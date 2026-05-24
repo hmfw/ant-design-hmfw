@@ -1,0 +1,42 @@
+{
+  "name": "ant-design-hmfw",
+  "version": "0.1.0",
+  "description": "A Vue3 UI component library based on Ant Design v6",
+  "keywords": ["vue3", "ui", "component-library", "ant-design", "typescript"],
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/style.css": "./dist/style.css",
+    "./style.css": "./dist/style.css"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vue": ">=3.3.0 <4.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitejs/plugin-vue-jsx": "^4.0.0",
+    "@vitest/coverage-v8": "^1.4.0",
+    "@vue/test-utils": "^2.4.0",
+    "jsdom": "^24.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.4.0",
+    "vue": "^3.4.0"
+  }
+}

@@ -1,0 +1,49 @@
+.hmfw-result {
+  padding: 48px 32px;
+  text-align: center;
+}
+
+.hmfw-result-icon {
+  margin-bottom: 24px;
+  font-size: 72px;
+  line-height: 1;
+}
+
+.hmfw-result-title {
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.5714;
+  margin-bottom: 8px;
+}
+
+.hmfw-result-subtitle {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  line-height: 1.5714;
+  margin-bottom: 24px;
+}
+
+.hmfw-result-extra {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hmfw-result-content {
+  margin-top: 24px;
+  padding: 24px 40px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  text-align: left;
+}
+
+/* Status colors */
+.hmfw-result-success .hmfw-result-icon { color: #52c41a; }
+.hmfw-result-error .hmfw-result-icon   { color: #ff4d4f; }
+.hmfw-result-info .hmfw-result-icon    { color: #1677ff; }
+.hmfw-result-warning .hmfw-result-icon { color: #faad14; }
+.hmfw-result-404 .hmfw-result-icon     { color: #1677ff; font-size: 80px; font-weight: 700; }
+.hmfw-result-403 .hmfw-result-icon     { color: #faad14; font-size: 80px; font-weight: 700; }
+.hmfw-result-500 .hmfw-result-icon     { color: #ff4d4f; font-size: 80px; font-weight: 700; }

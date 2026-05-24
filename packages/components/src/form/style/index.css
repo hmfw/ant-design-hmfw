@@ -1,0 +1,133 @@
+.hmfw-form {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.hmfw-form-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+/* Horizontal layout */
+.hmfw-form-horizontal .hmfw-form-item {
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.hmfw-form-horizontal .hmfw-form-item-label {
+  flex: 0 0 auto;
+  padding-right: 8px;
+  padding-top: 5px;
+  text-align: right;
+}
+
+.hmfw-form-horizontal .hmfw-form-item-control {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Inline layout */
+.hmfw-form-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.hmfw-form-inline .hmfw-form-item {
+  flex-direction: row;
+  align-items: flex-start;
+  margin-bottom: 0;
+}
+
+/* Label */
+.hmfw-form-item-label {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  padding-bottom: 8px;
+}
+
+.hmfw-form-item-label > label {
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.hmfw-form-item-required > label::before {
+  display: inline-block;
+  margin-inline-end: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
+}
+
+/* Control */
+.hmfw-form-item-control {
+  position: relative;
+}
+
+/* Explain / Help */
+.hmfw-form-item-explain {
+  font-size: 14px;
+  min-height: 24px;
+  padding-top: 2px;
+  line-height: 1.5714;
+  transition: color 0.3s;
+}
+
+.hmfw-form-item-explain-error {
+  color: #ff4d4f;
+}
+
+.hmfw-form-item-explain-warning {
+  color: #faad14;
+}
+
+.hmfw-form-item-explain-success {
+  color: #52c41a;
+}
+
+/* Validate status */
+.hmfw-form-item-has-error .hmfw-input,
+.hmfw-form-item-has-error .hmfw-input-number,
+.hmfw-form-item-has-error .hmfw-select-selector {
+  border-color: #ff4d4f;
+}
+
+.hmfw-form-item-has-warning .hmfw-input,
+.hmfw-form-item-has-warning .hmfw-input-number,
+.hmfw-form-item-has-warning .hmfw-select-selector {
+  border-color: #faad14;
+}
+
+.hmfw-form-item-has-success .hmfw-input,
+.hmfw-form-item-has-success .hmfw-input-number,
+.hmfw-form-item-has-success .hmfw-select-selector {
+  border-color: #52c41a;
+}
+
+/* Extra */
+.hmfw-form-item-extra {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+  min-height: 24px;
+  padding-top: 2px;
+  line-height: 1.5714;
+}
+
+/* Colon */
+.hmfw-form-item-label > label.hmfw-form-item-no-colon::after {
+  content: ' ';
+}
+
+.hmfw-form-item-label > label::after {
+  content: ':';
+  position: relative;
+  top: -0.5px;
+  margin: 0 8px 0 2px;
+}

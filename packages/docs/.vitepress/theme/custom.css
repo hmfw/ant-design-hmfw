@@ -1,0 +1,17 @@
+/* Demo block styles */
+.vp-doc .demo-preview {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+
+.vp-doc .demo-preview .preview {
+  padding: 24px;
+  background: #fff;
+}
+
+/* Ensure component styles render correctly in docs */
+.vp-doc [class^="hmfw-"] {
+  font-family: var(--vp-font-family-base);
+}

@@ -1,0 +1,83 @@
+.hmfw-segmented {
+  display: inline-flex;
+  align-items: stretch;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  padding: 2px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.hmfw-segmented-block {
+  display: flex;
+  width: 100%;
+}
+
+.hmfw-segmented-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.hmfw-segmented-group {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  gap: 2px;
+}
+
+.hmfw-segmented-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 11px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.hmfw-segmented-item:hover:not(.hmfw-segmented-item-disabled):not(.hmfw-segmented-item-selected) {
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.hmfw-segmented-item-selected {
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  cursor: default;
+}
+
+.hmfw-segmented-item-disabled {
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.hmfw-segmented-item-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hmfw-segmented-item-icon {
+  font-size: 14px;
+}
+
+/* Sizes */
+.hmfw-segmented-large .hmfw-segmented-item {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 16px;
+}
+
+.hmfw-segmented-small .hmfw-segmented-item {
+  height: 22px;
+  padding: 0 7px;
+  font-size: 12px;
+}

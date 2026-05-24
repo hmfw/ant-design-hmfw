@@ -1,0 +1,103 @@
+.hmfw-checkbox-wrapper {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: var(--hmfw-font-size-base);
+  color: var(--hmfw-color-text);
+  gap: 8px;
+}
+
+.hmfw-checkbox-wrapper-disabled {
+  cursor: not-allowed;
+  color: var(--hmfw-color-text-disabled, rgba(0,0,0,0.25));
+}
+
+.hmfw-checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hmfw-checkbox-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hmfw-checkbox-disabled .hmfw-checkbox-input {
+  cursor: not-allowed;
+}
+
+.hmfw-checkbox-inner {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-radius: var(--hmfw-border-radius-sm, 2px);
+  background: #fff;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.hmfw-checkbox-inner::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 8px;
+  border: 2px solid #fff;
+  border-top: 0;
+  border-left: 0;
+  transform: translate(-50%, -60%) rotate(45deg) scale(0);
+  transition: transform 0.1s;
+}
+
+.hmfw-checkbox-checked .hmfw-checkbox-inner {
+  background: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-checkbox-checked .hmfw-checkbox-inner::after {
+  transform: translate(-50%, -60%) rotate(45deg) scale(1);
+}
+
+.hmfw-checkbox-indeterminate .hmfw-checkbox-inner {
+  background: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-checkbox-indeterminate .hmfw-checkbox-inner::after {
+  width: 8px;
+  height: 2px;
+  border: none;
+  background: #fff;
+  transform: translate(-50%, -50%) scale(1);
+  top: 50%;
+  left: 50%;
+}
+
+.hmfw-checkbox-disabled .hmfw-checkbox-inner {
+  background: var(--hmfw-color-bg-container-disabled, rgba(0,0,0,0.04));
+  border-color: var(--hmfw-color-border, #d9d9d9);
+}
+
+.hmfw-checkbox-disabled.hmfw-checkbox-checked .hmfw-checkbox-inner::after {
+  border-color: var(--hmfw-color-text-disabled, rgba(0,0,0,0.25));
+}
+
+.hmfw-checkbox-label {
+  padding-inline: 4px;
+}
+
+.hmfw-checkbox-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
