@@ -9,53 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import EmptyBasic from '../demos/empty/EmptyBasic.vue'
+import EmptyBasicSource from '../demos/empty/EmptyBasic.vue?raw'
+import EmptyCustomDescription from '../demos/empty/EmptyCustomDescription.vue'
+import EmptyCustomDescriptionSource from '../demos/empty/EmptyCustomDescription.vue?raw'
+import EmptyAction from '../demos/empty/EmptyAction.vue'
+import EmptyActionSource from '../demos/empty/EmptyAction.vue?raw'
+</script>
+
 ### 基础用法
 
 简单的空状态展示。
 
-```vue
-<template>
-  <Empty />
-</template>
-
-<script setup lang="ts">
-import { Empty } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础用法" :source="EmptyBasicSource">
+  <EmptyBasic />
+</DemoBlock>
 
 ### 自定义描述
 
 自定义描述文字。
 
-```vue
-<template>
-  <Empty description="暂无数据，请稍后再试" />
-</template>
-
-<script setup lang="ts">
-import { Empty } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="自定义描述" :source="EmptyCustomDescriptionSource">
+  <EmptyCustomDescription />
+</DemoBlock>
 
 ### 底部操作
 
 带有操作按钮的空状态。
 
-```vue
-<template>
-  <Empty description="暂无数据">
-    <button @click="onCreate">立即创建</button>
-  </Empty>
-</template>
-
-<script setup lang="ts">
-import { Empty } from 'ant-design-hmfw'
-
-function onCreate() {
-  console.log('创建')
-}
-</script>
-```
+<DemoBlock title="底部操作" :source="EmptyActionSource">
+  <EmptyAction />
+</DemoBlock>
 
 ## API
 

@@ -9,102 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import TableBasic from '../demos/table/TableBasic.vue'
+import TableBasicSource from '../demos/table/TableBasic.vue?raw'
+import TableSorter from '../demos/table/TableSorter.vue'
+import TableSorterSource from '../demos/table/TableSorter.vue?raw'
+import TableRowSelection from '../demos/table/TableRowSelection.vue'
+import TableRowSelectionSource from '../demos/table/TableRowSelection.vue?raw'
+</script>
+
 ### 基础用法
 
 简单的表格，最后一列是各种操作。
 
-```vue
-<template>
-  <Table :data-source="dataSource" :columns="columns" row-key="key" />
-</template>
-
-<script setup lang="ts">
-import { Table } from 'ant-design-hmfw'
-
-const dataSource = [
-  { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },
-  { key: '2', name: '胡彦祖', age: 42, address: '西湖区湖底公园2号' },
-]
-
-const columns = [
-  { title: '姓名', dataIndex: 'name', key: 'name' },
-  { title: '年龄', dataIndex: 'age', key: 'age' },
-  { title: '住址', dataIndex: 'address', key: 'address' },
-]
-</script>
-```
+<DemoBlock title="基础用法" :source="TableBasicSource">
+  <TableBasic />
+</DemoBlock>
 
 ### 排序
 
 对某一列数据进行排序。
 
-```vue
-<template>
-  <Table :data-source="dataSource" :columns="columns" row-key="key" />
-</template>
-
-<script setup lang="ts">
-import { Table } from 'ant-design-hmfw'
-
-const dataSource = [
-  { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },
-  { key: '2', name: '胡彦祖', age: 42, address: '西湖区湖底公园2号' },
-  { key: '3', name: '李明', age: 28, address: '朝阳区建国路88号' },
-]
-
-const columns = [
-  { title: '姓名', dataIndex: 'name', key: 'name' },
-  {
-    title: '年龄',
-    dataIndex: 'age',
-    key: 'age',
-    sorter: (a: any, b: any) => a.age - b.age,
-  },
-  { title: '住址', dataIndex: 'address', key: 'address' },
-]
-</script>
-```
+<DemoBlock title="排序" :source="TableSorterSource">
+  <TableSorter />
+</DemoBlock>
 
 ### 行选择
 
 第一列是联动的选择框。
 
-```vue
-<template>
-  <Table
-    :data-source="dataSource"
-    :columns="columns"
-    row-key="key"
-    :row-selection="rowSelection"
-  />
-  <p>已选择：{{ selectedKeys.join(', ') }}</p>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Table } from 'ant-design-hmfw'
-
-const selectedKeys = ref<string[]>([])
-
-const rowSelection = {
-  selectedRowKeys: selectedKeys,
-  onChange: (keys: string[]) => {
-    selectedKeys.value = keys
-  },
-}
-
-const dataSource = [
-  { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },
-  { key: '2', name: '胡彦祖', age: 42, address: '西湖区湖底公园2号' },
-]
-
-const columns = [
-  { title: '姓名', dataIndex: 'name', key: 'name' },
-  { title: '年龄', dataIndex: 'age', key: 'age' },
-  { title: '住址', dataIndex: 'address', key: 'address' },
-]
-</script>
-```
+<DemoBlock title="行选择" :source="TableRowSelectionSource">
+  <TableRowSelection />
+</DemoBlock>
 
 ## API
 

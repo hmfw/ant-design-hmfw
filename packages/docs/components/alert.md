@@ -9,82 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import AlertTypes from '../demos/alert/AlertTypes.vue'
+import AlertTypesSource from '../demos/alert/AlertTypes.vue?raw'
+import AlertDescription from '../demos/alert/AlertDescription.vue'
+import AlertDescriptionSource from '../demos/alert/AlertDescription.vue?raw'
+import AlertClosable from '../demos/alert/AlertClosable.vue'
+import AlertClosableSource from '../demos/alert/AlertClosable.vue?raw'
+</script>
+
 ### 四种类型
 
 共有四种样式 success、info、warning、error。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <Alert message="成功提示" type="success" />
-    <Alert message="消息提示" type="info" />
-    <Alert message="警告提示" type="warning" />
-    <Alert message="错误提示" type="error" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Alert } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="四种类型" :source="AlertTypesSource">
+  <AlertTypes />
+</DemoBlock>
 
 ### 带描述
 
 含有辅助性文字介绍的警告提示。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <Alert
-      message="成功提示"
-      description="详细的成功描述和对此次成功的说明。"
-      type="success"
-      show-icon
-    />
-    <Alert
-      message="错误提示"
-      description="详细的错误描述和对此次错误的说明。"
-      type="error"
-      show-icon
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Alert } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="带描述" :source="AlertDescriptionSource">
+  <AlertDescription />
+</DemoBlock>
 
 ### 可关闭
 
 显示关闭按钮，点击可关闭警告提示。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <Alert
-      message="警告提示"
-      type="warning"
-      closable
-      @close="onClose"
-    />
-    <Alert
-      message="错误提示"
-      description="详细的错误描述信息。"
-      type="error"
-      closable
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Alert } from 'ant-design-hmfw'
-
-function onClose() {
-  console.log('关闭警告')
-}
-</script>
-```
+<DemoBlock title="可关闭" :source="AlertClosableSource">
+  <AlertClosable />
+</DemoBlock>
 
 ## API
 

@@ -2,6 +2,15 @@
 
 多选框。
 
+<script setup>
+import CheckboxBasic from '../demos/checkbox/CheckboxBasic.vue'
+import CheckboxBasicSource from '../demos/checkbox/CheckboxBasic.vue?raw'
+import CheckboxGroup from '../demos/checkbox/CheckboxGroup.vue'
+import CheckboxGroupSource from '../demos/checkbox/CheckboxGroup.vue?raw'
+import CheckboxCheckAll from '../demos/checkbox/CheckboxCheckAll.vue'
+import CheckboxCheckAllSource from '../demos/checkbox/CheckboxCheckAll.vue?raw'
+</script>
+
 ## 何时使用
 
 - 在一组可选项中进行多项选择时。
@@ -13,125 +22,25 @@
 
 简单的 checkbox。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 8px;">
-    <Checkbox v-model:checked="checked1">普通复选框</Checkbox>
-    <Checkbox v-model:checked="checked2" disabled>禁用复选框</Checkbox>
-    <Checkbox v-model:checked="checked3" disabled>禁用选中</Checkbox>
-    <p>checked1: {{ checked1 }}, checked2: {{ checked2 }}, checked3: {{ checked3 }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Checkbox } from 'ant-design-hmfw'
-
-const checked1 = ref(false)
-const checked2 = ref(false)
-const checked3 = ref(true)
-</script>
-```
+<DemoBlock title="基础用法" :source="CheckboxBasicSource">
+  <CheckboxBasic />
+</DemoBlock>
 
 ### CheckboxGroup
 
 方便的从数组生成 Checkbox 组。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <div>
-      <p style="margin-bottom: 8px;">水平排列：</p>
-      <CheckboxGroup
-        v-model:value="selectedFruits"
-        :options="fruitOptions"
-      />
-    </div>
-    <div>
-      <p style="margin-bottom: 8px;">垂直排列：</p>
-      <CheckboxGroup
-        v-model:value="selectedColors"
-        :options="colorOptions"
-        direction="vertical"
-      />
-    </div>
-    <p>水果：{{ selectedFruits }}，颜色：{{ selectedColors }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { CheckboxGroup } from 'ant-design-hmfw'
-
-const selectedFruits = ref<string[]>(['apple'])
-const selectedColors = ref<string[]>([])
-
-const fruitOptions = [
-  { label: '苹果', value: 'apple' },
-  { label: '香蕉', value: 'banana' },
-  { label: '橙子', value: 'orange' },
-  { label: '葡萄', value: 'grape', disabled: true },
-]
-
-const colorOptions = [
-  { label: '红色', value: 'red' },
-  { label: '绿色', value: 'green' },
-  { label: '蓝色', value: 'blue' },
-]
-</script>
-```
+<DemoBlock title="CheckboxGroup" :source="CheckboxGroupSource">
+  <CheckboxGroup />
+</DemoBlock>
 
 ### 全选
 
 在实现全选效果时，你可能会用到 `indeterminate` 属性。
 
-```vue
-<template>
-  <div>
-    <div style="border-bottom: 1px solid #e8e8e8; padding-bottom: 8px; margin-bottom: 8px;">
-      <Checkbox
-        v-model:checked="checkAll"
-        :indeterminate="indeterminate"
-        @change="handleCheckAllChange"
-      >
-        全选
-      </Checkbox>
-    </div>
-    <CheckboxGroup
-      v-model:value="checkedList"
-      :options="options"
-      @change="handleGroupChange"
-    />
-    <p style="margin-top: 8px;">已选：{{ checkedList }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Checkbox, CheckboxGroup } from 'ant-design-hmfw'
-
-const options = [
-  { label: '选项 A', value: 'A' },
-  { label: '选项 B', value: 'B' },
-  { label: '选项 C', value: 'C' },
-  { label: '选项 D', value: 'D' },
-]
-
-const checkedList = ref<string[]>(['A', 'B'])
-const checkAll = ref(false)
-const indeterminate = ref(true)
-
-const handleCheckAllChange = (checked: boolean) => {
-  checkedList.value = checked ? options.map(o => o.value) : []
-  indeterminate.value = false
-}
-
-const handleGroupChange = (list: string[]) => {
-  indeterminate.value = !!list.length && list.length < options.length
-  checkAll.value = list.length === options.length
-}
-</script>
-```
+<DemoBlock title="全选" :source="CheckboxCheckAllSource">
+  <CheckboxCheckAll />
+</DemoBlock>
 
 ## API
 

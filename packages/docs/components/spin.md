@@ -8,83 +8,48 @@
 
 ## 代码演示
 
+<script setup>
+import SpinBasic from '../demos/spin/SpinBasic.vue'
+import SpinBasicSource from '../demos/spin/SpinBasic.vue?raw'
+import SpinSize from '../demos/spin/SpinSize.vue'
+import SpinSizeSource from '../demos/spin/SpinSize.vue?raw'
+import SpinNested from '../demos/spin/SpinNested.vue'
+import SpinNestedSource from '../demos/spin/SpinNested.vue?raw'
+import SpinDelay from '../demos/spin/SpinDelay.vue'
+import SpinDelaySource from '../demos/spin/SpinDelay.vue?raw'
+</script>
+
 ### 基础用法
 
 一个简单的 loading 状态。
 
-```vue
-<template>
-  <Spin />
-</template>
-
-<script setup lang="ts">
-import { Spin } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础用法" :source="SpinBasicSource">
+  <SpinBasic />
+</DemoBlock>
 
 ### 各种大小
 
 小的用于文本加载，默认用于卡片容器级加载，大的用于页面级加载。
 
-```vue
-<template>
-  <div style="display: flex; gap: 24px; align-items: center;">
-    <Spin size="small" />
-    <Spin />
-    <Spin size="large" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Spin } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="各种大小" :source="SpinSizeSource">
+  <SpinSize />
+</DemoBlock>
 
 ### 嵌套内容
 
 可以直接把内容内嵌到 Spin 中，将现有容器变为加载状态。
 
-```vue
-<template>
-  <div>
-    <button @click="loading = !loading">切换加载状态</button>
-    <Spin :spinning="loading" tip="加载中...">
-      <div style="padding: 24px; background: #f0f0f0; margin-top: 16px; border-radius: 4px;">
-        <p>这是被遮罩的内容区域</p>
-        <p>加载时会显示遮罩层</p>
-      </div>
-    </Spin>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Spin } from 'ant-design-hmfw'
-
-const loading = ref(true)
-</script>
-```
+<DemoBlock title="嵌套内容" :source="SpinNestedSource">
+  <SpinNested />
+</DemoBlock>
 
 ### 延迟加载
 
 延迟显示 loading 效果。当 spinning 状态在 delay 时间内结束，则不显示 loading 状态。
 
-```vue
-<template>
-  <Spin :spinning="loading" :delay="500">
-    <div style="padding: 24px; background: #f0f0f0; border-radius: 4px;">
-      <p>延迟 500ms 后才显示加载状态</p>
-    </div>
-  </Spin>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Spin } from 'ant-design-hmfw'
-
-const loading = ref(true)
-</script>
-```
+<DemoBlock title="延迟加载" :source="SpinDelaySource">
+  <SpinDelay />
+</DemoBlock>
 
 ## API
 

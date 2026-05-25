@@ -2,6 +2,17 @@
 
 开关选择器。
 
+<script setup>
+import SwitchBasic from '../demos/switch/SwitchBasic.vue'
+import SwitchBasicSource from '../demos/switch/SwitchBasic.vue?raw'
+import SwitchLabel from '../demos/switch/SwitchLabel.vue'
+import SwitchLabelSource from '../demos/switch/SwitchLabel.vue?raw'
+import SwitchLoading from '../demos/switch/SwitchLoading.vue'
+import SwitchLoadingSource from '../demos/switch/SwitchLoading.vue?raw'
+import SwitchSize from '../demos/switch/SwitchSize.vue'
+import SwitchSizeSource from '../demos/switch/SwitchSize.vue?raw'
+</script>
+
 ## 何时使用
 
 - 需要表示开关状态/两种状态之间的切换时。
@@ -13,129 +24,33 @@
 
 最简单的用法。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <Switch v-model:checked="checked" />
-      <span>{{ checked ? '开启' : '关闭' }}</span>
-    </div>
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <Switch v-model:checked="checked2" disabled />
-      <span>禁用状态</span>
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Switch } from 'ant-design-hmfw'
-
-const checked = ref(false)
-const checked2 = ref(true)
-</script>
-```
+<DemoBlock title="基础用法" :source="SwitchBasicSource">
+  <SwitchBasic />
+</DemoBlock>
 
 ### 文字和图标
 
 带有文字和图标的开关。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <Switch
-      v-model:checked="checked1"
-      checked-children="开"
-      un-checked-children="关"
-    />
-    <Switch
-      v-model:checked="checked2"
-      checked-children="✓"
-      un-checked-children="✗"
-    />
-    <Switch
-      v-model:checked="checked3"
-      checked-children="ON"
-      un-checked-children="OFF"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Switch } from 'ant-design-hmfw'
-
-const checked1 = ref(true)
-const checked2 = ref(false)
-const checked3 = ref(true)
-</script>
-```
+<DemoBlock title="文字和图标" :source="SwitchLabelSource">
+  <SwitchLabel />
+</DemoBlock>
 
 ### 加载中
 
 标识开关操作仍在执行中。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <div style="display: flex; gap: 8px;">
-      <Switch :checked="true" loading />
-      <Switch :checked="false" loading />
-    </div>
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <Switch
-        v-model:checked="checked"
-        :loading="loading"
-        @change="handleChange"
-      />
-      <span>{{ loading ? '切换中...' : (checked ? '已开启' : '已关闭') }}</span>
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Switch } from 'ant-design-hmfw'
-
-const checked = ref(false)
-const loading = ref(false)
-
-const handleChange = (val: boolean) => {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-    checked.value = val
-  }, 1500)
-}
-</script>
-```
+<DemoBlock title="加载中" :source="SwitchLoadingSource">
+  <SwitchLoading />
+</DemoBlock>
 
 ### 不同尺寸
 
 `size="small"` 表示小号开关。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <div style="display: flex; align-items: center; gap: 16px;">
-      <Switch v-model:checked="checked1" />
-      <span>默认大小</span>
-    </div>
-    <div style="display: flex; align-items: center; gap: 16px;">
-      <Switch v-model:checked="checked2" size="small" />
-      <span>小号开关</span>
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Switch } from 'ant-design-hmfw'
-
-const checked1 = ref(true)
-const checked2 = ref(true)
-</script>
-```
+<DemoBlock title="不同尺寸" :source="SwitchSizeSource">
+  <SwitchSize />
+</DemoBlock>
 
 ## API
 

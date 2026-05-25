@@ -2,6 +2,17 @@
 
 文本的基本格式。
 
+<script setup>
+import TypographyTitle from '../demos/typography/TypographyTitle.vue'
+import TypographyTitleSource from '../demos/typography/TypographyTitle.vue?raw'
+import TypographyText from '../demos/typography/TypographyText.vue'
+import TypographyTextSource from '../demos/typography/TypographyText.vue?raw'
+import TypographyDecorations from '../demos/typography/TypographyDecorations.vue'
+import TypographyDecorationsSource from '../demos/typography/TypographyDecorations.vue?raw'
+import TypographyParagraph from '../demos/typography/TypographyParagraph.vue'
+import TypographyParagraphSource from '../demos/typography/TypographyParagraph.vue?raw'
+</script>
+
 ## 何时使用
 
 - 当需要展示标题、段落、列表内容时
@@ -14,92 +25,33 @@
 
 通过 `level` 属性设置标题级别。
 
-```vue
-<template>
-  <Space direction="vertical" :size="16">
-    <Title :level="1">h1. Ant Design</Title>
-    <Title :level="2">h2. Ant Design</Title>
-    <Title :level="3">h3. Ant Design</Title>
-    <Title :level="4">h4. Ant Design</Title>
-    <Title :level="5">h5. Ant Design</Title>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Title, Space } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="标题" :source="TypographyTitleSource">
+  <TypographyTitle />
+</DemoBlock>
 
 ### 文本类型
 
 通过 `type` 属性设置文本类型。
 
-```vue
-<template>
-  <Space direction="vertical">
-    <Text>默认文本</Text>
-    <Text type="secondary">次要文本</Text>
-    <Text type="success">成功文本</Text>
-    <Text type="warning">警告文本</Text>
-    <Text type="danger">危险文本</Text>
-    <Text disabled>禁用文本</Text>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Text, Space } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="文本类型" :source="TypographyTextSource">
+  <TypographyText />
+</DemoBlock>
 
 ### 文本修饰
 
 支持多种文本修饰样式。
 
-```vue
-<template>
-  <Space direction="vertical">
-    <Text mark>标记文本</Text>
-    <Text code>代码文本</Text>
-    <Text keyboard>Ctrl</Text>
-    <Text underline>下划线文本</Text>
-    <Text delete>删除线文本</Text>
-    <Text strong>加粗文本</Text>
-    <Text italic>斜体文本</Text>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Text, Space } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="文本修饰" :source="TypographyDecorationsSource">
+  <TypographyDecorations />
+</DemoBlock>
 
 ### 段落
 
 段落组件支持省略和复制功能。
 
-```vue
-<template>
-  <Space direction="vertical" :size="16">
-    <Paragraph>
-      这是一段普通的段落文本。Ant Design 是一套企业级 UI 设计语言和 React 组件库。
-    </Paragraph>
-    
-    <Paragraph copyable>
-      这段文本可以复制。点击右侧图标复制内容。
-    </Paragraph>
-    
-    <Paragraph :ellipsis="{ rows: 2 }">
-      这是一段很长的文本,会被省略显示。当文本超过指定行数时,会自动显示省略号。
-      这是一段很长的文本,会被省略显示。当文本超过指定行数时,会自动显示省略号。
-      这是一段很长的文本,会被省略显示。当文本超过指定行数时,会自动显示省略号。
-    </Paragraph>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Paragraph, Space } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="段落" :source="TypographyParagraphSource">
+  <TypographyParagraph />
+</DemoBlock>
 
 ## API
 

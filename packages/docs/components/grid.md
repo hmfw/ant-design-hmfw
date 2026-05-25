@@ -2,6 +2,17 @@
 
 24 栅格系统。
 
+<script setup>
+import GridBasic from '../demos/grid/GridBasic.vue'
+import GridBasicSource from '../demos/grid/GridBasic.vue?raw'
+import GridGutter from '../demos/grid/GridGutter.vue'
+import GridGutterSource from '../demos/grid/GridGutter.vue?raw'
+import GridOffset from '../demos/grid/GridOffset.vue'
+import GridOffsetSource from '../demos/grid/GridOffset.vue?raw'
+import GridResponsive from '../demos/grid/GridResponsive.vue'
+import GridResponsiveSource from '../demos/grid/GridResponsive.vue?raw'
+</script>
+
 ## 何时使用
 
 - 需要对页面进行栅格化布局时
@@ -14,148 +25,33 @@
 
 使用 `span` 属性设置列宽，总宽度为 24。
 
-```vue
-<template>
-  <Space direction="vertical" style="width: 100%">
-    <Row>
-      <Col :span="24">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-24</div>
-      </Col>
-    </Row>
-    <Row>
-      <Col :span="12">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-12</div>
-      </Col>
-      <Col :span="12">
-        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">col-12</div>
-      </Col>
-    </Row>
-    <Row>
-      <Col :span="8">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-8</div>
-      </Col>
-      <Col :span="8">
-        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">col-8</div>
-      </Col>
-      <Col :span="8">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-8</div>
-      </Col>
-    </Row>
-    <Row>
-      <Col :span="6">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-6</div>
-      </Col>
-      <Col :span="6">
-        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">col-6</div>
-      </Col>
-      <Col :span="6">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-6</div>
-      </Col>
-      <Col :span="6">
-        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">col-6</div>
-      </Col>
-    </Row>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Row, Col, Space } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础栅格" :source="GridBasicSource">
+  <GridBasic />
+</DemoBlock>
 
 ### 区块间隔
 
 通过 `gutter` 属性设置列间距，支持水平和垂直间距。
 
-```vue
-<template>
-  <Space direction="vertical" style="width: 100%">
-    <div>水平间距</div>
-    <Row :gutter="16">
-      <Col :span="6">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
-      </Col>
-      <Col :span="6">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
-      </Col>
-      <Col :span="6">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
-      </Col>
-      <Col :span="6">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
-      </Col>
-    </Row>
-    <div>水平 + 垂直间距</div>
-    <Row :gutter="[16, 24]">
-      <Col :span="6" v-for="i in 8" :key="i">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
-      </Col>
-    </Row>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Row, Col, Space } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="区块间隔" :source="GridGutterSource">
+  <GridGutter />
+</DemoBlock>
 
 ### 偏移
 
 通过 `offset` 属性设置列偏移量。
 
-```vue
-<template>
-  <Space direction="vertical" style="width: 100%">
-    <Row>
-      <Col :span="8">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-8</div>
-      </Col>
-      <Col :span="8" :offset="8">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-8 offset-8</div>
-      </Col>
-    </Row>
-    <Row>
-      <Col :span="6" :offset="6">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-6 offset-6</div>
-      </Col>
-      <Col :span="6" :offset="6">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-6 offset-6</div>
-      </Col>
-    </Row>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Row, Col, Space } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="偏移" :source="GridOffsetSource">
+  <GridOffset />
+</DemoBlock>
 
 ### 响应式布局
 
 通过 `xs`、`sm`、`md`、`lg`、`xl`、`xxl` 属性设置不同断点下的列宽。
 
-```vue
-<template>
-  <Row :gutter="16">
-    <Col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-      <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">响应式</div>
-    </Col>
-    <Col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-      <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">响应式</div>
-    </Col>
-    <Col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-      <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">响应式</div>
-    </Col>
-    <Col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-      <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">响应式</div>
-    </Col>
-  </Row>
-</template>
-
-<script setup lang="ts">
-import { Row, Col } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="响应式布局" :source="GridResponsiveSource">
+  <GridResponsive />
+</DemoBlock>
 
 ## API
 

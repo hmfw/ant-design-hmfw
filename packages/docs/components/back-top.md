@@ -9,57 +9,30 @@
 
 ## 代码演示
 
+<script setup>
+import BackTopBasic from '../demos/back-top/BackTopBasic.vue'
+import BackTopBasicSource from '../demos/back-top/BackTopBasic.vue?raw'
+import BackTopCustom from '../demos/back-top/BackTopCustom.vue'
+import BackTopCustomSource from '../demos/back-top/BackTopCustom.vue?raw'
+</script>
+
 ### 基础用法
 
 滚动页面后，右下角会出现回到顶部按钮。
 
 > 注意：需要滚动页面才能看到按钮出现。默认当页面滚动超过 400px 时显示。
 
-```vue
-<template>
-  <div style="height: 1000px; background: linear-gradient(to bottom, #fff, #f0f0f0);">
-    <p>向下滚动页面，右下角会出现回到顶部按钮。</p>
-    <BackTop />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { BackTop } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础用法" :source="BackTopBasicSource">
+  <BackTopBasic />
+</DemoBlock>
 
 ### 自定义内容
 
 可以自定义回到顶部按钮的样式。
 
-```vue
-<template>
-  <div style="height: 1000px;">
-    <p>向下滚动页面，右下角会出现自定义的回到顶部按钮。</p>
-    <BackTop :visibility-height="200" @click="onBackTop">
-      <div style="
-        width: 40px;
-        height: 40px;
-        background: #1677ff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 18px;
-      ">↑</div>
-    </BackTop>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { BackTop } from 'ant-design-hmfw'
-
-function onBackTop() {
-  console.log('回到顶部')
-}
-</script>
-```
+<DemoBlock title="自定义内容" :source="BackTopCustomSource">
+  <BackTopCustom />
+</DemoBlock>
 
 ## API
 

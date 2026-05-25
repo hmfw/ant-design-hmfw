@@ -2,6 +2,25 @@
 
 按钮用于开始一个即时操作。
 
+<script setup>
+import ButtonBasic from '../demos/button/ButtonBasic.vue'
+import ButtonBasicSource from '../demos/button/ButtonBasic.vue?raw'
+import ButtonSize from '../demos/button/ButtonSize.vue'
+import ButtonSizeSource from '../demos/button/ButtonSize.vue?raw'
+import ButtonDisabled from '../demos/button/ButtonDisabled.vue'
+import ButtonDisabledSource from '../demos/button/ButtonDisabled.vue?raw'
+import ButtonLoading from '../demos/button/ButtonLoading.vue'
+import ButtonLoadingSource from '../demos/button/ButtonLoading.vue?raw'
+import ButtonDanger from '../demos/button/ButtonDanger.vue'
+import ButtonDangerSource from '../demos/button/ButtonDanger.vue?raw'
+import ButtonBlock from '../demos/button/ButtonBlock.vue'
+import ButtonBlockSource from '../demos/button/ButtonBlock.vue?raw'
+import ButtonGhost from '../demos/button/ButtonGhost.vue'
+import ButtonGhostSource from '../demos/button/ButtonGhost.vue?raw'
+import ButtonIcon from '../demos/button/ButtonIcon.vue'
+import ButtonIconSource from '../demos/button/ButtonIcon.vue?raw'
+</script>
+
 ## 何时使用
 
 标记了一个（或封装一组）操作命令，响应用户点击行为，触发相应的业务逻辑。
@@ -27,21 +46,9 @@
 
 按钮有五种类型：主按钮、默认按钮、虚线按钮、文本按钮和链接按钮。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary">Primary Button</Button>
-    <Button>Default Button</Button>
-    <Button type="dashed">Dashed Button</Button>
-    <Button type="text">Text Button</Button>
-    <Button type="link">Link Button</Button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="按钮类型" :source="ButtonBasicSource">
+  <ButtonBasic />
+</DemoBlock>
 
 ### 按钮尺寸
 
@@ -49,145 +56,57 @@ import { Button } from 'ant-design-hmfw'
 
 通过设置 `size` 为 `large` `small` 分别把按钮设为大、小尺寸。若不设置 `size`，则尺寸为中。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; align-items: center;">
-    <Button type="primary" size="large">Large</Button>
-    <Button type="primary">Middle</Button>
-    <Button type="primary" size="small">Small</Button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="按钮尺寸" :source="ButtonSizeSource">
+  <ButtonSize />
+</DemoBlock>
 
 ### 禁用状态
 
 添加 `disabled` 属性即可让按钮处于不可用状态，同时按钮样式也会改变。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary" disabled>Primary Disabled</Button>
-    <Button disabled>Default Disabled</Button>
-    <Button type="dashed" disabled>Dashed Disabled</Button>
-    <Button type="text" disabled>Text Disabled</Button>
-    <Button type="link" disabled>Link Disabled</Button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="禁用状态" :source="ButtonDisabledSource">
+  <ButtonDisabled />
+</DemoBlock>
 
 ### 加载状态
 
 添加 `loading` 属性即可让按钮处于加载状态，最后两个按钮演示点击后进入加载状态。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary" loading>Loading</Button>
-    <Button type="primary" size="small" loading>Loading</Button>
-    <Button type="primary" :loading="loading" @click="handleClick">
-      Click me!
-    </Button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Button } from 'ant-design-hmfw'
-
-const loading = ref(false)
-
-const handleClick = () => {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-  }, 2000)
-}
-</script>
-```
+<DemoBlock title="加载状态" :source="ButtonLoadingSource">
+  <ButtonLoading />
+</DemoBlock>
 
 ### 危险按钮
 
 危险按钮用于删除/移动/修改权限等危险操作。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary" danger>Primary Danger</Button>
-    <Button danger>Default Danger</Button>
-    <Button type="text" danger>Text Danger</Button>
-    <Button type="link" danger>Link Danger</Button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="危险按钮" :source="ButtonDangerSource">
+  <ButtonDanger />
+</DemoBlock>
 
 ### Block 按钮
 
 `block` 属性将使按钮适合其父宽度。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 8px;">
-    <Button type="primary" block>Primary Block</Button>
-    <Button block>Default Block</Button>
-    <Button type="dashed" block>Dashed Block</Button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="Block 按钮" :source="ButtonBlockSource">
+  <ButtonBlock />
+</DemoBlock>
 
 ### Ghost 按钮
 
 幽灵按钮将按钮的内容反色，背景变为透明，常用在有色背景上。
 
-```vue
-<template>
-  <div style="padding: 16px; background: #1677ff;">
-    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-      <Button type="primary" ghost>Primary Ghost</Button>
-      <Button ghost>Default Ghost</Button>
-      <Button type="dashed" ghost>Dashed Ghost</Button>
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="Ghost 按钮" :source="ButtonGhostSource">
+  <ButtonGhost />
+</DemoBlock>
 
 ### 图标按钮
 
 当需要在 Button 内嵌入 Icon 时，可以设置 `icon` 属性。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary" :icon="{ type: 'search' }">Search</Button>
-    <Button type="primary" :icon="{ type: 'search' }" />
-    <Button type="primary" :icon="{ type: 'check' }">Confirm</Button>
-    <Button type="dashed" :icon="{ type: 'close' }">Cancel</Button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="图标按钮" :source="ButtonIconSource">
+  <ButtonIcon />
+</DemoBlock>
 
 ## API
 

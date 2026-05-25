@@ -8,78 +8,38 @@
 
 ## 代码演示
 
+<script setup>
+import TooltipBasic from '../demos/tooltip/TooltipBasic.vue'
+import TooltipBasicSource from '../demos/tooltip/TooltipBasic.vue?raw'
+import TooltipPlacement from '../demos/tooltip/TooltipPlacement.vue'
+import TooltipPlacementSource from '../demos/tooltip/TooltipPlacement.vue?raw'
+import TooltipCustomColor from '../demos/tooltip/TooltipCustomColor.vue'
+import TooltipCustomColorSource from '../demos/tooltip/TooltipCustomColor.vue?raw'
+</script>
+
 ### 基础用法
 
 最简单的用法。
 
-```vue
-<template>
-  <Tooltip title="这是提示文字">
-    <button>鼠标移入</button>
-  </Tooltip>
-</template>
-
-<script setup lang="ts">
-import { Tooltip } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础用法" :source="TooltipBasicSource">
+  <TooltipBasic />
+</DemoBlock>
 
 ### 十二个方向
 
 位置有十二个方向。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Tooltip
-      v-for="placement in placements"
-      :key="placement"
-      :placement="placement"
-      title="提示文字"
-    >
-      <button style="width: 100px;">{{ placement }}</button>
-    </Tooltip>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Tooltip } from 'ant-design-hmfw'
-
-const placements = [
-  'topLeft', 'top', 'topRight',
-  'leftTop', 'left', 'leftBottom',
-  'rightTop', 'right', 'rightBottom',
-  'bottomLeft', 'bottom', 'bottomRight',
-]
-</script>
-```
+<DemoBlock title="十二个方向" :source="TooltipPlacementSource">
+  <TooltipPlacement />
+</DemoBlock>
 
 ### 自定义颜色
 
 自定义提示框颜色。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Tooltip title="粉色提示" color="pink">
-      <button>粉色</button>
-    </Tooltip>
-    <Tooltip title="红色提示" color="red">
-      <button>红色</button>
-    </Tooltip>
-    <Tooltip title="蓝色提示" color="#1677ff">
-      <button>自定义蓝色</button>
-    </Tooltip>
-    <Tooltip title="绿色提示" color="#52c41a">
-      <button>自定义绿色</button>
-    </Tooltip>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Tooltip } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="自定义颜色" :source="TooltipCustomColorSource">
+  <TooltipCustomColor />
+</DemoBlock>
 
 ## API
 

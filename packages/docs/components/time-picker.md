@@ -2,6 +2,15 @@
 
 输入或选择时间的控件。
 
+<script setup>
+import TimePickerBasic from '../demos/time-picker/TimePickerBasic.vue'
+import TimePickerBasicSource from '../demos/time-picker/TimePickerBasic.vue?raw'
+import TimePickerStep from '../demos/time-picker/TimePickerStep.vue'
+import TimePickerStepSource from '../demos/time-picker/TimePickerStep.vue?raw'
+import TimePickerFormat from '../demos/time-picker/TimePickerFormat.vue'
+import TimePickerFormatSource from '../demos/time-picker/TimePickerFormat.vue?raw'
+</script>
+
 ## 何时使用
 
 当用户需要输入一个时间，可以点击标准输入框，弹出时间面板进行选择。
@@ -12,125 +21,25 @@
 
 点击 TimePicker，然后可以在浮层中选择或者输入某一时间。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
-    <TimePicker
-      v-model:value="time"
-      placeholder="请选择时间"
-      @change="handleChange"
-    />
-    <TimePicker
-      v-model:value="time2"
-      placeholder="禁用状态"
-      disabled
-    />
-    <p>选中时间：{{ time }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { TimePicker } from 'ant-design-hmfw'
-
-const time = ref('')
-const time2 = ref('10:30:00')
-
-const handleChange = (value: string) => {
-  console.log('选中时间：', value)
-}
-</script>
-```
+<DemoBlock title="基础用法" :source="TimePickerBasicSource">
+  <TimePickerBasic />
+</DemoBlock>
 
 ### 步进
 
 通过 `hour-step`、`minute-step`、`second-step` 设置时间步长。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
-    <div>
-      <p style="margin-bottom: 4px;">小时步长 2：</p>
-      <TimePicker
-        v-model:value="time1"
-        :hour-step="2"
-        placeholder="小时步长 2"
-      />
-    </div>
-    <div>
-      <p style="margin-bottom: 4px;">分钟步长 15：</p>
-      <TimePicker
-        v-model:value="time2"
-        :minute-step="15"
-        placeholder="分钟步长 15"
-      />
-    </div>
-    <div>
-      <p style="margin-bottom: 4px;">秒步长 30：</p>
-      <TimePicker
-        v-model:value="time3"
-        :second-step="30"
-        placeholder="秒步长 30"
-      />
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { TimePicker } from 'ant-design-hmfw'
-
-const time1 = ref('')
-const time2 = ref('')
-const time3 = ref('')
-</script>
-```
+<DemoBlock title="步进" :source="TimePickerStepSource">
+  <TimePickerStep />
+</DemoBlock>
 
 ### 格式化
 
 通过 `format` 属性自定义时间格式，通过 `use12Hours` 开启 12 小时制。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
-    <div>
-      <p style="margin-bottom: 4px;">只显示时分（HH:mm）：</p>
-      <TimePicker
-        v-model:value="time1"
-        format="HH:mm"
-        placeholder="选择时分"
-      />
-    </div>
-    <div>
-      <p style="margin-bottom: 4px;">12 小时制：</p>
-      <TimePicker
-        v-model:value="time2"
-        :use12-hours="true"
-        format="h:mm a"
-        placeholder="12 小时制"
-      />
-    </div>
-    <div>
-      <p style="margin-bottom: 4px;">不显示秒：</p>
-      <TimePicker
-        v-model:value="time3"
-        format="HH:mm"
-        :show-now="false"
-        placeholder="不显示秒"
-      />
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { TimePicker } from 'ant-design-hmfw'
-
-const time1 = ref('')
-const time2 = ref('')
-const time3 = ref('')
-</script>
-```
+<DemoBlock title="格式化" :source="TimePickerFormatSource">
+  <TimePickerFormat />
+</DemoBlock>
 
 ## API
 

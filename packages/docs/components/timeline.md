@@ -9,68 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import TimelineBasic from '../demos/timeline/TimelineBasic.vue'
+import TimelineBasicSource from '../demos/timeline/TimelineBasic.vue?raw'
+import TimelineAlternate from '../demos/timeline/TimelineAlternate.vue'
+import TimelineAlternateSource from '../demos/timeline/TimelineAlternate.vue?raw'
+import TimelineCustomColor from '../demos/timeline/TimelineCustomColor.vue'
+import TimelineCustomColorSource from '../demos/timeline/TimelineCustomColor.vue?raw'
+</script>
+
 ### 基础用法
 
 基本的时间轴。
 
-```vue
-<template>
-  <Timeline :items="items" />
-</template>
-
-<script setup lang="ts">
-import { Timeline } from 'ant-design-hmfw'
-
-const items = [
-  { children: '创建服务现场 2015-09-01' },
-  { children: '初步排除网络异常 2015-09-01' },
-  { children: '技术测试异常 2015-09-01' },
-  { children: '网络异常正在修复 2015-09-01' },
-]
-</script>
-```
+<DemoBlock title="基础用法" :source="TimelineBasicSource">
+  <TimelineBasic />
+</DemoBlock>
 
 ### 交替展示
 
 内容在时间轴两侧交替出现。
 
-```vue
-<template>
-  <Timeline mode="alternate" :items="items" />
-</template>
-
-<script setup lang="ts">
-import { Timeline } from 'ant-design-hmfw'
-
-const items = [
-  { children: '创建服务现场 2015-09-01' },
-  { children: '初步排除网络异常 2015-09-01', position: 'right' },
-  { children: '技术测试异常 2015-09-01' },
-  { children: '网络异常正在修复 2015-09-01', position: 'right' },
-]
-</script>
-```
+<DemoBlock title="交替展示" :source="TimelineAlternateSource">
+  <TimelineAlternate />
+</DemoBlock>
 
 ### 自定义颜色
 
 可以设置为 red、green、blue、gray，或者自定义颜色。
 
-```vue
-<template>
-  <Timeline :items="items" />
-</template>
-
-<script setup lang="ts">
-import { Timeline } from 'ant-design-hmfw'
-
-const items = [
-  { children: '成功事件', color: 'green' },
-  { children: '失败事件', color: 'red' },
-  { children: '警告事件', color: 'gray' },
-  { children: '自定义颜色', color: '#00CCFF' },
-]
-</script>
-```
+<DemoBlock title="自定义颜色" :source="TimelineCustomColorSource">
+  <TimelineCustomColor />
+</DemoBlock>
 
 ## API
 

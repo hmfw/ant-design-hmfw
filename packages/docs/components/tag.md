@@ -9,110 +9,48 @@
 
 ## 代码演示
 
+<script setup>
+import TagBasic from '../demos/tag/TagBasic.vue'
+import TagBasicSource from '../demos/tag/TagBasic.vue?raw'
+import TagPresetColor from '../demos/tag/TagPresetColor.vue'
+import TagPresetColorSource from '../demos/tag/TagPresetColor.vue?raw'
+import TagCustomColor from '../demos/tag/TagCustomColor.vue'
+import TagCustomColorSource from '../demos/tag/TagCustomColor.vue?raw'
+import TagCheckable from '../demos/tag/TagCheckable.vue'
+import TagCheckableSource from '../demos/tag/TagCheckable.vue?raw'
+</script>
+
 ### 基础用法
 
 基本标签的用法，可以通过添加 closable 变为可关闭标签。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Tag>Tag 1</Tag>
-    <Tag>
-      <a href="https://github.com/ant-design/ant-design">Link</a>
-    </Tag>
-    <Tag closable @close="onClose">Tag 2</Tag>
-    <Tag closable :bordered="false">Tag 3</Tag>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Tag } from 'ant-design-hmfw'
-
-function onClose() {
-  console.log('关闭标签')
-}
-</script>
-```
+<DemoBlock title="基础用法" :source="TagBasicSource">
+  <TagBasic />
+</DemoBlock>
 
 ### 预设颜色
 
 我们添加了多种预设色彩的标签样式，用作不同场景使用。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Tag color="magenta">magenta</Tag>
-    <Tag color="red">red</Tag>
-    <Tag color="volcano">volcano</Tag>
-    <Tag color="orange">orange</Tag>
-    <Tag color="gold">gold</Tag>
-    <Tag color="lime">lime</Tag>
-    <Tag color="green">green</Tag>
-    <Tag color="cyan">cyan</Tag>
-    <Tag color="blue">blue</Tag>
-    <Tag color="geekblue">geekblue</Tag>
-    <Tag color="purple">purple</Tag>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Tag } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="预设颜色" :source="TagPresetColorSource">
+  <TagPresetColor />
+</DemoBlock>
 
 ### 自定义颜色
 
 可以自定义标签颜色。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Tag color="#f50">#f50</Tag>
-    <Tag color="#2db7f5">#2db7f5</Tag>
-    <Tag color="#87d068">#87d068</Tag>
-    <Tag color="#108ee9">#108ee9</Tag>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Tag } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="自定义颜色" :source="TagCustomColorSource">
+  <TagCustomColor />
+</DemoBlock>
 
 ### 可选中标签
 
 可通过 CheckableTag 实现类似 Checkbox 的效果。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px;">
-    <CheckableTag
-      v-for="tag in tags"
-      :key="tag"
-      :checked="selectedTags.includes(tag)"
-      @change="(checked) => handleChange(tag, checked)"
-    >
-      {{ tag }}
-    </CheckableTag>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { CheckableTag } from 'ant-design-hmfw'
-
-const tags = ['Movies', 'Books', 'Music', 'Sports']
-const selectedTags = ref<string[]>(['Books'])
-
-function handleChange(tag: string, checked: boolean) {
-  if (checked) {
-    selectedTags.value = [...selectedTags.value, tag]
-  } else {
-    selectedTags.value = selectedTags.value.filter(t => t !== tag)
-  }
-}
-</script>
-```
+<DemoBlock title="可选中标签" :source="TagCheckableSource">
+  <TagCheckable />
+</DemoBlock>
 
 ## API
 

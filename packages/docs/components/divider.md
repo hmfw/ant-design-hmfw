@@ -2,6 +2,15 @@
 
 区隔内容的分割线。
 
+<script setup>
+import DividerBasic from '../demos/divider/DividerBasic.vue'
+import DividerBasicSource from '../demos/divider/DividerBasic.vue?raw'
+import DividerWithText from '../demos/divider/DividerWithText.vue'
+import DividerWithTextSource from '../demos/divider/DividerWithText.vue?raw'
+import DividerVertical from '../demos/divider/DividerVertical.vue'
+import DividerVerticalSource from '../demos/divider/DividerVertical.vue?raw'
+</script>
+
 ## 何时使用
 
 - 对不同章节的文本段落进行分割
@@ -13,65 +22,25 @@
 
 默认为水平分割线，可在中间加入文字。
 
-```vue
-<template>
-  <div>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <Divider />
-    <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    <Divider dashed />
-    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Divider } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="水平分割线" :source="DividerBasicSource">
+  <DividerBasic />
+</DemoBlock>
 
 ### 带文字的分割线
 
 通过 `orientation` 属性设置文字位置。
 
-```vue
-<template>
-  <div>
-    <p>Lorem ipsum dolor sit amet.</p>
-    <Divider>居中文字</Divider>
-    <p>Lorem ipsum dolor sit amet.</p>
-    <Divider orientation="left">左对齐</Divider>
-    <p>Lorem ipsum dolor sit amet.</p>
-    <Divider orientation="right">右对齐</Divider>
-    <p>Lorem ipsum dolor sit amet.</p>
-    <Divider orientation="left" plain>朴素文字</Divider>
-    <p>Lorem ipsum dolor sit amet.</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Divider } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="带文字的分割线" :source="DividerWithTextSource">
+  <DividerWithText />
+</DemoBlock>
 
 ### 垂直分割线
 
 使用 `type="vertical"` 设置为行内的垂直分割线。
 
-```vue
-<template>
-  <div>
-    <a href="#">链接一</a>
-    <Divider type="vertical" />
-    <a href="#">链接二</a>
-    <Divider type="vertical" />
-    <a href="#">链接三</a>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Divider } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="垂直分割线" :source="DividerVerticalSource">
+  <DividerVertical />
+</DemoBlock>
 
 ## API
 

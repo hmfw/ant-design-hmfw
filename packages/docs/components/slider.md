@@ -2,6 +2,15 @@
 
 滑动型输入器，展示当前值和可选范围。
 
+<script setup>
+import SliderBasic from '../demos/slider/SliderBasic.vue'
+import SliderBasicSource from '../demos/slider/SliderBasic.vue?raw'
+import SliderRange from '../demos/slider/SliderRange.vue'
+import SliderRangeSource from '../demos/slider/SliderRange.vue?raw'
+import SliderMarks from '../demos/slider/SliderMarks.vue'
+import SliderMarksSource from '../demos/slider/SliderMarks.vue?raw'
+</script>
+
 ## 何时使用
 
 - 当用户需要在数值区间/自定义区间内进行选择时，可为连续或离散值。
@@ -14,92 +23,25 @@
 
 基本滑动条。当 `range` 为 `true` 时，渲染为双滑块。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px;">
-    <div>
-      <p style="margin-bottom: 8px;">基础滑块：{{ value1 }}</p>
-      <Slider v-model:value="value1" />
-    </div>
-    <div>
-      <p style="margin-bottom: 8px;">禁用状态：</p>
-      <Slider v-model:value="value2" disabled />
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Slider } from 'ant-design-hmfw'
-
-const value1 = ref(30)
-const value2 = ref(50)
-</script>
-```
+<DemoBlock title="基础用法" :source="SliderBasicSource">
+  <SliderBasic />
+</DemoBlock>
 
 ### 范围选择
 
 通过 `range` 属性开启范围选择。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px;">
-    <div>
-      <p style="margin-bottom: 8px;">范围选择：{{ rangeValue }}</p>
-      <Slider v-model:value="rangeValue" range />
-    </div>
-    <div>
-      <p style="margin-bottom: 8px;">带步长的范围选择：{{ rangeValue2 }}</p>
-      <Slider v-model:value="rangeValue2" range :step="10" />
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Slider } from 'ant-design-hmfw'
-
-const rangeValue = ref<[number, number]>([20, 70])
-const rangeValue2 = ref<[number, number]>([20, 60])
-</script>
-```
+<DemoBlock title="范围选择" :source="SliderRangeSource">
+  <SliderRange />
+</DemoBlock>
 
 ### 刻度标记
 
 使用 `marks` 属性标注分段式滑块，使用 `step="null"` 时，Slider 的可选值仅有 marks 标出来的部分。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 40px; padding: 0 16px;">
-    <div>
-      <p style="margin-bottom: 8px;">带刻度标记：{{ value1 }}</p>
-      <Slider v-model:value="value1" :marks="marks" />
-    </div>
-    <div>
-      <p style="margin-bottom: 8px;">只能选择刻度点：{{ value2 }}</p>
-      <Slider v-model:value="value2" :marks="marks" :step="null" />
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Slider } from 'ant-design-hmfw'
-
-const value1 = ref(37)
-const value2 = ref(0)
-
-const marks = {
-  0: '0°C',
-  26: '26°C',
-  37: '37°C',
-  100: {
-    label: '100°C',
-    style: { color: '#f50' },
-  },
-}
-</script>
-```
+<DemoBlock title="刻度标记" :source="SliderMarksSource">
+  <SliderMarks />
+</DemoBlock>
 
 ## API
 

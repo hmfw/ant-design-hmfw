@@ -2,6 +2,15 @@
 
 单选框。
 
+<script setup>
+import RadioBasic from '../demos/radio/RadioBasic.vue'
+import RadioBasicSource from '../demos/radio/RadioBasic.vue?raw'
+import RadioGroup from '../demos/radio/RadioGroup.vue'
+import RadioGroupSource from '../demos/radio/RadioGroup.vue?raw'
+import RadioButton from '../demos/radio/RadioButton.vue'
+import RadioButtonSource from '../demos/radio/RadioButton.vue?raw'
+</script>
+
 ## 何时使用
 
 - 用于在多个备选项中选中单个状态。
@@ -13,114 +22,25 @@
 
 最简单的用法。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 8px;">
-    <Radio v-model:checked="checked">单选框</Radio>
-    <Radio v-model:checked="checked2" disabled>禁用单选框</Radio>
-    <Radio v-model:checked="checked3" disabled>禁用选中</Radio>
-    <p>checked: {{ checked }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Radio } from 'ant-design-hmfw'
-
-const checked = ref(false)
-const checked2 = ref(false)
-const checked3 = ref(true)
-</script>
-```
+<DemoBlock title="基础用法" :source="RadioBasicSource">
+  <RadioBasic />
+</DemoBlock>
 
 ### RadioGroup
 
 一组互斥的 Radio 配合使用。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <div>
-      <p style="margin-bottom: 8px;">水平排列：</p>
-      <RadioGroup v-model:value="value1" :options="options" />
-    </div>
-    <div>
-      <p style="margin-bottom: 8px;">垂直排列：</p>
-      <RadioGroup v-model:value="value2" :options="options" direction="vertical" />
-    </div>
-    <p>value1: {{ value1 }}，value2: {{ value2 }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { RadioGroup } from 'ant-design-hmfw'
-
-const value1 = ref('a')
-const value2 = ref('b')
-
-const options = [
-  { label: '选项 A', value: 'a' },
-  { label: '选项 B', value: 'b' },
-  { label: '选项 C', value: 'c' },
-  { label: '禁用选项', value: 'd', disabled: true },
-]
-</script>
-```
+<DemoBlock title="RadioGroup" :source="RadioGroupSource">
+  <RadioGroup />
+</DemoBlock>
 
 ### 按钮样式
 
 按钮样式的单选组合。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <div>
-      <p style="margin-bottom: 8px;">outline 样式（默认）：</p>
-      <RadioGroup
-        v-model:value="size"
-        :options="sizeOptions"
-        option-type="button"
-        button-style="outline"
-      />
-    </div>
-    <div>
-      <p style="margin-bottom: 8px;">solid 样式：</p>
-      <RadioGroup
-        v-model:value="size2"
-        :options="sizeOptions"
-        option-type="button"
-        button-style="solid"
-      />
-    </div>
-    <div>
-      <p style="margin-bottom: 8px;">大尺寸：</p>
-      <RadioGroup
-        v-model:value="size3"
-        :options="sizeOptions"
-        option-type="button"
-        size="large"
-      />
-    </div>
-    <p>选中：{{ size }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { RadioGroup } from 'ant-design-hmfw'
-
-const size = ref('middle')
-const size2 = ref('middle')
-const size3 = ref('large')
-
-const sizeOptions = [
-  { label: '大', value: 'large' },
-  { label: '中', value: 'middle' },
-  { label: '小', value: 'small' },
-]
-</script>
-```
+<DemoBlock title="按钮样式" :source="RadioButtonSource">
+  <RadioButton />
+</DemoBlock>
 
 ## API
 

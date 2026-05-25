@@ -2,6 +2,17 @@
 
 向下弹出的列表。
 
+<script setup>
+import DropdownBasic from '../demos/dropdown/DropdownBasic.vue'
+import DropdownBasicSource from '../demos/dropdown/DropdownBasic.vue?raw'
+import DropdownTrigger from '../demos/dropdown/DropdownTrigger.vue'
+import DropdownTriggerSource from '../demos/dropdown/DropdownTrigger.vue?raw'
+import DropdownDanger from '../demos/dropdown/DropdownDanger.vue'
+import DropdownDangerSource from '../demos/dropdown/DropdownDanger.vue?raw'
+import DropdownPlacement from '../demos/dropdown/DropdownPlacement.vue'
+import DropdownPlacementSource from '../demos/dropdown/DropdownPlacement.vue?raw'
+</script>
+
 ## 何时使用
 
 - 当页面上的操作命令过多时，用此组件可以收纳操作元素
@@ -13,122 +24,33 @@
 
 最简单的下拉菜单。
 
-```vue
-<template>
-  <Dropdown :items="items" @click="onMenuClick">
-    <Button>
-      下拉菜单
-      <Icon type="down" />
-    </Button>
-  </Dropdown>
-</template>
-
-<script setup lang="ts">
-import { Dropdown, Button, Icon } from 'ant-design-hmfw'
-
-const items = [
-  { key: '1', label: '菜单项一' },
-  { key: '2', label: '菜单项二' },
-  { key: '3', label: '菜单项三' },
-]
-
-const onMenuClick = ({ key }: { key: string }) => {
-  console.log('点击了:', key)
-}
-</script>
-```
+<DemoBlock title="基础用法" :source="DropdownBasicSource">
+  <DropdownBasic />
+</DemoBlock>
 
 ### 触发方式
 
 通过 `trigger` 属性设置触发方式，支持 `hover` 和 `click`。
 
-```vue
-<template>
-  <Space>
-    <Dropdown :items="items" trigger="hover">
-      <Button>悬停触发</Button>
-    </Dropdown>
-    <Dropdown :items="items" trigger="click">
-      <Button>点击触发</Button>
-    </Dropdown>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Dropdown, Button, Space } from 'ant-design-hmfw'
-
-const items = [
-  { key: '1', label: '菜单项一' },
-  { key: '2', label: '菜单项二' },
-  { key: '3', label: '菜单项三' },
-]
-</script>
-```
+<DemoBlock title="触发方式" :source="DropdownTriggerSource">
+  <DropdownTrigger />
+</DemoBlock>
 
 ### 危险选项与分割线
 
 通过 `danger` 属性标记危险操作，通过 `type: 'divider'` 添加分割线。
 
-```vue
-<template>
-  <Dropdown :items="items" trigger="click" @click="onMenuClick">
-    <Button>操作菜单</Button>
-  </Dropdown>
-</template>
-
-<script setup lang="ts">
-import { Dropdown, Button } from 'ant-design-hmfw'
-
-const items = [
-  { key: 'edit', label: '编辑' },
-  { key: 'copy', label: '复制' },
-  { type: 'divider' },
-  { key: 'delete', label: '删除', danger: true },
-]
-
-const onMenuClick = ({ key }: { key: string }) => {
-  console.log('点击了:', key)
-}
-</script>
-```
+<DemoBlock title="危险选项与分割线" :source="DropdownDangerSource">
+  <DropdownDanger />
+</DemoBlock>
 
 ### 弹出位置
 
 通过 `placement` 属性设置弹出位置。
 
-```vue
-<template>
-  <Space wrap>
-    <Dropdown :items="items" placement="bottomLeft">
-      <Button>左下</Button>
-    </Dropdown>
-    <Dropdown :items="items" placement="bottomCenter">
-      <Button>居中下</Button>
-    </Dropdown>
-    <Dropdown :items="items" placement="bottomRight">
-      <Button>右下</Button>
-    </Dropdown>
-    <Dropdown :items="items" placement="topLeft">
-      <Button>左上</Button>
-    </Dropdown>
-    <Dropdown :items="items" placement="topCenter">
-      <Button>居中上</Button>
-    </Dropdown>
-    <Dropdown :items="items" placement="topRight">
-      <Button>右上</Button>
-    </Dropdown>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Dropdown, Button, Space } from 'ant-design-hmfw'
-
-const items = [
-  { key: '1', label: '菜单项一' },
-  { key: '2', label: '菜单项二' },
-]
-</script>
-```
+<DemoBlock title="弹出位置" :source="DropdownPlacementSource">
+  <DropdownPlacement />
+</DemoBlock>
 
 ## API
 

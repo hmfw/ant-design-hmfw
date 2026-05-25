@@ -8,59 +8,38 @@
 
 ## 代码演示
 
+<script setup>
+import QRCodeBasic from '../demos/qrcode/QRCodeBasic.vue'
+import QRCodeBasicSource from '../demos/qrcode/QRCodeBasic.vue?raw'
+import QRCodeCustomColor from '../demos/qrcode/QRCodeCustomColor.vue'
+import QRCodeCustomColorSource from '../demos/qrcode/QRCodeCustomColor.vue?raw'
+import QRCodeStatus from '../demos/qrcode/QRCodeStatus.vue'
+import QRCodeStatusSource from '../demos/qrcode/QRCodeStatus.vue?raw'
+</script>
+
 ### 基础用法
 
 基本使用方法。
 
-```vue
-<template>
-  <QRCode value="https://ant.design" />
-</template>
-
-<script setup lang="ts">
-import { QRCode } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础用法" :source="QRCodeBasicSource">
+  <QRCodeBasic />
+</DemoBlock>
 
 ### 自定义颜色
 
 自定义二维码颜色。
 
-```vue
-<template>
-  <div style="display: flex; gap: 16px;">
-    <QRCode value="https://ant.design" color="#1677ff" />
-    <QRCode value="https://ant.design" color="#52c41a" bg-color="#f0f0f0" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { QRCode } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="自定义颜色" :source="QRCodeCustomColorSource">
+  <QRCodeCustomColor />
+</DemoBlock>
 
 ### 状态展示
 
 二维码的不同状态。
 
-```vue
-<template>
-  <div style="display: flex; gap: 16px;">
-    <QRCode value="https://ant.design" status="active" />
-    <QRCode value="https://ant.design" status="expired" @refresh="onRefresh" />
-    <QRCode value="https://ant.design" status="loading" />
-    <QRCode value="https://ant.design" status="scanned" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { QRCode } from 'ant-design-hmfw'
-
-function onRefresh() {
-  console.log('刷新二维码')
-}
-</script>
-```
+<DemoBlock title="状态展示" :source="QRCodeStatusSource">
+  <QRCodeStatus />
+</DemoBlock>
 
 ## API
 

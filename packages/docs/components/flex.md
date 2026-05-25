@@ -2,6 +2,17 @@
 
 弹性布局。
 
+<script setup>
+import FlexBasic from '../demos/flex/FlexBasic.vue'
+import FlexBasicSource from '../demos/flex/FlexBasic.vue?raw'
+import FlexVertical from '../demos/flex/FlexVertical.vue'
+import FlexVerticalSource from '../demos/flex/FlexVertical.vue?raw'
+import FlexGap from '../demos/flex/FlexGap.vue'
+import FlexGapSource from '../demos/flex/FlexGap.vue?raw'
+import FlexWrap from '../demos/flex/FlexWrap.vue'
+import FlexWrapSource from '../demos/flex/FlexWrap.vue?raw'
+</script>
+
 ## 何时使用
 
 - 需要在水平或垂直方向上排列元素时
@@ -14,115 +25,33 @@
 
 默认水平排列，通过 `justify` 和 `align` 控制对齐。
 
-```vue
-<template>
-  <Space direction="vertical" style="width: 100%">
-    <Flex justify="flex-start" align="center" gap="small">
-      <div style="background: #1677ff; color: #fff; padding: 8px 16px;">item 1</div>
-      <div style="background: #1677ff; color: #fff; padding: 8px 16px;">item 2</div>
-      <div style="background: #1677ff; color: #fff; padding: 8px 16px;">item 3</div>
-    </Flex>
-    <Flex justify="center" align="center" gap="small">
-      <div style="background: #52c41a; color: #fff; padding: 8px 16px;">item 1</div>
-      <div style="background: #52c41a; color: #fff; padding: 8px 16px;">item 2</div>
-      <div style="background: #52c41a; color: #fff; padding: 8px 16px;">item 3</div>
-    </Flex>
-    <Flex justify="flex-end" align="center" gap="small">
-      <div style="background: #faad14; color: #fff; padding: 8px 16px;">item 1</div>
-      <div style="background: #faad14; color: #fff; padding: 8px 16px;">item 2</div>
-      <div style="background: #faad14; color: #fff; padding: 8px 16px;">item 3</div>
-    </Flex>
-    <Flex justify="space-between" align="center">
-      <div style="background: #ff4d4f; color: #fff; padding: 8px 16px;">item 1</div>
-      <div style="background: #ff4d4f; color: #fff; padding: 8px 16px;">item 2</div>
-      <div style="background: #ff4d4f; color: #fff; padding: 8px 16px;">item 3</div>
-    </Flex>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Flex, Space } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础水平排列" :source="FlexBasicSource">
+  <FlexBasic />
+</DemoBlock>
 
 ### 垂直排列
 
 通过 `vertical` 属性设置垂直方向排列。
 
-```vue
-<template>
-  <Flex vertical gap="small" style="width: 200px">
-    <div style="background: #1677ff; color: #fff; padding: 8px 16px; text-align: center;">item 1</div>
-    <div style="background: #1677ff; color: #fff; padding: 8px 16px; text-align: center;">item 2</div>
-    <div style="background: #1677ff; color: #fff; padding: 8px 16px; text-align: center;">item 3</div>
-  </Flex>
-</template>
-
-<script setup lang="ts">
-import { Flex } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="垂直排列" :source="FlexVerticalSource">
+  <FlexVertical />
+</DemoBlock>
 
 ### 间距设置
 
 通过 `gap` 属性设置元素间距，支持预设值和数字。
 
-```vue
-<template>
-  <Space direction="vertical" style="width: 100%">
-    <div>small 间距</div>
-    <Flex gap="small">
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-    </Flex>
-    <div>middle 间距</div>
-    <Flex gap="middle">
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-    </Flex>
-    <div>large 间距</div>
-    <Flex gap="large">
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-    </Flex>
-    <div>自定义 32px 间距</div>
-    <Flex :gap="32">
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-      <div style="background: #e6f4ff; border: 1px solid #91caff; padding: 8px 16px;">item</div>
-    </Flex>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Flex, Space } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="间距设置" :source="FlexGapSource">
+  <FlexGap />
+</DemoBlock>
 
 ### 自动换行
 
 通过 `wrap` 属性允许子元素换行。
 
-```vue
-<template>
-  <Flex wrap gap="small" style="max-width: 400px">
-    <div
-      v-for="i in 12"
-      :key="i"
-      style="background: #1677ff; color: #fff; padding: 8px 16px; border-radius: 4px;"
-    >
-      item {{ i }}
-    </div>
-  </Flex>
-</template>
-
-<script setup lang="ts">
-import { Flex } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="自动换行" :source="FlexWrapSource">
+  <FlexWrap />
+</DemoBlock>
 
 ## API
 

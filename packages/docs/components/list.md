@@ -8,108 +8,38 @@
 
 ## 代码演示
 
+<script setup>
+import ListBasic from '../demos/list/ListBasic.vue'
+import ListBasicSource from '../demos/list/ListBasic.vue?raw'
+import ListActions from '../demos/list/ListActions.vue'
+import ListActionsSource from '../demos/list/ListActions.vue?raw'
+import ListAvatar from '../demos/list/ListAvatar.vue'
+import ListAvatarSource from '../demos/list/ListAvatar.vue?raw'
+</script>
+
 ### 基础用法
 
 基础列表。
 
-```vue
-<template>
-  <List
-    :data-source="data"
-    bordered
-  >
-    <template #renderItem="{ item }">
-      <ListItem>{{ item }}</ListItem>
-    </template>
-  </List>
-</template>
-
-<script setup lang="ts">
-import { List, ListItem } from 'ant-design-hmfw'
-
-const data = [
-  'Racing car sprays burning fuel into crowd.',
-  'Japanese princess to wed commoner.',
-  'Australian walks 100km after outback crash.',
-  'Man charged over missing wedding girl.',
-]
-</script>
-```
+<DemoBlock title="基础用法" :source="ListBasicSource">
+  <ListBasic />
+</DemoBlock>
 
 ### 带操作
 
 可以配置额外操作。
 
-```vue
-<template>
-  <List :data-source="data" bordered>
-    <template #renderItem="{ item }">
-      <ListItem>
-        <template #actions>
-          <a @click="onEdit(item)">编辑</a>
-          <a @click="onDelete(item)">删除</a>
-        </template>
-        {{ item.title }}
-      </ListItem>
-    </template>
-  </List>
-</template>
-
-<script setup lang="ts">
-import { List, ListItem } from 'ant-design-hmfw'
-
-const data = [
-  { title: '列表项 1' },
-  { title: '列表项 2' },
-  { title: '列表项 3' },
-]
-
-function onEdit(item: any) {
-  console.log('编辑', item)
-}
-
-function onDelete(item: any) {
-  console.log('删除', item)
-}
-</script>
-```
+<DemoBlock title="带操作" :source="ListActionsSource">
+  <ListActions />
+</DemoBlock>
 
 ### 带头像
 
 带头像的列表。
 
-```vue
-<template>
-  <List :data-source="data">
-    <template #renderItem="{ item }">
-      <ListItem>
-        <ListItemMeta
-          :avatar="item.avatar"
-          :title="item.title"
-          :description="item.description"
-        />
-      </ListItem>
-    </template>
-  </List>
-</template>
-
-<script setup lang="ts">
-import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
-
-const data = [
-  {
-    title: '用户名称 1',
-    description: '这是一段描述信息',
-    avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=1',
-  },
-  {
-    title: '用户名称 2',
-    description: '这是一段描述信息',
-    avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=2',
-  },
-]
-</script>
-```
+<DemoBlock title="带头像" :source="ListAvatarSource">
+  <ListAvatar />
+</DemoBlock>
 
 ## API
 

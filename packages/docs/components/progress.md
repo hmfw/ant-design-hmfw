@@ -10,89 +10,48 @@
 
 ## 代码演示
 
+<script setup>
+import ProgressBasic from '../demos/progress/ProgressBasic.vue'
+import ProgressBasicSource from '../demos/progress/ProgressBasic.vue?raw'
+import ProgressCircle from '../demos/progress/ProgressCircle.vue'
+import ProgressCircleSource from '../demos/progress/ProgressCircle.vue?raw'
+import ProgressDashboard from '../demos/progress/ProgressDashboard.vue'
+import ProgressDashboardSource from '../demos/progress/ProgressDashboard.vue?raw'
+import ProgressDynamic from '../demos/progress/ProgressDynamic.vue'
+import ProgressDynamicSource from '../demos/progress/ProgressDynamic.vue?raw'
+</script>
+
 ### 进度条
 
 标准的进度条。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <Progress :percent="30" />
-    <Progress :percent="50" status="active" />
-    <Progress :percent="70" status="exception" />
-    <Progress :percent="100" />
-    <Progress :percent="50" :show-info="false" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Progress } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="进度条" :source="ProgressBasicSource">
+  <ProgressBasic />
+</DemoBlock>
 
 ### 圆形进度
 
 圆形进度条。
 
-```vue
-<template>
-  <div style="display: flex; gap: 16px;">
-    <Progress type="circle" :percent="75" />
-    <Progress type="circle" :percent="70" status="exception" />
-    <Progress type="circle" :percent="100" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Progress } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="圆形进度" :source="ProgressCircleSource">
+  <ProgressCircle />
+</DemoBlock>
 
 ### 仪表盘
 
 仪表盘样式的进度条。
 
-```vue
-<template>
-  <div style="display: flex; gap: 16px;">
-    <Progress type="dashboard" :percent="75" />
-    <Progress type="dashboard" :percent="75" :gap-degree="30" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Progress } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="仪表盘" :source="ProgressDashboardSource">
+  <ProgressDashboard />
+</DemoBlock>
 
 ### 动态展示
 
 会动的进度条才是好进度条。
 
-```vue
-<template>
-  <Progress :percent="percent" />
-  <div style="display: flex; gap: 8px; margin-top: 12px;">
-    <button @click="decline">-</button>
-    <button @click="increase">+</button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Progress } from 'ant-design-hmfw'
-
-const percent = ref(0)
-
-function increase() {
-  percent.value = Math.min(percent.value + 10, 100)
-}
-
-function decline() {
-  percent.value = Math.max(percent.value - 10, 0)
-}
-</script>
-```
+<DemoBlock title="动态展示" :source="ProgressDynamicSource">
+  <ProgressDynamic />
+</DemoBlock>
 
 ## API
 

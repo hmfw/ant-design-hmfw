@@ -9,64 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import SegmentedBasic from '../demos/segmented/SegmentedBasic.vue'
+import SegmentedBasicSource from '../demos/segmented/SegmentedBasic.vue?raw'
+import SegmentedBlock from '../demos/segmented/SegmentedBlock.vue'
+import SegmentedBlockSource from '../demos/segmented/SegmentedBlock.vue?raw'
+import SegmentedDisabled from '../demos/segmented/SegmentedDisabled.vue'
+import SegmentedDisabledSource from '../demos/segmented/SegmentedDisabled.vue?raw'
+</script>
+
 ### 基础用法
 
 基本分段控制器。
 
-```vue
-<template>
-  <Segmented v-model:value="value" :options="options" />
-  <p>当前选中：{{ value }}</p>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
-
-const value = ref('Daily')
-const options = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']
-</script>
-```
+<DemoBlock title="基础用法" :source="SegmentedBasicSource">
+  <SegmentedBasic />
+</DemoBlock>
 
 ### Block 模式
 
 block 属性使其适合父元素宽度。
 
-```vue
-<template>
-  <Segmented v-model:value="value" :options="options" block />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
-
-const value = ref('Map')
-const options = ['Map', 'Transit', 'Satellite']
-</script>
-```
+<DemoBlock title="Block 模式" :source="SegmentedBlockSource">
+  <SegmentedBlock />
+</DemoBlock>
 
 ### 禁用
 
 禁用某些选项。
 
-```vue
-<template>
-  <Segmented v-model:value="value" :options="options" />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
-
-const value = ref('Daily')
-const options = [
-  { value: 'Daily', label: '每日' },
-  { value: 'Weekly', label: '每周', disabled: true },
-  { value: 'Monthly', label: '每月' },
-]
-</script>
-```
+<DemoBlock title="禁用" :source="SegmentedDisabledSource">
+  <SegmentedDisabled />
+</DemoBlock>
 
 ## API
 

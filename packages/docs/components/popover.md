@@ -9,76 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import PopoverBasic from '../demos/popover/PopoverBasic.vue'
+import PopoverBasicSource from '../demos/popover/PopoverBasic.vue?raw'
+import PopoverTrigger from '../demos/popover/PopoverTrigger.vue'
+import PopoverTriggerSource from '../demos/popover/PopoverTrigger.vue?raw'
+import PopoverPlacement from '../demos/popover/PopoverPlacement.vue'
+import PopoverPlacementSource from '../demos/popover/PopoverPlacement.vue?raw'
+</script>
+
 ### 基础用法
 
 最简单的用法，鼠标移入时显示。
 
-```vue
-<template>
-  <Popover title="标题" content="这是气泡卡片的内容">
-    <button>鼠标移入</button>
-  </Popover>
-</template>
-
-<script setup lang="ts">
-import { Popover } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础用法" :source="PopoverBasicSource">
+  <PopoverBasic />
+</DemoBlock>
 
 ### 触发方式
 
 鼠标移入、聚集、点击。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px;">
-    <Popover title="悬停触发" content="鼠标悬停时显示" trigger="hover">
-      <button>悬停</button>
-    </Popover>
-    <Popover title="点击触发" content="点击时显示" trigger="click">
-      <button>点击</button>
-    </Popover>
-    <Popover title="聚焦触发" content="聚焦时显示" trigger="focus">
-      <button>聚焦</button>
-    </Popover>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Popover } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="触发方式" :source="PopoverTriggerSource">
+  <PopoverTrigger />
+</DemoBlock>
 
 ### 十二个方向
 
 位置有十二个方向。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Popover
-      v-for="placement in placements"
-      :key="placement"
-      :placement="placement"
-      title="标题"
-      content="内容"
-    >
-      <button>{{ placement }}</button>
-    </Popover>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Popover } from 'ant-design-hmfw'
-
-const placements = [
-  'topLeft', 'top', 'topRight',
-  'leftTop', 'left', 'leftBottom',
-  'rightTop', 'right', 'rightBottom',
-  'bottomLeft', 'bottom', 'bottomRight',
-]
-</script>
-```
+<DemoBlock title="十二个方向" :source="PopoverPlacementSource">
+  <PopoverPlacement />
+</DemoBlock>
 
 ## API
 

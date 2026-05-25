@@ -8,73 +8,38 @@
 
 ## 代码演示
 
+<script setup>
+import DescriptionsBasic from '../demos/descriptions/DescriptionsBasic.vue'
+import DescriptionsBasicSource from '../demos/descriptions/DescriptionsBasic.vue?raw'
+import DescriptionsBordered from '../demos/descriptions/DescriptionsBordered.vue'
+import DescriptionsBorderedSource from '../demos/descriptions/DescriptionsBordered.vue?raw'
+import DescriptionsVertical from '../demos/descriptions/DescriptionsVertical.vue'
+import DescriptionsVerticalSource from '../demos/descriptions/DescriptionsVertical.vue?raw'
+</script>
+
 ### 基础用法
 
 简单的展示。
 
-```vue
-<template>
-  <Descriptions title="用户信息" :items="items" />
-</template>
-
-<script setup lang="ts">
-import { Descriptions } from 'ant-design-hmfw'
-
-const items = [
-  { label: '用户名', children: 'Zhou Maomao' },
-  { label: '手机号', children: '1810000000' },
-  { label: '居住地', children: '杭州市' },
-  { label: '备注', children: '学校' },
-  { label: '联系地址', children: '浙江省杭州市西湖区古翠路' },
-]
-</script>
-```
+<DemoBlock title="基础用法" :source="DescriptionsBasicSource">
+  <DescriptionsBasic />
+</DemoBlock>
 
 ### 带边框
 
 带边框和背景颜色列表。
 
-```vue
-<template>
-  <Descriptions title="用户信息" bordered :items="items" />
-</template>
-
-<script setup lang="ts">
-import { Descriptions } from 'ant-design-hmfw'
-
-const items = [
-  { label: '产品', children: 'Cloud Database' },
-  { label: '计费模式', children: '按量付费' },
-  { label: '自动续费', children: '否' },
-  { label: '订单时间', children: '2018-04-24 18:00:00' },
-  { label: '使用时间', children: '2019-04-24 18:00:00', span: 2 },
-  { label: '状态', children: '运行中' },
-  { label: '协商速度', children: '100Mbps' },
-  { label: '配置信息', children: 'Data disk type: MongoDB' },
-]
-</script>
-```
+<DemoBlock title="带边框" :source="DescriptionsBorderedSource">
+  <DescriptionsBordered />
+</DemoBlock>
 
 ### 垂直布局
 
 垂直的列表。
 
-```vue
-<template>
-  <Descriptions title="用户信息" layout="vertical" :items="items" />
-</template>
-
-<script setup lang="ts">
-import { Descriptions } from 'ant-design-hmfw'
-
-const items = [
-  { label: '用户名', children: 'Zhou Maomao' },
-  { label: '手机号', children: '1810000000' },
-  { label: '居住地', children: '杭州市' },
-  { label: '联系地址', children: '浙江省杭州市西湖区古翠路' },
-]
-</script>
-```
+<DemoBlock title="垂直布局" :source="DescriptionsVerticalSource">
+  <DescriptionsVertical />
+</DemoBlock>
 
 ## API
 

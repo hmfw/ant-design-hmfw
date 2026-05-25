@@ -2,6 +2,17 @@
 
 级联选择框。
 
+<script setup>
+import CascaderBasic from '../demos/cascader/CascaderBasic.vue'
+import CascaderBasicSource from '../demos/cascader/CascaderBasic.vue?raw'
+import CascaderHover from '../demos/cascader/CascaderHover.vue'
+import CascaderHoverSource from '../demos/cascader/CascaderHover.vue?raw'
+import CascaderSearch from '../demos/cascader/CascaderSearch.vue'
+import CascaderSearchSource from '../demos/cascader/CascaderSearch.vue?raw'
+import CascaderChangeOnSelect from '../demos/cascader/CascaderChangeOnSelect.vue'
+import CascaderChangeOnSelectSource from '../demos/cascader/CascaderChangeOnSelect.vue?raw'
+</script>
+
 ## 何时使用
 
 - 需要从一组相关联的数据集合进行选择，例如省市区，公司层级，事物分类等。
@@ -14,229 +25,33 @@
 
 省市区级联。
 
-```vue
-<template>
-  <Cascader
-    v-model:value="value"
-    :options="options"
-    placeholder="请选择省市区"
-    style="width: 300px;"
-  />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Cascader } from 'ant-design-hmfw'
-
-const value = ref<string[]>([])
-
-const options = [
-  {
-    value: 'zhejiang',
-    label: '浙江',
-    children: [
-      {
-        value: 'hangzhou',
-        label: '杭州',
-        children: [
-          { value: 'xihu', label: '西湖区' },
-          { value: 'yuhang', label: '余杭区' },
-        ],
-      },
-      {
-        value: 'ningbo',
-        label: '宁波',
-        children: [
-          { value: 'haishu', label: '海曙区' },
-          { value: 'jiangbei', label: '江北区' },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: '江苏',
-    children: [
-      {
-        value: 'nanjing',
-        label: '南京',
-        children: [
-          { value: 'xuanwu', label: '玄武区' },
-          { value: 'qinhuai', label: '秦淮区' },
-        ],
-      },
-    ],
-  },
-]
-</script>
-```
+<DemoBlock title="基础用法" :source="CascaderBasicSource">
+  <CascaderBasic />
+</DemoBlock>
 
 ### Hover 展开
 
 通过 `expandTrigger` 设置为 `hover` 时，鼠标移入即展开下级菜单。
 
-```vue
-<template>
-  <Cascader
-    v-model:value="value"
-    :options="options"
-    expand-trigger="hover"
-    placeholder="鼠标悬停展开"
-    style="width: 300px;"
-  />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Cascader } from 'ant-design-hmfw'
-
-const value = ref<string[]>([])
-
-const options = [
-  {
-    value: 'frontend',
-    label: '前端',
-    children: [
-      {
-        value: 'framework',
-        label: '框架',
-        children: [
-          { value: 'vue', label: 'Vue' },
-          { value: 'react', label: 'React' },
-        ],
-      },
-      {
-        value: 'language',
-        label: '语言',
-        children: [
-          { value: 'ts', label: 'TypeScript' },
-          { value: 'js', label: 'JavaScript' },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'backend',
-    label: '后端',
-    children: [
-      {
-        value: 'node',
-        label: 'Node.js',
-        children: [
-          { value: 'express', label: 'Express' },
-          { value: 'koa', label: 'Koa' },
-        ],
-      },
-    ],
-  },
-]
-</script>
-```
+<DemoBlock title="Hover 展开" :source="CascaderHoverSource">
+  <CascaderHover />
+</DemoBlock>
 
 ### 可搜索
 
 可以直接搜索选项并选择。
 
-```vue
-<template>
-  <Cascader
-    v-model:value="value"
-    :options="options"
-    :show-search="true"
-    placeholder="请搜索并选择"
-    style="width: 300px;"
-    @search="handleSearch"
-  />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Cascader } from 'ant-design-hmfw'
-
-const value = ref<string[]>([])
-
-const options = [
-  {
-    value: 'zhejiang',
-    label: '浙江',
-    children: [
-      {
-        value: 'hangzhou',
-        label: '杭州',
-        children: [
-          { value: 'xihu', label: '西湖区' },
-          { value: 'yuhang', label: '余杭区' },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: '江苏',
-    children: [
-      {
-        value: 'nanjing',
-        label: '南京',
-        children: [
-          { value: 'xuanwu', label: '玄武区' },
-        ],
-      },
-    ],
-  },
-]
-
-const handleSearch = (searchText: string) => {
-  console.log('搜索：', searchText)
-}
-</script>
-```
+<DemoBlock title="可搜索" :source="CascaderSearchSource">
+  <CascaderSearch />
+</DemoBlock>
 
 ### 选择即改变
 
 当 `changeOnSelect` 为 `true` 时，点选每级菜单选项值都会发生变化。
 
-```vue
-<template>
-  <div>
-    <Cascader
-      v-model:value="value"
-      :options="options"
-      :change-on-select="true"
-      placeholder="选择即改变"
-      style="width: 300px;"
-      @change="handleChange"
-    />
-    <p style="margin-top: 8px;">当前值：{{ value }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Cascader } from 'ant-design-hmfw'
-
-const value = ref<string[]>([])
-
-const options = [
-  {
-    value: 'zhejiang',
-    label: '浙江',
-    children: [
-      {
-        value: 'hangzhou',
-        label: '杭州',
-        children: [
-          { value: 'xihu', label: '西湖区' },
-        ],
-      },
-    ],
-  },
-]
-
-const handleChange = (val: string[]) => {
-  console.log('选中值：', val)
-}
-</script>
-```
+<DemoBlock title="选择即改变" :source="CascaderChangeOnSelectSource">
+  <CascaderChangeOnSelect />
+</DemoBlock>
 
 ## API
 

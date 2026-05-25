@@ -2,6 +2,17 @@
 
 输入或选择日期的控件。
 
+<script setup>
+import DatePickerBasic from '../demos/date-picker/DatePickerBasic.vue'
+import DatePickerBasicSource from '../demos/date-picker/DatePickerBasic.vue?raw'
+import DatePickerPicker from '../demos/date-picker/DatePickerPicker.vue'
+import DatePickerPickerSource from '../demos/date-picker/DatePickerPicker.vue?raw'
+import DatePickerDisabledDate from '../demos/date-picker/DatePickerDisabledDate.vue'
+import DatePickerDisabledDateSource from '../demos/date-picker/DatePickerDisabledDate.vue?raw'
+import DatePickerShowTime from '../demos/date-picker/DatePickerShowTime.vue'
+import DatePickerShowTimeSource from '../demos/date-picker/DatePickerShowTime.vue?raw'
+</script>
+
 ## 何时使用
 
 当用户需要输入一个日期，可以点击标准输入框，弹出日期面板进行选择。
@@ -12,136 +23,33 @@
 
 最简单的用法，在浮层中可以选择或者输入日期。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
-    <DatePicker
-      v-model:value="date"
-      placeholder="请选择日期"
-      @change="handleChange"
-    />
-    <p>选中日期：{{ date }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { DatePicker } from 'ant-design-hmfw'
-
-const date = ref<string>('')
-
-const handleChange = (value: string) => {
-  console.log('选中日期：', value)
-}
-</script>
-```
+<DemoBlock title="基础用法" :source="DatePickerBasicSource">
+  <DatePickerBasic />
+</DemoBlock>
 
 ### 不同 picker 类型
 
 通过 `picker` 属性切换不同的选择器类型。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
-    <DatePicker
-      v-model:value="date"
-      picker="date"
-      placeholder="选择日期"
-    />
-    <DatePicker
-      v-model:value="month"
-      picker="month"
-      placeholder="选择月份"
-    />
-    <DatePicker
-      v-model:value="quarter"
-      picker="quarter"
-      placeholder="选择季度"
-    />
-    <DatePicker
-      v-model:value="year"
-      picker="year"
-      placeholder="选择年份"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { DatePicker } from 'ant-design-hmfw'
-
-const date = ref('')
-const month = ref('')
-const quarter = ref('')
-const year = ref('')
-</script>
-```
+<DemoBlock title="不同 picker 类型" :source="DatePickerPickerSource">
+  <DatePickerPicker />
+</DemoBlock>
 
 ### 禁用日期
 
 可用 `disabledDate` 禁止选择某些日期。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
-    <DatePicker
-      v-model:value="date"
-      :disabled-date="disablePastDates"
-      placeholder="不可选择过去日期"
-    />
-    <DatePicker
-      v-model:value="date2"
-      :disabled-date="disableFutureDates"
-      placeholder="不可选择未来日期"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { DatePicker } from 'ant-design-hmfw'
-
-const date = ref('')
-const date2 = ref('')
-
-const disablePastDates = (dateStr: string) => {
-  return new Date(dateStr) < new Date(new Date().toDateString())
-}
-
-const disableFutureDates = (dateStr: string) => {
-  return new Date(dateStr) > new Date(new Date().toDateString())
-}
-</script>
-```
+<DemoBlock title="禁用日期" :source="DatePickerDisabledDateSource">
+  <DatePickerDisabledDate />
+</DemoBlock>
 
 ### 带时间的日期选择
 
 通过 `showTime` 属性增加选择时间功能。
 
-```vue
-<template>
-  <div style="width: 300px;">
-    <DatePicker
-      v-model:value="datetime"
-      :show-time="true"
-      placeholder="选择日期和时间"
-      @change="handleChange"
-    />
-    <p style="margin-top: 8px;">选中：{{ datetime }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { DatePicker } from 'ant-design-hmfw'
-
-const datetime = ref('')
-
-const handleChange = (value: string) => {
-  console.log('选中日期时间：', value)
-}
-</script>
-```
+<DemoBlock title="带时间的日期选择" :source="DatePickerShowTimeSource">
+  <DatePickerShowTime />
+</DemoBlock>
 
 ## API
 

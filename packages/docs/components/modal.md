@@ -8,108 +8,38 @@
 
 ## 代码演示
 
+<script setup>
+import ModalBasic from '../demos/modal/ModalBasic.vue'
+import ModalBasicSource from '../demos/modal/ModalBasic.vue?raw'
+import ModalCustomFooter from '../demos/modal/ModalCustomFooter.vue'
+import ModalCustomFooterSource from '../demos/modal/ModalCustomFooter.vue?raw'
+import ModalCentered from '../demos/modal/ModalCentered.vue'
+import ModalCenteredSource from '../demos/modal/ModalCentered.vue?raw'
+</script>
+
 ### 基础用法
 
 第一个对话框。
 
-```vue
-<template>
-  <button @click="open = true">打开对话框</button>
-  <Modal
-    v-model:open="open"
-    title="基础对话框"
-    @ok="handleOk"
-    @cancel="handleCancel"
-  >
-    <p>对话框内容</p>
-    <p>对话框内容</p>
-    <p>对话框内容</p>
-  </Modal>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Modal } from 'ant-design-hmfw'
-
-const open = ref(false)
-
-function handleOk() {
-  console.log('确认')
-  open.value = false
-}
-
-function handleCancel() {
-  console.log('取消')
-  open.value = false
-}
-</script>
-```
+<DemoBlock title="基础用法" :source="ModalBasicSource">
+  <ModalBasic />
+</DemoBlock>
 
 ### 自定义页脚
 
 更复杂的例子，自定义了页脚的按钮，点击提交后进入 loading 状态，完成后关闭。
 
-```vue
-<template>
-  <button @click="open = true">打开对话框</button>
-  <Modal
-    v-model:open="open"
-    title="自定义页脚"
-    :confirm-loading="confirmLoading"
-    @ok="handleOk"
-  >
-    <p>{{ modalText }}</p>
-    <template #footer>
-      <button @click="open = false">取消</button>
-      <button @click="handleOk">确认</button>
-    </template>
-  </Modal>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Modal } from 'ant-design-hmfw'
-
-const open = ref(false)
-const confirmLoading = ref(false)
-const modalText = ref('内容将在两秒后更新')
-
-function handleOk() {
-  modalText.value = '正在提交...'
-  confirmLoading.value = true
-  setTimeout(() => {
-    open.value = false
-    confirmLoading.value = false
-  }, 2000)
-}
-</script>
-```
+<DemoBlock title="自定义页脚" :source="ModalCustomFooterSource">
+  <ModalCustomFooter />
+</DemoBlock>
 
 ### 居中展示
 
 垂直居中展示对话框。
 
-```vue
-<template>
-  <button @click="open = true">居中对话框</button>
-  <Modal
-    v-model:open="open"
-    title="居中对话框"
-    centered
-    @ok="open = false"
-    @cancel="open = false"
-  >
-    <p>居中展示的对话框内容</p>
-  </Modal>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Modal } from 'ant-design-hmfw'
-
-const open = ref(false)
-</script>
-```
+<DemoBlock title="居中展示" :source="ModalCenteredSource">
+  <ModalCentered />
+</DemoBlock>
 
 ## API
 

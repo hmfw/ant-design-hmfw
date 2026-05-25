@@ -9,74 +9,28 @@
 
 ## 代码演示
 
+<script setup>
+import DrawerBasic from '../demos/drawer/DrawerBasic.vue'
+import DrawerBasicSource from '../demos/drawer/DrawerBasic.vue?raw'
+import DrawerPlacement from '../demos/drawer/DrawerPlacement.vue'
+import DrawerPlacementSource from '../demos/drawer/DrawerPlacement.vue?raw'
+</script>
+
 ### 基础用法
 
 基础抽屉，点击触发按钮抽屉从右滑出，点击遮罩区关闭。
 
-```vue
-<template>
-  <button @click="open = true">打开抽屉</button>
-  <Drawer
-    v-model:open="open"
-    title="基础抽屉"
-  >
-    <p>抽屉内容</p>
-    <p>抽屉内容</p>
-    <p>抽屉内容</p>
-  </Drawer>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Drawer } from 'ant-design-hmfw'
-
-const open = ref(false)
-</script>
-```
+<DemoBlock title="基础用法" :source="DrawerBasicSource">
+  <DrawerBasic />
+</DemoBlock>
 
 ### 四个方向
 
 抽屉可以从上、右、下、左四个方向滑出。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px;">
-    <button @click="show('top')">上</button>
-    <button @click="show('right')">右</button>
-    <button @click="show('bottom')">下</button>
-    <button @click="show('left')">左</button>
-  </div>
-  <Drawer
-    v-model:open="open"
-    :placement="placement"
-    :title="`从${placementText}滑出`"
-  >
-    <p>抽屉内容</p>
-  </Drawer>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Drawer } from 'ant-design-hmfw'
-
-const open = ref(false)
-const placement = ref<'top' | 'right' | 'bottom' | 'left'>('right')
-const placementText = ref('右侧')
-
-const textMap: Record<string, string> = {
-  top: '顶部',
-  right: '右侧',
-  bottom: '底部',
-  left: '左侧',
-}
-
-function show(dir: 'top' | 'right' | 'bottom' | 'left') {
-  placement.value = dir
-  placementText.value = textMap[dir]
-  open.value = true
-}
-</script>
-```
+<DemoBlock title="四个方向" :source="DrawerPlacementSource">
+  <DrawerPlacement />
+</DemoBlock>
 
 ## API
 

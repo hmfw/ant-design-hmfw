@@ -2,6 +2,17 @@
 
 设置组件之间的间距。
 
+<script setup>
+import SpaceBasic from '../demos/space/SpaceBasic.vue'
+import SpaceBasicSource from '../demos/space/SpaceBasic.vue?raw'
+import SpaceVertical from '../demos/space/SpaceVertical.vue'
+import SpaceVerticalSource from '../demos/space/SpaceVertical.vue?raw'
+import SpaceSize from '../demos/space/SpaceSize.vue'
+import SpaceSizeSource from '../demos/space/SpaceSize.vue?raw'
+import SpaceSplit from '../demos/space/SpaceSplit.vue'
+import SpaceSplitSource from '../demos/space/SpaceSplit.vue?raw'
+</script>
+
 ## 何时使用
 
 - 避免组件紧贴在一起，拉开统一的空间
@@ -14,93 +25,33 @@
 
 相邻组件水平间距。
 
-```vue
-<template>
-  <Space>
-    <Button type="primary">按钮一</Button>
-    <Button>按钮二</Button>
-    <Button type="dashed">按钮三</Button>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Space, Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础用法" :source="SpaceBasicSource">
+  <SpaceBasic />
+</DemoBlock>
 
 ### 垂直间距
 
 通过 `direction` 属性设置垂直方向间距。
 
-```vue
-<template>
-  <Space direction="vertical" style="width: 100%">
-    <Button type="primary" block>按钮一</Button>
-    <Button block>按钮二</Button>
-    <Button type="dashed" block>按钮三</Button>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Space, Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="垂直间距" :source="SpaceVerticalSource">
+  <SpaceVertical />
+</DemoBlock>
 
 ### 自定义大小
 
 通过 `size` 属性设置间距大小，支持预设值和数字。
 
-```vue
-<template>
-  <Space direction="vertical" :size="16">
-    <Space size="small">
-      <Button>small</Button>
-      <Button>small</Button>
-      <Button>small</Button>
-    </Space>
-    <Space size="middle">
-      <Button>middle</Button>
-      <Button>middle</Button>
-      <Button>middle</Button>
-    </Space>
-    <Space size="large">
-      <Button>large</Button>
-      <Button>large</Button>
-      <Button>large</Button>
-    </Space>
-    <Space :size="32">
-      <Button>32px</Button>
-      <Button>32px</Button>
-      <Button>32px</Button>
-    </Space>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Space, Button } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="自定义大小" :source="SpaceSizeSource">
+  <SpaceSize />
+</DemoBlock>
 
 ### 分隔符
 
 通过 `split` 插槽设置分隔符。
 
-```vue
-<template>
-  <Space>
-    <template #split>
-      <Divider type="vertical" />
-    </template>
-    <a href="#">链接一</a>
-    <a href="#">链接二</a>
-    <a href="#">链接三</a>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { Space, Divider } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="分隔符" :source="SpaceSplitSource">
+  <SpaceSplit />
+</DemoBlock>
 
 ## API
 

@@ -2,6 +2,17 @@
 
 输入框自动完成功能。
 
+<script setup>
+import AutoCompleteBasic from '../demos/auto-complete/AutoCompleteBasic.vue'
+import AutoCompleteBasicSource from '../demos/auto-complete/AutoCompleteBasic.vue?raw'
+import AutoCompleteCustom from '../demos/auto-complete/AutoCompleteCustom.vue'
+import AutoCompleteCustomSource from '../demos/auto-complete/AutoCompleteCustom.vue?raw'
+import AutoCompleteEmail from '../demos/auto-complete/AutoCompleteEmail.vue'
+import AutoCompleteEmailSource from '../demos/auto-complete/AutoCompleteEmail.vue?raw'
+import AutoCompleteSize from '../demos/auto-complete/AutoCompleteSize.vue'
+import AutoCompleteSizeSource from '../demos/auto-complete/AutoCompleteSize.vue?raw'
+</script>
+
 ## 何时使用
 
 需要自动完成时。
@@ -20,158 +31,33 @@
 
 基本使用，通过 `options` 设置自动完成的数据源。
 
-```vue
-<template>
-  <div style="width: 300px;">
-    <AutoComplete
-      v-model:value="value"
-      :options="options"
-      placeholder="请输入内容"
-      @search="handleSearch"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { AutoComplete } from 'ant-design-hmfw'
-
-const value = ref('')
-const options = ref([
-  { value: 'Vue' },
-  { value: 'React' },
-  { value: 'Angular' },
-  { value: 'Svelte' },
-])
-
-const handleSearch = (searchText: string) => {
-  const allOptions = ['Vue', 'React', 'Angular', 'Svelte', 'Solid']
-  options.value = allOptions
-    .filter(item => item.toLowerCase().includes(searchText.toLowerCase()))
-    .map(item => ({ value: item }))
-}
-</script>
-```
+<DemoBlock title="基础用法" :source="AutoCompleteBasicSource">
+  <AutoCompleteBasic />
+</DemoBlock>
 
 ### 自定义选项
 
 通过 `options` 的 `label` 属性自定义选项内容。
 
-```vue
-<template>
-  <div style="width: 300px;">
-    <AutoComplete
-      v-model:value="value"
-      :options="options"
-      placeholder="请输入内容"
-      @search="handleSearch"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { AutoComplete } from 'ant-design-hmfw'
-
-const value = ref('')
-const options = ref([
-  { value: 'vue', label: 'Vue - 渐进式 JavaScript 框架' },
-  { value: 'react', label: 'React - 用于构建用户界面的 JavaScript 库' },
-  { value: 'angular', label: 'Angular - 现代 Web 开发平台' },
-])
-
-const handleSearch = (searchText: string) => {
-  const allOptions = [
-    { value: 'vue', label: 'Vue - 渐进式 JavaScript 框架' },
-    { value: 'react', label: 'React - 用于构建用户界面的 JavaScript 库' },
-    { value: 'angular', label: 'Angular - 现代 Web 开发平台' },
-  ]
-  options.value = allOptions.filter(item =>
-    item.value.toLowerCase().includes(searchText.toLowerCase())
-  )
-}
-</script>
-```
+<DemoBlock title="自定义选项" :source="AutoCompleteCustomSource">
+  <AutoCompleteCustom />
+</DemoBlock>
 
 ### 邮箱补全
 
 邮箱输入自动补全示例。
 
-```vue
-<template>
-  <div style="width: 300px;">
-    <AutoComplete
-      v-model:value="email"
-      :options="emailOptions"
-      placeholder="请输入邮箱"
-      @search="handleEmailSearch"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { AutoComplete } from 'ant-design-hmfw'
-
-const email = ref('')
-const emailOptions = ref<Array<{ value: string }>>([])
-
-const emailSuffixes = ['@gmail.com', '@qq.com', '@163.com', '@outlook.com', '@hotmail.com']
-
-const handleEmailSearch = (searchText: string) => {
-  if (!searchText || searchText.includes('@')) {
-    emailOptions.value = []
-    return
-  }
-  
-  emailOptions.value = emailSuffixes.map(suffix => ({
-    value: searchText + suffix,
-  }))
-}
-</script>
-```
+<DemoBlock title="邮箱补全" :source="AutoCompleteEmailSource">
+  <AutoCompleteEmail />
+</DemoBlock>
 
 ### 不同尺寸
 
 三种大小的输入框，大的用在表单中，中的为默认。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
-    <AutoComplete
-      v-model:value="value1"
-      :options="options"
-      size="large"
-      placeholder="Large size"
-    />
-    <AutoComplete
-      v-model:value="value2"
-      :options="options"
-      placeholder="Default size"
-    />
-    <AutoComplete
-      v-model:value="value3"
-      :options="options"
-      size="small"
-      placeholder="Small size"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { AutoComplete } from 'ant-design-hmfw'
-
-const value1 = ref('')
-const value2 = ref('')
-const value3 = ref('')
-const options = ref([
-  { value: 'Vue' },
-  { value: 'React' },
-  { value: 'Angular' },
-])
-</script>
-```
+<DemoBlock title="不同尺寸" :source="AutoCompleteSizeSource">
+  <AutoCompleteSize />
+</DemoBlock>
 
 ## API
 

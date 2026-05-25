@@ -1,17 +1,314 @@
-/* Demo block styles */
+/* ==========================================================================
+   1. CSS 变量覆盖 — 品牌色（Ant Design Blue）+ 字体 + 背景
+   ========================================================================== */
+
+:root {
+  /* Ant Design 蓝色系 */
+  --vp-c-brand-1: #1677ff;
+  --vp-c-brand-2: #4096ff;
+  --vp-c-brand-3: #0958d9;
+  --vp-c-brand-soft: rgba(22, 119, 255, 0.1);
+
+  /* Ant Design 官方字体栈 */
+  --vp-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --vp-font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo,
+    Courier, monospace;
+
+  /* 背景色 */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-alt: #f5f5f5;
+  --vp-c-bg-soft: #fafafa;
+  --vp-c-bg-elv: #ffffff;
+
+  /* 边框 */
+  --vp-c-divider: rgba(5, 5, 5, 0.06);
+  --vp-c-border: rgba(5, 5, 5, 0.15);
+  --vp-c-gutter: rgba(5, 5, 5, 0.06);
+
+  /* 文字色 */
+  --vp-c-text-1: rgba(0, 0, 0, 0.88);
+  --vp-c-text-2: rgba(0, 0, 0, 0.45);
+  --vp-c-text-3: rgba(0, 0, 0, 0.25);
+
+  /* 侧边栏 */
+  --vp-sidebar-width: 260px;
+  --vp-sidebar-bg-color: #ffffff;
+
+  /* 导航栏 */
+  --vp-nav-height: 64px;
+  --vp-nav-bg-color: #ffffff;
+
+  /* inline code：Ant Design 浅蓝背景 */
+  --vp-code-color: #1677ff;
+  --vp-code-bg: rgba(22, 119, 255, 0.06);
+
+  /* 首页 hero name 颜色 */
+  --vp-home-hero-name-color: #1677ff;
+}
+
+.dark {
+  --vp-c-brand-1: #4096ff;
+  --vp-c-brand-2: #1677ff;
+  --vp-c-brand-3: #0958d9;
+  --vp-c-brand-soft: rgba(64, 150, 255, 0.15);
+
+  --vp-c-bg: #141414;
+  --vp-c-bg-alt: #1d1d1d;
+  --vp-c-bg-soft: #1d1d1d;
+  --vp-c-bg-elv: #1f1f1f;
+
+  --vp-c-divider: rgba(255, 255, 255, 0.12);
+  --vp-c-border: rgba(255, 255, 255, 0.2);
+  --vp-c-gutter: rgba(255, 255, 255, 0.08);
+
+  --vp-c-text-1: rgba(255, 255, 255, 0.85);
+  --vp-c-text-2: rgba(255, 255, 255, 0.45);
+  --vp-c-text-3: rgba(255, 255, 255, 0.25);
+
+  --vp-sidebar-bg-color: #141414;
+  --vp-nav-bg-color: #141414;
+
+  --vp-code-color: #4096ff;
+  --vp-code-bg: rgba(64, 150, 255, 0.1);
+
+  --vp-home-hero-name-color: #4096ff;
+}
+
+/* ==========================================================================
+   2. 导航栏
+   ========================================================================== */
+
+.VPNav {
+  border-bottom: 1px solid var(--vp-c-divider) !important;
+  box-shadow: none !important;
+}
+
+.VPNavBar {
+  border-bottom: none !important;
+  background-color: var(--vp-nav-bg-color) !important;
+}
+
+.VPNavBarMenu .VPNavBarMenuLink {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--vp-c-text-1);
+  transition: color 0.2s;
+}
+
+.VPNavBarMenu .VPNavBarMenuLink:hover,
+.VPNavBarMenu .VPNavBarMenuLink.active {
+  color: var(--vp-c-brand-1);
+}
+
+.VPNavBarTitle .title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+/* ==========================================================================
+   3. 侧边栏
+   ========================================================================== */
+
+.VPSidebar {
+  background-color: var(--vp-sidebar-bg-color) !important;
+  border-right: 1px solid var(--vp-c-divider);
+}
+
+/* 分组标题 */
+.VPSidebarItem.level-0 > .item > .text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vp-c-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 16px 0 8px;
+}
+
+/* 链接项文字 */
+.VPSidebarItem.level-1 > .item > .link > .text,
+.VPSidebarItem.level-2 > .item > .link > .text {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--vp-c-text-1);
+  transition: color 0.2s;
+}
+
+.VPSidebarItem.level-1 > .item > .link:hover > .text,
+.VPSidebarItem.level-2 > .item > .link:hover > .text {
+  color: var(--vp-c-brand-1);
+}
+
+/* 激活项：蓝色文字 + 浅蓝背景 + 左侧竖线（inset box-shadow 避免 overflow 裁切） */
+.VPSidebarItem.level-1.is-active > .item > .link > .text,
+.VPSidebarItem.level-2.is-active > .item > .link > .text {
+  color: var(--vp-c-brand-1);
+  font-weight: 500;
+}
+
+.VPSidebarItem.level-1.is-active > .item > .link,
+.VPSidebarItem.level-2.is-active > .item > .link {
+  background-color: rgba(22, 119, 255, 0.06);
+  border-radius: 4px;
+  box-shadow: inset 3px 0 0 var(--vp-c-brand-1);
+}
+
+.dark .VPSidebarItem.level-1.is-active > .item > .link,
+.dark .VPSidebarItem.level-2.is-active > .item > .link {
+  background-color: rgba(64, 150, 255, 0.1);
+}
+
+/* ==========================================================================
+   4. 演示卡片（@vitepress-demo-preview ant-design 主题）
+   ========================================================================== */
+
+.vitepress-demo-preview__ant-design__container {
+  border: 1px solid rgba(5, 5, 5, 0.06) !important;
+  border-radius: 8px !important;
+  margin: 16px 0 !important;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.vitepress-demo-preview__ant-design__container:hover {
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+}
+
+.vitepress-demo-preview__ant-design__container > .vitepress-demo-preview-preview {
+  padding: 24px !important;
+  background-color: #ffffff;
+  min-height: 60px;
+}
+
+.dark .vitepress-demo-preview__ant-design__container > .vitepress-demo-preview-preview {
+  background-color: var(--vp-c-bg);
+}
+
+.vitepress-demo-preview__ant-design__container div[class*='language-'] {
+  background-color: var(--vp-c-bg-soft) !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* 兼容手写 demo 块 */
 .vp-doc .demo-preview {
-  border: 1px solid var(--vp-c-divider);
+  border: 1px solid rgba(5, 5, 5, 0.06);
   border-radius: 8px;
   overflow: hidden;
   margin: 16px 0;
+  transition: box-shadow 0.2s;
+}
+
+.vp-doc .demo-preview:hover {
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
 }
 
 .vp-doc .demo-preview .preview {
   padding: 24px;
-  background: #fff;
+  background: #ffffff;
 }
 
-/* Ensure component styles render correctly in docs */
-.vp-doc [class^="hmfw-"] {
+/* ==========================================================================
+   5. API 表格
+   ========================================================================== */
+
+.vp-doc table {
+  border: 1px solid rgba(5, 5, 5, 0.06) !important;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.vp-doc th {
+  background-color: #fafafa !important;
+  font-weight: 600;
+  color: var(--vp-c-text-1) !important;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.dark .vp-doc th {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.vp-doc th,
+.vp-doc td {
+  border: none !important;
+  border-bottom: 1px solid rgba(5, 5, 5, 0.06) !important;
+  padding: 12px 16px !important;
+}
+
+.dark .vp-doc th,
+.dark .vp-doc td {
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.vp-doc tr:nth-child(2n) {
+  background-color: transparent !important;
+}
+
+/* inline code 在表格中：浅蓝背景（Ant Design 标志性样式） */
+.vp-doc td code,
+.vp-doc th code {
+  background-color: rgba(22, 119, 255, 0.06) !important;
+  color: #1677ff !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-family: var(--vp-font-family-mono);
+}
+
+.dark .vp-doc td code,
+.dark .vp-doc th code {
+  background-color: rgba(64, 150, 255, 0.1) !important;
+  color: #4096ff !important;
+}
+
+/* ==========================================================================
+   6. 首页 + 内容区微调
+   ========================================================================== */
+
+/* features 卡片悬停效果 */
+.VPFeature {
+  border: 1px solid rgba(5, 5, 5, 0.06) !important;
+  transition: box-shadow 0.2s, border-color 0.2s !important;
+}
+
+.VPFeature:hover {
+  border-color: #1677ff !important;
+  box-shadow: 0 4px 16px rgba(22, 119, 255, 0.12) !important;
+}
+
+.dark .VPFeature {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* h2 分割线 */
+.vp-doc h2 {
+  border-top-color: rgba(5, 5, 5, 0.06) !important;
+}
+
+/* 链接颜色 */
+.vp-doc a {
+  color: #1677ff;
+  text-decoration: none;
+}
+
+.vp-doc a:hover {
+  color: #4096ff;
+  text-decoration: underline;
+}
+
+/* blockquote */
+.vp-doc blockquote {
+  border-left-color: #1677ff !important;
+  background-color: rgba(22, 119, 255, 0.04);
+  border-radius: 0 4px 4px 0;
+}
+
+/* 确保组件样式正确渲染 */
+.vp-doc [class^='hmfw-'] {
   font-family: var(--vp-font-family-base);
 }

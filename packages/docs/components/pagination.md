@@ -2,6 +2,17 @@
 
 采用分页的形式分隔长列表，每次只加载一个页面。
 
+<script setup>
+import PaginationBasic from '../demos/pagination/PaginationBasic.vue'
+import PaginationBasicSource from '../demos/pagination/PaginationBasic.vue?raw'
+import PaginationMore from '../demos/pagination/PaginationMore.vue'
+import PaginationMoreSource from '../demos/pagination/PaginationMore.vue?raw'
+import PaginationSimple from '../demos/pagination/PaginationSimple.vue'
+import PaginationSimpleSource from '../demos/pagination/PaginationSimple.vue?raw'
+import PaginationSmall from '../demos/pagination/PaginationSmall.vue'
+import PaginationSmallSource from '../demos/pagination/PaginationSmall.vue?raw'
+</script>
+
 ## 何时使用
 
 - 当加载/渲染所有数据将花费很多时间时
@@ -13,102 +24,33 @@
 
 基础分页。
 
-```vue
-<template>
-  <Space direction="vertical">
-    <Pagination :total="50" v-model:current="current" />
-    <p>当前页：{{ current }}</p>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Pagination, Space } from 'ant-design-hmfw'
-
-const current = ref(1)
-</script>
-```
+<DemoBlock title="基础用法" :source="PaginationBasicSource">
+  <PaginationBasic />
+</DemoBlock>
 
 ### 更多功能
 
 展示总数、切换每页条数、快速跳转。
 
-```vue
-<template>
-  <Space direction="vertical">
-    <Pagination
-      v-model:current="current"
-      v-model:page-size="pageSize"
-      :total="500"
-      show-size-changer
-      show-quick-jumper
-      :show-total="(total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`"
-      @change="onChange"
-      @show-size-change="onShowSizeChange"
-    />
-    <p>当前页：{{ current }}，每页条数：{{ pageSize }}</p>
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Pagination, Space } from 'ant-design-hmfw'
-
-const current = ref(1)
-const pageSize = ref(10)
-
-const onChange = (page: number, size: number) => {
-  console.log('页码变化:', page, size)
-}
-
-const onShowSizeChange = (cur: number, size: number) => {
-  console.log('每页条数变化:', cur, size)
-}
-</script>
-```
+<DemoBlock title="更多功能" :source="PaginationMoreSource">
+  <PaginationMore />
+</DemoBlock>
 
 ### 简洁模式
 
 通过 `simple` 属性设置简洁模式。
 
-```vue
-<template>
-  <Pagination simple :total="50" v-model:current="current" />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Pagination } from 'ant-design-hmfw'
-
-const current = ref(1)
-</script>
-```
+<DemoBlock title="简洁模式" :source="PaginationSimpleSource">
+  <PaginationSimple />
+</DemoBlock>
 
 ### 小型分页
 
 通过 `size="small"` 设置小型分页。
 
-```vue
-<template>
-  <Space direction="vertical">
-    <Pagination size="small" :total="50" v-model:current="current" />
-    <Pagination
-      size="small"
-      :total="50"
-      v-model:current="current"
-      show-size-changer
-      show-quick-jumper
-    />
-  </Space>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Pagination, Space } from 'ant-design-hmfw'
-
-const current = ref(1)
-</script>
-```
+<DemoBlock title="小型分页" :source="PaginationSmallSource">
+  <PaginationSmall />
+</DemoBlock>
 
 ## API
 

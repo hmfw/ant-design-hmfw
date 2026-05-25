@@ -2,6 +2,15 @@
 
 高性能表单控件，自带数据域管理。包含数据录入、校验以及对应样式。
 
+<script setup>
+import FormBasic from '../demos/form/FormBasic.vue'
+import FormBasicSource from '../demos/form/FormBasic.vue?raw'
+import FormValidation from '../demos/form/FormValidation.vue'
+import FormValidationSource from '../demos/form/FormValidation.vue?raw'
+import FormInline from '../demos/form/FormInline.vue'
+import FormInlineSource from '../demos/form/FormInline.vue?raw'
+</script>
+
 ## 何时使用
 
 - 用于创建一个实体或收集信息。
@@ -13,156 +22,25 @@
 
 基本的表单数据域控制展示，包含布局、初始化、验证、提交。
 
-```vue
-<template>
-  <Form
-    :model="formState"
-    :label-col="{ span: 6 }"
-    :wrapper-col="{ span: 18 }"
-    style="max-width: 480px;"
-    @finish="handleFinish"
-  >
-    <FormItem label="用户名" name="username" :rules="[{ required: true, message: '请输入用户名' }]">
-      <Input v-model:value="formState.username" placeholder="请输入用户名" />
-    </FormItem>
-    <FormItem label="密码" name="password" :rules="[{ required: true, message: '请输入密码' }]">
-      <InputPassword v-model:value="formState.password" placeholder="请输入密码" />
-    </FormItem>
-    <FormItem :wrapper-col="{ offset: 6, span: 18 }">
-      <Button type="primary" html-type="submit">提交</Button>
-      <Button style="margin-left: 8px;" @click="handleReset">重置</Button>
-    </FormItem>
-  </Form>
-</template>
-
-<script setup lang="ts">
-import { reactive } from 'vue'
-import { Form, FormItem, Input, InputPassword, Button } from 'ant-design-hmfw'
-
-const formState = reactive({
-  username: '',
-  password: '',
-})
-
-const handleFinish = (values: typeof formState) => {
-  console.log('表单提交：', values)
-}
-
-const handleReset = () => {
-  formState.username = ''
-  formState.password = ''
-}
-</script>
-```
+<DemoBlock title="基础表单" :source="FormBasicSource">
+  <FormBasic />
+</DemoBlock>
 
 ### 表单校验
 
 Form 组件提供了表单验证的功能，只需为 FormItem 设置 `rules` 属性即可。
 
-```vue
-<template>
-  <Form
-    ref="formRef"
-    :model="formState"
-    :rules="rules"
-    :label-col="{ span: 5 }"
-    :wrapper-col="{ span: 19 }"
-    style="max-width: 480px;"
-  >
-    <FormItem label="邮箱" name="email">
-      <Input v-model:value="formState.email" placeholder="请输入邮箱" />
-    </FormItem>
-    <FormItem label="手机号" name="phone">
-      <Input v-model:value="formState.phone" placeholder="请输入手机号" />
-    </FormItem>
-    <FormItem label="年龄" name="age">
-      <InputNumber v-model:value="formState.age" :min="1" :max="120" placeholder="请输入年龄" style="width: 100%;" />
-    </FormItem>
-    <FormItem :wrapper-col="{ offset: 5, span: 19 }">
-      <Button type="primary" @click="handleValidate">校验</Button>
-      <Button style="margin-left: 8px;" @click="handleClear">清除校验</Button>
-    </FormItem>
-  </Form>
-</template>
-
-<script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { Form, FormItem, Input, InputNumber, Button } from 'ant-design-hmfw'
-
-const formRef = ref()
-
-const formState = reactive({
-  email: '',
-  phone: '',
-  age: null as number | null,
-})
-
-const rules = {
-  email: [
-    { required: true, message: '请输入邮箱' },
-    { type: 'email', message: '请输入有效的邮箱地址' },
-  ],
-  phone: [
-    { required: true, message: '请输入手机号' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号' },
-  ],
-  age: [
-    { required: true, message: '请输入年龄' },
-  ],
-}
-
-const handleValidate = async () => {
-  try {
-    await formRef.value?.validate()
-    console.log('校验通过')
-  } catch (error) {
-    console.log('校验失败：', error)
-  }
-}
-
-const handleClear = () => {
-  formRef.value?.clearValidate()
-}
-</script>
-```
+<DemoBlock title="表单校验" :source="FormValidationSource">
+  <FormValidation />
+</DemoBlock>
 
 ### 内联表单
 
 内联排列表单项。
 
-```vue
-<template>
-  <Form
-    :model="formState"
-    layout="inline"
-    @finish="handleSearch"
-  >
-    <FormItem label="姓名" name="name">
-      <Input v-model:value="formState.name" placeholder="请输入姓名" />
-    </FormItem>
-    <FormItem label="年龄" name="age">
-      <InputNumber v-model:value="formState.age" placeholder="年龄" style="width: 100px;" />
-    </FormItem>
-    <FormItem>
-      <Button type="primary" html-type="submit">搜索</Button>
-    </FormItem>
-  </Form>
-</template>
-
-<script setup lang="ts">
-import { reactive } from 'vue'
-import { Form, FormItem, Input, InputNumber, Button } from 'ant-design-hmfw'
-
-const formState = reactive({
-  name: '',
-  age: null as number | null,
-})
-
-const handleSearch = (values: typeof formState) => {
-  console.log('搜索：', values)
-}
-</script>
-```
+<DemoBlock title="内联表单" :source="FormInlineSource">
+  <FormInline />
+</DemoBlock>
 
 ## API
 

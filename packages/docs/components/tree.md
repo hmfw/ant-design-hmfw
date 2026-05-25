@@ -9,123 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import TreeBasic from '../demos/tree/TreeBasic.vue'
+import TreeBasicSource from '../demos/tree/TreeBasic.vue?raw'
+import TreeCheckable from '../demos/tree/TreeCheckable.vue'
+import TreeCheckableSource from '../demos/tree/TreeCheckable.vue?raw'
+import TreeShowLine from '../demos/tree/TreeShowLine.vue'
+import TreeShowLineSource from '../demos/tree/TreeShowLine.vue?raw'
+</script>
+
 ### 基础用法
 
 最简单的用法，展示可勾选，可选中，禁用，默认展开等功能。
 
-```vue
-<template>
-  <Tree
-    :tree-data="treeData"
-    v-model:expanded-keys="expandedKeys"
-    v-model:selected-keys="selectedKeys"
-  />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Tree } from 'ant-design-hmfw'
-
-const expandedKeys = ref(['0-0', '0-0-0'])
-const selectedKeys = ref<string[]>([])
-
-const treeData = [
-  {
-    title: '父节点 1',
-    key: '0-0',
-    children: [
-      {
-        title: '父节点 1-0',
-        key: '0-0-0',
-        children: [
-          { title: '叶子节点', key: '0-0-0-0' },
-          { title: '叶子节点', key: '0-0-0-1' },
-        ],
-      },
-      {
-        title: '父节点 1-1',
-        key: '0-0-1',
-        children: [
-          { title: '叶子节点', key: '0-0-1-0' },
-        ],
-      },
-    ],
-  },
-]
-</script>
-```
+<DemoBlock title="基础用法" :source="TreeBasicSource">
+  <TreeBasic />
+</DemoBlock>
 
 ### 可勾选
 
 使用 checkable 属性可以节点前添加 Checkbox 复选框。
 
-```vue
-<template>
-  <Tree
-    checkable
-    :tree-data="treeData"
-    v-model:checked-keys="checkedKeys"
-    v-model:expanded-keys="expandedKeys"
-  />
-  <p>已勾选：{{ checkedKeys.join(', ') }}</p>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Tree } from 'ant-design-hmfw'
-
-const expandedKeys = ref(['0-0'])
-const checkedKeys = ref<string[]>([])
-
-const treeData = [
-  {
-    title: '父节点 1',
-    key: '0-0',
-    children: [
-      { title: '子节点 1-1', key: '0-0-0' },
-      { title: '子节点 1-2', key: '0-0-1' },
-    ],
-  },
-  {
-    title: '父节点 2',
-    key: '0-1',
-    children: [
-      { title: '子节点 2-1', key: '0-1-0' },
-    ],
-  },
-]
-</script>
-```
+<DemoBlock title="可勾选" :source="TreeCheckableSource">
+  <TreeCheckable />
+</DemoBlock>
 
 ### 显示连接线
 
 使用 showLine 属性可以显示连接线。
 
-```vue
-<template>
-  <Tree
-    show-line
-    :tree-data="treeData"
-    :default-expand-all="true"
-  />
-</template>
-
-<script setup lang="ts">
-import { Tree } from 'ant-design-hmfw'
-
-const treeData = [
-  {
-    title: '父节点',
-    key: '0-0',
-    children: [
-      { title: '子节点 1', key: '0-0-0' },
-      { title: '子节点 2', key: '0-0-1' },
-      { title: '子节点 3', key: '0-0-2' },
-    ],
-  },
-]
-</script>
-```
+<DemoBlock title="显示连接线" :source="TreeShowLineSource">
+  <TreeShowLine />
+</DemoBlock>
 
 ## API
 

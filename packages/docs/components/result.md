@@ -8,88 +8,38 @@
 
 ## 代码演示
 
+<script setup>
+import ResultSuccess from '../demos/result/ResultSuccess.vue'
+import ResultSuccessSource from '../demos/result/ResultSuccess.vue?raw'
+import ResultError from '../demos/result/ResultError.vue'
+import ResultErrorSource from '../demos/result/ResultError.vue?raw'
+import Result404 from '../demos/result/Result404.vue'
+import Result404Source from '../demos/result/Result404.vue?raw'
+</script>
+
 ### 成功结果
 
 成功的结果。
 
-```vue
-<template>
-  <Result
-    status="success"
-    title="成功提交采购申请"
-    sub-title="订单号：2017182818828182881，云顾问正在对接中，请耐心等待。"
-  >
-    <template #extra>
-      <button @click="onGoOrder">查看订单</button>
-      <button @click="onBuyAgain">再次购买</button>
-    </template>
-  </Result>
-</template>
-
-<script setup lang="ts">
-import { Result } from 'ant-design-hmfw'
-
-function onGoOrder() {
-  console.log('查看订单')
-}
-
-function onBuyAgain() {
-  console.log('再次购买')
-}
-</script>
-```
+<DemoBlock title="成功结果" :source="ResultSuccessSource">
+  <ResultSuccess />
+</DemoBlock>
 
 ### 错误结果
 
 复杂的错误反馈。
 
-```vue
-<template>
-  <Result
-    status="error"
-    title="提交失败"
-    sub-title="请检查并修改以下信息后，再重新提交。"
-  >
-    <template #extra>
-      <button @click="onRetry">再次提交</button>
-    </template>
-  </Result>
-</template>
-
-<script setup lang="ts">
-import { Result } from 'ant-design-hmfw'
-
-function onRetry() {
-  console.log('重试')
-}
-</script>
-```
+<DemoBlock title="错误结果" :source="ResultErrorSource">
+  <ResultError />
+</DemoBlock>
 
 ### 404 页面
 
 此页面不存在。
 
-```vue
-<template>
-  <Result
-    status="404"
-    title="404"
-    sub-title="抱歉，您访问的页面不存在。"
-  >
-    <template #extra>
-      <button @click="onBack">返回首页</button>
-    </template>
-  </Result>
-</template>
-
-<script setup lang="ts">
-import { Result } from 'ant-design-hmfw'
-
-function onBack() {
-  console.log('返回首页')
-}
-</script>
-```
+<DemoBlock title="404 页面" :source="Result404Source">
+  <Result404 />
+</DemoBlock>
 
 ## API
 

@@ -8,57 +8,38 @@
 
 ## 代码演示
 
+<script setup>
+import WatermarkBasic from '../demos/watermark/WatermarkBasic.vue'
+import WatermarkBasicSource from '../demos/watermark/WatermarkBasic.vue?raw'
+import WatermarkMultiline from '../demos/watermark/WatermarkMultiline.vue'
+import WatermarkMultilineSource from '../demos/watermark/WatermarkMultiline.vue?raw'
+import WatermarkCustomStyle from '../demos/watermark/WatermarkCustomStyle.vue'
+import WatermarkCustomStyleSource from '../demos/watermark/WatermarkCustomStyle.vue?raw'
+</script>
+
 ### 文字水印
 
 使用 content 设置文字水印。
 
-```vue
-<template>
-  <Watermark content="Ant Design">
-    <div style="height: 500px;" />
-  </Watermark>
-</template>
-
-<script setup lang="ts">
-import { Watermark } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="文字水印" :source="WatermarkBasicSource">
+  <WatermarkBasic />
+</DemoBlock>
 
 ### 多行水印
 
 使用 content 数组设置多行文字水印。
 
-```vue
-<template>
-  <Watermark :content="['Ant Design', 'Happy Working']">
-    <div style="height: 500px;" />
-  </Watermark>
-</template>
-
-<script setup lang="ts">
-import { Watermark } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="多行水印" :source="WatermarkMultilineSource">
+  <WatermarkMultiline />
+</DemoBlock>
 
 ### 自定义样式
 
 自定义水印字体样式。
 
-```vue
-<template>
-  <Watermark
-    content="Ant Design"
-    :font="{ color: 'rgba(23, 119, 255, 0.15)', fontSize: 20, fontWeight: 'bold' }"
-    :rotate="-22"
-  >
-    <div style="height: 500px;" />
-  </Watermark>
-</template>
-
-<script setup lang="ts">
-import { Watermark } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="自定义样式" :source="WatermarkCustomStyleSource">
+  <WatermarkCustomStyle />
+</DemoBlock>
 
 ## API
 

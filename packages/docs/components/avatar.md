@@ -9,62 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import AvatarBasic from '../demos/avatar/AvatarBasic.vue'
+import AvatarBasicSource from '../demos/avatar/AvatarBasic.vue?raw'
+import AvatarSize from '../demos/avatar/AvatarSize.vue'
+import AvatarSizeSource from '../demos/avatar/AvatarSize.vue?raw'
+import AvatarGroupDemo from '../demos/avatar/AvatarGroup.vue'
+import AvatarGroupDemoSource from '../demos/avatar/AvatarGroup.vue?raw'
+</script>
+
 ### 基本用法
 
 支持三种类型：图片、图标和字符。
 
-```vue
-<template>
-  <div style="display: flex; gap: 16px; align-items: center;">
-    <Avatar :size="64" src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-    <Avatar :size="64">U</Avatar>
-    <Avatar :size="64" style="background-color: #87d068;">USER</Avatar>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Avatar } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基本用法" :source="AvatarBasicSource">
+  <AvatarBasic />
+</DemoBlock>
 
 ### 不同尺寸
 
 支持三种预设尺寸和自定义尺寸。
 
-```vue
-<template>
-  <div style="display: flex; gap: 16px; align-items: center;">
-    <Avatar size="small">S</Avatar>
-    <Avatar>M</Avatar>
-    <Avatar size="large">L</Avatar>
-    <Avatar :size="64">64</Avatar>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Avatar } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="不同尺寸" :source="AvatarSizeSource">
+  <AvatarSize />
+</DemoBlock>
 
 ### 头像组
 
 使用 AvatarGroup 可以展示一组头像。
 
-```vue
-<template>
-  <AvatarGroup :max-count="3">
-    <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-    <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=2" />
-    <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=3" />
-    <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=4" />
-    <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=5" />
-  </AvatarGroup>
-</template>
-
-<script setup lang="ts">
-import { Avatar, AvatarGroup } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="头像组" :source="AvatarGroupDemoSource">
+  <AvatarGroupDemo />
+</DemoBlock>
 
 ## API
 

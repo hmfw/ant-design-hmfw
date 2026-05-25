@@ -9,69 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import CardBasic from '../demos/card/CardBasic.vue'
+import CardBasicSource from '../demos/card/CardBasic.vue?raw'
+import CardCover from '../demos/card/CardCover.vue'
+import CardCoverSource from '../demos/card/CardCover.vue?raw'
+import CardLoading from '../demos/card/CardLoading.vue'
+import CardLoadingSource from '../demos/card/CardLoading.vue?raw'
+</script>
+
 ### 基础卡片
 
 包含标题、内容、操作区域。
 
-```vue
-<template>
-  <Card title="卡片标题" style="width: 300px;">
-    <p>卡片内容</p>
-    <p>卡片内容</p>
-    <p>卡片内容</p>
-  </Card>
-</template>
-
-<script setup lang="ts">
-import { Card } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础卡片" :source="CardBasicSource">
+  <CardBasic />
+</DemoBlock>
 
 ### 带封面
 
 可以配合 cover 插槽展示封面图片。
 
-```vue
-<template>
-  <Card style="width: 300px;">
-    <template #cover>
-      <img
-        alt="example"
-        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-        style="width: 100%;"
-      />
-    </template>
-    <CardMeta
-      title="卡片标题"
-      description="这是卡片的描述信息"
-    />
-  </Card>
-</template>
-
-<script setup lang="ts">
-import { Card, CardMeta } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="带封面" :source="CardCoverSource">
+  <CardCover />
+</DemoBlock>
 
 ### 加载中
 
 数据读入前会有文本块样式。
 
-```vue
-<template>
-  <Card title="卡片标题" :loading="loading" style="width: 300px;">
-    <p>卡片内容</p>
-    <p>卡片内容</p>
-  </Card>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Card } from 'ant-design-hmfw'
-
-const loading = ref(true)
-</script>
-```
+<DemoBlock title="加载中" :source="CardLoadingSource">
+  <CardLoading />
+</DemoBlock>
 
 ## API
 

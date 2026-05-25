@@ -2,6 +2,19 @@
 
 通过鼠标或键盘输入内容，是最基础的表单域的包装。
 
+<script setup>
+import InputBasic from '../demos/input/InputBasic.vue'
+import InputBasicSource from '../demos/input/InputBasic.vue?raw'
+import InputAddon from '../demos/input/InputAddon.vue'
+import InputAddonSource from '../demos/input/InputAddon.vue?raw'
+import InputPassword from '../demos/input/InputPassword.vue'
+import InputPasswordSource from '../demos/input/InputPassword.vue?raw'
+import InputTextArea from '../demos/input/InputTextArea.vue'
+import InputTextAreaSource from '../demos/input/InputTextArea.vue?raw'
+import InputSearch from '../demos/input/InputSearch.vue'
+import InputSearchSource from '../demos/input/InputSearch.vue?raw'
+</script>
+
 ## 何时使用
 
 - 需要用户输入表单域内容时。
@@ -13,161 +26,41 @@
 
 基本使用。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
-    <Input v-model:value="value" placeholder="请输入内容" />
-    <Input v-model:value="value" placeholder="禁用状态" disabled />
-    <Input v-model:value="value" placeholder="只读状态" readonly />
-    <p>当前值：{{ value }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Input } from 'ant-design-hmfw'
-
-const value = ref('')
-</script>
-```
+<DemoBlock title="基础用法" :source="InputBasicSource">
+  <InputBasic />
+</DemoBlock>
 
 ### 前缀/后缀
 
 在输入框上添加前缀或后缀图标。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
-    <Input v-model:value="value1" placeholder="请输入用户名" prefix="👤" />
-    <Input v-model:value="value2" placeholder="请输入金额" prefix="¥" suffix="元" />
-    <Input v-model:value="value3" placeholder="带前置/后置标签" addon-before="http://" addon-after=".com" />
-    <Input v-model:value="value4" placeholder="支持清除" allow-clear />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Input } from 'ant-design-hmfw'
-
-const value1 = ref('')
-const value2 = ref('')
-const value3 = ref('')
-const value4 = ref('')
-</script>
-```
+<DemoBlock title="前缀/后缀" :source="InputAddonSource">
+  <InputAddon />
+</DemoBlock>
 
 ### 密码框
 
 密码输入框，可切换密码可见性。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
-    <InputPassword v-model:value="password" placeholder="请输入密码" />
-    <InputPassword
-      v-model:value="password2"
-      placeholder="不可切换可见性"
-      :visibility-toggle="false"
-    />
-    <p>密码：{{ password }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { InputPassword } from 'ant-design-hmfw'
-
-const password = ref('')
-const password2 = ref('')
-</script>
-```
+<DemoBlock title="密码框" :source="InputPasswordSource">
+  <InputPassword />
+</DemoBlock>
 
 ### 文本域
 
 用于多行输入。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
-    <TextArea
-      v-model:value="text1"
-      placeholder="固定行数"
-      :rows="4"
-    />
-    <TextArea
-      v-model:value="text2"
-      placeholder="自适应高度"
-      :auto-size="{ minRows: 2, maxRows: 6 }"
-    />
-    <TextArea
-      v-model:value="text3"
-      placeholder="显示字数"
-      :maxlength="100"
-      :show-count="true"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { TextArea } from 'ant-design-hmfw'
-
-const text1 = ref('')
-const text2 = ref('')
-const text3 = ref('')
-</script>
-```
+<DemoBlock title="文本域" :source="InputTextAreaSource">
+  <InputTextArea />
+</DemoBlock>
 
 ### 搜索框
 
 带有搜索按钮的输入框。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
-    <InputSearch
-      v-model:value="keyword"
-      placeholder="请输入搜索内容"
-      @search="handleSearch"
-    />
-    <InputSearch
-      v-model:value="keyword2"
-      placeholder="带按钮的搜索框"
-      enter-button
-      @search="handleSearch"
-    />
-    <InputSearch
-      v-model:value="keyword3"
-      placeholder="加载中"
-      enter-button
-      :loading="loading"
-      @search="handleSearchWithLoading"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { InputSearch } from 'ant-design-hmfw'
-
-const keyword = ref('')
-const keyword2 = ref('')
-const keyword3 = ref('')
-const loading = ref(false)
-
-const handleSearch = (value: string) => {
-  console.log('搜索：', value)
-}
-
-const handleSearchWithLoading = (value: string) => {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-    console.log('搜索完成：', value)
-  }, 1500)
-}
-</script>
-```
+<DemoBlock title="搜索框" :source="InputSearchSource">
+  <InputSearch />
+</DemoBlock>
 
 ## API
 

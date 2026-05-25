@@ -2,6 +2,15 @@
 
 通过鼠标或键盘，输入范围内的数值。
 
+<script setup>
+import InputNumberBasic from '../demos/input-number/InputNumberBasic.vue'
+import InputNumberBasicSource from '../demos/input-number/InputNumberBasic.vue?raw'
+import InputNumberMinMax from '../demos/input-number/InputNumberMinMax.vue'
+import InputNumberMinMaxSource from '../demos/input-number/InputNumberMinMax.vue?raw'
+import InputNumberAddon from '../demos/input-number/InputNumberAddon.vue'
+import InputNumberAddonSource from '../demos/input-number/InputNumberAddon.vue?raw'
+</script>
+
 ## 何时使用
 
 当需要获取标准数值时。
@@ -12,107 +21,25 @@
 
 数字输入框。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
-    <InputNumber v-model:value="value" placeholder="请输入数字" style="width: 100%;" />
-    <InputNumber v-model:value="value" disabled placeholder="禁用状态" style="width: 100%;" />
-    <p>当前值：{{ value }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { InputNumber } from 'ant-design-hmfw'
-
-const value = ref<number | null>(null)
-</script>
-```
+<DemoBlock title="基础用法" :source="InputNumberBasicSource">
+  <InputNumberBasic />
+</DemoBlock>
 
 ### 最大最小值
 
 通过 `min` 和 `max` 限制输入范围，通过 `step` 设置步长。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
-    <div>
-      <p style="margin-bottom: 4px;">范围 1-10，步长 1：</p>
-      <InputNumber
-        v-model:value="value1"
-        :min="1"
-        :max="10"
-        :step="1"
-        style="width: 100%;"
-      />
-    </div>
-    <div>
-      <p style="margin-bottom: 4px;">范围 0-1，步长 0.1，精度 1：</p>
-      <InputNumber
-        v-model:value="value2"
-        :min="0"
-        :max="1"
-        :step="0.1"
-        :precision="1"
-        style="width: 100%;"
-      />
-    </div>
-    <p>value1: {{ value1 }}，value2: {{ value2 }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { InputNumber } from 'ant-design-hmfw'
-
-const value1 = ref<number>(5)
-const value2 = ref<number>(0.5)
-</script>
-```
+<DemoBlock title="最大最小值" :source="InputNumberMinMaxSource">
+  <InputNumberMinMax />
+</DemoBlock>
 
 ### 前后缀
 
 带有前缀或后缀的数字输入框。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
-    <InputNumber
-      v-model:value="price"
-      :min="0"
-      prefix="¥"
-      addon-after="元"
-      placeholder="请输入价格"
-      style="width: 100%;"
-    />
-    <InputNumber
-      v-model:value="percent"
-      :min="0"
-      :max="100"
-      addon-after="%"
-      placeholder="请输入百分比"
-      style="width: 100%;"
-    />
-    <InputNumber
-      v-model:value="weight"
-      :min="0"
-      addon-before="重量"
-      addon-after="kg"
-      placeholder="请输入重量"
-      style="width: 100%;"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { InputNumber } from 'ant-design-hmfw'
-
-const price = ref<number | null>(null)
-const percent = ref<number | null>(null)
-const weight = ref<number | null>(null)
-</script>
-```
+<DemoBlock title="前后缀" :source="InputNumberAddonSource">
+  <InputNumberAddon />
+</DemoBlock>
 
 ## API
 

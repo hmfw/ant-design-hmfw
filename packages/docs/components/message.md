@@ -9,72 +9,28 @@
 
 ## 代码演示
 
+<script setup>
+import MessageBasic from '../demos/message/MessageBasic.vue'
+import MessageBasicSource from '../demos/message/MessageBasic.vue?raw'
+import MessageDuration from '../demos/message/MessageDuration.vue'
+import MessageDurationSource from '../demos/message/MessageDuration.vue?raw'
+</script>
+
 ### 基础用法
 
 信息提醒反馈。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <button @click="showSuccess">成功</button>
-    <button @click="showError">错误</button>
-    <button @click="showWarning">警告</button>
-    <button @click="showInfo">信息</button>
-    <button @click="showLoading">加载中</button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { message } from 'ant-design-hmfw'
-
-function showSuccess() {
-  message.success('操作成功！')
-}
-
-function showError() {
-  message.error('操作失败，请重试。')
-}
-
-function showWarning() {
-  message.warning('请注意此操作的风险。')
-}
-
-function showInfo() {
-  message.info('这是一条普通提示信息。')
-}
-
-function showLoading() {
-  message.loading('正在加载中...')
-}
-</script>
-```
+<DemoBlock title="基础用法" :source="MessageBasicSource">
+  <MessageBasic />
+</DemoBlock>
 
 ### 自定义时长
 
 自定义消息显示时长，默认 3 秒。
 
-```vue
-<template>
-  <div style="display: flex; gap: 8px;">
-    <button @click="showLong">显示 10 秒</button>
-    <button @click="showWithCallback">关闭后回调</button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { message } from 'ant-design-hmfw'
-
-function showLong() {
-  message.success('这条消息将显示 10 秒', 10)
-}
-
-function showWithCallback() {
-  message.info('关闭后将触发回调', 2).then(() => {
-    message.success('消息已关闭！')
-  })
-}
-</script>
-```
+<DemoBlock title="自定义时长" :source="MessageDurationSource">
+  <MessageDuration />
+</DemoBlock>
 
 ## API
 

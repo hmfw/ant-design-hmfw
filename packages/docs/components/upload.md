@@ -2,6 +2,17 @@
 
 文件选择上传和拖拽上传控件。
 
+<script setup>
+import UploadBasic from '../demos/upload/UploadBasic.vue'
+import UploadBasicSource from '../demos/upload/UploadBasic.vue?raw'
+import UploadPictureCard from '../demos/upload/UploadPictureCard.vue'
+import UploadPictureCardSource from '../demos/upload/UploadPictureCard.vue?raw'
+import UploadDragger from '../demos/upload/UploadDragger.vue'
+import UploadDraggerSource from '../demos/upload/UploadDragger.vue?raw'
+import UploadCustom from '../demos/upload/UploadCustom.vue'
+import UploadCustomSource from '../demos/upload/UploadCustom.vue?raw'
+</script>
+
 ## 何时使用
 
 上传是将信息（网页、文字、图片、视频等）通过网页或者上传工具发布到远程服务器上的过程。
@@ -16,175 +27,33 @@
 
 经典款式，用户点击按钮弹出文件选择框。
 
-```vue
-<template>
-  <Upload
-    v-model:file-list="fileList"
-    action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-    :multiple="true"
-    @change="handleChange"
-  >
-    <Button>点击上传</Button>
-  </Upload>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Upload, Button } from 'ant-design-hmfw'
-import type { UploadFile } from 'ant-design-hmfw'
-
-const fileList = ref<UploadFile[]>([])
-
-const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
-  if (info.file.status === 'done') {
-    console.log(`${info.file.name} 上传成功`)
-  } else if (info.file.status === 'error') {
-    console.log(`${info.file.name} 上传失败`)
-  }
-  fileList.value = info.fileList
-}
-</script>
-```
+<DemoBlock title="点击上传" :source="UploadBasicSource">
+  <UploadBasic />
+</DemoBlock>
 
 ### 图片卡片
 
 使用 `list-type="picture-card"` 展示图片卡片样式。
 
-```vue
-<template>
-  <Upload
-    v-model:file-list="fileList"
-    action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-    list-type="picture-card"
-    :max-count="8"
-    @preview="handlePreview"
-    @change="handleChange"
-  >
-    <div v-if="fileList.length < 8">
-      <div>+ 上传</div>
-    </div>
-  </Upload>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Upload } from 'ant-design-hmfw'
-import type { UploadFile } from 'ant-design-hmfw'
-
-const fileList = ref<UploadFile[]>([
-  {
-    uid: '-1',
-    name: 'image.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-])
-
-const handlePreview = (file: UploadFile) => {
-  console.log('预览：', file.url || file.thumbUrl)
-}
-
-const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
-  fileList.value = info.fileList
-}
-</script>
-```
+<DemoBlock title="图片卡片" :source="UploadPictureCardSource">
+  <UploadPictureCard />
+</DemoBlock>
 
 ### 拖拽上传
 
 可以把文件拖入指定区域，完成上传，同样支持点击上传。
 
-```vue
-<template>
-  <Upload.Dragger
-    v-model:file-list="fileList"
-    action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-    :multiple="true"
-    @change="handleChange"
-    @drop="handleDrop"
-  >
-    <div style="padding: 32px; text-align: center;">
-      <p style="font-size: 48px; margin-bottom: 8px;">📥</p>
-      <p style="font-size: 16px; margin-bottom: 4px;">点击或拖拽文件到此区域上传</p>
-      <p style="color: #999; font-size: 14px;">支持单个或批量上传，严禁上传公司数据或其他违禁文件</p>
-    </div>
-  </Upload.Dragger>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Upload } from 'ant-design-hmfw'
-import type { UploadFile } from 'ant-design-hmfw'
-
-const fileList = ref<UploadFile[]>([])
-
-const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
-  console.log('文件状态：', info.file.status)
-  fileList.value = info.fileList
-}
-
-const handleDrop = (event: DragEvent) => {
-  console.log('拖拽文件：', event.dataTransfer?.files)
-}
-</script>
-```
+<DemoBlock title="拖拽上传" :source="UploadDraggerSource">
+  <UploadDragger />
+</DemoBlock>
 
 ### 自定义上传
 
 通过 `custom-request` 覆盖默认的上传行为，实现自定义上传逻辑。
 
-```vue
-<template>
-  <Upload
-    v-model:file-list="fileList"
-    :custom-request="customRequest"
-    :before-upload="beforeUpload"
-    accept=".jpg,.jpeg,.png,.gif"
-    @change="handleChange"
-  >
-    <Button>选择图片</Button>
-  </Upload>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Upload, Button } from 'ant-design-hmfw'
-import type { UploadFile } from 'ant-design-hmfw'
-
-const fileList = ref<UploadFile[]>([])
-
-const beforeUpload = (file: File) => {
-  const isImage = file.type.startsWith('image/')
-  if (!isImage) {
-    console.error('只能上传图片文件！')
-    return false
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2
-  if (!isLt2M) {
-    console.error('图片大小不能超过 2MB！')
-    return false
-  }
-  return true
-}
-
-const customRequest = ({ file, onSuccess, onError, onProgress }: any) => {
-  // 模拟上传进度
-  let percent = 0
-  const timer = setInterval(() => {
-    percent += 20
-    onProgress({ percent })
-    if (percent >= 100) {
-      clearInterval(timer)
-      onSuccess({ url: URL.createObjectURL(file) })
-    }
-  }, 200)
-}
-
-const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
-  fileList.value = info.fileList
-}
-</script>
-```
+<DemoBlock title="自定义上传" :source="UploadCustomSource">
+  <UploadCustom />
+</DemoBlock>
 
 ## API
 

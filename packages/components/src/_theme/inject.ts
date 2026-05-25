@@ -14,11 +14,22 @@ function toCssValue(key: string, value: number | string): string {
   return value
 }
 
+function toKebab(key: string): string {
+  return key
+    .replace(/XXL/g, '-xxl')
+    .replace(/XXS/g, '-xxs')
+    .replace(/XL/g, '-xl')
+    .replace(/XS/g, '-xs')
+    .replace(/SM/g, '-sm')
+    .replace(/LG/g, '-lg')
+    .replace(/MD/g, '-md')
+    .replace(/([A-Z])/g, (m) => `-${m.toLowerCase()}`)
+    .replace(/--+/g, '-')
+    .replace(/^-/, '')
+}
+
 export function tokensToCssVars(tokens: MapTokens, prefix = 'hmfw'): string {
   const entries: string[] = []
-
-  const toKebab = (key: string) =>
-    key.replace(/([A-Z])/g, (m) => `-${m.toLowerCase()}`)
 
   for (const [key, value] of Object.entries(tokens)) {
     if (typeof value === 'string' || typeof value === 'number') {
@@ -49,9 +60,6 @@ export function injectScopedCssVars(
   tokens: Partial<MapTokens>,
   prefix = 'hmfw',
 ): void {
-  const toKebab = (key: string) =>
-    key.replace(/([A-Z])/g, (m) => `-${m.toLowerCase()}`)
-
   for (const [key, value] of Object.entries(tokens)) {
     if (typeof value === 'string' || typeof value === 'number') {
       const cssKey = `--${prefix}-${toKebab(key)}`

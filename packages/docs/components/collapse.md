@@ -9,83 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import CollapseBasic from '../demos/collapse/CollapseBasic.vue'
+import CollapseBasicSource from '../demos/collapse/CollapseBasic.vue?raw'
+import CollapseAccordion from '../demos/collapse/CollapseAccordion.vue'
+import CollapseAccordionSource from '../demos/collapse/CollapseAccordion.vue?raw'
+import CollapseBorderless from '../demos/collapse/CollapseBorderless.vue'
+import CollapseBorderlessSource from '../demos/collapse/CollapseBorderless.vue?raw'
+</script>
+
 ### 基本用法
 
 可以同时展开多个面板。
 
-```vue
-<template>
-  <Collapse v-model:active-key="activeKey">
-    <CollapsePanel key="1" header="面板标题 1">
-      <p>面板内容 1</p>
-    </CollapsePanel>
-    <CollapsePanel key="2" header="面板标题 2">
-      <p>面板内容 2</p>
-    </CollapsePanel>
-    <CollapsePanel key="3" header="面板标题 3">
-      <p>面板内容 3</p>
-    </CollapsePanel>
-  </Collapse>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Collapse, CollapsePanel } from 'ant-design-hmfw'
-
-const activeKey = ref(['1'])
-</script>
-```
+<DemoBlock title="基本用法" :source="CollapseBasicSource">
+  <CollapseBasic />
+</DemoBlock>
 
 ### 手风琴模式
 
 手风琴模式，每次只能展开一个面板。
 
-```vue
-<template>
-  <Collapse v-model:active-key="activeKey" accordion>
-    <CollapsePanel key="1" header="面板标题 1">
-      <p>面板内容 1</p>
-    </CollapsePanel>
-    <CollapsePanel key="2" header="面板标题 2">
-      <p>面板内容 2</p>
-    </CollapsePanel>
-    <CollapsePanel key="3" header="面板标题 3">
-      <p>面板内容 3</p>
-    </CollapsePanel>
-  </Collapse>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Collapse, CollapsePanel } from 'ant-design-hmfw'
-
-const activeKey = ref(['1'])
-</script>
-```
+<DemoBlock title="手风琴模式" :source="CollapseAccordionSource">
+  <CollapseAccordion />
+</DemoBlock>
 
 ### 无边框
 
 无边框风格。
 
-```vue
-<template>
-  <Collapse v-model:active-key="activeKey" :bordered="false">
-    <CollapsePanel key="1" header="面板标题 1">
-      <p>面板内容 1</p>
-    </CollapsePanel>
-    <CollapsePanel key="2" header="面板标题 2">
-      <p>面板内容 2</p>
-    </CollapsePanel>
-  </Collapse>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Collapse, CollapsePanel } from 'ant-design-hmfw'
-
-const activeKey = ref(['1'])
-</script>
-```
+<DemoBlock title="无边框" :source="CollapseBorderlessSource">
+  <CollapseBorderless />
+</DemoBlock>
 
 ## API
 

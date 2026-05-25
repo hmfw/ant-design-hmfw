@@ -9,76 +9,38 @@
 
 ## 代码演示
 
+<script setup>
+import BadgeBasic from '../demos/badge/BadgeBasic.vue'
+import BadgeBasicSource from '../demos/badge/BadgeBasic.vue?raw'
+import BadgeStatus from '../demos/badge/BadgeStatus.vue'
+import BadgeStatusSource from '../demos/badge/BadgeStatus.vue?raw'
+import BadgeCustomColor from '../demos/badge/BadgeCustomColor.vue'
+import BadgeCustomColorSource from '../demos/badge/BadgeCustomColor.vue?raw'
+</script>
+
 ### 基本用法
 
 简单的徽章展示，当 count 为 0 时，默认不显示。
 
-```vue
-<template>
-  <div style="display: flex; gap: 24px;">
-    <Badge :count="5">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
-    </Badge>
-    <Badge :count="0" show-zero>
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
-    </Badge>
-    <Badge :count="99">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
-    </Badge>
-    <Badge :count="100">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
-    </Badge>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Badge } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基本用法" :source="BadgeBasicSource">
+  <BadgeBasic />
+</DemoBlock>
 
 ### 状态点
 
 用于表示状态的小圆点。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <Badge status="success" text="成功" />
-    <Badge status="error" text="错误" />
-    <Badge status="default" text="默认" />
-    <Badge status="processing" text="进行中" />
-    <Badge status="warning" text="警告" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Badge } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="状态点" :source="BadgeStatusSource">
+  <BadgeStatus />
+</DemoBlock>
 
 ### 自定义颜色
 
 可以自定义徽标的颜色。
 
-```vue
-<template>
-  <div style="display: flex; gap: 24px;">
-    <Badge color="#f50" :count="5">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
-    </Badge>
-    <Badge color="#2db7f5" :count="5">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
-    </Badge>
-    <Badge color="#87d068" :count="5">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
-    </Badge>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { Badge } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="自定义颜色" :source="BadgeCustomColorSource">
+  <BadgeCustomColor />
+</DemoBlock>
 
 ## API
 

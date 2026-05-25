@@ -2,6 +2,15 @@
 
 协助进行页面级整体布局。
 
+<script setup>
+import LayoutBasic from '../demos/layout/LayoutBasic.vue'
+import LayoutBasicSource from '../demos/layout/LayoutBasic.vue?raw'
+import LayoutSider from '../demos/layout/LayoutSider.vue'
+import LayoutSiderSource from '../demos/layout/LayoutSider.vue?raw'
+import LayoutCollapsible from '../demos/layout/LayoutCollapsible.vue'
+import LayoutCollapsibleSource from '../demos/layout/LayoutCollapsible.vue?raw'
+</script>
+
 ## 何时使用
 
 - 需要搭建页面整体结构时
@@ -14,91 +23,25 @@
 
 最基本的上中下布局。
 
-```vue
-<template>
-  <Layout style="min-height: 200px">
-    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px;">
-      Header
-    </Header>
-    <Content style="padding: 24px; background: #fff;">
-      Content
-    </Content>
-    <Footer style="text-align: center; background: #f5f5f5;">
-      Footer ©2024 Created by ant-design-hmfw
-    </Footer>
-  </Layout>
-</template>
-
-<script setup lang="ts">
-import { Layout, Header, Content, Footer } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础布局（上中下）" :source="LayoutBasicSource">
+  <LayoutBasic />
+</DemoBlock>
 
 ### 带侧边栏
 
 左侧边栏 + 右侧内容区布局。
 
-```vue
-<template>
-  <Layout style="min-height: 300px">
-    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px;">
-      Header
-    </Header>
-    <Layout>
-      <Sider :width="200" style="background: #fff; border-right: 1px solid #f0f0f0;">
-        <div style="padding: 16px;">Sider</div>
-      </Sider>
-      <Content style="padding: 24px; background: #f5f5f5;">
-        Content
-      </Content>
-    </Layout>
-    <Footer style="text-align: center; background: #f5f5f5;">
-      Footer ©2024
-    </Footer>
-  </Layout>
-</template>
-
-<script setup lang="ts">
-import { Layout, Header, Content, Footer, Sider } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="带侧边栏" :source="LayoutSiderSource">
+  <LayoutSider />
+</DemoBlock>
 
 ### 可折叠侧边栏
 
 通过 `collapsible` 属性开启侧边栏折叠功能。
 
-```vue
-<template>
-  <Layout style="min-height: 300px">
-    <Sider
-      v-model:collapsed="collapsed"
-      collapsible
-      :width="200"
-      :collapsed-width="64"
-      style="background: #001529;"
-    >
-      <div style="color: #fff; padding: 16px; text-align: center;">
-        {{ collapsed ? '收' : '导航菜单' }}
-      </div>
-    </Sider>
-    <Layout>
-      <Header style="background: #fff; padding: 0 24px; border-bottom: 1px solid #f0f0f0; line-height: 64px;">
-        Header
-      </Header>
-      <Content style="padding: 24px; background: #f5f5f5;">
-        <p>当前状态：{{ collapsed ? '已折叠' : '已展开' }}</p>
-      </Content>
-    </Layout>
-  </Layout>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Layout, Header, Content, Sider } from 'ant-design-hmfw'
-
-const collapsed = ref(false)
-</script>
-```
+<DemoBlock title="可折叠侧边栏" :source="LayoutCollapsibleSource">
+  <LayoutCollapsible />
+</DemoBlock>
 
 ## API
 

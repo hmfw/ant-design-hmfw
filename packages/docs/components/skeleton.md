@@ -10,84 +10,48 @@
 
 ## 代码演示
 
+<script setup>
+import SkeletonBasic from '../demos/skeleton/SkeletonBasic.vue'
+import SkeletonBasicSource from '../demos/skeleton/SkeletonBasic.vue?raw'
+import SkeletonActive from '../demos/skeleton/SkeletonActive.vue'
+import SkeletonActiveSource from '../demos/skeleton/SkeletonActive.vue?raw'
+import SkeletonWithChildren from '../demos/skeleton/SkeletonWithChildren.vue'
+import SkeletonWithChildrenSource from '../demos/skeleton/SkeletonWithChildren.vue?raw'
+import SkeletonButtonInput from '../demos/skeleton/SkeletonButtonInput.vue'
+import SkeletonButtonInputSource from '../demos/skeleton/SkeletonButtonInput.vue?raw'
+</script>
+
 ### 基础用法
 
 最简单的占位效果。
 
-```vue
-<template>
-  <Skeleton />
-</template>
-
-<script setup lang="ts">
-import { Skeleton } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="基础用法" :source="SkeletonBasicSource">
+  <SkeletonBasic />
+</DemoBlock>
 
 ### 动画效果
 
 显示动画效果。
 
-```vue
-<template>
-  <Skeleton active />
-</template>
-
-<script setup lang="ts">
-import { Skeleton } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="动画效果" :source="SkeletonActiveSource">
+  <SkeletonActive />
+</DemoBlock>
 
 ### 包含子组件
 
 加载占位图包含子组件。
 
-```vue
-<template>
-  <div>
-    <button @click="loading = !loading">切换加载状态</button>
-    <Skeleton :loading="loading" active avatar>
-      <div style="display: flex; gap: 12px; margin-top: 16px;">
-        <img
-          src="https://api.dicebear.com/7.x/miniavs/svg?seed=1"
-          style="width: 40px; height: 40px; border-radius: 50%;"
-        />
-        <div>
-          <p style="font-weight: bold;">用户名称</p>
-          <p>这是一段描述信息，用于展示骨架屏效果。</p>
-        </div>
-      </div>
-    </Skeleton>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Skeleton } from 'ant-design-hmfw'
-
-const loading = ref(true)
-</script>
-```
+<DemoBlock title="包含子组件" :source="SkeletonWithChildrenSource">
+  <SkeletonWithChildren />
+</DemoBlock>
 
 ### 按钮/输入框骨架
 
 独立的按钮和输入框骨架。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <SkeletonButton active />
-    <SkeletonButton active size="small" />
-    <SkeletonButton active shape="round" />
-    <SkeletonInput active />
-    <SkeletonInput active size="small" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { SkeletonButton, SkeletonInput } from 'ant-design-hmfw'
-</script>
-```
+<DemoBlock title="按钮/输入框骨架" :source="SkeletonButtonInputSource">
+  <SkeletonButtonInput />
+</DemoBlock>
 
 ## API
 

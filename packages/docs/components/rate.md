@@ -2,6 +2,17 @@
 
 评分组件。
 
+<script setup>
+import RateBasic from '../demos/rate/RateBasic.vue'
+import RateBasicSource from '../demos/rate/RateBasic.vue?raw'
+import RateHalfStar from '../demos/rate/RateHalfStar.vue'
+import RateHalfStarSource from '../demos/rate/RateHalfStar.vue?raw'
+import RateCustom from '../demos/rate/RateCustom.vue'
+import RateCustomSource from '../demos/rate/RateCustom.vue?raw'
+import RateTooltip from '../demos/rate/RateTooltip.vue'
+import RateTooltipSource from '../demos/rate/RateTooltip.vue?raw'
+</script>
+
 ## 何时使用
 
 - 对评价进行展示。
@@ -13,108 +24,33 @@
 
 最简单的用法。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <Rate v-model:value="value" />
-    <Rate v-model:value="value2" disabled />
-    <p>评分：{{ value }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Rate } from 'ant-design-hmfw'
-
-const value = ref(3)
-const value2 = ref(2.5)
-</script>
-```
+<DemoBlock title="基础用法" :source="RateBasicSource">
+  <RateBasic />
+</DemoBlock>
 
 ### 半星
 
 通过 `allow-half` 属性支持选择半星。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <Rate v-model:value="value" allow-half />
-    <Rate v-model:value="value2" allow-half disabled />
-    <p>评分：{{ value }}</p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Rate } from 'ant-design-hmfw'
-
-const value = ref(2.5)
-const value2 = ref(3.5)
-</script>
-```
+<DemoBlock title="半星" :source="RateHalfStarSource">
+  <RateHalfStar />
+</DemoBlock>
 
 ### 自定义字符
 
 可以将星星替换为其他字符，比如字母、数字、汉字等。
 
-```vue
-<template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <div>
-      <p style="margin-bottom: 4px;">使用表情：</p>
-      <Rate v-model:value="value1" character="😊" />
-    </div>
-    <div>
-      <p style="margin-bottom: 4px;">使用文字：</p>
-      <Rate v-model:value="value2" character="好" />
-    </div>
-    <div>
-      <p style="margin-bottom: 4px;">使用字母：</p>
-      <Rate v-model:value="value3" character="A" />
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Rate } from 'ant-design-hmfw'
-
-const value1 = ref(3)
-const value2 = ref(4)
-const value3 = ref(2)
-</script>
-```
+<DemoBlock title="自定义字符" :source="RateCustomSource">
+  <RateCustom />
+</DemoBlock>
 
 ### 提示信息
 
 通过 `tooltips` 属性为每个星星设置提示信息。
 
-```vue
-<template>
-  <div>
-    <Rate
-      v-model:value="value"
-      :tooltips="tooltips"
-      @hover-change="handleHoverChange"
-    />
-    <p style="margin-top: 8px;">
-      当前：{{ tooltips[value - 1] || '未评分' }}
-    </p>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Rate } from 'ant-design-hmfw'
-
-const value = ref(0)
-const tooltips = ['极差', '差', '一般', '好', '极好']
-
-const handleHoverChange = (hoverValue: number) => {
-  console.log('悬停：', tooltips[hoverValue - 1])
-}
-</script>
-```
+<DemoBlock title="提示信息" :source="RateTooltipSource">
+  <RateTooltip />
+</DemoBlock>
 
 ## API
 

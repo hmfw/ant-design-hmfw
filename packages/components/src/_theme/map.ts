@@ -57,6 +57,18 @@ export interface MapTokens extends SeedTokens {
   colorErrorHover: string
   colorErrorActive: string
 
+  // Additional tokens used by components
+  colorWhite: string
+  colorLink: string
+  colorLinkHover: string
+  colorLinkActive: string
+  colorBgContainerDisabled: string
+  colorBgHeader: string
+  colorBgTextHover: string
+  colorTextLightSolid: string
+  fontSize: number
+  lineHeight: number
+
   // Font sizes
   fontSizeSM: number
   fontSizeLG: number
@@ -172,6 +184,17 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     colorErrorText: seed.colorError,
     colorErrorHover: lighten(seed.colorError, 0.2),
     colorErrorActive: darken(seed.colorError, 0.1),
+
+    colorWhite: '#ffffff',
+    colorLink: seed.colorPrimary,
+    colorLinkHover: lighten(seed.colorPrimary, 0.2),
+    colorLinkActive: darken(seed.colorPrimary, 0.1),
+    colorBgContainerDisabled: 'rgba(0,0,0,0.04)',
+    colorBgHeader: '#001529',
+    colorBgTextHover: 'rgba(0,0,0,0.06)',
+    colorTextLightSolid: '#ffffff',
+    fontSize: seed.fontSizeBase,
+    lineHeight: seed.lineHeightBase,
 
     fontSizeSM: seed.fontSizeBase - 2,
     fontSizeLG: seed.fontSizeBase + 2,
