@@ -10,6 +10,7 @@ export default defineConfig({
   title: 'ant-design-hmfw',
   description: 'A Vue3 UI component library based on Ant Design v6',
   lang: 'zh-CN',
+  head: [['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }]],
   themeConfig: {
     logo: '/logo.svg',
     nav: [

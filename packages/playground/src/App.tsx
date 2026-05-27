@@ -132,7 +132,8 @@ export default defineComponent({
             top: 0,
             zIndex: 100,
           }}>
-            <div style={{ marginBottom: '8px' }}>
+            <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+              <img src="/logo.svg" style={{ height: '28px', marginRight: '10px' }} alt="logo" />
               <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 600, display: 'inline' }}>
                 ant-design-hmfw Playground
               </h1>
