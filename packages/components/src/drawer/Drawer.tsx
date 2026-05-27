@@ -46,8 +46,8 @@ export const Drawer = defineComponent({
 
     return () => (
       <Teleport to="body">
-        <Transition name={`hmfw-drawer-${props.placement}`}>
-          {isOpen.value && (
+        <Transition name={`hmfw-drawer-${props.placement}`} v-slots={{
+          default: () => isOpen.value && (
             <div class={`${prefixCls}-root`} style={{ zIndex: props.zIndex }}>
               {props.mask && <div class={`${prefixCls}-mask`} onClick={() => props.maskClosable && close()} />}
               <div class={cls(`${prefixCls}-content-wrapper`, `${prefixCls}-${props.placement}`)} style={sizeStyle.value}>
@@ -67,7 +67,8 @@ export const Drawer = defineComponent({
                 </div>
               </div>
             </div>
-          )}
+          )
+        }}>
         </Transition>
       </Teleport>
     )

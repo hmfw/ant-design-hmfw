@@ -107,9 +107,12 @@ export const RadioGroup = defineComponent({
                 ? opt as { label: string; value: RadioValueType; disabled?: boolean }
                 : { label: String(opt), value: opt as RadioValueType }
               return (
-                <Radio key={String(item.value)} value={item.value} disabled={item.disabled}>
-                  {item.label}
-                </Radio>
+                <Radio
+                  key={String(item.value)}
+                  value={item.value}
+                  disabled={item.disabled}
+                  v-slots={{ default: () => item.label }}
+                />
               )
             })}
           </div>

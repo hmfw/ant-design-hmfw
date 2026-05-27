@@ -47,8 +47,8 @@ export const Modal = defineComponent({
 
     return () => (
       <Teleport to="body">
-        <Transition name="hmfw-modal-fade">
-          {isOpen.value && (
+        <Transition name="hmfw-modal-fade" v-slots={{
+          default: () => isOpen.value && (
             <div class={`${prefixCls}-root`} style={{ zIndex: props.zIndex }}>
               <div class={`${prefixCls}-mask`} onClick={handleMaskClick} />
               <div class={cls(`${prefixCls}-wrap`, { [`${prefixCls}-centered`]: props.centered })}>
@@ -94,7 +94,8 @@ export const Modal = defineComponent({
                 </div>
               </div>
             </div>
-          )}
+          )
+        }}>
         </Transition>
       </Teleport>
     )

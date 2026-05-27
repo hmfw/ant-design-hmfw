@@ -7,6 +7,7 @@ import type { AutoCompleteOption } from './types'
 
 export const AutoComplete = defineComponent({
   name: 'AutoComplete',
+  inheritAttrs: false,
   props: {
     value: String,
     defaultValue: { type: String, default: '' },
@@ -24,7 +25,7 @@ export const AutoComplete = defineComponent({
     open: { type: Boolean, default: undefined },
   },
   emits: ['update:value', 'change', 'select', 'search', 'focus', 'blur', 'clear'],
-  setup(props, { slots, emit }) {
+  setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('auto-complete')
     const inputPfx = usePrefixCls('input')
 
@@ -152,6 +153,7 @@ export const AutoComplete = defineComponent({
               [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
             }
           )}
+          style={attrs.style as any}
         >
           {slots.prefix && <span class={`${inputPfx}-prefix`}>{slots.prefix()}</span>}
           <input

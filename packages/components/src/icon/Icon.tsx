@@ -7,7 +7,7 @@ export default defineComponent({
   name: 'Icon',
   props: {
     component: {
-      type: Object as PropType<IconComponent>,
+      type: [Object, Function] as PropType<IconComponent>,
       default: undefined,
     },
     spin: {

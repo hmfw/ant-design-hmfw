@@ -150,9 +150,14 @@ export const AvatarGroup = defineComponent({
         <div class={groupPrefixCls}>
           {visibleChildren}
           {overflowCount > 0 && (
-            <Avatar size={props.size} shape={props.shape} style={props.maxStyle}>
-              +{overflowCount}
-            </Avatar>
+            <Avatar
+              size={props.size}
+              shape={props.shape}
+              style={props.maxStyle}
+              v-slots={{
+                default: () => `+${overflowCount}`
+              }}
+            />
           )}
         </div>
       )

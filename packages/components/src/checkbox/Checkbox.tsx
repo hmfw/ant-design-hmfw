@@ -118,9 +118,10 @@ export const CheckboxGroup = defineComponent({
                   key={String(item.value)}
                   value={item.value}
                   disabled={item.disabled}
-                >
-                  {item.label}
-                </Checkbox>
+                  v-slots={{
+                    default: () => item.label
+                  }}
+                />
               )
             })}
           </div>

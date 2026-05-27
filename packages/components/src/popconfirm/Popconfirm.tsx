@@ -149,18 +149,19 @@ export const Popconfirm = defineComponent({
                   )}
                   <div class={`${prefixCls}-buttons`}>
                     {props.showCancel && (
-                      <Button size="small" onClick={handleCancel}>
-                        {props.cancelText}
-                      </Button>
+                      <Button
+                        size="small"
+                        onClick={handleCancel}
+                        v-slots={{ default: () => props.cancelText }}
+                      />
                     )}
                     <Button
                       size="small"
                       type={props.okType === 'danger' ? 'primary' : props.okType}
                       danger={props.okType === 'danger'}
                       onClick={handleConfirm}
-                    >
-                      {props.okText}
-                    </Button>
+                      v-slots={{ default: () => props.okText }}
+                    />
                   </div>
                 </div>
               </div>

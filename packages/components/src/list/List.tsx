@@ -8,7 +8,7 @@ import { Pagination } from '../pagination'
 export const ListItemMeta = defineComponent({
   name: 'ListItemMeta',
   props: {
-    avatar: String,
+    avatar: [String, Object],
     title: String,
     description: String,
   },
