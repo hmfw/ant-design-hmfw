@@ -54,7 +54,7 @@ export default defineComponent({
       getPopupContainer: props.getPopupContainer,
     }))
 
-    provide(CONFIG_PROVIDER_KEY, context.value)
+    provide(CONFIG_PROVIDER_KEY, context)
 
     // Inject CSS variables globally on first mount, scoped if nested
     onMounted(() => {

@@ -31,6 +31,8 @@ const zhCN: Locale = {
   },
   DatePicker: {
     placeholder: '请选择日期',
+    yearPlaceholder: '请选择年份',
+    monthPlaceholder: '请选择月份',
     rangePlaceholder: ['开始日期', '结束日期'],
     today: '今天',
     now: '此刻',
@@ -47,6 +49,8 @@ const zhCN: Locale = {
     nextDecade: '下一个十年',
     previousCentury: '上一个世纪',
     nextCentury: '下一个世纪',
+    weekdays: ['日', '一', '二', '三', '四', '五', '六'],
+    months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
   },
   TimePicker: {
     placeholder: '请选择时间',

@@ -1,7 +1,7 @@
 import {
   defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport,
 } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import type { DatePickerMode } from './types'
 
@@ -44,8 +44,6 @@ function getFirstDayOfWeek(year: number, month: number) {
   return new Date(year, month, 1).getDay()
 }
 
-const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
-const MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
 
 // --- Date panel ---
 function buildCalendar(year: number, month: number) {
@@ -87,6 +85,7 @@ export const DatePicker = defineComponent({
   emits: ['update:value', 'change', 'openChange', 'panelChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('date-picker')
+    const locale = useLocale()
     const now = new Date()
 
     const fmt = computed(() => {
@@ -100,9 +99,10 @@ export const DatePicker = defineComponent({
 
     const placeholder = computed(() => {
       if (props.placeholder) return props.placeholder
-      if (props.picker === 'year') return '请选择年份'
-      if (props.picker === 'month') return '请选择月份'
-      return '请选择日期'
+      const dp = locale.value.DatePicker
+      if (props.picker === 'year') return dp.yearPlaceholder
+      if (props.picker === 'month') return dp.monthPlaceholder
+      return dp.placeholder
     })
 
     const innerValue = ref<Date | null>(parseDate(props.defaultValue ?? props.value))
@@ -213,7 +213,7 @@ export const DatePicker = defineComponent({
               {viewYear.value}年
             </button>
             <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'month' }}>
-              {MONTHS[viewMonth.value]}
+              {locale.value.DatePicker.months[viewMonth.value]}
             </button>
           </span>
           <button class={`${prefixCls}-panel-header-btn`} onClick={nextMonth}>›</button>
@@ -222,7 +222,7 @@ export const DatePicker = defineComponent({
         {/* Weekday row */}
         <div class={`${prefixCls}-panel-body`}>
           <div class={`${prefixCls}-weekdays`}>
-            {WEEKDAYS.map((d) => <span key={d} class={`${prefixCls}-weekday`}>{d}</span>)}
+            {locale.value.DatePicker.weekdays.map((d) => <span key={d} class={`${prefixCls}-weekday`}>{d}</span>)}
           </div>
           <div class={`${prefixCls}-days`}>
             {calendar.value.map(({ date, inCurrentMonth }, i) => {
@@ -251,10 +251,10 @@ export const DatePicker = defineComponent({
         {(props.showToday || props.showTime) && (
           <div class={`${prefixCls}-panel-footer`}>
             {props.showToday && (
-              <button class={`${prefixCls}-panel-footer-today`} onClick={() => selectDate(new Date())}>今天</button>
+              <button class={`${prefixCls}-panel-footer-today`} onClick={() => selectDate(new Date())}>{locale.value.DatePicker.today}</button>
             )}
             {props.showTime && (
-              <button class={`${prefixCls}-panel-footer-ok`} onClick={closePanel}>确定</button>
+              <button class={`${prefixCls}-panel-footer-ok`} onClick={closePanel}>{locale.value.DatePicker.ok}</button>
             )}
           </div>
         )}
@@ -274,7 +274,7 @@ export const DatePicker = defineComponent({
         </div>
         <div class={`${prefixCls}-panel-body`}>
           <div class={`${prefixCls}-months`}>
-            {MONTHS.map((m, i) => {
+            {locale.value.DatePicker.months.map((m, i) => {
               const d = new Date(viewYear.value, i, 1)
               const isSelected = selectedDate.value ? isSameMonth(d, selectedDate.value) : false
               return (

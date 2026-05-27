@@ -29,6 +29,8 @@ export interface Locale {
   }
   DatePicker: {
     placeholder: string
+    yearPlaceholder: string
+    monthPlaceholder: string
     rangePlaceholder: [string, string]
     today: string
     now: string
@@ -45,6 +47,8 @@ export interface Locale {
     nextDecade: string
     previousCentury: string
     nextCentury: string
+    weekdays: [string, string, string, string, string, string, string]
+    months: [string, string, string, string, string, string, string, string, string, string, string, string]
   }
   TimePicker: {
     placeholder: string

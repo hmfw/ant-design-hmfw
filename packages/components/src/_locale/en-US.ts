@@ -31,6 +31,8 @@ const enUS: Locale = {
   },
   DatePicker: {
     placeholder: 'Select date',
+    yearPlaceholder: 'Select year',
+    monthPlaceholder: 'Select month',
     rangePlaceholder: ['Start date', 'End date'],
     today: 'Today',
     now: 'Now',
@@ -47,6 +49,8 @@ const enUS: Locale = {
     nextDecade: 'Next decade',
     previousCentury: 'Last century',
     nextCentury: 'Next century',
+    weekdays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   },
   TimePicker: {
     placeholder: 'Select time',

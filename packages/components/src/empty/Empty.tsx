@@ -1,5 +1,5 @@
 import { defineComponent, type PropType } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 
 // Simple SVG for the default empty illustration
@@ -33,11 +33,12 @@ export const Empty = defineComponent({
     imageStyle: Object as PropType<Record<string, string>>,
     description: {
       type: [String, Boolean] as PropType<string | false>,
-      default: '暂无数据',
+      default: undefined,
     },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('empty')
+    const locale = useLocale()
 
     return () => {
       const showImage = props.image !== false
@@ -62,7 +63,7 @@ export const Empty = defineComponent({
 
       const descriptionNode = showDescription && (
         <div class={`${prefixCls}-description`}>
-          {slots.description ? slots.description() : props.description}
+          {slots.description ? slots.description() : (props.description ?? locale.value.Empty.description)}
         </div>
       )
 

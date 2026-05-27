@@ -89,6 +89,7 @@ export const Input = defineComponent({
           disabled={props.disabled}
           readonly={props.readOnly}
           maxlength={props.maxLength}
+          aria-invalid={props.status === 'error' || undefined}
           onInput={handleInput}
           onKeydown={handleKeydown}
           onFocus={(e: FocusEvent) => emit('focus', e)}

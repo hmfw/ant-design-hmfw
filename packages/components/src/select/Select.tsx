@@ -9,7 +9,7 @@ import {
   Teleport,
   type PropType,
 } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import type { SelectSize, SelectMode, SelectStatus, SelectOption } from './types'
 
@@ -30,7 +30,7 @@ export const Select = defineComponent({
     status: String as PropType<SelectStatus>,
     placeholder: {
       type: String,
-      default: '请选择',
+      default: undefined,
     },
     disabled: Boolean,
     loading: Boolean,
@@ -42,7 +42,7 @@ export const Select = defineComponent({
     },
     notFoundContent: {
       type: String,
-      default: '暂无数据',
+      default: undefined,
     },
     maxTagCount: Number,
     open: {
@@ -57,6 +57,7 @@ export const Select = defineComponent({
   emits: ['update:value', 'change', 'search', 'select', 'deselect', 'clear', 'dropdownVisibleChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('select')
+    const locale = useLocale()
     const selectorRef = ref<HTMLElement | null>(null)
     const dropdownRef = ref<HTMLElement | null>(null)
     const searchRef = ref<HTMLInputElement | null>(null)
@@ -220,6 +221,10 @@ export const Select = defineComponent({
           <div
             ref={selectorRef}
             class={`${prefixCls}-selector`}
+            role="combobox"
+            aria-expanded={isOpen.value}
+            aria-haspopup="listbox"
+            aria-disabled={props.disabled || undefined}
             onClick={isOpen.value ? closeDropdown : openDropdown}
           >
             {isMultiple.value ? (
@@ -251,7 +256,7 @@ export const Select = defineComponent({
                   />
                 )}
                 {!hasValue && !searchText.value && (
-                  <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder}</span>
+                  <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder ?? locale.value.Select.placeholder}</span>
                 )}
               </>
             ) : (
@@ -260,7 +265,7 @@ export const Select = defineComponent({
                   <span class={`${prefixCls}-selection-item`}>{selectedLabels.value[0]}</span>
                 ) : (
                   !searchText.value && (
-                    <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder}</span>
+                    <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder ?? locale.value.Select.placeholder}</span>
                   )
                 )}
                 {props.showSearch && isOpen.value && (
@@ -295,6 +300,8 @@ export const Select = defineComponent({
               <div
                 ref={dropdownRef}
                 class={`${prefixCls}-dropdown`}
+                role="listbox"
+                aria-multiselectable={isMultiple.value || undefined}
                 style={{
                   position: 'absolute',
                   top: `${dropdownPos.value.top}px`,
@@ -305,7 +312,7 @@ export const Select = defineComponent({
                 }}
               >
                 {filteredOptions.value.length === 0 ? (
-                  <div class={`${prefixCls}-item-empty`}>{props.notFoundContent}</div>
+                  <div class={`${prefixCls}-item-empty`}>{props.notFoundContent ?? locale.value.Select.notFoundContent}</div>
                 ) : (
                   filteredOptions.value.map((opt) => (
                     <div
@@ -315,6 +322,9 @@ export const Select = defineComponent({
                         [`${prefixCls}-item-option-disabled`]: opt.disabled,
                         [`${prefixCls}-item-option-active`]: !opt.disabled,
                       })}
+                      role="option"
+                      aria-selected={selectedValues.value.includes(opt.value)}
+                      aria-disabled={opt.disabled || undefined}
                       title={opt.title ?? opt.label}
                       onMousedown={(e) => e.preventDefault()}
                       onClick={() => selectOption(opt)}

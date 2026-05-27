@@ -16,6 +16,7 @@
     "./dist/style.css": "./dist/style.css",
     "./style.css": "./dist/style.css"
   },
+  "sideEffects": ["**/*.css", "dist/style.css"],
   "files": ["dist"],
   "scripts": {
     "build": "tsup",

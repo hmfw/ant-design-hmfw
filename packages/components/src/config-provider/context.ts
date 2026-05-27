@@ -1,9 +1,9 @@
-import { inject, type InjectionKey } from 'vue'
+import { inject, computed, type InjectionKey, type ComputedRef } from 'vue'
 import type { ConfigContext } from './types'
 import { defaultSeedTokens } from '../_theme/seed'
 import { zhCN } from '../_locale'
 
-export const CONFIG_PROVIDER_KEY: InjectionKey<ConfigContext> = Symbol('ConfigProvider')
+export const CONFIG_PROVIDER_KEY: InjectionKey<ComputedRef<ConfigContext>> = Symbol('ConfigProvider')
 
 export const defaultConfig: ConfigContext = {
   locale: zhCN,
@@ -14,16 +14,18 @@ export const defaultConfig: ConfigContext = {
   getPopupContainer: () => document.body,
 }
 
-export function useConfig(): ConfigContext {
-  return inject(CONFIG_PROVIDER_KEY, defaultConfig)
+const defaultConfigRef = computed(() => defaultConfig)
+
+export function useConfig(): ComputedRef<ConfigContext> {
+  return inject(CONFIG_PROVIDER_KEY, defaultConfigRef)
 }
 
 export function usePrefixCls(componentName: string): string {
   const config = useConfig()
-  return `${config.prefixCls}-${componentName}`
+  return `${config.value.prefixCls}-${componentName}`
 }
 
-export function useLocale() {
+export function useLocale(): ComputedRef<ConfigContext['locale']> {
   const config = useConfig()
-  return config.locale
+  return computed(() => config.value.locale)
 }

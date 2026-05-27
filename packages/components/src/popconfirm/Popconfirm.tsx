@@ -9,7 +9,7 @@ import {
   Teleport,
   type PropType,
 } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
 import type { TooltipPlacement } from '../tooltip/types'
@@ -19,8 +19,8 @@ export const Popconfirm = defineComponent({
   props: {
     title: String,
     description: String,
-    okText: { type: String, default: '确定' },
-    cancelText: { type: String, default: '取消' },
+    okText: { type: String, default: undefined },
+    cancelText: { type: String, default: undefined },
     okType: { type: String as PropType<'primary' | 'default' | 'danger'>, default: 'primary' },
     icon: { type: String, default: '⚠' },
     placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
@@ -33,6 +33,7 @@ export const Popconfirm = defineComponent({
   emits: ['update:open', 'openChange', 'confirm', 'cancel'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('popconfirm')
+    const locale = useLocale()
     const triggerRef = ref<HTMLElement | null>(null)
     const popRef = ref<HTMLElement | null>(null)
     const innerOpen = ref(false)
@@ -152,7 +153,7 @@ export const Popconfirm = defineComponent({
                       <Button
                         size="small"
                         onClick={handleCancel}
-                        v-slots={{ default: () => props.cancelText }}
+                        v-slots={{ default: () => props.cancelText ?? locale.value.Modal.cancelText }}
                       />
                     )}
                     <Button
@@ -160,7 +161,7 @@ export const Popconfirm = defineComponent({
                       type={props.okType === 'danger' ? 'primary' : props.okType}
                       danger={props.okType === 'danger'}
                       onClick={handleConfirm}
-                      v-slots={{ default: () => props.okText }}
+                      v-slots={{ default: () => props.okText ?? locale.value.Modal.okText }}
                     />
                   </div>
                 </div>

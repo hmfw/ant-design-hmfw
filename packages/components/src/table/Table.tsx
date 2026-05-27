@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, watch, type PropType } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Spin } from '../spin'
 import { Empty } from '../empty'
@@ -59,6 +59,7 @@ export const Table = defineComponent({
   emits: ['change'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('table')
+    const locale = useLocale()
 
     // Sort state
     const sortState = ref<{ key: string; order: 'ascend' | 'descend' | null }>({ key: '', order: null })
@@ -227,6 +228,8 @@ export const Table = defineComponent({
                         return (
                           <th
                             key={key}
+                            scope="col"
+                            aria-sort={isSorted ? (sortState.value.order === 'ascend' ? 'ascending' : 'descending') : (col.sorter ? 'none' : undefined)}
                             class={cls(`${prefixCls}-cell`, {
                               [`${prefixCls}-column-sort`]: isSorted,
                               [`${prefixCls}-column-has-sorters`]: !!col.sorter,
@@ -256,7 +259,7 @@ export const Table = defineComponent({
                   {isEmpty ? (
                     <tr class={`${prefixCls}-placeholder`}>
                       <td colspan={(props.columns?.length ?? 0) + (showSelection ? 1 : 0)}>
-                        <Empty description={props.locale?.emptyText ?? '暂无数据'} />
+                        <Empty description={props.locale?.emptyText ?? locale.value.Table.emptyText} />
                       </td>
                     </tr>
                   ) : (
