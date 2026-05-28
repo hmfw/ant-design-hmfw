@@ -21,8 +21,7 @@
 ant-design-hmfw/
 ├── packages/
 │   ├── components/   # 组件库核心 → 见 packages/components/CLAUDE.md
-│   ├── playground/   # 开发调试环境 → 见 packages/playground/CLAUDE.md
-│   └── docs/         # 文档站 → 见 packages/docs/CLAUDE.md
+│   └── docs/         # 文档站（同时作为开发调试环境）→ 见 packages/docs/CLAUDE.md
 ├── IMPLEMENTATION_PLAN.md
 ├── CLAUDE.md
 └── package.json
@@ -38,7 +37,6 @@ pnpm install
 
 # 各包独立操作（推荐）
 pnpm --filter ant-design-hmfw <script>   # 组件库
-pnpm --filter playground <script>        # playground
 pnpm --filter docs <script>              # 文档站
 ```
 
@@ -62,9 +60,11 @@ mkdir -p packages/components/src/my-component/{style,__tests__}
 #    packages/components/src/index.ts   — 添加导出
 #    packages/components/src/style.css  — 添加 @import
 
-# 3. 在 playground 中添加演示
-#    packages/playground/src/demos/MyComponentDemo.tsx
-#    packages/playground/src/App.tsx    — 添加到 demos 数组
+# 3. 在 docs 中添加演示和文档
+#    packages/docs/demos/my-component/MyComponentBasic.vue  — demo 文件
+#    packages/docs/components/my-component.md               — 组件文档
+#    packages/docs/src/router/index.ts                      — 添加路由
+#    packages/docs/src/nav/sidebar.ts                       — 添加侧边栏
 
 # 4. 更新 IMPLEMENTATION_PLAN.md 状态
 ```
@@ -83,17 +83,17 @@ pnpm --filter ant-design-hmfw test:coverage
 pnpm --filter ant-design-hmfw build
 ```
 
-### 启动 Playground
+### 启动文档站（开发调试）
 
 ```bash
-pnpm --filter playground dev
-# 访问 http://localhost:5177
+pnpm --filter docs dev
+# 访问 http://localhost:5173
 ```
 
 ### E2E 验证
 
 ```bash
-playwright-cli open http://localhost:5177
+playwright-cli open http://localhost:5173
 playwright-cli screenshot --filename=/tmp/demo.png
 playwright-cli console error
 playwright-cli close

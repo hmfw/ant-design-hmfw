@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '../layouts/AppLayout.vue'
 import HomePage from '../pages/HomePage.vue'
-
 export const router = createRouter({
   history: createWebHistory(),
   routes: [

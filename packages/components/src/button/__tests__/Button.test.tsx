@@ -104,7 +104,7 @@ describe('Button', () => {
 
   it('handles icon only button', () => {
     const wrapper = mount(Button, {
-      props: { icon: { component: () => <span>icon</span> } },
+      props: { icon: () => <span>icon</span> },
     })
     expect(wrapper.classes()).toContain('hmfw-btn-icon-only')
   })

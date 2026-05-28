@@ -1,9 +1,8 @@
-import type { IconProps } from '../icon/types'
+import type { IconComponent } from '../icon/types'
 
 export type ButtonType = 'default' | 'primary' | 'dashed' | 'text' | 'link'
 export type ButtonSize = 'small' | 'middle' | 'large'
 export type ButtonHTMLType = 'submit' | 'button' | 'reset'
-export type IconConfig = IconProps
 
 export interface ButtonProps {
   type?: ButtonType
@@ -14,5 +13,5 @@ export interface ButtonProps {
   danger?: boolean
   block?: boolean
   ghost?: boolean
-  icon?: IconConfig
+  icon?: IconComponent
 }

@@ -3,7 +3,8 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { LoadingOutlined } from '../icon/icons'
-import type { ButtonType, ButtonSize, ButtonHTMLType, IconConfig } from './types'
+import type { ButtonType, ButtonSize, ButtonHTMLType } from './types'
+import type { IconComponent } from '../icon/types'
 
 export default defineComponent({
   name: 'Button',
@@ -41,7 +42,7 @@ export default defineComponent({
       default: false,
     },
     icon: {
-      type: Object as PropType<IconConfig>,
+      type: Function as PropType<IconComponent>,
       default: undefined,
     },
   },
@@ -49,25 +50,25 @@ export default defineComponent({
   setup(props, { emit, slots }) {
     const prefixCls = usePrefixCls('btn')
 
-    const classes = computed(() => {
-      const hasIcon: boolean = !slots.default && !!(props.icon || props.loading)
-      return cls(
+    const isDisabled = computed(() => props.disabled || props.loading)
+
+    const classes = computed(() =>
+      cls(
         prefixCls,
         `${prefixCls}-${props.type}`,
         `${prefixCls}-${props.size}`,
         {
           [`${prefixCls}-loading`]: props.loading,
-          [`${prefixCls}-disabled`]: props.disabled || props.loading,
+          [`${prefixCls}-disabled`]: props.disabled,
           [`${prefixCls}-dangerous`]: props.danger,
           [`${prefixCls}-block`]: props.block,
           [`${prefixCls}-background-ghost`]: props.ghost,
-          [`${prefixCls}-icon-only`]: hasIcon,
         }
       )
-    })
+    )
 
     const handleClick = (e: MouseEvent) => {
-      if (props.disabled || props.loading) {
+      if (isDisabled.value) {
         e.preventDefault()
         return
       }
@@ -78,18 +79,22 @@ export default defineComponent({
       const iconNode = props.loading ? (
         <Icon component={LoadingOutlined} spin />
       ) : props.icon ? (
-        <Icon {...props.icon} />
+        <Icon component={props.icon} />
       ) : null
+
+      const slotContent = slots.default?.()
+      const hasSlotContent = !!slotContent?.length
+      const hasIcon = !hasSlotContent && !!(props.icon || props.loading)
 
       return (
         <button
           type={props.htmlType}
-          class={classes.value}
-          disabled={props.disabled || props.loading}
+          class={cls(classes.value, { [`${prefixCls}-icon-only`]: hasIcon })}
+          disabled={isDisabled.value}
           onClick={handleClick}
         >
           {iconNode}
-          {slots.default && <span>{slots.default()}</span>}
+          {hasSlotContent && <span>{slotContent}</span>}
         </button>
       )
     }

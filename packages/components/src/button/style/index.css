@@ -190,12 +190,12 @@
 }
 
 /* Ghost */
-.hmfw-btn-background-ghost {
-  background-color: transparent !important;
+.hmfw-btn.hmfw-btn-background-ghost {
+  background-color: transparent;
   color: var(--hmfw-color-white);
   border-color: var(--hmfw-color-white);
 }
 
-.hmfw-btn-background-ghost:hover:not(.hmfw-btn-disabled) {
-  background-color: rgba(255, 255, 255, 0.1) !important;
+.hmfw-btn.hmfw-btn-background-ghost:hover:not(.hmfw-btn-disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
 }
