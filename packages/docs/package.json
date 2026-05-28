@@ -3,19 +3,22 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vitepress dev",
-    "build": "vitepress build",
-    "preview": "vitepress preview"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "ant-design-hmfw": "workspace:*"
+    "ant-design-hmfw": "workspace:*",
+    "markdown-it-anchor": "^9.2.0",
+    "vue": "^3.4.0",
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.4",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
-    "@vitepress-demo-preview/component": "^2.6.2",
-    "@vitepress-demo-preview/plugin": "^1.4.1",
-    "vitepress": "^1.1.0",
-    "vue": "^3.4.0"
+    "markdown-it-prism": "^2.3.0",
+    "prismjs": "^1.29.0",
+    "unplugin-vue-markdown": "^0.26.2",
+    "vite": "^5.4.0"
   }
 }

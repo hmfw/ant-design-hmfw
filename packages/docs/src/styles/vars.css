@@ -1,0 +1,30 @@
+:root {
+  --doc-c-brand:       #1677ff;
+  --doc-c-brand-hover: #4096ff;
+  --doc-c-brand-dark:  #0958d9;
+  --doc-c-brand-soft:  rgba(22, 119, 255, 0.06);
+
+  --doc-c-bg:          #ffffff;
+  --doc-c-bg-soft:     #fafafa;
+  --doc-c-bg-alt:      #f5f5f5;
+
+  --doc-c-text-1:      rgba(0, 0, 0, 0.88);
+  --doc-c-text-2:      rgba(0, 0, 0, 0.45);
+  --doc-c-text-3:      rgba(0, 0, 0, 0.25);
+
+  --doc-c-divider:     rgba(5, 5, 5, 0.06);
+  --doc-c-border:      rgba(5, 5, 5, 0.15);
+
+  --doc-code-color:    #1677ff;
+  --doc-code-bg:       rgba(22, 119, 255, 0.06);
+
+  --doc-font-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --doc-font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+
+  --doc-nav-height:      64px;
+  --doc-sidebar-width:   260px;
+  --doc-content-max-w:   960px;
+  --doc-content-padding: 32px 48px 96px;
+}

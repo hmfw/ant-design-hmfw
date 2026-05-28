@@ -99,27 +99,19 @@ async function copyCode() {
   min-height: 60px;
 }
 
-.dark .demo-block__preview {
-  background: var(--vp-c-bg);
-}
-
 .demo-block__toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
   border-top: 1px dashed rgba(5, 5, 5, 0.1);
-  background: var(--vp-c-bg-soft);
+  background: var(--vp-c-bg-soft, var(--doc-c-bg-soft));
   gap: 8px;
-}
-
-.dark .demo-block__toolbar {
-  border-top-color: rgba(255, 255, 255, 0.1);
 }
 
 .demo-block__title {
   font-size: 13px;
-  color: var(--vp-c-text-2);
+  color: var(--vp-c-text-2, var(--doc-c-text-2));
   flex: 1;
 }
 
@@ -136,17 +128,13 @@ async function copyCode() {
   overflow: hidden;
 }
 
-.dark .demo-block__lang-tabs {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
 .demo-block__lang-btn {
   padding: 2px 10px;
   font-size: 12px;
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--vp-c-text-2);
+  color: var(--vp-c-text-2, var(--doc-c-text-2));
   transition: background 0.15s, color 0.15s;
   line-height: 20px;
 }
@@ -170,7 +158,7 @@ async function copyCode() {
   border: none;
   background: transparent;
   cursor: pointer;
-  color: var(--vp-c-text-2);
+  color: var(--vp-c-text-2, var(--doc-c-text-2));
   border-radius: 4px;
   transition: background 0.15s, color 0.15s;
 }
@@ -190,14 +178,10 @@ async function copyCode() {
   border: 1px solid rgba(5, 5, 5, 0.12);
   border-radius: 4px;
   cursor: pointer;
-  color: var(--vp-c-text-2);
+  color: var(--vp-c-text-2, var(--doc-c-text-2));
   transition: background 0.15s, color 0.15s, border-color 0.15s;
   line-height: 20px;
   white-space: nowrap;
-}
-
-.dark .demo-block__toggle-btn {
-  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .demo-block__toggle-btn:hover {
@@ -210,19 +194,15 @@ async function copyCode() {
   border-top: 1px solid rgba(5, 5, 5, 0.06);
 }
 
-.dark .demo-block__code {
-  border-top-color: rgba(255, 255, 255, 0.08);
-}
-
 .demo-block__pre {
   margin: 0;
   padding: 20px 24px;
-  background: var(--vp-c-bg-soft);
+  background: var(--vp-c-bg-soft, var(--doc-c-bg-soft));
   overflow-x: auto;
-  font-family: var(--vp-font-family-mono);
+  font-family: var(--vp-font-family-mono, var(--doc-font-mono));
   font-size: 13px;
   line-height: 1.6;
-  color: var(--vp-c-text-1);
+  color: var(--vp-c-text-1, var(--doc-c-text-1));
   tab-size: 2;
 }
 </style>

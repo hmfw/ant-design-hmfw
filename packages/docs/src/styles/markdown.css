@@ -1,0 +1,185 @@
+.md-content {
+  line-height: 1.7;
+  color: var(--doc-c-text-1);
+  font-size: 15px;
+  font-family: var(--doc-font-base);
+}
+
+/* ---- Headings ---- */
+.md-content h1,
+.md-content h2,
+.md-content h3,
+.md-content h4,
+.md-content h5,
+.md-content h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--doc-c-text-1);
+}
+
+.md-content h1 {
+  font-size: 28px;
+  margin: 0 0 24px;
+}
+
+.md-content h2 {
+  font-size: 22px;
+  margin: 48px 0 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--doc-c-divider);
+}
+
+.md-content h2:first-of-type {
+  border-top: none;
+  margin-top: 24px;
+}
+
+.md-content h3 {
+  font-size: 17px;
+  margin: 32px 0 12px;
+}
+
+.md-content h4 {
+  font-size: 15px;
+  margin: 24px 0 8px;
+}
+
+/* ---- Paragraphs ---- */
+.md-content p {
+  margin: 0 0 16px;
+}
+
+/* ---- Links ---- */
+.md-content a {
+  color: var(--doc-c-brand);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.md-content a:hover {
+  color: var(--doc-c-brand-hover);
+  text-decoration: underline;
+}
+
+/* ---- Inline code ---- */
+.md-content :not(pre) > code {
+  font-family: var(--doc-font-mono);
+  font-size: 0.875em;
+  color: var(--doc-code-color);
+  background: var(--doc-code-bg);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+/* ---- Code blocks ---- */
+.md-content pre {
+  margin: 16px 0;
+  padding: 20px 24px;
+  background: #f5f5f5;
+  border: 1px solid var(--doc-c-divider);
+  border-radius: 8px;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+.md-content pre code {
+  font-family: var(--doc-font-mono);
+  font-size: 13px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  /* Let Prism handle the color */
+  color: inherit;
+}
+
+/* ---- Blockquote ---- */
+.md-content blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 3px solid var(--doc-c-brand);
+  background: rgba(22, 119, 255, 0.04);
+  border-radius: 0 4px 4px 0;
+  color: var(--doc-c-text-2);
+}
+
+.md-content blockquote p {
+  margin: 0;
+}
+
+/* ---- Lists ---- */
+.md-content ul,
+.md-content ol {
+  margin: 0 0 16px;
+  padding-left: 24px;
+}
+
+.md-content li {
+  margin: 4px 0;
+  line-height: 1.7;
+}
+
+.md-content li > ul,
+.md-content li > ol {
+  margin: 4px 0 0;
+}
+
+/* ---- HR ---- */
+.md-content hr {
+  border: none;
+  border-top: 1px solid var(--doc-c-divider);
+  margin: 32px 0;
+}
+
+/* ---- Tables ---- */
+.md-content table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--doc-c-divider);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.md-content th {
+  background: var(--doc-c-bg-soft);
+  font-weight: 600;
+  color: var(--doc-c-text-1);
+  font-size: 13px;
+  white-space: nowrap;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--doc-c-divider);
+}
+
+.md-content td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--doc-c-divider);
+  vertical-align: top;
+}
+
+.md-content tr:last-child td {
+  border-bottom: none;
+}
+
+.md-content td code,
+.md-content th code {
+  background: rgba(22, 119, 255, 0.06);
+  color: #1677ff;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-family: var(--doc-font-mono);
+}
+
+/* ---- Images ---- */
+.md-content img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+/* ---- Strong / em ---- */
+.md-content strong {
+  font-weight: 600;
+  color: var(--doc-c-text-1);
+}
