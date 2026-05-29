@@ -6,11 +6,13 @@ import MarkdownItPrism from 'markdown-it-prism'
 import MarkdownItAnchor from 'markdown-it-anchor'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { autoDemoImports } from './plugins/auto-demo-imports'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   plugins: [
+    autoDemoImports(),
     Markdown({
       markdownItOptions: { html: true, linkify: true },
       markdownItSetup(md) {
