@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { Upload } from '../Upload'
 
 describe('Upload', () => {
@@ -66,5 +66,64 @@ describe('Upload', () => {
       await removeBtn.trigger('click')
       expect(wrapper.emitted('remove')).toBeTruthy()
     }
+  })
+
+  it('renders dragger variant', () => {
+    const wrapper = mount(Upload, { props: { type: 'drag' } })
+    expect(wrapper.find('.hmfw-upload-drag').exists()).toBe(true)
+  })
+
+  it('dragger shows drag-over class on dragover', async () => {
+    const wrapper = mount(Upload, { props: { type: 'drag' } })
+    await wrapper.find('.hmfw-upload-drag').trigger('dragover')
+    expect(wrapper.find('.hmfw-upload-drag-hover').exists()).toBe(true)
+  })
+
+  it('dragger removes drag-over class on dragleave', async () => {
+    const wrapper = mount(Upload, { props: { type: 'drag' } })
+    await wrapper.find('.hmfw-upload-drag').trigger('dragover')
+    await wrapper.find('.hmfw-upload-drag').trigger('dragleave')
+    expect(wrapper.find('.hmfw-upload-drag-hover').exists()).toBe(false)
+  })
+
+  it('renders error status file', () => {
+    const fileList = [{ uid: '1', name: 'fail.png', status: 'error' as const }]
+    const wrapper = mount(Upload, { props: { fileList } })
+    expect(wrapper.find('.hmfw-upload-list-item-error').exists()).toBe(true)
+  })
+
+  it('renders uploading status file', () => {
+    const fileList = [{ uid: '1', name: 'uploading.png', status: 'uploading' as const, percent: 60 }]
+    const wrapper = mount(Upload, { props: { fileList } })
+    expect(wrapper.find('.hmfw-upload-list-item-uploading').exists()).toBe(true)
+  })
+
+  it('showUploadList=false hides file list', () => {
+    const fileList = [{ uid: '1', name: 'test.png', status: 'done' as const }]
+    const wrapper = mount(Upload, { props: { fileList, showUploadList: false } })
+    expect(wrapper.find('.hmfw-upload-list-item').exists()).toBe(false)
+  })
+
+  it('calls customRequest when file selected', async () => {
+    const customRequest = vi.fn()
+    const wrapper = mount(Upload, { props: { customRequest } })
+    const file = new File(['content'], 'test.txt', { type: 'text/plain' })
+    const input = wrapper.find('input[type="file"]').element as HTMLInputElement
+    Object.defineProperty(input, 'files', { value: [file], configurable: true })
+    await wrapper.find('input[type="file"]').trigger('change')
+    await wrapper.vm.$nextTick()
+    expect(customRequest).toHaveBeenCalled()
+  })
+
+  it('emits beforeUpload result false cancels upload', async () => {
+    const beforeUpload = vi.fn().mockReturnValue(false)
+    const customRequest = vi.fn()
+    const wrapper = mount(Upload, { props: { beforeUpload, customRequest } })
+    const file = new File(['content'], 'test.txt', { type: 'text/plain' })
+    const input = wrapper.find('input[type="file"]').element as HTMLInputElement
+    Object.defineProperty(input, 'files', { value: [file], configurable: true })
+    await wrapper.find('input[type="file"]').trigger('change')
+    await wrapper.vm.$nextTick()
+    expect(customRequest).not.toHaveBeenCalled()
   })
 })

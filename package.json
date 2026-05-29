@@ -50,13 +50,12 @@
     "typecheck": "tsc --noEmit",
     "gen:icons": "tsx scripts/generate-icons.ts",
     "prebuild:lib": "pnpm gen:icons",
-    "release": "pnpm build:lib && changeset publish"
+    "release": "pnpm build:lib && npm publish"
   },
   "peerDependencies": {
     "vue": ">=3.3.0 <4.0.0"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.1",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "@vitejs/plugin-vue": "^5.2.4",
