@@ -13,31 +13,32 @@
 - **构建**: tsup（基于 esbuild）
 - **测试**: Vitest + @vue/test-utils
 - **E2E**: Playwright CLI（`playwright-cli`）
-- **包管理**: pnpm workspace（monorepo）
+- **包管理**: pnpm
 
-## Monorepo 结构
+## 项目结构
 
 ```
 ant-design-hmfw/
-├── packages/
-│   ├── components/   # 组件库核心 → 见 packages/components/CLAUDE.md
-│   └── docs/         # 文档站（同时作为开发调试环境）→ 见 packages/docs/CLAUDE.md
+├── components/          # 组件库核心源码
+├── docs/                # 文档站（同时作为开发调试环境）
+├── scripts/             # 构建脚本（图标生成等）
+├── dist/                # 构建产物（自动生成）
 ├── IMPLEMENTATION_PLAN.md
 ├── CLAUDE.md
 └── package.json
 ```
 
-各子包的详细说明见对应目录下的 CLAUDE.md。
-
-## 根目录命令
+## 常用命令
 
 ```bash
-# 安装所有依赖
-pnpm install
-
-# 各包独立操作（推荐）
-pnpm --filter ant-design-hmfw <script>   # 组件库
-pnpm --filter docs <script>              # 文档站
+pnpm install          # 安装依赖
+pnpm dev              # 启动文档站（访问 http://localhost:5173）
+pnpm build:lib        # 构建组件库
+pnpm build:docs       # 构建文档站
+pnpm test             # 运行测试
+pnpm test:watch       # 监听模式测试
+pnpm test:coverage    # 测试覆盖率
+pnpm typecheck        # 类型检查
 ```
 
 ## 命名规范
@@ -53,18 +54,17 @@ pnpm --filter docs <script>              # 文档站
 ### 开发新组件
 
 ```bash
-# 1. 在 components 包中创建组件
-mkdir -p packages/components/src/my-component/{style,__tests__}
+# 1. 创建组件目录
+mkdir -p components/my-component/{style,__tests__}
 
 # 2. 实现后更新：
-#    packages/components/src/index.ts   — 添加导出
-#    packages/components/src/style.css  — 添加 @import
+#    components/index.ts   — 添加导出
+#    components/style.css  — 添加 @import
 
 # 3. 在 docs 中添加演示和文档
-#    packages/docs/demos/my-component/MyComponentBasic.vue  — demo 文件
-#    packages/docs/components/my-component.md               — 组件文档
-#    packages/docs/src/router/index.ts                      — 添加路由
-#    packages/docs/src/nav/sidebar.ts                       — 添加侧边栏
+#    docs/demos/my-component/MyComponentBasic.vue  — demo 文件
+#    docs/demos/my-component/my-component.md       — 组件文档（路由自动生成）
+#    docs/src/nav/sidebar.ts                       — 添加侧边栏条目
 
 # 4. 更新 IMPLEMENTATION_PLAN.md 状态
 ```
@@ -72,21 +72,21 @@ mkdir -p packages/components/src/my-component/{style,__tests__}
 ### 运行测试
 
 ```bash
-pnpm --filter ant-design-hmfw test
-pnpm --filter ant-design-hmfw test:watch
-pnpm --filter ant-design-hmfw test:coverage
+pnpm test
+pnpm test:watch
+pnpm test:coverage
 ```
 
 ### 构建
 
 ```bash
-pnpm --filter ant-design-hmfw build
+pnpm build:lib
 ```
 
 ### 启动文档站（开发调试）
 
 ```bash
-pnpm --filter docs dev
+pnpm dev
 # 访问 http://localhost:5173
 ```
 
@@ -101,7 +101,7 @@ playwright-cli close
 
 ## 设计 Token 系统
 
-位于 `packages/components/src/_theme/`：
+位于 `components/_theme/`：
 
 - `seed.ts` — 基础 Token（颜色、字体、间距原始值）
 - `map.ts` — 派生 Token（由 seed 计算）
