@@ -1,0 +1,1 @@
+function r(...o){const s=[];for(const e of o)if(e){if(typeof e=="string"||typeof e=="number")s.push(String(e));else if(Array.isArray(e)){const n=r(...e);n&&s.push(n)}else if(typeof e=="object")for(const[n,t]of Object.entries(e))t&&s.push(n)}return s.join(" ")}export{r as c};
