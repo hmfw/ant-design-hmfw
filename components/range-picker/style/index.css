@@ -1,0 +1,49 @@
+/* RangePicker extends DatePicker styles */
+.hmfw-date-picker-range {
+  width: auto;
+}
+
+.hmfw-date-picker-range .hmfw-date-picker-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hmfw-date-picker-range-separator {
+  color: rgba(0, 0, 0, 0.45);
+  flex-shrink: 0;
+}
+
+.hmfw-date-picker-range-popup {
+  padding: 0;
+}
+
+.hmfw-date-picker-range-panels {
+  display: flex;
+}
+
+.hmfw-date-picker-range-panels .hmfw-date-picker-panel {
+  border-right: 1px solid var(--hmfw-color-border, #d9d9d9);
+}
+
+.hmfw-date-picker-range-panels .hmfw-date-picker-panel:last-child {
+  border-right: none;
+}
+
+/* Range highlight */
+.hmfw-date-picker-day-in-range {
+  background: var(--hmfw-color-primary-bg, #e6f4ff);
+  border-radius: 0;
+}
+
+.hmfw-date-picker-day-range-start {
+  border-radius: 4px 0 0 4px !important;
+}
+
+.hmfw-date-picker-day-range-end {
+  border-radius: 0 4px 4px 0 !important;
+}
+
+.hmfw-date-picker-day-range-start.hmfw-date-picker-day-range-end {
+  border-radius: 4px !important;
+}

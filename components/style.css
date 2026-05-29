@@ -61,6 +61,9 @@
 @import './carousel/style/index.css';
 @import './tour/style/index.css';
 @import './color-picker/style/index.css';
+@import './transfer/style/index.css';
+@import './range-picker/style/index.css';
+@import './tree-select/style/index.css';
 
 /* Global reset */
 * {
