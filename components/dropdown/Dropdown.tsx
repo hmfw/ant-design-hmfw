@@ -14,7 +14,7 @@ import { cls } from '../_utils'
 
 export interface DropdownItem {
   key: string
-  label: string
+  label?: string
   icon?: string
   disabled?: boolean
   danger?: boolean
