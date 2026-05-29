@@ -1,4 +1,4 @@
-import type { App } from 'vue'
+import type { App as VueApp } from 'vue'
 
 // Config
 export { ConfigProvider, useConfig, usePrefixCls, useLocale } from './config-provider'
@@ -189,6 +189,10 @@ export type { AutoCompleteProps, AutoCompleteOption } from './auto-complete'
 export { Cascader } from './cascader'
 export type { CascaderProps, CascaderOption, CascaderValue, CascaderExpandTrigger } from './cascader'
 
+// App
+export { App, useApp } from './app'
+export type { AppConfig } from './app'
+
 // Install function for Vue.use()
 import { ConfigProvider } from './config-provider'
 import { Icon } from './icon'
@@ -214,10 +218,11 @@ import { Pagination } from './pagination'
 import { Tabs } from './tabs'
 import { Modal } from './modal'
 import { Drawer } from './drawer'
+import { App as AppComponent } from './app'
 
-const components = [ConfigProvider, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Tag, CheckableTag, Empty, Card, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer]
+const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Tag, CheckableTag, Empty, Card, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer]
 
-export function install(app: App): void {
+export function install(app: VueApp): void {
   components.forEach((component) => {
     app.component(component.name!, component)
   })

@@ -56,6 +56,7 @@
 @import './flex/style/index.css';
 @import './auto-complete/style/index.css';
 @import './cascader/style/index.css';
+@import './app/style/index.css';
 
 /* Global reset */
 * {
