@@ -57,6 +57,8 @@
 @import './auto-complete/style/index.css';
 @import './cascader/style/index.css';
 @import './app/style/index.css';
+@import './image/style/index.css';
+@import './carousel/style/index.css';
 
 /* Global reset */
 * {

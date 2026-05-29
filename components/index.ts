@@ -193,6 +193,14 @@ export type { CascaderProps, CascaderOption, CascaderValue, CascaderExpandTrigge
 export { App, useApp } from './app'
 export type { AppConfig } from './app'
 
+// Image
+export { Image, PreviewGroup } from './image'
+export type { ImageProps, PreviewGroupProps } from './image'
+
+// Carousel
+export { Carousel } from './carousel'
+export type { CarouselProps, CarouselEffect, CarouselDotPosition } from './carousel'
+
 // Install function for Vue.use()
 import { ConfigProvider } from './config-provider'
 import { Icon } from './icon'
@@ -219,8 +227,10 @@ import { Tabs } from './tabs'
 import { Modal } from './modal'
 import { Drawer } from './drawer'
 import { App as AppComponent } from './app'
+import { Image, PreviewGroup } from './image'
+import { Carousel } from './carousel'
 
-const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Tag, CheckableTag, Empty, Card, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer]
+const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Tag, CheckableTag, Empty, Card, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel]
 
 export function install(app: VueApp): void {
   components.forEach((component) => {
