@@ -61,9 +61,6 @@ export const componentsSidebar: SidebarGroup[] = [
       { text: 'Upload 上传', link: '/components/upload' },
     ],
   },
-      { text: 'Upload 上传', link: '/components/upload' },
-    ],
-  },
   {
     text: '数据展示',
     items: [
