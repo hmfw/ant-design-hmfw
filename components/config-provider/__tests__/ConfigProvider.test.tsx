@@ -45,7 +45,7 @@ describe('ConfigProvider', () => {
       props: { locale: enUS },
       slots: { default: () => [<Consumer />] },
     })
-    expect(config!.value.locale).toBe(enUS)
+    expect(config!.value.locale).toStrictEqual(enUS)
   })
 
   it('provides componentSize', () => {

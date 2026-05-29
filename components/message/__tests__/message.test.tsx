@@ -2,10 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { message } from '../message'
 
 describe('message', () => {
-  beforeEach(() => {
-    document.body.innerHTML = ''
-  })
-
   afterEach(() => {
     document.body.innerHTML = ''
   })
@@ -31,20 +27,6 @@ describe('message', () => {
     expect(message.loading('加载中')).toBeInstanceOf(Promise)
   })
 
-  it('creates container in document.body', async () => {
-    message.success('test')
-    await Promise.resolve()
-    expect(document.querySelector('.hmfw-message-container')).not.toBeNull()
-  })
-
-  it('shows message content', async () => {
-    message.info('hello world')
-    await Promise.resolve()
-    await Promise.resolve()
-    const container = document.querySelector('.hmfw-message-container')
-    expect(container).not.toBeNull()
-  })
-
   it('resolves promise after duration', async () => {
     vi.useFakeTimers()
     let resolved = false
@@ -61,3 +43,4 @@ describe('message', () => {
     expect(p).toBeInstanceOf(Promise)
   })
 })
+

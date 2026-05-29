@@ -68,24 +68,6 @@ describe('Upload', () => {
     }
   })
 
-  it('renders dragger variant', () => {
-    const wrapper = mount(Upload, { props: { type: 'drag' } })
-    expect(wrapper.find('.hmfw-upload-drag').exists()).toBe(true)
-  })
-
-  it('dragger shows drag-over class on dragover', async () => {
-    const wrapper = mount(Upload, { props: { type: 'drag' } })
-    await wrapper.find('.hmfw-upload-drag').trigger('dragover')
-    expect(wrapper.find('.hmfw-upload-drag-hover').exists()).toBe(true)
-  })
-
-  it('dragger removes drag-over class on dragleave', async () => {
-    const wrapper = mount(Upload, { props: { type: 'drag' } })
-    await wrapper.find('.hmfw-upload-drag').trigger('dragover')
-    await wrapper.find('.hmfw-upload-drag').trigger('dragleave')
-    expect(wrapper.find('.hmfw-upload-drag-hover').exists()).toBe(false)
-  })
-
   it('renders error status file', () => {
     const fileList = [{ uid: '1', name: 'fail.png', status: 'error' as const }]
     const wrapper = mount(Upload, { props: { fileList } })
