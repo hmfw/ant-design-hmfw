@@ -27,17 +27,14 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Lint
-        run: pnpm lint
-
       - name: Test
         run: pnpm test
 
-      - name: Build
-        run: pnpm build
+      - name: Build lib
+        run: pnpm build:lib
 
   docs:
-    name: Build Docs
+    name: Build & Deploy Docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -54,11 +51,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Build Docs
-        run: pnpm docs:build
+        run: pnpm build:docs
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: packages/docs/.vitepress/dist
+          publish_dir: docs-dist

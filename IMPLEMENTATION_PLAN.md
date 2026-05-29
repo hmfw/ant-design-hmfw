@@ -5,9 +5,9 @@
 ## 项目状态
 
 - **开始日期**: 2026-05-24
-- **当前进度**: 58 个组件已完成（含子组件共 70+ 个导出）
-- **单元测试**: 55 个测试文件，538 个测试用例，全部通过
-- **Playground**: 58 个独立 Tab，每个组件一个演示页，导航栏支持换行
+- **当前进度**: 66 个组件已完成（含子组件共 80+ 个导出）
+- **单元测试**: 65 个测试文件，655 个测试用例，全部通过
+- **Playground**: 66 个独立 Tab，每个组件一个演示页，导航栏支持换行
 
 ---
 
@@ -26,7 +26,7 @@
 - [x] 工具函数 (cls, usePrefixCls)
 - [x] 修复 line-height CSS 变量 bug（inject.ts 无单位数值不加 px）
 
-### 已完成组件（24 个，按实现顺序）
+### 已完成组件（66 个，按实现顺序）
 
 | 组件 | 说明 | 测试 | Playground |
 |------|------|------|-----------|
@@ -87,6 +87,14 @@
 | Flex | 弹性布局（justify/align/gap/wrap/vertical/自定义标签） | ✓ | ✓ |
 | AutoComplete | 自动完成（filterOption/backfill/受控/键盘导航） | ✓ | ✓ |
 | Cascader | 级联选择（多列/hover展开/搜索/changeOnSelect/fieldNames） | ✓ | ✓ |
+| App | 全局上下文（useApp() 获取 message/notification/modal） | ✓ | ✓ |
+| Image / PreviewGroup | 图片预览（缩放/旋转/多图切换） | ✓ | ✓ |
+| Carousel | 走马灯（scrollx/fade/autoplay/dots/arrows） | ✓ | ✓ |
+| Tour | 漫游引导（步骤/遮罩/spotlight/指示器） | ✓ | ✓ |
+| ColorPicker | 颜色选择器（HSB拾色/hue滑块/预设颜色） | ✓ | ✓ |
+| Transfer | 穿梭框（双列表/搜索/全选/受控） | ✓ | ✓ |
+| RangePicker | 日期范围选择（双日历/范围高亮/hover预览） | ✓ | ✓ |
+| TreeSelect | 树形下拉选择（展开/多选/checkbox/fieldNames） | ✓ | ✓ |
 
 ---
 
@@ -96,30 +104,21 @@
 
 （全部完成）
 
-### Ant Design 有但未开始的组件（8 个）
+### Ant Design 有但未开始的组件（0 个）
 
-| 组件 | 复杂度 | 说明 |
-|------|--------|------|
-| ColorPicker | 中 | 颜色选择器（色板 + 自定义输入） |
-| Image | 中 | 图片预览（懒加载/fallback/预览组） |
-| Carousel | 中 | 走马灯/轮播 |
-| Transfer | 高 | 穿梭框（双列表互选） |
-| TreeSelect | 高 | 树形下拉选择（Tree + Select 结合） |
-| Tour | 中 | 漫游引导 |
-| App | 低 | 全局上下文（message/notification 的静态调用） |
-| RangePicker | 高 | 日期范围选择（DatePicker 的双值变体） |
+（全部完成）
 
 ---
 
 ## 🚀 发布准备
 
 ### 文档系统
-- [x] 搭建 VitePress 文档站（packages/docs）
+- [x] 搭建文档站（Vite + unplugin-vue-markdown）
 - [x] 首页（hero + features）
 - [x] 快速上手指南
 - [x] 主题定制文档
 - [x] 国际化文档
-- [x] 全部 58 个组件文档（含代码演示 + API 表格）
+- [x] 全部 66 个组件文档（含代码演示 + API 表格）
 
 ### 构建和发布
 - [ ] 配置 npm 发布流程（package.json publishConfig）

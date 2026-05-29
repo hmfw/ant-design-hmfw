@@ -10,6 +10,15 @@
     "typescript"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmfw/ant-design-hmfw.git"
+  },
+  "homepage": "https://hmfw.github.io/ant-design-hmfw",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -40,7 +49,8 @@
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "typecheck": "tsc --noEmit",
     "gen:icons": "tsx scripts/generate-icons.ts",
-    "prebuild:lib": "pnpm gen:icons"
+    "prebuild:lib": "pnpm gen:icons",
+    "release": "pnpm build:lib && changeset publish"
   },
   "peerDependencies": {
     "vue": ">=3.3.0 <4.0.0"
