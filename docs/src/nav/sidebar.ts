@@ -13,6 +13,7 @@ export const componentsSidebar: SidebarGroup[] = [
     text: '通用',
     items: [
       { text: 'Button 按钮', link: '/components/button' },
+      { text: 'ColorPicker 颜色选择器', link: '/components/color-picker' },
       { text: 'Icon 图标', link: '/components/icon' },
       { text: 'Typography 排版', link: '/components/typography' },
     ],
@@ -102,6 +103,7 @@ export const componentsSidebar: SidebarGroup[] = [
       { text: 'App 包裹组件', link: '/components/app' },
       { text: 'BackTop 回到顶部', link: '/components/back-top' },
       { text: 'ConfigProvider 全局配置', link: '/components/config-provider' },
+      { text: 'Tour 漫游引导', link: '/components/tour' },
     ],
   },
 ]

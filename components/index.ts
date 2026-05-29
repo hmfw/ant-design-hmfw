@@ -201,6 +201,14 @@ export type { ImageProps, PreviewGroupProps } from './image'
 export { Carousel } from './carousel'
 export type { CarouselProps, CarouselEffect, CarouselDotPosition } from './carousel'
 
+// Tour
+export { Tour } from './tour'
+export type { TourProps, TourStep } from './tour'
+
+// ColorPicker
+export { ColorPicker } from './color-picker'
+export type { ColorPickerProps, ColorFormat } from './color-picker'
+
 // Install function for Vue.use()
 import { ConfigProvider } from './config-provider'
 import { Icon } from './icon'
@@ -229,8 +237,10 @@ import { Drawer } from './drawer'
 import { App as AppComponent } from './app'
 import { Image, PreviewGroup } from './image'
 import { Carousel } from './carousel'
+import { Tour } from './tour'
+import { ColorPicker } from './color-picker'
 
-const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Tag, CheckableTag, Empty, Card, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel]
+const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Tag, CheckableTag, Empty, Card, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker]
 
 export function install(app: VueApp): void {
   components.forEach((component) => {

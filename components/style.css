@@ -59,6 +59,8 @@
 @import './app/style/index.css';
 @import './image/style/index.css';
 @import './carousel/style/index.css';
+@import './tour/style/index.css';
+@import './color-picker/style/index.css';
 
 /* Global reset */
 * {

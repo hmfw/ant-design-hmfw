@@ -1,0 +1,142 @@
+.hmfw-tour-root {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.hmfw-tour-mask {
+  position: fixed;
+  inset: 0;
+  pointer-events: auto;
+}
+
+.hmfw-tour-mask-svg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hmfw-tour-mask-fill {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.hmfw-tour-popover {
+  pointer-events: auto;
+  width: 300px;
+}
+
+.hmfw-tour-popover-inner {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px 20px 16px;
+}
+
+.hmfw-tour-popover-primary .hmfw-tour-popover-inner {
+  background: var(--hmfw-color-primary, #1677ff);
+  color: #fff;
+}
+
+.hmfw-tour-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+  line-height: 1;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.hmfw-tour-close:hover { color: rgba(0, 0, 0, 0.88); }
+
+.hmfw-tour-popover-primary .hmfw-tour-close {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.hmfw-tour-popover-primary .hmfw-tour-close:hover {
+  color: #fff;
+}
+
+.hmfw-tour-cover {
+  margin: -20px -20px 16px;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+}
+
+.hmfw-tour-cover img {
+  width: 100%;
+  display: block;
+}
+
+.hmfw-tour-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.88);
+  margin-bottom: 8px;
+  padding-right: 20px;
+}
+
+.hmfw-tour-popover-primary .hmfw-tour-title {
+  color: #fff;
+}
+
+.hmfw-tour-description {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 1.5714;
+  margin-bottom: 16px;
+}
+
+.hmfw-tour-popover-primary .hmfw-tour-description {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hmfw-tour-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hmfw-tour-indicators {
+  display: flex;
+  gap: 6px;
+}
+
+.hmfw-tour-indicator {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: background 0.2s, width 0.2s;
+}
+
+.hmfw-tour-indicator-active {
+  background: var(--hmfw-color-primary, #1677ff);
+  width: 12px;
+  border-radius: 3px;
+}
+
+.hmfw-tour-popover-primary .hmfw-tour-indicator {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.hmfw-tour-popover-primary .hmfw-tour-indicator-active {
+  background: #fff;
+}
+
+.hmfw-tour-buttons {
+  display: flex;
+  gap: 8px;
+}
