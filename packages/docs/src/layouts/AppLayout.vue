@@ -3,10 +3,8 @@
     <NavBar />
     <div class="app-layout__body">
       <Sidebar :groups="activeSidebar" />
-      <div class="app-layout__content">
-        <div class="app-layout__content-inner md-content">
-          <RouterView />
-        </div>
+      <div class="app-layout__content md-content">
+        <RouterView />
       </div>
       <TocNav />
     </div>

@@ -93,13 +93,15 @@ watch(() => route.path, updateAnchors)
 
 <style scoped>
 .toc {
-  position: fixed;
+  position: sticky;
   top: calc(var(--doc-nav-height) + 32px);
-  right: 24px;
   width: 200px;
+  flex-shrink: 0;
+  align-self: flex-start;
   max-height: calc(100vh - var(--doc-nav-height) - 64px);
   overflow-y: auto;
   font-size: 13px;
+  padding: 0 16px 0 0;
   scrollbar-width: thin;
   scrollbar-color: var(--doc-c-border) transparent;
 }

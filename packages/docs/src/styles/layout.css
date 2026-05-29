@@ -92,6 +92,7 @@ body,
 /* ---- App layout shell ---- */
 .app-layout {
   display: flex;
+  flex-direction: column;
   padding-top: var(--doc-nav-height);
   min-height: 100vh;
 }
@@ -172,13 +173,6 @@ body,
   margin-left: var(--doc-sidebar-width);
   flex: 1;
   min-width: 0;
-  display: flex;
-  justify-content: center;
-}
-
-.app-layout__content-inner {
-  width: 100%;
-  max-width: var(--doc-content-max-w);
   padding: var(--doc-content-padding);
 }
 
@@ -196,9 +190,6 @@ body,
 
   .app-layout__content {
     margin-left: 0;
-  }
-
-  .app-layout__content-inner {
     padding: 24px 20px 64px;
   }
 }
