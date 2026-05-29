@@ -60,8 +60,14 @@ export const Progress = defineComponent({
         const offset = totalArc * (1 - props.percent / 100)
 
         return (
-          <div class={cls(prefixCls, `${prefixCls}-circle`, `${prefixCls}-status-${computedStatus.value}`)}>
-            <div class={`${prefixCls}-inner`} style={{ width: `${size}px`, height: `${size}px` }}>
+          <div
+            class={cls(prefixCls, `${prefixCls}-circle`, `${prefixCls}-status-${computedStatus.value}`)}
+            role="progressbar"
+            aria-valuenow={props.percent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`${props.percent}%`}
+          >            <div class={`${prefixCls}-inner`} style={{ width: `${size}px`, height: `${size}px` }}>
               <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size}>
                 <circle
                   class={`${prefixCls}-circle-trail`}
@@ -97,10 +103,16 @@ export const Progress = defineComponent({
       // Line
       const strokeH = props.strokeWidth ?? (props.size === 'small' ? 6 : 8)
       return (
-        <div class={cls(prefixCls, `${prefixCls}-line`, `${prefixCls}-status-${computedStatus.value}`, {
-          [`${prefixCls}-small`]: props.size === 'small',
-        })}>
-          <div class={`${prefixCls}-outer`}>
+        <div
+          class={cls(prefixCls, `${prefixCls}-line`, `${prefixCls}-status-${computedStatus.value}`, {
+            [`${prefixCls}-small`]: props.size === 'small',
+          })}
+          role="progressbar"
+          aria-valuenow={props.percent}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`${props.percent}%`}
+        >          <div class={`${prefixCls}-outer`}>
             <div class={`${prefixCls}-inner`} style={{ height: `${strokeH}px`, background: props.trailColor }}>
               <div
                 class={`${prefixCls}-bg`}

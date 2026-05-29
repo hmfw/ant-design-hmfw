@@ -33,6 +33,7 @@ export const Breadcrumb = defineComponent({
                 ) : (
                   <span
                     class={`${prefixCls}-link`}
+                    aria-current={i === items.length - 1 ? 'page' : undefined}
                     onClick={item.onClick}
                     style={item.onClick ? { cursor: 'pointer' } : {}}
                   >

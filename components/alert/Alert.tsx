@@ -48,6 +48,7 @@ export const Alert = defineComponent({
       return (
         <div
           role="alert"
+          aria-live={type === 'error' || type === 'warning' ? 'assertive' : 'polite'}
           class={cls(prefixCls, `${prefixCls}-${type}`, {
             [`${prefixCls}-with-description`]: hasDesc,
             [`${prefixCls}-banner`]: props.banner,
@@ -74,6 +75,7 @@ export const Alert = defineComponent({
             <button
               type="button"
               class={`${prefixCls}-close-icon`}
+              aria-label="关闭"
               onClick={handleClose}
             >
               {slots.closeIcon?.() ?? props.closeText ?? '×'}

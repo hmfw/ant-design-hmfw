@@ -147,11 +147,15 @@ export const Tree = defineComponent({
     }
 
     return () => (
-      <div class={cls(prefixCls, {
-        [`${prefixCls}-show-line`]: props.showLine,
-        [`${prefixCls}-block-node`]: props.blockNode,
-        [`${prefixCls}-disabled`]: props.disabled,
-      })}>
+      <div
+        class={cls(prefixCls, {
+          [`${prefixCls}-show-line`]: props.showLine,
+          [`${prefixCls}-block-node`]: props.blockNode,
+          [`${prefixCls}-disabled`]: props.disabled,
+        })}
+        role="tree"
+        aria-multiselectable={props.multiple || undefined}
+      >
         {flatNodes.value.map(({ node, level, hasChildren }) => {
           const key = getKey(node)
           const title = getTitle(node)
@@ -171,6 +175,12 @@ export const Tree = defineComponent({
                 [`${prefixCls}-treenode-disabled`]: node.disabled || props.disabled,
                 [`${prefixCls}-treenode-leaf`]: !hasChildren,
               })}
+              role="treeitem"
+              aria-level={level + 1}
+              aria-expanded={hasChildren ? isExpanded : undefined}
+              aria-selected={props.selectable ? isSelected : undefined}
+              aria-checked={props.checkable ? isChecked : undefined}
+              aria-disabled={node.disabled || props.disabled || undefined}
               style={{ paddingLeft: `${level * props.indent}px` }}
             >
               {/* Switcher */}

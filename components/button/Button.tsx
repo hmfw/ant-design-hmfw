@@ -91,6 +91,8 @@ export default defineComponent({
           type={props.htmlType}
           class={cls(classes.value, { [`${prefixCls}-icon-only`]: hasIcon })}
           disabled={isDisabled.value}
+          aria-busy={props.loading || undefined}
+          aria-disabled={isDisabled.value || undefined}
           onClick={handleClick}
         >
           {iconNode}

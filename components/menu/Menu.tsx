@@ -122,6 +122,9 @@ export const Menu = defineComponent({
                 <div
                   class={`${prefixCls}-submenu-title`}
                   style={{ paddingLeft: `${props.inlineIndent * (depth + 1)}px` }}
+                  role="button"
+                  aria-expanded={isOpen}
+                  aria-haspopup="true"
                   onClick={() => handleOpenChange(item.key, !isOpen)}
                 >
                   {item.icon && <span class={`${prefixCls}-item-icon`}>{item.icon}</span>}
@@ -150,6 +153,9 @@ export const Menu = defineComponent({
             >
               <div
                 class={`${prefixCls}-submenu-title`}
+                role="button"
+                aria-expanded={isOpen}
+                aria-haspopup="true"
                 onClick={() => props.mode === 'vertical' && handleOpenChange(item.key, !isOpen)}
               >
                 {item.icon && <span class={`${prefixCls}-item-icon`}>{item.icon}</span>}
@@ -176,6 +182,8 @@ export const Menu = defineComponent({
             })}
             style={props.mode === 'inline' ? { paddingLeft: `${props.inlineIndent * (depth + 1)}px` } : {}}
             role="menuitem"
+            aria-disabled={item.disabled || undefined}
+            aria-current={isSelected ? 'true' : undefined}
             title={item.title ?? item.label}
             onClick={() => !item.disabled && handleSelect(item.key)}
           >

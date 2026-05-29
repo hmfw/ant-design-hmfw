@@ -50,13 +50,17 @@ export const Steps = defineComponent({
       const items = props.items ?? []
 
       return (
-        <div class={cls(prefixCls, `${prefixCls}-${props.direction}`, {
-          [`${prefixCls}-${props.size}`]: props.size !== 'default',
-          [`${prefixCls}-label-${props.labelPlacement}`]: props.labelPlacement !== 'horizontal',
-          [`${prefixCls}-dot`]: props.progressDot,
-          [`${prefixCls}-navigation`]: props.type === 'navigation',
-          [`${prefixCls}-inline`]: props.type === 'inline',
-        })}>
+        <div
+          class={cls(prefixCls, `${prefixCls}-${props.direction}`, {
+            [`${prefixCls}-${props.size}`]: props.size !== 'default',
+            [`${prefixCls}-label-${props.labelPlacement}`]: props.labelPlacement !== 'horizontal',
+            [`${prefixCls}-dot`]: props.progressDot,
+            [`${prefixCls}-navigation`]: props.type === 'navigation',
+            [`${prefixCls}-inline`]: props.type === 'inline',
+          })}
+          role="list"
+          aria-label="步骤条"
+        >
           {items.map((item, index) => {
             const status = getStepStatus(index, item)
             const icon = getStepIcon(index, status, item)
@@ -69,6 +73,9 @@ export const Steps = defineComponent({
                   [`${prefixCls}-item-disabled`]: item.disabled,
                   [`${prefixCls}-item-active`]: index + props.initial === props.current,
                 })}
+                role="listitem"
+                aria-current={index + props.initial === props.current ? 'step' : undefined}
+                aria-disabled={item.disabled || undefined}
                 onClick={() => isClickable && emit('change', index + props.initial)}
               >
                 <div class={`${prefixCls}-item-container`}>

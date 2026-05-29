@@ -62,11 +62,14 @@ export const Pagination = defineComponent({
       }
 
       return (
-        <ul class={cls(prefixCls, {
-          [`${prefixCls}-mini`]: props.size === 'small',
-          [`${prefixCls}-disabled`]: props.disabled,
-        })}>
-          {props.showTotal && (
+        <ul
+          class={cls(prefixCls, {
+            [`${prefixCls}-mini`]: props.size === 'small',
+            [`${prefixCls}-disabled`]: props.disabled,
+          })}
+          role="navigation"
+          aria-label="分页"
+        >          {props.showTotal && (
             <li class={`${prefixCls}-total-text`}>
               {props.showTotal(props.total, range.value)}
             </li>
@@ -91,7 +94,10 @@ export const Pagination = defineComponent({
                 })}
                 onClick={() => goTo(p)}
               >
-                <button>{p}</button>
+                <button
+                  aria-label={`第 ${p} 页`}
+                  aria-current={p === currentPage.value ? 'page' : undefined}
+                >{p}</button>
               </li>
             ),
           )}

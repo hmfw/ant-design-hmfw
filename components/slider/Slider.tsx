@@ -184,6 +184,8 @@ export const Slider = defineComponent({
                 })}
                 style={props.vertical ? { bottom: `${startPct}%` } : { left: `${startPct}%` }}
                 role="slider"
+                aria-label="最小值"
+                aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
                 aria-valuemin={props.min}
                 aria-valuemax={endVal}
                 aria-valuenow={startVal}
@@ -207,6 +209,8 @@ export const Slider = defineComponent({
               })}
               style={props.vertical ? { bottom: `${endPct}%` } : { left: `${endPct}%` }}
               role="slider"
+              aria-label={props.range ? '最大值' : '滑块'}
+              aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
               aria-valuemin={props.range ? startVal : props.min}
               aria-valuemax={props.max}
               aria-valuenow={endVal}

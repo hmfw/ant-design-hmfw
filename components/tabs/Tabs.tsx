@@ -49,14 +49,20 @@ export const Tabs = defineComponent({
           [`${prefixCls}-centered`]: props.centered,
         })}>
           <div class={`${prefixCls}-nav`}>
-            <div class={`${prefixCls}-nav-list`}>
+            <div class={`${prefixCls}-nav-list`} role="tablist" aria-orientation={props.tabPosition === 'left' || props.tabPosition === 'right' ? 'vertical' : 'horizontal'}>
               {items.map((item) => (
                 <div
                   key={item.key}
+                  id={`tab-${item.key}`}
                   class={cls(`${prefixCls}-tab`, {
                     [`${prefixCls}-tab-active`]: item.key === currentKey.value,
                     [`${prefixCls}-tab-disabled`]: item.disabled,
                   })}
+                  role="tab"
+                  aria-selected={item.key === currentKey.value}
+                  aria-controls={`tabpanel-${item.key}`}
+                  aria-disabled={item.disabled || undefined}
+                  tabindex={item.disabled ? -1 : item.key === currentKey.value ? 0 : -1}
                   onClick={() => !item.disabled && handleTabClick(item.key)}
                 >
                   <div class={`${prefixCls}-tab-btn`}>{item.label}</div>
@@ -70,11 +76,15 @@ export const Tabs = defineComponent({
               {items.map((item) => (
                 <div
                   key={item.key}
+                  id={`tabpanel-${item.key}`}
                   class={cls(`${prefixCls}-tabpane`, {
                     [`${prefixCls}-tabpane-active`]: item.key === currentKey.value,
                     [`${prefixCls}-tabpane-hidden`]: item.key !== currentKey.value,
                   })}
                   role="tabpanel"
+                  aria-labelledby={`tab-${item.key}`}
+                  tabindex={item.key === currentKey.value ? 0 : -1}
+                  hidden={item.key !== currentKey.value || undefined}
                 >
                   {item.key === currentKey.value && (item.children ?? slots[item.key]?.())}
                 </div>

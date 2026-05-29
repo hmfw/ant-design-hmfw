@@ -13,6 +13,8 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { TooltipPlacement, TooltipTrigger } from './types'
 
+let tooltipIdCounter = 0
+
 export const Tooltip = defineComponent({
   name: 'Tooltip',
   props: {
@@ -49,6 +51,7 @@ export const Tooltip = defineComponent({
   emits: ['update:open', 'openChange'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('tooltip')
+    const tooltipId = `tooltip-${++tooltipIdCounter}`
     const triggerRef = ref<HTMLElement | null>(null)
     const tooltipRef = ref<HTMLElement | null>(null)
     const innerOpen = ref(props.defaultOpen ?? false)
@@ -192,6 +195,7 @@ export const Tooltip = defineComponent({
           <div
             ref={triggerRef}
             style={{ display: 'inline-block' }}
+            aria-describedby={visible.value ? tooltipId : undefined}
             onMouseenter={handleMouseEnter}
             onMouseleave={handleMouseLeave}
             onClick={handleClick}
@@ -205,6 +209,8 @@ export const Tooltip = defineComponent({
             <Teleport to="body">
               <div
                 ref={tooltipRef}
+                id={tooltipId}
+                role="tooltip"
                 class={cls(prefixCls, `${prefixCls}-placement-${props.placement}`, {
                   [`${prefixCls}-hidden`]: !visible.value,
                 })}
