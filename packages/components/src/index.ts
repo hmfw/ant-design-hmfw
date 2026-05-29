@@ -20,6 +20,17 @@ export { Icon } from './icon'
 export type { IconProps, IconComponent } from './icon'
 export * from './icon/icons'
 
+// Icon metadata and utilities
+export { iconMetadata } from './icon/metadata'
+export type { IconMetadata } from './icon/metadata'
+export {
+  searchIcons,
+  getIconsByCategory,
+  getAllCategories,
+  getAllIcons,
+} from './icon/utils'
+export type { IconSearchResult } from './icon/utils'
+
 export { Button } from './button'
 export type { ButtonProps, ButtonType, ButtonSize, ButtonHTMLType } from './button'
 

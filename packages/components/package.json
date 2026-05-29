@@ -2,7 +2,13 @@
   "name": "ant-design-hmfw",
   "version": "0.1.0",
   "description": "A Vue3 UI component library based on Ant Design v6",
-  "keywords": ["vue3", "ui", "component-library", "ant-design", "typescript"],
+  "keywords": [
+    "vue3",
+    "ui",
+    "component-library",
+    "ant-design",
+    "typescript"
+  ],
   "license": "MIT",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -16,9 +22,16 @@
     "./dist/style.css": "./dist/style.css",
     "./style.css": "./dist/style.css"
   },
-  "sideEffects": ["**/*.css", "dist/style.css"],
-  "files": ["dist"],
+  "sideEffects": [
+    "**/*.css",
+    "dist/style.css"
+  ],
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "gen:icons": "tsx ../../scripts/generate-icons.ts",
+    "prebuild": "pnpm gen:icons",
     "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",

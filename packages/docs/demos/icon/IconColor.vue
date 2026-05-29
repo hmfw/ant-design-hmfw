@@ -1,13 +1,13 @@
 <template>
   <Space :size="16">
-    <Icon type="heart" color="#1677ff" :size="24" />
-    <Icon type="heart" color="#52c41a" :size="24" />
-    <Icon type="heart" color="#faad14" :size="24" />
-    <Icon type="heart" color="#ff4d4f" :size="24" />
-    <Icon type="heart" color="#722ed1" :size="24" />
+    <Icon :component="UserOutlined" style="font-size: 24px; color: #1677ff" />
+    <Icon :component="UserOutlined" style="font-size: 24px; color: #52c41a" />
+    <Icon :component="UserOutlined" style="font-size: 24px; color: #faad14" />
+    <Icon :component="UserOutlined" style="font-size: 24px; color: #ff4d4f" />
+    <Icon :component="UserOutlined" style="font-size: 24px; color: #722ed1" />
   </Space>
 </template>
 
 <script setup lang="ts">
-import { Icon, Space } from 'ant-design-hmfw'
+import { Icon, Space, UserOutlined } from 'ant-design-hmfw'
 </script>

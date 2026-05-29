@@ -1,10 +1,10 @@
 <template>
   <Space :size="16">
-    <Icon type="loading" :size="24" spin />
-    <Icon type="setting" :size="24" spin />
+    <Icon :component="LoadingOutlined" style="font-size: 24px" spin />
+    <Icon :component="SettingOutlined" style="font-size: 24px" spin />
   </Space>
 </template>
 
 <script setup lang="ts">
-import { Icon, Space } from 'ant-design-hmfw'
+import { Icon, Space, LoadingOutlined, SettingOutlined } from 'ant-design-hmfw'
 </script>

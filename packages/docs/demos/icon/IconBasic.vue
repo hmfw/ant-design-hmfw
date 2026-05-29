@@ -1,26 +1,32 @@
 <template>
   <Space :size="16" wrap>
-    <Icon type="search" />
-    <Icon type="close" />
-    <Icon type="check" />
-    <Icon type="warning" />
-    <Icon type="info" />
-    <Icon type="loading" />
-    <Icon type="up" />
-    <Icon type="down" />
-    <Icon type="left" />
-    <Icon type="right" />
-    <Icon type="plus" />
-    <Icon type="minus" />
-    <Icon type="edit" />
-    <Icon type="delete" />
-    <Icon type="eye" />
-    <Icon type="home" />
-    <Icon type="user" />
-    <Icon type="setting" />
+    <Icon :component="SearchOutlined" />
+    <Icon :component="CloseOutlined" />
+    <Icon :component="CheckOutlined" />
+    <Icon :component="WarningOutlined" />
+    <Icon :component="InfoCircleOutlined" />
+    <Icon :component="LoadingOutlined" />
+    <Icon :component="UpOutlined" />
+    <Icon :component="DownOutlined" />
+    <Icon :component="LeftOutlined" />
+    <Icon :component="RightOutlined" />
+    <Icon :component="PlusOutlined" />
+    <Icon :component="MinusOutlined" />
+    <Icon :component="EditOutlined" />
+    <Icon :component="DeleteOutlined" />
+    <Icon :component="EyeOutlined" />
+    <Icon :component="HomeOutlined" />
+    <Icon :component="UserOutlined" />
+    <Icon :component="SettingOutlined" />
   </Space>
 </template>
 
 <script setup lang="ts">
-import { Icon, Space } from 'ant-design-hmfw'
+import {
+  Icon, Space,
+  SearchOutlined, CloseOutlined, CheckOutlined, WarningOutlined, InfoCircleOutlined,
+  LoadingOutlined, UpOutlined, DownOutlined, LeftOutlined, RightOutlined,
+  PlusOutlined, MinusOutlined, EditOutlined, DeleteOutlined, EyeOutlined,
+  HomeOutlined, UserOutlined, SettingOutlined,
+} from 'ant-design-hmfw'
 </script>
