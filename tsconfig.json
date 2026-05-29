@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "ant-design-hmfw": ["components/index.ts"]
+    },
+    "types": ["vite/client"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": [
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "docs/src/**/*.ts",
+    "docs/src/**/*.tsx",
+    "docs/src/**/*.vue",
+    "docs/src/**/*.d.ts",
+    "docs/plugins/**/*.ts",
+    "vite.config.ts",
+    "tsup.config.ts"
+  ],
+  "exclude": ["node_modules", "dist", "docs-dist", "**/*.test.ts", "**/*.spec.ts"]
+}

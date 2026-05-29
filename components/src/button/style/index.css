@@ -1,0 +1,201 @@
+.hmfw-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 400;
+  white-space: nowrap;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: all var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
+  border: 1px solid transparent;
+  outline: none;
+  font-family: var(--hmfw-font-family);
+  line-height: var(--hmfw-line-height);
+}
+
+/* Sizes */
+.hmfw-btn-small {
+  height: 24px;
+  padding: 0 7px;
+  font-size: var(--hmfw-font-size-sm);
+  border-radius: var(--hmfw-border-radius-sm);
+}
+
+.hmfw-btn-middle {
+  height: 32px;
+  padding: 4px 15px;
+  font-size: var(--hmfw-font-size);
+  border-radius: var(--hmfw-border-radius);
+}
+
+.hmfw-btn-large {
+  height: 40px;
+  padding: 6px 15px;
+  font-size: var(--hmfw-font-size-lg);
+  border-radius: var(--hmfw-border-radius);
+}
+
+/* Icon only */
+.hmfw-btn-icon-only.hmfw-btn-small {
+  width: 24px;
+  padding: 0;
+}
+
+.hmfw-btn-icon-only.hmfw-btn-middle {
+  width: 32px;
+  padding: 0;
+}
+
+.hmfw-btn-icon-only.hmfw-btn-large {
+  width: 40px;
+  padding: 0;
+}
+
+/* Default type */
+.hmfw-btn-default {
+  background-color: var(--hmfw-color-bg-container);
+  border-color: var(--hmfw-color-border);
+  color: var(--hmfw-color-text);
+  box-shadow: var(--hmfw-box-shadow);
+}
+
+.hmfw-btn-default:hover:not(.hmfw-btn-disabled) {
+  color: var(--hmfw-color-primary-hover);
+  border-color: var(--hmfw-color-primary-hover);
+}
+
+.hmfw-btn-default:active:not(.hmfw-btn-disabled) {
+  color: var(--hmfw-color-primary-active);
+  border-color: var(--hmfw-color-primary-active);
+}
+
+/* Primary type */
+.hmfw-btn-primary {
+  background-color: var(--hmfw-color-primary);
+  border-color: var(--hmfw-color-primary);
+  color: var(--hmfw-color-white);
+  box-shadow: var(--hmfw-box-shadow);
+}
+
+.hmfw-btn-primary:hover:not(.hmfw-btn-disabled) {
+  background-color: var(--hmfw-color-primary-hover);
+  border-color: var(--hmfw-color-primary-hover);
+}
+
+.hmfw-btn-primary:active:not(.hmfw-btn-disabled) {
+  background-color: var(--hmfw-color-primary-active);
+  border-color: var(--hmfw-color-primary-active);
+}
+
+/* Dashed type */
+.hmfw-btn-dashed {
+  background-color: var(--hmfw-color-bg-container);
+  border-color: var(--hmfw-color-border);
+  border-style: dashed;
+  color: var(--hmfw-color-text);
+}
+
+.hmfw-btn-dashed:hover:not(.hmfw-btn-disabled) {
+  color: var(--hmfw-color-primary-hover);
+  border-color: var(--hmfw-color-primary-hover);
+}
+
+.hmfw-btn-dashed:active:not(.hmfw-btn-disabled) {
+  color: var(--hmfw-color-primary-active);
+  border-color: var(--hmfw-color-primary-active);
+}
+
+/* Text type */
+.hmfw-btn-text {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--hmfw-color-text);
+  box-shadow: none;
+}
+
+.hmfw-btn-text:hover:not(.hmfw-btn-disabled) {
+  background-color: var(--hmfw-color-fill-tertiary);
+}
+
+.hmfw-btn-text:active:not(.hmfw-btn-disabled) {
+  background-color: var(--hmfw-color-fill-secondary);
+}
+
+/* Link type */
+.hmfw-btn-link {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--hmfw-color-link);
+  box-shadow: none;
+}
+
+.hmfw-btn-link:hover:not(.hmfw-btn-disabled) {
+  color: var(--hmfw-color-link-hover);
+}
+
+.hmfw-btn-link:active:not(.hmfw-btn-disabled) {
+  color: var(--hmfw-color-link-active);
+}
+
+/* Danger */
+.hmfw-btn-dangerous.hmfw-btn-default {
+  color: var(--hmfw-color-error);
+  border-color: var(--hmfw-color-error);
+}
+
+.hmfw-btn-dangerous.hmfw-btn-default:hover:not(.hmfw-btn-disabled) {
+  color: var(--hmfw-color-error-hover);
+  border-color: var(--hmfw-color-error-hover);
+}
+
+.hmfw-btn-dangerous.hmfw-btn-primary {
+  background-color: var(--hmfw-color-error);
+  border-color: var(--hmfw-color-error);
+}
+
+.hmfw-btn-dangerous.hmfw-btn-primary:hover:not(.hmfw-btn-disabled) {
+  background-color: var(--hmfw-color-error-hover);
+  border-color: var(--hmfw-color-error-hover);
+}
+
+.hmfw-btn-dangerous.hmfw-btn-text,
+.hmfw-btn-dangerous.hmfw-btn-link {
+  color: var(--hmfw-color-error);
+}
+
+.hmfw-btn-dangerous.hmfw-btn-text:hover:not(.hmfw-btn-disabled),
+.hmfw-btn-dangerous.hmfw-btn-link:hover:not(.hmfw-btn-disabled) {
+  color: var(--hmfw-color-error-hover);
+}
+
+/* Disabled */
+.hmfw-btn-disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* Loading */
+.hmfw-btn-loading {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Block */
+.hmfw-btn-block {
+  width: 100%;
+}
+
+/* Ghost */
+.hmfw-btn.hmfw-btn-background-ghost {
+  background-color: transparent;
+  color: var(--hmfw-color-white);
+  border-color: var(--hmfw-color-white);
+}
+
+.hmfw-btn.hmfw-btn-background-ghost:hover:not(.hmfw-btn-disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+}

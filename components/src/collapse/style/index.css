@@ -1,0 +1,114 @@
+.hmfw-collapse {
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid #d9d9d9;
+  border-bottom: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hmfw-collapse-borderless {
+  background-color: transparent;
+  border: 0;
+}
+
+.hmfw-collapse-ghost {
+  background-color: transparent;
+  border: 0;
+}
+
+.hmfw-collapse-ghost .hmfw-collapse-item {
+  border-bottom: 0;
+}
+
+/* Item */
+.hmfw-collapse-item {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.hmfw-collapse-item:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.hmfw-collapse-item-disabled .hmfw-collapse-header {
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+/* Header */
+.hmfw-collapse-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+  gap: 8px;
+}
+
+.hmfw-collapse-header:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.hmfw-collapse-expand-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.45);
+  transition: transform 0.3s;
+}
+
+.hmfw-collapse-expand-icon-active {
+  transform: rotate(90deg);
+}
+
+.hmfw-collapse-icon-position-end .hmfw-collapse-expand-icon {
+  order: 1;
+  margin-left: auto;
+}
+
+.hmfw-collapse-header-text {
+  flex: 1;
+  color: rgba(0, 0, 0, 0.88);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.hmfw-collapse-extra {
+  margin-left: auto;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+}
+
+/* Content */
+.hmfw-collapse-content {
+  color: rgba(0, 0, 0, 0.88);
+  background-color: #fff;
+  border-top: 1px solid #d9d9d9;
+  overflow: hidden;
+}
+
+.hmfw-collapse-content-inactive {
+  display: none;
+}
+
+.hmfw-collapse-content-box {
+  padding: 16px;
+}
+
+/* Sizes */
+.hmfw-collapse-small .hmfw-collapse-header {
+  padding: 6px 12px;
+}
+
+.hmfw-collapse-small .hmfw-collapse-content-box {
+  padding: 8px 12px;
+}
+
+.hmfw-collapse-large .hmfw-collapse-header {
+  padding: 16px 20px;
+  font-size: 16px;
+}
+
+.hmfw-collapse-large .hmfw-collapse-content-box {
+  padding: 20px;
+}

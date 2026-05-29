@@ -1,0 +1,151 @@
+@keyframes hmfw-skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+.hmfw-skeleton {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.hmfw-skeleton-with-avatar .hmfw-skeleton-content .hmfw-skeleton-title {
+  margin-top: 12px;
+}
+
+.hmfw-skeleton-header {
+  flex-shrink: 0;
+}
+
+.hmfw-skeleton-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Avatar */
+.hmfw-skeleton-avatar {
+  display: inline-block;
+  vertical-align: top;
+  background: rgba(0, 0, 0, 0.06);
+  width: 32px;
+  height: 32px;
+}
+
+.hmfw-skeleton-avatar-circle {
+  border-radius: 50%;
+}
+
+.hmfw-skeleton-avatar-square {
+  border-radius: 4px;
+}
+
+.hmfw-skeleton-avatar-lg {
+  width: 40px;
+  height: 40px;
+}
+
+.hmfw-skeleton-avatar-sm {
+  width: 24px;
+  height: 24px;
+}
+
+/* Title */
+.hmfw-skeleton-title {
+  width: 100%;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+/* Paragraph */
+.hmfw-skeleton-paragraph {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.hmfw-skeleton-paragraph li {
+  width: 100%;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.hmfw-skeleton-paragraph li:last-child {
+  margin-bottom: 0;
+}
+
+/* Round */
+.hmfw-skeleton-round .hmfw-skeleton-title,
+.hmfw-skeleton-round .hmfw-skeleton-paragraph li {
+  border-radius: 100px;
+}
+
+/* Active animation */
+.hmfw-skeleton-active .hmfw-skeleton-avatar,
+.hmfw-skeleton-active .hmfw-skeleton-title,
+.hmfw-skeleton-active .hmfw-skeleton-paragraph li,
+.hmfw-skeleton-active.hmfw-skeleton-button,
+.hmfw-skeleton-active.hmfw-skeleton-input {
+  background: linear-gradient(90deg, rgba(0,0,0,0.06) 25%, rgba(0,0,0,0.15) 37%, rgba(0,0,0,0.06) 63%);
+  background-size: 400% 100%;
+  animation: hmfw-skeleton-loading 1.4s ease infinite;
+}
+
+/* Button */
+.hmfw-skeleton-button {
+  display: inline-block;
+  vertical-align: top;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  width: 64px;
+  min-width: 64px;
+  height: 32px;
+}
+
+.hmfw-skeleton-button-large {
+  height: 40px;
+  width: 80px;
+  min-width: 80px;
+}
+
+.hmfw-skeleton-button-small {
+  height: 24px;
+  width: 48px;
+  min-width: 48px;
+}
+
+.hmfw-skeleton-button-circle {
+  width: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+}
+
+.hmfw-skeleton-button-round {
+  border-radius: 32px;
+}
+
+.hmfw-skeleton-block {
+  width: 100%;
+}
+
+/* Input */
+.hmfw-skeleton-input {
+  display: inline-block;
+  vertical-align: top;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  width: 160px;
+  min-width: 160px;
+  height: 32px;
+}
+
+.hmfw-skeleton-input-large {
+  height: 40px;
+}
+
+.hmfw-skeleton-input-small {
+  height: 24px;
+}

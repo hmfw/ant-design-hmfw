@@ -8,8 +8,8 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 // SVG 文件目录
-const SVG_DIR = join(__dirname, '../packages/components/src/icon/svg')
-const OUTPUT_FILE = join(__dirname, '../packages/components/src/icon/icons.ts')
+const SVG_DIR = join(__dirname, '../components/icon/svg')
+const OUTPUT_FILE = join(__dirname, '../components/icon/icons.ts')
 
 // 将 kebab-case 转换为 PascalCase
 function toPascalCase(str: string): string {

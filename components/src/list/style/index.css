@@ -1,0 +1,147 @@
+.hmfw-list {
+  position: relative;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.hmfw-list-header,
+.hmfw-list-footer {
+  padding: 12px 0;
+  background: transparent;
+}
+
+.hmfw-list-bordered {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+}
+
+.hmfw-list-bordered .hmfw-list-header,
+.hmfw-list-bordered .hmfw-list-footer {
+  padding: 12px 24px;
+}
+
+.hmfw-list-bordered .hmfw-list-items {
+  padding: 0 24px;
+}
+
+.hmfw-list-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hmfw-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.hmfw-list-split .hmfw-list-item {
+  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+}
+
+.hmfw-list-split .hmfw-list-item:last-child {
+  border-bottom: none;
+}
+
+.hmfw-list-item-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.hmfw-list-item-extra {
+  margin-left: 40px;
+  flex-shrink: 0;
+}
+
+.hmfw-list-item-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0 0 0 16px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.hmfw-list-item-action li {
+  position: relative;
+  color: rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.hmfw-list-item-action li:hover {
+  color: var(--hmfw-color-primary, #1677ff);
+}
+
+/* Meta */
+.hmfw-list-item-meta {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.hmfw-list-item-meta-avatar {
+  flex-shrink: 0;
+}
+
+.hmfw-list-item-meta-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.hmfw-list-item-meta-title {
+  margin: 0 0 4px;
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5714;
+}
+
+.hmfw-list-item-meta-description {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  line-height: 1.5714;
+}
+
+/* Sizes */
+.hmfw-list-small .hmfw-list-item {
+  padding: 8px 0;
+}
+
+.hmfw-list-large .hmfw-list-item {
+  padding: 16px 0;
+}
+
+.hmfw-list-bordered.hmfw-list-small .hmfw-list-item {
+  padding: 8px 16px;
+}
+
+.hmfw-list-bordered.hmfw-list-large .hmfw-list-item {
+  padding: 16px 24px;
+}
+
+/* Empty */
+.hmfw-list-empty-text {
+  padding: 16px;
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+  text-align: center;
+  list-style: none;
+}
+
+/* Pagination */
+.hmfw-list-pagination {
+  margin-top: 24px;
+  text-align: right;
+}
+
+/* Loading */
+.hmfw-list-spin {
+  min-height: 40px;
+  text-align: center;
+  padding: 20px 0;
+}
