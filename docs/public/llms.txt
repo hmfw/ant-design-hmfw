@@ -1,0 +1,84 @@
+# ant-design-hmfw
+
+> 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
+
+安装：`pnpm add ant-design-hmfw`
+
+按需引入：
+```ts
+import { Button } from 'ant-design-hmfw'
+import 'ant-design-hmfw/style.css'
+```
+
+## Components
+
+- [Alert 警告提示](https://hmfw.github.io/ant-design-hmfw/components/alert): 警告提示，展现需要关注的信息。
+- [Anchor 锚点](https://hmfw.github.io/ant-design-hmfw/components/anchor): 用于跳转到页面指定位置。
+- [App 全局化配置](https://hmfw.github.io/ant-design-hmfw/components/app): 应用级别的全局上下文，提供 `useApp()` 组合式 API，使子组件可以通过 hooks 调用 `message`、`notification`、`mod
+- [AutoComplete 自动完成](https://hmfw.github.io/ant-design-hmfw/components/auto-complete): 输入框自动完成功能。
+- [Avatar 头像](https://hmfw.github.io/ant-design-hmfw/components/avatar): 用来代表用户或事物，支持图片、图标或字符展示。
+- [BackTop 回到顶部](https://hmfw.github.io/ant-design-hmfw/components/back-top): 返回页面顶部的操作按钮。
+- [Badge 徽标数](https://hmfw.github.io/ant-design-hmfw/components/badge): 图标右上角的圆形徽标数字。
+- [Breadcrumb 面包屑](https://hmfw.github.io/ant-design-hmfw/components/breadcrumb): 显示当前页面在系统层级结构中的位置，并能向上返回。
+- [Button 按钮](https://hmfw.github.io/ant-design-hmfw/components/button): 按钮用于开始一个即时操作。
+- [Card 卡片](https://hmfw.github.io/ant-design-hmfw/components/card): 通用卡片容器。
+- [Carousel 走马灯](https://hmfw.github.io/ant-design-hmfw/components/carousel): 旋转播放的幻灯片。
+- [Cascader 级联选择](https://hmfw.github.io/ant-design-hmfw/components/cascader): 级联选择框。
+- [Checkbox 多选框](https://hmfw.github.io/ant-design-hmfw/components/checkbox): 多选框。
+- [Collapse 折叠面板](https://hmfw.github.io/ant-design-hmfw/components/collapse): 可以折叠/展开的内容区域。
+- [ColorPicker 颜色选择器](https://hmfw.github.io/ant-design-hmfw/components/color-picker): 提供颜色选取的组件。
+- [ConfigProvider 全局配置](https://hmfw.github.io/ant-design-hmfw/components/config-provider): 为组件提供统一的全局化配置。
+- [DatePicker 日期选择框](https://hmfw.github.io/ant-design-hmfw/components/date-picker): 输入或选择日期的控件。
+- [Descriptions 描述列表](https://hmfw.github.io/ant-design-hmfw/components/descriptions): 成组展示多个只读字段。
+- [Divider 分割线](https://hmfw.github.io/ant-design-hmfw/components/divider): 区隔内容的分割线。
+- [Drawer 抽屉](https://hmfw.github.io/ant-design-hmfw/components/drawer): 屏幕边缘滑出的浮层面板。
+- [Dropdown 下拉菜单](https://hmfw.github.io/ant-design-hmfw/components/dropdown): 向下弹出的列表。
+- [Empty 空状态](https://hmfw.github.io/ant-design-hmfw/components/empty): 空状态时的展示占位图。
+- [Flex 弹性布局](https://hmfw.github.io/ant-design-hmfw/components/flex): 弹性布局。
+- [FloatButton 悬浮按钮](https://hmfw.github.io/ant-design-hmfw/components/float-button): 悬浮按钮。
+- [Form 表单](https://hmfw.github.io/ant-design-hmfw/components/form): 高性能表单控件，自带数据域管理。包含数据录入、校验以及对应样式。
+- [Grid 栅格](https://hmfw.github.io/ant-design-hmfw/components/grid): 24 栅格系统。
+- [Icon 图标](https://hmfw.github.io/ant-design-hmfw/components/icon): 语义化的矢量图形，用于展示常用的操作和状态。
+- [Image 图片](https://hmfw.github.io/ant-design-hmfw/components/image): 可预览的图片。
+- [Input 输入框](https://hmfw.github.io/ant-design-hmfw/components/input): 通过鼠标或键盘输入内容，是最基础的表单域的包装。
+- [InputNumber 数字输入框](https://hmfw.github.io/ant-design-hmfw/components/input-number): 通过鼠标或键盘，输入范围内的数值。
+- [Layout 布局](https://hmfw.github.io/ant-design-hmfw/components/layout): 协助进行页面级整体布局。
+- [List 列表](https://hmfw.github.io/ant-design-hmfw/components/list): 通用列表。
+- [Menu 导航菜单](https://hmfw.github.io/ant-design-hmfw/components/menu): 为页面和功能提供导航的菜单列表。
+- [Message 全局提示](https://hmfw.github.io/ant-design-hmfw/components/message): 全局展示操作反馈信息。
+- [Modal 对话框](https://hmfw.github.io/ant-design-hmfw/components/modal): 模态对话框。
+- [Notification 通知提醒框](https://hmfw.github.io/ant-design-hmfw/components/notification): 全局展示通知提醒信息。
+- [Pagination 分页](https://hmfw.github.io/ant-design-hmfw/components/pagination): 采用分页的形式分隔长列表，每次只加载一个页面。
+- [Popconfirm 气泡确认框](https://hmfw.github.io/ant-design-hmfw/components/popconfirm): 点击元素，弹出气泡式的确认框。
+- [Popover 气泡卡片](https://hmfw.github.io/ant-design-hmfw/components/popover): 点击/鼠标移入元素，弹出气泡式的卡片浮层。
+- [Progress 进度条](https://hmfw.github.io/ant-design-hmfw/components/progress): 展示操作的当前进度。
+- [QRCode 二维码](https://hmfw.github.io/ant-design-hmfw/components/qrcode): 生成二维码。
+- [Radio 单选框](https://hmfw.github.io/ant-design-hmfw/components/radio): 单选框。
+- [RangePicker 日期范围选择框](https://hmfw.github.io/ant-design-hmfw/components/range-picker): 日期范围选择器。
+- [Rate 评分](https://hmfw.github.io/ant-design-hmfw/components/rate): 评分组件。
+- [Result 结果](https://hmfw.github.io/ant-design-hmfw/components/result): 用于反馈一系列操作任务的处理结果。
+- [Segmented 分段控制器](https://hmfw.github.io/ant-design-hmfw/components/segmented): 分段控制器。
+- [Select 选择器](https://hmfw.github.io/ant-design-hmfw/components/select): 下拉选择器。
+- [Skeleton 骨架屏](https://hmfw.github.io/ant-design-hmfw/components/skeleton): 在需要等待加载内容的位置提供一个占位图形组合。
+- [Slider 滑动输入条](https://hmfw.github.io/ant-design-hmfw/components/slider): 滑动型输入器，展示当前值和可选范围。
+- [Space 间距](https://hmfw.github.io/ant-design-hmfw/components/space): 设置组件之间的间距。
+- [Spin 加载中](https://hmfw.github.io/ant-design-hmfw/components/spin): 用于页面和区块的加载中状态。
+- [Steps 步骤条](https://hmfw.github.io/ant-design-hmfw/components/steps): 引导用户按照流程完成任务的导航条。
+- [Switch 开关](https://hmfw.github.io/ant-design-hmfw/components/switch): 开关选择器。
+- [Table 表格](https://hmfw.github.io/ant-design-hmfw/components/table): 展示行列数据。
+- [Tag 标签](https://hmfw.github.io/ant-design-hmfw/components/tag): 进行标记和分类的小标签。
+- [TimePicker 时间选择框](https://hmfw.github.io/ant-design-hmfw/components/time-picker): 输入或选择时间的控件。
+- [Timeline 时间轴](https://hmfw.github.io/ant-design-hmfw/components/timeline): 垂直展示的时间流信息。
+- [Tooltip 文字提示](https://hmfw.github.io/ant-design-hmfw/components/tooltip): 简单的文字提示气泡框。
+- [Tour 漫游引导](https://hmfw.github.io/ant-design-hmfw/components/tour): 用于分步引导用户了解产品功能的组件。
+- [Transfer 穿梭框](https://hmfw.github.io/ant-design-hmfw/components/transfer): 双栏穿梭选择框，用于将元素从一列移入另一列。
+- [Tree 树形控件](https://hmfw.github.io/ant-design-hmfw/components/tree): 多层次的结构列表。
+- [TreeSelect 树形选择](https://hmfw.github.io/ant-design-hmfw/components/tree-select): 树形选择控件，类似 Select 的选择控件，可选择的数据结构是一个树形结构。
+- [Typography 排版](https://hmfw.github.io/ant-design-hmfw/components/typography): 文本的基本格式。
+- [Upload 上传](https://hmfw.github.io/ant-design-hmfw/components/upload): 文件选择上传和拖拽上传控件。
+- [Watermark 水印](https://hmfw.github.io/ant-design-hmfw/components/watermark): 给页面的某个区域加上水印。
+
+## More
+
+- [components.json](https://hmfw.github.io/ant-design-hmfw/components.json): 全量结构化 API 数据（props/events/slots/demos）
+- [llms-full.txt](https://hmfw.github.io/ant-design-hmfw/llms-full.txt): 自包含全量文档，可直接喂给大模型

@@ -48,7 +48,9 @@
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "typecheck": "tsc --noEmit",
     "gen:icons": "tsx scripts/generate-icons.ts",
+    "gen:llm": "tsx scripts/generate-llm-manifest.ts",
     "prebuild:lib": "pnpm gen:icons",
+    "prebuild:docs": "pnpm gen:llm",
     "release": "pnpm build:lib && npm publish"
   },
   "peerDependencies": {
