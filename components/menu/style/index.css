@@ -101,6 +101,15 @@
   position: relative;
 }
 
+.hmfw-menu-submenu-disabled > .hmfw-menu-submenu-title {
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.hmfw-menu-submenu-disabled > .hmfw-menu-submenu-title:hover {
+  background: transparent;
+}
+
 .hmfw-menu-submenu-title {
   display: flex;
   align-items: center;
@@ -163,6 +172,11 @@
   height: 1px;
   background: rgba(5, 5, 5, 0.06);
   margin: 4px 0;
+}
+
+.hmfw-menu-item-divider-dashed {
+  background: transparent;
+  border-top: 1px dashed rgba(5, 5, 5, 0.06);
 }
 
 /* Group */

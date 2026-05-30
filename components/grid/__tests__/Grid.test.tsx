@@ -1,8 +1,25 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import Row from '../Row'
 import Col from '../Col'
 import { h } from 'vue'
+
+// Mock matchMedia
+beforeEach(() => {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  })
+})
 
 describe('Grid', () => {
   describe('Row', () => {
@@ -16,8 +33,8 @@ describe('Grid', () => {
       const wrapper = mount(Row, {
         props: { gutter: 16 },
       })
-      expect(wrapper.attributes('style')).toContain('margin-left: -8px')
-      expect(wrapper.attributes('style')).toContain('margin-right: -8px')
+      const style = wrapper.attributes('style')
+      expect(style).toContain('margin-inline: -8px')
     })
 
     it('handles vertical gutter', () => {
@@ -25,6 +42,14 @@ describe('Grid', () => {
         props: { gutter: [16, 8] },
       })
       expect(wrapper.attributes('style')).toContain('row-gap: 8px')
+    })
+
+    it('handles string gutter', () => {
+      const wrapper = mount(Row, {
+        props: { gutter: '20px' },
+      })
+      const style = wrapper.attributes('style')
+      expect(style).toContain('margin-inline: calc(20px / -2)')
     })
 
     it('handles align', () => {
@@ -69,6 +94,13 @@ describe('Grid', () => {
       expect(wrapper.classes()).toContain('hmfw-col-12')
     })
 
+    it('handles span 0 (hidden)', () => {
+      const wrapper = mount(Col, {
+        props: { span: 0 },
+      })
+      expect(wrapper.classes()).toContain('hmfw-col-0')
+    })
+
     it('handles offset', () => {
       const wrapper = mount(Col, {
         props: { offset: 4 },
@@ -97,6 +129,27 @@ describe('Grid', () => {
       expect(wrapper.classes()).toContain('hmfw-col-push-2')
     })
 
+    it('handles flex prop - number', () => {
+      const wrapper = mount(Col, {
+        props: { flex: 2 },
+      })
+      expect(wrapper.attributes('style')).toContain('flex: 2 2 auto')
+    })
+
+    it('handles flex prop - auto', () => {
+      const wrapper = mount(Col, {
+        props: { flex: 'auto' },
+      })
+      expect(wrapper.attributes('style')).toContain('flex: 1 1 auto')
+    })
+
+    it('handles flex prop - px value', () => {
+      const wrapper = mount(Col, {
+        props: { flex: '200px' },
+      })
+      expect(wrapper.attributes('style')).toContain('flex: 0 0 200px')
+    })
+
     it('handles responsive props - number', () => {
       const wrapper = mount(Col, {
         props: { xs: 24, sm: 12, md: 8 },
@@ -118,13 +171,6 @@ describe('Grid', () => {
       expect(wrapper.classes()).toContain('hmfw-col-sm-offset-2')
     })
 
-    it('handles flex string', () => {
-      const wrapper = mount(Col, {
-        props: { span: '200px' },
-      })
-      expect(wrapper.attributes('style')).toContain('flex: 0 0 200px')
-    })
-
     it('receives gutter from Row', () => {
       const wrapper = mount(Row, {
         props: { gutter: 16 },
@@ -133,8 +179,20 @@ describe('Grid', () => {
         },
       })
       const col = wrapper.findComponent(Col)
-      expect(col.attributes('style')).toContain('padding-left: 8px')
-      expect(col.attributes('style')).toContain('padding-right: 8px')
+      const style = col.attributes('style')
+      expect(style).toContain('padding-inline: 8px')
+    })
+
+    it('applies minWidth when wrap is false and flex is set', () => {
+      const wrapper = mount(Row, {
+        props: { wrap: false },
+        slots: {
+          default: () => h(Col, { flex: 'auto' }, () => 'Content'),
+        },
+      })
+      const col = wrapper.findComponent(Col)
+      const style = col.attributes('style')
+      expect(style).toContain('min-width: 0')
     })
   })
 })

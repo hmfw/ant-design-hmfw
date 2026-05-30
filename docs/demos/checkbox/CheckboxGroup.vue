@@ -8,11 +8,11 @@
       />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">垂直排列：</p>
+      <p style="margin-bottom: 8px;">垂直排列（通过 style 控制）：</p>
       <CheckboxGroup
         v-model:value="selectedColors"
         :options="colorOptions"
-        direction="vertical"
+        :style="{ display: 'flex', flexDirection: 'column', gap: '8px' }"
       />
     </div>
     <p>水果：{{ selectedFruits }}，颜色：{{ selectedColors }}</p>

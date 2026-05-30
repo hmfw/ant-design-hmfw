@@ -43,6 +43,22 @@
   <SkeletonButtonInput />
 </DemoBlock>
 
+### 头像骨架
+
+独立的头像骨架。
+
+<DemoBlock title="头像骨架" :source="SkeletonAvatarSource">
+  <SkeletonAvatar />
+</DemoBlock>
+
+### 图片/节点骨架
+
+独立的图片和自定义节点骨架。
+
+<DemoBlock title="图片/节点骨架" :source="SkeletonImageNodeSource">
+  <SkeletonImageNode />
+</DemoBlock>
+
 ## API
 
 ### Skeleton Props
@@ -50,13 +66,33 @@
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
-| avatar | 是否显示头像占位图 | `boolean \| object` | `false` |
-| paragraph | 是否显示段落占位图 | `boolean \| object` | `true` |
-| title | 是否显示标题占位图 | `boolean \| object` | `true` |
-| loading | 为 true 时，显示占位图，反之则直接展示子组件 | `boolean` | - |
+| avatar | 是否显示头像占位图 | `boolean \| SkeletonAvatarProps` | `false` |
+| paragraph | 是否显示段落占位图 | `boolean \| SkeletonParagraphProps` | `true` |
+| title | 是否显示标题占位图 | `boolean \| SkeletonTitleProps` | `true` |
+| loading | 为 true 时，显示占位图，反之则直接展示子组件 | `boolean` | `true` |
 | round | 为 true 时，段落和标题显示圆角 | `boolean` | `false` |
 
-### SkeletonButton Props
+### SkeletonAvatarProps
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| size | 大小 | `'large' \| 'default' \| 'small' \| number` | `'large'` |
+| shape | 形状 | `'circle' \| 'square'` | `'circle'` |
+
+### SkeletonTitleProps
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| width | 标题宽度 | `string \| number` | - |
+
+### SkeletonParagraphProps
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| rows | 段落行数 | `number` | `3` (无头像时) / `2` (有头像时) |
+| width | 段落宽度，可传数组分别指定每行宽度 | `string \| number \| Array<string \| number>` | - |
+
+### Skeleton.Button Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
@@ -65,10 +101,47 @@
 | shape | 形状 | `'default' \| 'circle' \| 'round'` | `'default'` |
 | block | 将按钮宽度调整为其父宽度 | `boolean` | `false` |
 
-### SkeletonInput Props
+### Skeleton.Input Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
 | size | 大小 | `'large' \| 'default' \| 'small'` | `'default'` |
 | block | 将输入框宽度调整为其父宽度 | `boolean` | `false` |
+
+### Skeleton.Avatar Props
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| active | 是否展示动画效果 | `boolean` | `false` |
+| size | 大小 | `'large' \| 'default' \| 'small' \| number` | `'default'` |
+| shape | 形状 | `'circle' \| 'square'` | `'circle'` |
+
+### Skeleton.Image Props
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| active | 是否展示动画效果 | `boolean` | `false` |
+
+### Skeleton.Node Props
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| active | 是否展示动画效果 | `boolean` | `false` |
+
+<script setup lang="ts">
+import SkeletonBasic from './SkeletonBasic.vue'
+import SkeletonActive from './SkeletonActive.vue'
+import SkeletonWithChildren from './SkeletonWithChildren.vue'
+import SkeletonButtonInput from './SkeletonButtonInput.vue'
+import SkeletonAvatar from './SkeletonAvatar.vue'
+import SkeletonImageNode from './SkeletonImageNode.vue'
+
+import SkeletonBasicSource from './SkeletonBasic.vue?raw'
+import SkeletonActiveSource from './SkeletonActive.vue?raw'
+import SkeletonWithChildrenSource from './SkeletonWithChildren.vue?raw'
+import SkeletonButtonInputSource from './SkeletonButtonInput.vue?raw'
+import SkeletonAvatarSource from './SkeletonAvatar.vue?raw'
+import SkeletonImageNodeSource from './SkeletonImageNode.vue?raw'
+</script>
+

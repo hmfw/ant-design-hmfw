@@ -55,6 +55,10 @@
 | size | 开关大小 | `'default' \| 'small'` | `'default'` |
 | checkedChildren | 选中时的内容 | `string \| VNode` | - |
 | unCheckedChildren | 非选中时的内容 | `string \| VNode` | - |
+| autoFocus | 组件自动获取焦点 | `boolean` | `false` |
+| id | 组件的 id | `string` | - |
+| title | 组件的 title 属性 | `string` | - |
+| tabIndex | 组件的 tab index | `number` | - |
 
 ### Switch Events
 
@@ -63,5 +67,12 @@
 | update:checked | 变化时回调函数 | `(checked: boolean) => void` |
 | change | 变化时回调函数 | `(checked: boolean, event: MouseEvent) => void` |
 | click | 点击时回调函数 | `(checked: boolean, event: MouseEvent) => void` |
-| focus | 获取焦点时的回调 | `() => void` |
-| blur | 失去焦点时的回调 | `() => void` |
+| focus | 获取焦点时的回调 | `(event: FocusEvent) => void` |
+| blur | 失去焦点时的回调 | `(event: FocusEvent) => void` |
+
+### Switch Slots
+
+| 插槽名 | 说明 |
+|--------|------|
+| checkedChildren | 选中时的内容 |
+| unCheckedChildren | 非选中时的内容 |

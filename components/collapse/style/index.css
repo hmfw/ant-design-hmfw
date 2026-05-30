@@ -1,8 +1,8 @@
 .hmfw-collapse {
-  background-color: rgba(0, 0, 0, 0.02);
-  border: 1px solid #d9d9d9;
+  background-color: var(--hmfw-color-fill-alter, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--hmfw-color-border, #d9d9d9);
   border-bottom: 0;
-  border-radius: 8px;
+  border-radius: var(--hmfw-border-radius-lg, 8px);
   overflow: hidden;
 }
 
@@ -20,45 +20,59 @@
   border-bottom: 0;
 }
 
+.hmfw-collapse-ghost .hmfw-collapse-content {
+  background-color: transparent;
+  border-top: 0;
+}
+
 /* Item */
 .hmfw-collapse-item {
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid var(--hmfw-color-border, #d9d9d9);
 }
 
 .hmfw-collapse-item:last-child {
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 var(--hmfw-border-radius-lg, 8px) var(--hmfw-border-radius-lg, 8px);
 }
 
 .hmfw-collapse-item-disabled .hmfw-collapse-header {
   cursor: not-allowed;
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+}
+
+.hmfw-collapse-item-disabled .hmfw-collapse-expand-icon {
+  cursor: not-allowed;
+  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
 }
 
 /* Header */
 .hmfw-collapse-header {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  padding: var(--hmfw-padding-sm, 12px) var(--hmfw-padding, 16px);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all var(--hmfw-motion-duration-mid, 0.3s);
   user-select: none;
   gap: 8px;
 }
 
-.hmfw-collapse-header:hover {
-  background: rgba(0, 0, 0, 0.02);
+.hmfw-collapse-header:hover:not(.hmfw-collapse-item-disabled .hmfw-collapse-header) {
+  background: var(--hmfw-color-fill-alter, rgba(0, 0, 0, 0.02));
 }
 
 .hmfw-collapse-expand-icon {
   display: inline-flex;
   align-items: center;
-  font-size: 10px;
-  color: rgba(0, 0, 0, 0.45);
-  transition: transform 0.3s;
+  font-size: 12px;
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  transition: transform var(--hmfw-motion-duration-mid, 0.3s) var(--hmfw-motion-ease-in-out, ease);
 }
 
 .hmfw-collapse-expand-icon-active {
-  transform: rotate(90deg);
+  /* Rotation is handled inline via style for custom icons */
+}
+
+.hmfw-collapse-icon-position-end .hmfw-collapse-header {
+  flex-direction: row;
 }
 
 .hmfw-collapse-icon-position-end .hmfw-collapse-expand-icon {
@@ -66,25 +80,32 @@
   margin-left: auto;
 }
 
+.hmfw-collapse-icon-position-end .hmfw-collapse-extra {
+  order: 0;
+  margin-left: 0;
+  margin-right: auto;
+}
+
 .hmfw-collapse-header-text {
   flex: 1;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size-base, 14px);
 }
 
 .hmfw-collapse-extra {
   margin-left: auto;
-  color: rgba(0, 0, 0, 0.45);
-  font-size: 12px;
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  font-size: var(--hmfw-font-size-sm, 12px);
 }
 
 /* Content */
 .hmfw-collapse-content {
-  color: rgba(0, 0, 0, 0.88);
-  background-color: #fff;
-  border-top: 1px solid #d9d9d9;
+  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  background-color: var(--hmfw-color-bg-container, #fff);
+  border-top: 1px solid var(--hmfw-color-border, #d9d9d9);
   overflow: hidden;
+  transition: height var(--hmfw-motion-duration-mid, 0.3s) var(--hmfw-motion-ease-in-out, ease);
 }
 
 .hmfw-collapse-content-inactive {
@@ -92,23 +113,24 @@
 }
 
 .hmfw-collapse-content-box {
-  padding: 16px;
+  padding: var(--hmfw-padding, 16px);
 }
 
 /* Sizes */
 .hmfw-collapse-small .hmfw-collapse-header {
-  padding: 6px 12px;
+  padding: 6px var(--hmfw-padding-sm, 12px);
+  font-size: var(--hmfw-font-size-sm, 12px);
 }
 
 .hmfw-collapse-small .hmfw-collapse-content-box {
-  padding: 8px 12px;
+  padding: 8px var(--hmfw-padding-sm, 12px);
 }
 
 .hmfw-collapse-large .hmfw-collapse-header {
-  padding: 16px 20px;
-  font-size: 16px;
+  padding: var(--hmfw-padding, 16px) var(--hmfw-padding-lg, 20px);
+  font-size: var(--hmfw-font-size-lg, 16px);
 }
 
 .hmfw-collapse-large .hmfw-collapse-content-box {
-  padding: 20px;
+  padding: var(--hmfw-padding-lg, 20px);
 }

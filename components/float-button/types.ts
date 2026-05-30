@@ -22,10 +22,12 @@ export interface FloatButtonProps {
   shape?: FloatButtonShape
   /** Custom icon */
   icon?: IconComponent | string
-  /** Text and other content (only shown for square shape) */
+  /** @deprecated Use `content` instead. */
   description?: string
-  /** The text shown in the tooltip on hover */
-  tooltip?: string
+  /** Text and other content (only shown for square shape) */
+  content?: string
+  /** The text shown in the tooltip on hover (string or full TooltipProps) */
+  tooltip?: string | Record<string, any>
   /** Attach a Badge to the button */
   badge?: FloatButtonBadgeProps
   /** The jump address of the hyperlink — renders as <a> */
@@ -34,6 +36,8 @@ export interface FloatButtonProps {
   target?: string
   /** Set the original html `type` of the button element */
   htmlType?: FloatButtonHTMLType
+  /** Whether the button is disabled */
+  disabled?: boolean
 }
 
 export interface FloatButtonGroupProps {
@@ -53,8 +57,8 @@ export interface FloatButtonGroupProps {
   closeIcon?: IconComponent | string
   /** Custom trigger icon shown when the menu is closed */
   icon?: IconComponent | string
-  /** Tooltip of the trigger button */
-  tooltip?: string
+  /** Tooltip of the trigger button (string or full TooltipProps) */
+  tooltip?: string | Record<string, any>
   /** Badge of the trigger button */
   badge?: FloatButtonBadgeProps
   /** Description of the trigger button (square shape) */
@@ -74,8 +78,10 @@ export interface FloatButtonBackTopProps {
   type?: FloatButtonType
   /** Set the button shape */
   shape?: FloatButtonShape
-  /** Tooltip content */
-  tooltip?: string
-  /** Description (square shape) */
+  /** Tooltip content (string or full TooltipProps) */
+  tooltip?: string | Record<string, any>
+  /** @deprecated Use `content` instead. */
   description?: string
+  /** Text and other content (square shape) */
+  content?: string
 }

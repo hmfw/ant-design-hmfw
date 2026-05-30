@@ -64,12 +64,21 @@
   line-height: 1;
 }
 
-.hmfw-float-btn-description {
+.hmfw-float-btn-content {
   display: flex;
   align-items: center;
   font-size: var(--hmfw-font-size-sm, 12px);
   line-height: 1.2;
   padding: 0 2px;
+}
+
+/* Disabled state */
+.hmfw-float-btn-disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.hmfw-float-btn-disabled .hmfw-float-btn-body {
+  pointer-events: none;
 }
 
 /* Square shape grows to fit description */

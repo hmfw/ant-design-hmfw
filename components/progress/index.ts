@@ -1,2 +1,11 @@
 export { Progress } from './Progress'
-export type { ProgressProps, ProgressType, ProgressStatus } from './types'
+export type {
+  ProgressProps,
+  ProgressType,
+  ProgressStatus,
+  ProgressSize,
+  StrokeLinecap,
+  SuccessProps,
+  PercentPositionType,
+  ProgressGradient,
+} from './types'

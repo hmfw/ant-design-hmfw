@@ -1,19 +1,10 @@
 <template>
-  <List :data-source="data" bordered>
-    <template #renderItem="{ item }">
-      <ListItem>
-        <template #actions>
-          <a @click="onEdit(item)">编辑</a>
-          <a @click="onDelete(item)">删除</a>
-        </template>
-        {{ item.title }}
-      </ListItem>
-    </template>
-  </List>
+  <List :data-source="data" :render-item="renderItem" bordered />
 </template>
 
 <script setup lang="ts">
-import { List, ListItem } from 'ant-design-hmfw'
+import { h } from 'vue'
+import { List } from 'ant-design-hmfw'
 
 const data = [
   { title: '列表项 1' },
@@ -28,4 +19,16 @@ function onEdit(item: any) {
 function onDelete(item: any) {
   console.log('删除', item)
 }
+
+const renderItem = (item: any) =>
+  h(
+    List.Item,
+    {
+      actions: [
+        h('a', { onClick: () => onEdit(item) }, '编辑'),
+        h('a', { onClick: () => onDelete(item) }, '删除'),
+      ],
+    },
+    () => item.title
+  )
 </script>

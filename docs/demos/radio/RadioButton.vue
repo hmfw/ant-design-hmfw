@@ -27,6 +27,24 @@
         size="large"
       />
     </div>
+    <div>
+      <p style="margin-bottom: 8px;">小尺寸：</p>
+      <RadioGroup
+        v-model:value="size4"
+        :options="sizeOptions"
+        option-type="button"
+        size="small"
+      />
+    </div>
+    <div>
+      <p style="margin-bottom: 8px;">禁用状态：</p>
+      <RadioGroup
+        v-model:value="size5"
+        :options="sizeOptions"
+        option-type="button"
+        disabled
+      />
+    </div>
     <p>选中：{{ size }}</p>
   </div>
 </template>
@@ -38,6 +56,8 @@ import { RadioGroup } from 'ant-design-hmfw'
 const size = ref('middle')
 const size2 = ref('middle')
 const size3 = ref('large')
+const size4 = ref('small')
+const size5 = ref('middle')
 
 const sizeOptions = [
   { label: '大', value: 'large' },

@@ -1,11 +1,5 @@
 .hmfw-watermark {
   position: relative;
+  overflow: hidden;
 }
 
-.hmfw-watermark-wrapper {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-repeat: repeat;
-  z-index: 9;
-}

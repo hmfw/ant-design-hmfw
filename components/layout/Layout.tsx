@@ -1,7 +1,9 @@
-import { defineComponent, computed, provide, inject, ref, onMounted, onUnmounted, type PropType } from 'vue'
+import { defineComponent, computed, provide, inject, ref, onMounted, onUnmounted, type PropType, type VNode, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { LayoutBreakpoint } from './types'
+import { Icon } from '../icon'
+import { LeftOutlined, RightOutlined, MinusOutlined } from '../icon/icons'
+import type { LayoutBreakpoint, CollapseType } from './types'
 
 const LAYOUT_SIDER_KEY = Symbol('layout-sider')
 
@@ -25,11 +27,12 @@ export const Layout = defineComponent({
       removeSider: () => siderCount.value--,
     })
 
-    const classes = computed(() =>
-      cls(prefixCls, {
-        [`${prefixCls}-has-sider`]: props.hasSider ?? siderCount.value > 0,
-      }),
-    )
+    const classes = computed(() => {
+      const hasSider = props.hasSider !== undefined ? props.hasSider : siderCount.value > 0
+      return cls(prefixCls, {
+        [`${prefixCls}-has-sider`]: hasSider,
+      })
+    })
 
     return () => <section class={classes.value}>{slots.default?.()}</section>
   },
@@ -62,13 +65,14 @@ export const Content = defineComponent({
   },
 })
 
-const BREAKPOINTS: Record<LayoutBreakpoint, number> = {
-  xs: 480,
-  sm: 576,
-  md: 768,
-  lg: 992,
-  xl: 1200,
-  xxl: 1600,
+const BREAKPOINTS: Record<LayoutBreakpoint, string> = {
+  xs: '479.98px',
+  sm: '575.98px',
+  md: '767.98px',
+  lg: '991.98px',
+  xl: '1199.98px',
+  xxl: '1599.98px',
+  xxxl: '1839.98px',
 }
 
 // Sider
@@ -96,9 +100,12 @@ export const Sider = defineComponent({
       default: 'dark',
     },
     trigger: {
-      type: Boolean,
+      type: [Object, null] as PropType<VNode | null>,
       default: undefined,
     },
+    zeroWidthTriggerStyle: Object as PropType<CSSProperties>,
+    onCollapse: Function as PropType<(collapsed: boolean, type: CollapseType) => void>,
+    onBreakpoint: Function as PropType<(broken: boolean) => void>,
   },
   emits: ['collapse', 'update:collapsed', 'breakpoint'],
   setup(props, { slots, emit }) {
@@ -110,31 +117,42 @@ export const Sider = defineComponent({
     onUnmounted(() => context?.removeSider())
 
     const internalCollapsed = ref(props.defaultCollapsed ?? false)
+    const below = ref(false)
 
     const isCollapsed = computed(() =>
       props.collapsed !== undefined ? props.collapsed : internalCollapsed.value,
     )
 
+    const handleSetCollapsed = (value: boolean, type: CollapseType) => {
+      if (props.collapsed === undefined) {
+        internalCollapsed.value = value
+      }
+      emit('update:collapsed', value)
+      emit('collapse', value, type)
+      props.onCollapse?.(value, type)
+    }
+
     const toggle = () => {
-      const next = !isCollapsed.value
-      internalCollapsed.value = next
-      emit('update:collapsed', next)
-      emit('collapse', next, 'clickTrigger')
+      handleSetCollapsed(!isCollapsed.value, 'clickTrigger')
     }
 
     // Responsive breakpoint
     let mql: MediaQueryList | null = null
     const handleBreakpoint = (e: MediaQueryListEvent | MediaQueryList) => {
-      const collapsed = !e.matches
-      internalCollapsed.value = collapsed
-      emit('breakpoint', collapsed)
-      emit('collapse', collapsed, 'responsive')
+      const broken = e.matches
+      below.value = broken
+      emit('breakpoint', broken)
+      props.onBreakpoint?.(broken)
+
+      if (isCollapsed.value !== broken) {
+        handleSetCollapsed(broken, 'responsive')
+      }
     }
 
     onMounted(() => {
       if (props.breakpoint && typeof window !== 'undefined') {
-        const bp = BREAKPOINTS[props.breakpoint]
-        mql = window.matchMedia(`(min-width: ${bp}px)`)
+        const maxWidth = BREAKPOINTS[props.breakpoint]
+        mql = window.matchMedia(`screen and (max-width: ${maxWidth})`)
         mql.addEventListener('change', handleBreakpoint)
         handleBreakpoint(mql)
       }
@@ -144,49 +162,76 @@ export const Sider = defineComponent({
       mql?.removeEventListener('change', handleBreakpoint)
     })
 
-    const currentWidth = computed(() =>
+    const rawWidth = computed(() =>
       isCollapsed.value ? props.collapsedWidth : props.width,
     )
 
-    const showTrigger = computed(() =>
-      props.trigger !== undefined ? props.trigger : props.collapsible,
-    )
+    const isNumeric = (val: any) =>
+      !Number.isNaN(Number.parseFloat(val)) && Number.isFinite(Number(val))
 
-    const isZeroWidth = computed(() => Number(props.collapsedWidth) === 0)
+    const siderWidth = computed(() => {
+      const val = rawWidth.value
+      return isNumeric(val) ? `${val}px` : String(val)
+    })
+
+    const isZeroWidth = computed(() =>
+      Number.parseFloat(String(props.collapsedWidth || 0)) === 0
+    )
 
     const classes = computed(() =>
       cls(siderPrefixCls, `${siderPrefixCls}-${props.theme}`, {
         [`${siderPrefixCls}-collapsed`]: isCollapsed.value,
-        [`${siderPrefixCls}-zero-width`]: isCollapsed.value && isZeroWidth.value,
+        [`${siderPrefixCls}-has-trigger`]: props.collapsible && props.trigger !== null && !isZeroWidth.value,
+        [`${siderPrefixCls}-below`]: below.value,
+        [`${siderPrefixCls}-zero-width`]: Number.parseFloat(siderWidth.value) === 0,
       }),
     )
 
     return () => {
-      const width = typeof currentWidth.value === 'number'
-        ? `${currentWidth.value}px`
-        : currentWidth.value
+      const width = siderWidth.value
 
-      const triggerNode = showTrigger.value && (
-        <div class={`${siderPrefixCls}-trigger`} onClick={toggle} style={{ width }}>
-          {slots.trigger ? (
-            slots.trigger({ collapsed: isCollapsed.value })
-          ) : (
-            <span class={`${siderPrefixCls}-trigger-icon`}>
-              {props.reverseArrow
-                ? (isCollapsed.value ? '›' : '‹')
-                : (isCollapsed.value ? '›' : '‹')}
-            </span>
+      // Zero-width trigger (floating button when collapsedWidth === 0)
+      const zeroWidthTrigger = isZeroWidth.value && isCollapsed.value ? (
+        <span
+          onClick={toggle}
+          class={cls(
+            `${siderPrefixCls}-zero-width-trigger`,
+            `${siderPrefixCls}-zero-width-trigger-${props.reverseArrow ? 'right' : 'left'}`,
           )}
-        </div>
-      )
+          style={props.zeroWidthTriggerStyle}
+        >
+          {props.trigger !== undefined ? props.trigger : <Icon component={MinusOutlined} />}
+        </span>
+      ) : null
+
+      // Default trigger icons
+      const defaultTrigger = () => {
+        if (isCollapsed.value) {
+          return props.reverseArrow ? <Icon component={LeftOutlined} /> : <Icon component={RightOutlined} />
+        }
+        return props.reverseArrow ? <Icon component={RightOutlined} /> : <Icon component={LeftOutlined} />
+      }
+
+      // Regular trigger (bottom bar)
+      const triggerDom = props.trigger !== null
+        ? zeroWidthTrigger || (
+            <div class={`${siderPrefixCls}-trigger`} onClick={toggle} style={{ width }}>
+              {props.trigger !== undefined ? props.trigger : defaultTrigger()}
+            </div>
+          )
+        : null
+
+      const divStyle: CSSProperties = {
+        flex: `0 0 ${width}`,
+        maxWidth: width,
+        minWidth: width,
+        width,
+      }
 
       return (
-        <aside
-          class={classes.value}
-          style={{ flex: `0 0 ${width}`, maxWidth: width, minWidth: width, width }}
-        >
+        <aside class={classes.value} style={divStyle}>
           <div class={`${siderPrefixCls}-children`}>{slots.default?.()}</div>
-          {triggerNode}
+          {props.collapsible || (below.value && zeroWidthTrigger) ? triggerDom : null}
         </aside>
       )
     }

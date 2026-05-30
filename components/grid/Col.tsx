@@ -1,14 +1,18 @@
 import { defineComponent, computed, inject, type PropType, type CSSProperties, type ComputedRef } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { ColSpan, ColSize } from './types'
+import type { ColSpan, ColSize, FlexType } from './types'
 import { RowContextKey } from './Row'
 
 interface RowContext {
-  gutter: ComputedRef<[number, number]>
+  gutter: ComputedRef<[number | string, number | string]>
+  wrap: ComputedRef<boolean>
 }
 
-function parseFlex(flex: ColSpan): string {
+function parseFlex(flex: FlexType): string {
+  if (flex === 'auto') {
+    return '1 1 auto'
+  }
   if (typeof flex === 'number') {
     return `${flex} ${flex} auto`
   }
@@ -21,6 +25,10 @@ function parseFlex(flex: ColSpan): string {
 export default defineComponent({
   name: 'Col',
   props: {
+    flex: {
+      type: [Number, String] as PropType<FlexType>,
+      default: undefined,
+    },
     span: {
       type: [Number, String] as PropType<ColSpan>,
       default: undefined,
@@ -104,20 +112,20 @@ export default defineComponent({
         const sizeProps = props[size]
         if (typeof sizeProps === 'number') {
           classNames.push(`${prefixCls}-${size}-${sizeProps}`)
-        } else if (typeof sizeProps === 'object') {
+        } else if (typeof sizeProps === 'object' && sizeProps !== null) {
           if (sizeProps.span !== undefined) {
             classNames.push(`${prefixCls}-${size}-${sizeProps.span}`)
           }
-          if (sizeProps.offset) {
+          if (sizeProps.offset !== undefined && sizeProps.offset !== 0) {
             classNames.push(`${prefixCls}-${size}-offset-${sizeProps.offset}`)
           }
-          if (sizeProps.order) {
+          if (sizeProps.order !== undefined && sizeProps.order !== 0) {
             classNames.push(`${prefixCls}-${size}-order-${sizeProps.order}`)
           }
-          if (sizeProps.pull) {
+          if (sizeProps.pull !== undefined && sizeProps.pull !== 0) {
             classNames.push(`${prefixCls}-${size}-pull-${sizeProps.pull}`)
           }
-          if (sizeProps.push) {
+          if (sizeProps.push !== undefined && sizeProps.push !== 0) {
             classNames.push(`${prefixCls}-${size}-push-${sizeProps.push}`)
           }
         }
@@ -131,14 +139,20 @@ export default defineComponent({
 
       if (rowContext) {
         const [horizontalGutter] = rowContext.gutter.value
-        if (horizontalGutter > 0) {
-          style.paddingLeft = `${horizontalGutter / 2}px`
-          style.paddingRight = `${horizontalGutter / 2}px`
+        if (horizontalGutter) {
+          const hGutter = typeof horizontalGutter === 'number'
+            ? `${horizontalGutter / 2}px`
+            : `calc(${horizontalGutter} / 2)`
+          style.paddingInline = hGutter
         }
       }
 
-      if (props.span !== undefined && typeof props.span === 'string') {
-        style.flex = parseFlex(props.span)
+      if (props.flex) {
+        style.flex = parseFlex(props.flex)
+        // Hack for Firefox to avoid size issue
+        if (rowContext && !rowContext.wrap.value && !style.minWidth) {
+          style.minWidth = 0
+        }
       }
 
       return style

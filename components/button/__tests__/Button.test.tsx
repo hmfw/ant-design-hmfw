@@ -1,8 +1,16 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import Button from '../Button'
 
 describe('Button', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders correctly', () => {
     const wrapper = mount(Button, {
       slots: { default: 'Click me' },
@@ -33,6 +41,17 @@ describe('Button', () => {
     })
   })
 
+  it('handles different shapes', () => {
+    const shapes = ['circle', 'round'] as const
+    shapes.forEach((shape) => {
+      const wrapper = mount(Button, {
+        props: { shape },
+        slots: { default: 'Button' },
+      })
+      expect(wrapper.classes()).toContain(`hmfw-btn-${shape}`)
+    })
+  })
+
   it('emits click event', async () => {
     const wrapper = mount(Button, {
       slots: { default: 'Click me' },
@@ -58,6 +77,21 @@ describe('Button', () => {
     })
     await wrapper.trigger('click')
     expect(wrapper.emitted('click')).toBeFalsy()
+  })
+
+  it('handles loading with delay', async () => {
+    const wrapper = mount(Button, {
+      props: { loading: { delay: 500 } },
+      slots: { default: 'Button' },
+    })
+
+    // Initially should not have loading class
+    expect(wrapper.classes()).not.toContain('hmfw-btn-loading')
+
+    // After delay, should have loading class
+    vi.advanceTimersByTime(500)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.classes()).toContain('hmfw-btn-loading')
   })
 
   it('handles disabled state', () => {
@@ -107,6 +141,39 @@ describe('Button', () => {
       props: { icon: () => <span>icon</span> },
     })
     expect(wrapper.classes()).toContain('hmfw-btn-icon-only')
+  })
+
+  it('handles icon position end', () => {
+    const wrapper = mount(Button, {
+      props: { icon: () => <span>icon</span>, iconPosition: 'end' },
+      slots: { default: 'Button' },
+    })
+    expect(wrapper.classes()).toContain('hmfw-btn-icon-end')
+  })
+
+  it('renders as anchor when href is provided', () => {
+    const wrapper = mount(Button, {
+      props: { href: 'https://example.com' },
+      slots: { default: 'Link' },
+    })
+    expect(wrapper.element.tagName).toBe('A')
+    expect(wrapper.attributes('href')).toBe('https://example.com')
+  })
+
+  it('renders anchor with target', () => {
+    const wrapper = mount(Button, {
+      props: { href: 'https://example.com', target: '_blank' },
+      slots: { default: 'Link' },
+    })
+    expect(wrapper.attributes('target')).toBe('_blank')
+  })
+
+  it('disables href when disabled', () => {
+    const wrapper = mount(Button, {
+      props: { href: 'https://example.com', disabled: true },
+      slots: { default: 'Link' },
+    })
+    expect(wrapper.attributes('href')).toBeUndefined()
   })
 
   it('handles different html types', () => {

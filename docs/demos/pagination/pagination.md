@@ -42,6 +42,14 @@
   <PaginationSmall />
 </DemoBlock>
 
+### 自定义渲染
+
+通过 `itemRender` 自定义页码渲染，通过 `align` 设置对齐方式。
+
+<DemoBlock title="自定义渲染" :source="PaginationCustomSource">
+  <PaginationCustom />
+</DemoBlock>
+
 ## API
 
 ### Pagination Props
@@ -53,6 +61,7 @@
 | total | 数据总数 | `number` | `0` |
 | pageSize | 每页条数（v-model） | `number` | - |
 | defaultPageSize | 默认的每页条数 | `number` | `10` |
+| pageSizeOptions | 指定每页可以显示多少条 | `number[]` | `[10, 20, 50, 100]` |
 | showSizeChanger | 是否展示 pageSize 切换器 | `boolean` | `false` |
 | showQuickJumper | 是否可以快速跳转至某页 | `boolean` | `false` |
 | showTotal | 用于显示数据总量和当前数据顺序 | `(total: number, range: [number, number]) => string` | - |
@@ -60,6 +69,9 @@
 | simple | 当添加该属性时，显示为简单分页 | `boolean` | `false` |
 | disabled | 禁用分页 | `boolean` | `false` |
 | hideOnSinglePage | 只有一页时是否隐藏分页器 | `boolean` | `false` |
+| itemRender | 自定义页码的结构 | `(page: number, type: 'page' \| 'prev' \| 'next' \| 'jump-prev' \| 'jump-next', originalElement: VNode) => VNode` | - |
+| responsive | 当屏幕尺寸小于 576px 时，自动变为 small | `boolean` | `false` |
+| align | 对齐方式 | `'start' \| 'center' \| 'end'` | - |
 
 ### Pagination Events
 
@@ -67,3 +79,6 @@
 | --- | --- | --- |
 | change | 页码或 pageSize 改变的回调 | `(page: number, pageSize: number) => void` |
 | showSizeChange | pageSize 变化的回调 | `(current: number, size: number) => void` |
+| update:current | 当前页数变化时触发（v-model） | `(page: number) => void` |
+| update:pageSize | 每页条数变化时触发（v-model） | `(size: number) => void` |
+

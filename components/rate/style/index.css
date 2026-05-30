@@ -1,14 +1,23 @@
 .hmfw-rate {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--hmfw-margin-xs, 8px);
   list-style: none;
   margin: 0;
   padding: 0;
   outline: none;
-  font-size: 20px;
+  font-size: calc(var(--hmfw-control-height, 32px) * 0.625);
   line-height: 1;
   cursor: pointer;
+  color: var(--hmfw-color-warning, #faad14);
+}
+
+.hmfw-rate-small {
+  font-size: calc(var(--hmfw-control-height-sm, 24px) * 0.625);
+}
+
+.hmfw-rate-large {
+  font-size: calc(var(--hmfw-control-height-lg, 40px) * 0.625);
 }
 
 .hmfw-rate-disabled {
@@ -19,25 +28,50 @@
 .hmfw-rate-star {
   position: relative;
   display: inline-block;
-  color: #d9d9d9;
+  color: var(--hmfw-color-fill-secondary, #f0f0f0);
   cursor: pointer;
-  transition: transform 0.1s;
+  transition: transform var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
 }
 
-.hmfw-rate-star:hover {
+.hmfw-rate-star > div {
+  transition: all var(--hmfw-motion-duration-mid, 0.2s);
+}
+
+.hmfw-rate-star > div:hover {
   transform: scale(1.1);
 }
 
-.hmfw-rate-disabled .hmfw-rate-star:hover {
+.hmfw-rate-star > div:focus {
+  outline: 0;
+}
+
+.hmfw-rate-star > div:focus-visible {
+  outline: 1px dashed var(--hmfw-color-warning, #faad14);
+  transform: scale(1.1);
+}
+
+.hmfw-rate-disabled .hmfw-rate-star > div:hover {
   transform: none;
 }
 
-.hmfw-rate-star-full {
-  color: #fadb14;
+.hmfw-rate-star-full .hmfw-rate-star-second {
+  color: inherit;
+}
+
+.hmfw-rate-star-half .hmfw-rate-star-first,
+.hmfw-rate-star-half .hmfw-rate-star-second {
+  opacity: 1;
 }
 
 .hmfw-rate-star-half .hmfw-rate-star-first {
-  color: #fadb14;
+  color: inherit;
+}
+
+.hmfw-rate-star-first,
+.hmfw-rate-star-second {
+  color: var(--hmfw-color-fill-secondary, #f0f0f0);
+  transition: all var(--hmfw-motion-duration-mid, 0.2s);
+  user-select: none;
 }
 
 .hmfw-rate-star-first {
@@ -48,15 +82,8 @@
   height: 100%;
   overflow: hidden;
   opacity: 0;
-  color: #d9d9d9;
-}
-
-.hmfw-rate-star-half .hmfw-rate-star-first {
-  opacity: 1;
 }
 
 .hmfw-rate-star-second {
   display: block;
-  color: inherit;
-  user-select: none;
 }

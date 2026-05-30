@@ -32,7 +32,7 @@ export {
 export type { IconSearchResult } from './icon/utils'
 
 export { Button } from './button'
-export type { ButtonProps, ButtonType, ButtonSize, ButtonHTMLType } from './button'
+export type { ButtonProps, ButtonType, ButtonSize, ButtonHTMLType, ButtonShape, LoadingConfig } from './button'
 
 export { Space } from './space'
 export type { SpaceProps, SpaceSize, SpaceDirection, SpaceAlign } from './space'
@@ -68,10 +68,10 @@ export { Input, InputPassword, TextArea, InputSearch } from './input'
 export type { InputProps, TextAreaProps, InputSize, InputStatus } from './input'
 
 export { Checkbox, CheckboxGroup } from './checkbox'
-export type { CheckboxProps, CheckboxGroupProps, CheckboxValueType } from './checkbox'
+export type { CheckboxProps, CheckboxGroupProps, CheckboxValueType, CheckboxChangeEvent, CheckboxChangeEventTarget, CheckboxOptionType } from './checkbox'
 
 export { Radio, RadioGroup } from './radio'
-export type { RadioProps, RadioGroupProps, RadioValueType } from './radio'
+export type { RadioProps, RadioGroupProps, RadioValueType, RadioChangeEvent } from './radio'
 
 export { Switch } from './switch'
 export type { SwitchProps, SwitchSize } from './switch'
@@ -83,7 +83,7 @@ export { Progress } from './progress'
 export type { ProgressProps, ProgressType, ProgressStatus } from './progress'
 
 export { Breadcrumb } from './breadcrumb'
-export type { BreadcrumbProps, BreadcrumbItem } from './breadcrumb'
+export type { BreadcrumbProps, BreadcrumbItemType as BreadcrumbItem } from './breadcrumb'
 
 export { Pagination } from './pagination'
 export type { PaginationProps, PaginationSize } from './pagination'
@@ -116,31 +116,41 @@ export type { PopoverProps } from './popover'
 export { InputNumber } from './input-number'
 
 export { Collapse, CollapsePanel } from './collapse'
-export type { CollapseItem } from './collapse'
+export type { CollapseItem, CollapsibleType, CollapsePanelProps, ExpandIconProps } from './collapse'
 
-export { Descriptions } from './descriptions'
-export type { DescriptionsItem } from './descriptions'
+export { Descriptions, DescriptionsItem } from './descriptions'
+export type { DescriptionsProps, DescriptionsItemProps } from './descriptions'
 
-export { Steps } from './steps'
-export type { StepItem, StepStatus } from './steps'
+export { Steps, ProgressIcon, PanelArrow } from './steps'
+export type { StepItem, StepStatus, StepsProps, IconRenderType, IconRenderInfo } from './steps'
 
 export { Result } from './result'
 export type { ResultStatus } from './result'
 
-export { Skeleton, SkeletonButton, SkeletonInput } from './skeleton'
+export { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from './skeleton'
 export type { SkeletonAvatarProps, SkeletonTitleProps, SkeletonParagraphProps } from './skeleton'
 
 export { Rate } from './rate'
+export type { RateProps, RateSize, RateCharacterRenderContext } from './rate'
 
 export { Slider } from './slider'
 
-export { Timeline } from './timeline'
-export type { TimelineItem } from './timeline'
+export { Timeline, TimelineItem } from './timeline'
+export type {
+  TimelineProps,
+  TimelineItemProps,
+  TimelineMode,
+  TimelineOrientation,
+  TimelineVariant,
+  TimelineItemPlacement,
+  TimelineItemColor,
+} from './timeline'
 
 export { List, ListItem, ListItemMeta } from './list'
+export type { ListProps, ListItemProps, ListItemMetaProps, ListGridType, PaginationConfig } from './list'
 
 export { Dropdown } from './dropdown'
-export type { DropdownItem } from './dropdown'
+export type { DropdownProps } from './dropdown'
 
 export { Popconfirm } from './popconfirm'
 
@@ -151,14 +161,16 @@ export { Table } from './table'
 export type { TableColumn, TableProps } from './table'
 
 export { Menu } from './menu'
-export type { MenuItem } from './menu'
+export type { MenuProps, MenuTheme, MenuMode } from './menu'
 
 export { Form, FormItem, useForm } from './form'
 export type { FormProps, FormItemProps, FormRule } from './form'
 
 export { Watermark } from './watermark'
+export type { WatermarkProps, WatermarkFont } from './watermark'
 
 export { BackTop } from './back-top'
+export type { BackTopProps } from './back-top'
 
 export { FloatButton, FloatButtonGroup, FloatButtonBackTop } from './float-button'
 export type {
@@ -174,9 +186,9 @@ export type {
 } from './float-button'
 
 export { QRCode } from './qrcode'
-export type { QRCodeProps, QRCodeStatus, QRCodeErrorLevel } from './qrcode'
+export type { QRCodeProps, QRCodeStatus, QRCodeErrorLevel, QRCodeType, StatusRenderInfo } from './qrcode'
 
-export { Anchor } from './anchor'
+export { Anchor, AnchorLink } from './anchor'
 export type { AnchorProps, AnchorLinkItem } from './anchor'
 
 export { Tree } from './tree'

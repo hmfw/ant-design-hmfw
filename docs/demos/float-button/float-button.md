@@ -80,13 +80,15 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 | --- | --- | --- | --- |
 | type | 设置按钮类型 | `'default' \| 'primary'` | `'default'` |
 | shape | 设置按钮形状 | `'circle' \| 'square'` | `'circle'` |
-| icon | 自定义图标 | `IconComponent \| string \| slot` | - |
-| description | 文字及其他内容，仅 `square` 形状展示 | `string \| slot` | - |
-| tooltip | 气泡提示的内容 | `string \| slot` | - |
+| icon | 自定义图标 | `IconComponent \| string \| slot` | `FileTextOutlined` |
+| content | 文字及其他内容，仅 `square` 形状展示 | `string \| slot` | - |
+| description | 文字及其他内容（已废弃，请使用 `content`） | `string \| slot` | - |
+| tooltip | 气泡提示的内容 | `string \| TooltipProps \| slot` | - |
 | badge | 带徽标数字的悬浮按钮 | `{ count?, dot?, overflowCount?, color?, offset? }` | - |
 | href | 点击跳转的地址，指定时渲染为 `a` 标签 | `string` | - |
 | target | 相当于 `a` 标签的 `target` 属性 | `string` | - |
 | htmlType | 设置原生 `button` 的 `type` | `'submit' \| 'reset' \| 'button'` | `'button'` |
+| disabled | 是否禁用按钮 | `boolean` | `false` |
 
 ### FloatButton Events
 
@@ -106,14 +108,16 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 | defaultOpen | 默认展开状态 | `boolean` | `false` |
 | icon | 触发按钮的图标 | `IconComponent \| string` | `PlusOutlined` |
 | closeIcon | 展开时触发按钮的图标 | `IconComponent \| string` | `CloseOutlined` |
-| tooltip | 触发按钮的气泡提示 | `string` | - |
+| tooltip | 触发按钮的气泡提示 | `string \| TooltipProps` | - |
 | badge | 触发按钮的徽标 | `FloatButtonBadgeProps` | - |
+| description | 触发按钮的描述（square 形状） | `string` | - |
 
 ### FloatButton.Group Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | openChange / update:open | 展开状态变化时的回调 | `(open: boolean) => void` |
+| click | 点击触发按钮时的回调（仅菜单模式） | `(e: MouseEvent) => void` |
 
 ### FloatButton.BackTop Props
 
@@ -122,10 +126,12 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 | visibilityHeight | 滚动高度达到此参数值才出现 | `number` | `400` |
 | target | 设置需要监听其滚动事件的元素 | `() => HTMLElement \| Window \| Document` | `() => window` |
 | duration | 回到顶部所需时间（ms） | `number` | `450` |
-| icon | 自定义图标 | `IconComponent \| string` | `UpOutlined` |
+| icon | 自定义图标 | `IconComponent \| string` | `VerticalAlignTopOutlined` |
 | type | 设置按钮类型 | `'default' \| 'primary'` | `'default'` |
 | shape | 设置按钮形状 | `'circle' \| 'square'` | `'circle'` |
-| tooltip | 气泡提示的内容 | `string` | - |
+| tooltip | 气泡提示的内容 | `string \| TooltipProps` | - |
+| content | 文字及其他内容（square 形状） | `string` | - |
+| description | 文字及其他内容（已废弃，请使用 `content`） | `string` | - |
 
 ### FloatButton.BackTop Events
 

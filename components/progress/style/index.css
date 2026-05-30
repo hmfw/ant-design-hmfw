@@ -1,92 +1,211 @@
 .hmfw-progress {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--hmfw-font-size-base);
+  display: inline-flex;
+  font-size: var(--hmfw-font-size-base, 14px);
+  line-height: 1;
 }
 
+/* ====== Line Progress ====== */
 .hmfw-progress-line {
-  width: 100%;
-}
-
-.hmfw-progress-outer {
-  flex: 1;
-}
-
-.hmfw-progress-inner {
   position: relative;
-  display: block;
   width: 100%;
-  background: var(--hmfw-color-fill-secondary, rgba(0,0,0,0.06));
+}
+
+.hmfw-progress-body {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  gap: var(--hmfw-margin-xs, 8px);
+}
+
+.hmfw-progress-body-layout-bottom {
+  flex-direction: column;
+  align-items: center;
+  gap: var(--hmfw-margin-xxs, 4px);
+}
+
+.hmfw-progress-rail {
+  flex: auto;
+  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
   border-radius: 100px;
+  position: relative;
+  width: 100%;
   overflow: hidden;
 }
 
-.hmfw-progress-bg {
-  position: relative;
+.hmfw-progress-track {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0;
+  border-radius: inherit;
   background: var(--hmfw-color-primary, #1677ff);
-  transition: width 0.3s ease, background 0.3s ease;
+  transition: all var(--hmfw-motion-duration-slow, 0.3s) var(--hmfw-motion-ease-in-out, ease);
+  min-width: max-content;
+  display: flex;
+  align-items: center;
 }
 
-.hmfw-progress-status-exception .hmfw-progress-bg {
-  background: var(--hmfw-color-error, #ff4d4f);
-}
-
-.hmfw-progress-status-success .hmfw-progress-bg {
+.hmfw-progress-track-success {
   background: var(--hmfw-color-success, #52c41a);
 }
 
-.hmfw-progress-status-active .hmfw-progress-bg::before {
+.hmfw-progress-status-exception .hmfw-progress-track {
+  background: var(--hmfw-color-error, #ff4d4f);
+}
+
+.hmfw-progress-status-success .hmfw-progress-track {
+  background: var(--hmfw-color-success, #52c41a);
+}
+
+.hmfw-progress-status-active .hmfw-progress-track::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: #fff;
+  background: var(--hmfw-color-bg-container, #fff);
   border-radius: inherit;
+  opacity: 0;
   animation: hmfw-progress-active 2.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
 }
 
 @keyframes hmfw-progress-active {
-  0% { transform: translateX(-100%) scaleX(0); opacity: 0.1; }
-  20% { transform: translateX(-100%) scaleX(0); opacity: 0.5; }
-  100% { transform: translateX(0) scaleX(1); opacity: 0; }
+  0% {
+    transform: translateX(-100%) scaleX(0);
+    opacity: 0.1;
+  }
+  20% {
+    transform: translateX(-100%) scaleX(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(0) scaleX(1);
+    opacity: 0;
+  }
 }
 
-.hmfw-progress-text {
-  min-width: 2em;
-  text-align: left;
-  color: var(--hmfw-color-text-secondary, rgba(0,0,0,0.45));
+/* Indicator */
+.hmfw-progress-indicator {
+  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  line-height: 1;
   white-space: nowrap;
+  vertical-align: middle;
+  word-break: normal;
 }
 
-.hmfw-progress-status-exception .hmfw-progress-text {
+.hmfw-progress-indicator-outer.hmfw-progress-indicator-start {
+  order: -1;
+}
+
+.hmfw-progress-indicator-inner {
+  color: var(--hmfw-color-white, #fff);
+  padding-inline: var(--hmfw-padding-xxs, 4px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hmfw-progress-indicator-inner.hmfw-progress-indicator-end {
+  justify-content: end;
+}
+
+.hmfw-progress-indicator-inner.hmfw-progress-indicator-start {
+  justify-content: start;
+}
+
+.hmfw-progress-indicator-inner.hmfw-progress-indicator-bright {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.hmfw-progress-status-exception .hmfw-progress-indicator {
   color: var(--hmfw-color-error, #ff4d4f);
 }
 
-.hmfw-progress-status-success .hmfw-progress-text {
+.hmfw-progress-status-success .hmfw-progress-indicator {
   color: var(--hmfw-color-success, #52c41a);
 }
 
-/* Circle */
+/* Small size */
+.hmfw-progress-small.hmfw-progress-line .hmfw-progress-indicator {
+  font-size: var(--hmfw-font-size-sm, 12px);
+}
+
+/* ====== Circle Progress ====== */
 .hmfw-progress-circle {
   display: inline-flex;
 }
 
-.hmfw-progress-circle .hmfw-progress-inner {
+.hmfw-progress-circle .hmfw-progress-body {
   position: relative;
-  background: transparent;
-  overflow: visible;
+  line-height: 1;
+  background-color: transparent;
 }
 
-.hmfw-progress-circle .hmfw-progress-text {
+.hmfw-progress-circle .hmfw-progress-indicator {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  font-size: 1em;
+  line-height: 1;
+  white-space: normal;
   text-align: center;
-  font-size: 14px;
-  color: var(--hmfw-color-text);
+  transform: translateY(-50%);
+}
+
+.hmfw-progress-circle-rail {
+  stroke: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
 }
 
 .hmfw-progress-circle-path {
-  transition: stroke-dashoffset 0.3s ease;
+  stroke: var(--hmfw-color-primary, #1677ff);
+  transition: stroke-dashoffset var(--hmfw-motion-duration-slow, 0.3s) ease;
+}
+
+.hmfw-progress-circle-path-success {
+  stroke: var(--hmfw-color-success, #52c41a);
+}
+
+.hmfw-progress-status-exception .hmfw-progress-circle-path {
+  stroke: var(--hmfw-color-error, #ff4d4f);
+}
+
+.hmfw-progress-status-success .hmfw-progress-circle-path {
+  stroke: var(--hmfw-color-success, #52c41a);
+}
+
+/* ====== Steps Progress ====== */
+.hmfw-progress-steps {
+  display: inline-block;
+}
+
+.hmfw-progress-steps-body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(var(--hmfw-margin-xxs, 4px) / 2);
+}
+
+.hmfw-progress-steps-body .hmfw-progress-indicator {
+  margin-inline-start: var(--hmfw-margin-xs, 8px);
+}
+
+.hmfw-progress-steps-item {
+  flex-shrink: 0;
+  min-width: calc(var(--hmfw-margin-xxs, 4px) / 2);
+  background-color: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  transition: all var(--hmfw-motion-duration-slow, 0.3s);
+  border-radius: 2px;
+}
+
+.hmfw-progress-steps-item-active {
+  background-color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-progress-status-exception .hmfw-progress-steps-item-active {
+  background-color: var(--hmfw-color-error, #ff4d4f);
+}
+
+.hmfw-progress-status-success .hmfw-progress-steps-item-active {
+  background-color: var(--hmfw-color-success, #52c41a);
 }

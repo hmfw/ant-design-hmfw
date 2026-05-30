@@ -43,16 +43,30 @@ describe('FloatButton', () => {
     expect(wrapper.find('.hmfw-float-btn-icon .my-icon').exists()).toBe(true)
   })
 
-  it('renders a default icon when none provided', () => {
+  it('renders default FileTextOutlined icon when no content/icon provided', () => {
     const wrapper = mount(FloatButton)
     expect(wrapper.find('.hmfw-float-btn-icon svg').exists()).toBe(true)
   })
 
-  it('renders description', () => {
+  it('renders content prop', () => {
+    const wrapper = mount(FloatButton, {
+      props: { shape: 'square', content: 'Back' },
+    })
+    expect(wrapper.find('.hmfw-float-btn-content').text()).toBe('Back')
+  })
+
+  it('renders deprecated description prop', () => {
     const wrapper = mount(FloatButton, {
       props: { shape: 'square', description: 'Back' },
     })
-    expect(wrapper.find('.hmfw-float-btn-description').text()).toBe('Back')
+    expect(wrapper.find('.hmfw-float-btn-content').text()).toBe('Back')
+  })
+
+  it('content prop takes precedence over description', () => {
+    const wrapper = mount(FloatButton, {
+      props: { shape: 'square', content: 'New', description: 'Old' },
+    })
+    expect(wrapper.find('.hmfw-float-btn-content').text()).toBe('New')
   })
 
   it('respects custom html type', () => {
@@ -64,6 +78,19 @@ describe('FloatButton', () => {
     const wrapper = mount(FloatButton)
     await wrapper.find('.hmfw-float-btn').trigger('click')
     expect(wrapper.emitted('click')).toBeTruthy()
+  })
+
+  it('does not emit click when disabled', async () => {
+    const wrapper = mount(FloatButton, { props: { disabled: true } })
+    await wrapper.find('.hmfw-float-btn').trigger('click')
+    expect(wrapper.emitted('click')).toBeFalsy()
+  })
+
+  it('applies disabled class and attribute', () => {
+    const wrapper = mount(FloatButton, { props: { disabled: true } })
+    const btn = wrapper.find('.hmfw-float-btn')
+    expect(btn.classes()).toContain('hmfw-float-btn-disabled')
+    expect(btn.attributes('disabled')).toBe('')
   })
 
   it('renders as anchor when href provided', () => {
@@ -89,11 +116,18 @@ describe('FloatButton', () => {
     expect(wrapper.find('.hmfw-badge-count').exists()).toBe(false)
   })
 
-  it('wraps content in a Tooltip when tooltip provided', () => {
+  it('wraps content in a Tooltip when tooltip string provided', () => {
     const wrapper = mount(FloatButton, { props: { tooltip: '提示' } })
     // Button still renders as root, tooltip trigger lives inside
     expect(wrapper.find('.hmfw-float-btn').exists()).toBe(true)
     expect(wrapper.find('.hmfw-float-btn-body').exists()).toBe(true)
+  })
+
+  it('accepts tooltip as object (TooltipProps)', () => {
+    const wrapper = mount(FloatButton, {
+      props: { tooltip: { title: 'Tip', placement: 'top' } },
+    })
+    expect(wrapper.find('.hmfw-float-btn').exists()).toBe(true)
   })
 })
 
@@ -168,6 +202,15 @@ describe('FloatButtonGroup', () => {
     expect(wrapper.emitted('update:open')?.[0]).toEqual([true])
   })
 
+  it('emits click event on trigger button', async () => {
+    const wrapper = mount(FloatButtonGroup, {
+      props: { trigger: 'click' },
+      slots: { default: '<span class="child">1</span>' },
+    })
+    await wrapper.find('.hmfw-float-btn').trigger('click')
+    expect(wrapper.emitted('click')).toBeTruthy()
+  })
+
   it('supports controlled open', async () => {
     const wrapper = mount(FloatButtonGroup, {
       props: { trigger: 'click', open: false },
@@ -181,6 +224,20 @@ describe('FloatButtonGroup', () => {
     // Parent updates the prop
     await wrapper.setProps({ open: true })
     expect(wrapper.find('.hmfw-float-btn-group-wrap').exists()).toBe(true)
+  })
+
+  it('closes on outside click when trigger=click', async () => {
+    const wrapper = mount(FloatButtonGroup, {
+      props: { trigger: 'click', defaultOpen: true },
+      slots: { default: '<span class="child">1</span>' },
+      attachTo: document.body,
+    })
+    expect(wrapper.find('.hmfw-float-btn-group-wrap').exists()).toBe(true)
+    // Simulate outside click
+    document.body.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('.hmfw-float-btn-group-wrap').exists()).toBe(false)
+    wrapper.unmount()
   })
 })
 

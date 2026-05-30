@@ -1,15 +1,11 @@
-import { defineComponent, ref, computed, watch, type PropType } from 'vue'
+import { defineComponent, ref, computed, watch, provide, inject, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import { Icon } from '../icon'
+import { RightOutlined } from '../icon/icons'
+import type { CollapseItem, CollapsibleType, ExpandIconProps } from './types'
 
-export interface CollapseItem {
-  key: string
-  label: string
-  children?: unknown
-  disabled?: boolean
-  showArrow?: boolean
-  extra?: string
-}
+const COLLAPSE_CONTEXT_KEY = Symbol('collapse-context')
 
 export const Collapse = defineComponent({
   name: 'Collapse',
@@ -23,6 +19,8 @@ export const Collapse = defineComponent({
     expandIconPosition: { type: String as PropType<'start' | 'end'>, default: 'start' },
     items: Array as PropType<CollapseItem[]>,
     destroyInactivePanel: Boolean,
+    collapsible: String as PropType<CollapsibleType>,
+    expandIcon: Function as PropType<(props: ExpandIconProps) => VNode>,
   },
   emits: ['update:activeKey', 'change'],
   setup(props, { slots, emit }) {
@@ -53,13 +51,113 @@ export const Collapse = defineComponent({
         next = keys.includes(key) ? keys.filter((k) => k !== key) : [...keys, key]
       }
       innerKeys.value = next
-      const emitVal = props.accordion ? (next[0] ?? '') : next
-      emit('update:activeKey', emitVal)
-      emit('change', emitVal)
+      // Always emit array for consistency with ant-design v6
+      emit('update:activeKey', next)
+      emit('change', next)
+    }
+
+    // Provide context for Panel children
+    provide(COLLAPSE_CONTEXT_KEY, {
+      activeKeys: currentKeys,
+      toggle,
+      prefixCls,
+      expandIconPosition: computed(() => props.expandIconPosition),
+      collapsible: computed(() => props.collapsible),
+      destroyInactivePanel: computed(() => props.destroyInactivePanel),
+      expandIcon: computed(() => props.expandIcon),
+    })
+
+    const renderExpandIcon = (isActive: boolean, panelKey: string) => {
+      if (props.expandIcon) {
+        return props.expandIcon({ isActive, panelKey })
+      }
+      return (
+        <Icon
+          component={RightOutlined}
+          style={{ transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)' }}
+        />
+      )
     }
 
     return () => {
       const items = props.items ?? []
+      const panelChildren = slots.default?.()
+
+      const renderPanel = (
+        key: string,
+        label: string | VNode,
+        children: unknown,
+        options: {
+          disabled?: boolean
+          showArrow?: boolean
+          extra?: string | VNode
+          collapsible?: CollapsibleType
+          style?: Record<string, any>
+          forceRender?: boolean
+        } = {},
+      ) => {
+        const isOpen = currentKeys.value.includes(key)
+        const shouldRender = isOpen || !props.destroyInactivePanel || options.forceRender
+
+        const effectiveCollapsible = options.collapsible ?? props.collapsible
+        const isDisabled = options.disabled || effectiveCollapsible === 'disabled'
+        const canClickHeader = !isDisabled && effectiveCollapsible !== 'icon'
+        const canClickIcon = !isDisabled && (effectiveCollapsible === 'icon' || effectiveCollapsible === 'header' || effectiveCollapsible === undefined)
+
+        return (
+          <div
+            key={key}
+            class={cls(`${prefixCls}-item`, {
+              [`${prefixCls}-item-active`]: isOpen,
+              [`${prefixCls}-item-disabled`]: isDisabled,
+            })}
+            style={options.style}
+          >
+            <div
+              class={`${prefixCls}-header`}
+              onClick={() => canClickHeader && toggle(key)}
+              role="button"
+              aria-expanded={isOpen}
+              aria-disabled={isDisabled}
+              style={{ cursor: canClickHeader ? 'pointer' : 'default' }}
+            >
+              {options.showArrow !== false && (
+                <span
+                  class={cls(`${prefixCls}-expand-icon`, {
+                    [`${prefixCls}-expand-icon-active`]: isOpen,
+                  })}
+                  onClick={(e) => {
+                    if (effectiveCollapsible === 'icon' && canClickIcon) {
+                      e.stopPropagation()
+                      toggle(key)
+                    }
+                  }}
+                  style={{ cursor: canClickIcon && effectiveCollapsible === 'icon' ? 'pointer' : 'inherit' }}
+                >
+                  {renderExpandIcon(isOpen, key)}
+                </span>
+              )}
+              <span class={`${prefixCls}-header-text`}>{label}</span>
+              {options.extra && (
+                <span class={`${prefixCls}-extra`}>{options.extra}</span>
+              )}
+            </div>
+            {shouldRender && (
+              <div
+                class={cls(`${prefixCls}-content`, {
+                  [`${prefixCls}-content-active`]: isOpen,
+                  [`${prefixCls}-content-inactive`]: !isOpen,
+                })}
+                role="region"
+              >
+                <div class={`${prefixCls}-content-box`}>
+                  {children as any}
+                </div>
+              </div>
+            )}
+          </div>
+        )
+      }
 
       return (
         <div class={cls(prefixCls, {
@@ -68,53 +166,17 @@ export const Collapse = defineComponent({
           [`${prefixCls}-${props.size}`]: props.size !== 'middle',
           [`${prefixCls}-icon-position-end`]: props.expandIconPosition === 'end',
         })}>
-          {items.map((item) => {
-            const isOpen = currentKeys.value.includes(item.key)
-            const shouldRender = isOpen || !props.destroyInactivePanel
-
-            return (
-              <div
-                key={item.key}
-                class={cls(`${prefixCls}-item`, {
-                  [`${prefixCls}-item-active`]: isOpen,
-                  [`${prefixCls}-item-disabled`]: item.disabled,
-                })}
-              >
-                <div
-                  class={`${prefixCls}-header`}
-                  onClick={() => !item.disabled && toggle(item.key)}
-                  role="button"
-                  aria-expanded={isOpen}
-                >
-                  {item.showArrow !== false && (
-                    <span class={cls(`${prefixCls}-expand-icon`, {
-                      [`${prefixCls}-expand-icon-active`]: isOpen,
-                    })}>
-                      ▶
-                    </span>
-                  )}
-                  <span class={`${prefixCls}-header-text`}>{item.label}</span>
-                  {item.extra && (
-                    <span class={`${prefixCls}-extra`}>{item.extra}</span>
-                  )}
-                </div>
-                {shouldRender && (
-                  <div
-                    class={cls(`${prefixCls}-content`, {
-                      [`${prefixCls}-content-active`]: isOpen,
-                      [`${prefixCls}-content-inactive`]: !isOpen,
-                    })}
-                    role="region"
-                  >
-                    <div class={`${prefixCls}-content-box`}>
-                      {item.children as any ?? slots[item.key]?.()}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )
-          })}
-          {slots.default?.()}
+          {items.map((item) =>
+            renderPanel(item.key, item.label, item.children, {
+              disabled: item.disabled,
+              showArrow: item.showArrow,
+              extra: item.extra,
+              collapsible: item.collapsible,
+              style: item.style,
+              forceRender: item.forceRender,
+            }),
+          )}
+          {panelChildren}
         </div>
       )
     }
@@ -127,21 +189,106 @@ export const CollapsePanel = defineComponent({
     header: String,
     disabled: Boolean,
     showArrow: { type: Boolean, default: true },
-    extra: String,
+    extra: [String, Object] as PropType<string | VNode>,
     forceRender: Boolean,
+    collapsible: String as PropType<CollapsibleType>,
+    panelKey: String,
   },
-  setup(props, { slots }) {
-    const prefixCls = usePrefixCls('collapse')
+  setup(props, { slots, attrs }) {
+    const context = inject<any>(COLLAPSE_CONTEXT_KEY, null)
+
+    if (!context) {
+      // Standalone mode (not inside Collapse) - just render static
+      const prefixCls = usePrefixCls('collapse')
+      return () => (
+        <div class={`${prefixCls}-item`}>
+          <div class={`${prefixCls}-header`}>
+            {props.showArrow && (
+              <span class={`${prefixCls}-expand-icon`}>
+                <Icon component={RightOutlined} />
+              </span>
+            )}
+            <span class={`${prefixCls}-header-text`}>{props.header}</span>
+            {props.extra && <span class={`${prefixCls}-extra`}>{props.extra}</span>}
+          </div>
+          <div class={`${prefixCls}-content ${prefixCls}-content-active`}>
+            <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
+          </div>
+        </div>
+      )
+    }
+
+    // Integrated mode - use context
+    const key = computed(() => props.panelKey ?? (attrs.key as string) ?? '')
+    const isOpen = computed(() => context.activeKeys.value.includes(key.value))
+    const prefixCls = context.prefixCls
+
+    const effectiveCollapsible = computed(() => props.collapsible ?? context.collapsible.value)
+    const isDisabled = computed(() => props.disabled || effectiveCollapsible.value === 'disabled')
+    const canClickHeader = computed(() => !isDisabled.value && effectiveCollapsible.value !== 'icon')
+    const canClickIcon = computed(() => !isDisabled.value && effectiveCollapsible.value !== 'disabled')
+
+    const shouldRender = computed(
+      () => isOpen.value || !context.destroyInactivePanel.value || props.forceRender,
+    )
+
+    const renderExpandIcon = () => {
+      if (context.expandIcon.value) {
+        return context.expandIcon.value({ isActive: isOpen.value, panelKey: key.value })
+      }
+      return (
+        <Icon
+          component={RightOutlined}
+          style={{ transform: isOpen.value ? 'rotate(90deg)' : 'rotate(0deg)' }}
+        />
+      )
+    }
+
     return () => (
-      <div class={`${prefixCls}-item`}>
-        <div class={`${prefixCls}-header`}>
-          {props.showArrow && <span class={`${prefixCls}-expand-icon`}>▶</span>}
+      <div
+        class={cls(`${prefixCls}-item`, {
+          [`${prefixCls}-item-active`]: isOpen.value,
+          [`${prefixCls}-item-disabled`]: isDisabled.value,
+        })}
+      >
+        <div
+          class={`${prefixCls}-header`}
+          onClick={() => canClickHeader.value && context.toggle(key.value)}
+          role="button"
+          aria-expanded={isOpen.value}
+          aria-disabled={isDisabled.value}
+          style={{ cursor: canClickHeader.value ? 'pointer' : 'default' }}
+        >
+          {props.showArrow && (
+            <span
+              class={cls(`${prefixCls}-expand-icon`, {
+                [`${prefixCls}-expand-icon-active`]: isOpen.value,
+              })}
+              onClick={(e) => {
+                if (effectiveCollapsible.value === 'icon' && canClickIcon.value) {
+                  e.stopPropagation()
+                  context.toggle(key.value)
+                }
+              }}
+              style={{ cursor: canClickIcon.value && effectiveCollapsible.value === 'icon' ? 'pointer' : 'inherit' }}
+            >
+              {renderExpandIcon()}
+            </span>
+          )}
           <span class={`${prefixCls}-header-text`}>{props.header}</span>
           {props.extra && <span class={`${prefixCls}-extra`}>{props.extra}</span>}
         </div>
-        <div class={`${prefixCls}-content ${prefixCls}-content-active`}>
-          <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
-        </div>
+        {shouldRender.value && (
+          <div
+            class={cls(`${prefixCls}-content`, {
+              [`${prefixCls}-content-active`]: isOpen.value,
+              [`${prefixCls}-content-inactive`]: !isOpen.value,
+            })}
+            role="region"
+          >
+            <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
+          </div>
+        )}
       </div>
     )
   },

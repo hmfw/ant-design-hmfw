@@ -1,11 +1,14 @@
-// QR Code generator using pure canvas — no external dependencies.
+// QR Code generator using pure canvas/SVG — no external dependencies.
 // Implements a minimal QR code encoder (version 1-10, ECC level L/M/Q/H).
 // Based on the ISO/IEC 18004 standard algorithm.
 
-import { defineComponent, ref, onMounted, watch, computed, type PropType } from 'vue'
+import { defineComponent, ref, onMounted, watch, computed, type PropType, h as createElement } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { QRCodeStatus, QRCodeErrorLevel } from './types'
+import { Spin } from '../spin'
+import { Icon } from '../icon'
+import { LoadingOutlined } from '../icon/icons'
+import type { QRCodeStatus, QRCodeErrorLevel, QRCodeType, StatusRenderInfo } from './types'
 
 // --- Minimal QR encoder ---
 
@@ -246,23 +249,45 @@ export const QRCode = defineComponent({
   name: 'QRCode',
   props: {
     value: { type: String, required: true },
+    type: { type: String as PropType<QRCodeType>, default: 'canvas' },
     size: { type: Number, default: 160 },
     color: { type: String, default: '#000000' },
-    bgColor: { type: String, default: '#ffffff' },
+    bgColor: { type: String, default: 'transparent' },
     errorLevel: { type: String as PropType<QRCodeErrorLevel>, default: 'M' },
     status: { type: String as PropType<QRCodeStatus>, default: 'active' },
     icon: String,
-    iconSize: { type: Number, default: 40 },
+    iconSize: { type: [Number, Object] as PropType<number | { width: number; height: number }>, default: 40 },
     bordered: { type: Boolean, default: true },
+    statusRender: Function as PropType<(info: StatusRenderInfo) => any>,
+    marginSize: Number,
+    onRefresh: Function as PropType<() => void>,
   },
-  emits: ['refresh'],
-  setup(props, { emit }) {
+  setup(props, { attrs }) {
     const prefixCls = usePrefixCls('qrcode')
     const canvasRef = ref<HTMLCanvasElement>()
 
-    const matrix = computed(() => generateQR(props.value, props.errorLevel))
+    const matrix = computed(() => {
+      if (!props.value) return null
+      return generateQR(props.value, props.errorLevel)
+    })
 
-    const draw = () => {
+    const iconSizeValue = computed(() => {
+      if (typeof props.iconSize === 'number') {
+        return { width: props.iconSize, height: props.iconSize }
+      }
+      return props.iconSize
+    })
+
+    // Warn in dev mode
+    if (import.meta.env.DEV) {
+      if (props.icon && props.errorLevel === 'L') {
+        console.warn(
+          '[hmfw: QRCode] ErrorLevel `L` is not recommended to be used with `icon`, for scanning result would be affected by low level.'
+        )
+      }
+    }
+
+    const drawCanvas = () => {
       const canvas = canvasRef.value
       if (!canvas || !matrix.value) return
       const ctx = canvas.getContext('2d')
@@ -281,77 +306,187 @@ export const QRCode = defineComponent({
       )
       if (props.icon) {
         const img = new Image()
+        img.crossOrigin = 'anonymous'
         img.src = props.icon
         img.onload = () => {
-          const iSize = props.iconSize
-          const x = (size - iSize) / 2
-          const y = (size - iSize) / 2
+          const iSize = iconSizeValue.value
+          const x = (size - iSize.width) / 2
+          const y = (size - iSize.height) / 2
           ctx.fillStyle = props.bgColor
-          ctx.fillRect(x - 2, y - 2, iSize + 4, iSize + 4)
-          ctx.drawImage(img, x, y, iSize, iSize)
+          ctx.fillRect(x - 2, y - 2, iSize.width + 4, iSize.height + 4)
+          ctx.drawImage(img, x, y, iSize.width, iSize.height)
         }
       }
     }
 
-    onMounted(draw)
-    watch([() => props.value, () => props.size, () => props.color, () => props.bgColor, () => props.errorLevel], draw)
+    onMounted(() => {
+      if (props.type === 'canvas') drawCanvas()
+    })
+    watch([() => props.value, () => props.size, () => props.color, () => props.bgColor, () => props.errorLevel, () => props.icon, () => props.iconSize], () => {
+      if (props.type === 'canvas') drawCanvas()
+    })
 
-    return () => (
-      <div
-        class={cls(prefixCls, {
-          [`${prefixCls}-bordered`]: props.bordered,
-        })}
-        style={{ width: `${props.size}px`, height: `${props.size}px` }}
-      >
-        <canvas
-          ref={canvasRef}
-          width={props.size}
-          height={props.size}
-          style={{ display: props.status === 'active' ? 'block' : 'none' }}
-        />
-        {props.status !== 'active' && (
-          <div class={`${prefixCls}-mask`}>
-            <div class={`${prefixCls}-mask-canvas`}>
-              <canvas width={props.size} height={props.size} ref={(el) => {
-                if (!el) return
-                const m = matrix.value
-                if (!m) return
-                const ctx = (el as HTMLCanvasElement).getContext('2d')
-                if (!ctx) return
-                const cellSize = props.size / m.length
-                ctx.fillStyle = props.bgColor
-                ctx.fillRect(0, 0, props.size, props.size)
-                ctx.fillStyle = props.color
-                ctx.globalAlpha = 0.2
-                m.forEach((row, r) =>
-                  row.forEach((dark, c) => {
-                    if (dark) ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize)
-                  })
-                )
-                ctx.globalAlpha = 1
-              }} />
+    const renderSVG = () => {
+      const m = matrix.value
+      if (!m) return null
+      const margin = props.marginSize ?? 0
+      const cellSize = 1
+      const matrixSize = m.length
+      const viewBoxSize = matrixSize + 2 * margin
+      const paths: string[] = []
+
+      m.forEach((row, r) => {
+        row.forEach((dark, c) => {
+          if (dark) {
+            paths.push(`M${c + margin},${r + margin}h${cellSize}v${cellSize}h-${cellSize}z`)
+          }
+        })
+      })
+
+      const svgAttrs: Record<string, any> = {
+        viewBox: `0 0 ${viewBoxSize} ${viewBoxSize}`,
+        width: props.size,
+        height: props.size,
+        style: { display: 'block' },
+      }
+
+      // Pass aria-* and data-* attributes to SVG
+      Object.keys(attrs).forEach((key) => {
+        if (key.startsWith('aria-') || key.startsWith('data-')) {
+          svgAttrs[key] = attrs[key]
+        }
+      })
+
+      const children = [
+        createElement('rect', {
+          x: 0,
+          y: 0,
+          width: viewBoxSize,
+          height: viewBoxSize,
+          fill: props.bgColor,
+        }),
+        createElement('path', {
+          d: paths.join(''),
+          fill: props.color,
+        }),
+      ]
+
+      if (props.icon) {
+        const iSize = iconSizeValue.value
+        const x = (matrixSize - iSize.width / props.size * matrixSize) / 2 + margin
+        const y = (matrixSize - iSize.height / props.size * matrixSize) / 2 + margin
+        const w = iSize.width / props.size * matrixSize
+        const h = iSize.height / props.size * matrixSize
+        children.push(
+          createElement('rect', {
+            x: x - 0.1,
+            y: y - 0.1,
+            width: w + 0.2,
+            height: h + 0.2,
+            fill: props.bgColor,
+          }),
+          createElement('image', {
+            href: props.icon,
+            x,
+            y,
+            width: w,
+            height: h,
+            crossOrigin: 'anonymous',
+          })
+        )
+      }
+
+      return createElement('svg', svgAttrs, children)
+    }
+
+    const defaultStatusRender = (info: StatusRenderInfo) => {
+      if (info.status === 'loading') {
+        return <Spin />
+      }
+      if (info.status === 'expired') {
+        return (
+          <>
+            <p class={`${prefixCls}-expired`}>二维码过期</p>
+            {info.onRefresh && (
+              <button
+                type="button"
+                class={`${prefixCls}-refresh`}
+                onClick={info.onRefresh}
+              >
+                <Icon component={LoadingOutlined} style={{ marginRight: '4px' }} />
+                点击刷新
+              </button>
+            )}
+          </>
+        )
+      }
+      if (info.status === 'scanned') {
+        return <p class={`${prefixCls}-scanned`}>已扫描</p>
+      }
+      return null
+    }
+
+    return () => {
+      // Return null if value is empty
+      if (!props.value) {
+        if (import.meta.env.DEV) {
+          console.warn('[hmfw: QRCode] need to receive `value` props')
+        }
+        return null
+      }
+
+      const rootClasses = cls(
+        prefixCls,
+        {
+          [`${prefixCls}-borderless`]: !props.bordered,
+        }
+      )
+
+      const canvasAttrs: Record<string, any> = {
+        width: props.size,
+        height: props.size,
+        style: { display: 'block' },
+      }
+
+      // Pass aria-* and data-* attributes to canvas
+      Object.keys(attrs).forEach((key) => {
+        if (key.startsWith('aria-') || key.startsWith('data-')) {
+          canvasAttrs[key] = attrs[key]
+        }
+      })
+
+      return (
+        <div
+          class={rootClasses}
+          style={{
+            width: `${props.size}px`,
+            height: `${props.size}px`,
+            backgroundColor: props.bgColor,
+          }}
+        >
+          {props.type === 'canvas' ? (
+            <canvas ref={canvasRef} {...canvasAttrs} />
+          ) : (
+            renderSVG()
+          )}
+          {props.status !== 'active' && (
+            <div class={`${prefixCls}-cover`}>
+              {(props.statusRender ?? defaultStatusRender)({
+                status: props.status as Exclude<QRCodeStatus, 'active'>,
+                onRefresh: props.onRefresh,
+              })}
             </div>
-            <div class={`${prefixCls}-mask-info`}>
-              {props.status === 'expired' && (
-                <>
-                  <span class={`${prefixCls}-mask-icon`}>⏱</span>
-                  <p>二维码已过期</p>
-                  <button class={`${prefixCls}-mask-refresh`} onClick={() => emit('refresh')}>
-                    刷新
-                  </button>
-                </>
-              )}
-              {props.status === 'loading' && <span class={`${prefixCls}-mask-icon`}>⏳</span>}
-              {props.status === 'scanned' && (
-                <>
-                  <span class={`${prefixCls}-mask-icon`}>✓</span>
-                  <p>已扫描</p>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    )
+          )}
+        </div>
+      )
+    }
   },
 })
+
+
+
+
+
+
+
+

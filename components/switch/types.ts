@@ -6,6 +6,10 @@ export interface SwitchProps {
   disabled?: boolean
   loading?: boolean
   size?: SwitchSize
-  checkedChildren?: string
-  unCheckedChildren?: string
+  checkedChildren?: any
+  unCheckedChildren?: any
+  autoFocus?: boolean
+  id?: string
+  title?: string
+  tabIndex?: number
 }

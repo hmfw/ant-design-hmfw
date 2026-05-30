@@ -1,14 +1,15 @@
 <template>
-  <Layout style="min-height: 300px">
+  <Layout style="min-height: 400px">
     <Sider
       v-model:collapsed="collapsed"
       collapsible
       :width="200"
-      :collapsed-width="64"
+      :collapsed-width="80"
       style="background: #001529;"
+      @collapse="onCollapse"
     >
       <div style="color: #fff; padding: 16px; text-align: center;">
-        {{ collapsed ? '收' : '导航菜单' }}
+        {{ collapsed ? 'Menu' : 'Navigation Menu' }}
       </div>
     </Sider>
     <Layout>
@@ -16,7 +17,8 @@
         Header
       </Header>
       <Content style="padding: 24px; background: #f5f5f5;">
-        <p>当前状态：{{ collapsed ? '已折叠' : '已展开' }}</p>
+        <p>Current state: {{ collapsed ? 'Collapsed' : 'Expanded' }}</p>
+        <p>Collapse type: {{ collapseType }}</p>
       </Content>
     </Layout>
   </Layout>
@@ -25,6 +27,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Layout, Header, Content, Sider } from 'ant-design-hmfw'
+import type { CollapseType } from 'ant-design-hmfw'
 
 const collapsed = ref(false)
+const collapseType = ref<CollapseType>('clickTrigger')
+
+const onCollapse = (value: boolean, type: CollapseType) => {
+  collapseType.value = type
+  console.log('Collapsed:', value, 'Type:', type)
+}
 </script>

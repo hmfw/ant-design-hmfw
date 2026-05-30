@@ -1,0 +1,104 @@
+import { defineComponent, h, type PropType } from 'vue'
+import { usePrefixCls } from '../config-provider'
+import { cls } from '../_utils'
+import { Button } from '../button'
+import { Icon } from '../icon'
+import { DownOutlined } from '../icon/icons'
+import { Dropdown } from './Dropdown'
+import type { DropdownProps } from './types'
+import type { ButtonType } from '../button/types'
+
+export interface DropdownButtonProps extends DropdownProps {
+  type?: ButtonType
+  danger?: boolean
+  loading?: boolean
+  icon?: any
+  onClick?: (e: MouseEvent) => void
+  buttonsRender?: (buttons: [any, any]) => [any, any]
+}
+
+export const DropdownButton = defineComponent({
+  name: 'DropdownButton',
+  props: {
+    type: { type: String as PropType<ButtonType>, default: 'default' },
+    danger: Boolean,
+    disabled: Boolean,
+    loading: Boolean,
+    icon: Object,
+    onClick: Function as PropType<(e: MouseEvent) => void>,
+    buttonsRender: Function as PropType<(buttons: [any, any]) => [any, any]>,
+    // Dropdown props
+    menu: Object as PropType<DropdownProps['menu']>,
+    trigger: { type: [String, Array] as PropType<DropdownProps['trigger']>, default: 'hover' },
+    placement: { type: String as PropType<DropdownProps['placement']>, default: 'bottomRight' },
+    open: Boolean,
+    arrow: [Boolean, Object] as PropType<DropdownProps['arrow']>,
+    autoFocus: Boolean,
+    overlayClassName: String,
+    overlayStyle: Object,
+    getPopupContainer: Function,
+    mouseEnterDelay: Number,
+    mouseLeaveDelay: Number,
+    destroyPopupOnHide: Boolean,
+    destroyOnHidden: Boolean,
+  },
+  emits: ['update:open', 'openChange', 'click'],
+  setup(props, { slots, emit }) {
+    const prefixCls = usePrefixCls('dropdown-button')
+
+    const handleClick = (e: MouseEvent) => {
+      emit('click', e)
+      props.onClick?.(e)
+    }
+
+    return () => {
+      const leftButton = (
+        <Button
+          type={props.type}
+          danger={props.danger}
+          disabled={props.disabled}
+          loading={props.loading}
+          onClick={handleClick}
+        >
+          {slots.default?.()}
+        </Button>
+      )
+
+      const iconNode = props.icon || <Icon component={DownOutlined} />
+      const rightButton = (
+        <Button type={props.type} danger={props.danger} disabled={props.disabled}>
+          {iconNode}
+        </Button>
+      )
+
+      const [leftRendered, rightRendered] = props.buttonsRender
+        ? props.buttonsRender([leftButton, rightButton])
+        : [leftButton, rightButton]
+
+      return (
+        <div class={cls(prefixCls)}>
+          {leftRendered}
+          <Dropdown
+            menu={props.menu}
+            trigger={props.disabled ? [] : props.trigger}
+            placement={props.placement}
+            open={props.open}
+            arrow={props.arrow}
+            autoFocus={props.autoFocus}
+            overlayClassName={props.overlayClassName}
+            overlayStyle={props.overlayStyle}
+            getPopupContainer={props.getPopupContainer as any}
+            mouseEnterDelay={props.mouseEnterDelay}
+            mouseLeaveDelay={props.mouseLeaveDelay}
+            destroyPopupOnHide={props.destroyPopupOnHide}
+            destroyOnHidden={props.destroyOnHidden}
+            onUpdate:open={(v) => emit('update:open', v)}
+            onOpenChange={(v, info) => emit('openChange', v, info)}
+          >
+            {rightRendered}
+          </Dropdown>
+        </div>
+      )
+    }
+  },
+})

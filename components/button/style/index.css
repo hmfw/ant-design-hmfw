@@ -15,7 +15,30 @@
   outline: none;
   font-family: var(--hmfw-font-family);
   line-height: var(--hmfw-line-height);
+  text-decoration: none;
 }
+
+/* Shapes */
+.hmfw-btn-circle {
+  border-radius: 50%;
+  min-width: auto;
+}
+
+.hmfw-btn-round {
+  border-radius: 32px;
+}
+
+/* Icon position */
+.hmfw-btn-icon-end {
+  flex-direction: row-reverse;
+}
+
+/* Two Chinese characters spacing */
+.hmfw-btn-two-chinese-chars .hmfw-btn-two-chinese-chars-content {
+  letter-spacing: 0.34em;
+  margin-right: -0.34em;
+}
+
 
 /* Sizes */
 .hmfw-btn-small {
@@ -53,6 +76,12 @@
 .hmfw-btn-icon-only.hmfw-btn-large {
   width: 40px;
   padding: 0;
+}
+
+.hmfw-btn-icon-only.hmfw-btn-circle.hmfw-btn-small,
+.hmfw-btn-icon-only.hmfw-btn-circle.hmfw-btn-middle,
+.hmfw-btn-icon-only.hmfw-btn-circle.hmfw-btn-large {
+  border-radius: 50%;
 }
 
 /* Default type */
@@ -131,6 +160,8 @@
   border-color: transparent;
   color: var(--hmfw-color-link);
   box-shadow: none;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .hmfw-btn-link:hover:not(.hmfw-btn-disabled) {
@@ -139,6 +170,17 @@
 
 .hmfw-btn-link:active:not(.hmfw-btn-disabled) {
   color: var(--hmfw-color-link-active);
+}
+
+/* Link button as anchor */
+a.hmfw-btn-link {
+  text-decoration: none;
+}
+
+a.hmfw-btn-disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 /* Danger */

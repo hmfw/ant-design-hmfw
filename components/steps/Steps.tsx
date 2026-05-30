@@ -1,34 +1,73 @@
-import { defineComponent, type PropType } from 'vue'
+import { defineComponent, computed, type PropType, type VNode, h } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-
-export type StepStatus = 'wait' | 'process' | 'finish' | 'error'
-
-export interface StepItem {
-  title: string
-  description?: string
-  status?: StepStatus
-  icon?: string
-  disabled?: boolean
-  subTitle?: string
-}
+import { Icon } from '../icon'
+import { CheckOutlined, CloseOutlined } from '../icon/icons'
+import type { StepsProps, StepItem, StepStatus, IconRenderInfo } from './types'
+import { ProgressIcon } from './ProgressIcon'
+import { PanelArrow } from './PanelArrow'
 
 export const Steps = defineComponent({
   name: 'Steps',
   props: {
     current: { type: Number, default: 0 },
-    direction: { type: String as PropType<'horizontal' | 'vertical'>, default: 'horizontal' },
+    initial: { type: Number, default: 0 },
+    items: { type: Array as PropType<StepItem[]>, default: () => [] },
+    direction: { type: String as PropType<'horizontal' | 'vertical'> },
+    orientation: { type: String as PropType<'horizontal' | 'vertical'> },
     size: { type: String as PropType<'default' | 'small'>, default: 'default' },
     status: { type: String as PropType<StepStatus>, default: 'process' },
-    type: { type: String as PropType<'default' | 'navigation' | 'inline'>, default: 'default' },
-    labelPlacement: { type: String as PropType<'horizontal' | 'vertical'>, default: 'horizontal' },
-    progressDot: Boolean,
-    items: Array as PropType<StepItem[]>,
-    initial: { type: Number, default: 0 },
+    type: { type: String as PropType<'default' | 'navigation' | 'inline' | 'panel' | 'dot'>, default: 'default' },
+    labelPlacement: { type: String as PropType<'horizontal' | 'vertical'> },
+    titlePlacement: { type: String as PropType<'horizontal' | 'vertical'> },
+    progressDot: { type: [Boolean, Function] as PropType<boolean | ((iconDot: VNode, info: IconRenderInfo) => VNode)> },
+    variant: { type: String as PropType<'filled' | 'outlined'>, default: 'filled' },
+    percent: Number,
+    responsive: { type: Boolean, default: true },
+    ellipsis: Boolean,
+    offset: { type: Number, default: 0 },
+    iconRender: Function as PropType<(oriNode: VNode, info: IconRenderInfo) => VNode>,
   },
   emits: ['change'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('steps')
+
+    // Merge type from progressDot
+    const mergedType = computed(() => {
+      if (props.type && props.type !== 'default') {
+        return props.type
+      }
+      if (props.progressDot) {
+        return 'dot'
+      }
+      return props.type
+    })
+
+    const isDot = computed(() => mergedType.value === 'dot' || mergedType.value === 'inline')
+    const isInline = computed(() => mergedType.value === 'inline')
+
+    // Merge orientation
+    const mergedOrientation = computed(() => {
+      const nextOrientation = props.orientation || props.direction
+      if (mergedType.value === 'panel') {
+        return 'horizontal'
+      }
+      return nextOrientation === 'vertical' ? 'vertical' : 'horizontal'
+    })
+
+    // Merge titlePlacement
+    const mergedTitlePlacement = computed(() => {
+      if (isDot.value || mergedOrientation.value === 'vertical') {
+        return mergedOrientation.value === 'vertical' ? 'horizontal' : 'vertical'
+      }
+      if (props.type === 'navigation') {
+        return 'horizontal'
+      }
+      return props.titlePlacement || props.labelPlacement || 'horizontal'
+    })
+
+    // Merge percent (inline type doesn't show percent)
+    const mergedPercent = computed(() => isInline.value ? undefined : props.percent)
 
     const getStepStatus = (index: number, item: StepItem): StepStatus => {
       if (item.status) return item.status
@@ -38,12 +77,63 @@ export const Steps = defineComponent({
       return 'wait'
     }
 
-    const getStepIcon = (index: number, status: StepStatus, item: StepItem) => {
-      if (item.icon) return item.icon
-      if (props.progressDot) return '•'
-      if (status === 'finish') return '✓'
-      if (status === 'error') return '✕'
-      return String(index + props.initial + 1)
+    const renderIcon = (index: number, status: StepStatus, item: StepItem): VNode => {
+      const itemIconCls = `${prefixCls}-item-icon`
+      let iconContent: VNode | null = null
+
+      if (isDot.value || item.icon) {
+        iconContent = item.icon || h('span', { class: `${prefixCls}-icon-dot` })
+      } else {
+        switch (status) {
+          case 'finish':
+            iconContent = h(Icon, { component: CheckOutlined, class: `${itemIconCls}-finish` })
+            break
+          case 'error':
+            iconContent = h(Icon, { component: CloseOutlined, class: `${itemIconCls}-error` })
+            break
+          default: {
+            const numContent = h('span', { class: `${itemIconCls}-number` }, index + props.initial + 1)
+
+            if (status === 'process' && mergedPercent.value !== undefined) {
+              iconContent = h(ProgressIcon, { prefixCls, percent: mergedPercent.value }, { default: () => numContent })
+            } else {
+              iconContent = numContent
+            }
+          }
+        }
+      }
+
+      let iconNode: VNode = iconContent
+
+      // Custom iconRender
+      if (props.iconRender) {
+        const info: IconRenderInfo = {
+          index,
+          active: index + props.initial === props.current,
+          item: { ...item, status },
+        }
+        iconNode = props.iconRender(iconNode, info)
+      } else if (typeof props.progressDot === 'function') {
+        const info: IconRenderInfo = {
+          index,
+          active: index + props.initial === props.current,
+          item: { ...item, status },
+        }
+        iconNode = props.progressDot(iconNode, info)
+      }
+
+      return iconNode
+    }
+
+    const handleStepClick = (index: number, item: StepItem, e: MouseEvent) => {
+      if (item.disabled) return
+      if (item.onClick) {
+        item.onClick(e)
+      }
+      const adjustedIndex = index + props.initial
+      if (adjustedIndex !== props.current) {
+        emit('change', adjustedIndex)
+      }
     }
 
     return () => {
@@ -51,20 +141,29 @@ export const Steps = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, `${prefixCls}-${props.direction}`, {
-            [`${prefixCls}-${props.size}`]: props.size !== 'default',
-            [`${prefixCls}-label-${props.labelPlacement}`]: props.labelPlacement !== 'horizontal',
-            [`${prefixCls}-dot`]: props.progressDot,
-            [`${prefixCls}-navigation`]: props.type === 'navigation',
-            [`${prefixCls}-inline`]: props.type === 'inline',
-          })}
+          class={cls(
+            prefixCls,
+            `${prefixCls}-${mergedOrientation.value}`,
+            `${prefixCls}-${props.variant}`,
+            {
+              [`${prefixCls}-${props.size}`]: props.size !== 'default',
+              [`${prefixCls}-label-${mergedTitlePlacement.value}`]: mergedTitlePlacement.value !== 'horizontal',
+              [`${prefixCls}-dot`]: isDot.value,
+              [`${prefixCls}-navigation`]: props.type === 'navigation',
+              [`${prefixCls}-inline`]: isInline.value,
+              [`${prefixCls}-panel`]: mergedType.value === 'panel',
+              [`${prefixCls}-with-progress`]: mergedPercent.value !== undefined,
+              [`${prefixCls}-ellipsis`]: props.ellipsis,
+            }
+          )}
           role="list"
           aria-label="步骤条"
         >
           {items.map((item, index) => {
             const status = getStepStatus(index, item)
-            const icon = getStepIcon(index, status, item)
-            const isClickable = !item.disabled && index !== props.current
+            const icon = renderIcon(index, status, item)
+            const isClickable = !item.disabled
+            const content = item.content || item.description
 
             return (
               <div
@@ -76,15 +175,11 @@ export const Steps = defineComponent({
                 role="listitem"
                 aria-current={index + props.initial === props.current ? 'step' : undefined}
                 aria-disabled={item.disabled || undefined}
-                onClick={() => isClickable && emit('change', index + props.initial)}
+                onClick={(e) => isClickable && handleStepClick(index, item, e)}
               >
                 <div class={`${prefixCls}-item-container`}>
                   <div class={`${prefixCls}-item-tail`} />
-                  <div class={cls(`${prefixCls}-item-icon`, {
-                    [`${prefixCls}-item-icon-${status}`]: true,
-                  })}>
-                    <span class={`${prefixCls}-icon`}>{icon}</span>
-                  </div>
+                  <div class={`${prefixCls}-item-icon`}>{icon}</div>
                   <div class={`${prefixCls}-item-content`}>
                     <div class={`${prefixCls}-item-title`}>
                       {item.title}
@@ -92,11 +187,12 @@ export const Steps = defineComponent({
                         <span class={`${prefixCls}-item-subtitle`}>{item.subTitle}</span>
                       )}
                     </div>
-                    {item.description && (
-                      <div class={`${prefixCls}-item-description`}>{item.description}</div>
+                    {content && (
+                      <div class={`${prefixCls}-item-description`}>{content}</div>
                     )}
                   </div>
                 </div>
+                {mergedType.value === 'panel' && <PanelArrow prefixCls={prefixCls} />}
               </div>
             )
           })}
@@ -105,3 +201,4 @@ export const Steps = defineComponent({
     }
   },
 })
+

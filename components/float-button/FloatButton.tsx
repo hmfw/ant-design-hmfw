@@ -11,8 +11,9 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { UpOutlined, CloseOutlined, PlusOutlined } from '../icon/icons'
+import { CloseOutlined, PlusOutlined } from '../icon/icons'
 import { Tooltip } from '../tooltip'
+import type { TooltipProps } from '../tooltip/types'
 import { Badge } from '../badge'
 import type { IconComponent } from '../icon/types'
 import type {
@@ -23,6 +24,7 @@ import type {
   FloatButtonGroupPlacement,
   FloatButtonBadgeProps,
 } from './types'
+import { FileTextOutlined, VerticalAlignTopOutlined } from './icons'
 
 type IconLike = IconComponent | string
 
@@ -35,6 +37,15 @@ function renderIcon(icon: IconLike | undefined, fallbackSlot?: () => VNode[] | u
   return <Icon component={icon} />
 }
 
+/** Normalize tooltip prop: string → { title: string }, object → pass through. */
+function normalizeTooltip(
+  tooltip: string | TooltipProps | undefined,
+): TooltipProps | undefined {
+  if (!tooltip) return undefined
+  if (typeof tooltip === 'string') return { title: tooltip }
+  return tooltip
+}
+
 // ---------------------------------------------------------------------------
 // FloatButton
 // ---------------------------------------------------------------------------
@@ -45,36 +56,52 @@ export const FloatButton = defineComponent({
     type: { type: String as PropType<FloatButtonType>, default: 'default' },
     shape: { type: String as PropType<FloatButtonShape>, default: 'circle' },
     icon: [Function, String] as PropType<IconLike>,
+    /** @deprecated Use `content` instead. */
     description: String,
-    tooltip: String,
+    /** Text and other content (only shown for square shape). */
+    content: String,
+    /** Tooltip: string or full TooltipProps object. */
+    tooltip: [String, Object] as PropType<string | TooltipProps>,
     badge: Object as PropType<FloatButtonBadgeProps>,
     href: String,
     target: String,
     htmlType: { type: String as PropType<FloatButtonHTMLType>, default: 'button' },
+    disabled: Boolean,
   },
   emits: ['click'],
   setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('float-btn')
 
-    const handleClick = (e: MouseEvent) => emit('click', e)
+    const handleClick = (e: MouseEvent) => {
+      if (!props.disabled) emit('click', e)
+    }
 
     return () => {
-      const showDescription = props.description || slots.description
+      // Merge content and description (content takes precedence)
+      const mergedContent = props.content ?? props.description
+      const showContent = mergedContent || slots.description || slots.content
+
+      // Default icon: FileTextOutlined when no content/icon provided
+      const mergedIcon =
+        props.icon ?? (showContent ? undefined : FileTextOutlined)
 
       const body = (
         <div class={`${prefixCls}-body`}>
-          <div class={`${prefixCls}-icon`}>
-            {renderIcon(props.icon, slots.icon) ?? <Icon component={UpOutlined} />}
-          </div>
-          {showDescription && (
-            <div class={`${prefixCls}-description`}>
-              {slots.description?.() ?? props.description}
+          {mergedIcon !== undefined && (
+            <div class={`${prefixCls}-icon`}>
+              {renderIcon(mergedIcon, slots.icon)}
+            </div>
+          )}
+          {showContent && (
+            <div class={`${prefixCls}-content`}>
+              {slots.content?.() ?? slots.description?.() ?? mergedContent}
             </div>
           )}
         </div>
       )
 
       // Badge wraps the body (rendered inside the fixed root element)
+      // Filter out unsupported props: status, text, title, children
       const badged =
         props.badge && (props.badge.dot || props.badge.count !== undefined) ? (
           <Badge
@@ -91,22 +118,23 @@ export const FloatButton = defineComponent({
         )
 
       // Tooltip wraps the body content (still inside the fixed root element)
-      const content =
-        props.tooltip || slots.tooltip ? (
-          <Tooltip title={props.tooltip} placement="left">
-            {{
-              default: () => badged,
-              ...(slots.tooltip ? { title: slots.tooltip } : {}),
-            }}
-          </Tooltip>
-        ) : (
-          badged
-        )
+      const tooltipProps = normalizeTooltip(props.tooltip)
+      const content = tooltipProps ? (
+        <Tooltip {...tooltipProps} placement={tooltipProps.placement ?? 'left'}>
+          {{
+            default: () => badged,
+            ...(slots.tooltip ? { title: slots.tooltip } : {}),
+          }}
+        </Tooltip>
+      ) : (
+        badged
+      )
 
       const rootCls = cls(
         prefixCls,
         `${prefixCls}-${props.type}`,
         `${prefixCls}-${props.shape}`,
+        { [`${prefixCls}-disabled`]: props.disabled },
       )
 
       if (props.href) {
@@ -117,6 +145,7 @@ export const FloatButton = defineComponent({
             href={props.href}
             target={props.target}
             onClick={handleClick}
+            aria-disabled={props.disabled}
           >
             {content}
           </a>
@@ -129,6 +158,7 @@ export const FloatButton = defineComponent({
           type={props.htmlType}
           class={rootCls}
           onClick={handleClick}
+          disabled={props.disabled}
         >
           {content}
         </button>
@@ -151,15 +181,16 @@ export const FloatButtonGroup = defineComponent({
     defaultOpen: { type: Boolean, default: false },
     closeIcon: [Function, String] as PropType<IconLike>,
     icon: [Function, String] as PropType<IconLike>,
-    tooltip: String,
+    tooltip: [String, Object] as PropType<string | TooltipProps>,
     badge: Object as PropType<FloatButtonBadgeProps>,
     description: String,
     onOpenChange: Function as PropType<(open: boolean) => void>,
   },
-  emits: ['update:open', 'openChange'],
+  emits: ['update:open', 'openChange', 'click'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('float-btn')
     const innerOpen = ref(props.defaultOpen)
+    const groupRef = ref<HTMLDivElement | null>(null)
 
     const isControlled = computed(() => props.open !== undefined)
     const isOpen = computed(() => (isControlled.value ? props.open! : innerOpen.value))
@@ -172,13 +203,40 @@ export const FloatButtonGroup = defineComponent({
       props.onOpenChange?.(next)
     }
 
-    const handleTriggerClick = () => setOpen(!isOpen.value)
+    const handleTriggerClick = (e: MouseEvent) => {
+      if (props.trigger === 'click') setOpen(!isOpen.value)
+      emit('click', e)
+    }
     const handleMouseEnter = () => {
       if (props.trigger === 'hover') setOpen(true)
     }
     const handleMouseLeave = () => {
       if (props.trigger === 'hover') setOpen(false)
     }
+
+    // Close on outside click when trigger='click'
+    const handleDocumentClick = (e: MouseEvent) => {
+      if (
+        props.trigger === 'click' &&
+        isOpen.value &&
+        groupRef.value &&
+        !groupRef.value.contains(e.target as Node)
+      ) {
+        setOpen(false)
+      }
+    }
+
+    onMounted(() => {
+      if (props.trigger === 'click') {
+        document.addEventListener('click', handleDocumentClick, { capture: true })
+      }
+    })
+
+    onBeforeUnmount(() => {
+      if (props.trigger === 'click') {
+        document.removeEventListener('click', handleDocumentClick, { capture: true })
+      }
+    })
 
     return () => {
       const hasTrigger = !!props.trigger
@@ -196,7 +254,7 @@ export const FloatButtonGroup = defineComponent({
       // No trigger: render all children inline, always visible.
       if (!hasTrigger) {
         return (
-          <div class={groupCls}>
+          <div class={groupCls} ref={groupRef}>
             {slots.default?.()}
           </div>
         )
@@ -209,6 +267,7 @@ export const FloatButtonGroup = defineComponent({
       return (
         <div
           class={groupCls}
+          ref={groupRef}
           onMouseenter={handleMouseEnter}
           onMouseleave={handleMouseLeave}
         >
@@ -225,7 +284,7 @@ export const FloatButtonGroup = defineComponent({
             icon={triggerIcon}
             tooltip={props.tooltip}
             badge={props.badge}
-            description={props.description}
+            content={props.description}
             onClick={handleTriggerClick}
           />
         </div>
@@ -246,7 +305,9 @@ export const FloatButtonBackTop = defineComponent({
     icon: [Function, String] as PropType<IconLike>,
     type: { type: String as PropType<FloatButtonType>, default: 'default' },
     shape: { type: String as PropType<FloatButtonShape>, default: 'circle' },
-    tooltip: String,
+    tooltip: [String, Object] as PropType<string | TooltipProps>,
+    content: String,
+    /** @deprecated Use `content` instead. */
     description: String,
   },
   emits: ['click'],
@@ -303,23 +364,26 @@ export const FloatButtonBackTop = defineComponent({
       ;(listenTarget as HTMLElement | Window).removeEventListener('scroll', handleScroll)
     })
 
-    return () => (
-      <Transition name={`${prefixCls}-fade`}>
-        {visible.value && (
-          <FloatButton
-            type={props.type}
-            shape={props.shape}
-            icon={props.icon ?? UpOutlined}
-            tooltip={props.tooltip}
-            description={props.description}
-            class={`${prefixCls}-back-top`}
-            onClick={scrollToTop}
-          >
-            {slots.icon ? { icon: slots.icon } : undefined}
-          </FloatButton>
-        )}
-      </Transition>
-    )
+    return () => {
+      const mergedContent = props.content ?? props.description
+      return (
+        <Transition name={`${prefixCls}-fade`}>
+          {visible.value && (
+            <FloatButton
+              type={props.type}
+              shape={props.shape}
+              icon={props.icon ?? VerticalAlignTopOutlined}
+              tooltip={props.tooltip}
+              content={mergedContent}
+              class={`${prefixCls}-back-top`}
+              onClick={scrollToTop}
+            >
+              {slots.icon ? { icon: slots.icon } : undefined}
+            </FloatButton>
+          )}
+        </Transition>
+      )
+    }
   },
 })
 

@@ -1,2 +1,12 @@
 export { Menu } from './Menu'
-export type { MenuItem } from './Menu'
+export type {
+  MenuItemType,
+  SubMenuType,
+  MenuItemGroupType,
+  MenuDividerType,
+  ItemType,
+  MenuMode,
+  MenuTheme,
+  MenuProps,
+} from './types'
+

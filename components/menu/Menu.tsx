@@ -1,43 +1,38 @@
-import { defineComponent, ref, computed, watch, provide, type PropType } from 'vue'
+import { defineComponent, ref, computed, watch, provide, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-
-export interface MenuItem {
-  key: string
-  label: string
-  icon?: string
-  disabled?: boolean
-  danger?: boolean
-  type?: 'divider' | 'group'
-  children?: MenuItem[]
-  title?: string
-}
+import type { ItemType, MenuMode, MenuTheme } from './types'
 
 const MENU_CONTEXT_KEY = Symbol('menu-context')
 
 interface MenuContext {
   selectedKeys: string[]
   openKeys: string[]
-  mode: string
+  mode: MenuMode
+  theme: MenuTheme
   prefixCls: string
+  inlineIndent: number
   onSelect: (key: string) => void
+  onDeselect: (key: string) => void
   onOpenChange: (key: string, open: boolean) => void
 }
 
 export const Menu = defineComponent({
   name: 'Menu',
   props: {
-    items: Array as PropType<MenuItem[]>,
-    mode: { type: String as PropType<'horizontal' | 'vertical' | 'inline'>, default: 'vertical' },
+    items: Array as PropType<ItemType[]>,
+    mode: { type: String as PropType<MenuMode>, default: 'vertical' },
     selectedKeys: Array as PropType<string[]>,
     defaultSelectedKeys: Array as PropType<string[]>,
     openKeys: Array as PropType<string[]>,
     defaultOpenKeys: Array as PropType<string[]>,
     inlineCollapsed: Boolean,
-    theme: { type: String as PropType<'light' | 'dark'>, default: 'light' },
+    theme: { type: String as PropType<MenuTheme>, default: 'light' },
     multiple: Boolean,
     selectable: { type: Boolean, default: true },
     inlineIndent: { type: Number, default: 24 },
+    expandIcon: [Object, Function] as PropType<VNode | ((props: { isOpen: boolean }) => VNode)>,
+    triggerSubMenuAction: { type: String as PropType<'hover' | 'click'>, default: 'hover' },
   },
   emits: ['update:selectedKeys', 'update:openKeys', 'select', 'deselect', 'openChange', 'click'],
   setup(props, { emit }) {
@@ -58,17 +53,34 @@ export const Menu = defineComponent({
     const handleSelect = (key: string) => {
       if (!props.selectable) return
       let next: string[]
+      const isCurrentlySelected = currentSelected.value.includes(key)
+
       if (props.multiple) {
-        next = currentSelected.value.includes(key)
-          ? currentSelected.value.filter((k) => k !== key)
-          : [...currentSelected.value, key]
+        if (isCurrentlySelected) {
+          next = currentSelected.value.filter((k) => k !== key)
+          innerSelected.value = next
+          emit('update:selectedKeys', next)
+          emit('deselect', { key, selectedKeys: next })
+        } else {
+          next = [...currentSelected.value, key]
+          innerSelected.value = next
+          emit('update:selectedKeys', next)
+          emit('select', { key, selectedKeys: next })
+        }
       } else {
         next = [key]
+        innerSelected.value = next
+        emit('update:selectedKeys', next)
+        emit('select', { key, selectedKeys: next })
       }
+      emit('click', { key })
+    }
+
+    const handleDeselect = (key: string) => {
+      const next = currentSelected.value.filter((k) => k !== key)
       innerSelected.value = next
       emit('update:selectedKeys', next)
-      emit('select', { key, selectedKeys: next })
-      emit('click', { key })
+      emit('deselect', { key, selectedKeys: next })
     }
 
     const handleOpenChange = (key: string, open: boolean) => {
@@ -84,31 +96,81 @@ export const Menu = defineComponent({
       get selectedKeys() { return currentSelected.value },
       get openKeys() { return currentOpen.value },
       get mode() { return props.mode },
+      get theme() { return props.theme },
+      get inlineIndent() { return props.inlineIndent },
       prefixCls,
       onSelect: handleSelect,
+      onDeselect: handleDeselect,
       onOpenChange: handleOpenChange,
     } as MenuContext)
 
-    const renderItems = (items: MenuItem[], depth = 0): any => {
-      return items.map((item) => {
-        if (item.type === 'divider') {
-          return <li key={item.key} class={`${prefixCls}-item-divider`} role="separator" />
+    const isItemType = (item: ItemType): item is { key: string; label?: string; children?: ItemType[] } => {
+      return item !== null && typeof item === 'object' && 'key' in item
+    }
+
+    const isGroupType = (item: ItemType): item is { type: 'group'; key?: string; label?: string; children?: ItemType[] } => {
+      return item !== null && typeof item === 'object' && 'type' in item && item.type === 'group'
+    }
+
+    const isDividerType = (item: ItemType): item is { type: 'divider'; key?: string; dashed?: boolean } => {
+      return item !== null && typeof item === 'object' && 'type' in item && item.type === 'divider'
+    }
+
+    const renderItems = (items: ItemType[], depth = 0): any => {
+      return items.filter(item => item !== null).map((item, index) => {
+        if (isDividerType(item)) {
+          return (
+            <li
+              key={item.key ?? `divider-${index}`}
+              class={cls(`${prefixCls}-item-divider`, {
+                [`${prefixCls}-item-divider-dashed`]: item.dashed,
+              })}
+              role="separator"
+            />
+          )
         }
 
-        if (item.type === 'group') {
+        if (isGroupType(item)) {
           return (
-            <li key={item.key} class={`${prefixCls}-item-group`}>
+            <li key={item.key ?? `group-${index}`} class={`${prefixCls}-item-group`}>
               <div class={`${prefixCls}-item-group-title`}>{item.label}</div>
               <ul class={`${prefixCls}-item-group-list`}>
-                {item.children && renderItems(item.children, depth + 1)}
+                {item.children && renderItems(item.children, depth)}
               </ul>
             </li>
           )
         }
 
-        if (item.children?.length) {
+        if (!isItemType(item)) return null
+
+        const hasChildren = item.children && item.children.length > 0
+
+        if (hasChildren) {
           const isOpen = currentOpen.value.includes(item.key)
-          const hasSelectedChild = item.children.some((c) => currentSelected.value.includes(c.key))
+          const hasSelectedChild = (item.children || []).some((c) => {
+            if (c && typeof c === 'object' && 'key' in c) {
+              return currentSelected.value.includes(c.key || '')
+            }
+            return false
+          })
+
+          const renderIcon = () => {
+            if (!item.icon) return null
+            if (typeof item.icon === 'function') {
+              return <span class={`${prefixCls}-item-icon`}>{item.icon()}</span>
+            }
+            return <span class={`${prefixCls}-item-icon`}>{item.icon}</span>
+          }
+
+          const renderExpandIcon = () => {
+            if (props.expandIcon) {
+              if (typeof props.expandIcon === 'function') {
+                return props.expandIcon({ isOpen })
+              }
+              return props.expandIcon
+            }
+            return <span class={cls(`${prefixCls}-submenu-arrow`, { open: isOpen })}>▾</span>
+          }
 
           if (props.mode === 'inline') {
             return (
@@ -117,23 +179,26 @@ export const Menu = defineComponent({
                 class={cls(`${prefixCls}-submenu`, `${prefixCls}-submenu-inline`, {
                   [`${prefixCls}-submenu-open`]: isOpen,
                   [`${prefixCls}-submenu-selected`]: hasSelectedChild,
+                  [`${prefixCls}-submenu-disabled`]: item.disabled,
                 })}
               >
                 <div
                   class={`${prefixCls}-submenu-title`}
                   style={{ paddingLeft: `${props.inlineIndent * (depth + 1)}px` }}
                   role="button"
+                  tabindex={item.disabled ? -1 : 0}
                   aria-expanded={isOpen}
                   aria-haspopup="true"
-                  onClick={() => handleOpenChange(item.key, !isOpen)}
+                  aria-disabled={item.disabled || undefined}
+                  onClick={() => !item.disabled && handleOpenChange(item.key, !isOpen)}
                 >
-                  {item.icon && <span class={`${prefixCls}-item-icon`}>{item.icon}</span>}
+                  {renderIcon()}
                   <span class={`${prefixCls}-title-content`}>{item.label}</span>
-                  <span class={cls(`${prefixCls}-submenu-arrow`, { open: isOpen })}>▾</span>
+                  {renderExpandIcon()}
                 </div>
                 {isOpen && (
                   <ul class={`${prefixCls}-sub ${prefixCls}-inline`}>
-                    {renderItems(item.children, depth + 1)}
+                    {renderItems(item.children || [], depth + 1)}
                   </ul>
                 )}
               </li>
@@ -141,30 +206,34 @@ export const Menu = defineComponent({
           }
 
           // horizontal/vertical popup submenu
+          const shouldTriggerOnHover = props.triggerSubMenuAction === 'hover'
           return (
             <li
               key={item.key}
               class={cls(`${prefixCls}-submenu`, `${prefixCls}-submenu-${props.mode}`, {
                 [`${prefixCls}-submenu-open`]: isOpen,
                 [`${prefixCls}-submenu-selected`]: hasSelectedChild,
+                [`${prefixCls}-submenu-disabled`]: item.disabled,
               })}
-              onMouseenter={() => props.mode !== 'vertical' && handleOpenChange(item.key, true)}
-              onMouseleave={() => props.mode !== 'vertical' && handleOpenChange(item.key, false)}
+              onMouseenter={() => !item.disabled && shouldTriggerOnHover && handleOpenChange(item.key, true)}
+              onMouseleave={() => !item.disabled && shouldTriggerOnHover && handleOpenChange(item.key, false)}
             >
               <div
                 class={`${prefixCls}-submenu-title`}
                 role="button"
+                tabindex={item.disabled ? -1 : 0}
                 aria-expanded={isOpen}
                 aria-haspopup="true"
-                onClick={() => props.mode === 'vertical' && handleOpenChange(item.key, !isOpen)}
+                aria-disabled={item.disabled || undefined}
+                onClick={() => !item.disabled && !shouldTriggerOnHover && handleOpenChange(item.key, !isOpen)}
               >
-                {item.icon && <span class={`${prefixCls}-item-icon`}>{item.icon}</span>}
+                {renderIcon()}
                 <span class={`${prefixCls}-title-content`}>{item.label}</span>
-                <span class={`${prefixCls}-submenu-arrow`}>▾</span>
+                {renderExpandIcon()}
               </div>
               {isOpen && (
                 <ul class={`${prefixCls}-sub ${prefixCls}-vertical`}>
-                  {renderItems(item.children, depth + 1)}
+                  {renderItems(item.children || [], depth + 1)}
                 </ul>
               )}
             </li>
@@ -172,6 +241,14 @@ export const Menu = defineComponent({
         }
 
         const isSelected = currentSelected.value.includes(item.key)
+        const renderItemIcon = () => {
+          if (!item.icon) return null
+          if (typeof item.icon === 'function') {
+            return <span class={`${prefixCls}-item-icon`}>{item.icon()}</span>
+          }
+          return <span class={`${prefixCls}-item-icon`}>{item.icon}</span>
+        }
+
         return (
           <li
             key={item.key}
@@ -182,12 +259,13 @@ export const Menu = defineComponent({
             })}
             style={props.mode === 'inline' ? { paddingLeft: `${props.inlineIndent * (depth + 1)}px` } : {}}
             role="menuitem"
+            tabindex={item.disabled ? -1 : 0}
             aria-disabled={item.disabled || undefined}
             aria-current={isSelected ? 'true' : undefined}
-            title={item.title ?? item.label}
+            title={item.title ?? (typeof item.label === 'string' ? item.label : undefined)}
             onClick={() => !item.disabled && handleSelect(item.key)}
           >
-            {item.icon && <span class={`${prefixCls}-item-icon`}>{item.icon}</span>}
+            {renderItemIcon()}
             <span class={`${prefixCls}-title-content`}>{item.label}</span>
           </li>
         )

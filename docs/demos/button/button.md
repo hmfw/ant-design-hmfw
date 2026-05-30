@@ -90,6 +90,38 @@
   <ButtonIcon />
 </DemoBlock>
 
+### 按钮形状
+
+按钮有多种形状：默认、圆形、圆角。
+
+<DemoBlock title="按钮形状" :source="ButtonShapeSource">
+  <ButtonShape />
+</DemoBlock>
+
+### 图标位置
+
+可以通过 `iconPosition` 属性设置图标在按钮中的位置。
+
+<DemoBlock title="图标位置" :source="ButtonIconPositionSource">
+  <ButtonIconPosition />
+</DemoBlock>
+
+### 链接按钮
+
+设置 `href` 属性后，按钮将渲染为 `<a>` 标签。
+
+<DemoBlock title="链接按钮" :source="ButtonHrefSource">
+  <ButtonHref />
+</DemoBlock>
+
+### 延迟加载
+
+通过设置 `loading` 为对象并指定 `delay` 属性，可以延迟显示加载状态。
+
+<DemoBlock title="延迟加载" :source="ButtonLoadingDelaySource">
+  <ButtonLoadingDelay />
+</DemoBlock>
+
 ## API
 
 ### Button Props
@@ -98,13 +130,18 @@
 |------|------|------|--------|
 | type | 设置按钮类型 | `'default' \| 'primary' \| 'dashed' \| 'text' \| 'link'` | `'default'` |
 | size | 设置按钮大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| shape | 设置按钮形状 | `'default' \| 'circle' \| 'round'` | `'default'` |
 | htmlType | 设置 button 原生的 type 值 | `'submit' \| 'button' \| 'reset'` | `'button'` |
-| loading | 设置按钮载入状态 | `boolean` | `false` |
+| loading | 设置按钮载入状态 | `boolean \| { delay?: number }` | `false` |
 | disabled | 设置按钮失效状态 | `boolean` | `false` |
 | danger | 设置危险按钮 | `boolean` | `false` |
 | block | 将按钮宽度调整为其父宽度的选项 | `boolean` | `false` |
 | ghost | 幽灵属性，使按钮背景透明 | `boolean` | `false` |
-| icon | 设置按钮的图标组件 | `object` | - |
+| icon | 设置按钮的图标组件 | `IconComponent` | - |
+| iconPosition | 设置图标位置 | `'start' \| 'end'` | `'start'` |
+| href | 点击跳转的地址，指定此属性后按钮渲染为 a 标签 | `string` | - |
+| target | 相当于 a 标签的 target 属性，href 存在时生效 | `string` | - |
+| autoInsertSpace | 是否在两个汉字之间插入空格 | `boolean` | `true` |
 
 ### Button Events
 
