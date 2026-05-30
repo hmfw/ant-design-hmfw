@@ -8,13 +8,14 @@ export interface AvatarProps {
   srcSet?: string
   alt?: string
   icon?: unknown
+  draggable?: boolean | 'true' | 'false'
+  crossOrigin?: '' | 'anonymous' | 'use-credentials'
   gap?: number
 }
 
 export interface AvatarGroupProps {
   maxCount?: number
   maxStyle?: Record<string, string>
-  maxPopoverPlacement?: 'top' | 'bottom'
   size?: AvatarSize
   shape?: AvatarShape
 }

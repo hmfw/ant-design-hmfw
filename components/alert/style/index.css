@@ -47,6 +47,27 @@
   border-right: none;
 }
 
+/* Variant: filled（更强的背景填充，无边框） */
+.hmfw-alert-filled {
+  border-color: transparent;
+}
+
+.hmfw-alert-filled.hmfw-alert-success {
+  background-color: #d9f7be;
+}
+
+.hmfw-alert-filled.hmfw-alert-info {
+  background-color: #bae0ff;
+}
+
+.hmfw-alert-filled.hmfw-alert-warning {
+  background-color: #fff1b8;
+}
+
+.hmfw-alert-filled.hmfw-alert-error {
+  background-color: #ffd6d3;
+}
+
 /* Icon */
 .hmfw-alert-icon {
   display: inline-flex;

@@ -54,6 +54,44 @@
   padding: 24px;
 }
 
+/* Grid 网格内容 */
+.hmfw-card-contain-grid .hmfw-card-body {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+}
+
+.hmfw-card-grid {
+  width: 33.33%;
+  padding: 24px;
+  box-shadow: 1px 0 0 0 #f0f0f0, 0 1px 0 0 #f0f0f0, 1px 1px 0 0 #f0f0f0,
+    1px 0 0 0 #f0f0f0 inset, 0 1px 0 0 #f0f0f0 inset;
+  transition: all 0.3s;
+}
+
+.hmfw-card-grid-hoverable:hover {
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12),
+    0 5px 12px 4px rgba(0, 0, 0, 0.09);
+}
+
+/* type=inner 内部卡片 */
+.hmfw-card-type-inner .hmfw-card-head {
+  min-height: 40px;
+  padding: 0 24px;
+  background: var(--hmfw-color-fill-alter, rgba(0, 0, 0, 0.02));
+  font-size: var(--hmfw-font-size-base);
+}
+
+.hmfw-card-type-inner .hmfw-card-head-wrapper {
+  min-height: 40px;
+}
+
+.hmfw-card-type-inner .hmfw-card-body {
+  padding: 16px 24px;
+}
+
 .hmfw-card-small .hmfw-card-head {
   min-height: 38px;
   padding: 0 12px;

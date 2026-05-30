@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import Space from '../Space'
-import { h } from 'vue'
+import { h, Fragment, createCommentVNode } from 'vue'
 
 describe('Space', () => {
   it('renders correctly', () => {
@@ -54,18 +54,20 @@ describe('Space', () => {
         default: () => [h('span', 'Item 1'), h('span', 'Item 2')],
       },
     })
-    const items = wrapper.findAll('.hmfw-space-item')
-    expect(items[0].attributes('style')).toContain('margin-right: 32px')
+    // 间距改为容器 gap（与 AntD v6 一致），正确处理换行
+    expect(wrapper.attributes('style')).toContain('column-gap: 32px')
+    expect(wrapper.attributes('style')).toContain('row-gap: 32px')
   })
 
-  it('handles array size', () => {
+  it('handles array size as [column, row] gap', () => {
     const wrapper = mount(Space, {
       props: { size: [16, 24] },
       slots: {
         default: () => [h('span', 'Item 1'), h('span', 'Item 2')],
       },
     })
-    expect(wrapper.exists()).toBe(true)
+    expect(wrapper.attributes('style')).toContain('column-gap: 16px')
+    expect(wrapper.attributes('style')).toContain('row-gap: 24px')
   })
 
   it('handles align prop', () => {
@@ -123,17 +125,42 @@ describe('Space', () => {
     expect(wrapper.classes()).toContain('hmfw-space-align-center')
   })
 
-  it('does not apply margin to last item', () => {
+  it('flattens fragment children (v-for)', () => {
     const wrapper = mount(Space, {
-      props: { size: 16 },
       slots: {
-        default: () => [h('span', 'Item 1'), h('span', 'Item 2')],
+        // 模拟 v-for 产生的 Fragment
+        default: () => [h(Fragment, [h('span', 'A'), h('span', 'B'), h('span', 'C')])],
       },
     })
-    const items = wrapper.findAll('.hmfw-space-item')
-    const firstStyle = items[0].attributes('style') || ''
-    const lastStyle = items[1].attributes('style') || ''
-    expect(firstStyle).toContain('margin-right')
-    expect(lastStyle).not.toContain('margin-right')
+    expect(wrapper.findAll('.hmfw-space-item')).toHaveLength(3)
+  })
+
+  it('filters out comment vnodes', () => {
+    const wrapper = mount(Space, {
+      slots: {
+        default: () => [h('span', 'Item 1'), createCommentVNode('v-if'), h('span', 'Item 2')],
+      },
+    })
+    expect(wrapper.findAll('.hmfw-space-item')).toHaveLength(2)
+  })
+
+  it('separator works as alias of split', () => {
+    const wrapper = mount(Space, {
+      props: { separator: h('span', '|') },
+      slots: {
+        default: () => [h('span', 'A'), h('span', 'B'), h('span', 'C')],
+      },
+    })
+    expect(wrapper.findAll('.hmfw-space-item-split')).toHaveLength(2)
+  })
+
+  it('vertical prop is shorthand for direction', () => {
+    const wrapper = mount(Space, {
+      props: { vertical: true },
+      slots: {
+        default: () => [h('span', 'A'), h('span', 'B')],
+      },
+    })
+    expect(wrapper.classes()).toContain('hmfw-space-vertical')
   })
 })

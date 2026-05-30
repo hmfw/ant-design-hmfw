@@ -2,28 +2,28 @@ import { defineComponent, computed, ref, onMounted, onUpdated, type PropType } f
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { AvatarSize, AvatarShape } from './types'
-
-const SIZE_MAP: Record<string, number> = {
-  large: 40,
-  default: 32,
-  small: 24,
-}
+import { provideAvatarContext, useAvatarContext } from './context'
 
 export const Avatar = defineComponent({
   name: 'Avatar',
   props: {
     size: {
       type: [String, Number] as PropType<AvatarSize>,
-      default: 'default',
+      default: undefined,
     },
     shape: {
       type: String as PropType<AvatarShape>,
-      default: 'circle',
+      default: undefined,
     },
     src: String,
     srcSet: String,
     alt: String,
     icon: Object,
+    draggable: {
+      type: [Boolean, String] as PropType<boolean | 'true' | 'false'>,
+      default: undefined,
+    },
+    crossOrigin: String as PropType<'' | 'anonymous' | 'use-credentials'>,
     gap: {
       type: Number,
       default: 4,
@@ -32,41 +32,44 @@ export const Avatar = defineComponent({
   emits: ['error'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('avatar')
+    const ctx = useAvatarContext()
     const imgError = ref(false)
     const textRef = ref<HTMLSpanElement | null>(null)
     const avatarRef = ref<HTMLSpanElement | null>(null)
     const scale = ref(1)
 
-    const sizeValue = computed(() =>
-      typeof props.size === 'number' ? props.size : SIZE_MAP[props.size] ?? 32,
-    )
-    void sizeValue
+    // props 优先，其次 AvatarGroup 上下文，最后默认值
+    const mergedSize = computed<AvatarSize>(() => props.size ?? ctx.size ?? 'default')
+    const mergedShape = computed<AvatarShape>(() => props.shape ?? ctx.shape ?? 'circle')
 
     const sizeStyle = computed(() => {
-      if (typeof props.size === 'number') {
+      const size = mergedSize.value
+      if (typeof size === 'number') {
         return {
-          width: `${props.size}px`,
-          height: `${props.size}px`,
-          lineHeight: `${props.size}px`,
-          fontSize: `${Math.round(props.size / 2)}px`,
+          width: `${size}px`,
+          height: `${size}px`,
+          lineHeight: `${size}px`,
+          fontSize: `${Math.round(size / 2)}px`,
         }
       }
       return {}
     })
 
-    const classes = computed(() =>
-      cls(prefixCls, `${prefixCls}-${props.shape}`, `${prefixCls}-${props.size}`, {
+    const classes = computed(() => {
+      const size = mergedSize.value
+      return cls(prefixCls, `${prefixCls}-${mergedShape.value}`, {
+        [`${prefixCls}-${size}`]: typeof size === 'string',
         [`${prefixCls}-image`]: !!props.src && !imgError.value,
         [`${prefixCls}-icon`]: !!props.icon,
-      }),
-    )
+      })
+    })
 
     const adjustTextScale = () => {
       if (!textRef.value || !avatarRef.value) return
       const avatarWidth = avatarRef.value.offsetWidth
       const textWidth = textRef.value.offsetWidth
       const gap = props.gap * 2
-      if (avatarWidth && textWidth) {
+      if (avatarWidth && textWidth && gap < avatarWidth) {
         scale.value = avatarWidth - gap < textWidth
           ? (avatarWidth - gap) / textWidth
           : 1
@@ -90,6 +93,8 @@ export const Avatar = defineComponent({
             src={props.src}
             srcset={props.srcSet}
             alt={props.alt}
+            draggable={props.draggable}
+            crossorigin={props.crossOrigin}
             onError={handleImgError}
           />
         )
@@ -123,16 +128,26 @@ export const AvatarGroup = defineComponent({
     maxStyle: Object as PropType<Record<string, string>>,
     size: {
       type: [String, Number] as PropType<AvatarSize>,
-      default: 'default',
+      default: undefined,
     },
     shape: {
       type: String as PropType<AvatarShape>,
-      default: 'circle',
+      default: undefined,
     },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('avatar')
     const groupPrefixCls = `${prefixCls}-group`
+
+    // 向子 Avatar 提供 size/shape
+    provideAvatarContext({
+      get size() {
+        return props.size
+      },
+      get shape() {
+        return props.shape
+      },
+    })
 
     return () => {
       const children = slots.default?.() ?? []

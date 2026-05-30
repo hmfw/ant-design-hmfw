@@ -1,10 +1,26 @@
 <template>
-  <div style="display: flex; gap: 16px; position: relative; height: 80px;">
-    <FloatButton type="default" description="默认" shape="square" />
-    <FloatButton type="primary" description="主要" shape="square" />
+  <div class="float-btn-showcase">
+    <FloatButton :icon="SettingOutlined" :style="s" />
+    <FloatButton type="primary" :icon="SettingOutlined" :style="s" />
+    <FloatButton shape="square" :icon="SettingOutlined" :style="s" />
+    <FloatButton type="primary" shape="square" :icon="SettingOutlined" :style="s" />
+    <FloatButton type="primary" shape="square" description="文档" :style="s" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { FloatButton } from 'ant-design-hmfw'
+import { SettingOutlined } from 'ant-design-hmfw'
+
+// Render inline within the demo box instead of fixed to the viewport
+const s = { position: 'static' } as const
 </script>
+
+<style scoped>
+.float-btn-showcase {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 8px 0;
+}
+</style>

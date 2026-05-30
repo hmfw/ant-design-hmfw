@@ -34,19 +34,47 @@
   <AlertClosable />
 </DemoBlock>
 
+### 填充样式
+
+通过 `variant="filled"` 使用更强的背景填充。
+
+<DemoBlock title="填充样式" :source="AlertVariantSource">
+  <AlertVariant />
+</DemoBlock>
+
+### 顶部公告
+
+通过 `banner` 用作顶部公告，默认显示图标且类型为 warning。
+
+<DemoBlock title="顶部公告" :source="AlertBannerSource">
+  <AlertBanner />
+</DemoBlock>
+
 ## API
 
 ### Alert Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| type | 指定警告提示的样式 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'` |
-| message | 警告提示内容 | `string` | - |
+| type | 指定警告提示的样式 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'`（banner 模式为 `'warning'`） |
+| variant | 样式变体 | `'outlined' \| 'filled'` | `'outlined'` |
+| title | 警告提示内容 | `string` | - |
+| message | `title` 的别名（已废弃，请使用 `title`） | `string` | - |
 | description | 警告提示的辅助性文字介绍 | `string` | - |
-| showIcon | 是否显示辅助图标 | `boolean` | `false` |
+| showIcon | 是否显示辅助图标（banner 模式默认 `true`） | `boolean` | `false` |
 | closable | 默认不显示关闭按钮 | `boolean` | `false` |
+| closeText | 自定义关闭按钮文字 | `string` | - |
 | banner | 是否用作顶部公告 | `boolean` | `false` |
-| action | 自定义操作项 | `slot` | - |
+
+### Alert Slots
+
+| 名称 | 说明 |
+| --- | --- |
+| title / message | 标题内容 |
+| description | 辅助性文字介绍 |
+| icon | 自定义图标 |
+| closeIcon | 自定义关闭按钮 |
+| action | 自定义操作项 |
 
 ### Alert Events
 

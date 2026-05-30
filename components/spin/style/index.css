@@ -89,3 +89,26 @@
   pointer-events: none;
   user-select: none;
 }
+
+/* Fullscreen 全屏遮罩 */
+.hmfw-spin-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.hmfw-spin-fullscreen-show {
+  display: flex;
+}
+
+.hmfw-spin-fullscreen .hmfw-spin-dot-item {
+  background: #fff;
+}
+
+.hmfw-spin-fullscreen .hmfw-spin-text {
+  color: #fff;
+}

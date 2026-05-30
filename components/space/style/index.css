@@ -36,4 +36,5 @@
 
 .hmfw-space-item-split {
   display: inline-flex;
+  align-items: center;
 }

@@ -1,94 +1,31 @@
-import { defineComponent, computed, type PropType } from 'vue'
+import { defineComponent } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
-import type { TypographyType } from './types'
+import {
+  baseTypographyProps,
+  getTypographyClass,
+  wrapDecorations,
+  extractText,
+  useCopyable,
+} from './Base'
 
 export default defineComponent({
   name: 'TypographyText',
-  props: {
-    type: {
-      type: String as PropType<TypographyType>,
-      default: undefined,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    mark: {
-      type: Boolean,
-      default: false,
-    },
-    code: {
-      type: Boolean,
-      default: false,
-    },
-    keyboard: {
-      type: Boolean,
-      default: false,
-    },
-    underline: {
-      type: Boolean,
-      default: false,
-    },
-    delete: {
-      type: Boolean,
-      default: false,
-    },
-    strong: {
-      type: Boolean,
-      default: false,
-    },
-    italic: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  props: baseTypographyProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('typography')
-
-    const classes = computed(() => {
-      const type = props.type
-      return cls(
-        prefixCls,
-        {
-          [`${prefixCls}-${type}`]: !!type,
-          [`${prefixCls}-disabled`]: props.disabled,
-        }
-      )
-    })
+    const { renderCopy } = useCopyable(prefixCls)
 
     return () => {
-      let children: any = slots.default?.()
+      const raw = slots.default?.()
+      const children = wrapDecorations(props, raw)
+      const copyNode = renderCopy(props, () => extractText(raw))
 
-      if (props.mark) {
-        children = <mark>{children}</mark>
-      }
-
-      if (props.code) {
-        children = <code>{children}</code>
-      }
-
-      if (props.keyboard) {
-        children = <kbd>{children}</kbd>
-      }
-
-      if (props.underline) {
-        children = <u>{children}</u>
-      }
-
-      if (props.delete) {
-        children = <del>{children}</del>
-      }
-
-      if (props.strong) {
-        children = <strong>{children}</strong>
-      }
-
-      if (props.italic) {
-        children = <i>{children}</i>
-      }
-
-      return <span class={classes.value}>{children}</span>
+      return (
+        <span class={getTypographyClass(prefixCls, props)}>
+          {children}
+          {copyNode}
+        </span>
+      )
     }
   },
 })

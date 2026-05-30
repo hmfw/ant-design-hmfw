@@ -1,6 +1,18 @@
-import { defineComponent, computed, type PropType } from 'vue'
+import { defineComponent, computed, type PropType, Fragment, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import type { CardType, CardVariant } from './types'
+
+// 判断子节点中是否包含 Card.Grid
+function containsGrid(children: VNode[]): boolean {
+  return children.some((child) => {
+    if (!child) return false
+    if (child.type === Fragment && Array.isArray(child.children)) {
+      return containsGrid(child.children as VNode[])
+    }
+    return (child.type as any)?.name === 'CardGrid'
+  })
+}
 
 export const Card = defineComponent({
   name: 'Card',
@@ -10,11 +22,19 @@ export const Card = defineComponent({
       type: Boolean,
       default: true,
     },
+    variant: {
+      type: String as PropType<CardVariant>,
+      default: undefined,
+    },
     hoverable: Boolean,
     loading: Boolean,
     size: {
       type: String as PropType<'default' | 'small'>,
       default: 'default',
+    },
+    type: {
+      type: String as PropType<CardType>,
+      default: undefined,
     },
     bodyStyle: Object as PropType<Record<string, string>>,
     headStyle: Object as PropType<Record<string, string>>,
@@ -22,12 +42,19 @@ export const Card = defineComponent({
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('card')
 
+    // variant 优先于 bordered：'borderless' → 无边框；'outlined' → 有边框
+    const mergedBordered = computed(() => {
+      if (props.variant) return props.variant === 'outlined'
+      return props.bordered
+    })
+
     const classes = computed(() =>
       cls(prefixCls, {
-        [`${prefixCls}-bordered`]: props.bordered,
+        [`${prefixCls}-bordered`]: mergedBordered.value,
         [`${prefixCls}-hoverable`]: props.hoverable,
         [`${prefixCls}-loading`]: props.loading,
         [`${prefixCls}-small`]: props.size === 'small',
+        [`${prefixCls}-type-${props.type}`]: !!props.type,
       }),
     )
 
@@ -52,6 +79,9 @@ export const Card = defineComponent({
         </div>
       )
 
+      const defaultChildren = slots.default?.() ?? []
+      const hasGrid = Array.isArray(defaultChildren) && containsGrid(defaultChildren)
+
       const bodyNode = (
         <div class={`${prefixCls}-body`} style={props.bodyStyle}>
           {props.loading ? (
@@ -61,7 +91,7 @@ export const Card = defineComponent({
               ))}
             </div>
           ) : (
-            slots.default?.()
+            defaultChildren
           )}
         </div>
       )
@@ -71,7 +101,7 @@ export const Card = defineComponent({
       )
 
       return (
-        <div class={classes.value}>
+        <div class={cls(classes.value, { [`${prefixCls}-contain-grid`]: hasGrid })}>
           {coverNode}
           {headNode}
           {bodyNode}
@@ -79,6 +109,28 @@ export const Card = defineComponent({
         </div>
       )
     }
+  },
+})
+
+export const CardGrid = defineComponent({
+  name: 'CardGrid',
+  props: {
+    hoverable: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  setup(props, { slots }) {
+    const prefixCls = usePrefixCls('card')
+    return () => (
+      <div
+        class={cls(`${prefixCls}-grid`, {
+          [`${prefixCls}-grid-hoverable`]: props.hoverable,
+        })}
+      >
+        {slots.default?.()}
+      </div>
+    )
   },
 })
 

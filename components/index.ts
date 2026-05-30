@@ -43,8 +43,8 @@ export type { DividerProps, DividerType, DividerOrientation } from './divider'
 export { Row, Col } from './grid'
 export type { RowProps, ColProps, Gutter, Align, Justify, ColSpan, ColSize } from './grid'
 
-export { Text, Title, Paragraph } from './typography'
-export type { TextProps, TitleProps, ParagraphProps, TypographyType, TitleLevel } from './typography'
+export { Text, Title, Paragraph, Link } from './typography'
+export type { TextProps, TitleProps, ParagraphProps, LinkProps, TypographyType, TitleLevel, CopyableConfig } from './typography'
 
 export { Layout, Header, Footer, Content, Sider } from './layout'
 export type { LayoutProps, SiderProps, LayoutBreakpoint } from './layout'
@@ -52,8 +52,8 @@ export type { LayoutProps, SiderProps, LayoutBreakpoint } from './layout'
 export { Avatar, AvatarGroup } from './avatar'
 export type { AvatarProps, AvatarGroupProps, AvatarSize, AvatarShape } from './avatar'
 
-export { Badge } from './badge'
-export type { BadgeProps, BadgeStatus, BadgeSize } from './badge'
+export { Badge, Ribbon } from './badge'
+export type { BadgeProps, BadgeStatus, BadgeSize, RibbonProps, RibbonPlacement } from './badge'
 
 export { Tag, CheckableTag } from './tag'
 export type { TagProps, CheckableTagProps, TagColor } from './tag'
@@ -61,8 +61,8 @@ export type { TagProps, CheckableTagProps, TagColor } from './tag'
 export { Empty } from './empty'
 export type { EmptyProps } from './empty'
 
-export { Card, CardMeta } from './card'
-export type { CardProps, CardMetaProps } from './card'
+export { Card, CardGrid, CardMeta } from './card'
+export type { CardProps, CardMetaProps, CardGridProps, CardVariant } from './card'
 
 export { Input, InputPassword, TextArea, InputSearch } from './input'
 export type { InputProps, TextAreaProps, InputSize, InputStatus } from './input'
@@ -102,7 +102,7 @@ export { Tooltip } from './tooltip'
 export type { TooltipProps, TooltipPlacement, TooltipTrigger } from './tooltip'
 
 export { Alert } from './alert'
-export type { AlertProps, AlertType } from './alert'
+export type { AlertProps, AlertType, AlertVariant } from './alert'
 
 export { notification } from './notification'
 export type { NotificationConfig, NotificationPlacement, NotificationType } from './notification'
@@ -160,7 +160,18 @@ export { Watermark } from './watermark'
 
 export { BackTop } from './back-top'
 
-export { FloatButton, FloatButtonGroup } from './float-button'
+export { FloatButton, FloatButtonGroup, FloatButtonBackTop } from './float-button'
+export type {
+  FloatButtonProps,
+  FloatButtonGroupProps,
+  FloatButtonBackTopProps,
+  FloatButtonType,
+  FloatButtonShape,
+  FloatButtonHTMLType,
+  FloatButtonTrigger,
+  FloatButtonGroupPlacement,
+  FloatButtonBadgeProps,
+} from './float-button'
 
 export { QRCode } from './qrcode'
 export type { QRCodeProps, QRCodeStatus, QRCodeErrorLevel } from './qrcode'
@@ -228,13 +239,13 @@ import { Button } from './button'
 import { Space } from './space'
 import { Divider } from './divider'
 import { Row, Col } from './grid'
-import { Text, Title, Paragraph } from './typography'
+import { Text, Title, Paragraph, Link } from './typography'
 import { Layout, Header, Footer, Content, Sider } from './layout'
 import { Avatar, AvatarGroup } from './avatar'
-import { Badge } from './badge'
+import { Badge, Ribbon } from './badge'
 import { Tag, CheckableTag } from './tag'
 import { Empty } from './empty'
-import { Card, CardMeta } from './card'
+import { Card, CardGrid, CardMeta } from './card'
 import { Input, InputPassword, TextArea, InputSearch } from './input'
 import { Checkbox, CheckboxGroup } from './checkbox'
 import { Radio, RadioGroup } from './radio'
@@ -255,7 +266,7 @@ import { Transfer } from './transfer'
 import { RangePicker } from './range-picker'
 import { TreeSelect } from './tree-select'
 
-const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Tag, CheckableTag, Empty, Card, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker, Transfer, RangePicker, TreeSelect]
+const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Link, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Ribbon, Tag, CheckableTag, Empty, Card, CardGrid, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker, Transfer, RangePicker, TreeSelect]
 
 export function install(app: VueApp): void {
   components.forEach((component) => {

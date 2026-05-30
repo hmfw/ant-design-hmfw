@@ -34,13 +34,21 @@
   <BadgeCustomColor />
 </DemoBlock>
 
+### 缎带
+
+使用 `Badge.Ribbon` 展示缎带样式标记。
+
+<DemoBlock title="缎带" :source="BadgeRibbonSource">
+  <BadgeRibbon />
+</DemoBlock>
+
 ## API
 
 ### Badge Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| count | 展示的数字 | `number` | - |
+| count | 展示的数字 | `number \| string` | - |
 | dot | 不展示数字，只有一个小红点 | `boolean` | `false` |
 | overflowCount | 展示封顶的数字值 | `number` | `99` |
 | showZero | 当数值为 0 时，是否展示 Badge | `boolean` | `false` |
@@ -49,3 +57,12 @@
 | offset | 设置状态点的位置偏移 | `[number, number]` | - |
 | size | 徽标大小 | `'default' \| 'small'` | `'default'` |
 | text | 在设置了 status 的前提下有效，设置状态点的文本 | `string` | - |
+| title | 鼠标悬停时的提示文字 | `string` | - |
+
+### Badge.Ribbon Props
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| text | 缎带内容 | `string` | - |
+| color | 缎带颜色（预设色或自定义色值） | `string` | - |
+| placement | 缎带位置 | `'start' \| 'end'` | `'end'` |

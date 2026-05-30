@@ -57,6 +57,41 @@ describe('Alert', () => {
     expect(wrapper.classes()).toContain('hmfw-alert-banner')
   })
 
+  it('banner auto-enables icon', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg', banner: true } })
+    expect(wrapper.find('.hmfw-alert-icon').exists()).toBe(true)
+  })
+
+  it('banner defaults to warning type', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg', banner: true } })
+    expect(wrapper.classes()).toContain('hmfw-alert-warning')
+  })
+
+  it('banner can disable icon explicitly', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg', banner: true, showIcon: false } })
+    expect(wrapper.find('.hmfw-alert-icon').exists()).toBe(false)
+  })
+
+  it('supports title prop (alias of message)', () => {
+    const wrapper = mount(Alert, { props: { title: 'Title content' } })
+    expect(wrapper.find('.hmfw-alert-message').text()).toBe('Title content')
+  })
+
+  it('title takes precedence over message', () => {
+    const wrapper = mount(Alert, { props: { title: 'Title', message: 'Message' } })
+    expect(wrapper.find('.hmfw-alert-message').text()).toBe('Title')
+  })
+
+  it('applies outlined variant by default', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg' } })
+    expect(wrapper.classes()).toContain('hmfw-alert-outlined')
+  })
+
+  it('applies filled variant', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg', variant: 'filled' } })
+    expect(wrapper.classes()).toContain('hmfw-alert-filled')
+  })
+
   it('renders slot message', () => {
     const wrapper = mount(Alert, {
       slots: { message: '<strong>bold msg</strong>' },

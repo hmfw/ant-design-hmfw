@@ -23,6 +23,11 @@ export interface TagProps {
   closeIcon?: unknown
   bordered?: boolean
   icon?: unknown
+  /** 渲染为链接 */
+  href?: string
+  target?: string
+  /** 禁用状态 */
+  disabled?: boolean
 }
 
 export interface CheckableTagProps {

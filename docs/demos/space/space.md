@@ -37,10 +37,18 @@
 
 ### 分隔符
 
-通过 `split` 插槽设置分隔符。
+通过 `separator`（或别名 `split`）属性设置分隔符。
 
 <DemoBlock title="分隔符" :source="SpaceSplitSource">
   <SpaceSplit />
+</DemoBlock>
+
+### 自动换行
+
+通过 `wrap` 属性允许子元素换行，换行后行间距由 `size` 的垂直分量控制。
+
+<DemoBlock title="自动换行" :source="SpaceWrapSource">
+  <SpaceWrap />
 </DemoBlock>
 
 ## API
@@ -51,12 +59,14 @@
 | --- | --- | --- | --- |
 | size | 间距大小，数组形式表示 `[水平, 垂直]` | `'small' \| 'middle' \| 'large' \| number \| [number, number]` | `'small'` |
 | direction | 间距方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| vertical | `direction="vertical"` 的简写 | `boolean` | `false` |
 | align | 对齐方式 | `'start' \| 'end' \| 'center' \| 'baseline'` | - |
 | wrap | 是否自动换行，仅水平方向有效 | `boolean` | `false` |
+| separator | 设置分隔符 | `VNode \| string` | - |
+| split | `separator` 的别名（已废弃，请使用 `separator`） | `VNode \| string` | - |
 
 ### Space Slots
 
 | 名称 | 说明 |
 | --- | --- |
 | default | 子元素内容 |
-| split | 设置拆分 |

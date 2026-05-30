@@ -73,6 +73,33 @@
   border-style: dashed;
 }
 
+.hmfw-divider-dotted {
+  background: none;
+  border-style: dotted;
+  border-width: 1px 0 0;
+}
+
+.hmfw-divider-horizontal.hmfw-divider-with-text.hmfw-divider-dotted::before,
+.hmfw-divider-horizontal.hmfw-divider-with-text.hmfw-divider-dotted::after {
+  border-style: dotted;
+}
+
+.hmfw-divider-horizontal.hmfw-divider-sm {
+  margin: 8px 0;
+}
+
+.hmfw-divider-horizontal.hmfw-divider-sm.hmfw-divider-with-text {
+  margin: 8px 0;
+}
+
+.hmfw-divider-horizontal.hmfw-divider-md {
+  margin: 16px 0;
+}
+
+.hmfw-divider-horizontal.hmfw-divider-md.hmfw-divider-with-text {
+  margin: 16px 0;
+}
+
 .hmfw-divider-plain.hmfw-divider-with-text {
   color: rgba(0, 0, 0, 0.88);
   font-weight: normal;
@@ -92,4 +119,8 @@
 
 .hmfw-divider-vertical.hmfw-divider-dashed {
   border-inline-start-style: dashed;
+}
+
+.hmfw-divider-vertical.hmfw-divider-dotted {
+  border-inline-start-style: dotted;
 }

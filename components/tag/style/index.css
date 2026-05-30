@@ -18,6 +18,28 @@
   border-color: transparent;
 }
 
+.hmfw-tag-hidden {
+  display: none;
+}
+
+a.hmfw-tag {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hmfw-tag-disabled,
+.hmfw-tag-disabled.hmfw-tag-has-color {
+  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  background: var(--hmfw-color-bg-container-disabled, rgba(0, 0, 0, 0.04));
+  border-color: var(--hmfw-color-border, #d9d9d9);
+  cursor: not-allowed;
+}
+
+.hmfw-tag-disabled .hmfw-tag-close-icon {
+  cursor: not-allowed;
+  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+}
+
 .hmfw-tag-has-color {
   color: #fff;
   border-color: transparent;

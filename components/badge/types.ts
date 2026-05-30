@@ -1,5 +1,6 @@
 export type BadgeStatus = 'success' | 'processing' | 'default' | 'error' | 'warning'
 export type BadgeSize = 'default' | 'small'
+export type RibbonPlacement = 'start' | 'end'
 
 export interface BadgeProps {
   count?: number | string
@@ -12,4 +13,10 @@ export interface BadgeProps {
   size?: BadgeSize
   offset?: [number, number]
   title?: string
+}
+
+export interface RibbonProps {
+  text?: string
+  color?: string
+  placement?: RibbonPlacement
 }

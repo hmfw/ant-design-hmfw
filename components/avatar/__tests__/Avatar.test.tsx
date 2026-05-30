@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
+import { h } from 'vue'
 import { Avatar, AvatarGroup } from '../Avatar'
 
 describe('Avatar', () => {
@@ -77,5 +78,40 @@ describe('AvatarGroup', () => {
       },
     })
     expect(wrapper.text()).toContain('+1')
+  })
+
+  it('propagates size to child Avatars via context', () => {
+    const wrapper = mount(AvatarGroup, {
+      props: { size: 'large' },
+      slots: {
+        default: () => [h(Avatar, null, () => 'A'), h(Avatar, null, () => 'B')],
+      },
+    })
+    const avatars = wrapper.findAll('.hmfw-avatar')
+    // 两个子 avatar 都应继承 large
+    const larges = avatars.filter((a) => a.classes().includes('hmfw-avatar-large'))
+    expect(larges.length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('propagates shape to child Avatars via context', () => {
+    const wrapper = mount(AvatarGroup, {
+      props: { shape: 'square' },
+      slots: {
+        default: () => [h(Avatar, null, () => 'A')],
+      },
+    })
+    expect(wrapper.find('.hmfw-avatar').classes()).toContain('hmfw-avatar-square')
+  })
+
+  it('child Avatar props override group context', () => {
+    const wrapper = mount(AvatarGroup, {
+      props: { size: 'large' },
+      slots: {
+        default: () => [h(Avatar, { size: 'small' }, () => 'A')],
+      },
+    })
+    const avatar = wrapper.find('.hmfw-avatar')
+    expect(avatar.classes()).toContain('hmfw-avatar-small')
+    expect(avatar.classes()).not.toContain('hmfw-avatar-large')
   })
 })

@@ -1,2 +1,2 @@
-export { Empty } from './Empty'
+export { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from './Empty'
 export type { EmptyProps } from './types'

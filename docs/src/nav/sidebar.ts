@@ -13,7 +13,7 @@ export const componentsSidebar: SidebarGroup[] = [
     text: '通用',
     items: [
       { text: 'Button 按钮', link: '/components/button' },
-      { text: 'ColorPicker 颜色选择器', link: '/components/color-picker' },
+      { text: 'FloatButton 悬浮按钮', link: '/components/float-button' },
       { text: 'Icon 图标', link: '/components/icon' },
       { text: 'Typography 排版', link: '/components/typography' },
     ],
@@ -37,6 +37,7 @@ export const componentsSidebar: SidebarGroup[] = [
       { text: 'Menu 导航菜单', link: '/components/menu' },
       { text: 'Pagination 分页', link: '/components/pagination' },
       { text: 'Steps 步骤条', link: '/components/steps' },
+      { text: 'Tabs 标签页', link: '/components/tabs' },
     ],
   },
   {

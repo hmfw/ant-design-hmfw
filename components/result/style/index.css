@@ -44,6 +44,14 @@
 .hmfw-result-error .hmfw-result-icon   { color: #ff4d4f; }
 .hmfw-result-info .hmfw-result-icon    { color: #1677ff; }
 .hmfw-result-warning .hmfw-result-icon { color: #faad14; }
-.hmfw-result-404 .hmfw-result-icon     { color: #1677ff; font-size: 80px; font-weight: 700; }
-.hmfw-result-403 .hmfw-result-icon     { color: #faad14; font-size: 80px; font-weight: 700; }
-.hmfw-result-500 .hmfw-result-icon     { color: #ff4d4f; font-size: 80px; font-weight: 700; }
+
+/* Exception statuses 渲染为插画 */
+.hmfw-result-icon.hmfw-result-image {
+  margin-bottom: 24px;
+  font-size: 0;
+}
+
+.hmfw-result-icon.hmfw-result-image svg {
+  max-width: 100%;
+  height: auto;
+}

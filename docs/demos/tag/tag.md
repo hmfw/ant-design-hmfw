@@ -42,22 +42,34 @@
   <TagCheckable />
 </DemoBlock>
 
+### 链接与禁用
+
+通过 `href` 渲染为链接，通过 `disabled` 禁用标签。
+
+<DemoBlock title="链接与禁用" :source="TagLinkDisabledSource">
+  <TagLinkDisabled />
+</DemoBlock>
+
 ## API
 
 ### Tag Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| color | 标签色 | `string` | - |
-| closable | 标签是否可以关闭 | `boolean` | `false` |
+| color | 标签色（预设色或自定义色值） | `string` | - |
+| closable | 标签是否可以关闭，关闭后自动隐藏 | `boolean` | `false` |
+| closeIcon | 自定义关闭图标组件 | `Component` | - |
+| icon | 标签图标组件 | `Component` | - |
 | bordered | 是否有边框 | `boolean` | `true` |
+| href | 设置后标签渲染为 `<a>` 链接 | `string` | - |
+| target | 链接打开方式，配合 `href` | `string` | - |
+| disabled | 禁用状态 | `boolean` | `false` |
 
 ### Tag Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| close | 关闭时的回调 | `(e: MouseEvent) => void` |
-| click | 点击标签时的回调 | `(e: MouseEvent) => void` |
+| close | 关闭时的回调，调用 `e.preventDefault()` 可阻止自动隐藏 | `(e: MouseEvent) => void` |
 
 ### CheckableTag Props
 

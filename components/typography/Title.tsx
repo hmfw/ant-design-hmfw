@@ -1,77 +1,39 @@
-import { defineComponent, computed, type PropType } from 'vue'
+import { defineComponent, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
-import type { TypographyType, TitleLevel } from './types'
+import {
+  baseTypographyProps,
+  getTypographyClass,
+  wrapDecorations,
+  extractText,
+  useCopyable,
+} from './Base'
+import type { TitleLevel } from './types'
 
 export default defineComponent({
   name: 'TypographyTitle',
   props: {
+    ...baseTypographyProps,
     level: {
       type: Number as PropType<TitleLevel>,
       default: 1,
     },
-    type: {
-      type: String as PropType<TypographyType>,
-      default: undefined,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    mark: {
-      type: Boolean,
-      default: false,
-    },
-    code: {
-      type: Boolean,
-      default: false,
-    },
-    underline: {
-      type: Boolean,
-      default: false,
-    },
-    delete: {
-      type: Boolean,
-      default: false,
-    },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('typography')
-
-    const classes = computed(() => {
-      const type = props.type
-      return cls(
-        prefixCls,
-        `${prefixCls}-h${props.level}`,
-        {
-          [`${prefixCls}-${type}`]: !!type,
-          [`${prefixCls}-disabled`]: props.disabled,
-        }
-      )
-    })
+    const { renderCopy } = useCopyable(prefixCls)
 
     return () => {
-      let children: any = slots.default?.()
-
-      if (props.mark) {
-        children = <mark>{children}</mark>
-      }
-
-      if (props.code) {
-        children = <code>{children}</code>
-      }
-
-      if (props.underline) {
-        children = <u>{children}</u>
-      }
-
-      if (props.delete) {
-        children = <del>{children}</del>
-      }
-
+      const raw = slots.default?.()
+      const children = wrapDecorations(props, raw)
+      const copyNode = renderCopy(props, () => extractText(raw))
       const Tag = `h${props.level}` as any
 
-      return <Tag class={classes.value}>{children}</Tag>
+      return (
+        <Tag class={getTypographyClass(prefixCls, props, `${prefixCls}-h${props.level}`)}>
+          {children}
+          {copyNode}
+        </Tag>
+      )
     }
   },
 })

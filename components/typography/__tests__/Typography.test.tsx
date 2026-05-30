@@ -1,8 +1,9 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import Text from '../Text'
 import Title from '../Title'
 import Paragraph from '../Paragraph'
+import Link from '../Link'
 
 describe('Typography', () => {
   describe('Text', () => {
@@ -143,6 +144,90 @@ describe('Typography', () => {
         slots: { default: () => 'Paragraph' },
       })
       expect(wrapper.find('strong').exists()).toBe(true)
+    })
+
+    it('handles italic (parity with Text)', () => {
+      const wrapper = mount(Paragraph, {
+        props: { italic: true },
+        slots: { default: () => 'Paragraph' },
+      })
+      expect(wrapper.find('i').exists()).toBe(true)
+    })
+
+    it('handles code (parity with Text)', () => {
+      const wrapper = mount(Paragraph, {
+        props: { code: true },
+        slots: { default: () => 'Paragraph' },
+      })
+      expect(wrapper.find('code').exists()).toBe(true)
+    })
+  })
+
+  describe('Link', () => {
+    it('renders an anchor', () => {
+      const wrapper = mount(Link, {
+        props: { href: 'https://example.com' },
+        slots: { default: () => 'Go' },
+      })
+      expect(wrapper.element.tagName).toBe('A')
+      expect(wrapper.attributes('href')).toBe('https://example.com')
+      expect(wrapper.classes()).toContain('hmfw-typography-link')
+    })
+
+    it('disabled link drops href', () => {
+      const wrapper = mount(Link, {
+        props: { href: 'https://example.com', disabled: true },
+        slots: { default: () => 'Go' },
+      })
+      expect(wrapper.attributes('href')).toBeUndefined()
+      expect(wrapper.attributes('aria-disabled')).toBe('true')
+    })
+  })
+
+  describe('ellipsis & copyable', () => {
+    beforeEach(() => {
+      Object.assign(navigator, {
+        clipboard: { writeText: vi.fn().mockResolvedValue(undefined) },
+      })
+    })
+
+    it('applies ellipsis class', () => {
+      const wrapper = mount(Text, {
+        props: { ellipsis: true },
+        slots: { default: () => 'Long text that should be truncated' },
+      })
+      expect(wrapper.classes()).toContain('hmfw-typography-ellipsis')
+    })
+
+    it('renders copy button when copyable', () => {
+      const wrapper = mount(Text, {
+        props: { copyable: true },
+        slots: { default: () => 'Copy me' },
+      })
+      expect(wrapper.find('.hmfw-typography-copy').exists()).toBe(true)
+    })
+
+    it('copies text on click', async () => {
+      const onCopy = vi.fn()
+      const wrapper = mount(Text, {
+        props: { copyable: { onCopy } },
+        slots: { default: () => 'Copy me' },
+      })
+      await wrapper.find('.hmfw-typography-copy').trigger('click')
+      await new Promise((r) => setTimeout(r, 0))
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('Copy me')
+      expect(onCopy).toHaveBeenCalled()
+      expect(wrapper.find('.hmfw-typography-copy-success').exists()).toBe(true)
+    })
+
+    it('uses custom copyable text', async () => {
+      const wrapper = mount(Text, {
+        props: { copyable: { text: 'custom value' } },
+        slots: { default: () => 'displayed' },
+      })
+      await wrapper.find('.hmfw-typography-copy').trigger('click')
+      await new Promise((r) => setTimeout(r, 0))
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('custom value')
     })
   })
 })

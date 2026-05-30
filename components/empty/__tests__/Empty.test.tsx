@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import { Empty } from '../Empty'
+import { Empty, PRESENTED_IMAGE_SIMPLE } from '../Empty'
 
 describe('Empty', () => {
   it('renders correctly', () => {
@@ -43,5 +43,28 @@ describe('Empty', () => {
     const wrapper = mount(Empty, { slots: { default: '<button>Reload</button>' } })
     expect(wrapper.find('.hmfw-empty-footer').exists()).toBe(true)
     expect(wrapper.find('button').text()).toBe('Reload')
+  })
+
+  it('renders simple preset image with normal class', () => {
+    const wrapper = mount(Empty, { props: { image: PRESENTED_IMAGE_SIMPLE } })
+    expect(wrapper.classes()).toContain('hmfw-empty-normal')
+    expect(wrapper.find('svg').exists()).toBe(true)
+  })
+
+  it('does not treat preset sentinel as image url', () => {
+    const wrapper = mount(Empty, { props: { image: PRESENTED_IMAGE_SIMPLE } })
+    expect(wrapper.find('img').exists()).toBe(false)
+  })
+
+  it('renders custom image slot', () => {
+    const wrapper = mount(Empty, {
+      slots: { image: '<i class="custom-img">x</i>' },
+    })
+    expect(wrapper.find('.custom-img').exists()).toBe(true)
+  })
+
+  it('exposes preset constants on component', () => {
+    expect((Empty as any).PRESENTED_IMAGE_SIMPLE).toBe('simple')
+    expect((Empty as any).PRESENTED_IMAGE_DEFAULT).toBe('default')
   })
 })

@@ -18,6 +18,16 @@ describe('Flex', () => {
     expect(wrapper.attributes('style')).toContain('justify-content: center')
   })
 
+  it('applies space-between justify', () => {
+    const wrapper = mount(Flex, { props: { justify: 'space-between' } })
+    expect(wrapper.attributes('style')).toContain('justify-content: space-between')
+  })
+
+  it('does not add rtl class', () => {
+    const wrapper = mount(Flex)
+    expect(wrapper.classes()).not.toContain('hmfw-flex-rtl')
+  })
+
   it('applies align style', () => {
     const wrapper = mount(Flex, { props: { align: 'flex-end' } })
     expect(wrapper.attributes('style')).toContain('align-items: flex-end')

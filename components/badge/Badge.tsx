@@ -99,11 +99,11 @@ export const Badge = defineComponent({
       )
 
       if (!slots.default) {
-        return <span class={cls(prefixCls)}>{sup}</span>
+        return <span class={cls(prefixCls, `${prefixCls}-not-a-wrapper`)}>{sup}</span>
       }
 
       return (
-        <span class={cls(prefixCls, `${prefixCls}-not-a-wrapper`)}>
+        <span class={cls(prefixCls)}>
           {slots.default()}
           {sup}
         </span>

@@ -34,15 +34,25 @@
   <EmptyAction />
 </DemoBlock>
 
+### 简约模式
+
+通过 `image="simple"`（或 `PRESENTED_IMAGE_SIMPLE`）使用更紧凑的简约空状态。
+
+<DemoBlock title="简约模式" :source="EmptySimpleSource">
+  <EmptySimple />
+</DemoBlock>
+
 ## API
 
 ### Empty Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| description | 自定义描述内容 | `string` | `'暂无数据'` |
-| image | 设置显示图片，为 string 时表示自定义图片地址 | `string` | - |
+| description | 自定义描述内容，为 `false` 时不显示 | `string \| false` | `'暂无数据'` |
+| image | 显示图片：图片地址字符串，或预设标识 `'default'` / `'simple'`，为 `false` 时不显示 | `string \| false` | `'default'` |
 | imageStyle | 图片样式 | `CSSProperties` | - |
+
+预设常量：`PRESENTED_IMAGE_DEFAULT`（`'default'`）、`PRESENTED_IMAGE_SIMPLE`（`'simple'`）。
 
 ### Empty Slots
 

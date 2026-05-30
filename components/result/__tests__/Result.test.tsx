@@ -55,4 +55,21 @@ describe('Result', () => {
     })
     expect(wrapper.find('.hmfw-result-title strong').exists()).toBe(true)
   })
+
+  it('renders exception status as image illustration', () => {
+    const wrapper = mount(Result, { props: { status: '404', title: 'Not Found' } })
+    const icon = wrapper.find('.hmfw-result-icon')
+    expect(icon.classes()).toContain('hmfw-result-image')
+    expect(icon.find('svg').exists()).toBe(true)
+  })
+
+  it('hides icon when icon=false', () => {
+    const wrapper = mount(Result, { props: { status: 'success', icon: false, title: 'T' } })
+    expect(wrapper.find('.hmfw-result-icon').exists()).toBe(false)
+  })
+
+  it('renders custom string icon', () => {
+    const wrapper = mount(Result, { props: { status: 'info', icon: '★', title: 'T' } })
+    expect(wrapper.find('.hmfw-result-icon').text()).toBe('★')
+  })
 })

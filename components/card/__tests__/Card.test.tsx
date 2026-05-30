@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import { Card, CardMeta } from '../Card'
+import { h } from 'vue'
+import { Card, CardGrid, CardMeta } from '../Card'
 
 describe('Card', () => {
   it('renders correctly', () => {
@@ -54,6 +55,50 @@ describe('Card', () => {
   it('shows loading skeleton when loading', () => {
     const wrapper = mount(Card, { props: { loading: true } })
     expect(wrapper.find('.hmfw-card-loading-content').exists()).toBe(true)
+  })
+
+  it('applies type=inner class', () => {
+    const wrapper = mount(Card, { props: { type: 'inner', title: 'Inner' } })
+    expect(wrapper.classes()).toContain('hmfw-card-type-inner')
+  })
+
+  it('variant=borderless removes border', () => {
+    const wrapper = mount(Card, { props: { variant: 'borderless' } })
+    expect(wrapper.classes()).not.toContain('hmfw-card-bordered')
+  })
+
+  it('variant=outlined adds border (overrides bordered=false)', () => {
+    const wrapper = mount(Card, { props: { variant: 'outlined', bordered: false } })
+    expect(wrapper.classes()).toContain('hmfw-card-bordered')
+  })
+
+  it('detects grid children and adds contain-grid', () => {
+    const wrapper = mount(Card, {
+      slots: {
+        default: () => [h(CardGrid, () => 'A'), h(CardGrid, () => 'B')],
+      },
+    })
+    expect(wrapper.classes()).toContain('hmfw-card-contain-grid')
+    expect(wrapper.findAll('.hmfw-card-grid')).toHaveLength(2)
+  })
+})
+
+describe('Card.Grid', () => {
+  it('renders grid with hoverable by default', () => {
+    const wrapper = mount(CardGrid, { slots: { default: () => 'Grid' } })
+    expect(wrapper.classes()).toContain('hmfw-card-grid')
+    expect(wrapper.classes()).toContain('hmfw-card-grid-hoverable')
+  })
+
+  it('can disable hoverable', () => {
+    const wrapper = mount(CardGrid, { props: { hoverable: false }, slots: { default: () => 'Grid' } })
+    expect(wrapper.classes()).not.toContain('hmfw-card-grid-hoverable')
+  })
+
+  it('is attached as Card.Grid', async () => {
+    const { Card: C } = await import('../index')
+    expect((C as any).Grid).toBe(CardGrid)
+    expect((C as any).Meta).toBe(CardMeta)
   })
 })
 

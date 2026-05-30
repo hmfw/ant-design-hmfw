@@ -43,14 +43,20 @@
 | size | 头像大小 | `number \| 'small' \| 'default' \| 'large'` | `'default'` |
 | shape | 头像形状 | `'circle' \| 'square'` | `'circle'` |
 | src | 图片地址 | `string` | - |
+| srcSet | 图片响应式资源地址 | `string` | - |
 | alt | 图片无法显示时的替代文本 | `string` | - |
+| icon | 自定义图标组件 | `Component` | - |
+| draggable | 图片是否允许拖拽 | `boolean \| 'true' \| 'false'` | - |
+| crossOrigin | CORS 属性设置 | `'' \| 'anonymous' \| 'use-credentials'` | - |
 | gap | 字符类型距离左右两侧边界单位像素 | `number` | `4` |
 
 ### AvatarGroup Props
+
+设置后会自动下发 `size`/`shape` 给子 Avatar（子 Avatar 显式设置可覆盖）。
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | maxCount | 最多显示的头像数量 | `number` | - |
 | maxStyle | 多余头像样式 | `CSSProperties` | - |
-| size | 头像大小 | `number \| 'small' \| 'default' \| 'large'` | `'default'` |
-| shape | 头像形状 | `'circle' \| 'square'` | `'circle'` |
+| size | 头像大小（下发给子 Avatar） | `number \| 'small' \| 'default' \| 'large'` | `'default'` |
+| shape | 头像形状（下发给子 Avatar） | `'circle' \| 'square'` | `'circle'` |

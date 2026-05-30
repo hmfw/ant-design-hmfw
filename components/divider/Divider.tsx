@@ -1,7 +1,7 @@
 import { defineComponent, computed, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { DividerType, DividerOrientation } from './types'
+import type { DividerType, DividerOrientation, DividerVariant, DividerSize } from './types'
 
 export default defineComponent({
   name: 'Divider',
@@ -13,6 +13,10 @@ export default defineComponent({
     dashed: {
       type: Boolean,
       default: false,
+    },
+    variant: {
+      type: String as PropType<DividerVariant>,
+      default: undefined,
     },
     orientation: {
       type: String as PropType<DividerOrientation>,
@@ -26,11 +30,21 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    size: {
+      type: String as PropType<DividerSize>,
+      default: undefined,
+    },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('divider')
 
     const hasChildren = computed(() => !!slots.default)
+
+    // variant 优先级高于 dashed；dashed 等价于 variant="dashed"
+    const mergedVariant = computed<DividerVariant>(() => {
+      if (props.variant) return props.variant
+      return props.dashed ? 'dashed' : 'solid'
+    })
 
     const classes = computed(() =>
       cls(
@@ -39,8 +53,10 @@ export default defineComponent({
         {
           [`${prefixCls}-with-text`]: hasChildren.value && props.type === 'horizontal',
           [`${prefixCls}-with-text-${props.orientation}`]: hasChildren.value && props.type === 'horizontal',
-          [`${prefixCls}-dashed`]: props.dashed,
+          [`${prefixCls}-${mergedVariant.value}`]: mergedVariant.value !== 'solid',
           [`${prefixCls}-plain`]: props.plain,
+          [`${prefixCls}-sm`]: props.size === 'small' && props.type === 'horizontal',
+          [`${prefixCls}-md`]: props.size === 'middle' && props.type === 'horizontal',
         }
       )
     )

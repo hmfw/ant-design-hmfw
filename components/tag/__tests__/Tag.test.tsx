@@ -31,6 +31,42 @@ describe('Tag', () => {
     expect(wrapper.emitted('close')).toBeTruthy()
   })
 
+  it('auto-hides the tag after close', async () => {
+    const wrapper = mount(Tag, { props: { closable: true }, slots: { default: 'Tag' } })
+    await wrapper.find('.hmfw-tag-close-icon').trigger('click')
+    expect(wrapper.find('.hmfw-tag').exists()).toBe(false)
+  })
+
+  it('does not hide when close is prevented', async () => {
+    const wrapper = mount(Tag, {
+      props: {
+        closable: true,
+        onClose: (e: MouseEvent) => e.preventDefault(),
+      },
+      slots: { default: 'Tag' },
+    })
+    await wrapper.find('.hmfw-tag-close-icon').trigger('click')
+    expect(wrapper.find('.hmfw-tag').exists()).toBe(true)
+  })
+
+  it('renders as anchor when href is set', () => {
+    const wrapper = mount(Tag, { props: { href: 'https://example.com' }, slots: { default: 'Link' } })
+    expect(wrapper.element.tagName).toBe('A')
+    expect(wrapper.attributes('href')).toBe('https://example.com')
+  })
+
+  it('disabled tag drops href and is not closable', async () => {
+    const wrapper = mount(Tag, {
+      props: { href: 'https://example.com', disabled: true, closable: true },
+      slots: { default: 'Tag' },
+    })
+    expect(wrapper.classes()).toContain('hmfw-tag-disabled')
+    expect(wrapper.attributes('href')).toBeUndefined()
+    await wrapper.find('.hmfw-tag-close-icon').trigger('click')
+    expect(wrapper.emitted('close')).toBeFalsy()
+    expect(wrapper.find('.hmfw-tag').exists()).toBe(true)
+  })
+
   it('applies borderless class', () => {
     const wrapper = mount(Tag, { props: { bordered: false } })
     expect(wrapper.classes()).toContain('hmfw-tag-borderless')

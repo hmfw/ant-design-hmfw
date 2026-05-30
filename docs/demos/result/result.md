@@ -39,13 +39,17 @@
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| status | 结果的状态，决定图标和颜色 | `'success' \| 'error' \| 'warning' \| 'info' \| '404' \| '403' \| '500'` | `'info'` |
+| status | 结果的状态，决定图标和颜色；`404/403/500` 渲染为异常插画 | `'success' \| 'error' \| 'warning' \| 'info' \| '404' \| '403' \| '500'` | `'info'` |
 | title | 标题 | `string` | - |
 | subTitle | 副标题 | `string` | - |
+| icon | 自定义图标字符；设为 `false` 时隐藏图标 | `string \| false` | - |
 
 ### Result Slots
 
 | 名称 | 说明 |
 | --- | --- |
 | icon | 自定义图标 |
+| title | 自定义标题 |
+| subTitle | 自定义副标题 |
 | extra | 操作区 |
+| default | 补充说明内容 |

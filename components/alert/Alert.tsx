@@ -1,7 +1,7 @@
-import { defineComponent, ref, type PropType } from 'vue'
+import { defineComponent, ref, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { AlertType } from './types'
+import type { AlertType, AlertVariant } from './types'
 
 const iconMap: Record<AlertType, string> = {
   success: '✓',
@@ -15,11 +15,21 @@ export const Alert = defineComponent({
   props: {
     type: {
       type: String as PropType<AlertType>,
-      default: 'info',
+      default: undefined,
     },
+    variant: {
+      type: String as PropType<AlertVariant>,
+      default: 'outlined',
+    },
+    /** 标题内容（与 AntD v6 对齐，`message` 为其别名） */
+    title: String,
+    /** @deprecated 请使用 `title` */
     message: String,
     description: String,
-    showIcon: Boolean,
+    showIcon: {
+      type: Boolean,
+      default: undefined,
+    },
     closable: Boolean,
     closeText: String,
     banner: Boolean,
@@ -29,6 +39,19 @@ export const Alert = defineComponent({
     const prefixCls = usePrefixCls('alert')
     const closed = ref(false)
     const closing = ref(false)
+
+    // banner 模式默认为 warning
+    const mergedType = computed<AlertType>(() => {
+      if (props.type !== undefined) return props.type
+      return props.banner ? 'warning' : 'info'
+    })
+
+    // banner 模式默认显示图标（与 AntD v6 对齐）
+    const isShowIcon = computed(() =>
+      props.banner && props.showIcon === undefined ? true : !!props.showIcon,
+    )
+
+    const mergedTitle = computed(() => props.title ?? props.message)
 
     const handleClose = (e: MouseEvent) => {
       closing.value = true
@@ -42,28 +65,28 @@ export const Alert = defineComponent({
     return () => {
       if (closed.value) return null
 
-      const type = props.banner ? 'warning' : (props.type ?? 'info')
+      const type = mergedType.value
       const hasDesc = !!(props.description || slots.description)
 
       return (
         <div
           role="alert"
           aria-live={type === 'error' || type === 'warning' ? 'assertive' : 'polite'}
-          class={cls(prefixCls, `${prefixCls}-${type}`, {
+          class={cls(prefixCls, `${prefixCls}-${type}`, `${prefixCls}-${props.variant}`, {
             [`${prefixCls}-with-description`]: hasDesc,
             [`${prefixCls}-banner`]: props.banner,
             [`${prefixCls}-closing`]: closing.value,
-            [`${prefixCls}-no-icon`]: !props.showIcon,
+            [`${prefixCls}-no-icon`]: !isShowIcon.value,
           })}
         >
-          {props.showIcon && (
+          {isShowIcon.value && (
             <span class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-${type}`)}>
-              {iconMap[type]}
+              {slots.icon?.() ?? iconMap[type]}
             </span>
           )}
           <div class={`${prefixCls}-content`}>
             <div class={`${prefixCls}-message`}>
-              {slots.message?.() ?? props.message}
+              {slots.message?.() ?? slots.title?.() ?? mergedTitle.value}
             </div>
             {hasDesc && (
               <div class={`${prefixCls}-description`}>

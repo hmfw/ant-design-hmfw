@@ -48,7 +48,6 @@ export const Flex = defineComponent({
     const classes = computed(() =>
       cls(prefixCls, {
         [`${prefixCls}-vertical`]: props.vertical,
-        [`${prefixCls}-rtl`]: false,
       })
     )
 

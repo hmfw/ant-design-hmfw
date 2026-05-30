@@ -29,6 +29,47 @@ describe('Divider', () => {
     expect(wrapper.classes()).toContain('hmfw-divider-dashed')
   })
 
+  it('renders dotted divider via variant', () => {
+    const wrapper = mount(Divider, {
+      props: { variant: 'dotted' },
+    })
+    expect(wrapper.classes()).toContain('hmfw-divider-dotted')
+  })
+
+  it('variant takes precedence over dashed', () => {
+    const wrapper = mount(Divider, {
+      props: { dashed: true, variant: 'dotted' },
+    })
+    expect(wrapper.classes()).toContain('hmfw-divider-dotted')
+    expect(wrapper.classes()).not.toContain('hmfw-divider-dashed')
+  })
+
+  it('does not add solid class for default variant', () => {
+    const wrapper = mount(Divider)
+    expect(wrapper.classes()).not.toContain('hmfw-divider-solid')
+  })
+
+  it('renders small size divider', () => {
+    const wrapper = mount(Divider, {
+      props: { size: 'small' },
+    })
+    expect(wrapper.classes()).toContain('hmfw-divider-sm')
+  })
+
+  it('renders middle size divider', () => {
+    const wrapper = mount(Divider, {
+      props: { size: 'middle' },
+    })
+    expect(wrapper.classes()).toContain('hmfw-divider-md')
+  })
+
+  it('ignores size on vertical divider', () => {
+    const wrapper = mount(Divider, {
+      props: { type: 'vertical', size: 'small' },
+    })
+    expect(wrapper.classes()).not.toContain('hmfw-divider-sm')
+  })
+
   it('renders divider with text', () => {
     const wrapper = mount(Divider, {
       slots: {

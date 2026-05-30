@@ -77,7 +77,7 @@
 | Form / FormItem | 表单容器（校验/布局/validateStatus/help） | ✓ | ✓ |
 | Watermark | 水印（content/font/rotate/gap） | ✓ | ✓ |
 | BackTop | 回到顶部（visibilityHeight/target/duration） | ✓ | ✓ |
-| FloatButton / FloatButtonGroup | 悬浮按钮（type/shape/badge/href/trigger） | ✓ | ✓ |
+| FloatButton / FloatButtonGroup / FloatButton.BackTop | 悬浮按钮（type/shape/icon/Badge集成/Tooltip集成/href/htmlType/trigger/placement/受控/复合API） | ✓ | ✓ |
 | QRCode | 二维码（纯 Canvas 实现，状态/颜色/纠错级别） | ✓ | ✓ |
 | Anchor | 锚点（垂直/水平/嵌套/ink bar） | ✓ | ✓ |
 | Tree | 树形控件（展开/选择/多选/勾选/显示线/fieldNames） | ✓ | ✓ |

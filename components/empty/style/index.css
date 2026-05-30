@@ -25,3 +25,18 @@
 .hmfw-empty-footer {
   margin-top: 16px;
 }
+
+/* Simple/normal 模式（更紧凑的简约图） */
+.hmfw-empty-normal {
+  margin-block: 32px 0;
+  padding: 0;
+  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+}
+
+.hmfw-empty-normal .hmfw-empty-image {
+  height: 40px;
+}
+
+.hmfw-empty-normal .hmfw-empty-footer {
+  margin-top: 8px;
+}

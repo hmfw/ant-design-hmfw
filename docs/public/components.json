@@ -2292,9 +2292,9 @@
       "name": "FloatButton",
       "slug": "float-button",
       "title": "FloatButton 悬浮按钮",
-      "description": "悬浮按钮。",
+      "description": "悬浮于页面上方的按钮。",
       "whenToUse": "",
-      "import": "import { FloatButton, FloatButtonGroup } from 'ant-design-hmfw'",
+      "import": "import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "FloatButton Props",
@@ -2312,8 +2312,15 @@
         },
         {
           "section": "FloatButton Props",
+          "name": "icon",
+          "description": "自定义图标",
+          "type": "`IconComponent | string | slot`",
+          "default": "-"
+        },
+        {
+          "section": "FloatButton Props",
           "name": "description",
-          "description": "文字及其他内容",
+          "description": "文字及其他内容，仅 `square` 形状展示",
           "type": "`string | slot`",
           "default": "-"
         },
@@ -2326,50 +2333,167 @@
         },
         {
           "section": "FloatButton Props",
+          "name": "badge",
+          "description": "带徽标数字的悬浮按钮",
+          "type": "`{ count?, dot?, overflowCount?, color?, offset? }`",
+          "default": "-"
+        },
+        {
+          "section": "FloatButton Props",
           "name": "href",
-          "description": "点击跳转的地址",
+          "description": "点击跳转的地址，指定时渲染为 `a` 标签",
           "type": "`string`",
           "default": "-"
         },
         {
           "section": "FloatButton Props",
-          "name": "badge",
-          "description": "带徽标数字的悬浮按钮",
-          "type": "`{ count?: number, dot?: boolean }`",
+          "name": "target",
+          "description": "相当于 `a` 标签的 `target` 属性",
+          "type": "`string`",
           "default": "-"
         },
         {
-          "section": "FloatButtonGroup Props",
+          "section": "FloatButton Props",
+          "name": "htmlType",
+          "description": "设置原生 `button` 的 `type`",
+          "type": "`'submit' | 'reset' | 'button'`",
+          "default": "`'button'`"
+        },
+        {
+          "section": "FloatButton.Group Props",
           "name": "trigger",
-          "description": "触发方式，不设置时默认展示所有按钮",
+          "description": "触发方式（不设置时默认展示所有子按钮）",
           "type": "`'click' | 'hover'`",
           "default": "-"
         },
         {
-          "section": "FloatButtonGroup Props",
+          "section": "FloatButton.Group Props",
+          "name": "type",
+          "description": "设置触发按钮类型",
+          "type": "`'default' | 'primary'`",
+          "default": "`'default'`"
+        },
+        {
+          "section": "FloatButton.Group Props",
+          "name": "shape",
+          "description": "设置子按钮形状",
+          "type": "`'circle' | 'square'`",
+          "default": "`'circle'`"
+        },
+        {
+          "section": "FloatButton.Group Props",
+          "name": "placement",
+          "description": "自定义菜单展开方向",
+          "type": "`'top' | 'right' | 'bottom' | 'left'`",
+          "default": "`'top'`"
+        },
+        {
+          "section": "FloatButton.Group Props",
+          "name": "open",
+          "description": "受控展开状态",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "FloatButton.Group Props",
+          "name": "defaultOpen",
+          "description": "默认展开状态",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "FloatButton.Group Props",
+          "name": "icon",
+          "description": "触发按钮的图标",
+          "type": "`IconComponent | string`",
+          "default": "`PlusOutlined`"
+        },
+        {
+          "section": "FloatButton.Group Props",
+          "name": "closeIcon",
+          "description": "展开时触发按钮的图标",
+          "type": "`IconComponent | string`",
+          "default": "`CloseOutlined`"
+        },
+        {
+          "section": "FloatButton.Group Props",
+          "name": "tooltip",
+          "description": "触发按钮的气泡提示",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "FloatButton.Group Props",
+          "name": "badge",
+          "description": "触发按钮的徽标",
+          "type": "`FloatButtonBadgeProps`",
+          "default": "-"
+        },
+        {
+          "section": "FloatButton.BackTop Props",
+          "name": "visibilityHeight",
+          "description": "滚动高度达到此参数值才出现",
+          "type": "`number`",
+          "default": "`400`"
+        },
+        {
+          "section": "FloatButton.BackTop Props",
+          "name": "target",
+          "description": "设置需要监听其滚动事件的元素",
+          "type": "`() => HTMLElement | Window | Document`",
+          "default": "`() => window`"
+        },
+        {
+          "section": "FloatButton.BackTop Props",
+          "name": "duration",
+          "description": "回到顶部所需时间（ms）",
+          "type": "`number`",
+          "default": "`450`"
+        },
+        {
+          "section": "FloatButton.BackTop Props",
+          "name": "icon",
+          "description": "自定义图标",
+          "type": "`IconComponent | string`",
+          "default": "`UpOutlined`"
+        },
+        {
+          "section": "FloatButton.BackTop Props",
           "name": "type",
           "description": "设置按钮类型",
           "type": "`'default' | 'primary'`",
           "default": "`'default'`"
         },
         {
-          "section": "FloatButtonGroup Props",
+          "section": "FloatButton.BackTop Props",
           "name": "shape",
           "description": "设置按钮形状",
           "type": "`'circle' | 'square'`",
           "default": "`'circle'`"
         },
         {
-          "section": "FloatButtonGroup Props",
-          "name": "open",
-          "description": "受控展开",
-          "type": "`boolean`",
+          "section": "FloatButton.BackTop Props",
+          "name": "tooltip",
+          "description": "气泡提示的内容",
+          "type": "`string`",
           "default": "-"
         }
       ],
       "events": [
         {
           "section": "FloatButton Events",
+          "name": "click",
+          "description": "点击按钮时的回调",
+          "params": "`(e: MouseEvent) => void`"
+        },
+        {
+          "section": "FloatButton.Group Events",
+          "name": "openChange / update:open",
+          "description": "展开状态变化时的回调",
+          "params": "`(open: boolean) => void`"
+        },
+        {
+          "section": "FloatButton.BackTop Events",
           "name": "click",
           "description": "点击按钮时的回调",
           "params": "`(e: MouseEvent) => void`"
@@ -2380,17 +2504,32 @@
         {
           "title": "基础用法",
           "description": "最简单的用法。",
-          "code": "<template>\n  <FloatButton @click=\"onClick\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton } from 'ant-design-hmfw'\n\nfunction onClick() {\n  console.log('点击悬浮按钮')\n}\n</script>"
-        },
-        {
-          "title": "按钮组",
-          "description": "使用 FloatButtonGroup 可以将多个悬浮按钮组合在一起。",
-          "code": ""
+          "code": "<template>\n  <div class=\"float-btn-demo\">\n    <FloatButton tooltip=\"点击\" :style=\"demoStyle\" @click=\"onClick\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton } from 'ant-design-hmfw'\n\nconst demoStyle = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const\n\nfunction onClick() {\n  console.log('点击悬浮按钮')\n}\n</script>\n\n<style scoped>\n.float-btn-demo {\n  position: relative;\n  height: 120px;\n  overflow: hidden;\n}\n</style>"
         },
         {
           "title": "不同类型",
-          "description": "提供 default 和 primary 两种类型。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 16px; position: relative; height: 80px;\">\n    <FloatButton type=\"default\" description=\"默认\" shape=\"square\" />\n    <FloatButton type=\"primary\" description=\"主要\" shape=\"square\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton } from 'ant-design-hmfw'\n</script>"
+          "description": "提供 `default` 和 `primary` 两种类型，以及 `circle` 和 `square` 两种形状。",
+          "code": "<template>\n  <div class=\"float-btn-showcase\">\n    <FloatButton :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton type=\"primary\" :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton shape=\"square\" :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton type=\"primary\" shape=\"square\" :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton type=\"primary\" shape=\"square\" description=\"文档\" :style=\"s\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton } from 'ant-design-hmfw'\nimport { SettingOutlined } from 'ant-design-hmfw'\n\n// Render inline within the demo box instead of fixed to the viewport\nconst s = { position: 'static' } as const\n</script>\n\n<style scoped>\n.float-btn-showcase {\n  display: flex;\n  align-items: flex-start;\n  gap: 24px;\n  padding: 8px 0;\n}\n</style>"
+        },
+        {
+          "title": "徽标数字",
+          "description": "带徽标的悬浮按钮，徽标基于 Badge 组件实现。",
+          "code": "<template>\n  <div class=\"float-btn-showcase\">\n    <FloatButton :badge=\"{ count: 5 }\" :icon=\"InfoCircleOutlined\" :style=\"s\" />\n    <FloatButton :badge=\"{ count: 128, overflowCount: 99 }\" :icon=\"InfoCircleOutlined\" :style=\"s\" />\n    <FloatButton :badge=\"{ dot: true }\" :icon=\"InfoCircleOutlined\" :style=\"s\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton } from 'ant-design-hmfw'\nimport { InfoCircleOutlined } from 'ant-design-hmfw'\n\nconst s = { position: 'static' } as const\n</script>\n\n<style scoped>\n.float-btn-showcase {\n  display: flex;\n  align-items: center;\n  gap: 32px;\n  padding: 8px 0;\n}\n</style>"
+        },
+        {
+          "title": "浮动按钮组",
+          "description": "使用 `FloatButtonGroup` 可以将多个悬浮按钮组合在一起。设置 `trigger` 后会折叠为可展开的菜单。",
+          "code": "<template>\n  <div class=\"float-btn-demo\">\n    <FloatButtonGroup shape=\"circle\" :style=\"pos\">\n      <FloatButton :icon=\"EditOutlined\" tooltip=\"编辑\" />\n      <FloatButton :icon=\"DeleteOutlined\" tooltip=\"删除\" />\n      <FloatButton :icon=\"SearchOutlined\" tooltip=\"搜索\" />\n    </FloatButtonGroup>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton, FloatButtonGroup } from 'ant-design-hmfw'\nimport { EditOutlined, DeleteOutlined, SearchOutlined } from 'ant-design-hmfw'\n\nconst pos = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const\n</script>\n\n<style scoped>\n.float-btn-demo {\n  position: relative;\n  height: 220px;\n  overflow: hidden;\n}\n</style>"
+        },
+        {
+          "title": "菜单模式",
+          "description": "设置 `trigger` 为 `hover` 或 `click`，鼠标悬停或点击展开菜单。",
+          "code": "<template>\n  <div class=\"float-btn-demo\">\n    <FloatButtonGroup\n      trigger=\"click\"\n      type=\"primary\"\n      :icon=\"SettingOutlined\"\n      :style=\"left\"\n    >\n      <FloatButton :icon=\"EditOutlined\" tooltip=\"编辑\" />\n      <FloatButton :icon=\"SearchOutlined\" tooltip=\"搜索\" />\n    </FloatButtonGroup>\n\n    <FloatButtonGroup trigger=\"hover\" :style=\"right\">\n      <FloatButton :icon=\"EditOutlined\" tooltip=\"编辑\" />\n      <FloatButton :icon=\"DeleteOutlined\" tooltip=\"删除\" />\n    </FloatButtonGroup>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton, FloatButtonGroup } from 'ant-design-hmfw'\nimport { SettingOutlined, EditOutlined, SearchOutlined, DeleteOutlined } from 'ant-design-hmfw'\n\nconst left = { position: 'absolute', insetInlineEnd: '120px', insetBlockEnd: '24px' } as const\nconst right = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const\n</script>\n\n<style scoped>\n.float-btn-demo {\n  position: relative;\n  height: 240px;\n  overflow: hidden;\n}\n</style>"
+        },
+        {
+          "title": "回到顶部",
+          "description": "`FloatButton.BackTop` 返回页面顶部的操作按钮。",
+          "code": "<template>\n  <div class=\"back-top-demo\" ref=\"containerRef\">\n    <div class=\"back-top-demo__inner\">\n      <p v-for=\"n in 30\" :key=\"n\">向下滚动这块区域，第 {{ n }} 行…</p>\n    </div>\n    <FloatButton.BackTop\n      :target=\"getTarget\"\n      :visibility-height=\"80\"\n      tooltip=\"回到顶部\"\n      :style=\"pos\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { FloatButton } from 'ant-design-hmfw'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst getTarget = () => containerRef.value as HTMLElement\n\nconst pos = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const\n</script>\n\n<style scoped>\n.back-top-demo {\n  position: relative;\n  height: 220px;\n  overflow: auto;\n  border: 1px solid var(--hmfw-color-border, #d9d9d9);\n  border-radius: 8px;\n  padding: 12px 16px;\n}\n.back-top-demo__inner p {\n  margin: 8px 0;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/float-button"

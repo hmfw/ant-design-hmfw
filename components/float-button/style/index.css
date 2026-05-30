@@ -1,114 +1,220 @@
+/* ===========================================================================
+ * FloatButton
+ * ======================================================================== */
 .hmfw-float-btn {
   position: fixed;
-  right: 24px;
-  bottom: 48px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  inset-inline-end: 24px;
+  inset-block-end: 48px;
+  z-index: 99;
+  display: block;
   width: 40px;
   height: 40px;
-  cursor: pointer;
-  border: none;
+  margin: 0;
   padding: 0;
-  transition: all 0.3s;
-  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  border: none;
+  cursor: pointer;
+  font-family: var(--hmfw-font-family);
+  background: transparent;
+  box-shadow: var(--hmfw-box-shadow, 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05));
+  border-radius: var(--hmfw-border-radius-lg, 8px);
+  transition: all var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
 }
 
 .hmfw-float-btn-circle {
   border-radius: 50%;
 }
 
-.hmfw-float-btn-square {
-  border-radius: 8px;
-  height: auto;
-  min-height: 40px;
-  padding: 8px 0;
-}
-
-.hmfw-float-btn-default {
-  background: #fff;
-  color: rgba(0, 0, 0, 0.88);
-}
-
-.hmfw-float-btn-default:hover {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-.hmfw-float-btn-primary {
-  background: var(--hmfw-color-primary, #1677ff);
-  color: #fff;
-}
-
-.hmfw-float-btn-primary:hover {
-  background: #4096ff;
-}
-
-.hmfw-float-btn-body {
+/* Body fills the button and carries the visual background */
+.hmfw-float-btn .hmfw-float-btn-body {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  transition: background var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+}
+
+/* Default type */
+.hmfw-float-btn-default .hmfw-float-btn-body {
+  background: var(--hmfw-color-bg-elevated, #fff);
+  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+}
+.hmfw-float-btn-default:hover .hmfw-float-btn-body {
+  background: var(--hmfw-color-fill-tertiary, rgba(0, 0, 0, 0.04));
+}
+
+/* Primary type */
+.hmfw-float-btn-primary .hmfw-float-btn-body {
+  background: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-text-light-solid, #fff);
+}
+.hmfw-float-btn-primary:hover .hmfw-float-btn-body {
+  background: var(--hmfw-color-primary-hover, #4096ff);
 }
 
 .hmfw-float-btn-icon {
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 16px;
   line-height: 1;
 }
 
 .hmfw-float-btn-description {
-  font-size: 12px;
-  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  font-size: var(--hmfw-font-size-sm, 12px);
+  line-height: 1.2;
+  padding: 0 2px;
 }
 
-.hmfw-float-btn-badge-dot {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #ff4d4f;
-  border: 2px solid #fff;
+/* Square shape grows to fit description */
+.hmfw-float-btn-square {
+  height: auto;
+  min-height: 40px;
+}
+.hmfw-float-btn-square .hmfw-float-btn-body {
+  min-height: 40px;
+  padding: 4px 0;
+  gap: 2px;
 }
 
-.hmfw-float-btn-badge-count {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  border-radius: 9px;
-  background: #ff4d4f;
-  color: #fff;
-  font-size: 11px;
-  line-height: 18px;
-  text-align: center;
-  border: 2px solid #fff;
+/* PLACEHOLDER_GROUP */
+
+/* ===========================================================================
+ * FloatButton inside a Group — reset fixed positioning
+ * ======================================================================== */
+.hmfw-float-btn-group .hmfw-float-btn {
+  position: relative;
+  inset-inline-end: auto;
+  inset-block-end: auto;
 }
 
-/* Group */
+/* Group: with no trigger, children stack and share a single rounded surface */
 .hmfw-float-btn-group {
   position: fixed;
-  right: 24px;
-  bottom: 48px;
-  z-index: 1000;
+  inset-inline-end: 24px;
+  inset-block-end: 48px;
+  z-index: 99;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: center;
   gap: 8px;
 }
 
-.hmfw-float-btn-group .hmfw-float-btn {
-  position: relative;
-  right: auto;
-  bottom: auto;
+/* Square group with no trigger: merge children into one column */
+.hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) {
+  gap: 0;
+  border-radius: var(--hmfw-border-radius-lg, 8px);
+  box-shadow: var(--hmfw-box-shadow, 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05));
+}
+.hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn {
+  box-shadow: none;
+  border-radius: 0;
+}
+.hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn-body {
+  border-radius: 0;
+}
+.hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn:not(:last-child) .hmfw-float-btn-body {
+  border-bottom: 1px solid var(--hmfw-color-border, rgba(5, 5, 5, 0.06));
+}
+.hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn:first-child .hmfw-float-btn-body {
+  border-start-start-radius: var(--hmfw-border-radius-lg, 8px);
+  border-start-end-radius: var(--hmfw-border-radius-lg, 8px);
+}
+.hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn:last-child .hmfw-float-btn-body {
+  border-end-start-radius: var(--hmfw-border-radius-lg, 8px);
+  border-end-end-radius: var(--hmfw-border-radius-lg, 8px);
 }
 
-.hmfw-float-btn-group-list {
+/* ===========================================================================
+ * Group with trigger — expandable menu
+ * ======================================================================== */
+.hmfw-float-btn-group-trigger {
   display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hmfw-float-btn-group-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Placement: vertical (top / bottom) */
+.hmfw-float-btn-group-top,
+.hmfw-float-btn-group-bottom {
+  flex-direction: column;
+}
+.hmfw-float-btn-group-top .hmfw-float-btn-group-wrap,
+.hmfw-float-btn-group-bottom .hmfw-float-btn-group-wrap {
+  flex-direction: column;
+}
+.hmfw-float-btn-group-bottom,
+.hmfw-float-btn-group-bottom .hmfw-float-btn-group-wrap {
   flex-direction: column-reverse;
-  gap: 8px;
+}
+
+/* Placement: horizontal (left / right) */
+.hmfw-float-btn-group-left,
+.hmfw-float-btn-group-right {
+  flex-direction: row;
+}
+.hmfw-float-btn-group-left .hmfw-float-btn-group-wrap,
+.hmfw-float-btn-group-right .hmfw-float-btn-group-wrap {
+  flex-direction: row;
+}
+.hmfw-float-btn-group-right,
+.hmfw-float-btn-group-right .hmfw-float-btn-group-wrap {
+  flex-direction: row-reverse;
+}
+
+/* ===========================================================================
+ * Badge attached to a FloatButton
+ * ======================================================================== */
+.hmfw-float-btn .hmfw-badge {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.hmfw-float-btn .hmfw-badge .hmfw-badge-count,
+.hmfw-float-btn .hmfw-badge .hmfw-badge-dot {
+  z-index: 1;
+}
+
+/* ===========================================================================
+ * BackTop variant
+ * ======================================================================== */
+.hmfw-float-btn-back-top {
+  inset-inline-end: 24px;
+  inset-block-end: 48px;
+}
+
+/* ===========================================================================
+ * Transitions
+ * ======================================================================== */
+.hmfw-float-btn-fade-enter-active,
+.hmfw-float-btn-fade-leave-active {
+  transition: opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out),
+    transform var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+}
+.hmfw-float-btn-fade-enter-from,
+.hmfw-float-btn-fade-leave-to {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.hmfw-float-btn-group-wrap-enter-active,
+.hmfw-float-btn-group-wrap-leave-active {
+  transition: opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out),
+    transform var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+}
+.hmfw-float-btn-group-wrap-enter-from,
+.hmfw-float-btn-group-wrap-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
 }
