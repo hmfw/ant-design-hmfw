@@ -8,17 +8,33 @@ import {
   nextTick,
   Teleport,
   type PropType,
+  type VNode,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { TooltipPlacement, TooltipTrigger } from './types'
+import type {
+  TooltipPlacement,
+  TooltipTrigger,
+  TooltipArrow,
+  TooltipTitle,
+} from './types'
 
 let tooltipIdCounter = 0
+
+/** Pairs of placements for `autoAdjustOverflow` flipping. */
+const FLIP_PLACEMENT: Record<TooltipPlacement, TooltipPlacement> = {
+  top: 'bottom', topLeft: 'bottomLeft', topRight: 'bottomRight',
+  bottom: 'top', bottomLeft: 'topLeft', bottomRight: 'topRight',
+  left: 'right', leftTop: 'rightTop', leftBottom: 'rightBottom',
+  right: 'left', rightTop: 'leftTop', rightBottom: 'leftBottom',
+}
 
 export const Tooltip = defineComponent({
   name: 'Tooltip',
   props: {
-    title: String,
+    title: [String, Number, Object, Function] as PropType<TooltipTitle>,
+    /** AntD legacy alias for `title`. */
+    overlay: [String, Number, Object, Function] as PropType<TooltipTitle>,
     placement: {
       type: String as PropType<TooltipPlacement>,
       default: 'top',
@@ -34,7 +50,7 @@ export const Tooltip = defineComponent({
     defaultOpen: Boolean,
     color: String,
     arrow: {
-      type: Boolean,
+      type: [Boolean, Object] as PropType<TooltipArrow>,
       default: true,
     },
     mouseEnterDelay: {
@@ -47,20 +63,50 @@ export const Tooltip = defineComponent({
     },
     disabled: Boolean,
     destroyTooltipOnHide: Boolean,
+    destroyOnHidden: Boolean,
+    autoAdjustOverflow: { type: Boolean, default: true },
+    zIndex: Number,
+    getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
+    /** Override the default `hmfw-tooltip` prefix (used by Popover/Popconfirm wrappers). */
+    customPrefixCls: String,
+    /** Extra inline style merged onto the popup element (used by wrappers for `overlayStyle`). */
+    popupStyle: Object as PropType<Record<string, string>>,
   },
-  emits: ['update:open', 'openChange'],
+  emits: ['update:open', 'openChange', 'afterOpenChange'],
   setup(props, { slots, emit }) {
-    const prefixCls = usePrefixCls('tooltip')
+    const defaultPrefix = usePrefixCls('tooltip')
+    /** Allow wrappers (Popover/Popconfirm) to swap the visual prefix. */
+    const prefixCls = computed(() => props.customPrefixCls ?? defaultPrefix)
     const tooltipId = `tooltip-${++tooltipIdCounter}`
     const triggerRef = ref<HTMLElement | null>(null)
     const tooltipRef = ref<HTMLElement | null>(null)
     const innerOpen = ref(props.defaultOpen ?? false)
     const position = ref({ top: 0, left: 0 })
+    /** Active placement after possible flip via `autoAdjustOverflow`. */
+    const actualPlacement = ref<TooltipPlacement>(props.placement)
     let enterTimer: ReturnType<typeof setTimeout> | null = null
     let leaveTimer: ReturnType<typeof setTimeout> | null = null
 
     const isControlled = computed(() => props.open !== undefined)
     const visible = computed(() => (isControlled.value ? props.open! : innerOpen.value))
+
+    /** AntD v6: tooltip stays hidden when title is empty/null. Falls back to slot. */
+    const hasTitle = computed(() => {
+      const t = props.title ?? props.overlay
+      if (t === 0 || t === '0') return true
+      if (t !== undefined && t !== null && t !== '') return true
+      // Check title slot — touch slots.title to be reactive on slot updates.
+      return !!slots.title
+    })
+
+    const showArrow = computed(() => props.arrow !== false)
+    const arrowPointAtCenter = computed(() =>
+      typeof props.arrow === 'object' && props.arrow?.pointAtCenter === true,
+    )
+
+    const mergedDestroyOnHidden = computed(() =>
+      props.destroyOnHidden ?? props.destroyTooltipOnHide ?? false,
+    )
 
     watch(() => props.open, (v) => {
       if (v !== undefined) innerOpen.value = v
@@ -73,23 +119,23 @@ export const Tooltip = defineComponent({
 
     const setOpen = (v: boolean) => {
       if (props.disabled) return
+      // Don't open when title is empty (AntD v6 noTitle guard).
+      if (v && !hasTitle.value) return
       innerOpen.value = v
       emit('update:open', v)
       emit('openChange', v)
+      // afterOpenChange fires once the transition has had a tick to settle.
+      // setTimeout (not rAF) so consumers can intercept it under fake timers.
+      setTimeout(() => emit('afterOpenChange', v), 0)
     }
 
-    const updatePosition = () => {
-      if (!triggerRef.value || !tooltipRef.value) return
-      const triggerRect = triggerRef.value.getBoundingClientRect()
-      const tooltipRect = tooltipRef.value.getBoundingClientRect()
-      const scrollX = window.scrollX
-      const scrollY = window.scrollY
-      const placement = props.placement
-
+    /** Reset placement to user's pick before computing — flip is opt-in per render. */
+    const computeForPlacement = (placement: TooltipPlacement, scrollX: number, scrollY: number) => {
+      const triggerRect = triggerRef.value!.getBoundingClientRect()
+      const tooltipRect = tooltipRef.value!.getBoundingClientRect()
       let top = 0
       let left = 0
       const gap = 8
-
       const triggerCenterX = triggerRect.left + triggerRect.width / 2 + scrollX
       const triggerCenterY = triggerRect.top + triggerRect.height / 2 + scrollY
 
@@ -114,8 +160,52 @@ export const Tooltip = defineComponent({
         else if (placement === 'rightTop') top = triggerRect.top + scrollY
         else top = triggerRect.bottom + scrollY - tooltipRect.height
       }
+      return { top, left, width: tooltipRect.width, height: tooltipRect.height }
+    }
 
-      position.value = { top, left }
+    /** Position the popup; flip if `autoAdjustOverflow` and primary placement overflows the viewport. */
+    const updatePosition = () => {
+      if (!triggerRef.value || !tooltipRef.value) return
+      const scrollX = window.scrollX
+      const scrollY = window.scrollY
+      const vw = window.innerWidth
+      const vh = window.innerHeight
+
+      let placement = props.placement
+      let computed = computeForPlacement(placement, scrollX, scrollY)
+
+      if (props.autoAdjustOverflow) {
+        const right = computed.left - scrollX + computed.width
+        const bottom = computed.top - scrollY + computed.height
+        const overflowsTop = computed.top - scrollY < 0
+        const overflowsBottom = bottom > vh
+        const overflowsLeft = computed.left - scrollX < 0
+        const overflowsRight = right > vw
+
+        const overflows =
+          (placement.startsWith('top') && overflowsTop) ||
+          (placement.startsWith('bottom') && overflowsBottom) ||
+          (placement.startsWith('left') && overflowsLeft) ||
+          (placement.startsWith('right') && overflowsRight)
+
+        if (overflows) {
+          const flipped = FLIP_PLACEMENT[placement]
+          const flippedComputed = computeForPlacement(flipped, scrollX, scrollY)
+          // Only adopt the flip if it actually fits better.
+          const flippedOverflows =
+            (flipped.startsWith('top') && flippedComputed.top - scrollY < 0) ||
+            (flipped.startsWith('bottom') && flippedComputed.top - scrollY + flippedComputed.height > vh) ||
+            (flipped.startsWith('left') && flippedComputed.left - scrollX < 0) ||
+            (flipped.startsWith('right') && flippedComputed.left - scrollX + flippedComputed.width > vw)
+          if (!flippedOverflows) {
+            placement = flipped
+            computed = flippedComputed
+          }
+        }
+      }
+
+      actualPlacement.value = placement
+      position.value = { top: computed.top, left: computed.left }
     }
 
     watch(visible, async (v) => {
@@ -124,6 +214,11 @@ export const Tooltip = defineComponent({
         updatePosition()
       }
     })
+
+    /** Reposition while open (scrolling, window resize). */
+    const onScrollOrResize = () => {
+      if (visible.value) updatePosition()
+    }
 
     const handleMouseEnter = () => {
       if (!triggers.value.includes('hover')) return
@@ -142,12 +237,13 @@ export const Tooltip = defineComponent({
       setOpen(!visible.value)
     }
 
-    const handleFocus = () => {
+    /** focusin/focusout bubble through the wrapper from nested inputs (focus does not). */
+    const handleFocusIn = () => {
       if (!triggers.value.includes('focus')) return
       setOpen(true)
     }
 
-    const handleBlur = () => {
+    const handleFocusOut = () => {
       if (!triggers.value.includes('focus')) return
       setOpen(false)
     }
@@ -164,12 +260,21 @@ export const Tooltip = defineComponent({
         triggerRef.value?.contains(e.target as Node) ||
         tooltipRef.value?.contains(e.target as Node)
       ) return
-      if (triggers.value.includes('click')) setOpen(false)
+      if (triggers.value.includes('click') || triggers.value.includes('contextMenu')) {
+        setOpen(false)
+      }
     }
 
-    onMounted(() => document.addEventListener('click', handleOutsideClick))
+    onMounted(() => {
+      document.addEventListener('click', handleOutsideClick)
+      // capture-phase scroll listener catches scroll on any ancestor.
+      window.addEventListener('scroll', onScrollOrResize, true)
+      window.addEventListener('resize', onScrollOrResize)
+    })
     onBeforeUnmount(() => {
       document.removeEventListener('click', handleOutsideClick)
+      window.removeEventListener('scroll', onScrollOrResize, true)
+      window.removeEventListener('resize', onScrollOrResize)
       if (enterTimer) clearTimeout(enterTimer)
       if (leaveTimer) clearTimeout(leaveTimer)
     })
@@ -178,49 +283,66 @@ export const Tooltip = defineComponent({
       const child = slots.default?.()[0]
       if (!child) return null
 
-      const tooltipContent = props.title ?? slots.title?.()
+      // Resolve title: prop > overlay alias > slot. Function values are called.
+      const rawTitle = props.title ?? props.overlay
+      let tooltipContent: unknown
+      if (typeof rawTitle === 'function') tooltipContent = (rawTitle as () => unknown)()
+      else if (rawTitle !== undefined && rawTitle !== null) tooltipContent = rawTitle
+      else tooltipContent = slots.title?.()
 
       const tooltipStyle: Record<string, string> = {
         position: 'absolute',
         top: `${position.value.top}px`,
         left: `${position.value.left}px`,
-        zIndex: '1070',
+        zIndex: String(props.zIndex ?? 1070),
       }
       if (props.color) tooltipStyle['--tooltip-bg'] = props.color
+      // Wrappers (Popover/Popconfirm) merge their `overlayStyle` here.
+      if (props.popupStyle) Object.assign(tooltipStyle, props.popupStyle)
 
-      const shouldRender = visible.value || !props.destroyTooltipOnHide
+      // Don't mount the popup at all when there's no title (AntD parity).
+      const shouldRender = hasTitle.value && (visible.value || !mergedDestroyOnHidden.value)
+
+      const popupTarget = props.getPopupContainer && triggerRef.value
+        ? props.getPopupContainer(triggerRef.value)
+        : 'body'
 
       return (
         <>
           <div
             ref={triggerRef}
             style={{ display: 'inline-block' }}
-            aria-describedby={visible.value ? tooltipId : undefined}
+            aria-describedby={visible.value && hasTitle.value ? tooltipId : undefined}
             onMouseenter={handleMouseEnter}
             onMouseleave={handleMouseLeave}
             onClick={handleClick}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            onFocusin={handleFocusIn}
+            onFocusout={handleFocusOut}
             onContextmenu={handleContextMenu}
           >
             {child}
           </div>
           {shouldRender && (
-            <Teleport to="body">
+            <Teleport to={popupTarget as 'body' | HTMLElement}>
               <div
                 ref={tooltipRef}
                 id={tooltipId}
                 role="tooltip"
-                class={cls(prefixCls, `${prefixCls}-placement-${props.placement}`, {
-                  [`${prefixCls}-hidden`]: !visible.value,
-                })}
+                class={cls(
+                  prefixCls.value,
+                  `${prefixCls.value}-placement-${actualPlacement.value}`,
+                  {
+                    [`${prefixCls.value}-hidden`]: !visible.value,
+                    [`${prefixCls.value}-arrow-point-at-center`]: arrowPointAtCenter.value,
+                  },
+                )}
                 style={tooltipStyle}
                 onMouseenter={handleMouseEnter}
                 onMouseleave={handleMouseLeave}
               >
-                <div class={`${prefixCls}-content`}>
-                  {props.arrow && <div class={`${prefixCls}-arrow`} />}
-                  <div class={`${prefixCls}-inner`}>{tooltipContent}</div>
+                <div class={`${prefixCls.value}-content`}>
+                  {showArrow.value && <div class={`${prefixCls.value}-arrow`} />}
+                  <div class={`${prefixCls.value}-inner`}>{tooltipContent as VNode | string}</div>
                 </div>
               </div>
             </Teleport>

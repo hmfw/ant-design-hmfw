@@ -9,6 +9,9 @@ describe('Tooltip', () => {
   })
   afterEach(() => {
     vi.useRealTimers()
+    // Clean up any orphaned popups teleported to body so querySelector
+    // doesn't pick up stale tooltips from previous tests.
+    document.querySelectorAll('.hmfw-tooltip').forEach((el) => el.remove())
   })
 
   it('renders trigger element', () => {
@@ -115,6 +118,178 @@ describe('Tooltip', () => {
     await nextTick()
     const inner = document.querySelector('.hmfw-tooltip-inner')
     expect(inner?.innerHTML).toContain('custom title')
+    wrapper.unmount()
+  })
+
+  it('does not render popup when title is empty', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: '', mouseEnterDelay: 0 },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await wrapper.find('div').trigger('mouseenter')
+    vi.runAllTimers()
+    await nextTick()
+    expect(document.querySelector('.hmfw-tooltip')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('does not open even when controlled open=true if title is empty', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: '', open: true },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-tooltip')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('renders title=0 (numeric zero) — not treated as empty', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 0, open: true },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const inner = document.querySelector('.hmfw-tooltip-inner')
+    expect(inner?.textContent).toBe('0')
+    wrapper.unmount()
+  })
+
+  it('overlay alias works in place of title', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { overlay: 'via overlay', open: true },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const inner = document.querySelector('.hmfw-tooltip-inner')
+    expect(inner?.textContent).toContain('via overlay')
+    wrapper.unmount()
+  })
+
+  it('title as render function is called', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: () => 'rendered', open: true },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const inner = document.querySelector('.hmfw-tooltip-inner')
+    expect(inner?.textContent).toContain('rendered')
+    wrapper.unmount()
+  })
+
+  it('focus trigger uses focusin/focusout (works with nested input)', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', trigger: 'focus' },
+      slots: { default: '<input />' },
+      attachTo: document.body,
+    })
+    const input = wrapper.find('input').element
+    input.dispatchEvent(new FocusEvent('focusin', { bubbles: true }))
+    await nextTick()
+    let popup = document.querySelector('.hmfw-tooltip')
+    expect(popup?.classList.contains('hmfw-tooltip-hidden')).toBe(false)
+    input.dispatchEvent(new FocusEvent('focusout', { bubbles: true }))
+    await nextTick()
+    popup = document.querySelector('.hmfw-tooltip')
+    expect(popup?.classList.contains('hmfw-tooltip-hidden')).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('emits afterOpenChange after open transition', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', mouseEnterDelay: 0 },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await wrapper.find('div').trigger('mouseenter')
+    vi.runAllTimers()
+    await nextTick()
+    expect(wrapper.emitted('afterOpenChange')).toBeTruthy()
+    expect(wrapper.emitted('afterOpenChange')?.[0]).toEqual([true])
+    wrapper.unmount()
+  })
+
+  it('respects custom zIndex', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', open: true, zIndex: 9999 },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const popup = document.querySelector('.hmfw-tooltip') as HTMLElement
+    expect(popup?.style.zIndex).toBe('9999')
+    wrapper.unmount()
+  })
+
+  it('arrow=false hides arrow element', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', open: true, arrow: false },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-tooltip-arrow')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('arrow as object with pointAtCenter adds class', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', open: true, arrow: { pointAtCenter: true } },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const popup = document.querySelector('.hmfw-tooltip')
+    expect(popup?.classList.contains('hmfw-tooltip-arrow-point-at-center')).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('contextMenu trigger opens on contextmenu event', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', trigger: 'contextMenu' },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await wrapper.find('div').trigger('contextmenu')
+    await nextTick()
+    const popup = document.querySelector('.hmfw-tooltip')
+    expect(popup?.classList.contains('hmfw-tooltip-hidden')).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('multiple triggers (hover + click) both work', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', trigger: ['hover', 'click'], mouseEnterDelay: 0, mouseLeaveDelay: 0 },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await wrapper.find('div').trigger('mouseenter')
+    vi.runAllTimers()
+    await nextTick()
+    let popup = document.querySelector('.hmfw-tooltip')
+    expect(popup?.classList.contains('hmfw-tooltip-hidden')).toBe(false)
+    await wrapper.find('div').trigger('mouseleave')
+    vi.runAllTimers()
+    await nextTick()
+    await wrapper.find('div').trigger('click')
+    await nextTick()
+    popup = document.querySelector('.hmfw-tooltip')
+    expect(popup?.classList.contains('hmfw-tooltip-hidden')).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('destroyOnHidden removes popup DOM when hidden', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', open: false, destroyOnHidden: true },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-tooltip')).toBeNull()
     wrapper.unmount()
   })
 })

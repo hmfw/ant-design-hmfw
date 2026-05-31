@@ -99,7 +99,7 @@ export { message } from './message'
 export type { MessageType } from './message'
 
 export { Tooltip } from './tooltip'
-export type { TooltipProps, TooltipPlacement, TooltipTrigger } from './tooltip'
+export type { TooltipProps, TooltipPlacement, TooltipTrigger, TooltipArrow, TooltipTitle } from './tooltip'
 
 export { Alert } from './alert'
 export type { AlertProps, AlertType, AlertVariant } from './alert'
@@ -111,7 +111,7 @@ export { Select } from './select'
 export type { SelectProps, SelectOption, SelectSize, SelectMode, SelectStatus } from './select'
 
 export { Popover } from './popover'
-export type { PopoverProps } from './popover'
+export type { PopoverProps, PopoverContent } from './popover'
 
 export { InputNumber } from './input-number'
 
@@ -153,6 +153,7 @@ export { Dropdown } from './dropdown'
 export type { DropdownProps } from './dropdown'
 
 export { Popconfirm } from './popconfirm'
+export type { PopconfirmProps, PopconfirmContent, PopconfirmOkType } from './popconfirm'
 
 export { Segmented } from './segmented'
 export type { SegmentedOption } from './segmented'

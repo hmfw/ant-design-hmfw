@@ -40,23 +40,45 @@
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 确认框标题 | `string` | - |
-| description | 确认框描述 | `string` | - |
-| okText | 确认按钮文字 | `string` | `'确定'` |
-| cancelText | 取消按钮文字 | `string` | `'取消'` |
-| okType | 确认按钮类型 | `string` | `'primary'` |
-| placement | 气泡框位置 | `'top' \| 'left' \| 'right' \| 'bottom' \| 'topLeft' \| 'topRight' \| 'bottomLeft' \| 'bottomRight' \| 'leftTop' \| 'leftBottom' \| 'rightTop' \| 'rightBottom'` | `'top'` |
-| disabled | 点击 Popconfirm 子元素是否弹出气泡确认框 | `boolean` | `false` |
+| title | 确认框标题（空值时不渲染浮层） | `string \| number \| VNode \| () => VNode \| slot` | - |
+| description | 确认框描述 | `string \| number \| VNode \| () => VNode \| slot` | - |
+| icon | 提示图标，slot 优先级高于 prop | `string \| VNode \| () => VNode \| slot` | `'⚠'` |
+| okText | 确认按钮文字 | `string` | locale 默认值 |
+| cancelText | 取消按钮文字 | `string` | locale 默认值 |
+| okType | 确认按钮类型，`'danger'` 是 `primary + danger` 的简写 | `ButtonType \| 'danger'` | `'primary'` |
+| okButtonProps | 确认按钮的额外 props（loading/disabled 等） | `ButtonProps` | - |
+| cancelButtonProps | 取消按钮的额外 props | `ButtonProps` | - |
+| showCancel | 是否显示取消按钮 | `boolean` | `true` |
+| trigger | 触发行为，可设单值或数组 | `'hover' \| 'click' \| 'focus' \| 'contextMenu'` | `'click'` |
+| placement | 气泡框位置，溢出视口时自动翻转 | 12 个方向（同 Tooltip） | `'top'` |
+| open (v-model) | 用于手动控制浮层显隐 | `boolean` | - |
+| defaultOpen | 默认是否显示（非受控） | `boolean` | `false` |
+| disabled | 禁用，禁用时点击触发器不会弹出 | `boolean` | `false` |
+| arrow | 是否显示箭头，可对象配置 | `boolean \| { pointAtCenter?: boolean }` | `true` |
+| mouseEnterDelay | 鼠标移入延时显示（trigger=hover），单位秒 | `number` | `0.1` |
+| mouseLeaveDelay | 鼠标移出延时隐藏（trigger=hover），单位秒 | `number` | `0.1` |
+| autoAdjustOverflow | 浮层超出视口时自动翻转方向 | `boolean` | `true` |
+| zIndex | 自定义浮层 z-index | `number` | `1070` |
+| destroyOnHidden | 隐藏时销毁浮层 DOM | `boolean` | `false` |
+| getPopupContainer | 自定义浮层挂载容器（默认 `body`） | `(triggerNode: HTMLElement) => HTMLElement` | - |
+| overlayStyle | 卡片外层样式 | `Record<string, string>` | - |
+| overlayInnerStyle | 卡片内层样式 | `Record<string, string>` | - |
 
 ### Popconfirm Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| confirm | 点击确认的回调 | `(e: MouseEvent) => void` |
-| cancel | 点击取消的回调 | `(e: MouseEvent) => void` |
+| confirm | 点击确认的回调（携带 MouseEvent） | `(e: MouseEvent) => void` |
+| cancel | 点击取消的回调（携带 MouseEvent） | `(e: MouseEvent) => void` |
+| update:open | 显示隐藏的回调（v-model） | `(open: boolean) => void` |
+| openChange | 显示隐藏的回调 | `(open: boolean) => void` |
+| afterOpenChange | 浮层动画结束时触发 | `(open: boolean) => void` |
 
 ### Popconfirm Slots
 
 | 名称 | 说明 |
 | --- | --- |
 | default | 触发气泡确认框的元素 |
+| title | 标题（与 `title` prop 二选一，slot 优先） |
+| description | 描述（与 `description` prop 二选一，slot 优先） |
+| icon | 图标（与 `icon` prop 二选一，slot 优先） |

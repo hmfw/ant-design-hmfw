@@ -1,222 +1,123 @@
 import {
   defineComponent,
-  ref,
   computed,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  nextTick,
-  Teleport,
+  h,
   type PropType,
+  type VNode,
 } from 'vue'
+import { Tooltip } from '../tooltip'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
-import type { TooltipPlacement, TooltipTrigger } from '../tooltip/types'
+import type {
+  TooltipPlacement,
+  TooltipTrigger,
+  TooltipArrow,
+} from '../tooltip/types'
+import type { PopoverContent } from './types'
 
+/**
+ * Popover delegates positioning, triggers, and overflow handling to Tooltip
+ * (matching AntD's React composition where Popover wraps Tooltip). The only
+ * thing Popover adds is the title + content layout inside the popup body.
+ */
 export const Popover = defineComponent({
   name: 'Popover',
+  inheritAttrs: false,
   props: {
-    title: String,
-    content: String,
-    placement: {
-      type: String as PropType<TooltipPlacement>,
-      default: 'top',
-    },
+    title: [String, Number, Object, Function] as PropType<PopoverContent>,
+    content: [String, Number, Object, Function] as PropType<PopoverContent>,
+    placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
     trigger: {
       type: [String, Array] as PropType<TooltipTrigger | TooltipTrigger[]>,
       default: 'hover',
     },
-    open: {
-      type: Boolean,
-      default: undefined,
-    },
+    open: { type: Boolean, default: undefined },
     defaultOpen: Boolean,
-    arrow: {
-      type: Boolean,
-      default: true,
-    },
-    mouseEnterDelay: {
-      type: Number,
-      default: 0.1,
-    },
-    mouseLeaveDelay: {
-      type: Number,
-      default: 0.1,
-    },
+    arrow: { type: [Boolean, Object] as PropType<TooltipArrow>, default: true },
+    mouseEnterDelay: { type: Number, default: 0.1 },
+    mouseLeaveDelay: { type: Number, default: 0.1 },
     disabled: Boolean,
     overlayStyle: Object as PropType<Record<string, string>>,
     overlayInnerStyle: Object as PropType<Record<string, string>>,
+    autoAdjustOverflow: { type: Boolean, default: true },
+    zIndex: Number,
+    destroyOnHidden: Boolean,
+    destroyTooltipOnHide: Boolean,
+    getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
+    color: String,
   },
-  emits: ['update:open', 'openChange'],
-  setup(props, { slots, emit }) {
+  emits: ['update:open', 'openChange', 'afterOpenChange'],
+  setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('popover')
-    const triggerRef = ref<HTMLElement | null>(null)
-    const popoverRef = ref<HTMLElement | null>(null)
-    const innerOpen = ref(props.defaultOpen ?? false)
-    const position = ref({ top: 0, left: 0 })
-    let enterTimer: ReturnType<typeof setTimeout> | null = null
-    let leaveTimer: ReturnType<typeof setTimeout> | null = null
 
-    const isControlled = computed(() => props.open !== undefined)
-    const visible = computed(() => (isControlled.value ? props.open! : innerOpen.value))
-
-    watch(() => props.open, (v) => {
-      if (v !== undefined) innerOpen.value = v
+    /** Whether either title or content has visible text/VNodes/slot. */
+    const hasOverlay = computed(() => {
+      const tn = props.title
+      const cn = props.content
+      const titleHas = (tn !== undefined && tn !== null && tn !== '') || !!slots.title
+      const contentHas = (cn !== undefined && cn !== null && cn !== '') || !!slots.content
+      return titleHas || contentHas
     })
 
-    const triggers = computed(() => {
-      const t = props.trigger
-      return Array.isArray(t) ? t : [t]
-    })
-
-    const setOpen = (v: boolean) => {
-      if (props.disabled) return
-      innerOpen.value = v
-      emit('update:open', v)
-      emit('openChange', v)
+    /** Resolve title/content (string | VNode | render fn | slot) to renderable nodes. */
+    const resolveNode = (
+      value: PopoverContent | undefined,
+      slot: (() => VNode[] | undefined) | undefined,
+    ) => {
+      if (typeof value === 'function') return (value as () => VNode | string | number)()
+      if (value !== undefined && value !== null && value !== '') return value
+      return slot?.()
     }
-
-    const updatePosition = () => {
-      if (!triggerRef.value || !popoverRef.value) return
-      const triggerRect = triggerRef.value.getBoundingClientRect()
-      const popoverRect = popoverRef.value.getBoundingClientRect()
-      const scrollX = window.scrollX
-      const scrollY = window.scrollY
-      const placement = props.placement
-
-      let top = 0
-      let left = 0
-      const gap = 8
-
-      const triggerCenterX = triggerRect.left + triggerRect.width / 2 + scrollX
-      const triggerCenterY = triggerRect.top + triggerRect.height / 2 + scrollY
-
-      if (placement.startsWith('top')) {
-        top = triggerRect.top + scrollY - popoverRect.height - gap
-        if (placement === 'top') left = triggerCenterX - popoverRect.width / 2
-        else if (placement === 'topLeft') left = triggerRect.left + scrollX
-        else left = triggerRect.right + scrollX - popoverRect.width
-      } else if (placement.startsWith('bottom')) {
-        top = triggerRect.bottom + scrollY + gap
-        if (placement === 'bottom') left = triggerCenterX - popoverRect.width / 2
-        else if (placement === 'bottomLeft') left = triggerRect.left + scrollX
-        else left = triggerRect.right + scrollX - popoverRect.width
-      } else if (placement.startsWith('left')) {
-        left = triggerRect.left + scrollX - popoverRect.width - gap
-        if (placement === 'left') top = triggerCenterY - popoverRect.height / 2
-        else if (placement === 'leftTop') top = triggerRect.top + scrollY
-        else top = triggerRect.bottom + scrollY - popoverRect.height
-      } else if (placement.startsWith('right')) {
-        left = triggerRect.right + scrollX + gap
-        if (placement === 'right') top = triggerCenterY - popoverRect.height / 2
-        else if (placement === 'rightTop') top = triggerRect.top + scrollY
-        else top = triggerRect.bottom + scrollY - popoverRect.height
-      }
-
-      position.value = { top, left }
-    }
-
-    watch(visible, async (v) => {
-      if (v) {
-        await nextTick()
-        updatePosition()
-      }
-    })
-
-    const handleMouseEnter = () => {
-      if (!triggers.value.includes('hover')) return
-      if (leaveTimer) { clearTimeout(leaveTimer); leaveTimer = null }
-      enterTimer = setTimeout(() => setOpen(true), props.mouseEnterDelay * 1000)
-    }
-
-    const handleMouseLeave = () => {
-      if (!triggers.value.includes('hover')) return
-      if (enterTimer) { clearTimeout(enterTimer); enterTimer = null }
-      leaveTimer = setTimeout(() => setOpen(false), props.mouseLeaveDelay * 1000)
-    }
-
-    const handleClick = () => {
-      if (!triggers.value.includes('click')) return
-      setOpen(!visible.value)
-    }
-
-    const handleFocus = () => {
-      if (!triggers.value.includes('focus')) return
-      setOpen(true)
-    }
-
-    const handleBlur = () => {
-      if (!triggers.value.includes('focus')) return
-      setOpen(false)
-    }
-
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (!visible.value) return
-      if (
-        triggerRef.value?.contains(e.target as Node) ||
-        popoverRef.value?.contains(e.target as Node)
-      ) return
-      if (triggers.value.includes('click')) setOpen(false)
-    }
-
-    onMounted(() => document.addEventListener('click', handleOutsideClick))
-    onBeforeUnmount(() => {
-      document.removeEventListener('click', handleOutsideClick)
-      if (enterTimer) clearTimeout(enterTimer)
-      if (leaveTimer) clearTimeout(leaveTimer)
-    })
 
     return () => {
-      const child = slots.default?.()[0]
-      if (!child) return null
+      // Build Popover's overlay body: title + content inside `.hmfw-popover-inner`.
+      // Tooltip places this as the popup content directly, so we control the layout.
+      const titleNode = resolveNode(props.title, slots.title)
+      const contentNode = resolveNode(props.content, slots.content)
 
-      const popoverStyle: Record<string, string> = {
-        position: 'absolute',
-        top: `${position.value.top}px`,
-        left: `${position.value.left}px`,
-        zIndex: '1070',
-        ...props.overlayStyle,
-      }
+      const overlay = hasOverlay.value
+        ? h('div', { class: `${prefixCls}-inner`, style: props.overlayInnerStyle }, [
+            (titleNode !== undefined && titleNode !== null && titleNode !== '') &&
+              h('div', { class: `${prefixCls}-title` }, titleNode as VNode),
+            h('div', { class: `${prefixCls}-inner-content` }, contentNode as VNode),
+          ])
+        : null
 
-      return (
-        <>
-          <div
-            ref={triggerRef}
-            style={{ display: 'inline-block' }}
-            onMouseenter={handleMouseEnter}
-            onMouseleave={handleMouseLeave}
-            onClick={handleClick}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          >
-            {child}
-          </div>
-          <Teleport to="body">
-            <div
-              ref={popoverRef}
-              class={cls(prefixCls, `${prefixCls}-placement-${props.placement}`, {
-                [`${prefixCls}-hidden`]: !visible.value,
-              })}
-              style={popoverStyle}
-              onMouseenter={handleMouseEnter}
-              onMouseleave={handleMouseLeave}
-            >
-              <div class={`${prefixCls}-content`}>
-                {props.arrow && <div class={`${prefixCls}-arrow`} />}
-                <div class={`${prefixCls}-inner`} style={props.overlayInnerStyle}>
-                  {(props.title || slots.title) && (
-                    <div class={`${prefixCls}-title`}>
-                      {slots.title?.() ?? props.title}
-                    </div>
-                  )}
-                  <div class={`${prefixCls}-inner-content`}>
-                    {slots.content?.() ?? props.content}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Teleport>
-        </>
+      // Forward the trigger child via Tooltip's default slot. We pass the
+      // popover overlay through Tooltip's `title` slot so all the empty-state /
+      // focus / scroll / overflow logic in Tooltip applies to Popover too.
+      return h(
+        Tooltip,
+        {
+          ...attrs,
+          // Swap Tooltip's prefix so the popup root gets `.hmfw-popover` classes.
+          customPrefixCls: prefixCls,
+          placement: props.placement,
+          trigger: props.trigger,
+          open: props.open,
+          defaultOpen: props.defaultOpen,
+          arrow: props.arrow,
+          mouseEnterDelay: props.mouseEnterDelay,
+          mouseLeaveDelay: props.mouseLeaveDelay,
+          disabled: props.disabled,
+          autoAdjustOverflow: props.autoAdjustOverflow,
+          zIndex: props.zIndex,
+          destroyOnHidden: props.destroyOnHidden,
+          destroyTooltipOnHide: props.destroyTooltipOnHide,
+          getPopupContainer: props.getPopupContainer,
+          color: props.color,
+          popupStyle: props.overlayStyle,
+          'onUpdate:open': (v: boolean) => emit('update:open', v),
+          onOpenChange: (v: boolean) => emit('openChange', v),
+          onAfterOpenChange: (v: boolean) => emit('afterOpenChange', v),
+        },
+        // Only pass `title` slot when we actually have content; otherwise
+        // Tooltip's `hasTitle` guard would think the slot is non-empty.
+        hasOverlay.value
+          ? {
+              default: () => slots.default?.(),
+              title: () => overlay,
+            }
+          : { default: () => slots.default?.() },
       )
     }
   },
