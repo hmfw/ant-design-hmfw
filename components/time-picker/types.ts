@@ -1,4 +1,12 @@
+import type { VNodeChild } from 'vue'
+
 export type TimePickerValue = string // HH:mm:ss
+
+export interface DisabledTimeConfig {
+  disabledHours?: () => number[]
+  disabledMinutes?: (selectedHour: number) => number[]
+  disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]
+}
 
 export interface TimePickerProps {
   value?: TimePickerValue
@@ -11,11 +19,16 @@ export interface TimePickerProps {
   hourStep?: number
   minuteStep?: number
   secondStep?: number
-  disabledHours?: () => number[]
-  disabledMinutes?: (hour: number) => number[]
-  disabledSeconds?: (hour: number, minute: number) => number[]
+  disabledTime?: () => DisabledTimeConfig
+  hideDisabledOptions?: boolean
   showNow?: boolean
   use12Hours?: boolean
   status?: 'error' | 'warning' | ''
   open?: boolean
+  needConfirm?: boolean
+  changeOnScroll?: boolean
+  renderExtraFooter?: () => VNodeChild
+  variant?: 'outlined' | 'borderless' | 'filled' | 'underlined'
+  placement?: 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 }
+

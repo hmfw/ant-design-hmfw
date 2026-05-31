@@ -152,4 +152,111 @@ describe('DatePicker', () => {
     expect(document.querySelector('.hmfw-date-picker-panel')).not.toBeNull()
     wrapper.unmount()
   })
+
+  it('defaultOpen shows panel on mount', async () => {
+    const wrapper = mount(DatePicker, { props: { defaultOpen: true }, attachTo: document.body })
+    await wrapper.vm.$nextTick()
+    expect(document.querySelector('.hmfw-date-picker-panel')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('emits panelChange when navigating months', async () => {
+    const wrapper = mount(DatePicker, { attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const nextBtn = document.querySelectorAll('.hmfw-date-picker-panel-header-btn')[3] as HTMLButtonElement
+    nextBtn?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('panelChange')).toBeTruthy()
+    wrapper.unmount()
+  })
+
+  it('emits panelChange when switching to year panel', async () => {
+    const wrapper = mount(DatePicker, { attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const yearBtn = document.querySelector('.hmfw-date-picker-panel-header-title-btn') as HTMLButtonElement
+    yearBtn?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('panelChange')).toBeTruthy()
+    expect(wrapper.emitted('panelChange')?.[0]).toEqual([null, 'year'])
+    wrapper.unmount()
+  })
+
+  it('closes panel on Escape key', async () => {
+    const wrapper = mount(DatePicker, { attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(document.querySelector('.hmfw-date-picker-panel')).not.toBeNull()
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('openChange')?.[1]).toEqual([false])
+    wrapper.unmount()
+  })
+
+  it('renders presets', async () => {
+    const presets = [
+      { label: 'Yesterday', value: '2026-05-30' },
+      { label: 'Today', value: '2026-05-31' },
+    ]
+    const wrapper = mount(DatePicker, { props: { presets }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(document.querySelectorAll('.hmfw-date-picker-preset-btn').length).toBe(2)
+    wrapper.unmount()
+  })
+
+  it('applies preset on click', async () => {
+    const presets = [{ label: 'Today', value: '2026-05-31' }]
+    const wrapper = mount(DatePicker, { props: { presets }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const presetBtn = document.querySelector('.hmfw-date-picker-preset-btn') as HTMLButtonElement
+    presetBtn?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('update:value')?.[0]).toEqual(['2026-05-31'])
+    wrapper.unmount()
+  })
+
+  it('respects minDate constraint', async () => {
+    const wrapper = mount(DatePicker, { props: { minDate: '2026-05-15' }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const days = document.querySelectorAll('.hmfw-date-picker-day')
+    const day10 = Array.from(days).find(d => d.textContent === '10' && !d.classList.contains('hmfw-date-picker-day-other-month')) as HTMLButtonElement
+    day10?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('update:value')).toBeFalsy()
+    wrapper.unmount()
+  })
+
+  it('respects maxDate constraint', async () => {
+    const wrapper = mount(DatePicker, { props: { maxDate: '2026-05-15' }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const days = document.querySelectorAll('.hmfw-date-picker-day')
+    const day20 = Array.from(days).find(d => d.textContent === '20' && !d.classList.contains('hmfw-date-picker-day-other-month')) as HTMLButtonElement
+    day20?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('update:value')).toBeFalsy()
+    wrapper.unmount()
+  })
+
+  it('showNow displays "Now" button', async () => {
+    const wrapper = mount(DatePicker, { props: { showNow: true }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const todayBtn = document.querySelector('.hmfw-date-picker-panel-footer-today')
+    expect(todayBtn?.textContent).toBe('此刻')
+    wrapper.unmount()
+  })
+
+  it('renderExtraFooter renders custom content', async () => {
+    const renderExtraFooter = () => <div class="custom-footer">Custom</div>
+    const wrapper = mount(DatePicker, { props: { renderExtraFooter }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(document.querySelector('.custom-footer')).not.toBeNull()
+    wrapper.unmount()
+  })
 })

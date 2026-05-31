@@ -1,2 +1,2 @@
 export { RangePicker } from './RangePicker'
-export type { RangePickerProps, RangeValue } from './types'
+export type { RangePickerProps, RangeValue, RangePreset } from './types'

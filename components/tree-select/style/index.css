@@ -38,6 +38,22 @@
   box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
 }
 
+.hmfw-tree-select-status-error .hmfw-tree-select-selector {
+  border-color: var(--hmfw-color-error, #ff4d4f);
+}
+
+.hmfw-tree-select-status-error.hmfw-tree-select-open .hmfw-tree-select-selector {
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
+}
+
+.hmfw-tree-select-status-warning .hmfw-tree-select-selector {
+  border-color: var(--hmfw-color-warning, #faad14);
+}
+
+.hmfw-tree-select-status-warning.hmfw-tree-select-open .hmfw-tree-select-selector {
+  box-shadow: 0 0 0 2px rgba(250, 173, 20, 0.1);
+}
+
 .hmfw-tree-select-small .hmfw-tree-select-selector {
   min-height: 24px;
   padding: 0 7px;
@@ -234,6 +250,27 @@
   border-top: none;
   border-left: none;
   transform: rotate(45deg);
+}
+
+.hmfw-tree-select-tree-checkbox-indeterminate .hmfw-tree-select-tree-checkbox-inner {
+  background: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-tree-select-tree-checkbox-indeterminate .hmfw-tree-select-tree-checkbox-inner::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 2px;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+
+.hmfw-tree-select-tree-checkbox-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .hmfw-tree-select-tree-node-content {

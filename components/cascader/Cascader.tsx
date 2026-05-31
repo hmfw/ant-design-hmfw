@@ -3,13 +3,13 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { CascaderOption, CascaderValue, CascaderExpandTrigger } from './types'
+import type { CascaderOption, CascaderValue, CascaderExpandTrigger, CascaderShowCheckedStrategy } from './types'
 
 export const Cascader = defineComponent({
   name: 'Cascader',
   props: {
-    value: Array as PropType<CascaderValue>,
-    defaultValue: { type: Array as PropType<CascaderValue>, default: () => [] },
+    value: [Array, Object] as PropType<CascaderValue | CascaderValue[]>,
+    defaultValue: { type: [Array, Object] as PropType<CascaderValue | CascaderValue[]>, default: () => [] },
     options: { type: Array as PropType<CascaderOption[]>, default: () => [] },
     disabled: Boolean,
     placeholder: { type: String, default: '请选择' },
@@ -20,12 +20,19 @@ export const Cascader = defineComponent({
     multiple: Boolean,
     showSearch: Boolean,
     changeOnSelect: Boolean,
-    displayRender: Function as PropType<(labels: string[]) => string>,
+    displayRender: Function as PropType<(labels: string[], selectedOptions?: CascaderOption[]) => string>,
     fieldNames: Object as PropType<{ label?: string; value?: string; children?: string }>,
     open: { type: Boolean, default: undefined },
+    defaultOpen: Boolean,
+    notFoundContent: { type: String, default: '无匹配结果' },
+    loadData: Function as PropType<(selectedOptions: CascaderOption[]) => void>,
+    showCheckedStrategy: { type: String as PropType<CascaderShowCheckedStrategy>, default: 'SHOW_PARENT' },
+    maxTagCount: Number,
+    maxTagPlaceholder: [String, Function] as PropType<string | ((omittedValues: CascaderValue[]) => string)>,
+    maxTagTextLength: Number,
   },
-  emits: ['update:value', 'change', 'search', 'focus', 'blur', 'clear'],
-  setup(props, { emit }) {
+  emits: ['update:value', 'update:open', 'change', 'search', 'focus', 'blur', 'clear'],
+  setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('cascader')
 
     const labelField = computed(() => props.fieldNames?.label ?? 'label')
@@ -36,43 +43,71 @@ export const Cascader = defineComponent({
     const getValue = (opt: CascaderOption) => opt[valueField.value as keyof CascaderOption] as string | number
     const getChildren = (opt: CascaderOption) => opt[childrenField.value as keyof CascaderOption] as CascaderOption[] | undefined
 
-    const innerValue = ref<CascaderValue>([...(props.defaultValue ?? props.value ?? [])])
-    const innerOpen = ref(false)
-    // activePath tracks which column selections are open (for hover expand)
+    // Normalize value to array of paths (for multiple) or single path
+    const normalizeValue = (v: CascaderValue | CascaderValue[] | undefined): CascaderValue[] => {
+      if (!v) return []
+      if (props.multiple) {
+        // Multiple: array of paths [[a,b], [c,d]]
+        if (Array.isArray(v) && v.length > 0 && Array.isArray(v[0])) return v as CascaderValue[]
+        return []
+      }
+      // Single: one path [a,b,c]
+      if (Array.isArray(v) && v.length > 0 && !Array.isArray(v[0])) return [v as CascaderValue]
+      return []
+    }
+
+    const innerValue = ref<CascaderValue[]>(normalizeValue(props.defaultValue ?? props.value))
+    const innerOpen = ref(props.defaultOpen ?? false)
     const activePath = ref<(string | number)[]>([])
     const searchText = ref('')
     const triggerRef = ref<HTMLElement>()
     const dropdownRef = ref<HTMLElement>()
     const dropdownPos = ref({ top: 0, left: 0, width: 0 })
+    const inputRef = ref<HTMLInputElement>()
 
     const isControlled = computed(() => props.value !== undefined)
-    const currentValue = computed(() => isControlled.value ? props.value! : innerValue.value)
+    const currentValue = computed(() => isControlled.value ? normalizeValue(props.value) : innerValue.value)
     const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
 
-    watch(() => props.value, (v) => { if (v) innerValue.value = [...v] })
+    watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = normalizeValue(v) })
 
-    // Build label path for selected value
-    const getLabelPath = (val: CascaderValue, opts: CascaderOption[]): string[] => {
-      const labels: string[] = []
+    // Build option path from value path
+    const getOptionPath = (valPath: CascaderValue, opts: CascaderOption[]): CascaderOption[] => {
+      const result: CascaderOption[] = []
       let list = opts
-      for (const v of val) {
+      for (const v of valPath) {
         const found = list.find((o) => getValue(o) === v)
         if (!found) break
-        labels.push(getLabel(found))
+        result.push(found)
         list = getChildren(found) ?? []
       }
-      return labels
+      return result
+    }
+
+    // Build label path from value path
+    const getLabelPath = (valPath: CascaderValue, opts: CascaderOption[]): string[] => {
+      return getOptionPath(valPath, opts).map(getLabel)
     }
 
     const displayText = computed(() => {
-      if (!currentValue.value.length) return ''
-      const labels = getLabelPath(currentValue.value, props.options)
-      if (props.displayRender) return props.displayRender(labels)
-      return labels.join(' / ')
+      if (props.multiple) {
+        const paths = currentValue.value
+        if (paths.length === 0) return ''
+        // For multiple, show first path or tag count
+        const firstLabels = getLabelPath(paths[0], props.options)
+        const firstOptions = getOptionPath(paths[0], props.options)
+        if (props.displayRender) return props.displayRender(firstLabels, firstOptions)
+        return firstLabels.join(' / ')
+      } else {
+        if (currentValue.value.length === 0) return ''
+        const labels = getLabelPath(currentValue.value[0], props.options)
+        const options = getOptionPath(currentValue.value[0], props.options)
+        if (props.displayRender) return props.displayRender(labels, options)
+        return labels.join(' / ')
+      }
     })
 
-    // Columns to show: first column is always root options,
-    // subsequent columns based on activePath
+    // Columns to show
     const columns = computed<CascaderOption[][]>(() => {
       const cols: CascaderOption[][] = [props.options]
       let list = props.options
@@ -90,20 +125,21 @@ export const Cascader = defineComponent({
 
     // Search: flatten all leaf paths
     const flatOptions = computed(() => {
-      const result: Array<{ labels: string[]; values: (string | number)[] }> = []
-      const flatten = (opts: CascaderOption[], labels: string[], values: (string | number)[]) => {
+      const result: Array<{ labels: string[]; values: (string | number)[]; options: CascaderOption[] }> = []
+      const flatten = (opts: CascaderOption[], labels: string[], values: (string | number)[], optPath: CascaderOption[]) => {
         for (const opt of opts) {
           const newLabels = [...labels, getLabel(opt)]
           const newValues = [...values, getValue(opt)]
+          const newOptPath = [...optPath, opt]
           const children = getChildren(opt)
-          if (children?.length) {
-            flatten(children, newLabels, newValues)
+          if (children?.length && !opt.isLeaf) {
+            flatten(children, newLabels, newValues, newOptPath)
           } else {
-            result.push({ labels: newLabels, values: newValues })
+            result.push({ labels: newLabels, values: newValues, options: newOptPath })
           }
         }
       }
-      flatten(props.options, [], [])
+      flatten(props.options, [], [], [])
       return result
     })
 
@@ -129,13 +165,17 @@ export const Cascader = defineComponent({
       if (props.disabled) return
       updatePos()
       // Init activePath from current value to show selected state
-      activePath.value = [...currentValue.value]
+      if (!props.multiple && currentValue.value.length > 0) {
+        activePath.value = [...currentValue.value[0]]
+      }
       innerOpen.value = true
+      emit('update:open', true)
     }
 
     const close = () => {
       innerOpen.value = false
       searchText.value = ''
+      emit('update:open', false)
     }
 
     const handleOutsideClick = (e: MouseEvent) => {
@@ -148,17 +188,49 @@ export const Cascader = defineComponent({
     onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
     onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
 
+    const emitChange = (paths: CascaderValue[]) => {
+      const outValue = props.multiple ? paths : (paths[0] ?? [])
+      const outOptions = props.multiple
+        ? paths.map(p => getOptionPath(p, props.options))
+        : getOptionPath(paths[0] ?? [], props.options)
+      emit('update:value', outValue)
+      emit('change', outValue, outOptions)
+    }
+
     const handleOptionClick = (opt: CascaderOption, colIndex: number) => {
       if (opt.disabled) return
       const newPath = [...activePath.value.slice(0, colIndex), getValue(opt)]
       activePath.value = newPath
       const children = getChildren(opt)
       const isLeaf = !children?.length || opt.isLeaf
-      if (isLeaf || props.changeOnSelect) {
-        innerValue.value = newPath
-        emit('update:value', newPath)
-        emit('change', newPath, getLabelPath(newPath, props.options))
-        if (isLeaf) close()
+
+      if (props.loadData && !isLeaf && !children?.length) {
+        // Lazy load
+        const optPath = getOptionPath(newPath, props.options)
+        props.loadData(optPath)
+        return
+      }
+
+      if (props.multiple) {
+        // Multiple mode: toggle selection
+        if (isLeaf || props.changeOnSelect) {
+          const paths = [...currentValue.value]
+          const idx = paths.findIndex(p => p.length === newPath.length && p.every((v, i) => v === newPath[i]))
+          if (idx >= 0) {
+            paths.splice(idx, 1)
+          } else {
+            paths.push(newPath)
+          }
+          innerValue.value = paths
+          emitChange(paths)
+        }
+      } else {
+        // Single mode
+        if (isLeaf || props.changeOnSelect) {
+          innerValue.value = [newPath]
+          emitChange([newPath])
+          if (isLeaf) close()
+        }
       }
     }
 
@@ -168,20 +240,36 @@ export const Cascader = defineComponent({
       activePath.value = newPath
     }
 
-    const handleSearchSelect = (values: (string | number)[]) => {
-      innerValue.value = values
-      emit('update:value', values)
-      emit('change', values, getLabelPath(values, props.options))
-      close()
+    const handleSearchSelect = (values: (string | number)[], options: CascaderOption[]) => {
+      if (props.multiple) {
+        const paths = [...currentValue.value, values]
+        innerValue.value = paths
+        emitChange(paths)
+      } else {
+        innerValue.value = [values]
+        emitChange([values])
+        close()
+      }
     }
 
     const handleClear = (e: MouseEvent) => {
       e.stopPropagation()
       innerValue.value = []
-      emit('update:value', [])
-      emit('change', [], [])
+      emitChange([])
       emit('clear')
     }
+
+    const handleRemoveTag = (path: CascaderValue, e: MouseEvent) => {
+      e.stopPropagation()
+      const paths = currentValue.value.filter(p => !(p.length === path.length && p.every((v, i) => v === path[i])))
+      innerValue.value = paths
+      emitChange(paths)
+    }
+
+    expose({
+      focus: () => inputRef.value?.focus(),
+      blur: () => inputRef.value?.blur(),
+    })
 
     return () => (
       <>
@@ -193,6 +281,7 @@ export const Cascader = defineComponent({
             {
               [`${prefixCls}-open`]: isOpen.value,
               [`${prefixCls}-disabled`]: props.disabled,
+              [`${prefixCls}-multiple`]: props.multiple,
               [`${prefixCls}-status-error`]: props.status === 'error',
               [`${prefixCls}-status-warning`]: props.status === 'warning',
             }
@@ -200,24 +289,74 @@ export const Cascader = defineComponent({
           onClick={open}
         >
           <span class={`${prefixCls}-selector`}>
-            {props.showSearch && isOpen.value ? (
-              <input
-                class={`${prefixCls}-search-input`}
-                value={searchText.value}
-                placeholder={displayText.value || props.placeholder}
-                onInput={(e) => {
-                  searchText.value = (e.target as HTMLInputElement).value
-                  emit('search', searchText.value)
-                }}
-                onClick={(e) => e.stopPropagation()}
-                autofocus={true}
-              />
+            {props.multiple ? (
+              <>
+                {currentValue.value.slice(0, props.maxTagCount ?? currentValue.value.length).map((path) => {
+                  const labels = getLabelPath(path, props.options)
+                  let text = labels.join(' / ')
+                  if (props.maxTagTextLength && text.length > props.maxTagTextLength) {
+                    text = text.slice(0, props.maxTagTextLength) + '...'
+                  }
+                  return (
+                    <span key={path.join('-')} class={`${prefixCls}-selection-item`}>
+                      <span class={`${prefixCls}-selection-item-content`}>{text}</span>
+                      {!props.disabled && (
+                        <span
+                          class={`${prefixCls}-selection-item-remove`}
+                          onClick={(e) => handleRemoveTag(path, e)}
+                        >×</span>
+                      )}
+                    </span>
+                  )
+                })}
+                {props.maxTagCount && currentValue.value.length > props.maxTagCount && (
+                  <span class={`${prefixCls}-selection-item`}>
+                    {typeof props.maxTagPlaceholder === 'function'
+                      ? props.maxTagPlaceholder(currentValue.value.slice(props.maxTagCount))
+                      : (props.maxTagPlaceholder ?? `+${currentValue.value.length - props.maxTagCount}`)}
+                  </span>
+                )}
+                {props.showSearch && isOpen.value && (
+                  <input
+                    ref={inputRef}
+                    class={`${prefixCls}-search-input`}
+                    value={searchText.value}
+                    placeholder={currentValue.value.length === 0 ? props.placeholder : ''}
+                    onInput={(e) => {
+                      searchText.value = (e.target as HTMLInputElement).value
+                      emit('search', searchText.value)
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    autofocus={true}
+                  />
+                )}
+                {currentValue.value.length === 0 && !searchText.value && (
+                  <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder}</span>
+                )}
+              </>
             ) : (
-              <span class={cls(`${prefixCls}-selection-item`, {
-                [`${prefixCls}-selection-placeholder`]: !displayText.value,
-              })}>
-                {displayText.value || props.placeholder}
-              </span>
+              <>
+                {props.showSearch && isOpen.value ? (
+                  <input
+                    ref={inputRef}
+                    class={`${prefixCls}-search-input`}
+                    value={searchText.value}
+                    placeholder={displayText.value || props.placeholder}
+                    onInput={(e) => {
+                      searchText.value = (e.target as HTMLInputElement).value
+                      emit('search', searchText.value)
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    autofocus={true}
+                  />
+                ) : (
+                  <span class={cls(`${prefixCls}-selection-item`, {
+                    [`${prefixCls}-selection-placeholder`]: !displayText.value,
+                  })}>
+                    {displayText.value || props.placeholder}
+                  </span>
+                )}
+              </>
             )}
           </span>
           <span class={`${prefixCls}-suffix`}>
@@ -249,12 +388,12 @@ export const Cascader = defineComponent({
                 /* Search results */
                 <div class={`${prefixCls}-menu ${prefixCls}-menu-search`}>
                   {filteredOptions.value.length === 0 ? (
-                    <div class={`${prefixCls}-menu-item-empty`}>无匹配结果</div>
+                    <div class={`${prefixCls}-menu-item-empty`}>{props.notFoundContent}</div>
                   ) : filteredOptions.value.map((item, i) => (
                     <div
                       key={i}
                       class={`${prefixCls}-menu-item`}
-                      onMousedown={(e) => { e.preventDefault(); handleSearchSelect(item.values) }}
+                      onMousedown={(e) => { e.preventDefault(); handleSearchSelect(item.values, item.options) }}
                     >
                       {item.labels.join(' / ')}
                     </div>
@@ -268,9 +407,11 @@ export const Cascader = defineComponent({
                       {colOpts.map((opt) => {
                         const val = getValue(opt)
                         const children = getChildren(opt)
-                        const hasChildren = !!(children?.length)
+                        const hasChildren = !!(children?.length) && !opt.isLeaf
                         const isActive = activePath.value[colIndex] === val
-                        const isSelected = currentValue.value[colIndex] === val
+                        const isSelected = props.multiple
+                          ? currentValue.value.some(p => p[colIndex] === val && p.length > colIndex)
+                          : currentValue.value[0]?.[colIndex] === val
 
                         return (
                           <li
@@ -284,6 +425,11 @@ export const Cascader = defineComponent({
                             onClick={() => handleOptionClick(opt, colIndex)}
                             onMouseenter={() => handleOptionHover(opt, colIndex)}
                           >
+                            {props.multiple && (
+                              <span class={`${prefixCls}-menu-item-checkbox`}>
+                                {currentValue.value.some(p => p.length === colIndex + 1 && p[colIndex] === val) && '✓'}
+                              </span>
+                            )}
                             <span class={`${prefixCls}-menu-item-content`}>{getLabel(opt)}</span>
                             {hasChildren && <span class={`${prefixCls}-menu-item-expand-icon`}>›</span>}
                           </li>
@@ -300,3 +446,4 @@ export const Cascader = defineComponent({
     )
   },
 })
+

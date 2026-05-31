@@ -49,6 +49,14 @@
   <AutoCompleteSize />
 </DemoBlock>
 
+### 高级特性
+
+演示 defaultActiveFirstOption、notFoundContent 和自定义清除图标。
+
+<DemoBlock title="高级特性" :source="AutoCompleteAdvancedSource">
+  <AutoCompleteAdvanced />
+</DemoBlock>
+
 ## API
 
 ### AutoComplete Props
@@ -60,11 +68,15 @@
 | options | 数据源 | `AutoCompleteOption[]` | `[]` |
 | disabled | 是否禁用 | `boolean` | `false` |
 | placeholder | 输入框占位文本 | `string` | - |
-| allowClear | 支持清除 | `boolean` | `false` |
+| allowClear | 支持清除，可传入对象自定义清除图标 | `boolean \| { clearIcon?: VNodeChild }` | `false` |
 | size | 输入框大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | status | 设置校验状态 | `'error' \| 'warning'` | - |
 | filterOption | 是否根据输入项进行筛选。当其为一个函数时，会接收 `inputValue` `option` 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false | `boolean \| ((inputValue: string, option: AutoCompleteOption) => boolean)` | `true` |
 | backfill | 使用键盘选择选项的时候把选中项回填到输入框中 | `boolean` | `false` |
+| defaultActiveFirstOption | 是否默认高亮第一个选项 | `boolean` | `true` |
+| defaultOpen | 默认是否展开下拉菜单 | `boolean` | `false` |
+| open | 是否展开下拉菜单（受控） | `boolean` | - |
+| notFoundContent | 当下拉列表为空时显示的内容 | `string` | - |
 
 ### AutoCompleteOption
 
@@ -85,3 +97,11 @@
 | focus | 获得焦点时的回调 | `(event: FocusEvent) => void` |
 | blur | 失去焦点时的回调 | `(event: FocusEvent) => void` |
 | clear | 点击清除按钮时的回调 | `() => void` |
+| openChange | 下拉框展开/收起时的回调 | `(open: boolean) => void` |
+
+### AutoComplete Methods
+
+| 方法名 | 说明 |
+|--------|------|
+| focus() | 获取焦点 |
+| blur() | 失去焦点 |

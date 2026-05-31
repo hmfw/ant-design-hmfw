@@ -46,3 +46,10 @@
 .hmfw-auto-complete-dropdown-item-disabled:hover {
   background: transparent;
 }
+
+.hmfw-auto-complete-dropdown-empty {
+  padding: 16px 12px;
+  font-size: 14px;
+  color: var(--hmfw-color-text-disabled, rgba(0,0,0,0.25));
+  text-align: center;
+}

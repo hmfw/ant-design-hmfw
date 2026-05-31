@@ -1,6 +1,7 @@
-import { defineComponent, ref, computed, watch, type PropType } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
+import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
+import { CloseOutlined, EyeOutlined, SearchOutlined, LoadingOutlined } from '../icon'
 import type { InputSize, InputStatus } from './types'
 
 // ─── Base Input ───────────────────────────────────────────────────────────────
@@ -15,35 +16,62 @@ export const Input = defineComponent({
     readOnly: Boolean,
     size: {
       type: String as PropType<InputSize>,
-      default: 'middle',
+      default: undefined,
     },
     status: {
       type: String as PropType<InputStatus>,
       default: '',
     },
-    allowClear: Boolean,
+    allowClear: [Boolean, Object] as PropType<boolean | { clearIcon?: VNode; disabled?: boolean }>,
     maxLength: Number,
-    showCount: Boolean,
+    showCount: [Boolean, Object] as PropType<boolean | { formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string }>,
     type: {
       type: String,
       default: 'text',
     },
+    prefix: [String, Object] as PropType<string | VNode>,
+    suffix: [String, Object] as PropType<string | VNode>,
+    id: String,
+    rootClassName: String,
   },
-  emits: ['update:value', 'change', 'input', 'focus', 'blur', 'pressEnter', 'clear'],
-  setup(props, { slots, emit }) {
+  emits: ['update:value', 'change', 'input', 'focus', 'blur', 'pressEnter', 'clear', 'onPressEnter'],
+  setup(props, { slots, emit, expose }) {
     const prefixCls = usePrefixCls('input')
+    const config = useConfig()
     const innerValue = ref(props.value ?? props.defaultValue ?? '')
+    const inputRef = ref<HTMLInputElement>()
+
+    const mergedSize = computed(() => props.size ?? config.value.componentSize)
 
     watch(
       () => props.value,
       (v) => { if (v !== undefined) innerValue.value = v },
     )
 
+    // Expose focus/blur methods
+    expose({
+      focus: (options?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => {
+        inputRef.value?.focus(options)
+        if (options?.cursor && inputRef.value) {
+          const len = inputRef.value.value.length
+          if (options.cursor === 'start') {
+            inputRef.value.setSelectionRange(0, 0)
+          } else if (options.cursor === 'end') {
+            inputRef.value.setSelectionRange(len, len)
+          } else if (options.cursor === 'all') {
+            inputRef.value.setSelectionRange(0, len)
+          }
+        }
+      },
+      blur: () => inputRef.value?.blur(),
+      input: inputRef,
+    })
+
     const wrapperCls = computed(() =>
       cls(`${prefixCls}-affix-wrapper`, {
         [`${prefixCls}-affix-wrapper-disabled`]: props.disabled,
-        [`${prefixCls}-affix-wrapper-lg`]: props.size === 'large',
-        [`${prefixCls}-affix-wrapper-sm`]: props.size === 'small',
+        [`${prefixCls}-affix-wrapper-lg`]: mergedSize.value === 'large',
+        [`${prefixCls}-affix-wrapper-sm`]: mergedSize.value === 'small',
         [`${prefixCls}-affix-wrapper-status-error`]: props.status === 'error',
         [`${prefixCls}-affix-wrapper-status-warning`]: props.status === 'warning',
       }),
@@ -52,8 +80,8 @@ export const Input = defineComponent({
     const inputCls = computed(() =>
       cls(prefixCls, {
         [`${prefixCls}-disabled`]: props.disabled,
-        [`${prefixCls}-lg`]: props.size === 'large',
-        [`${prefixCls}-sm`]: props.size === 'small',
+        [`${prefixCls}-lg`]: mergedSize.value === 'large',
+        [`${prefixCls}-sm`]: mergedSize.value === 'small',
         [`${prefixCls}-status-error`]: props.status === 'error',
         [`${prefixCls}-status-warning`]: props.status === 'warning',
       }),
@@ -68,20 +96,36 @@ export const Input = defineComponent({
     }
 
     const handleKeydown = (e: KeyboardEvent) => {
-      if (e.key === 'Enter') emit('pressEnter', e)
+      if (e.key === 'Enter') {
+        emit('pressEnter', e)
+        emit('onPressEnter', e)
+      }
     }
 
+    const allowClearConfig = computed(() => {
+      if (typeof props.allowClear === 'object' && props.allowClear !== null) {
+        return props.allowClear
+      }
+      return { disabled: false }
+    })
+
     const handleClear = () => {
+      if (allowClearConfig.value.disabled) return
       innerValue.value = ''
       emit('update:value', '')
       emit('clear')
+      inputRef.value?.focus()
     }
 
-    const hasFix = computed(() => slots.prefix || slots.suffix || props.allowClear || props.showCount)
+    const hasFix = computed(() =>
+      slots.prefix || slots.suffix || props.prefix || props.suffix ||
+      (props.allowClear && !allowClearConfig.value.disabled) || props.showCount
+    )
 
     return () => {
       const inputEl = (
         <input
+          ref={inputRef}
           class={hasFix.value ? prefixCls : inputCls.value}
           type={props.type}
           value={innerValue.value}
@@ -89,6 +133,7 @@ export const Input = defineComponent({
           disabled={props.disabled}
           readonly={props.readOnly}
           maxlength={props.maxLength}
+          id={props.id}
           aria-invalid={props.status === 'error' || undefined}
           onInput={handleInput}
           onKeydown={handleKeydown}
@@ -99,24 +144,38 @@ export const Input = defineComponent({
 
       if (!hasFix.value) return inputEl
 
-      const clearBtn = props.allowClear && innerValue.value && (
-        <span class={`${prefixCls}-clear-icon`} onClick={handleClear}>×</span>
+      const clearIcon = allowClearConfig.value.clearIcon || <CloseOutlined />
+      const clearBtn = props.allowClear && innerValue.value && !allowClearConfig.value.disabled && (
+        <span class={`${prefixCls}-clear-icon`} onClick={handleClear}>{clearIcon}</span>
       )
 
-      const countNode = props.showCount && (
-        <span class={`${prefixCls}-show-count-suffix`}>
-          {props.maxLength
-            ? `${innerValue.value.length} / ${props.maxLength}`
-            : `${innerValue.value.length}`}
-        </span>
-      )
+      const countNode = (() => {
+        if (!props.showCount) return null
+        const count = innerValue.value.length
+        const max = props.maxLength
+        if (typeof props.showCount === 'object' && props.showCount.formatter) {
+          return (
+            <span class={`${prefixCls}-show-count-suffix`}>
+              {props.showCount.formatter({ value: innerValue.value, count, maxLength: max })}
+            </span>
+          )
+        }
+        return (
+          <span class={`${prefixCls}-show-count-suffix`}>
+            {max ? `${count} / ${max}` : `${count}`}
+          </span>
+        )
+      })()
+
+      const prefixNode = slots.prefix?.() || (props.prefix && <span>{props.prefix}</span>)
+      const suffixNode = slots.suffix?.() || (props.suffix && <span>{props.suffix}</span>)
 
       return (
-        <span class={wrapperCls.value}>
-          {slots.prefix && <span class={`${prefixCls}-prefix`}>{slots.prefix()}</span>}
+        <span class={cls(wrapperCls.value, props.rootClassName)}>
+          {prefixNode && <span class={`${prefixCls}-prefix`}>{prefixNode}</span>}
           {inputEl}
           {clearBtn}
-          {slots.suffix && <span class={`${prefixCls}-suffix`}>{slots.suffix()}</span>}
+          {suffixNode && <span class={`${prefixCls}-suffix`}>{suffixNode}</span>}
           {countNode}
         </span>
       )
@@ -135,33 +194,71 @@ export const InputPassword = defineComponent({
     disabled: Boolean,
     size: {
       type: String as PropType<InputSize>,
-      default: 'middle',
+      default: undefined,
     },
     status: {
       type: String as PropType<InputStatus>,
       default: '',
     },
     visibilityToggle: {
-      type: Boolean,
+      type: [Boolean, Object] as PropType<boolean | { visible?: boolean; onVisibleChange?: (visible: boolean) => void }>,
       default: true,
     },
+    iconRender: Function as PropType<(visible: boolean) => VNode | string>,
+    action: {
+      type: String as PropType<'click' | 'hover'>,
+      default: 'click',
+    },
+    rootClassName: String,
   },
   emits: ['update:value', 'change', 'input', 'focus', 'blur'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('input')
+    const config = useConfig()
     const visible = ref(false)
     const innerValue = ref(props.value ?? props.defaultValue ?? '')
+    const inputRef = ref<HTMLInputElement>()
+
+    const mergedSize = computed(() => props.size ?? config.value.componentSize)
+
+    const visibilityControlled = computed(() =>
+      typeof props.visibilityToggle === 'object' && props.visibilityToggle.visible !== undefined
+    )
 
     watch(
       () => props.value,
       (v) => { if (v !== undefined) innerValue.value = v },
     )
 
+    watch(
+      () => visibilityControlled.value && typeof props.visibilityToggle === 'object' ? props.visibilityToggle.visible : undefined,
+      (v) => { if (v !== undefined) visible.value = v },
+    )
+
+    // Expose focus/blur methods
+    expose({
+      focus: (options?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => {
+        inputRef.value?.focus(options)
+        if (options?.cursor && inputRef.value) {
+          const len = inputRef.value.value.length
+          if (options.cursor === 'start') {
+            inputRef.value.setSelectionRange(0, 0)
+          } else if (options.cursor === 'end') {
+            inputRef.value.setSelectionRange(len, len)
+          } else if (options.cursor === 'all') {
+            inputRef.value.setSelectionRange(0, len)
+          }
+        }
+      },
+      blur: () => inputRef.value?.blur(),
+      input: inputRef,
+    })
+
     const wrapperCls = computed(() =>
-      cls(`${prefixCls}-affix-wrapper`, `${prefixCls}-password`, {
+      cls(`${prefixCls}-affix-wrapper`, `${prefixCls}-password`, props.rootClassName, {
         [`${prefixCls}-affix-wrapper-disabled`]: props.disabled,
-        [`${prefixCls}-affix-wrapper-lg`]: props.size === 'large',
-        [`${prefixCls}-affix-wrapper-sm`]: props.size === 'small',
+        [`${prefixCls}-affix-wrapper-lg`]: mergedSize.value === 'large',
+        [`${prefixCls}-affix-wrapper-sm`]: mergedSize.value === 'small',
         [`${prefixCls}-affix-wrapper-status-error`]: props.status === 'error',
         [`${prefixCls}-affix-wrapper-status-warning`]: props.status === 'warning',
       }),
@@ -175,29 +272,57 @@ export const InputPassword = defineComponent({
       emit('change', e)
     }
 
-    return () => (
-      <span class={wrapperCls.value}>
-        <input
-          class={prefixCls}
-          type={visible.value ? 'text' : 'password'}
-          value={innerValue.value}
-          placeholder={props.placeholder}
-          disabled={props.disabled}
-          onInput={handleInput}
-          onFocus={(e: FocusEvent) => emit('focus', e)}
-          onBlur={(e: FocusEvent) => emit('blur', e)}
-        />
-        {props.visibilityToggle && (
-          <span
-            class={`${prefixCls}-suffix`}
-            onClick={() => (visible.value = !visible.value)}
-            style={{ cursor: 'pointer' }}
-          >
-            {visible.value ? '🙈' : '👁'}
-          </span>
-        )}
-      </span>
-    )
+    const onVisibleChange = () => {
+      if (props.disabled) return
+      const nextVisible = !visible.value
+      visible.value = nextVisible
+      if (typeof props.visibilityToggle === 'object' && props.visibilityToggle.onVisibleChange) {
+        props.visibilityToggle.onVisibleChange(nextVisible)
+      }
+    }
+
+    const defaultIconRender = (vis: boolean) => {
+      if (vis) return <EyeOutlined />
+      // Temporary: use simple text until EyeInvisibleOutlined is added
+      return <span style={{ fontSize: '14px' }}>👁‍🗨</span>
+    }
+
+    return () => {
+      const showToggle = props.visibilityToggle !== false
+      const iconRenderer = props.iconRender || defaultIconRender
+      const icon = showToggle ? iconRenderer(visible.value) : null
+
+      const actionMap: Record<string, string> = {
+        click: 'onClick',
+        hover: 'onMouseover',
+      }
+      const triggerEvent = actionMap[props.action] || 'onClick'
+
+      return (
+        <span class={wrapperCls.value}>
+          <input
+            ref={inputRef}
+            class={prefixCls}
+            type={visible.value ? 'text' : 'password'}
+            value={innerValue.value}
+            placeholder={props.placeholder}
+            disabled={props.disabled}
+            onInput={handleInput}
+            onFocus={(e: FocusEvent) => emit('focus', e)}
+            onBlur={(e: FocusEvent) => emit('blur', e)}
+          />
+          {showToggle && (
+            <span
+              class={`${prefixCls}-suffix ${prefixCls}-password-icon`}
+              {...{ [triggerEvent]: onVisibleChange }}
+              style={{ cursor: props.disabled ? 'not-allowed' : 'pointer' }}
+            >
+              {icon}
+            </span>
+          )}
+        </span>
+      )
+    }
   },
 })
 
@@ -216,22 +341,68 @@ export const TextArea = defineComponent({
       default: 4,
     },
     maxLength: Number,
-    showCount: Boolean,
+    showCount: [Boolean, Object] as PropType<boolean | { formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string }>,
     status: {
       type: String as PropType<InputStatus>,
       default: '',
     },
-    allowClear: Boolean,
+    allowClear: [Boolean, Object] as PropType<boolean | { clearIcon?: VNode; disabled?: boolean }>,
+    autoSize: [Boolean, Object] as PropType<boolean | { minRows?: number; maxRows?: number }>,
+    rootClassName: String,
   },
-  emits: ['update:value', 'change', 'input', 'focus', 'blur'],
-  setup(props, { emit }) {
+  emits: ['update:value', 'change', 'input', 'focus', 'blur', 'clear'],
+  setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('input')
     const innerValue = ref(props.value ?? props.defaultValue ?? '')
+    const textareaRef = ref<HTMLTextAreaElement>()
 
     watch(
       () => props.value,
       (v) => { if (v !== undefined) innerValue.value = v },
     )
+
+    // Expose focus/blur methods
+    expose({
+      focus: (options?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => {
+        textareaRef.value?.focus(options)
+        if (options?.cursor && textareaRef.value) {
+          const len = textareaRef.value.value.length
+          if (options.cursor === 'start') {
+            textareaRef.value.setSelectionRange(0, 0)
+          } else if (options.cursor === 'end') {
+            textareaRef.value.setSelectionRange(len, len)
+          } else if (options.cursor === 'all') {
+            textareaRef.value.setSelectionRange(0, len)
+          }
+        }
+      },
+      blur: () => textareaRef.value?.blur(),
+      resizableTextArea: textareaRef,
+    })
+
+    // Auto-resize logic
+    const computedRows = ref(props.rows)
+    const updateAutoSize = () => {
+      if (!props.autoSize || !textareaRef.value) return
+      const minRows = typeof props.autoSize === 'object' ? props.autoSize.minRows : props.rows
+      const maxRows = typeof props.autoSize === 'object' ? props.autoSize.maxRows : undefined
+
+      textareaRef.value.style.height = 'auto'
+      const scrollHeight = textareaRef.value.scrollHeight
+      const lineHeight = parseInt(getComputedStyle(textareaRef.value).lineHeight || '22', 10)
+      const rows = Math.ceil(scrollHeight / lineHeight)
+
+      if (minRows && rows < minRows) {
+        computedRows.value = minRows
+      } else if (maxRows && rows > maxRows) {
+        computedRows.value = maxRows
+      } else {
+        computedRows.value = rows
+      }
+    }
+
+    watch(() => innerValue.value, updateAutoSize)
+    watch(() => props.autoSize, updateAutoSize)
 
     const textareaCls = computed(() =>
       cls(prefixCls, `${prefixCls}-textarea`, {
@@ -247,17 +418,37 @@ export const TextArea = defineComponent({
       emit('update:value', val)
       emit('input', e)
       emit('change', e)
+      updateAutoSize()
     }
+
+    const allowClearConfig = computed(() => {
+      if (typeof props.allowClear === 'object' && props.allowClear !== null) {
+        return props.allowClear
+      }
+      return { disabled: false }
+    })
+
+    const handleClear = () => {
+      if (allowClearConfig.value.disabled) return
+      innerValue.value = ''
+      emit('update:value', '')
+      emit('clear')
+      textareaRef.value?.focus()
+      updateAutoSize()
+    }
+
+    const hasWrapper = computed(() => props.showCount || (props.allowClear && !allowClearConfig.value.disabled))
 
     return () => {
       const textarea = (
         <textarea
+          ref={textareaRef}
           class={textareaCls.value}
           value={innerValue.value}
           placeholder={props.placeholder}
           disabled={props.disabled}
           readonly={props.readOnly}
-          rows={props.rows}
+          rows={props.autoSize ? computedRows.value : props.rows}
           maxlength={props.maxLength}
           onInput={handleInput}
           onFocus={(e: FocusEvent) => emit('focus', e)}
@@ -265,16 +456,36 @@ export const TextArea = defineComponent({
         />
       )
 
-      if (!props.showCount) return textarea
+      if (!hasWrapper.value) return textarea
+
+      const clearIcon = allowClearConfig.value.clearIcon || <CloseOutlined />
+      const clearBtn = props.allowClear && innerValue.value && !allowClearConfig.value.disabled && (
+        <span class={`${prefixCls}-clear-icon`} onClick={handleClear}>{clearIcon}</span>
+      )
+
+      const countNode = (() => {
+        if (!props.showCount) return null
+        const count = innerValue.value.length
+        const max = props.maxLength
+        if (typeof props.showCount === 'object' && props.showCount.formatter) {
+          return (
+            <span class={`${prefixCls}-show-count-suffix`}>
+              {props.showCount.formatter({ value: innerValue.value, count, maxLength: max })}
+            </span>
+          )
+        }
+        return (
+          <span class={`${prefixCls}-show-count-suffix`}>
+            {max ? `${count} / ${max}` : `${count}`}
+          </span>
+        )
+      })()
 
       return (
-        <div class={`${prefixCls}-textarea-show-count`}>
+        <div class={cls(`${prefixCls}-textarea-show-count`, props.rootClassName)}>
           {textarea}
-          <span class={`${prefixCls}-show-count-suffix`}>
-            {props.maxLength
-              ? `${innerValue.value.length} / ${props.maxLength}`
-              : `${innerValue.value.length}`}
-          </span>
+          {clearBtn}
+          {countNode}
         </div>
       )
     }
@@ -292,23 +503,48 @@ export const InputSearch = defineComponent({
     disabled: Boolean,
     size: {
       type: String as PropType<InputSize>,
-      default: 'middle',
+      default: undefined,
     },
     loading: Boolean,
     enterButton: {
       type: [Boolean, String],
       default: false,
     },
+    searchIcon: [String, Object] as PropType<string | VNode>,
+    rootClassName: String,
   },
-  emits: ['update:value', 'change', 'input', 'search'],
-  setup(props, { emit }) {
+  emits: ['update:value', 'change', 'input', 'search', 'pressEnter', 'onPressEnter'],
+  setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('input')
+    const config = useConfig()
     const innerValue = ref(props.value ?? props.defaultValue ?? '')
+    const inputRef = ref<HTMLInputElement>()
+
+    const mergedSize = computed(() => props.size ?? config.value.componentSize)
 
     watch(
       () => props.value,
       (v) => { if (v !== undefined) innerValue.value = v },
     )
+
+    // Expose focus/blur methods
+    expose({
+      focus: (options?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => {
+        inputRef.value?.focus(options)
+        if (options?.cursor && inputRef.value) {
+          const len = inputRef.value.value.length
+          if (options.cursor === 'start') {
+            inputRef.value.setSelectionRange(0, 0)
+          } else if (options.cursor === 'end') {
+            inputRef.value.setSelectionRange(len, len)
+          } else if (options.cursor === 'all') {
+            inputRef.value.setSelectionRange(0, len)
+          }
+        }
+      },
+      blur: () => inputRef.value?.blur(),
+      input: inputRef,
+    })
 
     const handleInput = (e: Event) => {
       const val = (e.target as HTMLInputElement).value
@@ -318,35 +554,50 @@ export const InputSearch = defineComponent({
       emit('change', e)
     }
 
-    const handleSearch = () => {
-      emit('search', innerValue.value)
+    const handleSearch = (e: Event) => {
+      emit('search', innerValue.value, e, { source: 'input' })
     }
 
-    return () => (
-      <span class={cls(`${prefixCls}-search`, `${prefixCls}-affix-wrapper`, {
-        [`${prefixCls}-affix-wrapper-lg`]: props.size === 'large',
-        [`${prefixCls}-affix-wrapper-sm`]: props.size === 'small',
-        [`${prefixCls}-affix-wrapper-disabled`]: props.disabled,
-      })}>
-        <input
-          class={prefixCls}
-          type="search"
-          value={innerValue.value}
-          placeholder={props.placeholder}
-          disabled={props.disabled}
-          onInput={handleInput}
-          onKeydown={(e: KeyboardEvent) => { if (e.key === 'Enter') handleSearch() }}
-        />
-        <span class={`${prefixCls}-suffix`}>
-          <button
-            class={`${prefixCls}-search-button`}
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        emit('pressEnter', e)
+        emit('onPressEnter', e)
+        handleSearch(e)
+      }
+    }
+
+    return () => {
+      const icon = props.loading
+        ? <LoadingOutlined class="hmfw-icon-loading" />
+        : (props.searchIcon || <SearchOutlined />)
+
+      return (
+        <span class={cls(`${prefixCls}-search`, `${prefixCls}-affix-wrapper`, props.rootClassName, {
+          [`${prefixCls}-affix-wrapper-lg`]: mergedSize.value === 'large',
+          [`${prefixCls}-affix-wrapper-sm`]: mergedSize.value === 'small',
+          [`${prefixCls}-affix-wrapper-disabled`]: props.disabled,
+        })}>
+          <input
+            ref={inputRef}
+            class={prefixCls}
+            type="search"
+            value={innerValue.value}
+            placeholder={props.placeholder}
             disabled={props.disabled}
-            onClick={handleSearch}
-          >
-            {typeof props.enterButton === 'string' ? props.enterButton : '🔍'}
-          </button>
+            onInput={handleInput}
+            onKeydown={handleKeydown}
+          />
+          <span class={`${prefixCls}-suffix`}>
+            <button
+              class={`${prefixCls}-search-button`}
+              disabled={props.disabled || props.loading}
+              onClick={handleSearch}
+            >
+              {typeof props.enterButton === 'string' ? props.enterButton : icon}
+            </button>
+          </span>
         </span>
-      </span>
-    )
+      )
+    }
   },
 })

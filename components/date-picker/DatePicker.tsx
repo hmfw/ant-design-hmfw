@@ -3,7 +3,7 @@ import {
 } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
-import type { DatePickerMode } from './types'
+import type { DatePickerMode, PresetItem } from './types'
 
 // --- Date utilities ---
 function pad(n: number) { return String(n).padStart(2, '0') }
@@ -78,9 +78,15 @@ export const DatePicker = defineComponent({
     picker: { type: String as PropType<DatePickerMode>, default: 'date' },
     showTime: Boolean,
     showToday: { type: Boolean, default: true },
+    showNow: Boolean,
     disabledDate: Function as PropType<(d: Date) => boolean>,
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
     open: { type: Boolean, default: undefined },
+    defaultOpen: Boolean,
+    presets: Array as PropType<PresetItem[]>,
+    minDate: String,
+    maxDate: String,
+    renderExtraFooter: Function as PropType<() => any>,
   },
   emits: ['update:value', 'change', 'openChange', 'panelChange'],
   setup(props, { emit }) {
@@ -108,7 +114,7 @@ export const DatePicker = defineComponent({
     const innerValue = ref<Date | null>(parseDate(props.defaultValue ?? props.value))
     const viewYear = ref((innerValue.value ?? now).getFullYear())
     const viewMonth = ref((innerValue.value ?? now).getMonth())
-    const innerOpen = ref(false)
+    const innerOpen = ref(props.defaultOpen ?? false)
     const panelMode = ref<'date' | 'month' | 'year'>(
       props.picker === 'year' ? 'year' : props.picker === 'month' ? 'month' : 'date'
     )
@@ -122,6 +128,9 @@ export const DatePicker = defineComponent({
       if (props.value) return parseDate(props.value)
       return innerValue.value
     })
+
+    const minDateObj = computed(() => props.minDate ? parseDate(props.minDate) : null)
+    const maxDateObj = computed(() => props.maxDate ? parseDate(props.maxDate) : null)
 
     const displayText = computed(() => {
       const d = selectedDate.value
@@ -162,11 +171,26 @@ export const DatePicker = defineComponent({
         closePanel()
     }
 
-    onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
-    onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen.value) {
+        closePanel()
+        e.preventDefault()
+      }
+    }
+
+    onMounted(() => {
+      document.addEventListener('mousedown', handleOutsideClick)
+      document.addEventListener('keydown', handleKeyDown)
+    })
+    onUnmounted(() => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+      document.removeEventListener('keydown', handleKeyDown)
+    })
 
     const selectDate = (d: Date) => {
       if (props.disabledDate?.(d)) return
+      if (minDateObj.value && d < minDateObj.value) return
+      if (maxDateObj.value && d > maxDateObj.value) return
       innerValue.value = d
       const str = props.picker === 'quarter'
         ? `${d.getFullYear()}-Q${Math.floor(d.getMonth() / 3) + 1}`
@@ -183,16 +207,30 @@ export const DatePicker = defineComponent({
       emit('change', undefined, null)
     }
 
+    const applyPreset = (preset: PresetItem) => {
+      const val = typeof preset.value === 'function' ? preset.value() : preset.value
+      const d = parseDate(val)
+      if (d) selectDate(d)
+    }
+
     const prevMonth = () => {
       if (viewMonth.value === 0) { viewYear.value--; viewMonth.value = 11 }
       else viewMonth.value--
+      emit('panelChange', null, panelMode.value)
     }
     const nextMonth = () => {
       if (viewMonth.value === 11) { viewYear.value++; viewMonth.value = 0 }
       else viewMonth.value++
+      emit('panelChange', null, panelMode.value)
     }
-    const prevYear = () => { viewYear.value-- }
-    const nextYear = () => { viewYear.value++ }
+    const prevYear = () => {
+      viewYear.value--
+      emit('panelChange', null, panelMode.value)
+    }
+    const nextYear = () => {
+      viewYear.value++
+      emit('panelChange', null, panelMode.value)
+    }
 
     const calendar = computed(() => buildCalendar(viewYear.value, viewMonth.value))
 
@@ -209,10 +247,10 @@ export const DatePicker = defineComponent({
           <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>«</button>
           <button class={`${prefixCls}-panel-header-btn`} onClick={prevMonth}>‹</button>
           <span class={`${prefixCls}-panel-header-title`}>
-            <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'year' }}>
+            <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'year'; emit('panelChange', null, 'year') }}>
               {viewYear.value}年
             </button>
-            <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'month' }}>
+            <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'month'; emit('panelChange', null, 'month') }}>
               {locale.value.DatePicker.months[viewMonth.value]}
             </button>
           </span>
@@ -248,14 +286,30 @@ export const DatePicker = defineComponent({
           </div>
         </div>
         {/* Footer */}
-        {(props.showToday || props.showTime) && (
+        {(props.showToday || props.showNow || props.showTime || props.presets?.length || props.renderExtraFooter) && (
           <div class={`${prefixCls}-panel-footer`}>
-            {props.showToday && (
-              <button class={`${prefixCls}-panel-footer-today`} onClick={() => selectDate(new Date())}>{locale.value.DatePicker.today}</button>
-            )}
-            {props.showTime && (
-              <button class={`${prefixCls}-panel-footer-ok`} onClick={closePanel}>{locale.value.DatePicker.ok}</button>
-            )}
+            <div class={`${prefixCls}-panel-footer-extra`}>
+              {props.presets?.length && (
+                <div class={`${prefixCls}-presets`}>
+                  {props.presets.map((preset, i) => (
+                    <button key={i} class={`${prefixCls}-preset-btn`} onClick={() => applyPreset(preset)}>
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {props.renderExtraFooter?.()}
+            </div>
+            <div class={`${prefixCls}-panel-footer-actions`}>
+              {(props.showToday || props.showNow) && (
+                <button class={`${prefixCls}-panel-footer-today`} onClick={() => selectDate(new Date())}>
+                  {props.showNow ? locale.value.DatePicker.now : locale.value.DatePicker.today}
+                </button>
+              )}
+              {props.showTime && (
+                <button class={`${prefixCls}-panel-footer-ok`} onClick={closePanel}>{locale.value.DatePicker.ok}</button>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -266,7 +320,7 @@ export const DatePicker = defineComponent({
         <div class={`${prefixCls}-panel-header`}>
           <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>«</button>
           <span class={`${prefixCls}-panel-header-title`}>
-            <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'year' }}>
+            <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'year'; emit('panelChange', null, 'year') }}>
               {viewYear.value}年
             </button>
           </span>
@@ -284,7 +338,7 @@ export const DatePicker = defineComponent({
                   onClick={() => {
                     viewMonth.value = i
                     if (props.picker === 'month') selectDate(d)
-                    else panelMode.value = 'date'
+                    else { panelMode.value = 'date'; emit('panelChange', null, 'date') }
                   }}
                 >
                   {m}
@@ -316,7 +370,7 @@ export const DatePicker = defineComponent({
                   onClick={() => {
                     viewYear.value = y
                     if (props.picker === 'year') selectDate(new Date(y, 0, 1))
-                    else panelMode.value = 'month'
+                    else { panelMode.value = 'month'; emit('panelChange', null, 'month') }
                   }}
                 >
                   {y}年

@@ -31,12 +31,61 @@
   cursor: not-allowed;
 }
 
+.hmfw-input-number-disabled:hover {
+  border-color: #d9d9d9;
+}
+
 .hmfw-input-number-status-error {
   border-color: #ff4d4f;
 }
 
 .hmfw-input-number-status-warning {
   border-color: #faad14;
+}
+
+/* Variants */
+.hmfw-input-number-filled {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: transparent;
+}
+
+.hmfw-input-number-filled:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  border-color: transparent;
+}
+
+.hmfw-input-number-filled.hmfw-input-number-focused {
+  background-color: #fff;
+  border-color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-input-number-borderless {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.hmfw-input-number-borderless:hover,
+.hmfw-input-number-borderless.hmfw-input-number-focused {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.hmfw-input-number-underlined {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #d9d9d9;
+  border-radius: 0;
+}
+
+.hmfw-input-number-underlined:hover {
+  border-bottom-color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-input-number-underlined.hmfw-input-number-focused {
+  border-bottom-color: var(--hmfw-color-primary, #1677ff);
+  box-shadow: none;
 }
 
 /* Sizes */
@@ -78,12 +127,21 @@
   cursor: not-allowed;
 }
 
-/* Prefix */
-.hmfw-input-number-prefix {
+/* Prefix & Suffix */
+.hmfw-input-number-prefix,
+.hmfw-input-number-suffix {
   display: inline-flex;
   align-items: center;
-  padding-left: 11px;
+  padding: 0 11px;
   color: rgba(0, 0, 0, 0.45);
+}
+
+.hmfw-input-number-prefix {
+  padding-right: 4px;
+}
+
+.hmfw-input-number-suffix {
+  padding-left: 4px;
 }
 
 /* Handler */
@@ -103,6 +161,10 @@
 .hmfw-input-number:hover .hmfw-input-number-handler-wrap,
 .hmfw-input-number-focused .hmfw-input-number-handler-wrap {
   opacity: 1;
+}
+
+.hmfw-input-number-without-controls .hmfw-input-number-handler-wrap {
+  display: none;
 }
 
 .hmfw-input-number-handler {

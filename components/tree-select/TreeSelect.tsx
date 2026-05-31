@@ -3,38 +3,51 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { TreeSelectNode } from './types'
+import type { TreeSelectNode, ShowCheckedStrategy, TreeSelectValue } from './types'
+
+type Key = string | number
 
 interface FlatNode {
   node: TreeSelectNode
   level: number
   hasChildren: boolean
-  valueKey: string | number
+  valueKey: Key
   label: string
+  /** 搜索态下强制展开 */
+  forceExpand: boolean
 }
 
 export const TreeSelect = defineComponent({
   name: 'TreeSelect',
   props: {
-    value: [String, Number, Array] as PropType<string | number | (string | number)[]>,
-    defaultValue: [String, Number, Array] as PropType<string | number | (string | number)[]>,
+    value: [String, Number, Array] as PropType<TreeSelectValue>,
+    defaultValue: [String, Number, Array] as PropType<TreeSelectValue>,
     treeData: { type: Array as PropType<TreeSelectNode[]>, default: () => [] },
     multiple: Boolean,
     treeCheckable: Boolean,
+    treeCheckStrictly: Boolean,
+    showCheckedStrategy: { type: String as PropType<ShowCheckedStrategy>, default: 'SHOW_CHILD' },
     showSearch: Boolean,
+    autoClearSearchValue: { type: Boolean, default: true },
     allowClear: Boolean,
     placeholder: { type: String, default: '请选择' },
     disabled: Boolean,
     size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
+    maxCount: Number,
+    notFoundContent: { type: String, default: '暂无数据' },
     treeDefaultExpandAll: Boolean,
+    treeDefaultExpandedKeys: { type: Array as PropType<Key[]>, default: () => [] },
+    open: { type: Boolean, default: undefined },
+    defaultOpen: Boolean,
     fieldNames: Object as PropType<{ label?: string; value?: string; children?: string }>,
   },
-  emits: ['update:value', 'change', 'search', 'dropdownVisibleChange'],
+  emits: ['update:value', 'update:open', 'change', 'search', 'select', 'treeExpand', 'dropdownVisibleChange', 'openChange', 'clear'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tree-select')
     const selectorRef = ref<HTMLElement | null>(null)
     const dropdownRef = ref<HTMLElement | null>(null)
-    const innerOpen = ref(false)
+    const innerOpen = ref(!!props.defaultOpen)
     const dropdownPos = ref({ top: 0, left: 0, width: 0 })
     const searchText = ref('')
 
@@ -43,37 +56,103 @@ export const TreeSelect = defineComponent({
     const childrenField = computed(() => props.fieldNames?.children ?? 'children')
 
     const getLabel = (n: TreeSelectNode) => n[labelField.value] as string
-    const getValue = (n: TreeSelectNode) => n[valueField.value] as string | number
+    const getValue = (n: TreeSelectNode) => n[valueField.value] as Key
     const getChildren = (n: TreeSelectNode) => n[childrenField.value] as TreeSelectNode[] | undefined
 
     const isMultiple = computed(() => props.multiple || props.treeCheckable)
+    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
-    const normalizeValue = (v: typeof props.value) => {
+    const normalizeValue = (v: TreeSelectValue | undefined) => {
       if (v === undefined || v === null) return isMultiple.value ? [] : undefined
       return v
     }
 
-    const innerValue = ref<string | number | (string | number)[] | undefined>(
-      normalizeValue(props.defaultValue ?? props.value)
+    const innerValue = ref<TreeSelectValue | undefined>(
+      normalizeValue(props.defaultValue ?? props.value),
     )
     watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = v })
 
-    const currentValue = computed(() => props.value !== undefined ? props.value : innerValue.value)
-    const selectedValues = computed(() => {
+    const currentValue = computed(() => (props.value !== undefined ? props.value : innerValue.value))
+    const selectedValues = computed<Key[]>(() => {
       const v = currentValue.value
       if (v === undefined || v === null) return []
       return Array.isArray(v) ? v : [v]
     })
 
-    // Flatten tree for rendering
-    const getAllKeys = (nodes: TreeSelectNode[]): (string | number)[] =>
+    // ===================== Tree maps =====================
+    interface TreeMaps {
+      nodeMap: Map<Key, TreeSelectNode>
+      parentMap: Map<Key, Key | undefined>
+      childKeysMap: Map<Key, Key[]>
+      labelMap: Map<Key, string>
+      rootKeys: Key[]
+    }
+    const maps = computed<TreeMaps>(() => {
+      const nodeMap = new Map<Key, TreeSelectNode>()
+      const parentMap = new Map<Key, Key | undefined>()
+      const childKeysMap = new Map<Key, Key[]>()
+      const labelMap = new Map<Key, string>()
+      const walk = (nodes: TreeSelectNode[], parent: Key | undefined) => {
+        for (const n of nodes) {
+          const k = getValue(n)
+          nodeMap.set(k, n)
+          parentMap.set(k, parent)
+          labelMap.set(k, getLabel(n))
+          const ch = getChildren(n)
+          if (ch?.length) {
+            childKeysMap.set(k, ch.map(getValue))
+            walk(ch, k)
+          }
+        }
+      }
+      walk(props.treeData, undefined)
+      return { nodeMap, parentMap, childKeysMap, labelMap, rootKeys: props.treeData.map(getValue) }
+    })
+
+    const descendantLeaves = (key: Key): Key[] => {
+      const children = maps.value.childKeysMap.get(key)
+      if (!children?.length) return [key]
+      return children.flatMap((c) => descendantLeaves(c))
+    }
+
+    // Conduct checked state from a set of checked leaf keys (cascade up).
+    const conductCheck = (checkedLeaves: Set<Key>): { checked: Set<Key>; half: Set<Key> } => {
+      const { childKeysMap, rootKeys } = maps.value
+      const checked = new Set<Key>(checkedLeaves)
+      const half = new Set<Key>()
+      const visit = (key: Key): 'checked' | 'half' | 'none' => {
+        const children = childKeysMap.get(key)
+        if (!children?.length) return checked.has(key) ? 'checked' : 'none'
+        let allChecked = true
+        let anyChecked = false
+        for (const c of children) {
+          const s = visit(c)
+          if (s === 'checked') anyChecked = true
+          else if (s === 'half') { anyChecked = true; allChecked = false }
+          else allChecked = false
+        }
+        if (allChecked) { checked.add(key); return 'checked' }
+        checked.delete(key)
+        if (anyChecked) { half.add(key); return 'half' }
+        return 'none'
+      }
+      rootKeys.forEach(visit)
+      return { checked, half }
+    }
+
+    // ===================== Expand keys =====================
+    const getAllKeys = (nodes: TreeSelectNode[]): Key[] =>
       nodes.flatMap((n) => [getValue(n), ...getAllKeys(getChildren(n) ?? [])])
 
-    const expandedKeys = ref<(string | number)[]>(
-      props.treeDefaultExpandAll ? getAllKeys(props.treeData) : []
-    )
+    const initExpandedKeys = computed(() => {
+      if (props.treeDefaultExpandAll) return getAllKeys(props.treeData)
+      return props.treeDefaultExpandedKeys
+    })
+    const expandedKeys = ref<Key[]>([...initExpandedKeys.value])
+    watch(initExpandedKeys, (v) => { expandedKeys.value = [...v] })
 
-    function flattenTree(nodes: TreeSelectNode[], level = 0): FlatNode[] {
+    // ===================== Flatten tree =====================
+    function flattenTree(nodes: TreeSelectNode[], level = 0, forceExpand = false): FlatNode[] {
       return nodes.flatMap((node) => {
         const children = getChildren(node)
         const key = getValue(node)
@@ -83,40 +162,74 @@ export const TreeSelect = defineComponent({
           hasChildren: !!(children?.length),
           valueKey: key,
           label: getLabel(node),
+          forceExpand,
         }]
-        if (children?.length && expandedKeys.value.includes(key)) {
-          result.push(...flattenTree(children, level + 1))
+        if (children?.length && (forceExpand || expandedKeys.value.includes(key))) {
+          result.push(...flattenTree(children, level + 1, forceExpand))
         }
         return result
       })
     }
 
+    // ===================== Search =====================
     const flatNodes = computed(() => {
-      const all = flattenTree(props.treeData)
-      if (!searchText.value) return all
+      if (!searchText.value) return flattenTree(props.treeData)
       const q = searchText.value.toLowerCase()
-      return all.filter((n) => n.label.toLowerCase().includes(q))
+      const matchKeys = new Set<Key>()
+      const ancestorKeys = new Set<Key>()
+      const walk = (nodes: TreeSelectNode[]) => {
+        for (const n of nodes) {
+          const k = getValue(n)
+          const label = getLabel(n)
+          if (label.toLowerCase().includes(q)) {
+            matchKeys.add(k)
+            let p = maps.value.parentMap.get(k)
+            while (p !== undefined) {
+              ancestorKeys.add(p)
+              p = maps.value.parentMap.get(p)
+            }
+          }
+          const ch = getChildren(n)
+          if (ch) walk(ch)
+        }
+      }
+      walk(props.treeData)
+      const filter = (nodes: TreeSelectNode[], level = 0): FlatNode[] => {
+        return nodes.flatMap((node) => {
+          const k = getValue(node)
+          const isMatch = matchKeys.has(k)
+          const isAncestor = ancestorKeys.has(k)
+          if (!isMatch && !isAncestor) return []
+          const children = getChildren(node)
+          const result: FlatNode[] = [{
+            node,
+            level,
+            hasChildren: !!(children?.length),
+            valueKey: k,
+            label: getLabel(node),
+            forceExpand: isAncestor,
+          }]
+          if (children && isAncestor) {
+            result.push(...filter(children, level + 1))
+          }
+          return result
+        })
+      }
+      return filter(props.treeData)
     })
 
-    // Build label map for display
-    function buildLabelMap(nodes: TreeSelectNode[], map: Map<string | number, string> = new Map()) {
-      for (const n of nodes) {
-        map.set(getValue(n), getLabel(n))
-        const children = getChildren(n)
-        if (children) buildLabelMap(children, map)
-      }
-      return map
-    }
-    const labelMap = computed(() => buildLabelMap(props.treeData))
-
+    // ===================== Display labels =====================
     const selectedLabels = computed(() =>
-      selectedValues.value.map((v) => labelMap.value.get(v) ?? String(v))
+      selectedValues.value.map((v) => maps.value.labelMap.get(v) ?? String(v)),
     )
 
+    // ===================== Dropdown =====================
     async function openDropdown() {
       if (props.disabled) return
       innerOpen.value = true
+      emit('update:open', true)
       emit('dropdownVisibleChange', true)
+      emit('openChange', true)
       await nextTick()
       if (selectorRef.value) {
         const rect = selectorRef.value.getBoundingClientRect()
@@ -131,42 +244,100 @@ export const TreeSelect = defineComponent({
     function closeDropdown() {
       innerOpen.value = false
       searchText.value = ''
+      emit('update:open', false)
       emit('dropdownVisibleChange', false)
+      emit('openChange', false)
     }
 
-    function toggleExpand(key: string | number) {
+    function toggleExpand(key: Key) {
       if (expandedKeys.value.includes(key)) {
         expandedKeys.value = expandedKeys.value.filter((k) => k !== key)
       } else {
         expandedKeys.value = [...expandedKeys.value, key]
       }
+      emit('treeExpand', expandedKeys.value)
     }
 
+    // ===================== Selection =====================
     function selectNode(node: TreeSelectNode) {
-      if (node.disabled || props.disabled) return
+      const selectable = node.selectable !== false
+      if (!selectable || node.disabled || props.disabled) return
       const key = getValue(node)
-      if (isMultiple.value) {
+      const label = getLabel(node)
+
+      if (props.treeCheckable) {
+        // Checkable mode
+        if (node.disableCheckbox) return
+        let newVals: Key[]
+        if (props.treeCheckStrictly) {
+          // Strict: no cascade
+          const vals = [...selectedValues.value]
+          const idx = vals.indexOf(key)
+          if (idx >= 0) vals.splice(idx, 1)
+          else vals.push(key)
+          newVals = vals
+        } else {
+          // Cascade: toggle all descendants
+          const leaves = descendantLeaves(key)
+          const currentLeaves = new Set(selectedValues.value)
+          const allChecked = leaves.every((l) => currentLeaves.has(l))
+          if (allChecked) {
+            leaves.forEach((l) => currentLeaves.delete(l))
+          } else {
+            leaves.forEach((l) => currentLeaves.add(l))
+          }
+          const { checked } = conductCheck(currentLeaves)
+          // Apply showCheckedStrategy
+          if (props.showCheckedStrategy === 'SHOW_ALL') {
+            newVals = Array.from(checked)
+          } else if (props.showCheckedStrategy === 'SHOW_PARENT') {
+            // Only show parent if all children checked
+            newVals = Array.from(checked).filter((k) => {
+              const children = maps.value.childKeysMap.get(k)
+              if (!children?.length) return true
+              return children.every((c) => checked.has(c))
+            })
+          } else {
+            // SHOW_CHILD: only leaves
+            newVals = Array.from(checked).filter((k) => !maps.value.childKeysMap.get(k)?.length)
+          }
+        }
+        if (props.maxCount !== undefined && newVals.length > props.maxCount) return
+        innerValue.value = newVals
+        emit('update:value', newVals)
+        emit('change', newVals, newVals.map((v) => maps.value.labelMap.get(v) ?? String(v)))
+        emit('select', key, node)
+        if (props.autoClearSearchValue) searchText.value = ''
+      } else if (isMultiple.value) {
+        // Multiple (non-checkable)
         const vals = [...selectedValues.value]
         const idx = vals.indexOf(key)
         if (idx >= 0) vals.splice(idx, 1)
-        else vals.push(key)
+        else {
+          if (props.maxCount !== undefined && vals.length >= props.maxCount) return
+          vals.push(key)
+        }
         innerValue.value = vals
         emit('update:value', vals)
-        emit('change', vals, selectedLabels.value)
+        emit('change', vals, vals.map((v) => maps.value.labelMap.get(v) ?? String(v)))
+        emit('select', key, node)
+        if (props.autoClearSearchValue) searchText.value = ''
       } else {
+        // Single
         innerValue.value = key
         emit('update:value', key)
-        emit('change', key, getLabel(node))
+        emit('change', key, label)
+        emit('select', key, node)
         closeDropdown()
       }
     }
 
-    function removeTag(val: string | number, e: MouseEvent) {
+    function removeTag(val: Key, e: MouseEvent) {
       e.stopPropagation()
       const vals = selectedValues.value.filter((v) => v !== val)
       innerValue.value = vals
       emit('update:value', vals)
-      emit('change', vals, vals.map((v) => labelMap.value.get(v) ?? String(v)))
+      emit('change', vals, vals.map((v) => maps.value.labelMap.get(v) ?? String(v)))
     }
 
     function clearAll(e: MouseEvent) {
@@ -175,10 +346,11 @@ export const TreeSelect = defineComponent({
       innerValue.value = empty
       emit('update:value', empty)
       emit('change', empty, [])
+      emit('clear')
     }
 
     const handleOutsideClick = (e: MouseEvent) => {
-      if (!innerOpen.value) return
+      if (!isOpen.value) return
       if (selectorRef.value?.contains(e.target as Node) || dropdownRef.value?.contains(e.target as Node)) return
       closeDropdown()
     }
@@ -186,19 +358,34 @@ export const TreeSelect = defineComponent({
     onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
     onBeforeUnmount(() => document.removeEventListener('mousedown', handleOutsideClick))
 
+    // ===================== Render =====================
     return () => {
       const hasValue = selectedValues.value.length > 0
       const showClear = props.allowClear && hasValue && !props.disabled
 
+      // Compute checked/half for checkable mode
+      let checkedSet = new Set<Key>()
+      let halfSet = new Set<Key>()
+      if (props.treeCheckable && !props.treeCheckStrictly) {
+        const leaves = new Set(selectedValues.value)
+        const result = conductCheck(leaves)
+        checkedSet = result.checked
+        halfSet = result.half
+      } else if (props.treeCheckable) {
+        checkedSet = new Set(selectedValues.value)
+      }
+
       return (
         <div class={cls(prefixCls, `${prefixCls}-${props.size}`, {
-          [`${prefixCls}-open`]: innerOpen.value,
+          [`${prefixCls}-open`]: isOpen.value,
           [`${prefixCls}-disabled`]: props.disabled,
+          [`${prefixCls}-status-error`]: props.status === 'error',
+          [`${prefixCls}-status-warning`]: props.status === 'warning',
         })}>
           <div
             ref={selectorRef}
             class={`${prefixCls}-selector`}
-            onClick={innerOpen.value ? closeDropdown : openDropdown}
+            onClick={isOpen.value ? closeDropdown : openDropdown}
           >
             {isMultiple.value ? (
               <>
@@ -230,7 +417,7 @@ export const TreeSelect = defineComponent({
                 ) : (
                   <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder}</span>
                 )}
-                {props.showSearch && innerOpen.value && (
+                {props.showSearch && isOpen.value && (
                   <input
                     class={`${prefixCls}-selection-search`}
                     value={searchText.value}
@@ -246,14 +433,14 @@ export const TreeSelect = defineComponent({
           </div>
 
           <div class={`${prefixCls}-arrow`}>
-            <span class={cls(`${prefixCls}-arrow-icon`, { [`${prefixCls}-arrow-icon-open`]: innerOpen.value })}>▾</span>
+            <span class={cls(`${prefixCls}-arrow-icon`, { [`${prefixCls}-arrow-icon-open`]: isOpen.value })}>▾</span>
           </div>
 
           {showClear && (
             <span class={`${prefixCls}-clear`} onClick={clearAll}>×</span>
           )}
 
-          {innerOpen.value && (
+          {isOpen.value && (
             <Teleport to="body">
               <div
                 ref={dropdownRef}
@@ -267,11 +454,13 @@ export const TreeSelect = defineComponent({
                 }}
               >
                 {flatNodes.value.length === 0 ? (
-                  <div class={`${prefixCls}-dropdown-empty`}>暂无数据</div>
+                  <div class={`${prefixCls}-dropdown-empty`}>{props.notFoundContent}</div>
                 ) : (
-                  flatNodes.value.map(({ node, level, hasChildren, valueKey, label }) => {
+                  flatNodes.value.map(({ node, level, hasChildren, valueKey, label, forceExpand }) => {
                     const isSelected = selectedValues.value.includes(valueKey)
-                    const isExpanded = expandedKeys.value.includes(valueKey)
+                    const isExpanded = forceExpand || expandedKeys.value.includes(valueKey)
+                    const isChecked = checkedSet.has(valueKey)
+                    const isHalf = halfSet.has(valueKey)
                     return (
                       <div
                         key={valueKey}
@@ -285,15 +474,16 @@ export const TreeSelect = defineComponent({
                           class={cls(`${prefixCls}-tree-switcher`, {
                             [`${prefixCls}-tree-switcher-noop`]: !hasChildren,
                           })}
-                          onClick={(e) => { e.stopPropagation(); if (hasChildren) toggleExpand(valueKey) }}
+                          onClick={(e) => { e.stopPropagation(); if (hasChildren && !forceExpand) toggleExpand(valueKey) }}
                         >
-                          {hasChildren ? (isExpanded ? '▾' : '▸') : null}
+                          {hasChildren && !forceExpand ? (isExpanded ? '▾' : '▸') : null}
                         </span>
                         {props.treeCheckable && (
                           <span
                             class={cls(`${prefixCls}-tree-checkbox`, {
-                              [`${prefixCls}-tree-checkbox-checked`]: isSelected,
-                              [`${prefixCls}-tree-checkbox-disabled`]: node.disabled,
+                              [`${prefixCls}-tree-checkbox-checked`]: isChecked,
+                              [`${prefixCls}-tree-checkbox-indeterminate`]: isHalf,
+                              [`${prefixCls}-tree-checkbox-disabled`]: node.disabled || node.disableCheckbox,
                             })}
                             onClick={(e) => { e.stopPropagation(); selectNode(node) }}
                           >
@@ -318,3 +508,4 @@ export const TreeSelect = defineComponent({
     }
   },
 })
+

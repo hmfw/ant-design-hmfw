@@ -211,3 +211,14 @@
 .hmfw-input-password .hmfw-input-suffix {
   cursor: pointer;
 }
+
+.hmfw-input-password-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Loading icon animation */
+.hmfw-icon-loading {
+  animation: hmfw-icon-spin 1s infinite linear;
+}

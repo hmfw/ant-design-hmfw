@@ -3,7 +3,7 @@ import {
 } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
-import type { RangeValue } from './types'
+import type { RangeValue, RangePreset } from './types'
 
 function pad(n: number) { return String(n).padStart(2, '0') }
 
@@ -49,7 +49,6 @@ function buildCalendar(year: number, month: number) {
   }
   return days
 }
-
 export const RangePicker = defineComponent({
   name: 'RangePicker',
   props: {
@@ -57,17 +56,28 @@ export const RangePicker = defineComponent({
     defaultValue: Array as unknown as PropType<RangeValue>,
     format: { type: String, default: 'YYYY-MM-DD' },
     disabled: { type: [Boolean, Array] as PropType<boolean | [boolean, boolean]>, default: false },
-    placeholder: { type: Array as unknown as PropType<[string, string]>, default: () => ['开始日期', '结束日期'] },
+    placeholder: { type: Array as unknown as PropType<[string, string]> },
     allowClear: { type: Boolean, default: true },
+    allowEmpty: { type: Array as unknown as PropType<[boolean, boolean]> },
+    order: { type: Boolean, default: true },
+    separator: { type: String, default: '→' },
+    presets: { type: Array as PropType<RangePreset[]> },
     size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
-    disabledDate: Function as PropType<(d: Date) => boolean>,
+    disabledDate: Function as PropType<(d: Date, info?: { from?: Date; type?: string }) => boolean>,
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
+    open: { type: Boolean, default: undefined },
   },
   emits: ['update:value', 'change', 'openChange', 'calendarChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('date-picker')
     const locale = useLocale()
     const now = new Date()
+
+    const placeholders = computed<[string, string]>(() => {
+      if (props.placeholder) return props.placeholder
+      const range = locale.value.DatePicker.rangePlaceholder
+      return (range as [string, string]) ?? ['Start date', 'End date']
+    })
 
     const parseValue = (v: RangeValue | undefined): [Date | null, Date | null] => {
       if (!v) return [null, null]
@@ -87,6 +97,7 @@ export const RangePicker = defineComponent({
     })
 
     const innerOpen = ref(false)
+    const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
     const selecting = ref<'start' | 'end'>('start')
     const hoverDate = ref<Date | null>(null)
 
@@ -100,13 +111,17 @@ export const RangePicker = defineComponent({
     const panelRef = ref<HTMLElement>()
     const panelPos = ref({ top: 0, left: 0 })
 
-    const isDisabled = computed(() => {
-      if (typeof props.disabled === 'boolean') return props.disabled
-      return false
-    })
+    // Whole-picker disabled state (boolean form only).
+    const isDisabled = computed(() => typeof props.disabled === 'boolean' && props.disabled)
+    const startDisabled = computed(() =>
+      Array.isArray(props.disabled) ? !!props.disabled[0] : !!props.disabled)
+    const endDisabled = computed(() =>
+      Array.isArray(props.disabled) ? !!props.disabled[1] : !!props.disabled)
 
     const displayStart = computed(() => startDate.value ? formatDate(startDate.value, props.format) : '')
     const displayEnd = computed(() => endDate.value ? formatDate(endDate.value, props.format) : '')
+
+    const hasValue = computed(() => !!(startDate.value || endDate.value))
 
     const updatePos = () => {
       if (!triggerRef.value) return
@@ -114,21 +129,25 @@ export const RangePicker = defineComponent({
       panelPos.value = { top: rect.bottom + window.scrollY + 4, left: rect.left + window.scrollX }
     }
 
+    const setOpen = (next: boolean) => {
+      if (props.open === undefined) innerOpen.value = next
+      emit('openChange', next)
+    }
+
     const openPanel = () => {
-      if (isDisabled.value) return
+      if (isDisabled.value || isOpen.value) return
       updatePos()
       const d = startDate.value ?? now
       leftYear.value = d.getFullYear()
       leftMonth.value = d.getMonth()
-      selecting.value = 'start'
-      innerOpen.value = true
-      emit('openChange', true)
+      // Resume selection from the side that is still empty.
+      selecting.value = startDate.value && !endDate.value ? 'end' : 'start'
+      setOpen(true)
     }
 
     const closePanel = () => {
-      innerOpen.value = false
       hoverDate.value = null
-      emit('openChange', false)
+      setOpen(false)
     }
 
     const handleOutsideClick = (e: MouseEvent) => {
@@ -139,31 +158,48 @@ export const RangePicker = defineComponent({
     onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
     onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
 
+    const toStr = (d: Date | null) => d ? formatDate(d, props.format) : null
+
+    const emitCalendarChange = (pair: [Date | null, Date | null], range: 'start' | 'end') => {
+      emit('calendarChange', [toStr(pair[0]), toStr(pair[1])] as RangeValue, pair, { range })
+    }
+
+    const commit = (pair: [Date | null, Date | null]) => {
+      const result = [toStr(pair[0]), toStr(pair[1])] as RangeValue
+      innerValue.value = pair
+      emit('update:value', result)
+      emit('change', result, pair)
+    }
+
     const selectDate = (d: Date) => {
-      if (props.disabledDate?.(d)) return
+      if (props.disabledDate?.(d, { type: 'date', from: innerValue.value[0] ?? undefined })) return
       if (selecting.value === 'start') {
         innerValue.value = [d, null]
         selecting.value = 'end'
-        emit('calendarChange', [formatDate(d, props.format), null])
+        emitCalendarChange([d, null], 'start')
       } else {
         let start = innerValue.value[0]
         let end = d
-        if (start && end < start) { [start, end] = [end, start] }
-        innerValue.value = [start, end]
-        const result = [
-          start ? formatDate(start, props.format) : null,
-          end ? formatDate(end, props.format) : null,
-        ] as RangeValue
-        emit('update:value', result)
-        emit('change', result, [start, end])
-        emit('calendarChange', result)
+        if (props.order && start && end < start) { [start, end] = [end, start] }
+        const pair: [Date | null, Date | null] = [start, end]
+        emitCalendarChange(pair, 'end')
+        commit(pair)
         closePanel()
       }
+    }
+
+    const applyPreset = (preset: RangePreset) => {
+      const raw = typeof preset.value === 'function' ? preset.value() : preset.value
+      const pair: [Date | null, Date | null] = [parseDate(raw[0]), parseDate(raw[1])]
+      emitCalendarChange(pair, 'end')
+      commit(pair)
+      closePanel()
     }
 
     const clearValue = (e: MouseEvent) => {
       e.stopPropagation()
       innerValue.value = [null, null]
+      selecting.value = 'start'
       emit('update:value', [null, null])
       emit('change', [null, null], [null, null])
     }
@@ -215,7 +251,7 @@ export const RangePicker = defineComponent({
             <div class={`${prefixCls}-days`}>
               {calendar.map(({ date, inCurrentMonth }, i) => {
                 const isToday = isSameDay(date, now)
-                const isDisabledDay = props.disabledDate?.(date) ?? false
+                const isDisabledDay = props.disabledDate?.(date, { type: 'date', from: innerValue.value[0] ?? undefined }) ?? false
                 const inRange = isInRange(date)
                 const rangeStart = isRangeStart(date)
                 const rangeEnd = isRangeEnd(date)
@@ -251,7 +287,7 @@ export const RangePicker = defineComponent({
         <div
           ref={triggerRef}
           class={cls(`${prefixCls}`, `${prefixCls}-range`, `${prefixCls}-${props.size}`, {
-            [`${prefixCls}-open`]: innerOpen.value,
+            [`${prefixCls}-open`]: isOpen.value,
             [`${prefixCls}-disabled`]: isDisabled.value,
             [`${prefixCls}-status-error`]: props.status === 'error',
             [`${prefixCls}-status-warning`]: props.status === 'warning',
@@ -262,35 +298,52 @@ export const RangePicker = defineComponent({
             <input
               readonly
               value={displayStart.value}
-              placeholder={props.placeholder[0]}
-              disabled={isDisabled.value}
+              placeholder={placeholders.value[0]}
+              disabled={startDisabled.value}
               class={`${prefixCls}-input-inner`}
             />
-            <span class={`${prefixCls}-range-separator`}>→</span>
+            <span class={`${prefixCls}-range-separator`}>{props.separator}</span>
             <input
               readonly
               value={displayEnd.value}
-              placeholder={props.placeholder[1]}
-              disabled={isDisabled.value}
+              placeholder={placeholders.value[1]}
+              disabled={endDisabled.value}
               class={`${prefixCls}-input-inner`}
             />
-            {props.allowClear && (displayStart.value || displayEnd.value) && !isDisabled.value && (
+            {props.allowClear && hasValue.value && !isDisabled.value && (
               <span class={`${prefixCls}-clear`} onClick={clearValue}>✕</span>
             )}
             <span class={`${prefixCls}-suffix`}>📅</span>
           </span>
         </div>
 
-        {innerOpen.value && (
+        {isOpen.value && (
           <Teleport to="body">
             <div
               ref={panelRef}
               class={`${prefixCls}-popup ${prefixCls}-range-popup`}
               style={{ position: 'absolute', top: `${panelPos.value.top}px`, left: `${panelPos.value.left}px`, zIndex: 1050 }}
             >
-              <div class={`${prefixCls}-range-panels`}>
-                {renderPanel(leftYear.value, leftMonth.value, 'left')}
-                {renderPanel(rightYear.value, rightMonth.value, 'right')}
+              <div class={`${prefixCls}-range-wrapper`}>
+                {props.presets && props.presets.length > 0 && (
+                  <div class={`${prefixCls}-presets`}>
+                    <ul>
+                      {props.presets.map((preset) => (
+                        <li
+                          key={preset.label}
+                          class={`${prefixCls}-preset`}
+                          onClick={() => applyPreset(preset)}
+                        >
+                          {preset.label}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <div class={`${prefixCls}-range-panels`}>
+                  {renderPanel(leftYear.value, leftMonth.value, 'left')}
+                  {renderPanel(rightYear.value, rightMonth.value, 'right')}
+                </div>
               </div>
             </div>
           </Teleport>

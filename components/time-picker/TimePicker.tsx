@@ -1,32 +1,59 @@
 import {
-  defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport,
+  defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick,
+  type PropType, type VNodeChild, Teleport,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 
+type Placement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
+type Variant = 'outlined' | 'borderless' | 'filled' | 'underlined'
+
+export interface DisabledTimeConfig {
+  disabledHours?: () => number[]
+  disabledMinutes?: (selectedHour: number) => number[]
+  disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]
+}
 
 function pad(n: number) {
   return String(n).padStart(2, '0')
 }
 
-function parseTime(val: string | undefined) {
+function parseTime(val?: string) {
   if (!val) return { h: 0, m: 0, s: 0 }
-  const parts = val.split(':').map(Number)
-  return { h: parts[0] ?? 0, m: parts[1] ?? 0, s: parts[2] ?? 0 }
+  const lower = val.toLowerCase()
+  const isPM = lower.includes('pm')
+  const isAM = lower.includes('am')
+  const parts = val.replace(/[^\d:]/g, '').split(':').map((x) => Number(x))
+  let h = parts[0] || 0
+  const m = parts[1] || 0
+  const s = parts[2] || 0
+  if (isPM && h < 12) h += 12
+  if (isAM && h === 12) h = 0
+  return { h, m, s }
 }
 
-function formatTime(h: number, m: number, s: number, fmt = 'HH:mm:ss') {
-  return fmt
-    .replace('HH', pad(h))
-    .replace('mm', pad(m))
-    .replace('ss', pad(s))
-    .replace('H', String(h))
-    .replace('m', String(m))
-    .replace('s', String(s))
+function formatTime(h: number, m: number, s: number, fmt: string) {
+  const isPM = h >= 12
+  const h12 = h % 12 === 0 ? 12 : h % 12
+  return fmt.replace(/HH|H|hh|h|mm|m|ss|s|A|a/g, (token) => {
+    switch (token) {
+      case 'HH': return pad(h)
+      case 'H': return String(h)
+      case 'hh': return pad(h12)
+      case 'h': return String(h12)
+      case 'mm': return pad(m)
+      case 'm': return String(m)
+      case 'ss': return pad(s)
+      case 's': return String(s)
+      case 'A': return isPM ? 'PM' : 'AM'
+      case 'a': return isPM ? 'pm' : 'am'
+      default: return token
+    }
+  })
 }
 
-function hasSeconds(fmt = 'HH:mm:ss') {
-  return fmt.includes('s')
+function hasSeconds(fmt: string) {
+  return /s/.test(fmt)
 }
 
 export const TimePicker = defineComponent({
@@ -42,16 +69,20 @@ export const TimePicker = defineComponent({
     hourStep: { type: Number, default: 1 },
     minuteStep: { type: Number, default: 1 },
     secondStep: { type: Number, default: 1 },
-    disabledHours: Function as PropType<() => number[]>,
-    disabledMinutes: Function as PropType<(h: number) => number[]>,
-    disabledSeconds: Function as PropType<(h: number, m: number) => number[]>,
+    disabledTime: Function as PropType<() => DisabledTimeConfig>,
+    hideDisabledOptions: Boolean,
     showNow: { type: Boolean, default: true },
     use12Hours: Boolean,
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
     open: { type: Boolean, default: undefined },
+    needConfirm: Boolean,
+    changeOnScroll: Boolean,
+    renderExtraFooter: Function as PropType<() => VNodeChild>,
+    variant: { type: String as PropType<Variant>, default: 'outlined' },
+    placement: { type: String as PropType<Placement>, default: 'bottomLeft' },
   },
-  emits: ['update:value', 'change', 'openChange'],
-  setup(props, { emit }) {
+  emits: ['update:value', 'change', 'openChange', 'focus', 'blur'],
+  setup(props, { emit, expose, slots }) {
     const prefixCls = usePrefixCls('time-picker')
     const parsed = parseTime(props.defaultValue ?? props.value)
     const innerH = ref(parsed.h)
@@ -60,21 +91,23 @@ export const TimePicker = defineComponent({
     const innerOpen = ref(false)
     const triggerRef = ref<HTMLElement>()
     const panelRef = ref<HTMLElement>()
+    const inputRef = ref<HTMLInputElement>()
+    const hasValue = ref(!!props.defaultValue || !!props.value)
 
     const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
 
     const displayValue = computed(() => {
-      if (props.value) {
+      if (props.value !== undefined) {
+        if (!props.value) return ''
         const p = parseTime(props.value)
         return formatTime(p.h, p.m, p.s, props.format)
       }
-      return innerOpen.value || innerH.value || innerM.value || innerS.value
-        ? formatTime(innerH.value, innerM.value, innerS.value, props.format)
-        : ''
+      if (!hasValue.value) return ''
+      return formatTime(innerH.value, innerM.value, innerS.value, props.format)
     })
 
     const currentVal = computed(() => {
-      if (props.value) {
+      if (props.value !== undefined) {
         const p = parseTime(props.value)
         return { h: p.h, m: p.m, s: p.s }
       }
@@ -82,11 +115,19 @@ export const TimePicker = defineComponent({
     })
 
     watch(() => props.value, (v) => {
-      if (v) {
-        const p = parseTime(v)
-        innerH.value = p.h
-        innerM.value = p.m
-        innerS.value = p.s
+      if (v !== undefined) {
+        if (!v) {
+          innerH.value = 0
+          innerM.value = 0
+          innerS.value = 0
+          hasValue.value = false
+        } else {
+          const p = parseTime(v)
+          innerH.value = p.h
+          innerM.value = p.m
+          innerS.value = p.s
+          hasValue.value = true
+        }
       }
     })
 
@@ -95,9 +136,11 @@ export const TimePicker = defineComponent({
     const updatePos = () => {
       if (!triggerRef.value) return
       const rect = triggerRef.value.getBoundingClientRect()
+      const isTop = props.placement.startsWith('top')
+      const isRight = props.placement.endsWith('Right')
       panelPos.value = {
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX,
+        top: isTop ? rect.top + window.scrollY - 300 : rect.bottom + window.scrollY + 4,
+        left: isRight ? rect.right + window.scrollX - 200 : rect.left + window.scrollX,
       }
     }
 
@@ -115,8 +158,9 @@ export const TimePicker = defineComponent({
 
     const confirmTime = () => {
       const str = formatTime(innerH.value, innerM.value, innerS.value, props.format)
+      hasValue.value = true
       emit('update:value', str)
-      emit('change', str)
+      emit('change', str, str)
       close()
     }
 
@@ -125,6 +169,7 @@ export const TimePicker = defineComponent({
       innerH.value = now.getHours()
       innerM.value = now.getMinutes()
       innerS.value = now.getSeconds()
+      if (!props.needConfirm) confirmTime()
     }
 
     const clearValue = (e: MouseEvent) => {
@@ -132,8 +177,9 @@ export const TimePicker = defineComponent({
       innerH.value = 0
       innerM.value = 0
       innerS.value = 0
+      hasValue.value = false
       emit('update:value', undefined)
-      emit('change', undefined)
+      emit('change', undefined, '')
     }
 
     const handleOutsideClick = (e: MouseEvent) => {
@@ -146,37 +192,96 @@ export const TimePicker = defineComponent({
     onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
     onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
 
+    const disabledConfig = computed(() => props.disabledTime?.() ?? {})
+
     const hours = computed(() => {
-      const disabled = props.disabledHours?.() ?? []
-      return Array.from({ length: props.use12Hours ? 12 : 24 }, (_, i) => i * (props.hourStep ?? 1))
-        .filter((h) => !disabled.includes(h))
+      const disabled = disabledConfig.value.disabledHours?.() ?? []
+      const max = props.use12Hours ? 12 : 24
+      const list: number[] = []
+      for (let i = 0; i < max; i += props.hourStep) {
+        if (!props.hideDisabledOptions || !disabled.includes(i)) {
+          list.push(i)
+        }
+      }
+      return list.map((h) => ({ value: h, disabled: disabled.includes(h) }))
     })
 
     const minutes = computed(() => {
-      const disabled = props.disabledMinutes?.(currentVal.value.h) ?? []
-      return Array.from({ length: 60 }, (_, i) => i)
-        .filter((m) => m % (props.minuteStep ?? 1) === 0 && !disabled.includes(m))
+      const disabled = disabledConfig.value.disabledMinutes?.(currentVal.value.h) ?? []
+      const list: number[] = []
+      for (let i = 0; i < 60; i += props.minuteStep) {
+        if (!props.hideDisabledOptions || !disabled.includes(i)) {
+          list.push(i)
+        }
+      }
+      return list.map((m) => ({ value: m, disabled: disabled.includes(m) }))
     })
 
     const seconds = computed(() => {
-      const disabled = props.disabledSeconds?.(currentVal.value.h, currentVal.value.m) ?? []
-      return Array.from({ length: 60 }, (_, i) => i)
-        .filter((s) => s % (props.secondStep ?? 1) === 0 && !disabled.includes(s))
+      const disabled = disabledConfig.value.disabledSeconds?.(currentVal.value.h, currentVal.value.m) ?? []
+      const list: number[] = []
+      for (let i = 0; i < 60; i += props.secondStep) {
+        if (!props.hideDisabledOptions || !disabled.includes(i)) {
+          list.push(i)
+        }
+      }
+      return list.map((s) => ({ value: s, disabled: disabled.includes(s) }))
     })
+
+    const periods = computed(() => [
+      { value: 'AM', disabled: false },
+      { value: 'PM', disabled: false },
+    ])
+
+    const currentPeriod = computed(() => currentVal.value.h >= 12 ? 'PM' : 'AM')
 
     const showSec = computed(() => hasSeconds(props.format))
 
-    const scrollToActive = (el: HTMLElement | null, value: number) => {
+    const scrollToActive = (el: HTMLElement | null, value: number | string) => {
       if (!el) return
-      const item = el.querySelector(`[data-value="${value}"]`) as HTMLElement
-      if (item) item.scrollIntoView({ block: 'nearest' })
+      nextTick(() => {
+        const item = el.querySelector(`[data-value="${value}"]`) as HTMLElement
+        if (item && typeof item.scrollIntoView === 'function') item.scrollIntoView({ block: 'nearest' })
+      })
     }
+
+    const handleHourClick = (h: number, disabled: boolean) => {
+      if (disabled) return
+      innerH.value = h
+      if (props.changeOnScroll && !props.needConfirm) confirmTime()
+    }
+
+    const handleMinuteClick = (m: number, disabled: boolean) => {
+      if (disabled) return
+      innerM.value = m
+      if (props.changeOnScroll && !props.needConfirm) confirmTime()
+    }
+
+    const handleSecondClick = (s: number, disabled: boolean) => {
+      if (disabled) return
+      innerS.value = s
+      if (props.changeOnScroll && !props.needConfirm) confirmTime()
+    }
+
+    const handlePeriodClick = (period: string) => {
+      const isPM = period === 'PM'
+      const currentIsPM = innerH.value >= 12
+      if (isPM !== currentIsPM) {
+        innerH.value = isPM ? innerH.value + 12 : innerH.value - 12
+        if (props.changeOnScroll && !props.needConfirm) confirmTime()
+      }
+    }
+
+    expose({
+      focus: () => inputRef.value?.focus(),
+      blur: () => inputRef.value?.blur(),
+    })
 
     return () => (
       <>
         <div
           ref={triggerRef}
-          class={cls(prefixCls, `${prefixCls}-${props.size}`, {
+          class={cls(prefixCls, `${prefixCls}-${props.size}`, `${prefixCls}-${props.variant}`, {
             [`${prefixCls}-open`]: isOpen.value,
             [`${prefixCls}-disabled`]: props.disabled,
             [`${prefixCls}-status-error`]: props.status === 'error',
@@ -186,11 +291,14 @@ export const TimePicker = defineComponent({
         >
           <span class={`${prefixCls}-input`}>
             <input
+              ref={inputRef}
               readonly
               placeholder={props.placeholder}
               value={displayValue.value}
               disabled={props.disabled}
               class={`${prefixCls}-input-inner`}
+              onFocus={() => emit('focus')}
+              onBlur={() => emit('blur')}
             />
             {props.allowClear && displayValue.value && !props.disabled && (
               <span class={`${prefixCls}-clear`} onClick={clearValue}>✕</span>
@@ -209,15 +317,16 @@ export const TimePicker = defineComponent({
               <div class={`${prefixCls}-panel`}>
                 <div class={`${prefixCls}-panel-inner`}>
                   {/* Hour column */}
-                  <ul class={`${prefixCls}-panel-column`} ref={(el) => scrollToActive(el as HTMLElement, innerH.value)}>
-                    {hours.value.map((h) => (
+                  <ul class={`${prefixCls}-panel-column`} ref={(el) => scrollToActive(el as HTMLElement, props.use12Hours ? innerH.value % 12 || 12 : innerH.value)}>
+                    {hours.value.map(({ value: h, disabled }) => (
                       <li
                         key={h}
                         data-value={h}
                         class={cls(`${prefixCls}-panel-cell`, {
-                          [`${prefixCls}-panel-cell-selected`]: innerH.value === h,
+                          [`${prefixCls}-panel-cell-selected`]: props.use12Hours ? (innerH.value % 12 || 12) === h : innerH.value === h,
+                          [`${prefixCls}-panel-cell-disabled`]: disabled,
                         })}
-                        onClick={() => { innerH.value = h }}
+                        onClick={() => handleHourClick(h, disabled)}
                       >
                         {pad(h)}
                       </li>
@@ -225,14 +334,15 @@ export const TimePicker = defineComponent({
                   </ul>
                   {/* Minute column */}
                   <ul class={`${prefixCls}-panel-column`} ref={(el) => scrollToActive(el as HTMLElement, innerM.value)}>
-                    {minutes.value.map((m) => (
+                    {minutes.value.map(({ value: m, disabled }) => (
                       <li
                         key={m}
                         data-value={m}
                         class={cls(`${prefixCls}-panel-cell`, {
                           [`${prefixCls}-panel-cell-selected`]: innerM.value === m,
+                          [`${prefixCls}-panel-cell-disabled`]: disabled,
                         })}
-                        onClick={() => { innerM.value = m }}
+                        onClick={() => handleMinuteClick(m, disabled)}
                       >
                         {pad(m)}
                       </li>
@@ -241,26 +351,51 @@ export const TimePicker = defineComponent({
                   {/* Second column */}
                   {showSec.value && (
                     <ul class={`${prefixCls}-panel-column`} ref={(el) => scrollToActive(el as HTMLElement, innerS.value)}>
-                      {seconds.value.map((s) => (
+                      {seconds.value.map(({ value: s, disabled }) => (
                         <li
                           key={s}
                           data-value={s}
                           class={cls(`${prefixCls}-panel-cell`, {
                             [`${prefixCls}-panel-cell-selected`]: innerS.value === s,
+                            [`${prefixCls}-panel-cell-disabled`]: disabled,
                           })}
-                          onClick={() => { innerS.value = s }}
+                          onClick={() => handleSecondClick(s, disabled)}
                         >
                           {pad(s)}
                         </li>
                       ))}
                     </ul>
                   )}
+                  {/* AM/PM column */}
+                  {props.use12Hours && (
+                    <ul class={`${prefixCls}-panel-column`} ref={(el) => scrollToActive(el as HTMLElement, currentPeriod.value)}>
+                      {periods.value.map(({ value: period }) => (
+                        <li
+                          key={period}
+                          data-value={period}
+                          class={cls(`${prefixCls}-panel-cell`, {
+                            [`${prefixCls}-panel-cell-selected`]: currentPeriod.value === period,
+                          })}
+                          onClick={() => handlePeriodClick(period)}
+                        >
+                          {period}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
                 <div class={`${prefixCls}-panel-footer`}>
-                  {props.showNow && (
-                    <button class={`${prefixCls}-panel-footer-btn`} onClick={handleNow}>此刻</button>
-                  )}
-                  <button class={`${prefixCls}-panel-footer-btn ${prefixCls}-panel-footer-ok`} onClick={confirmTime}>确定</button>
+                  <div class={`${prefixCls}-panel-footer-extra`}>
+                    {props.renderExtraFooter?.()}
+                  </div>
+                  <div class={`${prefixCls}-panel-footer-actions`}>
+                    {props.showNow && (
+                      <button class={`${prefixCls}-panel-footer-btn`} onClick={handleNow}>此刻</button>
+                    )}
+                    {props.needConfirm && (
+                      <button class={`${prefixCls}-panel-footer-btn ${prefixCls}-panel-footer-ok`} onClick={confirmTime}>确定</button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -270,3 +405,4 @@ export const TimePicker = defineComponent({
     )
   },
 })
+

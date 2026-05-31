@@ -34,25 +34,69 @@
   <SelectSearch />
 </DemoBlock>
 
+### 标签模式
+
+通过 `mode="tags"` 开启标签模式，可以自由输入标签。配合 `token-separators` 可以自动分词。
+
+<DemoBlock title="标签模式" :source="SelectTagsSource">
+  <SelectTags />
+</DemoBlock>
+
+### 获取选项对象
+
+通过 `label-in-value` 可以获取选项的完整对象（包含 value 和 label）。
+
+<DemoBlock title="获取选项对象" :source="SelectLabelInValueSource">
+  <SelectLabelInValue />
+</DemoBlock>
+
+### 选项分组
+
+使用 `options` 的嵌套结构实现选项分组。
+
+<DemoBlock title="选项分组" :source="SelectOptGroupSource">
+  <SelectOptGroup />
+</DemoBlock>
+
+### 限制选择数量
+
+通过 `max-count` 限制多选模式下的最大选择数量。
+
+<DemoBlock title="限制选择数量" :source="SelectMaxCountSource">
+  <SelectMaxCount />
+</DemoBlock>
+
 ## API
 
 ### Select Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 |------|------|------|--------|
-| value(v-model) | 指定当前选中的条目 | `string \| number \| (string \| number)[]` | - |
-| defaultValue | 指定默认选中的条目 | `string \| number \| (string \| number)[]` | - |
-| options | 数据化配置选项内容 | `SelectOption[]` | `[]` |
+| value(v-model) | 指定当前选中的条目 | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | - |
+| defaultValue | 指定默认选中的条目 | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | - |
+| options | 数据化配置选项内容，支持嵌套（OptGroup） | `SelectOption[]` | `[]` |
 | disabled | 是否禁用 | `boolean` | `false` |
 | placeholder | 选择框默认文字 | `string` | - |
 | allowClear | 支持清除 | `boolean` | `false` |
 | size | 选择框大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | mode | 设置 Select 的模式为多选或标签 | `'multiple' \| 'tags'` | - |
 | showSearch | 使单选模式可搜索 | `boolean` | `false` |
-| maxTagCount | 最多显示多少个 tag，响应式模式会对性能产生损耗 | `number` | - |
+| maxTagCount | 最多显示多少个 tag | `number` | - |
+| maxCount | 最多选择多少个选项（multiple/tags 模式） | `number` | - |
+| maxTagPlaceholder | 隐藏 tag 时显示的内容 | `string \| ((omittedValues) => string)` | - |
 | status | 设置校验状态 | `'error' \| 'warning'` | - |
 | open | 是否展开下拉菜单 | `boolean` | - |
 | loading | 加载中状态 | `boolean` | `false` |
+| labelInValue | 是否把每个选项的 label 包装到 value 中 | `boolean` | `false` |
+| tokenSeparators | 自动分词的分隔符（tags 模式） | `string[]` | - |
+| filterOption | 是否根据输入项进行筛选 | `boolean \| ((input: string, option: SelectOption) => boolean)` | `true` |
+| notFoundContent | 当下拉列表为空时显示的内容 | `string` | - |
+| dropdownMatchSelectWidth | 下拉菜单和选择器同宽 | `boolean` | `true` |
+| autoClearSearchValue | 选中后是否清空搜索框（multiple/tags 模式） | `boolean` | `true` |
+| optionRender | 自定义下拉选项渲染 | `(option: SelectOption, info: { index: number }) => VNode` | - |
+| labelRender | 自定义选中项渲染 | `(props: LabeledValue) => VNode` | - |
+| tagRender | 自定义 tag 渲染（multiple/tags 模式） | `(props: { label, value, closable, onClose }) => VNode` | - |
+| fieldNames | 自定义字段名 | `{ label?: string; value?: string; options?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
 
 ### SelectOption
 
@@ -61,14 +105,34 @@
 | value | 选项的值 | `string \| number` |
 | label | 选项的标签 | `string` |
 | disabled | 是否禁用该选项 | `boolean` |
+| title | 选项的 title 属性 | `string` |
+| options | 子选项（用于 OptGroup） | `SelectOption[]` |
+
+### LabeledValue
+
+| 参数 | 说明 | 类型 |
+|------|------|------|
+| value | 选项的值 | `string \| number` |
+| label | 选项的标签 | `string` |
+| key | 选项的 key | `string` |
 
 ### Select Events
 
 | 事件名 | 说明 | 回调参数 |
 |--------|------|----------|
-| update:value | 选中 option，或 input 的 value 变化时，调用此函数 | `(value: string \| number \| (string \| number)[]) => void` |
-| change | 选中 option，或 input 的 value 变化时，调用此函数 | `(value: string \| number \| (string \| number)[], option: SelectOption \| SelectOption[]) => void` |
+| update:value | 选中 option，或 input 的 value 变化时，调用此函数 | `(value: SelectValue) => void` |
+| change | 选中 option，或 input 的 value 变化时，调用此函数 | `(value: SelectValue, option: SelectOption \| SelectOption[]) => void` |
 | search | 文本框值变化时回调 | `(value: string) => void` |
-| focus | 获得焦点时回调 | `(event: FocusEvent) => void` |
-| blur | 失去焦点时回调 | `(event: FocusEvent) => void` |
+| select | 选中选项时回调 | `(value: string \| number, option: SelectOption) => void` |
+| deselect | 取消选中选项时回调 | `(value: string \| number) => void` |
+| focus | 获得焦点时回调 | `() => void` |
+| blur | 失去焦点时回调 | `() => void` |
 | clear | 清除内容时回调 | `() => void` |
+| dropdownVisibleChange | 下拉菜单显示/隐藏时回调 | `(visible: boolean) => void` |
+
+### Select Methods
+
+| 方法名 | 说明 | 参数 |
+|--------|------|------|
+| focus | 获取焦点 | - |
+| blur | 失去焦点 | - |

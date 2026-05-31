@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { TreeSelect } from '../TreeSelect'
 import type { TreeSelectNode } from '../types'
@@ -54,9 +54,8 @@ describe('TreeSelect', () => {
     })
     await wrapper.find('.hmfw-tree-select-selector').trigger('click')
     await wrapper.vm.$nextTick()
-    // Root nodes visible (children collapsed by default)
     const nodes = document.querySelectorAll('.hmfw-tree-select-tree-node')
-    expect(nodes.length).toBe(3) // Node 1, Node 2, Node 3 (children collapsed)
+    expect(nodes.length).toBe(3)
     wrapper.unmount()
   })
 
@@ -71,7 +70,7 @@ describe('TreeSelect', () => {
     switcher?.click()
     await wrapper.vm.$nextTick()
     const nodes = document.querySelectorAll('.hmfw-tree-select-tree-node')
-    expect(nodes.length).toBe(5) // Node 1, 1-1, 1-2, Node 2, Node 3
+    expect(nodes.length).toBe(5)
     wrapper.unmount()
   })
 
@@ -83,7 +82,7 @@ describe('TreeSelect', () => {
     await wrapper.find('.hmfw-tree-select-selector').trigger('click')
     await wrapper.vm.$nextTick()
     const nodes = document.querySelectorAll<HTMLElement>('.hmfw-tree-select-tree-node-content')
-    nodes[1]?.click() // Node 2
+    nodes[1]?.click()
     await wrapper.vm.$nextTick()
     expect(wrapper.emitted('change')?.[0]?.[0]).toBe('2')
     wrapper.unmount()
@@ -97,8 +96,8 @@ describe('TreeSelect', () => {
     await wrapper.find('.hmfw-tree-select-selector').trigger('click')
     await wrapper.vm.$nextTick()
     const nodes = document.querySelectorAll<HTMLElement>('.hmfw-tree-select-tree-node-content')
-    nodes[1]?.click() // Node 2
-    nodes[2]?.click() // Node 3
+    nodes[1]?.click()
+    nodes[2]?.click()
     await wrapper.vm.$nextTick()
     const emitted = wrapper.emitted('change')
     expect(Array.isArray(emitted?.[emitted.length - 1]?.[0])).toBe(true)
@@ -119,6 +118,134 @@ describe('TreeSelect', () => {
     await wrapper.vm.$nextTick()
     const nodes = document.querySelectorAll('.hmfw-tree-select-tree-node')
     expect(nodes.length).toBe(5)
+    wrapper.unmount()
+  })
+
+  it('respects selectable:false', async () => {
+    const data: TreeSelectNode[] = [
+      { value: '1', label: 'Node 1', selectable: false },
+      { value: '2', label: 'Node 2' },
+    ]
+    const wrapper = mount(TreeSelect, {
+      props: { treeData: data },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-tree-select-selector').trigger('click')
+    await wrapper.vm.$nextTick()
+    const nodes = document.querySelectorAll<HTMLElement>('.hmfw-tree-select-tree-node-content')
+    nodes[0]?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('change')).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it('searches nested nodes', async () => {
+    const wrapper = mount(TreeSelect, {
+      props: { treeData, showSearch: true },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-tree-select-selector').trigger('click')
+    await wrapper.vm.$nextTick()
+    const input = document.querySelector<HTMLInputElement>('.hmfw-tree-select-selection-search')
+    if (input) {
+      input.value = '1-1'
+      input.dispatchEvent(new Event('input'))
+    }
+    await wrapper.vm.$nextTick()
+    const nodes = document.querySelectorAll('.hmfw-tree-select-tree-node')
+    expect(nodes.length).toBeGreaterThan(0)
+    wrapper.unmount()
+  })
+
+  it('treeCheckable cascades parent-child', async () => {
+    const wrapper = mount(TreeSelect, {
+      props: { treeData, treeCheckable: true },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-tree-select-selector').trigger('click')
+    await wrapper.vm.$nextTick()
+    const switcher = document.querySelector<HTMLElement>('.hmfw-tree-select-tree-switcher')
+    switcher?.click()
+    await wrapper.vm.$nextTick()
+    const checkboxes = document.querySelectorAll<HTMLElement>('.hmfw-tree-select-tree-checkbox')
+    checkboxes[0]?.click()
+    await wrapper.vm.$nextTick()
+    const emitted = wrapper.emitted('change')
+    const lastVal = emitted?.[emitted.length - 1]?.[0] as string[]
+    expect(lastVal).toContain('1-1')
+    expect(lastVal).toContain('1-2')
+    wrapper.unmount()
+  })
+
+  it('respects maxCount', async () => {
+    const wrapper = mount(TreeSelect, {
+      props: { treeData, multiple: true, maxCount: 2 },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-tree-select-selector').trigger('click')
+    await wrapper.vm.$nextTick()
+    const nodes = document.querySelectorAll<HTMLElement>('.hmfw-tree-select-tree-node-content')
+    nodes[0]?.click()
+    nodes[1]?.click()
+    nodes[2]?.click()
+    await wrapper.vm.$nextTick()
+    const emitted = wrapper.emitted('change')
+    const lastVal = emitted?.[emitted.length - 1]?.[0] as string[]
+    expect(lastVal.length).toBeLessThanOrEqual(2)
+    wrapper.unmount()
+  })
+
+  it('emits onSelect', async () => {
+    const wrapper = mount(TreeSelect, {
+      props: { treeData },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-tree-select-selector').trigger('click')
+    await wrapper.vm.$nextTick()
+    const nodes = document.querySelectorAll<HTMLElement>('.hmfw-tree-select-tree-node-content')
+    nodes[1]?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('select')?.[0]?.[0]).toBe('2')
+    wrapper.unmount()
+  })
+
+  it('emits onTreeExpand', async () => {
+    const wrapper = mount(TreeSelect, {
+      props: { treeData },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-tree-select-selector').trigger('click')
+    await wrapper.vm.$nextTick()
+    const switcher = document.querySelector<HTMLElement>('.hmfw-tree-select-tree-switcher')
+    switcher?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('treeExpand')).toBeDefined()
+    wrapper.unmount()
+  })
+
+  it('controlled open', async () => {
+    const wrapper = mount(TreeSelect, {
+      props: { treeData, open: true },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    expect(document.querySelector('.hmfw-tree-select-dropdown')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('applies status class', () => {
+    const wrapper = mount(TreeSelect, { props: { treeData, status: 'error' } })
+    expect(wrapper.find('.hmfw-tree-select-status-error').exists()).toBe(true)
+  })
+
+  it('shows notFoundContent when empty', async () => {
+    const wrapper = mount(TreeSelect, {
+      props: { treeData: [], notFoundContent: 'No data' },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-tree-select-selector').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(document.querySelector('.hmfw-tree-select-dropdown-empty')?.textContent).toBe('No data')
     wrapper.unmount()
   })
 })

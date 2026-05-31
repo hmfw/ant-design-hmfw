@@ -41,6 +41,22 @@
   <DatePickerShowTime />
 </DemoBlock>
 
+### 预设范围
+
+通过 `presets` 属性提供快捷选择。
+
+<DemoBlock title="预设范围" :source="DatePickerPresetsSource">
+  <DatePickerPresets />
+</DemoBlock>
+
+### 限制日期范围
+
+通过 `minDate` 和 `maxDate` 限制可选日期范围。
+
+<DemoBlock title="限制日期范围" :source="DatePickerMinMaxSource">
+  <DatePickerMinMax />
+</DemoBlock>
+
 ## API
 
 ### DatePicker Props
@@ -57,9 +73,15 @@
 | picker | 设置选择器类型 | `'date' \| 'month' \| 'year' \| 'quarter'` | `'date'` |
 | showTime | 增加时间选择功能 | `boolean` | `false` |
 | showToday | 是否展示"今天"按钮 | `boolean` | `true` |
+| showNow | 是否展示"此刻"按钮（优先于 showToday） | `boolean` | `false` |
 | disabledDate | 不可选择的日期 | `(dateStr: string) => boolean` | - |
 | status | 设置校验状态 | `'error' \| 'warning'` | - |
 | open | 控制弹层是否展开 | `boolean` | - |
+| defaultOpen | 默认是否展开弹层 | `boolean` | `false` |
+| presets | 预设时间范围快捷选择 | `PresetItem[]` | - |
+| minDate | 最小可选日期 | `string` | - |
+| maxDate | 最大可选日期 | `string` | - |
+| renderExtraFooter | 在面板中添加额外的页脚 | `() => VNode` | - |
 
 ### DatePicker Events
 
@@ -68,3 +90,11 @@
 | update:value | 日期发生变化的回调 | `(value: string) => void` |
 | change | 日期发生变化的回调 | `(value: string, dateString: string) => void` |
 | openChange | 弹出日历和关闭日历的回调 | `(open: boolean) => void` |
+| panelChange | 日历面板切换的回调 | `(value: any, mode: string) => void` |
+
+### PresetItem
+
+| 参数 | 说明 | 类型 |
+|------|------|------|
+| label | 预设项显示文本 | `string` |
+| value | 预设值 | `string \| (() => string)` |

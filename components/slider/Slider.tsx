@@ -3,10 +3,15 @@ import {
   ref,
   computed,
   watch,
+  onMounted,
+  onBeforeUnmount,
   type PropType,
+  type CSSProperties,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls, KEYS } from '../_utils'
+
+type MarkValue = string | { label: string; style?: CSSProperties }
 
 export const Slider = defineComponent({
   name: 'Slider',
@@ -15,14 +20,16 @@ export const Slider = defineComponent({
     defaultValue: [Number, Array] as PropType<number | [number, number]>,
     min: { type: Number, default: 0 },
     max: { type: Number, default: 100 },
-    step: { type: Number, default: 1 },
+    step: { type: Number as PropType<number | null>, default: 1 },
     disabled: Boolean,
     range: Boolean,
     vertical: Boolean,
     reverse: Boolean,
-    marks: Object as PropType<Record<number, string>>,
-    tooltip: { type: Object as PropType<{ formatter?: ((v: number) => string) | null }> },
+    marks: Object as PropType<Record<number, MarkValue>>,
+    tooltip: { type: Object as PropType<{ open?: boolean; formatter?: ((v: number) => string) | null }> },
     included: { type: Boolean, default: true },
+    dots: Boolean,
+    keyboard: { type: Boolean, default: true },
   },
   emits: ['update:value', 'change', 'afterChange'],
   setup(props, { emit }) {
@@ -41,7 +48,21 @@ export const Slider = defineComponent({
 
     const clamp = (v: number) => Math.min(props.max, Math.max(props.min, v))
 
+    const getMarkPoints = () => {
+      if (!props.marks) return []
+      return Object.keys(props.marks).map(Number).sort((a, b) => a - b)
+    }
+
     const snapToStep = (v: number) => {
+      // When step is null, only snap to marks, min, and max
+      if (props.step === null) {
+        const markPoints = getMarkPoints()
+        const validPoints = [props.min, ...markPoints, props.max]
+        const closest = validPoints.reduce((prev, curr) =>
+          Math.abs(curr - v) < Math.abs(prev - v) ? curr : prev
+        )
+        return closest
+      }
       const steps = Math.round((v - props.min) / props.step)
       return clamp(props.min + steps * props.step)
     }
@@ -126,6 +147,59 @@ export const Slider = defineComponent({
       return String(v)
     }
 
+    const shouldShowTooltip = (which: 'start' | 'end') => {
+      // If tooltip.open is explicitly set, use it
+      if (props.tooltip?.open !== undefined) return props.tooltip.open
+      // Otherwise show on hover/drag
+      return tooltipVisible.value === which
+    }
+
+    const handleKeyDown = (which: 'start' | 'end') => (e: KeyboardEvent) => {
+      if (props.disabled || !props.keyboard) return
+
+      const currentVal = props.range
+        ? which === 'start'
+          ? (currentValue.value as [number, number])[0]
+          : (currentValue.value as [number, number])[1]
+        : (currentValue.value as number)
+
+      let delta = 0
+      const stepSize = props.step === null ? 1 : props.step
+
+      switch (e.key) {
+        case KEYS.ARROW_RIGHT:
+        case KEYS.ARROW_UP:
+          delta = stepSize
+          break
+        case KEYS.ARROW_LEFT:
+        case KEYS.ARROW_DOWN:
+          delta = -stepSize
+          break
+        case KEYS.HOME:
+          delta = props.min - currentVal
+          break
+        case KEYS.END:
+          delta = props.max - currentVal
+          break
+        default:
+          return
+      }
+
+      e.preventDefault()
+      const newVal = snapToStep(currentVal + delta)
+
+      if (props.range) {
+        const [start, end] = currentValue.value as [number, number]
+        if (which === 'start') {
+          setValue([Math.min(newVal, end), end])
+        } else {
+          setValue([start, Math.max(newVal, start)])
+        }
+      } else {
+        setValue(newVal)
+      }
+    }
+
     return () => {
       const val = currentValue.value
       const startVal = props.range ? (val as [number, number])[0] : (val as number)
@@ -142,7 +216,37 @@ export const Slider = defineComponent({
           ? { left: `${props.range ? startPct : 0}%`, width: `${props.range ? endPct - startPct : endPct}%` }
           : {}
 
-      const markEntries = props.marks ? Object.entries(props.marks).map(([k, v]) => ({ value: Number(k), label: v })) : []
+      const markEntries = props.marks
+        ? Object.entries(props.marks).map(([k, v]) => ({
+            value: Number(k),
+            label: typeof v === 'string' ? v : v.label,
+            style: typeof v === 'object' && v.style ? v.style : undefined,
+          }))
+        : []
+
+      // Generate dots for step-based slider
+      const dotPoints: number[] = []
+      if (props.dots && props.step !== null && props.step > 0) {
+        for (let i = props.min; i <= props.max; i += props.step) {
+          dotPoints.push(i)
+        }
+      }
+
+      const handleMarkClick = (mv: number) => {
+        if (props.disabled) return
+        if (props.range) {
+          const [start, end] = currentValue.value as [number, number]
+          const distStart = Math.abs(mv - start)
+          const distEnd = Math.abs(mv - end)
+          if (distStart <= distEnd) {
+            setValue([mv, end])
+          } else {
+            setValue([start, mv])
+          }
+        } else {
+          setValue(mv)
+        }
+      }
 
       return (
         <div
@@ -159,7 +263,7 @@ export const Slider = defineComponent({
           >
             <div class={`${prefixCls}-track`} style={trackStyle} />
 
-            {/* Marks */}
+            {/* Dots from marks */}
             {markEntries.map(({ value: mv }) => {
               const pct = getPercent(mv)
               const dotStyle = props.vertical ? { bottom: `${pct}%` } : { left: `${pct}%` }
@@ -170,6 +274,23 @@ export const Slider = defineComponent({
                     [`${prefixCls}-dot-active`]: props.range
                       ? mv >= startVal && mv <= endVal
                       : mv <= endVal,
+                  })}
+                  style={dotStyle}
+                />
+              )
+            })}
+
+            {/* Dots from step (when dots=true) */}
+            {dotPoints.map((dp) => {
+              const pct = getPercent(dp)
+              const dotStyle = props.vertical ? { bottom: `${pct}%` } : { left: `${pct}%` }
+              return (
+                <span
+                  key={dp}
+                  class={cls(`${prefixCls}-dot`, {
+                    [`${prefixCls}-dot-active`]: props.range
+                      ? dp >= startVal && dp <= endVal
+                      : dp <= endVal,
                   })}
                   style={dotStyle}
                 />
@@ -195,8 +316,9 @@ export const Slider = defineComponent({
                 onTouchstart={startDrag('start')}
                 onMouseenter={() => { tooltipVisible.value = 'start' }}
                 onMouseleave={() => { if (dragging.value !== 'start') tooltipVisible.value = null }}
+                onKeydown={handleKeyDown('start')}
               >
-                {tooltipVisible.value === 'start' && formatTooltip(startVal) !== null && (
+                {shouldShowTooltip('start') && formatTooltip(startVal) !== null && (
                   <div class={`${prefixCls}-tooltip`}>{formatTooltip(startVal)}</div>
                 )}
               </div>
@@ -220,8 +342,9 @@ export const Slider = defineComponent({
               onTouchstart={startDrag(props.range ? 'end' : 'end')}
               onMouseenter={() => { tooltipVisible.value = 'end' }}
               onMouseleave={() => { if (dragging.value !== 'end') tooltipVisible.value = null }}
+              onKeydown={handleKeyDown(props.range ? 'end' : 'start')}
             >
-              {tooltipVisible.value === 'end' && formatTooltip(endVal) !== null && (
+              {shouldShowTooltip('end') && formatTooltip(endVal) !== null && (
                 <div class={`${prefixCls}-tooltip`}>{formatTooltip(endVal)}</div>
               )}
             </div>
@@ -230,9 +353,10 @@ export const Slider = defineComponent({
           {/* Mark labels */}
           {markEntries.length > 0 && (
             <div class={`${prefixCls}-mark`}>
-              {markEntries.map(({ value: mv, label }) => {
+              {markEntries.map(({ value: mv, label, style: markStyle }) => {
                 const pct = getPercent(mv)
                 const labelStyle = props.vertical ? { bottom: `${pct}%` } : { left: `${pct}%` }
+                const combinedStyle = markStyle ? { ...labelStyle, ...markStyle } : labelStyle
                 return (
                   <span
                     key={mv}
@@ -241,8 +365,8 @@ export const Slider = defineComponent({
                         ? mv >= startVal && mv <= endVal
                         : mv <= endVal,
                     })}
-                    style={labelStyle}
-                    onClick={() => !props.disabled && setValue(mv)}
+                    style={combinedStyle}
+                    onClick={() => handleMarkClick(mv)}
                   >
                     {label}
                   </span>

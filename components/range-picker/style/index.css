@@ -18,8 +18,41 @@
   padding: 0;
 }
 
+.hmfw-date-picker-range-wrapper {
+  display: flex;
+}
+
 .hmfw-date-picker-range-panels {
   display: flex;
+}
+
+/* Preset ranges panel */
+.hmfw-date-picker-presets {
+  min-width: 120px;
+  max-height: 280px;
+  overflow: auto;
+  border-right: 1px solid var(--hmfw-color-border, #d9d9d9);
+}
+
+.hmfw-date-picker-presets ul {
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+}
+
+.hmfw-date-picker-preset {
+  display: block;
+  margin: 4px 0;
+  padding: 0 8px;
+  line-height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.hmfw-date-picker-preset:hover {
+  background: var(--hmfw-color-primary-bg, #e6f4ff);
 }
 
 .hmfw-date-picker-range-panels .hmfw-date-picker-panel {

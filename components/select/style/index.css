@@ -199,6 +199,10 @@
   background: rgba(0, 0, 0, 0.04);
 }
 
+.hmfw-select-item-option-active {
+  background: rgba(0, 0, 0, 0.04);
+}
+
 .hmfw-select-item-option-selected {
   background: #e6f4ff;
   font-weight: 600;
@@ -237,3 +241,17 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* OptGroup */
+.hmfw-select-item-group {
+  padding: 0;
+}
+
+.hmfw-select-item-group-label {
+  padding: 5px 12px;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: default;
+}
+

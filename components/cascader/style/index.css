@@ -13,6 +13,12 @@
   user-select: none;
 }
 
+.hmfw-cascader-multiple {
+  height: auto;
+  min-height: 32px;
+  padding: 2px 4px;
+}
+
 .hmfw-cascader:hover {
   border-color: var(--hmfw-color-primary, #1677ff);
 }
@@ -31,12 +37,16 @@
 .hmfw-cascader-status-error { border-color: var(--hmfw-color-error, #ff4d4f); }
 .hmfw-cascader-status-warning { border-color: var(--hmfw-color-warning, #faad14); }
 .hmfw-cascader-small { height: 24px; font-size: 12px; padding: 0 7px; }
+.hmfw-cascader-small.hmfw-cascader-multiple { min-height: 24px; }
 .hmfw-cascader-large { height: 40px; font-size: 16px; padding: 0 11px; }
+.hmfw-cascader-large.hmfw-cascader-multiple { min-height: 40px; }
 
 .hmfw-cascader-selector {
   flex: 1;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
   overflow: hidden;
 }
 
@@ -46,6 +56,36 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 14px;
+  color: var(--hmfw-color-text, rgba(0,0,0,0.88));
+}
+
+.hmfw-cascader-multiple .hmfw-cascader-selection-item {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  height: 24px;
+  padding: 0 8px;
+  background: var(--hmfw-color-fill-secondary, rgba(0,0,0,0.06));
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.hmfw-cascader-selection-item-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hmfw-cascader-selection-item-remove {
+  margin-left: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--hmfw-color-text-secondary, rgba(0,0,0,0.45));
+}
+
+.hmfw-cascader-selection-item-remove:hover {
   color: var(--hmfw-color-text, rgba(0,0,0,0.88));
 }
 
@@ -62,6 +102,13 @@
   color: var(--hmfw-color-text, rgba(0,0,0,0.88));
   padding: 0;
   width: 100%;
+  min-width: 4ch;
+}
+
+.hmfw-cascader-multiple .hmfw-cascader-search-input {
+  flex: 1 1 auto;
+  min-width: 4ch;
+  max-width: 100%;
 }
 
 .hmfw-cascader-search-input::placeholder {
@@ -139,6 +186,19 @@
   cursor: pointer;
   transition: background 0.15s;
   white-space: nowrap;
+}
+
+.hmfw-cascader-menu-item-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-radius: 2px;
+  font-size: 12px;
+  color: var(--hmfw-color-primary, #1677ff);
 }
 
 .hmfw-cascader-menu-item:hover,

@@ -3,6 +3,11 @@ export type DatePickerValue = string // YYYY-MM-DD
 export type DatePickerMode = 'date' | 'week' | 'month' | 'quarter' | 'year'
 export type RangePickerValue = [string, string]
 
+export interface PresetItem {
+  label: string
+  value: string | (() => string)
+}
+
 export interface DatePickerProps {
   value?: DatePickerValue
   defaultValue?: DatePickerValue
@@ -14,8 +19,14 @@ export interface DatePickerProps {
   mode?: DatePickerMode
   showTime?: boolean
   showToday?: boolean
+  showNow?: boolean
   disabledDate?: (date: Date) => boolean
   status?: 'error' | 'warning' | ''
   open?: boolean
+  defaultOpen?: boolean
   picker?: DatePickerMode
+  presets?: PresetItem[]
+  minDate?: string
+  maxDate?: string
+  renderExtraFooter?: () => any
 }

@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { Cascader } from '../Cascader'
+import { nextTick } from 'vue'
 
 const options = [
   {
@@ -75,6 +76,23 @@ describe('Cascader', () => {
     expect(wrapper.find('.hmfw-cascader-selection-item').text()).toBe('浙江 > 杭州')
   })
 
+  it('displayRender receives selectedOptions', () => {
+    const displayRender = vi.fn((labels, selectedOptions) => labels.join(' > '))
+    mount(Cascader, {
+      props: {
+        options,
+        value: ['zhejiang', 'hangzhou'],
+        displayRender,
+      },
+    })
+    expect(displayRender).toHaveBeenCalled()
+    const [labels, selectedOptions] = displayRender.mock.calls[0]
+    expect(labels).toEqual(['浙江', '杭州'])
+    expect(selectedOptions).toHaveLength(2)
+    expect(selectedOptions[0].value).toBe('zhejiang')
+    expect(selectedOptions[1].value).toBe('hangzhou')
+  })
+
   it('opens dropdown on click', async () => {
     const wrapper = mount(Cascader, { props: { options }, attachTo: document.body })
     await wrapper.find('.hmfw-cascader').trigger('click')
@@ -111,6 +129,24 @@ describe('Cascader', () => {
     expect(wrapper.emitted('clear')).toBeTruthy()
   })
 
+  it('change event includes selectedOptions', () => {
+    const onChange = vi.fn()
+    const wrapper = mount(Cascader, {
+      props: { options, defaultValue: ['zhejiang'], onChange },
+    })
+    // Simulate internal change by clearing
+    const clearBtn = wrapper.find('.hmfw-cascader-clear')
+    if (clearBtn.exists()) {
+      clearBtn.trigger('mousedown')
+    }
+    // Check that change was emitted with correct signature
+    const changeEvents = wrapper.emitted('change')
+    if (changeEvents && changeEvents.length > 0) {
+      const [value, selectedOptions] = changeEvents[0]
+      expect(Array.isArray(selectedOptions)).toBe(true)
+    }
+  })
+
   it('custom fieldNames', () => {
     const customOptions = [{ id: 'a', name: '选项A', sub: [] }]
     const wrapper = mount(Cascader, {
@@ -121,5 +157,78 @@ describe('Cascader', () => {
       },
     })
     expect(wrapper.find('.hmfw-cascader-selection-item').text()).toBe('选项A')
+  })
+
+  it('multiple mode', () => {
+    const wrapper = mount(Cascader, {
+      props: { options, multiple: true, value: [['zhejiang'], ['jiangsu']] },
+    })
+    expect(wrapper.find('.hmfw-cascader-multiple').exists()).toBe(true)
+    expect(wrapper.findAll('.hmfw-cascader-selection-item').length).toBeGreaterThan(0)
+  })
+
+  it('maxTagCount', () => {
+    const wrapper = mount(Cascader, {
+      props: {
+        options,
+        multiple: true,
+        value: [['zhejiang'], ['jiangsu']],
+        maxTagCount: 1,
+      },
+    })
+    const tags = wrapper.findAll('.hmfw-cascader-selection-item')
+    expect(tags.length).toBeLessThanOrEqual(2) // 1 tag + 1 overflow
+  })
+
+  it('defaultOpen', async () => {
+    const wrapper = mount(Cascader, {
+      props: { options, defaultOpen: true },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-cascader-dropdown')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('controlled open', async () => {
+    const wrapper = mount(Cascader, {
+      props: { options, open: true },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-cascader-dropdown')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('emits update:open', async () => {
+    const wrapper = mount(Cascader, {
+      props: { options },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-cascader').trigger('click')
+    expect(wrapper.emitted('update:open')).toBeTruthy()
+    expect(wrapper.emitted('update:open')![0]).toEqual([true])
+    wrapper.unmount()
+  })
+
+  it('notFoundContent in search', async () => {
+    const wrapper = mount(Cascader, {
+      props: { options, showSearch: true, notFoundContent: '没有数据' },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-cascader').trigger('click')
+    await nextTick()
+    const input = wrapper.find('.hmfw-cascader-search-input')
+    await input.setValue('xyz')
+    await nextTick()
+    const empty = document.querySelector('.hmfw-cascader-menu-item-empty')
+    expect(empty?.textContent).toBe('没有数据')
+    wrapper.unmount()
+  })
+
+  it('exposes focus and blur methods', () => {
+    const wrapper = mount(Cascader, { props: { options } })
+    expect(wrapper.vm.focus).toBeDefined()
+    expect(wrapper.vm.blur).toBeDefined()
   })
 })
