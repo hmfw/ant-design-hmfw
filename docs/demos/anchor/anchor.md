@@ -23,7 +23,7 @@
 使用 `Anchor.Link` 组件作为子组件。
 
 <DemoBlock title="使用 Anchor.Link" :source="AnchorLinkSource">
-  <AnchorLinkDemo />
+  <AnchorLink />
 </DemoBlock>
 
 ### 水平锚点

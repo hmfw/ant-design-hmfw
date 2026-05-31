@@ -18,8 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Switch, Icon } from 'ant-design-hmfw'
-import { CheckOutlined, CloseOutlined } from 'ant-design-hmfw/icons'
+import { Switch, Icon, CheckOutlined, CloseOutlined } from 'ant-design-hmfw'
 
 const checked1 = ref(true)
 const checked2 = ref(false)

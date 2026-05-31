@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { Row, Col } from '../../components/grid'
+import { Row, Col } from 'ant-design-hmfw'
 </script>
 
 <style scoped>

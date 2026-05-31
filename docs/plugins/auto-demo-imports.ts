@@ -17,7 +17,9 @@ export function autoDemoImports(): Plugin {
           return `import ${name} from './${f}'\nimport ${name}Source from './${f}?raw'`
         })
         .join('\n')
-      const stripped = code.replace(/<script setup>[\s\S]*?<\/script>\n?/, '')
+      // Strip any author-written <script setup> block (with or without
+      // attributes like lang="ts") so we don't emit a duplicate one.
+      const stripped = code.replace(/<script setup[^>]*>[\s\S]*?<\/script>\n?/, '')
       return `<script setup>\n${imports}\n</script>\n\n${stripped}`
     },
   }

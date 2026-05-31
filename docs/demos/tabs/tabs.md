@@ -13,21 +13,69 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 
 ## 代码演示
 
-<demo src="./TabsBasic.vue" title="基本" desc="默认选中第一项。"></demo>
+### 基本
 
-<demo src="./TabsIcon.vue" title="图标" desc="有图标的标签。"></demo>
+默认选中第一项。
 
-<demo src="./TabsCentered.vue" title="居中" desc="标签居中展示。"></demo>
+<DemoBlock title="基本" :source="TabsBasicSource">
+  <TabsBasic />
+</DemoBlock>
 
-<demo src="./TabsSize.vue" title="大小" desc="大中小三种大小的标签页，提供了 large 和 small 两个尺寸。"></demo>
+### 图标
 
-<demo src="./TabsPosition.vue" title="位置" desc="有四个位置，tabPosition=top|bottom|left|right。"></demo>
+有图标的标签。
 
-<demo src="./TabsCard.vue" title="卡片式页签" desc="另一种样式的页签，不提供对应的垂直样式。"></demo>
+<DemoBlock title="图标" :source="TabsIconSource">
+  <TabsIcon />
+</DemoBlock>
 
-<demo src="./TabsEditable.vue" title="新增和关闭页签" desc="只有卡片样式的页签支持新增和关闭选项。使用 closable={false} 禁止关闭。"></demo>
+### 居中
 
-<demo src="./TabsExtra.vue" title="附加内容" desc="可以在页签右边添加附加操作。"></demo>
+标签居中展示。
+
+<DemoBlock title="居中" :source="TabsCenteredSource">
+  <TabsCentered />
+</DemoBlock>
+
+### 大小
+
+大中小三种大小的标签页，提供了 large 和 small 两个尺寸。
+
+<DemoBlock title="大小" :source="TabsSizeSource">
+  <TabsSize />
+</DemoBlock>
+
+### 位置
+
+有四个位置，tabPosition=top|bottom|left|right。
+
+<DemoBlock title="位置" :source="TabsPositionSource">
+  <TabsPosition />
+</DemoBlock>
+
+### 卡片式页签
+
+另一种样式的页签，不提供对应的垂直样式。
+
+<DemoBlock title="卡片式页签" :source="TabsCardSource">
+  <TabsCard />
+</DemoBlock>
+
+### 新增和关闭页签
+
+只有卡片样式的页签支持新增和关闭选项。使用 closable={false} 禁止关闭。
+
+<DemoBlock title="新增和关闭页签" :source="TabsEditableSource">
+  <TabsEditable />
+</DemoBlock>
+
+### 附加内容
+
+可以在页签右边添加附加操作。
+
+<DemoBlock title="附加内容" :source="TabsExtraSource">
+  <TabsExtra />
+</DemoBlock>
 
 ## API
 

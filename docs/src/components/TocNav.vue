@@ -29,22 +29,34 @@ const route = useRoute()
 const anchors = ref<Anchor[]>([])
 const activeId = ref('')
 
-function collectAnchors() {
+function collectAnchors(): Anchor[] {
   const content = document.querySelector('.md-content')
   if (!content) return []
   const headings = content.querySelectorAll('h2, h3')
-  return Array.from(headings).map((el) => ({
-    id: el.id || slugify((el as HTMLElement).innerText),
-    text: (el as HTMLElement).innerText,
-    level: parseInt(el.tagName[1]),
-  }))
+  const seen = new Map<string, number>()
+  return Array.from(headings).map((el) => {
+    let id = el.id || slugify((el as HTMLElement).innerText) || 'section'
+    // Guarantee unique ids: collapsed/empty slugs (e.g. CJK-only headings)
+    // would otherwise collide and trigger duplicate-key warnings.
+    const count = seen.get(id) ?? 0
+    seen.set(id, count + 1)
+    if (count > 0) id = `${id}-${count}`
+    // Reflect the resolved id back so anchor links / getElementById resolve.
+    if (!el.id) el.id = id
+    return {
+      id,
+      text: (el as HTMLElement).innerText,
+      level: parseInt(el.tagName[1]),
+    }
+  })
 }
 
 function slugify(text: string) {
   return text
+    .trim()
     .toLowerCase()
     .replace(/\s+/g, '-')
-    .replace(/[^\w-]/g, '')
+    .replace(/[^\p{L}\p{N}-]/gu, '')
 }
 
 function updateAnchors() {
