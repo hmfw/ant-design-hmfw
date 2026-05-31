@@ -97,7 +97,17 @@ export { Drawer } from './drawer'
 export type { DrawerPlacement, DrawerSize, DrawerContent, DrawerGetContainer } from './drawer'
 
 export { message } from './message'
-export type { MessageType } from './message'
+export type {
+  MessageType,
+  MessageApi,
+  MessageInstance,
+  MessageContent,
+  ArgsProps as MessageArgsProps,
+  ConfigOptions as MessageConfigOptions,
+  JointContent as MessageJointContent,
+  NoticeType as MessageNoticeType,
+  TypeOpen as MessageTypeOpen,
+} from './message'
 
 export { Tooltip } from './tooltip'
 export type { TooltipProps, TooltipPlacement, TooltipTrigger, TooltipArrow, TooltipTitle } from './tooltip'

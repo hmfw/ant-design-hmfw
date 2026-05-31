@@ -4,7 +4,7 @@
 
 包含：Tooltip · Popover · Popconfirm · Modal · Drawer · Message · Notification · Tour · Image
 
-待办：message · notification · tour · image
+待办：notification · tour · image
 
 ---
 
@@ -318,6 +318,63 @@ AntD Modal 由 `rc-dialog` 提供 dialog/mask/transition，外层包一层 Confi
 4. 无 body 滚动锁、无 Esc/keyboard 关闭
 5. `closeIcon` 硬编码 `×` 字符，无法自定义
 6. mask 与 panel 共用一个 transform 动画：遮罩跟着面板平移而非淡入；且 root `inset:0` 全屏 + 无 pointer-events 分层会挡住非遮罩区域点击
+
+---
+
+## 55. Message 全局提示 ✅ 已完成（含 Bug 修复）
+
+**对比基准**: `ant-design-master/components/message/{index.tsx,useMessage.tsx,interface.ts,PurePanel.tsx,PureList.tsx,util.ts,style/index.ts}`
+
+原实现仅 68 行的极简 stub：5 个 type 方法 + 字符串内容 + 字符图标 + 返回原生 Promise，缺失绝大部分 AntD v6 API。本次重写 68 → ~290 行（message.tsx），并抽出 `types.ts`。
+
+### 发现的差异/问题表
+| 项 | 严重度 | 说明 | 处理 |
+| --- | --- | --- | --- |
+| `duration: 0` 仍自动关闭 | 🐛 Bug | 原 `show()` 无条件 `setTimeout(duration*1000)`，`0` 立即触发移除 | ✅ `startTimer` 在 `duration <= 0` 时直接 return，不挂定时器 |
+| 图标是字符 `✓✕⚠ℹ⟳` | 🐛 Bug | 原用 Unicode 字符，与全库 SVG Icon 体系不一致、loading 旋转靠单独 keyframes | ✅ 改用 `<Icon component={...} spin>` + 五个 Filled/Outlined SVG（与 Modal ConfirmDialog 一致），loading 复用 `hmfw-icon-spin` |
+| 返回值是原生 `Promise` | 差异 | AntD 返回 `MessageType`：既是可调用函数（调用即手动关闭）又是 thenable | ✅ `wrapPromise` 返回可调用对象，`.then` 代理内部 promise，关闭后 `resolve(true)` |
+| `onClose` 回调缺失 | 差异 | AntD `type(content, duration?, onClose?)`；`duration` 也可直接传函数当 onClose | ✅ `normalizeArgs` 解析：`duration` 为函数时当 onClose；移除时触发 |
+| 对象配置 `open(config)` / `type(config)` 缺失 | 差异 | AntD 支持 `message.open({...})` 与 `message.success({content,...})` | ✅ 新增 `open`；`normalizeArgs` 用 `isVNode` + `'content' in` 区分对象配置与裸内容 |
+| `key` 去重/更新缺失 | 差异 | AntD 相同 key 原地更新而非堆叠 | ✅ `findIndex(mergedKey)` 命中则 `splice` 替换并重置计时器 |
+| `destroy(key?)` 缺失 | 差异 | AntD `destroy()` 清空、`destroy(key)` 移除单条 | ✅ 新增；无 key 时清空全部并 resolve 所有挂起 promise |
+| `config(options)` 缺失 | 差异 | AntD 全局配置 top/duration/maxCount/getContainer/pauseOnHover | ✅ 新增 `config`；写入模块级 `globalConfig`，实时更新容器 `top` |
+| `maxCount` 缺失 | 差异 | 超限关闭最早 | ✅ push 后若超 `maxCount`，对溢出项调用 `removeNotice` |
+| `top` 偏移缺失 | 差异 | AntD 默认 8，可配 string/number | ✅ 容器 `top` 由 `topStyle()` 计算，number 加 px |
+| `pauseOnHover` 缺失 | 差异 | AntD 默认 true，悬停暂停计时 | ✅ `onMouseenter` clearTimer / `onMouseleave` startTimer（受 item 或全局开关控制） |
+| 自定义 `icon` 缺失 | 差异 | AntD `icon?: ReactNode` 覆盖类型图标 | ✅ `getIconNode`：有 icon 用 icon，否则类型图标 |
+| `content` 仅 string | 差异 | AntD `ReactNode`（含数字/VNode/render-fn） | ✅ 类型扩展 `string\|number\|VNode\|()=>VNodeChild`，`renderContent` 处理函数 |
+| `onClick` / `style` / `className` 缺失 | 差异 | AntD 支持 | ✅ notice 节点绑定 `onClick`、`style`、`className` |
+| 离场动画缺失 | 差异 | AntD `move-up` motion：高度折叠 + 淡出 | ✅ `leaving` 标记 + `-leave` class 触发 `move-out` keyframes（折叠 max-height + margin），200ms 后真正移除 |
+| 容器结构/类名 | 差异 | AntD `ant-message > ant-message-notice-wrapper > ant-message-notice` | ✅ 对齐为 `hmfw-message > hmfw-message-list > hmfw-message-notice-wrapper > hmfw-message-notice`，含 `-notice-content`/`-icon`/`-title` |
+| 背景/阴影/层级硬编码 | 差异 | 原写死 `#fff` / 自定义 shadow / z-index 1010 | ✅ 改用 `--hmfw-color-bg-elevated` / `--hmfw-box-shadow-secondary` / `--hmfw-z-index-popup` token |
+| `getContainer` 缺失 | 差异 | AntD 可挂到指定容器 | ✅ `config({getContainer})`；`ensureContainer` 挂载点变更时重建 app |
+| `useMessage`（contextHolder） | 未实现 | AntD hooks 用法获取 context 连接 | ⏭️ Vue 端 `App`/`provide` 已提供 message 实例（见 app 组件），未单独做 useMessage |
+| `stack` 折叠 | 未实现 | AntD v6.4 多条折叠 | ⏭️ 记入待办 |
+| RTL | 差异 | 全库无 RTL 体系 | ⏭️ 跳过 |
+| 语义化 `classNames`/`styles` | 差异 | 全库统一缺失 | ⏭️ 全库统一处理 |
+| `_InternalPanel`/`PureList` | 未实现 | AntD 内部组件 | ⏭️ 私有 API，不实现 |
+
+### 改动文件
+- `components/message/types.ts` — **新建**：`NoticeType`/`MessageContent`/`ArgsProps`/`JointContent`/`ConfigOptions`/`MessageType`/`TypeOpen`/`MessageInstance`/`MessageApi`
+- `components/message/message.tsx` — 重写（68 → ~290 行）：SVG 图标映射、`renderContent`/`getIconNode`、计时器 Map + `startTimer`（duration≤0 不挂）、`ensureContainer`（getContainer 变更重建、容器 top）、`removeNotice`（leaving 动画 + onClose + resolve）、`wrapPromise`（可调用 thenable）、`open`/`destroy`/`config`、`normalizeArgs`（对象配置 + duration-as-onClose）、`makeTypeOpen`、`maxCount`/`pauseOnHover`/`key` 更新
+- `components/message/style/index.css` — 重写：`hmfw-message`(fixed/top/z-index-popup) > `-list` > `-notice-wrapper`(进/出 keyframes) > `-notice`(elevated bg + secondary shadow + token)；`-notice-content`/`-icon`(按类型着色) /`-title`；`move-in`/`move-out` 折叠动画
+- `components/message/index.ts` — 导出全部新类型
+- `components/index.ts` — re-export（`MessageType`/`MessageApi`/`MessageInstance`/`MessageContent` + 带 `Message` 前缀别名 `MessageArgsProps`/`MessageConfigOptions`/`MessageJointContent`/`MessageNoticeType`/`MessageTypeOpen`）
+- `components/message/__tests__/message.test.tsx` — 7 → 20 用例（渲染/类型 class/SVG 图标/loading spin/可调用+thenable/自动关闭+resolve/duration:0 不关/手动关闭/onClose 第 3 参/onClose 第 2 参函数/open 对象/type 对象/key 更新/destroy(key)/destroy()/maxCount/top/自定义 icon/onClick/VNode 内容）
+- `docs/demos/message/MessageBasic.vue`、`MessageDuration.vue` — 触发器改用 `<Button>`，Duration 增加 duration:0 手动关闭演示
+- `docs/demos/message/MessageUpdate.vue`、`MessageConfig.vue` — **新建**：key 更新加载态、maxCount/top 全局配置
+- `docs/demos/message/message.md` — 重写 API（方法签名 + config 对象表 + 全局方法表 + MessageType 说明），新增「更新消息内容」「全局配置」两节
+
+### 验证
+- `vitest run components/message`：20 通过（原 7 → +13）
+- `vitest run components/app`：5 通过（依赖 message 实例，未回归）
+- `pnpm typecheck`：通过
+- 全量测试：1329 通过 + 2 skipped（message 7 → 20，net +13）
+- E2E（playwright-cli）：message 页面点击「成功」弹出提示并 3s 自动消失；「不自动关闭」弹出 warning，DOM 校验 `hasSvgIcon:true`（非字符）、`typeClass=...-warning`、容器 `top:8px`；0 console error
+
+### 发现的 Bug 清单（2 个）
+1. `duration: 0` 仍会自动关闭（应永久显示）—— 原 `show()` 无条件挂定时器
+2. 图标用 Unicode 字符（`✓✕⚠ℹ⟳`），与全库 SVG Icon 体系不一致、无法自定义、loading 旋转靠独立 keyframes
 
 ---
 

@@ -1,15 +1,15 @@
 <template>
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <button @click="showSuccess">成功</button>
-    <button @click="showError">错误</button>
-    <button @click="showWarning">警告</button>
-    <button @click="showInfo">信息</button>
-    <button @click="showLoading">加载中</button>
+    <Button @click="showSuccess">成功</Button>
+    <Button @click="showError">错误</Button>
+    <Button @click="showWarning">警告</Button>
+    <Button @click="showInfo">信息</Button>
+    <Button @click="showLoading">加载中</Button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { message } from 'ant-design-hmfw'
+import { message, Button } from 'ant-design-hmfw'
 
 function showSuccess() {
   message.success('操作成功！')
