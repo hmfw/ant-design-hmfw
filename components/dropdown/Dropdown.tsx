@@ -193,6 +193,8 @@ export const Dropdown = defineComponent({
     })
 
     const handleMenuClick = (info: { key: string }) => {
+      // Forward to user-provided menu.onClick first
+      props.menu?.onClick?.(info)
       // Close dropdown after menu click unless menu is selectable and multiple
       if (props.menu?.selectable && props.menu?.multiple) {
         return

@@ -1,21 +1,21 @@
 <template>
   <Space wrap>
-    <Dropdown :items="items" placement="bottomLeft">
+    <Dropdown :menu="menu" placement="bottomLeft">
       <Button>左下</Button>
     </Dropdown>
-    <Dropdown :items="items" placement="bottomCenter">
+    <Dropdown :menu="menu" placement="bottom">
       <Button>居中下</Button>
     </Dropdown>
-    <Dropdown :items="items" placement="bottomRight">
+    <Dropdown :menu="menu" placement="bottomRight">
       <Button>右下</Button>
     </Dropdown>
-    <Dropdown :items="items" placement="topLeft">
+    <Dropdown :menu="menu" placement="topLeft">
       <Button>左上</Button>
     </Dropdown>
-    <Dropdown :items="items" placement="topCenter">
+    <Dropdown :menu="menu" placement="top">
       <Button>居中上</Button>
     </Dropdown>
-    <Dropdown :items="items" placement="topRight">
+    <Dropdown :menu="menu" placement="topRight">
       <Button>右上</Button>
     </Dropdown>
   </Space>
@@ -24,8 +24,10 @@
 <script setup lang="ts">
 import { Dropdown, Button, Space } from 'ant-design-hmfw'
 
-const items = [
-  { key: '1', label: '菜单项一' },
-  { key: '2', label: '菜单项二' },
-]
+const menu = {
+  items: [
+    { key: '1', label: '菜单项一' },
+    { key: '2', label: '菜单项二' },
+  ],
+}
 </script>

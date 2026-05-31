@@ -58,7 +58,7 @@ export type { BadgeProps, BadgeStatus, BadgeSize, RibbonProps, RibbonPlacement }
 export { Tag, CheckableTag } from './tag'
 export type { TagProps, CheckableTagProps, TagColor } from './tag'
 
-export { Empty } from './empty'
+export { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from './empty'
 export type { EmptyProps } from './empty'
 
 export { Card, CardGrid, CardMeta } from './card'

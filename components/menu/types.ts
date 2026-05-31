@@ -55,4 +55,5 @@ export interface MenuProps {
   selectable?: boolean
   expandIcon?: VNode | ((props: { isOpen: boolean }) => VNode)
   triggerSubMenuAction?: 'hover' | 'click'
+  onClick?: (info: { key: string }) => void
 }
