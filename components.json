@@ -391,8 +391,8 @@
         {
           "section": "AutoComplete Props",
           "name": "allowClear",
-          "description": "支持清除",
-          "type": "`boolean`",
+          "description": "支持清除，可传入对象自定义清除图标",
+          "type": "`boolean | { clearIcon?: VNodeChild }`",
           "default": "`false`"
         },
         {
@@ -422,6 +422,34 @@
           "description": "使用键盘选择选项的时候把选中项回填到输入框中",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "AutoComplete Props",
+          "name": "defaultActiveFirstOption",
+          "description": "是否默认高亮第一个选项",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "AutoComplete Props",
+          "name": "defaultOpen",
+          "description": "默认是否展开下拉菜单",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "AutoComplete Props",
+          "name": "open",
+          "description": "是否展开下拉菜单（受控）",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "AutoComplete Props",
+          "name": "notFoundContent",
+          "description": "当下拉列表为空时显示的内容",
+          "type": "`string`",
+          "default": "-"
         },
         {
           "section": "AutoCompleteOption",
@@ -487,6 +515,12 @@
           "name": "clear",
           "description": "点击清除按钮时的回调",
           "params": "`() => void`"
+        },
+        {
+          "section": "AutoComplete Events",
+          "name": "openChange",
+          "description": "下拉框展开/收起时的回调",
+          "params": "`(open: boolean) => void`"
         }
       ],
       "slots": [],
@@ -510,6 +544,11 @@
           "title": "不同尺寸",
           "description": "三种大小的输入框，大的用在表单中，中的为默认。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; width: 300px;\">\n    <AutoComplete\n      v-model:value=\"value1\"\n      :options=\"options\"\n      size=\"large\"\n      placeholder=\"Large size\"\n    />\n    <AutoComplete\n      v-model:value=\"value2\"\n      :options=\"options\"\n      placeholder=\"Default size\"\n    />\n    <AutoComplete\n      v-model:value=\"value3\"\n      :options=\"options\"\n      size=\"small\"\n      placeholder=\"Small size\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { AutoComplete } from 'ant-design-hmfw'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value3 = ref('')\nconst options = ref([\n  { value: 'Vue' },\n  { value: 'React' },\n  { value: 'Angular' },\n])\n</script>"
+        },
+        {
+          "title": "高级特性",
+          "description": "演示 defaultActiveFirstOption、notFoundContent 和自定义清除图标。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; width: 300px;\">\n    <AutoComplete\n      v-model:value=\"value1\"\n      :options=\"options1\"\n      placeholder=\"默认高亮第一项\"\n      :default-active-first-option=\"true\"\n    />\n    <AutoComplete\n      v-model:value=\"value2\"\n      :options=\"options2\"\n      placeholder=\"不高亮第一项\"\n      :default-active-first-option=\"false\"\n    />\n    <AutoComplete\n      v-model:value=\"value3\"\n      :options=\"options3\"\n      placeholder=\"自定义清除图标\"\n      :allow-clear=\"{ clearIcon: '🗑️' }\"\n    />\n    <AutoComplete\n      v-model:value=\"value4\"\n      :options=\"filteredOptions\"\n      placeholder=\"无匹配时显示提示\"\n      not-found-content=\"无匹配结果\"\n      @search=\"handleSearch\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { AutoComplete } from 'ant-design-hmfw'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value3 = ref('Vue')\nconst value4 = ref('')\n\nconst options1 = ref([\n  { value: 'Vue' },\n  { value: 'React' },\n  { value: 'Angular' },\n])\n\nconst options2 = ref([\n  { value: 'TypeScript' },\n  { value: 'JavaScript' },\n  { value: 'Python' },\n])\n\nconst options3 = ref([\n  { value: 'Vue' },\n  { value: 'React' },\n  { value: 'Angular' },\n])\n\nconst filteredOptions = ref([\n  { value: 'Vue' },\n  { value: 'React' },\n  { value: 'Angular' },\n])\n\nconst handleSearch = (searchText: string) => {\n  const allOptions = ['Vue', 'React', 'Angular']\n  filteredOptions.value = allOptions\n    .filter(item => item.toLowerCase().includes(searchText.toLowerCase()))\n    .map(item => ({ value: item }))\n}\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/auto-complete"
@@ -1422,14 +1461,14 @@
           "section": "Cascader Props",
           "name": "value(v-model)",
           "description": "指定选中项",
-          "type": "`string[]`",
+          "type": "`string[]` | `string[][]` (multiple)",
           "default": "-"
         },
         {
           "section": "Cascader Props",
           "name": "defaultValue",
           "description": "默认的选中项",
-          "type": "`string[]`",
+          "type": "`string[]` | `string[][]` (multiple)",
           "default": "`[]`"
         },
         {
@@ -1483,6 +1522,13 @@
         },
         {
           "section": "Cascader Props",
+          "name": "multiple",
+          "description": "支持多选",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Cascader Props",
           "name": "showSearch",
           "description": "在选择框中显示搜索框",
           "type": "`boolean`",
@@ -1499,7 +1545,7 @@
           "section": "Cascader Props",
           "name": "displayRender",
           "description": "选择后展示的渲染函数",
-          "type": "`(labels: string[]) => string`",
+          "type": "`(labels: string[], selectedOptions?: CascaderOption[]) => string`",
           "default": "-"
         },
         {
@@ -1510,10 +1556,66 @@
           "default": "`{ label: 'label', value: 'value', children: 'children' }`"
         },
         {
+          "section": "Cascader Props",
+          "name": "open(v-model)",
+          "description": "控制浮层显隐",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "Cascader Props",
+          "name": "defaultOpen",
+          "description": "默认展开浮层",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Cascader Props",
+          "name": "notFoundContent",
+          "description": "当下拉列表为空时显示的内容",
+          "type": "`string`",
+          "default": "`'无匹配结果'`"
+        },
+        {
+          "section": "Cascader Props",
+          "name": "loadData",
+          "description": "用于动态加载选项",
+          "type": "`(selectedOptions: CascaderOption[]) => void`",
+          "default": "-"
+        },
+        {
+          "section": "Cascader Props",
+          "name": "showCheckedStrategy",
+          "description": "多选时的选中策略",
+          "type": "`'SHOW_PARENT' | 'SHOW_CHILD'`",
+          "default": "`'SHOW_PARENT'`"
+        },
+        {
+          "section": "Cascader Props",
+          "name": "maxTagCount",
+          "description": "最多显示多少个 tag",
+          "type": "`number`",
+          "default": "-"
+        },
+        {
+          "section": "Cascader Props",
+          "name": "maxTagPlaceholder",
+          "description": "隐藏 tag 时显示的内容",
+          "type": "`string | ((omittedValues: string[][]) => string)`",
+          "default": "-"
+        },
+        {
+          "section": "Cascader Props",
+          "name": "maxTagTextLength",
+          "description": "最大显示的 tag 文本长度",
+          "type": "`number`",
+          "default": "-"
+        },
+        {
           "section": "CascaderOption",
           "name": "value",
           "description": "选项的值",
-          "type": "`string`",
+          "type": "`string | number`",
           "default": ""
         },
         {
@@ -1543,6 +1645,20 @@
           "description": "标记是否为叶子节点，设置了 `loadData` 时有效",
           "type": "`boolean`",
           "default": ""
+        },
+        {
+          "section": "Cascader Methods",
+          "name": "-",
+          "description": "获取焦点",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Cascader Methods",
+          "name": "-",
+          "description": "失去焦点",
+          "type": "",
+          "default": ""
         }
       ],
       "events": [
@@ -1550,13 +1666,19 @@
           "section": "Cascader Events",
           "name": "update:value",
           "description": "选择完成后的回调",
-          "params": "`(value: string[]) => void`"
+          "params": "`(value: string[] | string[][]) => void`"
+        },
+        {
+          "section": "Cascader Events",
+          "name": "update:open",
+          "description": "浮层显隐变化时的回调",
+          "params": "`(open: boolean) => void`"
         },
         {
           "section": "Cascader Events",
           "name": "change",
           "description": "选择完成后的回调",
-          "params": "`(value: string[], selectedOptions: CascaderOption[]) => void`"
+          "params": "`(value: string[] | string[][], selectedOptions: CascaderOption[] | CascaderOption[][]) => void`"
         },
         {
           "section": "Cascader Events",
@@ -1592,6 +1714,11 @@
           "title": "选择即改变",
           "description": "当 `changeOnSelect` 为 `true` 时，点选每级菜单选项值都会发生变化。",
           "code": "<template>\n  <div>\n    <Cascader\n      v-model:value=\"value\"\n      :options=\"options\"\n      :change-on-select=\"true\"\n      placeholder=\"选择即改变\"\n      style=\"width: 300px;\"\n      @change=\"handleChange\"\n    />\n    <p style=\"margin-top: 8px;\">当前值：{{ value }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Cascader } from 'ant-design-hmfw'\n\nconst value = ref<string[]>([])\n\nconst options = [\n  {\n    value: 'zhejiang',\n    label: '浙江',\n    children: [\n      {\n        value: 'hangzhou',\n        label: '杭州',\n        children: [\n          { value: 'xihu', label: '西湖区' },\n        ],\n      },\n    ],\n  },\n]\n\nconst handleChange = (val: string[]) => {\n  console.log('选中值：', val)\n}\n</script>"
+        },
+        {
+          "title": "多选",
+          "description": "通过 `multiple` 属性开启多选模式。",
+          "code": "<template>\n  <div>\n    <Cascader\n      v-model:value=\"value\"\n      :options=\"options\"\n      :multiple=\"true\"\n      placeholder=\"支持多选\"\n      style=\"width: 300px;\"\n      @change=\"handleChange\"\n    />\n    <p style=\"margin-top: 8px;\">当前值：{{ value }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Cascader } from 'ant-design-hmfw'\n\nconst value = ref<string[][]>([])\n\nconst options = [\n  {\n    value: 'zhejiang',\n    label: '浙江',\n    children: [\n      {\n        value: 'hangzhou',\n        label: '杭州',\n        children: [\n          { value: 'xihu', label: '西湖区' },\n          { value: 'yuhang', label: '余杭区' },\n        ],\n      },\n      {\n        value: 'ningbo',\n        label: '宁波',\n        children: [\n          { value: 'haishu', label: '海曙区' },\n        ],\n      },\n    ],\n  },\n  {\n    value: 'jiangsu',\n    label: '江苏',\n    children: [\n      {\n        value: 'nanjing',\n        label: '南京',\n        children: [\n          { value: 'xuanwu', label: '玄武区' },\n        ],\n      },\n    ],\n  },\n]\n\nconst handleChange = (val: string[][], selectedOptions: any[]) => {\n  console.log('选中值：', val, selectedOptions)\n}\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/cascader"
@@ -2377,6 +2504,13 @@
         },
         {
           "section": "DatePicker Props",
+          "name": "showNow",
+          "description": "是否展示\"此刻\"按钮（优先于 showToday）",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "DatePicker Props",
           "name": "disabledDate",
           "description": "不可选择的日期",
           "type": "`(dateStr: string) => boolean`",
@@ -2395,6 +2529,55 @@
           "description": "控制弹层是否展开",
           "type": "`boolean`",
           "default": "-"
+        },
+        {
+          "section": "DatePicker Props",
+          "name": "defaultOpen",
+          "description": "默认是否展开弹层",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "DatePicker Props",
+          "name": "presets",
+          "description": "预设时间范围快捷选择",
+          "type": "`PresetItem[]`",
+          "default": "-"
+        },
+        {
+          "section": "DatePicker Props",
+          "name": "minDate",
+          "description": "最小可选日期",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "DatePicker Props",
+          "name": "maxDate",
+          "description": "最大可选日期",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "DatePicker Props",
+          "name": "renderExtraFooter",
+          "description": "在面板中添加额外的页脚",
+          "type": "`() => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "PresetItem",
+          "name": "label",
+          "description": "预设项显示文本",
+          "type": "`string`",
+          "default": ""
+        },
+        {
+          "section": "PresetItem",
+          "name": "value",
+          "description": "预设值",
+          "type": "`string | (() => string)`",
+          "default": ""
         }
       ],
       "events": [
@@ -2415,6 +2598,12 @@
           "name": "openChange",
           "description": "弹出日历和关闭日历的回调",
           "params": "`(open: boolean) => void`"
+        },
+        {
+          "section": "DatePicker Events",
+          "name": "panelChange",
+          "description": "日历面板切换的回调",
+          "params": "`(value: any, mode: string) => void`"
         }
       ],
       "slots": [],
@@ -2438,6 +2627,16 @@
           "title": "带时间的日期选择",
           "description": "通过 `showTime` 属性增加选择时间功能。",
           "code": "<template>\n  <div style=\"width: 300px;\">\n    <DatePicker\n      v-model:value=\"datetime\"\n      :show-time=\"true\"\n      placeholder=\"选择日期和时间\"\n      @change=\"handleChange\"\n    />\n    <p style=\"margin-top: 8px;\">选中：{{ datetime }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { DatePicker } from 'ant-design-hmfw'\n\nconst datetime = ref('')\n\nconst handleChange = (value: string) => {\n  console.log('选中日期时间：', value)\n}\n</script>"
+        },
+        {
+          "title": "预设范围",
+          "description": "通过 `presets` 属性提供快捷选择。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; width: 300px;\">\n    <DatePicker\n      v-model:value=\"date\"\n      :presets=\"presets\"\n      placeholder=\"选择日期\"\n    />\n    <p>选中日期：{{ date }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { DatePicker } from 'ant-design-hmfw'\n\nconst date = ref('')\n\nconst presets = [\n  { label: '昨天', value: () => {\n    const d = new Date()\n    d.setDate(d.getDate() - 1)\n    return d.toISOString().split('T')[0]\n  }},\n  { label: '今天', value: () => new Date().toISOString().split('T')[0] },\n  { label: '明天', value: () => {\n    const d = new Date()\n    d.setDate(d.getDate() + 1)\n    return d.toISOString().split('T')[0]\n  }},\n  { label: '一周后', value: () => {\n    const d = new Date()\n    d.setDate(d.getDate() + 7)\n    return d.toISOString().split('T')[0]\n  }},\n]\n</script>"
+        },
+        {
+          "title": "限制日期范围",
+          "description": "通过 `minDate` 和 `maxDate` 限制可选日期范围。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; width: 300px;\">\n    <DatePicker\n      v-model:value=\"date\"\n      :min-date=\"minDate\"\n      :max-date=\"maxDate\"\n      placeholder=\"只能选择本月\"\n    />\n    <p>选中日期：{{ date }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue'\nimport { DatePicker } from 'ant-design-hmfw'\n\nconst date = ref('')\n\nconst minDate = computed(() => {\n  const d = new Date()\n  d.setDate(1)\n  return d.toISOString().split('T')[0]\n})\n\nconst maxDate = computed(() => {\n  const d = new Date()\n  d.setMonth(d.getMonth() + 1, 0)\n  return d.toISOString().split('T')[0]\n})\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/date-picker"
@@ -4054,15 +4253,15 @@
         {
           "section": "Input Props",
           "name": "showCount",
-          "description": "是否展示字数",
-          "type": "`boolean`",
+          "description": "是否展示字数，支持自定义格式化",
+          "type": "`boolean | { formatter: (info) => VNode | string }`",
           "default": "`false`"
         },
         {
           "section": "Input Props",
           "name": "allowClear",
-          "description": "可以点击清除图标删除内容",
-          "type": "`boolean`",
+          "description": "可以点击清除图标删除内容，支持自定义清除图标",
+          "type": "`boolean | { clearIcon?: VNode; disabled?: boolean }`",
           "default": "`false`"
         },
         {
@@ -4081,20 +4280,6 @@
         },
         {
           "section": "Input Props",
-          "name": "addonBefore",
-          "description": "带标签的 input，设置前置标签",
-          "type": "`string | VNode`",
-          "default": "-"
-        },
-        {
-          "section": "Input Props",
-          "name": "addonAfter",
-          "description": "带标签的 input，设置后置标签",
-          "type": "`string | VNode`",
-          "default": "-"
-        },
-        {
-          "section": "Input Props",
           "name": "status",
           "description": "设置校验状态",
           "type": "`'error' | 'warning'`",
@@ -4108,24 +4293,66 @@
           "default": "`false`"
         },
         {
+          "section": "Input Props",
+          "name": "id",
+          "description": "输入框的 id",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Input Props",
+          "name": "rootClassName",
+          "description": "根节点的 className",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
           "section": "InputPassword Props",
           "name": "visibilityToggle",
           "description": "是否显示切换按钮或者控制密码显隐",
-          "type": "`boolean`",
+          "type": "`boolean | { visible?: boolean; onVisibleChange?: (visible: boolean) => void }`",
           "default": "`true`"
+        },
+        {
+          "section": "InputPassword Props",
+          "name": "iconRender",
+          "description": "自定义切换按钮",
+          "type": "`(visible: boolean) => VNode | string`",
+          "default": "-"
+        },
+        {
+          "section": "InputPassword Props",
+          "name": "action",
+          "description": "切换按钮的触发方式",
+          "type": "`'click' | 'hover'`",
+          "default": "`'click'`"
         },
         {
           "section": "TextArea Props",
           "name": "rows",
           "description": "输入框行数",
           "type": "`number`",
-          "default": "`3`"
+          "default": "`4`"
         },
         {
           "section": "TextArea Props",
           "name": "autoSize",
           "description": "自适应内容高度，可设置为 true | false 或对象",
           "type": "`boolean | { minRows?: number; maxRows?: number }`",
+          "default": "`false`"
+        },
+        {
+          "section": "TextArea Props",
+          "name": "allowClear",
+          "description": "可以点击清除图标删除内容",
+          "type": "`boolean | { clearIcon?: VNode; disabled?: boolean }`",
+          "default": "`false`"
+        },
+        {
+          "section": "TextArea Props",
+          "name": "showCount",
+          "description": "是否展示字数，支持自定义格式化",
+          "type": "`boolean | { formatter: (info) => VNode | string }`",
           "default": "`false`"
         },
         {
@@ -4141,6 +4368,27 @@
           "description": "搜索 loading",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "InputSearch Props",
+          "name": "searchIcon",
+          "description": "自定义搜索图标",
+          "type": "`string | VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Input Methods",
+          "name": "`(options?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => void`",
+          "description": "获取焦点",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Input Methods",
+          "name": "`() => void`",
+          "description": "移除焦点",
+          "type": "",
+          "default": ""
         }
       ],
       "events": [
@@ -4184,7 +4432,7 @@
           "section": "InputSearch Events",
           "name": "search",
           "description": "点击搜索图标、清除图标，或按下回车键时的回调",
-          "params": "`(value: string, event: Event) => void`"
+          "params": "`(value: string, event: Event, info: { source: 'input' | 'clear' }) => void`"
         }
       ],
       "slots": [],
@@ -4197,7 +4445,7 @@
         {
           "title": "前缀/后缀",
           "description": "在输入框上添加前缀或后缀图标。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px;\">\n    <Input v-model:value=\"value1\" placeholder=\"请输入用户名\" prefix=\"👤\" />\n    <Input v-model:value=\"value2\" placeholder=\"请输入金额\" prefix=\"¥\" suffix=\"元\" />\n    <Input v-model:value=\"value3\" placeholder=\"带前置/后置标签\" addon-before=\"http://\" addon-after=\".com\" />\n    <Input v-model:value=\"value4\" placeholder=\"支持清除\" allow-clear />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Input } from 'ant-design-hmfw'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value3 = ref('')\nconst value4 = ref('')\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px;\">\n    <Input v-model:value=\"value1\" placeholder=\"请输入用户名\" prefix=\"👤\" />\n    <Input v-model:value=\"value2\" placeholder=\"请输入金额\" prefix=\"¥\" suffix=\"元\" />\n    <!-- addon-before/addon-after are deprecated, use Space.Compact instead -->\n    <Input v-model:value=\"value4\" placeholder=\"支持清除\" allow-clear />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Input } from 'ant-design-hmfw'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value4 = ref('')\n</script>"
         },
         {
           "title": "密码框",
@@ -4276,6 +4524,13 @@
         },
         {
           "section": "InputNumber Props",
+          "name": "readOnly",
+          "description": "只读",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "InputNumber Props",
           "name": "size",
           "description": "输入框大小",
           "type": "`'small' | 'middle' | 'large'`",
@@ -4290,8 +4545,29 @@
         },
         {
           "section": "InputNumber Props",
+          "name": "variant",
+          "description": "变体",
+          "type": "`'outlined' | 'filled' | 'borderless' | 'underlined'`",
+          "default": "`'outlined'`"
+        },
+        {
+          "section": "InputNumber Props",
+          "name": "mode",
+          "description": "显示模式",
+          "type": "`'input' | 'spinner'`",
+          "default": "`'input'`"
+        },
+        {
+          "section": "InputNumber Props",
           "name": "prefix",
           "description": "带有前缀图标的 input",
+          "type": "`string | VNode`",
+          "default": "-"
+        },
+        {
+          "section": "InputNumber Props",
+          "name": "suffix",
+          "description": "带有后缀图标的 input",
           "type": "`string | VNode`",
           "default": "-"
         },
@@ -4312,8 +4588,8 @@
         {
           "section": "InputNumber Props",
           "name": "controls",
-          "description": "是否显示增减按钮",
-          "type": "`boolean`",
+          "description": "是否显示增减按钮，或自定义图标",
+          "type": "`boolean | { upIcon?: VNode | string; downIcon?: VNode | string }`",
           "default": "`true`"
         },
         {
@@ -4329,6 +4605,69 @@
           "description": "占位符",
           "type": "`string`",
           "default": "-"
+        },
+        {
+          "section": "InputNumber Props",
+          "name": "formatter",
+          "description": "指定输入框展示值的格式",
+          "type": "`(value: number, info: { userTyping: boolean; input: string }) => string`",
+          "default": "-"
+        },
+        {
+          "section": "InputNumber Props",
+          "name": "parser",
+          "description": "指定从 formatter 里转换回数字的方式",
+          "type": "`(value: string) => number`",
+          "default": "-"
+        },
+        {
+          "section": "InputNumber Props",
+          "name": "changeOnBlur",
+          "description": "是否在失焦时触发 change",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "InputNumber Props",
+          "name": "changeOnWheel",
+          "description": "是否允许鼠标滚轮改变数值",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "InputNumber Props",
+          "name": "decimalSeparator",
+          "description": "小数点",
+          "type": "`string`",
+          "default": "`'.'`"
+        },
+        {
+          "section": "InputNumber Props",
+          "name": "stringMode",
+          "description": "字符串模式，开启后支持高精度小数",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "InputNumber Methods",
+          "name": "`(options?: { cursor?: 'start' | 'end' | 'all'; preventScroll?: boolean }) => void`",
+          "description": "获取焦点",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "InputNumber Methods",
+          "name": "`() => void`",
+          "description": "移除焦点",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "InputNumber Methods",
+          "name": "-",
+          "description": "获取原生 DOM 元素",
+          "type": "",
+          "default": ""
         }
       ],
       "events": [
@@ -4366,7 +4705,7 @@
           "section": "InputNumber Events",
           "name": "step",
           "description": "点击上下箭头的回调",
-          "params": "`(value: number, info: { offset: number; type: 'up' | 'down' }) => void`"
+          "params": "`(value: number, info: { offset: number; type: 'up' | 'down'; emitter: 'handler' | 'keydown' | 'wheel' }) => void`"
         }
       ],
       "slots": [],
@@ -4385,6 +4724,26 @@
           "title": "前后缀",
           "description": "带有前缀或后缀的数字输入框。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px;\">\n    <InputNumber\n      v-model:value=\"price\"\n      :min=\"0\"\n      prefix=\"¥\"\n      addon-after=\"元\"\n      placeholder=\"请输入价格\"\n      style=\"width: 100%;\"\n    />\n    <InputNumber\n      v-model:value=\"percent\"\n      :min=\"0\"\n      :max=\"100\"\n      addon-after=\"%\"\n      placeholder=\"请输入百分比\"\n      style=\"width: 100%;\"\n    />\n    <InputNumber\n      v-model:value=\"weight\"\n      :min=\"0\"\n      addon-before=\"重量\"\n      addon-after=\"kg\"\n      placeholder=\"请输入重量\"\n      style=\"width: 100%;\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from 'ant-design-hmfw'\n\nconst price = ref<number | null>(null)\nconst percent = ref<number | null>(null)\nconst weight = ref<number | null>(null)\n</script>"
+        },
+        {
+          "title": "前缀和后缀",
+          "description": "使用 `prefix` 和 `suffix` 添加前缀和后缀。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px;\">\n    <div>\n      <p style=\"margin-bottom: 4px;\">带前缀：</p>\n      <InputNumber v-model:value=\"value1\" prefix=\"¥\" style=\"width: 100%;\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">带后缀：</p>\n      <InputNumber v-model:value=\"value2\" suffix=\"RMB\" style=\"width: 100%;\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">前缀 + 后缀：</p>\n      <InputNumber v-model:value=\"value3\" prefix=\"¥\" suffix=\"元\" style=\"width: 100%;\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from 'ant-design-hmfw'\n\nconst value1 = ref<number>(100)\nconst value2 = ref<number>(200)\nconst value3 = ref<number>(300)\n</script>"
+        },
+        {
+          "title": "变体",
+          "description": "支持 `outlined`、`filled`、`borderless`、`underlined` 四种变体。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px;\">\n    <InputNumber v-model:value=\"value\" placeholder=\"Outlined (默认)\" style=\"width: 100%;\" />\n    <InputNumber v-model:value=\"value\" variant=\"filled\" placeholder=\"Filled\" style=\"width: 100%;\" />\n    <InputNumber v-model:value=\"value\" variant=\"borderless\" placeholder=\"Borderless\" style=\"width: 100%;\" />\n    <InputNumber v-model:value=\"value\" variant=\"underlined\" placeholder=\"Underlined\" style=\"width: 100%;\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from 'ant-design-hmfw'\n\nconst value = ref<number>(100)\n</script>"
+        },
+        {
+          "title": "显示模式",
+          "description": "支持 `input` 和 `spinner` 两种模式。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px;\">\n    <div>\n      <p style=\"margin-bottom: 4px;\">Input 模式（默认）：</p>\n      <InputNumber v-model:value=\"value1\" :min=\"1\" :max=\"10\" style=\"width: 100%;\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">Spinner 模式：</p>\n      <InputNumber v-model:value=\"value2\" mode=\"spinner\" :min=\"1\" :max=\"10\" style=\"width: 100%;\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from 'ant-design-hmfw'\n\nconst value1 = ref<number>(3)\nconst value2 = ref<number>(3)\n</script>"
+        },
+        {
+          "title": "格式化展示",
+          "description": "通过 `formatter` 格式化数字，以展示具有具体含义的数据，往往需要配合 `parser` 一起使用。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px;\">\n    <div>\n      <p style=\"margin-bottom: 4px;\">千分位格式化：</p>\n      <InputNumber\n        v-model:value=\"value1\"\n        :formatter=\"formatter1\"\n        :parser=\"parser1\"\n        style=\"width: 100%;\"\n      />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">百分比：</p>\n      <InputNumber\n        v-model:value=\"value2\"\n        :min=\"0\"\n        :max=\"100\"\n        :formatter=\"formatter2\"\n        :parser=\"parser2\"\n        style=\"width: 100%;\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from 'ant-design-hmfw'\n\nconst value1 = ref<number>(1000)\nconst value2 = ref<number>(50)\n\nconst formatter1 = (value: number, info: { userTyping: boolean; input: string }) => {\n  const [start, end] = `${value}`.split('.') || []\n  const v = `${start}`.replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',')\n  return `$ ${end ? `${v}.${end}` : `${v}`}`\n}\n\nconst parser1 = (value: string) => {\n  return parseFloat(value.replace(/\\$\\s?|(,*)/g, ''))\n}\n\nconst formatter2 = (value: number) => `${value}%`\nconst parser2 = (value: string) => parseFloat(value.replace('%', ''))\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/input-number"
@@ -6170,7 +6529,14 @@
           "section": "RangePicker Props",
           "name": "value (v-model)",
           "description": "日期范围",
-          "type": "`[string, string] | [null, null]`",
+          "type": "`[string | null, string | null]`",
+          "default": "-"
+        },
+        {
+          "section": "RangePicker Props",
+          "name": "defaultValue",
+          "description": "默认日期范围",
+          "type": "`[string | null, string | null]`",
           "default": "-"
         },
         {
@@ -6183,16 +6549,16 @@
         {
           "section": "RangePicker Props",
           "name": "disabled",
-          "description": "是否禁用",
-          "type": "`boolean`",
+          "description": "是否禁用，可分别禁用起止",
+          "type": "`boolean | [boolean, boolean]`",
           "default": "`false`"
         },
         {
           "section": "RangePicker Props",
           "name": "placeholder",
-          "description": "占位文本",
+          "description": "占位文本，缺省时使用当前语言包",
           "type": "`[string, string]`",
-          "default": "`['开始日期', '结束日期']`"
+          "default": "locale.rangePlaceholder"
         },
         {
           "section": "RangePicker Props",
@@ -6203,6 +6569,34 @@
         },
         {
           "section": "RangePicker Props",
+          "name": "allowEmpty",
+          "description": "允许起止留空",
+          "type": "`[boolean, boolean]`",
+          "default": "-"
+        },
+        {
+          "section": "RangePicker Props",
+          "name": "order",
+          "description": "自动排序起止日期",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "RangePicker Props",
+          "name": "separator",
+          "description": "起止输入框之间的分隔符",
+          "type": "`string`",
+          "default": "`'→'`"
+        },
+        {
+          "section": "RangePicker Props",
+          "name": "presets",
+          "description": "预设范围快捷选项",
+          "type": "`{ label: string, value: RangeValue | (() => RangeValue) }[]`",
+          "default": "-"
+        },
+        {
+          "section": "RangePicker Props",
           "name": "size",
           "description": "尺寸",
           "type": "`'small' | 'middle' | 'large'`",
@@ -6210,10 +6604,24 @@
         },
         {
           "section": "RangePicker Props",
+          "name": "disabledDate",
+          "description": "不可选日期",
+          "type": "`(date: Date, info?: { from?: Date, type?: string }) => boolean`",
+          "default": "-"
+        },
+        {
+          "section": "RangePicker Props",
           "name": "status",
           "description": "校验状态",
           "type": "`'error' | 'warning' | ''`",
           "default": "`''`"
+        },
+        {
+          "section": "RangePicker Props",
+          "name": "open",
+          "description": "受控的弹层显隐",
+          "type": "`boolean`",
+          "default": "-"
         }
       ],
       "events": [
@@ -6221,13 +6629,13 @@
           "section": "RangePicker Events",
           "name": "change",
           "description": "日期范围变化时",
-          "params": "`(value: RangeValue, dates: [Date, Date]) => void`"
+          "params": "`(value: RangeValue, dates: [Date | null, Date | null]) => void`"
         },
         {
           "section": "RangePicker Events",
           "name": "calendarChange",
-          "description": "面板选择日期时",
-          "params": "`(value: RangeValue) => void`"
+          "description": "面板选择起止日期时",
+          "params": "`(value: RangeValue, dates: [Date | null, Date | null], info: { range: 'start' | 'end' }) => void`"
         },
         {
           "section": "RangePicker Events",
@@ -6242,6 +6650,16 @@
           "title": "基础用法",
           "description": "",
           "code": "<template>\n  <Space direction=\"vertical\">\n    <RangePicker v-model:value=\"range\" />\n    <span>选择范围：{{ range[0] }} ~ {{ range[1] }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { RangePicker, Space } from 'ant-design-hmfw'\nimport type { RangeValue } from 'ant-design-hmfw'\n\nconst range = ref<RangeValue>([null, null])\n</script>"
+        },
+        {
+          "title": "预设范围",
+          "description": "通过 `presets` 提供快捷选项，`value` 支持直接传范围或返回范围的函数。",
+          "code": "<template>\n  <RangePicker :presets=\"presets\" @change=\"onChange\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { RangePicker } from 'ant-design-hmfw'\nimport type { RangeValue } from 'ant-design-hmfw'\n\ntype RangePreset = { label: string; value: RangeValue | (() => RangeValue) }\n\nfunction daysAgo(n: number): string {\n  const d = new Date()\n  d.setDate(d.getDate() - n)\n  return d.toISOString().slice(0, 10)\n}\nfunction today(): string {\n  return new Date().toISOString().slice(0, 10)\n}\n\nconst presets: RangePreset[] = [\n  { label: '最近 7 天', value: [daysAgo(7), today()] },\n  { label: '最近 14 天', value: [daysAgo(14), today()] },\n  { label: '最近 30 天', value: () => [daysAgo(30), today()] },\n]\n\nfunction onChange(value: RangeValue) {\n  console.log('range:', value)\n}\n</script>"
+        },
+        {
+          "title": "禁用",
+          "description": "`disabled` 传布尔值禁用整个控件，传 `[boolean, boolean]` 可分别禁用起止输入框。",
+          "code": "<template>\n  <Space direction=\"vertical\">\n    <RangePicker :disabled=\"[true, false]\" />\n    <RangePicker disabled :value=\"['2024-01-01', '2024-01-31']\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { RangePicker, Space } from 'ant-design-hmfw'\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/range-picker"
@@ -6681,20 +7099,20 @@
           "section": "Select Props",
           "name": "value(v-model)",
           "description": "指定当前选中的条目",
-          "type": "`string | number | (string | number)[]`",
+          "type": "`string | number | (string | number)[] | LabeledValue | LabeledValue[]`",
           "default": "-"
         },
         {
           "section": "Select Props",
           "name": "defaultValue",
           "description": "指定默认选中的条目",
-          "type": "`string | number | (string | number)[]`",
+          "type": "`string | number | (string | number)[] | LabeledValue | LabeledValue[]`",
           "default": "-"
         },
         {
           "section": "Select Props",
           "name": "options",
-          "description": "数据化配置选项内容",
+          "description": "数据化配置选项内容，支持嵌套（OptGroup）",
           "type": "`SelectOption[]`",
           "default": "`[]`"
         },
@@ -6743,8 +7161,22 @@
         {
           "section": "Select Props",
           "name": "maxTagCount",
-          "description": "最多显示多少个 tag，响应式模式会对性能产生损耗",
+          "description": "最多显示多少个 tag",
           "type": "`number`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "maxCount",
+          "description": "最多选择多少个选项（multiple/tags 模式）",
+          "type": "`number`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "maxTagPlaceholder",
+          "description": "隐藏 tag 时显示的内容",
+          "type": "`string | ((omittedValues) => string)`",
           "default": "-"
         },
         {
@@ -6769,6 +7201,76 @@
           "default": "`false`"
         },
         {
+          "section": "Select Props",
+          "name": "labelInValue",
+          "description": "是否把每个选项的 label 包装到 value 中",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Select Props",
+          "name": "tokenSeparators",
+          "description": "自动分词的分隔符（tags 模式）",
+          "type": "`string[]`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "filterOption",
+          "description": "是否根据输入项进行筛选",
+          "type": "`boolean | ((input: string, option: SelectOption) => boolean)`",
+          "default": "`true`"
+        },
+        {
+          "section": "Select Props",
+          "name": "notFoundContent",
+          "description": "当下拉列表为空时显示的内容",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "dropdownMatchSelectWidth",
+          "description": "下拉菜单和选择器同宽",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Select Props",
+          "name": "autoClearSearchValue",
+          "description": "选中后是否清空搜索框（multiple/tags 模式）",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Select Props",
+          "name": "optionRender",
+          "description": "自定义下拉选项渲染",
+          "type": "`(option: SelectOption, info: { index: number }) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "labelRender",
+          "description": "自定义选中项渲染",
+          "type": "`(props: LabeledValue) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "tagRender",
+          "description": "自定义 tag 渲染（multiple/tags 模式）",
+          "type": "`(props: { label, value, closable, onClose }) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "fieldNames",
+          "description": "自定义字段名",
+          "type": "`{ label?: string; value?: string; options?: string }`",
+          "default": "`{ label: 'label', value: 'value', options: 'options' }`"
+        },
+        {
           "section": "SelectOption",
           "name": "value",
           "description": "选项的值",
@@ -6788,6 +7290,55 @@
           "description": "是否禁用该选项",
           "type": "`boolean`",
           "default": ""
+        },
+        {
+          "section": "SelectOption",
+          "name": "title",
+          "description": "选项的 title 属性",
+          "type": "`string`",
+          "default": ""
+        },
+        {
+          "section": "SelectOption",
+          "name": "options",
+          "description": "子选项（用于 OptGroup）",
+          "type": "`SelectOption[]`",
+          "default": ""
+        },
+        {
+          "section": "LabeledValue",
+          "name": "value",
+          "description": "选项的值",
+          "type": "`string | number`",
+          "default": ""
+        },
+        {
+          "section": "LabeledValue",
+          "name": "label",
+          "description": "选项的标签",
+          "type": "`string`",
+          "default": ""
+        },
+        {
+          "section": "LabeledValue",
+          "name": "key",
+          "description": "选项的 key",
+          "type": "`string`",
+          "default": ""
+        },
+        {
+          "section": "Select Methods",
+          "name": "-",
+          "description": "获取焦点",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Select Methods",
+          "name": "-",
+          "description": "失去焦点",
+          "type": "",
+          "default": ""
         }
       ],
       "events": [
@@ -6795,13 +7346,13 @@
           "section": "Select Events",
           "name": "update:value",
           "description": "选中 option，或 input 的 value 变化时，调用此函数",
-          "params": "`(value: string | number | (string | number)[]) => void`"
+          "params": "`(value: SelectValue) => void`"
         },
         {
           "section": "Select Events",
           "name": "change",
           "description": "选中 option，或 input 的 value 变化时，调用此函数",
-          "params": "`(value: string | number | (string | number)[], option: SelectOption | SelectOption[]) => void`"
+          "params": "`(value: SelectValue, option: SelectOption | SelectOption[]) => void`"
         },
         {
           "section": "Select Events",
@@ -6811,21 +7362,39 @@
         },
         {
           "section": "Select Events",
+          "name": "select",
+          "description": "选中选项时回调",
+          "params": "`(value: string | number, option: SelectOption) => void`"
+        },
+        {
+          "section": "Select Events",
+          "name": "deselect",
+          "description": "取消选中选项时回调",
+          "params": "`(value: string | number) => void`"
+        },
+        {
+          "section": "Select Events",
           "name": "focus",
           "description": "获得焦点时回调",
-          "params": "`(event: FocusEvent) => void`"
+          "params": "`() => void`"
         },
         {
           "section": "Select Events",
           "name": "blur",
           "description": "失去焦点时回调",
-          "params": "`(event: FocusEvent) => void`"
+          "params": "`() => void`"
         },
         {
           "section": "Select Events",
           "name": "clear",
           "description": "清除内容时回调",
           "params": "`() => void`"
+        },
+        {
+          "section": "Select Events",
+          "name": "dropdownVisibleChange",
+          "description": "下拉菜单显示/隐藏时回调",
+          "params": "`(visible: boolean) => void`"
         }
       ],
       "slots": [],
@@ -6844,6 +7413,26 @@
           "title": "搜索",
           "description": "通过 `show-search` 开启搜索功能。",
           "code": "<template>\n  <div style=\"max-width: 300px;\">\n    <Select\n      v-model:value=\"value\"\n      :options=\"options\"\n      :show-search=\"true\"\n      placeholder=\"请搜索并选择\"\n      style=\"width: 100%;\"\n      @search=\"handleSearch\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from 'ant-design-hmfw'\n\nconst value = ref('')\n\nconst allOptions = [\n  { label: '北京', value: 'beijing' },\n  { label: '上海', value: 'shanghai' },\n  { label: '广州', value: 'guangzhou' },\n  { label: '深圳', value: 'shenzhen' },\n  { label: '杭州', value: 'hangzhou' },\n  { label: '成都', value: 'chengdu' },\n]\n\nconst options = ref(allOptions)\n\nconst handleSearch = (searchText: string) => {\n  options.value = allOptions.filter(item =>\n    item.label.includes(searchText)\n  )\n}\n</script>"
+        },
+        {
+          "title": "标签模式",
+          "description": "通过 `mode=\"tags\"` 开启标签模式，可以自由输入标签。配合 `token-separators` 可以自动分词。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px;\">\n    <Select\n      v-model:value=\"value\"\n      :options=\"options\"\n      mode=\"tags\"\n      :token-separators=\"[',']\"\n      placeholder=\"输入标签，用逗号分隔\"\n      style=\"width: 100%;\"\n    />\n    <p>已选：{{ value }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from 'ant-design-hmfw'\n\nconst value = ref<string[]>([])\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n]\n</script>"
+        },
+        {
+          "title": "获取选项对象",
+          "description": "通过 `label-in-value` 可以获取选项的完整对象（包含 value 和 label）。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px;\">\n    <Select\n      v-model:value=\"value\"\n      :options=\"options\"\n      label-in-value\n      placeholder=\"选择一个选项\"\n      style=\"width: 100%;\"\n      @change=\"handleChange\"\n    />\n    <p>选中值：{{ JSON.stringify(value) }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from 'ant-design-hmfw'\n\nconst value = ref<any>(null)\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n]\n\nconst handleChange = (val: any, option: any) => {\n  console.log('change:', val, option)\n}\n</script>"
+        },
+        {
+          "title": "选项分组",
+          "description": "使用 `options` 的嵌套结构实现选项分组。",
+          "code": "<template>\n  <div style=\"max-width: 400px;\">\n    <Select\n      v-model:value=\"value\"\n      :options=\"options\"\n      placeholder=\"选择城市\"\n      style=\"width: 100%;\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from 'ant-design-hmfw'\n\nconst value = ref<string>('')\n\nconst options = [\n  {\n    label: '浙江',\n    options: [\n      { label: '杭州', value: 'hangzhou' },\n      { label: '宁波', value: 'ningbo' },\n      { label: '温州', value: 'wenzhou' },\n    ],\n  },\n  {\n    label: '江苏',\n    options: [\n      { label: '南京', value: 'nanjing' },\n      { label: '苏州', value: 'suzhou' },\n      { label: '镇江', value: 'zhenjiang' },\n    ],\n  },\n]\n</script>"
+        },
+        {
+          "title": "限制选择数量",
+          "description": "通过 `max-count` 限制多选模式下的最大选择数量。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px;\">\n    <Select\n      v-model:value=\"value\"\n      :options=\"options\"\n      mode=\"multiple\"\n      :max-count=\"3\"\n      placeholder=\"最多选择 3 个\"\n      style=\"width: 100%;\"\n    />\n    <p>已选：{{ value }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from 'ant-design-hmfw'\n\nconst value = ref<string[]>([])\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n  { label: 'Svelte', value: 'svelte' },\n  { label: 'Solid', value: 'solid' },\n]\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/select"
@@ -7093,7 +7682,7 @@
         {
           "section": "Slider Props",
           "name": "step",
-          "description": "步长，取值必须大于 0，并且可被 (max - min) 整除。当 `marks` 不为空对象时，可以设置 `step` 为 null，此时 Slider 的可选值仅有 marks 标出来的部分",
+          "description": "步长，取值必须大于 0，并且可被 (max - min) 整除。当 `marks` 不为空对象时，可以设置 `step` 为 `null`，此时 Slider 的可选值仅有 marks 标出来的部分",
           "type": "`number | null`",
           "default": "`1`"
         },
@@ -7113,6 +7702,13 @@
         },
         {
           "section": "Slider Props",
+          "name": "reverse",
+          "description": "反向坐标轴",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Slider Props",
           "name": "range",
           "description": "双滑块模式",
           "type": "`boolean`",
@@ -7122,14 +7718,35 @@
           "section": "Slider Props",
           "name": "marks",
           "description": "刻度标记，key 的类型必须为 number 且取值在闭区间 [min, max] 内，每个标签可以单独设置样式",
-          "type": "`Record<number, string | { label: string; style?: object }>`",
+          "type": "`Record<number, string | { label: string; style?: CSSProperties }>`",
           "default": "-"
+        },
+        {
+          "section": "Slider Props",
+          "name": "included",
+          "description": "`marks` 不为空对象时有效，值为 true 时表示值为包含关系，false 表示并列",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Slider Props",
+          "name": "dots",
+          "description": "是否只能拖拽到刻度上",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Slider Props",
+          "name": "keyboard",
+          "description": "支持使用键盘操作 handle",
+          "type": "`boolean`",
+          "default": "`true`"
         },
         {
           "section": "Slider Props",
           "name": "tooltip",
           "description": "Tooltip 相关配置",
-          "type": "`{ open?: boolean; formatter?: (value: number) => string }`",
+          "type": "`{ open?: boolean; formatter?: (value: number) => string | null }`",
           "default": "-"
         }
       ],
@@ -7167,8 +7784,23 @@
         },
         {
           "title": "刻度标记",
-          "description": "使用 `marks` 属性标注分段式滑块，使用 `step=\"null\"` 时，Slider 的可选值仅有 marks 标出来的部分。",
+          "description": "使用 `marks` 属性标注分段式滑块，使用 `step={null}` 时，Slider 的可选值仅有 marks 标出来的部分。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 40px; padding: 0 16px;\">\n    <div>\n      <p style=\"margin-bottom: 8px;\">带刻度标记：{{ value1 }}</p>\n      <Slider v-model:value=\"value1\" :marks=\"marks\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 8px;\">只能选择刻度点：{{ value2 }}</p>\n      <Slider v-model:value=\"value2\" :marks=\"marks\" :step=\"null\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Slider } from 'ant-design-hmfw'\n\nconst value1 = ref(37)\nconst value2 = ref(0)\n\nconst marks = {\n  0: '0°C',\n  26: '26°C',\n  37: '37°C',\n  100: {\n    label: '100°C',\n    style: { color: '#f50' },\n  },\n}\n</script>"
+        },
+        {
+          "title": "自定义 Tooltip",
+          "description": "使用 `tooltip.formatter` 自定义 Tooltip 内容，设置为 `null` 可隐藏 Tooltip。使用 `tooltip.open` 控制 Tooltip 显示状态。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px; padding: 0 16px;\">\n    <div>\n      <p style=\"margin-bottom: 8px;\">自定义 Tooltip 格式：{{ value1 }}</p>\n      <Slider v-model:value=\"value1\" :tooltip=\"{ formatter: (v) => `${v}%` }\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 8px;\">隐藏 Tooltip：{{ value2 }}</p>\n      <Slider v-model:value=\"value2\" :tooltip=\"{ formatter: null }\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 8px;\">始终显示 Tooltip：{{ value3 }}</p>\n      <Slider v-model:value=\"value3\" :tooltip=\"{ open: true }\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Slider } from 'ant-design-hmfw'\n\nconst value1 = ref(30)\nconst value2 = ref(50)\nconst value3 = ref(70)\n</script>"
+        },
+        {
+          "title": "垂直方向",
+          "description": "垂直方向的 Slider。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 48px; padding: 0 16px;\">\n    <div style=\"height: 300px;\">\n      <p style=\"margin-bottom: 8px;\">垂直滑块：{{ value1 }}</p>\n      <Slider v-model:value=\"value1\" vertical />\n    </div>\n    <div style=\"height: 300px;\">\n      <p style=\"margin-bottom: 8px;\">垂直范围选择：{{ value2 }}</p>\n      <Slider v-model:value=\"value2\" vertical range :step=\"10\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Slider } from 'ant-design-hmfw'\n\nconst value1 = ref(30)\nconst value2 = ref<[number, number]>([20, 50])\n</script>"
+        },
+        {
+          "title": "刻度点",
+          "description": "通过 `dots` 属性显示刻度点。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px; padding: 0 16px;\">\n    <div>\n      <p style=\"margin-bottom: 8px;\">带刻度点：{{ value1 }}</p>\n      <Slider v-model:value=\"value1\" :dots=\"true\" :step=\"10\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 8px;\">范围选择 + 刻度点：{{ value2 }}</p>\n      <Slider v-model:value=\"value2\" range :dots=\"true\" :step=\"20\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Slider } from 'ant-design-hmfw'\n\nconst value1 = ref(30)\nconst value2 = ref<[number, number]>([20, 60])\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/slider"
@@ -8313,6 +8945,20 @@
         },
         {
           "section": "TimePicker Props",
+          "name": "disabledTime",
+          "description": "禁用部分时间选项",
+          "type": "`() => DisabledTimeConfig`",
+          "default": "-"
+        },
+        {
+          "section": "TimePicker Props",
+          "name": "hideDisabledOptions",
+          "description": "隐藏禁用的选项",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TimePicker Props",
           "name": "showNow",
           "description": "面板是否显示\"此刻\"按钮",
           "type": "`boolean`",
@@ -8338,6 +8984,41 @@
           "description": "控制浮层显隐",
           "type": "`boolean`",
           "default": "-"
+        },
+        {
+          "section": "TimePicker Props",
+          "name": "needConfirm",
+          "description": "需要点击确定按钮才触发值变化",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TimePicker Props",
+          "name": "changeOnScroll",
+          "description": "滚动时立即触发选择",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TimePicker Props",
+          "name": "renderExtraFooter",
+          "description": "在面板底部渲染额外的内容",
+          "type": "`() => VNodeChild`",
+          "default": "-"
+        },
+        {
+          "section": "TimePicker Props",
+          "name": "variant",
+          "description": "输入框变体",
+          "type": "`'outlined' | 'borderless' | 'filled' | 'underlined'`",
+          "default": "`'outlined'`"
+        },
+        {
+          "section": "TimePicker Props",
+          "name": "placement",
+          "description": "浮层弹出位置",
+          "type": "`'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'`",
+          "default": "`'bottomLeft'`"
         }
       ],
       "events": [
@@ -8345,19 +9026,31 @@
           "section": "TimePicker Events",
           "name": "update:value",
           "description": "时间发生变化的回调",
-          "params": "`(value: string) => void`"
+          "params": "`(value: string | undefined) => void`"
         },
         {
           "section": "TimePicker Events",
           "name": "change",
           "description": "时间发生变化的回调",
-          "params": "`(value: string, timeString: string) => void`"
+          "params": "`(value: string | undefined, timeString: string) => void`"
         },
         {
           "section": "TimePicker Events",
           "name": "openChange",
           "description": "面板打开/关闭时的回调",
           "params": "`(open: boolean) => void`"
+        },
+        {
+          "section": "TimePicker Events",
+          "name": "focus",
+          "description": "获得焦点时的回调",
+          "params": "`() => void`"
+        },
+        {
+          "section": "TimePicker Events",
+          "name": "blur",
+          "description": "失去焦点时的回调",
+          "params": "`() => void`"
         }
       ],
       "slots": [],
@@ -8376,6 +9069,21 @@
           "title": "格式化",
           "description": "通过 `format` 属性自定义时间格式，通过 `use12Hours` 开启 12 小时制。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px;\">\n    <div>\n      <p style=\"margin-bottom: 4px;\">只显示时分（HH:mm）：</p>\n      <TimePicker\n        v-model:value=\"time1\"\n        format=\"HH:mm\"\n        placeholder=\"选择时分\"\n      />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">12 小时制：</p>\n      <TimePicker\n        v-model:value=\"time2\"\n        :use12-hours=\"true\"\n        format=\"h:mm a\"\n        placeholder=\"12 小时制\"\n      />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">不显示秒：</p>\n      <TimePicker\n        v-model:value=\"time3\"\n        format=\"HH:mm\"\n        :show-now=\"false\"\n        placeholder=\"不显示秒\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TimePicker } from 'ant-design-hmfw'\n\nconst time1 = ref('')\nconst time2 = ref('')\nconst time3 = ref('')\n</script>"
+        },
+        {
+          "title": "禁用时间",
+          "description": "通过 `disabledTime` 禁用部分时间选项，`hideDisabledOptions` 可以隐藏禁用的选项。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px;\">\n    <div>\n      <p style=\"margin-bottom: 4px;\">禁用部分小时：</p>\n      <TimePicker\n        v-model:value=\"time1\"\n        :disabled-time=\"disabledTime1\"\n        placeholder=\"禁用 0-5 时\"\n      />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">隐藏禁用选项：</p>\n      <TimePicker\n        v-model:value=\"time2\"\n        :disabled-time=\"disabledTime2\"\n        :hide-disabled-options=\"true\"\n        placeholder=\"隐藏 0-5 时\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TimePicker } from 'ant-design-hmfw'\n\nconst time1 = ref('')\nconst time2 = ref('')\n\nconst disabledTime1 = () => ({\n  disabledHours: () => [0, 1, 2, 3, 4, 5],\n})\n\nconst disabledTime2 = () => ({\n  disabledHours: () => [0, 1, 2, 3, 4, 5],\n})\n</script>"
+        },
+        {
+          "title": "确认模式",
+          "description": "通过 `needConfirm` 需要点击确定按钮才生效，`changeOnScroll` 可以在滚动时立即触发变化。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px;\">\n    <div>\n      <p style=\"margin-bottom: 4px;\">需要确认（needConfirm）：</p>\n      <TimePicker\n        v-model:value=\"time1\"\n        :need-confirm=\"true\"\n        placeholder=\"点击确定按钮生效\"\n      />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">滚动即改变（changeOnScroll）：</p>\n      <TimePicker\n        v-model:value=\"time2\"\n        :change-on-scroll=\"true\"\n        :need-confirm=\"false\"\n        placeholder=\"选择即生效\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TimePicker } from 'ant-design-hmfw'\n\nconst time1 = ref('')\nconst time2 = ref('')\n</script>"
+        },
+        {
+          "title": "变体",
+          "description": "通过 `variant` 设置不同的输入框样式。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px;\">\n    <div>\n      <p style=\"margin-bottom: 4px;\">Outlined（默认）：</p>\n      <TimePicker\n        v-model:value=\"time1\"\n        variant=\"outlined\"\n        placeholder=\"Outlined\"\n      />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">Filled：</p>\n      <TimePicker\n        v-model:value=\"time2\"\n        variant=\"filled\"\n        placeholder=\"Filled\"\n      />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">Borderless：</p>\n      <TimePicker\n        v-model:value=\"time3\"\n        variant=\"borderless\"\n        placeholder=\"Borderless\"\n      />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px;\">Underlined：</p>\n      <TimePicker\n        v-model:value=\"time4\"\n        variant=\"underlined\"\n        placeholder=\"Underlined\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TimePicker } from 'ant-design-hmfw'\n\nconst time1 = ref('')\nconst time2 = ref('')\nconst time3 = ref('')\nconst time4 = ref('')\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/time-picker"
@@ -9120,10 +9828,31 @@
         },
         {
           "section": "TreeSelect Props",
+          "name": "treeCheckStrictly",
+          "description": "checkable 状态下节点选择完全受控（父子节点选中状态不再关联）",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TreeSelect Props",
+          "name": "showCheckedStrategy",
+          "description": "checkable 时选中项回填方式",
+          "type": "`'SHOW_ALL' | 'SHOW_PARENT' | 'SHOW_CHILD'`",
+          "default": "`'SHOW_CHILD'`"
+        },
+        {
+          "section": "TreeSelect Props",
           "name": "showSearch",
           "description": "是否显示搜索框",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "TreeSelect Props",
+          "name": "autoClearSearchValue",
+          "description": "多选模式下选中后自动清空搜索框",
+          "type": "`boolean`",
+          "default": "`true`"
         },
         {
           "section": "TreeSelect Props",
@@ -9155,8 +9884,50 @@
         },
         {
           "section": "TreeSelect Props",
+          "name": "status",
+          "description": "设置校验状态",
+          "type": "`'error' | 'warning' | ''`",
+          "default": "`''`"
+        },
+        {
+          "section": "TreeSelect Props",
+          "name": "maxCount",
+          "description": "可选中的最多数量，仅在多选时生效",
+          "type": "`number`",
+          "default": "-"
+        },
+        {
+          "section": "TreeSelect Props",
+          "name": "notFoundContent",
+          "description": "下拉列表为空时显示的内容",
+          "type": "`string`",
+          "default": "`'暂无数据'`"
+        },
+        {
+          "section": "TreeSelect Props",
           "name": "treeDefaultExpandAll",
           "description": "是否默认展开所有节点",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TreeSelect Props",
+          "name": "treeDefaultExpandedKeys",
+          "description": "默认展开的树节点 key",
+          "type": "`(string | number)[]`",
+          "default": "`[]`"
+        },
+        {
+          "section": "TreeSelect Props",
+          "name": "open",
+          "description": "受控展开下拉菜单",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "TreeSelect Props",
+          "name": "defaultOpen",
+          "description": "默认是否展开下拉菜单",
           "type": "`boolean`",
           "default": "`false`"
         },
@@ -9194,15 +9965,94 @@
           "description": "是否禁用",
           "type": "`boolean`",
           "default": ""
+        },
+        {
+          "section": "TreeSelectNode",
+          "name": "selectable",
+          "description": "是否可选（单选/普通多选时生效）",
+          "type": "`boolean`",
+          "default": ""
+        },
+        {
+          "section": "TreeSelectNode",
+          "name": "disableCheckbox",
+          "description": "treeCheckable 时禁用该节点的勾选框",
+          "type": "`boolean`",
+          "default": ""
+        },
+        {
+          "section": "TreeSelectNode",
+          "name": "isLeaf",
+          "description": "是否叶子节点（仅用于标记）",
+          "type": "`boolean`",
+          "default": ""
         }
       ],
-      "events": [],
+      "events": [
+        {
+          "section": "TreeSelect Events",
+          "name": "change",
+          "description": "选中树节点时调用",
+          "params": "`(value, labels)`"
+        },
+        {
+          "section": "TreeSelect Events",
+          "name": "select",
+          "description": "被选中时调用",
+          "params": "`(value, node)`"
+        },
+        {
+          "section": "TreeSelect Events",
+          "name": "search",
+          "description": "搜索框值变化时调用",
+          "params": "`(value: string)`"
+        },
+        {
+          "section": "TreeSelect Events",
+          "name": "treeExpand",
+          "description": "展开节点时调用",
+          "params": "`(expandedKeys)`"
+        },
+        {
+          "section": "TreeSelect Events",
+          "name": "openChange",
+          "description": "展开下拉菜单的回调",
+          "params": "`(open: boolean)`"
+        },
+        {
+          "section": "TreeSelect Events",
+          "name": "dropdownVisibleChange",
+          "description": "展开下拉菜单的回调（同 openChange）",
+          "params": "`(visible: boolean)`"
+        },
+        {
+          "section": "TreeSelect Events",
+          "name": "clear",
+          "description": "清除时调用",
+          "params": "`()`"
+        }
+      ],
       "slots": [],
       "demos": [
         {
           "title": "基础用法",
           "description": "",
           "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 300px\">\n    <TreeSelect\n      v-model:value=\"value\"\n      :tree-data=\"treeData\"\n      placeholder=\"请选择\"\n      style=\"width: 100%\"\n    />\n    <span>选中：{{ value }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TreeSelect, Space } from 'ant-design-hmfw'\nimport type { TreeSelectNode } from 'ant-design-hmfw'\n\nconst value = ref<string>()\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'parent1',\n    label: '父节点 1',\n    children: [\n      { value: 'child1-1', label: '子节点 1-1' },\n      { value: 'child1-2', label: '子节点 1-2' },\n    ],\n  },\n  {\n    value: 'parent2',\n    label: '父节点 2',\n    children: [\n      { value: 'child2-1', label: '子节点 2-1' },\n    ],\n  },\n]\n</script>"
+        },
+        {
+          "title": "多选",
+          "description": "",
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 300px\">\n    <TreeSelect\n      v-model:value=\"value\"\n      :tree-data=\"treeData\"\n      multiple\n      placeholder=\"请选择\"\n      style=\"width: 100%\"\n    />\n    <span>选中：{{ value }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TreeSelect, Space } from 'ant-design-hmfw'\nimport type { TreeSelectNode } from 'ant-design-hmfw'\n\nconst value = ref<(string | number)[]>([])\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'parent1',\n    label: '父节点 1',\n    children: [\n      { value: 'child1-1', label: '子节点 1-1' },\n      { value: 'child1-2', label: '子节点 1-2' },\n    ],\n  },\n  {\n    value: 'parent2',\n    label: '父节点 2',\n    children: [\n      { value: 'child2-1', label: '子节点 2-1' },\n    ],\n  },\n]\n</script>"
+        },
+        {
+          "title": "可勾选",
+          "description": "",
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 300px\">\n    <TreeSelect\n      v-model:value=\"value\"\n      :tree-data=\"treeData\"\n      tree-checkable\n      placeholder=\"请选择\"\n      style=\"width: 100%\"\n    />\n    <span>选中：{{ value }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TreeSelect, Space } from 'ant-design-hmfw'\nimport type { TreeSelectNode } from 'ant-design-hmfw'\n\nconst value = ref<(string | number)[]>([])\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'parent1',\n    label: '父节点 1',\n    children: [\n      { value: 'child1-1', label: '子节点 1-1' },\n      { value: 'child1-2', label: '子节点 1-2' },\n    ],\n  },\n  {\n    value: 'parent2',\n    label: '父节点 2',\n    children: [\n      { value: 'child2-1', label: '子节点 2-1' },\n    ],\n  },\n]\n</script>"
+        },
+        {
+          "title": "搜索",
+          "description": "",
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 300px\">\n    <TreeSelect\n      v-model:value=\"value\"\n      :tree-data=\"treeData\"\n      show-search\n      placeholder=\"搜索节点\"\n      style=\"width: 100%\"\n    />\n    <span>选中：{{ value }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TreeSelect, Space } from 'ant-design-hmfw'\nimport type { TreeSelectNode } from 'ant-design-hmfw'\n\nconst value = ref<string>()\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'parent1',\n    label: '父节点 1',\n    children: [\n      { value: 'child1-1', label: '子节点 1-1' },\n      { value: 'child1-2', label: '子节点 1-2' },\n    ],\n  },\n  {\n    value: 'parent2',\n    label: '父节点 2',\n    children: [\n      { value: 'child2-1', label: '子节点 2-1' },\n      { value: 'child2-2', label: '子节点 2-2' },\n    ],\n  },\n]\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/tree-select"
