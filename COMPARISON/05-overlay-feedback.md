@@ -4,7 +4,7 @@
 
 包含：Tooltip · Popover · Popconfirm · Modal · Drawer · Message · Notification · Tour · Image
 
-待办：modal · drawer · message · notification · tour · image
+待办：message · notification · tour · image
 
 ---
 
@@ -267,5 +267,59 @@ AntD Modal 由 `rc-dialog` 提供 dialog/mask/transition，外层包一层 Confi
 9. 缺失静态方法 `Modal.confirm/info/success/error/warning` + `Modal.destroyAll`（核心特性）
 
 ---
+
+## 54. Drawer 抽屉 ✅ 已完成（含 Bug 修复）
+
+参考源码：`ant-design-master/components/drawer/{Drawer,DrawerPanel,useFocusable}.tsx`、`index.en-US.md`。
+原实现仅 117 行、5 个用例，缺失大量 v6 特性，且自身文档里声明的 `extra`/`afterOpenChange` 根本没实现。
+
+### 发现的差异/问题表
+
+| 维度 | AntD v6 | 原 hmfw | 处理 |
+| --- | --- | --- | --- |
+| body 滚动锁 | RcDrawer 锁 body 滚动 | ❌ 无 | ✅ 复用 Modal 的 ref-count `lockScroll`，仅 `mask` 时锁 |
+| Esc 关闭 | `keyboard`（默认 true） | ❌ 无 keyboard，Esc 无效 | ✅ 加 `keyboard` prop + `handleKeydown` |
+| `afterOpenChange` | 文档声明 | ❌ 声明在 md 但从未 emit | ✅ `setTimeout(emit, 0)`（fake-timer 友好），与 Modal 一致 |
+| `extra` | 右上角操作区 | ❌ 文档声明 md 但无实现 | ✅ `extra` slot + `.hmfw-drawer-extra` |
+| `close` 事件参数 | `(e)` | ❌ emit 不带 event | ✅ `emit('close', e)`，单测断言 MouseEvent |
+| 关闭图标 | Icon（CloseOutlined） | ❌ 硬编码 `×` 字符 | ✅ `<Icon component={closeIcon ?? CloseOutlined}>` + `closeIcon` prop |
+| header 布局 | v6：关闭按钮在**标题左侧**（`header-title` 容器） | 旧：关闭按钮在右、`space-between` | ✅ 重排为 `header-title`(close+title) + extra，对齐 v6 |
+| `size` | `'default'\|'large'\|number\|string`，large=736 | ❌ 仅 width/height | ✅ `resolvedSize`：large→736/default→378/数字/纯数字串→px/其它原样；size 优先于 width/height |
+| `loading` | Skeleton | ❌ 无 | ✅ `loading` → `<Skeleton active title=false rows=5>` |
+| `getContainer` | 挂载节点 / false | ❌ 固定 `to="body"` | ✅ `getContainer` prop，`false` → Teleport disabled 原地渲染 |
+| `destroyOnHidden` | 5.25 新名 | 仅旧 `destroyOnClose` | ✅ 两者都支持，`destroyOnHidden ?? destroyOnClose` |
+| `forceRender` | 预渲染 | ❌ 无 | ✅ `forceRender` → 渲染但 `display:none` |
+| `focusTriggerAfterClose` | focusable.focusTriggerAfterClose（默认 true） | ❌ 焦点恒返回 | ✅ prop，透传给 trapFocus（与 Modal 同签名） |
+| mask 动画 | mask 淡入 + panel 滑出（分离） | ❌ 整块跟着 placement 平移、mask 也被 translate | ✅ 单 Transition 落在 root，CSS 分别给 mask（opacity）与 wrapper（transform） |
+| `rootClassName`/`rootStyle`/`*Style` | 全套 | ❌ 仅 maskStyle 间接 | ✅ rootClassName/rootStyle/bodyStyle/headerStyle/footerStyle/maskStyle |
+| title/footer slot | ReactNode | footer slot 有、title 仅 string | ✅ title 支持 string\|number\|VNode\|render\|slot；footer slot 保留 |
+| pointer-events | mask 与 panel 分层可点 | root `inset:0` 全屏挡住点击 | ✅ root `pointer-events:none`，mask/wrapper 各自 `auto` |
+
+### 改动文件
+- `components/drawer/Drawer.tsx` — 重写（117 → 279 行）：新增 size 解析、getContainer、Icon 关闭图标、extra/title slot、loading Skeleton、body 滚动锁、Esc/keyboard、afterOpenChange、destroyOnHidden/forceRender/focusTriggerAfterClose、rootClassName/rootStyle 及各 \*Style；header 改为 v6 的 `header-title`(close 在左) 布局
+- `components/drawer/style/index.css` — 重写：root `pointer-events:none` + mask/wrapper 分层；transition 落在 root，mask 淡入 / wrapper 按 placement 滑出（4 向）；header-title/extra/close（margin-inline-end）/footer（8px 16px）样式对齐 v6
+- `components/drawer/index.ts` — 导出 `DrawerPlacement/DrawerSize/DrawerContent/DrawerGetContainer` 类型
+- `components/index.ts` — re-export 上述类型
+- `components/drawer/__tests__/Drawer.test.tsx` — 5 → 24 用例（标题/插槽、close 带 event、Icon 非 ×、mask/maskClosable、mask=false、Esc/keyboard、滚动锁、size 预设/数字/字符串、top/bottom 用 height、extra+footer、loading Skeleton、无内容不渲染 header、afterOpenChange、defaultOpen 非受控、destroyOnHidden、自定义 closeIcon）
+- `docs/demos/drawer/DrawerBasic.vue`、`DrawerPlacement.vue` — 触发器改用 `<Button>`
+- `docs/demos/drawer/DrawerExtraFooter.vue`、`DrawerLoading.vue` — **新建**：size 预设 + extra/footer、loading 骨架屏
+- `docs/demos/drawer/drawer.md` — 重写 API 表（补全 22 个 props + slots 表 + close 带参），新增两个 demo 章节
+
+### 验证
+- `vitest run components/drawer`：24 通过（原 5 → 新 24，+19）
+- `pnpm typecheck`：通过
+- 全量测试：1316 通过 + 2 skipped
+- E2E（playwright-cli）：基础抽屉出浮层、`role=dialog`、标题正确；关闭按钮渲染为 svg（非 `×`）；Esc 关闭生效；large size → 736px、extra/footer 同时渲染；0 console error
+
+### 发现的 Bug 清单（6 个）
+1. `afterOpenChange` 在自身 md 文档声明但从未 emit
+2. `extra` 在自身 md 文档声明但无实现
+3. `close` 事件不传递 event 参数（与文档 `(e: MouseEvent)` 不符）
+4. 无 body 滚动锁、无 Esc/keyboard 关闭
+5. `closeIcon` 硬编码 `×` 字符，无法自定义
+6. mask 与 panel 共用一个 transform 动画：遮罩跟着面板平移而非淡入；且 root `inset:0` 全屏 + 无 pointer-events 分层会挡住非遮罩区域点击
+
+---
+
 
 

@@ -1,5 +1,5 @@
 <template>
-  <button @click="open = true">打开抽屉</button>
+  <Button type="primary" @click="open = true">打开抽屉</Button>
   <Drawer
     v-model:open="open"
     title="基础抽屉"
@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Drawer } from 'ant-design-hmfw'
+import { Drawer, Button } from 'ant-design-hmfw'
 
 const open = ref(false)
 </script>

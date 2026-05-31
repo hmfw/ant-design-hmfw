@@ -94,6 +94,7 @@ export type { TabsProps, TabItem, TabsType, TabsSize, TabsPosition } from './tab
 export { Modal } from './modal'
 
 export { Drawer } from './drawer'
+export type { DrawerPlacement, DrawerSize, DrawerContent, DrawerGetContainer } from './drawer'
 
 export { message } from './message'
 export type { MessageType } from './message'

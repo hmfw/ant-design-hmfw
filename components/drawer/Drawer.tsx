@@ -1,10 +1,17 @@
-import { defineComponent, ref, watch, computed, Teleport, Transition, type PropType } from 'vue'
+import {
+  defineComponent, ref, watch, computed, onBeforeUnmount, Teleport, Transition,
+  type PropType, type VNode, type CSSProperties,
+} from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import { Icon } from '../icon'
+import { CloseOutlined } from '../icon/icons'
+import { Skeleton } from '../skeleton'
+import type { IconComponent } from '../icon/types'
 
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
 
-function trapFocus(el: HTMLElement): (() => void) {
+function trapFocus(el: HTMLElement, focusTriggerAfterClose: boolean): (() => void) {
   const prev = document.activeElement as HTMLElement | null
   const nodes = () => Array.from(el.querySelectorAll<HTMLElement>(FOCUSABLE))
   nodes()[0]?.focus()
@@ -21,35 +28,91 @@ function trapFocus(el: HTMLElement): (() => void) {
     }
   }
   el.addEventListener('keydown', handler)
-  return () => { el.removeEventListener('keydown', handler); prev?.focus() }
+  return () => {
+    el.removeEventListener('keydown', handler)
+    if (focusTriggerAfterClose) prev?.focus()
+  }
 }
 
+// Body scroll lock shared across all open drawers (ref-counted)
+let lockCount = 0
+let cachedOverflow = ''
+function lockScroll() {
+  if (typeof document === 'undefined') return
+  if (lockCount === 0) {
+    cachedOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+  }
+  lockCount += 1
+}
+function unlockScroll() {
+  if (typeof document === 'undefined') return
+  lockCount = Math.max(0, lockCount - 1)
+  if (lockCount === 0) document.body.style.overflow = cachedOverflow
+}
+
+let uid = 0
+
 export type DrawerPlacement = 'top' | 'right' | 'bottom' | 'left'
+export type DrawerSize = 'default' | 'large' | number | string
+export type DrawerContent = string | number | VNode | (() => VNode | string)
+export type DrawerGetContainer = string | HTMLElement | (() => HTMLElement) | false
+
+const DEFAULT_SIZE = 378
+const LARGE_SIZE = 736
+
+function renderContent(content: DrawerContent | undefined, slot?: () => VNode[] | undefined): VNode[] | VNode | string | number | undefined {
+  if (slot) {
+    const s = slot()
+    if (s && s.length) return s
+  }
+  if (content == null || content === '') return undefined
+  if (typeof content === 'function') return (content as () => VNode | string)()
+  return content as VNode | string | number
+}
+
+function toCssSize(v: number | string): string {
+  return typeof v === 'number' ? `${v}px` : v
+}
 
 export const Drawer = defineComponent({
   name: 'Drawer',
+  inheritAttrs: false,
   props: {
     open: { type: Boolean, default: undefined },
     defaultOpen: Boolean,
-    title: String,
-    placement: {
-      type: String as PropType<DrawerPlacement>,
-      default: 'right',
-    },
-    width: { type: [Number, String], default: 378 },
-    height: { type: [Number, String], default: 378 },
+    title: { type: [String, Number, Object, Function] as PropType<DrawerContent>, default: undefined },
+    placement: { type: String as PropType<DrawerPlacement>, default: 'right' },
+    size: { type: [String, Number] as PropType<DrawerSize>, default: undefined },
+    width: { type: [Number, String], default: DEFAULT_SIZE },
+    height: { type: [Number, String], default: DEFAULT_SIZE },
     closable: { type: Boolean, default: true },
+    closeIcon: { type: Function as PropType<IconComponent>, default: undefined },
     maskClosable: { type: Boolean, default: true },
     mask: { type: Boolean, default: true },
+    keyboard: { type: Boolean, default: true },
+    loading: Boolean,
     zIndex: { type: Number, default: 1000 },
     destroyOnClose: Boolean,
+    destroyOnHidden: { type: Boolean, default: undefined },
+    forceRender: Boolean,
+    focusTriggerAfterClose: { type: Boolean, default: true },
+    getContainer: { type: [String, Object, Function, Boolean] as PropType<DrawerGetContainer>, default: undefined },
+    rootClassName: { type: String, default: undefined },
+    rootStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    bodyStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    headerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    footerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    maskStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   },
-  emits: ['update:open', 'close'],
-  setup(props, { slots, emit }) {
+  emits: ['update:open', 'close', 'afterOpenChange'],
+  setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('drawer')
+    const ariaId = `${prefixCls}-title-${(uid += 1)}`
     const innerOpen = ref(props.defaultOpen ?? false)
     const drawerRef = ref<HTMLElement | null>(null)
     let cleanupTrap: (() => void) | null = null
+    let didLock = false
 
     watch(() => props.open, (v) => { if (v !== undefined) innerOpen.value = v })
 
@@ -57,61 +120,157 @@ export const Drawer = defineComponent({
 
     watch(isOpen, async (v) => {
       if (v) {
+        if (props.mask) { lockScroll(); didLock = true }
         await Promise.resolve()
-        if (drawerRef.value) cleanupTrap = trapFocus(drawerRef.value)
+        if (drawerRef.value) cleanupTrap = trapFocus(drawerRef.value, props.focusTriggerAfterClose)
       } else {
         cleanupTrap?.()
         cleanupTrap = null
+        if (didLock) { unlockScroll(); didLock = false }
       }
+      // afterOpenChange fires once the transition would have settled; async so
+      // fake-timer tests can intercept it too
+      setTimeout(() => emit('afterOpenChange', v), 0)
+    }, { flush: 'post' })
+
+    onBeforeUnmount(() => {
+      cleanupTrap?.()
+      cleanupTrap = null
+      if (didLock) { unlockScroll(); didLock = false }
     })
 
-    const close = () => {
-      innerOpen.value = false
+    const close = (e?: Event) => {
+      if (props.open === undefined) innerOpen.value = false
       emit('update:open', false)
-      emit('close')
+      emit('close', e)
     }
 
-    const sizeStyle = computed(() => {
-      const isVertical = props.placement === 'left' || props.placement === 'right'
-      return isVertical
-        ? { width: typeof props.width === 'number' ? `${props.width}px` : props.width }
-        : { height: typeof props.height === 'number' ? `${props.height}px` : props.height }
+    const handleMaskClick = (e: MouseEvent) => {
+      if (props.mask && props.maskClosable) close(e)
+    }
+
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && props.keyboard && isOpen.value) close(e)
+    }
+
+    const isHorizontal = computed(() => props.placement === 'left' || props.placement === 'right')
+
+    // Resolve the panel size: `size` preset/custom wins, else width/height by placement.
+    const resolvedSize = computed<string>(() => {
+      const { size } = props
+      if (size === 'large') return `${LARGE_SIZE}px`
+      if (size === 'default') return `${DEFAULT_SIZE}px`
+      if (typeof size === 'number') return `${size}px`
+      if (typeof size === 'string') {
+        return /^\d+(\.\d+)?$/.test(size) ? `${size}px` : size
+      }
+      return toCssSize(isHorizontal.value ? props.width : props.height)
     })
 
-    return () => (
-      <Teleport to="body">
-        <Transition name={`hmfw-drawer-${props.placement}`} v-slots={{
-          default: () => isOpen.value && (
-            <div class={`${prefixCls}-root`} style={{ zIndex: props.zIndex }}>
-              {props.mask && <div class={`${prefixCls}-mask`} onClick={() => props.maskClosable && close()} />}
+    const sizeStyle = computed<CSSProperties>(() =>
+      isHorizontal.value ? { width: resolvedSize.value } : { height: resolvedSize.value },
+    )
+
+    const getContainer = computed<string | HTMLElement>(() => {
+      const c = props.getContainer
+      if (c === false) return 'body' // false → render in place; Teleport disabled below
+      if (typeof c === 'function') return c()
+      if (typeof c === 'string') return c
+      if (c instanceof HTMLElement) return c
+      return 'body'
+    })
+
+    const renderCloseIcon = () => {
+      if (!props.closable) return null
+      return (
+        <button
+          type="button"
+          class={`${prefixCls}-close`}
+          onClick={(e: MouseEvent) => close(e)}
+          aria-label="Close"
+        >
+          <Icon component={props.closeIcon ?? CloseOutlined} />
+        </button>
+      )
+    }
+
+    const renderHeader = () => {
+      const titleNode = renderContent(props.title, slots.title)
+      const extraNode = slots.extra?.()
+      const hasTitle = titleNode != null && titleNode !== ''
+      // no header at all when nothing to show
+      if (!hasTitle && !props.closable && !extraNode) return null
+      return (
+        <div
+          class={cls(`${prefixCls}-header`, { [`${prefixCls}-header-close-only`]: props.closable && !hasTitle && !extraNode })}
+          style={props.headerStyle}
+        >
+          <div class={`${prefixCls}-header-title`}>
+            {renderCloseIcon()}
+            {hasTitle && (
+              <div id={ariaId} class={`${prefixCls}-title`}>{titleNode}</div>
+            )}
+          </div>
+          {extraNode && <div class={`${prefixCls}-extra`}>{extraNode}</div>}
+        </div>
+      )
+    }
+
+    const renderFooter = () => {
+      const footerNode = slots.footer?.()
+      if (!footerNode || (Array.isArray(footerNode) && !footerNode.length)) return null
+      return <div class={`${prefixCls}-footer`} style={props.footerStyle}>{footerNode}</div>
+    }
+
+    const renderBody = () => {
+      if (props.loading) {
+        return <Skeleton active title={false} paragraph={{ rows: 5 }} class={`${prefixCls}-body-skeleton`} />
+      }
+      // destroyOnHidden / destroyOnClose: unmount children while closed
+      const destroy = props.destroyOnHidden ?? props.destroyOnClose
+      if (destroy && !isOpen.value) return null
+      return slots.default?.()
+    }
+
+    return () => {
+      const hasTitle = renderContent(props.title, slots.title) != null
+      const rootStyle: CSSProperties = { zIndex: props.zIndex, ...props.rootStyle }
+      const teleportDisabled = props.getContainer === false
+
+      return (
+        <Teleport to={getContainer.value} disabled={teleportDisabled}>
+          <Transition name={`hmfw-drawer-${props.placement}`} appear>
+            {(isOpen.value || props.forceRender) && (
               <div
-                ref={drawerRef}
-                class={cls(`${prefixCls}-content-wrapper`, `${prefixCls}-${props.placement}`)}
-                style={sizeStyle.value}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby={props.title ? `${prefixCls}-title` : undefined}
+                class={cls(`${prefixCls}-root`, props.rootClassName, { [`${prefixCls}-no-mask`]: !props.mask })}
+                style={{ ...rootStyle, display: isOpen.value ? '' : 'none' }}
+                onKeydown={handleKeydown}
               >
-                <div class={`${prefixCls}-content`}>
-                  <div class={`${prefixCls}-header`}>
-                    {props.title && <div id={`${prefixCls}-title`} class={`${prefixCls}-title`}>{props.title}</div>}
-                    {props.closable && (
-                      <button class={`${prefixCls}-close`} onClick={close} aria-label="Close">×</button>
-                    )}
+                {props.mask && (
+                  <div class={`${prefixCls}-mask`} style={props.maskStyle} onClick={handleMaskClick} />
+                )}
+                <div
+                  ref={drawerRef}
+                  class={cls(`${prefixCls}-content-wrapper`, `${prefixCls}-${props.placement}`)}
+                  style={sizeStyle.value}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby={hasTitle ? ariaId : undefined}
+                  {...attrs}
+                >
+                  <div class={`${prefixCls}-content`}>
+                    {renderHeader()}
+                    <div class={`${prefixCls}-body`} style={props.bodyStyle}>
+                      {renderBody()}
+                    </div>
+                    {renderFooter()}
                   </div>
-                  <div class={`${prefixCls}-body`}>
-                    {(!props.destroyOnClose || isOpen.value) && slots.default?.()}
-                  </div>
-                  {slots.footer && (
-                    <div class={`${prefixCls}-footer`}>{slots.footer()}</div>
-                  )}
                 </div>
               </div>
-            </div>
-          )
-        }}>
-        </Transition>
-      </Teleport>
-    )
+            )}
+          </Transition>
+        </Teleport>
+      )
+    }
   },
 })

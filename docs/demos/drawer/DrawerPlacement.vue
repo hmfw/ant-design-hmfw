@@ -1,9 +1,9 @@
 <template>
   <div style="display: flex; gap: 8px;">
-    <button @click="show('top')">上</button>
-    <button @click="show('right')">右</button>
-    <button @click="show('bottom')">下</button>
-    <button @click="show('left')">左</button>
+    <Button @click="show('top')">上</Button>
+    <Button @click="show('right')">右</Button>
+    <Button @click="show('bottom')">下</Button>
+    <Button @click="show('left')">左</Button>
   </div>
   <Drawer
     v-model:open="open"
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Drawer } from 'ant-design-hmfw'
+import { Drawer, Button } from 'ant-design-hmfw'
 
 const open = ref(false)
 const placement = ref<'top' | 'right' | 'bottom' | 'left'>('right')
