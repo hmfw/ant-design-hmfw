@@ -314,6 +314,10 @@ export const FloatButtonBackTop = defineComponent({
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('float-btn')
     const visible = ref(false)
+    // Captured at mount so cleanup removes the listener from the exact same
+    // node — re-resolving props.target() on unmount can yield null (e.g. the
+    // container ref is cleared during route navigation) and crash.
+    let listenTarget: HTMLElement | Window | Document | null = null
 
     const getTarget = (): HTMLElement | Window | Document =>
       props.target ? props.target() : window
@@ -353,15 +357,14 @@ export const FloatButtonBackTop = defineComponent({
 
     onMounted(() => {
       const target = getTarget()
-      const listenTarget = target === document ? window : target
-      ;(listenTarget as HTMLElement | Window).addEventListener('scroll', handleScroll)
+      listenTarget = target === document ? window : target
+      listenTarget.addEventListener('scroll', handleScroll)
       handleScroll()
     })
 
     onBeforeUnmount(() => {
-      const target = getTarget()
-      const listenTarget = target === document ? window : target
-      ;(listenTarget as HTMLElement | Window).removeEventListener('scroll', handleScroll)
+      listenTarget?.removeEventListener('scroll', handleScroll)
+      listenTarget = null
     })
 
     return () => {
