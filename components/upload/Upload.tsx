@@ -3,7 +3,15 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { UploadProps, UploadFile, UploadListType } from './types'
+import type {
+  UploadProps,
+  UploadFile,
+  UploadListType,
+  UploadType,
+  ShowUploadListInterface,
+  CustomRequestOptions,
+  BeforeUploadValue,
+} from './types'
 
 let uidCounter = 0
 function genUid() { return `__upload_${Date.now()}_${uidCounter++}` }
@@ -15,33 +23,56 @@ function formatSize(bytes?: number) {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`
 }
 
+/** Resolve `action` against AntD v6 signature: string | (file) => string | Promise<string>. */
+async function resolveAction(action: UploadProps['action'], file: File): Promise<string> {
+  if (typeof action === 'function') return await action(file)
+  return action ?? ''
+}
+
+/** Resolve `data` per AntD v6: plain object or (file) => object | Promise<object>. */
+async function resolveData(
+  data: UploadProps['data'],
+  file: UploadFile,
+): Promise<Record<string, unknown>> {
+  if (typeof data === 'function') return (await data(file)) ?? {}
+  return data ?? {}
+}
+
 export const Upload = defineComponent({
   name: 'Upload',
   props: {
     accept: String,
-    action: { type: String, default: '' },
+    action: [String, Function] as PropType<UploadProps['action']>,
     directory: Boolean,
     disabled: Boolean,
     fileList: Array as PropType<UploadFile[]>,
+    defaultFileList: Array as PropType<UploadFile[]>,
     listType: { type: String as PropType<UploadListType>, default: 'text' },
+    type: { type: String as PropType<UploadType>, default: 'select' },
     maxCount: Number,
     multiple: Boolean,
     name: { type: String, default: 'file' },
-    showUploadList: { type: Boolean, default: true },
+    showUploadList: {
+      type: [Boolean, Object] as PropType<boolean | ShowUploadListInterface>,
+      default: true,
+    },
     beforeUpload: Function as PropType<UploadProps['beforeUpload']>,
     customRequest: Function as PropType<UploadProps['customRequest']>,
     headers: Object as PropType<Record<string, string>>,
-    data: Object as PropType<Record<string, unknown>>,
+    data: [Object, Function] as PropType<UploadProps['data']>,
     withCredentials: Boolean,
     openFileDialogOnClick: { type: Boolean, default: true },
     method: { type: String, default: 'post' },
+    onRemove: Function as PropType<UploadProps['onRemove']>,
   },
-  emits: ['update:fileList', 'change', 'remove', 'preview', 'download'],
+  emits: ['update:fileList', 'change', 'remove', 'preview', 'download', 'drop'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('upload')
     const inputRef = ref<HTMLInputElement>()
-    const innerFileList = ref<UploadFile[]>([])
-    const dragging = ref(false)
+    const innerFileList = ref<UploadFile[]>(props.defaultFileList ?? [])
+    /** Track drag-enter depth so child elements don't toggle hover off. */
+    const dragDepth = ref(0)
+    const dragging = computed(() => dragDepth.value > 0)
 
     const fileList = computed(() => props.fileList ?? innerFileList.value)
 
@@ -50,7 +81,31 @@ export const Upload = defineComponent({
       emit('update:fileList', list)
     }
 
-    const doUpload = (file: File) => {
+    /** Default XHR upload, exposed so customRequest can call it via the second arg. */
+    const defaultRequest = (opts: CustomRequestOptions) => {
+      const xhr = new XMLHttpRequest()
+      const formData = new FormData()
+      if (opts.data) {
+        Object.entries(opts.data).forEach(([k, v]) => formData.append(k, v as string))
+      }
+      formData.append(opts.filename ?? 'file', opts.file)
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) opts.onProgress({ percent: Math.round((e.loaded / e.total) * 100) })
+      }
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) opts.onSuccess(xhr.response, opts.file)
+        else opts.onError(new Error(`HTTP ${xhr.status}`))
+      }
+      xhr.onerror = () => opts.onError(new Error('Network error'))
+
+      if (opts.withCredentials) xhr.withCredentials = true
+      if (opts.headers) Object.entries(opts.headers).forEach(([k, v]) => xhr.setRequestHeader(k, v))
+      xhr.open(props.method ?? 'post', opts.action)
+      xhr.send(formData)
+    }
+
+    const doUpload = async (file: File) => {
       const uid = genUid()
       const uploadFile: UploadFile = {
         uid,
@@ -63,7 +118,12 @@ export const Upload = defineComponent({
       }
 
       const next = [...fileList.value, uploadFile]
-      if (props.maxCount && next.length > props.maxCount) next.splice(0, next.length - props.maxCount)
+      if (props.maxCount === 1) {
+        next.splice(0, next.length - 1)
+      } else if (props.maxCount && next.length > props.maxCount) {
+        // Cut to match count
+        next.splice(props.maxCount)
+      }
       updateList(next)
       emit('change', { file: uploadFile, fileList: next })
 
@@ -72,7 +132,7 @@ export const Upload = defineComponent({
           f.uid === uid ? { ...f, status: 'done' as const, response, percent: 100 } : f
         )
         updateList(list)
-        emit('change', { file: { ...uploadFile, status: 'done', percent: 100 }, fileList: list })
+        emit('change', { file: { ...uploadFile, status: 'done', percent: 100, response }, fileList: list })
       }
 
       const onError = (error: Error, response?: unknown) => {
@@ -80,7 +140,7 @@ export const Upload = defineComponent({
           f.uid === uid ? { ...f, status: 'error' as const, error, response } : f
         )
         updateList(list)
-        emit('change', { file: { ...uploadFile, status: 'error' }, fileList: list })
+        emit('change', { file: { ...uploadFile, status: 'error', error, response }, fileList: list })
       }
 
       const onProgress = (event: { percent: number }) => {
@@ -88,64 +148,55 @@ export const Upload = defineComponent({
           f.uid === uid ? { ...f, percent: event.percent } : f
         )
         updateList(list)
+        // AntD v6: progress events include the original event payload.
+        emit('change', { file: { ...uploadFile, percent: event.percent }, fileList: list, event })
+      }
+
+      const resolvedAction = await resolveAction(props.action, file)
+      const resolvedData = await resolveData(props.data, uploadFile)
+
+      const requestOpts: CustomRequestOptions = {
+        action: resolvedAction,
+        data: resolvedData,
+        file,
+        filename: props.name,
+        headers: props.headers,
+        withCredentials: props.withCredentials,
+        onSuccess,
+        onError,
+        onProgress,
       }
 
       if (props.customRequest) {
-        props.customRequest({
-          action: props.action ?? '',
-          data: props.data,
-          file,
-          filename: props.name,
-          headers: props.headers,
-          withCredentials: props.withCredentials,
-          onSuccess,
-          onError,
-          onProgress,
-        })
+        // AntD 5.28+ second arg exposes the default XHR for opt-in fallback.
+        props.customRequest(requestOpts, { defaultRequest })
         return
       }
 
-      if (!props.action) {
-        // No action: mark as done immediately (used in demos)
+      if (!resolvedAction) {
+        // No action configured: simulate done (used by demos).
         setTimeout(() => onSuccess({}), 500)
         return
       }
 
-      const xhr = new XMLHttpRequest()
-      const formData = new FormData()
-      if (props.data) {
-        Object.entries(props.data).forEach(([k, v]) => formData.append(k, v as string))
-      }
-      formData.append(props.name ?? 'file', file)
-
-      xhr.upload.onprogress = (e) => {
-        if (e.lengthComputable) onProgress({ percent: Math.round((e.loaded / e.total) * 100) })
-      }
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          onSuccess(xhr.response)
-        } else {
-          onError(new Error(`HTTP ${xhr.status}`))
-        }
-      }
-      xhr.onerror = () => onError(new Error('Network error'))
-
-      if (props.withCredentials) xhr.withCredentials = true
-      if (props.headers) {
-        Object.entries(props.headers).forEach(([k, v]) => xhr.setRequestHeader(k, v))
-      }
-
-      xhr.open(props.method ?? 'post', props.action ?? '')
-      xhr.send(formData)
+      defaultRequest(requestOpts)
     }
 
     const processFiles = async (files: File[]) => {
       for (const file of files) {
+        let uploadTarget: File = file
         if (props.beforeUpload) {
-          const result = await props.beforeUpload(file, files)
-          if (result === false) continue
+          const result: BeforeUploadValue | Promise<BeforeUploadValue> = props.beforeUpload(file, files)
+          const awaited = await Promise.resolve(result)
+          if (awaited === false) continue
+          // AntD v6: returning a File/Blob replaces the upload target.
+          if (awaited instanceof File) {
+            uploadTarget = awaited
+          } else if (awaited instanceof Blob) {
+            uploadTarget = new File([awaited], file.name, { type: awaited.type || file.type })
+          }
         }
-        doUpload(file)
+        await doUpload(uploadTarget)
       }
     }
 
@@ -155,15 +206,30 @@ export const Upload = defineComponent({
       if (inputRef.value) inputRef.value.value = ''
     }
 
+    const handleDragEnter = (e: DragEvent) => {
+      e.preventDefault()
+      dragDepth.value += 1
+    }
+    const handleDragLeave = (e: DragEvent) => {
+      e.preventDefault()
+      dragDepth.value = Math.max(0, dragDepth.value - 1)
+    }
+    const handleDragOver = (e: DragEvent) => { e.preventDefault() }
+
     const handleDrop = (e: DragEvent) => {
       e.preventDefault()
-      dragging.value = false
+      dragDepth.value = 0
+      // AntD v6 emits the native `drop` event regardless of disabled state.
+      emit('drop', e)
       if (props.disabled) return
       const files = Array.from(e.dataTransfer?.files ?? [])
       processFiles(files)
     }
 
-    const handleRemove = (file: UploadFile) => {
+    const handleRemove = async (file: UploadFile) => {
+      const result = props.onRemove ? await Promise.resolve(props.onRemove(file)) : true
+      // AntD v6: returning `false` from onRemove cancels the removal.
+      if (result === false) return
       const next = fileList.value.filter((f) => f.uid !== file.uid)
       updateList(next)
       emit('remove', file)
@@ -175,9 +241,21 @@ export const Upload = defineComponent({
     }
 
     const isCardType = computed(() => props.listType === 'picture-card' || props.listType === 'picture-circle')
+    const isDragType = computed(() => props.type === 'drag')
+
+    /** Resolve `showUploadList` (boolean | object). */
+    const showList = computed(() => props.showUploadList !== false)
+    const showRemove = computed(() => {
+      if (typeof props.showUploadList === 'object') return props.showUploadList.showRemoveIcon !== false
+      return true
+    })
+    const showPreview = computed(() => {
+      if (typeof props.showUploadList === 'object') return props.showUploadList.showPreviewIcon !== false
+      return true
+    })
 
     const renderFileList = () => {
-      if (!props.showUploadList || fileList.value.length === 0) return null
+      if (!showList.value || fileList.value.length === 0) return null
       return (
         <div class={`${prefixCls}-list ${prefixCls}-list-${props.listType}`}>
           {fileList.value.map((file) => (
@@ -204,10 +282,12 @@ export const Upload = defineComponent({
                     </div>
                   )}
                   <div class={`${prefixCls}-list-item-card-actions`}>
-                    {file.url && (
+                    {file.url && showPreview.value && (
                       <button class={`${prefixCls}-list-item-action`} onClick={() => emit('preview', file)}>👁</button>
                     )}
-                    <button class={`${prefixCls}-list-item-action`} onClick={() => handleRemove(file)}>🗑</button>
+                    {showRemove.value && (
+                      <button class={`${prefixCls}-list-item-action`} onClick={() => handleRemove(file)}>🗑</button>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -222,12 +302,14 @@ export const Upload = defineComponent({
                       <div class={`${prefixCls}-list-item-progress-bar`} style={{ width: `${file.percent ?? 0}%` }} />
                     </div>
                   )}
-                  <button
-                    class={`${prefixCls}-list-item-action ${prefixCls}-list-item-remove`}
-                    onClick={() => handleRemove(file)}
-                  >
-                    ✕
-                  </button>
+                  {showRemove.value && (
+                    <button
+                      class={`${prefixCls}-list-item-action ${prefixCls}-list-item-remove`}
+                      onClick={() => handleRemove(file)}
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -249,8 +331,9 @@ export const Upload = defineComponent({
               [`${prefixCls}-disabled`]: props.disabled,
             })}
             onClick={triggerSelect}
-            onDragover={(e) => { e.preventDefault(); dragging.value = true }}
-            onDragleave={() => { dragging.value = false }}
+            onDragenter={handleDragEnter}
+            onDragover={handleDragOver}
+            onDragleave={handleDragLeave}
             onDrop={handleDrop}
           >
             {slots.default ? slots.default() : (
@@ -263,16 +346,33 @@ export const Upload = defineComponent({
         ) : null
       }
 
+      if (isDragType.value) {
+        return (
+          <div
+            class={cls(`${prefixCls}-drag`, {
+              [`${prefixCls}-drag-uploading`]: fileList.value.some((f) => f.status === 'uploading'),
+              [`${prefixCls}-drag-hover`]: dragging.value,
+              [`${prefixCls}-disabled`]: props.disabled,
+            })}
+            onClick={triggerSelect}
+            onDragenter={handleDragEnter}
+            onDragover={handleDragOver}
+            onDragleave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <div class={`${prefixCls}-drag-container`}>
+              {slots.default?.()}
+            </div>
+          </div>
+        )
+      }
+
       return (
         <div
           class={cls(`${prefixCls}-select`, {
             [`${prefixCls}-disabled`]: props.disabled,
-            [`${prefixCls}-drag`]: dragging.value,
           })}
           onClick={triggerSelect}
-          onDragover={(e) => { e.preventDefault(); dragging.value = true }}
-          onDragleave={() => { dragging.value = false }}
-          onDrop={handleDrop}
         >
           {slots.default ? slots.default() : null}
         </div>
@@ -309,3 +409,21 @@ export const Upload = defineComponent({
     )
   },
 })
+
+/**
+ * Upload.Dragger — convenience wrapper for `<Upload type="drag">` (AntD v6 parity).
+ */
+export const UploadDragger = defineComponent({
+  name: 'UploadDragger',
+  inheritAttrs: false,
+  setup(_, { slots, attrs }) {
+    return () => (
+      <Upload {...attrs} type="drag">
+        {{ default: () => slots.default?.() }}
+      </Upload>
+    )
+  },
+})
+
+// Compound API: `<Upload.Dragger>` parity with AntD.
+;(Upload as typeof Upload & { Dragger: typeof UploadDragger }).Dragger = UploadDragger

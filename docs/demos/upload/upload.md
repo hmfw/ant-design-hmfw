@@ -52,16 +52,22 @@
 | 参数 | 说明 | 类型 | 默认值 |
 |------|------|------|--------|
 | fileList(v-model) | 已经上传的文件列表（受控） | `UploadFile[]` | - |
+| defaultFileList | 默认已经上传的文件列表（非受控） | `UploadFile[]` | - |
 | accept | 接受上传的文件类型，详见 input accept Attribute | `string` | - |
-| action | 上传的地址 | `string \| ((file: File) => Promise<string>)` | - |
+| action | 上传的地址，支持函数返回字符串或 Promise | `string \| ((file: File) => string \| Promise<string>)` | - |
+| data | 上传所需额外参数，支持函数返回对象或 Promise | `object \| ((file: UploadFile) => object \| Promise<object>)` | - |
 | disabled | 是否禁用 | `boolean` | `false` |
 | listType | 上传列表的内建样式 | `'text' \| 'picture' \| 'picture-card' \| 'picture-circle'` | `'text'` |
+| type | 触发器类型，`drag` 即拖拽上传区域 | `'select' \| 'drag'` | `'select'` |
 | maxCount | 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件 | `number` | - |
-| multiple | 是否支持多选文件，`ie10+` 支持。开启后按住 ctrl 可选择多个文件 | `boolean` | `false` |
+| multiple | 是否支持多选文件 | `boolean` | `false` |
 | name | 发到后台的文件参数名 | `string` | `'file'` |
-| showUploadList | 是否展示文件列表 | `boolean` | `true` |
-| beforeUpload | 上传文件之前的钩子，参数为上传的文件，若返回 false 则停止上传 | `(file: File, fileList: File[]) => boolean \| Promise<File \| boolean>` | - |
-| customRequest | 通过覆盖默认的上传行为，可以自定义自己的上传实现 | `(options: UploadRequestOption) => void` | - |
+| showUploadList | 是否展示文件列表，可对象配置 | `boolean \| { showRemoveIcon?: boolean; showPreviewIcon?: boolean }` | `true` |
+| beforeUpload | 上传文件之前的钩子，返回 `false` 取消，返回 `File/Blob` 替换上传目标 | `(file: File, fileList: File[]) => boolean \| File \| Blob \| Promise<...>` | - |
+| customRequest | 覆盖默认上传行为；第二参数 `{ defaultRequest }` 可回退默认实现 | `(options, info?: { defaultRequest }) => void` | - |
+| onRemove | 删除文件的拦截钩子，返回 `false` 阻止删除 | `(file: UploadFile) => boolean \| Promise<boolean>` | - |
+| openFileDialogOnClick | 点击触发器是否弹出文件选择框 | `boolean` | `true` |
+| method | 上传请求 HTTP 方法 | `string` | `'post'` |
 
 ### UploadFile
 
@@ -81,13 +87,23 @@
 | 事件名 | 说明 | 回调参数 |
 |--------|------|----------|
 | update:fileList | 文件列表变化时的回调 | `(fileList: UploadFile[]) => void` |
-| change | 上传文件改变时的状态，详见 change | `(info: { file: UploadFile; fileList: UploadFile[] }) => void` |
-| remove | 点击移除文件时的回调，返回值为 false 时不移除 | `(file: UploadFile) => boolean \| Promise<boolean>` |
+| change | 上传文件改变时的状态。进度变化时 `event` 字段携带 `{ percent }` | `(info: { file: UploadFile; fileList: UploadFile[]; event?: { percent: number } }) => void` |
+| remove | 点击移除文件后触发（被 `onRemove` 拦截 false 时不触发） | `(file: UploadFile) => void` |
 | preview | 点击文件链接或预览图标时的回调 | `(file: UploadFile) => void` |
-| drop | 拖拽文件进入上传区域时执行的回调（仅 Dragger 模式） | `(event: DragEvent) => void` |
+| drop | 文件拖拽到上传区域释放时触发 | `(event: DragEvent) => void` |
 
 ### Upload Slots
 
 | 插槽名 | 说明 |
 |--------|------|
 | default | 触发上传的控件，通常为按钮或图标 |
+
+## Upload.Dragger
+
+`<UploadDragger>` 是 `<Upload type="drag">` 的便捷别名，等同于 AntD 的 `Upload.Dragger`。也可通过 `Upload.Dragger` 访问。
+
+```vue
+<UploadDragger v-model:file-list="fileList" action="/api/upload">
+  ...
+</UploadDragger>
+```

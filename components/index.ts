@@ -201,8 +201,17 @@ export type { TimePickerProps, TimePickerValue } from './time-picker'
 export { DatePicker } from './date-picker'
 export type { DatePickerProps, DatePickerMode, DatePickerValue, RangePickerValue } from './date-picker'
 
-export { Upload } from './upload'
-export type { UploadProps, UploadFile, UploadListType, CustomRequestOptions } from './upload'
+export { Upload, UploadDragger } from './upload'
+export type {
+  UploadProps,
+  UploadFile,
+  UploadListType,
+  UploadType,
+  UploadChangeParam,
+  ShowUploadListInterface,
+  CustomRequestOptions,
+  BeforeUploadValue,
+} from './upload'
 
 export { Flex } from './flex'
 export type { FlexProps, FlexAlign, FlexJustify, FlexWrap, FlexGap, FlexDirection } from './flex'

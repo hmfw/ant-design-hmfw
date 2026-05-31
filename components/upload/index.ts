@@ -1,2 +1,11 @@
-export { Upload } from './Upload'
-export type { UploadProps, UploadFile, UploadListType, CustomRequestOptions } from './types'
+export { Upload, UploadDragger } from './Upload'
+export type {
+  UploadProps,
+  UploadFile,
+  UploadListType,
+  UploadType,
+  UploadChangeParam,
+  ShowUploadListInterface,
+  CustomRequestOptions,
+  BeforeUploadValue,
+} from './types'
