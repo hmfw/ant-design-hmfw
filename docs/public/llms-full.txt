@@ -22,13 +22,15 @@ import { Alert } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| type | 指定警告提示的样式 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'` |
-| message | 警告提示内容 | `string` | - |
+| type | 指定警告提示的样式 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'`（banner 模式为 `'warning'`） |
+| variant | 样式变体 | `'outlined' \| 'filled'` | `'outlined'` |
+| title | 警告提示内容 | `string` | - |
+| message | `title` 的别名（已废弃，请使用 `title`） | `string` | - |
 | description | 警告提示的辅助性文字介绍 | `string` | - |
-| showIcon | 是否显示辅助图标 | `boolean` | `false` |
+| showIcon | 是否显示辅助图标（banner 模式默认 `true`） | `boolean` | `false` |
 | closable | 默认不显示关闭按钮 | `boolean` | `false` |
+| closeText | 自定义关闭按钮文字 | `string` | - |
 | banner | 是否用作顶部公告 | `boolean` | `false` |
-| action | 自定义操作项 | `slot` | - |
 
 ### Events
 
@@ -90,7 +92,7 @@ import { Alert } from 'ant-design-hmfw'
 
 导入：
 ```ts
-import { Anchor } from 'ant-design-hmfw'
+import { Anchor, AnchorLink } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -102,23 +104,40 @@ import { Anchor } from 'ant-design-hmfw'
 | items | 数据化配置选项内容 | `AnchorLinkItem[]` | `[]` |
 | affix | 固定模式 | `boolean` | `true` |
 | offsetTop | 距离窗口顶部达到指定偏移量后触发 | `number` | `0` |
+| targetOffset | 滚动偏移量，影响锚点高亮判断 | `number` | `offsetTop` |
 | direction | 锚点方向 | `'vertical' \| 'horizontal'` | `'vertical'` |
 | bounds | 锚点区域边界 | `number` | `5` |
+| replace | 是否替换浏览器历史记录 | `boolean` | `false` |
+| getCurrentAnchor | 自定义高亮的锚点 | `(activeLink: string) => string` | - |
+| getContainer | 指定滚动的容器 | `() => HTMLElement \| Window` | `() => window` |
 
 **AnchorLinkItem**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| key | 唯一标识 | `string` | - |
 | href | 锚点链接 | `string` | - |
 | title | 文字内容 | `string` | - |
+| target | 链接打开方式 | `string` | - |
+| targetOffset | 该锚点的滚动偏移量 | `number` | - |
 | children | 子节点 | `AnchorLinkItem[]` | - |
+
+**Anchor.Link Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| href | 锚点链接 | `string` | - |
+| title | 文字内容 | `string` | - |
+| target | 链接打开方式 | `string` | - |
+| replace | 是否替换浏览器历史记录 | `boolean` | `false` |
+| targetOffset | 该锚点的滚动偏移量 | `number` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | change | 锚点改变时触发 | `(currentActiveLink: string) => void` |
-| click | 点击锚点时触发 | `(e: Event, link: AnchorLinkItem) => void` |
+| click | 点击锚点时触发 | `(e: MouseEvent, link: { title: string; href: string }) => void` |
 
 ### 示例
 
@@ -167,36 +186,40 @@ const items = [
 </script>
 ```
 
-水平锚点 — 通过 `direction="horizontal"` 设置水平方向锚点。
+使用 Anchor.Link — 使用 `Anchor.Link` 组件作为子组件。
 
 ```vue
 <template>
-  <div>
-    <Anchor
-      direction="horizontal"
-      :items="items"
-      style="margin-bottom: 24px;"
-    />
-    <div id="h-part-1" style="height: 160px; background: #e6f4ff; padding: 16px; margin-bottom: 16px;">
-      <h3>第一部分</h3>
+  <div style="display: flex; gap: 24px;">
+    <div style="flex: 1;">
+      <div id="components-anchor-demo-basic" style="height: 200px; background: #e6f4ff; padding: 16px; margin-bottom: 16px;">
+        <h3>Basic demo</h3>
+        <p>The simplest usage.</p>
+      </div>
+      <div id="components-anchor-demo-static" style="height: 200px; background: #f6ffed; padding: 16px; margin-bottom: 16px;">
+        <h3>Static Anchor</h3>
+        <p>Do not change hash when scrolling.</p>
+      </div>
+      <div id="API" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px;">
+        <h3>API</h3>
+        <p>API documentation.</p>
+      </div>
     </div>
-    <div id="h-part-2" style="height: 160px; background: #f6ffed; padding: 16px; margin-bottom: 16px;">
-      <h3>第二部分</h3>
-    </div>
-    <div id="h-part-3" style="height: 160px; background: #fff7e6; padding: 16px;">
-      <h3>第三部分</h3>
-    </div>
+    <Anchor :offset-top="64" style="width: 200px;">
+      <AnchorLink href="#components-anchor-demo-basic" title="Basic demo" />
+      <AnchorLink href="#components-anchor-demo-static" title="Static demo" />
+      <AnchorLink href="#API" title="API">
+        <AnchorLink href="#Anchor-Props" title="Anchor Props" />
+        <AnchorLink href="#Link-Props" title="Link Props" />
+      </AnchorLink>
+    </Anchor>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Anchor } from 'ant-design-hmfw'
 
-const items = [
-  { href: '#h-part-1', title: '第一部分' },
-  { href: '#h-part-2', title: '第二部分' },
-  { href: '#h-part-3', title: '第三部分' },
-]
+const AnchorLink = Anchor.Link
 </script>
 ```
 
@@ -418,7 +441,11 @@ import { Avatar, AvatarGroup } from 'ant-design-hmfw'
 | size | 头像大小 | `number \| 'small' \| 'default' \| 'large'` | `'default'` |
 | shape | 头像形状 | `'circle' \| 'square'` | `'circle'` |
 | src | 图片地址 | `string` | - |
+| srcSet | 图片响应式资源地址 | `string` | - |
 | alt | 图片无法显示时的替代文本 | `string` | - |
+| icon | 自定义图标组件 | `Component` | - |
+| draggable | 图片是否允许拖拽 | `boolean \| 'true' \| 'false'` | - |
+| crossOrigin | CORS 属性设置 | `'' \| 'anonymous' \| 'use-credentials'` | - |
 | gap | 字符类型距离左右两侧边界单位像素 | `number` | `4` |
 
 **AvatarGroup Props**
@@ -427,8 +454,8 @@ import { Avatar, AvatarGroup } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | maxCount | 最多显示的头像数量 | `number` | - |
 | maxStyle | 多余头像样式 | `CSSProperties` | - |
-| size | 头像大小 | `number \| 'small' \| 'default' \| 'large'` | `'default'` |
-| shape | 头像形状 | `'circle' \| 'square'` | `'circle'` |
+| size | 头像大小（下发给子 Avatar） | `number \| 'small' \| 'default' \| 'large'` | `'default'` |
+| shape | 头像形状（下发给子 Avatar） | `'circle' \| 'square'` | `'circle'` |
 
 ### 示例
 
@@ -484,8 +511,12 @@ import { BackTop } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | visibilityHeight | 滚动高度达到此参数值才出现 BackTop | `number` | `400` |
-| target | 设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数 | `() => HTMLElement` | `() => window` |
+| target | 设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数 | `() => HTMLElement \| Window \| Document` | `() => window` |
 | duration | 回到顶部所需时间（ms） | `number` | `450` |
+| className | 自定义类名 | `string` | - |
+| rootClassName | 根节点类名 | `string` | - |
+| style | 自定义样式 | `CSSProperties` | - |
+| prefixCls | 自定义前缀 | `string` | `'hmfw'` |
 
 ### Events
 
@@ -499,8 +530,12 @@ import { BackTop } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="height: 1000px; background: linear-gradient(to bottom, #fff, #f0f0f0);">
-    <p>向下滚动页面，右下角会出现回到顶部按钮。</p>
+  <div style="height: 1500px; padding: 20px; background: linear-gradient(to bottom, #fff, #f0f0f0);">
+    <p style="margin-bottom: 20px;">向下滚动页面，右下角会出现回到顶部按钮。</p>
+    <p style="margin-bottom: 20px;">默认当页面滚动超过 400px 时显示。</p>
+    <div v-for="i in 50" :key="i" style="margin-bottom: 10px;">
+      内容行 {{ i }}
+    </div>
     <BackTop />
   </div>
 </template>
@@ -514,20 +549,29 @@ import { BackTop } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="height: 1000px;">
-    <p>向下滚动页面，右下角会出现自定义的回到顶部按钮。</p>
+  <div style="height: 1500px; padding: 20px;">
+    <p style="margin-bottom: 20px;">向下滚动页面，右下角会出现自定义的回到顶部按钮。</p>
+    <p style="margin-bottom: 20px;">此示例设置 visibilityHeight 为 200px，并自定义了按钮样式。</p>
+    <div v-for="i in 50" :key="i" style="margin-bottom: 10px;">
+      内容行 {{ i }}
+    </div>
     <BackTop :visibility-height="200" @click="onBackTop">
       <div style="
-        width: 40px;
-        height: 40px;
-        background: #1677ff;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 18px;
-      ">↑</div>
+        font-size: 20px;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s;
+      ">
+        ↑
+      </div>
     </BackTop>
   </div>
 </template>
@@ -550,7 +594,7 @@ function onBackTop() {
 
 导入：
 ```ts
-import { Badge } from 'ant-design-hmfw'
+import { Badge, Ribbon } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -559,7 +603,7 @@ import { Badge } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| count | 展示的数字 | `number` | - |
+| count | 展示的数字 | `number \| string` | - |
 | dot | 不展示数字，只有一个小红点 | `boolean` | `false` |
 | overflowCount | 展示封顶的数字值 | `number` | `99` |
 | showZero | 当数值为 0 时，是否展示 Badge | `boolean` | `false` |
@@ -568,6 +612,15 @@ import { Badge } from 'ant-design-hmfw'
 | offset | 设置状态点的位置偏移 | `[number, number]` | - |
 | size | 徽标大小 | `'default' \| 'small'` | `'default'` |
 | text | 在设置了 status 的前提下有效，设置状态点的文本 | `string` | - |
+| title | 鼠标悬停时的提示文字 | `string` | - |
+
+**Badge.Ribbon Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| text | 缎带内容 | `string` | - |
+| color | 缎带颜色（预设色或自定义色值） | `string` | - |
+| placement | 缎带位置 | `'start' \| 'end'` | `'end'` |
 
 ### 示例
 
@@ -632,16 +685,26 @@ import { Breadcrumb } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| items | 路由栈信息 | `BreadcrumbItem[]` | `[]` |
-| separator | 分隔符 | `string` | `'/'` |
+| items | 路由栈信息 | `ItemType[]` | `[]` |
+| separator | 分隔符 | `string \| VNode` | `'/'` |
+| params | 路径参数 | `Record<string, any>` | `{}` |
 
-**BreadcrumbItem**
+**ItemType**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 名称 | `string` | - |
+| key | 唯一标识 | `string \| number` | - |
+| title | 名称 | `string \| number \| VNode` | - |
 | href | 链接地址 | `string` | - |
+| path | 路径（会自动拼接前面的路径） | `string` | - |
+| className | 自定义类名 | `string` | - |
+| style | 自定义样式 | `CSSProperties` | - |
 | onClick | 点击事件 | `(e: MouseEvent) => void` | - |
+| data-* | 自定义数据属性 | `any` | - |
+| aria-* | ARIA 无障碍属性 | `any` | - |
+| type | 类型（必须为 'separator'） | `'separator'` | - |
+| separator | 分隔符内容 | `string \| VNode` | - |
+| key | 唯一标识 | `string \| number` | - |
 
 ### 示例
 
@@ -703,13 +766,18 @@ import { Button } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | type | 设置按钮类型 | `'default' \| 'primary' \| 'dashed' \| 'text' \| 'link'` | `'default'` |
 | size | 设置按钮大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| shape | 设置按钮形状 | `'default' \| 'circle' \| 'round'` | `'default'` |
 | htmlType | 设置 button 原生的 type 值 | `'submit' \| 'button' \| 'reset'` | `'button'` |
-| loading | 设置按钮载入状态 | `boolean` | `false` |
+| loading | 设置按钮载入状态 | `boolean \| { delay?: number }` | `false` |
 | disabled | 设置按钮失效状态 | `boolean` | `false` |
 | danger | 设置危险按钮 | `boolean` | `false` |
 | block | 将按钮宽度调整为其父宽度的选项 | `boolean` | `false` |
 | ghost | 幽灵属性，使按钮背景透明 | `boolean` | `false` |
-| icon | 设置按钮的图标组件 | `object` | - |
+| icon | 设置按钮的图标组件 | `IconComponent` | - |
+| iconPosition | 设置图标位置 | `'start' \| 'end'` | `'start'` |
+| href | 点击跳转的地址，指定此属性后按钮渲染为 a 标签 | `string` | - |
+| target | 相当于 a 标签的 target 属性，href 存在时生效 | `string` | - |
+| autoInsertSpace | 是否在两个汉字之间插入空格 | `boolean` | `true` |
 
 ### Events
 
@@ -768,7 +836,7 @@ import { Button } from 'ant-design-hmfw'
 
 导入：
 ```ts
-import { Card, CardMeta } from 'ant-design-hmfw'
+import { Card, CardGrid, CardMeta } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -780,10 +848,19 @@ import { Card, CardMeta } from 'ant-design-hmfw'
 | title | 卡片标题 | `string` | - |
 | extra | 卡片右上角的操作区域 | `string \| slot` | - |
 | bordered | 是否有边框 | `boolean` | `true` |
+| variant | 边框变体（优先于 `bordered`） | `'borderless' \| 'outlined'` | - |
+| type | 卡片类型，可设为 `inner` | `'inner'` | - |
 | loading | 当卡片内容还在加载中时，可以用 loading 展示一个占位 | `boolean` | `false` |
 | size | 卡片的尺寸 | `'default' \| 'small'` | `'default'` |
 | hoverable | 鼠标移过时可浮起 | `boolean` | `false` |
 | bodyStyle | 内容区域自定义样式 | `CSSProperties` | - |
+| headStyle | 标题区域自定义样式 | `CSSProperties` | - |
+
+**Card.Grid Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| hoverable | 鼠标移过时可浮起 | `boolean` | `true` |
 
 **CardMeta Props**
 
@@ -1095,26 +1172,55 @@ import { Checkbox, CheckboxGroup } from 'ant-design-hmfw'
 | defaultChecked | 初始是否选中 | `boolean` | `false` |
 | disabled | 失效状态 | `boolean` | `false` |
 | indeterminate | 设置 indeterminate 状态，只负责样式控制 | `boolean` | `false` |
-| value | checkbox 的 value，在 CheckboxGroup 中使用 | `string \| number` | - |
+| value | checkbox 的 value，在 CheckboxGroup 中使用 | `string \| number \| boolean` | - |
+| autoFocus | 自动获取焦点 | `boolean` | `false` |
+| name | input[type="checkbox"] 的 name 属性 | `string` | - |
+| id | input[type="checkbox"] 的 id 属性 | `string` | - |
+| title | input[type="checkbox"] 的 title 属性 | `string` | - |
+| tabIndex | input[type="checkbox"] 的 tabindex 属性 | `number` | - |
+| required | input[type="checkbox"] 的 required 属性 | `boolean` | `false` |
+| skipGroup | 在 CheckboxGroup 中时，跳过组控制 | `boolean` | `false` |
 
 **CheckboxGroup Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| value(v-model) | 指定选中的选项 | `(string \| number)[]` | `[]` |
-| defaultValue | 默认选中的选项 | `(string \| number)[]` | `[]` |
-| options | 指定可选项 | `Array<{ label: string; value: string \| number; disabled?: boolean }>` | `[]` |
+| value(v-model) | 指定选中的选项 | `(string \| number \| boolean)[]` | `[]` |
+| defaultValue | 默认选中的选项 | `(string \| number \| boolean)[]` | `[]` |
+| options | 指定可选项 | `Array<string \| number \| CheckboxOptionType>` | `[]` |
 | disabled | 整组失效 | `boolean` | `false` |
-| direction | 排列方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| name | CheckboxGroup 下所有 input[type="checkbox"] 的 name 属性 | `string` | - |
+| style | 自定义样式 | `CSSProperties` | - |
+| className | 自定义类名 | `string` | - |
+
+**CheckboxOptionType**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| label | 选项显示文本 | `string` |  |
+| value | 选项值 | `string \| number \| boolean` |  |
+| disabled | 是否禁用 | `boolean` |  |
+| style | 自定义样式 | `CSSProperties` |  |
+| className | 自定义类名 | `string` |  |
+| title | title 属性 | `string` |  |
+| id | id 属性 | `string` |  |
+| required | required 属性 | `boolean` |  |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | update:checked | 变化时回调函数（Checkbox） | `(checked: boolean) => void` |
-| change | 变化时回调函数 | `(event: Event) => void` |
-| update:value | 变化时回调函数 | `(value: (string \| number)[]) => void` |
-| change | 变化时回调函数 | `(value: (string \| number)[]) => void` |
+| change | 变化时回调函数 | `(event: CheckboxChangeEvent) => void` |
+| click | 点击时回调函数 | `(event: MouseEvent) => void` |
+| mouseenter | 鼠标移入时回调函数 | `(event: MouseEvent) => void` |
+| mouseleave | 鼠标移出时回调函数 | `(event: MouseEvent) => void` |
+| focus | 获得焦点时回调函数 | `(event: FocusEvent) => void` |
+| blur | 失去焦点时回调函数 | `(event: FocusEvent) => void` |
+| keypress | 按键时回调函数 | `(event: KeyboardEvent) => void` |
+| keydown | 按键按下时回调函数 | `(event: KeyboardEvent) => void` |
+| update:value | 变化时回调函数 | `(value: (string \| number \| boolean)[]) => void` |
+| change | 变化时回调函数 | `(value: (string \| number \| boolean)[]) => void` |
 
 ### Slots
 
@@ -1159,11 +1265,11 @@ CheckboxGroup — 方便的从数组生成 Checkbox 组。
       />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">垂直排列：</p>
+      <p style="margin-bottom: 8px;">垂直排列（通过 style 控制）：</p>
       <CheckboxGroup
         v-model:value="selectedColors"
         :options="colorOptions"
-        direction="vertical"
+        :style="{ display: 'flex', flexDirection: 'column', gap: '8px' }"
       />
     </div>
     <p>水果：{{ selectedFruits }}，颜色：{{ selectedColors }}</p>
@@ -1215,24 +1321,45 @@ import { Collapse, CollapsePanel } from 'ant-design-hmfw'
 | accordion | 手风琴模式 | `boolean` | `false` |
 | bordered | 带边框风格的折叠面板 | `boolean` | `true` |
 | ghost | 使折叠面板透明且无边框 | `boolean` | `false` |
-| size | 设置折叠面板大小 | `'default' \| 'small' \| 'large'` | `'default'` |
+| size | 设置折叠面板大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | expandIconPosition | 设置图标位置 | `'start' \| 'end'` | `'start'` |
+| collapsible | 设置可折叠触发区域 | `'header' \| 'icon' \| 'disabled'` | `'header'` |
+| expandIcon | 自定义展开图标 | `(props: { isActive?: boolean, panelKey?: string }) => VNode` | - |
+| destroyInactivePanel | 销毁折叠隐藏的面板 | `boolean` | `false` |
+| items | 面板数据 | `CollapseItem[]` | - |
+
+**CollapseItem**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| key | 对应 activeKey | `string` | - |
+| label | 面板头内容 | `string` | - |
+| children | 面板内容 | `any` | - |
+| disabled | 禁用后的面板展开与否将无法通过用户交互改变 | `boolean` | `false` |
+| showArrow | 是否展示箭头 | `boolean` | `true` |
+| extra | 自定义渲染每个面板右上角的内容 | `string \| VNode` | - |
+| collapsible | 设置可折叠触发区域 | `'header' \| 'icon' \| 'disabled'` | - |
+| forceRender | 被隐藏时是否渲染 DOM 结构 | `boolean` | `false` |
+| style | 自定义面板样式 | `CSSProperties` | - |
 
 **CollapsePanel Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | key | 对应 activeKey | `string` | - |
-| header | 面板头内容 | `string \| slot` | - |
+| header | 面板头内容 | `string` | - |
 | disabled | 禁用后的面板展开与否将无法通过用户交互改变 | `boolean` | `false` |
 | showArrow | 是否展示箭头 | `boolean` | `true` |
-| extra | 自定义渲染每个面板右上角的内容 | `string \| slot` | - |
+| extra | 自定义渲染每个面板右上角的内容 | `string \| VNode` | - |
+| collapsible | 设置可折叠触发区域 | `'header' \| 'icon' \| 'disabled'` | - |
+| forceRender | 被隐藏时是否渲染 DOM 结构 | `boolean` | `false` |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| update:activeKey | 切换面板的回调 | `(key: string \| string[]) => void` |
+| change | 切换面板的回调 | `(keys: string[]) => void` |
+| update:activeKey | 切换面板的回调 | `(keys: string[]) => void` |
 
 ### 示例
 
@@ -1557,7 +1684,7 @@ const year = ref('')
 
 导入：
 ```ts
-import { Descriptions } from 'ant-design-hmfw'
+import { Descriptions, DescriptionsItem } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -1566,21 +1693,24 @@ import { Descriptions } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 描述列表的标题 | `string` | - |
-| extra | 描述列表的操作区域 | `string \| slot` | - |
+| title | 描述列表的标题 | `string \| VNode` | - |
+| extra | 描述列表的操作区域 | `string \| VNode \| slot` | - |
 | bordered | 是否展示边框 | `boolean` | `false` |
-| column | 一行的 DescriptionItems 数量 | `number` | `3` |
-| size | 设置列表的大小 | `'default' \| 'middle' \| 'small'` | `'default'` |
+| column | 一行的 DescriptionItems 数量,可以是响应式对象 | `number \| Record<Breakpoint, number>` | `3` |
+| size | 设置列表的大小 | `'default' \| 'middle' \| 'small' \| 'medium'` | `'default'` |
 | layout | 描述布局 | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| colon | 配置 Descriptions.Item 的 colon 的默认值 | `boolean` | `true` |
 | items | 描述列表的数据项 | `DescriptionsItem[]` | - |
+| labelStyle | 自定义标签样式(全局) | `CSSProperties` | - |
+| contentStyle | 自定义内容样式(全局) | `CSSProperties` | - |
 
 **DescriptionsItem**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | label | 内容的描述 | `string` | - |
-| children | 内容 | `string` | - |
-| span | 包含列的数量 | `number` | `1` |
+| children | 内容 | `any` | - |
+| span | 包含列的数量,可以是响应式对象或 'filled' | `number \| 'filled' \| Record<Breakpoint, number>` | `1` |
 | labelStyle | 自定义标签样式 | `CSSProperties` | - |
 | contentStyle | 自定义内容样式 | `CSSProperties` | - |
 
@@ -1601,7 +1731,7 @@ const items = [
   { label: '手机号', children: '1810000000' },
   { label: '居住地', children: '杭州市' },
   { label: '备注', children: '学校' },
-  { label: '联系地址', children: '浙江省杭州市西湖区古翠路' },
+  { label: '联系地址', children: '浙江省杭州市西湖区古翠路', span: 2 },
 ]
 </script>
 ```
@@ -1618,13 +1748,12 @@ import { Descriptions } from 'ant-design-hmfw'
 
 const items = [
   { label: '产品', children: 'Cloud Database' },
-  { label: '计费模式', children: '按量付费' },
-  { label: '自动续费', children: '否' },
+  { label: '计费方式', children: '预付费' },
+  { label: '自动续费', children: '已开通' },
   { label: '订单时间', children: '2018-04-24 18:00:00' },
-  { label: '使用时间', children: '2019-04-24 18:00:00', span: 2 },
-  { label: '状态', children: '运行中' },
-  { label: '协商速度', children: '100Mbps' },
-  { label: '配置信息', children: 'Data disk type: MongoDB' },
+  { label: '使用时长', children: '2年' },
+  { label: '到期时间', children: '2020-04-24 18:00:00' },
+  { label: '配置信息', children: '2核 4GB 80GB SSD', span: 3 },
 ]
 </script>
 ```
@@ -1649,8 +1778,11 @@ import { Divider } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | type | 水平还是垂直类型 | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | orientation | 分割线标题的位置 | `'left' \| 'center' \| 'right'` | `'center'` |
-| dashed | 是否虚线 | `boolean` | `false` |
+| orientationMargin | 标题和最近 left/right 边框之间的距离，去除分割线，同时 `orientation` 必须为 `left` 或 `right` | `string \| number` | - |
+| dashed | 是否虚线，等价于 `variant="dashed"` | `boolean` | `false` |
+| variant | 分割线样式，优先级高于 `dashed` | `'solid' \| 'dashed' \| 'dotted'` | `'solid'` |
 | plain | 文字是否显示为普通正文样式 | `boolean` | `false` |
+| size | 分割线间距大小（仅水平分割线生效） | `'small' \| 'middle' \| 'large'` | `'large'` |
 
 ### 示例
 
@@ -1817,26 +1949,45 @@ import { Dropdown } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| items | 菜单配置项 | `DropdownItem[]` | `[]` |
-| trigger | 触发方式 | `'hover' \| 'click'` | `'hover'` |
-| placement | 弹出位置 | `'bottomLeft' \| 'bottomCenter' \| 'bottomRight' \| 'topLeft' \| 'topCenter' \| 'topRight'` | `'bottomLeft'` |
+| menu | 菜单配置项 | `MenuProps` | - |
+| trigger | 触发方式 | `'hover' \| 'click' \| 'contextMenu' \| Array` | `'hover'` |
+| placement | 弹出位置 | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight'` | `'bottomLeft'` |
+| open | 手动控制下拉框显示 | `boolean` | - |
+| defaultOpen | 默认是否显示下拉框 | `boolean` | `false` |
 | disabled | 是否禁用 | `boolean` | `false` |
+| arrow | 下拉框箭头是否显示 | `boolean \| { pointAtCenter?: boolean }` | `false` |
+| autoFocus | 打开后自动聚焦下拉框 | `boolean` | `false` |
+| overlayClassName | 下拉根元素的类名称 | `string` | - |
+| overlayStyle | 下拉根元素的样式 | `CSSProperties` | - |
+| getPopupContainer | 菜单渲染父节点 | `(triggerNode: HTMLElement) => HTMLElement` | `() => document.body` |
+| autoAdjustOverflow | 下拉框被遮挡时自动调整位置 | `boolean` | `true` |
+| destroyPopupOnHide | 关闭后是否销毁 Dropdown（已废弃，请使用 destroyOnHidden） | `boolean` | `false` |
+| destroyOnHidden | 关闭后是否销毁 Dropdown | `boolean` | `false` |
+| mouseEnterDelay | 鼠标移入后延时多少才显示 Dropdown，单位：秒 | `number` | `0.15` |
+| mouseLeaveDelay | 鼠标移出后延时多少才隐藏 Dropdown，单位：秒 | `number` | `0.1` |
+| popupRender | 自定义下拉框内容 | `(originNode: VNode) => VNode` | - |
+| dropdownRender | 自定义下拉框内容（已废弃，请使用 popupRender） | `(originNode: VNode) => VNode` | - |
+| forceRender | 强制渲染 Dropdown | `boolean` | `false` |
+| openClassName | 菜单展开时给触发元素添加的类名 | `string` | - |
+| rootClassName | 下拉根元素的类名称 | `string` | - |
 
-**DropdownItem**
+**Dropdown.Button Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| key | 唯一标识 | `string` | - |
-| label | 菜单项标题 | `string` | - |
-| disabled | 是否禁用 | `boolean` | `false` |
-| danger | 是否危险样式 | `boolean` | `false` |
-| type | 菜单项类型，`'divider'` 为分割线 | `'divider'` | - |
+| type | 按钮类型 | `'default' \| 'primary' \| 'dashed' \| 'link' \| 'text'` | `'default'` |
+| danger | 设置危险按钮 | `boolean` | `false` |
+| loading | 设置按钮载入状态 | `boolean` | `false` |
+| icon | 右侧的 icon | `VNode` | `<EllipsisOutlined />` |
+| buttonsRender | 自定义按钮的渲染 | `(buttons: [VNode, VNode]) => [VNode, VNode]` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| click | 点击菜单项时触发 | `({ key: string }) => void` |
+| openChange | 菜单显示状态改变时调用 | `(open: boolean, info: { source: 'trigger' \| 'menu' }) => void` |
+| click | 点击左侧按钮的回调 | `(event: MouseEvent) => void` |
+| openChange | 菜单显示状态改变时调用 | `(open: boolean, info: { source: 'trigger' \| 'menu' }) => void` |
 
 ### 示例
 
@@ -1844,7 +1995,7 @@ import { Dropdown } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Dropdown :items="items" @click="onMenuClick">
+  <Dropdown :menu="menu">
     <Button>
       下拉菜单
       <Icon type="down" />
@@ -1855,27 +2006,28 @@ import { Dropdown } from 'ant-design-hmfw'
 <script setup lang="ts">
 import { Dropdown, Button, Icon } from 'ant-design-hmfw'
 
-const items = [
-  { key: '1', label: '菜单项一' },
-  { key: '2', label: '菜单项二' },
-  { key: '3', label: '菜单项三' },
-]
-
-const onMenuClick = ({ key }: { key: string }) => {
-  console.log('点击了:', key)
+const menu = {
+  items: [
+    { key: '1', label: '菜单项一' },
+    { key: '2', label: '菜单项二' },
+    { key: '3', label: '菜单项三' },
+  ],
+  onClick: ({ key }: { key: string }) => {
+    console.log('点击了:', key)
+  },
 }
 </script>
 ```
 
-触发方式 — 通过 `trigger` 属性设置触发方式，支持 `hover` 和 `click`。
+触发方式 — 通过 `trigger` 属性设置触发方式，支持 `hover`、`click` 和 `contextMenu`。
 
 ```vue
 <template>
   <Space>
-    <Dropdown :items="items" trigger="hover">
+    <Dropdown :menu="menu" trigger="hover">
       <Button>悬停触发</Button>
     </Dropdown>
-    <Dropdown :items="items" trigger="click">
+    <Dropdown :menu="menu" trigger="click">
       <Button>点击触发</Button>
     </Dropdown>
   </Space>
@@ -1884,11 +2036,13 @@ const onMenuClick = ({ key }: { key: string }) => {
 <script setup lang="ts">
 import { Dropdown, Button, Space } from 'ant-design-hmfw'
 
-const items = [
-  { key: '1', label: '菜单项一' },
-  { key: '2', label: '菜单项二' },
-  { key: '3', label: '菜单项三' },
-]
+const menu = {
+  items: [
+    { key: '1', label: '菜单项一' },
+    { key: '2', label: '菜单项二' },
+    { key: '3', label: '菜单项三' },
+  ],
+}
 </script>
 ```
 
@@ -1901,7 +2055,7 @@ const items = [
 
 导入：
 ```ts
-import { Empty } from 'ant-design-hmfw'
+import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -1910,8 +2064,8 @@ import { Empty } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| description | 自定义描述内容 | `string` | `'暂无数据'` |
-| image | 设置显示图片，为 string 时表示自定义图片地址 | `string` | - |
+| description | 自定义描述内容，为 `false` 时不显示 | `string \| false` | `'暂无数据'` |
+| image | 显示图片：图片地址字符串，或预设标识 `'default'` / `'simple'`，为 `false` 时不显示 | `string \| false` | `'default'` |
 | imageStyle | 图片样式 | `CSSProperties` | - |
 
 ### 示例
@@ -1960,8 +2114,8 @@ import { Flex } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | vertical | 是否垂直方向排列 | `boolean` | `false` |
 | wrap | 是否自动换行 | `boolean \| string` | `false` |
-| justify | 主轴对齐方式 | `'flex-start' \| 'center' \| 'flex-end' \| 'space-between' \| 'space-around' \| 'space-evenly'` | `'flex-start'` |
-| align | 交叉轴对齐方式 | `'flex-start' \| 'center' \| 'flex-end' \| 'stretch'` | `'stretch'` |
+| justify | 主轴对齐方式，对应 `justify-content` | `'flex-start' \| 'center' \| 'flex-end' \| 'space-between' \| 'space-around' \| 'space-evenly' \| 'start' \| 'end' \| ...` | - |
+| align | 交叉轴对齐方式，对应 `align-items` | `'flex-start' \| 'center' \| 'flex-end' \| 'stretch' \| 'baseline' \| 'start' \| 'end' \| ...` | - |
 | gap | 子元素间距 | `'small' \| 'middle' \| 'large' \| number` | - |
 | flex | flex CSS 简写属性 | `string \| number` | - |
 | component | 自定义元素类型 | `string` | `'div'` |
@@ -2037,13 +2191,15 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 | --- | --- | --- | --- |
 | type | 设置按钮类型 | `'default' \| 'primary'` | `'default'` |
 | shape | 设置按钮形状 | `'circle' \| 'square'` | `'circle'` |
-| icon | 自定义图标 | `IconComponent \| string \| slot` | - |
-| description | 文字及其他内容，仅 `square` 形状展示 | `string \| slot` | - |
-| tooltip | 气泡提示的内容 | `string \| slot` | - |
+| icon | 自定义图标 | `IconComponent \| string \| slot` | `FileTextOutlined` |
+| content | 文字及其他内容，仅 `square` 形状展示 | `string \| slot` | - |
+| description | 文字及其他内容（已废弃，请使用 `content`） | `string \| slot` | - |
+| tooltip | 气泡提示的内容 | `string \| TooltipProps \| slot` | - |
 | badge | 带徽标数字的悬浮按钮 | `{ count?, dot?, overflowCount?, color?, offset? }` | - |
 | href | 点击跳转的地址，指定时渲染为 `a` 标签 | `string` | - |
 | target | 相当于 `a` 标签的 `target` 属性 | `string` | - |
 | htmlType | 设置原生 `button` 的 `type` | `'submit' \| 'reset' \| 'button'` | `'button'` |
+| disabled | 是否禁用按钮 | `boolean` | `false` |
 
 **FloatButton.Group Props**
 
@@ -2057,8 +2213,9 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 | defaultOpen | 默认展开状态 | `boolean` | `false` |
 | icon | 触发按钮的图标 | `IconComponent \| string` | `PlusOutlined` |
 | closeIcon | 展开时触发按钮的图标 | `IconComponent \| string` | `CloseOutlined` |
-| tooltip | 触发按钮的气泡提示 | `string` | - |
+| tooltip | 触发按钮的气泡提示 | `string \| TooltipProps` | - |
 | badge | 触发按钮的徽标 | `FloatButtonBadgeProps` | - |
+| description | 触发按钮的描述（square 形状） | `string` | - |
 
 **FloatButton.BackTop Props**
 
@@ -2067,10 +2224,12 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 | visibilityHeight | 滚动高度达到此参数值才出现 | `number` | `400` |
 | target | 设置需要监听其滚动事件的元素 | `() => HTMLElement \| Window \| Document` | `() => window` |
 | duration | 回到顶部所需时间（ms） | `number` | `450` |
-| icon | 自定义图标 | `IconComponent \| string` | `UpOutlined` |
+| icon | 自定义图标 | `IconComponent \| string` | `VerticalAlignTopOutlined` |
 | type | 设置按钮类型 | `'default' \| 'primary'` | `'default'` |
 | shape | 设置按钮形状 | `'circle' \| 'square'` | `'circle'` |
-| tooltip | 气泡提示的内容 | `string` | - |
+| tooltip | 气泡提示的内容 | `string \| TooltipProps` | - |
+| content | 文字及其他内容（square 形状） | `string` | - |
+| description | 文字及其他内容（已废弃，请使用 `content`） | `string` | - |
 
 ### Events
 
@@ -2078,6 +2237,7 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 | --- | --- | --- |
 | click | 点击按钮时的回调 | `(e: MouseEvent) => void` |
 | openChange / update:open | 展开状态变化时的回调 | `(open: boolean) => void` |
+| click | 点击触发按钮时的回调（仅菜单模式） | `(e: MouseEvent) => void` |
 | click | 点击按钮时的回调 | `(e: MouseEvent) => void` |
 
 ### 示例
@@ -2341,25 +2501,27 @@ import { Row, Col } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| gutter | 栅格间距，支持 `[水平, 垂直]` | `number \| [number, number]` | `0` |
-| justify | 水平排列方式 | `'start' \| 'end' \| 'center' \| 'space-around' \| 'space-between'` | `'start'` |
-| align | 垂直对齐方式 | `'top' \| 'middle' \| 'bottom'` | `'top'` |
+| gutter | 栅格间距，支持 `[水平, 垂直]` 和响应式对象 | `number \| string \| [number \| string, number \| string] \| { xs?: number, sm?: number, ... }` | `0` |
+| justify | 水平排列方式，支持响应式对象 | `'start' \| 'end' \| 'center' \| 'space-around' \| 'space-between' \| 'space-evenly' \| { xs?: ..., sm?: ..., ... }` | `'start'` |
+| align | 垂直对齐方式，支持响应式对象 | `'top' \| 'middle' \| 'bottom' \| 'stretch' \| { xs?: ..., sm?: ..., ... }` | `'top'` |
 | wrap | 是否自动换行 | `boolean` | `true` |
 
 **Col Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| span | 栅格占位格数，0 时隐藏 | `number` | - |
+| flex | flex 布局属性 | `number \| 'auto' \| 'none' \| string` | - |
+| span | 栅格占位格数，0 时隐藏 | `number \| string` | - |
 | offset | 栅格左侧的间隔格数 | `number` | `0` |
+| order | 栅格顺序 | `number` | `0` |
 | push | 栅格向右移动格数 | `number` | `0` |
 | pull | 栅格向左移动格数 | `number` | `0` |
-| xs | `<576px` 响应式栅格 | `number \| { span: number, offset: number }` | - |
-| sm | `≥576px` 响应式栅格 | `number \| { span: number, offset: number }` | - |
-| md | `≥768px` 响应式栅格 | `number \| { span: number, offset: number }` | - |
-| lg | `≥992px` 响应式栅格 | `number \| { span: number, offset: number }` | - |
-| xl | `≥1200px` 响应式栅格 | `number \| { span: number, offset: number }` | - |
-| xxl | `≥1600px` 响应式栅格 | `number \| { span: number, offset: number }` | - |
+| xs | `<576px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
+| sm | `≥576px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
+| md | `≥768px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
+| lg | `≥992px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
+| xl | `≥1200px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
+| xxl | `≥1600px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
 
 ### 示例
 
@@ -3102,17 +3264,26 @@ import { Layout, Header, Footer, Content, Sider } from 'ant-design-hmfw'
 
 ### Props
 
+**Layout Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| hasSider | 表示子元素里有 Sider，一般不用指定。可用于服务端渲染时避免样式闪动 | `boolean` | - |
+
 **Sider Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | width | 宽度 | `number \| string` | `200` |
 | collapsible | 是否可收起 | `boolean` | `false` |
-| collapsed | 当前收起状态（v-model） | `boolean` | - |
+| collapsed(v-model) | 当前收起状态 | `boolean` | - |
 | defaultCollapsed | 是否默认收起 | `boolean` | `false` |
-| collapsedWidth | 收缩宽度，设置为 0 会出现特殊 trigger | `number` | `80` |
-| breakpoint | 触发响应式布局的断点 | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | - |
-| trigger | 自定义 trigger，设为 null 时隐藏 trigger | `string \| null` | - |
+| collapsedWidth | 收缩宽度，设置为 0 会出现特殊 trigger | `number \| string` | `80` |
+| breakpoint | 触发响应式布局的断点 | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| 'xxxl'` | - |
+| theme | 主题颜色 | `'light' \| 'dark'` | `'dark'` |
+| trigger | 自定义 trigger，设为 null 时隐藏 trigger | `VNode \| null` | - |
+| reverseArrow | 翻转折叠提示箭头的方向 | `boolean` | `false` |
+| zeroWidthTriggerStyle | 指定当 collapsedWidth 为 0 时出现的特殊 trigger 的样式 | `CSSProperties` | - |
 
 ### Events
 
@@ -3191,28 +3362,48 @@ import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | dataSource | 列表数据源 | `any[]` | - |
+| renderItem | 自定义渲染列表项 | `(item: T, index: number) => VNode` | - |
 | bordered | 是否展示边框 | `boolean` | `false` |
 | size | 列表大小 | `'default' \| 'small' \| 'large'` | `'default'` |
 | split | 是否展示分割线 | `boolean` | `true` |
-| loading | 当卡片内容还在加载中时，可以用 loading 展示一个占位 | `boolean` | `false` |
-| pagination | 对应的 pagination 配置，设置 false 不显示 | `object \| false` | `false` |
-| header | 列表头部 | `string \| slot` | - |
-| footer | 列表底部 | `string \| slot` | - |
+| loading | 当卡片内容还在加载中时，可以用 loading 展示一个占位 | `boolean \| { spinning?: boolean }` | `false` |
+| pagination | 对应的 pagination 配置，设置 false 不显示 | `boolean \| PaginationConfig` | `false` |
+| grid | 列表栅格配置 | `{ column?: number; gutter?: number; xs?: number; sm?: number; md?: number; lg?: number; xl?: number; xxl?: number }` | - |
+| itemLayout | 设置 List.Item 布局 | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| rowKey | 各项 key 的取值，可以是字符串或一个函数 | `string \| ((item: T) => string \| number)` | `'key'` |
+| header | 列表头部 | `string \| VNode` | - |
+| footer | 列表底部 | `string \| VNode` | - |
+| locale | 默认文案设置，目前包括空数据文案 | `{ emptyText?: string \| VNode }` | - |
+| loadMore | 加载更多 | `VNode` | - |
 
-**ListItem Props**
-
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| actions | 列表操作组 | `slot[]` | - |
-| extra | 额外内容 | `string \| slot` | - |
-
-**ListItemMeta Props**
+**PaginationConfig**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| avatar | 列表元素的图标 | `string \| slot` | - |
-| title | 列表元素的标题 | `string \| slot` | - |
-| description | 列表元素的描述内容 | `string \| slot` | - |
+| current | 当前页数 | `number` | - |
+| pageSize | 每页条数 | `number` | `10` |
+| total | 数据总数 | `number` | - |
+| defaultCurrent | 默认的当前页数 | `number` | `1` |
+| defaultPageSize | 默认的每页条数 | `number` | `10` |
+| position | 指定分页显示的位置 | `'top' \| 'bottom' \| 'both'` | `'bottom'` |
+| align | 指定分页对齐方式 | `'start' \| 'center' \| 'end'` | `'end'` |
+| onChange | 页码改变的回调 | `(page: number, pageSize: number) => void` | - |
+| onShowSizeChange | pageSize 变化的回调 | `(current: number, size: number) => void` | - |
+
+**List.Item Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| actions | 列表操作组，根据 itemLayout 的不同，位置在卡片底部或者最右侧 | `VNode[]` | - |
+| extra | 额外内容，通常用在 itemLayout 为 vertical 的情况下，展示右侧内容 | `VNode` | - |
+
+**List.Item.Meta Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| avatar | 列表元素的图标 | `VNode` | - |
+| title | 列表元素的标题 | `string \| VNode` | - |
+| description | 列表元素的描述内容 | `string \| VNode` | - |
 
 ### 示例
 
@@ -3222,16 +3413,14 @@ import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
 <template>
   <List
     :data-source="data"
+    :render-item="renderItem"
     bordered
-  >
-    <template #renderItem="{ item }">
-      <ListItem>{{ item }}</ListItem>
-    </template>
-  </List>
+  />
 </template>
 
 <script setup lang="ts">
-import { List, ListItem } from 'ant-design-hmfw'
+import { h } from 'vue'
+import { List } from 'ant-design-hmfw'
 
 const data = [
   'Racing car sprays burning fuel into crowd.',
@@ -3239,6 +3428,8 @@ const data = [
   'Australian walks 100km after outback crash.',
   'Man charged over missing wedding girl.',
 ]
+
+const renderItem = (item: string) => h(List.Item, null, () => item)
 </script>
 ```
 
@@ -3246,21 +3437,12 @@ const data = [
 
 ```vue
 <template>
-  <List :data-source="data" bordered>
-    <template #renderItem="{ item }">
-      <ListItem>
-        <template #actions>
-          <a @click="onEdit(item)">编辑</a>
-          <a @click="onDelete(item)">删除</a>
-        </template>
-        {{ item.title }}
-      </ListItem>
-    </template>
-  </List>
+  <List :data-source="data" :render-item="renderItem" bordered />
 </template>
 
 <script setup lang="ts">
-import { List, ListItem } from 'ant-design-hmfw'
+import { h } from 'vue'
+import { List } from 'ant-design-hmfw'
 
 const data = [
   { title: '列表项 1' },
@@ -3275,6 +3457,18 @@ function onEdit(item: any) {
 function onDelete(item: any) {
   console.log('删除', item)
 }
+
+const renderItem = (item: any) =>
+  h(
+    List.Item,
+    {
+      actions: [
+        h('a', { onClick: () => onEdit(item) }, '编辑'),
+        h('a', { onClick: () => onDelete(item) }, '删除'),
+      ],
+    },
+    () => item.title
+  )
 </script>
 ```
 
@@ -3296,34 +3490,52 @@ import { Menu } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| items | 菜单内容 | `MenuItem[]` | `[]` |
+| items | 菜单内容 | `ItemType[]` | `[]` |
 | mode | 菜单类型 | `'horizontal' \| 'vertical' \| 'inline'` | `'vertical'` |
 | theme | 主题颜色 | `'light' \| 'dark'` | `'light'` |
 | selectedKeys | 当前选中的菜单项 key 数组 | `string[]` | - |
 | defaultSelectedKeys | 初始选中的菜单项 key 数组 | `string[]` | `[]` |
 | openKeys | 当前展开的 SubMenu 菜单项 key 数组 | `string[]` | - |
 | defaultOpenKeys | 初始展开的 SubMenu 菜单项 key 数组 | `string[]` | `[]` |
-| collapsed | 是否折叠（仅 inline 模式） | `boolean` | `false` |
 | inlineCollapsed | inline 时菜单是否收起状态 | `boolean` | `false` |
+| inlineIndent | inline 模式的菜单缩进宽度 | `number` | `24` |
+| multiple | 是否允许多选 | `boolean` | `false` |
+| selectable | 是否允许选中 | `boolean` | `true` |
+| expandIcon | 自定义展开图标 | `VNode \| ((props: { isOpen: boolean }) => VNode)` | - |
+| triggerSubMenuAction | SubMenu 展开/关闭的触发行为 | `'hover' \| 'click'` | `'hover'` |
 
-**MenuItem**
+**ItemType**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | key | 唯一标识 | `string` | - |
 | label | 菜单项标题 | `string` | - |
-| icon | 图标类型 | `string` | - |
-| children | 子菜单项 | `MenuItem[]` | - |
+| icon | 图标 | `VNode \| (() => VNode)` | - |
 | disabled | 是否禁用 | `boolean` | `false` |
-| type | 菜单项类型 | `'group' \| 'divider'` | - |
+| danger | 是否为危险选项 | `boolean` | `false` |
+| title | 设置收缩时展示的悬浮标题 | `string` | - |
+| key | 唯一标识 | `string` | - |
+| label | 子菜单标题 | `string` | - |
+| icon | 图标 | `VNode \| (() => VNode)` | - |
+| disabled | 是否禁用 | `boolean` | `false` |
+| children | 子菜单项 | `ItemType[]` | - |
+| theme | 子菜单主题 | `'light' \| 'dark'` | - |
+| type | 类型标识 | `'divider'` | - |
+| key | 唯一标识 | `string` | - |
+| dashed | 是否虚线 | `boolean` | `false` |
+| type | 类型标识 | `'group'` | - |
+| key | 唯一标识 | `string` | - |
+| label | 分组标题 | `string` | - |
+| children | 分组内的菜单项 | `ItemType[]` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| select | 被选中时调用 | `({ key: string, keyPath: string[], selectedKeys: string[] }) => void` |
+| select | 被选中时调用 | `({ key: string, selectedKeys: string[] }) => void` |
+| deselect | 取消选中时调用（仅 multiple 模式） | `({ key: string, selectedKeys: string[] }) => void` |
 | openChange | SubMenu 展开/关闭的回调 | `(openKeys: string[]) => void` |
-| click | 点击菜单项触发的回调 | `({ key: string, keyPath: string[] }) => void` |
+| click | 点击菜单项触发的回调 | `({ key: string }) => void` |
 
 ### 示例
 
@@ -3750,6 +3962,7 @@ import { Pagination } from 'ant-design-hmfw'
 | total | 数据总数 | `number` | `0` |
 | pageSize | 每页条数（v-model） | `number` | - |
 | defaultPageSize | 默认的每页条数 | `number` | `10` |
+| pageSizeOptions | 指定每页可以显示多少条 | `number[]` | `[10, 20, 50, 100]` |
 | showSizeChanger | 是否展示 pageSize 切换器 | `boolean` | `false` |
 | showQuickJumper | 是否可以快速跳转至某页 | `boolean` | `false` |
 | showTotal | 用于显示数据总量和当前数据顺序 | `(total: number, range: [number, number]) => string` | - |
@@ -3757,6 +3970,9 @@ import { Pagination } from 'ant-design-hmfw'
 | simple | 当添加该属性时，显示为简单分页 | `boolean` | `false` |
 | disabled | 禁用分页 | `boolean` | `false` |
 | hideOnSinglePage | 只有一页时是否隐藏分页器 | `boolean` | `false` |
+| itemRender | 自定义页码的结构 | `(page: number, type: 'page' \| 'prev' \| 'next' \| 'jump-prev' \| 'jump-next', originalElement: VNode) => VNode` | - |
+| responsive | 当屏幕尺寸小于 576px 时，自动变为 small | `boolean` | `false` |
+| align | 对齐方式 | `'start' \| 'center' \| 'end'` | - |
 
 ### Events
 
@@ -3764,6 +3980,8 @@ import { Pagination } from 'ant-design-hmfw'
 | --- | --- | --- |
 | change | 页码或 pageSize 改变的回调 | `(page: number, pageSize: number) => void` |
 | showSizeChange | pageSize 变化的回调 | `(current: number, size: number) => void` |
+| update:current | 当前页数变化时触发（v-model） | `(page: number) => void` |
+| update:pageSize | 每页条数变化时触发（v-model） | `(size: number) => void` |
 
 ### 示例
 
@@ -4000,12 +4218,18 @@ import { Progress } from 'ant-design-hmfw'
 | percent | 百分比 | `number` | `0` |
 | status | 状态 | `'success' \| 'exception' \| 'normal' \| 'active'` | - |
 | showInfo | 是否显示进度数值或状态图标 | `boolean` | `true` |
-| strokeColor | 进度条的色彩 | `string \| object` | - |
-| trailColor | 未完成的分段的颜色 | `string` | - |
-| strokeWidth | 进度条线的宽度 | `number` | `6` |
-| size | 进度条的尺寸 | `'default' \| 'small'` | `'default'` |
-| format | 内容的模板函数 | `(percent: number) => string` | - |
+| strokeColor | 进度条的色彩，支持渐变 | `string \| ProgressGradient` | - |
+| railColor | 未完成的分段的颜色 | `string` | - |
+| trailColor | (已废弃) 使用 railColor 代替 | `string` | - |
+| strokeWidth | 进度条线的宽度 | `number` | `6` (line), `6` (circle) |
+| strokeLinecap | 进度条端点形状 | `'round' \| 'butt' \| 'square'` | `'round'` |
+| size | 进度条的尺寸 | `'default' \| 'small' \| number \| { width?: number; height?: number }` | `'default'` |
+| width | (已废弃) circle/dashboard 的画布宽度 | `number` | `120` |
+| format | 内容的模板函数 | `(percent: number, successPercent?: number) => string` | - |
 | steps | 进度条总共步数 | `number` | - |
+| success | 成功进度条相关配置 | `{ percent?: number; strokeColor?: string }` | - |
+| gapDegree | 圆形进度条缺口角度，dashboard 默认 75 | `number` | `0` (circle), `75` (dashboard) |
+| percentPosition | 进度文字位置 | `{ align?: 'start' \| 'center' \| 'end'; type?: 'inner' \| 'outer' }` | `{ align: 'end', type: 'outer' }` |
 
 ### 示例
 
@@ -4062,20 +4286,25 @@ import { QRCode } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | value | 扫描后的文本 | `string` | - |
+| type | 渲染类型 | `'canvas' \| 'svg'` | `'canvas'` |
 | size | 二维码大小 | `number` | `160` |
 | color | 二维码颜色 | `string` | `'#000000'` |
-| bgColor | 二维码背景颜色 | `string` | `'#ffffff'` |
+| bgColor | 二维码背景颜色 | `string` | `'transparent'` |
 | errorLevel | 二维码纠错等级 | `'L' \| 'M' \| 'Q' \| 'H'` | `'M'` |
 | status | 二维码状态 | `'active' \| 'expired' \| 'loading' \| 'scanned'` | `'active'` |
 | icon | 二维码中图片的地址 | `string` | - |
-| iconSize | 二维码中图片的大小 | `number` | `40` |
+| iconSize | 二维码中图片的大小 | `number \| { width: number; height: number }` | `40` |
 | bordered | 是否有边框 | `boolean` | `true` |
+| marginSize | SVG 类型二维码的边距 | `number` | - |
+| statusRender | 自定义状态渲染函数 | `(info: StatusRenderInfo) => VNode \| null` | - |
+| onRefresh | 点击刷新的回调 | `() => void` | - |
 
-### Events
+**StatusRenderInfo**
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| refresh | 点击刷新的回调 | `() => void` |
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| status | 当前状态 | `'expired' \| 'loading' \| 'scanned'` |  |
+| onRefresh | 刷新回调 | `() => void \| undefined` |  |
 
 ### 示例
 
@@ -4091,13 +4320,13 @@ import { QRCode } from 'ant-design-hmfw'
 </script>
 ```
 
-自定义颜色 — 自定义二维码颜色。
+渲染类型 — 支持 canvas 和 svg 两种渲染方式。
 
 ```vue
 <template>
   <div style="display: flex; gap: 16px;">
-    <QRCode value="https://ant.design" color="#1677ff" />
-    <QRCode value="https://ant.design" color="#52c41a" bg-color="#f0f0f0" />
+    <QRCode value="https://ant.design" type="canvas" />
+    <QRCode value="https://ant.design" type="svg" />
   </div>
 </template>
 
@@ -4293,8 +4522,18 @@ import { Rate } from 'ant-design-hmfw'
 | allowHalf | 是否允许半选 | `boolean` | `false` |
 | allowClear | 是否允许再次点击后清除 | `boolean` | `true` |
 | disabled | 只读，无法进行交互 | `boolean` | `false` |
-| character | 自定义字符 | `string \| VNode` | `'★'` |
-| tooltips | 自定义每项的提示信息 | `string[]` | - |
+| character | 自定义字符 | `string \| ((ctx: RateCharacterRenderContext) => any)` | `'★'` |
+| tooltips | 自定义每项的提示信息 | `(string \| TooltipProps)[]` | - |
+| size | 组件尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| keyboard | 是否支持键盘操作 | `boolean` | `true` |
+| autoFocus | 自动获取焦点 | `boolean` | `false` |
+
+**Rate Methods**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| - | 获取焦点 |  |  |
+| - | 失去焦点 |  |  |
 
 ### Events
 
@@ -4302,9 +4541,10 @@ import { Rate } from 'ant-design-hmfw'
 | --- | --- | --- |
 | update:value | 选择时的回调 | `(value: number) => void` |
 | change | 选择时的回调 | `(value: number) => void` |
-| hoverChange | 鼠标经过时数值变化的回调 | `(value: number) => void` |
+| hoverChange | 鼠标经过时数值变化的回调 | `(value: number \| undefined) => void` |
 | focus | 获取焦点时的回调 | `() => void` |
 | blur | 失去焦点时的回调 | `() => void` |
+| keydown | 键盘按下时的回调 | `(event: KeyboardEvent) => void` |
 
 ### 示例
 
@@ -4366,9 +4606,10 @@ import { Result } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| status | 结果的状态，决定图标和颜色 | `'success' \| 'error' \| 'warning' \| 'info' \| '404' \| '403' \| '500'` | `'info'` |
+| status | 结果的状态，决定图标和颜色；`404/403/500` 渲染为异常插画 | `'success' \| 'error' \| 'warning' \| 'info' \| '404' \| '403' \| '500'` | `'info'` |
 | title | 标题 | `string` | - |
 | subTitle | 副标题 | `string` | - |
+| icon | 自定义图标字符；设为 `false` 时隐藏图标 | `string \| false` | - |
 
 ### 示例
 
@@ -4445,19 +4686,26 @@ import { Segmented } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | value (v-model) | 当前选中的值 | `string \| number` | - |
 | defaultValue | 默认选中的值 | `string \| number` | - |
-| options | 数据化配置选项内容 | `string[] \| SegmentedOption[]` | `[]` |
+| options | 数据化配置选项内容 | `string[] \| number[] \| SegmentedOption[]` | `[]` |
 | disabled | 是否禁用 | `boolean` | `false` |
 | block | 将宽度调整为父元素宽度 | `boolean` | `false` |
 | size | 控件大小 | `'large' \| 'middle' \| 'small'` | `'middle'` |
+| vertical | 垂直方向 | `boolean` | `false` |
+| orientation | 方向(优先级高于 vertical) | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| shape | 形状 | `'default' \| 'round'` | `'default'` |
+| name | 为所有 radio input 设置 name 属性 | `string` | - |
 
 **SegmentedOption**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | value | 选项值 | `string \| number` | - |
-| label | 选项标签 | `string` | - |
-| icon | 选项图标 | `slot` | - |
+| label | 选项标签 | `string \| VNode` | - |
+| icon | 选项图标 | `VNode` | - |
 | disabled | 是否禁用 | `boolean` | `false` |
+| title | HTML title 属性 | `string` | - |
+| tooltip | 提示信息 | `string \| Omit<TooltipProps, 'title'>` | - |
+| className | 自定义类名 | `string` | - |
 
 ### Events
 
@@ -4642,7 +4890,7 @@ const options = [
 
 导入：
 ```ts
-import { Skeleton, SkeletonButton, SkeletonInput } from 'ant-design-hmfw'
+import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -4652,13 +4900,33 @@ import { Skeleton, SkeletonButton, SkeletonInput } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
-| avatar | 是否显示头像占位图 | `boolean \| object` | `false` |
-| paragraph | 是否显示段落占位图 | `boolean \| object` | `true` |
-| title | 是否显示标题占位图 | `boolean \| object` | `true` |
-| loading | 为 true 时，显示占位图，反之则直接展示子组件 | `boolean` | - |
+| avatar | 是否显示头像占位图 | `boolean \| SkeletonAvatarProps` | `false` |
+| paragraph | 是否显示段落占位图 | `boolean \| SkeletonParagraphProps` | `true` |
+| title | 是否显示标题占位图 | `boolean \| SkeletonTitleProps` | `true` |
+| loading | 为 true 时，显示占位图，反之则直接展示子组件 | `boolean` | `true` |
 | round | 为 true 时，段落和标题显示圆角 | `boolean` | `false` |
 
-**SkeletonButton Props**
+**SkeletonAvatarProps**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| size | 大小 | `'large' \| 'default' \| 'small' \| number` | `'large'` |
+| shape | 形状 | `'circle' \| 'square'` | `'circle'` |
+
+**SkeletonTitleProps**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| width | 标题宽度 | `string \| number` | - |
+
+**SkeletonParagraphProps**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| rows | 段落行数 | `number` | `3` (无头像时) / `2` (有头像时) |
+| width | 段落宽度，可传数组分别指定每行宽度 | `string \| number \| Array<string \| number>` | - |
+
+**Skeleton.Button Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
@@ -4667,13 +4935,33 @@ import { Skeleton, SkeletonButton, SkeletonInput } from 'ant-design-hmfw'
 | shape | 形状 | `'default' \| 'circle' \| 'round'` | `'default'` |
 | block | 将按钮宽度调整为其父宽度 | `boolean` | `false` |
 
-**SkeletonInput Props**
+**Skeleton.Input Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
 | size | 大小 | `'large' \| 'default' \| 'small'` | `'default'` |
 | block | 将输入框宽度调整为其父宽度 | `boolean` | `false` |
+
+**Skeleton.Avatar Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| active | 是否展示动画效果 | `boolean` | `false` |
+| size | 大小 | `'large' \| 'default' \| 'small' \| number` | `'default'` |
+| shape | 形状 | `'circle' \| 'square'` | `'circle'` |
+
+**Skeleton.Image Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| active | 是否展示动画效果 | `boolean` | `false` |
+
+**Skeleton.Node Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| active | 是否展示动画效果 | `boolean` | `false` |
 
 ### 示例
 
@@ -4810,8 +5098,11 @@ import { Space } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | size | 间距大小，数组形式表示 `[水平, 垂直]` | `'small' \| 'middle' \| 'large' \| number \| [number, number]` | `'small'` |
 | direction | 间距方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| vertical | `direction="vertical"` 的简写 | `boolean` | `false` |
 | align | 对齐方式 | `'start' \| 'end' \| 'center' \| 'baseline'` | - |
 | wrap | 是否自动换行，仅水平方向有效 | `boolean` | `false` |
+| separator | 设置分隔符 | `VNode \| string` | - |
+| split | `separator` 的别名（已废弃，请使用 `separator`） | `VNode \| string` | - |
 
 ### 示例
 
@@ -4909,7 +5200,7 @@ import { Spin } from 'ant-design-hmfw'
 
 导入：
 ```ts
-import { Steps } from 'ant-design-hmfw'
+import { Steps, ProgressIcon, PanelArrow } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -4919,23 +5210,41 @@ import { Steps } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | current | 指定当前步骤，从 0 开始记数 | `number` | `0` |
+| initial | 起始序号，从 0 开始记数 | `number` | `0` |
 | items | 配置选项 | `StepItem[]` | `[]` |
-| direction | 指定步骤条方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| direction | 指定步骤条方向（已废弃，请使用 orientation） | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| orientation | 指定步骤条方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | size | 指定大小 | `'default' \| 'small'` | `'default'` |
 | status | 指定当前步骤的状态 | `'wait' \| 'process' \| 'finish' \| 'error'` | `'process'` |
-| progressDot | 点状步骤条，可以自定义点的渲染 | `boolean \| function` | `false` |
-| labelPlacement | 指定标签放置位置 | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| type | 步骤条类型 | `'default' \| 'navigation' \| 'inline' \| 'panel' \| 'dot'` | `'default'` |
+| progressDot | 点状步骤条（已废弃，请使用 type="dot"） | `boolean \| function` | `false` |
+| labelPlacement | 指定标签放置位置（已废弃，请使用 titlePlacement） | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| titlePlacement | 指定标签放置位置 | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| variant | 步骤条样式变体 | `'filled' \| 'outlined'` | `'filled'` |
+| percent | 当前步骤的进度百分比（0-100） | `number` | - |
+| responsive | 是否响应式 | `boolean` | `true` |
+| ellipsis | 是否省略过长的标题和描述 | `boolean` | `false` |
+| offset | 内联型步骤条的偏移量 | `number` | `0` |
+| iconRender | 自定义图标渲染函数 | `(node, info) => VNode` | - |
 
 **StepItem**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 标题 | `string` | - |
-| description | 步骤的详情描述 | `string` | - |
-| subTitle | 子标题 | `string` | - |
+| title | 标题 | `string \| VNode` | - |
+| description | 步骤的详情描述（已废弃，请使用 content） | `string \| VNode` | - |
+| content | 步骤的详情描述 | `string \| VNode` | - |
+| subTitle | 子标题 | `string \| VNode` | - |
 | status | 指定状态 | `'wait' \| 'process' \| 'finish' \| 'error'` | - |
-| icon | 步骤图标 | `string` | - |
+| icon | 步骤图标 | `VNode` | - |
 | disabled | 禁用点击 | `boolean` | `false` |
+| onClick | 点击步骤时的回调 | `(e: MouseEvent) => void` | - |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| change | 点击切换步骤时触发 | `(current: number) => void` |
 
 ### 示例
 
@@ -4967,7 +5276,7 @@ const items = [
 </script>
 ```
 
-垂直步骤条 — 通过 `direction="vertical"` 设置垂直方向步骤条。
+垂直步骤条 — 通过 `direction="vertical"` 或 `orientation="vertical"` 设置垂直方向步骤条。
 
 ```vue
 <template>
@@ -5023,6 +5332,10 @@ import { Switch } from 'ant-design-hmfw'
 | size | 开关大小 | `'default' \| 'small'` | `'default'` |
 | checkedChildren | 选中时的内容 | `string \| VNode` | - |
 | unCheckedChildren | 非选中时的内容 | `string \| VNode` | - |
+| autoFocus | 组件自动获取焦点 | `boolean` | `false` |
+| id | 组件的 id | `string` | - |
+| title | 组件的 title 属性 | `string` | - |
+| tabIndex | 组件的 tab index | `number` | - |
 
 ### Events
 
@@ -5031,8 +5344,15 @@ import { Switch } from 'ant-design-hmfw'
 | update:checked | 变化时回调函数 | `(checked: boolean) => void` |
 | change | 变化时回调函数 | `(checked: boolean, event: MouseEvent) => void` |
 | click | 点击时回调函数 | `(checked: boolean, event: MouseEvent) => void` |
-| focus | 获取焦点时的回调 | `() => void` |
-| blur | 失去焦点时的回调 | `() => void` |
+| focus | 获取焦点时的回调 | `(event: FocusEvent) => void` |
+| blur | 失去焦点时的回调 | `(event: FocusEvent) => void` |
+
+### Slots
+
+| 插槽名 | 说明 |
+| --- | --- |
+| checkedChildren | 选中时的内容 |
+| unCheckedChildren | 非选中时的内容 |
 
 ### 示例
 
@@ -5193,6 +5513,117 @@ const columns = [
 
 ---
 
+## Tabs 标签页
+
+选项卡切换组件。
+
+**何时使用**：提供平级的区域将大块内容进行收纳和展现，保持界面整洁。
+
+导入：
+```ts
+import { Tabs } from 'ant-design-hmfw'
+```
+
+### Props
+
+**Tabs**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| activeKey(v-model) | 当前激活 tab 面板的 key | string | - |
+| defaultActiveKey | 初始化选中面板的 key，如果没有设置 activeKey | string | 第一个面板 |
+| type | 页签的基本样式，可选 `line`、`card`、`editable-card` 类型 | string | `line` |
+| size | 大小，提供 `large` 和 `small` 两种大小 | string | - |
+| tabPosition | 页签位置，可选值有 `top` `right` `bottom` `left` | string | `top` |
+| centered | 标签居中展示 | boolean | false |
+| items | 配置选项卡内容 | TabItem[] | [] |
+| animated | 是否使用动画切换 Tabs，可以是布尔值或对象 `{ inkBar: boolean, tabPane: boolean }` | boolean \| AnimatedConfig | true |
+| tabBarExtraContent | tab bar 上额外的元素 | VNode \| { left?: VNode, right?: VNode } | - |
+| tabBarGutter | tabs 之间的间隙 | number | - |
+| tabBarStyle | tab bar 的样式对象 | object | - |
+| hideAdd | 是否隐藏加号图标，在 `type="editable-card"` 时有效 | boolean | false |
+| addIcon | 自定义添加按钮图标 | VNode | - |
+| removeIcon | 自定义删除按钮图标 | VNode | - |
+| destroyInactiveTabPane | 被隐藏时是否销毁 DOM 结构 | boolean | false |
+
+**TabItem**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| key | 对应 activeKey | string | - |
+| label | 选项卡头显示文字 | string \| VNode | - |
+| children | 选项卡内容 | any | - |
+| disabled | 禁用某一项 | boolean | false |
+| closable | 是否显示关闭按钮，在 `type="editable-card"` 时有效 | boolean | true |
+| icon | 选项卡头显示图标 | VNode | - |
+| closeIcon | 自定义关闭图标，在 `type="editable-card"` 时有效 | VNode | - |
+| forceRender | 被隐藏时是否渲染 DOM 结构 | boolean | false |
+| destroyInactiveTabPane | 被隐藏时是否销毁 DOM 结构 | boolean | false |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| change | 切换面板的回调 | (activeKey: string) => void |
+| tabClick | tab 被点击的回调 | (key: string, event: MouseEvent) => void |
+| edit | 新增和删除页签的回调，在 `type="editable-card"` 时有效 | (targetKey: string \| MouseEvent, action: 'add' \| 'remove') => void |
+
+### 示例
+
+基本 — 默认选中第一项。
+
+```vue
+<template>
+  <Tabs :items="items" @change="onChange" />
+</template>
+
+<script setup lang="ts">
+import { Tabs } from '../../../components'
+
+const items = [
+  { key: '1', label: 'Tab 1', children: 'Content of Tab Pane 1' },
+  { key: '2', label: 'Tab 2', children: 'Content of Tab Pane 2' },
+  { key: '3', label: 'Tab 3', children: 'Content of Tab Pane 3' },
+]
+
+const onChange = (key: string) => {
+  console.log('Active tab:', key)
+}
+</script>
+```
+
+图标 — 有图标的标签。
+
+```vue
+<template>
+  <Tabs :items="items" />
+</template>
+
+<script setup lang="ts">
+import { h } from 'vue'
+import { Tabs, Icon } from '../../../components'
+import { AppleOutlined, AndroidOutlined } from '../../../components/icon/icons'
+
+const items = [
+  {
+    key: '1',
+    label: 'Tab 1',
+    icon: h(Icon, { component: AppleOutlined }),
+    children: 'Content of Tab 1',
+  },
+  {
+    key: '2',
+    label: 'Tab 2',
+    icon: h(Icon, { component: AndroidOutlined }),
+    children: 'Content of Tab 2',
+  },
+]
+</script>
+```
+
+
+---
+
 ## Tag 标签
 
 进行标记和分类的小标签。
@@ -5208,9 +5639,14 @@ import { Tag, CheckableTag } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| color | 标签色 | `string` | - |
-| closable | 标签是否可以关闭 | `boolean` | `false` |
+| color | 标签色（预设色或自定义色值） | `string` | - |
+| closable | 标签是否可以关闭，关闭后自动隐藏 | `boolean` | `false` |
+| closeIcon | 自定义关闭图标组件 | `Component` | - |
+| icon | 标签图标组件 | `Component` | - |
 | bordered | 是否有边框 | `boolean` | `true` |
+| href | 设置后标签渲染为 `<a>` 链接 | `string` | - |
+| target | 链接打开方式，配合 `href` | `string` | - |
+| disabled | 禁用状态 | `boolean` | `false` |
 
 **CheckableTag Props**
 
@@ -5222,8 +5658,7 @@ import { Tag, CheckableTag } from 'ant-design-hmfw'
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| close | 关闭时的回调 | `(e: MouseEvent) => void` |
-| click | 点击标签时的回调 | `(e: MouseEvent) => void` |
+| close | 关闭时的回调，调用 `e.preventDefault()` 可阻止自动隐藏 | `(e: MouseEvent) => void` |
 | change | 点击标签时触发的回调 | `(checked: boolean) => void` |
 
 ### 示例
@@ -5403,7 +5838,7 @@ const time3 = ref('')
 
 导入：
 ```ts
-import { Timeline } from 'ant-design-hmfw'
+import { Timeline, TimelineItem } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -5412,21 +5847,32 @@ import { Timeline } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| items | 选项配置 | `TimelineItem[]` | - |
-| pending | 指定最后一个幽灵节点是否存在或内容 | `boolean \| string` | `false` |
-| pendingDot | 当最后一个幽灵节点存在时，指定其时间图点 | `string \| slot` | - |
+| items | 选项配置 | `TimelineItemProps[]` | - |
+| mode | 通过设置 mode 可以改变时间轴和内容的相对位置 | `'left' \| 'right' \| 'start' \| 'end' \| 'alternate'` | `'left'` |
+| orientation | 设置时间轴的方向 | `'vertical' \| 'horizontal'` | `'vertical'` |
+| variant | 设置样式变体 | `'outlined' \| 'filled'` | `'outlined'` |
 | reverse | 节点排序 | `boolean` | `false` |
-| mode | 通过设置 mode 可以改变时间轴和内容的相对位置 | `'left' \| 'alternate' \| 'right'` | `'left'` |
+| titleSpan | 设置标题占比空间（到 dot 中心点距离） | `number \| string` | - |
+| pending | 指定最后一个幽灵节点是否存在或内容（已废弃，建议使用 items 中的 loading） | `boolean \| string \| VNode` | - |
+| pendingDot | 当最后一个幽灵节点存在时，指定其时间图点（已废弃） | `string \| VNode` | - |
 
-**TimelineItem**
+**TimelineItemProps**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| label | 设置标签 | `string` | - |
-| children | 内容 | `string` | - |
+| title | 设置标题 | `string \| VNode` | - |
+| content | 设置内容 | `string \| VNode` | - |
+| icon | 自定义节点图标 | `string \| VNode` | - |
+| placement | 自定义节点位置 | `'start' \| 'end'` | - |
+| loading | 设置加载状态 | `boolean` | `false` |
 | color | 指定圆圈颜色 | `'blue' \| 'red' \| 'green' \| 'gray' \| string` | `'blue'` |
-| dot | 自定义时间轴点 | `string \| slot` | - |
-| position | 自定义节点位置 | `'left' \| 'right'` | - |
+| className | 自定义类名 | `string` | - |
+| style | 自定义样式 | `CSSProperties` | - |
+| key | 唯一标识 | `string \| number` | - |
+| label | 设置标签（已废弃，使用 title） | `string \| VNode` | - |
+| children | 内容（已废弃，使用 content） | `unknown` | - |
+| dot | 自定义时间轴点（已废弃，使用 icon） | `string \| VNode` | - |
+| position | 自定义节点位置（已废弃，使用 placement） | `'left' \| 'right'` | - |
 
 ### 示例
 
@@ -5441,10 +5887,10 @@ import { Timeline } from 'ant-design-hmfw'
 import { Timeline } from 'ant-design-hmfw'
 
 const items = [
-  { children: '创建服务现场 2015-09-01' },
-  { children: '初步排除网络异常 2015-09-01' },
-  { children: '技术测试异常 2015-09-01' },
-  { children: '网络异常正在修复 2015-09-01' },
+  { content: '创建服务现场 2015-09-01' },
+  { content: '初步排除网络异常 2015-09-01' },
+  { content: '技术测试异常 2015-09-01' },
+  { content: '网络异常正在修复 2015-09-01' },
 ]
 </script>
 ```
@@ -5460,10 +5906,10 @@ const items = [
 import { Timeline } from 'ant-design-hmfw'
 
 const items = [
-  { children: '创建服务现场 2015-09-01' },
-  { children: '初步排除网络异常 2015-09-01', position: 'right' },
-  { children: '技术测试异常 2015-09-01' },
-  { children: '网络异常正在修复 2015-09-01', position: 'right' },
+  { content: '创建服务现场 2015-09-01' },
+  { content: '初步排除网络异常 2015-09-01' },
+  { content: '技术测试异常 2015-09-01' },
+  { content: '网络异常正在修复 2015-09-01' },
 ]
 </script>
 ```
@@ -5927,23 +6373,16 @@ const treeData: TreeSelectNode[] = [
 
 导入：
 ```ts
-import { Text, Title, Paragraph } from 'ant-design-hmfw'
+import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'
 ```
 
 ### Props
 
-**Title Props**
+**通用 Props（Text / Title / Paragraph / Link 共享）**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| level | 标题级别 | `1 \| 2 \| 3 \| 4 \| 5` | `1` |
-| type | 文本类型 | `'default' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'default'` |
-
-**Text Props**
-
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| type | 文本类型 | `'default' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'default'` |
+| type | 文本类型 | `'secondary' \| 'success' \| 'warning' \| 'danger'` | - |
 | disabled | 禁用状态 | `boolean` | `false` |
 | mark | 标记样式 | `boolean` | `false` |
 | code | 代码样式 | `boolean` | `false` |
@@ -5952,15 +6391,21 @@ import { Text, Title, Paragraph } from 'ant-design-hmfw'
 | delete | 删除线 | `boolean` | `false` |
 | strong | 加粗 | `boolean` | `false` |
 | italic | 斜体 | `boolean` | `false` |
-| copyable | 是否可复制 | `boolean` | `false` |
-| ellipsis | 省略配置 | `boolean \| { rows?: number }` | `false` |
+| copyable | 是否可复制，对象形式 `{ text?, onCopy? }` | `boolean \| CopyableConfig` | `false` |
+| ellipsis | 单行省略 | `boolean` | `false` |
 
-**Paragraph Props**
+**Title Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| copyable | 是否可复制 | `boolean` | `false` |
-| ellipsis | 省略配置 | `boolean \| { rows?: number }` | `false` |
+| level | 标题级别 | `1 \| 2 \| 3 \| 4 \| 5` | `1` |
+
+**Link Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| href | 链接地址 | `string` | - |
+| target | 链接打开方式 | `string` | - |
 
 ### 示例
 
@@ -6157,14 +6602,26 @@ import { Watermark } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | content | 水印文字内容 | `string \| string[]` | - |
-| font | 文字样式 | `{ color?: string, fontSize?: number, fontWeight?: string \| number, fontFamily?: string }` | - |
-| rotate | 水印绘制时，旋转的角度 | `number` | `-22` |
+| font | 文字样式 | `WatermarkFont` | - |
+| rotate | 水印绘制时，旋转的角度，单位 `°` | `number` | `-22` |
 | gap | 水印之间的间距 | `[number, number]` | `[100, 100]` |
-| offset | 水印距离容器左上角的偏移量 | `[number, number]` | - |
-| zIndex | 追加的水印元素的 z-index | `number` | `9` |
-| image | 图片源，建议使用 2x 或 3x 图，优先级高于文字 | `string` | - |
-| width | 水印的宽度 | `number` | `120` |
-| height | 水印的高度 | `number` | `64` |
+| offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | `[number, number]` | `[gap[0]/2, gap[1]/2]` |
+| zIndex | 追加的水印元素的 z-index | `number` | `999` |
+| image | 图片源，建议使用 2x 或 3x 图，优先级高于文字（支持 base64 格式） | `string` | - |
+| width | 水印的宽度，`content` 的默认值为自身的宽度 | `number` | `120` |
+| height | 水印的高度，`content` 的默认值为自身的高度 | `number` | `64` |
+| inherit | 是否将水印传导给弹出组件如 Modal、Drawer | `boolean` | `true` |
+
+**WatermarkFont**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| color | 字体颜色 | `string` | `rgba(0, 0, 0, 0.15)` |
+| fontSize | 字体大小 | `number \| string` | `16` |
+| fontWeight | 字体粗细 | `'normal' \| 'lighter' \| 'bold' \| 'bolder' \| number` | `'normal'` |
+| fontStyle | 字体样式 | `'none' \| 'normal' \| 'italic' \| 'oblique'` | `'normal'` |
+| fontFamily | 字体类型 | `string` | `'sans-serif'` |
+| textAlign | 文本对齐方向 | `CanvasTextAlign` | `'center'` |
 
 ### 示例
 

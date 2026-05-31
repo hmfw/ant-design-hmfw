@@ -66,6 +66,7 @@ import 'ant-design-hmfw/style.css'
 - [Steps 步骤条](https://hmfw.github.io/ant-design-hmfw/components/steps): 引导用户按照流程完成任务的导航条。
 - [Switch 开关](https://hmfw.github.io/ant-design-hmfw/components/switch): 开关选择器。
 - [Table 表格](https://hmfw.github.io/ant-design-hmfw/components/table): 展示行列数据。
+- [Tabs 标签页](https://hmfw.github.io/ant-design-hmfw/components/tabs): 选项卡切换组件。
 - [Tag 标签](https://hmfw.github.io/ant-design-hmfw/components/tag): 进行标记和分类的小标签。
 - [TimePicker 时间选择框](https://hmfw.github.io/ant-design-hmfw/components/time-picker): 输入或选择时间的控件。
 - [Timeline 时间轴](https://hmfw.github.io/ant-design-hmfw/components/timeline): 垂直展示的时间流信息。
