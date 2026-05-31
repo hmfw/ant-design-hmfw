@@ -12,7 +12,7 @@ const componentRoutes = Object.entries(demoMds)
   }))
 
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/ant-design-hmfw/'),
   routes: [
     {
       path: '/',
@@ -34,3 +34,10 @@ export const router = createRouter({
     return { top: 0 }
   },
 })
+
+// 恢复从 404.html 重定向过来的路径
+const redirect = sessionStorage.getItem('redirect')
+if (redirect) {
+  sessionStorage.removeItem('redirect')
+  router.replace(redirect.replace('/ant-design-hmfw', ''))
+}

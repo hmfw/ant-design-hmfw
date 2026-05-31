@@ -55,6 +55,9 @@ jobs:
       - name: Build Docs
         run: pnpm build:docs
 
+      - name: Add .nojekyll
+        run: touch docs-dist/.nojekyll
+
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
