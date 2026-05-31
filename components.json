@@ -5664,60 +5664,130 @@
       "import": "import { message } from 'ant-design-hmfw'",
       "props": [
         {
-          "section": "message 方法",
-          "name": "`(content: string, duration?: number, onClose?: () => void) => Promise`",
-          "description": "成功提示",
-          "type": "",
-          "default": ""
-        },
-        {
-          "section": "message 方法",
-          "name": "`(content: string, duration?: number, onClose?: () => void) => Promise`",
-          "description": "错误提示",
-          "type": "",
-          "default": ""
-        },
-        {
-          "section": "message 方法",
-          "name": "`(content: string, duration?: number, onClose?: () => void) => Promise`",
-          "description": "警告提示",
-          "type": "",
-          "default": ""
-        },
-        {
-          "section": "message 方法",
-          "name": "`(content: string, duration?: number, onClose?: () => void) => Promise`",
-          "description": "普通提示",
-          "type": "",
-          "default": ""
-        },
-        {
-          "section": "message 方法",
-          "name": "`(content: string, duration?: number, onClose?: () => void) => Promise`",
-          "description": "加载中提示",
-          "type": "",
-          "default": ""
-        },
-        {
-          "section": "参数说明",
+          "section": "",
           "name": "content",
           "description": "提示内容",
-          "type": "`string`",
+          "type": "`string | number | VNode | () => VNodeChild | config`",
           "default": "-"
         },
         {
-          "section": "参数说明",
+          "section": "",
+          "name": "duration",
+          "description": "自动关闭的延时，单位秒。设为 0 时不自动关闭。也可直接传入 `onClose` 回调",
+          "type": "`number | () => void`",
+          "default": "`3`"
+        },
+        {
+          "section": "",
+          "name": "onClose",
+          "description": "关闭时触发的回调函数",
+          "type": "`() => void`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
+          "name": "content",
+          "description": "提示内容",
+          "type": "`string | number | VNode | () => VNodeChild`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
           "name": "duration",
           "description": "自动关闭的延时，单位秒。设为 0 时不自动关闭",
           "type": "`number`",
           "default": "`3`"
         },
         {
-          "section": "参数说明",
+          "section": "以配置对象调用",
+          "name": "type",
+          "description": "提示类型",
+          "type": "`'info' | 'success' | 'error' | 'warning' | 'loading'`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
+          "name": "icon",
+          "description": "自定义图标",
+          "type": "`VNode | () => VNodeChild`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
+          "name": "key",
+          "description": "当前提示的唯一标识，相同 key 会更新已有提示",
+          "type": "`string | number`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
+          "name": "style",
+          "description": "自定义内联样式",
+          "type": "`CSSProperties`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
+          "name": "className",
+          "description": "自定义 CSS class",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
+          "name": "pauseOnHover",
+          "description": "悬停时是否暂停计时器",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "以配置对象调用",
+          "name": "onClick",
+          "description": "点击时触发的回调函数",
+          "type": "`(e: MouseEvent) => void`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
           "name": "onClose",
           "description": "关闭时触发的回调函数",
           "type": "`() => void`",
           "default": "-"
+        },
+        {
+          "section": "全局方法",
+          "name": "top",
+          "description": "消息距离顶部的位置",
+          "type": "`string | number`",
+          "default": "`8`"
+        },
+        {
+          "section": "全局方法",
+          "name": "duration",
+          "description": "默认自动关闭延时，单位秒",
+          "type": "`number`",
+          "default": "`3`"
+        },
+        {
+          "section": "全局方法",
+          "name": "maxCount",
+          "description": "最大显示数，超过限制时关闭最早的提示",
+          "type": "`number`",
+          "default": "-"
+        },
+        {
+          "section": "全局方法",
+          "name": "getContainer",
+          "description": "配置渲染节点的输出位置",
+          "type": "`() => HTMLElement`",
+          "default": "`() => document.body`"
+        },
+        {
+          "section": "全局方法",
+          "name": "pauseOnHover",
+          "description": "悬停时是否暂停计时器",
+          "type": "`boolean`",
+          "default": "`true`"
         }
       ],
       "events": [],
@@ -5726,12 +5796,22 @@
         {
           "title": "基础用法",
           "description": "信息提醒反馈。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap;\">\n    <button @click=\"showSuccess\">成功</button>\n    <button @click=\"showError\">错误</button>\n    <button @click=\"showWarning\">警告</button>\n    <button @click=\"showInfo\">信息</button>\n    <button @click=\"showLoading\">加载中</button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { message } from 'ant-design-hmfw'\n\nfunction showSuccess() {\n  message.success('操作成功！')\n}\n\nfunction showError() {\n  message.error('操作失败，请重试。')\n}\n\nfunction showWarning() {\n  message.warning('请注意此操作的风险。')\n}\n\nfunction showInfo() {\n  message.info('这是一条普通提示信息。')\n}\n\nfunction showLoading() {\n  message.loading('正在加载中...')\n}\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap;\">\n    <Button @click=\"showSuccess\">成功</Button>\n    <Button @click=\"showError\">错误</Button>\n    <Button @click=\"showWarning\">警告</Button>\n    <Button @click=\"showInfo\">信息</Button>\n    <Button @click=\"showLoading\">加载中</Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { message, Button } from 'ant-design-hmfw'\n\nfunction showSuccess() {\n  message.success('操作成功！')\n}\n\nfunction showError() {\n  message.error('操作失败，请重试。')\n}\n\nfunction showWarning() {\n  message.warning('请注意此操作的风险。')\n}\n\nfunction showInfo() {\n  message.info('这是一条普通提示信息。')\n}\n\nfunction showLoading() {\n  message.loading('正在加载中...')\n}\n</script>"
         },
         {
           "title": "自定义时长",
-          "description": "自定义消息显示时长，默认 3 秒。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 8px;\">\n    <button @click=\"showLong\">显示 10 秒</button>\n    <button @click=\"showWithCallback\">关闭后回调</button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { message } from 'ant-design-hmfw'\n\nfunction showLong() {\n  message.success('这条消息将显示 10 秒', 10)\n}\n\nfunction showWithCallback() {\n  message.info('关闭后将触发回调', 2).then(() => {\n    message.success('消息已关闭！')\n  })\n}\n</script>"
+          "description": "自定义消息显示时长，默认 3 秒。`duration` 设为 `0` 时不自动关闭，方法返回值可作为函数调用以手动关闭。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 8px;\">\n    <Button @click=\"showLong\">显示 10 秒</Button>\n    <Button @click=\"showSticky\">不自动关闭</Button>\n    <Button @click=\"showWithCallback\">关闭后回调</Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { message, Button } from 'ant-design-hmfw'\n\nfunction showLong() {\n  message.success('这条消息将显示 10 秒', 10)\n}\n\nfunction showSticky() {\n  // duration 设为 0，不会自动关闭，返回值可调用以手动关闭\n  const close = message.warning('点我手动关闭', 0)\n  setTimeout(close, 5000)\n}\n\nfunction showWithCallback() {\n  message.info('关闭后将触发回调', 2).then(() => {\n    message.success('消息已关闭！')\n  })\n}\n</script>"
+        },
+        {
+          "title": "更新消息内容",
+          "description": "通过相同的 `key` 更新已有消息内容，常用于异步加载场景，避免堆叠多条提示。",
+          "code": "<template>\n  <Button @click=\"openMessage\">开始加载</Button>\n</template>\n\n<script setup lang=\"ts\">\nimport { message, Button } from 'ant-design-hmfw'\n\nfunction openMessage() {\n  const key = 'updatable'\n  message.loading({ content: '加载中...', key, duration: 0 })\n  setTimeout(() => {\n    // 相同 key：原地更新内容与类型，而非堆叠新提示\n    message.success({ content: '加载完成！', key, duration: 2 })\n  }, 1500)\n}\n</script>"
+        },
+        {
+          "title": "全局配置",
+          "description": "通过 `message.config` 配置最大显示数量、距顶部距离等全局参数。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap;\">\n    <Button @click=\"setConfig\">设置 maxCount = 3 / top = 100</Button>\n    <Button @click=\"spam\">连续弹出 5 条</Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { message, Button } from 'ant-design-hmfw'\n\nfunction setConfig() {\n  // 全局配置：最多同时显示 3 条，距顶部 100px\n  message.config({ maxCount: 3, top: 100 })\n  message.info('已应用全局配置')\n}\n\nfunction spam() {\n  for (let i = 1; i <= 5; i++) {\n    message.info(`第 ${i} 条消息`)\n  }\n}\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/message"

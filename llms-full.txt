@@ -3751,23 +3751,36 @@ import { message } from 'ant-design-hmfw'
 
 ### Props
 
-**message 方法**
-
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `(content: string, duration?: number, onClose?: () => void) => Promise` | 成功提示 |  |  |
-| `(content: string, duration?: number, onClose?: () => void) => Promise` | 错误提示 |  |  |
-| `(content: string, duration?: number, onClose?: () => void) => Promise` | 警告提示 |  |  |
-| `(content: string, duration?: number, onClose?: () => void) => Promise` | 普通提示 |  |  |
-| `(content: string, duration?: number, onClose?: () => void) => Promise` | 加载中提示 |  |  |
-
-**参数说明**
-
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| content | 提示内容 | `string` | - |
-| duration | 自动关闭的延时，单位秒。设为 0 时不自动关闭 | `number` | `3` |
+| content | 提示内容 | `string \| number \| VNode \| () => VNodeChild \| config` | - |
+| duration | 自动关闭的延时，单位秒。设为 0 时不自动关闭。也可直接传入 `onClose` 回调 | `number \| () => void` | `3` |
 | onClose | 关闭时触发的回调函数 | `() => void` | - |
+
+**以配置对象调用**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| content | 提示内容 | `string \| number \| VNode \| () => VNodeChild` | - |
+| duration | 自动关闭的延时，单位秒。设为 0 时不自动关闭 | `number` | `3` |
+| type | 提示类型 | `'info' \| 'success' \| 'error' \| 'warning' \| 'loading'` | - |
+| icon | 自定义图标 | `VNode \| () => VNodeChild` | - |
+| key | 当前提示的唯一标识，相同 key 会更新已有提示 | `string \| number` | - |
+| style | 自定义内联样式 | `CSSProperties` | - |
+| className | 自定义 CSS class | `string` | - |
+| pauseOnHover | 悬停时是否暂停计时器 | `boolean` | `true` |
+| onClick | 点击时触发的回调函数 | `(e: MouseEvent) => void` | - |
+| onClose | 关闭时触发的回调函数 | `() => void` | - |
+
+**全局方法**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| top | 消息距离顶部的位置 | `string \| number` | `8` |
+| duration | 默认自动关闭延时，单位秒 | `number` | `3` |
+| maxCount | 最大显示数，超过限制时关闭最早的提示 | `number` | - |
+| getContainer | 配置渲染节点的输出位置 | `() => HTMLElement` | `() => document.body` |
+| pauseOnHover | 悬停时是否暂停计时器 | `boolean` | `true` |
 
 ### 示例
 
@@ -3776,16 +3789,16 @@ import { message } from 'ant-design-hmfw'
 ```vue
 <template>
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <button @click="showSuccess">成功</button>
-    <button @click="showError">错误</button>
-    <button @click="showWarning">警告</button>
-    <button @click="showInfo">信息</button>
-    <button @click="showLoading">加载中</button>
+    <Button @click="showSuccess">成功</Button>
+    <Button @click="showError">错误</Button>
+    <Button @click="showWarning">警告</Button>
+    <Button @click="showInfo">信息</Button>
+    <Button @click="showLoading">加载中</Button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { message } from 'ant-design-hmfw'
+import { message, Button } from 'ant-design-hmfw'
 
 function showSuccess() {
   message.success('操作成功！')
@@ -3809,21 +3822,28 @@ function showLoading() {
 </script>
 ```
 
-自定义时长 — 自定义消息显示时长，默认 3 秒。
+自定义时长 — 自定义消息显示时长，默认 3 秒。`duration` 设为 `0` 时不自动关闭，方法返回值可作为函数调用以手动关闭。
 
 ```vue
 <template>
   <div style="display: flex; gap: 8px;">
-    <button @click="showLong">显示 10 秒</button>
-    <button @click="showWithCallback">关闭后回调</button>
+    <Button @click="showLong">显示 10 秒</Button>
+    <Button @click="showSticky">不自动关闭</Button>
+    <Button @click="showWithCallback">关闭后回调</Button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { message } from 'ant-design-hmfw'
+import { message, Button } from 'ant-design-hmfw'
 
 function showLong() {
   message.success('这条消息将显示 10 秒', 10)
+}
+
+function showSticky() {
+  // duration 设为 0，不会自动关闭，返回值可调用以手动关闭
+  const close = message.warning('点我手动关闭', 0)
+  setTimeout(close, 5000)
 }
 
 function showWithCallback() {
