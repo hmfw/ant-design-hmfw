@@ -2356,25 +2356,36 @@ import { Form, FormItem, useForm } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | model | 表单数据对象 | `object` | - |
-| rules | 表单验证规则 | `Record<string, FormRule[]>` | - |
+| rules | 表单验证规则 | `Record<string, FormRule \| FormRule[]>` | - |
 | layout | 表单布局 | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` |
 | labelCol | label 标签布局，同 Col 组件 | `{ span?: number; offset?: number }` | - |
-| wrapperCol | 需要为输入控件设置布局样式时，使用该属性，用法同 labelCol | `{ span?: number; offset?: number }` | - |
+| wrapperCol | 输入控件布局样式 | `{ span?: number; offset?: number }` | - |
+| labelAlign | label 文本对齐方式 | `'left' \| 'right'` | `'right'` |
+| colon | 是否显示 label 后面的冒号（仅 horizontal 布局有效） | `boolean` | `true` |
 | disabled | 设置表单组件禁用，仅对 ant-design-hmfw 组件有效 | `boolean` | `false` |
 | size | 设置字段组件的尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| validateTrigger | 统一设置字段触发验证的时机 | `'blur' \| 'change' \| ('blur' \| 'change')[]` | `'change'` |
+| requiredMark | 必选样式：`true` 显示星号，`false` 不显示，`'optional'` 反向标注「可选」 | `boolean \| 'optional'` | `true` |
+| scrollToFirstError | 提交失败自动滚动到第一个错误字段 | `boolean` | `false` |
 
 **FormItem Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | label | label 标签的文本 | `string` | - |
-| name | 字段名，支持数组 | `string \| string[]` | - |
-| rules | 校验规则，设置字段的校验逻辑 | `FormRule[]` | - |
+| name | 字段名，支持数组（嵌套字段） | `string \| number \| (string \| number)[]` | - |
+| rules | 校验规则，设置字段的校验逻辑 | `FormRule \| FormRule[]` | - |
 | required | 必填样式设置。如不设置，则会根据校验规则自动生成 | `boolean` | `false` |
-| validateStatus | 校验状态，如不设置，则会根据校验规则自动生成 | `'success' \| 'warning' \| 'error' \| 'validating'` | - |
+| validateStatus | 校验状态 | `'success' \| 'warning' \| 'error' \| 'validating' \| ''` | - |
 | help | 提示信息，如不设置，则会根据校验规则自动生成 | `string` | - |
-| labelCol | label 标签布局，同 Col 组件，优先级高于 Form 的 labelCol | `{ span?: number; offset?: number }` | - |
+| extra | 额外的提示信息 | `string` | - |
+| labelCol | label 标签布局，优先级高于 Form 的 labelCol | `{ span?: number; offset?: number }` | - |
 | wrapperCol | 输入控件布局样式，优先级高于 Form 的 wrapperCol | `{ span?: number; offset?: number }` | - |
+| validateTrigger | 设置字段校验的时机 | `'blur' \| 'change' \| ('blur' \| 'change')[]` | 继承自 Form |
+| tooltip | 配置提示信息（鼠标悬停 ⓘ 图标显示） | `string` | - |
+| noStyle | 为 true 时不带样式，作为纯字段控件使用 | `boolean` | `false` |
+| hidden | 是否隐藏字段（依然会收集和校验字段） | `boolean` | `false` |
+| colon | 配合 label 属性，覆盖 Form 的 colon | `boolean` | 继承自 Form |
 
 **FormRule**
 
@@ -2392,9 +2403,20 @@ import { Form, FormItem, useForm } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `(nameList?: string[]) => Promise<void>` | 触发表单验证 |  |  |
-| `(nameList?: string[]) => void` | 重置一组字段到初始值 |  |  |
-| `(nameList?: string[]) => void` | 清理某个字段的表单验证信息 |  |  |
+| `(nameList?: string[]) => Promise<values>` | 触发表单验证；成功 resolve 模型，失败 reject `{ values, errorFields }` |  |  |
+| `(nameList?: string[]) => Promise<values>` | `validate` 的别名（AntD 一致） |  |  |
+| `(nameList?: string[]) => void` | 清理某些字段的校验信息 |  |  |
+| `() => void` | 重置一组字段的校验信息 |  |  |
+| `() => void` | 触发表单提交，效果等同 `<button type="submit">` |  |  |
+| `() => object` | 取当前表单全部字段值 |  |  |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| finish | 提交表单且数据验证成功后触发 | `(values) => void` |
+| finishFailed | 提交表单且数据验证失败后触发 | `({ values, errorFields }) => void` |
+| valuesChange | 字段值更新时触发（需在控件中显式调用 ctx.notifyValueChange，详见说明） | `(changedValues, allValues) => void` |
 
 ### Slots
 
@@ -3808,27 +3830,60 @@ import { Modal } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | open (v-model) | 对话框是否可见 | `boolean` | `false` |
-| title | 标题 | `string \| slot` | - |
+| defaultOpen | 非受控初始可见状态 | `boolean` | `false` |
+| title | 标题 | `string \| number \| VNode \| () => VNode \| slot` | - |
 | width | 宽度 | `number \| string` | `520` |
-| centered | 垂直居中展示 Modal | `boolean` | `false` |
-| closable | 是否显示右上角的关闭按钮 | `boolean` | `true` |
+| centered | 垂直居中展示 | `boolean` | `false` |
+| closable | 是否显示右上角关闭按钮 | `boolean` | `true` |
+| closeIcon | 自定义关闭图标 | `IconComponent` | `CloseOutlined` |
 | mask | 是否展示遮罩 | `boolean` | `true` |
-| maskClosable | 点击蒙层是否允许关闭 | `boolean` | `true` |
-| footer | 底部内容，当不需要默认底部按钮时，可以设为 null | `string \| slot \| null` | - |
-| okText | 确认按钮文字 | `string` | `'确定'` |
-| cancelText | 取消按钮文字 | `string` | `'取消'` |
-| okType | 确认按钮类型 | `string` | `'primary'` |
-| confirmLoading | 确定按钮 loading | `boolean` | `false` |
-| destroyOnClose | 关闭时销毁 Modal 里的子元素 | `boolean` | `false` |
+| maskClosable | 点击遮罩是否允许关闭 | `boolean` | `true` |
+| keyboard | 是否支持 Esc 键关闭 | `boolean` | `true` |
+| footer | 底部内容；`null` / `false` 隐藏 | `boolean \| null \| slot` | `true` |
+| okText | 确认按钮文字 | `string` | locale.okText |
+| cancelText | 取消按钮文字 | `string` | locale.cancelText |
+| okType | 确认按钮类型，支持 `'danger'` 简写 | `LegacyButtonType` | `'primary'` |
+| okButtonProps | 透传到 OK Button 的 props | `ButtonProps` | - |
+| cancelButtonProps | 透传到 Cancel Button 的 props | `ButtonProps` | - |
+| confirmLoading | 确定按钮 loading；同时阻止取消/Esc/遮罩关闭 | `boolean` | `false` |
+| loading | 整个对话框 body 显示骨架屏 | `boolean` | `false` |
+| destroyOnHidden | 关闭后销毁 body 内的子元素（5.25+ 命名） | `boolean` | `false` |
+| destroyOnClose | `destroyOnHidden` 的兼容别名 | `boolean` | `false` |
+| forceRender | 强制渲染对话框 | `boolean` | `false` |
+| zIndex | 层级 | `number` | `1000` |
+| wrapClassName | 应用到包裹层 `.hmfw-modal-wrap` 的 class | `string` | - |
+| rootClassName | 应用到根元素 `.hmfw-modal-root` 的 class | `string` | - |
+| focusTriggerAfterClose | 关闭后是否将焦点还给打开前的元素 | `boolean` | `true` |
+| bodyStyle | body 内联样式 | `CSSProperties` | - |
+| maskStyle | mask 内联样式 | `CSSProperties` | - |
+
+**静态方法**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| title | 标题 | `string \| number \| VNode \| () => VNode` | - |
+| content | 内容 | `string \| number \| VNode \| () => VNode` | - |
+| icon | 自定义图标，传 `null` 隐藏 | `IconComponent \| null` | 按 `type` 自动选择 |
+| type | 类型；决定默认图标和 `okCancel` 默认值 | `'info' \| 'success' \| 'error' \| 'warning' \| 'confirm'` | `'confirm'` |
+| okCancel | 是否显示取消按钮（默认仅 `confirm` 显示） | `boolean` | - |
+| okText / cancelText / okType | 同 Modal Props | - | - |
+| okButtonProps / cancelButtonProps | 同 Modal Props | - | - |
+| centered / width / mask / maskClosable / keyboard / closable / zIndex | 同 Modal Props | - | - |
+| className | 应用到 `.hmfw-modal-root` 的 class | `string` | - |
+| wrapClassName | 应用到 `.hmfw-modal-wrap` 的 class | `string` | - |
+| onOk | 点击 OK；返回 Promise 时按钮 loading 直到 resolve | `() => any \| Promise<any>` | - |
+| onCancel | 点击 Cancel | `() => void` | - |
+| afterClose | 销毁后回调 | `() => void` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | update:open | 可见状态变化时的回调 | `(open: boolean) => void` |
-| ok | 点击确定回调 | `(e: MouseEvent) => void` |
-| cancel | 点击遮罩层或右上角叉或取消按钮的回调 | `(e: MouseEvent) => void` |
-| afterClose | Modal 完全关闭后的回调 | `() => void` |
+| ok | 点击确定按钮 | `(e: MouseEvent) => void` |
+| cancel | 点击遮罩 / 关闭按钮 / 取消按钮 / Esc 时触发 | `(e?: MouseEvent \| KeyboardEvent) => void` |
+| afterClose | 关闭动画结束后触发 | `() => void` |
+| afterOpenChange | 显示/隐藏切换的动画结束后触发 | `(open: boolean) => void` |
 
 ### 示例
 
@@ -4122,20 +4177,39 @@ import { Popconfirm } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 确认框标题 | `string` | - |
-| description | 确认框描述 | `string` | - |
-| okText | 确认按钮文字 | `string` | `'确定'` |
-| cancelText | 取消按钮文字 | `string` | `'取消'` |
-| okType | 确认按钮类型 | `string` | `'primary'` |
-| placement | 气泡框位置 | `'top' \| 'left' \| 'right' \| 'bottom' \| 'topLeft' \| 'topRight' \| 'bottomLeft' \| 'bottomRight' \| 'leftTop' \| 'leftBottom' \| 'rightTop' \| 'rightBottom'` | `'top'` |
-| disabled | 点击 Popconfirm 子元素是否弹出气泡确认框 | `boolean` | `false` |
+| title | 确认框标题（空值时不渲染浮层） | `string \| number \| VNode \| () => VNode \| slot` | - |
+| description | 确认框描述 | `string \| number \| VNode \| () => VNode \| slot` | - |
+| icon | 提示图标，slot 优先级高于 prop | `string \| VNode \| () => VNode \| slot` | `'⚠'` |
+| okText | 确认按钮文字 | `string` | locale 默认值 |
+| cancelText | 取消按钮文字 | `string` | locale 默认值 |
+| okType | 确认按钮类型，`'danger'` 是 `primary + danger` 的简写 | `ButtonType \| 'danger'` | `'primary'` |
+| okButtonProps | 确认按钮的额外 props（loading/disabled 等） | `ButtonProps` | - |
+| cancelButtonProps | 取消按钮的额外 props | `ButtonProps` | - |
+| showCancel | 是否显示取消按钮 | `boolean` | `true` |
+| trigger | 触发行为，可设单值或数组 | `'hover' \| 'click' \| 'focus' \| 'contextMenu'` | `'click'` |
+| placement | 气泡框位置，溢出视口时自动翻转 | 12 个方向（同 Tooltip） | `'top'` |
+| open (v-model) | 用于手动控制浮层显隐 | `boolean` | - |
+| defaultOpen | 默认是否显示（非受控） | `boolean` | `false` |
+| disabled | 禁用，禁用时点击触发器不会弹出 | `boolean` | `false` |
+| arrow | 是否显示箭头，可对象配置 | `boolean \| { pointAtCenter?: boolean }` | `true` |
+| mouseEnterDelay | 鼠标移入延时显示（trigger=hover），单位秒 | `number` | `0.1` |
+| mouseLeaveDelay | 鼠标移出延时隐藏（trigger=hover），单位秒 | `number` | `0.1` |
+| autoAdjustOverflow | 浮层超出视口时自动翻转方向 | `boolean` | `true` |
+| zIndex | 自定义浮层 z-index | `number` | `1070` |
+| destroyOnHidden | 隐藏时销毁浮层 DOM | `boolean` | `false` |
+| getPopupContainer | 自定义浮层挂载容器（默认 `body`） | `(triggerNode: HTMLElement) => HTMLElement` | - |
+| overlayStyle | 卡片外层样式 | `Record<string, string>` | - |
+| overlayInnerStyle | 卡片内层样式 | `Record<string, string>` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| confirm | 点击确认的回调 | `(e: MouseEvent) => void` |
-| cancel | 点击取消的回调 | `(e: MouseEvent) => void` |
+| confirm | 点击确认的回调（携带 MouseEvent） | `(e: MouseEvent) => void` |
+| cancel | 点击取消的回调（携带 MouseEvent） | `(e: MouseEvent) => void` |
+| update:open | 显示隐藏的回调（v-model） | `(open: boolean) => void` |
+| openChange | 显示隐藏的回调 | `(open: boolean) => void` |
+| afterOpenChange | 浮层动画结束时触发 | `(open: boolean) => void` |
 
 ### 示例
 
@@ -4209,19 +4283,31 @@ import { Popover } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 卡片标题 | `string \| slot` | - |
-| content | 卡片内容 | `string \| slot` | - |
-| trigger | 触发行为 | `'hover' \| 'click' \| 'focus'` | `'hover'` |
-| placement | 气泡框位置 | `'top' \| 'left' \| 'right' \| 'bottom' \| 'topLeft' \| 'topRight' \| 'bottomLeft' \| 'bottomRight' \| 'leftTop' \| 'leftBottom' \| 'rightTop' \| 'rightBottom'` | `'top'` |
+| title | 卡片标题（空值时不渲染浮层） | `string \| number \| VNode \| () => VNode \| slot` | - |
+| content | 卡片内容（与 title 同时为空时不渲染浮层） | `string \| number \| VNode \| () => VNode \| slot` | - |
+| trigger | 触发行为 | `'hover' \| 'click' \| 'focus' \| 'contextMenu'` | `'hover'` |
+| placement | 气泡框位置，溢出视口时自动翻转 | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight' \| 'left' \| 'leftTop' \| 'leftBottom' \| 'right' \| 'rightTop' \| 'rightBottom'` | `'top'` |
 | open (v-model) | 用于手动控制浮层显隐 | `boolean` | - |
+| defaultOpen | 默认是否显示（非受控） | `boolean` | `false` |
 | color | 背景颜色 | `string` | - |
+| arrow | 是否显示箭头，可对象配置 | `boolean \| { pointAtCenter?: boolean }` | `true` |
+| mouseEnterDelay | 鼠标移入后延时显示，单位秒 | `number` | `0.1` |
+| mouseLeaveDelay | 鼠标移出后延时隐藏，单位秒 | `number` | `0.1` |
+| disabled | 禁用 popover | `boolean` | `false` |
+| autoAdjustOverflow | 浮层超出视口时自动翻转方向 | `boolean` | `true` |
+| zIndex | 自定义浮层 z-index | `number` | `1070` |
+| destroyOnHidden | 隐藏时销毁浮层 DOM | `boolean` | `false` |
+| getPopupContainer | 自定义浮层挂载容器（默认 `body`） | `(triggerNode: HTMLElement) => HTMLElement` | - |
+| overlayStyle | 卡片样式 | `Record<string, string>` | - |
+| overlayInnerStyle | 卡片内层样式 | `Record<string, string>` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| update:open | 显示隐藏的回调 | `(open: boolean) => void` |
+| update:open | 显示隐藏的回调（v-model） | `(open: boolean) => void` |
 | openChange | 显示隐藏的回调 | `(open: boolean) => void` |
+| afterOpenChange | 浮层动画结束时触发 | `(open: boolean) => void` |
 
 ### 示例
 
@@ -6083,19 +6169,30 @@ import { Tooltip } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 提示文字 | `string \| slot` | - |
-| placement | 气泡框位置 | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight' \| 'left' \| 'leftTop' \| 'leftBottom' \| 'right' \| 'rightTop' \| 'rightBottom'` | `'top'` |
-| trigger | 触发行为 | `'hover' \| 'click' \| 'focus'` | `'hover'` |
+| title | 提示文字（空值时不渲染浮层） | `string \| number \| VNode \| () => VNode \| slot` | - |
+| overlay | `title` 的别名（AntD 旧版兼容） | 同 `title` | - |
+| placement | 气泡框位置，溢出视口时自动翻转 | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight' \| 'left' \| 'leftTop' \| 'leftBottom' \| 'right' \| 'rightTop' \| 'rightBottom'` | `'top'` |
+| trigger | 触发行为，可设单值或数组 | `'hover' \| 'click' \| 'focus' \| 'contextMenu'` | `'hover'` |
 | open (v-model) | 用于手动控制浮层显隐 | `boolean` | - |
+| defaultOpen | 默认是否显示（非受控） | `boolean` | `false` |
 | color | 背景颜色 | `string` | - |
-| arrow | 是否显示箭头 | `boolean` | `true` |
+| arrow | 是否显示箭头，可对象配置 | `boolean \| { pointAtCenter?: boolean }` | `true` |
+| mouseEnterDelay | 鼠标移入后延时显示，单位秒 | `number` | `0.1` |
+| mouseLeaveDelay | 鼠标移出后延时隐藏，单位秒 | `number` | `0.1` |
+| disabled | 禁用 tooltip | `boolean` | `false` |
+| autoAdjustOverflow | 浮层超出视口时自动翻转方向 | `boolean` | `true` |
+| zIndex | 自定义浮层 z-index | `number` | `1070` |
+| destroyOnHidden | 隐藏时销毁浮层 DOM | `boolean` | `false` |
+| destroyTooltipOnHide | 同 `destroyOnHidden`（旧名，已弃用） | `boolean` | `false` |
+| getPopupContainer | 自定义浮层挂载容器（默认 `body`） | `(triggerNode: HTMLElement) => HTMLElement` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| update:open | 显示隐藏的回调 | `(open: boolean) => void` |
+| update:open | 显示隐藏的回调（v-model） | `(open: boolean) => void` |
 | openChange | 显示隐藏的回调 | `(open: boolean) => void` |
+| afterOpenChange | 浮层动画结束时触发 | `(open: boolean) => void` |
 
 ### 示例
 
@@ -6675,7 +6772,7 @@ import { Text, Space } from 'ant-design-hmfw'
 
 导入：
 ```ts
-import { Upload } from 'ant-design-hmfw'
+import { Upload, UploadDragger } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -6685,16 +6782,22 @@ import { Upload } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | fileList(v-model) | 已经上传的文件列表（受控） | `UploadFile[]` | - |
+| defaultFileList | 默认已经上传的文件列表（非受控） | `UploadFile[]` | - |
 | accept | 接受上传的文件类型，详见 input accept Attribute | `string` | - |
-| action | 上传的地址 | `string \| ((file: File) => Promise<string>)` | - |
+| action | 上传的地址，支持函数返回字符串或 Promise | `string \| ((file: File) => string \| Promise<string>)` | - |
+| data | 上传所需额外参数，支持函数返回对象或 Promise | `object \| ((file: UploadFile) => object \| Promise<object>)` | - |
 | disabled | 是否禁用 | `boolean` | `false` |
 | listType | 上传列表的内建样式 | `'text' \| 'picture' \| 'picture-card' \| 'picture-circle'` | `'text'` |
+| type | 触发器类型，`drag` 即拖拽上传区域 | `'select' \| 'drag'` | `'select'` |
 | maxCount | 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件 | `number` | - |
-| multiple | 是否支持多选文件，`ie10+` 支持。开启后按住 ctrl 可选择多个文件 | `boolean` | `false` |
+| multiple | 是否支持多选文件 | `boolean` | `false` |
 | name | 发到后台的文件参数名 | `string` | `'file'` |
-| showUploadList | 是否展示文件列表 | `boolean` | `true` |
-| beforeUpload | 上传文件之前的钩子，参数为上传的文件，若返回 false 则停止上传 | `(file: File, fileList: File[]) => boolean \| Promise<File \| boolean>` | - |
-| customRequest | 通过覆盖默认的上传行为，可以自定义自己的上传实现 | `(options: UploadRequestOption) => void` | - |
+| showUploadList | 是否展示文件列表，可对象配置 | `boolean \| { showRemoveIcon?: boolean; showPreviewIcon?: boolean }` | `true` |
+| beforeUpload | 上传文件之前的钩子，返回 `false` 取消，返回 `File/Blob` 替换上传目标 | `(file: File, fileList: File[]) => boolean \| File \| Blob \| Promise<...>` | - |
+| customRequest | 覆盖默认上传行为；第二参数 `{ defaultRequest }` 可回退默认实现 | `(options, info?: { defaultRequest }) => void` | - |
+| onRemove | 删除文件的拦截钩子，返回 `false` 阻止删除 | `(file: UploadFile) => boolean \| Promise<boolean>` | - |
+| openFileDialogOnClick | 点击触发器是否弹出文件选择框 | `boolean` | `true` |
+| method | 上传请求 HTTP 方法 | `string` | `'post'` |
 
 **UploadFile**
 
@@ -6714,10 +6817,10 @@ import { Upload } from 'ant-design-hmfw'
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | update:fileList | 文件列表变化时的回调 | `(fileList: UploadFile[]) => void` |
-| change | 上传文件改变时的状态，详见 change | `(info: { file: UploadFile; fileList: UploadFile[] }) => void` |
-| remove | 点击移除文件时的回调，返回值为 false 时不移除 | `(file: UploadFile) => boolean \| Promise<boolean>` |
+| change | 上传文件改变时的状态。进度变化时 `event` 字段携带 `{ percent }` | `(info: { file: UploadFile; fileList: UploadFile[]; event?: { percent: number } }) => void` |
+| remove | 点击移除文件后触发（被 `onRemove` 拦截 false 时不触发） | `(file: UploadFile) => void` |
 | preview | 点击文件链接或预览图标时的回调 | `(file: UploadFile) => void` |
-| drop | 拖拽文件进入上传区域时执行的回调（仅 Dragger 模式） | `(event: DragEvent) => void` |
+| drop | 文件拖拽到上传区域释放时触发 | `(event: DragEvent) => void` |
 
 ### Slots
 

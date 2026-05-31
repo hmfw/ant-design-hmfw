@@ -3693,7 +3693,7 @@
           "section": "Form Props",
           "name": "rules",
           "description": "表单验证规则",
-          "type": "`Record<string, FormRule[]>`",
+          "type": "`Record<string, FormRule | FormRule[]>`",
           "default": "-"
         },
         {
@@ -3713,9 +3713,23 @@
         {
           "section": "Form Props",
           "name": "wrapperCol",
-          "description": "需要为输入控件设置布局样式时，使用该属性，用法同 labelCol",
+          "description": "输入控件布局样式",
           "type": "`{ span?: number; offset?: number }`",
           "default": "-"
+        },
+        {
+          "section": "Form Props",
+          "name": "labelAlign",
+          "description": "label 文本对齐方式",
+          "type": "`'left' | 'right'`",
+          "default": "`'right'`"
+        },
+        {
+          "section": "Form Props",
+          "name": "colon",
+          "description": "是否显示 label 后面的冒号（仅 horizontal 布局有效）",
+          "type": "`boolean`",
+          "default": "`true`"
         },
         {
           "section": "Form Props",
@@ -3732,6 +3746,27 @@
           "default": "`'middle'`"
         },
         {
+          "section": "Form Props",
+          "name": "validateTrigger",
+          "description": "统一设置字段触发验证的时机",
+          "type": "`'blur' | 'change' | ('blur' | 'change')[]`",
+          "default": "`'change'`"
+        },
+        {
+          "section": "Form Props",
+          "name": "requiredMark",
+          "description": "必选样式：`true` 显示星号，`false` 不显示，`'optional'` 反向标注「可选」",
+          "type": "`boolean | 'optional'`",
+          "default": "`true`"
+        },
+        {
+          "section": "Form Props",
+          "name": "scrollToFirstError",
+          "description": "提交失败自动滚动到第一个错误字段",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
           "section": "FormItem Props",
           "name": "label",
           "description": "label 标签的文本",
@@ -3741,15 +3776,15 @@
         {
           "section": "FormItem Props",
           "name": "name",
-          "description": "字段名，支持数组",
-          "type": "`string | string[]`",
+          "description": "字段名，支持数组（嵌套字段）",
+          "type": "`string | number | (string | number)[]`",
           "default": "-"
         },
         {
           "section": "FormItem Props",
           "name": "rules",
           "description": "校验规则，设置字段的校验逻辑",
-          "type": "`FormRule[]`",
+          "type": "`FormRule | FormRule[]`",
           "default": "-"
         },
         {
@@ -3762,8 +3797,8 @@
         {
           "section": "FormItem Props",
           "name": "validateStatus",
-          "description": "校验状态，如不设置，则会根据校验规则自动生成",
-          "type": "`'success' | 'warning' | 'error' | 'validating'`",
+          "description": "校验状态",
+          "type": "`'success' | 'warning' | 'error' | 'validating' | ''`",
           "default": "-"
         },
         {
@@ -3775,8 +3810,15 @@
         },
         {
           "section": "FormItem Props",
+          "name": "extra",
+          "description": "额外的提示信息",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "FormItem Props",
           "name": "labelCol",
-          "description": "label 标签布局，同 Col 组件，优先级高于 Form 的 labelCol",
+          "description": "label 标签布局，优先级高于 Form 的 labelCol",
           "type": "`{ span?: number; offset?: number }`",
           "default": "-"
         },
@@ -3786,6 +3828,41 @@
           "description": "输入控件布局样式，优先级高于 Form 的 wrapperCol",
           "type": "`{ span?: number; offset?: number }`",
           "default": "-"
+        },
+        {
+          "section": "FormItem Props",
+          "name": "validateTrigger",
+          "description": "设置字段校验的时机",
+          "type": "`'blur' | 'change' | ('blur' | 'change')[]`",
+          "default": "继承自 Form"
+        },
+        {
+          "section": "FormItem Props",
+          "name": "tooltip",
+          "description": "配置提示信息（鼠标悬停 ⓘ 图标显示）",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "FormItem Props",
+          "name": "noStyle",
+          "description": "为 true 时不带样式，作为纯字段控件使用",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "FormItem Props",
+          "name": "hidden",
+          "description": "是否隐藏字段（依然会收集和校验字段）",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "FormItem Props",
+          "name": "colon",
+          "description": "配合 label 属性，覆盖 Form 的 colon",
+          "type": "`boolean`",
+          "default": "继承自 Form"
         },
         {
           "section": "FormRule",
@@ -3838,27 +3915,67 @@
         },
         {
           "section": "Form 方法（通过 ref 调用）",
-          "name": "`(nameList?: string[]) => Promise<void>`",
-          "description": "触发表单验证",
+          "name": "`(nameList?: string[]) => Promise<values>`",
+          "description": "触发表单验证；成功 resolve 模型，失败 reject `{ values, errorFields }`",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Form 方法（通过 ref 调用）",
+          "name": "`(nameList?: string[]) => Promise<values>`",
+          "description": "`validate` 的别名（AntD 一致）",
           "type": "",
           "default": ""
         },
         {
           "section": "Form 方法（通过 ref 调用）",
           "name": "`(nameList?: string[]) => void`",
-          "description": "重置一组字段到初始值",
+          "description": "清理某些字段的校验信息",
           "type": "",
           "default": ""
         },
         {
           "section": "Form 方法（通过 ref 调用）",
-          "name": "`(nameList?: string[]) => void`",
-          "description": "清理某个字段的表单验证信息",
+          "name": "`() => void`",
+          "description": "重置一组字段的校验信息",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Form 方法（通过 ref 调用）",
+          "name": "`() => void`",
+          "description": "触发表单提交，效果等同 `<button type=\"submit\">`",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Form 方法（通过 ref 调用）",
+          "name": "`() => object`",
+          "description": "取当前表单全部字段值",
           "type": "",
           "default": ""
         }
       ],
-      "events": [],
+      "events": [
+        {
+          "section": "Form Events",
+          "name": "finish",
+          "description": "提交表单且数据验证成功后触发",
+          "params": "`(values) => void`"
+        },
+        {
+          "section": "Form Events",
+          "name": "finishFailed",
+          "description": "提交表单且数据验证失败后触发",
+          "params": "`({ values, errorFields }) => void`"
+        },
+        {
+          "section": "Form Events",
+          "name": "valuesChange",
+          "description": "字段值更新时触发（需在控件中显式调用 ctx.notifyValueChange，详见说明）",
+          "params": "`(changedValues, allValues) => void`"
+        }
+      ],
       "slots": [
         {
           "name": "default",
@@ -5511,9 +5628,16 @@
         },
         {
           "section": "Modal Props",
+          "name": "defaultOpen",
+          "description": "非受控初始可见状态",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Modal Props",
           "name": "title",
           "description": "标题",
-          "type": "`string | slot`",
+          "type": "`string | number | VNode | () => VNode | slot`",
           "default": "-"
         },
         {
@@ -5526,16 +5650,23 @@
         {
           "section": "Modal Props",
           "name": "centered",
-          "description": "垂直居中展示 Modal",
+          "description": "垂直居中展示",
           "type": "`boolean`",
           "default": "`false`"
         },
         {
           "section": "Modal Props",
           "name": "closable",
-          "description": "是否显示右上角的关闭按钮",
+          "description": "是否显示右上角关闭按钮",
           "type": "`boolean`",
           "default": "`true`"
+        },
+        {
+          "section": "Modal Props",
+          "name": "closeIcon",
+          "description": "自定义关闭图标",
+          "type": "`IconComponent`",
+          "default": "`CloseOutlined`"
         },
         {
           "section": "Modal Props",
@@ -5547,51 +5678,226 @@
         {
           "section": "Modal Props",
           "name": "maskClosable",
-          "description": "点击蒙层是否允许关闭",
+          "description": "点击遮罩是否允许关闭",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Modal Props",
+          "name": "keyboard",
+          "description": "是否支持 Esc 键关闭",
           "type": "`boolean`",
           "default": "`true`"
         },
         {
           "section": "Modal Props",
           "name": "footer",
-          "description": "底部内容，当不需要默认底部按钮时，可以设为 null",
-          "type": "`string | slot | null`",
-          "default": "-"
+          "description": "底部内容；`null` / `false` 隐藏",
+          "type": "`boolean | null | slot`",
+          "default": "`true`"
         },
         {
           "section": "Modal Props",
           "name": "okText",
           "description": "确认按钮文字",
           "type": "`string`",
-          "default": "`'确定'`"
+          "default": "locale.okText"
         },
         {
           "section": "Modal Props",
           "name": "cancelText",
           "description": "取消按钮文字",
           "type": "`string`",
-          "default": "`'取消'`"
+          "default": "locale.cancelText"
         },
         {
           "section": "Modal Props",
           "name": "okType",
-          "description": "确认按钮类型",
-          "type": "`string`",
+          "description": "确认按钮类型，支持 `'danger'` 简写",
+          "type": "`LegacyButtonType`",
           "default": "`'primary'`"
         },
         {
           "section": "Modal Props",
+          "name": "okButtonProps",
+          "description": "透传到 OK Button 的 props",
+          "type": "`ButtonProps`",
+          "default": "-"
+        },
+        {
+          "section": "Modal Props",
+          "name": "cancelButtonProps",
+          "description": "透传到 Cancel Button 的 props",
+          "type": "`ButtonProps`",
+          "default": "-"
+        },
+        {
+          "section": "Modal Props",
           "name": "confirmLoading",
-          "description": "确定按钮 loading",
+          "description": "确定按钮 loading；同时阻止取消/Esc/遮罩关闭",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Modal Props",
+          "name": "loading",
+          "description": "整个对话框 body 显示骨架屏",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Modal Props",
+          "name": "destroyOnHidden",
+          "description": "关闭后销毁 body 内的子元素（5.25+ 命名）",
           "type": "`boolean`",
           "default": "`false`"
         },
         {
           "section": "Modal Props",
           "name": "destroyOnClose",
-          "description": "关闭时销毁 Modal 里的子元素",
+          "description": "`destroyOnHidden` 的兼容别名",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "Modal Props",
+          "name": "forceRender",
+          "description": "强制渲染对话框",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Modal Props",
+          "name": "zIndex",
+          "description": "层级",
+          "type": "`number`",
+          "default": "`1000`"
+        },
+        {
+          "section": "Modal Props",
+          "name": "wrapClassName",
+          "description": "应用到包裹层 `.hmfw-modal-wrap` 的 class",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Modal Props",
+          "name": "rootClassName",
+          "description": "应用到根元素 `.hmfw-modal-root` 的 class",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Modal Props",
+          "name": "focusTriggerAfterClose",
+          "description": "关闭后是否将焦点还给打开前的元素",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Modal Props",
+          "name": "bodyStyle",
+          "description": "body 内联样式",
+          "type": "`CSSProperties`",
+          "default": "-"
+        },
+        {
+          "section": "Modal Props",
+          "name": "maskStyle",
+          "description": "mask 内联样式",
+          "type": "`CSSProperties`",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "title",
+          "description": "标题",
+          "type": "`string | number | VNode | () => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "content",
+          "description": "内容",
+          "type": "`string | number | VNode | () => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "icon",
+          "description": "自定义图标，传 `null` 隐藏",
+          "type": "`IconComponent | null`",
+          "default": "按 `type` 自动选择"
+        },
+        {
+          "section": "静态方法",
+          "name": "type",
+          "description": "类型；决定默认图标和 `okCancel` 默认值",
+          "type": "`'info' | 'success' | 'error' | 'warning' | 'confirm'`",
+          "default": "`'confirm'`"
+        },
+        {
+          "section": "静态方法",
+          "name": "okCancel",
+          "description": "是否显示取消按钮（默认仅 `confirm` 显示）",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "okText / cancelText / okType",
+          "description": "同 Modal Props",
+          "type": "-",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "okButtonProps / cancelButtonProps",
+          "description": "同 Modal Props",
+          "type": "-",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "centered / width / mask / maskClosable / keyboard / closable / zIndex",
+          "description": "同 Modal Props",
+          "type": "-",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "className",
+          "description": "应用到 `.hmfw-modal-root` 的 class",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "wrapClassName",
+          "description": "应用到 `.hmfw-modal-wrap` 的 class",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "onOk",
+          "description": "点击 OK；返回 Promise 时按钮 loading 直到 resolve",
+          "type": "`() => any | Promise<any>`",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "onCancel",
+          "description": "点击 Cancel",
+          "type": "`() => void`",
+          "default": "-"
+        },
+        {
+          "section": "静态方法",
+          "name": "afterClose",
+          "description": "销毁后回调",
+          "type": "`() => void`",
+          "default": "-"
         }
       ],
       "events": [
@@ -5604,20 +5910,26 @@
         {
           "section": "Modal Events",
           "name": "ok",
-          "description": "点击确定回调",
+          "description": "点击确定按钮",
           "params": "`(e: MouseEvent) => void`"
         },
         {
           "section": "Modal Events",
           "name": "cancel",
-          "description": "点击遮罩层或右上角叉或取消按钮的回调",
-          "params": "`(e: MouseEvent) => void`"
+          "description": "点击遮罩 / 关闭按钮 / 取消按钮 / Esc 时触发",
+          "params": "`(e?: MouseEvent | KeyboardEvent) => void`"
         },
         {
           "section": "Modal Events",
           "name": "afterClose",
-          "description": "Modal 完全关闭后的回调",
+          "description": "关闭动画结束后触发",
           "params": "`() => void`"
+        },
+        {
+          "section": "Modal Events",
+          "name": "afterOpenChange",
+          "description": "显示/隐藏切换的动画结束后触发",
+          "params": "`(open: boolean) => void`"
         }
       ],
       "slots": [],
@@ -5636,6 +5948,11 @@
           "title": "居中展示",
           "description": "垂直居中展示对话框。",
           "code": "<template>\n  <button @click=\"open = true\">居中对话框</button>\n  <Modal\n    v-model:open=\"open\"\n    title=\"居中对话框\"\n    centered\n    @ok=\"open = false\"\n    @cancel=\"open = false\"\n  >\n    <p>居中展示的对话框内容</p>\n  </Modal>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Modal } from 'ant-design-hmfw'\n\nconst open = ref(false)\n</script>"
+        },
+        {
+          "title": "静态方法（confirm / info / success / error / warning）",
+          "description": "不需要在模板中维护 open 状态，直接调用即可。`onOk` 返回 Promise 时按钮自动显示 loading。",
+          "code": "<template>\n  <Button @click=\"confirm\">删除项目</Button>\n  <Button @click=\"info\">提示信息</Button>\n  <Button @click=\"success\">成功</Button>\n  <Button @click=\"error\">错误</Button>\n  <Button @click=\"warning\">警告</Button>\n  <Button @click=\"asyncConfirm\">异步确认</Button>\n</template>\n\n<script setup lang=\"ts\">\nimport { Modal, Button } from 'ant-design-hmfw'\n\nfunction confirm() {\n  Modal.confirm({\n    title: '确认删除？',\n    content: '该操作不可撤销。',\n    okType: 'danger',\n    onOk: () => {\n      console.log('OK')\n    },\n    onCancel: () => {\n      console.log('Cancel')\n    },\n  })\n}\n\nfunction info() {\n  Modal.info({ title: '提示', content: '这是一条信息。' })\n}\n\nfunction success() {\n  Modal.success({ title: '操作成功', content: '保存完成。' })\n}\n\nfunction error() {\n  Modal.error({ title: '操作失败', content: '请重试。' })\n}\n\nfunction warning() {\n  Modal.warning({ title: '注意', content: '即将关闭。' })\n}\n\nfunction asyncConfirm() {\n  Modal.confirm({\n    title: '提交中？',\n    content: 'OK 按钮会显示 loading 直到 Promise resolve。',\n    onOk: () => new Promise<void>((resolve) => setTimeout(resolve, 1500)),\n  })\n}\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/modal"
@@ -5895,65 +6212,195 @@
         {
           "section": "Popconfirm Props",
           "name": "title",
-          "description": "确认框标题",
-          "type": "`string`",
+          "description": "确认框标题（空值时不渲染浮层）",
+          "type": "`string | number | VNode | () => VNode | slot`",
           "default": "-"
         },
         {
           "section": "Popconfirm Props",
           "name": "description",
           "description": "确认框描述",
-          "type": "`string`",
+          "type": "`string | number | VNode | () => VNode | slot`",
           "default": "-"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "icon",
+          "description": "提示图标，slot 优先级高于 prop",
+          "type": "`string | VNode | () => VNode | slot`",
+          "default": "`'⚠'`"
         },
         {
           "section": "Popconfirm Props",
           "name": "okText",
           "description": "确认按钮文字",
           "type": "`string`",
-          "default": "`'确定'`"
+          "default": "locale 默认值"
         },
         {
           "section": "Popconfirm Props",
           "name": "cancelText",
           "description": "取消按钮文字",
           "type": "`string`",
-          "default": "`'取消'`"
+          "default": "locale 默认值"
         },
         {
           "section": "Popconfirm Props",
           "name": "okType",
-          "description": "确认按钮类型",
-          "type": "`string`",
+          "description": "确认按钮类型，`'danger'` 是 `primary + danger` 的简写",
+          "type": "`ButtonType | 'danger'`",
           "default": "`'primary'`"
         },
         {
           "section": "Popconfirm Props",
+          "name": "okButtonProps",
+          "description": "确认按钮的额外 props（loading/disabled 等）",
+          "type": "`ButtonProps`",
+          "default": "-"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "cancelButtonProps",
+          "description": "取消按钮的额外 props",
+          "type": "`ButtonProps`",
+          "default": "-"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "showCancel",
+          "description": "是否显示取消按钮",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "trigger",
+          "description": "触发行为，可设单值或数组",
+          "type": "`'hover' | 'click' | 'focus' | 'contextMenu'`",
+          "default": "`'click'`"
+        },
+        {
+          "section": "Popconfirm Props",
           "name": "placement",
-          "description": "气泡框位置",
-          "type": "`'top' | 'left' | 'right' | 'bottom' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBottom'`",
+          "description": "气泡框位置，溢出视口时自动翻转",
+          "type": "12 个方向（同 Tooltip）",
           "default": "`'top'`"
         },
         {
           "section": "Popconfirm Props",
-          "name": "disabled",
-          "description": "点击 Popconfirm 子元素是否弹出气泡确认框",
+          "name": "open (v-model)",
+          "description": "用于手动控制浮层显隐",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "defaultOpen",
+          "description": "默认是否显示（非受控）",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "disabled",
+          "description": "禁用，禁用时点击触发器不会弹出",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "arrow",
+          "description": "是否显示箭头，可对象配置",
+          "type": "`boolean | { pointAtCenter?: boolean }`",
+          "default": "`true`"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "mouseEnterDelay",
+          "description": "鼠标移入延时显示（trigger=hover），单位秒",
+          "type": "`number`",
+          "default": "`0.1`"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "mouseLeaveDelay",
+          "description": "鼠标移出延时隐藏（trigger=hover），单位秒",
+          "type": "`number`",
+          "default": "`0.1`"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "autoAdjustOverflow",
+          "description": "浮层超出视口时自动翻转方向",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "zIndex",
+          "description": "自定义浮层 z-index",
+          "type": "`number`",
+          "default": "`1070`"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "destroyOnHidden",
+          "description": "隐藏时销毁浮层 DOM",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "getPopupContainer",
+          "description": "自定义浮层挂载容器（默认 `body`）",
+          "type": "`(triggerNode: HTMLElement) => HTMLElement`",
+          "default": "-"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "overlayStyle",
+          "description": "卡片外层样式",
+          "type": "`Record<string, string>`",
+          "default": "-"
+        },
+        {
+          "section": "Popconfirm Props",
+          "name": "overlayInnerStyle",
+          "description": "卡片内层样式",
+          "type": "`Record<string, string>`",
+          "default": "-"
         }
       ],
       "events": [
         {
           "section": "Popconfirm Events",
           "name": "confirm",
-          "description": "点击确认的回调",
+          "description": "点击确认的回调（携带 MouseEvent）",
           "params": "`(e: MouseEvent) => void`"
         },
         {
           "section": "Popconfirm Events",
           "name": "cancel",
-          "description": "点击取消的回调",
+          "description": "点击取消的回调（携带 MouseEvent）",
           "params": "`(e: MouseEvent) => void`"
+        },
+        {
+          "section": "Popconfirm Events",
+          "name": "update:open",
+          "description": "显示隐藏的回调（v-model）",
+          "params": "`(open: boolean) => void`"
+        },
+        {
+          "section": "Popconfirm Events",
+          "name": "openChange",
+          "description": "显示隐藏的回调",
+          "params": "`(open: boolean) => void`"
+        },
+        {
+          "section": "Popconfirm Events",
+          "name": "afterOpenChange",
+          "description": "浮层动画结束时触发",
+          "params": "`(open: boolean) => void`"
         }
       ],
       "slots": [],
@@ -5987,29 +6434,29 @@
         {
           "section": "Popover Props",
           "name": "title",
-          "description": "卡片标题",
-          "type": "`string | slot`",
+          "description": "卡片标题（空值时不渲染浮层）",
+          "type": "`string | number | VNode | () => VNode | slot`",
           "default": "-"
         },
         {
           "section": "Popover Props",
           "name": "content",
-          "description": "卡片内容",
-          "type": "`string | slot`",
+          "description": "卡片内容（与 title 同时为空时不渲染浮层）",
+          "type": "`string | number | VNode | () => VNode | slot`",
           "default": "-"
         },
         {
           "section": "Popover Props",
           "name": "trigger",
           "description": "触发行为",
-          "type": "`'hover' | 'click' | 'focus'`",
+          "type": "`'hover' | 'click' | 'focus' | 'contextMenu'`",
           "default": "`'hover'`"
         },
         {
           "section": "Popover Props",
           "name": "placement",
-          "description": "气泡框位置",
-          "type": "`'top' | 'left' | 'right' | 'bottom' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBottom'`",
+          "description": "气泡框位置，溢出视口时自动翻转",
+          "type": "`'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight' | 'left' | 'leftTop' | 'leftBottom' | 'right' | 'rightTop' | 'rightBottom'`",
           "default": "`'top'`"
         },
         {
@@ -6021,9 +6468,86 @@
         },
         {
           "section": "Popover Props",
+          "name": "defaultOpen",
+          "description": "默认是否显示（非受控）",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Popover Props",
           "name": "color",
           "description": "背景颜色",
           "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Popover Props",
+          "name": "arrow",
+          "description": "是否显示箭头，可对象配置",
+          "type": "`boolean | { pointAtCenter?: boolean }`",
+          "default": "`true`"
+        },
+        {
+          "section": "Popover Props",
+          "name": "mouseEnterDelay",
+          "description": "鼠标移入后延时显示，单位秒",
+          "type": "`number`",
+          "default": "`0.1`"
+        },
+        {
+          "section": "Popover Props",
+          "name": "mouseLeaveDelay",
+          "description": "鼠标移出后延时隐藏，单位秒",
+          "type": "`number`",
+          "default": "`0.1`"
+        },
+        {
+          "section": "Popover Props",
+          "name": "disabled",
+          "description": "禁用 popover",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Popover Props",
+          "name": "autoAdjustOverflow",
+          "description": "浮层超出视口时自动翻转方向",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Popover Props",
+          "name": "zIndex",
+          "description": "自定义浮层 z-index",
+          "type": "`number`",
+          "default": "`1070`"
+        },
+        {
+          "section": "Popover Props",
+          "name": "destroyOnHidden",
+          "description": "隐藏时销毁浮层 DOM",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Popover Props",
+          "name": "getPopupContainer",
+          "description": "自定义浮层挂载容器（默认 `body`）",
+          "type": "`(triggerNode: HTMLElement) => HTMLElement`",
+          "default": "-"
+        },
+        {
+          "section": "Popover Props",
+          "name": "overlayStyle",
+          "description": "卡片样式",
+          "type": "`Record<string, string>`",
+          "default": "-"
+        },
+        {
+          "section": "Popover Props",
+          "name": "overlayInnerStyle",
+          "description": "卡片内层样式",
+          "type": "`Record<string, string>`",
           "default": "-"
         }
       ],
@@ -6031,13 +6555,19 @@
         {
           "section": "Popover Events",
           "name": "update:open",
-          "description": "显示隐藏的回调",
+          "description": "显示隐藏的回调（v-model）",
           "params": "`(open: boolean) => void`"
         },
         {
           "section": "Popover Events",
           "name": "openChange",
           "description": "显示隐藏的回调",
+          "params": "`(open: boolean) => void`"
+        },
+        {
+          "section": "Popover Events",
+          "name": "afterOpenChange",
+          "description": "浮层动画结束时触发",
           "params": "`(open: boolean) => void`"
         }
       ],
@@ -9296,22 +9826,29 @@
         {
           "section": "Tooltip Props",
           "name": "title",
-          "description": "提示文字",
-          "type": "`string | slot`",
+          "description": "提示文字（空值时不渲染浮层）",
+          "type": "`string | number | VNode | () => VNode | slot`",
+          "default": "-"
+        },
+        {
+          "section": "Tooltip Props",
+          "name": "overlay",
+          "description": "`title` 的别名（AntD 旧版兼容）",
+          "type": "同 `title`",
           "default": "-"
         },
         {
           "section": "Tooltip Props",
           "name": "placement",
-          "description": "气泡框位置",
+          "description": "气泡框位置，溢出视口时自动翻转",
           "type": "`'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight' | 'left' | 'leftTop' | 'leftBottom' | 'right' | 'rightTop' | 'rightBottom'`",
           "default": "`'top'`"
         },
         {
           "section": "Tooltip Props",
           "name": "trigger",
-          "description": "触发行为",
-          "type": "`'hover' | 'click' | 'focus'`",
+          "description": "触发行为，可设单值或数组",
+          "type": "`'hover' | 'click' | 'focus' | 'contextMenu'`",
           "default": "`'hover'`"
         },
         {
@@ -9323,6 +9860,13 @@
         },
         {
           "section": "Tooltip Props",
+          "name": "defaultOpen",
+          "description": "默认是否显示（非受控）",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Tooltip Props",
           "name": "color",
           "description": "背景颜色",
           "type": "`string`",
@@ -9331,22 +9875,84 @@
         {
           "section": "Tooltip Props",
           "name": "arrow",
-          "description": "是否显示箭头",
+          "description": "是否显示箭头，可对象配置",
+          "type": "`boolean | { pointAtCenter?: boolean }`",
+          "default": "`true`"
+        },
+        {
+          "section": "Tooltip Props",
+          "name": "mouseEnterDelay",
+          "description": "鼠标移入后延时显示，单位秒",
+          "type": "`number`",
+          "default": "`0.1`"
+        },
+        {
+          "section": "Tooltip Props",
+          "name": "mouseLeaveDelay",
+          "description": "鼠标移出后延时隐藏，单位秒",
+          "type": "`number`",
+          "default": "`0.1`"
+        },
+        {
+          "section": "Tooltip Props",
+          "name": "disabled",
+          "description": "禁用 tooltip",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Tooltip Props",
+          "name": "autoAdjustOverflow",
+          "description": "浮层超出视口时自动翻转方向",
           "type": "`boolean`",
           "default": "`true`"
+        },
+        {
+          "section": "Tooltip Props",
+          "name": "zIndex",
+          "description": "自定义浮层 z-index",
+          "type": "`number`",
+          "default": "`1070`"
+        },
+        {
+          "section": "Tooltip Props",
+          "name": "destroyOnHidden",
+          "description": "隐藏时销毁浮层 DOM",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Tooltip Props",
+          "name": "destroyTooltipOnHide",
+          "description": "同 `destroyOnHidden`（旧名，已弃用）",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Tooltip Props",
+          "name": "getPopupContainer",
+          "description": "自定义浮层挂载容器（默认 `body`）",
+          "type": "`(triggerNode: HTMLElement) => HTMLElement`",
+          "default": "-"
         }
       ],
       "events": [
         {
           "section": "Tooltip Events",
           "name": "update:open",
-          "description": "显示隐藏的回调",
+          "description": "显示隐藏的回调（v-model）",
           "params": "`(open: boolean) => void`"
         },
         {
           "section": "Tooltip Events",
           "name": "openChange",
           "description": "显示隐藏的回调",
+          "params": "`(open: boolean) => void`"
+        },
+        {
+          "section": "Tooltip Events",
+          "name": "afterOpenChange",
+          "description": "浮层动画结束时触发",
           "params": "`(open: boolean) => void`"
         }
       ],
@@ -10211,12 +10817,19 @@
       "title": "Upload 上传",
       "description": "文件选择上传和拖拽上传控件。",
       "whenToUse": "上传是将信息（网页、文字、图片、视频等）通过网页或者上传工具发布到远程服务器上的过程。",
-      "import": "import { Upload } from 'ant-design-hmfw'",
+      "import": "import { Upload, UploadDragger } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Upload Props",
           "name": "fileList(v-model)",
           "description": "已经上传的文件列表（受控）",
+          "type": "`UploadFile[]`",
+          "default": "-"
+        },
+        {
+          "section": "Upload Props",
+          "name": "defaultFileList",
+          "description": "默认已经上传的文件列表（非受控）",
           "type": "`UploadFile[]`",
           "default": "-"
         },
@@ -10230,8 +10843,15 @@
         {
           "section": "Upload Props",
           "name": "action",
-          "description": "上传的地址",
-          "type": "`string | ((file: File) => Promise<string>)`",
+          "description": "上传的地址，支持函数返回字符串或 Promise",
+          "type": "`string | ((file: File) => string | Promise<string>)`",
+          "default": "-"
+        },
+        {
+          "section": "Upload Props",
+          "name": "data",
+          "description": "上传所需额外参数，支持函数返回对象或 Promise",
+          "type": "`object | ((file: UploadFile) => object | Promise<object>)`",
           "default": "-"
         },
         {
@@ -10250,6 +10870,13 @@
         },
         {
           "section": "Upload Props",
+          "name": "type",
+          "description": "触发器类型，`drag` 即拖拽上传区域",
+          "type": "`'select' | 'drag'`",
+          "default": "`'select'`"
+        },
+        {
+          "section": "Upload Props",
           "name": "maxCount",
           "description": "限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件",
           "type": "`number`",
@@ -10258,7 +10885,7 @@
         {
           "section": "Upload Props",
           "name": "multiple",
-          "description": "是否支持多选文件，`ie10+` 支持。开启后按住 ctrl 可选择多个文件",
+          "description": "是否支持多选文件",
           "type": "`boolean`",
           "default": "`false`"
         },
@@ -10272,23 +10899,44 @@
         {
           "section": "Upload Props",
           "name": "showUploadList",
-          "description": "是否展示文件列表",
-          "type": "`boolean`",
+          "description": "是否展示文件列表，可对象配置",
+          "type": "`boolean | { showRemoveIcon?: boolean; showPreviewIcon?: boolean }`",
           "default": "`true`"
         },
         {
           "section": "Upload Props",
           "name": "beforeUpload",
-          "description": "上传文件之前的钩子，参数为上传的文件，若返回 false 则停止上传",
-          "type": "`(file: File, fileList: File[]) => boolean | Promise<File | boolean>`",
+          "description": "上传文件之前的钩子，返回 `false` 取消，返回 `File/Blob` 替换上传目标",
+          "type": "`(file: File, fileList: File[]) => boolean | File | Blob | Promise<...>`",
           "default": "-"
         },
         {
           "section": "Upload Props",
           "name": "customRequest",
-          "description": "通过覆盖默认的上传行为，可以自定义自己的上传实现",
-          "type": "`(options: UploadRequestOption) => void`",
+          "description": "覆盖默认上传行为；第二参数 `{ defaultRequest }` 可回退默认实现",
+          "type": "`(options, info?: { defaultRequest }) => void`",
           "default": "-"
+        },
+        {
+          "section": "Upload Props",
+          "name": "onRemove",
+          "description": "删除文件的拦截钩子，返回 `false` 阻止删除",
+          "type": "`(file: UploadFile) => boolean | Promise<boolean>`",
+          "default": "-"
+        },
+        {
+          "section": "Upload Props",
+          "name": "openFileDialogOnClick",
+          "description": "点击触发器是否弹出文件选择框",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Upload Props",
+          "name": "method",
+          "description": "上传请求 HTTP 方法",
+          "type": "`string`",
+          "default": "`'post'`"
         },
         {
           "section": "UploadFile",
@@ -10357,14 +11005,14 @@
         {
           "section": "Upload Events",
           "name": "change",
-          "description": "上传文件改变时的状态，详见 change",
-          "params": "`(info: { file: UploadFile; fileList: UploadFile[] }) => void`"
+          "description": "上传文件改变时的状态。进度变化时 `event` 字段携带 `{ percent }`",
+          "params": "`(info: { file: UploadFile; fileList: UploadFile[]; event?: { percent: number } }) => void`"
         },
         {
           "section": "Upload Events",
           "name": "remove",
-          "description": "点击移除文件时的回调，返回值为 false 时不移除",
-          "params": "`(file: UploadFile) => boolean | Promise<boolean>`"
+          "description": "点击移除文件后触发（被 `onRemove` 拦截 false 时不触发）",
+          "params": "`(file: UploadFile) => void`"
         },
         {
           "section": "Upload Events",
@@ -10375,7 +11023,7 @@
         {
           "section": "Upload Events",
           "name": "drop",
-          "description": "拖拽文件进入上传区域时执行的回调（仅 Dragger 模式）",
+          "description": "文件拖拽到上传区域释放时触发",
           "params": "`(event: DragEvent) => void`"
         }
       ],
@@ -10399,7 +11047,7 @@
         {
           "title": "拖拽上传",
           "description": "可以把文件拖入指定区域，完成上传，同样支持点击上传。",
-          "code": "<template>\n  <Upload.Dragger\n    v-model:file-list=\"fileList\"\n    action=\"https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188\"\n    :multiple=\"true\"\n    @change=\"handleChange\"\n    @drop=\"handleDrop\"\n  >\n    <div style=\"padding: 32px; text-align: center;\">\n      <p style=\"font-size: 48px; margin-bottom: 8px;\">📥</p>\n      <p style=\"font-size: 16px; margin-bottom: 4px;\">点击或拖拽文件到此区域上传</p>\n      <p style=\"color: #999; font-size: 14px;\">支持单个或批量上传，严禁上传公司数据或其他违禁文件</p>\n    </div>\n  </Upload.Dragger>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Upload } from 'ant-design-hmfw'\nimport type { UploadFile } from 'ant-design-hmfw'\n\nconst fileList = ref<UploadFile[]>([])\n\nconst handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {\n  console.log('文件状态：', info.file.status)\n  fileList.value = info.fileList\n}\n\nconst handleDrop = (event: DragEvent) => {\n  console.log('拖拽文件：', event.dataTransfer?.files)\n}\n</script>"
+          "code": "<template>\n  <UploadDragger\n    v-model:file-list=\"fileList\"\n    action=\"https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188\"\n    :multiple=\"true\"\n    @change=\"handleChange\"\n    @drop=\"handleDrop\"\n  >\n    <div style=\"padding: 32px; text-align: center;\">\n      <p style=\"font-size: 48px; margin-bottom: 8px;\">📥</p>\n      <p style=\"font-size: 16px; margin-bottom: 4px;\">点击或拖拽文件到此区域上传</p>\n      <p style=\"color: #999; font-size: 14px;\">支持单个或批量上传，严禁上传公司数据或其他违禁文件</p>\n    </div>\n  </UploadDragger>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { UploadDragger } from 'ant-design-hmfw'\nimport type { UploadFile } from 'ant-design-hmfw'\n\nconst fileList = ref<UploadFile[]>([])\n\nconst handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {\n  console.log('文件状态：', info.file.status)\n  fileList.value = info.fileList\n}\n\nconst handleDrop = (event: DragEvent) => {\n  console.log('拖拽文件：', event.dataTransfer?.files)\n}\n</script>"
         },
         {
           "title": "自定义上传",
