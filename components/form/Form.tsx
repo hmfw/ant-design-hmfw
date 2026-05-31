@@ -1,4 +1,11 @@
-import { defineComponent, ref, provide, inject, computed, type PropType } from 'vue'
+import {
+  defineComponent,
+  ref,
+  provide,
+  inject,
+  computed,
+  type PropType,
+} from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 
@@ -8,16 +15,20 @@ export interface FormRule {
   min?: number
   max?: number
   pattern?: RegExp
-  validator?: (rule: FormRule, value: any) => Promise<void> | void
+  validator?: (rule: FormRule, value: unknown) => Promise<void> | void
   type?: 'string' | 'number' | 'boolean' | 'array' | 'email' | 'url'
   whitespace?: boolean
   len?: number
-  enum?: any[]
+  enum?: unknown[]
+  /** Validation trigger; falls back to FormItem/Form `validateTrigger`. */
   trigger?: 'blur' | 'change' | ('blur' | 'change')[]
 }
 
+export type NamePath = string | number | (string | number)[]
+export type ValidateStatus = '' | 'success' | 'warning' | 'error' | 'validating'
+
 export interface FormProps {
-  model?: Record<string, any>
+  model?: Record<string, unknown>
   rules?: Record<string, FormRule | FormRule[]>
   layout?: 'horizontal' | 'vertical' | 'inline'
   labelCol?: { span?: number; offset?: number }
@@ -28,42 +39,68 @@ export interface FormProps {
   disabled?: boolean
   scrollToFirstError?: boolean
   validateTrigger?: 'blur' | 'change' | ('blur' | 'change')[]
+  /** AntD v6 `requiredMark`: false hides asterisks; `'optional'` marks non-required fields. */
+  requiredMark?: boolean | 'optional'
 }
 
 export interface FormItemProps {
-  name?: string | string[]
+  name?: NamePath
   label?: string
   rules?: FormRule | FormRule[]
   required?: boolean
   colon?: boolean
   labelCol?: { span?: number; offset?: number }
   wrapperCol?: { span?: number; offset?: number }
-  validateStatus?: '' | 'success' | 'warning' | 'error' | 'validating'
+  validateStatus?: ValidateStatus
   help?: string
   extra?: string
   hasFeedback?: boolean
   noStyle?: boolean
   hidden?: boolean
   tooltip?: string
+  validateTrigger?: 'blur' | 'change' | ('blur' | 'change')[]
 }
 
 const FORM_CONTEXT_KEY = Symbol('form-context')
 
 interface FormContext {
-  model: Record<string, any>
+  model: Record<string, unknown>
   rules: Record<string, FormRule | FormRule[]>
   layout: string
   colon: boolean
   labelAlign: string
   size: string
   disabled: boolean
+  labelCol?: { span?: number; offset?: number }
+  wrapperCol?: { span?: number; offset?: number }
+  validateTrigger: 'blur' | 'change' | ('blur' | 'change')[]
+  requiredMark: boolean | 'optional'
   errors: Record<string, string>
   setError: (name: string, error: string) => void
   clearError: (name: string) => void
   validateField: (name: string) => Promise<boolean>
+  notifyValueChange: (name: string, value: unknown) => void
 }
 
-async function runRules(value: any, rules: FormRule[]): Promise<string | null> {
+/** Resolve `NamePath` to a dot-joined string key (used as the errors map key). */
+function namePathKey(name: NamePath | undefined): string {
+  if (name === undefined || name === null || name === '') return ''
+  return Array.isArray(name) ? name.join('.') : String(name)
+}
+
+/** Read a deep value from an object using a NamePath. */
+function getValueByPath(obj: Record<string, unknown> | undefined, name: NamePath): unknown {
+  if (!obj) return undefined
+  if (!Array.isArray(name)) return obj[String(name)]
+  let cur: unknown = obj
+  for (const seg of name) {
+    if (cur == null) return undefined
+    cur = (cur as Record<string, unknown>)[String(seg)]
+  }
+  return cur
+}
+
+async function runRules(value: unknown, rules: FormRule[]): Promise<string | null> {
   for (const rule of rules) {
     if (rule.required && (value === undefined || value === null || value === '')) {
       return rule.message ?? '此字段为必填项'
@@ -84,30 +121,55 @@ async function runRules(value: any, rules: FormRule[]): Promise<string | null> {
     if (rule.validator) {
       try {
         await rule.validator(rule, value)
-      } catch (e: any) {
-        return e?.message ?? String(e) ?? '验证失败'
+      } catch (e: unknown) {
+        const msg = (e as { message?: string })?.message ?? String(e) ?? '验证失败'
+        return msg
       }
     }
   }
   return null
 }
 
+/** Composable matching ant-design-vue conventions; AntD React's `Form.useForm` is a different model. */
 export function useForm() {
   const ctx = inject<FormContext>(FORM_CONTEXT_KEY)
   return {
-    validate: async () => {
+    validate: async (nameList?: string[]) => {
       if (!ctx) return true
-      const names = Object.keys(ctx.rules)
+      const names = nameList ?? Object.keys(ctx.rules)
       const results = await Promise.all(names.map((n) => ctx.validateField(n)))
       return results.every(Boolean)
+    },
+    /** Alias for AntD parity. */
+    validateFields: async (nameList?: string[]) => {
+      if (!ctx) return {}
+      const names = nameList ?? Object.keys(ctx.rules)
+      const results = await Promise.all(names.map((n) => ctx.validateField(n)))
+      if (results.every(Boolean)) return ctx.model
+      throw {
+        values: ctx.model,
+        errorFields: Object.entries(ctx.errors).map(([name, error]) => ({ name, errors: [error] })),
+      }
     },
     resetFields: () => {
       if (!ctx) return
       Object.keys(ctx.errors).forEach((k) => ctx.clearError(k))
     },
+    clearValidate: (nameList?: string[]) => {
+      if (!ctx) return
+      const names = nameList ?? Object.keys(ctx.errors)
+      names.forEach((n) => ctx.clearError(n))
+    },
     getFieldValue: (name: string) => ctx?.model?.[name],
-    setFieldValue: (name: string, value: any) => {
-      if (ctx?.model) ctx.model[name] = value
+    getFieldsValue: () => ctx?.model ?? {},
+    setFieldValue: (name: string, value: unknown) => {
+      if (ctx?.model) (ctx.model as Record<string, unknown>)[name] = value
+    },
+    setFieldsValue: (values: Record<string, unknown>) => {
+      if (!ctx?.model) return
+      Object.entries(values).forEach(([k, v]) => {
+        ;(ctx.model as Record<string, unknown>)[k] = v
+      })
     },
   }
 }
@@ -115,7 +177,7 @@ export function useForm() {
 export const Form = defineComponent({
   name: 'Form',
   props: {
-    model: Object as PropType<Record<string, any>>,
+    model: Object as PropType<Record<string, unknown>>,
     rules: Object as PropType<Record<string, FormRule | FormRule[]>>,
     layout: { type: String as PropType<'horizontal' | 'vertical' | 'inline'>, default: 'horizontal' },
     labelCol: Object as PropType<{ span?: number; offset?: number }>,
@@ -125,10 +187,17 @@ export const Form = defineComponent({
     size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
     disabled: Boolean,
     scrollToFirstError: Boolean,
-    validateTrigger: [String, Array] as PropType<'blur' | 'change' | ('blur' | 'change')[]>,
+    validateTrigger: {
+      type: [String, Array] as PropType<'blur' | 'change' | ('blur' | 'change')[]>,
+      default: 'change',
+    },
+    requiredMark: {
+      type: [Boolean, String] as PropType<boolean | 'optional'>,
+      default: true,
+    },
   },
   emits: ['finish', 'finishFailed', 'valuesChange'],
-  setup(props, { slots, emit }) {
+  setup(props, { slots, emit, expose }) {
     const prefixCls = usePrefixCls('form')
     const errors = ref<Record<string, string>>({})
 
@@ -136,17 +205,24 @@ export const Form = defineComponent({
       const rules = props.rules?.[name]
       if (!rules) return true
       const rulesArr = Array.isArray(rules) ? rules : [rules]
-      const value = props.model?.[name]
+      // Allow nested name keys ('a.b' or array path).
+      const namePath: NamePath = name.includes('.') ? name.split('.') : name
+      const value = getValueByPath(props.model, namePath)
       const error = await runRules(value, rulesArr)
       if (error) {
         errors.value = { ...errors.value, [name]: error }
         return false
-      } else {
-        const next = { ...errors.value }
-        delete next[name]
-        errors.value = next
-        return true
       }
+      const next = { ...errors.value }
+      delete next[name]
+      errors.value = next
+      return true
+    }
+
+    const scrollToFirstErrorField = () => {
+      // Find the first FormItem with `-has-error` class and scroll to it.
+      const el = document.querySelector(`.${prefixCls}-item-has-error`)
+      el?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' })
     }
 
     provide(FORM_CONTEXT_KEY, {
@@ -157,6 +233,10 @@ export const Form = defineComponent({
       get labelAlign() { return props.labelAlign },
       get size() { return props.size },
       get disabled() { return props.disabled ?? false },
+      get labelCol() { return props.labelCol },
+      get wrapperCol() { return props.wrapperCol },
+      get validateTrigger() { return props.validateTrigger ?? 'change' },
+      get requiredMark() { return props.requiredMark ?? true },
       get errors() { return errors.value },
       setError: (name: string, error: string) => { errors.value = { ...errors.value, [name]: error } },
       clearError: (name: string) => {
@@ -165,24 +245,63 @@ export const Form = defineComponent({
         errors.value = next
       },
       validateField,
+      notifyValueChange: (name: string, value: unknown) => {
+        emit('valuesChange', { [name]: value }, props.model ?? {})
+      },
     } as FormContext)
 
-    const handleSubmit = async (e: Event) => {
-      e.preventDefault()
+    const submit = async () => {
       const names = Object.keys(props.rules ?? {})
       const results = await Promise.all(names.map(validateField))
       const allValid = results.every(Boolean)
       if (allValid) {
         emit('finish', props.model)
       } else {
-        emit('finishFailed', { values: props.model, errorFields: Object.entries(errors.value).map(([name, errors]) => ({ name, errors: [errors] })) })
+        emit('finishFailed', {
+          values: props.model,
+          errorFields: Object.entries(errors.value).map(([name, error]) => ({ name, errors: [error] })),
+        })
+        if (props.scrollToFirstError) scrollToFirstErrorField()
       }
     }
+
+    const handleSubmit = (e: Event) => {
+      e.preventDefault()
+      submit()
+    }
+
+    /** Public ref API — keeps `formRef.validate()/clearValidate()` working in templates. */
+    const validate = async (nameList?: string[]) => {
+      const names = nameList ?? Object.keys(props.rules ?? {})
+      const results = await Promise.all(names.map(validateField))
+      if (results.every(Boolean)) return props.model
+      throw {
+        values: props.model,
+        errorFields: Object.entries(errors.value).map(([name, error]) => ({ name, errors: [error] })),
+      }
+    }
+    const clearValidate = (nameList?: string[]) => {
+      const names = nameList ?? Object.keys(errors.value)
+      const next = { ...errors.value }
+      names.forEach((n) => { delete next[n] })
+      errors.value = next
+    }
+    const resetFields = () => clearValidate()
+
+    expose({
+      validate,
+      validateFields: validate,
+      clearValidate,
+      resetFields,
+      submit,
+      getFieldsValue: () => props.model ?? {},
+    })
 
     return () => (
       <form
         class={cls(prefixCls, `${prefixCls}-${props.layout}`, {
           [`${prefixCls}-${props.size}`]: props.size !== 'middle',
+          [`${prefixCls}-hide-required-mark`]: props.requiredMark === false,
         })}
         onSubmit={handleSubmit}
       >
@@ -192,39 +311,46 @@ export const Form = defineComponent({
   },
 })
 
+/** Flatten {span, offset} into a CSS flex-basis percentage; matches AntD 24-col grid math. */
+function colToStyle(col?: { span?: number; offset?: number }) {
+  if (!col) return undefined
+  const style: Record<string, string> = {}
+  if (col.span !== undefined) style.flex = `0 0 ${(col.span / 24) * 100}%`
+  if (col.offset !== undefined) style.marginLeft = `${(col.offset / 24) * 100}%`
+  return style
+}
+
 export const FormItem = defineComponent({
   name: 'FormItem',
   props: {
-    name: [String, Array] as PropType<string | string[]>,
+    name: [String, Number, Array] as PropType<NamePath>,
     label: String,
     rules: [Object, Array] as PropType<FormRule | FormRule[]>,
     required: Boolean,
     colon: { type: Boolean, default: undefined },
     labelCol: Object as PropType<{ span?: number; offset?: number }>,
     wrapperCol: Object as PropType<{ span?: number; offset?: number }>,
-    validateStatus: String as PropType<'' | 'success' | 'warning' | 'error' | 'validating'>,
+    validateStatus: String as PropType<ValidateStatus>,
     help: String,
     extra: String,
     hasFeedback: Boolean,
     noStyle: Boolean,
     hidden: Boolean,
     tooltip: String,
+    validateTrigger: [String, Array] as PropType<'blur' | 'change' | ('blur' | 'change')[]>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('form')
     const ctx = inject<FormContext>(FORM_CONTEXT_KEY)
 
-    const fieldName = computed(() => {
-      if (!props.name) return ''
-      return Array.isArray(props.name) ? props.name.join('.') : props.name
-    })
+    const fieldName = computed(() => namePathKey(props.name))
 
     const error = computed(() => {
       if (props.validateStatus === 'error' && props.help) return props.help
       return fieldName.value ? ctx?.errors[fieldName.value] : undefined
     })
 
-    const status = computed(() => {
+    const status = computed<ValidateStatus>(() => {
       if (props.validateStatus) return props.validateStatus
       if (error.value) return 'error'
       return ''
@@ -243,6 +369,11 @@ export const FormItem = defineComponent({
       return ctx?.colon ?? true
     })
 
+    const mergedLabelCol = computed(() => props.labelCol ?? ctx?.labelCol)
+    const mergedWrapperCol = computed(() => props.wrapperCol ?? ctx?.wrapperCol)
+
+    const isHorizontal = computed(() => ctx?.layout === 'horizontal' || ctx?.layout === undefined)
+
     if (props.noStyle) {
       return () => slots.default?.()
     }
@@ -251,38 +382,55 @@ export const FormItem = defineComponent({
       return () => <div style={{ display: 'none' }}>{slots.default?.()}</div>
     }
 
-    return () => (
-      <div class={cls(`${prefixCls}-item`, {
-        [`${prefixCls}-item-has-error`]: status.value === 'error',
-        [`${prefixCls}-item-has-warning`]: status.value === 'warning',
-        [`${prefixCls}-item-has-success`]: status.value === 'success',
-        [`${prefixCls}-item-required`]: isRequired.value,
-      })}>
-        {props.label !== undefined && (
-          <div class={`${prefixCls}-item-label`}>
-            <label class={cls({ [`${prefixCls}-item-no-colon`]: !showColon.value })}>
-              {props.label}
-            </label>
-          </div>
-        )}
-        <div class={`${prefixCls}-item-control`}>
-          <div class={`${prefixCls}-item-control-input`}>
-            {slots.default?.()}
-          </div>
-          {(error.value || props.help) && (
-            <div class={cls(`${prefixCls}-item-explain`, {
-              [`${prefixCls}-item-explain-error`]: status.value === 'error',
-              [`${prefixCls}-item-explain-warning`]: status.value === 'warning',
-              [`${prefixCls}-item-explain-success`]: status.value === 'success',
-            })}>
-              {error.value ?? props.help}
+    return () => {
+      const labelStyle = isHorizontal.value ? colToStyle(mergedLabelCol.value) : undefined
+      const wrapperStyle = isHorizontal.value ? colToStyle(mergedWrapperCol.value) : undefined
+      const showOptionalMark =
+        ctx?.requiredMark === 'optional' && !isRequired.value
+
+      return (
+        <div class={cls(`${prefixCls}-item`, {
+          [`${prefixCls}-item-has-error`]: status.value === 'error',
+          [`${prefixCls}-item-has-warning`]: status.value === 'warning',
+          [`${prefixCls}-item-has-success`]: status.value === 'success',
+          [`${prefixCls}-item-required`]: isRequired.value && ctx?.requiredMark !== false,
+        })}>
+          {(props.label !== undefined || slots.label) && (
+            <div class={`${prefixCls}-item-label`} style={labelStyle}>
+              <label class={cls({ [`${prefixCls}-item-no-colon`]: !showColon.value })}>
+                {slots.label ? slots.label() : props.label}
+                {props.tooltip && (
+                  <span class={`${prefixCls}-item-tooltip`} title={props.tooltip}>ⓘ</span>
+                )}
+                {showOptionalMark && (
+                  <span class={`${prefixCls}-item-optional`}>（可选）</span>
+                )}
+              </label>
             </div>
           )}
-          {props.extra && (
-            <div class={`${prefixCls}-item-extra`}>{props.extra}</div>
-          )}
+          <div class={`${prefixCls}-item-control`} style={wrapperStyle}>
+            <div class={`${prefixCls}-item-control-input`}>
+              {slots.default?.()}
+            </div>
+            {(error.value || props.help) && (
+              <div class={cls(`${prefixCls}-item-explain`, {
+                [`${prefixCls}-item-explain-error`]: status.value === 'error',
+                [`${prefixCls}-item-explain-warning`]: status.value === 'warning',
+                [`${prefixCls}-item-explain-success`]: status.value === 'success',
+              })}>
+                {error.value ?? props.help}
+              </div>
+            )}
+            {props.extra && (
+              <div class={`${prefixCls}-item-extra`}>{props.extra}</div>
+            )}
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
   },
 })
+
+// Compound API: AntD parity for `<Form.Item>` usage in templates.
+;(Form as typeof Form & { Item: typeof FormItem; useForm: typeof useForm }).Item = FormItem
+;(Form as typeof Form & { useForm: typeof useForm }).useForm = useForm

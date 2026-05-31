@@ -165,7 +165,7 @@ export { Menu } from './menu'
 export type { MenuProps, MenuTheme, MenuMode } from './menu'
 
 export { Form, FormItem, useForm } from './form'
-export type { FormProps, FormItemProps, FormRule } from './form'
+export type { FormProps, FormItemProps, FormRule, NamePath, ValidateStatus } from './form'
 
 export { Watermark } from './watermark'
 export type { WatermarkProps, WatermarkFont } from './watermark'
