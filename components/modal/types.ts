@@ -1,0 +1,77 @@
+import type { CSSProperties, VNode } from 'vue'
+import type { ButtonProps, ButtonType } from '../button/types'
+import type { IconComponent } from '../icon/types'
+
+export type ModalWidth = number | string
+
+/** AntD `okType` accepts the legacy `'danger'` shorthand in addition to ButtonType */
+export type LegacyButtonType = ButtonType | 'danger'
+
+/** Renderable content: plain text, number, a VNode, or a render function */
+export type ModalContent = string | number | VNode | (() => VNode | string)
+
+export type GetContainer = string | HTMLElement | (() => HTMLElement) | false
+
+export interface ModalProps {
+  open?: boolean
+  defaultOpen?: boolean
+  title?: ModalContent
+  width?: ModalWidth
+  centered?: boolean
+  closable?: boolean
+  closeIcon?: IconComponent
+  mask?: boolean
+  maskClosable?: boolean
+  keyboard?: boolean
+  footer?: boolean | null
+  okText?: string
+  cancelText?: string
+  okType?: LegacyButtonType
+  okButtonProps?: ButtonProps
+  cancelButtonProps?: ButtonProps
+  confirmLoading?: boolean
+  loading?: boolean
+  destroyOnClose?: boolean
+  destroyOnHidden?: boolean
+  forceRender?: boolean
+  zIndex?: number
+  getContainer?: GetContainer
+  wrapClassName?: string
+  rootClassName?: string
+  focusTriggerAfterClose?: boolean
+  bodyStyle?: CSSProperties
+  maskStyle?: CSSProperties
+}
+
+/** Type used by the static methods Modal.confirm / info / success / error / warning */
+export interface ModalFuncProps {
+  title?: ModalContent
+  content?: ModalContent
+  icon?: IconComponent | null
+  type?: 'info' | 'success' | 'error' | 'warning' | 'confirm'
+  okText?: string
+  okType?: LegacyButtonType
+  cancelText?: string
+  okCancel?: boolean
+  okButtonProps?: ButtonProps
+  cancelButtonProps?: ButtonProps
+  centered?: boolean
+  width?: ModalWidth
+  mask?: boolean
+  maskClosable?: boolean
+  keyboard?: boolean
+  closable?: boolean
+  zIndex?: number
+  className?: string
+  wrapClassName?: string
+  autoFocusButton?: null | 'ok' | 'cancel'
+  getContainer?: GetContainer
+  onOk?: (...args: any[]) => any
+  onCancel?: (...args: any[]) => any
+  afterClose?: () => void
+}
+
+export interface ModalFuncReturn {
+  destroy: () => void
+  update: (configUpdate: ModalFuncProps | ((prev: ModalFuncProps) => ModalFuncProps)) => void
+}

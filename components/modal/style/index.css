@@ -81,12 +81,79 @@
   gap: 8px;
 }
 
-.hmfw-modal-fade-enter-active,
-.hmfw-modal-fade-leave-active {
+.hmfw-modal-close-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+}
+
+.hmfw-zoom-enter-active,
+.hmfw-zoom-leave-active {
   transition: opacity 0.2s;
 }
 
-.hmfw-modal-fade-enter-from,
-.hmfw-modal-fade-leave-to {
+.hmfw-zoom-enter-active .hmfw-modal,
+.hmfw-zoom-leave-active .hmfw-modal {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.hmfw-zoom-enter-from,
+.hmfw-zoom-leave-to {
   opacity: 0;
 }
+
+.hmfw-zoom-enter-from .hmfw-modal,
+.hmfw-zoom-leave-to .hmfw-modal {
+  transform: scale(0.85);
+  opacity: 0;
+}
+
+/* Modal.confirm / info / success / error / warning */
+.hmfw-modal-confirm .hmfw-modal-body {
+  padding: 32px 32px 24px;
+}
+
+.hmfw-modal-confirm-body {
+  display: flex;
+  align-items: flex-start;
+}
+
+.hmfw-modal-confirm-body .hmfw-modal-confirm-icon {
+  flex: none;
+  margin-right: 12px;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.hmfw-modal-confirm-body.hmfw-modal-confirm-no-icon {
+  display: block;
+}
+
+.hmfw-modal-confirm-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--hmfw-color-text);
+}
+
+.hmfw-modal-confirm-content {
+  margin-top: 8px;
+  font-size: var(--hmfw-font-size-base);
+  color: var(--hmfw-color-text);
+}
+
+.hmfw-modal-confirm-btns {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.hmfw-modal-confirm-info .hmfw-modal-confirm-icon { color: var(--hmfw-color-primary, #1677ff); }
+.hmfw-modal-confirm-success .hmfw-modal-confirm-icon { color: var(--hmfw-color-success, #52c41a); }
+.hmfw-modal-confirm-error .hmfw-modal-confirm-icon { color: var(--hmfw-color-error, #ff4d4f); }
+.hmfw-modal-confirm-warning .hmfw-modal-confirm-icon,
+.hmfw-modal-confirm-confirm .hmfw-modal-confirm-icon { color: var(--hmfw-color-warning, #faad14); }

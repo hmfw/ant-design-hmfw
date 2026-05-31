@@ -53,7 +53,11 @@ function parseSvg(svgContent: string): { viewBox: string; paths: string[] } {
 
 // 生成图标组件代码
 function generateIconComponent(name: string, viewBox: string, paths: string[]): string {
-  const componentName = `${toPascalCase(name)}Outlined`
+  // 文件名以 -filled 结尾时生成 Filled 后缀组件，否则默认 Outlined
+  const isFilled = name.endsWith('-filled')
+  const baseName = isFilled ? name.slice(0, -'-filled'.length) : name
+  const suffix = isFilled ? 'Filled' : 'Outlined'
+  const componentName = `${toPascalCase(baseName)}${suffix}`
   const pathsCode = paths.length > 0 ? paths.join(', ') : ''
 
   return `export const ${componentName}: IconComponent = () =>
