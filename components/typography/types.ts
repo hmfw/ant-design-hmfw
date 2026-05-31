@@ -7,6 +7,11 @@ export interface CopyableConfig {
   onCopy?: (e: MouseEvent) => void
 }
 
+export interface EllipsisConfig {
+  /** 最多显示的行数，超出省略 */
+  rows?: number
+}
+
 export interface BaseTypographyProps {
   type?: TypographyType
   disabled?: boolean
@@ -19,8 +24,8 @@ export interface BaseTypographyProps {
   italic?: boolean
   /** 是否可复制 */
   copyable?: boolean | CopyableConfig
-  /** 单行省略 */
-  ellipsis?: boolean
+  /** 省略：true 单行省略，或 { rows } 指定行数 */
+  ellipsis?: boolean | EllipsisConfig
 }
 
 export interface TextProps extends BaseTypographyProps {}

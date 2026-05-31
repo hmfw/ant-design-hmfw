@@ -199,6 +199,25 @@ describe('Typography', () => {
       expect(wrapper.classes()).toContain('hmfw-typography-ellipsis')
     })
 
+    it('applies multi-line ellipsis from { rows } config', () => {
+      const wrapper = mount(Paragraph, {
+        props: { ellipsis: { rows: 2 } },
+        slots: { default: () => 'Long text that should be clamped to two lines' },
+      })
+      expect(wrapper.classes()).toContain('hmfw-typography-ellipsis-multiple-line')
+      expect(wrapper.classes()).not.toContain('hmfw-typography-ellipsis')
+      expect(wrapper.attributes('style')).toContain('-webkit-line-clamp: 2')
+    })
+
+    it('treats { rows: 1 } as single-line ellipsis', () => {
+      const wrapper = mount(Paragraph, {
+        props: { ellipsis: { rows: 1 } },
+        slots: { default: () => 'Long text' },
+      })
+      expect(wrapper.classes()).toContain('hmfw-typography-ellipsis')
+      expect(wrapper.classes()).not.toContain('hmfw-typography-ellipsis-multiple-line')
+    })
+
     it('renders copy button when copyable', () => {
       const wrapper = mount(Text, {
         props: { copyable: true },

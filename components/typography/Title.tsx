@@ -3,6 +3,7 @@ import { usePrefixCls } from '../config-provider'
 import {
   baseTypographyProps,
   getTypographyClass,
+  getEllipsisStyle,
   wrapDecorations,
   extractText,
   useCopyable,
@@ -29,7 +30,10 @@ export default defineComponent({
       const Tag = `h${props.level}` as any
 
       return (
-        <Tag class={getTypographyClass(prefixCls, props, `${prefixCls}-h${props.level}`)}>
+        <Tag
+          class={getTypographyClass(prefixCls, props, `${prefixCls}-h${props.level}`)}
+          style={getEllipsisStyle(props)}
+        >
           {children}
           {copyNode}
         </Tag>

@@ -1,7 +1,7 @@
-import { ref, type PropType, type VNode } from 'vue'
+import { ref, type PropType, type VNode, type CSSProperties } from 'vue'
 import { CheckOutlined } from '../icon'
 import { cls } from '../_utils'
-import type { TypographyType, CopyableConfig } from './types'
+import type { TypographyType, CopyableConfig, EllipsisConfig } from './types'
 
 // 内联 Copy 图标（图标系统暂无 CopyOutlined）
 const CopyIcon = () =>
@@ -30,8 +30,11 @@ export const baseTypographyProps = {
     type: [Boolean, Object] as PropType<boolean | CopyableConfig>,
     default: false,
   },
-  /** 单行省略 */
-  ellipsis: { type: Boolean, default: false },
+  /** 省略：true 单行省略，或 { rows } 指定行数 */
+  ellipsis: {
+    type: [Boolean, Object] as PropType<boolean | EllipsisConfig>,
+    default: false,
+  },
 }
 
 export interface BaseProps {
@@ -45,7 +48,14 @@ export interface BaseProps {
   strong?: boolean
   italic?: boolean
   copyable?: boolean | CopyableConfig
-  ellipsis?: boolean
+  ellipsis?: boolean | EllipsisConfig
+}
+
+/** 解析 ellipsis prop 的行数：true → 1，{ rows } → rows，false → 0 */
+function getEllipsisRows(ellipsis: boolean | EllipsisConfig | undefined): number {
+  if (!ellipsis) return 0
+  if (ellipsis === true) return 1
+  return ellipsis.rows && ellipsis.rows > 0 ? ellipsis.rows : 1
 }
 
 // 计算根元素 class
@@ -54,15 +64,26 @@ export function getTypographyClass(
   props: BaseProps,
   extra?: string,
 ): string {
+  const rows = getEllipsisRows(props.ellipsis)
   return cls(
     prefixCls,
     extra,
     {
       [`${prefixCls}-${props.type}`]: !!props.type,
       [`${prefixCls}-disabled`]: props.disabled,
-      [`${prefixCls}-ellipsis`]: props.ellipsis,
+      [`${prefixCls}-ellipsis`]: rows === 1,
+      [`${prefixCls}-ellipsis-multiple-line`]: rows > 1,
     },
   )
+}
+
+/** 多行省略需要内联设置 -webkit-line-clamp，返回 style 对象或 undefined */
+export function getEllipsisStyle(props: BaseProps): CSSProperties | undefined {
+  const rows = getEllipsisRows(props.ellipsis)
+  if (rows > 1) {
+    return { '-webkit-line-clamp': String(rows) } as CSSProperties
+  }
+  return undefined
 }
 
 // 依次包裹文本装饰标签

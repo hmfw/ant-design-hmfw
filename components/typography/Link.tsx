@@ -3,6 +3,7 @@ import { usePrefixCls } from '../config-provider'
 import {
   baseTypographyProps,
   getTypographyClass,
+  getEllipsisStyle,
   wrapDecorations,
   extractText,
   useCopyable,
@@ -27,6 +28,7 @@ export default defineComponent({
       return (
         <a
           class={getTypographyClass(prefixCls, props, `${prefixCls}-link`)}
+          style={getEllipsisStyle(props)}
           href={props.disabled ? undefined : props.href}
           target={props.target}
           aria-disabled={props.disabled || undefined}

@@ -137,6 +137,14 @@ a.hmfw-typography-link,
   text-overflow: ellipsis;
 }
 
+/* Ellipsis（多行省略，由内联 -webkit-line-clamp 指定行数） */
+.hmfw-typography-ellipsis-multiple-line {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+
 /* Copy 按钮 */
 .hmfw-typography-copy {
   display: inline-flex;
