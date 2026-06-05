@@ -3068,19 +3068,51 @@ import { Image, PreviewGroup } from 'ant-design-hmfw'
 | alt | 图片描述 | `string` | - |
 | width | 宽度 | `number \| string` | - |
 | height | 高度 | `number \| string` | - |
-| preview | 是否开启预览 | `boolean` | `true` |
+| preview | 预览配置，`false` 时禁用 | `boolean \| PreviewConfig` | `true` |
 | fallback | 加载失败时的替代图片地址 | `string` | - |
-| placeholder | 是否显示加载占位 | `boolean` | `false` |
+| placeholder | 加载占位：`true` 显示骨架动画，或自定义 VNode | `boolean \| VNode \| (() => VNode)` | `false` |
+| rootClassName | 根节点 class | `string` | - |
+| onError | 加载失败回调 | `(e: Event) => void` | - |
+
+**PreviewConfig**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| open | 受控：是否打开预览 | `boolean` | - |
+| onOpenChange | 预览开关变化回调 | `(open: boolean) => void` | - |
+| src | 自定义预览图片地址（与 thumb 不同） | `string` | - |
+| closeIcon | 自定义关闭图标，`false` 隐藏 | `VNode \| (() => VNode) \| false` | `<CloseOutlined />` |
+| cover | 自定义 hover 遮罩内容 | `VNode \| (() => VNode)` | - |
+| mask | 遮罩配置：`false` 隐藏遮罩，对象形式可配置可点击性 | `boolean \| MaskType` | `true` |
+| scaleStep | 缩放每步倍率（1 + scaleStep） | `number` | `0.5` |
+| minScale | 最小缩放 | `number` | `1` |
+| maxScale | 最大缩放 | `number` | `50` |
+| movable | 是否可拖拽移动 | `boolean` | `true` |
+| getContainer | 预览挂载容器；`false` 时原地渲染 | `string \| HTMLElement \| (() => HTMLElement) \| false` | `document.body` |
+| zIndex | 预览根节点 z-index | `number` | `1080` |
+| onTransform | 预览 transform 变化回调 | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
+| imageRender | 自定义预览内容渲染 | `(originalNode: VNode, info: { transform: TransformType; image: ImgInfo }) => VNode` | - |
+| actionsRender | 自定义底部操作栏渲染 | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode` | - |
+
+**MaskType**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| enabled | 是否启用遮罩（hover 提示层） | `boolean` | `true` |
+| closable | 点击遮罩是否可关闭预览 | `boolean` | `true` |
 
 **PreviewGroup Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| preview | 是否开启预览 | `boolean` | `true` |
+| preview | 预览配置，`false` 时禁用 | `boolean \| PreviewConfig` | `true` |
+| items | 预览图片项（无子组件时用） | `(string \| ImgInfo)[]` | - |
+| current | 受控：当前预览索引 | `number` | - |
+| onChange | 切换预览图片回调 | `(current: number, prevCurrent: number) => void` | - |
 
 ### 示例
 
-基础用法 — 单张图片预览，支持 fallback 回退图片。
+基础用法 — 单张图片预览，支持 fallback 回退图片。第二张禁用预览，第三张加载失败时显示 fallback。
 
 ```vue
 <template>
@@ -3096,7 +3128,7 @@ import { Image, Space } from 'ant-design-hmfw'
 </script>
 ```
 
-图片组预览 — 多张图片共享一个预览弹层，支持切换。
+图片组预览 — 多张图片共享一个预览弹层，支持键盘左右键切换、Esc 关闭。
 
 ```vue
 <template>
@@ -4017,33 +4049,55 @@ import { notification } from 'ant-design-hmfw'
 
 ### Props
 
-**配置参数**
+**config 参数**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| message | 通知提醒标题 | `string` | - |
-| description | 通知提醒内容 | `string` | - |
-| duration | 默认 4.5 秒后自动关闭，设置为 null 则不自动关闭 | `number \| null` | `4.5` |
-| placement | 弹出位置 | `'topLeft' \| 'topRight' \| 'bottomLeft' \| 'bottomRight'` | `'topRight'` |
-| onClose | 当通知关闭时触发 | `() => void` | - |
-| key | 当前通知唯一标志 | `string` | - |
+| message | 通知提醒标题，必选 | `string \| number \| VNode \| () => VNode` | - |
+| description | 通知提醒内容，可选 | `string \| number \| VNode \| () => VNode` | - |
+| duration | 自动关闭的延时，单位秒。设为 0 时不自动关闭 | `number` | `4.5` |
+| placement | 弹出位置 | `'topLeft' \| 'topRight' \| 'bottomLeft' \| 'bottomRight' \| 'top' \| 'bottom'` | `'topRight'` |
+| key | 当前通知唯一标志，相同 key 会更新已有通知 | `string` | - |
+| icon | 自定义图标 | `VNode \| () => VNode` | - |
+| closeIcon | 自定义关闭图标 | `VNode \| () => VNode` | `<CloseOutlined />` |
+| btn | 自定义按钮 | `VNode \| () => VNode` | - |
+| onClick | 点击通知时触发的回调函数 | `() => void` | - |
+| onClose | 关闭时触发的回调函数 | `() => void` | - |
+| style | 自定义内联样式 | `CSSProperties` | - |
+| className | 自定义 CSS class | `string` | - |
+| pauseOnHover | 鼠标悬停时暂停自动关闭 | `boolean` | `true` |
+| role | 可访问性角色属性 | `'alert' \| 'status'` | `'alert'` |
+
+**全局配置方法**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| top | 消息从顶部弹出时，距离顶部的位置，单位像素 | `number` | `24` |
+| bottom | 消息从底部弹出时，距离底部的位置，单位像素 | `number` | `24` |
+| duration | 默认自动关闭延时，单位秒 | `number` | `4.5` |
+| placement | 弹出位置 | `NotificationPlacement` | `'topRight'` |
+| maxCount | 最大显示数，超过限制时，最早的消息会被自动关闭 | `number` | - |
+| getContainer | 配置渲染节点的输出位置 | `() => HTMLElement` | `() => document.body` |
+| pauseOnHover | 鼠标悬停时暂停自动关闭 | `boolean` | `true` |
+| closeIcon | 自定义关闭图标 | `VNode \| () => VNode` | - |
+| rtl | 是否开启 RTL 模式 | `boolean` | `false` |
 
 ### 示例
 
-基础用法 — 最简单的用法，4.5 秒后自动关闭。
+基础用法 — 最简单的用法，4.5 秒后自动关闭。通知提醒框左侧有图标，`message` 作为通知提醒标题，`description` 作为通知提醒内容。
 
 ```vue
 <template>
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <button @click="openSuccess">成功</button>
-    <button @click="openError">错误</button>
-    <button @click="openWarning">警告</button>
-    <button @click="openInfo">信息</button>
+    <Button @click="openSuccess">成功</Button>
+    <Button @click="openError">错误</Button>
+    <Button @click="openWarning">警告</Button>
+    <Button @click="openInfo">信息</Button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { notification } from 'ant-design-hmfw'
+import { notification, Button } from 'ant-design-hmfw'
 
 function openSuccess() {
   notification.success({
@@ -4075,28 +4129,41 @@ function openInfo() {
 </script>
 ```
 
-四个位置 — 通知从屏幕四个角弹出。
+自动关闭的延时 — 自定义通知框自动关闭的延时，默认 `4.5s`，取消自动关闭只要将该值设为 `0` 即可。
 
 ```vue
 <template>
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <button @click="open('topLeft')">左上角</button>
-    <button @click="open('topRight')">右上角</button>
-    <button @click="open('bottomLeft')">左下角</button>
-    <button @click="open('bottomRight')">右下角</button>
+    <Button @click="openWithDuration">默认 4.5 秒</Button>
+    <Button @click="openLongDuration">10 秒关闭</Button>
+    <Button @click="openNeverClose">永不关闭</Button>
+    <Button type="default" @click="notification.destroy()">关闭全部</Button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { notification } from 'ant-design-hmfw'
+import { notification, Button } from 'ant-design-hmfw'
 
-type Placement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
+function openWithDuration() {
+  notification.success({
+    message: '默认关闭时间',
+    description: '此通知将在 4.5 秒后自动关闭。',
+  })
+}
 
-function open(placement: Placement) {
+function openLongDuration() {
   notification.info({
-    message: `通知 (${placement})`,
-    description: `这是一条来自${placement}的通知消息。`,
-    placement,
+    message: '较长关闭时间',
+    description: '此通知将在 10 秒后自动关闭。',
+    duration: 10,
+  })
+}
+
+function openNeverClose() {
+  notification.warning({
+    message: '永不自动关闭',
+    description: '此通知需要手动关闭，duration 设置为 0。',
+    duration: 0,
   })
 }
 </script>
@@ -6302,19 +6369,40 @@ import { Tour } from 'ant-design-hmfw'
 | open (v-model) | 是否显示 | `boolean` | `false` |
 | current (v-model) | 当前步骤 | `number` | `0` |
 | steps | 步骤配置 | `TourStep[]` | `[]` |
-| arrow | 是否显示箭头 | `boolean` | `true` |
-| mask | 是否显示遮罩 | `boolean` | `true` |
-| type | 类型 | `'default' \| 'primary'` | `'default'` |
+| arrow | 是否显示箭头 | `boolean \| { pointAtCenter?: boolean }` | `true` |
+| placement | 引导卡片相对于目标元素的位置 | `TooltipPlacement` | `'bottom'` |
+| mask | 是否显示遮罩 | `boolean \| { style?: CSSProperties; color?: string }` | `true` |
+| type | 类型，影响底色与文字颜色 | `'default' \| 'primary'` | `'default'` |
+| scrollIntoViewOptions | 是否滚动到目标元素，支持传入滚动选项 | `boolean \| ScrollIntoViewOptions` | `true` |
+| zIndex | Tour 的 z-index | `number` | `1001` |
+| gap | 引导卡片与目标元素的距离和箭头偏移 | `{ offset?: number \| [number, number]; radius?: number }` | `{ offset: 12, radius: 4 }` |
+| indicatorsRender | 自定义指示器渲染 | `(current: number, total: number) => VNode` | - |
+| closeIcon | 自定义关闭图标，设置为 `false` 时隐藏关闭按钮 | `VNode \| (() => VNode) \| false` | `<CloseOutlined />` |
 
 **TourStep**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 标题 | `string` |  |
-| description | 描述 | `string` |  |
-| target | 目标元素（CSS 选择器或返回元素的函数） | `string \| (() => HTMLElement \| null)` |  |
-| placement | 弹出位置 | `TooltipPlacement` |  |
-| cover | 封面图片地址 | `string` |  |
+| title | 标题 | `string \| VNode \| (() => VNode)` | - |
+| description | 描述 | `string \| VNode \| (() => VNode)` | - |
+| target | 目标元素（CSS 选择器或返回元素的函数） | `string \| (() => HTMLElement \| null)` | - |
+| placement | 弹出位置 | `TooltipPlacement` | - |
+| cover | 封面图片或自定义内容 | `string \| VNode` | - |
+| type | 类型，优先级高于 Tour 的 type | `'default' \| 'primary'` | - |
+| mask | 是否显示遮罩，优先级高于 Tour 的 mask | `boolean \| { style?: CSSProperties; color?: string }` | - |
+| style | 自定义样式 | `CSSProperties` | - |
+| className | 自定义类名 | `string` | - |
+| nextButtonProps | 下一步按钮的属性 | `TourButtonProps` | - |
+| prevButtonProps | 上一步按钮的属性 | `TourButtonProps` | - |
+| scrollIntoViewOptions | 是否滚动到目标元素 | `boolean \| ScrollIntoViewOptions` | - |
+
+**TourButtonProps**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| children | 按钮文本 | `string \| VNode` |  |
+| onClick | 点击回调 | `() => void` |  |
+| ...其他 | Button 组件的其他属性 | `ButtonProps` |  |
 
 ### Events
 
@@ -6334,11 +6422,7 @@ import { Tour } from 'ant-design-hmfw'
     <Space>
       <Button ref="btnRef" type="primary" @click="open = true">开始引导</Button>
     </Space>
-    <Tour
-      v-model:open="open"
-      :steps="steps"
-      @finish="open = false"
-    />
+    <Tour v-model:open="open" :steps="steps" @finish="open = false" />
   </div>
 </template>
 
@@ -6363,6 +6447,65 @@ const steps: TourStep[] = [
     description: '引导完成！现在你已经了解了所有功能。',
   },
 ]
+</script>
+```
+
+不同类型 — Tour 有两种类型：`default` 和 `primary`。
+
+```vue
+<template>
+  <div>
+    <Space>
+      <Button type="primary" @click="openDefault">默认样式</Button>
+      <Button type="primary" @click="openPrimary">主题样式</Button>
+    </Space>
+    <Tour v-model:open="defaultOpen" :steps="defaultSteps" @finish="defaultOpen = false" />
+    <Tour
+      v-model:open="primaryOpen"
+      type="primary"
+      :steps="primarySteps"
+      @finish="primaryOpen = false"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Tour, Button, Space } from 'ant-design-hmfw'
+import type { TourStep } from 'ant-design-hmfw'
+
+const defaultOpen = ref(false)
+const primaryOpen = ref(false)
+
+const defaultSteps: TourStep[] = [
+  {
+    title: '默认样式',
+    description: '这是默认样式的引导，白色背景。',
+  },
+  {
+    title: '第二步',
+    description: '继续介绍功能...',
+  },
+]
+
+const primarySteps: TourStep[] = [
+  {
+    title: '主题样式',
+    description: '这是主题样式的引导，蓝色背景。',
+  },
+  {
+    title: '第二步',
+    description: '继续介绍功能...',
+  },
+]
+
+function openDefault() {
+  defaultOpen.value = true
+}
+
+function openPrimary() {
+  primaryOpen.value = true
+}
 </script>
 ```
 
