@@ -3,11 +3,7 @@
     <Space>
       <Button ref="btnRef" type="primary" @click="open = true">开始引导</Button>
     </Space>
-    <Tour
-      v-model:open="open"
-      :steps="steps"
-      @finish="open = false"
-    />
+    <Tour v-model:open="open" :steps="steps" @finish="open = false" />
   </div>
 </template>
 

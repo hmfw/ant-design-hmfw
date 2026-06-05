@@ -1,2 +1,9 @@
 export { notification } from './notification'
-export type { NotificationConfig, NotificationPlacement, NotificationType, NotificationInstance } from './types'
+export type {
+  NotificationPlacement,
+  NotificationType,
+  NotificationContent,
+  ArgsProps,
+  ConfigOptions,
+  NotificationInstance,
+} from './types'

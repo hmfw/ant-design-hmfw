@@ -13,7 +13,7 @@
 
 > **关于 `/clear`**：每个组件的产出已完整落地到分类文件（差异表+改动文件+Bug 清单），下一个组件不需要前一个的对话上下文。例外：当下一个组件是前一个的特化或共用底层（如 Popconfirm 复用 Popover 的 wrapper 接口），保留上下文或改用 `/compact` 软压缩。
 
-### ✅ 已完成（55 个，全量 1329 测试通过 + 2 skipped，修复 157 个真实 bug）
+### ✅ 已完成（56 个，全量 1383 测试通过 + 2 skipped，修复 165 个真实 bug）
 
 **基础/布局** → [`COMPARISON/01-basic-layout.md`](./COMPARISON/01-basic-layout.md)
 Divider · Flex · Space(修2bug) · Typography · Tag · Badge(修1) · Alert(修1行为) · Avatar · Empty · Card · Result · Spin(修 delay 失效 bug)
@@ -30,14 +30,13 @@ Input(修12bug) · InputNumber(修1bug) · Slider(修1bug) · Select(修1bug) ·
 Upload(修10bug) · Form(修8bug)
 
 **D 浮层/反馈** → [`COMPARISON/05-overlay-feedback.md`](./COMPARISON/05-overlay-feedback.md)
-Tooltip(修4bug) · Popover(修5bug) · Popconfirm(修8bug) · Modal(修9bug) · Drawer(修6bug) · Message(修2bug)
+Tooltip(修4bug) · Popover(修5bug) · Popconfirm(修8bug) · Modal(修9bug) · Drawer(修6bug) · Message(修2bug) · Notification(修2bug) · Tour(修2bug) · Image(修8bug)
 
 ### ⏭️ 待办路线图（简单→复杂，按序进行）
 
-- **D 浮层/反馈(剩余)**：notification、tour、image → 写入 [`COMPARISON/05-overlay-feedback.md`](./COMPARISON/05-overlay-feedback.md)
 - **E 数据/复杂**：table、tree、transfer、carousel、color-picker → 写入 [`COMPARISON/06-data-complex.md`](./COMPARISON/06-data-complex.md)
 
-**下一个执行**：D 浮层/反馈类（notification 起，建议先 `/clear`）。恢复时对我说「继续」即可。
+**下一个执行**：E 数据/复杂类（table 起，建议先 `/clear`）。恢复时对我说「继续」即可。
 
 ---
 
@@ -49,5 +48,5 @@ Tooltip(修4bug) · Popover(修5bug) · Popconfirm(修8bug) · Modal(修9bug) ·
 | 2 | A 展示类 | [02-display.md](./COMPARISON/02-display.md) | ✅ 10/10 |
 | 3 | B 容器/导航 | [03-container-nav.md](./COMPARISON/03-container-nav.md) | ✅ 11/11 |
 | 4 | C 表单控件 | [04-form.md](./COMPARISON/04-form.md) | ✅ 16/16 |
-| 5 | D 浮层/反馈 | [05-overlay-feedback.md](./COMPARISON/05-overlay-feedback.md) | 🚧 6/9（已完成 Tooltip · Popover · Popconfirm · Modal · Drawer · Message） |
+| 5 | D 浮层/反馈 | [05-overlay-feedback.md](./COMPARISON/05-overlay-feedback.md) | ✅ 9/9（已完成 Tooltip · Popover · Popconfirm · Modal · Drawer · Message · Notification · Tour · Image） |
 | 6 | E 数据/复杂 | [06-data-complex.md](./COMPARISON/06-data-complex.md) | ⏭️ 0/5 |

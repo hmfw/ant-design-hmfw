@@ -1,14 +1,14 @@
 <template>
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <button @click="openSuccess">成功</button>
-    <button @click="openError">错误</button>
-    <button @click="openWarning">警告</button>
-    <button @click="openInfo">信息</button>
+    <Button @click="openSuccess">成功</Button>
+    <Button @click="openError">错误</Button>
+    <Button @click="openWarning">警告</Button>
+    <Button @click="openInfo">信息</Button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { notification } from 'ant-design-hmfw'
+import { notification, Button } from 'ant-design-hmfw'
 
 function openSuccess() {
   notification.success({

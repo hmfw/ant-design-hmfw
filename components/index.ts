@@ -116,7 +116,14 @@ export { Alert } from './alert'
 export type { AlertProps, AlertType, AlertVariant } from './alert'
 
 export { notification } from './notification'
-export type { NotificationConfig, NotificationPlacement, NotificationType } from './notification'
+export type {
+  NotificationPlacement,
+  NotificationType,
+  NotificationContent,
+  ArgsProps as NotificationArgsProps,
+  ConfigOptions as NotificationConfigOptions,
+  NotificationInstance,
+} from './notification'
 
 export { Select } from './select'
 export type { SelectProps, SelectOption, SelectSize, SelectMode, SelectStatus } from './select'
@@ -239,7 +246,17 @@ export type { AppConfig } from './app'
 
 // Image
 export { Image, PreviewGroup } from './image'
-export type { ImageProps, PreviewGroupProps } from './image'
+export type {
+  ImageProps,
+  PreviewGroupProps,
+  PreviewConfig as ImagePreviewConfig,
+  ImageContent,
+  TransformType as ImageTransformType,
+  TransformAction as ImageTransformAction,
+  ImgInfo as ImageImgInfo,
+  MaskType as ImageMaskType,
+  ToolbarRenderInfoType as ImageToolbarRenderInfoType,
+} from './image'
 
 // Carousel
 export { Carousel } from './carousel'

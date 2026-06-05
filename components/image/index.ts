@@ -1,2 +1,12 @@
 export { Image, PreviewGroup } from './Image'
-export type { ImageProps, PreviewGroupProps } from './types'
+export type {
+  ImageProps,
+  PreviewGroupProps,
+  PreviewConfig,
+  ImageContent,
+  TransformType,
+  TransformAction,
+  ImgInfo,
+  MaskType,
+  ToolbarRenderInfoType,
+} from './types'

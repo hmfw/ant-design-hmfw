@@ -1,7 +1,7 @@
 .hmfw-tour-root {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 1001;
   pointer-events: none;
 }
 
@@ -31,46 +31,55 @@
 
 .hmfw-tour-popover-inner {
   position: relative;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  background: var(--hmfw-color-bg-elevated, #fff);
+  border-radius: var(--hmfw-border-radius, 8px);
+  box-shadow: var(--hmfw-box-shadow-secondary, 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05));
   padding: 20px 20px 16px;
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-popover-inner {
   background: var(--hmfw-color-primary, #1677ff);
-  color: #fff;
+  color: var(--hmfw-color-white, #fff);
 }
 
 .hmfw-tour-close {
   position: absolute;
   top: 12px;
-  right: 12px;
+  inset-inline-end: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
   background: transparent;
   border: none;
   cursor: pointer;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-tertiary, rgba(0, 0, 0, 0.45));
   line-height: 1;
-  padding: 4px;
-  border-radius: 4px;
-  transition: color 0.2s;
+  border-radius: var(--hmfw-border-radius-sm, 4px);
+  transition: color 0.2s, background-color 0.2s;
 }
 
-.hmfw-tour-close:hover { color: rgba(0, 0, 0, 0.88); }
+.hmfw-tour-close:hover {
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.65));
+  background-color: var(--hmfw-color-fill-quaternary, rgba(0, 0, 0, 0.04));
+}
 
 .hmfw-tour-popover-primary .hmfw-tour-close {
   color: rgba(255, 255, 255, 0.65);
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-close:hover {
-  color: #fff;
+  color: var(--hmfw-color-white, #fff);
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .hmfw-tour-cover {
   margin: -20px -20px 16px;
   overflow: hidden;
-  border-radius: 8px 8px 0 0;
+  border-radius: var(--hmfw-border-radius, 8px) var(--hmfw-border-radius, 8px) 0 0;
 }
 
 .hmfw-tour-cover img {
@@ -81,18 +90,19 @@
 .hmfw-tour-title {
   font-size: 16px;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
   margin-bottom: 8px;
-  padding-right: 20px;
+  padding-right: 24px;
+  line-height: 1.5;
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-title {
-  color: #fff;
+  color: var(--hmfw-color-white, #fff);
 }
 
 .hmfw-tour-description {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.65));
   line-height: 1.5714;
   margin-bottom: 16px;
 }
@@ -105,11 +115,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .hmfw-tour-indicators {
   display: flex;
   gap: 6px;
+  flex: 1;
 }
 
 .hmfw-tour-indicator {
@@ -117,14 +129,18 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--hmfw-color-fill-tertiary, rgba(0, 0, 0, 0.15));
   cursor: pointer;
   transition: background 0.2s, width 0.2s;
 }
 
+.hmfw-tour-indicator:hover {
+  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.25));
+}
+
 .hmfw-tour-indicator-active {
   background: var(--hmfw-color-primary, #1677ff);
-  width: 12px;
+  width: 16px;
   border-radius: 3px;
 }
 
@@ -132,11 +148,29 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
+.hmfw-tour-popover-primary .hmfw-tour-indicator:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
 .hmfw-tour-popover-primary .hmfw-tour-indicator-active {
-  background: #fff;
+  background: var(--hmfw-color-white, #fff);
 }
 
 .hmfw-tour-buttons {
   display: flex;
   gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Ghost button style for primary type */
+.hmfw-tour-popover-primary .hmfw-btn-default {
+  color: var(--hmfw-color-white, #fff);
+  border-color: var(--hmfw-color-white, #fff);
+  background: transparent;
+}
+
+.hmfw-tour-popover-primary .hmfw-btn-default:hover {
+  color: var(--hmfw-color-white, #fff);
+  border-color: var(--hmfw-color-white, #fff);
+  background: rgba(255, 255, 255, 0.12);
 }

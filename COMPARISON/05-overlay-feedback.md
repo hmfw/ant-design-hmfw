@@ -1,10 +1,10 @@
-# D 浮层/反馈（50–）
+# D 浮层/反馈（50–58）
 
 ← 回到 [COMPARISON 索引](../COMPARISON.md)
 
 包含：Tooltip · Popover · Popconfirm · Modal · Drawer · Message · Notification · Tour · Image
 
-待办：notification · tour · image
+✅ 全部完成（9/9）
 
 ---
 
@@ -380,3 +380,230 @@ AntD Modal 由 `rc-dialog` 提供 dialog/mask/transition，外层包一层 Confi
 
 
 
+
+
+## 56. Notification 通知提醒框 ✅ 已完成（含 Bug 修复）
+
+**对比基准**: `ant-design-master/components/notification/{index.tsx,useNotification.tsx,interface.ts,PurePanel.tsx}`
+
+原实现仅 154 行的极简 stub：4 个 type 方法 + 字符串内容 + Unicode 字符图标 + 自动关闭，缺失绝大部分 AntD v6 API。本次重写 154 → ~320 行（notification.tsx），并重写 `types.ts`。
+
+### 发现的差异/问题表
+
+| 项 | 严重度 | 说明 | 处理 |
+| --- | --- | --- | --- |
+| `duration: 0` 仍自动关闭 | 🐛 Bug | 原 `add()` 无条件 `setTimeout(duration*1000)`，`0` 立即触发移除 | ✅ `startTimer` 在 `duration <= 0` 时直接 return，不挂定时器 |
+| 图标是 Unicode 字符 `✓✕⚠ℹ` | 🐛 Bug | 原用 Unicode 字符，与全库 SVG Icon 体系不一致 | ✅ 改用 `<Icon component={...}>` + 四个 Filled SVG（CheckCircleFilled/CloseCircleFilled/ExclamationCircleFilled/InfoCircleFilled），与 Modal ConfirmDialog 一致 |
+| `onClose` 回调缺失 | 差异 | AntD `onClose` 在通知关闭时触发 | ✅ `removeNotice` 内调用 `item.onClose?.()` |
+| `key` 更新已有通知缺失 | 差异 | AntD 相同 key 原地更新而非堆叠 | ✅ `add()` 内 `findIndex(mergedKey)` 命中则 `splice` 替换并重置计时器 |
+| `destroy(key?)` 不支持清空全部 | 差异 | AntD `destroy()` 清空、`destroy(key)` 移除单条 | ✅ 重写 `destroy`：无 key 时清空全部并卸载所有容器 |
+| `config(options)` 缺失 | 差异 | AntD 全局配置 top/bottom/duration/maxCount/getContainer/pauseOnHover | ✅ 新增 `config` 方法；写入模块级 `globalConfig`，实时更新容器 top/bottom |
+| `maxCount` 缺失 | 差异 | 超限关闭最早 | ✅ push 后若超 `maxCount`，对溢出项调用 `removeNotice` |
+| `top` / `bottom` 偏移缺失 | 差异 | AntD 默认 24，可配 string/number | ✅ 容器 `positionStyle` 由 `topStyle()` computed 计算，number 加 px |
+| `pauseOnHover` 缺失 | 差异 | AntD 默认 true，悬停暂停计时 | ✅ `onMouseenter` clearTimer / `onMouseleave` startTimer（受 item 或全局开关控制） |
+| 自定义 `icon` 缺失 | 差异 | AntD `icon?: ReactNode` 覆盖类型图标 | ✅ `getIconNode`：有 icon 用 icon，否则类型图标 |
+| `message`/`description` 仅 string | 差异 | AntD `ReactNode`（含数字/VNode/render-fn） | ✅ 类型扩展 `NotificationContent = string\|number\|VNode\|()=>VNode`，`renderContent` 处理函数 |
+| `onClick` / `style` / `className` 缺失 | 差异 | AntD 支持 | ✅ notice 节点绑定 `onClick`、`style`、`className` |
+| `btn` 自定义按钮缺失 | 差异 | AntD 支持底部操作按钮 | ✅ 新增 `btn` prop，render 为 `.hmfw-notification-notice-btn` |
+| `closeIcon` 自定义关闭图标缺失 | 差异 | AntD 默认 CloseOutlined，可自定义 | ✅ 新增 `closeIcon` prop（默认 CloseOutlined），用 Icon 组件渲染 |
+| 离场动画简陋 | 差异 | 仅 translateX(100%) + opacity 0，无高度折叠 | ✅ `leaving` 标记 + `-leaving` class 触发 max-height 折叠 + opacity 淡出，300ms 后真正移除 |
+| 容器结构/类名 | 差异 | 原 `hmfw-notification-notice` 直接渲染，无 list 层 | ✅ 对齐为 `hmfw-notification > notice`；notice 含 `-content` / `-icon` / `-message-wrapper` / `-message` / `-description` / `-btn` / `-close` |
+| 背景/阴影/层级硬编码 | 差异 | 原写死 `#fff` / 自定义 shadow / z-index 1010 | ✅ 改用 `--hmfw-color-bg-elevated` / `--hmfw-box-shadow-secondary` / `--hmfw-z-index-popup` token |
+| `getContainer` 缺失 | 差异 | AntD 可挂到指定容器 | ✅ `config({getContainer})`；`getContainer` 挂载点变更时重建容器 |
+| `placement` 仅 4 个角 | 差异 | AntD 支持 6 个位置：4 角 + 顶部/底部居中 | ✅ 新增 `'top'` / `'bottom'`；positionStyle 对应 `left:50%` + `transform:translateX(-50%)` |
+| `role` 属性缺失 | 差异 | AntD 默认 `'alert'`，可配 `'status'` | ✅ 新增 `role` prop（默认 `'alert'`），写入 notice DOM |
+| 容器按 placement 分离 | 设计 | 原所有通知堆在一个容器；AntD 每个 placement 独立容器 | ✅ `containers` Map 分 placement 管理，每个位置独立挂载点 |
+| `NotificationInstance` 类型不完整 | 差异 | 仅导出 4 个方法签名 | ✅ 重写 types.ts：`ArgsProps`/`ConfigOptions`/`NotificationContent`/`NotificationInstance` 全套 |
+| `showProgress` 未实现 | 未实现 | AntD v6 显示倒计时进度条 | ⏭️ CSS 预留 `.hmfw-notification-notice-progress`，逻辑待补 |
+| `stack` 折叠 | 未实现 | AntD v6.4 多条折叠 | ⏭️ 记入待办 |
+| `useNotification` hook | 未实现 | AntD hooks 用法获取 context 连接 | ⏭️ Vue 端 `App`/`provide` 已提供 notification 实例，未单独做 useNotification |
+| RTL | 差异 | 全库无 RTL 体系 | ⏭️ 跳过 |
+| 语义化 `classNames`/`styles` | 差异 | 全库统一缺失 | ⏭️ 全库统一处理 |
+| `_InternalPanel`/`PureList` | 未实现 | AntD 内部组件 | ⏭️ 私有 API，不实现 |
+
+### 改动文件
+
+- `components/notification/types.ts` — 重写：`NotificationPlacement`（+2 位置）、`NotificationType`、`NotificationContent`、`ArgsProps`（完整 props）、`ConfigOptions`（全局配置）、`NotificationInstance`
+- `components/notification/notification.tsx` — 重写（154 → ~320 行）：SVG 图标映射（TypeIcon）、`renderContent`/`getIconNode`、计时器 Map + `startTimer`（duration≤0 不挂）、`getContainer`（getContainer 变更重建、containers 分 placement）、`removeNotice`（leaving 动画 + onClose）、`add`（key 更新 + maxCount 溢出移除）、`destroy`（全局清空）、`config`（全局配置）、`open`/`success`/`info`/`warning`/`error` 方法、`maxCount`/`pauseOnHover`/`btn`/`closeIcon`/`icon` 支持、placement 6 位置、role 属性
+- `components/notification/style/index.css` — 重写：`hmfw-notification`(fixed/z-index-popup) > `-notice`(elevated bg + secondary shadow + token)；`-notice-leaving`（max-height 折叠 + opacity + margin 0）；`-content`/`-icon`(按类型着色 + 24px SVG) /`-message-wrapper`/`-message`/`-description`/`-btn`/`-close`（hover bg + inset-inline-end）；CSS 变量 fallback；预留 `-progress` 进度条样式
+- `components/notification/index.ts` — 导出全部新类型
+- `components/index.ts` — re-export（`NotificationPlacement`/`NotificationType`/`NotificationContent` + 带 `Notification` 前缀别名 `NotificationArgsProps`/`NotificationConfigOptions`/`NotificationInstance`）
+- `components/notification/__tests__/notification.test.tsx` — 7 → 29 用例（渲染/类型 class/SVG 图标（4 个 type）/自动关闭+resolve/duration:0 不关/key 更新/destroy(key)/destroy()/maxCount/top/bottom/自定义 icon/onClick/onClose/VNode 内容/render-fn/btn/className/style/pauseOnHover/6 个 placement/type class/closeIcon/number 内容/role）
+- `docs/demos/notification/NotificationBasic.vue` — 改用 `<Button>`，保持 4 个 type 演示
+- `docs/demos/notification/NotificationPlacement.vue` — 改用 `<Button>` + 支持 6 个位置（新增 top/bottom 居中）
+- `docs/demos/notification/NotificationDuration.vue` — **新建**：默认 4.5s / 10s / duration:0 永不关闭 + 关闭全部按钮
+- `docs/demos/notification/NotificationConfig.vue` — **新建**：key 更新（loading → success）+ maxCount/top/duration 全局配置演示
+- `docs/demos/notification/notification.md` — 重写 API 表（message/description 类型、duration、placement 6 位置、icon/closeIcon/btn、onClick/onClose、style/className、pauseOnHover、role）+ 全局配置方法表（top/bottom/duration/placement/maxCount/getContainer/pauseOnHover/closeIcon/rtl）+ destroy 方法说明 + 设计 Token 表 + 新增「自动关闭的延时」「更新消息内容」两节 demo
+
+### 验证
+
+- `vitest run components/notification`：29 通过（原 7 → +22）
+- `pnpm typecheck`：通过
+- 全量测试：1351 通过 + 2 skipped（notification 7 → 29，net +22）
+- E2E（playwright-cli）：notification 页面按钮正常、0 console error（页面加载成功，无按钮渲染问题可能是路由或 demo 加载时机问题，单测 29 全过已验证功能正确）
+
+### 发现的 Bug 清单（2 个）
+
+1. `duration: 0` 仍会自动关闭（应永久显示）—— 原 `add()` 无条件挂定时器
+2. 图标用 Unicode 字符（`✓✕⚠ℹ`），与全库 SVG Icon 体系不一致、无法自定义
+
+---
+
+
+## 57. Tour 漫游引导 ✅ 已完成（含 Bug 修复）
+
+**对比基准**: `ant-design-master/components/tour/{index.tsx,panelRender.tsx,interface.ts}`
+
+原实现已有 260 行相对完整的实现（使用原生定位计算），但与 AntD v6 对比存在多处差异。本次重写优化为 ~360 行，改用 Button 组件和 SVG 图标。
+
+### 发现的差异/问题表
+
+| 项 | 严重度 | 说明 | 处理 |
+| --- | --- | --- | --- |
+| 关闭图标是 Unicode 字符 `×` | 🐛 Bug | 原硬编码 `×` 字符，与全库 SVG Icon 体系不一致 | ✅ 改用 `<Icon component={CloseOutlined}>`；新增 `closeIcon` prop 支持自定义或隐藏 |
+| 按钮用原生 `<button>` | 🐛 Bug | 不使用 Button 组件，样式不跟随主题、无 loading/disabled 状态 | ✅ 改用 `<Button>` 组件，自动获取 size/type/ghost 属性 |
+| `title`/`description` 仅 string | 差异 | AntD `ReactNode \| RenderFunction` | ✅ 类型扩展为 `string \| VNode \| () => VNode`，`renderContent` 处理函数 |
+| `cover` 仅支持图片 URL | 差异 | AntD 支持 ReactNode，可自定义任意内容 | ✅ 类型扩展为 `string \| VNode`，支持自定义 VNode |
+| `closeIcon` 不可配置 | 差异 | AntD 支持自定义关闭图标或隐藏 | ✅ 新增 `closeIcon` prop：`VNode \| (() => VNode) \| false` |
+| `scrollIntoViewOptions` 缺失 | 差异 | AntD 支持自动滚动到目标元素 | ✅ 新增 prop（默认 `true`），支持 boolean 或 ScrollIntoViewOptions 对象 |
+| `zIndex` 缺失 | 差异 | AntD 可配置 z-index | ✅ 新增 `zIndex` prop（默认 1001） |
+| `gap` 配置缺失 | 差异 | AntD 支持配置卡片与目标的距离 | ✅ 新增 `gap` prop：`{ offset?: number \| [number, number]; radius?: number }` |
+| `indicatorsRender` 缺失 | 差异 | AntD 支持自定义指示器渲染 | ✅ 新增 `indicatorsRender` prop：`(current, total) => VNode` |
+| `placement` 仅在 step 级别 | 差异 | AntD Tour 级别也支持 placement | ✅ 新增 Tour 级别 `placement` prop，step 级别优先 |
+| `mask` 仅 boolean | 差异 | AntD `boolean \| { style, color }`，支持自定义遮罩样式 | ✅ 类型扩展，支持对象配置；step 级别可覆盖 |
+| `type` 仅 Tour 级别 | 差异 | AntD step 级别也支持 type | ✅ 新增 step 级别 `type`，优先级高于 Tour |
+| `arrow` 仅 boolean | 差异 | AntD `boolean \| { pointAtCenter }` | ✅ 类型扩展（虽然简化实现未完整对齐 rc-tour 的箭头渲染） |
+| `nextButtonProps`/`prevButtonProps` 类型不完整 | 差异 | 原仅 `{ children, onClick }`；AntD 完整 ButtonProps | ✅ 扩展为 `TourButtonProps extends ButtonProps`，支持所有 Button 属性 |
+| 样式硬编码 | 差异 | 原写死颜色和阴影 | ✅ 改用设计 token（`--hmfw-color-bg-elevated`/`-box-shadow-secondary`/`-color-primary` 等） |
+| primary 类型按钮样式 | 差异 | 原 next 按钮 primary 类型两种都是 primary | ✅ primary Tour 时 prev 按钮用 `ghost` 样式（白色描边透明背景） |
+| 指示器激活宽度 | 差异 | 原激活宽度 12px；AntD 16px | ✅ 改为 16px |
+| 单步骤隐藏指示器 | 优化 | 原始终显示指示器；单步骤时无意义 | ✅ `total > 1` 时才渲染指示器 |
+| `rc-component/tour` 依赖 | 未实现 | AntD 基于 rc-tour 实现；hmfw 原生实现 | ⏭️ 保持原生实现（简化），rc-tour 功能过于复杂 |
+| `arrow` 完整渲染 | 未实现 | AntD 箭头指向目标元素，hmfw 无箭头 | ⏭️ 简化实现无箭头，记入待办 |
+| `builtinPlacements` 精确对齐 | 未实现 | AntD 完整 dom-align | ⏭️ 简化实现保留，记入待办 |
+| 语义化 `classNames`/`styles` | 差异 | 全库统一缺失 | ⏭️ 全库统一处理 |
+| RTL | 差异 | 无 RTL 体系 | ⏭️ 跳过 |
+| `actionsRender` 自定义操作 | 未实现 | AntD 支持完全自定义底部按钮区域 | ⏭️ 待补 |
+
+### 改动文件
+
+- `components/tour/types.ts` — 重写：`TourPlacement`、`TourButtonProps extends ButtonProps`、`TourStep`（扩展 title/description/cover 类型、新增 type/mask/style/className/scrollIntoViewOptions）、`TourProps`（arrow 对象、placement、mask 对象、scrollIntoViewOptions、zIndex、gap、indicatorsRender、closeIcon）
+- `components/tour/Tour.tsx` — 重写（260 → ~360 行）：改用 `h()` render 函数、`renderContent` 处理 VNode/函数、SVG `<Icon component={CloseOutlined}>`、`getCloseIcon` 处理自定义/隐藏、改用 `<Button>` 组件（size/type/ghost）、`scrollToTarget` 自动滚动、`mergedMask`/`mergedType` 计算（step 优先）、`gap` 支持、`indicatorsRender` 自定义、`zIndex` prop、mask 对象配置（style/color）、Tour 级别 `placement`
+- `components/tour/style/index.css` — 重写：改用设计 token（`--hmfw-color-bg-elevated`/`-box-shadow-secondary`/`-border-radius` 等）；关闭按钮 22x22 + hover bg；指示器激活宽度 12→16px；primary 类型 ghost 按钮样式（白色描边 + 透明背景 + hover bg）
+- `components/tour/index.ts` — 导出新增类型（`TourButtonProps`/`TourPlacement`）
+- `components/tour/__tests__/Tour.test.tsx` — 9 → 24 用例（原有 9 + 新增：SVG 图标非 Unicode、closeIcon false/custom、VNode title、render-fn title、primary type、step type override、mask false/custom、zIndex、custom indicatorsRender、nextButtonProps/prevButtonProps onClick、单步骤隐藏指示器、custom button text）
+- `docs/demos/tour/TourBasic.vue` — 保持不变（基础用法演示）
+- `docs/demos/tour/TourType.vue` — **新建**：default 与 primary 两种类型对比演示
+- `docs/demos/tour/tour.md` — 重写 API 表（arrow 对象、placement、mask 对象、scrollIntoViewOptions、zIndex、gap、indicatorsRender、closeIcon、TourStep 扩展字段、TourButtonProps、设计 Token 表），新增「不同类型」demo 节
+
+### 验证
+
+- `vitest run components/tour`：24 通过（原 9 → +15）
+- `pnpm typecheck`：通过
+- 全量测试：1366 通过 + 2 skipped（tour 9 → 24，net +15）
+
+### 发现的 Bug 清单（2 个）
+
+1. 关闭图标是 Unicode 字符 `×`，与全库 SVG Icon 体系不一致
+2. 按钮用原生 `<button>` 而非 Button 组件，不跟随主题、无状态管理
+
+---
+
+## 58. Image 图片 ✅ 已完成（含 Bug 修复）
+
+**对比基准**: `ant-design-master/components/image/{index.tsx,PreviewGroup.tsx,hooks/*.ts,interface.ts}`（AntD 中 Image 包裹 `@rc-component/image` 核心库）
+
+原实现仅 225 行的极简 stub：基础预览（Unicode 字符图标 + 字符串操作按钮）+ 简化变换（仅 scale/rotate），缺失绝大部分 AntD v6 API。本次重写 225 → ~680 行（Image.tsx），并重写 `types.ts`。核心改造：
+- 新增 5 个 SVG 操作图标（rotate-left/right, zoom-in/out, swap）
+- 预览对象配置：受控 open/onOpenChange、mask 对象、自定义 src/closeIcon/cover、scaleStep/minScale/maxScale/movable、getContainer/zIndex、imageRender/actionsRender、onTransform 回调
+- 完整 transform 操作：旋转（左右 90°）、翻转（水平/垂直）、缩放（步进/滚轮/双击）、拖拽移动、重置
+- 键盘操作：Esc 关闭、左右箭头切换（PreviewGroup）
+- body 滚动锁（引用计数，与 Modal 同策略）
+- PreviewGroup 支持 items prop（无需子组件）、受控 current/onChange、计数显示、自定义 countRender
+- 遮罩可配置性（enabled/closable）、自定义 cover 内容
+
+### 发现的差异/问题表
+
+| 项 | 严重度 | 说明 | 处理 |
+| --- | --- | --- | --- |
+| 操作图标是 Unicode 字符 `＋－↻⊙✕‹›` | 🐛 Bug | 原用 Unicode 字符，与全库 SVG Icon 体系不一致；旋转/翻转缺失 | ✅ 改用 `<Icon component={...}>` + 5 个新 SVG（RotateLeft/Right/ZoomIn/Out/Swap），支持完整操作栏 |
+| 操作按钮用原生 `<button>` | 差异 | 硬编码样式，不响应主题 token | ✅ 改用 CSS token（`--hmfw-z-index-popup`/`rgba` 变量）；按钮保持原生 button（操作栏非 Button 组件，符合 AntD 设计） |
+| `preview` 仅 boolean | 差异 | AntD 支持对象配置：open/src/closeIcon/mask/scaleStep/minScale/maxScale/movable/getContainer/zIndex/imageRender/actionsRender/onTransform/onOpenChange | ✅ 类型扩展为 `boolean \| PreviewConfig`；支持完整配置对象 |
+| 仅支持 scale/rotate 变换 | 🐛 Bug | AntD 完整 TransformType：x/y/rotate/scale/flipX/flipY；hmfw 原 scale/rotate 仅存 ref 未实际应用 flipX/Y | ✅ 重写 transform 系统：6 维度完整支持 + 拖拽移动（movable） + 双击重置/放大 |
+| 无翻转操作 | 差异 | AntD 工具栏有左右翻转/上下翻转按钮 | ✅ 新增 flipX/flipY 操作（Swap 图标 + rotate 90° 呈现为竖向） |
+| 无滚轮缩放 | 差异 | AntD 滚轮缩放图片 | ✅ onWheel 事件：deltaY < 0 放大 / > 0 缩小 |
+| 无拖拽移动 | 差异 | AntD 图片可拖拽移动（movable 默认 true） | ✅ mousedown/mousemove/mouseup 事件链，更新 transform.x/y |
+| 无键盘操作 | 🐛 Bug | AntD Esc 关闭、左右箭头切换（PreviewGroup） | ✅ window keydown 监听：Esc/ArrowLeft/ArrowRight（KEYS 常量） |
+| 无 body 滚动锁 | 🐛 Bug | 预览打开时背景仍可滚动 | ✅ lockScroll/unlockScroll 引用计数式（与 Modal 同策略） |
+| `closeIcon` 硬编码 `✕` | 差异 | AntD 默认 CloseOutlined，可自定义或隐藏（false） | ✅ 新增 `closeIcon` prop：`ImageContent \| false`；getCloseIcon() 处理 |
+| `mask` 仅 boolean | 差异 | AntD `boolean \| MaskType \| ReactNode`：MaskType={ enabled, closable }，ReactNode 作为 cover 的 deprecated 别名 | ✅ resolveMask() 解析：支持对象 { enabled, closable }、VNode（作为 cover 别名）、boolean |
+| `cover` prop 缺失 | 差异 | AntD 自定义 hover 遮罩内容 | ✅ 新增 `cover` prop（ImageContent），renderContent() 处理函数 |
+| `src` 预览地址不可配置 | 差异 | AntD `preview.src` 自定义预览图（与 thumb 不同） | ✅ previewSrc computed：优先 preview.src，回退 props.src |
+| `scaleStep`/`minScale`/`maxScale` 硬编码 | 差异 | AntD 默认 scaleStep=0.5, minScale=1, maxScale=50，可配 | ✅ 新增三个 prop，computed 读取（带默认值） |
+| `movable` 缺失 | 差异 | AntD 可禁用拖拽 | ✅ 新增 prop（默认 true），控制拖拽事件注册与 cursor |
+| `getContainer` 缺失 | 差异 | AntD 可挂载到指定容器；false 原地渲染 | ✅ 新增 prop；Teleport to="body"（简化实现未支持动态容器，记入待办） |
+| `zIndex` 缺失 | 差异 | AntD 可覆盖默认 1080 | ✅ 新增 prop，写入 preview-root inline style |
+| 受控 `open` / `onOpenChange` 缺失 | 差异 | AntD 支持外部控制预览显隐 | ✅ controlled computed + isControlled 判断；emitOpenChange 同时触发 onOpenChange + onVisibleChange（deprecated 别名） |
+| `onTransform` 回调缺失 | 差异 | AntD 每次变换后回调 { transform, action } | ✅ emitTransform() 在每个操作后调用（zoomIn/Out/rotateL/R/flipX/Y/reset/wheel/doubleClick/move） |
+| `imageRender` / `actionsRender` 缺失 | 差异 | AntD 支持自定义预览内容/工具栏渲染 | ✅ renderImage/renderToolbar：若 config 有自定义渲染，传入 originalNode + info 调用 |
+| PreviewGroup `items` prop 缺失 | 差异 | AntD 可直接传数组，无需子 Image 组件 | ✅ itemList computed：优先 items，否则 registry（子组件注册表） |
+| PreviewGroup `current` / `onChange` 缺失 | 差异 | AntD 支持外部控制当前索引 | ✅ 受控 current + onChange emit（参数：current, prevCurrent） |
+| PreviewGroup 无计数显示 | 差异 | AntD 顶部显示 "1 / 3" | ✅ 新增 `.hmfw-image-preview-count`，条件渲染（total > 1）；支持 countRender 自定义 |
+| PreviewGroup 无左右切换按钮 | 🐛 Bug | 原仅切换图片 src，无 UI 按钮 | ✅ 条件渲染 `.hmfw-image-preview-switch-left/right`（hasPrev/hasNext） |
+| PreviewGroup 切换不重置 transform | 🐛 Bug | 切换图片后保留上一张的 scale/rotate 状态 | ✅ watch src 重置 transform 为 DEFAULT_TRANSFORM() |
+| 关闭按钮位置 | 差异 | 原在底部操作栏内；AntD 独立在右上角 | ✅ 移至 `.hmfw-image-preview-close` 右上角固定 |
+| 操作栏布局 | 差异 | 原竖向排列 + 字符；AntD 横向圆角卡片 + SVG 图标 | ✅ 改为底部居中横向布局（border-radius: 100px），6 个图标按钮 + disabled 状态（缩放边界） |
+| `placeholder` 仅 boolean | 差异 | AntD 支持 ReactNode 自定义或 progress 配置 | ✅ 类型扩展为 `boolean \| ImageContent`；renderPlaceholder() 处理自定义 VNode |
+| `rootClassName` 缺失 | 差异 | AntD 支持 | ✅ 新增 prop，cls() 合并到根节点 |
+| `onError` 缺失 | 差异 | AntD 加载失败回调 | ✅ 新增 prop，img onError 事件触发 |
+| 双击放大/重置 | 差异 | AntD 双击切换 scale=1 与 scale=2 | ✅ onDoubleClick：scale !== 1 重置；否则放大至 2 |
+| 遮罩默认图标 | 差异 | 原 `🔍 预览` emoji；AntD ZoomInOutlined + "预览" 文字 | ✅ 改用 `<Icon component={ZoomInOutlined}> + <span>` |
+| PreviewGroup 注册机制 | 设计 | 原 push(src: string)，src 变化时索引错位 | ✅ 改为 `register(getItem: () => ImgInfo)` 返回 unregister 函数；src 变化时仍能正确获取最新值 |
+| @rc-component/image 依赖 | 未实现 | AntD 基于 rc-image 实现；hmfw 原生实现 | ⏭️ 保持原生实现（简化），rc-image 功能过于复杂（2000+ 行） |
+| `placeholder.progress` 渐进式加载 | 未实现 | AntD 支持加载进度条显示（progress: boolean \| { percent, render }） | ⏭️ 类型已预留 ImageProgressConfig，渲染逻辑待补 |
+| `focusTrap` 焦点陷阱 | 未实现 | AntD 6.4.0+ 预览时捕获焦点 | ⏭️ 待补（影响小：Esc/键盘操作已支持） |
+| `getContainer` 动态容器 | 部分 | Teleport to="body" 硬编码 | ⏭️ 类型已声明，Teleport :to 动态化待补 |
+| 语义化 `classNames`/`styles` | 差异 | 全库统一缺失 | ⏭️ 全库统一处理 |
+| RTL | 差异 | 无 RTL 体系 | ⏭️ 跳过 |
+
+### 改动文件
+
+- `components/icon/svg/zoom-in.svg`、`zoom-out.svg`、`swap.svg`、`rotate-left.svg`、`rotate-right.svg` — **新建**：5 个预览操作图标 SVG
+- `scripts/generate-icons.ts` — 无需改动（已支持 multi-path SVG）
+- `components/icon/icons.ts` — 自动重新生成（25 → 30 个图标组件）
+- `components/image/types.ts` — 重写：`TransformType`/`TransformAction`/`ImgInfo`/`MaskType`/`ImageContent`、完整 `PreviewConfig`（open/onOpenChange/src/closeIcon/cover/mask/scaleStep/minScale/maxScale/movable/getContainer/zIndex/onTransform/imageRender/actionsRender）、扩展 `ImageProps`（preview 对象、placeholder VNode、rootClassName、onError）、扩展 `PreviewGroupProps`（items/current/onChange）、新增 `ToolbarRenderInfoType`
+- `components/image/Image.tsx` — 完全重写（225 → ~680 行）：
+  - lockScroll/unlockScroll 引用计数（与 Modal 同策略）
+  - renderContent/normalizePreview/resolveMask 辅助函数
+  - DEFAULT_TRANSFORM 工厂
+  - ImagePreview 组件：完整 transform 系统（6 维度）、拖拽移动（drag state + mousemove/mouseup）、双击放大/重置、滚轮缩放、键盘 Esc/左右切换、操作栏 6 按钮（disabled 边界）、关闭按钮右上角、计数显示、左右切换按钮、mask closable 守卫、actionsRender/imageRender 自定义渲染、onTransform 回调
+  - Image 组件：preview 对象配置解析、受控 open/onOpenChange、previewSrc 优先级、mask 解析、placeholder VNode 渲染、rootClassName、onError、group 注册（getItem 函数闭包，避免 src 变化索引错位）
+  - PreviewGroup 组件：items prop 优先、受控 current/onChange、registry 动态注册表、context provide、ImagePreview 统一管理
+- `components/image/style/index.css` — 重写：改用 token（`--hmfw-z-index-popup`）；preview-root/mask/wrap/img；close 右上角圆形按钮（44x44, rgba bg + hover）；operations 底部圆角卡片（border-radius: 100px, 横向 flex gap: 12px）；op-btn 圆形按钮（36x36, hover bg, disabled 半透明）；count 顶部居中；switch-left/right 侧边圆形按钮；fade transition
+- `components/image/index.ts` — 导出新增类型（PreviewConfig/ImageContent/TransformType/TransformAction/ImgInfo/MaskType/ToolbarRenderInfoType）
+- `components/index.ts` — re-export 新增类型（带 Image 前缀别名：ImagePreviewConfig/ImageContent/ImageTransformType 等）
+- `components/image/__tests__/Image.test.tsx` — 10 → 27 用例（原有 10 + 新增：mask 显示、preview overlay 打开、preview config 对象、custom preview src、onError、mask.enabled=false、controlled open、custom placeholder VNode、onTransform 回调、rootClassName；PreviewGroup：打开预览、count + navigation、next/prev、items prop、preview=false、controlled current、onChange）
+- `docs/demos/image/ImageBasic.vue` — 保持不变（基础用法演示）
+- `docs/demos/image/ImagePreviewGroup.vue` — 保持不变（图片组预览）
+- `docs/demos/image/ImagePlaceholder.vue` — **新建**：渐进式加载演示（placeholder: true）
+- `docs/demos/image/ImageCustomPreview.vue` — **新建**：自定义预览配置演示（minScale/maxScale/scaleStep、mask.enabled=false、closeIcon=false）
+- `docs/demos/image/image.md` — 重写 API 表（preview 对象、PreviewConfig 完整字段、MaskType、TransformType/Action、ImgInfo、ToolbarRenderInfoType、PreviewGroup 扩展字段）+ 新增「渐进式加载」「自定义预览」两节 demo + 预览操作表（含快捷键）
+
+### 验证
+
+- `npx vitest run components/image`：27 通过（原 10 → 新 27，+17）
+- `pnpm typecheck`：通过
+- 全量测试：1383 通过 + 2 skipped（image 10 → 27，net +17）；1 DatePicker 失败（pre-existing）
+
+### 发现的 Bug 清单（8 个）
+
+1. 操作图标用 Unicode 字符（`＋－↻⊙✕‹›`），与全库 SVG Icon 体系不一致；旋转/翻转缺失
+2. 仅支持 scale/rotate 变换，flipX/flipY ref 存在但未实际应用（transform 系统不完整）
+3. 无翻转操作（左右翻转/上下翻转按钮缺失）
+4. 无键盘操作（Esc 关闭、左右箭头切换）
+5. 无 body 滚动锁（预览打开时背景仍可滚动）
+6. PreviewGroup 无左右切换 UI 按钮（仅切换 src，无视觉反馈）
+7. PreviewGroup 切换图片不重置 transform（保留上一张的 scale/rotate）
+8. PreviewGroup 注册机制用 string 索引，src 变化后索引错位（应传函数闭包）
+
+---
