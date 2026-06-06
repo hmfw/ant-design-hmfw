@@ -30,21 +30,22 @@
   width: 100%;
 }
 
-/* Arrows */
+/* Arrows (Button components) */
 .hmfw-carousel-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  background: rgba(0, 0, 0, 0.3);
-  border: none;
-  color: #fff;
-  font-size: 28px;
-  line-height: 1;
-  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   cursor: pointer;
   border-radius: 2px;
-  transition: background 0.2s;
+  transition: background 0.2s, opacity 0.2s;
   opacity: 0;
 }
 
@@ -53,7 +54,7 @@
 }
 
 .hmfw-carousel-arrow:hover {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.6) !important;
 }
 
 .hmfw-carousel-arrow-left { left: 8px; }
@@ -83,14 +84,16 @@
   flex-direction: row;
 }
 
-.hmfw-carousel-dots-left {
+.hmfw-carousel-dots-left,
+.hmfw-carousel-dots-start {
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
   flex-direction: column;
 }
 
-.hmfw-carousel-dots-right {
+.hmfw-carousel-dots-right,
+.hmfw-carousel-dots-end {
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
@@ -118,7 +121,6 @@
   width: 24px;
 }
 
-/* Vertical dots */
 .hmfw-carousel-vertical .hmfw-carousel-dots-left li button,
 .hmfw-carousel-vertical .hmfw-carousel-dots-right li button {
   width: 3px;
@@ -129,3 +131,27 @@
   width: 3px;
   height: 24px;
 }
+
+/* Progress dots (autoplay.dotDuration) */
+.hmfw-carousel-dots-progress .hmfw-carousel-dot-active button {
+  position: relative;
+  overflow: hidden;
+}
+
+.hmfw-carousel-dots-progress .hmfw-carousel-dot-active button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: rgba(255, 255, 255, 0.5);
+  animation: carousel-dot-progress var(--carousel-dot-duration, 3000ms) linear forwards;
+}
+
+@keyframes carousel-dot-progress {
+  to {
+    width: 100%;
+  }
+}
+

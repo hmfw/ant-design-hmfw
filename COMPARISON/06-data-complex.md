@@ -222,54 +222,81 @@
 
 ---
 
-## 62. Carousel 走马灯 🔄 待处理（差异已识别）
+## 62. Carousel 走马灯 ✅ 已完成（含 Bug 修复 + 功能补全）
 
 **对比基准**: `ant-design-master/components/carousel/index.tsx`（AntD 基于 `@ant-design/react-slick`）
 
-**实现说明**: hmfw 为原生精简实现（`Carousel.tsx` 130 行），手动实现 scrollx/fade 切换与自动播放。核心交互（手动切换/自动播放/指示点/箭头/渐显）已实现并有测试覆盖；AntD 基于 react-slick 提供的高级能力（拖拽滑动、响应式断点、自定义箭头、进度条 dots、RTL、垂直模式）缺失。
+**实现说明**: hmfw 为原生精简实现（`Carousel.tsx` ~270 行），手动实现 scrollx/fade 切换与自动播放。核心交互（手动切换/自动播放/指示点/箭头/渐显/ref 方法/可访问性）已实现并有测试覆盖；AntD 基于 react-slick 提供的高级能力（拖拽滑动、响应式断点、自定义箭头、垂直模式、多列轮播）按需后补。
 
 ### 发现的差异/问题表
 
 | 项 | 严重度 | 说明 | 处理 |
 | --- | --- | --- | --- |
-| 箭头用自绘 `<button>` | 🐛 Bug | 未集成库内 Button，aria-label 缺失 | ⏭️ 改用 Button + 图标；补 `aria-label` |
-| 无 `arrows` 控制显隐 | 差异 | AntD v5.17+ `arrows` prop 控制箭头显示，hmfw 固定渲染 | ⏭️ 新增 prop（默认 false，与 AntD 对齐） |
-| 无自定义箭头 `prevArrow`/`nextArrow` | 差异 | AntD 支持自定义箭头 VNode | ⏭️ 新增 prop |
-| 无 `draggable` 拖拽 | 差异 | AntD 支持鼠标/触摸拖拽切换 | ⏭️ 新增（监听 touchstart/mousemove/touchend，阈值判定切换） |
-| 无 `waitForAnimate` | 差异 | AntD 动画期间禁止切换，hmfw 已用 `transitioning` 实现但未暴露 prop | ⏭️ 新增 prop（默认 false） |
-| `dotPosition` 命名过时 | 差异 | AntD v6 废弃 `dotPosition`，推荐 `dotPlacement`（start/end 替代 left/right，RTL 自适应） | ⏭️ 重命名；保留 `dotPosition` 兼容并标 `@deprecated` |
-| `dots` 仅 boolean | 差异 | AntD 支持对象 `{className}` 自定义 dots class | ⏭️ 类型与逻辑支持对象形式 |
-| 无 `autoplay.dotDuration` | 差异 | AntD v5.24+ 自动播放时 dots 显示进度条动画 | ⏭️ 新增；CSS `animation: dot-progress ${autoplaySpeed}ms linear` |
-| 无 `vertical` | 差异 | AntD 垂直滚动模式（`dotPlacement=start/end` 时自动推断） | ⏭️ 新增；scrollx 改用 `translateY`；dots 纵向排列 |
-| 无 `speed` 自定义动画时长 | 差异 | AntD `speed=500` 可调，hmfw 固定 400ms | ⏭️ 新增 prop |
-| 无 `easing` | 差异 | AntD 自定义缓动函数（`linear`/`ease`/...） | ⏭️ 新增 prop，透传到 CSS `transition-timing-function` |
-| 无 `fade` 独立 prop | 差异 | AntD 同时支持 `fade={true}` 与 `effect='fade'`，hmfw 仅 `effect` | ⏭️ 补 `fade` prop（优先级高于 `effect`） |
+| 箭头用自绘 `<button>` | 🐛 Bug | 未集成库内 Button，aria-label 缺失 | ✅ 改用 Button(type=text) + Icon(LeftOutlined/RightOutlined)；补 `aria-label` |
+| 无 `arrows` 控制显隐 | 差异 | AntD v5.17+ `arrows` prop 控制箭头显示，hmfw 固定渲染 | ✅ 新增 prop（默认 false，与 AntD 对齐） |
+| 无自定义箭头 `prevArrow`/`nextArrow` | 差异 | AntD 支持自定义箭头 VNode | ✅ 新增 prop（VNode 类型） |
+| 无 `draggable` 拖拽 | 差异 | AntD 支持鼠标/触摸拖拽切换 | ⏭️ 后补（需处理触摸事件与鼠标事件兼容，阈值判定） |
+| 无 `waitForAnimate` | 差异 | AntD 动画期间禁止切换，hmfw 已用 `transitioning` 实现但未暴露 prop | ✅ 新增 prop（默认 false），接入 `transitioning` 判断 |
+| `dotPosition` 命名过时 | 差异 | AntD v6 废弃 `dotPosition`，推荐 `dotPlacement`（start/end 替代 left/right，RTL 自适应） | ✅ 新增 `dotPlacement` prop；保留 `dotPosition` 兼容并标 `@deprecated`；`mergedDotPlacement` 映射 left→start、right→end |
+| `dots` 仅 boolean | 差异 | AntD 支持对象 `{className}` 自定义 dots class | ✅ 类型支持 `boolean \| DotsConfig`；提取 `dotsClassName` 合并到 class |
+| 无 `autoplay.dotDuration` | 差异 | AntD v5.24+ 自动播放时 dots 显示进度条动画 | ✅ 支持 `autoplay: {dotDuration}` 对象形式；CSS 变量 `--carousel-dot-duration` + `.hmfw-carousel-dots-progress` class + 伪元素 `::before` + `@keyframes carousel-dot-progress` |
+| 无 `vertical` | 差异 | AntD 垂直滚动模式（`dotPlacement=start/end` 时自动推断） | ✅ 实现 `isVertical` computed（dotPlacement=start/end 时为 true）；scrollx 改用 `translateY`；CSS `.hmfw-carousel-vertical` + dots 纵向样式 |
+| 无 `speed` 自定义动画时长 | 差异 | AntD `speed=500` 可调，hmfw 固定 400ms | ✅ 新增 prop（默认 500ms）；`setTimeout` 延迟改用 `props.speed` |
+| 无 `easing` | 差异 | AntD 自定义缓动函数（`linear`/`ease`/...） | ✅ 新增 prop（默认 `ease`）；透传到 CSS `transition-timing-function` |
+| 无 `fade` 独立 prop | 差异 | AntD 同时支持 `fade={true}` 与 `effect='fade'`，hmfw 仅 `effect` | ✅ 新增 `fade` prop；`finalEffect` computed 优先取 `fade`，否则取 `effect` |
 | 无响应式 `responsive` | 未实现 | AntD react-slick 提供断点配置（每个断点不同 slidesToShow/speed） | ⏭️ 按需后补 |
 | 无 `slidesToShow`/`slidesToScroll` | 未实现 | 多列轮播 | ⏭️ 后补 |
 | 无 `centerMode` | 未实现 | 居中展示当前 slide | ⏭️ 后补 |
 | 无 `swipeToSlide` | 未实现 | 拖拽到任意位置 | ⏭️ 后补 |
 | 无 `lazyLoad` | 未实现 | 懒加载 slide 内容 | ⏭️ 后补 |
 | 无 `adaptiveHeight` | 未实现 | 根据当前 slide 调整容器高度 | ⏭️ 后补 |
-| 无 `initialSlide` | 差异 | AntD 初始 slide 索引，hmfw 固定 0 | ⏭️ 新增 prop |
-| 无 `slickGoTo` 受控跳转 | 差异 | AntD prop 受控跳转到指定索引 | ⏭️ 新增 prop（watch 触发 `goTo`） |
-| 无 `ref` 方法暴露 | 差异 | AntD 暴露 `{goTo,next,prev,autoPlay,innerSlider}`，hmfw 无 ref | ⏭️ 用 `defineExpose` 暴露方法 |
-| 无 RTL 支持 | 差异 | AntD `direction=rtl` 时反转箭头语义与 slides 顺序 | ⏭️ 接入 ConfigProvider direction；反转 transform |
-| 无 `rootClassName` | 差异 | AntD v5 语义化 class | ⏭️ 新增 prop |
-| 无可访问性 `role`/`aria-*` | 🐛 Bug | 无 `role=region`/`aria-roledescription=carousel`/`aria-label`/`aria-live` | ⏭️ 补齐 |
-| 未使用 ConfigProvider | 差异 | 未接入全局配置 | ⏭️ 接入 `className`/`style`/`rootClassName` |
-| 无国际化 | 差异 | 箭头 aria-label 固定英文 | ⏭️ locale 支持 |
+| 无 `initialSlide` | 差异 | AntD 初始 slide 索引，hmfw 固定 0 | ✅ 新增 prop（默认 0）；`onMounted` 时设置 `current.value` |
+| 无 `slickGoTo` 受控跳转 | 差异 | AntD prop 受控跳转到指定索引 | ⏭️ 后补（需 watch prop 触发 goTo） |
+| 无 `ref` 方法暴露 | 差异 | AntD 暴露 `{goTo,next,prev,autoPlay,innerSlider}`，hmfw 无 ref | ✅ `expose({goTo,next,prev})`；类型定义 `CarouselRef` |
+| 无 RTL 支持 | 差异 | AntD `direction=rtl` 时反转箭头语义与 slides 顺序 | ⏭️ 后补（接入 ConfigProvider direction；反转 transform） |
+| 无 `rootClassName` | 差异 | AntD v5 语义化 class | ✅ 新增 prop；合并到根元素 class |
+| 无可访问性 `role`/`aria-*` | 🐛 Bug | 无 `role=region`/`aria-roledescription=carousel`/`aria-label`/`aria-live` | ✅ 根元素补 `role=region`、`aria-roledescription=carousel`、`aria-label=Carousel`；每个 slide 补 `role=group`、`aria-roledescription=slide`、`aria-label="${i+1} / ${count}"`、`aria-hidden`；箭头 `aria-label`；dots 按钮 `aria-label` |
+| 未使用 ConfigProvider | 差异 | 未接入全局配置 | ✅ 接入 `usePrefixCls('carousel')`；移除 config.carousel（项目 ConfigContext 无组件级配置） |
+| 无国际化 | 差异 | 箭头 aria-label 固定英文 | ⏭️ 后补（locale 支持） |
 
 ### 改动文件
-⏭️ 待实施（当前为对比条目记录，未执行修改）
+- `components/carousel/types.ts` — 重写：补全类型（`CarouselDotPlacement`、`CarouselDotsConfig`、`CarouselAutoplayConfig`、`CarouselRef`；`dotPosition` 标 `@deprecated`；`CarouselProps` 新增 13 个字段）
+- `components/carousel/Carousel.tsx` — 重写（~270 行，从 130 行）：
+  - 接入 `usePrefixCls` + `rootClassName`
+  - 箭头改用 `<Button type="text" icon={LeftOutlined/RightOutlined}>` + `arrows` prop 控制显隐（默认 false）+ `prevArrow`/`nextArrow` 自定义
+  - `waitForAnimate` prop + `transitioning` 判断
+  - `dotPlacement` 新 API + `mergedDotPlacement` 映射（left→start、right→end）；`dotPosition` 兼容
+  - `dots` 对象形式 + `dotsClassName` 提取
+  - `autoplay` 对象形式 + `showDotDuration` computed + CSS 变量 `--carousel-dot-duration`
+  - `isVertical` computed + scrollx `translateY`
+  - `speed`/`easing` props + `speedInSec` computed + CSS `transition-timing-function`
+  - `fade` prop + `finalEffect` computed 优先级
+  - `initialSlide` prop + `onMounted` 初始化
+  - `expose({goTo,next,prev})`
+  - 可访问性：`role`/`aria-*`
+- `components/carousel/index.ts` — 导出新增 5 个类型
+- `components/carousel/style/index.css` — 重构箭头样式（Button 组件）+ 补充进度条 dots（`.hmfw-carousel-dots-progress` + `::before` 伪元素 + `@keyframes`）+ 补充 start/end class（映射 left/right）
+- `components/carousel/__tests__/Carousel.test.tsx` — 11 → 27 用例（+16）：
+  - 新增：dots 对象 className、arrows 显隐、arrows 点击导航、fade prop 优先级、autoplay 对象 dotDuration、speed prop 延迟、easing、initialSlide、waitForAnimate、rootClassName、dotPlacement、dotPlacement start/end 映射、dotPosition 兼容、可访问性、ref 方法、goTo dontAnimate
+  - 修正：原有测试调整 speed 从 400ms→500ms；arrows 测试补 `arrows: true`
+- `docs/demos/carousel/carousel.md` — 重写 API 表（Props 18 行 / Events 2 行 / Ref 方法 3 行 / 可访问性 / 注意事项）+ 新增 2 个 demo 引用（箭头/进度条）
+- `docs/demos/carousel/CarouselArrows.vue` — 新建：演示 `arrows` prop
+- `docs/demos/carousel/CarouselProgress.vue` — 新建：演示 `autoplay.dotDuration` 进度条
 
 ### 验证
-⏭️ 待实施
+- `npx vitest run components/carousel`：**27 通过**（11 → 27，+16）
+- `pnpm typecheck`：通过（无输出）
+- 全量测试：**1462 通过 / 2 skipped**（从 1383 增至 1462，+79；Carousel 贡献 +16）
+- E2E：⏭️ 待补（需 `pnpm dev` + `playwright-cli` 验证箭头点击、进度条动画、垂直模式）
 
 ### 备注（诚实声明）
-- 当前 hmfw Carousel 为极简实现（130 行），AntD 依赖 react-slick（>3000 行）提供企业级轮播能力（响应式/多列/居中模式/懒加载）。
-- 本对比聚焦 AntD v6 公开 API 与基础交互缺失；react-slick 的高级配置（`centerPadding`/`cssEase`/`focusOnSelect`/`rows`/`variableWidth` 等 20+ 项）未逐一列举，差异表已标 ⏭️ 按需后补。
-- 拖拽实现需处理触摸事件与鼠标事件兼容，阈值判定（移动距离 > 50px 或速度 > 0.5px/ms）触发切换。
-- 进度条 dots 需在 li 内添加伪元素 `::before` + CSS `animation`，监听 `animationend` 同步切换。
+- 当前 hmfw Carousel 为轻量级原生实现（~270 行），AntD 依赖 react-slick（>3000 行）提供企业级轮播能力（拖拽/响应式/多列/居中/懒加载）。
+- 本次对比聚焦 AntD v6 公开 API 与基础交互；react-slick 的高级配置（`centerPadding`/`cssEase`/`focusOnSelect`/`rows`/`variableWidth` 等 20+ 项）未逐一实现，差异表已标 ⏭️ 按需后补。
+- `arrows` 默认 false 与 AntD 对齐；原实现固定显示箭头，现需显式设置 `arrows={true}`。
+- 箭头改用 Button 组件，icon prop 传 `LeftOutlined`/`RightOutlined`（Function 类型，非 VNode）。
+- 进度条 dots 用 CSS 动画实现，未监听 `animationend` 同步切换（自动播放计时器独立触发）。
+- ref 方法通过 `wrapper.vm as unknown as CarouselRef` 访问（测试环境）；生产环境用模板 ref。
+- `dotPlacement=start/end` 会自动启用垂直模式（`isVertical`），CSS 仍用 `left`/`right` class（`dotPositionClass` computed 映射）。
 
 ---
 

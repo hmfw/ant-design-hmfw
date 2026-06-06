@@ -1,28 +1,52 @@
-import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, type PropType } from 'vue'
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { CarouselEffect, CarouselDotPosition } from './types'
+import { Button } from '../button'
+import { LeftOutlined, RightOutlined } from '../icon'
+import type {
+  CarouselEffect,
+  CarouselDotPosition,
+  CarouselDotPlacement,
+  CarouselDotsConfig,
+  CarouselAutoplayConfig,
+  CarouselRef,
+} from './types'
 
 export const Carousel = defineComponent({
   name: 'Carousel',
   props: {
-    autoplay: { type: Boolean, default: false },
+    autoplay: {
+      type: [Boolean, Object],
+      default: false,
+    },
     autoplaySpeed: { type: Number, default: 3000 },
-    dots: { type: Boolean, default: true },
-    dotPosition: { type: String as PropType<CarouselDotPosition>, default: 'bottom' },
-    effect: { type: String as PropType<CarouselEffect>, default: 'scrollx' },
+    dots: {
+      type: [Boolean, Object],
+      default: true,
+    },
+    dotPosition: String,
+    dotPlacement: String,
+    effect: { type: String, default: 'scrollx' },
+    fade: Boolean,
     infinite: { type: Boolean, default: true },
+    speed: { type: Number, default: 500 },
+    easing: { type: String, default: 'ease' },
+    initialSlide: { type: Number, default: 0 },
+    arrows: { type: Boolean, default: false },
+    prevArrow: Object,
+    nextArrow: Object,
+    waitForAnimate: { type: Boolean, default: false },
+    rootClassName: String,
   },
   emits: ['beforeChange', 'afterChange'],
-  setup(props, { slots, emit }) {
+  setup(props, { slots, emit, expose }) {
     const prefixCls = usePrefixCls('carousel')
-    const current = ref(0)
+    const current = ref(props.initialSlide)
     const transitioning = ref(false)
     let timer: ReturnType<typeof setInterval> | null = null
 
     const slides = computed(() => {
       const defaultSlot = slots.default?.() ?? []
-      // flatten fragment children
       return defaultSlot.flatMap((vnode) => {
         if (Array.isArray(vnode.children)) return vnode.children as typeof defaultSlot
         return [vnode]
@@ -31,8 +55,50 @@ export const Carousel = defineComponent({
 
     const count = computed(() => slides.value.length)
 
-    function goTo(index: number) {
-      if (count.value === 0 || transitioning.value) return
+    // Merge dotPosition/dotPlacement (dotPlacement takes priority, map left/right to start/end)
+    const mergedDotPlacement = computed(() => {
+      const placement = props.dotPlacement ?? props.dotPosition ?? 'bottom'
+      if (placement === 'left') return 'start'
+      if (placement === 'right') return 'end'
+      return placement as CarouselDotPlacement
+    })
+
+    // Determine if vertical (when dots at start/end)
+    const isVertical = computed(() => {
+      const p = mergedDotPlacement.value
+      return p === 'start' || p === 'end'
+    })
+
+    // Determine final effect (fade prop takes priority)
+    const finalEffect = computed(() => {
+      if (props.fade) return 'fade'
+      return props.effect
+    })
+
+    const isFade = computed(() => finalEffect.value === 'fade')
+
+    // Dots config
+    const enableDots = computed(() => !!props.dots)
+    const dotsClassName = computed(() => {
+      if (typeof props.dots === 'object' && props.dots.className) {
+        return props.dots.className
+      }
+      return ''
+    })
+
+    // Autoplay config
+    const isAutoplay = computed(() => !!props.autoplay)
+    const showDotDuration = computed(() => {
+      if (typeof props.autoplay === 'object' && props.autoplay.dotDuration) {
+        return true
+      }
+      return false
+    })
+
+    function goTo(index: number, dontAnimate = false) {
+      if (count.value === 0) return
+      if (!dontAnimate && props.waitForAnimate && transitioning.value) return
+
       let next = index
       if (props.infinite) {
         next = ((index % count.value) + count.value) % count.value
@@ -40,49 +106,110 @@ export const Carousel = defineComponent({
         next = Math.max(0, Math.min(index, count.value - 1))
       }
       if (next === current.value) return
+
       emit('beforeChange', current.value, next)
-      transitioning.value = true
-      current.value = next
-      setTimeout(() => {
-        transitioning.value = false
+
+      if (dontAnimate) {
+        current.value = next
         emit('afterChange', next)
-      }, 400)
+      } else {
+        transitioning.value = true
+        current.value = next
+        setTimeout(() => {
+          transitioning.value = false
+          emit('afterChange', next)
+        }, props.speed)
+      }
     }
 
     const prev = () => goTo(current.value - 1)
     const next = () => goTo(current.value + 1)
 
     function startAutoplay() {
-      if (!props.autoplay || count.value <= 1) return
+      if (!isAutoplay.value || count.value <= 1) return
       timer = setInterval(() => goTo(current.value + 1), props.autoplaySpeed)
     }
 
     function stopAutoplay() {
-      if (timer) { clearInterval(timer); timer = null }
+      if (timer) {
+        clearInterval(timer)
+        timer = null
+      }
     }
 
-    onMounted(startAutoplay)
+    // Initialize current index on mount
+    onMounted(() => {
+      if (count.value > 0 && props.initialSlide > 0) {
+        const init = props.infinite
+          ? props.initialSlide % count.value
+          : Math.min(props.initialSlide, count.value - 1)
+        current.value = init
+      }
+      startAutoplay()
+    })
+
     onBeforeUnmount(stopAutoplay)
 
-    watch(() => props.autoplay, (v) => { v ? startAutoplay() : stopAutoplay() })
+    watch(() => props.autoplay, (v) => {
+      v ? startAutoplay() : stopAutoplay()
+    })
 
-    const isVertical = computed(() => props.dotPosition === 'left' || props.dotPosition === 'right')
+    // Expose ref methods
+    expose({
+      goTo,
+      next,
+      prev,
+    } as CarouselRef)
+
+    // Map dotPlacement to CSS position class
+    const dotPositionClass = computed(() => {
+      const p = mergedDotPlacement.value
+      // Map start/end to left/right for CSS
+      if (p === 'start') return 'left'
+      if (p === 'end') return 'right'
+      return p
+    })
 
     return () => {
-      if (count.value === 0) return <div class={prefixCls} />
+      if (count.value === 0) {
+        return (
+          <div
+            class={cls(prefixCls, props.rootClassName)}
+          />
+        )
+      }
+
+      const speedInSec = `${props.speed / 1000}s`
+      const dotDurationStyle = showDotDuration.value
+        ? { '--carousel-dot-duration': `${props.autoplaySpeed}ms` }
+        : {}
 
       return (
-        <div class={cls(prefixCls, {
-          [`${prefixCls}-vertical`]: isVertical.value,
-          [`${prefixCls}-fade`]: props.effect === 'fade',
-        })}>
+        <div
+          class={cls(prefixCls, props.rootClassName, {
+            [`${prefixCls}-vertical`]: isVertical.value,
+            [`${prefixCls}-fade`]: isFade.value,
+          })}
+          style={dotDurationStyle}
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Carousel"
+        >
           <div class={`${prefixCls}-list`}>
             <div
               class={`${prefixCls}-track`}
-              style={props.effect === 'scrollx' ? {
-                transform: `translateX(-${current.value * 100}%)`,
-                transition: transitioning.value ? 'transform 0.4s ease' : 'none',
-              } : {}}
+              style={
+                isFade.value
+                  ? {}
+                  : {
+                      transform: isVertical.value
+                        ? `translateY(-${current.value * 100}%)`
+                        : `translateX(-${current.value * 100}%)`,
+                      transition: transitioning.value
+                        ? `transform ${speedInSec} ${props.easing}`
+                        : 'none',
+                    }
+              }
             >
               {slides.value.map((slide, i) => (
                 <div
@@ -90,12 +217,20 @@ export const Carousel = defineComponent({
                   class={cls(`${prefixCls}-slide`, {
                     [`${prefixCls}-slide-active`]: i === current.value,
                   })}
-                  style={props.effect === 'fade' ? {
-                    opacity: i === current.value ? 1 : 0,
-                    transition: 'opacity 0.4s ease',
-                    position: i === current.value ? 'relative' : 'absolute',
-                    inset: i === current.value ? 'auto' : '0',
-                  } : {}}
+                  style={
+                    isFade.value
+                      ? {
+                          opacity: i === current.value ? 1 : 0,
+                          transition: `opacity ${speedInSec} ${props.easing}`,
+                          position: i === current.value ? 'relative' : 'absolute',
+                          inset: i === current.value ? 'auto' : '0',
+                        }
+                      : {}
+                  }
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`${i + 1} / ${count.value}`}
+                  aria-hidden={i !== current.value}
                 >
                   {slide}
                 </div>
@@ -103,22 +238,47 @@ export const Carousel = defineComponent({
             </div>
           </div>
 
-          {count.value > 1 && (
+          {props.arrows && count.value > 1 && (
             <>
-              <button class={cls(`${prefixCls}-arrow`, `${prefixCls}-arrow-left`)} onClick={prev}>‹</button>
-              <button class={cls(`${prefixCls}-arrow`, `${prefixCls}-arrow-right`)} onClick={next}>›</button>
+              {props.prevArrow ?? (
+                <Button
+                  class={cls(`${prefixCls}-arrow`, `${prefixCls}-arrow-left`)}
+                  type="text"
+                  icon={LeftOutlined}
+                  onClick={prev}
+                  aria-label="Previous slide"
+                />
+              )}
+              {props.nextArrow ?? (
+                <Button
+                  class={cls(`${prefixCls}-arrow`, `${prefixCls}-arrow-right`)}
+                  type="text"
+                  icon={RightOutlined}
+                  onClick={next}
+                  aria-label="Next slide"
+                />
+              )}
             </>
           )}
 
-          {props.dots && count.value > 1 && (
-            <ul class={cls(`${prefixCls}-dots`, `${prefixCls}-dots-${props.dotPosition}`)}>
+          {enableDots.value && count.value > 1 && (
+            <ul
+              class={cls(
+                `${prefixCls}-dots`,
+                `${prefixCls}-dots-${dotPositionClass.value}`,
+                dotsClassName.value,
+                {
+                  [`${prefixCls}-dots-progress`]: showDotDuration.value,
+                },
+              )}
+            >
               {slides.value.map((_, i) => (
                 <li
                   key={i}
                   class={cls({ [`${prefixCls}-dot-active`]: i === current.value })}
                   onClick={() => goTo(i)}
                 >
-                  <button />
+                  <button aria-label={`Go to slide ${i + 1}`} />
                 </li>
               ))}
             </ul>

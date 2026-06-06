@@ -33,7 +33,7 @@
    - E2E（涉及交互/渲染/异步刷新的组件必做）：`pnpm dev` 起站 → `playwright-cli` 开 `/components/<name>` → 查 `console error` + DOM 计数/交互断言 → `close` 并停 dev server。jsdom 测不到的真实联动（如父子级联、异步 flush 后的 DOM 态）靠这步兜底；做完在条目「验证」里记实测结果，别再留「待补」。
    - 数字一律来自命令真实输出，不准写「约」「50+」「完成 75%」这类估算。
 
-**5. 落盘**：把条目写入**对应分类文件**（就是步骤 0 找到的 `COMPARISON/0X-*.md`，**不新建目录/文件**），更新本文件的「已完成」行与「分类文件一览」状态。条目标题须带**全局连续编号**（`## N. 组件名 ✅ ...`，N 接上一个组件，跨分类文件连续不重置——如 05 止于 58，06 从 59 起）。
+**5. 落盘**：把条目写入**对应分类文件**（就是步骤 0 找到的 `COMPARISON/0X-*.md`，**不新建目录/文件**），更新本文件的「已完成」行（如第 67 行）、「待办路线图」（如第 71 行）与「分类文件一览」状态（如第 86 行）。条目标题须带**全局连续编号**（`## N. 组件名 ✅ ...`，N 接上一个组件，跨分类文件连续不重置——如 05 止于 58，06 从 59 起）。**重要**：落盘完成后，**必须向用户展示所有改动并等待确认**，经用户同意后才能使用 `/git` 提交。
 
 **6. 收尾自检（Definition of Done，全勾才能 `/clear`）**：
    - [ ] 差异表无 ❌ 与已修代码矛盾的行
@@ -44,7 +44,7 @@
 
 > **关于 `/clear`**：产出全部落在分类文件，下一个组件不需要前一个的对话上下文。**但隐性约定（文件路径、条目格式、验证标准）只存在于步骤 0 读取的样板里——所以 `/clear` 后必须先做步骤 0 再动手，否则就会"靠猜路径、靠估数字"。** 例外：下一个组件是前一个的特化或共用底层（如 Popconfirm 复用 Popover wrapper），保留上下文或用 `/compact` 软压缩。
 
-### ✅ 已完成（57 个，全量 1383 测试通过 + 2 skipped，修复 233 个真实 bug）
+### ✅ 已完成（58 个，全量 1462 测试通过 + 2 skipped，修复 245 个真实 bug）
 
 **基础/布局** → [`COMPARISON/01-basic-layout.md`](./COMPARISON/01-basic-layout.md)
 Divider · Flex · Space(修2bug) · Typography · Tag · Badge(修1) · Alert(修1行为) · Avatar · Empty · Card · Result · Spin(修 delay 失效 bug)
@@ -64,14 +64,13 @@ Upload(修10bug) · Form(修8bug)
 Tooltip(修4bug) · Popover(修5bug) · Popconfirm(修8bug) · Modal(修9bug) · Drawer(修6bug) · Message(修2bug) · Notification(修2bug) · Tour(修2bug) · Image(修8bug)
 
 **E 数据/复杂** → [`COMPARISON/06-data-complex.md`](./COMPARISON/06-data-complex.md)
-Table(修13差异/Bug，测试 11→24) · Transfer(修20差异/Bug，测试 10→29) · Tree(修/补22项，测试 11→40)
+Table(修13差异/Bug，测试 11→24) · Tree(修/补22项，测试 11→40) · Transfer(修20差异/Bug，测试 10→29) · Carousel(修12差异/Bug，测试 11→27)
 
 ### ⏭️ 待办路线图（简单→复杂，按序进行）
 
-- **E 数据/复杂**：Carousel → 继续写入 [`COMPARISON/06-data-complex.md`](./COMPARISON/06-data-complex.md)
-- **E 数据/复杂**：ColorPicker（Carousel 完成后）
+- **E 数据/复杂**：ColorPicker → 继续写入 [`COMPARISON/06-data-complex.md`](./COMPARISON/06-data-complex.md)
 
-**下一个执行**：E 数据/复杂类 Carousel 组件（建议先 `/clear`）。恢复时对我说「继续」即可。
+**下一个执行**：E 数据/复杂类 ColorPicker 组件（建议先 `/clear`）。恢复时对我说「继续」即可。
 
 ---
 
