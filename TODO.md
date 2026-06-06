@@ -110,10 +110,10 @@ components/{name}/
 - [ ] 缺少 `onChange` 的 `extra` 参数（当前分页器信息）
 
 **Tree 树形控件**
-- [ ] 虚拟滚动未实现
-- [ ] 缺少 `fieldNames` 自定义字段
-- [ ] 缺少 `blockNode` 块级节点
-- [ ] 拖拽功能缺少边界检查
+- [x] 虚拟滚动未实现
+- [x] 缺少 `fieldNames` 自定义字段
+- [x] 缺少 `blockNode` 块级节点
+- [x] 拖拽功能缺少边界检查
 
 **List 列表**
 - [x] 缺少 `grid.column` 响应式配置（xs/sm/md/lg/xl）

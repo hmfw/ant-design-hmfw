@@ -57,6 +57,30 @@
   <TreeSearch />
 </DemoBlock>
 
+### 块级节点
+
+设置 `blockNode` 后，节点将占据整行宽度，选中样式会覆盖整行。
+
+<DemoBlock title="块级节点" :source="TreeBlockNodeSource">
+  <TreeBlockNode />
+</DemoBlock>
+
+### 自定义字段
+
+通过 `fieldNames` 可以自定义数据字段名，适配不同的后端接口格式。
+
+<DemoBlock title="自定义字段" :source="TreeFieldNamesSource">
+  <TreeFieldNames />
+</DemoBlock>
+
+### 虚拟滚动
+
+设置 `virtual` 和 `height` 属性支持大数据场景的虚拟滚动。
+
+<DemoBlock title="虚拟滚动" :source="TreeVirtualSource">
+  <TreeVirtual />
+</DemoBlock>
+
 ## API
 
 ### Tree Props
@@ -79,6 +103,7 @@
 | selectable | 是否可选中 | `boolean` | `true` |
 | disabled | 将树禁用 | `boolean` | `false` |
 | draggable | 节点可拖拽 | `boolean \| (node) => boolean \| { icon?, nodeDraggable? }` | `false` |
+| allowDrop | 是否允许拖放到目标节点，返回 `false` 阻止 | `({ dragNode, dropNode, dropPosition }) => boolean` | - |
 | showLine | 是否展示连接线 | `boolean \| { showLeafIcon }` | `false` |
 | showIcon | 是否展示节点图标 | `boolean` | `false` |
 | blockNode | 节点是否占据一行 | `boolean` | `false` |
@@ -88,6 +113,9 @@
 | switcherIcon | 自定义展开/收起图标 | `string \| ({ expanded, isLeaf }) => VNode` | - |
 | titleRender | 自定义节点标题渲染 | `(node) => VNode` | - |
 | fieldNames | 自定义节点 title、key、children 的字段 | `{ title?, key?, children? }` | - |
+| virtual | 是否开启虚拟滚动 | `boolean` | `false` |
+| height | 虚拟滚动容器高度（开启 virtual 时必需） | `number \| string` | - |
+| itemHeight | 虚拟滚动每项高度 | `number` | `28` |
 | rootClassName | 根节点 className | `string` | - |
 | classNames | 语义化 class（`root`/`item`/`itemIcon`/`itemTitle`/`itemSwitcher`） | `object` | - |
 | styles | 语义化内联样式（同上 key） | `object` | - |
@@ -136,4 +164,25 @@
 
 ### 不支持的能力（待后补）
 
-虚拟滚动 `virtual`、异步加载 `loadData`/`loadedKeys`、`TreeNode` 子组件式 JSX 声明、拖拽 `dropToGap`/插入位置指示线（当前仅触发 `drop` 事件，不自动改数据）。
+异步加载 `loadData`/`loadedKeys`、`TreeNode` 子组件式 JSX 声明、拖拽插入位置指示线（当前拖放仅支持放入目标节点子级，触发 `drop` 事件，并已内置循环引用边界检查与 `allowDrop` 校验）。
+
+<script setup>
+import TreeBasic from './TreeBasic.vue'
+import TreeBasicSource from './TreeBasic.vue?raw'
+import TreeCheckable from './TreeCheckable.vue'
+import TreeCheckableSource from './TreeCheckable.vue?raw'
+import TreeShowLine from './TreeShowLine.vue'
+import TreeShowLineSource from './TreeShowLine.vue?raw'
+import TreeDirectory from './TreeDirectory.vue'
+import TreeDirectorySource from './TreeDirectory.vue?raw'
+import TreeDraggable from './TreeDraggable.vue'
+import TreeDraggableSource from './TreeDraggable.vue?raw'
+import TreeSearch from './TreeSearch.vue'
+import TreeSearchSource from './TreeSearch.vue?raw'
+import TreeBlockNode from './TreeBlockNode.vue'
+import TreeBlockNodeSource from './TreeBlockNode.vue?raw'
+import TreeFieldNames from './TreeFieldNames.vue'
+import TreeFieldNamesSource from './TreeFieldNames.vue?raw'
+import TreeVirtual from './TreeVirtual.vue'
+import TreeVirtualSource from './TreeVirtual.vue?raw'
+</script>

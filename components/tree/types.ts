@@ -92,6 +92,13 @@ export type DraggableConfig =
   | ((node: TreeDataNode) => boolean)
   | { icon?: string | false; nodeDraggable?: (node: TreeDataNode) => boolean }
 
+/** allowDrop 回调参数 */
+export interface AllowDropOptions {
+  dragNode: TreeDataNode
+  dropNode: TreeDataNode
+  dropPosition: -1 | 0 | 1
+}
+
 /** 语义化 class 名 */
 export interface TreeSemanticClassNames {
   root?: string
@@ -129,6 +136,8 @@ export interface TreeProps {
   selectable?: boolean
   disabled?: boolean
   draggable?: DraggableConfig
+  /** 是否允许拖放到目标节点，返回 false 阻止 */
+  allowDrop?: (options: AllowDropOptions) => boolean
   showLine?: ShowLineConfig
   showIcon?: boolean
   blockNode?: boolean

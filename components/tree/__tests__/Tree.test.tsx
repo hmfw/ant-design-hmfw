@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { Tree } from '../Tree'
 import { DirectoryTree } from '../DirectoryTree'
 
@@ -260,11 +260,63 @@ describe('Tree', () => {
   it('drop emits drop event', async () => {
     const wrapper = mount(Tree, { props: { treeData, draggable: true, defaultExpandAll: true } })
     const nodes = wrapper.findAll('.hmfw-tree-treenode')
-    await nodes[0].trigger('dragstart')
-    await nodes[1].trigger('drop')
+    // 拖叶子 0-0-0-0(index 2) 到 0-0-1(index 4)，两者无祖先/后代关系，是合法拖放
+    await nodes[2].trigger('dragstart')
+    await nodes[4].trigger('drop')
     expect(wrapper.emitted('drop')).toBeTruthy()
     const info = (wrapper.emitted('drop')![0] as any[])[0]
-    expect(info.dragNode.key).toBe('0-0')
+    expect(info.dragNode.key).toBe('0-0-0-0')
+  })
+
+  // ============ 拖拽边界检查 ============
+  it('does not emit drop when dropping onto itself', async () => {
+    const wrapper = mount(Tree, { props: { treeData, draggable: true, defaultExpandAll: true } })
+    const nodes = wrapper.findAll('.hmfw-tree-treenode')
+    await nodes[0].trigger('dragstart')
+    await nodes[0].trigger('drop')
+    // 拖到自身：不触发 drop
+    expect(wrapper.emitted('drop')).toBeFalsy()
+  })
+
+  it('does not emit drop when dropping into own descendant', async () => {
+    const wrapper = mount(Tree, { props: { treeData, draggable: true, defaultExpandAll: true } })
+    const nodes = wrapper.findAll('.hmfw-tree-treenode')
+    // nodes[0] 是 0-0（根），nodes[2] 是 0-0-0-0（孙节点，0-0 的后代）
+    await nodes[0].trigger('dragstart')
+    await nodes[2].trigger('drop')
+    // 拖入自身后代会造成循环引用：不触发 drop
+    expect(wrapper.emitted('drop')).toBeFalsy()
+  })
+
+  it('respects allowDrop callback returning false', async () => {
+    const allowDrop = vi.fn(() => false)
+    const wrapper = mount(Tree, { props: { treeData, draggable: true, allowDrop, defaultExpandAll: true } })
+    const nodes = wrapper.findAll('.hmfw-tree-treenode')
+    // 拖叶子 0-0-0-0 到 0-0-1（合法组合，会进入 allowDrop 校验）
+    await nodes[2].trigger('dragstart')
+    await nodes[4].trigger('drop')
+    // allowDrop 返回 false：不触发 drop
+    expect(allowDrop).toHaveBeenCalled()
+    expect(wrapper.emitted('drop')).toBeFalsy()
+  })
+
+  it('allows drop when allowDrop returns true', async () => {
+    const allowDrop = vi.fn(() => true)
+    const wrapper = mount(Tree, { props: { treeData, draggable: true, allowDrop, defaultExpandAll: true } })
+    const nodes = wrapper.findAll('.hmfw-tree-treenode')
+    await nodes[2].trigger('dragstart')
+    await nodes[4].trigger('drop')
+    expect(wrapper.emitted('drop')).toBeTruthy()
+  })
+
+  it('does not highlight invalid drop target on dragenter', async () => {
+    const wrapper = mount(Tree, { props: { treeData, draggable: true, defaultExpandAll: true } })
+    const nodes = wrapper.findAll('.hmfw-tree-treenode')
+    await nodes[0].trigger('dragstart')
+    // 拖入自身后代节点 0-0-0-0
+    await nodes[2].trigger('dragenter')
+    // 非法目标不应有 drag-over 高亮
+    expect(nodes[2].classes()).not.toContain('hmfw-tree-treenode-drag-over')
   })
 
   // ============ semantic classNames / styles ============

@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { List, ListItem, ListItemMeta, Spin } from '../../../components'
+import { List, ListItem, ListItemMeta, Spin } from 'ant-design-hmfw'
 
 // 模拟总数据（1000 项）
 const totalData = Array.from({ length: 1000 }, (_, i) => ({

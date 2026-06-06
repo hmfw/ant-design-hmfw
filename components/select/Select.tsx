@@ -597,7 +597,7 @@ export const Select = defineComponent({
                             [`${prefixCls}-item-active`]: isActive,
                             [`${prefixCls}-item-disabled`]: opt.disabled,
                           }),
-                          onClick: () => { if (!opt.disabled) handleSelect(opt) },
+                          onClick: () => { if (!opt.disabled) selectOption(opt) },
                           onMouseenter: () => { if (!opt.disabled) activeIndex.value = index },
                         },
                         props.optionRender

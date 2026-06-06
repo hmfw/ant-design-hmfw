@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { List, ListItem, ListItemMeta } from '../../../components'
+import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
 
 // 生成 10,000 项数据
 const data = computed(() => {

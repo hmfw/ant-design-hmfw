@@ -4,10 +4,11 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Checkbox } from '../checkbox'
+import { VirtualList } from '../_internal/virtual-list'
 import * as Icons from '../icon'
 import type {
   TreeDataNode, TreeExpandedKeys, TreeSelectedKeys, TreeCheckedKeys,
-  CheckedKeysObject, FieldNames, ShowLineConfig, DraggableConfig,
+  CheckedKeysObject, FieldNames, ShowLineConfig, DraggableConfig, AllowDropOptions,
   TreeSemanticClassNames, TreeSemanticStyles, Key,
 } from './types'
 
@@ -64,6 +65,7 @@ export const Tree = defineComponent({
     selectable: { type: Boolean, default: true },
     disabled: Boolean,
     draggable: [Boolean, Function, Object] as PropType<DraggableConfig>,
+    allowDrop: Function as PropType<(options: AllowDropOptions) => boolean>,
     showLine: [Boolean, Object] as PropType<ShowLineConfig>,
     showIcon: Boolean,
     blockNode: Boolean,
@@ -73,6 +75,9 @@ export const Tree = defineComponent({
     switcherIcon: [String, Function] as PropType<string | ((s: { expanded: boolean; isLeaf: boolean }) => VNodeChild)>,
     titleRender: Function as PropType<(node: TreeDataNode) => VNodeChild>,
     fieldNames: Object as PropType<FieldNames>,
+    virtual: Boolean,
+    height: [Number, String] as PropType<number | string>,
+    itemHeight: { type: Number, default: 28 },
     rootClassName: String,
     classNames: Object as PropType<TreeSemanticClassNames>,
     styles: Object as PropType<TreeSemanticStyles>,
@@ -391,16 +396,44 @@ export const Tree = defineComponent({
       return true
     }
 
+    /**
+     * 判断拖放是否合法（边界检查）：
+     * 1. 不能拖到自身
+     * 2. 不能将节点拖入其自身的后代（会造成循环引用）
+     * 3. 满足用户自定义的 allowDrop 校验
+     */
+    const isValidDrop = (dropKey: Key): boolean => {
+      if (dragKey.value == null) return false
+      // 1. 不能拖到自身
+      if (dragKey.value === dropKey) return false
+      // 2. 不能拖入自身后代
+      const descendants = getDescendantKeys(dragKey.value)
+      if (descendants.includes(dropKey)) return false
+      // 3. 用户自定义校验
+      if (props.allowDrop) {
+        const dragNode = keyEntities.value.get(dragKey.value)?.node
+        const dropNode = keyEntities.value.get(dropKey)?.node
+        if (dragNode && dropNode) {
+          return props.allowDrop({ dragNode, dropNode, dropPosition: 0 })
+        }
+      }
+      return true
+    }
+
     const handleDragStart = (e: DragEvent, key: Key, node: TreeDataNode) => {
       dragKey.value = key
       emit('dragstart', { event: e, node })
     }
     const handleDragEnter = (e: DragEvent, key: Key, node: TreeDataNode) => {
-      dragOverKey.value = key
+      // 仅在合法目标上显示拖放高亮
+      dragOverKey.value = isValidDrop(key) ? key : null
       emit('dragenter', { event: e, node, expandedKeys: expandedKeys.value })
     }
-    const handleDragOver = (e: DragEvent, node: TreeDataNode) => {
-      e.preventDefault()
+    const handleDragOver = (e: DragEvent, key: Key, node: TreeDataNode) => {
+      // 仅在合法目标上调用 preventDefault 以允许放置；非法目标保持默认行为（禁止放置光标）
+      if (isValidDrop(key)) {
+        e.preventDefault()
+      }
       emit('dragover', { event: e, node })
     }
     const handleDragLeave = (e: DragEvent, node: TreeDataNode) => {
@@ -413,6 +446,12 @@ export const Tree = defineComponent({
     }
     const handleDrop = (e: DragEvent, key: Key, node: TreeDataNode) => {
       e.preventDefault()
+      // 边界检查：非法放置（拖到自身、拖入后代、未通过 allowDrop）直接忽略，不触发 drop 事件
+      if (!isValidDrop(key)) {
+        dragKey.value = null
+        dragOverKey.value = null
+        return
+      }
       const dragNode = dragKey.value != null ? keyEntities.value.get(dragKey.value)?.node : undefined
       const dropEntity = keyEntities.value.get(key)
       emit('drop', {
@@ -457,119 +496,137 @@ export const Tree = defineComponent({
       return isExpanded ? '▾' : '▸'
     }
 
-    return () => (
-      <div
-        ref={treeRef}
-        class={cls(prefixCls, props.rootClassName, sn('root'), {
-          [`${prefixCls}-show-line`]: showLineEnabled.value,
-          [`${prefixCls}-block-node`]: props.blockNode,
-          [`${prefixCls}-disabled`]: props.disabled,
-          [`${prefixCls}-icon-hide`]: !props.showIcon,
-          [`${prefixCls}-unselectable`]: !props.selectable,
-        })}
-        style={ss('root')}
-        role="tree"
-        aria-multiselectable={props.multiple || undefined}
-      >
-        {flatNodes.value.map(({ node, level, hasChildren }) => {
-          const key = getKey(node)
-          const isExpanded = expandedKeys.value.includes(key)
-          const isSelected = selectedKeys.value.includes(key)
-          const isChecked = checkedKeys.value.includes(key)
-          const isHalfChecked = halfCheckedKeys.value.has(key)
-          const isActive = activeKey.value === key
-          const isDisabled = !!(node.disabled || props.disabled)
-          const matched = props.filterTreeNode?.(node)
-          const nodeIcon = node.icon ?? props.icon
-          const draggableNode = isDraggable(node)
+    // 渲染单个树节点
+    const renderTreeNode = (flatNode: FlatNode, index: number) => {
+      const { node, level, hasChildren } = flatNode
+      const key = getKey(node)
+      const isExpanded = expandedKeys.value.includes(key)
+      const isSelected = selectedKeys.value.includes(key)
+      const isChecked = checkedKeys.value.includes(key)
+      const isHalfChecked = halfCheckedKeys.value.has(key)
+      const isActive = activeKey.value === key
+      const isDisabled = !!(node.disabled || props.disabled)
+      const matched = props.filterTreeNode?.(node)
+      const nodeIcon = node.icon ?? props.icon
+      const draggableNode = isDraggable(node)
 
-          return (
-            <div
-              key={key}
-              data-key={String(key)}
-              class={cls(`${prefixCls}-treenode`, sn('item'), {
-                [`${prefixCls}-treenode-selected`]: isSelected,
-                [`${prefixCls}-treenode-disabled`]: isDisabled,
-                [`${prefixCls}-treenode-leaf`]: !hasChildren,
-                [`${prefixCls}-treenode-active`]: isActive,
-                [`${prefixCls}-treenode-draggable`]: draggableNode,
-                [`${prefixCls}-treenode-drag-over`]: dragOverKey.value === key,
-              })}
-              role="treeitem"
-              tabindex={isActive || (activeKey.value === null && level === 0 && flatNodes.value[0]?.node === node) ? 0 : -1}
-              aria-level={level + 1}
-              aria-expanded={hasChildren ? isExpanded : undefined}
-              aria-selected={props.selectable ? isSelected : undefined}
-              aria-checked={props.checkable ? isChecked : undefined}
-              aria-disabled={isDisabled || undefined}
-              style={{ paddingLeft: `${level * props.indent}px`, ...ss('item') }}
-              draggable={draggableNode || undefined}
-              onFocus={() => { activeKey.value = key }}
-              onKeydown={(e: KeyboardEvent) => handleNodeKeydown(e, key, node, hasChildren)}
-              onContextmenu={(e: Event) => handleRightClick(key, node, e)}
-              onDragstart={draggableNode ? ((e: DragEvent) => handleDragStart(e, key, node)) : undefined}
-              onDragenter={props.draggable ? ((e: DragEvent) => handleDragEnter(e, key, node)) : undefined}
-              onDragover={props.draggable ? ((e: DragEvent) => handleDragOver(e, node)) : undefined}
-              onDragleave={props.draggable ? ((e: DragEvent) => handleDragLeave(e, node)) : undefined}
-              onDragend={props.draggable ? ((e: DragEvent) => handleDragEnd(e, node)) : undefined}
-              onDrop={props.draggable ? ((e: DragEvent) => handleDrop(e, key, node)) : undefined}
-            >
-              {/* 拖拽把手 */}
-              {draggableNode && dragIcon.value && (
-                <span class={`${prefixCls}-draggable-icon`}>⋮⋮</span>
-              )}
+      return (
+        <div
+          key={key}
+          data-key={String(key)}
+          class={cls(`${prefixCls}-treenode`, sn('item'), {
+            [`${prefixCls}-treenode-selected`]: isSelected,
+            [`${prefixCls}-treenode-disabled`]: isDisabled,
+            [`${prefixCls}-treenode-leaf`]: !hasChildren,
+            [`${prefixCls}-treenode-active`]: isActive,
+            [`${prefixCls}-treenode-draggable`]: draggableNode,
+            [`${prefixCls}-treenode-drag-over`]: dragOverKey.value === key,
+          })}
+          role="treeitem"
+          tabindex={isActive || (activeKey.value === null && level === 0 && flatNodes.value[0]?.node === node) ? 0 : -1}
+          aria-level={level + 1}
+          aria-expanded={hasChildren ? isExpanded : undefined}
+          aria-selected={props.selectable ? isSelected : undefined}
+          aria-checked={props.checkable ? isChecked : undefined}
+          aria-disabled={isDisabled || undefined}
+          style={{ paddingLeft: `${level * props.indent}px`, ...ss('item') }}
+          draggable={draggableNode || undefined}
+          onFocus={() => { activeKey.value = key }}
+          onKeydown={(e: KeyboardEvent) => handleNodeKeydown(e, key, node, hasChildren)}
+          onContextmenu={(e: Event) => handleRightClick(key, node, e)}
+          onDragstart={draggableNode ? ((e: DragEvent) => handleDragStart(e, key, node)) : undefined}
+          onDragenter={props.draggable ? ((e: DragEvent) => handleDragEnter(e, key, node)) : undefined}
+          onDragover={props.draggable ? ((e: DragEvent) => handleDragOver(e, key, node)) : undefined}
+          onDragleave={props.draggable ? ((e: DragEvent) => handleDragLeave(e, node)) : undefined}
+          onDragend={props.draggable ? ((e: DragEvent) => handleDragEnd(e, node)) : undefined}
+          onDrop={props.draggable ? ((e: DragEvent) => handleDrop(e, key, node)) : undefined}
+        >
+          {/* 拖拽把手 */}
+          {draggableNode && dragIcon.value && (
+            <span class={`${prefixCls}-draggable-icon`}>⋮⋮</span>
+          )}
 
-              {/* Switcher */}
-              <span
-                class={cls(`${prefixCls}-switcher`, sn('itemSwitcher'), {
-                  [`${prefixCls}-switcher_open`]: hasChildren && isExpanded,
-                  [`${prefixCls}-switcher_close`]: hasChildren && !isExpanded,
-                  [`${prefixCls}-switcher-noop`]: !hasChildren,
-                })}
-                style={ss('itemSwitcher')}
-                onClick={() => hasChildren && handleExpand(key, node)}
-              >
-                {renderSwitcher(node, hasChildren, isExpanded)}
-              </span>
+          {/* Switcher */}
+          <span
+            class={cls(`${prefixCls}-switcher`, sn('itemSwitcher'), {
+              [`${prefixCls}-switcher_open`]: hasChildren && isExpanded,
+              [`${prefixCls}-switcher_close`]: hasChildren && !isExpanded,
+              [`${prefixCls}-switcher-noop`]: !hasChildren,
+            })}
+            style={ss('itemSwitcher')}
+            onClick={() => hasChildren && handleExpand(key, node)}
+          >
+            {renderSwitcher(node, hasChildren, isExpanded)}
+          </span>
 
-              {/* Checkbox */}
-              {props.checkable && (
-                <span class={`${prefixCls}-checkbox-cell`} onClick={(e: Event) => e.stopPropagation()}>
-                  <Checkbox
-                    checked={isChecked}
-                    indeterminate={isHalfChecked}
-                    disabled={isDisabled || !!node.disableCheckbox}
-                    onChange={() => handleCheck(key, node)}
-                  />
-                </span>
-              )}
+          {/* Checkbox */}
+          {props.checkable && (
+            <span class={`${prefixCls}-checkbox-cell`} onClick={(e: Event) => e.stopPropagation()}>
+              <Checkbox
+                checked={isChecked}
+                indeterminate={isHalfChecked}
+                disabled={isDisabled || !!node.disableCheckbox}
+                onChange={() => handleCheck(key, node)}
+              />
+            </span>
+          )}
 
-              {/* Icon */}
-              {props.showIcon && (nodeIcon || (showLineEnabled.value && showLeafIcon.value)) && (
-                <span class={cls(`${prefixCls}-iconEle`, sn('itemIcon'))} style={ss('itemIcon')}>
-                  {renderIcon(nodeIcon, node, { expanded: isExpanded, isLeaf: !hasChildren })}
-                </span>
-              )}
+          {/* Icon */}
+          {props.showIcon && (nodeIcon || (showLineEnabled.value && showLeafIcon.value)) && (
+            <span class={cls(`${prefixCls}-iconEle`, sn('itemIcon'))} style={ss('itemIcon')}>
+              {renderIcon(nodeIcon, node, { expanded: isExpanded, isLeaf: !hasChildren })}
+            </span>
+          )}
 
-              {/* Node content */}
-              <span
-                class={cls(`${prefixCls}-node-content-wrapper`, sn('itemTitle'), {
-                  [`${prefixCls}-node-content-wrapper-normal`]: !hasChildren,
-                  [`${prefixCls}-node-selected`]: isSelected,
-                  [`${prefixCls}-node-content-wrapper-matched`]: matched,
-                })}
-                style={ss('itemTitle')}
-                onClick={(e: Event) => handleTitleClick(key, node, hasChildren, e)}
-                onDblclick={(e: Event) => handleTitleDblclick(key, node, hasChildren, e)}
-              >
-                <span class={`${prefixCls}-title`}>
-                  {props.titleRender ? props.titleRender(node) : getTitle(node)}
-                </span>
-              </span>
-            </div>
-          )
-        })}
-      </div>
-    )
+          {/* Node content */}
+          <span
+            class={cls(`${prefixCls}-node-content-wrapper`, sn('itemTitle'), {
+              [`${prefixCls}-node-content-wrapper-normal`]: !hasChildren,
+              [`${prefixCls}-node-selected`]: isSelected,
+              [`${prefixCls}-node-content-wrapper-matched`]: matched,
+            })}
+            style={ss('itemTitle')}
+            onClick={(e: Event) => handleTitleClick(key, node, hasChildren, e)}
+            onDblclick={(e: Event) => handleTitleDblclick(key, node, hasChildren, e)}
+          >
+            <span class={`${prefixCls}-title`}>
+              {props.titleRender ? props.titleRender(node) : getTitle(node)}
+            </span>
+          </span>
+        </div>
+      )
+    }
+
+    return () => {
+      const treeContent = props.virtual && props.height
+        ? (
+          <VirtualList
+            data={flatNodes.value}
+            height={props.height}
+            itemHeight={props.itemHeight}
+            renderItem={(flatNode: FlatNode, index: number) => renderTreeNode(flatNode, index)}
+            itemKey={(flatNode: FlatNode) => getKey(flatNode.node)}
+          />
+        )
+        : flatNodes.value.map((flatNode, index) => renderTreeNode(flatNode, index))
+
+      return (
+        <div
+          ref={treeRef}
+          class={cls(prefixCls, props.rootClassName, sn('root'), {
+            [`${prefixCls}-show-line`]: showLineEnabled.value,
+            [`${prefixCls}-block-node`]: props.blockNode,
+            [`${prefixCls}-disabled`]: props.disabled,
+            [`${prefixCls}-icon-hide`]: !props.showIcon,
+            [`${prefixCls}-unselectable`]: !props.selectable,
+          })}
+          style={ss('root')}
+          role="tree"
+          aria-multiselectable={props.multiple || undefined}
+        >
+          {treeContent}
+        </div>
+      )
+    }
   },
 })
