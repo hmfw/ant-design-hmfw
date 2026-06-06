@@ -57,6 +57,8 @@
 | getPopupContainer | 自定义浮层挂载容器（默认 `body`） | `(triggerNode: HTMLElement) => HTMLElement` | - |
 | overlayStyle | 卡片样式 | `Record<string, string>` | - |
 | overlayInnerStyle | 卡片内层样式 | `Record<string, string>` | - |
+| classNames | 语义化 DOM 的 className（支持 `title` / `content`），可传函数 | `{ title?, content? } \| (info) => {...}` | - |
+| styles | 语义化 DOM 的内联样式（支持 `title` / `content`），可传函数 | `{ title?, content? } \| (info) => {...}` | - |
 
 ### Popover Events
 

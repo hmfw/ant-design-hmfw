@@ -62,8 +62,12 @@
 | message | `title` 的别名（已废弃，请使用 `title`） | `string` | - |
 | description | 警告提示的辅助性文字介绍 | `string` | - |
 | showIcon | 是否显示辅助图标（banner 模式默认 `true`） | `boolean` | `false` |
-| closable | 默认不显示关闭按钮 | `boolean` | `false` |
-| closeText | 自定义关闭按钮文字 | `string` | - |
+| icon | 自定义图标（`showIcon` 为 `true` 时有效） | `VNode \| slot` | - |
+| closable | 是否显示关闭按钮，可传对象自定义图标与无障碍标签 | `boolean \| { closeIcon?, 'aria-label'? }` | `false` |
+| closeIcon | 自定义关闭按钮图标 | `VNode \| slot` | - |
+| closeText | 自定义关闭按钮文字（已废弃，请使用 `closeIcon`） | `string` | - |
+| action | 自定义操作项 | `VNode \| slot` | - |
+| role | 根节点 `role` 属性 | `string` | `'alert'` |
 | banner | 是否用作顶部公告 | `boolean` | `false` |
 
 ### Alert Slots

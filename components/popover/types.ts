@@ -8,6 +8,24 @@ import type {
 /** Popover title/content can be plain text, VNode, or a render function. */
 export type PopoverContent = string | number | VNode | (() => VNode | string | number)
 
+/**
+ * 语义化 DOM 的 className 配置（AntD v6.0.0）。
+ * 目前支持 Popover 自身渲染的 `title` / `content` 两个语义节点。
+ */
+export interface PopoverClassNames {
+  title?: string
+  content?: string
+}
+
+/**
+ * 语义化 DOM 的内联样式配置（AntD v6.0.0）。
+ * 目前支持 Popover 自身渲染的 `title` / `content` 两个语义节点。
+ */
+export interface PopoverStyles {
+  title?: Record<string, string>
+  content?: Record<string, string>
+}
+
 export interface PopoverProps {
   title?: PopoverContent
   content?: PopoverContent
@@ -33,4 +51,8 @@ export interface PopoverProps {
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
   /** Background color of the popover. */
   color?: string
+  /** 各语义化 DOM 的自定义 className（AntD v6.0.0），支持对象或函数。 */
+  classNames?: PopoverClassNames | ((info: { props: PopoverProps }) => PopoverClassNames)
+  /** 各语义化 DOM 的自定义内联样式（AntD v6.0.0），支持对象或函数。 */
+  styles?: PopoverStyles | ((info: { props: PopoverProps }) => PopoverStyles)
 }

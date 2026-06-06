@@ -1,13 +1,25 @@
-import { defineComponent, ref, computed, type PropType } from 'vue'
+import { defineComponent, ref, computed, type PropType, type VNodeChild } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { AlertType, AlertVariant } from './types'
+import {
+  CheckCircleFilled,
+  InfoCircleFilled,
+  ExclamationCircleFilled,
+  CloseCircleFilled,
+  CloseOutlined,
+} from '../icon'
+import type { AlertType, AlertVariant, AlertClosable } from './types'
 
-const iconMap: Record<AlertType, string> = {
-  success: '✓',
-  info: 'ℹ',
-  warning: '⚠',
-  error: '✕',
+// 与 AntD v6 对齐：使用 Filled 状态图标
+const iconMap: Record<AlertType, typeof CheckCircleFilled> = {
+  success: CheckCircleFilled,
+  info: InfoCircleFilled,
+  warning: ExclamationCircleFilled,
+  error: CloseCircleFilled,
+}
+
+function isPlainObject(v: unknown): v is Record<string, unknown> {
+  return Object.prototype.toString.call(v) === '[object Object]'
 }
 
 export const Alert = defineComponent({
@@ -30,9 +42,19 @@ export const Alert = defineComponent({
       type: Boolean,
       default: undefined,
     },
-    closable: Boolean,
-    closeText: String,
+    closable: {
+      type: [Boolean, Object] as PropType<AlertClosable>,
+      default: undefined,
+    },
+    closeText: [String, Object, Array, Function] as PropType<VNodeChild>,
+    closeIcon: [String, Object, Array, Function] as PropType<VNodeChild>,
+    icon: [String, Object, Array, Function] as PropType<VNodeChild>,
     banner: Boolean,
+    action: [String, Object, Array, Function] as PropType<VNodeChild>,
+    role: {
+      type: String,
+      default: 'alert',
+    },
   },
   emits: ['close', 'afterClose'],
   setup(props, { slots, emit }) {
@@ -53,6 +75,37 @@ export const Alert = defineComponent({
 
     const mergedTitle = computed(() => props.title ?? props.message)
 
+    // 是否可关闭：closable 对象含 closeIcon、closeText、closeIcon prop 或 closable=true 均可关闭
+    const isClosable = computed(() => {
+      const { closable, closeText, closeIcon } = props
+      // closable 传对象即视为可关闭
+      if (isPlainObject(closable)) return true
+      if (closeText != null && closeText !== '') return true
+      if (typeof closable === 'boolean') return closable
+      if (closeIcon != null) return true
+      return false
+    })
+
+    // 合并关闭图标：closable.closeIcon > closeText > closeIcon prop > slot > 默认 CloseOutlined
+    const mergedCloseIcon = computed<VNodeChild>(() => {
+      const { closable, closeText, closeIcon } = props
+      if (isPlainObject(closable) && closable.closeIcon != null) {
+        return closable.closeIcon as VNodeChild
+      }
+      if (closeText != null && closeText !== '') return closeText
+      if (closeIcon != null) return closeIcon
+      if (slots.closeIcon) return slots.closeIcon()
+      return undefined
+    })
+
+    const closeAriaLabel = computed(() => {
+      const { closable } = props
+      if (isPlainObject(closable) && typeof closable['aria-label'] === 'string') {
+        return closable['aria-label'] as string
+      }
+      return '关闭'
+    })
+
     const handleClose = (e: MouseEvent) => {
       closing.value = true
       emit('close', e)
@@ -67,11 +120,19 @@ export const Alert = defineComponent({
 
       const type = mergedType.value
       const hasDesc = !!(props.description || slots.description)
+      const IconComp = iconMap[type]
+
+      // 图标内容：icon prop > slot > 默认状态图标
+      const iconNode = props.icon ?? slots.icon?.() ?? <IconComp />
+      const closeIconNode = mergedCloseIcon.value ?? <CloseOutlined />
+      const titleNode = slots.message?.() ?? slots.title?.() ?? mergedTitle.value
+      const actionNode = props.action ?? slots.action?.()
 
       return (
         <div
-          role="alert"
+          role={props.role}
           aria-live={type === 'error' || type === 'warning' ? 'assertive' : 'polite'}
+          data-show={!closed.value}
           class={cls(prefixCls, `${prefixCls}-${type}`, `${prefixCls}-${props.variant}`, {
             [`${prefixCls}-with-description`]: hasDesc,
             [`${prefixCls}-banner`]: props.banner,
@@ -80,32 +141,31 @@ export const Alert = defineComponent({
           })}
         >
           {isShowIcon.value && (
-            <span class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-${type}`)}>
-              {slots.icon?.() ?? iconMap[type]}
-            </span>
+            <span class={`${prefixCls}-icon`}>{iconNode}</span>
           )}
-          <div class={`${prefixCls}-content`}>
-            <div class={`${prefixCls}-message`}>
-              {slots.message?.() ?? slots.title?.() ?? mergedTitle.value}
-            </div>
+          <div class={`${prefixCls}-section`}>
+            {titleNode != null && titleNode !== '' && (
+              <div class={`${prefixCls}-title`}>{titleNode}</div>
+            )}
             {hasDesc && (
               <div class={`${prefixCls}-description`}>
                 {slots.description?.() ?? props.description}
               </div>
             )}
           </div>
-          {(props.closable || props.closeText || slots.closeIcon) && (
+          {actionNode != null && (
+            <div class={`${prefixCls}-actions`}>{actionNode}</div>
+          )}
+          {isClosable.value && (
             <button
               type="button"
+              tabindex={0}
               class={`${prefixCls}-close-icon`}
-              aria-label="关闭"
+              aria-label={closeAriaLabel.value}
               onClick={handleClose}
             >
-              {slots.closeIcon?.() ?? props.closeText ?? '×'}
+              {closeIconNode}
             </button>
-          )}
-          {slots.action && (
-            <div class={`${prefixCls}-action`}>{slots.action()}</div>
           )}
         </div>
       )

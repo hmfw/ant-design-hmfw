@@ -8,4 +8,10 @@ export interface SpinProps {
   description?: string
   delay?: number
   fullscreen?: boolean
+  /**
+   * 进度百分比，与 AntD v6 对齐。
+   * - number：受控显示环形进度
+   * - 'auto'：spinning 期间自动模拟递增
+   */
+  percent?: number | 'auto'
 }

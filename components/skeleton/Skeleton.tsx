@@ -1,4 +1,4 @@
-import { defineComponent, computed, type PropType, h } from 'vue'
+import { defineComponent, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 
@@ -49,6 +49,7 @@ export const Skeleton = defineComponent({
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('skeleton')
+    const config = useConfig()
 
     return () => {
       if (!props.loading) return slots.default?.() ?? null
@@ -76,9 +77,9 @@ export const Skeleton = defineComponent({
         paragraphWidths = Array(rows).fill('100%')
         paragraphWidths[rows - 1] = paragraphProps.width
       } else {
-        // Default: last row is 61% if there are multiple rows
+        // Default: last row is 61% when there is no avatar or no title (对齐 AntD，不限制行数)
         paragraphWidths = Array(rows).fill('100%')
-        if (rows > 1 && (!showAvatar || !showTitle)) {
+        if (!showAvatar || !showTitle) {
           paragraphWidths[rows - 1] = '61%'
         }
       }
@@ -93,6 +94,7 @@ export const Skeleton = defineComponent({
           [`${prefixCls}-with-avatar`]: showAvatar,
           [`${prefixCls}-active`]: props.active,
           [`${prefixCls}-round`]: props.round,
+          [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
         })}>
           {showAvatar && (
             <div class={`${prefixCls}-header`}>
@@ -146,7 +148,7 @@ export const SkeletonButton = defineComponent({
   props: {
     active: Boolean,
     size: { type: String as PropType<'large' | 'small' | 'default'>, default: 'default' },
-    shape: { type: String as PropType<'default' | 'circle' | 'round'>, default: 'default' },
+    shape: { type: String as PropType<'default' | 'circle' | 'round' | 'square'>, default: 'default' },
     block: Boolean,
   },
   setup(props) {
@@ -162,6 +164,7 @@ export const SkeletonButton = defineComponent({
           [`${prefixCls}-button-sm`]: mergedSize === 'small',
           [`${prefixCls}-button-circle`]: props.shape === 'circle',
           [`${prefixCls}-button-round`]: props.shape === 'round',
+          [`${prefixCls}-button-square`]: props.shape === 'square',
         })} />
       </div>
     )
@@ -260,6 +263,7 @@ export const SkeletonNode = defineComponent({
   name: 'SkeletonNode',
   props: {
     active: Boolean,
+    nodeStyle: Object as PropType<CSSProperties>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('skeleton')
@@ -267,7 +271,7 @@ export const SkeletonNode = defineComponent({
       <div class={cls(`${prefixCls}`, `${prefixCls}-element`, {
         [`${prefixCls}-active`]: props.active,
       })}>
-        <div class={`${prefixCls}-node`}>
+        <div class={`${prefixCls}-node`} style={props.nodeStyle}>
           {slots.default?.()}
         </div>
       </div>

@@ -42,7 +42,8 @@
 | status | 结果的状态，决定图标和颜色；`404/403/500` 渲染为异常插画 | `'success' \| 'error' \| 'warning' \| 'info' \| '404' \| '403' \| '500'` | `'info'` |
 | title | 标题 | `string` | - |
 | subTitle | 副标题 | `string` | - |
-| icon | 自定义图标字符；设为 `false` 时隐藏图标 | `string \| false` | - |
+| icon | 自定义图标字符；设为 `false` 时隐藏图标（异常状态插画不受影响） | `string \| false` | - |
+| extra | 操作区内容（`extra` 插槽优先级更高） | `string` | - |
 
 ### Result Slots
 

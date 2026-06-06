@@ -1,21 +1,21 @@
 import { defineComponent, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import {
+  CheckCircleFilled,
+  CloseCircleFilled,
+  ExclamationCircleFilled,
+  WarningFilled,
+} from '../icon'
 
 export type ResultStatus = 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500'
 
-const iconMap: Record<string, string> = {
-  success: '✓',
-  error: '✕',
-  info: 'ℹ',
-  warning: '⚠',
-}
-
-const colorMap: Record<string, string> = {
-  success: '#52c41a',
-  error: '#ff4d4f',
-  info: '#1677ff',
-  warning: '#faad14',
+// 对齐 AntD：四种状态各自对应一个 Filled 图标组件
+const iconMap: Record<string, () => VNode> = {
+  success: () => <CheckCircleFilled />,
+  error: () => <CloseCircleFilled />,
+  info: () => <ExclamationCircleFilled />,
+  warning: () => <WarningFilled />,
 }
 
 const EXCEPTION_STATUS = ['404', '403', '500']
@@ -40,7 +40,9 @@ export const Result = defineComponent({
     status: { type: String as PropType<ResultStatus>, default: 'info' },
     title: String,
     subTitle: String,
-    // icon 为 false 时隐藏图标
+    // 额外操作区，亦可用 extra slot
+    extra: String,
+    // icon 为 false/null 时隐藏图标（异常状态插画不受影响，对齐 AntD）
     icon: { type: [String, Boolean] as PropType<string | false>, default: undefined },
   },
   setup(props, { slots }) {
@@ -51,24 +53,30 @@ export const Result = defineComponent({
       const isException = EXCEPTION_STATUS.includes(status)
 
       let iconNode: unknown = null
-      if (props.icon !== false) {
-        if (slots.icon) {
-          iconNode = <div class={`${prefixCls}-icon`}>{slots.icon()}</div>
-        } else if (isException) {
-          const Img = exceptionMap[status]
-          iconNode = (
-            <div class={cls(`${prefixCls}-icon`, `${prefixCls}-image`)}>
-              <Img />
-            </div>
-          )
-        } else {
-          iconNode = (
-            <div class={`${prefixCls}-icon`} style={{ color: colorMap[status] }}>
-              {props.icon ?? iconMap[status]}
-            </div>
-          )
-        }
+      if (isException) {
+        // 异常状态：始终渲染插画，不受 icon=false 影响（对齐 AntD）
+        const Img = exceptionMap[status]
+        iconNode = (
+          <div class={cls(`${prefixCls}-icon`, `${prefixCls}-image`)}>
+            <Img />
+          </div>
+        )
+      } else if (slots.icon) {
+        iconNode = <div class={`${prefixCls}-icon`}>{slots.icon()}</div>
+      } else if (props.icon === false) {
+        // 仅普通状态在 icon=false 时隐藏图标
+        iconNode = null
+      } else {
+        const fallback = iconMap[status]?.() ?? null
+        iconNode = (
+          <div class={`${prefixCls}-icon`}>
+            {props.icon ?? fallback}
+          </div>
+        )
       }
+
+      const extraNode = slots.extra?.() ?? props.extra
+      const hasExtra = slots.extra || props.extra
 
       return (
         <div class={cls(prefixCls, `${prefixCls}-${status}`)}>
@@ -79,11 +87,11 @@ export const Result = defineComponent({
           {(props.subTitle || slots.subTitle) && (
             <div class={`${prefixCls}-subtitle`}>{slots.subTitle?.() ?? props.subTitle}</div>
           )}
-          {slots.extra && (
-            <div class={`${prefixCls}-extra`}>{slots.extra()}</div>
+          {hasExtra && (
+            <div class={`${prefixCls}-extra`}>{extraNode}</div>
           )}
           {slots.default && (
-            <div class={`${prefixCls}-content`}>{slots.default()}</div>
+            <div class={`${prefixCls}-body`}>{slots.default()}</div>
           )}
         </div>
       )

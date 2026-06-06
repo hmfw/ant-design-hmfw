@@ -41,6 +41,14 @@
   <SpinDelay />
 </DemoBlock>
 
+### 进度
+
+通过 `percent` 展示环形进度指示器。传入 `number` 为受控进度，传入 `'auto'` 时在 `spinning` 期间自动模拟递增。
+
+<DemoBlock title="进度" :source="SpinPercentSource">
+  <SpinPercent />
+</DemoBlock>
+
 ## API
 
 ### Spin Props
@@ -51,10 +59,11 @@
 | size | 组件大小 | `'small' \| 'default' \| 'large'` | `'default'` |
 | tip | 当作为包裹元素时，可以自定义描述文案 | `string` | - |
 | delay | 延迟显示加载效果的时间（防止闪烁），单位：毫秒 | `number` | - |
+| percent | 进度百分比；为 `'auto'` 时在 `spinning` 期间自动模拟递增 | `number \| 'auto'` | - |
 
 ### Spin Slots
 
 | 名称 | 说明 |
 | --- | --- |
 | default | 被遮罩的内容 |
-| indicator | 加载指示符 |
+| indicator | 加载指示符（自定义指示器时，插槽参数含 `percent`） |

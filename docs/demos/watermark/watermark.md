@@ -66,6 +66,8 @@
 | width | 水印的宽度，`content` 的默认值为自身的宽度 | `number` | `120` |
 | height | 水印的高度，`content` 的默认值为自身的高度 | `number` | `64` |
 | inherit | 是否将水印传导给弹出组件如 Modal、Drawer | `boolean` | `true` |
+| rootClassName | 添加到根容器的 className | `string` | - |
+| onRemove | 水印节点被外部移除后重建时触发 | `() => void` | - |
 
 ### WatermarkFont
 

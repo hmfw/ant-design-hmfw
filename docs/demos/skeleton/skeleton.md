@@ -98,7 +98,7 @@
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
 | size | 大小 | `'large' \| 'default' \| 'small'` | `'default'` |
-| shape | 形状 | `'default' \| 'circle' \| 'round'` | `'default'` |
+| shape | 形状 | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
 | block | 将按钮宽度调整为其父宽度 | `boolean` | `false` |
 
 ### Skeleton.Input Props
@@ -128,6 +128,7 @@
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
+| nodeStyle | 作用于内部占位节点的内联样式（常用于设定占位尺寸） | `CSSProperties` | - |
 
 <script setup lang="ts">
 import SkeletonBasic from './SkeletonBasic.vue'

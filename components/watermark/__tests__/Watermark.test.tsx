@@ -96,4 +96,102 @@ describe('Watermark', () => {
     const container = wrapper.find('.hmfw-watermark')
     expect(container.attributes('style')).toContain('overflow: hidden')
   })
+
+  it('applies rootClassName to container', () => {
+    const wrapper = mount(Watermark, { props: { content: 'Test', rootClassName: 'my-root' } })
+    expect(wrapper.find('.hmfw-watermark').classes()).toContain('my-root')
+  })
+
+  it('passes through custom class and style to container', () => {
+    const wrapper = mount(Watermark, {
+      props: { content: 'Test' },
+      attrs: { class: 'extra-cls', style: 'background: blue;' },
+    })
+    const container = wrapper.find('.hmfw-watermark')
+    expect(container.classes()).toContain('extra-cls')
+    expect(container.attributes('style')).toContain('background: blue')
+    // 固定样式仍然保留
+    expect(container.attributes('style')).toContain('overflow: hidden')
+  })
+
+  it('watermark element carries visibility !important to prevent hiding', async () => {
+    const wrapper = mount(Watermark, { props: { content: 'Test' } })
+    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    const markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+    expect(markDiv).toBeTruthy()
+    expect(markDiv.getAttribute('style')).toContain('visibility: visible !important')
+  })
+
+  it('removes class and hidden attribute on watermark element', async () => {
+    const wrapper = mount(Watermark, { props: { content: 'Test' } })
+    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    const markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+    expect(markDiv).toBeTruthy()
+    expect(markDiv.hasAttribute('class')).toBe(false)
+    expect(markDiv.hasAttribute('hidden')).toBe(false)
+  })
+
+  it('calls onRemove when watermark element is hard removed', async () => {
+    const onRemove = vi.fn()
+    const wrapper = mount(Watermark, { props: { content: 'Ant', onRemove } })
+    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    const markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+    expect(markDiv).toBeTruthy()
+    markDiv.remove()
+    // 等待 MutationObserver 异步回调
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(onRemove).toHaveBeenCalled()
+  })
+
+  it('does not call onRemove on unmount', async () => {
+    const onRemove = vi.fn()
+    const wrapper = mount(Watermark, { props: { content: 'Ant', onRemove } })
+    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    wrapper.unmount()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(onRemove).not.toHaveBeenCalled()
+  })
+
+  it('restores fixed style when container style is tampered', async () => {
+    const wrapper = mount(Watermark, { props: { content: 'Test' } })
+    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    const container = wrapper.element as HTMLElement
+    container.setAttribute('style', '')
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(container.style.overflow).toBe('hidden')
+    expect(container.style.position).toBe('relative')
+  })
+
+  it('re-appends watermark when removed by external mutation', async () => {
+    const wrapper = mount(Watermark, { props: { content: 'Test' } })
+    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    let markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+    expect(markDiv).toBeTruthy()
+    markDiv.remove()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    // 水印应被重新挂载
+    markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+    expect(markDiv).toBeTruthy()
+  })
+
+  it('applies offset position correctly', async () => {
+    const wrapper = mount(Watermark, {
+      props: { content: ['Ant Design', 'Ant Design Pro'], offset: [200, 200] },
+    })
+    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    const markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+    expect(markDiv).toBeTruthy()
+    const style = markDiv.getAttribute('style') || ''
+    expect(style).toContain('left: 150px')
+    expect(style).toContain('top: 150px')
+    expect(style).toContain('width: calc(100% - 150px)')
+    expect(style).toContain('height: calc(100% - 150px)')
+  })
 })

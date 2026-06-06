@@ -5,6 +5,18 @@
   gap: 8px;
 }
 
+.hmfw-spin-dot-holder {
+  display: inline-block;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: 50% 50%;
+  line-height: 1;
+}
+
+.hmfw-spin-dot-holder-hidden {
+  transform: scale(0.3);
+  opacity: 0;
+}
+
 .hmfw-spin-dot {
   position: relative;
   display: inline-block;
@@ -60,9 +72,29 @@
   50% { transform: scale(1); opacity: 1; }
 }
 
-.hmfw-spin-text {
+.hmfw-spin-description {
   font-size: var(--hmfw-font-size-base);
   color: var(--hmfw-color-primary, #1677ff);
+}
+
+/* Progress 环形进度 */
+.hmfw-spin-dot-progress {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.hmfw-spin-dot-circle {
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease, stroke-dasharray 0.3s ease, stroke 0.3s ease,
+    stroke-width 0.3s ease, opacity 0.3s ease;
+  fill-opacity: 0;
+  stroke: currentColor;
+}
+
+.hmfw-spin-dot-circle-bg {
+  stroke: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
 }
 
 /* Nested loading */
@@ -109,6 +141,6 @@
   background: #fff;
 }
 
-.hmfw-spin-fullscreen .hmfw-spin-text {
+.hmfw-spin-fullscreen .hmfw-spin-description {
   color: #fff;
 }

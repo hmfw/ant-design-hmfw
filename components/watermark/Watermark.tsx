@@ -8,8 +8,8 @@ import {
   provide,
   inject,
   type PropType,
+  type CSSProperties,
   type InjectionKey,
-  type Ref,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import type { WatermarkProps, WatermarkFont } from './types'
@@ -18,6 +18,7 @@ const FontGap = 3
 const BaseSize = 2
 const DEFAULT_GAP_X = 100
 const DEFAULT_GAP_Y = 100
+const WATERMARK_Z_INDEX_OFFSET = 1
 
 interface WatermarkContext {
   add: (ele: HTMLElement) => void
@@ -25,6 +26,17 @@ interface WatermarkContext {
 }
 
 const WatermarkContextKey: InjectionKey<WatermarkContext> = Symbol('WatermarkContext')
+
+// 容器固定样式，被外部篡改后需要还原
+const fixedStyle: Record<string, string> = {
+  position: 'relative',
+  overflow: 'hidden',
+}
+
+// 防止外部通过隐藏元素的方式隐藏水印
+const emphasizedStyle: Record<string, string> = {
+  visibility: 'visible !important',
+}
 
 function getPixelRatio() {
   return window.devicePixelRatio || 1
@@ -38,6 +50,12 @@ function getRotatePos(x: number, y: number, angle: number): [number, number] {
   const targetX = x * Math.cos(angle) - y * Math.sin(angle)
   const targetY = x * Math.sin(angle) + y * Math.cos(angle)
   return [targetX, targetY]
+}
+
+function getStyleStr(style: Record<string, string | number>): string {
+  return Object.keys(style)
+    .map((key) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${style[key]};`)
+    .join(' ')
 }
 
 function prepareCanvas(
@@ -64,7 +82,7 @@ function getClips(
   font: Required<WatermarkFont>,
   gapX: number,
   gapY: number,
-): [dataURL: string, finalWidth: number] {
+): [dataURL: string, finalWidth: number, finalHeight: number] {
   const [ctx, canvas, contentWidth, contentHeight] = prepareCanvas(width, height, ratio)
 
   if (content instanceof HTMLImageElement) {
@@ -143,11 +161,12 @@ function getClips(
   drawImg(cutWidth + realGapX, -cutHeight / 2 - realGapY / 2)
   drawImg(cutWidth + realGapX, +cutHeight / 2 + realGapY / 2)
 
-  return [fCanvas.toDataURL(), filledWidth / ratio]
+  return [fCanvas.toDataURL(), filledWidth / ratio, filledHeight / ratio]
 }
 
 export const Watermark = defineComponent({
   name: 'Watermark',
+  inheritAttrs: false,
   props: {
     content: [String, Array] as PropType<string | string[]>,
     width: Number,
@@ -162,25 +181,35 @@ export const Watermark = defineComponent({
     },
     offset: Array as unknown as PropType<[number, number]>,
     inherit: { type: Boolean, default: true },
+    rootClassName: String,
+    onRemove: Function as PropType<() => void>,
   },
-  setup(props, { slots }) {
+  setup(props, { slots, attrs }) {
     const prefixCls = usePrefixCls('watermark')
     const containerRef = ref<HTMLDivElement>()
-    const watermarkRef = ref<HTMLDivElement>()
-    const stopObserver = ref<(() => void) | null>(null)
+    // 每个目标容器对应一个水印节点（支持嵌套 Modal/Drawer 等场景）
+    const watermarkMap = new Map<HTMLElement, HTMLDivElement>()
     const base64Url = ref('')
     const markWidthRef = ref(0)
+    let rafId: number | null = null
+    let rafLock = false
+
+    // 嵌套子元素集合
+    const subElements = ref(new Set<HTMLElement>())
+    const observers = new Map<HTMLElement, MutationObserver>()
 
     const parentContext = inject(WatermarkContextKey, null)
-    const subElements = ref(new Set<HTMLElement>())
 
-    const [gapX, gapY] = props.gap
-    const gapXCenter = gapX / 2
-    const gapYCenter = gapY / 2
-    const offsetLeft = props.offset?.[0] ?? gapXCenter
-    const offsetTop = props.offset?.[1] ?? gapYCenter
+    // gap / offset 通过 computed 保持响应性
+    const gapX = computed(() => props.gap?.[0] ?? DEFAULT_GAP_X)
+    const gapY = computed(() => props.gap?.[1] ?? DEFAULT_GAP_Y)
+    const gapXCenter = computed(() => gapX.value / 2)
+    const gapYCenter = computed(() => gapY.value / 2)
+    const offsetLeft = computed(() => props.offset?.[0] ?? gapXCenter.value)
+    const offsetTop = computed(() => props.offset?.[1] ?? gapYCenter.value)
 
-    const mergedZIndex = computed(() => props.zIndex ?? 999)
+    // 默认 zIndex 与 AntD 对齐：zIndexPopupBase(1000) - WATERMARK_Z_INDEX_OFFSET(1) = 999
+    const mergedZIndex = computed(() => props.zIndex ?? 1000 - WATERMARK_Z_INDEX_OFFSET)
 
     const markStyle = computed(() => {
       const style: Record<string, string | number> = {
@@ -194,8 +223,8 @@ export const Watermark = defineComponent({
         backgroundRepeat: 'repeat',
       }
 
-      let positionLeft = offsetLeft - gapXCenter
-      let positionTop = offsetTop - gapYCenter
+      let positionLeft = offsetLeft.value - gapXCenter.value
+      let positionTop = offsetTop.value - gapYCenter.value
       if (positionLeft > 0) {
         style.left = `${positionLeft}px`
         style.width = `calc(100% - ${positionLeft}px)`
@@ -209,6 +238,12 @@ export const Watermark = defineComponent({
       style.backgroundPosition = `${positionLeft}px ${positionTop}px`
 
       return style
+    })
+
+    // 所有需要渲染水印的目标容器
+    const targetElements = computed<HTMLElement[]>(() => {
+      const list: HTMLElement[] = containerRef.value ? [containerRef.value] : []
+      return [...list, ...Array.from(subElements.value)]
     })
 
     const getMarkSize = (ctx: CanvasRenderingContext2D): [number, number] => {
@@ -259,12 +294,14 @@ export const Watermark = defineComponent({
             markWidth,
             markHeight,
             font,
-            gapX,
-            gapY,
+            gapX.value,
+            gapY.value,
           )
 
           base64Url.value = nextClips
           markWidthRef.value = clipWidth
+          // 直接渲染：即使 base64 不变（如被移除后重建）也要重新挂载
+          renderAll()
         }
 
         if (props.image) {
@@ -284,40 +321,72 @@ export const Watermark = defineComponent({
       }
     }
 
-    const appendWatermark = (base64: string, width: number) => {
-      if (watermarkRef.value && containerRef.value) {
-        watermarkRef.value.setAttribute(
-          'style',
-          Object.entries({
-            ...markStyle.value,
-            backgroundImage: `url('${base64}')`,
-            backgroundSize: `${Math.floor(width)}px`,
-          })
-            .map(([k, v]) => `${k.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)}: ${v};`)
-            .join(' '),
-        )
-        watermarkRef.value.removeAttribute('class')
+    // raf 去抖：同一帧内多次触发只执行一次
+    const syncWatermark = () => {
+      if (rafLock) {
+        return
+      }
+      rafLock = true
+      renderWatermark()
+      rafId = requestAnimationFrame(() => {
+        rafLock = false
+      })
+    }
+
+    // 向单个容器追加 / 更新水印节点
+    const appendWatermark = (base64: string, width: number, container: HTMLElement) => {
+      const exist = watermarkMap.get(container)
+      if (!exist) {
+        watermarkMap.set(container, document.createElement('div'))
+      }
+      const watermarkEle = watermarkMap.get(container)!
+
+      watermarkEle.setAttribute(
+        'style',
+        getStyleStr({
+          ...markStyle.value,
+          backgroundImage: `url('${base64}')`,
+          backgroundSize: `${Math.floor(width)}px`,
+          ...emphasizedStyle,
+        }),
+      )
+      // 防止浏览器「隐藏元素」功能隐藏水印
+      watermarkEle.removeAttribute('class')
+      watermarkEle.removeAttribute('hidden')
+
+      if (watermarkEle.parentElement !== container) {
+        if (exist) {
+          props.onRemove?.()
+        }
+        container.append(watermarkEle)
       }
     }
 
-    const destroyWatermark = () => {
-      if (watermarkRef.value && containerRef.value) {
-        containerRef.value.removeChild(watermarkRef.value)
-        watermarkRef.value = undefined
+    const removeWatermark = (container: HTMLElement) => {
+      const watermarkEle = watermarkMap.get(container)
+      if (watermarkEle && container.contains(watermarkEle)) {
+        container.removeChild(watermarkEle)
+      }
+      watermarkMap.delete(container)
+    }
+
+    const isWatermarkEle = (ele: Node) =>
+      Array.from(watermarkMap.values()).includes(ele as HTMLDivElement)
+
+    const renderAll = () => {
+      if (base64Url.value && markWidthRef.value) {
+        targetElements.value.forEach((holder) => {
+          appendWatermark(base64Url.value, markWidthRef.value, holder)
+        })
       }
     }
 
-    const isWatermarkEle = (ele: Node) => ele === watermarkRef.value
-
-    watch([base64Url, markWidthRef], ([url, width]) => {
-      if (url && width) {
-        appendWatermark(url, width)
-      }
-    })
+    watch(targetElements, renderAll)
 
     watch(
       () => [
         props.rotate,
+        props.zIndex,
         props.width,
         props.height,
         props.image,
@@ -327,61 +396,102 @@ export const Watermark = defineComponent({
         props.offset,
       ],
       () => {
-        renderWatermark()
+        syncWatermark()
       },
       { deep: true },
     )
 
+    // 监听容器：水印被移除则重建；容器固定样式被篡改则还原
+    const observeTarget = (target: HTMLElement) => {
+      if (observers.has(target)) {
+        return
+      }
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          let needRerender = false
+          if (mutation.removedNodes.length) {
+            needRerender = Array.from(mutation.removedNodes).some(isWatermarkEle)
+          }
+          if (mutation.type === 'attributes' && isWatermarkEle(mutation.target)) {
+            needRerender = true
+          }
+          if (needRerender) {
+            syncWatermark()
+          } else if (
+            mutation.target === target &&
+            mutation.attributeName === 'style' &&
+            target === containerRef.value
+          ) {
+            // 容器固定样式被外部修改后还原
+            Object.keys(fixedStyle).forEach((key) => {
+              const oriValue = fixedStyle[key]
+              const currentValue = (target.style as any)[key]
+              if (oriValue && oriValue !== currentValue) {
+                ;(target.style as any)[key] = oriValue
+              }
+            })
+          }
+        })
+      })
+      observer.observe(target, {
+        childList: true,
+        attributes: true,
+        subtree: true,
+      })
+      observers.set(target, observer)
+    }
+
+    // 目标容器集合变化时，挂载/卸载对应的观察器
+    watch(
+      targetElements,
+      (next, prev) => {
+        const prevList = prev ?? []
+        prevList.forEach((el) => {
+          if (!next.includes(el)) {
+            observers.get(el)?.disconnect()
+            observers.delete(el)
+          }
+        })
+        next.forEach(observeTarget)
+      },
+      { flush: 'post' },
+    )
+
     onMounted(() => {
       if (containerRef.value) {
-        const div = document.createElement('div')
-        watermarkRef.value = div
-        containerRef.value.appendChild(div)
         renderWatermark()
+        observeTarget(containerRef.value)
+        renderAll()
 
         if (parentContext) {
           parentContext.add(containerRef.value)
         }
-
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.type === 'childList') {
-              const removed = Array.from(mutation.removedNodes).some(isWatermarkEle)
-              if (removed && watermarkRef.value) {
-                containerRef.value?.appendChild(watermarkRef.value)
-                renderWatermark()
-              }
-            }
-            if (mutation.type === 'attributes' && isWatermarkEle(mutation.target)) {
-              renderWatermark()
-            }
-          })
-        })
-
-        observer.observe(containerRef.value, {
-          childList: true,
-          attributes: true,
-          subtree: true,
-        })
-
-        stopObserver.value = () => observer.disconnect()
       }
     })
 
     onBeforeUnmount(() => {
-      stopObserver.value?.()
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+      }
+      observers.forEach((observer) => observer.disconnect())
+      observers.clear()
       if (parentContext && containerRef.value) {
         parentContext.remove(containerRef.value)
       }
-      destroyWatermark()
+      Array.from(watermarkMap.keys()).forEach(removeWatermark)
     })
 
     const context: WatermarkContext = {
       add: (ele: HTMLElement) => {
-        subElements.value.add(ele)
+        const clone = new Set(subElements.value)
+        clone.add(ele)
+        subElements.value = clone
       },
       remove: (ele: HTMLElement) => {
-        subElements.value.delete(ele)
+        removeWatermark(ele)
+        const clone = new Set(subElements.value)
+        clone.delete(ele)
+        subElements.value = clone
       },
     }
 
@@ -389,15 +499,18 @@ export const Watermark = defineComponent({
       provide(WatermarkContextKey, context)
     }
 
-    return () => (
-      <div
-        ref={containerRef}
-        class={prefixCls}
-        style={{ position: 'relative', overflow: 'hidden' }}
-      >
-        {slots.default?.()}
-      </div>
-    )
+    return () => {
+      const { class: attrClass, style: attrStyle, ...restAttrs } = attrs as Record<string, unknown>
+      return (
+        <div
+          {...restAttrs}
+          ref={containerRef}
+          class={[prefixCls, props.rootClassName, attrClass]}
+          style={[fixedStyle as CSSProperties, attrStyle as CSSProperties]}
+        >
+          {slots.default?.()}
+        </div>
+      )
+    }
   },
 })
-

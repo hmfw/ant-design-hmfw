@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
+import { h } from 'vue'
 import { Alert } from '../Alert'
 import { nextTick } from 'vue'
 
@@ -22,12 +23,17 @@ describe('Alert', () => {
     expect(wrapper.find('.hmfw-alert-icon').exists()).toBe(true)
   })
 
+  it('renders svg status icon (not emoji)', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg', showIcon: true, type: 'success' } })
+    expect(wrapper.find('.hmfw-alert-icon svg').exists()).toBe(true)
+  })
+
   it('does not show icon by default', () => {
     const wrapper = mount(Alert, { props: { message: 'msg' } })
     expect(wrapper.find('.hmfw-alert-icon').exists()).toBe(false)
   })
 
-  it('renders description', () => {
+  it('renders description with v6 classNames', () => {
     const wrapper = mount(Alert, {
       props: { message: 'title', description: 'desc text' },
     })
@@ -40,6 +46,11 @@ describe('Alert', () => {
     expect(wrapper.find('.hmfw-alert-close-icon').exists()).toBe(true)
   })
 
+  it('renders default CloseOutlined svg in close button', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg', closable: true } })
+    expect(wrapper.find('.hmfw-alert-close-icon svg').exists()).toBe(true)
+  })
+
   it('emits close event and hides after close', async () => {
     vi.useFakeTimers()
     const wrapper = mount(Alert, { props: { message: 'msg', closable: true } })
@@ -49,6 +60,17 @@ describe('Alert', () => {
     await nextTick()
     await nextTick()
     expect(wrapper.find('.hmfw-alert').exists()).toBe(false)
+    vi.useRealTimers()
+  })
+
+  it('emits afterClose after the close animation', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(Alert, { props: { message: 'msg', closable: true } })
+    await wrapper.find('.hmfw-alert-close-icon').trigger('click')
+    expect(wrapper.emitted('afterClose')).toBeFalsy()
+    vi.runAllTimers()
+    await nextTick()
+    expect(wrapper.emitted('afterClose')).toBeTruthy()
     vi.useRealTimers()
   })
 
@@ -72,14 +94,14 @@ describe('Alert', () => {
     expect(wrapper.find('.hmfw-alert-icon').exists()).toBe(false)
   })
 
-  it('supports title prop (alias of message)', () => {
+  it('supports title prop (alias of message) rendered in -title', () => {
     const wrapper = mount(Alert, { props: { title: 'Title content' } })
-    expect(wrapper.find('.hmfw-alert-message').text()).toBe('Title content')
+    expect(wrapper.find('.hmfw-alert-title').text()).toBe('Title content')
   })
 
   it('title takes precedence over message', () => {
     const wrapper = mount(Alert, { props: { title: 'Title', message: 'Message' } })
-    expect(wrapper.find('.hmfw-alert-message').text()).toBe('Title')
+    expect(wrapper.find('.hmfw-alert-title').text()).toBe('Title')
   })
 
   it('applies outlined variant by default', () => {
@@ -92,15 +114,103 @@ describe('Alert', () => {
     expect(wrapper.classes()).toContain('hmfw-alert-filled')
   })
 
-  it('renders slot message', () => {
+  it('renders slot message into -title', () => {
     const wrapper = mount(Alert, {
       slots: { message: '<strong>bold msg</strong>' },
     })
-    expect(wrapper.find('.hmfw-alert-message').html()).toContain('<strong>')
+    expect(wrapper.find('.hmfw-alert-title').html()).toContain('<strong>')
   })
 
-  it('has role=alert for accessibility', () => {
+  it('has role=alert for accessibility by default', () => {
     const wrapper = mount(Alert, { props: { message: 'msg' } })
     expect(wrapper.attributes('role')).toBe('alert')
+  })
+
+  it('supports custom role prop', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg', role: 'status' } })
+    expect(wrapper.attributes('role')).toBe('status')
+  })
+
+  it('renders custom icon prop', () => {
+    const wrapper = mount(Alert, {
+      props: { message: 'msg', showIcon: true, icon: h('i', { class: 'my-icon' }) },
+    })
+    expect(wrapper.find('.hmfw-alert-icon .my-icon').exists()).toBe(true)
+  })
+
+  it('renders action via prop into -actions', () => {
+    const wrapper = mount(Alert, {
+      props: { message: 'msg', action: h('button', { class: 'act-btn' }, 'undo') },
+    })
+    expect(wrapper.find('.hmfw-alert-actions .act-btn').exists()).toBe(true)
+  })
+
+  it('renders action via slot into -actions', () => {
+    const wrapper = mount(Alert, {
+      props: { message: 'msg' },
+      slots: { action: '<button class="slot-act">x</button>' },
+    })
+    expect(wrapper.find('.hmfw-alert-actions .slot-act').exists()).toBe(true)
+  })
+
+  it('closable object with closeIcon makes it closable and renders custom icon', () => {
+    const wrapper = mount(Alert, {
+      props: { message: 'msg', closable: { closeIcon: h('span', { class: 'ci' }, 'C') } },
+    })
+    const close = wrapper.find('.hmfw-alert-close-icon')
+    expect(close.exists()).toBe(true)
+    expect(close.find('.ci').exists()).toBe(true)
+  })
+
+  it('closable object supports aria-label', () => {
+    const wrapper = mount(Alert, {
+      props: { message: 'msg', closable: { 'aria-label': 'dismiss me' } },
+    })
+    expect(wrapper.find('.hmfw-alert-close-icon').attributes('aria-label')).toBe('dismiss me')
+  })
+
+  it('closeText makes it closable and renders the text', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg', closeText: 'Close Now' } })
+    const close = wrapper.find('.hmfw-alert-close-icon')
+    expect(close.exists()).toBe(true)
+    expect(close.text()).toBe('Close Now')
+  })
+
+  it('closeIcon prop makes it closable and renders custom icon', () => {
+    const wrapper = mount(Alert, {
+      props: { message: 'msg', closeIcon: h('span', { class: 'cix' }, 'x') },
+    })
+    expect(wrapper.find('.hmfw-alert-close-icon .cix').exists()).toBe(true)
+  })
+
+  it('not closable by default', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg' } })
+    expect(wrapper.find('.hmfw-alert-close-icon').exists()).toBe(false)
+  })
+
+  it('renders content section wrapper', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg' } })
+    expect(wrapper.find('.hmfw-alert-section').exists()).toBe(true)
+  })
+
+  it('actions come before close button in DOM order', () => {
+    const wrapper = mount(Alert, {
+      props: {
+        message: 'msg',
+        closable: true,
+        action: h('button', { class: 'act-btn' }, 'undo'),
+      },
+    })
+    const children = Array.from(wrapper.element.children).map((c) => c.className)
+    const actionsIdx = children.findIndex((c) => c.includes('hmfw-alert-actions'))
+    const closeIdx = children.findIndex((c) => c.includes('hmfw-alert-close-icon'))
+    expect(actionsIdx).toBeGreaterThan(-1)
+    expect(closeIdx).toBeGreaterThan(-1)
+    expect(actionsIdx).toBeLessThan(closeIdx)
+  })
+
+  it('adds no-icon class when icon is hidden', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg' } })
+    expect(wrapper.classes()).toContain('hmfw-alert-no-icon')
   })
 })

@@ -2,7 +2,9 @@
   position: absolute;
   z-index: 1070;
   display: block;
-  max-width: 320px;
+  /* AntD v6：宽度由内容决定，仅以视口为上限（非 Tooltip 的 320px 截断）。 */
+  width: max-content;
+  max-width: 100vw;
   font-size: 14px;
   line-height: 1.5714;
   pointer-events: none;
@@ -17,23 +19,28 @@
 }
 
 .hmfw-popover-inner {
-  background: #fff;
+  background: var(--tooltip-bg, #fff);
   border-radius: 8px;
   box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   pointer-events: auto;
   overflow: hidden;
+  /* AntD v6 默认主题（非 wireframe）：内边距落在容器上，标题/内容自身无 padding。 */
+  padding: 12px;
 }
 
 .hmfw-popover-title {
   min-width: 177px;
-  padding: 8px 12px;
+  margin-bottom: 8px;
   color: rgba(0, 0, 0, 0.88);
   font-weight: 600;
-  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+}
+
+/* 标题作为最后一个元素（仅标题、无内容）时不需要下间距。 */
+.hmfw-popover-title:last-child {
+  margin-bottom: 0;
 }
 
 .hmfw-popover-inner-content {
-  padding: 12px;
   color: rgba(0, 0, 0, 0.88);
 }
 
@@ -51,7 +58,7 @@
   inset-inline-start: 0;
   width: 16px;
   height: 8px;
-  background-color: #fff;
+  background-color: var(--tooltip-bg, #fff);
   clip-path: path('M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z');
   content: '';
   box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08);

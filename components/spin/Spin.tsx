@@ -1,7 +1,15 @@
-import { defineComponent, ref, watch, onBeforeUnmount, type PropType } from 'vue'
+import { defineComponent, ref, watch, onBeforeUnmount, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { SpinSize } from './types'
+
+// percent='auto' 时模拟递增的参数（与 AntD v6 usePercent 对齐）
+const AUTO_INTERVAL = 200
+const STEP_BUCKETS: [limit: number, stepPtg: number][] = [
+  [30, 0.05],
+  [70, 0.03],
+  [96, 0.01],
+]
 
 export const Spin = defineComponent({
   name: 'Spin',
@@ -22,6 +30,11 @@ export const Spin = defineComponent({
       default: 0,
     },
     fullscreen: Boolean,
+    // percent：number 受控 / 'auto' 自动模拟递增（与 AntD v6 对齐）
+    percent: {
+      type: [Number, String] as PropType<number | 'auto'>,
+      default: undefined,
+    },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('spin')
@@ -37,36 +50,137 @@ export const Spin = defineComponent({
       }
     }
 
-    watch(
-      () => props.spinning,
-      (val) => {
-        clearTimer()
-        if (val) {
-          if (props.delay > 0) {
-            timer = setTimeout(() => {
-              active.value = true
-            }, props.delay)
-          } else {
+    // 根据 spinning/delay 计算 active，挂载时立即生效（修复 delay-on-mount）
+    const applySpinning = (val: boolean | undefined) => {
+      clearTimer()
+      if (val) {
+        if (props.delay > 0) {
+          timer = setTimeout(() => {
             active.value = true
-          }
+          }, props.delay)
         } else {
-          active.value = false
+          active.value = true
+        }
+      } else {
+        active.value = false
+      }
+    }
+
+    watch(() => props.spinning, applySpinning, { immediate: true })
+
+    // ======================= percent =======================
+    const isAuto = computed(() => props.percent === 'auto')
+    const mockPercent = ref(0)
+    let mockTimer: ReturnType<typeof setInterval> | null = null
+
+    const clearMockTimer = () => {
+      if (mockTimer) {
+        clearInterval(mockTimer)
+        mockTimer = null
+      }
+    }
+
+    watch(
+      [isAuto, active],
+      ([auto, spinning]) => {
+        clearMockTimer()
+        if (auto && spinning) {
+          mockPercent.value = 0
+          mockTimer = setInterval(() => {
+            const prev = mockPercent.value
+            const restPTG = 100 - prev
+            for (let i = 0; i < STEP_BUCKETS.length; i += 1) {
+              const [limit, stepPtg] = STEP_BUCKETS[i]
+              if (prev <= limit) {
+                mockPercent.value = prev + restPTG * stepPtg
+                return
+              }
+            }
+          }, AUTO_INTERVAL)
         }
       },
+      { immediate: true },
     )
 
-    onBeforeUnmount(clearTimer)
+    const mergedPercent = computed<number | undefined>(() =>
+      isAuto.value ? mockPercent.value : (props.percent as number | undefined),
+    )
+
+    onBeforeUnmount(() => {
+      clearTimer()
+      clearMockTimer()
+    })
+
+    // ======================= Progress 环形进度 =======================
+    const viewSize = 100
+    const borderWidth = viewSize / 5
+    const radius = viewSize / 2 - borderWidth / 2
+    const circumference = radius * 2 * Math.PI
+    const center = 50
+
+    const renderProgress = () => {
+      const percent = mergedPercent.value
+      if (percent === undefined || percent === 0) return null
+      const safePtg = Math.max(Math.min(percent, 100), 0)
+      const dotCls = `${prefixCls}-dot`
+      const holderCls = `${dotCls}-holder`
+      const circleStyle = {
+        strokeDashoffset: `${circumference / 4}`,
+        strokeDasharray: `${(circumference * safePtg) / 100} ${
+          (circumference * (100 - safePtg)) / 100
+        }`,
+      }
+      return (
+        <span
+          class={cls(holderCls, `${dotCls}-progress`, {
+            [`${holderCls}-hidden`]: safePtg <= 0,
+          })}
+        >
+          <svg
+            viewBox={`0 0 ${viewSize} ${viewSize}`}
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={safePtg}
+          >
+            <circle
+              class={cls(`${dotCls}-circle`, `${dotCls}-circle-bg`)}
+              r={radius}
+              cx={center}
+              cy={center}
+              stroke-width={borderWidth}
+            />
+            <circle
+              class={`${dotCls}-circle`}
+              r={radius}
+              cx={center}
+              cy={center}
+              stroke-width={borderWidth}
+              style={circleStyle}
+            />
+          </svg>
+        </span>
+      )
+    }
 
     const renderIndicator = () => {
       if (slots.indicator) {
-        return <span class={`${prefixCls}-dot`}>{slots.indicator()}</span>
+        return <span class={`${prefixCls}-dot`}>{slots.indicator({ percent: mergedPercent.value })}</span>
       }
+      // percent>0 时隐藏四点 holder，仅显示环形进度（与 AntD v6 一致）
+      const showProgress = mergedPercent.value !== undefined && mergedPercent.value > 0
+      const holderCls = `${prefixCls}-dot-holder`
       return (
-        <span class={`${prefixCls}-dot`}>
-          {[0, 1, 2, 3].map((i) => (
-            <i key={i} class={`${prefixCls}-dot-item`} />
-          ))}
-        </span>
+        <>
+          <span class={cls(holderCls, { [`${holderCls}-hidden`]: showProgress })}>
+            <span class={cls(`${prefixCls}-dot`, `${prefixCls}-dot-spin`)}>
+              {[0, 1, 2, 3].map((i) => (
+                <i key={i} class={`${prefixCls}-dot-item`} />
+              ))}
+            </span>
+          </span>
+          {renderProgress()}
+        </>
       )
     }
 
@@ -83,7 +197,7 @@ export const Spin = defineComponent({
           aria-busy={active.value}
         >
           {renderIndicator()}
-          {desc && <div class={`${prefixCls}-text`}>{desc}</div>}
+          {desc && <div class={`${prefixCls}-description`}>{desc}</div>}
         </span>
       )
     }

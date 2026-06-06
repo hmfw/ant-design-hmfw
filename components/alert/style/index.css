@@ -1,12 +1,13 @@
 .hmfw-alert {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   padding: 8px 12px;
   border-radius: 6px;
   font-size: 14px;
   line-height: 1.5714;
   word-wrap: break-word;
+  border: 1px solid transparent;
   transition: opacity 0.3s;
 }
 
@@ -15,36 +16,42 @@
 }
 
 .hmfw-alert-with-description {
-  padding: 12px 16px;
+  align-items: flex-start;
+  padding: 16px;
 }
 
 /* Types */
 .hmfw-alert-success {
   background-color: #f6ffed;
-  border: 1px solid #b7eb8f;
+  border-color: #b7eb8f;
 }
 
 .hmfw-alert-info {
   background-color: #e6f4ff;
-  border: 1px solid #91caff;
+  border-color: #91caff;
 }
 
 .hmfw-alert-warning {
   background-color: #fffbe6;
-  border: 1px solid #ffe58f;
+  border-color: #ffe58f;
 }
 
 .hmfw-alert-error {
   background-color: #fff2f0;
-  border: 1px solid #ffccc7;
+  border-color: #ffccc7;
+}
+
+/* error 描述内的 pre 复位（与 AntD v6 对齐） */
+.hmfw-alert-error .hmfw-alert-description > pre {
+  margin: 0;
+  padding: 0;
 }
 
 /* Banner */
 .hmfw-alert-banner {
+  margin-bottom: 0;
+  border: 0 !important;
   border-radius: 0;
-  border-top: none;
-  border-left: none;
-  border-right: none;
 }
 
 /* Variant: filled（更强的背景填充，无边框） */
@@ -73,47 +80,61 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
   margin-right: 8px;
-  font-size: 14px;
-  font-style: normal;
+  font-size: 16px;
+  line-height: 0;
   flex-shrink: 0;
-  margin-top: 1px;
 }
 
 .hmfw-alert-with-description .hmfw-alert-icon {
-  width: 24px;
-  height: 24px;
-  font-size: 20px;
-  margin-top: 0;
+  margin-right: 12px;
+  font-size: 24px;
 }
 
-.hmfw-alert-icon-success { color: #52c41a; }
-.hmfw-alert-icon-info    { color: #1677ff; }
-.hmfw-alert-icon-warning { color: #faad14; }
-.hmfw-alert-icon-error   { color: #ff4d4f; }
+.hmfw-alert-icon-success,
+.hmfw-alert-success .hmfw-alert-icon {
+  color: #52c41a;
+}
+.hmfw-alert-icon-info,
+.hmfw-alert-info .hmfw-alert-icon {
+  color: #1677ff;
+}
+.hmfw-alert-icon-warning,
+.hmfw-alert-warning .hmfw-alert-icon {
+  color: #faad14;
+}
+.hmfw-alert-icon-error,
+.hmfw-alert-error .hmfw-alert-icon {
+  color: #ff4d4f;
+}
 
-/* Content */
-.hmfw-alert-content {
+/* Content（section） */
+.hmfw-alert-section {
   flex: 1;
   min-width: 0;
 }
 
-.hmfw-alert-message {
+.hmfw-alert-title {
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
 }
 
-.hmfw-alert-with-description .hmfw-alert-message {
+.hmfw-alert-with-description .hmfw-alert-title {
+  display: block;
   font-weight: 600;
   font-size: 16px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .hmfw-alert-description {
+  display: none;
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
+  line-height: 1.5714;
+}
+
+.hmfw-alert-with-description .hmfw-alert-description {
+  display: block;
 }
 
 /* Close */
@@ -123,11 +144,12 @@
   justify-content: center;
   padding: 0;
   margin-left: 8px;
+  overflow: hidden;
   background: transparent;
   border: none;
   cursor: pointer;
   color: rgba(0, 0, 0, 0.45);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   transition: color 0.2s;
   flex-shrink: 0;
@@ -137,8 +159,8 @@
   color: rgba(0, 0, 0, 0.75);
 }
 
-/* Action */
-.hmfw-alert-action {
+/* Action（actions） */
+.hmfw-alert-actions {
   margin-left: 8px;
   flex-shrink: 0;
 }

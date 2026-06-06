@@ -12,7 +12,7 @@ import type {
   TooltipTrigger,
   TooltipArrow,
 } from '../tooltip/types'
-import type { PopoverContent } from './types'
+import type { PopoverContent, PopoverClassNames, PopoverStyles } from './types'
 
 /**
  * Popover delegates positioning, triggers, and overflow handling to Tooltip
@@ -44,6 +44,12 @@ export const Popover = defineComponent({
     destroyTooltipOnHide: Boolean,
     getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
     color: String,
+    classNames: [Object, Function] as PropType<
+      PopoverClassNames | ((info: { props: Record<string, unknown> }) => PopoverClassNames)
+    >,
+    styles: [Object, Function] as PropType<
+      PopoverStyles | ((info: { props: Record<string, unknown> }) => PopoverStyles)
+    >,
   },
   emits: ['update:open', 'openChange', 'afterOpenChange'],
   setup(props, { slots, emit, attrs }) {
@@ -69,17 +75,59 @@ export const Popover = defineComponent({
     }
 
     return () => {
-      // Build Popover's overlay body: title + content inside `.hmfw-popover-inner`.
-      // Tooltip places this as the popup content directly, so we control the layout.
+      // 解析语义化 classNames / styles（AntD v6.0.0）。支持对象或函数形式，
+      // 函数形式接收 { props } 以便按属性动态生成。
+      const resolveSemantic = <T,>(
+        value: T | ((info: { props: Record<string, unknown> }) => T) | undefined,
+      ): T | undefined =>
+        typeof value === 'function'
+          ? (value as (info: { props: Record<string, unknown> }) => T)({ props })
+          : value
+      const mergedClassNames = resolveSemantic(props.classNames) ?? {}
+      const mergedStyles = resolveSemantic(props.styles) ?? {}
+
+      // Build Popover's overlay body: title + content. Tooltip already wraps
+      // whatever we return here inside `.hmfw-popover-inner` (the styled box),
+      // so we must NOT add another `.hmfw-popover-inner` layer or we'd get a
+      // double box (double shadow / radius / background) — AntD renders a
+      // single inner box.
       const titleNode = resolveNode(props.title, slots.title)
       const contentNode = resolveNode(props.content, slots.content)
 
+      const titleVisible =
+        titleNode !== undefined && titleNode !== null && titleNode !== ''
+      const contentVisible =
+        contentNode !== undefined && contentNode !== null && contentNode !== ''
+
+      // AntD only renders the content div when content is non-empty (title-only
+      // popovers don't get an empty padded content box).
+      const overlayChildren = [
+        titleVisible &&
+          h(
+            'div',
+            {
+              class: [`${prefixCls}-title`, mergedClassNames.title],
+              style: mergedStyles.title,
+            },
+            titleNode as VNode,
+          ),
+        contentVisible &&
+          h(
+            'div',
+            {
+              class: [`${prefixCls}-inner-content`, mergedClassNames.content],
+              style: mergedStyles.content,
+            },
+            contentNode as VNode,
+          ),
+      ].filter(Boolean) as VNode[]
+
+      // `overlayInnerStyle` targets the inner content box. Since the box itself
+      // is owned by Tooltip, carry the style on a thin wrapper inside it.
       const overlay = hasOverlay.value
-        ? h('div', { class: `${prefixCls}-inner`, style: props.overlayInnerStyle }, [
-            (titleNode !== undefined && titleNode !== null && titleNode !== '') &&
-              h('div', { class: `${prefixCls}-title` }, titleNode as VNode),
-            h('div', { class: `${prefixCls}-inner-content` }, contentNode as VNode),
-          ])
+        ? props.overlayInnerStyle
+          ? h('div', { style: props.overlayInnerStyle }, overlayChildren)
+          : overlayChildren
         : null
 
       // Forward the trigger child via Tooltip's default slot. We pass the

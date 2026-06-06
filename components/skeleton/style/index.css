@@ -14,6 +14,11 @@
   vertical-align: top;
 }
 
+/* RTL（padding-inline-* 等逻辑属性会随 direction 自动翻转） */
+.hmfw-skeleton-rtl {
+  direction: rtl;
+}
+
 .hmfw-skeleton-section {
   display: table-cell;
   width: 100%;
@@ -158,6 +163,10 @@
 
 .hmfw-skeleton-button-round {
   border-radius: var(--hmfw-control-height, 32px);
+}
+
+.hmfw-skeleton-button-square {
+  border-radius: var(--hmfw-border-radius-sm, 4px);
 }
 
 .hmfw-skeleton-button-lg.hmfw-skeleton-button-round {

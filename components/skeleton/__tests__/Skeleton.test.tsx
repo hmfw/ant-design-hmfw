@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from '../Skeleton'
+import { ConfigProvider } from '../../config-provider'
 
 describe('Skeleton', () => {
   it('renders skeleton when loading=true', () => {
@@ -99,6 +100,45 @@ describe('Skeleton', () => {
     const wrapper = mount(Skeleton)
     expect(wrapper.find('.hmfw-skeleton-section').exists()).toBe(true)
   })
+
+  it('sets last paragraph row width to 61% for single row without title', () => {
+    const wrapper = mount(Skeleton, { props: { title: false, paragraph: { rows: 1 } } })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    expect(rows).toHaveLength(1)
+    expect(rows[0].attributes('style')).toContain('width: 61%')
+  })
+
+  it('sets last paragraph row width to 61% when no avatar', () => {
+    const wrapper = mount(Skeleton, { props: { paragraph: { rows: 3 } } })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    expect(rows[rows.length - 1].attributes('style')).toContain('width: 61%')
+  })
+
+  it('keeps last row full width when both avatar and title present', () => {
+    const wrapper = mount(Skeleton, { props: { avatar: true, paragraph: { rows: 2 } } })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    expect(rows[rows.length - 1].attributes('style')).toContain('width: 100%')
+  })
+
+  it('applies explicit scalar paragraph width to last row only', () => {
+    const wrapper = mount(Skeleton, { props: { paragraph: { rows: 2, width: '40%' } } })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    expect(rows[0].attributes('style')).toContain('width: 100%')
+    expect(rows[1].attributes('style')).toContain('width: 40%')
+  })
+
+  it('applies rtl class when ConfigProvider direction is rtl', () => {
+    const wrapper = mount(ConfigProvider, {
+      props: { direction: 'rtl' },
+      slots: { default: () => <Skeleton /> },
+    })
+    expect(wrapper.find('.hmfw-skeleton-rtl').exists()).toBe(true)
+  })
+
+  it('does not apply rtl class by default', () => {
+    const wrapper = mount(Skeleton)
+    expect(wrapper.classes()).not.toContain('hmfw-skeleton-rtl')
+  })
 })
 
 describe('SkeletonButton', () => {
@@ -128,6 +168,9 @@ describe('SkeletonButton', () => {
 
     const round = mount(SkeletonButton, { props: { shape: 'round' } })
     expect(round.find('.hmfw-skeleton-button').classes()).toContain('hmfw-skeleton-button-round')
+
+    const square = mount(SkeletonButton, { props: { shape: 'square' } })
+    expect(square.find('.hmfw-skeleton-button').classes()).toContain('hmfw-skeleton-button-square')
   })
 
   it('applies block class', () => {
@@ -220,6 +263,11 @@ describe('SkeletonNode', () => {
   it('wraps in element container', () => {
     const wrapper = mount(SkeletonNode)
     expect(wrapper.classes()).toContain('hmfw-skeleton-element')
+  })
+
+  it('applies nodeStyle to the inner node', () => {
+    const wrapper = mount(SkeletonNode, { props: { nodeStyle: { width: '160px' } } })
+    expect(wrapper.find('.hmfw-skeleton-node').attributes('style')).toContain('width: 160px')
   })
 })
 

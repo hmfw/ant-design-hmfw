@@ -44,7 +44,7 @@
 
 > **关于 `/clear`**：产出全部落在分类文件，下一个组件不需要前一个的对话上下文。**但隐性约定（文件路径、条目格式、验证标准）只存在于步骤 0 读取的样板里——所以 `/clear` 后必须先做步骤 0 再动手，否则就会"靠猜路径、靠估数字"。** 例外：下一个组件是前一个的特化或共用底层（如 Popconfirm 复用 Popover wrapper），保留上下文或用 `/compact` 软压缩。
 
-### ✅ 已完成（59 个，全量 1483 测试通过 + 2 skipped，修复 254 个真实 bug）
+### ✅ 已完成（65 个，全量 1540 测试通过 + 2 skipped，修复 266 个真实 bug）
 
 **基础/布局** → [`COMPARISON/01-basic-layout.md`](./COMPARISON/01-basic-layout.md)
 Divider · Flex · Space(修2bug) · Typography · Tag · Badge(修1) · Alert(修1行为) · Avatar · Empty · Card · Result · Spin(修 delay 失效 bug)
@@ -67,13 +67,13 @@ Tooltip(修4bug) · Popover(修5bug) · Popconfirm(修8bug) · Modal(修9bug) ·
 Table(修13差异/Bug，测试 11→24) · Tree(修/补22项，测试 11→40) · Transfer(修20差异/Bug，测试 10→29) · Carousel(修12差异/Bug，测试 11→27) · ColorPicker(已对比，待修复28项)
 
 **F 反馈** → [`COMPARISON/07-feedback.md`](./COMPARISON/07-feedback.md)
-Progress(修9bug/补12差异，测试 23→44)
+Progress(修9bug/补12差异，测试 23→44) · Popover(对齐默认主题盒模型+语义化 classNames/styles，测试 22→29) · Result(修2bug，测试 11→15) · Spin(修1bug/补 percent，测试 11→18) · Skeleton(修1bug，测试 39→46) · Alert(修3bug，测试 17→32) · Watermark(修5bug，测试 11→20)
 
 ### ⏭️ 待办路线图（简单→复杂，按序进行）
 
-- **F 反馈**：~~Progress~~ → Popover → Result → Spin → Skeleton → Alert → Watermark
+- **F 反馈**：~~Progress~~ → ~~Popover~~ → ~~Result~~ → ~~Spin~~ → ~~Skeleton~~ → ~~Alert~~ → ~~Watermark~~ ✅ 全部完成
 
-**下一个执行**：F 反馈类 Popover 组件（建议先 `/clear`）。恢复时对我说「继续」即可。
+**下一个执行**：F 反馈类已全部完成（7/7）。全量 1540 测试通过 + 2 skipped。后续如有新分类再规划。
 
 ---
 
@@ -87,4 +87,4 @@ Progress(修9bug/补12差异，测试 23→44)
 | 4 | C 表单控件 | [04-form.md](./COMPARISON/04-form.md) | ✅ 16/16 |
 | 5 | D 浮层/反馈 | [05-overlay-feedback.md](./COMPARISON/05-overlay-feedback.md) | ✅ 9/9（已完成 Tooltip · Popover · Popconfirm · Modal · Drawer · Message · Notification · Tour · Image） |
 | 6 | E 数据/复杂 | [06-data-complex.md](./COMPARISON/06-data-complex.md) | ✅ 5/5（已完成 Table · Tree · Transfer · Carousel · ColorPicker） |
-| 7 | F 反馈 | [07-feedback.md](./COMPARISON/07-feedback.md) | 🚧 1/7（已完成 Progress） |
+| 7 | F 反馈 | [07-feedback.md](./COMPARISON/07-feedback.md) | ✅ 7/7（已完成 Progress · Popover · Result · Spin · Skeleton · Alert · Watermark） |

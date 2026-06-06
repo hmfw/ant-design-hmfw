@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { nextTick, h } from 'vue'
 import { Spin } from '../Spin'
 
 describe('Spin', () => {
@@ -11,7 +11,7 @@ describe('Spin', () => {
 
   it('shows tip text', () => {
     const wrapper = mount(Spin, { props: { tip: 'Loading...' } })
-    expect(wrapper.find('.hmfw-spin-text').text()).toBe('Loading...')
+    expect(wrapper.find('.hmfw-spin-description').text()).toBe('Loading...')
   })
 
   it('applies small size class', () => {
@@ -49,7 +49,7 @@ describe('Spin', () => {
 
   it('description acts as tip alias', () => {
     const wrapper = mount(Spin, { props: { description: 'Please wait' } })
-    expect(wrapper.find('.hmfw-spin-text').text()).toBe('Please wait')
+    expect(wrapper.find('.hmfw-spin-description').text()).toBe('Please wait')
   })
 
   it('renders fullscreen mode', () => {
@@ -78,5 +78,74 @@ describe('Spin', () => {
     await nextTick()
     expect(wrapper.find('.hmfw-spin-container').exists()).toBe(true)
     vi.useRealTimers()
+  })
+
+  it('delays on mount when spinning=true + delay set (bug fix)', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(Spin, {
+      props: { spinning: true, delay: 200 },
+      slots: { default: '<div>Content</div>' },
+    })
+    // 挂载即带 delay，初始不应显示
+    expect(wrapper.find('.hmfw-spin-container').exists()).toBe(false)
+    vi.advanceTimersByTime(200)
+    await nextTick()
+    // delay 到点后显示
+    expect(wrapper.find('.hmfw-spin-container').exists()).toBe(true)
+    vi.useRealTimers()
+  })
+
+  it('wraps default dot in dot-holder', () => {
+    const wrapper = mount(Spin)
+    expect(wrapper.find('.hmfw-spin-dot-holder').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-spin-dot-holder .hmfw-spin-dot-spin').exists()).toBe(true)
+    expect(wrapper.findAll('.hmfw-spin-dot-item')).toHaveLength(4)
+  })
+
+  it('renders circular progress when percent is set', () => {
+    const wrapper = mount(Spin, { props: { percent: 50 } })
+    const progress = wrapper.find('.hmfw-spin-dot-progress')
+    expect(progress.exists()).toBe(true)
+    const bar = wrapper.find('[role="progressbar"]')
+    expect(bar.attributes('aria-valuenow')).toBe('50')
+    // percent>0 时四点 holder 被隐藏
+    expect(wrapper.find('.hmfw-spin-dot-holder-hidden').exists()).toBe(true)
+  })
+
+  it('does not render progress when percent is 0 or undefined', () => {
+    const wrapper = mount(Spin, { props: { percent: 0 } })
+    expect(wrapper.find('.hmfw-spin-dot-progress').exists()).toBe(false)
+    const wrapper2 = mount(Spin)
+    expect(wrapper2.find('.hmfw-spin-dot-progress').exists()).toBe(false)
+  })
+
+  it('clamps percent into [0,100] for aria-valuenow', () => {
+    const wrapper = mount(Spin, { props: { percent: 150 } })
+    expect(wrapper.find('[role="progressbar"]').attributes('aria-valuenow')).toBe('100')
+  })
+
+  it('auto percent increments over time', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(Spin, { props: { percent: 'auto' } })
+    // 初始 0，无进度
+    expect(wrapper.find('.hmfw-spin-dot-progress').exists()).toBe(false)
+    vi.advanceTimersByTime(200)
+    await nextTick()
+    // 一个 tick 后 percent 应 > 0
+    expect(wrapper.find('.hmfw-spin-dot-progress').exists()).toBe(true)
+    const now = Number(wrapper.find('[role="progressbar"]').attributes('aria-valuenow'))
+    expect(now).toBeGreaterThan(0)
+    vi.useRealTimers()
+  })
+
+  it('exposes percent to indicator slot', () => {
+    const wrapper = mount(Spin, {
+      props: { percent: 42 },
+      slots: {
+        indicator: (params: { percent?: number }) =>
+          h('span', { class: 'my-pct' }, String(params?.percent)),
+      },
+    })
+    expect(wrapper.find('.my-pct').text()).toBe('42')
   })
 })
