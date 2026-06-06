@@ -41,6 +41,9 @@ export interface ListProps<T = any> {
   itemLayout?: ListItemLayout
   rowKey?: string | ((item: T) => string | number)
   loadMore?: VNode
+  virtual?: boolean
+  height?: number | string
+  itemHeight?: number
 }
 
 export interface ListItemProps {

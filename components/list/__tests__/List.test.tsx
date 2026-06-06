@@ -234,3 +234,63 @@ describe('List.Item.Meta', () => {
     expect(List.Item.Meta).toBe(ListItemMeta)
   })
 })
+
+describe('List Virtual Scroll', () => {
+  it('renders with virtual scroll enabled', () => {
+    const largeData = Array.from({ length: 1000 }, (_, i) => `Item ${i + 1}`)
+    const wrapper = mount(List, {
+      props: {
+        dataSource: largeData,
+        renderItem: (item: unknown) => h(ListItem, null, () => item as string),
+        virtual: true,
+        height: 400,
+        itemHeight: 48,
+      },
+    })
+    expect(wrapper.find('.hmfw-virtual-list').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-virtual-list-holder').exists()).toBe(true)
+  })
+
+  it('uses default itemHeight when not specified', () => {
+    const data = Array.from({ length: 100 }, (_, i) => `Item ${i + 1}`)
+    const wrapper = mount(List, {
+      props: {
+        dataSource: data,
+        renderItem: (item: unknown) => h(ListItem, null, () => item as string),
+        virtual: true,
+        height: 300,
+      },
+    })
+    expect(wrapper.find('.hmfw-virtual-list').exists()).toBe(true)
+  })
+
+  it('does not enable virtual scroll in grid mode', () => {
+    const data = Array.from({ length: 100 }, (_, i) => `Item ${i + 1}`)
+    const wrapper = mount(List, {
+      props: {
+        dataSource: data,
+        renderItem: (item: unknown) => h(ListItem, null, () => item as string),
+        virtual: true,
+        height: 400,
+        grid: { column: 3 },
+      },
+    })
+    // 虚拟滚动在 grid 模式下不启用
+    expect(wrapper.find('.hmfw-virtual-list').exists()).toBe(false)
+    expect(wrapper.find('.hmfw-list-grid').exists()).toBe(true)
+  })
+
+  it('requires height prop when virtual is enabled', () => {
+    const data = Array.from({ length: 100 }, (_, i) => `Item ${i + 1}`)
+    const wrapper = mount(List, {
+      props: {
+        dataSource: data,
+        renderItem: (item: unknown) => h(ListItem, null, () => item as string),
+        virtual: true,
+        // height 缺失，虚拟滚动不会启用
+      },
+    })
+    expect(wrapper.find('.hmfw-virtual-list').exists()).toBe(false)
+    expect(wrapper.find('.hmfw-list-items').exists()).toBe(true)
+  })
+})

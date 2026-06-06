@@ -64,6 +64,22 @@
   <ListVertical />
 </DemoBlock>
 
+### 虚拟滚动
+
+使用虚拟滚动支持大数据场景，通过 `virtual` 和 `height` 属性开启。
+
+<DemoBlock title="虚拟滚动" :source="ListVirtualSource">
+  <ListVirtual />
+</DemoBlock>
+
+### 无限滚动
+
+通过监听滚动事件实现无限滚动加载更多数据。
+
+<DemoBlock title="无限滚动" :source="ListInfiniteScrollSource">
+  <ListInfiniteScroll />
+</DemoBlock>
+
 ## API
 
 ### List Props
@@ -84,6 +100,9 @@
 | footer | 列表底部 | `string \| VNode` | - |
 | locale | 默认文案设置，目前包括空数据文案 | `{ emptyText?: string \| VNode }` | - |
 | loadMore | 加载更多 | `VNode` | - |
+| virtual | 是否开启虚拟滚动 | `boolean` | `false` |
+| height | 虚拟滚动容器高度（开启 virtual 时必需） | `number \| string` | - |
+| itemHeight | 虚拟滚动每项高度 | `number` | `48` |
 
 ### PaginationConfig
 
@@ -114,3 +133,23 @@
 | title | 列表元素的标题 | `string \| VNode` | - |
 | description | 列表元素的描述内容 | `string \| VNode` | - |
 
+<script setup>
+import ListBasic from './ListBasic.vue'
+import ListBasicSource from './ListBasic.vue?raw'
+import ListActions from './ListActions.vue'
+import ListActionsSource from './ListActions.vue?raw'
+import ListAvatar from './ListAvatar.vue'
+import ListAvatarSource from './ListAvatar.vue?raw'
+import ListGrid from './ListGrid.vue'
+import ListGridSource from './ListGrid.vue?raw'
+import ListResponsiveGrid from './ListResponsiveGrid.vue'
+import ListResponsiveGridSource from './ListResponsiveGrid.vue?raw'
+import ListPagination from './ListPagination.vue'
+import ListPaginationSource from './ListPagination.vue?raw'
+import ListVertical from './ListVertical.vue'
+import ListVerticalSource from './ListVertical.vue?raw'
+import ListVirtual from './ListVirtual.vue'
+import ListVirtualSource from './ListVirtual.vue?raw'
+import ListInfiniteScroll from './ListInfiniteScroll.vue'
+import ListInfiniteScrollSource from './ListInfiniteScroll.vue?raw'
+</script>

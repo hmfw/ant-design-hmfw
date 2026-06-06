@@ -5,6 +5,7 @@ import { Spin } from '../spin'
 import { Empty } from '../empty'
 import { Pagination } from '../pagination'
 import { Row, Col } from '../grid'
+import { VirtualList } from '../_internal/virtual-list'
 import { provideListContext } from './context'
 import type { ListProps, ListSize, ListItemLayout, ListGridType, PaginationConfig } from './types'
 
@@ -25,6 +26,12 @@ export const List = defineComponent({
     itemLayout: { type: String as PropType<ListItemLayout>, default: 'horizontal' },
     rowKey: [String, Function] as PropType<string | ((item: any) => string | number)>,
     loadMore: Object as PropType<VNode>,
+    virtual: Boolean,
+    height: [Number, String] as PropType<number | string>,
+    itemHeight: {
+      type: Number,
+      default: 48,
+    },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('list')
@@ -122,14 +129,40 @@ export const List = defineComponent({
       if (isLoading.value && displayItems.length === 0) {
         childrenContent = <div style={{ minHeight: '53px' }} />
       } else if (displayItems.length > 0) {
-        if (props.grid) {
-          childrenContent = (
-            <Row class={`${prefixCls}-container`} gutter={props.grid.gutter}>
-              {renderedItems}
-            </Row>
-          )
+        // 虚拟滚动模式
+        if (props.virtual && props.height) {
+          if (props.grid) {
+            // Grid 模式暂不支持虚拟滚动
+            childrenContent = (
+              <Row class={`${prefixCls}-container`} gutter={props.grid.gutter}>
+                {renderedItems}
+              </Row>
+            )
+          } else {
+            // 普通列表支持虚拟滚动
+            childrenContent = (
+              <VirtualList
+                data={displayItems}
+                height={props.height}
+                itemHeight={props.itemHeight}
+                renderItem={(item: any, index: number) => {
+                  return props.renderItem?.(item, index) || null
+                }}
+                itemKey={(item: any, index: number) => getKey(item, index)}
+              />
+            )
+          }
         } else {
-          childrenContent = <ul class={`${prefixCls}-items`}>{renderedItems}</ul>
+          // 常规模式
+          if (props.grid) {
+            childrenContent = (
+              <Row class={`${prefixCls}-container`} gutter={props.grid.gutter}>
+                {renderedItems}
+              </Row>
+            )
+          } else {
+            childrenContent = <ul class={`${prefixCls}-items`}>{renderedItems}</ul>
+          }
         }
       } else if (isEmpty) {
         childrenContent = (
