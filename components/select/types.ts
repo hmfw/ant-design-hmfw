@@ -49,4 +49,7 @@ export interface SelectProps {
     value?: string
     options?: string
   }
+  virtual?: boolean
+  listHeight?: number
+  listItemHeight?: number
 }

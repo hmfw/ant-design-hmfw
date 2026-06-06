@@ -8,9 +8,11 @@ import {
   nextTick,
   Teleport,
   type PropType,
+  h,
 } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
+import { VirtualList } from '../_internal/virtual-list'
 import type { SelectSize, SelectMode, SelectStatus, SelectOption, LabeledValue, SelectValue } from './types'
 
 export const Select = defineComponent({
@@ -65,6 +67,15 @@ export const Select = defineComponent({
       default: true,
     },
     fieldNames: Object as PropType<{ label?: string; value?: string; options?: string }>,
+    virtual: Boolean,
+    listHeight: {
+      type: Number,
+      default: 256,
+    },
+    listItemHeight: {
+      type: Number,
+      default: 32,
+    },
   },
   emits: ['update:value', 'change', 'search', 'select', 'deselect', 'clear', 'dropdownVisibleChange', 'focus', 'blur'],
   setup(props, { emit, expose }) {
@@ -567,6 +578,40 @@ export const Select = defineComponent({
               >
                 {filteredOptions.value.length === 0 ? (
                   <div class={`${prefixCls}-item-empty`}>{props.notFoundContent ?? locale.value.Select.notFoundContent}</div>
+                ) : props.virtual ? (
+                  <VirtualList
+                    data={filteredOptions.value}
+                    height={props.listHeight}
+                    itemHeight={props.listItemHeight}
+                    renderItem={(opt: SelectOption, index: number) => {
+                      const val = opt[valueField.value as keyof SelectOption] as string | number
+                      const label = String(opt[labelField.value as keyof SelectOption])
+                      const isSelected = selectedValues.value.includes(val)
+                      const isActive = index === activeIndex.value
+
+                      return h(
+                        'div',
+                        {
+                          class: cls(`${prefixCls}-item`, {
+                            [`${prefixCls}-item-selected`]: isSelected,
+                            [`${prefixCls}-item-active`]: isActive,
+                            [`${prefixCls}-item-disabled`]: opt.disabled,
+                          }),
+                          onClick: () => { if (!opt.disabled) handleSelect(opt) },
+                          onMouseenter: () => { if (!opt.disabled) activeIndex.value = index },
+                        },
+                        props.optionRender
+                          ? props.optionRender(opt, { index })
+                          : [
+                              h('div', { class: `${prefixCls}-item-content` }, label),
+                              isSelected && h('span', { class: `${prefixCls}-item-check` }, '✓'),
+                            ]
+                      )
+                    }}
+                    itemKey={(opt: SelectOption, index: number) =>
+                      String(opt[valueField.value as keyof SelectOption] ?? index)
+                    }
+                  />
                 ) : (
                   renderOptions(props.options)
                 )}

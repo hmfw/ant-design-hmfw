@@ -82,7 +82,7 @@ components/{name}/
 - [x] 缺少 `classNames` / `styles` 细粒度样式控制
 
 **Select 选择器**
-- [ ] 大数据场景性能问题（未实现虚拟滚动）
+- [x] 大数据场景性能问题（未实现虚拟滚动）
 - [x] 缺少 `fieldNames` 自定义字段名
 - [x] 缺少 `labelRender` 自定义渲染选中标签
 - [x] `autoClearSearchValue` 行为与 AntD 不一致

@@ -66,6 +66,14 @@
   <SelectMaxCount />
 </DemoBlock>
 
+### 虚拟滚动
+
+使用 `virtual` 属性开启虚拟滚动，适用于大数据量场景（推荐选项数超过 100 时使用）。
+
+<DemoBlock title="虚拟滚动" :source="SelectVirtualSource">
+  <SelectVirtual />
+</DemoBlock>
+
 ## API
 
 ### Select Props
@@ -97,6 +105,9 @@
 | labelRender | 自定义选中项渲染 | `(props: LabeledValue) => VNode` | - |
 | tagRender | 自定义 tag 渲染（multiple/tags 模式） | `(props: { label, value, closable, onClose }) => VNode` | - |
 | fieldNames | 自定义字段名 | `{ label?: string; value?: string; options?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
+| virtual | 启用虚拟滚动（推荐选项数 > 100 时使用） | `boolean` | `false` |
+| listHeight | 下拉列表高度（启用虚拟滚动时） | `number` | `256` |
+| listItemHeight | 下拉列表每项高度（启用虚拟滚动时） | `number` | `32` |
 
 ### SelectOption
 
