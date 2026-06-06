@@ -75,9 +75,26 @@ export const ListItem = defineComponent({
 
       // Wrap in Col if grid mode
       if (context.grid) {
-        const colSpan = 24 / (context.grid.column || 1)
+        const { column, xs, sm, md, lg, xl, xxl, gutter } = context.grid
+
+        // Build responsive span config
+        const colProps: Record<string, any> = {}
+
+        // Default span based on column
+        if (column) {
+          colProps.span = 24 / column
+        }
+
+        // Responsive spans
+        if (xs) colProps.xs = 24 / xs
+        if (sm) colProps.sm = 24 / sm
+        if (md) colProps.md = 24 / md
+        if (lg) colProps.lg = 24 / lg
+        if (xl) colProps.xl = 24 / xl
+        if (xxl) colProps.xxl = 24 / xxl
+
         return (
-          <Col span={colSpan} style={{ marginBottom: `${context.grid.gutter || 0}px` }}>
+          <Col {...colProps} style={{ marginBottom: `${gutter || 0}px` }}>
             {itemChildren}
           </Col>
         )

@@ -116,7 +116,7 @@ components/{name}/
 - [ ] 拖拽功能缺少边界检查
 
 **List 列表**
-- [ ] 缺少 `grid.column` 响应式配置（xs/sm/md/lg/xl）
+- [x] 缺少 `grid.column` 响应式配置（xs/sm/md/lg/xl）
 - [ ] 虚拟滚动未实现
 - [ ] 无限滚动示例缺失
 

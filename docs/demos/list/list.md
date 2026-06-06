@@ -40,6 +40,14 @@
   <ListGrid />
 </DemoBlock>
 
+### 响应式网格
+
+通过 `grid` 的响应式属性（xs/sm/md/lg/xl）实现不同屏幕尺寸下的自适应布局。
+
+<DemoBlock title="响应式网格" :source="ListResponsiveGridSource">
+  <ListResponsiveGrid />
+</DemoBlock>
+
 ### 翻页
 
 通过设置 `pagination` 属性来实现翻页。
