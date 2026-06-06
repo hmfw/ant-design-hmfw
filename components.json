@@ -9405,7 +9405,7 @@
           "section": "Table Props",
           "name": "rowKey",
           "description": "表格行 key 的取值",
-          "type": "`string | ((record: any) => string)`",
+          "type": "`string | ((record: any) => Key)`",
           "default": "`'key'`"
         },
         {
@@ -9419,14 +9419,21 @@
           "section": "Table Props",
           "name": "pagination",
           "description": "分页器，设为 false 时不展示",
-          "type": "`object | false`",
+          "type": "`TablePaginationConfig | false`",
           "default": "-"
         },
         {
           "section": "Table Props",
           "name": "rowSelection",
           "description": "列表项是否可选择",
-          "type": "`object`",
+          "type": "`TableRowSelection`",
+          "default": "-"
+        },
+        {
+          "section": "Table Props",
+          "name": "expandable",
+          "description": "配置展开属性",
+          "type": "`ExpandableConfig`",
           "default": "-"
         },
         {
@@ -9445,9 +9452,58 @@
         },
         {
           "section": "Table Props",
+          "name": "showHeader",
+          "description": "是否显示表头",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Table Props",
           "name": "scroll",
           "description": "表格是否可滚动",
-          "type": "`{ x?: number, y?: number }`",
+          "type": "`{ x?: number | string, y?: number | string }`",
+          "default": "-"
+        },
+        {
+          "section": "Table Props",
+          "name": "title",
+          "description": "表格标题",
+          "type": "`string | ((data: any[]) => VNode)`",
+          "default": "-"
+        },
+        {
+          "section": "Table Props",
+          "name": "footer",
+          "description": "表格页脚",
+          "type": "`string | ((data: any[]) => VNode)`",
+          "default": "-"
+        },
+        {
+          "section": "Table Props",
+          "name": "locale",
+          "description": "国际化配置",
+          "type": "`{ emptyText?: string }`",
+          "default": "-"
+        },
+        {
+          "section": "Table Props",
+          "name": "onChange",
+          "description": "分页、排序、筛选变化时触发",
+          "type": "`(pagination, filters, sorter, extra) => void`",
+          "default": "-"
+        },
+        {
+          "section": "Table Props",
+          "name": "onRow",
+          "description": "设置行属性",
+          "type": "`(record, index) => object`",
+          "default": "-"
+        },
+        {
+          "section": "Table Props",
+          "name": "onHeaderRow",
+          "description": "设置表头行属性",
+          "type": "`(columns, index) => object`",
           "default": "-"
         },
         {
@@ -9461,7 +9517,7 @@
           "section": "TableColumn",
           "name": "title",
           "description": "列头显示文字",
-          "type": "`string`",
+          "type": "`string | VNode`",
           "default": "-"
         },
         {
@@ -9480,38 +9536,213 @@
         },
         {
           "section": "TableColumn",
+          "name": "align",
+          "description": "设置列的对齐方式",
+          "type": "`'left' | 'center' | 'right'`",
+          "default": "`'left'`"
+        },
+        {
+          "section": "TableColumn",
           "name": "fixed",
-          "description": "列是否固定",
+          "description": "列是否固定（左侧/右侧）",
           "type": "`'left' | 'right'`",
           "default": "-"
         },
         {
           "section": "TableColumn",
+          "name": "ellipsis",
+          "description": "超过宽度将自动省略",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TableColumn",
           "name": "sorter",
-          "description": "排序函数",
-          "type": "`boolean | ((a: any, b: any) => number)`",
+          "description": "排序函数，支持多列排序",
+          "type": "`CompareFn | { compare: CompareFn, multiple: number }`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "sortOrder",
+          "description": "排序的受控属性",
+          "type": "`'ascend' | 'descend' | null`",
           "default": "-"
         },
         {
           "section": "TableColumn",
           "name": "filters",
           "description": "表头的筛选菜单项",
-          "type": "`{ text: string, value: any }[]`",
+          "type": "`ColumnFilterItem[]`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "filteredValue",
+          "description": "筛选的受控属性",
+          "type": "`FilterValue`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "onFilter",
+          "description": "筛选函数",
+          "type": "`(value: any, record: any) => boolean`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "filterMultiple",
+          "description": "是否多选",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "TableColumn",
+          "name": "responsive",
+          "description": "响应式断点",
+          "type": "`('xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl')[]`",
           "default": "-"
         },
         {
           "section": "TableColumn",
           "name": "render",
           "description": "自定义渲染函数",
-          "type": "`(text: any, record: any) => any`",
+          "type": "`(text: any, record: any, index: number) => any`",
           "default": "-"
         },
         {
-          "section": "TableColumn",
-          "name": "align",
-          "description": "设置列的对齐方式",
-          "type": "`'left' | 'center' | 'right'`",
-          "default": "`'left'`"
+          "section": "TableRowSelection",
+          "name": "type",
+          "description": "选择框类型",
+          "type": "`'checkbox' | 'radio'`",
+          "default": "`'checkbox'`"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "selectedRowKeys",
+          "description": "指定选中项的 key 数组",
+          "type": "`Key[]`",
+          "default": "-"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "onChange",
+          "description": "选中项发生变化时的回调",
+          "type": "`(keys: Key[], rows: any[], info: { type: string }) => void`",
+          "default": "-"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "onSelect",
+          "description": "用户手动选择/取消选择某行的回调",
+          "type": "`(record, selected, selectedRows, nativeEvent) => void`",
+          "default": "-"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "onSelectAll",
+          "description": "用户手动选择/取消选择所有行的回调",
+          "type": "`(selected, selectedRows, changeRows) => void`",
+          "default": "-"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "getCheckboxProps",
+          "description": "选择框的默认属性配置",
+          "type": "`(record) => object`",
+          "default": "-"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "expandedRowRender",
+          "description": "额外的展开行内容",
+          "type": "`(record, index, indent, expanded) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "expandedRowKeys",
+          "description": "展开的行，受控属性",
+          "type": "`Key[]`",
+          "default": "-"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "defaultExpandedRowKeys",
+          "description": "默认展开的行",
+          "type": "`Key[]`",
+          "default": "-"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "onExpand",
+          "description": "点击展开图标时触发",
+          "type": "`(expanded, record) => void`",
+          "default": "-"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "onExpandedRowsChange",
+          "description": "展开的行变化时触发",
+          "type": "`(expandedKeys: Key[]) => void`",
+          "default": "-"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "current",
+          "description": "当前页数",
+          "type": "`number`",
+          "default": "-"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "pageSize",
+          "description": "每页条数",
+          "type": "`number`",
+          "default": "`10`"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "total",
+          "description": "数据总数",
+          "type": "`number`",
+          "default": "-"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "showQuickJumper",
+          "description": "是否可以快速跳转至某页",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "showSizeChanger",
+          "description": "是否展示 pageSize 切换器",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "showTotal",
+          "description": "用于显示数据总量和当前数据顺序",
+          "type": "`(total, range) => string`",
+          "default": "-"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "pageSizeOptions",
+          "description": "指定每页可以显示多少条",
+          "type": "`number[]`",
+          "default": "`[10, 20, 50, 100]`"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "onChange",
+          "description": "页码或 pageSize 改变的回调",
+          "type": "`(page, pageSize) => void`",
+          "default": "-"
         }
       ],
       "events": [],
@@ -9524,13 +9755,33 @@
         },
         {
           "title": "排序",
-          "description": "对某一列数据进行排序。",
+          "description": "对某一列数据进行排序。支持多列排序（Shift + 点击表头）。",
           "code": "<template>\n  <Table :data-source=\"dataSource\" :columns=\"columns\" row-key=\"key\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Table } from 'ant-design-hmfw'\n\nconst dataSource = [\n  { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },\n  { key: '2', name: '胡彦祖', age: 42, address: '西湖区湖底公园2号' },\n  { key: '3', name: '李明', age: 28, address: '朝阳区建国路88号' },\n]\n\nconst columns = [\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  {\n    title: '年龄',\n    dataIndex: 'age',\n    key: 'age',\n    sorter: (a: any, b: any) => a.age - b.age,\n  },\n  { title: '住址', dataIndex: 'address', key: 'address' },\n]\n</script>"
         },
         {
           "title": "行选择",
-          "description": "第一列是联动的选择框。",
+          "description": "第一列是联动的选择框，支持单选和多选。",
           "code": "<template>\n  <Table\n    :data-source=\"dataSource\"\n    :columns=\"columns\"\n    row-key=\"key\"\n    :row-selection=\"rowSelection\"\n  />\n  <p>已选择：{{ selectedKeys.join(', ') }}</p>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Table } from 'ant-design-hmfw'\n\nconst selectedKeys = ref<string[]>([])\n\nconst rowSelection = {\n  selectedRowKeys: selectedKeys,\n  onChange: (keys: string[]) => {\n    selectedKeys.value = keys\n  },\n}\n\nconst dataSource = [\n  { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },\n  { key: '2', name: '胡彦祖', age: 42, address: '西湖区湖底公园2号' },\n]\n\nconst columns = [\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  { title: '年龄', dataIndex: 'age', key: 'age' },\n  { title: '住址', dataIndex: 'address', key: 'address' },\n]\n</script>"
+        },
+        {
+          "title": "筛选",
+          "description": "对某一列数据进行筛选。",
+          "code": "<template>\n  <Table :columns=\"columns\" :dataSource=\"data\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Table } from 'ant-design-hmfw'\n\nconst columns = [\n  {\n    title: 'Name',\n    dataIndex: 'name',\n    key: 'name',\n    filters: [\n      { text: 'Joe', value: 'Joe' },\n      { text: 'Jim', value: 'Jim' },\n      { text: 'Alice', value: 'Alice' },\n    ],\n    onFilter: (value: string, record: any) => record.name.includes(value),\n  },\n  {\n    title: 'Age',\n    dataIndex: 'age',\n    key: 'age',\n    filters: [\n      { text: '20-30', value: '20-30' },\n      { text: '30-40', value: '30-40' },\n    ],\n    onFilter: (value: string, record: any) => {\n      const age = record.age\n      if (value === '20-30') return age >= 20 && age < 30\n      if (value === '30-40') return age >= 30 && age < 40\n      return false\n    },\n  },\n  {\n    title: 'Address',\n    dataIndex: 'address',\n    key: 'address',\n  },\n]\n\nconst data = [\n  { key: '1', name: 'Joe', age: 32, address: 'New York' },\n  { key: '2', name: 'Jim', age: 28, address: 'London' },\n  { key: '3', name: 'Alice', age: 35, address: 'Sydney' },\n  { key: '4', name: 'Bob', age: 25, address: 'Paris' },\n]\n</script>"
+        },
+        {
+          "title": "固定列",
+          "description": "固定左侧或右侧的列，横向滚动时保持可见。",
+          "code": "<template>\n  <Table :columns=\"columns\" :dataSource=\"data\" :scroll=\"{ x: 1200 }\" bordered />\n</template>\n\n<script setup lang=\"ts\">\nimport { Table } from 'ant-design-hmfw'\n\nconst columns = [\n  {\n    title: 'Name',\n    dataIndex: 'name',\n    key: 'name',\n    fixed: 'left',\n    width: 100,\n  },\n  {\n    title: 'Age',\n    dataIndex: 'age',\n    key: 'age',\n    width: 80,\n  },\n  {\n    title: 'Column 1',\n    dataIndex: 'col1',\n    key: 'col1',\n    width: 150,\n  },\n  {\n    title: 'Column 2',\n    dataIndex: 'col2',\n    key: 'col2',\n    width: 150,\n  },\n  {\n    title: 'Column 3',\n    dataIndex: 'col3',\n    key: 'col3',\n    width: 150,\n  },\n  {\n    title: 'Column 4',\n    dataIndex: 'col4',\n    key: 'col4',\n    width: 150,\n  },\n  {\n    title: 'Action',\n    key: 'action',\n    fixed: 'right',\n    width: 100,\n    render: () => 'Edit',\n  },\n]\n\nconst data = [\n  { key: '1', name: 'Joe', age: 32, col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data 4' },\n  { key: '2', name: 'Jim', age: 28, col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data 4' },\n  { key: '3', name: 'Alice', age: 35, col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data 4' },\n]\n</script>"
+        },
+        {
+          "title": "展开行",
+          "description": "可展开的行，显示额外信息。",
+          "code": "<template>\n  <Table :columns=\"columns\" :dataSource=\"data\" :expandable=\"expandable\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Table } from 'ant-design-hmfw'\n\nconst expandedKeys = ref<string[]>([])\n\nconst columns = [\n  {\n    title: 'Name',\n    dataIndex: 'name',\n    key: 'name',\n  },\n  {\n    title: 'Age',\n    dataIndex: 'age',\n    key: 'age',\n  },\n  {\n    title: 'Address',\n    dataIndex: 'address',\n    key: 'address',\n  },\n]\n\nconst data = [\n  { key: '1', name: 'Joe', age: 32, address: 'New York', description: 'My name is Joe, I am 32 years old, living in New York.' },\n  { key: '2', name: 'Jim', age: 28, address: 'London', description: 'My name is Jim, I am 28 years old, living in London.' },\n  { key: '3', name: 'Alice', age: 35, address: 'Sydney', description: 'My name is Alice, I am 35 years old, living in Sydney.' },\n]\n\nconst expandable = {\n  expandedRowRender: (record: any) => record.description,\n  expandedRowKeys: expandedKeys.value,\n  onExpandedRowsChange: (keys: string[]) => {\n    expandedKeys.value = keys\n  },\n}\n</script>"
+        },
+        {
+          "title": "响应式",
+          "description": "根据屏幕大小自动显示或隐藏列。",
+          "code": "<template>\n  <Table :columns=\"columns\" :dataSource=\"data\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Table } from 'ant-design-hmfw'\n\nconst columns = [\n  {\n    title: 'Name',\n    dataIndex: 'name',\n    key: 'name',\n  },\n  {\n    title: 'Age',\n    dataIndex: 'age',\n    key: 'age',\n    responsive: ['sm', 'md', 'lg', 'xl', 'xxl'], // 隐藏在 xs 屏幕\n  },\n  {\n    title: 'Email',\n    dataIndex: 'email',\n    key: 'email',\n    responsive: ['md', 'lg', 'xl', 'xxl'], // 隐藏在 xs, sm 屏幕\n  },\n  {\n    title: 'Phone',\n    dataIndex: 'phone',\n    key: 'phone',\n    responsive: ['lg', 'xl', 'xxl'], // 隐藏在 xs, sm, md 屏幕\n  },\n  {\n    title: 'Address',\n    dataIndex: 'address',\n    key: 'address',\n    responsive: ['xl', 'xxl'], // 只在 xl, xxl 屏幕显示\n  },\n]\n\nconst data = [\n  {\n    key: '1',\n    name: 'Joe',\n    age: 32,\n    email: 'joe@example.com',\n    phone: '123-456-7890',\n    address: 'New York No. 1 Lake Park',\n  },\n  {\n    key: '2',\n    name: 'Jim',\n    age: 28,\n    email: 'jim@example.com',\n    phone: '098-765-4321',\n    address: 'London No. 1 Lake Park',\n  },\n  {\n    key: '3',\n    name: 'Alice',\n    age: 35,\n    email: 'alice@example.com',\n    phone: '555-123-4567',\n    address: 'Sydney No. 1 Lake Park',\n  },\n]\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/table"
@@ -10726,36 +10977,71 @@
           "section": "Transfer Props",
           "name": "targetKeys (v-model)",
           "description": "右侧列表的 key 集合",
-          "type": "`string[]`",
+          "type": "`TransferKey[]`",
           "default": "`[]`"
         },
         {
           "section": "Transfer Props",
           "name": "selectedKeys (v-model)",
           "description": "选中项的 key 集合",
-          "type": "`string[]`",
+          "type": "`TransferKey[]`",
           "default": "`[]`"
         },
         {
           "section": "Transfer Props",
           "name": "titles",
           "description": "标题集合",
-          "type": "`[string, string]`",
+          "type": "`(VNode | string)[]`",
           "default": "`['', '']`"
         },
         {
           "section": "Transfer Props",
           "name": "operations",
-          "description": "操作按钮文案",
-          "type": "`[string, string]`",
-          "default": "`['>', '<']`"
+          "description": "操作按钮文案（已废弃）",
+          "type": "`string[]`",
+          "default": "`[]`"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "render",
+          "description": "自定义渲染函数",
+          "type": "`(item: TransferItem) => RenderResult`",
+          "default": "-"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "rowKey",
+          "description": "自定义提取 key",
+          "type": "`(record: TransferItem) => TransferKey`",
+          "default": "-"
         },
         {
           "section": "Transfer Props",
           "name": "showSearch",
-          "description": "是否显示搜索框",
-          "type": "`boolean`",
+          "description": "显示搜索框",
+          "type": "`boolean | TransferSearchOption`",
           "default": "`false`"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "filterOption",
+          "description": "自定义搜索函数",
+          "type": "`(input: string, item: TransferItem, direction: TransferDirection) => boolean`",
+          "default": "-"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "footer",
+          "description": "列表底部渲染",
+          "type": "`(info: TransferListContext) => VNode | string | null`",
+          "default": "-"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "listStyle",
+          "description": "列表样式",
+          "type": "`CSSProperties | ((info: { direction: TransferDirection }) => CSSProperties)`",
+          "default": "-"
         },
         {
           "section": "Transfer Props",
@@ -10772,10 +11058,66 @@
           "default": "`true`"
         },
         {
+          "section": "Transfer Props",
+          "name": "selectAllLabels",
+          "description": "自定义全选文案",
+          "type": "`SelectAllLabel[]`",
+          "default": "-"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "oneWay",
+          "description": "单向模式",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "pagination",
+          "description": "分页配置",
+          "type": "`boolean | PaginationType`",
+          "default": "-"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "status",
+          "description": "校验状态",
+          "type": "`'error' | 'warning'`",
+          "default": "-"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "locale",
+          "description": "文案配置",
+          "type": "`Partial<TransferLocale>`",
+          "default": "-"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "rootClassName",
+          "description": "根元素 class",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "classNames",
+          "description": "语义化 class",
+          "type": "`TransferSemanticClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Transfer Props",
+          "name": "styles",
+          "description": "语义化 style",
+          "type": "`TransferSemanticStyles`",
+          "default": "-"
+        },
+        {
           "section": "TransferItem",
           "name": "key",
           "description": "唯一标识",
-          "type": "`string`",
+          "type": "`string | number`",
           "default": ""
         },
         {
@@ -10800,13 +11142,58 @@
           "default": ""
         }
       ],
-      "events": [],
+      "events": [
+        {
+          "section": "Transfer Events",
+          "name": "change",
+          "description": "右侧列表变化时触发",
+          "params": "`(targetKeys: TransferKey[], direction: TransferDirection, moveKeys: TransferKey[])`"
+        },
+        {
+          "section": "Transfer Events",
+          "name": "selectChange",
+          "description": "选中项变化时触发",
+          "params": "`(sourceSelectedKeys: TransferKey[], targetSelectedKeys: TransferKey[])`"
+        },
+        {
+          "section": "Transfer Events",
+          "name": "search",
+          "description": "搜索框内容变化时触发",
+          "params": "`(direction: TransferDirection, value: string)`"
+        },
+        {
+          "section": "Transfer Events",
+          "name": "scroll",
+          "description": "列表滚动时触发",
+          "params": "`(direction: TransferDirection, e: Event)`"
+        }
+      ],
       "slots": [],
       "demos": [
         {
           "title": "基础用法",
-          "description": "",
+          "description": "最简单的用法，展示了数据在左右两栏之间的移动。",
           "code": "<template>\n  <Transfer\n    :data-source=\"dataSource\"\n    v-model:target-keys=\"targetKeys\"\n    :titles=\"['待选', '已选']\"\n    show-search\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Transfer } from 'ant-design-hmfw'\nimport type { TransferItem } from 'ant-design-hmfw'\n\nconst dataSource: TransferItem[] = Array.from({ length: 10 }, (_, i) => ({\n  key: String(i),\n  title: `选项 ${i + 1}`,\n  description: `描述 ${i + 1}`,\n  disabled: i === 3,\n}))\n\nconst targetKeys = ref(['1', '3', '5'])\n</script>"
+        },
+        {
+          "title": "带搜索框",
+          "description": "支持搜索功能，可以快速找到目标项。",
+          "code": "<template>\n  <Transfer\n    :data-source=\"dataSource\"\n    v-model:target-keys=\"targetKeys\"\n    :titles=\"['待选', '已选']\"\n    show-search\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Transfer } from 'ant-design-hmfw'\nimport type { TransferItem } from 'ant-design-hmfw'\n\nconst dataSource: TransferItem[] = Array.from({ length: 20 }, (_, i) => ({\n  key: String(i),\n  title: `选项 ${i + 1}`,\n  description: `描述 ${i + 1}`,\n  disabled: i % 8 === 3,\n}))\n\nconst targetKeys = ref<string[]>(['1', '3', '5'])\n</script>"
+        },
+        {
+          "title": "自定义渲染",
+          "description": "可以自定义每项的渲染内容。",
+          "code": "<template>\n  <Transfer\n    :data-source=\"dataSource\"\n    v-model:target-keys=\"targetKeys\"\n    :titles=\"['待选', '已选']\"\n    :render=\"(item) => `[${item.title}]`\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Transfer } from 'ant-design-hmfw'\nimport type { TransferItem } from 'ant-design-hmfw'\n\nconst dataSource: TransferItem[] = Array.from({ length: 10 }, (_, i) => ({\n  key: String(i),\n  title: `选项 ${i + 1}`,\n}))\n\nconst targetKeys = ref<string[]>(['1', '3'])\n</script>"
+        },
+        {
+          "title": "分页",
+          "description": "数据较多时，可以使用分页。",
+          "code": "<template>\n  <Transfer\n    :data-source=\"dataSource\"\n    v-model:target-keys=\"targetKeys\"\n    :titles=\"['源', '目标']\"\n    :pagination=\"{ pageSize: 5 }\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Transfer } from 'ant-design-hmfw'\nimport type { TransferItem } from 'ant-design-hmfw'\n\nconst dataSource: TransferItem[] = Array.from({ length: 20 }, (_, i) => ({\n  key: String(i),\n  title: `选项 ${i + 1}`,\n}))\n\nconst targetKeys = ref<string[]>(['2', '5', '8'])\n</script>"
+        },
+        {
+          "title": "单向模式",
+          "description": "单向模式下，只能从左往右移动，右侧项可单独删除。",
+          "code": "<template>\n  <Transfer\n    :data-source=\"dataSource\"\n    v-model:target-keys=\"targetKeys\"\n    :titles=\"['源', '目标']\"\n    one-way\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Transfer } from 'ant-design-hmfw'\nimport type { TransferItem } from 'ant-design-hmfw'\n\nconst dataSource: TransferItem[] = Array.from({ length: 10 }, (_, i) => ({\n  key: String(i),\n  title: `Item ${i + 1}`,\n}))\n\nconst targetKeys = ref<string[]>(['1', '3'])\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/transfer"
@@ -10817,27 +11204,27 @@
       "title": "Tree 树形控件",
       "description": "多层次的结构列表。",
       "whenToUse": "",
-      "import": "import { Tree } from 'ant-design-hmfw'",
+      "import": "import { Tree, DirectoryTree } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Tree Props",
           "name": "treeData",
           "description": "treeNodes 数据",
           "type": "`TreeDataNode[]`",
-          "default": "-"
+          "default": "`[]`"
         },
         {
           "section": "Tree Props",
           "name": "expandedKeys (v-model)",
           "description": "展开指定的树节点",
-          "type": "`string[]`",
+          "type": "`(string | number)[]`",
           "default": "-"
         },
         {
           "section": "Tree Props",
           "name": "defaultExpandedKeys",
           "description": "默认展开指定的树节点",
-          "type": "`string[]`",
+          "type": "`(string | number)[]`",
           "default": "`[]`"
         },
         {
@@ -10849,22 +11236,57 @@
         },
         {
           "section": "Tree Props",
+          "name": "defaultExpandParent",
+          "description": "默认展开父节点",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Tree Props",
+          "name": "autoExpandParent",
+          "description": "展开时自动展开父节点",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Tree Props",
           "name": "selectedKeys (v-model)",
           "description": "设置选中的树节点",
-          "type": "`string[]`",
+          "type": "`(string | number)[]`",
           "default": "-"
         },
         {
           "section": "Tree Props",
+          "name": "defaultSelectedKeys",
+          "description": "默认选中的树节点",
+          "type": "`(string | number)[]`",
+          "default": "`[]`"
+        },
+        {
+          "section": "Tree Props",
           "name": "checkedKeys (v-model)",
-          "description": "选中复选框的树节点",
-          "type": "`string[]`",
+          "description": "选中复选框的树节点；`checkStrictly` 时为 `{ checked, halfChecked }`",
+          "type": "`(string | number)[] | { checked, halfChecked }`",
           "default": "-"
+        },
+        {
+          "section": "Tree Props",
+          "name": "defaultCheckedKeys",
+          "description": "默认勾选的树节点",
+          "type": "`(string | number)[]`",
+          "default": "`[]`"
         },
         {
           "section": "Tree Props",
           "name": "checkable",
           "description": "节点前添加 Checkbox 复选框",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Tree Props",
+          "name": "checkStrictly",
+          "description": "父子节点选中状态不再关联",
           "type": "`boolean`",
           "default": "`false`"
         },
@@ -10891,30 +11313,114 @@
         },
         {
           "section": "Tree Props",
+          "name": "draggable",
+          "description": "节点可拖拽",
+          "type": "`boolean | (node) => boolean | { icon?, nodeDraggable? }`",
+          "default": "`false`"
+        },
+        {
+          "section": "Tree Props",
           "name": "showLine",
           "description": "是否展示连接线",
+          "type": "`boolean | { showLeafIcon }`",
+          "default": "`false`"
+        },
+        {
+          "section": "Tree Props",
+          "name": "showIcon",
+          "description": "是否展示节点图标",
           "type": "`boolean`",
           "default": "`false`"
         },
         {
           "section": "Tree Props",
           "name": "blockNode",
-          "description": "是否节点占据一行",
+          "description": "节点是否占据一行",
           "type": "`boolean`",
           "default": "`false`"
         },
         {
           "section": "Tree Props",
+          "name": "indent",
+          "description": "每级缩进像素",
+          "type": "`number`",
+          "default": "`24`"
+        },
+        {
+          "section": "Tree Props",
+          "name": "filterTreeNode",
+          "description": "按需高亮节点，返回 `true` 高亮",
+          "type": "`(node) => boolean`",
+          "default": "-"
+        },
+        {
+          "section": "Tree Props",
+          "name": "icon",
+          "description": "自定义节点图标（名称或渲染函数）",
+          "type": "`string | (node, ctx) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Tree Props",
+          "name": "switcherIcon",
+          "description": "自定义展开/收起图标",
+          "type": "`string | ({ expanded, isLeaf }) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Tree Props",
+          "name": "titleRender",
+          "description": "自定义节点标题渲染",
+          "type": "`(node) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Tree Props",
           "name": "fieldNames",
           "description": "自定义节点 title、key、children 的字段",
-          "type": "`{ title?: string, key?: string, children?: string }`",
+          "type": "`{ title?, key?, children? }`",
           "default": "-"
+        },
+        {
+          "section": "Tree Props",
+          "name": "rootClassName",
+          "description": "根节点 className",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Tree Props",
+          "name": "classNames",
+          "description": "语义化 class（`root`/`item`/`itemIcon`/`itemTitle`/`itemSwitcher`）",
+          "type": "`object`",
+          "default": "-"
+        },
+        {
+          "section": "Tree Props",
+          "name": "styles",
+          "description": "语义化内联样式（同上 key）",
+          "type": "`object`",
+          "default": "-"
+        },
+        {
+          "section": "DirectoryTree Props",
+          "name": "expandAction",
+          "description": "点击展开节点的方式，`false` 关闭",
+          "type": "`false | 'click' | 'doubleClick'`",
+          "default": "`'click'`"
+        },
+        {
+          "section": "DirectoryTree Props",
+          "name": "showIcon",
+          "description": "是否展示图标",
+          "type": "`boolean`",
+          "default": "`true`"
         },
         {
           "section": "TreeDataNode",
           "name": "key",
           "description": "节点唯一标识",
-          "type": "`string`",
+          "type": "`string | number`",
           "default": "-"
         },
         {
@@ -10947,9 +11453,30 @@
         },
         {
           "section": "TreeDataNode",
+          "name": "selectable",
+          "description": "是否可选中",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "TreeDataNode",
+          "name": "checkable",
+          "description": "是否可勾选",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "TreeDataNode",
           "name": "isLeaf",
           "description": "设置为叶子节点",
           "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "TreeDataNode",
+          "name": "icon",
+          "description": "自定义图标",
+          "type": "`string | (node) => VNode`",
           "default": "-"
         }
       ],
@@ -10958,55 +11485,94 @@
           "section": "Tree Events",
           "name": "update:expandedKeys",
           "description": "展开/收起节点时触发",
-          "params": "`(keys: string[]) => void`"
+          "params": "`(keys: Key[]) => void`"
         },
         {
           "section": "Tree Events",
           "name": "update:selectedKeys",
           "description": "点击树节点触发",
-          "params": "`(keys: string[]) => void`"
+          "params": "`(keys: Key[]) => void`"
         },
         {
           "section": "Tree Events",
           "name": "update:checkedKeys",
           "description": "点击复选框触发",
-          "params": "`(keys: string[]) => void`"
+          "params": "`(keys: Key[] | { checked, halfChecked }) => void`"
         },
         {
           "section": "Tree Events",
           "name": "expand",
           "description": "展开/收起节点时触发",
-          "params": "`(expandedKeys: string[], info: object) => void`"
+          "params": "`(keys, { expanded, node, nativeEvent }) => void`"
         },
         {
           "section": "Tree Events",
           "name": "select",
           "description": "点击树节点触发",
-          "params": "`(selectedKeys: string[], info: object) => void`"
+          "params": "`(keys, { event, selected, node, selectedNodes, nativeEvent }) => void`"
         },
         {
           "section": "Tree Events",
           "name": "check",
           "description": "点击复选框触发",
-          "params": "`(checkedKeys: string[], info: object) => void`"
+          "params": "`(keys, { event, checked, node, checkedNodes, halfCheckedKeys, nativeEvent }) => void`"
+        },
+        {
+          "section": "Tree Events",
+          "name": "dblclick",
+          "description": "双击节点",
+          "params": "`(event, node) => void`"
+        },
+        {
+          "section": "Tree Events",
+          "name": "rightClick",
+          "description": "右键节点",
+          "params": "`({ event, node }) => void`"
+        },
+        {
+          "section": "Tree Events",
+          "name": "dragstart / dragenter / dragover / dragleave / dragend",
+          "description": "拖拽过程事件",
+          "params": "`({ event, node, ... }) => void`"
+        },
+        {
+          "section": "Tree Events",
+          "name": "drop",
+          "description": "拖拽释放",
+          "params": "`({ node, dragNode, dragNodesKeys, dropPosition, dropToGap, nativeEvent }) => void`"
         }
       ],
       "slots": [],
       "demos": [
         {
           "title": "基础用法",
-          "description": "最简单的用法，展示可勾选，可选中，禁用，默认展开等功能。",
+          "description": "最简单的用法，展示可选中，默认展开等功能。",
           "code": "<template>\n  <Tree\n    :tree-data=\"treeData\"\n    v-model:expanded-keys=\"expandedKeys\"\n    v-model:selected-keys=\"selectedKeys\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree } from 'ant-design-hmfw'\n\nconst expandedKeys = ref(['0-0', '0-0-0'])\nconst selectedKeys = ref<string[]>([])\n\nconst treeData = [\n  {\n    title: '父节点 1',\n    key: '0-0',\n    children: [\n      {\n        title: '父节点 1-0',\n        key: '0-0-0',\n        children: [\n          { title: '叶子节点', key: '0-0-0-0' },\n          { title: '叶子节点', key: '0-0-0-1' },\n        ],\n      },\n      {\n        title: '父节点 1-1',\n        key: '0-0-1',\n        children: [\n          { title: '叶子节点', key: '0-0-1-0' },\n        ],\n      },\n    ],\n  },\n]\n</script>"
         },
         {
           "title": "可勾选",
-          "description": "使用 checkable 属性可以节点前添加 Checkbox 复选框。",
+          "description": "使用 `checkable` 属性可以在节点前添加 Checkbox 复选框，父子节点选中状态默认级联联动（半选态自动计算）。",
           "code": "<template>\n  <Tree\n    checkable\n    :tree-data=\"treeData\"\n    v-model:checked-keys=\"checkedKeys\"\n    v-model:expanded-keys=\"expandedKeys\"\n  />\n  <p>已勾选：{{ checkedKeys.join(', ') }}</p>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree } from 'ant-design-hmfw'\n\nconst expandedKeys = ref(['0-0'])\nconst checkedKeys = ref<string[]>([])\n\nconst treeData = [\n  {\n    title: '父节点 1',\n    key: '0-0',\n    children: [\n      { title: '子节点 1-1', key: '0-0-0' },\n      { title: '子节点 1-2', key: '0-0-1' },\n    ],\n  },\n  {\n    title: '父节点 2',\n    key: '0-1',\n    children: [\n      { title: '子节点 2-1', key: '0-1-0' },\n    ],\n  },\n]\n</script>"
         },
         {
           "title": "显示连接线",
-          "description": "使用 showLine 属性可以显示连接线。",
+          "description": "使用 `showLine` 属性可以显示连接线。",
           "code": "<template>\n  <Tree\n    show-line\n    :tree-data=\"treeData\"\n    :default-expand-all=\"true\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { Tree } from 'ant-design-hmfw'\n\nconst treeData = [\n  {\n    title: '父节点',\n    key: '0-0',\n    children: [\n      { title: '子节点 1', key: '0-0-0' },\n      { title: '子节点 2', key: '0-0-1' },\n      { title: '子节点 3', key: '0-0-2' },\n    ],\n  },\n]\n</script>"
+        },
+        {
+          "title": "目录树",
+          "description": "内置的 `Tree.DirectoryTree`，默认展示文件夹/文件图标，支持 `expandAction` 控制点击展开方式。",
+          "code": "<template>\n  <Tree.DirectoryTree\n    multiple\n    :tree-data=\"treeData\"\n    v-model:expanded-keys=\"expandedKeys\"\n    v-model:selected-keys=\"selectedKeys\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree } from 'ant-design-hmfw'\n\nconst expandedKeys = ref(['0-0'])\nconst selectedKeys = ref<string[]>([])\n\nconst treeData = [\n  {\n    title: 'src',\n    key: '0-0',\n    children: [\n      {\n        title: 'components',\n        key: '0-0-0',\n        children: [\n          { title: 'Button.tsx', key: '0-0-0-0', isLeaf: true },\n          { title: 'Tree.tsx', key: '0-0-0-1', isLeaf: true },\n        ],\n      },\n      {\n        title: 'utils',\n        key: '0-0-1',\n        children: [\n          { title: 'index.ts', key: '0-0-1-0', isLeaf: true },\n        ],\n      },\n    ],\n  },\n]\n</script>"
+        },
+        {
+          "title": "可拖拽",
+          "description": "设置 `draggable` 后节点可拖动，拖放时触发 `drop` 事件。",
+          "code": "<template>\n  <Tree\n    draggable\n    block-node\n    :tree-data=\"treeData\"\n    :default-expand-all=\"true\"\n    @drop=\"onDrop\"\n  />\n  <p>提示：拖动节点查看 drop 事件（本示例仅打印，不改变数据）。</p>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree } from 'ant-design-hmfw'\n\nconst treeData = [\n  {\n    title: '父节点 1',\n    key: '0-0',\n    children: [\n      { title: '子节点 1-1', key: '0-0-0' },\n      { title: '子节点 1-2', key: '0-0-1' },\n    ],\n  },\n  {\n    title: '父节点 2',\n    key: '0-1',\n    children: [\n      { title: '子节点 2-1', key: '0-1-0' },\n    ],\n  },\n]\n\nconst onDrop = (info: any) => {\n  // eslint-disable-next-line no-console\n  console.log('drop', info.dragNode?.key, '->', info.node?.key)\n}\n</script>"
+        },
+        {
+          "title": "搜索高亮",
+          "description": "配合 `filterTreeNode` 对命中的节点做高亮处理。",
+          "code": "<template>\n  <input\n    v-model=\"searchValue\"\n    placeholder=\"输入关键字高亮匹配节点\"\n    style=\"margin-bottom: 8px; padding: 4px 8px; width: 240px;\"\n  />\n  <Tree\n    :tree-data=\"treeData\"\n    :default-expand-all=\"true\"\n    :filter-tree-node=\"filterNode\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree } from 'ant-design-hmfw'\n\nconst searchValue = ref('')\n\nconst treeData = [\n  {\n    title: '父节点 1',\n    key: '0-0',\n    children: [\n      { title: '子节点 apple', key: '0-0-0' },\n      { title: '子节点 banana', key: '0-0-1' },\n    ],\n  },\n  {\n    title: '父节点 2',\n    key: '0-1',\n    children: [\n      { title: '子节点 cherry', key: '0-1-0' },\n    ],\n  },\n]\n\nconst filterNode = (node: any) => {\n  if (!searchValue.value) return false\n  return String(node.title).toLowerCase().includes(searchValue.value.toLowerCase())\n}\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/tree"

@@ -5772,27 +5772,75 @@ import { Table } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | dataSource | 数据数组 | `any[]` | - |
 | columns | 表格列的配置描述 | `TableColumn[]` | - |
-| rowKey | 表格行 key 的取值 | `string \| ((record: any) => string)` | `'key'` |
+| rowKey | 表格行 key 的取值 | `string \| ((record: any) => Key)` | `'key'` |
 | loading | 页面是否加载中 | `boolean` | `false` |
-| pagination | 分页器，设为 false 时不展示 | `object \| false` | - |
-| rowSelection | 列表项是否可选择 | `object` | - |
+| pagination | 分页器，设为 false 时不展示 | `TablePaginationConfig \| false` | - |
+| rowSelection | 列表项是否可选择 | `TableRowSelection` | - |
+| expandable | 配置展开属性 | `ExpandableConfig` | - |
 | size | 表格大小 | `'default' \| 'middle' \| 'small'` | `'default'` |
 | bordered | 是否展示外边框和列边框 | `boolean` | `false` |
-| scroll | 表格是否可滚动 | `{ x?: number, y?: number }` | - |
+| showHeader | 是否显示表头 | `boolean` | `true` |
+| scroll | 表格是否可滚动 | `{ x?: number \| string, y?: number \| string }` | - |
+| title | 表格标题 | `string \| ((data: any[]) => VNode)` | - |
+| footer | 表格页脚 | `string \| ((data: any[]) => VNode)` | - |
+| locale | 国际化配置 | `{ emptyText?: string }` | - |
+| onChange | 分页、排序、筛选变化时触发 | `(pagination, filters, sorter, extra) => void` | - |
+| onRow | 设置行属性 | `(record, index) => object` | - |
+| onHeaderRow | 设置表头行属性 | `(columns, index) => object` | - |
 
 **TableColumn**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | key | 列的唯一标识 | `string` | - |
-| title | 列头显示文字 | `string` | - |
+| title | 列头显示文字 | `string \| VNode` | - |
 | dataIndex | 列数据在数据项中对应的路径 | `string` | - |
 | width | 列宽度 | `number \| string` | - |
-| fixed | 列是否固定 | `'left' \| 'right'` | - |
-| sorter | 排序函数 | `boolean \| ((a: any, b: any) => number)` | - |
-| filters | 表头的筛选菜单项 | `{ text: string, value: any }[]` | - |
-| render | 自定义渲染函数 | `(text: any, record: any) => any` | - |
 | align | 设置列的对齐方式 | `'left' \| 'center' \| 'right'` | `'left'` |
+| fixed | 列是否固定（左侧/右侧） | `'left' \| 'right'` | - |
+| ellipsis | 超过宽度将自动省略 | `boolean` | `false` |
+| sorter | 排序函数，支持多列排序 | `CompareFn \| { compare: CompareFn, multiple: number }` | - |
+| sortOrder | 排序的受控属性 | `'ascend' \| 'descend' \| null` | - |
+| filters | 表头的筛选菜单项 | `ColumnFilterItem[]` | - |
+| filteredValue | 筛选的受控属性 | `FilterValue` | - |
+| onFilter | 筛选函数 | `(value: any, record: any) => boolean` | - |
+| filterMultiple | 是否多选 | `boolean` | `true` |
+| responsive | 响应式断点 | `('xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl')[]` | - |
+| render | 自定义渲染函数 | `(text: any, record: any, index: number) => any` | - |
+
+**TableRowSelection**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| type | 选择框类型 | `'checkbox' \| 'radio'` | `'checkbox'` |
+| selectedRowKeys | 指定选中项的 key 数组 | `Key[]` | - |
+| onChange | 选中项发生变化时的回调 | `(keys: Key[], rows: any[], info: { type: string }) => void` | - |
+| onSelect | 用户手动选择/取消选择某行的回调 | `(record, selected, selectedRows, nativeEvent) => void` | - |
+| onSelectAll | 用户手动选择/取消选择所有行的回调 | `(selected, selectedRows, changeRows) => void` | - |
+| getCheckboxProps | 选择框的默认属性配置 | `(record) => object` | - |
+
+**ExpandableConfig**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| expandedRowRender | 额外的展开行内容 | `(record, index, indent, expanded) => VNode` | - |
+| expandedRowKeys | 展开的行，受控属性 | `Key[]` | - |
+| defaultExpandedRowKeys | 默认展开的行 | `Key[]` | - |
+| onExpand | 点击展开图标时触发 | `(expanded, record) => void` | - |
+| onExpandedRowsChange | 展开的行变化时触发 | `(expandedKeys: Key[]) => void` | - |
+
+**TablePaginationConfig**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| current | 当前页数 | `number` | - |
+| pageSize | 每页条数 | `number` | `10` |
+| total | 数据总数 | `number` | - |
+| showQuickJumper | 是否可以快速跳转至某页 | `boolean` | `false` |
+| showSizeChanger | 是否展示 pageSize 切换器 | `boolean` | `false` |
+| showTotal | 用于显示数据总量和当前数据顺序 | `(total, range) => string` | - |
+| pageSizeOptions | 指定每页可以显示多少条 | `number[]` | `[10, 20, 50, 100]` |
+| onChange | 页码或 pageSize 改变的回调 | `(page, pageSize) => void` | - |
 
 ### 示例
 
@@ -5819,7 +5867,7 @@ const columns = [
 </script>
 ```
 
-排序 — 对某一列数据进行排序。
+排序 — 对某一列数据进行排序。支持多列排序（Shift + 点击表头）。
 
 ```vue
 <template>
@@ -6528,26 +6576,48 @@ import { Transfer } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | dataSource | 数据源 | `TransferItem[]` | `[]` |
-| targetKeys (v-model) | 右侧列表的 key 集合 | `string[]` | `[]` |
-| selectedKeys (v-model) | 选中项的 key 集合 | `string[]` | `[]` |
-| titles | 标题集合 | `[string, string]` | `['', '']` |
-| operations | 操作按钮文案 | `[string, string]` | `['>', '<']` |
-| showSearch | 是否显示搜索框 | `boolean` | `false` |
+| targetKeys (v-model) | 右侧列表的 key 集合 | `TransferKey[]` | `[]` |
+| selectedKeys (v-model) | 选中项的 key 集合 | `TransferKey[]` | `[]` |
+| titles | 标题集合 | `(VNode \| string)[]` | `['', '']` |
+| operations | 操作按钮文案（已废弃） | `string[]` | `[]` |
+| render | 自定义渲染函数 | `(item: TransferItem) => RenderResult` | - |
+| rowKey | 自定义提取 key | `(record: TransferItem) => TransferKey` | - |
+| showSearch | 显示搜索框 | `boolean \| TransferSearchOption` | `false` |
+| filterOption | 自定义搜索函数 | `(input: string, item: TransferItem, direction: TransferDirection) => boolean` | - |
+| footer | 列表底部渲染 | `(info: TransferListContext) => VNode \| string \| null` | - |
+| listStyle | 列表样式 | `CSSProperties \| ((info: { direction: TransferDirection }) => CSSProperties)` | - |
 | disabled | 是否禁用 | `boolean` | `false` |
 | showSelectAll | 是否展示全选勾选框 | `boolean` | `true` |
+| selectAllLabels | 自定义全选文案 | `SelectAllLabel[]` | - |
+| oneWay | 单向模式 | `boolean` | `false` |
+| pagination | 分页配置 | `boolean \| PaginationType` | - |
+| status | 校验状态 | `'error' \| 'warning'` | - |
+| locale | 文案配置 | `Partial<TransferLocale>` | - |
+| rootClassName | 根元素 class | `string` | - |
+| classNames | 语义化 class | `TransferSemanticClassNames` | - |
+| styles | 语义化 style | `TransferSemanticStyles` | - |
 
 **TransferItem**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| key | 唯一标识 | `string` |  |
+| key | 唯一标识 | `string \| number` |  |
 | title | 标题 | `string` |  |
 | description | 描述 | `string` |  |
 | disabled | 是否禁用 | `boolean` |  |
 
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| change | 右侧列表变化时触发 | `(targetKeys: TransferKey[], direction: TransferDirection, moveKeys: TransferKey[])` |
+| selectChange | 选中项变化时触发 | `(sourceSelectedKeys: TransferKey[], targetSelectedKeys: TransferKey[])` |
+| search | 搜索框内容变化时触发 | `(direction: TransferDirection, value: string)` |
+| scroll | 列表滚动时触发 | `(direction: TransferDirection, e: Event)` |
+
 ### 示例
 
-基础用法
+基础用法 — 最简单的用法，展示了数据在左右两栏之间的移动。
 
 ```vue
 <template>
@@ -6575,6 +6645,34 @@ const targetKeys = ref(['1', '3', '5'])
 </script>
 ```
 
+带搜索框 — 支持搜索功能，可以快速找到目标项。
+
+```vue
+<template>
+  <Transfer
+    :data-source="dataSource"
+    v-model:target-keys="targetKeys"
+    :titles="['待选', '已选']"
+    show-search
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Transfer } from 'ant-design-hmfw'
+import type { TransferItem } from 'ant-design-hmfw'
+
+const dataSource: TransferItem[] = Array.from({ length: 20 }, (_, i) => ({
+  key: String(i),
+  title: `选项 ${i + 1}`,
+  description: `描述 ${i + 1}`,
+  disabled: i % 8 === 3,
+}))
+
+const targetKeys = ref<string[]>(['1', '3', '5'])
+</script>
+```
+
 
 ---
 
@@ -6584,7 +6682,7 @@ const targetKeys = ref(['1', '3', '5'])
 
 导入：
 ```ts
-import { Tree } from 'ant-design-hmfw'
+import { Tree, DirectoryTree } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -6593,45 +6691,74 @@ import { Tree } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| treeData | treeNodes 数据 | `TreeDataNode[]` | - |
-| expandedKeys (v-model) | 展开指定的树节点 | `string[]` | - |
-| defaultExpandedKeys | 默认展开指定的树节点 | `string[]` | `[]` |
+| treeData | treeNodes 数据 | `TreeDataNode[]` | `[]` |
+| expandedKeys (v-model) | 展开指定的树节点 | `(string \| number)[]` | - |
+| defaultExpandedKeys | 默认展开指定的树节点 | `(string \| number)[]` | `[]` |
 | defaultExpandAll | 默认展开所有树节点 | `boolean` | `false` |
-| selectedKeys (v-model) | 设置选中的树节点 | `string[]` | - |
-| checkedKeys (v-model) | 选中复选框的树节点 | `string[]` | - |
+| defaultExpandParent | 默认展开父节点 | `boolean` | `true` |
+| autoExpandParent | 展开时自动展开父节点 | `boolean` | `false` |
+| selectedKeys (v-model) | 设置选中的树节点 | `(string \| number)[]` | - |
+| defaultSelectedKeys | 默认选中的树节点 | `(string \| number)[]` | `[]` |
+| checkedKeys (v-model) | 选中复选框的树节点；`checkStrictly` 时为 `{ checked, halfChecked }` | `(string \| number)[] \| { checked, halfChecked }` | - |
+| defaultCheckedKeys | 默认勾选的树节点 | `(string \| number)[]` | `[]` |
 | checkable | 节点前添加 Checkbox 复选框 | `boolean` | `false` |
+| checkStrictly | 父子节点选中状态不再关联 | `boolean` | `false` |
 | multiple | 支持点选多个节点 | `boolean` | `false` |
 | selectable | 是否可选中 | `boolean` | `true` |
 | disabled | 将树禁用 | `boolean` | `false` |
-| showLine | 是否展示连接线 | `boolean` | `false` |
-| blockNode | 是否节点占据一行 | `boolean` | `false` |
-| fieldNames | 自定义节点 title、key、children 的字段 | `{ title?: string, key?: string, children?: string }` | - |
+| draggable | 节点可拖拽 | `boolean \| (node) => boolean \| { icon?, nodeDraggable? }` | `false` |
+| showLine | 是否展示连接线 | `boolean \| { showLeafIcon }` | `false` |
+| showIcon | 是否展示节点图标 | `boolean` | `false` |
+| blockNode | 节点是否占据一行 | `boolean` | `false` |
+| indent | 每级缩进像素 | `number` | `24` |
+| filterTreeNode | 按需高亮节点，返回 `true` 高亮 | `(node) => boolean` | - |
+| icon | 自定义节点图标（名称或渲染函数） | `string \| (node, ctx) => VNode` | - |
+| switcherIcon | 自定义展开/收起图标 | `string \| ({ expanded, isLeaf }) => VNode` | - |
+| titleRender | 自定义节点标题渲染 | `(node) => VNode` | - |
+| fieldNames | 自定义节点 title、key、children 的字段 | `{ title?, key?, children? }` | - |
+| rootClassName | 根节点 className | `string` | - |
+| classNames | 语义化 class（`root`/`item`/`itemIcon`/`itemTitle`/`itemSwitcher`） | `object` | - |
+| styles | 语义化内联样式（同上 key） | `object` | - |
+
+**DirectoryTree Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| expandAction | 点击展开节点的方式，`false` 关闭 | `false \| 'click' \| 'doubleClick'` | `'click'` |
+| showIcon | 是否展示图标 | `boolean` | `true` |
 
 **TreeDataNode**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| key | 节点唯一标识 | `string` | - |
+| key | 节点唯一标识 | `string \| number` | - |
 | title | 标题 | `string` | - |
 | children | 子节点 | `TreeDataNode[]` | - |
 | disabled | 禁掉响应 | `boolean` | `false` |
 | disableCheckbox | 禁掉 checkbox | `boolean` | `false` |
+| selectable | 是否可选中 | `boolean` | `true` |
+| checkable | 是否可勾选 | `boolean` | - |
 | isLeaf | 设置为叶子节点 | `boolean` | - |
+| icon | 自定义图标 | `string \| (node) => VNode` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| update:expandedKeys | 展开/收起节点时触发 | `(keys: string[]) => void` |
-| update:selectedKeys | 点击树节点触发 | `(keys: string[]) => void` |
-| update:checkedKeys | 点击复选框触发 | `(keys: string[]) => void` |
-| expand | 展开/收起节点时触发 | `(expandedKeys: string[], info: object) => void` |
-| select | 点击树节点触发 | `(selectedKeys: string[], info: object) => void` |
-| check | 点击复选框触发 | `(checkedKeys: string[], info: object) => void` |
+| update:expandedKeys | 展开/收起节点时触发 | `(keys: Key[]) => void` |
+| update:selectedKeys | 点击树节点触发 | `(keys: Key[]) => void` |
+| update:checkedKeys | 点击复选框触发 | `(keys: Key[] \| { checked, halfChecked }) => void` |
+| expand | 展开/收起节点时触发 | `(keys, { expanded, node, nativeEvent }) => void` |
+| select | 点击树节点触发 | `(keys, { event, selected, node, selectedNodes, nativeEvent }) => void` |
+| check | 点击复选框触发 | `(keys, { event, checked, node, checkedNodes, halfCheckedKeys, nativeEvent }) => void` |
+| dblclick | 双击节点 | `(event, node) => void` |
+| rightClick | 右键节点 | `({ event, node }) => void` |
+| dragstart / dragenter / dragover / dragleave / dragend | 拖拽过程事件 | `({ event, node, ... }) => void` |
+| drop | 拖拽释放 | `({ node, dragNode, dragNodesKeys, dropPosition, dropToGap, nativeEvent }) => void` |
 
 ### 示例
 
-基础用法 — 最简单的用法，展示可勾选，可选中，禁用，默认展开等功能。
+基础用法 — 最简单的用法，展示可选中，默认展开等功能。
 
 ```vue
 <template>
@@ -6675,7 +6802,7 @@ const treeData = [
 </script>
 ```
 
-可勾选 — 使用 checkable 属性可以节点前添加 Checkbox 复选框。
+可勾选 — 使用 `checkable` 属性可以在节点前添加 Checkbox 复选框，父子节点选中状态默认级联联动（半选态自动计算）。
 
 ```vue
 <template>
