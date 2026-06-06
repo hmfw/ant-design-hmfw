@@ -186,7 +186,8 @@ export interface TableProps<T = any> {
   expandable?: ExpandableConfig<T>
   locale?: TableLocale
   showHeader?: boolean
-  sticky?: boolean
+  sticky?: boolean | { offsetHeader?: number; offsetScroll?: number; getContainer?: () => HTMLElement }
+  summary?: (pageData: T[]) => VNode
 
   // Custom rendering
   title?: (data: T[]) => VNode | string

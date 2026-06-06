@@ -201,6 +201,11 @@
   outline: none;
   cursor: pointer;
   transition: all 0.3s;
+  transform: rotate(0deg);
+}
+
+.hmfw-table-expand-icon-expanded {
+  transform: rotate(90deg);
 }
 
 .hmfw-table-expand-icon:hover {
@@ -210,6 +215,37 @@
 
 .hmfw-table-expanded-row > td {
   background: rgba(0, 0, 0, 0.02);
+}
+
+/* Expanded row animation */
+.hmfw-table-expanded-row-enter-active {
+  animation: hmfwExpandIn 0.3s ease-out;
+}
+
+.hmfw-table-expanded-row-leave-active {
+  animation: hmfwExpandOut 0.3s ease-in;
+}
+
+@keyframes hmfwExpandIn {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+@keyframes hmfwExpandOut {
+  from {
+    opacity: 1;
+    max-height: 500px;
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+  }
 }
 
 /* Expand */
@@ -236,6 +272,11 @@
   outline: none;
   cursor: pointer;
   transition: all 0.3s;
+  transform: rotate(0deg);
+}
+
+.hmfw-table-expand-icon-expanded {
+  transform: rotate(90deg);
 }
 
 .hmfw-table-expand-icon:hover {
@@ -245,6 +286,37 @@
 
 .hmfw-table-expanded-row > td {
   background: rgba(0, 0, 0, 0.02);
+}
+
+/* Expanded row animation */
+.hmfw-table-expanded-row-enter-active {
+  animation: hmfwExpandIn 0.3s ease-out;
+}
+
+.hmfw-table-expanded-row-leave-active {
+  animation: hmfwExpandOut 0.3s ease-in;
+}
+
+@keyframes hmfwExpandIn {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+@keyframes hmfwExpandOut {
+  from {
+    opacity: 1;
+    max-height: 500px;
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+  }
 }
 
 /* Placeholder */
@@ -327,5 +399,36 @@
 
 .hmfw-table-ping-right .hmfw-table-cell-fix-right::after {
   box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.15);
+}
+
+/* Sticky header */
+.hmfw-table-sticky .hmfw-table-thead {
+  background: #fff;
+}
+
+.hmfw-table-sticky .hmfw-table-thead > tr > th {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.hmfw-table-sticky .hmfw-table-thead::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgba(5, 5, 5, 0.06);
+}
+
+/* Summary */
+.hmfw-table-summary {
+  background: rgba(0, 0, 0, 0.02);
+  border-top: 1px solid rgba(5, 5, 5, 0.06);
+}
+
+.hmfw-table-summary > tr > td {
+  padding: 16px;
+  font-weight: 600;
+  border-bottom: none;
 }
 

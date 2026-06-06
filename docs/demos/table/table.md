@@ -65,6 +65,38 @@
   <TableResponsive />
 </DemoBlock>
 
+### 虚拟滚动
+
+大数据场景下使用虚拟滚动优化性能，支持 1000+ 行数据流畅滚动。
+
+<DemoBlock title="虚拟滚动" :source="TableVirtualScrollSource">
+  <TableVirtualScroll />
+</DemoBlock>
+
+### 吸顶表头
+
+当页面滚动时，表头会固定在页面顶部。
+
+<DemoBlock title="吸顶表头" :source="TableStickySource">
+  <TableSticky />
+</DemoBlock>
+
+### 总结栏
+
+通过 `summary` 可以在表格尾部添加合计行。
+
+<DemoBlock title="总结栏" :source="TableSummarySource">
+  <TableSummary />
+</DemoBlock>
+
+### 可编辑单元格
+
+通过自定义 `render` 函数实现可编辑的单元格。
+
+<DemoBlock title="可编辑单元格" :source="TableEditableSource">
+  <TableEditable />
+</DemoBlock>
+
 ## API
 
 ### Table Props
@@ -81,7 +113,9 @@
 | size | 表格大小 | `'default' \| 'middle' \| 'small'` | `'default'` |
 | bordered | 是否展示外边框和列边框 | `boolean` | `false` |
 | showHeader | 是否显示表头 | `boolean` | `true` |
+| sticky | 设置粘性头部和滚动条 | `boolean \| { offsetHeader?: number, offsetScroll?: number }` | `false` |
 | scroll | 表格是否可滚动 | `{ x?: number \| string, y?: number \| string }` | - |
+| summary | 总结栏 | `(pageData: any[]) => VNode` | - |
 | title | 表格标题 | `string \| ((data: any[]) => VNode)` | - |
 | footer | 表格页脚 | `string \| ((data: any[]) => VNode)` | - |
 | locale | 国际化配置 | `{ emptyText?: string }` | - |
