@@ -1,9 +1,9 @@
 import {
-  defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport,
+  defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick, type PropType, Teleport,
 } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
-import type { DatePickerMode, PresetItem } from './types'
+import type { DatePickerMode, PresetItem, ShowTimeConfig } from './types'
 
 // --- Date utilities ---
 function pad(n: number) { return String(n).padStart(2, '0') }
@@ -76,7 +76,7 @@ export const DatePicker = defineComponent({
     placeholder: String,
     allowClear: { type: Boolean, default: true },
     picker: { type: String as PropType<DatePickerMode>, default: 'date' },
-    showTime: Boolean,
+    showTime: [Boolean, Object] as PropType<boolean | ShowTimeConfig>,
     showToday: { type: Boolean, default: true },
     showNow: Boolean,
     disabledDate: Function as PropType<(d: Date) => boolean>,
@@ -113,6 +113,20 @@ export const DatePicker = defineComponent({
     })
 
     const innerValue = ref<Date | null>(parseDate(props.defaultValue ?? props.value))
+
+    // 时间选择状态（仅 showTime 时使用）
+    const innerHour = ref(innerValue.value?.getHours() ?? 0)
+    const innerMinute = ref(innerValue.value?.getMinutes() ?? 0)
+    const innerSecond = ref(innerValue.value?.getSeconds() ?? 0)
+
+    // showTime 配置
+    const showTimeConfig = computed(() => {
+      if (!props.showTime) return null
+      if (typeof props.showTime === 'boolean') return {}
+      return props.showTime
+    })
+    const hasShowTime = computed(() => !!props.showTime)
+
     const viewYear = ref((innerValue.value ?? now).getFullYear())
     const viewMonth = ref((innerValue.value ?? now).getMonth())
     const innerOpen = ref(props.defaultOpen ?? false)
@@ -158,6 +172,12 @@ export const DatePicker = defineComponent({
       viewYear.value = d.getFullYear()
       viewMonth.value = d.getMonth()
       panelMode.value = props.picker === 'year' ? 'year' : props.picker === 'month' ? 'month' : 'date'
+      // showTime 模式下同步时间到内部状态
+      if (hasShowTime.value && d) {
+        innerHour.value = d.getHours()
+        innerMinute.value = d.getMinutes()
+        innerSecond.value = d.getSeconds()
+      }
       innerOpen.value = true
       emit('openChange', true)
     }
@@ -192,13 +212,56 @@ export const DatePicker = defineComponent({
       if (props.disabledDate?.(d)) return
       if (minDateObj.value && d < minDateObj.value) return
       if (maxDateObj.value && d > maxDateObj.value) return
+
+      // showTime 模式下，保留已选时间，合成完整日期时间
+      if (hasShowTime.value) {
+        const combined = new Date(d.getFullYear(), d.getMonth(), d.getDate(),
+                                    innerHour.value, innerMinute.value, innerSecond.value)
+        innerValue.value = combined
+        // 不立即关闭面板，等用户点"确定"
+        return
+      }
+
+      // 非 showTime 模式：选择日期后立即 emit 并关闭
       innerValue.value = d
       const str = props.picker === 'quarter'
         ? `${d.getFullYear()}-Q${Math.floor(d.getMonth() / 3) + 1}`
         : formatDate(d, fmt.value)
       emit('update:value', str)
       emit('change', str, d)
-      if (!props.showTime) closePanel()
+      closePanel()
+    }
+
+    // showTime 时间选择 handler
+    const selectHour = (h: number) => {
+      innerHour.value = h
+      if (innerValue.value) {
+        const d = innerValue.value
+        innerValue.value = new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, innerMinute.value, innerSecond.value)
+      }
+    }
+    const selectMinute = (m: number) => {
+      innerMinute.value = m
+      if (innerValue.value) {
+        const d = innerValue.value
+        innerValue.value = new Date(d.getFullYear(), d.getMonth(), d.getDate(), innerHour.value, m, innerSecond.value)
+      }
+    }
+    const selectSecond = (s: number) => {
+      innerSecond.value = s
+      if (innerValue.value) {
+        const d = innerValue.value
+        innerValue.value = new Date(d.getFullYear(), d.getMonth(), d.getDate(), innerHour.value, innerMinute.value, s)
+      }
+    }
+
+    // showTime 确认按钮：提交并关闭
+    const confirmDateTime = () => {
+      if (!innerValue.value) return
+      const str = formatDate(innerValue.value, fmt.value)
+      emit('update:value', str)
+      emit('change', str, innerValue.value)
+      closePanel()
     }
 
     const clearValue = (e: MouseEvent) => {
@@ -235,14 +298,65 @@ export const DatePicker = defineComponent({
 
     const calendar = computed(() => buildCalendar(viewYear.value, viewMonth.value))
 
+    // showTime 时间列数据
+    const hourStep = computed(() => {
+      const cfg = showTimeConfig.value
+      return (cfg && typeof cfg === 'object' && 'hourStep' in cfg && cfg.hourStep) ? cfg.hourStep : 1
+    })
+    const minuteStep = computed(() => {
+      const cfg = showTimeConfig.value
+      return (cfg && typeof cfg === 'object' && 'minuteStep' in cfg && cfg.minuteStep) ? cfg.minuteStep : 1
+    })
+    const secondStep = computed(() => {
+      const cfg = showTimeConfig.value
+      return (cfg && typeof cfg === 'object' && 'secondStep' in cfg && cfg.secondStep) ? cfg.secondStep : 1
+    })
+
+    const hours = computed(() => {
+      const list: number[] = []
+      for (let i = 0; i < 24; i += hourStep.value) list.push(i)
+      return list
+    })
+    const minutes = computed(() => {
+      const list: number[] = []
+      for (let i = 0; i < 60; i += minuteStep.value) list.push(i)
+      return list
+    })
+    const seconds = computed(() => {
+      const list: number[] = []
+      for (let i = 0; i < 60; i += secondStep.value) list.push(i)
+      return list
+    })
+
+    // 是否显示秒列（根据 format 判断）
+    const showSecondColumn = computed(() => {
+      if (!hasShowTime.value) return false
+      // 如果 showTimeConfig 指定了 format，用它；否则用 fmt
+      const timeFormat = (showTimeConfig.value && 'format' in showTimeConfig.value && showTimeConfig.value.format)
+        ? showTimeConfig.value.format
+        : fmt.value
+      return timeFormat.includes('ss') || timeFormat.includes('s')
+    })
+
     // Year panel: show 12 years around current
     const yearRange = computed(() => {
       const base = Math.floor(viewYear.value / 10) * 10
       return Array.from({ length: 10 }, (_, i) => base + i)
     })
 
+    // 时间列滚动到选中项
+    const scrollToActiveTime = (el: HTMLElement | null, value: number) => {
+      if (!el) return
+      nextTick(() => {
+        const item = el.querySelector(`[data-value="${value}"]`) as HTMLElement
+        if (item && typeof item.scrollIntoView === 'function') {
+          item.scrollIntoView({ block: 'nearest' })
+        }
+      })
+    }
+
     const renderDatePanel = () => (
-      <div class={`${prefixCls}-panel`}>
+      <div class={cls(`${prefixCls}-panel`, { [`${prefixCls}-panel-has-time`]: hasShowTime.value })}>
         {/* Header */}
         <div class={`${prefixCls}-panel-header`}>
           <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>«</button>
@@ -292,6 +406,54 @@ export const DatePicker = defineComponent({
             })}
           </div>
         </div>
+        {/* showTime 时间列 */}
+        {hasShowTime.value && (
+          <div class={`${prefixCls}-time-panel`}>
+            <div class={`${prefixCls}-time-content`}>
+              {/* 小时列 */}
+              <ul class={`${prefixCls}-time-column`} ref={(el) => scrollToActiveTime(el as HTMLElement, innerHour.value)}>
+                {hours.value.map((h) => (
+                  <li
+                    key={h}
+                    data-value={h}
+                    class={cls(`${prefixCls}-time-cell`, { [`${prefixCls}-time-cell-selected`]: innerHour.value === h })}
+                    onClick={() => selectHour(h)}
+                  >
+                    {pad(h)}
+                  </li>
+                ))}
+              </ul>
+              {/* 分钟列 */}
+              <ul class={`${prefixCls}-time-column`} ref={(el) => scrollToActiveTime(el as HTMLElement, innerMinute.value)}>
+                {minutes.value.map((m) => (
+                  <li
+                    key={m}
+                    data-value={m}
+                    class={cls(`${prefixCls}-time-cell`, { [`${prefixCls}-time-cell-selected`]: innerMinute.value === m })}
+                    onClick={() => selectMinute(m)}
+                  >
+                    {pad(m)}
+                  </li>
+                ))}
+              </ul>
+              {/* 秒列 */}
+              {showSecondColumn.value && (
+                <ul class={`${prefixCls}-time-column`} ref={(el) => scrollToActiveTime(el as HTMLElement, innerSecond.value)}>
+                  {seconds.value.map((s) => (
+                    <li
+                      key={s}
+                      data-value={s}
+                      class={cls(`${prefixCls}-time-cell`, { [`${prefixCls}-time-cell-selected`]: innerSecond.value === s })}
+                      onClick={() => selectSecond(s)}
+                    >
+                      {pad(s)}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        )}
         {/* Footer */}
         {(props.showToday || props.showNow || props.showTime || props.presets?.length || props.renderExtraFooter) && (
           <div class={`${prefixCls}-panel-footer`}>
@@ -314,7 +476,7 @@ export const DatePicker = defineComponent({
                 </button>
               )}
               {props.showTime && (
-                <button class={`${prefixCls}-panel-footer-ok`} onClick={closePanel}>{locale.value.DatePicker.ok}</button>
+                <button class={`${prefixCls}-panel-footer-ok`} onClick={confirmDateTime}>{locale.value.DatePicker.ok}</button>
               )}
             </div>
           </div>

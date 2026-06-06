@@ -91,8 +91,8 @@ components/{name}/
 **DatePicker 日期选择器**
 - [x] 缺少 `presets` 快捷选项（今天、本周、本月等）
 - [x] 缺少 `cellRender` 自定义单元格内容
-- [ ] 范围选择器缺少 `onCalendarChange` 回调
-- [ ] 时间面板交互与 AntD 有差异
+- [x] 范围选择器缺少 `onCalendarChange` 回调
+- [x] 时间面板交互与 AntD 有差异
 
 **Checkbox / Radio**
 - [ ] 缺少 `skipGroup` 属性（跳过 CheckboxGroup 控制）

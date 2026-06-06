@@ -338,3 +338,75 @@
   cursor: pointer;
   font-size: 14px;
 }
+
+.hmfw-date-picker-panel-footer-ok:hover {
+  background: var(--hmfw-color-primary-hover, #4096ff);
+}
+
+/* ============ showTime 时间面板 ============ */
+.hmfw-date-picker-panel-has-time {
+  display: flex;
+}
+
+.hmfw-date-picker-panel-has-time .hmfw-date-picker-panel-body {
+  border-right: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
+}
+
+.hmfw-date-picker-time-panel {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+}
+
+.hmfw-date-picker-time-content {
+  display: flex;
+  height: 224px;
+  padding: 0;
+}
+
+.hmfw-date-picker-time-column {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
+  scrollbar-width: none;
+}
+
+.hmfw-date-picker-time-column:last-child {
+  border-right: none;
+}
+
+.hmfw-date-picker-time-column::-webkit-scrollbar {
+  display: none;
+}
+
+.hmfw-date-picker-time-cell {
+  padding: 4px 0;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--hmfw-color-text, rgba(0,0,0,0.88));
+  transition: background 0.2s;
+  line-height: 28px;
+}
+
+.hmfw-date-picker-time-cell:hover {
+  background: var(--hmfw-color-bg-text-hover, rgba(0,0,0,0.04));
+}
+
+.hmfw-date-picker-time-cell-selected {
+  background: var(--hmfw-color-primary-bg, #e6f4ff);
+  color: var(--hmfw-color-primary, #1677ff);
+  font-weight: 600;
+}
+
+.hmfw-date-picker-time-cell-disabled {
+  color: var(--hmfw-color-text-disabled, rgba(0,0,0,0.25));
+  cursor: not-allowed;
+}
+
+.hmfw-date-picker-time-cell-disabled:hover {
+  background: transparent;
+}

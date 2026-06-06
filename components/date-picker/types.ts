@@ -8,6 +8,17 @@ export interface PresetItem {
   value: string | (() => string)
 }
 
+export interface ShowTimeConfig {
+  /** 时间格式，如 'HH:mm:ss'、'HH:mm' */
+  format?: string
+  /** 小时步长 */
+  hourStep?: number
+  /** 分钟步长 */
+  minuteStep?: number
+  /** 秒步长 */
+  secondStep?: number
+}
+
 export interface DatePickerProps {
   value?: DatePickerValue
   defaultValue?: DatePickerValue
@@ -17,7 +28,7 @@ export interface DatePickerProps {
   placeholder?: string
   allowClear?: boolean
   mode?: DatePickerMode
-  showTime?: boolean
+  showTime?: boolean | ShowTimeConfig
   showToday?: boolean
   showNow?: boolean
   disabledDate?: (date: Date) => boolean

@@ -263,4 +263,88 @@ describe('DatePicker', () => {
     expect(document.querySelector('.custom-footer')).not.toBeNull()
     wrapper.unmount()
   })
+
+  // ============ showTime 时间面板 ============
+  it('showTime renders time panel with time columns', async () => {
+    const wrapper = mount(DatePicker, { props: { showTime: true }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(document.querySelector('.hmfw-date-picker-time-panel')).not.toBeNull()
+    expect(document.querySelectorAll('.hmfw-date-picker-time-column').length).toBe(3) // 时/分/秒
+    wrapper.unmount()
+  })
+
+  it('showTime time columns contain correct number of cells', async () => {
+    const wrapper = mount(DatePicker, { props: { showTime: true }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const columns = document.querySelectorAll('.hmfw-date-picker-time-column')
+    // 小时 24 个，分钟 60 个，秒 60 个
+    expect(columns[0].querySelectorAll('.hmfw-date-picker-time-cell').length).toBe(24)
+    expect(columns[1].querySelectorAll('.hmfw-date-picker-time-cell').length).toBe(60)
+    expect(columns[2].querySelectorAll('.hmfw-date-picker-time-cell').length).toBe(60)
+    wrapper.unmount()
+  })
+
+  it('showTime does not close panel after selecting date', async () => {
+    const wrapper = mount(DatePicker, { props: { showTime: true }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const day = document.querySelector<HTMLButtonElement>('.hmfw-date-picker-day:not(.hmfw-date-picker-day-other-month)')
+    day?.click()
+    await wrapper.vm.$nextTick()
+    // showTime 模式下点日期不关闭
+    expect(document.querySelector('.hmfw-date-picker-panel')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('showTime clicking hour cell updates display', async () => {
+    const wrapper = mount(DatePicker, { props: { showTime: true, defaultValue: '2026-06-06 10:30:45' }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const hourCells = document.querySelectorAll('.hmfw-date-picker-time-column')[0].querySelectorAll('.hmfw-date-picker-time-cell')
+    const hour15 = Array.from(hourCells).find(c => c.textContent === '15') as HTMLElement
+    hour15?.click()
+    await wrapper.vm.$nextTick()
+    // 选中态正确
+    expect(hour15.classList.contains('hmfw-date-picker-time-cell-selected')).toBe(true)
+    // 显示文本含新小时（15:30:45）
+    const input = wrapper.find('input')
+    expect(input.element.value).toContain('15:')
+    wrapper.unmount()
+  })
+
+  it('showTime OK button emits change and closes panel', async () => {
+    const wrapper = mount(DatePicker, { props: { showTime: true, defaultValue: '2026-06-06 10:30:45' }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const okBtn = document.querySelector('.hmfw-date-picker-panel-footer-ok') as HTMLElement
+    okBtn?.click()
+    await wrapper.vm.$nextTick()
+    // emit change
+    expect(wrapper.emitted('change')).toBeTruthy()
+    // 面板关闭
+    expect(wrapper.emitted('openChange')?.[1]).toEqual([false])
+    wrapper.unmount()
+  })
+
+  it('showTime with format without seconds hides second column', async () => {
+    const wrapper = mount(DatePicker, { props: { showTime: { format: 'HH:mm' } }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    // 只有时/分两列
+    expect(document.querySelectorAll('.hmfw-date-picker-time-column').length).toBe(2)
+    wrapper.unmount()
+  })
+
+  it('showTime with hourStep/minuteStep respects steps', async () => {
+    const wrapper = mount(DatePicker, { props: { showTime: { hourStep: 2, minuteStep: 15 } }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const columns = document.querySelectorAll('.hmfw-date-picker-time-column')
+    // 小时 24/2=12 个，分钟 60/15=4 个
+    expect(columns[0].querySelectorAll('.hmfw-date-picker-time-cell').length).toBe(12)
+    expect(columns[1].querySelectorAll('.hmfw-date-picker-time-cell').length).toBe(4)
+    wrapper.unmount()
+  })
 })

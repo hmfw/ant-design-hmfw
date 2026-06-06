@@ -71,7 +71,7 @@
 | placeholder | 输入框提示文字 | `string` | - |
 | allowClear | 是否显示清除按钮 | `boolean` | `true` |
 | picker | 设置选择器类型 | `'date' \| 'month' \| 'year' \| 'quarter'` | `'date'` |
-| showTime | 增加时间选择功能 | `boolean` | `false` |
+| showTime | 增加时间选择功能，可配置时分秒步长 | `boolean \| { format?, hourStep?, minuteStep?, secondStep? }` | `false` |
 | showToday | 是否展示"今天"按钮 | `boolean` | `true` |
 | showNow | 是否展示"此刻"按钮（优先于 showToday） | `boolean` | `false` |
 | disabledDate | 不可选择的日期 | `(dateStr: string) => boolean` | - |
