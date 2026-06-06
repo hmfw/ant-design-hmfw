@@ -44,7 +44,9 @@
 
 > **关于 `/clear`**：产出全部落在分类文件，下一个组件不需要前一个的对话上下文。**但隐性约定（文件路径、条目格式、验证标准）只存在于步骤 0 读取的样板里——所以 `/clear` 后必须先做步骤 0 再动手，否则就会"靠猜路径、靠估数字"。** 例外：下一个组件是前一个的特化或共用底层（如 Popconfirm 复用 Popover wrapper），保留上下文或用 `/compact` 软压缩。
 
-### ✅ 已完成（65 个，全量 1540 测试通过 + 2 skipped，修复 266 个真实 bug）
+### ✅ 已完成（59 个组件，全量 1540 测试通过 + 2 skipped，修复 266 个真实 bug）
+
+> 注：F 反馈类 7 个组件均为其它分类已计数组件的二次复查（Progress→A 展示，Popover→D 浮层，Result/Spin/Alert→基础布局，Skeleton/Watermark→A 展示），故不重复计入「唯一组件数」；但其修复的 bug 与新增测试计入累计量。
 
 **基础/布局** → [`COMPARISON/01-basic-layout.md`](./COMPARISON/01-basic-layout.md)
 Divider · Flex · Space(修2bug) · Typography · Tag · Badge(修1) · Alert(修1行为) · Avatar · Empty · Card · Result · Spin(修 delay 失效 bug)

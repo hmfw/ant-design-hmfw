@@ -50,6 +50,14 @@
   <InputSearch />
 </DemoBlock>
 
+### 高级功能
+
+展示细粒度样式控制（classNames / styles）和 TextArea 的 pressEnter 事件。
+
+<DemoBlock title="高级功能" :source="InputAdvancedSource">
+  <InputAdvanced />
+</DemoBlock>
+
 ## API
 
 ### Input Props
@@ -70,6 +78,8 @@
 | readonly | 是否只读 | `boolean` | `false` |
 | id | 输入框的 id | `string` | - |
 | rootClassName | 根节点的 className | `string` | - |
+| classNames | 细粒度样式类名 | `{ affixWrapper?: string; prefix?: string; suffix?: string; input?: string; count?: string }` | - |
+| styles | 细粒度样式对象 | `{ affixWrapper?: CSSProperties; prefix?: CSSProperties; suffix?: CSSProperties; input?: CSSProperties; count?: CSSProperties }` | - |
 
 ### InputPassword Props
 
@@ -91,6 +101,8 @@
 | autoSize | 自适应内容高度，可设置为 true \| false 或对象 | `boolean \| { minRows?: number; maxRows?: number }` | `false` |
 | allowClear | 可以点击清除图标删除内容 | `boolean \| { clearIcon?: VNode; disabled?: boolean }` | `false` |
 | showCount | 是否展示字数，支持自定义格式化 | `boolean \| { formatter: (info) => VNode \| string }` | `false` |
+| classNames | 细粒度样式类名 | `{ textarea?: string; count?: string }` | - |
+| styles | 细粒度样式对象 | `{ textarea?: CSSProperties; count?: CSSProperties }` | - |
 
 ### InputSearch Props
 

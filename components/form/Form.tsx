@@ -41,6 +41,8 @@ export interface FormProps {
   validateTrigger?: 'blur' | 'change' | ('blur' | 'change')[]
   /** AntD v6 `requiredMark`: false hides asterisks; `'optional'` marks non-required fields. */
   requiredMark?: boolean | 'optional'
+  /** Whether to preserve field value when field is unmounted (default: false). */
+  preserve?: boolean
 }
 
 export interface FormItemProps {
@@ -75,11 +77,14 @@ interface FormContext {
   wrapperCol?: { span?: number; offset?: number }
   validateTrigger: 'blur' | 'change' | ('blur' | 'change')[]
   requiredMark: boolean | 'optional'
+  preserve: boolean
   errors: Record<string, string>
+  touched: Record<string, boolean>
   setError: (name: string, error: string) => void
   clearError: (name: string) => void
   validateField: (name: string) => Promise<boolean>
   notifyValueChange: (name: string, value: unknown) => void
+  setFieldTouched: (name: string, touched: boolean) => void
 }
 
 /** Resolve `NamePath` to a dot-joined string key (used as the errors map key). */
@@ -171,6 +176,44 @@ export function useForm() {
         ;(ctx.model as Record<string, unknown>)[k] = v
       })
     },
+    /** Get all field errors. Returns array of {name, errors[]} objects. */
+    getFieldsError: (nameList?: string[]) => {
+      if (!ctx) return []
+      const names = nameList ?? Object.keys(ctx.rules)
+      return names.map((name) => ({
+        name,
+        errors: ctx.errors[name] ? [ctx.errors[name]] : [],
+      }))
+    },
+    /** Get single field error. */
+    getFieldError: (name: string) => {
+      return ctx?.errors[name] ? [ctx.errors[name]] : []
+    },
+    /** Check if fields have been touched (user interacted). */
+    isFieldsTouched: (nameList?: string[], allTouched = false) => {
+      if (!ctx) return false
+      const names = nameList ?? Object.keys(ctx.rules)
+      if (allTouched) {
+        return names.every((name) => ctx.touched[name])
+      }
+      return names.some((name) => ctx.touched[name])
+    },
+    /** Check if single field has been touched. */
+    isFieldTouched: (name: string) => {
+      return ctx?.touched[name] ?? false
+    },
+    /** Check if fields are validating (not implemented yet, returns false). */
+    isFieldsValidating: (nameList?: string[]) => {
+      // Placeholder - would need async validation state tracking
+      return false
+    },
+    /** Scroll to first error field. */
+    scrollToField: (name: string) => {
+      const prefixCls = 'hmfw-form'
+      const el = document.querySelector(`[data-field-name="${name}"]`)
+        ?? document.querySelector(`.${prefixCls}-item-has-error`)
+      el?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' })
+    },
   }
 }
 
@@ -195,11 +238,13 @@ export const Form = defineComponent({
       type: [Boolean, String] as PropType<boolean | 'optional'>,
       default: true,
     },
+    preserve: { type: Boolean, default: false },
   },
   emits: ['finish', 'finishFailed', 'valuesChange'],
   setup(props, { slots, emit, expose }) {
     const prefixCls = usePrefixCls('form')
     const errors = ref<Record<string, string>>({})
+    const touched = ref<Record<string, boolean>>({})
 
     const validateField = async (name: string): Promise<boolean> => {
       const rules = props.rules?.[name]
@@ -237,7 +282,9 @@ export const Form = defineComponent({
       get wrapperCol() { return props.wrapperCol },
       get validateTrigger() { return props.validateTrigger ?? 'change' },
       get requiredMark() { return props.requiredMark ?? true },
+      get preserve() { return props.preserve ?? false },
       get errors() { return errors.value },
+      get touched() { return touched.value },
       setError: (name: string, error: string) => { errors.value = { ...errors.value, [name]: error } },
       clearError: (name: string) => {
         const next = { ...errors.value }
@@ -247,6 +294,9 @@ export const Form = defineComponent({
       validateField,
       notifyValueChange: (name: string, value: unknown) => {
         emit('valuesChange', { [name]: value }, props.model ?? {})
+      },
+      setFieldTouched: (name: string, touchedState: boolean) => {
+        touched.value = { ...touched.value, [name]: touchedState }
       },
     } as FormContext)
 
@@ -287,6 +337,11 @@ export const Form = defineComponent({
       errors.value = next
     }
     const resetFields = () => clearValidate()
+    const scrollToField = (name: string) => {
+      const el = document.querySelector(`[data-field-name="${name}"]`)
+        ?? document.querySelector(`.${prefixCls}-item-has-error`)
+      el?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' })
+    }
 
     expose({
       validate,
@@ -294,7 +349,22 @@ export const Form = defineComponent({
       clearValidate,
       resetFields,
       submit,
+      scrollToField,
       getFieldsValue: () => props.model ?? {},
+      getFieldsError: (nameList?: string[]) => {
+        const names = nameList ?? Object.keys(props.rules ?? {})
+        return names.map((name) => ({
+          name,
+          errors: errors.value[name] ? [errors.value[name]] : [],
+        }))
+      },
+      isFieldsTouched: (nameList?: string[], allTouched = false) => {
+        const names = nameList ?? Object.keys(props.rules ?? {})
+        if (allTouched) {
+          return names.every((name) => touched.value[name])
+        }
+        return names.some((name) => touched.value[name])
+      },
     })
 
     return () => (

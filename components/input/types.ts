@@ -19,6 +19,20 @@ export interface InputProps {
   type?: string
   id?: string
   rootClassName?: string
+  classNames?: {
+    affixWrapper?: string
+    prefix?: string
+    suffix?: string
+    input?: string
+    count?: string
+  }
+  styles?: {
+    affixWrapper?: Record<string, string>
+    prefix?: Record<string, string>
+    suffix?: Record<string, string>
+    input?: Record<string, string>
+    count?: Record<string, string>
+  }
 }
 
 export interface TextAreaProps {
@@ -34,6 +48,14 @@ export interface TextAreaProps {
   status?: InputStatus
   allowClear?: boolean | { clearIcon?: VNode; disabled?: boolean }
   rootClassName?: string
+  classNames?: {
+    textarea?: string
+    count?: string
+  }
+  styles?: {
+    textarea?: Record<string, string>
+    count?: Record<string, string>
+  }
 }
 
 export interface InputPasswordProps {

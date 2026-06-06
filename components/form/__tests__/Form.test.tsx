@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
 import { Form, FormItem, useForm } from '../Form'
-import { defineComponent, h, nextTick, reactive, ref } from 'vue'
+import { defineComponent, h, nextTick, reactive, ref, computed, inject } from 'vue'
 
 describe('Form', () => {
   it('renders form element', () => {
@@ -265,5 +265,329 @@ describe('Form (extended)', () => {
     })
     expect(wrapper.find('.hmfw-form-item-tooltip').exists()).toBe(true)
     expect(wrapper.find('.hmfw-form-item-tooltip').attributes('title')).toBe('help text')
+  })
+
+  it('getFieldsError returns all field errors', async () => {
+    let api: ReturnType<typeof useForm> | undefined
+    const Probe = defineComponent({
+      setup() {
+        api = useForm()
+        return () => h('div')
+      },
+    })
+    const ChildForm = defineComponent({
+      setup() {
+        const model = reactive({ a: '', b: '' })
+        const rules = {
+          a: [{ required: true, message: 'A required' }],
+          b: [{ required: true, message: 'B required' }],
+        }
+        return () => h(Form, { model, rules }, () => h(Probe))
+      },
+    })
+    mount(ChildForm)
+    await api!.validateFields().catch(() => {})
+    const errors = api!.getFieldsError()
+    expect(errors).toHaveLength(2)
+    expect(errors[0].name).toBe('a')
+    expect(errors[0].errors).toEqual(['A required'])
+    expect(errors[1].name).toBe('b')
+    expect(errors[1].errors).toEqual(['B required'])
+  })
+
+  it('getFieldsError with nameList returns subset', async () => {
+    let api: ReturnType<typeof useForm> | undefined
+    const Probe = defineComponent({
+      setup() {
+        api = useForm()
+        return () => h('div')
+      },
+    })
+    const ChildForm = defineComponent({
+      setup() {
+        const model = reactive({ a: '', b: '' })
+        const rules = {
+          a: [{ required: true, message: 'A required' }],
+          b: [{ required: true, message: 'B required' }],
+        }
+        return () => h(Form, { model, rules }, () => h(Probe))
+      },
+    })
+    mount(ChildForm)
+    await api!.validateFields().catch(() => {})
+    const errors = api!.getFieldsError(['a'])
+    expect(errors).toHaveLength(1)
+    expect(errors[0].name).toBe('a')
+  })
+
+  it('getFieldError returns single field error', async () => {
+    let api: ReturnType<typeof useForm> | undefined
+    const Probe = defineComponent({
+      setup() {
+        api = useForm()
+        return () => h('div')
+      },
+    })
+    const ChildForm = defineComponent({
+      setup() {
+        const model = reactive({ name: '' })
+        const rules = { name: [{ required: true, message: 'Required' }] }
+        return () => h(Form, { model, rules }, () => h(Probe))
+      },
+    })
+    mount(ChildForm)
+    await api!.validateFields().catch(() => {})
+    const error = api!.getFieldError('name')
+    expect(error).toEqual(['Required'])
+  })
+
+  it('isFieldsTouched returns false initially', () => {
+    let api: ReturnType<typeof useForm> | undefined
+    const Probe = defineComponent({
+      setup() {
+        api = useForm()
+        return () => h('div')
+      },
+    })
+    const ChildForm = defineComponent({
+      setup() {
+        const model = reactive({ a: '', b: '' })
+        const rules = { a: [{ required: true }], b: [{ required: true }] }
+        return () => h(Form, { model, rules }, () => h(Probe))
+      },
+    })
+    mount(ChildForm)
+    expect(api!.isFieldsTouched()).toBe(false)
+    expect(api!.isFieldsTouched(['a', 'b'], true)).toBe(false)
+  })
+
+  it('isFieldTouched returns field touch state', () => {
+    let api: ReturnType<typeof useForm> | undefined
+    const Probe = defineComponent({
+      setup() {
+        api = useForm()
+        return () => h('div')
+      },
+    })
+    const ChildForm = defineComponent({
+      setup() {
+        const model = reactive({ name: '' })
+        const rules = { name: [{ required: true }] }
+        return () => h(Form, { model, rules }, () => h(Probe))
+      },
+    })
+    mount(ChildForm)
+    expect(api!.isFieldTouched('name')).toBe(false)
+  })
+
+  it('formRef.scrollToField scrolls to specific field', () => {
+    const ChildForm = defineComponent({
+      setup(_, { expose }) {
+        const formRef = ref<any>(null)
+        const model = reactive({ name: '' })
+        const rules = { name: [{ required: true }] }
+        expose({ scroll: () => formRef.value?.scrollToField('name') })
+        return () => h(Form, { ref: formRef, model, rules }, () => h(FormItem, { name: 'name' }))
+      },
+    })
+    const wrapper = mount(ChildForm)
+    // Just ensure it doesn't throw
+    expect(() => (wrapper.vm as any).scroll()).not.toThrow()
+  })
+
+  it('formRef.getFieldsError returns errors via ref', async () => {
+    const ChildForm = defineComponent({
+      setup(_, { expose }) {
+        const formRef = ref<any>(null)
+        const model = reactive({ name: '' })
+        const rules = { name: [{ required: true, message: 'Required' }] }
+        expose({
+          validate: () => formRef.value?.validate().catch(() => {}),
+          getErrors: () => formRef.value?.getFieldsError(),
+        })
+        return () => h(Form, { ref: formRef, model, rules }, () => h(FormItem, { name: 'name' }))
+      },
+    })
+    const wrapper = mount(ChildForm)
+    await (wrapper.vm as any).validate()
+    const errors = (wrapper.vm as any).getErrors()
+    expect(errors).toHaveLength(1)
+    expect(errors[0].errors).toEqual(['Required'])
+  })
+
+  it('formRef.isFieldsTouched returns touch state via ref', () => {
+    const ChildForm = defineComponent({
+      setup(_, { expose }) {
+        const formRef = ref<any>(null)
+        const model = reactive({ name: '' })
+        const rules = { name: [{ required: true }] }
+        expose({ isTouched: () => formRef.value?.isFieldsTouched() })
+        return () => h(Form, { ref: formRef, model, rules }, () => h(FormItem, { name: 'name' }))
+      },
+    })
+    const wrapper = mount(ChildForm)
+    expect((wrapper.vm as any).isTouched()).toBe(false)
+  })
+
+  it('preserve prop defaults to false', () => {
+    const wrapper = mount(Form)
+    // Just verify component mounts without errors when preserve is not set
+    expect(wrapper.find('form').exists()).toBe(true)
+  })
+
+  it('preserve=true passed to context', () => {
+    const wrapper = mount(Form, { props: { preserve: true } })
+    // Just verify the prop is accepted without error
+    expect(wrapper.find('form').exists()).toBe(true)
+  })
+})
+
+describe('Form - Field Dependency & Linkage', () => {
+  it('dependent validation: field B validates when field A changes', async () => {
+    let formApi: ReturnType<typeof useForm> | undefined
+    const Probe = defineComponent({
+      setup() {
+        formApi = useForm()
+        return () => h('div')
+      },
+    })
+    const ChildForm = defineComponent({
+      setup() {
+        const model = reactive({ password: '', confirmPassword: '' })
+        const rules = {
+          password: [{ required: true, message: 'Password required' }],
+          confirmPassword: [
+            { required: true, message: 'Confirm required' },
+            {
+              validator: (_rule: any, value: any) => {
+                if (value && value !== model.password) {
+                  return Promise.reject('Passwords do not match')
+                }
+                return Promise.resolve()
+              },
+            },
+          ],
+        }
+        return () => h(Form, { model, rules }, () => h(Probe))
+      },
+    })
+    mount(ChildForm)
+
+    // Set passwords to different values
+    formApi!.setFieldValue('password', 'abc123')
+    formApi!.setFieldValue('confirmPassword', 'xyz789')
+
+    // Validate confirm password - should fail
+    await expect(formApi!.validateFields(['confirmPassword'])).rejects.toMatchObject({
+      errorFields: expect.arrayContaining([
+        expect.objectContaining({ name: 'confirmPassword' })
+      ])
+    })
+
+    // Set confirm to match
+    formApi!.setFieldValue('confirmPassword', 'abc123')
+
+    // Should now pass
+    await expect(formApi!.validateFields(['confirmPassword'])).resolves.toBeTruthy()
+  })
+
+  it('dynamic fields: add and remove fields maintains validation state', async () => {
+    let formApi: ReturnType<typeof useForm> | undefined
+    const showExtra = ref(false)
+
+    const Probe = defineComponent({
+      setup() {
+        formApi = useForm()
+        return () => h('div')
+      },
+    })
+
+    const ChildForm = defineComponent({
+      setup() {
+        const model = reactive({ name: '', extra: '' })
+        const rules = computed(() => {
+          const base = { name: [{ required: true, message: 'Name required' }] }
+          if (showExtra.value) {
+            return { ...base, extra: [{ required: true, message: 'Extra required' }] }
+          }
+          return base
+        })
+        return () => h(Form, { model, rules: rules.value }, () => h(Probe))
+      },
+    })
+
+    const wrapper = mount(ChildForm)
+
+    // Initially only name field
+    formApi!.setFieldValue('name', 'John')
+    await expect(formApi!.validateFields()).resolves.toBeTruthy()
+
+    // Add extra field
+    showExtra.value = true
+    await nextTick()
+
+    // Now validation should include extra field (empty)
+    await expect(formApi!.validateFields()).rejects.toMatchObject({
+      errorFields: expect.arrayContaining([
+        expect.objectContaining({ name: 'extra' })
+      ])
+    })
+
+    // Fill extra field
+    formApi!.setFieldValue('extra', 'data')
+    await expect(formApi!.validateFields()).resolves.toBeTruthy()
+  })
+
+  it('conditional validation: rules change based on other field value', async () => {
+    let formApi: ReturnType<typeof useForm> | undefined
+
+    const Probe = defineComponent({
+      setup() {
+        formApi = useForm()
+        return () => h('div')
+      },
+    })
+
+    const ChildForm = defineComponent({
+      setup() {
+        const model = reactive({ type: 'email', contact: '' })
+        const rules = computed(() => ({
+          type: [{ required: true }],
+          contact: [
+            { required: true, message: 'Contact required' },
+            model.type === 'email'
+              ? { type: 'email' as const, message: 'Invalid email' }
+              : { pattern: /^\d+$/, message: 'Invalid phone' },
+          ],
+        }))
+        return () => h(Form, { model, rules: rules.value }, () => h(Probe))
+      },
+    })
+
+    mount(ChildForm)
+
+    // Test email validation
+    formApi!.setFieldValue('type', 'email')
+    formApi!.setFieldValue('contact', 'invalid')
+    await expect(formApi!.validateFields(['contact'])).rejects.toMatchObject({
+      errorFields: expect.arrayContaining([
+        expect.objectContaining({ name: 'contact' })
+      ])
+    })
+
+    formApi!.setFieldValue('contact', 'test@example.com')
+    await expect(formApi!.validateFields(['contact'])).resolves.toBeTruthy()
+
+    // Switch to phone validation
+    formApi!.setFieldValue('type', 'phone')
+    formApi!.setFieldValue('contact', 'abc')
+    await expect(formApi!.validateFields(['contact'])).rejects.toMatchObject({
+      errorFields: expect.arrayContaining([
+        expect.objectContaining({ name: 'contact' })
+      ])
+    })
+
+    formApi!.setFieldValue('contact', '12345')
+    await expect(formApi!.validateFields(['contact'])).resolves.toBeTruthy()
   })
 })

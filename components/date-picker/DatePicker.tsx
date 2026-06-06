@@ -87,6 +87,7 @@ export const DatePicker = defineComponent({
     minDate: String,
     maxDate: String,
     renderExtraFooter: Function as PropType<() => any>,
+    cellRender: Function as PropType<(current: Date, info: { originNode: any; today: Date; range?: 'start' | 'end'; type: 'date' | 'month' | 'year' }) => any>,
   },
   emits: ['update:value', 'change', 'openChange', 'panelChange'],
   setup(props, { emit }) {
@@ -267,6 +268,12 @@ export const DatePicker = defineComponent({
               const isToday = isSameDay(date, now)
               const isSelected = selectedDate.value ? isSameDay(date, selectedDate.value) : false
               const isDisabled = props.disabledDate?.(date) ?? false
+
+              const originNode = <span>{date.getDate()}</span>
+              const cellContent = props.cellRender
+                ? props.cellRender(date, { originNode, today: now, type: 'date' })
+                : originNode
+
               return (
                 <button
                   key={i}
@@ -279,7 +286,7 @@ export const DatePicker = defineComponent({
                   disabled={isDisabled}
                   onClick={() => selectDate(date)}
                 >
-                  {date.getDate()}
+                  {cellContent}
                 </button>
               )
             })}

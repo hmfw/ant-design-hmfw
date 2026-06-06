@@ -33,6 +33,20 @@ export const Input = defineComponent({
     suffix: [String, Object] as PropType<string | VNode>,
     id: String,
     rootClassName: String,
+    classNames: Object as PropType<{
+      affixWrapper?: string
+      prefix?: string
+      suffix?: string
+      input?: string
+      count?: string
+    }>,
+    styles: Object as PropType<{
+      affixWrapper?: Record<string, string>
+      prefix?: Record<string, string>
+      suffix?: Record<string, string>
+      input?: Record<string, string>
+      count?: Record<string, string>
+    }>,
   },
   emits: ['update:value', 'change', 'input', 'focus', 'blur', 'pressEnter', 'clear', 'onPressEnter'],
   setup(props, { slots, emit, expose }) {
@@ -126,7 +140,8 @@ export const Input = defineComponent({
       const inputEl = (
         <input
           ref={inputRef}
-          class={hasFix.value ? prefixCls : inputCls.value}
+          class={cls(hasFix.value ? prefixCls : inputCls.value, props.classNames?.input)}
+          style={props.styles?.input}
           type={props.type}
           value={innerValue.value}
           placeholder={props.placeholder}
@@ -155,13 +170,13 @@ export const Input = defineComponent({
         const max = props.maxLength
         if (typeof props.showCount === 'object' && props.showCount.formatter) {
           return (
-            <span class={`${prefixCls}-show-count-suffix`}>
+            <span class={cls(`${prefixCls}-show-count-suffix`, props.classNames?.count)} style={props.styles?.count}>
               {props.showCount.formatter({ value: innerValue.value, count, maxLength: max })}
             </span>
           )
         }
         return (
-          <span class={`${prefixCls}-show-count-suffix`}>
+          <span class={cls(`${prefixCls}-show-count-suffix`, props.classNames?.count)} style={props.styles?.count}>
             {max ? `${count} / ${max}` : `${count}`}
           </span>
         )
@@ -171,11 +186,11 @@ export const Input = defineComponent({
       const suffixNode = slots.suffix?.() || (props.suffix && <span>{props.suffix}</span>)
 
       return (
-        <span class={cls(wrapperCls.value, props.rootClassName)}>
-          {prefixNode && <span class={`${prefixCls}-prefix`}>{prefixNode}</span>}
+        <span class={cls(wrapperCls.value, props.rootClassName, props.classNames?.affixWrapper)} style={props.styles?.affixWrapper}>
+          {prefixNode && <span class={cls(`${prefixCls}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>{prefixNode}</span>}
           {inputEl}
           {clearBtn}
-          {suffixNode && <span class={`${prefixCls}-suffix`}>{suffixNode}</span>}
+          {suffixNode && <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>{suffixNode}</span>}
           {countNode}
         </span>
       )
@@ -349,8 +364,16 @@ export const TextArea = defineComponent({
     allowClear: [Boolean, Object] as PropType<boolean | { clearIcon?: VNode; disabled?: boolean }>,
     autoSize: [Boolean, Object] as PropType<boolean | { minRows?: number; maxRows?: number }>,
     rootClassName: String,
+    classNames: Object as PropType<{
+      textarea?: string
+      count?: string
+    }>,
+    styles: Object as PropType<{
+      textarea?: Record<string, string>
+      count?: Record<string, string>
+    }>,
   },
-  emits: ['update:value', 'change', 'input', 'focus', 'blur', 'clear'],
+  emits: ['update:value', 'change', 'input', 'focus', 'blur', 'clear', 'pressEnter', 'onPressEnter'],
   setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('input')
     const innerValue = ref(props.value ?? props.defaultValue ?? '')
@@ -421,6 +444,13 @@ export const TextArea = defineComponent({
       updateAutoSize()
     }
 
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        emit('pressEnter', e)
+        emit('onPressEnter', e)
+      }
+    }
+
     const allowClearConfig = computed(() => {
       if (typeof props.allowClear === 'object' && props.allowClear !== null) {
         return props.allowClear
@@ -443,7 +473,8 @@ export const TextArea = defineComponent({
       const textarea = (
         <textarea
           ref={textareaRef}
-          class={textareaCls.value}
+          class={cls(textareaCls.value, props.classNames?.textarea)}
+          style={props.styles?.textarea}
           value={innerValue.value}
           placeholder={props.placeholder}
           disabled={props.disabled}
@@ -451,6 +482,7 @@ export const TextArea = defineComponent({
           rows={props.autoSize ? computedRows.value : props.rows}
           maxlength={props.maxLength}
           onInput={handleInput}
+          onKeydown={handleKeydown}
           onFocus={(e: FocusEvent) => emit('focus', e)}
           onBlur={(e: FocusEvent) => emit('blur', e)}
         />
@@ -469,13 +501,13 @@ export const TextArea = defineComponent({
         const max = props.maxLength
         if (typeof props.showCount === 'object' && props.showCount.formatter) {
           return (
-            <span class={`${prefixCls}-show-count-suffix`}>
+            <span class={cls(`${prefixCls}-show-count-suffix`, props.classNames?.count)} style={props.styles?.count}>
               {props.showCount.formatter({ value: innerValue.value, count, maxLength: max })}
             </span>
           )
         }
         return (
-          <span class={`${prefixCls}-show-count-suffix`}>
+          <span class={cls(`${prefixCls}-show-count-suffix`, props.classNames?.count)} style={props.styles?.count}>
             {max ? `${count} / ${max}` : `${count}`}
           </span>
         )
