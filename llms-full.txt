@@ -28,8 +28,12 @@ import { Alert } from 'ant-design-hmfw'
 | message | `title` 的别名（已废弃，请使用 `title`） | `string` | - |
 | description | 警告提示的辅助性文字介绍 | `string` | - |
 | showIcon | 是否显示辅助图标（banner 模式默认 `true`） | `boolean` | `false` |
-| closable | 默认不显示关闭按钮 | `boolean` | `false` |
-| closeText | 自定义关闭按钮文字 | `string` | - |
+| icon | 自定义图标（`showIcon` 为 `true` 时有效） | `VNode \| slot` | - |
+| closable | 是否显示关闭按钮，可传对象自定义图标与无障碍标签 | `boolean \| { closeIcon?, 'aria-label'? }` | `false` |
+| closeIcon | 自定义关闭按钮图标 | `VNode \| slot` | - |
+| closeText | 自定义关闭按钮文字（已废弃，请使用 `closeIcon`） | `string` | - |
+| action | 自定义操作项 | `VNode \| slot` | - |
+| role | 根节点 `role` 属性 | `string` | `'alert'` |
 | banner | 是否用作顶部公告 | `boolean` | `false` |
 
 ### Events
@@ -4428,6 +4432,8 @@ import { Popover } from 'ant-design-hmfw'
 | getPopupContainer | 自定义浮层挂载容器（默认 `body`） | `(triggerNode: HTMLElement) => HTMLElement` | - |
 | overlayStyle | 卡片样式 | `Record<string, string>` | - |
 | overlayInnerStyle | 卡片内层样式 | `Record<string, string>` | - |
+| classNames | 语义化 DOM 的 className（支持 `title` / `content`），可传函数 | `{ title?, content? } \| (info) => {...}` | - |
+| styles | 语义化 DOM 的内联样式（支持 `title` / `content`），可传函数 | `{ title?, content? } \| (info) => {...}` | - |
 
 ### Events
 
@@ -4935,7 +4941,8 @@ import { Result } from 'ant-design-hmfw'
 | status | 结果的状态，决定图标和颜色；`404/403/500` 渲染为异常插画 | `'success' \| 'error' \| 'warning' \| 'info' \| '404' \| '403' \| '500'` | `'info'` |
 | title | 标题 | `string` | - |
 | subTitle | 副标题 | `string` | - |
-| icon | 自定义图标字符；设为 `false` 时隐藏图标 | `string \| false` | - |
+| icon | 自定义图标字符；设为 `false` 时隐藏图标（异常状态插画不受影响） | `string \| false` | - |
+| extra | 操作区内容（`extra` 插槽优先级更高） | `string` | - |
 
 ### 示例
 
@@ -5290,7 +5297,7 @@ import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage,
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
 | size | 大小 | `'large' \| 'default' \| 'small'` | `'default'` |
-| shape | 形状 | `'default' \| 'circle' \| 'round'` | `'default'` |
+| shape | 形状 | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
 | block | 将按钮宽度调整为其父宽度 | `boolean` | `false` |
 
 **Skeleton.Input Props**
@@ -5320,6 +5327,7 @@ import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage,
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
+| nodeStyle | 作用于内部占位节点的内联样式（常用于设定占位尺寸） | `CSSProperties` | - |
 
 ### 示例
 
@@ -5522,6 +5530,7 @@ import { Spin } from 'ant-design-hmfw'
 | size | 组件大小 | `'small' \| 'default' \| 'large'` | `'default'` |
 | tip | 当作为包裹元素时，可以自定义描述文案 | `string` | - |
 | delay | 延迟显示加载效果的时间（防止闪烁），单位：毫秒 | `number` | - |
+| percent | 进度百分比；为 `'auto'` 时在 `spinning` 期间自动模拟递增 | `number \| 'auto'` | - |
 
 ### 示例
 
@@ -7269,6 +7278,8 @@ import { Watermark } from 'ant-design-hmfw'
 | width | 水印的宽度，`content` 的默认值为自身的宽度 | `number` | `120` |
 | height | 水印的高度，`content` 的默认值为自身的高度 | `number` | `64` |
 | inherit | 是否将水印传导给弹出组件如 Modal、Drawer | `boolean` | `true` |
+| rootClassName | 添加到根容器的 className | `string` | - |
+| onRemove | 水印节点被外部移除后重建时触发 | `() => void` | - |
 
 **WatermarkFont**
 

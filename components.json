@@ -61,17 +61,45 @@
         },
         {
           "section": "Alert Props",
+          "name": "icon",
+          "description": "自定义图标（`showIcon` 为 `true` 时有效）",
+          "type": "`VNode | slot`",
+          "default": "-"
+        },
+        {
+          "section": "Alert Props",
           "name": "closable",
-          "description": "默认不显示关闭按钮",
-          "type": "`boolean`",
+          "description": "是否显示关闭按钮，可传对象自定义图标与无障碍标签",
+          "type": "`boolean | { closeIcon?, 'aria-label'? }`",
           "default": "`false`"
         },
         {
           "section": "Alert Props",
+          "name": "closeIcon",
+          "description": "自定义关闭按钮图标",
+          "type": "`VNode | slot`",
+          "default": "-"
+        },
+        {
+          "section": "Alert Props",
           "name": "closeText",
-          "description": "自定义关闭按钮文字",
+          "description": "自定义关闭按钮文字（已废弃，请使用 `closeIcon`）",
           "type": "`string`",
           "default": "-"
+        },
+        {
+          "section": "Alert Props",
+          "name": "action",
+          "description": "自定义操作项",
+          "type": "`VNode | slot`",
+          "default": "-"
+        },
+        {
+          "section": "Alert Props",
+          "name": "role",
+          "description": "根节点 `role` 属性",
+          "type": "`string`",
+          "default": "`'alert'`"
         },
         {
           "section": "Alert Props",
@@ -7148,6 +7176,20 @@
           "description": "卡片内层样式",
           "type": "`Record<string, string>`",
           "default": "-"
+        },
+        {
+          "section": "Popover Props",
+          "name": "classNames",
+          "description": "语义化 DOM 的 className（支持 `title` / `content`），可传函数",
+          "type": "`{ title?, content? } | (info) => {...}`",
+          "default": "-"
+        },
+        {
+          "section": "Popover Props",
+          "name": "styles",
+          "description": "语义化 DOM 的内联样式（支持 `title` / `content`），可传函数",
+          "type": "`{ title?, content? } | (info) => {...}`",
+          "default": "-"
         }
       ],
       "events": [
@@ -8060,8 +8102,15 @@
         {
           "section": "Result Props",
           "name": "icon",
-          "description": "自定义图标字符；设为 `false` 时隐藏图标",
+          "description": "自定义图标字符；设为 `false` 时隐藏图标（异常状态插画不受影响）",
           "type": "`string | false`",
+          "default": "-"
+        },
+        {
+          "section": "Result Props",
+          "name": "extra",
+          "description": "操作区内容（`extra` 插槽优先级更高）",
+          "type": "`string`",
           "default": "-"
         }
       ],
@@ -8721,7 +8770,7 @@
           "section": "Skeleton.Button Props",
           "name": "shape",
           "description": "形状",
-          "type": "`'default' | 'circle' | 'round'`",
+          "type": "`'default' | 'circle' | 'round' | 'square'`",
           "default": "`'default'`"
         },
         {
@@ -8786,6 +8835,13 @@
           "description": "是否展示动画效果",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "Skeleton.Node Props",
+          "name": "nodeStyle",
+          "description": "作用于内部占位节点的内联样式（常用于设定占位尺寸）",
+          "type": "`CSSProperties`",
+          "default": "-"
         }
       ],
       "events": [],
@@ -9110,6 +9166,13 @@
           "description": "延迟显示加载效果的时间（防止闪烁），单位：毫秒",
           "type": "`number`",
           "default": "-"
+        },
+        {
+          "section": "Spin Props",
+          "name": "percent",
+          "description": "进度百分比；为 `'auto'` 时在 `spinning` 期间自动模拟递增",
+          "type": "`number | 'auto'`",
+          "default": "-"
         }
       ],
       "events": [],
@@ -9134,6 +9197,11 @@
           "title": "延迟加载",
           "description": "延迟显示 loading 效果。当 spinning 状态在 delay 时间内结束，则不显示 loading 状态。",
           "code": "<template>\n  <Spin :spinning=\"loading\" :delay=\"500\">\n    <div style=\"padding: 24px; background: #f0f0f0; border-radius: 4px;\">\n      <p>延迟 500ms 后才显示加载状态</p>\n    </div>\n  </Spin>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Spin } from 'ant-design-hmfw'\n\nconst loading = ref(true)\n</script>"
+        },
+        {
+          "title": "进度",
+          "description": "通过 `percent` 展示环形进度指示器。传入 `number` 为受控进度，传入 `'auto'` 时在 `spinning` 期间自动模拟递增。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 32px; align-items: center;\">\n    <Spin :percent=\"percent\" />\n    <Spin :percent=\"percent\" size=\"large\" />\n    <Spin percent=\"auto\" :spinning=\"autoSpinning\" />\n    <button @click=\"toggleAuto\">{{ autoSpinning ? '停止 auto' : '开始 auto' }}</button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, onMounted, onUnmounted } from 'vue'\nimport { Spin } from 'ant-design-hmfw'\n\n// 受控 percent：手动在 0~100 之间循环递增，演示环形进度指示器。\nconst percent = ref(0)\nconst autoSpinning = ref(true)\nlet timer: ReturnType<typeof setInterval> | undefined\n\nonMounted(() => {\n  timer = setInterval(() => {\n    percent.value = percent.value >= 100 ? 0 : percent.value + 10\n  }, 500)\n})\n\nonUnmounted(() => {\n  if (timer) clearInterval(timer)\n})\n\nfunction toggleAuto() {\n  autoSpinning.value = !autoSpinning.value\n}\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/spin"
@@ -12468,6 +12536,20 @@
           "description": "是否将水印传导给弹出组件如 Modal、Drawer",
           "type": "`boolean`",
           "default": "`true`"
+        },
+        {
+          "section": "Watermark Props",
+          "name": "rootClassName",
+          "description": "添加到根容器的 className",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Watermark Props",
+          "name": "onRemove",
+          "description": "水印节点被外部移除后重建时触发",
+          "type": "`() => void`",
+          "default": "-"
         },
         {
           "section": "WatermarkFont",
