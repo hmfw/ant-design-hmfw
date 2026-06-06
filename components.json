@@ -1380,8 +1380,8 @@
         {
           "section": "Carousel Props",
           "name": "autoplay",
-          "description": "是否自动切换",
-          "type": "`boolean`",
+          "description": "是否自动切换，可指定 `autoplay.dotDuration` 显示进度条",
+          "type": "`boolean | { dotDuration?: boolean }`",
           "default": "`false`"
         },
         {
@@ -1393,16 +1393,30 @@
         },
         {
           "section": "Carousel Props",
-          "name": "dots",
-          "description": "是否显示指示点",
+          "name": "arrows",
+          "description": "是否显示切换箭头",
           "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "dots",
+          "description": "是否显示指示点，可指定 `className` 自定义 class",
+          "type": "`boolean | { className?: string }`",
           "default": "`true`"
         },
         {
           "section": "Carousel Props",
           "name": "dotPosition",
-          "description": "指示点位置",
+          "description": "指示点位置（已废弃，推荐使用 `dotPlacement`）",
           "type": "`'top' | 'bottom' | 'left' | 'right'`",
+          "default": "`'bottom'`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "dotPlacement",
+          "description": "指示点位置，`start`/`end` 替代 `left`/`right`，支持 RTL",
+          "type": "`'top' | 'bottom' | 'start' | 'end'`",
           "default": "`'bottom'`"
         },
         {
@@ -1414,10 +1428,87 @@
         },
         {
           "section": "Carousel Props",
+          "name": "fade",
+          "description": "是否使用渐显过渡（优先级高于 `effect`）",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "Carousel Props",
           "name": "infinite",
           "description": "是否无限循环",
           "type": "`boolean`",
           "default": "`true`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "speed",
+          "description": "动画时长（ms）",
+          "type": "`number`",
+          "default": "`500`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "easing",
+          "description": "过渡缓动函数",
+          "type": "`string`",
+          "default": "`'ease'`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "initialSlide",
+          "description": "初始 slide 索引",
+          "type": "`number`",
+          "default": "`0`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "waitForAnimate",
+          "description": "切换时是否等待动画完成",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "prevArrow",
+          "description": "自定义前进箭头",
+          "type": "`VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "nextArrow",
+          "description": "自定义后退箭头",
+          "type": "`VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "rootClassName",
+          "description": "根元素 class",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Carousel Ref 方法",
+          "name": "`(slideNumber: number, dontAnimate?: boolean) => void`",
+          "description": "跳转到指定索引",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Carousel Ref 方法",
+          "name": "`() => void`",
+          "description": "切换到下一张",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Carousel Ref 方法",
+          "name": "`() => void`",
+          "description": "切换到上一张",
+          "type": "",
+          "default": ""
         }
       ],
       "events": [
@@ -1445,6 +1536,16 @@
           "title": "渐显效果",
           "description": "切换 effect 为 fade，使用渐显过渡。",
           "code": "<template>\n  <Carousel effect=\"fade\" style=\"height: 160px; background: #364d79; border-radius: 4px; overflow: hidden;\">\n    <div v-for=\"n in 4\" :key=\"n\" style=\"height: 160px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px;\">\n      {{ n }}\n    </div>\n  </Carousel>\n</template>\n\n<script setup lang=\"ts\">\nimport { Carousel } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "切换箭头",
+          "description": "设置 `arrows` 为 `true` 显示切换箭头。",
+          "code": "<template>\n  <Carousel arrows>\n    <div class=\"carousel-item\" style=\"background: #364d79; color: #fff; height: 160px; line-height: 160px; text-align: center;\">\n      Slide 1\n    </div>\n    <div class=\"carousel-item\" style=\"background: #7dbcea; color: #fff; height: 160px; line-height: 160px; text-align: center;\">\n      Slide 2\n    </div>\n    <div class=\"carousel-item\" style=\"background: #00a0e9; color: #fff; height: 160px; line-height: 160px; text-align: center;\">\n      Slide 3\n    </div>\n    <div class=\"carousel-item\" style=\"background: #1890ff; color: #fff; height: 160px; line-height: 160px; text-align: center;\">\n      Slide 4\n    </div>\n  </Carousel>\n</template>\n\n<script setup lang=\"ts\">\nimport { Carousel } from '../../../components'\n</script>"
+        },
+        {
+          "title": "自动播放进度条",
+          "description": "设置 `autoplay.dotDuration` 为 `true`，指示点将显示进度条动画。",
+          "code": "<template>\n  <Carousel :autoplay=\"{ dotDuration: true }\" :autoplay-speed=\"2000\">\n    <div class=\"carousel-item\" style=\"background: #364d79; color: #fff; height: 160px; line-height: 160px; text-align: center;\">\n      Slide 1\n    </div>\n    <div class=\"carousel-item\" style=\"background: #7dbcea; color: #fff; height: 160px; line-height: 160px; text-align: center;\">\n      Slide 2\n    </div>\n    <div class=\"carousel-item\" style=\"background: #00a0e9; color: #fff; height: 160px; line-height: 160px; text-align: center;\">\n      Slide 3\n    </div>\n    <div class=\"carousel-item\" style=\"background: #1890ff; color: #fff; height: 160px; line-height: 160px; text-align: center;\">\n      Slide 4\n    </div>\n  </Carousel>\n</template>\n\n<script setup lang=\"ts\">\nimport { Carousel } from '../../../components'\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/carousel"
@@ -7128,30 +7229,30 @@
         {
           "section": "Progress Props",
           "name": "strokeColor",
-          "description": "进度条的色彩，支持渐变",
-          "type": "`string | ProgressGradient`",
+          "description": "进度条色彩，支持字符串 / 数组 / 渐变对象",
+          "type": "`string | string[] | ProgressGradient`",
           "default": "-"
         },
         {
           "section": "Progress Props",
           "name": "railColor",
-          "description": "未完成的分段的颜色",
+          "description": "未完成分段颜色",
           "type": "`string`",
           "default": "-"
         },
         {
           "section": "Progress Props",
           "name": "trailColor",
-          "description": "(已废弃) 使用 railColor 代替",
+          "description": "(已废弃) 使用 `railColor` 代替",
           "type": "`string`",
           "default": "-"
         },
         {
           "section": "Progress Props",
           "name": "strokeWidth",
-          "description": "进度条线的宽度",
+          "description": "进度条线宽度",
           "type": "`number`",
-          "default": "`6` (line), `6` (circle)"
+          "default": "`8` (line), 自适应 (circle)"
         },
         {
           "section": "Progress Props",
@@ -7163,35 +7264,35 @@
         {
           "section": "Progress Props",
           "name": "size",
-          "description": "进度条的尺寸",
-          "type": "`'default' | 'small' | number | { width?: number; height?: number }`",
-          "default": "`'default'`"
+          "description": "进度条尺寸",
+          "type": "`'small' | 'medium' | 'default' | number | [number, number] | { width?, height? }`",
+          "default": "`'medium'`"
         },
         {
           "section": "Progress Props",
           "name": "width",
-          "description": "(已废弃) circle/dashboard 的画布宽度",
+          "description": "(已废弃) circle/dashboard 画布宽度，使用 `size` 代替",
           "type": "`number`",
           "default": "`120`"
         },
         {
           "section": "Progress Props",
           "name": "format",
-          "description": "内容的模板函数",
-          "type": "`(percent: number, successPercent?: number) => string`",
+          "description": "内容模板函数，可返回 VNode",
+          "type": "`(percent?: number, successPercent?: number) => VNode | string | number | null`",
           "default": "-"
         },
         {
           "section": "Progress Props",
           "name": "steps",
-          "description": "进度条总共步数",
-          "type": "`number`",
+          "description": "步骤进度条；对象形式可指定段间距",
+          "type": "`number | { count: number; gap: number }`",
           "default": "-"
         },
         {
           "section": "Progress Props",
           "name": "success",
-          "description": "成功进度条相关配置",
+          "description": "成功进度条配置",
           "type": "`{ percent?: number; strokeColor?: string }`",
           "default": "-"
         },
@@ -7204,10 +7305,52 @@
         },
         {
           "section": "Progress Props",
+          "name": "gapPlacement",
+          "description": "仪表盘缺口位置（v6 新 API）",
+          "type": "`'top' | 'bottom' | 'start' | 'end'`",
+          "default": "`'bottom'` (dashboard)"
+        },
+        {
+          "section": "Progress Props",
+          "name": "gapPosition",
+          "description": "(已废弃) 使用 `gapPlacement` 代替",
+          "type": "`'top' | 'bottom' | 'left' | 'right'`",
+          "default": "-"
+        },
+        {
+          "section": "Progress Props",
           "name": "percentPosition",
           "description": "进度文字位置",
           "type": "`{ align?: 'start' | 'center' | 'end'; type?: 'inner' | 'outer' }`",
           "default": "`{ align: 'end', type: 'outer' }`"
+        },
+        {
+          "section": "Progress Props",
+          "name": "rounding",
+          "description": "步骤进度条已激活段数舍入函数",
+          "type": "`(step: number) => number`",
+          "default": "`Math.round`"
+        },
+        {
+          "section": "Progress Props",
+          "name": "rootClassName",
+          "description": "根元素类名",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Progress Props",
+          "name": "classNames",
+          "description": "语义化类名（root/body/rail/track/indicator）",
+          "type": "`ProgressClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Progress Props",
+          "name": "styles",
+          "description": "语义化样式（root/body/rail/track/indicator）",
+          "type": "`ProgressStyles`",
+          "default": "-"
         }
       ],
       "events": [],
@@ -7247,6 +7390,16 @@
           "title": "自定义",
           "description": "自定义尺寸、间隙角度和线帽样式。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px;\">\n    <div>\n      <div style=\"margin-bottom: 8px;\">Custom Size (number)</div>\n      <Progress type=\"circle\" :percent=\"75\" :size=\"80\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Small Size</div>\n      <Progress type=\"circle\" :percent=\"75\" size=\"small\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Custom Gap Degree</div>\n      <Progress type=\"dashboard\" :percent=\"75\" :gap-degree=\"30\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Square Linecap</div>\n      <Progress type=\"circle\" :percent=\"75\" stroke-linecap=\"square\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Progress } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "仪表盘缺口位置",
+          "description": "通过 `gapPlacement` 控制仪表盘缺口位置（v6 替代 `gapPosition`）。",
+          "code": "<script setup lang=\"ts\">\nimport { Progress } from 'ant-design-hmfw'\n</script>\n\n<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px;\">\n    <div>\n      <span style=\"display: inline-block; width: 180px;\">默认（gapPlacement=bottom）</span>\n      <Progress type=\"dashboard\" :percent=\"75\" :width=\"80\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 180px;\">gapPlacement=top</span>\n      <Progress type=\"dashboard\" :percent=\"75\" :width=\"80\" gap-placement=\"top\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 180px;\">gapPlacement=start</span>\n      <Progress type=\"dashboard\" :percent=\"75\" :width=\"80\" gap-placement=\"start\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 180px;\">gapPlacement=end</span>\n      <Progress type=\"dashboard\" :percent=\"75\" :width=\"80\" gap-placement=\"end\" />\n    </div>\n  </div>\n</template>"
+        },
+        {
+          "title": "v6 新特性",
+          "description": "`size` 数组形式、`steps` 对象形式、`rounding` 自定义舍入、小圆形（≤20px）自动套 Tooltip 等。",
+          "code": "<script setup lang=\"ts\">\nimport { Progress } from 'ant-design-hmfw'\n</script>\n\n<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px;\">\n    <div>\n      <span style=\"display: inline-block; width: 200px;\">size=[200, 12]（数组）</span>\n      <Progress :percent=\"60\" :size=\"[200, 12]\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px;\">size={width:300, height:10}</span>\n      <Progress :percent=\"40\" :size=\"{ width: 300, height: 10 }\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px;\">size=14（小圆形 + Tooltip）</span>\n      <Progress type=\"circle\" :percent=\"60\" :size=\"14\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px;\">steps={count:6, gap:8}</span>\n      <Progress :percent=\"50\" :steps=\"{ count: 6, gap: 8 }\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px;\">strokeColor 数组（每段不同色）</span>\n      <Progress :percent=\"60\" :steps=\"5\" :stroke-color=\"['#f5222d', '#fa8c16', '#fadb14', '#52c41a', '#1677ff']\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px;\">rounding=Math.ceil</span>\n      <Progress :percent=\"41\" :steps=\"5\" :rounding=\"Math.ceil\" />\n    </div>\n  </div>\n</template>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/progress"
