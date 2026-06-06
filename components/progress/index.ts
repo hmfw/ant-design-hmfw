@@ -8,4 +8,13 @@ export type {
   SuccessProps,
   PercentPositionType,
   ProgressGradient,
+  ProgressClassNames,
+  ProgressStyles,
+  ProgressFormat,
+  ProgressFormatReturn,
+  ProgressStepsConfig,
+  GapPlacement,
+  GapPosition,
+  StringGradients,
+  FromToGradients,
 } from './types'

@@ -209,3 +209,22 @@
 .hmfw-progress-status-success .hmfw-progress-steps-item-active {
   background-color: var(--hmfw-color-success, #52c41a);
 }
+
+/* ====== Inline circle (size <= 20) ====== */
+.hmfw-progress-inline-circle {
+  vertical-align: middle;
+}
+
+.hmfw-progress-inline-circle .hmfw-progress-body {
+  font-size: 0;
+}
+
+/* ====== RTL ====== */
+.hmfw-progress-rtl {
+  direction: rtl;
+}
+
+.hmfw-progress-rtl .hmfw-progress-track {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
