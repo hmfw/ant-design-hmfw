@@ -210,8 +210,11 @@ export type { QRCodeProps, QRCodeStatus, QRCodeErrorLevel, QRCodeType, StatusRen
 export { Anchor, AnchorLink } from './anchor'
 export type { AnchorProps, AnchorLinkItem } from './anchor'
 
-export { Tree } from './tree'
-export type { TreeProps, TreeDataNode, TreeExpandedKeys, TreeSelectedKeys, TreeCheckedKeys } from './tree'
+export { Tree, DirectoryTree } from './tree'
+export type {
+  TreeProps, TreeDataNode, TreeExpandedKeys, TreeSelectedKeys, TreeCheckedKeys,
+  CheckedKeysObject, DirectoryTreeProps, ExpandAction,
+} from './tree'
 
 export { TimePicker } from './time-picker'
 export type { TimePickerProps, TimePickerValue } from './time-picker'
@@ -272,7 +275,21 @@ export type { ColorPickerProps, ColorFormat } from './color-picker'
 
 // Transfer
 export { Transfer } from './transfer'
-export type { TransferProps, TransferItem } from './transfer'
+export type {
+  TransferProps,
+  TransferItem,
+  TransferKey,
+  TransferDirection,
+  RenderResult as TransferRenderResult,
+  RenderResultObject as TransferRenderResultObject,
+  SelectAllLabel as TransferSelectAllLabel,
+  PaginationType as TransferPaginationType,
+  TransferSearchOption,
+  TransferLocale,
+  TransferListContext,
+  TransferSemanticClassNames,
+  TransferSemanticStyles,
+} from './transfer'
 
 // RangePicker
 export { RangePicker } from './range-picker'

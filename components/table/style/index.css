@@ -4,6 +4,18 @@
   position: relative;
 }
 
+/* Title and Footer */
+.hmfw-table-title,
+.hmfw-table-footer {
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px 8px 0 0;
+}
+
+.hmfw-table-footer {
+  border-radius: 0 0 8px 8px;
+}
+
 .hmfw-table table {
   width: 100%;
   border-collapse: collapse;
@@ -105,10 +117,134 @@
   color: var(--hmfw-color-primary, #1677ff);
 }
 
+/* Filter */
+.hmfw-table-filter-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.hmfw-table-filter-trigger:hover {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.hmfw-table-filter-trigger.active {
+  color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-table-dropdown {
+  min-width: 120px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+              0 3px 6px -4px rgba(0, 0, 0, 0.12),
+              0 9px 28px 8px rgba(0, 0, 0, 0.05);
+}
+
+.hmfw-table-dropdown-menu {
+  max-height: 264px;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.hmfw-table-dropdown-menu-item {
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.hmfw-table-dropdown-menu-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.hmfw-table-dropdown-btns {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(5, 5, 5, 0.06);
+}
+
 /* Selection */
 .hmfw-table-selection-column {
   width: 32px;
   text-align: center;
+}
+
+/* Expand */
+.hmfw-table-expand-icon-col {
+  width: 48px;
+}
+
+.hmfw-table-expand-icon-cell {
+  text-align: center;
+}
+
+.hmfw-table-expand-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  color: var(--hmfw-color-primary, #1677ff);
+  font-size: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.hmfw-table-expand-icon:hover {
+  color: var(--hmfw-color-primary-hover, #4096ff);
+  border-color: var(--hmfw-color-primary-hover, #4096ff);
+}
+
+.hmfw-table-expanded-row > td {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* Expand */
+.hmfw-table-expand-icon-col {
+  width: 48px;
+}
+
+.hmfw-table-expand-icon-cell {
+  text-align: center;
+}
+
+.hmfw-table-expand-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  color: var(--hmfw-color-primary, #1677ff);
+  font-size: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.hmfw-table-expand-icon:hover {
+  color: var(--hmfw-color-primary-hover, #4096ff);
+  border-color: var(--hmfw-color-primary-hover, #4096ff);
+}
+
+.hmfw-table-expanded-row > td {
+  background: rgba(0, 0, 0, 0.02);
 }
 
 /* Placeholder */
@@ -138,3 +274,58 @@
 .hmfw-table-content {
   overflow: auto;
 }
+
+/* Fixed columns */
+.hmfw-table-cell-fix-left,
+.hmfw-table-cell-fix-right {
+  position: sticky;
+  z-index: 2;
+  background: inherit;
+}
+
+.hmfw-table-thead .hmfw-table-cell-fix-left,
+.hmfw-table-thead .hmfw-table-cell-fix-right {
+  z-index: 3;
+}
+
+.hmfw-table-cell-fix-left {
+  left: 0;
+}
+
+.hmfw-table-cell-fix-right {
+  right: 0;
+}
+
+/* Fixed column shadow */
+.hmfw-table-cell-fix-left::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: -1px;
+  width: 30px;
+  transform: translateX(100%);
+  transition: box-shadow 0.3s;
+  content: '';
+  pointer-events: none;
+}
+
+.hmfw-table-cell-fix-right::after {
+  position: absolute;
+  top: 0;
+  bottom: -1px;
+  left: 0;
+  width: 30px;
+  transform: translateX(-100%);
+  transition: box-shadow 0.3s;
+  content: '';
+  pointer-events: none;
+}
+
+.hmfw-table-ping-left .hmfw-table-cell-fix-left::after {
+  box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.15);
+}
+
+.hmfw-table-ping-right .hmfw-table-cell-fix-right::after {
+  box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.15);
+}
+

@@ -5,47 +5,62 @@ import type { TransferItem } from '../types'
 
 const dataSource: TransferItem[] = [
   { key: '1', title: 'Item 1' },
-  { key: '2', title: 'Item 2' },
+  { key: '2', title: 'Item 2', description: 'desc 2' },
   { key: '3', title: 'Item 3', disabled: true },
   { key: '4', title: 'Item 4' },
+  { key: '5', title: 'Item 5' },
 ]
 
 describe('Transfer', () => {
-  it('renders two lists', () => {
+  it('renders two sections', () => {
     const wrapper = mount(Transfer, { props: { dataSource } })
-    expect(wrapper.findAll('.hmfw-transfer-list').length).toBe(2)
+    expect(wrapper.findAll('.hmfw-transfer-section').length).toBe(2)
   })
 
   it('shows source items in left list', () => {
     const wrapper = mount(Transfer, {
       props: { dataSource, targetKeys: ['1'] },
     })
-    const items = wrapper.findAll('.hmfw-transfer-list')[0].findAll('.hmfw-transfer-list-content-item')
-    expect(items.length).toBe(3) // 2, 3, 4
+    const items = wrapper.findAll('.hmfw-transfer-section')[0].findAll('.hmfw-transfer-list-content-item')
+    expect(items.length).toBe(4) // 2,3,4,5
   })
 
   it('shows target items in right list', () => {
     const wrapper = mount(Transfer, {
       props: { dataSource, targetKeys: ['1', '2'] },
     })
-    const items = wrapper.findAll('.hmfw-transfer-list')[1].findAll('.hmfw-transfer-list-content-item')
+    const items = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
     expect(items.length).toBe(2)
   })
 
-  it('moves selected items to right on > click', async () => {
+  it('uses Checkbox component (not native input)', () => {
+    const wrapper = mount(Transfer, { props: { dataSource } })
+    const checkboxes = wrapper.findAll('.hmfw-checkbox')
+    expect(checkboxes.length).toBeGreaterThan(0)
+  })
+
+  it('uses Button component for actions', () => {
+    const wrapper = mount(Transfer, { props: { dataSource } })
+    const buttons = wrapper.findAll('.hmfw-transfer-actions .hmfw-btn')
+    expect(buttons.length).toBe(2) // right & left
+  })
+
+  it('moves selected items to right on right button click', async () => {
     const wrapper = mount(Transfer, {
       props: { dataSource, defaultSelectedKeys: ['2'] },
     })
-    await wrapper.findAll('.hmfw-transfer-operation button')[0].trigger('click')
-    expect(wrapper.emitted('change')?.[0]?.[0]).toContain('2')
+    const rightBtn = wrapper.findAll('.hmfw-transfer-actions .hmfw-btn')[0]
+    await rightBtn.trigger('click')
+    expect(wrapper.emitted('change')?.[0]).toEqual([['2'], 'right', ['2']])
   })
 
-  it('moves selected items to left on < click', async () => {
+  it('moves selected items to left on left button click', async () => {
     const wrapper = mount(Transfer, {
       props: { dataSource, defaultTargetKeys: ['1'], defaultSelectedKeys: ['1'] },
     })
-    await wrapper.findAll('.hmfw-transfer-operation button')[1].trigger('click')
-    expect(wrapper.emitted('change')?.[0]?.[0]).toEqual([])
+    const leftBtn = wrapper.findAll('.hmfw-transfer-actions .hmfw-btn')[1]
+    await leftBtn.trigger('click')
+    expect(wrapper.emitted('change')?.[0]).toEqual([[], 'left', ['1']])
   })
 
   it('selects item on click', async () => {
@@ -56,27 +71,190 @@ describe('Transfer', () => {
 
   it('does not select disabled items', async () => {
     const wrapper = mount(Transfer, { props: { dataSource } })
-    // item 3 is disabled (index 2)
+    // item 3 is disabled (index 2 in left list)
     await wrapper.findAll('.hmfw-transfer-list-content-item')[2].trigger('click')
     expect(wrapper.emitted('selectChange')).toBeFalsy()
   })
 
-  it('shows search input when showSearch=true', () => {
+  it('renders Input component when showSearch=true', () => {
     const wrapper = mount(Transfer, { props: { dataSource, showSearch: true } })
-    expect(wrapper.findAll('.hmfw-transfer-list-search').length).toBe(2)
+    const inputs = wrapper.findAll('.hmfw-input')
+    expect(inputs.length).toBe(2) // left & right
   })
 
-  it('filters items by search', async () => {
+  it('filters items by search (Input component)', async () => {
     const wrapper = mount(Transfer, { props: { dataSource, showSearch: true } })
-    const input = wrapper.findAll('.hmfw-transfer-list-search-input')[0]
-    await input.setValue('Item 1')
-    await input.trigger('input')
-    const items = wrapper.findAll('.hmfw-transfer-list')[0].findAll('.hmfw-transfer-list-content-item')
+    const inputEl = wrapper.find('.hmfw-transfer-list-body-search-wrapper input')
+    await inputEl.setValue('Item 1')
+    await inputEl.trigger('input')
+    const items = wrapper.findAll('.hmfw-transfer-section')[0].findAll('.hmfw-transfer-list-content-item')
     expect(items.length).toBe(1)
   })
 
-  it('applies disabled class when disabled', () => {
+  it('shows not-found container when no data', () => {
+    const wrapper = mount(Transfer, { props: { dataSource: [] } })
+    expect(wrapper.findAll('.hmfw-transfer-list-body-not-found').length).toBe(2)
+  })
+
+  it('oneWay shows only right button and remove icons on right', async () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, oneWay: true, targetKeys: ['1'] },
+    })
+    const buttons = wrapper.findAll('.hmfw-transfer-actions .hmfw-btn')
+    expect(buttons.length).toBe(1) // only right button
+    const rightSection = wrapper.findAll('.hmfw-transfer-section')[1]
+    expect(rightSection.find('.hmfw-transfer-list-content-item-remove').exists()).toBe(true)
+  })
+
+  it('oneWay remove button triggers itemRemove event', async () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, oneWay: true, targetKeys: ['1', '2'] },
+    })
+    const removeBtn = wrapper.findAll('.hmfw-transfer-section')[1].find('.hmfw-transfer-list-content-item-remove')!
+    await removeBtn.trigger('click')
+    expect(wrapper.emitted('change')?.[0]).toEqual([['2'], 'left', ['1']])
+  })
+
+  it('renders footer when footer prop is provided', () => {
+    const wrapper = mount(Transfer, {
+      props: {
+        dataSource,
+        footer: () => 'Custom footer',
+      },
+    })
+    const footers = wrapper.findAll('.hmfw-transfer-list-footer')
+    expect(footers.length).toBe(2)
+    expect(footers[0].text()).toBe('Custom footer')
+  })
+
+  it('renders pagination when pagination=true', () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, targetKeys: ['1', '2'], pagination: true },
+    })
+    expect(wrapper.findAll('.hmfw-pagination').length).toBe(2)
+  })
+
+  it('custom render function works', () => {
+    const wrapper = mount(Transfer, {
+      props: {
+        dataSource,
+        render: (item: TransferItem) => `[${item.title}]`,
+      },
+    })
+    const firstItem = wrapper.find('.hmfw-transfer-list-content-item-text')
+    expect(firstItem.text()).toBe('[Item 1]')
+  })
+
+  it('applies disabled class', () => {
     const wrapper = mount(Transfer, { props: { dataSource, disabled: true } })
     expect(wrapper.find('.hmfw-transfer-disabled').exists()).toBe(true)
+  })
+
+  it('applies status error class', () => {
+    const wrapper = mount(Transfer, { props: { dataSource, status: 'error' } })
+    expect(wrapper.find('.hmfw-transfer-status-error').exists()).toBe(true)
+  })
+
+  it('applies status warning class', () => {
+    const wrapper = mount(Transfer, { props: { dataSource, status: 'warning' } })
+    expect(wrapper.find('.hmfw-transfer-status-warning').exists()).toBe(true)
+  })
+
+  it('renders selections dropdown trigger', () => {
+    const wrapper = mount(Transfer, { props: { dataSource } })
+    // Dropdown 渲染 Fragment，class 无法继承，改测下拉触发器
+    expect(wrapper.findAll('.hmfw-transfer-list-header-dropdown-trigger').length).toBe(2)
+  })
+
+  it('supports rowKey to normalize key', () => {
+    const data = [
+      { id: 1, name: 'A' },
+      { id: 2, name: 'B' },
+    ]
+    const wrapper = mount(Transfer, {
+      props: {
+        dataSource: data as any,
+        rowKey: (item: any) => String(item.id),
+        targetKeys: ['1'],
+      },
+    })
+    const rightItems = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
+    expect(rightItems.length).toBe(1)
+  })
+
+  it('emits search event when Input changes', async () => {
+    const wrapper = mount(Transfer, { props: { dataSource, showSearch: true } })
+    const inputEl = wrapper.find('.hmfw-transfer-list-body-search-wrapper input')
+    await inputEl.setValue('test')
+    await inputEl.trigger('input')
+    expect(wrapper.emitted('search')?.[0]).toEqual(['left', 'test'])
+  })
+
+  it('applies semantic classNames', () => {
+    const wrapper = mount(Transfer, {
+      props: {
+        dataSource,
+        classNames: { root: 'custom-root', actions: 'custom-actions' },
+      },
+    })
+    expect(wrapper.find('.custom-root').exists()).toBe(true)
+    expect(wrapper.find('.custom-actions').exists()).toBe(true)
+  })
+
+  it('applies semantic styles', () => {
+    const wrapper = mount(Transfer, {
+      props: {
+        dataSource,
+        styles: { root: { background: 'red' } },
+      },
+    })
+    expect((wrapper.find('.hmfw-transfer').element as HTMLElement).style.background).toBe('red')
+  })
+
+  it('shift+click enables multi-select', async () => {
+    const wrapper = mount(Transfer, { props: { dataSource } })
+    const items = wrapper.findAll('.hmfw-transfer-list-content-item')
+    await items[0].trigger('click')
+    // 点击 item[3] (Item 4)，shift 选中 0-3，跳过 disabled item[2]
+    await items[3].trigger('click', { shiftKey: true })
+    const emitted = wrapper.emitted('selectChange') as any[]
+    expect(emitted.length).toBe(2)
+    // 第二次 shift 选中应包含多项（1,4,5）
+    expect(emitted[1][0].length).toBeGreaterThan(1)
+  })
+
+  it('supports operations (deprecated) for button text', () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, operations: ['To Right', 'To Left'] },
+    })
+    const buttons = wrapper.findAll('.hmfw-transfer-actions .hmfw-btn')
+    expect(buttons[0].text()).toContain('To Right')
+    expect(buttons[1].text()).toContain('To Left')
+  })
+
+  it('selectAllLabel customizes header label', () => {
+    const wrapper = mount(Transfer, {
+      props: {
+        dataSource,
+        selectAllLabels: ['Custom Left', 'Custom Right'],
+      },
+    })
+    const headers = wrapper.findAll('.hmfw-transfer-list-header-selected')
+    expect(headers[0].text()).toContain('Custom Left')
+    expect(headers[1].text()).toContain('Custom Right')
+  })
+
+  it('listStyle function receives direction', () => {
+    const wrapper = mount(Transfer, {
+      props: {
+        dataSource,
+        listStyle: (info: { direction: string }) => ({
+          background: info.direction === 'left' ? 'blue' : 'green',
+        }),
+      },
+    })
+    const sections = wrapper.findAll('.hmfw-transfer-section')
+    expect((sections[0].element as HTMLElement).style.background).toBe('blue')
+    expect((sections[1].element as HTMLElement).style.background).toBe('green')
   })
 })

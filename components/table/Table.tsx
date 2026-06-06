@@ -1,41 +1,34 @@
-import { defineComponent, ref, computed, watch, type PropType } from 'vue'
+import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Spin } from '../spin'
 import { Empty } from '../empty'
 import { Pagination } from '../pagination'
+import { Checkbox } from '../checkbox'
+import { Radio } from '../radio'
+import { Dropdown } from '../dropdown'
+import { FilterDropdown } from './FilterDropdown'
+import type {
+  TableColumn,
+  TableProps,
+  TableRowSelection,
+  TablePaginationConfig,
+  Key,
+  SorterResult,
+  TableCurrentDataSource,
+  ExpandableConfig,
+} from './interface'
 
-export interface TableColumn<T = any> {
-  key?: string
-  dataIndex?: string
-  title?: string
-  width?: number | string
-  align?: 'left' | 'center' | 'right'
-  fixed?: 'left' | 'right'
-  sorter?: boolean | ((a: T, b: T) => number)
-  sortOrder?: 'ascend' | 'descend' | null
-  filters?: { text: string; value: string | number }[]
-  filteredValue?: (string | number)[]
-  onFilter?: (value: string | number, record: T) => boolean
-  render?: (value: any, record: T, index: number) => any
-  ellipsis?: boolean
-}
+export type { TableColumn, TableProps } from './interface'
 
-export interface TableProps<T = any> {
-  dataSource?: T[]
-  columns?: TableColumn<T>[]
-  rowKey?: string | ((record: T) => string)
-  loading?: boolean
-  bordered?: boolean
-  size?: 'default' | 'middle' | 'small'
-  scroll?: { x?: number | string; y?: number | string }
-  pagination?: false | { pageSize?: number; current?: number; total?: number; onChange?: (page: number, pageSize: number) => void }
-  rowSelection?: { selectedRowKeys?: (string | number)[]; onChange?: (keys: (string | number)[], rows: T[]) => void; type?: 'checkbox' | 'radio' }
-  expandable?: { expandedRowKeys?: string[]; onExpand?: (expanded: boolean, record: T) => void; expandedRowRender?: (record: T) => any }
-  locale?: { emptyText?: string }
-  showHeader?: boolean
-  sticky?: boolean
-  onChange?: (pagination: any, filters: any, sorter: any) => void
+// Responsive breakpoints
+const BREAKPOINTS: Record<string, number> = {
+  xs: 0,
+  sm: 576,
+  md: 768,
+  lg: 992,
+  xl: 1200,
+  xxl: 1600,
 }
 
 export const Table = defineComponent({
@@ -43,26 +36,58 @@ export const Table = defineComponent({
   props: {
     dataSource: { type: Array as PropType<any[]>, default: () => [] },
     columns: { type: Array as PropType<TableColumn[]>, default: () => [] },
-    rowKey: [String, Function] as PropType<string | ((record: any) => string)>,
+    rowKey: [String, Function] as PropType<string | ((record: any) => Key)>,
     loading: Boolean,
     bordered: Boolean,
     size: { type: String as PropType<'default' | 'middle' | 'small'>, default: 'default' },
-    scroll: Object as PropType<{ x?: number | string; y?: number | string }>,
-    pagination: { type: [Boolean, Object] as PropType<false | any>, default: undefined },
-    rowSelection: Object as PropType<any>,
-    expandable: Object as PropType<any>,
+    scroll: Object as PropType<{ x?: number | string; y?: number | string; scrollToFirstRowOnChange?: boolean }>,
+    pagination: { type: [Boolean, Object] as PropType<false | TablePaginationConfig>, default: undefined },
+    rowSelection: Object as PropType<TableRowSelection<any>>,
+    expandable: Object as PropType<ExpandableConfig<any>>,
     locale: Object as PropType<{ emptyText?: string }>,
     showHeader: { type: Boolean, default: true },
     sticky: Boolean,
-    onChange: Function as PropType<(pagination: any, filters: any, sorter: any) => void>,
+    title: [String, Function] as PropType<string | ((currentData: any[]) => any)>,
+    footer: [String, Function] as PropType<string | ((currentData: any[]) => any)>,
+    onRow: Function as PropType<(record: any, index: number) => Record<string, any>>,
+    onHeaderRow: Function as PropType<(columns: TableColumn[], index: number) => Record<string, any>>,
+    onChange: Function as PropType<(pagination: any, filters: any, sorter: any, extra?: TableCurrentDataSource) => void>,
   },
   emits: ['change'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('table')
     const locale = useLocale()
 
-    // Sort state
-    const sortState = ref<{ key: string; order: 'ascend' | 'descend' | null }>({ key: '', order: null })
+    // Responsive breakpoint detection
+    const currentBreakpoint = ref<string>('xxl')
+
+    const updateBreakpoint = () => {
+      const width = window.innerWidth
+      const breakpoint = Object.entries(BREAKPOINTS)
+        .reverse()
+        .find(([_, minWidth]) => width >= minWidth)?.[0] || 'xs'
+      currentBreakpoint.value = breakpoint
+    }
+
+    onMounted(() => {
+      updateBreakpoint()
+      window.addEventListener('resize', updateBreakpoint)
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', updateBreakpoint)
+    })
+
+    // Filter columns by responsive breakpoint
+    const responsiveColumns = computed(() => {
+      return props.columns?.filter(col => {
+        if (!col.responsive || col.responsive.length === 0) return true
+        return col.responsive.includes(currentBreakpoint.value)
+      }) ?? []
+    })
+
+    // Sort state - support multiple columns
+    const sortStates = ref<Array<{ key: string; order: 'ascend' | 'descend' | null; column: TableColumn }>>([])
     // Filter state
     const filterState = ref<Record<string, (string | number)[]>>({})
     // Pagination state
@@ -70,17 +95,17 @@ export const Table = defineComponent({
     const pageSize = ref(10)
 
     // Initialize filter state from columns
-    watch(() => props.columns, (cols) => {
+    watch(() => responsiveColumns.value, (cols) => {
       if (!cols) return
       cols.forEach((col) => {
         const key = col.key ?? col.dataIndex ?? ''
-        if (col.filteredValue !== undefined) {
-          filterState.value[key] = col.filteredValue
+        if (col.filteredValue !== undefined && col.filteredValue !== null) {
+          filterState.value[key] = col.filteredValue as (string | number)[]
         }
       })
     }, { immediate: true })
 
-    const getRowKey = (record: any, index: number): string => {
+    const getRowKey = (record: any, index: number): Key => {
       if (typeof props.rowKey === 'function') return props.rowKey(record)
       if (typeof props.rowKey === 'string') return record[props.rowKey]
       return record.key ?? String(index)
@@ -94,7 +119,7 @@ export const Table = defineComponent({
     // Filtered data
     const filteredData = computed(() => {
       let data = [...(props.dataSource ?? [])]
-      props.columns?.forEach((col) => {
+      responsiveColumns.value.forEach((col) => {
         const key = col.key ?? col.dataIndex ?? ''
         const filterVals = filterState.value[key]
         if (filterVals?.length && col.onFilter) {
@@ -106,18 +131,27 @@ export const Table = defineComponent({
       return data
     })
 
-    // Sorted data
+    // Sorted data - support multiple columns
     const sortedData = computed(() => {
-      const data = [...filteredData.value]
-      if (!sortState.value.key || !sortState.value.order) return data
-      const col = props.columns?.find((c) => (c.key ?? c.dataIndex) === sortState.value.key)
-      if (!col?.sorter) return data
-      const sorterFn = typeof col.sorter === 'function' ? col.sorter : undefined
-      if (!sorterFn) return data
+      let data = [...filteredData.value]
+      if (sortStates.value.length === 0) return data
+
       data.sort((a, b) => {
-        const result = sorterFn(a, b)
-        return sortState.value.order === 'descend' ? -result : result
+        for (const sortState of sortStates.value) {
+          const col = sortState.column
+          if (!col.sorter || !sortState.order) continue
+
+          const sorterFn = typeof col.sorter === 'function' ? col.sorter : undefined
+          if (!sorterFn) continue
+
+          const result = sorterFn(a, b)
+          if (result !== 0) {
+            return sortState.order === 'descend' ? -result : result
+          }
+        }
+        return 0
       })
+
       return data
     })
 
@@ -130,6 +164,10 @@ export const Table = defineComponent({
         current: cfg?.current ?? currentPage.value,
         total: cfg?.total ?? sortedData.value.length,
         onChange: cfg?.onChange,
+        showQuickJumper: cfg?.showQuickJumper,
+        showSizeChanger: cfg?.showSizeChanger,
+        showTotal: cfg?.showTotal,
+        pageSizeOptions: cfg?.pageSizeOptions,
       }
     })
 
@@ -140,42 +178,128 @@ export const Table = defineComponent({
       return sortedData.value.slice(start, start + ps)
     })
 
-    const handleSort = (col: TableColumn) => {
+    const handleSort = (col: TableColumn, event?: MouseEvent) => {
       if (!col.sorter) return
+
       const key = col.key ?? col.dataIndex ?? ''
-      if (sortState.value.key !== key) {
-        sortState.value = { key, order: 'ascend' }
-      } else if (sortState.value.order === 'ascend') {
-        sortState.value = { key, order: 'descend' }
+      const isMultiple = event?.shiftKey || (typeof col.sorter === 'object' && 'multiple' in col.sorter)
+
+      const existingIndex = sortStates.value.findIndex(s => s.key === key)
+
+      if (existingIndex >= 0) {
+        const existing = sortStates.value[existingIndex]
+        if (existing.order === 'ascend') {
+          sortStates.value[existingIndex] = { key, order: 'descend', column: col }
+        } else if (existing.order === 'descend') {
+          // Remove this sort
+          sortStates.value = sortStates.value.filter((_, i) => i !== existingIndex)
+        }
       } else {
-        sortState.value = { key: '', order: null }
+        const newState = { key, order: 'ascend' as const, column: col }
+        if (isMultiple) {
+          sortStates.value = [...sortStates.value, newState]
+        } else {
+          sortStates.value = [newState]
+        }
       }
-      emit('change', paginationConfig.value, filterState.value, sortState.value)
+
+      const sorterResults: SorterResult[] = sortStates.value.map(s => ({
+        column: s.column,
+        order: s.order,
+        field: s.column.dataIndex,
+        columnKey: s.key,
+      }))
+
+      const extra: TableCurrentDataSource = {
+        currentDataSource: sortedData.value,
+        action: 'sort',
+      }
+
+      const sorterResult = sorterResults.length === 1 ? sorterResults[0] : sorterResults
+      emit('change', paginationConfig.value, filterState.value, sorterResult, extra)
+      props.onChange?.(paginationConfig.value, filterState.value, sorterResult, extra)
     }
 
     const handlePageChange = (page: number, ps: number) => {
       currentPage.value = page
       pageSize.value = ps
       paginationConfig.value?.onChange?.(page, ps)
-      emit('change', { ...paginationConfig.value, current: page, pageSize: ps }, filterState.value, sortState.value)
+
+      const extra: TableCurrentDataSource = {
+        currentDataSource: pagedData.value,
+        action: 'paginate',
+      }
+
+      const sorterResults: SorterResult[] = sortStates.value.map(s => ({
+        column: s.column,
+        order: s.order,
+        field: s.column.dataIndex,
+        columnKey: s.key,
+      }))
+      const sorterResult = sorterResults.length === 1 ? sorterResults[0] : sorterResults
+
+      const updatedPagination = { ...paginationConfig.value, current: page, pageSize: ps }
+      emit('change', updatedPagination, filterState.value, sorterResult, extra)
+      props.onChange?.(updatedPagination, filterState.value, sorterResult, extra)
     }
 
-    const selectedKeys = ref<(string | number)[]>(props.rowSelection?.selectedRowKeys ?? [])
+    const selectedKeys = ref<Key[]>(props.rowSelection?.selectedRowKeys ?? [])
     watch(() => props.rowSelection?.selectedRowKeys, (v) => { if (v) selectedKeys.value = v })
 
-    const handleRowSelect = (key: string | number, _record: any, checked: boolean) => {
+    // Expandable state
+    const expandedKeys = ref<Key[]>(props.expandable?.expandedRowKeys ?? props.expandable?.defaultExpandedRowKeys ?? [])
+    watch(() => props.expandable?.expandedRowKeys, (v) => { if (v !== undefined) expandedKeys.value = v })
+
+    const handleExpand = (expanded: boolean, record: any) => {
+      const key = getRowKey(record, 0)
+      if (expanded) {
+        expandedKeys.value = [...expandedKeys.value, key]
+      } else {
+        expandedKeys.value = expandedKeys.value.filter(k => k !== key)
+      }
+      props.expandable?.onExpand?.(expanded, record)
+      props.expandable?.onExpandedRowsChange?.(expandedKeys.value)
+    }
+
+    // Filter handlers
+    const handleFilterConfirm = (columnKey: string, selectedKeys: Key[]) => {
+      filterState.value[columnKey] = selectedKeys as (string | number)[]
+
+      const extra: TableCurrentDataSource = {
+        currentDataSource: filteredData.value,
+        action: 'filter',
+      }
+
+      const sorterResults: SorterResult[] = sortStates.value.map(s => ({
+        column: s.column,
+        order: s.order,
+        field: s.column.dataIndex,
+        columnKey: s.key,
+      }))
+      const sorterResult = sorterResults.length === 1 ? sorterResults[0] : sorterResults
+
+      emit('change', paginationConfig.value, filterState.value, sorterResult, extra)
+      props.onChange?.(paginationConfig.value, filterState.value, sorterResult, extra)
+    }
+
+    const handleRowSelect = (key: Key, record: any, checked: boolean) => {
       if (!props.rowSelection) return
-      let next: (string | number)[]
+      let next: Key[]
+      let method: 'single' | 'multiple' = 'single'
+
       if (props.rowSelection.type === 'radio') {
         next = checked ? [key] : []
       } else {
         next = checked
           ? [...selectedKeys.value, key]
           : selectedKeys.value.filter((k) => k !== key)
+        method = 'multiple'
       }
+
       selectedKeys.value = next
       const rows = props.dataSource?.filter((r, i) => next.includes(getRowKey(r, i))) ?? []
-      props.rowSelection.onChange?.(next, rows)
+      props.rowSelection.onChange?.(next, rows, { type: method })
+      props.rowSelection.onSelect?.(record, checked, rows, new Event('change'))
     }
 
     const handleSelectAll = (checked: boolean) => {
@@ -183,70 +307,133 @@ export const Table = defineComponent({
       const next = checked ? pagedData.value.map((r, i) => getRowKey(r, i)) : []
       selectedKeys.value = next
       const rows = checked ? [...pagedData.value] : []
-      props.rowSelection.onChange?.(next, rows)
+      props.rowSelection.onChange?.(next, rows, { type: checked ? 'all' : 'none' })
+      props.rowSelection.onSelectAll?.(checked, rows, pagedData.value)
     }
 
     return () => {
       const isEmpty = pagedData.value.length === 0
       const showSelection = !!props.rowSelection
       const isRadio = props.rowSelection?.type === 'radio'
+      const hasExpandable = !!props.expandable?.expandedRowRender
 
       const allSelected = pagedData.value.length > 0 &&
         pagedData.value.every((r, i) => selectedKeys.value.includes(getRowKey(r, i)))
       const someSelected = pagedData.value.some((r, i) => selectedKeys.value.includes(getRowKey(r, i)))
 
+      const colSpan = (responsiveColumns.value.length ?? 0) + (showSelection ? 1 : 0) + (hasExpandable ? 1 : 0)
+
       const tableEl = (
-        <div class={cls(prefixCls, `${prefixCls}-${props.size}`, {
-          [`${prefixCls}-bordered`]: props.bordered,
-          [`${prefixCls}-loading`]: props.loading,
-          [`${prefixCls}-scroll-horizontal`]: !!props.scroll?.x,
-        })}>
+        <div
+          class={cls(prefixCls, `${prefixCls}-${props.size}`, {
+            [`${prefixCls}-bordered`]: props.bordered,
+            [`${prefixCls}-loading`]: props.loading,
+            [`${prefixCls}-scroll-horizontal`]: !!props.scroll?.x,
+          })}
+          role="region"
+          aria-label="Data table"
+        >
+          {props.title && (
+            <div class={`${prefixCls}-title`}>
+              {typeof props.title === 'function' ? props.title(sortedData.value) : props.title}
+            </div>
+          )}
           <div class={`${prefixCls}-container`}>
             <div
               class={`${prefixCls}-content`}
               style={props.scroll?.x ? { overflowX: 'auto' } : {}}
+              role="presentation"
             >
-              <table style={props.scroll?.x ? { minWidth: typeof props.scroll.x === 'number' ? `${props.scroll.x}px` : props.scroll.x } : {}}>
+              <table
+                role="table"
+                aria-rowcount={pagedData.value.length}
+                aria-colcount={colSpan}
+                style={props.scroll?.x ? { minWidth: typeof props.scroll.x === 'number' ? `${props.scroll.x}px` : props.scroll.x } : {}}
+              >
                 {props.showHeader && (
-                  <thead class={`${prefixCls}-thead`}>
-                    <tr>
+                  <thead class={`${prefixCls}-thead`} role="rowgroup">
+                    <tr {...(props.onHeaderRow?.(responsiveColumns.value ?? [], 0) ?? {})} role="row">
+                      {hasExpandable && (
+                        <th class={`${prefixCls}-cell ${prefixCls}-expand-icon-col`} style={{ width: '48px' }} role="columnheader"></th>
+                      )}
                       {showSelection && (
-                        <th class={`${prefixCls}-cell ${prefixCls}-selection-column`}>
+                        <th class={`${prefixCls}-cell ${prefixCls}-selection-column`} role="columnheader" aria-label="Row selection">
                           {!isRadio && (
-                            <input
-                              type="checkbox"
+                            <Checkbox
                               checked={allSelected}
                               indeterminate={someSelected && !allSelected}
-                              onChange={(e) => handleSelectAll((e.target as HTMLInputElement).checked)}
+                              onChange={(checked) => handleSelectAll(checked)}
                             />
                           )}
                         </th>
                       )}
-                      {props.columns?.map((col) => {
+                      {responsiveColumns.value.map((col) => {
                         const key = col.key ?? col.dataIndex ?? ''
-                        const isSorted = sortState.value.key === key
+                        const sortState = sortStates.value.find(s => s.key === key)
+                        const isSorted = !!sortState
+                        const fixedLeft = col.fixed === 'left'
+                        const fixedRight = col.fixed === 'right'
+                        const hasFilter = col.filters && col.filters.length > 0
+                        const isFiltered = filterState.value[key]?.length > 0
+
                         return (
                           <th
                             key={key}
                             scope="col"
-                            aria-sort={isSorted ? (sortState.value.order === 'ascend' ? 'ascending' : 'descending') : (col.sorter ? 'none' : undefined)}
+                            role="columnheader"
+                            aria-sort={isSorted ? (sortState.order === 'ascend' ? 'ascending' : 'descending') : (col.sorter ? 'none' : undefined)}
+                            tabindex={col.sorter ? 0 : undefined}
+                            onKeydown={(e) => {
+                              if (col.sorter && (e.key === 'Enter' || e.key === ' ')) {
+                                e.preventDefault()
+                                handleSort(col, e as any)
+                              }
+                            }}
                             class={cls(`${prefixCls}-cell`, {
                               [`${prefixCls}-column-sort`]: isSorted,
                               [`${prefixCls}-column-has-sorters`]: !!col.sorter,
+                              [`${prefixCls}-cell-fix-left`]: fixedLeft,
+                              [`${prefixCls}-cell-fix-right`]: fixedRight,
                             })}
                             style={{
                               width: col.width ? (typeof col.width === 'number' ? `${col.width}px` : col.width) : undefined,
                               textAlign: col.align ?? 'left',
                             }}
-                            onClick={() => handleSort(col)}
+                            onClick={(e) => col.sorter && handleSort(col, e)}
                           >
                             <div class={`${prefixCls}-column-title`}>
                               {col.title}
                               {col.sorter && (
                                 <span class={`${prefixCls}-column-sorter`}>
-                                  <span class={cls(`${prefixCls}-column-sorter-up`, { active: isSorted && sortState.value.order === 'ascend' })}>▲</span>
-                                  <span class={cls(`${prefixCls}-column-sorter-down`, { active: isSorted && sortState.value.order === 'descend' })}>▼</span>
+                                  <span class={cls(`${prefixCls}-column-sorter-up`, { active: isSorted && sortState?.order === 'ascend' })}>▲</span>
+                                  <span class={cls(`${prefixCls}-column-sorter-down`, { active: isSorted && sortState?.order === 'descend' })}>▼</span>
                                 </span>
+                              )}
+                              {hasFilter && (
+                                <Dropdown
+                                  trigger={['click']}
+                                  v-slots={{
+                                    overlay: () => (
+                                      <FilterDropdown
+                                        prefixCls={prefixCls}
+                                        filters={col.filters!}
+                                        filteredValue={filterState.value[key] || []}
+                                        filterMultiple={col.filterMultiple ?? true}
+                                        locale={locale.value.Table}
+                                        onConfirm={(keys) => handleFilterConfirm(key, keys)}
+                                      />
+                                    ),
+                                  }}
+                                >
+                                  <span
+                                    class={cls(`${prefixCls}-filter-trigger`, {
+                                      active: isFiltered,
+                                    })}
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    🔽
+                                  </span>
+                                </Dropdown>
                               )}
                             </div>
                           </th>
@@ -255,42 +442,75 @@ export const Table = defineComponent({
                     </tr>
                   </thead>
                 )}
-                <tbody class={`${prefixCls}-tbody`}>
+                <tbody class={`${prefixCls}-tbody`} role="rowgroup">
                   {isEmpty ? (
-                    <tr class={`${prefixCls}-placeholder`}>
-                      <td colspan={(props.columns?.length ?? 0) + (showSelection ? 1 : 0)}>
+                    <tr class={`${prefixCls}-placeholder`} role="row">
+                      <td colspan={colSpan} role="cell">
                         <Empty description={props.locale?.emptyText ?? locale.value.Table.emptyText} />
                       </td>
                     </tr>
                   ) : (
-                    pagedData.value.map((record, rowIndex) => {
+                    pagedData.value.flatMap((record, rowIndex) => {
                       const rowKey = getRowKey(record, rowIndex)
                       const isSelected = selectedKeys.value.includes(rowKey)
-                      return (
+                      const isExpanded = expandedKeys.value.includes(rowKey)
+
+                      const rows = [
                         <tr
                           key={rowKey}
+                          role="row"
+                          aria-selected={showSelection ? isSelected : undefined}
+                          aria-expanded={hasExpandable ? isExpanded : undefined}
                           class={cls(`${prefixCls}-row`, {
                             [`${prefixCls}-row-selected`]: isSelected,
                           })}
+                          {...(props.onRow?.(record, rowIndex) ?? {})}
                         >
-                          {showSelection && (
-                            <td class={`${prefixCls}-cell ${prefixCls}-selection-column`}>
-                              <input
-                                type={isRadio ? 'radio' : 'checkbox'}
-                                checked={isSelected}
-                                onChange={(e) => handleRowSelect(rowKey, record, (e.target as HTMLInputElement).checked)}
-                              />
+                          {hasExpandable && (
+                            <td class={`${prefixCls}-cell ${prefixCls}-expand-icon-cell`} role="cell">
+                              <button
+                                type="button"
+                                class={cls(`${prefixCls}-expand-icon`, {
+                                  [`${prefixCls}-expand-icon-expanded`]: isExpanded,
+                                })}
+                                onClick={() => handleExpand(!isExpanded, record)}
+                                aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
+                                aria-expanded={isExpanded}
+                              >
+                                {isExpanded ? '▼' : '▶'}
+                              </button>
                             </td>
                           )}
-                          {props.columns?.map((col) => {
+                          {showSelection && (
+                            <td class={`${prefixCls}-cell ${prefixCls}-selection-column`} role="cell">
+                              {isRadio ? (
+                                <Radio
+                                  checked={isSelected}
+                                  onChange={(checked) => handleRowSelect(rowKey, record, checked)}
+                                />
+                              ) : (
+                                <Checkbox
+                                  checked={isSelected}
+                                  onChange={(checked) => handleRowSelect(rowKey, record, checked)}
+                                  {...(props.rowSelection?.getCheckboxProps?.(record) ?? {})}
+                                />
+                              )}
+                            </td>
+                          )}
+                          {responsiveColumns.value.map((col) => {
                             const colKey = col.key ?? col.dataIndex ?? ''
                             const value = getCellValue(record, col)
                             const content = col.render ? col.render(value, record, rowIndex) : value
+                            const fixedLeft = col.fixed === 'left'
+                            const fixedRight = col.fixed === 'right'
                             return (
                               <td
                                 key={colKey}
+                                role="cell"
                                 class={cls(`${prefixCls}-cell`, {
                                   [`${prefixCls}-cell-ellipsis`]: col.ellipsis,
+                                  [`${prefixCls}-cell-fix-left`]: fixedLeft,
+                                  [`${prefixCls}-cell-fix-right`]: fixedRight,
                                 })}
                                 style={{ textAlign: col.align ?? 'left' }}
                               >
@@ -299,19 +519,41 @@ export const Table = defineComponent({
                             )
                           })}
                         </tr>
-                      )
+                      ]
+
+                      // Add expanded row if applicable
+                      if (hasExpandable && isExpanded && props.expandable?.expandedRowRender) {
+                        rows.push(
+                          <tr key={`${rowKey}-expanded`} class={`${prefixCls}-expanded-row`} role="row">
+                            <td colspan={colSpan} class={`${prefixCls}-cell`} role="cell">
+                              {props.expandable.expandedRowRender(record, rowIndex, 0, isExpanded)}
+                            </td>
+                          </tr>
+                        )
+                      }
+
+                      return rows
                     })
                   )}
                 </tbody>
               </table>
             </div>
           </div>
+          {props.footer && (
+            <div class={`${prefixCls}-footer`}>
+              {typeof props.footer === 'function' ? props.footer(sortedData.value) : props.footer}
+            </div>
+          )}
           {paginationConfig.value && !isEmpty && (
             <div class={`${prefixCls}-pagination ${prefixCls}-pagination-right`}>
               <Pagination
                 total={paginationConfig.value.total}
                 pageSize={paginationConfig.value.pageSize}
                 current={paginationConfig.value.current}
+                showQuickJumper={paginationConfig.value.showQuickJumper}
+                showSizeChanger={paginationConfig.value.showSizeChanger}
+                showTotal={paginationConfig.value.showTotal}
+                pageSizeOptions={paginationConfig.value.pageSizeOptions}
                 onChange={handlePageChange}
               />
             </div>

@@ -4,55 +4,77 @@
   gap: 0;
 }
 
-.hmfw-transfer-list {
+/* ===== Section（单侧容器） ===== */
+.hmfw-transfer-section {
   display: flex;
   flex-direction: column;
   width: 200px;
   min-height: 200px;
+  max-height: 100%;
   border: 1px solid var(--hmfw-color-border, #d9d9d9);
   border-radius: 8px;
   overflow: hidden;
-  background: #fff;
+  background: var(--hmfw-color-bg-container, #fff);
 }
 
+.hmfw-transfer-section-with-pagination {
+  min-height: 240px;
+}
+
+/* ===== Header ===== */
 .hmfw-transfer-list-header {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
   border-bottom: 1px solid var(--hmfw-color-border, #d9d9d9);
-  background: var(--hmfw-color-fill-quaternary, rgba(0, 0, 0, 0.02));
+  background: var(--hmfw-color-bg-container, #fff);
 }
 
-.hmfw-transfer-list-header-title {
+.hmfw-transfer-list-header-dropdown {
+  display: inline-flex;
+}
+
+.hmfw-transfer-list-header-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 10px;
+  transition: color 0.2s;
+}
+
+.hmfw-transfer-list-header-dropdown-trigger:hover {
+  color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-transfer-list-header-selected {
   flex: 1;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
 }
 
-.hmfw-transfer-list-header-label {
-  float: right;
+.hmfw-transfer-list-header-title {
+  text-align: right;
   font-weight: 500;
+  color: rgba(0, 0, 0, 0.88);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.hmfw-transfer-list-search {
+/* ===== Body ===== */
+.hmfw-transfer-list-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.hmfw-transfer-list-body-search-wrapper {
+  position: relative;
   padding: 8px 12px;
   border-bottom: 1px solid var(--hmfw-color-border, #d9d9d9);
-}
-
-.hmfw-transfer-list-search-input {
-  width: 100%;
-  height: 28px;
-  padding: 0 8px;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
-  border-radius: 4px;
-  font-size: 12px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.hmfw-transfer-list-search-input:focus {
-  border-color: var(--hmfw-color-primary, #1677ff);
 }
 
 .hmfw-transfer-list-content {
@@ -71,6 +93,7 @@
   cursor: pointer;
   transition: background 0.2s;
   font-size: 14px;
+  min-height: 32px;
 }
 
 .hmfw-transfer-list-content-item:hover {
@@ -81,98 +104,75 @@
   background: var(--hmfw-color-primary-bg, #e6f4ff);
 }
 
+.hmfw-transfer-list-content-item-checked:hover {
+  background: var(--hmfw-color-primary-bg-hover, #bae0ff);
+}
+
 .hmfw-transfer-list-content-item-disabled {
   cursor: not-allowed;
   color: rgba(0, 0, 0, 0.25);
 }
 
+.hmfw-transfer-list-content-item-disabled:hover {
+  background: transparent;
+}
+
 .hmfw-transfer-list-content-item-text {
   flex: 1;
   min-width: 0;
-}
-
-.hmfw-transfer-list-content-item-title {
-  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.hmfw-transfer-list-content-item-description {
-  display: block;
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* 单向模式删除按钮 */
+.hmfw-transfer-list-content-show-remove .hmfw-transfer-list-content-item {
+  cursor: default;
 }
 
-.hmfw-transfer-list-content-empty {
-  padding: 16px;
-  text-align: center;
+.hmfw-transfer-list-content-item-remove {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
   color: rgba(0, 0, 0, 0.25);
-  font-size: 14px;
+  padding: 0;
+  font-size: 12px;
+  transition: color 0.2s;
 }
 
-/* Checkbox */
-.hmfw-transfer-checkbox {
-  display: inline-flex;
+.hmfw-transfer-list-content-item-remove:hover:not(:disabled) {
+  color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-transfer-list-content-item-remove:disabled {
+  cursor: not-allowed;
+}
+
+.hmfw-transfer-list-body-not-found {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  cursor: pointer;
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+  padding: 16px;
 }
 
-.hmfw-transfer-checkbox-inner {
-  width: 16px;
-  height: 16px;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
-  border-radius: 2px;
-  background: #fff;
-  display: block;
-  transition: all 0.2s;
-  position: relative;
+/* ===== Footer / Pagination ===== */
+.hmfw-transfer-list-footer {
+  border-top: 1px solid var(--hmfw-color-border, #d9d9d9);
+  padding: 8px 12px;
 }
 
-.hmfw-transfer-checkbox-checked .hmfw-transfer-checkbox-inner {
-  background: var(--hmfw-color-primary, #1677ff);
-  border-color: var(--hmfw-color-primary, #1677ff);
+.hmfw-transfer-list-pagination {
+  padding: 8px 0;
+  text-align: right;
+  border-top: 1px solid var(--hmfw-color-border, #d9d9d9);
 }
 
-.hmfw-transfer-checkbox-checked .hmfw-transfer-checkbox-inner::after {
-  content: '';
-  position: absolute;
-  top: 1px;
-  left: 4px;
-  width: 5px;
-  height: 8px;
-  border: 2px solid #fff;
-  border-top: none;
-  border-left: none;
-  transform: rotate(45deg);
-}
-
-.hmfw-transfer-checkbox-indeterminate .hmfw-transfer-checkbox-inner {
-  border-color: var(--hmfw-color-primary, #1677ff);
-}
-
-.hmfw-transfer-checkbox-indeterminate .hmfw-transfer-checkbox-inner::after {
-  content: '';
-  position: absolute;
-  top: 6px;
-  left: 2px;
-  width: 10px;
-  height: 2px;
-  background: var(--hmfw-color-primary, #1677ff);
-}
-
-.hmfw-transfer-checkbox-disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* Operation buttons */
-.hmfw-transfer-operation {
+/* ===== Actions（中间操作区） ===== */
+.hmfw-transfer-actions {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -181,6 +181,15 @@
   padding: 0 12px;
 }
 
-.hmfw-transfer-disabled {
-  opacity: 0.65;
+/* ===== 状态 / 禁用 ===== */
+.hmfw-transfer-disabled .hmfw-transfer-section {
+  background: var(--hmfw-color-bg-container-disabled, rgba(0, 0, 0, 0.04));
+}
+
+.hmfw-transfer-status-error .hmfw-transfer-section {
+  border-color: var(--hmfw-color-error, #ff4d4f);
+}
+
+.hmfw-transfer-status-warning .hmfw-transfer-section {
+  border-color: var(--hmfw-color-warning, #faad14);
 }

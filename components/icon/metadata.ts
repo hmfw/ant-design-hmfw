@@ -78,4 +78,16 @@ export const iconMetadata: Record<string, IconMetadata> = {
     keywords: ['config', 'preferences', 'options', 'gear'],
     category: 'action',
   },
+  folder: {
+    keywords: ['directory', 'dir', 'file', 'collapse'],
+    category: 'file',
+  },
+  'folder-open': {
+    keywords: ['directory', 'dir', 'expand', 'open'],
+    category: 'file',
+  },
+  file: {
+    keywords: ['document', 'doc', 'leaf', 'page'],
+    category: 'file',
+  },
 }

@@ -5,6 +5,7 @@ import {
   getAllCategories,
   getAllIcons,
 } from '../utils'
+import { iconMetadata } from '../metadata'
 
 describe('Icon Utils', () => {
   describe('searchIcons', () => {
@@ -88,9 +89,9 @@ describe('Icon Utils', () => {
   })
 
   describe('getAllIcons', () => {
-    it('returns all 18 icons', () => {
+    it('returns all icons (count matches metadata)', () => {
       const icons = getAllIcons()
-      expect(icons.length).toBe(18)
+      expect(icons.length).toBe(Object.keys(iconMetadata).length)
     })
 
     it('each icon has required properties', () => {

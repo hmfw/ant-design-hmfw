@@ -219,25 +219,29 @@ describe('DatePicker', () => {
   })
 
   it('respects minDate constraint', async () => {
-    const wrapper = mount(DatePicker, { props: { minDate: '2026-05-15' }, attachTo: document.body })
+    // defaultValue 固定面板在 2026-05，避免依赖系统当前月份（否则跨月后点到的"10号"可能合法）
+    const wrapper = mount(DatePicker, { props: { minDate: '2026-05-15', defaultValue: '2026-05-20' }, attachTo: document.body })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
     const days = document.querySelectorAll('.hmfw-date-picker-day')
     const day10 = Array.from(days).find(d => d.textContent === '10' && !d.classList.contains('hmfw-date-picker-day-other-month')) as HTMLButtonElement
     day10?.click()
     await wrapper.vm.$nextTick()
+    // 5/10 早于 minDate 5/15，应被拦截，不触发 update:value（挂载 defaultValue 不 emit）
     expect(wrapper.emitted('update:value')).toBeFalsy()
     wrapper.unmount()
   })
 
   it('respects maxDate constraint', async () => {
-    const wrapper = mount(DatePicker, { props: { maxDate: '2026-05-15' }, attachTo: document.body })
+    // defaultValue 固定面板在 2026-05，避免依赖系统当前月份
+    const wrapper = mount(DatePicker, { props: { maxDate: '2026-05-15', defaultValue: '2026-05-10' }, attachTo: document.body })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
     const days = document.querySelectorAll('.hmfw-date-picker-day')
     const day20 = Array.from(days).find(d => d.textContent === '20' && !d.classList.contains('hmfw-date-picker-day-other-month')) as HTMLButtonElement
     day20?.click()
     await wrapper.vm.$nextTick()
+    // 5/20 晚于 maxDate 5/15，应被拦截，不触发 update:value
     expect(wrapper.emitted('update:value')).toBeFalsy()
     wrapper.unmount()
   })

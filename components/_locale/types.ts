@@ -96,4 +96,17 @@ export interface Locale {
   Empty: {
     description: string
   }
+  Transfer: {
+    searchPlaceholder: string
+    itemUnit: string
+    itemsUnit: string
+    remove: string
+    selectAll: string
+    deselectAll: string
+    selectCurrent: string
+    selectInvert: string
+    removeAll: string
+    removeCurrent: string
+    notFoundContent: string
+  }
 }

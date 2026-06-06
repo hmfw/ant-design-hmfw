@@ -98,6 +98,19 @@ const enUS: Locale = {
   Empty: {
     description: 'No data',
   },
+  Transfer: {
+    searchPlaceholder: 'Search here',
+    itemUnit: 'item',
+    itemsUnit: 'items',
+    remove: 'Remove',
+    selectAll: 'Select all data',
+    deselectAll: 'Deselect all data',
+    selectCurrent: 'Select current page',
+    selectInvert: 'Invert current page',
+    removeAll: 'Remove all data',
+    removeCurrent: 'Remove current page',
+    notFoundContent: 'The list is empty',
+  },
 }
 
 export default enUS

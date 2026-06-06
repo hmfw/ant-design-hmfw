@@ -98,6 +98,19 @@ const zhCN: Locale = {
   Empty: {
     description: '暂无数据',
   },
+  Transfer: {
+    searchPlaceholder: '请输入搜索内容',
+    itemUnit: '项',
+    itemsUnit: '项',
+    remove: '删除',
+    selectAll: '全选所有',
+    deselectAll: '取消全选',
+    selectCurrent: '全选当页',
+    selectInvert: '反选当页',
+    removeAll: '删除全部',
+    removeCurrent: '删除当页',
+    notFoundContent: '列表为空',
+  },
 }
 
 export default zhCN

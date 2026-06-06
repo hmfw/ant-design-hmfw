@@ -1,30 +1,63 @@
-import { defineComponent, ref, computed, watch, type PropType } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { defineComponent, ref, computed, watch, type PropType, type VNode, type CSSProperties } from 'vue'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
-import type { TransferItem } from './types'
+import { Button } from '../button'
+import { Icon } from '../icon'
+import { LeftOutlined, RightOutlined } from '../icon/icons'
+import { TransferList } from './TransferList'
+import type {
+  TransferItem,
+  TransferKey,
+  TransferDirection,
+  RenderResult,
+  SelectAllLabel,
+  PaginationType,
+  TransferSearchOption,
+  TransferLocale,
+  InputStatus,
+  TransferListContext,
+  TransferSemanticClassNames,
+  TransferSemanticStyles,
+} from './types'
 
 export const Transfer = defineComponent({
   name: 'Transfer',
   props: {
     dataSource: { type: Array as PropType<TransferItem[]>, default: () => [] },
-    targetKeys: Array as PropType<string[]>,
-    defaultTargetKeys: { type: Array as PropType<string[]>, default: () => [] },
-    selectedKeys: Array as PropType<string[]>,
-    defaultSelectedKeys: { type: Array as PropType<string[]>, default: () => [] },
-    titles: { type: Array as unknown as PropType<[string, string]>, default: () => ['', ''] },
-    operations: { type: Array as unknown as PropType<[string, string]>, default: () => ['>', '<'] },
-    showSearch: Boolean,
-    filterOption: Function as PropType<(input: string, item: TransferItem) => boolean>,
-    listStyle: Object as PropType<Record<string, string>>,
+    targetKeys: Array as PropType<TransferKey[]>,
+    defaultTargetKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
+    selectedKeys: Array as PropType<TransferKey[]>,
+    defaultSelectedKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
+    titles: { type: Array as PropType<(VNode | string)[]>, default: () => ['', ''] },
+    /** @deprecated 请使用 actions */
+    operations: { type: Array as PropType<string[]>, default: () => [] },
+    render: Function as PropType<(item: TransferItem) => RenderResult>,
+    rowKey: Function as PropType<(record: TransferItem) => TransferKey>,
+    showSearch: { type: [Boolean, Object] as PropType<boolean | TransferSearchOption>, default: false },
+    filterOption: Function as PropType<(input: string, item: TransferItem, direction: TransferDirection) => boolean>,
+    footer: Function as PropType<(info: TransferListContext) => VNode | string | null>,
+    listStyle: { type: [Object, Function] as PropType<CSSProperties | ((info: { direction: TransferDirection }) => CSSProperties)>, default: () => ({}) },
     disabled: Boolean,
     showSelectAll: { type: Boolean, default: true },
+    selectAllLabels: { type: Array as PropType<SelectAllLabel[]>, default: () => [] },
+    oneWay: Boolean,
+    pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
+    status: String as PropType<InputStatus>,
+    locale: { type: Object as PropType<Partial<TransferLocale>>, default: () => ({}) },
+    rootClassName: String,
+    classNames: { type: Object as PropType<TransferSemanticClassNames>, default: () => ({}) },
+    styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
   },
-  emits: ['update:targetKeys', 'change', 'update:selectedKeys', 'selectChange', 'search'],
+  emits: ['update:targetKeys', 'change', 'update:selectedKeys', 'selectChange', 'search', 'scroll'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('transfer')
+    const globalLocale = useLocale()
 
-    const innerTargetKeys = ref<string[]>([...props.defaultTargetKeys])
-    const innerSelectedKeys = ref<string[]>([...props.defaultSelectedKeys])
+    // 合并 locale：全局 < props.locale
+    const mergedLocale = computed(() => ({ ...globalLocale.value.Transfer, ...props.locale }))
+
+    const innerTargetKeys = ref<TransferKey[]>([...props.defaultTargetKeys])
+    const innerSelectedKeys = ref<TransferKey[]>([...props.defaultSelectedKeys])
 
     watch(() => props.targetKeys, (v) => { if (v) innerTargetKeys.value = [...v] })
     watch(() => props.selectedKeys, (v) => { if (v) innerSelectedKeys.value = [...v] })
@@ -32,183 +65,208 @@ export const Transfer = defineComponent({
     const targetKeys = computed(() => props.targetKeys ?? innerTargetKeys.value)
     const selectedKeys = computed(() => props.selectedKeys ?? innerSelectedKeys.value)
 
-    const leftSearch = ref('')
-    const rightSearch = ref('')
-
-    const sourceItems = computed(() =>
-      props.dataSource.filter((item) => !targetKeys.value.includes(item.key))
-    )
-    const targetItems = computed(() =>
-      props.dataSource.filter((item) => targetKeys.value.includes(item.key))
+    // rowKey 归一化：为缺 key 的项补 key
+    const mergedDataSource = computed<TransferItem[]>(() =>
+      props.dataSource.map((item) => ({
+        ...item,
+        key: props.rowKey ? props.rowKey(item) : item.key,
+      }))
     )
 
-    function filterItems(items: TransferItem[], search: string) {
-      if (!search) return items
-      return items.filter((item) =>
-        props.filterOption
-          ? props.filterOption(search, item)
-          : item.title.toLowerCase().includes(search.toLowerCase())
-      )
-    }
+    const leftDataSource = computed(() =>
+      mergedDataSource.value.filter((item) => !targetKeys.value.includes(item.key as TransferKey))
+    )
+    const targetKeyMap = computed(() => new Map(mergedDataSource.value.map((i) => [i.key, i])))
+    // 右侧按 targetKeys 顺序排列（对齐 AntD：新移入的排在前）
+    const rightDataSource = computed(() =>
+      targetKeys.value.map((k) => targetKeyMap.value.get(k)).filter(Boolean) as TransferItem[]
+    )
 
-    const filteredSource = computed(() => filterItems(sourceItems.value, leftSearch.value))
-    const filteredTarget = computed(() => filterItems(targetItems.value, rightSearch.value))
+    // 两侧选中态
+    const sourceSelectedKeys = computed(() =>
+      selectedKeys.value.filter((k) => leftDataSource.value.some((i) => i.key === k))
+    )
+    const targetSelectedKeys = computed(() =>
+      selectedKeys.value.filter((k) => rightDataSource.value.some((i) => i.key === k))
+    )
 
-    const leftSelected = computed(() => selectedKeys.value.filter((k) => sourceItems.value.some((i) => i.key === k)))
-    const rightSelected = computed(() => selectedKeys.value.filter((k) => targetItems.value.some((i) => i.key === k)))
-
-    function toggleSelect(key: string) {
-      if (props.disabled) return
-      const item = props.dataSource.find((i) => i.key === key)
-      if (item?.disabled) return
-      const next = selectedKeys.value.includes(key)
-        ? selectedKeys.value.filter((k) => k !== key)
-        : [...selectedKeys.value, key]
+    function setSelectedKeys(next: TransferKey[]) {
       innerSelectedKeys.value = next
       emit('update:selectedKeys', next)
-      const src = next.filter((k) => sourceItems.value.some((i) => i.key === k))
-      const tgt = next.filter((k) => targetItems.value.some((i) => i.key === k))
-      emit('selectChange', src, tgt)
     }
 
-    function moveToRight() {
-      if (!leftSelected.value.length) return
-      const next = [...targetKeys.value, ...leftSelected.value]
-      innerTargetKeys.value = next
-      emit('update:targetKeys', next)
-      emit('change', next, 'right', leftSelected.value)
-      // deselect moved items
-      const newSelected = selectedKeys.value.filter((k) => !leftSelected.value.includes(k))
-      innerSelectedKeys.value = newSelected
-      emit('update:selectedKeys', newSelected)
+    function handleSelectChange(direction: TransferDirection, holder: TransferKey[]) {
+      const otherSide = direction === 'left' ? targetSelectedKeys.value : sourceSelectedKeys.value
+      const next = direction === 'left' ? [...holder, ...otherSide] : [...otherSide, ...holder]
+      setSelectedKeys(next)
+      if (direction === 'left') emit('selectChange', holder, targetSelectedKeys.value)
+      else emit('selectChange', sourceSelectedKeys.value, holder)
     }
 
-    function moveToLeft() {
-      if (!rightSelected.value.length) return
-      const next = targetKeys.value.filter((k) => !rightSelected.value.includes(k))
-      innerTargetKeys.value = next
-      emit('update:targetKeys', next)
-      emit('change', next, 'left', rightSelected.value)
-      const newSelected = selectedKeys.value.filter((k) => !rightSelected.value.includes(k))
-      innerSelectedKeys.value = newSelected
-      emit('update:selectedKeys', newSelected)
+    function moveTo(direction: TransferDirection) {
+      const moveKeys = direction === 'right' ? sourceSelectedKeys.value : targetSelectedKeys.value
+      const disabledKeys = new Set(mergedDataSource.value.filter((i) => i.disabled).map((i) => i.key))
+      const newMoveKeys = moveKeys.filter((k) => !disabledKeys.has(k))
+      const moveSet = new Set(newMoveKeys)
+      const newTargetKeys =
+        direction === 'right'
+          ? [...newMoveKeys, ...targetKeys.value]
+          : targetKeys.value.filter((k) => !moveSet.has(k))
+
+      innerTargetKeys.value = newTargetKeys
+      emit('update:targetKeys', newTargetKeys)
+
+      // 清空对侧选中
+      const oppositeKeys = direction === 'right' ? targetSelectedKeys.value : sourceSelectedKeys.value
+      setSelectedKeys(oppositeKeys)
+      if (direction === 'right') emit('selectChange', [], targetSelectedKeys.value)
+      else emit('selectChange', sourceSelectedKeys.value, [])
+
+      emit('change', newTargetKeys, direction, newMoveKeys)
     }
 
-    function toggleSelectAll(items: TransferItem[], side: 'left' | 'right') {
-      const keys = items.filter((i) => !i.disabled).map((i) => i.key)
-      const allSelected = keys.every((k) => selectedKeys.value.includes(k))
-      let next: string[]
-      if (allSelected) {
-        next = selectedKeys.value.filter((k) => !keys.includes(k))
+    const moveToRight = () => moveTo('right')
+    const moveToLeft = () => moveTo('left')
+
+    // shift 多选锚点（每侧独立）
+    const lastSelectedIndex: Record<TransferDirection, number | null> = { left: null, right: null }
+
+    function onItemSelect(direction: TransferDirection, key: TransferKey, checked: boolean, multiple?: boolean) {
+      const isLeft = direction === 'left'
+      const holder = isLeft ? sourceSelectedKeys.value : targetSelectedKeys.value
+      const data = (isLeft ? leftDataSource.value : rightDataSource.value).filter((i) => !i.disabled)
+      const currentIndex = data.findIndex((i) => i.key === key)
+      const holderSet = new Set(holder)
+
+      if (multiple && lastSelectedIndex[direction] !== null) {
+        // shift 范围多选
+        const start = Math.min(lastSelectedIndex[direction]!, currentIndex)
+        const end = Math.max(lastSelectedIndex[direction]!, currentIndex)
+        for (let i = start; i <= end; i++) {
+          const k = data[i]?.key as TransferKey
+          if (k !== undefined) holderSet.add(k)
+        }
       } else {
-        next = [...new Set([...selectedKeys.value, ...keys])]
+        if (holderSet.has(key)) holderSet.delete(key)
+        if (checked) holderSet.add(key)
+        lastSelectedIndex[direction] = checked ? currentIndex : null
       }
-      innerSelectedKeys.value = next
-      emit('update:selectedKeys', next)
-      const src = next.filter((k) => sourceItems.value.some((i) => i.key === k))
-      const tgt = next.filter((k) => targetItems.value.some((i) => i.key === k))
-      emit('selectChange', src, tgt)
+      handleSelectChange(direction, [...holderSet])
     }
 
-    function renderList(items: TransferItem[], filteredItems: TransferItem[], title: string, search: string, setSearch: (v: string) => void, side: 'left' | 'right') {
-      const enabledItems = filteredItems.filter((i) => !i.disabled)
-      const selectedInList = filteredItems.filter((i) => selectedKeys.value.includes(i.key))
-      const allChecked = enabledItems.length > 0 && enabledItems.every((i) => selectedKeys.value.includes(i.key))
-      const someChecked = selectedInList.length > 0 && !allChecked
+    function onItemSelectAll(direction: TransferDirection, keys: TransferKey[], checkAll: boolean | 'replace') {
+      const prev = direction === 'left' ? sourceSelectedKeys.value : targetSelectedKeys.value
+      let merged: TransferKey[]
+      if (checkAll === 'replace') {
+        merged = keys
+      } else if (checkAll) {
+        merged = [...new Set([...prev, ...keys])]
+      } else {
+        const set = new Set(keys)
+        merged = prev.filter((k) => !set.has(k))
+      }
+      lastSelectedIndex[direction] = null
+      handleSelectChange(direction, merged)
+    }
 
-      return (
-        <div class={`${prefixCls}-list`} style={props.listStyle}>
-          <div class={`${prefixCls}-list-header`}>
-            {props.showSelectAll && (
-              <span
-                class={cls(`${prefixCls}-checkbox`, {
-                  [`${prefixCls}-checkbox-checked`]: allChecked,
-                  [`${prefixCls}-checkbox-indeterminate`]: someChecked,
-                  [`${prefixCls}-checkbox-disabled`]: props.disabled || enabledItems.length === 0,
-                })}
-                onClick={() => !props.disabled && toggleSelectAll(filteredItems, side)}
-              >
-                <span class={`${prefixCls}-checkbox-inner`} />
-              </span>
-            )}
-            <span class={`${prefixCls}-list-header-title`}>
-              {selectedInList.length > 0 ? `${selectedInList.length}/` : ''}{items.length} 项
-              {title && <span class={`${prefixCls}-list-header-label`}>{title}</span>}
-            </span>
-          </div>
-          {props.showSearch && (
-            <div class={`${prefixCls}-list-search`}>
-              <input
-                class={`${prefixCls}-list-search-input`}
-                placeholder="搜索"
-                value={search}
-                onInput={(e) => {
-                  setSearch((e.target as HTMLInputElement).value)
-                  emit('search', side, (e.target as HTMLInputElement).value)
-                }}
-              />
-            </div>
-          )}
-          <ul class={`${prefixCls}-list-content`}>
-            {filteredItems.map((item) => (
-              <li
-                key={item.key}
-                class={cls(`${prefixCls}-list-content-item`, {
-                  [`${prefixCls}-list-content-item-checked`]: selectedKeys.value.includes(item.key),
-                  [`${prefixCls}-list-content-item-disabled`]: item.disabled || props.disabled,
-                })}
-                onClick={() => toggleSelect(item.key)}
-              >
-                <span
-                  class={cls(`${prefixCls}-checkbox`, {
-                    [`${prefixCls}-checkbox-checked`]: selectedKeys.value.includes(item.key),
-                    [`${prefixCls}-checkbox-disabled`]: item.disabled || props.disabled,
-                  })}
-                >
-                  <span class={`${prefixCls}-checkbox-inner`} />
-                </span>
-                <span class={`${prefixCls}-list-content-item-text`}>
-                  <span class={`${prefixCls}-list-content-item-title`}>{item.title}</span>
-                  {item.description && (
-                    <span class={`${prefixCls}-list-content-item-description`}>{item.description}</span>
-                  )}
-                </span>
-              </li>
-            ))}
-            {filteredItems.length === 0 && (
-              <li class={`${prefixCls}-list-content-empty`}>暂无数据</li>
-            )}
-          </ul>
-        </div>
-      )
+    function onRightItemRemove(keys: TransferKey[]) {
+      const removeSet = new Set(keys)
+      const newTargetKeys = targetKeys.value.filter((k) => !removeSet.has(k))
+      innerTargetKeys.value = newTargetKeys
+      emit('update:targetKeys', newTargetKeys)
+      // 清空右侧选中
+      setSelectedKeys(sourceSelectedKeys.value)
+      emit('change', newTargetKeys, 'left', [...keys])
+    }
+
+    function handleListStyle(direction: TransferDirection): CSSProperties {
+      return typeof props.listStyle === 'function' ? props.listStyle({ direction }) : props.listStyle
+    }
+
+    // 右箭头（source→target）在源选中时可用；左箭头（target→source）在目标选中时可用
+    const rightActive = computed(() => sourceSelectedKeys.value.length > 0)
+    const leftActive = computed(() => targetSelectedKeys.value.length > 0)
+
+    // 操作按钮文案（兼容废弃的 operations）
+    const operations = computed(() => props.operations || [])
+
+    function renderListProps(direction: TransferDirection) {
+      const isLeft = direction === 'left'
+      const lc = mergedLocale.value
+      return {
+        prefixCls,
+        direction,
+        titleText: props.titles?.[isLeft ? 0 : 1] ?? '',
+        dataSource: isLeft ? leftDataSource.value : rightDataSource.value,
+        checkedKeys: isLeft ? sourceSelectedKeys.value : targetSelectedKeys.value,
+        disabled: props.disabled,
+        showSearch: props.showSearch,
+        showSelectAll: props.showSelectAll,
+        showRemove: props.oneWay && !isLeft,
+        pagination: props.pagination,
+        selectAllLabel: props.selectAllLabels?.[isLeft ? 0 : 1],
+        render: props.render,
+        filterOption: props.filterOption,
+        footer: props.footer,
+        listStyle: handleListStyle(direction),
+        classNames: props.classNames,
+        styles: props.styles,
+        // locale
+        searchPlaceholder: lc.searchPlaceholder,
+        notFoundContent: props.locale.notFoundContent ?? lc.notFoundContent,
+        itemUnit: lc.itemUnit,
+        itemsUnit: lc.itemsUnit,
+        selectAll: lc.selectAll,
+        deselectAll: lc.deselectAll,
+        selectCurrent: lc.selectCurrent,
+        selectInvert: lc.selectInvert,
+        removeAll: lc.removeAll,
+        removeCurrent: lc.removeCurrent,
+        onItemSelect: (key: TransferKey, checked: boolean, e?: MouseEvent) =>
+          onItemSelect(direction, key, checked, e?.shiftKey),
+        onItemSelectAll: (keys: TransferKey[], checkAll: boolean | 'replace') =>
+          onItemSelectAll(direction, keys, checkAll),
+        onItemRemove: (keys: TransferKey[]) => onRightItemRemove(keys),
+        onFilter: (dir: TransferDirection, val: string) => emit('search', dir, val),
+        onScroll: (dir: TransferDirection, e: Event) => emit('scroll', dir, e),
+      }
     }
 
     return () => (
-      <div class={cls(prefixCls, { [`${prefixCls}-disabled`]: props.disabled })}>
-        {renderList(sourceItems.value, filteredSource.value, props.titles[0], leftSearch.value, (v) => { leftSearch.value = v }, 'left')}
+      <div
+        class={cls(prefixCls, props.rootClassName, props.classNames.root, {
+          [`${prefixCls}-disabled`]: props.disabled,
+          [`${prefixCls}-status-error`]: props.status === 'error',
+          [`${prefixCls}-status-warning`]: props.status === 'warning',
+        })}
+        style={props.styles.root}
+      >
+        <TransferList {...renderListProps('left')} />
 
-        <div class={`${prefixCls}-operation`}>
-          <button
-            class={cls('hmfw-btn', 'hmfw-btn-primary', 'hmfw-btn-small', {
-              'hmfw-btn-disabled': !leftSelected.value.length || props.disabled,
-            })}
-            disabled={!leftSelected.value.length || props.disabled}
+        <div class={cls(`${prefixCls}-actions`, props.classNames.actions)} style={props.styles.actions}>
+          <Button
+            type="primary"
+            size="small"
+            icon={RightOutlined}
+            disabled={!rightActive.value || props.disabled}
             onClick={moveToRight}
           >
-            {props.operations[0]}
-          </button>
-          <button
-            class={cls('hmfw-btn', 'hmfw-btn-primary', 'hmfw-btn-small', {
-              'hmfw-btn-disabled': !rightSelected.value.length || props.disabled,
-            })}
-            disabled={!rightSelected.value.length || props.disabled}
-            onClick={moveToLeft}
-          >
-            {props.operations[1]}
-          </button>
+            {operations.value[0]}
+          </Button>
+          {!props.oneWay && (
+            <Button
+              type="primary"
+              size="small"
+              icon={LeftOutlined}
+              disabled={!leftActive.value || props.disabled}
+              onClick={moveToLeft}
+            >
+              {operations.value[1]}
+            </Button>
+          )}
         </div>
 
-        {renderList(targetItems.value, filteredTarget.value, props.titles[1], rightSearch.value, (v) => { rightSearch.value = v }, 'right')}
+        <TransferList {...renderListProps('right')} />
       </div>
     )
   },
