@@ -34,6 +34,22 @@
   <CheckboxCheckAll />
 </DemoBlock>
 
+### skipGroup 属性
+
+在 CheckboxGroup 中使用 `skipGroup` 可以让复选框独立控制，不受组管理。
+
+<DemoBlock title="skipGroup" :source="CheckboxSkipGroupSource">
+  <CheckboxSkipGroup />
+</DemoBlock>
+
+### id 属性绑定
+
+id 属性会自动绑定到原生 input 元素，方便配合 label 使用。
+
+<DemoBlock title="id 属性" :source="CheckboxIdBindingSource">
+  <CheckboxIdBinding />
+</DemoBlock>
+
 ## API
 
 ### Checkbox Props

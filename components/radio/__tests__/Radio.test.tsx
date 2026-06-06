@@ -51,6 +51,17 @@ describe('Radio', () => {
     const wrapper = mount(Radio, { props: { name: 'test-radio' } })
     expect(wrapper.find('input').attributes('name')).toBe('test-radio')
   })
+
+  it('supports id prop', () => {
+    const wrapper = mount(Radio, { props: { id: 'test-id' } })
+    expect(wrapper.find('input').attributes('id')).toBe('test-id')
+  })
+
+  it('id binds to native input element', () => {
+    const wrapper = mount(Radio, { props: { id: 'custom-radio-id', value: 'test' } })
+    const input = wrapper.find('input').element as HTMLInputElement
+    expect(input.id).toBe('custom-radio-id')
+  })
 })
 
 describe('RadioButton', () => {
@@ -63,6 +74,11 @@ describe('RadioButton', () => {
   it('works with value prop', () => {
     const wrapper = mount(RadioButton, { props: { value: 'btn1' } })
     expect(wrapper.find('input').attributes('value')).toBe('btn1')
+  })
+
+  it('supports id prop', () => {
+    const wrapper = mount(RadioButton, { props: { id: 'test-button-id' } })
+    expect(wrapper.find('input').attributes('id')).toBe('test-button-id')
   })
 })
 
@@ -144,6 +160,20 @@ describe('RadioGroup', () => {
     const inputs = wrapper.findAll('input')
     expect(inputs[0].attributes('name')).toBe('test-group')
     expect(inputs[1].attributes('name')).toBe('test-group')
+  })
+
+  it('passes id from options to radio inputs', () => {
+    const wrapper = mount(RadioGroup, {
+      props: {
+        options: [
+          { label: 'A', value: 'a', id: 'radio-a' },
+          { label: 'B', value: 'b', id: 'radio-b' },
+        ],
+      },
+    })
+    const inputs = wrapper.findAll('input')
+    expect(inputs[0].attributes('id')).toBe('radio-a')
+    expect(inputs[1].attributes('id')).toBe('radio-b')
   })
 
   it('disables all radios when disabled', () => {

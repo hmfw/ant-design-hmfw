@@ -78,7 +78,6 @@ export const Radio = defineComponent({
               [`${actualPrefixCls.value}-wrapper-disabled`]: isDisabled.value,
               [`${actualPrefixCls.value}-wrapper-block`]: isBlock.value,
             })}
-            id={props.id}
           >
             <input
               type="radio"
@@ -87,6 +86,7 @@ export const Radio = defineComponent({
               disabled={isDisabled.value}
               name={radioName.value}
               value={props.value as any}
+              id={props.id}
               onChange={handleChange}
             />
             <span class={`${actualPrefixCls.value}-label`}>{slots.default?.()}</span>
@@ -101,7 +101,6 @@ export const Radio = defineComponent({
             [`${actualPrefixCls.value}-wrapper-disabled`]: isDisabled.value,
             [`${actualPrefixCls.value}-wrapper-block`]: isBlock.value,
           })}
-          id={props.id}
         >
           <span
             class={cls(actualPrefixCls.value, {
@@ -116,6 +115,7 @@ export const Radio = defineComponent({
               disabled={isDisabled.value}
               name={radioName.value}
               value={props.value as any}
+              id={props.id}
               onChange={handleChange}
             />
             <span class={`${actualPrefixCls.value}-inner`} />

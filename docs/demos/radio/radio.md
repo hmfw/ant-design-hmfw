@@ -34,6 +34,14 @@
   <RadioButton />
 </DemoBlock>
 
+### id 属性绑定
+
+id 属性会自动绑定到原生 input 元素，方便配合 label 使用。
+
+<DemoBlock title="id 属性" :source="RadioIdBindingSource">
+  <RadioIdBinding />
+</DemoBlock>
+
 ## API
 
 ### Radio Props

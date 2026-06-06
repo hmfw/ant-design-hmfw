@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
 import { Checkbox, CheckboxGroup } from '../Checkbox'
-import { nextTick } from 'vue'
+import { nextTick, ref } from 'vue'
 
 describe('Checkbox', () => {
   it('renders correctly', () => {
@@ -134,7 +134,7 @@ describe('Checkbox', () => {
     expect(wrapper.vm.input).toBeInstanceOf(HTMLInputElement)
   })
 
-  it('supports skipGroup prop', async () => {
+  it('supports skipGroup prop - not controlled by group', async () => {
     const wrapper = mount({
       setup() {
         return () => (
@@ -145,7 +145,48 @@ describe('Checkbox', () => {
       }
     })
     const input = wrapper.find('input').element as HTMLInputElement
+    // Even though group has value=['a'], skipGroup makes it independent
     expect(input.checked).toBe(false)
+  })
+
+  it('skipGroup allows independent v-model:checked', async () => {
+    const wrapper = mount({
+      setup() {
+        const checked = ref(true)
+        const groupValue = ref<string[]>([])
+        return () => (
+          <CheckboxGroup value={groupValue.value}>
+            <Checkbox value="a" skipGroup checked={checked.value}>Independent</Checkbox>
+          </CheckboxGroup>
+        )
+      }
+    })
+    const input = wrapper.find('input').element as HTMLInputElement
+    expect(input.checked).toBe(true)
+  })
+
+  it('skipGroup does not register/unregister with group', async () => {
+    const wrapper = mount({
+      setup() {
+        const groupValue = ref<string[]>([])
+        return () => (
+          <CheckboxGroup value={groupValue.value} onUpdate:value={(v: any) => { groupValue.value = v }}>
+            <Checkbox value="a">Normal</Checkbox>
+            <Checkbox value="b" skipGroup>Skip</Checkbox>
+          </CheckboxGroup>
+        )
+      }
+    })
+
+    const inputs = wrapper.findAll('input')
+    // Check the skipGroup checkbox
+    ;(inputs[1].element as HTMLInputElement).checked = true
+    await inputs[1].trigger('change')
+    await nextTick()
+
+    // Group value should not include 'b'
+    const emitted = wrapper.findComponent(CheckboxGroup).emitted('update:value')
+    expect(emitted).toBeFalsy() // skipGroup doesn't emit to group
   })
 })
 

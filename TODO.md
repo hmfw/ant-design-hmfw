@@ -95,9 +95,9 @@ components/{name}/
 - [x] 时间面板交互与 AntD 有差异
 
 **Checkbox / Radio**
-- [ ] 缺少 `skipGroup` 属性（跳过 CheckboxGroup 控制）
-- [ ] Radio.Button 样式与 AntD 不一致
-- [ ] 缺少 `id` 属性自动绑定到原生 input
+- [x] 缺少 `skipGroup` 属性（跳过 CheckboxGroup 控制）
+- [x] Radio.Button 样式与 AntD 不一致
+- [x] 缺少 `id` 属性自动绑定到原生 input
 
 #### **数据展示组件**
 
