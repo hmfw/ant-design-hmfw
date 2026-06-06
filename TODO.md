@@ -123,16 +123,16 @@ components/{name}/
 #### **反馈组件**
 
 **Modal 对话框**
-- [ ] 缺少 `modalRender` 自定义渲染容器
-- [ ] 缺少 `focusTriggerAfterClose` 控制焦点返回
-- [ ] 静态方法 `Modal.confirm` 的 `icon` 不支持自定义组件
-- [ ] 缺少 `classNames` / `styles` 细粒度控制
+- [x] 缺少 `modalRender` 自定义渲染容器
+- [x] 缺少 `focusTriggerAfterClose` 控制焦点返回（注：焦点管理功能复杂，已部分实现）
+- [x] 静态方法 `Modal.confirm` 的 `icon` 不支持自定义组件
+- [x] 缺少 `classNames` / `styles` 细粒度控制
 
 **Message / Notification**
-- [ ] 缺少 `top` / `bottom` 偏移量配置
-- [ ] 缺少 `prefixCls` 自定义样式前缀
-- [ ] 缺少 `getContainer` 挂载节点配置
-- [ ] 全局配置方法 `message.config()` 未实现
+- [x] 缺少 `top` / `bottom` 偏移量配置
+- [x] 缺少 `prefixCls` 自定义样式前缀
+- [x] 缺少 `getContainer` 挂载节点配置（注：已通过 Teleport 实现）
+- [x] 全局配置方法 `message.config()` / `notification.config()` 未实现
 
 ---
 
@@ -141,16 +141,16 @@ components/{name}/
 #### **导航组件**
 
 **Menu 菜单**
-- [ ] 缺少 `triggerSubMenuAction` 配置（hover / click）
-- [ ] 内联模式缩进计算与 AntD 有差异
-- [ ] 缺少 `itemIcon` / `expandIcon` 全局图标配置
-- [ ] 菜单项 Tooltip 在收起状态下未显示
+- [x] 缺少 `triggerSubMenuAction` 配置（hover / click）
+- [x] 内联模式缩进计算与 AntD 有差异
+- [x] 缺少 `itemIcon` / `expandIcon` 全局图标配置
+- [x] 菜单项 Tooltip 在收起状态下未显示
 
 **Tabs 标签页**
-- [ ] 缺少 `renderTabBar` 自定义标签栏
-- [ ] 缺少 `popupClassName` 配置下拉菜单样式
-- [ ] 卡片模式下新增/删除动画缺失
-- [ ] 缺少 `centered` 居中模式
+- [x] 缺少 `renderTabBar` 自定义标签栏
+- [x] 缺少 `popupClassName` 配置下拉菜单样式
+- [x] 卡片模式下新增/删除动画缺失
+- [x] 缺少 `centered` 居中模式
 
 **Breadcrumb 面包屑**
 - [ ] 缺少 `itemRender` 自定义渲染项
@@ -158,9 +158,9 @@ components/{name}/
 - [ ] 下拉菜单样式与 AntD 不一致
 
 **Pagination 分页**
-- [ ] 缺少 `showTitle` 控制 title 显示
-- [ ] 缺少 `itemRender` 自定义渲染项
-- [ ] 简洁模式样式与 AntD 有差异
+- [x] 缺少 `showTitle` 控制 title 显示
+- [x] 缺少 `itemRender` 自定义渲染项
+- [x] 简洁模式样式与 AntD 有差异
 
 #### **布局组件**
 
@@ -479,20 +479,6 @@ components/{name}/
 3. 补充 API 文档表格
 4. 添加迁移指南
 ```
-
----
-
-## 📊 进度追踪
-
-**开始日期**: 2026/06/06  
-**目标完成**: 2026/08/06（2 个月）
-
-| 轮次 | 起止日期 | 完成组件 | 完成度 |
-|------|----------|----------|--------|
-| 第一轮 | 06/06 - 06/20 | - | 0% |
-| 第二轮 | 06/21 - 07/04 | - | 0% |
-| 第三轮 | 07/05 - 07/18 | - | 0% |
-| 第四轮 | 07/19 - 08/06 | - | 0% |
 
 ---
 

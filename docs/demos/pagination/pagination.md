@@ -44,10 +44,18 @@
 
 ### 自定义渲染
 
-通过 `itemRender` 自定义页码渲染，通过 `align` 设置对齐方式。
+通过 `itemRender` 自定义页码的结构，可以自定义上一页/下一页文本、页码样式或渲染为链接等。
 
-<DemoBlock title="自定义渲染" :source="PaginationCustomSource">
-  <PaginationCustom />
+<DemoBlock title="自定义渲染" :source="PaginationItemRenderSource">
+  <PaginationItemRender />
+</DemoBlock>
+
+### 对齐方式
+
+通过 `align` 属性设置分页器的对齐方式，支持左对齐（默认）、居中对齐和右对齐。
+
+<DemoBlock title="对齐方式" :source="PaginationAlignSource">
+  <PaginationAlign />
 </DemoBlock>
 
 ## API
@@ -69,9 +77,9 @@
 | simple | 当添加该属性时，显示为简单分页 | `boolean` | `false` |
 | disabled | 禁用分页 | `boolean` | `false` |
 | hideOnSinglePage | 只有一页时是否隐藏分页器 | `boolean` | `false` |
-| itemRender | 自定义页码的结构 | `(page: number, type: 'page' \| 'prev' \| 'next' \| 'jump-prev' \| 'jump-next', originalElement: VNode) => VNode` | - |
+| itemRender | 自定义页码的结构，可以自定义上一页/下一页文本、页码样式等 | `(page: number, type: 'page' \| 'prev' \| 'next' \| 'jump-prev' \| 'jump-next', originalElement: VNode) => VNode` | - |
 | responsive | 当屏幕尺寸小于 576px 时，自动变为 small | `boolean` | `false` |
-| align | 对齐方式 | `'start' \| 'center' \| 'end'` | - |
+| align | 分页器的对齐方式，可选 `start`（左对齐）、`center`（居中）、`end`（右对齐） | `'start' \| 'center' \| 'end'` | - |
 
 ### Pagination Events
 
@@ -81,4 +89,50 @@
 | showSizeChange | pageSize 变化的回调 | `(current: number, size: number) => void` |
 | update:current | 当前页数变化时触发（v-model） | `(page: number) => void` |
 | update:pageSize | 每页条数变化时触发（v-model） | `(size: number) => void` |
+
+### itemRender 函数参数
+
+`itemRender` 用于自定义页码渲染，函数签名为：
+
+```typescript
+(page: number, type: ItemType, originalElement: VNode) => VNode
+```
+
+**参数说明**：
+
+- `page`：目标页码
+  - 对于 `type: 'page'` —— 当前页码数字
+  - 对于 `type: 'prev'` —— 上一页的页码（current - 1）
+  - 对于 `type: 'next'` —— 下一页的页码（current + 1）
+  - 对于 `type: 'jump-prev'` —— 向前跳转 5 页的目标页码
+  - 对于 `type: 'jump-next'` —— 向后跳转 5 页的目标页码
+
+- `type`：渲染项的类型
+  - `'page'` —— 普通页码按钮
+  - `'prev'` —— 上一页按钮
+  - `'next'` —— 下一页按钮
+  - `'jump-prev'` —— 向前快速跳转（显示为省略号 `•••`）
+  - `'jump-next'` —— 向后快速跳转（显示为省略号 `•••`）
+
+- `originalElement`：原始渲染的 VNode，可以直接返回或基于此进行修改
+
+**使用示例**：
+
+```vue
+<script setup>
+import { h } from 'vue'
+
+const itemRender = (page, type, originalElement) => {
+  if (type === 'prev') {
+    return h('a', '上一页')
+  }
+  if (type === 'next') {
+    return h('a', '下一页')
+  }
+  // 其他情况返回原始元素
+  return originalElement
+}
+</script>
+```
+
 

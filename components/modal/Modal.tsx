@@ -1,6 +1,6 @@
 import {
-  defineComponent, ref, watch, computed, onBeforeUnmount, Teleport, Transition,
-  type PropType, type VNode,
+  defineComponent, ref, watch, computed, onBeforeUnmount, Teleport, Transition, h,
+  type PropType, type VNode, type CSSProperties,
 } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
@@ -10,7 +10,7 @@ import { CloseOutlined } from '../icon/icons'
 import { Skeleton } from '../skeleton'
 import type { ButtonProps } from '../button/types'
 import type { IconComponent } from '../icon/types'
-import type { ModalContent, ModalWidth, LegacyButtonType, GetContainer } from './types'
+import type { ModalContent, ModalWidth, LegacyButtonType, GetContainer, ModalClassNames, ModalStyles } from './types'
 
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
 
@@ -96,6 +96,9 @@ export const Modal = defineComponent({
     focusTriggerAfterClose: { type: Boolean, default: true },
     bodyStyle: { type: Object, default: undefined },
     maskStyle: { type: Object, default: undefined },
+    classNames: { type: Object as PropType<ModalClassNames>, default: undefined },
+    styles: { type: Object as PropType<ModalStyles>, default: undefined },
+    modalRender: { type: Function as PropType<(node: VNode) => VNode>, default: undefined },
   },
   emits: ['update:open', 'ok', 'cancel', 'afterClose', 'afterOpenChange'],
   setup(props, { slots, emit, attrs }) {
@@ -158,12 +161,22 @@ export const Modal = defineComponent({
       // footer === false / null: no footer at all
       if (props.footer === false || props.footer === null) return null
       if (slots.footer) {
-        return <div class={`${prefixCls}-footer`}>{slots.footer()}</div>
+        return (
+          <div
+            class={cls(`${prefixCls}-footer`, props.classNames?.footer)}
+            style={props.styles?.footer}
+          >
+            {slots.footer()}
+          </div>
+        )
       }
       const isDangerOk = props.okType === 'danger'
       const okType = isDangerOk ? 'primary' : props.okType
       return (
-        <div class={`${prefixCls}-footer`}>
+        <div
+          class={cls(`${prefixCls}-footer`, props.classNames?.footer)}
+          style={props.styles?.footer}
+        >
           <Button {...props.cancelButtonProps} onClick={(e: MouseEvent) => close(e)}>
             {props.cancelText ?? locale.value.Modal.cancelText}
           </Button>
@@ -184,7 +197,10 @@ export const Modal = defineComponent({
       const titleNode = renderContent(props.title, slots.title)
       if (titleNode == null || titleNode === '') return null
       return (
-        <div class={`${prefixCls}-header`}>
+        <div
+          class={cls(`${prefixCls}-header`, props.classNames?.header)}
+          style={props.styles?.header}
+        >
           <div id={`${prefixCls}-title`} class={`${prefixCls}-title`}>{titleNode}</div>
         </div>
       )
@@ -200,6 +216,41 @@ export const Modal = defineComponent({
     return () => {
       const widthStyle = typeof props.width === 'number' ? `${props.width}px` : props.width
       const closeIconComp = props.closeIcon
+
+      // 构建对话框内容节点
+      const dialogContent = (
+        <div
+          ref={dialogRef}
+          class={cls(prefixCls, props.classNames?.content)}
+          style={{ width: widthStyle, ...props.styles?.content }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={props.title ? `${prefixCls}-title` : undefined}
+          {...attrs}
+        >
+          <div class={`${prefixCls}-content`}>
+            {props.closable && (
+              <button class={`${prefixCls}-close`} onClick={(e: MouseEvent) => close(e)} aria-label="Close">
+                <span class={`${prefixCls}-close-x`}>
+                  <Icon component={closeIconComp ?? CloseOutlined} />
+                </span>
+              </button>
+            )}
+            {renderTitle()}
+            <div
+              class={cls(`${prefixCls}-body`, props.classNames?.body)}
+              style={{ ...props.bodyStyle, ...props.styles?.body }}
+            >
+              {renderBody()}
+            </div>
+            {renderFooter()}
+          </div>
+        </div>
+      )
+
+      // 如果有 modalRender，应用自定义渲染
+      const renderedDialog = props.modalRender ? props.modalRender(dialogContent) : dialogContent
+
       return (
         <Teleport to="body">
           <Transition name="hmfw-zoom" onAfterLeave={onAfterLeave}>
@@ -210,36 +261,22 @@ export const Modal = defineComponent({
                 onKeydown={handleKeydown}
               >
                 {props.mask && (
-                  <div class={`${prefixCls}-mask`} style={props.maskStyle} />
+                  <div
+                    class={cls(`${prefixCls}-mask`, props.classNames?.mask)}
+                    style={{ ...props.maskStyle, ...props.styles?.mask }}
+                  />
                 )}
                 <div
-                  class={cls(`${prefixCls}-wrap`, props.wrapClassName, { [`${prefixCls}-centered`]: props.centered })}
+                  class={cls(
+                    `${prefixCls}-wrap`,
+                    props.wrapClassName,
+                    props.classNames?.wrapper,
+                    { [`${prefixCls}-centered`]: props.centered }
+                  )}
+                  style={props.styles?.wrapper}
                   onClick={handleMaskClick}
                 >
-                  <div
-                    ref={dialogRef}
-                    class={prefixCls}
-                    style={{ width: widthStyle }}
-                    role="dialog"
-                    aria-modal="true"
-                    aria-labelledby={props.title ? `${prefixCls}-title` : undefined}
-                    {...attrs}
-                  >
-                    <div class={`${prefixCls}-content`}>
-                      {props.closable && (
-                        <button class={`${prefixCls}-close`} onClick={(e: MouseEvent) => close(e)} aria-label="Close">
-                          <span class={`${prefixCls}-close-x`}>
-                            <Icon component={closeIconComp ?? CloseOutlined} />
-                          </span>
-                        </button>
-                      )}
-                      {renderTitle()}
-                      <div class={`${prefixCls}-body`} style={props.bodyStyle}>
-                        {renderBody()}
-                      </div>
-                      {renderFooter()}
-                    </div>
-                  </div>
+                  {renderedDialog}
                 </div>
               </div>
             )}

@@ -41,6 +41,30 @@
   <ModalConfirm />
 </DemoBlock>
 
+### 细粒度样式控制
+
+使用 `classNames` 和 `styles` 属性可以精确控制对话框各部分的样式。
+
+<DemoBlock title="classNames 和 styles" :source="ModalClassNamesSource">
+  <ModalClassNames />
+</DemoBlock>
+
+### 自定义渲染容器
+
+使用 `modalRender` 可以自定义对话框的渲染容器。
+
+<DemoBlock title="modalRender" :source="ModalRenderSource">
+  <ModalRender />
+</DemoBlock>
+
+### 自定义图标
+
+静态方法支持使用 VNode 作为自定义图标，或通过 `null` 隐藏图标。
+
+<DemoBlock title="自定义图标" :source="ModalCustomIconSource">
+  <ModalCustomIcon />
+</DemoBlock>
+
 ## API
 
 ### Modal Props
@@ -74,6 +98,9 @@
 | focusTriggerAfterClose | 关闭后是否将焦点还给打开前的元素 | `boolean` | `true` |
 | bodyStyle | body 内联样式 | `CSSProperties` | - |
 | maskStyle | mask 内联样式 | `CSSProperties` | - |
+| classNames | 细粒度控制各部分的 class | `{ header?: string; body?: string; footer?: string; mask?: string; wrapper?: string; content?: string }` | - |
+| styles | 细粒度控制各部分的 style | `{ header?: CSSProperties; body?: CSSProperties; footer?: CSSProperties; mask?: CSSProperties; wrapper?: CSSProperties; content?: CSSProperties }` | - |
+| modalRender | 自定义渲染对话框容器 | `(node: VNode) => VNode` | - |
 
 ### Modal Events
 
@@ -105,7 +132,7 @@
 | --- | --- | --- | --- |
 | title | 标题 | `string \| number \| VNode \| () => VNode` | - |
 | content | 内容 | `string \| number \| VNode \| () => VNode` | - |
-| icon | 自定义图标，传 `null` 隐藏 | `IconComponent \| null` | 按 `type` 自动选择 |
+| icon | 自定义图标，传 `null` 隐藏；支持 VNode | `IconComponent \| VNode \| null` | 按 `type` 自动选择 |
 | type | 类型；决定默认图标和 `okCancel` 默认值 | `'info' \| 'success' \| 'error' \| 'warning' \| 'confirm'` | `'confirm'` |
 | okCancel | 是否显示取消按钮（默认仅 `confirm` 显示） | `boolean` | - |
 | okText / cancelText / okType | 同 Modal Props | - | - |

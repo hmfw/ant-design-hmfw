@@ -42,6 +42,30 @@
   <NotificationConfig />
 </DemoBlock>
 
+### 显示进度条
+
+通过 `showProgress` 属性，可以在通知底部显示倒计时进度条，让用户直观地看到通知将在何时自动关闭。
+
+<DemoBlock title="显示进度条" :source="NotificationShowProgressSource">
+  <NotificationShowProgress />
+</DemoBlock>
+
+### 自定义关闭图标
+
+可以通过 `closeIcon` 属性自定义单个通知的关闭图标，也可以通过 `notification.config({ closeIcon })` 设置全局关闭图标。单个通知的 `closeIcon` 会覆盖全局配置。
+
+<DemoBlock title="自定义关闭图标" :source="NotificationCloseIconSource">
+  <NotificationCloseIcon />
+</DemoBlock>
+
+### RTL 模式
+
+通过 `notification.config({ rtl: true })` 开启 RTL（从右到左）布局模式，适用于阿拉伯语、希伯来语等从右到左阅读的语言。RTL 模式会自动调整图标和关闭按钮的位置。
+
+<DemoBlock title="RTL 模式" :source="NotificationRtlSource">
+  <NotificationRtl />
+</DemoBlock>
+
 ## API
 
 组件提供了一些静态方法，使用方式和参数如下：
@@ -73,6 +97,7 @@
 | style | 自定义内联样式 | `CSSProperties` | - |
 | className | 自定义 CSS class | `string` | - |
 | pauseOnHover | 鼠标悬停时暂停自动关闭 | `boolean` | `true` |
+| showProgress | 显示倒计时进度条 | `boolean` | `false` |
 | role | 可访问性角色属性 | `'alert' \| 'status'` | `'alert'` |
 
 ### 全局配置方法
@@ -90,6 +115,7 @@
 | maxCount | 最大显示数，超过限制时，最早的消息会被自动关闭 | `number` | - |
 | getContainer | 配置渲染节点的输出位置 | `() => HTMLElement` | `() => document.body` |
 | pauseOnHover | 鼠标悬停时暂停自动关闭 | `boolean` | `true` |
+| showProgress | 全局显示倒计时进度条 | `boolean` | `false` |
 | closeIcon | 自定义关闭图标 | `VNode \| () => VNode` | - |
 | rtl | 是否开启 RTL 模式 | `boolean` | `false` |
 

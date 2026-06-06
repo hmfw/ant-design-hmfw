@@ -41,6 +41,22 @@
   <MessageConfig />
 </DemoBlock>
 
+### 位置配置
+
+通过 `message.config` 的 `top` 参数配置消息距离顶部的距离。
+
+<DemoBlock title="位置配置" :source="MessagePositionSource">
+  <MessagePosition />
+</DemoBlock>
+
+### 悬停暂停
+
+支持悬停时暂停计时器，移开后继续计时。可通过全局配置或单条消息配置控制。
+
+<DemoBlock title="悬停暂停" :source="MessagePauseOnHoverSource">
+  <MessagePauseOnHover />
+</DemoBlock>
+
 ## API
 
 组件提供以下静态方法，参数如下：
@@ -87,7 +103,7 @@ config 对象属性如下：
 | key | 当前提示的唯一标识，相同 key 会更新已有提示 | `string \| number` | - |
 | style | 自定义内联样式 | `CSSProperties` | - |
 | className | 自定义 CSS class | `string` | - |
-| pauseOnHover | 悬停时是否暂停计时器 | `boolean` | `true` |
+| pauseOnHover | 悬停时是否暂停计时器，默认为全局配置的 `pauseOnHover` | `boolean` | `true` |
 | onClick | 点击时触发的回调函数 | `(e: MouseEvent) => void` | - |
 | onClose | 关闭时触发的回调函数 | `() => void` | - |
 
@@ -111,10 +127,14 @@ message.config({
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| top | 消息距离顶部的位置 | `string \| number` | `8` |
+| top | 消息距离顶部的位置，单位 px | `string \| number` | `8` |
 | duration | 默认自动关闭延时，单位秒 | `number` | `3` |
 | maxCount | 最大显示数，超过限制时关闭最早的提示 | `number` | - |
 | getContainer | 配置渲染节点的输出位置 | `() => HTMLElement` | `() => document.body` |
-| pauseOnHover | 悬停时是否暂停计时器 | `boolean` | `true` |
+| pauseOnHover | 悬停时是否暂停计时器（全局配置，单条消息可覆盖） | `boolean` | `true` |
+| prefixCls | 提示组件 class 前缀（预留，当前版本暂未实现） | `string` | `'hmfw-message'` |
 
-> 当前实现未支持 RTL（`rtl`）与 stack 折叠（`stack`），后续统一补充。
+> **注意**：
+> - 当设置 `top` 时，所有消息从顶部显示
+> - `pauseOnHover` 可在全局配置，也可在单条消息中覆盖
+> - 当前实现未支持 RTL（`rtl`）与 stack 折叠（`stack`）、`bottom` 定位，后续统一补充

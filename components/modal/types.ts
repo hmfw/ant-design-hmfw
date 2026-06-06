@@ -12,6 +12,26 @@ export type ModalContent = string | number | VNode | (() => VNode | string)
 
 export type GetContainer = string | HTMLElement | (() => HTMLElement) | false
 
+/** 细粒度控制 Modal 各部分的 class */
+export interface ModalClassNames {
+  header?: string
+  body?: string
+  footer?: string
+  mask?: string
+  wrapper?: string
+  content?: string
+}
+
+/** 细粒度控制 Modal 各部分的 style */
+export interface ModalStyles {
+  header?: CSSProperties
+  body?: CSSProperties
+  footer?: CSSProperties
+  mask?: CSSProperties
+  wrapper?: CSSProperties
+  content?: CSSProperties
+}
+
 export interface ModalProps {
   open?: boolean
   defaultOpen?: boolean
@@ -41,13 +61,16 @@ export interface ModalProps {
   focusTriggerAfterClose?: boolean
   bodyStyle?: CSSProperties
   maskStyle?: CSSProperties
+  classNames?: ModalClassNames
+  styles?: ModalStyles
+  modalRender?: (node: VNode) => VNode
 }
 
 /** Type used by the static methods Modal.confirm / info / success / error / warning */
 export interface ModalFuncProps {
   title?: ModalContent
   content?: ModalContent
-  icon?: IconComponent | null
+  icon?: IconComponent | VNode | null
   type?: 'info' | 'success' | 'error' | 'warning' | 'confirm'
   okText?: string
   okType?: LegacyButtonType

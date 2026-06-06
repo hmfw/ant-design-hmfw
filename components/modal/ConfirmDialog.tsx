@@ -1,4 +1,4 @@
-import { defineComponent, computed, ref, h, type PropType, type VNode } from 'vue'
+import { defineComponent, computed, ref, h, isVNode, type PropType, type VNode } from 'vue'
 import { Modal } from './Modal'
 import { Button } from '../button'
 import { Icon } from '../icon'
@@ -40,9 +40,12 @@ export const ConfirmDialog = defineComponent({
     // okCancel defaults to true only for confirm; info/success/error/warning show just OK
     const okCancel = computed(() => cfg.value.okCancel ?? type.value === 'confirm')
 
-    const mergedIcon = computed<IconComponent | null>(() => {
+    const mergedIcon = computed<IconComponent | VNode | null>(() => {
       if (cfg.value.icon === null) return null
-      return cfg.value.icon ?? ICON_MAP[type.value]
+      if (cfg.value.icon && (isVNode(cfg.value.icon) || typeof cfg.value.icon !== 'function')) {
+        return cfg.value.icon as VNode
+      }
+      return (cfg.value.icon as IconComponent) ?? ICON_MAP[type.value]
     })
 
     const okText = computed(() =>
@@ -117,7 +120,11 @@ export const ConfirmDialog = defineComponent({
         >
           <div class={cls(confirmPrefixCls, `${confirmPrefixCls}-${type.value}`)}>
             <div class={cls(`${confirmPrefixCls}-body`, { [`${confirmPrefixCls}-no-icon`]: !iconComp })}>
-              {iconComp && <span class={`${confirmPrefixCls}-icon`}><Icon component={iconComp} /></span>}
+              {iconComp && (
+                <span class={`${confirmPrefixCls}-icon`}>
+                  {isVNode(iconComp) ? iconComp : <Icon component={iconComp as IconComponent} />}
+                </span>
+              )}
               <div class={`${confirmPrefixCls}-paragraph`}>
                 {titleNode != null && <span class={`${confirmPrefixCls}-title`}>{titleNode}</span>}
                 <div class={`${confirmPrefixCls}-content`}>{renderNode(c.content)}</div>
