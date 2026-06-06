@@ -64,13 +64,13 @@ Upload(修10bug) · Form(修8bug)
 Tooltip(修4bug) · Popover(修5bug) · Popconfirm(修8bug) · Modal(修9bug) · Drawer(修6bug) · Message(修2bug) · Notification(修2bug) · Tour(修2bug) · Image(修8bug)
 
 **E 数据/复杂** → [`COMPARISON/06-data-complex.md`](./COMPARISON/06-data-complex.md)
-Table(修13差异/Bug，测试 11→24) · Tree(修/补22项，测试 11→38)
+Table(修13差异/Bug，测试 11→24) · Transfer(修20差异/Bug，测试 10→29) · Tree(修/补22项，测试 11→40)
 
 ### ⏭️ 待办路线图（简单→复杂，按序进行）
 
-- **E 数据/复杂**：transfer、carousel、color-picker → 继续写入 [`COMPARISON/06-data-complex.md`](./COMPARISON/06-data-complex.md)
+- **E 数据/复杂**：carousel、color-picker → 继续写入 [`COMPARISON/06-data-complex.md`](./COMPARISON/06-data-complex.md)
 
-**下一个执行**：E 数据/复杂类（Carousel 起，建议先 `/clear`）。恢复时对我说「继续」即可。
+**下一个执行**：E 数据/复杂类（Carousel 和 ColorPicker，建议先 `/clear`）。恢复时对我说「继续」即可。
 
 ---
 
