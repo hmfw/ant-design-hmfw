@@ -4,7 +4,7 @@
 
 包含：Table · Tree · Transfer · Carousel · ColorPicker
 
-🔄 进行中（4/5：Table、Tree、Transfer、Carousel 已对比）
+✅ 已完成（5/5：全部组件已对比）
 
 ---
 
@@ -297,6 +297,79 @@
 - 进度条 dots 用 CSS 动画实现，未监听 `animationend` 同步切换（自动播放计时器独立触发）。
 - ref 方法通过 `wrapper.vm as unknown as CarouselRef` 访问（测试环境）；生产环境用模板 ref。
 - `dotPlacement=start/end` 会自动启用垂直模式（`isVertical`），CSS 仍用 `left`/`right` class（`dotPositionClass` computed 映射）。
+
+---
+
+## 63. ColorPicker 颜色选择器 ✅ 已对比（待修复）
+
+**对比基准**: `ant-design-master/components/color-picker/{ColorPicker.tsx,ColorPickerPanel.tsx,interface.ts,color.ts,util.ts}`（AntD 基于 `@rc-component/color-picker` + `@ctrl/tinycolor`）
+
+**实现说明**: hmfw 为原生精简实现（`ColorPicker.tsx` 276 行 + `color-utils.ts`），手动实现 HSB 颜色空间拾取器。核心交互（色板拾取/色相滑块/HEX 输入/预设色/清除/尺寸/禁用）已实现并有 12 个测试覆盖；AntD 高级能力（渐变模式/Alpha 通道/多格式切换/面板自定义渲染/Popover 集成/Form 集成/语义化 class）未实现。
+
+### 发现的差异/问题表
+
+| 项 | 严重度 | 说明 | 处理 |
+| --- | --- | --- | --- |
+| 未集成 Popover 组件 | 🐛 Bug | hmfw 用 Teleport 手动定位面板（固定 `bottom + 4px`），AntD 用 Popover（支持 12 方向 placement/自动调整溢出/getPopupContainer） | ✅ 待修复：改用库内 Popover，支持 `placement`/`arrow`/`autoAdjustOverflow`/`getPopupContainer`/`destroyTooltipOnHide` |
+| 面板定位逻辑简陋 | 🐛 Bug | 固定下方 4px 偏移，未处理视口边界溢出 | ✅ 待修复：Popover 自动处理 |
+| 无 `trigger` 控制 | 差异 | AntD 支持 `'click'\|'hover'`，hmfw 固定 click | ✅ 待补充：新增 prop，透传至 Popover |
+| 无 `open` 受控 | 差异 | AntD 支持受控打开/关闭，hmfw 仅内部状态 | ✅ 待补充：新增 prop + `onOpenChange` emit |
+| 无渐变模式 `mode` | 差异 | AntD 支持 `'single'\|'gradient'`（含渐变滑块编辑、多色标点），hmfw 仅单色 | ⏭️ 按需后补：需实现 `AggregationColor` 类（支持渐变数据结构）、渐变滑块 UI、activeIndex 切换 |
+| 无 Alpha 通道 `disabledAlpha` | 差异 | AntD 默认支持透明度滑块，可通过 prop 禁用；hmfw 无透明度能力 | ✅ 待补充：新增 Alpha 滑块（0-100%）+ `disabledAlpha` prop |
+| 格式固定 HEX | 差异 | AntD 支持 `'hex'\|'rgb'\|'hsb'` 动态切换（面板显示对应输入框），hmfw 固定 HEX | ✅ 待补充：`format`/`defaultFormat` prop + 格式切换按钮 + RGB/HSB 输入框 + `onFormatChange` emit |
+| `value` 类型过窄 | 🐛 Bug | hmfw `value?: string`，AntD `ColorValueType = SingleValueType \| LineGradientType \| null`（支持 `AggregationColor` 对象、渐变数组、null） | ✅ 待修复：类型改为 `string \| AggregationColor \| null`（先支持单色对象，渐变后补） |
+| `onChange` 参数不全 | 🐛 Bug | hmfw `(hex: string)`，AntD `(value: AggregationColor, css: string)` | ✅ 待修复：传 `AggregationColor` 实例（含 `.toHexString()`/`.toRgbString()` 等方法）+ CSS 字符串 |
+| 无 `onChangeComplete` | 差异 | AntD 区分拖拽中 `onChange` 与拖拽结束 `onChangeComplete`，hmfw 无此区分 | ✅ 待补充：拖拽结束时触发 |
+| `showText` 仅 boolean | 差异 | AntD 支持函数 `(color: AggregationColor) => ReactNode`，hmfw 固定显示 hex 字符串 | ✅ 待补充：类型支持函数形式 |
+| `presets` 结构简化 | 差异 | AntD `PresetsItem` 含 `defaultOpen`/`key`/支持渐变色，hmfw 仅 `{label, colors: string[]}` | ✅ 待补充：类型对齐 + 折叠交互 |
+| 无 `panelRender` | 差异 | AntD 自定义面板渲染（可访问 `{Picker, Presets}` 组件），hmfw 固定布局 | ⏭️ 按需后补 |
+| 无 `children` 自定义触发器 | 差异 | AntD 支持 `<ColorPicker><CustomTrigger /></ColorPicker>`，hmfw 固定渲染触发器 | ✅ 待补充：slot 支持 |
+| 未使用 Input 组件 | 🐛 Bug | HEX 输入框用原生 `<input>`，未集成库内 Input | ✅ 待修复：改用 `<Input>` 组件 |
+| 清除按钮用自绘 | 🐛 Bug | `allowClear` 渲染自绘 `<div>` + 固定文案「清除」，未集成 Button/未国际化 | ✅ 待修复：改用 Button(type=text) + locale |
+| 无 ConfigProvider 集成 | 🐛 Bug | 未接入 `DisabledContext`/`SizeContext`/`direction` | ✅ 待修复：已用 `usePrefixCls`，需补 disabled/size 继承、RTL |
+| 无 Form 集成 | 差异 | AntD 接入 `FormItemInputContext`（校验态边框 status），hmfw 无 | ⏭️ 按需后补 |
+| 无 Space.Compact 集成 | 差异 | AntD 支持紧凑模式（`useCompactItemContext`），hmfw 无 | ⏭️ 按需后补 |
+| 无语义化 `classNames`/`styles` | 差异 | AntD v6 支持 `{root, body, content, description, popup}` 细粒度样式，hmfw 无 | ✅ 待补充：类型定义 + 渲染接线 |
+| 无 `rootClassName` | 差异 | AntD v5 语义化 class，hmfw 无 | ✅ 待补充：合并到根元素 |
+| 无 `arrow` 配置 | 差异 | AntD Popover 箭头可配置 `boolean \| {pointAtCenter}`，hmfw 无 | ✅ 待补充：透传至 Popover |
+| 无可访问性 | 🐛 Bug | 触发器仅 `role=button` + `aria-haspopup/expanded`，面板无 `role`/`aria-label`，拾色器无键盘操作 | ✅ 待补充：面板 `role=dialog`/`aria-label`；色板/滑块支持方向键调整 |
+| 无国际化 locale | 差异 | 清除按钮固定「清除」，AntD 全量 locale | ✅ 待补充：接入 `_locale` 系统 |
+| 无 `disabledFormat` | 差异 | AntD 禁用格式切换，hmfw 无此 prop（当前也无格式切换 UI） | ⏭️ 与格式切换一并后补 |
+| 色板拖拽未处理触摸事件 | 差异 | `getSBFromEvent` 已处理 `TouchEvent`，但未绑定 `touchstart`/`touchmove`/`touchend` | ✅ 待补充：补绑定触摸事件监听器 |
+| 外部点击关闭用 mousedown | 差异 | AntD Popover 自动处理，hmfw 手动监听 mousedown 可能误触（drag 期间 mousedown 在面板外） | ✅ 待修复：改用 Popover 后自动处理 |
+| 无颜色工具类 `AggregationColor` | 🐛 Bug | AntD 提供 `AggregationColor` 类（`.toHexString()`/`.toRgbString()`/`.toHsbString()`/`.isGradient()` 等 20+ 方法），hmfw 仅工具函数 | ✅ 待补充：实现 Color 类，导出为 `Color` |
+| 未导出类型 | 差异 | hmfw 仅导出 `ColorPickerProps`，AntD 导出 14 个类型（`ColorGenInput`/`PresetsItem`/`ColorFormatType`/`ColorValueType`/`ModeType`/`TriggerType`/`TriggerPlacement`/`Color` 等） | ✅ 待补充：补全导出 |
+
+### 改动文件（预期）
+- `components/color-picker/Color.ts` — 新建：`AggregationColor` 类（颜色对象，含格式转换/透明度操作/渐变支持）
+- `components/color-picker/components/ColorTrigger.tsx` — 新建：触发器组件（分离逻辑）
+- `components/color-picker/components/AlphaSlider.tsx` — 新建：Alpha 滑块组件
+- `components/color-picker/components/FormatSelect.tsx` — 新建：格式切换组件
+- `components/color-picker/ColorPicker.tsx` — 重写：改用 Popover 包裹 + 新 props（placement/trigger/open/arrow/format/disabledAlpha 等）+ ConfigProvider 完整集成
+- `components/color-picker/types.ts` — 重写：补全类型（`ColorValueType`/`PresetsItem`/`TriggerType`/`TriggerPlacement`/`ModeType`/`ColorPickerSemanticClassNames`/`Styles` 等 14 个导出）
+- `components/color-picker/color-utils.ts` — 修改：补充 HSBA 支持 + 8 位 HEX 转换
+- `components/color-picker/index.ts` — 修改：导出新增类型（14 个）+ `Color` 类
+- `components/color-picker/__tests__/ColorPicker.test.tsx` — 扩展：12 → 30+ 用例（Popover 集成/Alpha/格式切换/可访问性/触摸/国际化）
+- `components/color-picker/style/index.css` — 新增：Alpha 滑块/格式选择器/语义化 class 样式
+- `components/_locale/{zh-CN,en-US}.ts` — 新增：ColorPicker 条目（`clear`/`formatHex`/`formatRgb`/`formatHsb` 等）
+- `docs/demos/color-picker/color-picker.md` — 重写：API 表 + 补充演示
+
+### 验证
+- ⏭️ 待实施修复后执行：`npx vitest run components/color-picker`（目标 30+ 通过）
+- ⏭️ `pnpm typecheck`：通过
+- ⏭️ E2E：`pnpm dev` + `playwright-cli` 验证拖拽/格式切换/键盘操作
+
+### 备注（诚实声明）
+- 当前实现为**原型级轻量实现**（276 行手写拾色器），缺少 Ant Design v6 核心生产能力。
+- **架构缺陷**：未集成 Popover（定位/溢出/容器配置缺失）、未集成 ConfigProvider（全局状态断链）
+- **能力缺失**：无 Alpha 通道、无格式切换、无渐变模式、无颜色对象类（`onChange` 只传字符串）
+- **细节不足**：未用库内组件（Input/Button）、无国际化、无可访问性键盘操作、无触摸支持
+- **修复优先级建议**：
+  - **P0（阻塞）**: Popover 集成、Alpha 通道、格式切换、`AggregationColor` 类、ConfigProvider 完整集成
+  - **P1（重要）**: 可访问性、国际化、语义化 class、触摸支持
+  - **P2（按需）**: 渐变模式、`panelRender`、Form 集成
+- 修复后可对齐 AntD **单色模式核心能力**（覆盖 90% 场景），渐变模式作为独立迭代目标。
+- `AggregationColor` 类可精简至 10 个核心方法（满足库内需求），或完整对标 tinycolor（40+ 方法）。建议**先精简实现**。
 
 ---
 
