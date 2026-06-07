@@ -117,6 +117,13 @@ const zhCN: Locale = {
     expand: '展开',
     collapse: '收起',
   },
+  Calendar: {
+    month: '月',
+    year: '年',
+    today: '今天',
+    selectDate: '选择日期',
+    selectMonth: '选择月份',
+  },
 }
 
 export default zhCN

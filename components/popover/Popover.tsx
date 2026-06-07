@@ -13,13 +13,14 @@ import type {
   TooltipArrow,
 } from '../tooltip/types'
 import type { PopoverContent, PopoverClassNames, PopoverStyles } from './types'
+import { PurePanel } from './PurePanel'
 
 /**
  * Popover delegates positioning, triggers, and overflow handling to Tooltip
  * (matching AntD's React composition where Popover wraps Tooltip). The only
  * thing Popover adds is the title + content layout inside the popup body.
  */
-export const Popover = defineComponent({
+const InternalPopover = defineComponent({
   name: 'Popover',
   inheritAttrs: false,
   props: {
@@ -170,3 +171,15 @@ export const Popover = defineComponent({
     }
   },
 })
+
+/**
+ * 对外导出的 Popover，并挂载内部纯展示面板
+ * `_InternalPanelDoNotUseOrYouWillBeFired`（命名对齐 AntD）。
+ * 该面板仅用于内部/特殊场景的就地渲染，请勿在常规业务中使用。
+ */
+export const Popover = InternalPopover as typeof InternalPopover & {
+  _InternalPanelDoNotUseOrYouWillBeFired: typeof PurePanel
+}
+
+Popover._InternalPanelDoNotUseOrYouWillBeFired = PurePanel
+

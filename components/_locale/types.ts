@@ -115,4 +115,11 @@ export interface Locale {
     expand: string
     collapse: string
   }
+  Calendar: {
+    month: string
+    year: string
+    today: string
+    selectDate: string
+    selectMonth: string
+  }
 }

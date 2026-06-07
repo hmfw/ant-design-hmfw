@@ -56,6 +56,8 @@ export interface CarouselProps {
   nextArrow?: VNode
   /** Whether to wait for the animation when switching */
   waitForAnimate?: boolean
+  /** Adjust the height of the carousel for the current slide */
+  adaptiveHeight?: boolean
   /** Root class name */
   rootClassName?: string
 }

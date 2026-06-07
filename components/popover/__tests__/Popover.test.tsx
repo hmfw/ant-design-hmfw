@@ -435,3 +435,84 @@ describe('Popover', () => {
     wrapper.unmount()
   })
 })
+
+describe('Popover._InternalPanelDoNotUseOrYouWillBeFired (PurePanel)', () => {
+  const Panel = Popover._InternalPanelDoNotUseOrYouWillBeFired
+
+  it('is attached to Popover', () => {
+    expect(Panel).toBeTruthy()
+  })
+
+  it('renders title and content inline (no trigger needed)', () => {
+    const wrapper = mount(Panel, {
+      props: { title: 'PT', content: 'PC' },
+    })
+    expect(wrapper.find('.hmfw-popover-pure').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-popover-title').text()).toBe('PT')
+    expect(wrapper.find('.hmfw-popover-inner-content').text()).toBe('PC')
+    // 单一内层盒子，不嵌套
+    expect(wrapper.findAll('.hmfw-popover-inner').length).toBe(1)
+    wrapper.unmount()
+  })
+
+  it('renders slots for title and content', () => {
+    const wrapper = mount(Panel, {
+      slots: {
+        title: '<strong>ST</strong>',
+        content: '<em>SC</em>',
+      },
+    })
+    expect(wrapper.find('.hmfw-popover-title').html()).toContain('<strong>')
+    expect(wrapper.find('.hmfw-popover-inner-content').html()).toContain('<em>')
+    wrapper.unmount()
+  })
+
+  it('shows arrow by default and hides it with arrow=false', () => {
+    const withArrow = mount(Panel, { props: { content: 'C' } })
+    expect(withArrow.find('.hmfw-popover-arrow').exists()).toBe(true)
+    withArrow.unmount()
+
+    const noArrow = mount(Panel, { props: { content: 'C', arrow: false } })
+    expect(noArrow.find('.hmfw-popover-arrow').exists()).toBe(false)
+    noArrow.unmount()
+  })
+
+  it('applies placement class', () => {
+    const wrapper = mount(Panel, {
+      props: { content: 'C', placement: 'bottomLeft' },
+    })
+    expect(wrapper.find('.hmfw-popover-placement-bottomLeft').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('title-only panel does not render an empty content div', () => {
+    const wrapper = mount(Panel, { props: { title: 'Only' } })
+    expect(wrapper.find('.hmfw-popover-title').text()).toBe('Only')
+    expect(wrapper.find('.hmfw-popover-inner-content').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('color drives background via --tooltip-bg', () => {
+    const wrapper = mount(Panel, {
+      props: { content: 'C', color: 'rgb(255, 0, 0)' },
+    })
+    const root = wrapper.find('.hmfw-popover-pure').element as HTMLElement
+    expect(root.style.getPropertyValue('--tooltip-bg')).toBe('rgb(255, 0, 0)')
+    wrapper.unmount()
+  })
+
+  it('supports render-function title/content and semantic classNames', () => {
+    const wrapper = mount(Panel, {
+      props: {
+        title: () => 'FnTitle',
+        content: () => 'FnContent',
+        classNames: { title: 'ct', content: 'cc' },
+      },
+    })
+    expect(wrapper.find('.hmfw-popover-title').text()).toContain('FnTitle')
+    expect(wrapper.find('.hmfw-popover-inner-content').text()).toContain('FnContent')
+    expect(wrapper.find('.hmfw-popover-title').classes()).toContain('ct')
+    expect(wrapper.find('.hmfw-popover-inner-content').classes()).toContain('cc')
+    wrapper.unmount()
+  })
+})

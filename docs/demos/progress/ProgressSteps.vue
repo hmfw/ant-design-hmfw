@@ -16,6 +16,18 @@
       <div style="margin-bottom: 8px;">Steps with Custom Color</div>
       <Progress :percent="80" :steps="5" stroke-color="#52c41a" />
     </div>
+    <div>
+      <div style="margin-bottom: 8px;">对象形式 steps（指定段数与间距）</div>
+      <Progress :percent="50" :steps="{ count: 4, gap: 12 }" />
+    </div>
+    <div>
+      <div style="margin-bottom: 8px;">分段渐变色（数组）</div>
+      <Progress
+        :percent="60"
+        :steps="5"
+        :stroke-color="['#f5222d', '#fa8c16', '#fadb14', '#52c41a', '#1677ff']"
+      />
+    </div>
   </div>
 </template>
 

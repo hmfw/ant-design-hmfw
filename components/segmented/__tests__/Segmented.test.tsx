@@ -119,6 +119,15 @@ describe('Segmented', () => {
     expect(wrapper.find('.hmfw-segmented-thumb').exists()).toBe(true)
   })
 
+  it('positions thumb via transform after mount', async () => {
+    const wrapper = mount(Segmented, { props: { options } })
+    await nextTick()
+    const thumb = wrapper.find('.hmfw-segmented-thumb').element as HTMLElement
+    // 新的定位逻辑使用 transform 而非 left/top（jsdom 下 rect 为 0，结果为 translateX(0px)）
+    expect(thumb.style.transform).toContain('translateX')
+    expect(thumb.style.left).toBe('')
+  })
+
   it('supports VNode label', () => {
     const objOptions: SegmentedOption[] = [
       { label: h('strong', 'Bold'), value: 'bold' },
@@ -147,6 +156,38 @@ describe('Segmented', () => {
     ]
     const wrapper = mount(Segmented, { props: { options: objOptions } })
     expect(wrapper.findAll('.hmfw-segmented-item')[0].classes()).toContain('custom-class')
+  })
+
+  it('applies custom style to option', () => {
+    const objOptions: SegmentedOption[] = [
+      { label: 'A', value: 'a', style: { color: 'rgb(255, 0, 0)', fontWeight: 'bold' } },
+      { label: 'B', value: 'b' },
+    ]
+    const wrapper = mount(Segmented, { props: { options: objOptions } })
+    const style = wrapper.findAll('.hmfw-segmented-item')[0].attributes('style')
+    expect(style).toContain('color: rgb(255, 0, 0)')
+    expect(style).toContain('font-weight: bold')
+  })
+
+  it('marks icon-only option with icon-only class', () => {
+    const objOptions: SegmentedOption[] = [
+      { value: 'list', icon: h('span', '☰') },
+      { value: 'grid', label: 'Grid', icon: h('span', '⊞') },
+    ]
+    const wrapper = mount(Segmented, { props: { options: objOptions } })
+    const labels = wrapper.findAll('.hmfw-segmented-item-label')
+    // 第一个选项仅有图标，应带 icon-only 类
+    expect(labels[0].classes()).toContain('hmfw-segmented-item-icon-only')
+    // 第二个选项有图标+文本，不应带 icon-only 类
+    expect(labels[1].classes()).not.toContain('hmfw-segmented-item-icon-only')
+  })
+
+  it('renders text span with dedicated class when label present', () => {
+    const objOptions: SegmentedOption[] = [
+      { value: 'a', label: 'Alpha', icon: h('span', '★') },
+    ]
+    const wrapper = mount(Segmented, { props: { options: objOptions } })
+    expect(wrapper.find('.hmfw-segmented-item-text').text()).toBe('Alpha')
   })
 
   it('applies title attribute', () => {

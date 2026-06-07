@@ -42,6 +42,22 @@
   <EmptySimple />
 </DemoBlock>
 
+### 自定义图片尺寸
+
+通过 `imageWidth` / `imageHeight`（数字按 px 处理，也可传带单位字符串）或 `imageStyle` 控制默认插画的尺寸。
+
+<DemoBlock title="自定义图片尺寸" :source="EmptyImageSizeSource">
+  <EmptyImageSize />
+</DemoBlock>
+
+### 暗黑模式
+
+默认插画的配色通过 CSS 变量驱动，会自动跟随系统配色（`prefers-color-scheme: dark`）。也可在祖先元素上设置 `data-theme="dark"`（或 `.hmfw-theme-dark` 类）强制使用暗色插画。
+
+<DemoBlock title="暗黑模式" :source="EmptyDarkSource">
+  <EmptyDark />
+</DemoBlock>
+
 ## API
 
 ### Empty Props
@@ -50,7 +66,9 @@
 | --- | --- | --- | --- |
 | description | 自定义描述内容，为 `false` 时不显示 | `string \| false` | `'暂无数据'` |
 | image | 显示图片：图片地址字符串，或预设标识 `'default'` / `'simple'`，为 `false` 时不显示 | `string \| false` | `'default'` |
-| imageStyle | 图片样式 | `CSSProperties` | - |
+| imageStyle | 图片样式（优先级高于 imageWidth/imageHeight） | `CSSProperties` | - |
+| imageWidth | 图片宽度，数字按 px 处理，亦可传带单位字符串 | `number \| string` | - |
+| imageHeight | 图片高度，数字按 px 处理，亦可传带单位字符串 | `number \| string` | - |
 
 预设常量：`PRESENTED_IMAGE_DEFAULT`（`'default'`）、`PRESENTED_IMAGE_SIMPLE`（`'simple'`）。
 

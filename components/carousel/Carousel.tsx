@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, type VNode } from 'vue'
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, nextTick, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
@@ -36,6 +36,7 @@ export const Carousel = defineComponent({
     prevArrow: Object,
     nextArrow: Object,
     waitForAnimate: { type: Boolean, default: false },
+    adaptiveHeight: { type: Boolean, default: false },
     rootClassName: String,
   },
   emits: ['beforeChange', 'afterChange'],
@@ -43,7 +44,11 @@ export const Carousel = defineComponent({
     const prefixCls = usePrefixCls('carousel')
     const current = ref(props.initialSlide)
     const transitioning = ref(false)
+    const listRef = ref<HTMLDivElement>()
+    const trackRef = ref<HTMLDivElement>()
+    const carouselHeight = ref<number | undefined>(undefined)
     let timer: ReturnType<typeof setInterval> | null = null
+    let transitionEndTimer: ReturnType<typeof setTimeout> | null = null
 
     const slides = computed(() => {
       const defaultSlot = slots.default?.() ?? []
@@ -95,6 +100,23 @@ export const Carousel = defineComponent({
       return false
     })
 
+    // 更新自适应高度
+    function updateAdaptiveHeight() {
+      if (!props.adaptiveHeight || isVertical.value || !trackRef.value) {
+        carouselHeight.value = undefined
+        return
+      }
+
+      nextTick(() => {
+        if (!trackRef.value) return
+        const slides = trackRef.value.querySelectorAll(`.${prefixCls}-slide`)
+        const currentSlide = slides[current.value] as HTMLElement | undefined
+        if (currentSlide) {
+          carouselHeight.value = currentSlide.offsetHeight
+        }
+      })
+    }
+
     function goTo(index: number, dontAnimate = false) {
       if (count.value === 0) return
       if (!dontAnimate && props.waitForAnimate && transitioning.value) return
@@ -113,11 +135,21 @@ export const Carousel = defineComponent({
         current.value = next
         emit('afterChange', next)
       } else {
+        // 清除旧的定时器
+        if (transitionEndTimer) {
+          clearTimeout(transitionEndTimer)
+          transitionEndTimer = null
+        }
+
+        // 使用 nextTick 确保状态更新后再开始动画
         transitioning.value = true
         current.value = next
-        setTimeout(() => {
+
+        // 使用定时器触发 afterChange 事件
+        transitionEndTimer = setTimeout(() => {
           transitioning.value = false
           emit('afterChange', next)
+          transitionEndTimer = null
         }, props.speed)
       }
     }
@@ -135,6 +167,10 @@ export const Carousel = defineComponent({
         clearInterval(timer)
         timer = null
       }
+      if (transitionEndTimer) {
+        clearTimeout(transitionEndTimer)
+        transitionEndTimer = null
+      }
     }
 
     // Initialize current index on mount
@@ -145,6 +181,7 @@ export const Carousel = defineComponent({
           : Math.min(props.initialSlide, count.value - 1)
         current.value = init
       }
+      updateAdaptiveHeight()
       startAutoplay()
     })
 
@@ -152,6 +189,16 @@ export const Carousel = defineComponent({
 
     watch(() => props.autoplay, (v) => {
       v ? startAutoplay() : stopAutoplay()
+    })
+
+    // 监听 current 变化更新高度
+    watch(current, () => {
+      updateAdaptiveHeight()
+    })
+
+    // 监听 adaptiveHeight 开关变化
+    watch(() => props.adaptiveHeight, () => {
+      updateAdaptiveHeight()
     })
 
     // Expose ref methods
@@ -195,8 +242,20 @@ export const Carousel = defineComponent({
           aria-roledescription="carousel"
           aria-label="Carousel"
         >
-          <div class={`${prefixCls}-list`}>
+          <div
+            ref={listRef}
+            class={`${prefixCls}-list`}
+            style={
+              props.adaptiveHeight && carouselHeight.value !== undefined
+                ? {
+                    height: `${carouselHeight.value}px`,
+                    transition: transitioning.value ? `height ${speedInSec} ${props.easing}` : 'none',
+                  }
+                : {}
+            }
+          >
             <div
+              ref={trackRef}
               class={`${prefixCls}-track`}
               style={
                 isFade.value
@@ -221,11 +280,15 @@ export const Carousel = defineComponent({
                     isFade.value
                       ? {
                           opacity: i === current.value ? 1 : 0,
+                          transform: 'translate3d(0, 0, 0)', // GPU 加速
                           transition: `opacity ${speedInSec} ${props.easing}`,
                           position: i === current.value ? 'relative' : 'absolute',
                           inset: i === current.value ? 'auto' : '0',
+                          contentVisibility: i === current.value ? 'auto' : 'auto',
                         }
-                      : {}
+                      : {
+                          contentVisibility: i === current.value ? 'auto' : 'auto',
+                        }
                   }
                   role="group"
                   aria-roledescription="slide"
@@ -246,6 +309,7 @@ export const Carousel = defineComponent({
                   type="text"
                   icon={LeftOutlined}
                   onClick={prev}
+                  disabled={props.waitForAnimate && transitioning.value}
                   aria-label="Previous slide"
                 />
               )}
@@ -255,6 +319,7 @@ export const Carousel = defineComponent({
                   type="text"
                   icon={RightOutlined}
                   onClick={next}
+                  disabled={props.waitForAnimate && transitioning.value}
                   aria-label="Next slide"
                 />
               )}
@@ -269,6 +334,7 @@ export const Carousel = defineComponent({
                 dotsClassName.value,
                 {
                   [`${prefixCls}-dots-progress`]: showDotDuration.value,
+                  [`${prefixCls}-dots-disabled`]: props.waitForAnimate && transitioning.value,
                 },
               )}
             >

@@ -75,17 +75,32 @@ export interface PreviewConfig {
   zIndex?: number
   /** 预览 transform 变化回调 */
   onTransform?: (info: { transform: TransformType; action: TransformAction }) => void
-  /** 自定义预览内容渲染 */
-  imageRender?: (originalNode: VNode, info: { transform: TransformType; image: ImgInfo }) => VNode
-  /** 自定义底部操作栏渲染 */
+  /** 自定义预览内容渲染（info 含 transform、current、total、image） */
+  imageRender?: (originalNode: VNode, info: ImageRenderInfoType) => VNode
+  /** 自定义底部工具栏渲染（参考 AntD v6 preview.toolbarRender） */
+  toolbarRender?: (originalNode: VNode, info: ToolbarRenderInfoType) => VNode
+  /** @deprecated 使用 toolbarRender 代替 */
   actionsRender?: (originalNode: VNode, info: ToolbarRenderInfoType) => VNode
 }
 
-/** actionsRender 信息 */
+/** imageRender 信息 */
+export interface ImageRenderInfoType {
+  transform: TransformType
+  /** 当前图片索引（PreviewGroup 场景） */
+  current?: number
+  /** 图片总数（PreviewGroup 场景） */
+  total?: number
+  /** 当前预览图片信息 */
+  image: ImgInfo
+}
+
+/** toolbarRender / actionsRender 信息 */
 export interface ToolbarRenderInfoType {
   transform: TransformType
   current?: number
   total?: number
+  /** 当前预览图片信息 */
+  image: ImgInfo
   actions: {
     onFlipY: () => void
     onFlipX: () => void
@@ -95,6 +110,8 @@ export interface ToolbarRenderInfoType {
     onZoomIn: () => void
     onReset: () => void
     onClose: () => void
+    /** 按偏移切换图片（PreviewGroup 场景，-1 上一张 / 1 下一张） */
+    onActive?: (offset: number) => void
   }
 }
 

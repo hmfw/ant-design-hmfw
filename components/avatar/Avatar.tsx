@@ -1,8 +1,52 @@
-import { defineComponent, computed, ref, onMounted, onUpdated, type PropType } from 'vue'
+import { defineComponent, computed, ref, onMounted, onUpdated, onBeforeUnmount, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { AvatarSize, AvatarShape } from './types'
 import { provideAvatarContext, useAvatarContext } from './context'
+
+// 响应式断点定义
+const BREAKPOINTS = {
+  xs: 0,
+  sm: 576,
+  md: 768,
+  lg: 992,
+  xl: 1200,
+  xxl: 1600,
+} as const
+
+type Breakpoint = keyof typeof BREAKPOINTS
+
+// 获取当前断点
+function getCurrentBreakpoint(width: number): Breakpoint {
+  const breakpoints: Breakpoint[] = ['xxl', 'xl', 'lg', 'md', 'sm', 'xs']
+  for (const bp of breakpoints) {
+    if (width >= BREAKPOINTS[bp]) {
+      return bp
+    }
+  }
+  return 'xs'
+}
+
+// 从响应式配置中获取实际尺寸
+function getResponsiveSize(size: AvatarSize, breakpoint: Breakpoint): Exclude<AvatarSize, object> {
+  if (typeof size === 'object' && size !== null) {
+    // 按优先级查找匹配的尺寸
+    const breakpoints: Breakpoint[] = ['xxl', 'xl', 'lg', 'md', 'sm', 'xs']
+    const currentIndex = breakpoints.indexOf(breakpoint)
+
+    // 从当前断点开始向下查找第一个有值的尺寸
+    for (let i = currentIndex; i < breakpoints.length; i++) {
+      const bp = breakpoints[i]
+      if (size[bp] !== undefined) {
+        return size[bp]!
+      }
+    }
+
+    // 如果没找到，返回默认值
+    return 'default'
+  }
+  return size as Exclude<AvatarSize, object>
+}
 
 export const Avatar = defineComponent({
   name: 'Avatar',
@@ -24,6 +68,7 @@ export const Avatar = defineComponent({
       default: undefined,
     },
     crossOrigin: String as PropType<'' | 'anonymous' | 'use-credentials'>,
+    referrerPolicy: String as PropType<'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'>,
     gap: {
       type: Number,
       default: 4,
@@ -37,9 +82,35 @@ export const Avatar = defineComponent({
     const textRef = ref<HTMLSpanElement | null>(null)
     const avatarRef = ref<HTMLSpanElement | null>(null)
     const scale = ref(1)
+    const currentBreakpoint = ref<Breakpoint>('md')
+
+    // 监听窗口大小变化以更新断点
+    const updateBreakpoint = () => {
+      if (typeof window !== 'undefined') {
+        currentBreakpoint.value = getCurrentBreakpoint(window.innerWidth)
+      }
+    }
+
+    onMounted(() => {
+      updateBreakpoint()
+      if (typeof window !== 'undefined') {
+        window.addEventListener('resize', updateBreakpoint)
+      }
+      adjustTextScale()
+    })
+
+    onBeforeUnmount(() => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', updateBreakpoint)
+      }
+    })
 
     // props 优先，其次 AvatarGroup 上下文，最后默认值
-    const mergedSize = computed<AvatarSize>(() => props.size ?? ctx.size ?? 'default')
+    const mergedSize = computed<AvatarSize>(() => {
+      const size = props.size ?? ctx.size ?? 'default'
+      // 如果是响应式配置，返回当前断点对应的尺寸
+      return getResponsiveSize(size, currentBreakpoint.value)
+    })
     const mergedShape = computed<AvatarShape>(() => props.shape ?? ctx.shape ?? 'circle')
 
     const sizeStyle = computed(() => {
@@ -76,7 +147,6 @@ export const Avatar = defineComponent({
       }
     }
 
-    onMounted(adjustTextScale)
     onUpdated(adjustTextScale)
 
     const handleImgError = (e: Event) => {
@@ -95,6 +165,7 @@ export const Avatar = defineComponent({
             alt={props.alt}
             draggable={props.draggable}
             crossorigin={props.crossOrigin}
+            referrerpolicy={props.referrerPolicy}
             onError={handleImgError}
           />
         )

@@ -67,8 +67,14 @@
 .hmfw-avatar-group .hmfw-avatar {
   border: 2px solid #fff;
   margin-inline-start: -8px;
+  position: relative;
+  transition: z-index 0.2s ease;
 }
 
 .hmfw-avatar-group .hmfw-avatar:first-child {
   margin-inline-start: 0;
+}
+
+.hmfw-avatar-group .hmfw-avatar:hover {
+  z-index: 1;
 }

@@ -14,6 +14,22 @@
   display: none;
 }
 
+/* 纯展示面板（_InternalPanelDoNotUseOrYouWillBeFired）：就地内联渲染，
+   中和 .hmfw-popover 的绝对定位、视口宽度上限与 pointer-events，
+   使其表现为普通的行内块元素。箭头仍按 placement 定位。 */
+.hmfw-popover-pure {
+  position: relative;
+  z-index: auto;
+  display: inline-block;
+  width: max-content;
+  max-width: none;
+  pointer-events: auto;
+}
+
+.hmfw-popover-pure .hmfw-popover-content {
+  position: relative;
+}
+
 .hmfw-popover-content {
   position: relative;
 }

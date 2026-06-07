@@ -105,11 +105,8 @@
   background-color: var(--hmfw-color-bg-container, #fff);
   border-top: 1px solid var(--hmfw-color-border, #d9d9d9);
   overflow: hidden;
-  transition: height var(--hmfw-motion-duration-mid, 0.3s) var(--hmfw-motion-ease-in-out, ease);
-}
-
-.hmfw-collapse-content-inactive {
-  display: none;
+  transition: height var(--hmfw-motion-duration-mid, 0.3s) var(--hmfw-motion-ease-in-out, ease),
+              opacity var(--hmfw-motion-duration-mid, 0.3s) var(--hmfw-motion-ease-in-out, ease);
 }
 
 .hmfw-collapse-content-box {

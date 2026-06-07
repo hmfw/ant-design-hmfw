@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, watch, onMounted, nextTick, type PropType, type VNode } from 'vue'
+import { defineComponent, ref, computed, watch, onMounted, onBeforeUnmount, nextTick, type PropType } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Tooltip } from '../tooltip'
@@ -96,51 +96,84 @@ export const Segmented = defineComponent({
       }
     }
 
-    // Update thumb position and size
+    // 更新滑块位置与尺寸
+    // 使用 getBoundingClientRect 而非 offsetLeft/offsetWidth：
+    // 1. 提供亚像素精度，避免整数取整带来的位置偏差
+    // 2. 当选项被 Tooltip 触发节点包裹时，offsetParent 可能不是 group，
+    //    导致 offsetLeft 计算错位；相对 group 的 rect 计算可消除该偏差
     const updateThumbPosition = (selectedIndex: number) => {
       if (!thumbRef.value || !groupRef.value) return
       const items = groupRef.value.querySelectorAll(`.${prefixCls}-item`)
       const selectedItem = items[selectedIndex] as HTMLElement
       if (!selectedItem) return
 
+      const groupRect = groupRef.value.getBoundingClientRect()
+      const itemRect = selectedItem.getBoundingClientRect()
+
       if (isVertical.value) {
-        thumbRef.value.style.top = `${selectedItem.offsetTop}px`
-        thumbRef.value.style.height = `${selectedItem.offsetHeight}px`
+        // 相对 group 顶部的偏移，扣除 group 自身可能的滚动
+        const offsetTop = itemRect.top - groupRect.top + groupRef.value.scrollTop
+        thumbRef.value.style.transform = `translateY(${offsetTop}px)`
+        thumbRef.value.style.height = `${itemRect.height}px`
         thumbRef.value.style.width = '100%'
-        thumbRef.value.style.left = '0'
       } else {
-        thumbRef.value.style.left = `${selectedItem.offsetLeft}px`
-        thumbRef.value.style.width = `${selectedItem.offsetWidth}px`
+        const offsetLeft = itemRect.left - groupRect.left + groupRef.value.scrollLeft
+        thumbRef.value.style.transform = `translateX(${offsetLeft}px)`
+        thumbRef.value.style.width = `${itemRect.width}px`
         thumbRef.value.style.height = '100%'
-        thumbRef.value.style.top = '0'
       }
     }
 
-    // Initialize thumb position
+    // 重新对齐当前选中项的滑块（用于尺寸/容器变化时）
+    const realignThumb = () => {
+      const selectedIndex = normalizeOptions.value.findIndex((opt) => opt.value === currentValue.value)
+      if (selectedIndex >= 0) updateThumbPosition(selectedIndex)
+    }
+
+    // 监听容器尺寸变化，自动重新计算滑块（block 模式 / 窗口缩放 / 字体加载）
+    let resizeObserver: ResizeObserver | null = null
+
+    // 初始化滑块位置
     onMounted(() => {
-      const selectedIndex = normalizeOptions.value.findIndex((opt) => opt.value === currentValue.value)
-      if (selectedIndex >= 0) {
-        updateThumbPosition(selectedIndex)
+      realignThumb()
+      if (groupRef.value && typeof ResizeObserver !== 'undefined') {
+        resizeObserver = new ResizeObserver(() => {
+          // 在下一帧重新对齐，避免与布局阶段冲突
+          nextTick(() => realignThumb())
+        })
+        resizeObserver.observe(groupRef.value)
       }
     })
 
-    // Watch for value changes to update thumb
-    watch(currentValue, () => {
-      const selectedIndex = normalizeOptions.value.findIndex((opt) => opt.value === currentValue.value)
-      if (selectedIndex >= 0) {
-        nextTick(() => updateThumbPosition(selectedIndex))
+    onBeforeUnmount(() => {
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+        resizeObserver = null
       }
     })
 
-    // Render item content (icon + label)
+    // 监听 value / 选项 / 方向变化以更新滑块
+    watch(
+      [currentValue, normalizeOptions, isVertical],
+      () => {
+        nextTick(() => realignThumb())
+      },
+    )
+
+    // 渲染选项内容（图标 + 文本）
     const renderItemContent = (opt: SegmentedOption) => {
       const hasIcon = !!opt.icon
       const hasLabel = opt.label !== undefined && opt.label !== null
 
       return (
-        <div class={`${prefixCls}-item-label`}>
+        <div
+          class={cls(`${prefixCls}-item-label`, {
+            // 仅有图标时使用专用类，使其呈正方形并居中
+            [`${prefixCls}-item-icon-only`]: hasIcon && !hasLabel,
+          })}
+        >
           {hasIcon && <span class={`${prefixCls}-item-icon`}>{opt.icon}</span>}
-          {hasLabel && <span>{opt.label}</span>}
+          {hasLabel && <span class={`${prefixCls}-item-text`}>{opt.label}</span>}
         </div>
       )
     }
@@ -157,6 +190,7 @@ export const Segmented = defineComponent({
             [`${prefixCls}-item-selected`]: isSelected,
             [`${prefixCls}-item-disabled`]: isDisabled,
           })}
+          style={opt.style}
           title={opt.title}
         >
           <input

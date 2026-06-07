@@ -54,6 +54,44 @@
   padding: 0 6px;
 }
 
+/* ScrollNumber 滚动数字 */
+.hmfw-scroll-number {
+  display: inline-flex;
+  align-items: center;
+}
+
+.hmfw-scroll-number-symbol {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  height: 20px;
+}
+
+.hmfw-scroll-number-symbol-only {
+  display: inline-flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.hmfw-scroll-number-symbol-animate {
+  transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.hmfw-scroll-number-only-unit {
+  display: block;
+  height: 20px;
+  line-height: 20px;
+}
+
+.hmfw-badge-count-sm .hmfw-scroll-number-symbol {
+  height: 14px;
+}
+
+.hmfw-badge-count-sm .hmfw-scroll-number-only-unit {
+  height: 14px;
+  line-height: 14px;
+}
+
 /* Status badge */
 .hmfw-badge-status {
   display: inline-flex;
@@ -77,6 +115,21 @@
 .hmfw-badge-status-default { background: var(--hmfw-color-text-placeholder, #d9d9d9); }
 .hmfw-badge-status-error { background: var(--hmfw-color-error, #ff4d4f); }
 .hmfw-badge-status-warning { background: var(--hmfw-color-warning, #faad14); }
+
+/* Preset colors for status dot */
+.hmfw-badge-color-pink     { background: #eb2f96; }
+.hmfw-badge-color-red      { background: #f5222d; }
+.hmfw-badge-color-volcano  { background: #fa541c; }
+.hmfw-badge-color-orange   { background: #fa8c16; }
+.hmfw-badge-color-gold     { background: #faad14; }
+.hmfw-badge-color-yellow   { background: #fadb14; }
+.hmfw-badge-color-lime     { background: #a0d911; }
+.hmfw-badge-color-green    { background: #52c41a; }
+.hmfw-badge-color-cyan     { background: #13c2c2; }
+.hmfw-badge-color-blue     { background: #1677ff; }
+.hmfw-badge-color-geekblue { background: #2f54eb; }
+.hmfw-badge-color-purple   { background: #722ed1; }
+.hmfw-badge-color-magenta  { background: #eb2f96; }
 
 .hmfw-badge-status-text {
   font-size: var(--hmfw-font-size-base);

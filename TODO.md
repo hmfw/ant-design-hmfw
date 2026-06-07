@@ -281,51 +281,51 @@ components/{name}/
 #### **数据展示（续）**
 
 **Avatar 头像**
-- [ ] 缺少 `crossOrigin` / `referrerPolicy` 图片属性
-- [ ] Group 最大数量超出时省略样式
-- [ ] 响应式大小配置缺失
+- [x] 缺少 `crossOrigin` / `referrerPolicy` 图片属性
+- [x] Group 最大数量超出时省略样式
+- [x] 响应式大小配置缺失
 
 **Badge 徽标**
-- [ ] Ribbon 缎带模式缺少 `placement` 配置
-- [ ] 数字滚动动画缺失
-- [ ] `status` 点状态颜色自定义受限
+- [x] Ribbon 缎带模式缺少 `placement` 配置
+- [x] 数字滚动动画缺失
+- [x] `status` 点状态颜色自定义受限
 
 **Calendar 日历**
-- [ ] 缺少 `cellRender` v6 新 API
-- [ ] 自定义头部渲染复杂场景支持不足
-- [ ] 范围选择模式缺失
+- [x] 缺少 `cellRender` v6 新 API
+- [x] 自定义头部渲染复杂场景支持不足
+- [x] 范围选择模式缺失
 
 **Carousel 走马灯**
-- [ ] 缺少 `waitForAnimate` 动画等待
-- [ ] 缺少 `adaptiveHeight` 自适应高度
-- [ ] 切换动画性能优化
+- [x] 缺少 `waitForAnimate` 动画等待
+- [x] 缺少 `adaptiveHeight` 自适应高度
+- [x] 切换动画性能优化
 
 **Collapse 折叠面板**
-- [ ] 缺少 `collapsible` 配置每个面板是否可折叠
-- [ ] 缺少 `showArrow` 控制箭头显示
-- [ ] 展开/收起动画抖动
+- [x] 缺少 `collapsible` 配置每个面板是否可折叠
+- [x] 缺少 `showArrow` 控制箭头显示
+- [x] 展开/收起动画抖动
 
 **Empty 空状态**
-- [ ] 缺少暗黑模式图片
-- [ ] 自定义图片尺寸配置缺失
+- [x] 缺少暗黑模式图片
+- [x] 自定义图片尺寸配置缺失
 
 **Image 图片**
-- [ ] 预览组件缺少 `toolbarRender` 自定义工具栏
-- [ ] 多图预览切换动画卡顿
-- [ ] 缺少 `imageRender` 自定义渲染
+- [x] 预览组件缺少 `toolbarRender` 自定义工具栏
+- [x] 多图预览切换动画卡顿
+- [x] 缺少 `imageRender` 自定义渲染
 
 **Popover**
-- [ ] `_InternalPanelDoNotUseOrYouWillBeFired` 内部组件未实现
+- [x] `_InternalPanelDoNotUseOrYouWillBeFired` 内部组件未实现
 
 **Progress 进度条**
-- [ ] 缺少 `steps` 步骤进度条
-- [ ] 缺少 `success.percent` 成功进度段
-- [ ] 仪表盘模式渐变色显示异常
+- [x] 缺少 `steps` 步骤进度条
+- [x] 缺少 `success.percent` 成功进度段
+- [x] 仪表盘模式渐变色显示异常
 
 **Segmented 分段控制器**
-- [ ] 缺少 `options` 的 `className` / `style` 配置
-- [ ] 切换动画滑块位置计算偏差
-- [ ] 图标+文本模式布局优化
+- [x] 缺少 `options` 的 `className` / `style` 配置
+- [x] 切换动画滑块位置计算偏差
+- [x] 图标+文本模式布局优化
 
 **Skeleton 骨架屏**
 - [ ] 缺少 `node` 自定义节点
@@ -358,42 +358,6 @@ components/{name}/
 - [ ] 缺少 `extra` 额外内容配置
 - [ ] 自定义图标尺寸不生效
 - [ ] 暗黑模式下颜色适配
-
----
-
-## 🎯 建议的迭代顺序
-
-### 第一轮（Week 1-2）：数据录入组件
-```
-1. Form       — 补全核心方法 + 联动场景测试
-2. Input      — showCount / status / classNames
-3. Select     — 虚拟滚动 + fieldNames
-4. DatePicker — presets + cellRender
-```
-
-### 第二轮（Week 3-4）：数据展示组件
-```
-1. Table      — 虚拟滚动 + sticky + summary
-2. Tree       — 虚拟滚动 + fieldNames
-3. List       — 响应式 grid + 虚拟滚动
-4. Card       — 补全细节功能
-```
-
-### 第三轮（Week 5-6）：反馈 + 导航组件
-```
-1. Modal / Message / Notification — 全局配置 + 细粒度控制
-2. Menu       — triggerSubMenuAction + 图标配置
-3. Tabs       — renderTabBar + 动画优化
-4. Pagination — itemRender
-```
-
-### 第四轮（Week 7-8）：细节优化 + 文档
-```
-1. 所有 P2 优先级的边缘功能
-2. 补充所有组件的 demo（至少 3 个/组件）
-3. 补充 API 文档表格
-4. 添加迁移指南
-```
 
 ---
 

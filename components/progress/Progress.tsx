@@ -1,4 +1,6 @@
 import { defineComponent, computed, type PropType, type CSSProperties, type VNode } from 'vue'
+// 圆形渐变 id 计数器：保证每个实例 id 稳定且唯一，避免 Math.random 在每次渲染时变化
+let circleGradientSeed = 0
 import { useConfig, usePrefixCls } from '../config-provider'
 import { Tooltip } from '../tooltip'
 import { cls } from '../_utils'
@@ -32,6 +34,7 @@ import {
   isLightColor,
   pickFirstColor,
   getSuccessStrokeColor,
+  getCircleGradientStops,
 } from './utils'
 
 const ProgressStatusList: ProgressStatus[] = ['normal', 'exception', 'active', 'success']
@@ -76,6 +79,8 @@ export const Progress = defineComponent({
     const prefixCls = usePrefixCls('progress')
     const config = useConfig()
     const isRTL = computed(() => config.value.direction === 'rtl')
+    // 当前实例的圆形渐变 id 种子（稳定且唯一，避免每次渲染随机变化导致 SVG 重绘/SSR 不一致）
+    const gradientUid = circleGradientSeed++
 
     const mergedRailColor = computed(() => props.railColor ?? props.trailColor)
     const infoAlign = computed(() => props.percentPosition?.align ?? 'end')
@@ -324,7 +329,8 @@ export const Progress = defineComponent({
       // circle 渐变定义
       const sc = strokeColorNotArray.value
       const isGradient = !!(sc && typeof sc !== 'string')
-      const gradientId = `${prefixCls}-${(Math.random() * 1e6) | 0}-${size}`
+      // 使用实例级稳定 id（含 size），避免 Math.random 每次渲染变化、且不与其它实例冲突
+      const gradientId = `${prefixCls}-gradient-${gradientUid}-${size}`
       let pathStroke: string | undefined
       if (isGradient) {
         pathStroke = `url(#${gradientId})`
@@ -354,16 +360,24 @@ export const Progress = defineComponent({
           <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size}>
             {isGradient && (
               <defs>
-                <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-                  {Object.entries(sc as ProgressGradient)
-                    .filter(([k, v]) => k !== 'direction' && typeof v === 'string')
-                    .map(([k, v]) => {
-                      let pct: string
-                      if (k === 'from') pct = '0%'
-                      else if (k === 'to') pct = '100%'
-                      else pct = String(k).endsWith('%') ? String(k) : `${k}%`
-                      return <stop key={k} offset={pct} stop-color={v as string} />
-                    })}
+                {/*
+                  使用 userSpaceOnUse + gradientTransform 抵消 path 的 rotate，
+                  使渐变在屏幕空间内始终保持水平（左→右）。
+                  否则在 circle(-90°) / dashboard(90+gap/2°) 旋转下，
+                  objectBoundingBox 渐变会随 path 一起旋转，导致显示异常。
+                */}
+                <linearGradient
+                  id={gradientId}
+                  gradientUnits="userSpaceOnUse"
+                  x1={isRTL.value ? size : 0}
+                  y1={size / 2}
+                  x2={isRTL.value ? 0 : size}
+                  y2={size / 2}
+                  gradientTransform={`rotate(${-rotation} ${size / 2} ${size / 2})`}
+                >
+                  {getCircleGradientStops(sc as ProgressGradient).map(({ offset, color }) => (
+                    <stop key={offset} offset={offset} stop-color={color} />
+                  ))}
                 </linearGradient>
               </defs>
             )}

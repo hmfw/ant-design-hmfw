@@ -1,4 +1,9 @@
 .hmfw-empty {
+  /* 插画配色变量（默认浅色主题），暗黑模式下被覆盖 */
+  --hmfw-empty-img-shadow: #f5f5f5;
+  --hmfw-empty-img-outline: #d9d9d9;
+  --hmfw-empty-img-bg: #fafafa;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,13 +14,34 @@
 }
 
 .hmfw-empty-image {
+  /* 默认高度，imageStyle / imageWidth / imageHeight 可覆盖 */
+  height: 100px;
   margin-bottom: 8px;
   line-height: 0;
+}
+
+/* 默认插画 svg 跟随容器尺寸缩放，使 imageStyle 能真正控制宽高 */
+.hmfw-empty-image svg {
+  width: 100%;
+  height: 100%;
 }
 
 .hmfw-empty-image img {
   max-width: 100%;
   height: auto;
+}
+
+/* 插画各部位通过 CSS 变量上色，便于主题切换 */
+.hmfw-empty-img-shadow {
+  fill: var(--hmfw-empty-img-shadow);
+}
+
+.hmfw-empty-img-outline {
+  stroke: var(--hmfw-empty-img-outline);
+}
+
+.hmfw-empty-img-bg {
+  fill: var(--hmfw-empty-img-bg);
 }
 
 .hmfw-empty-description {
@@ -40,3 +66,31 @@
 .hmfw-empty-normal .hmfw-empty-footer {
   margin-top: 8px;
 }
+
+/* ===== 暗黑模式适配 ===== */
+/* 方式一：跟随系统配色（无显式主题类时生效） */
+@media (prefers-color-scheme: dark) {
+  .hmfw-empty {
+    --hmfw-empty-img-shadow: rgba(255, 255, 255, 0.08);
+    --hmfw-empty-img-outline: #434343;
+    --hmfw-empty-img-bg: #1f1f1f;
+  }
+}
+
+/* 方式二：显式主题类（优先级高于媒体查询，可强制覆盖系统配色） */
+/* 显式浅色：即使系统为暗色也保持浅色插画 */
+.hmfw-theme-light .hmfw-empty,
+[data-theme='light'] .hmfw-empty {
+  --hmfw-empty-img-shadow: #f5f5f5;
+  --hmfw-empty-img-outline: #d9d9d9;
+  --hmfw-empty-img-bg: #fafafa;
+}
+
+/* 显式暗色：即使系统为浅色也使用暗色插画 */
+.hmfw-theme-dark .hmfw-empty,
+[data-theme='dark'] .hmfw-empty {
+  --hmfw-empty-img-shadow: rgba(255, 255, 255, 0.08);
+  --hmfw-empty-img-outline: #434343;
+  --hmfw-empty-img-bg: #1f1f1f;
+}
+

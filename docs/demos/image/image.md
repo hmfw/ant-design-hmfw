@@ -43,6 +43,14 @@
   <ImageCustomPreview />
 </DemoBlock>
 
+### 自定义工具栏与预览内容
+
+通过 `toolbarRender` 自定义底部工具栏，`imageRender` 自定义预览内容容器。两者的 `info` 都会回传 `transform`、`current`、`total`、`image` 等信息。
+
+<DemoBlock title="自定义工具栏与预览内容" :source="ImageToolbarRenderSource">
+  <ImageToolbarRender />
+</DemoBlock>
+
 ## API
 
 ### Image Props
@@ -76,8 +84,38 @@
 | getContainer | 预览挂载容器；`false` 时原地渲染 | `string \| HTMLElement \| (() => HTMLElement) \| false` | `document.body` |
 | zIndex | 预览根节点 z-index | `number` | `1080` |
 | onTransform | 预览 transform 变化回调 | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
-| imageRender | 自定义预览内容渲染 | `(originalNode: VNode, info: { transform: TransformType; image: ImgInfo }) => VNode` | - |
-| actionsRender | 自定义底部操作栏渲染 | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode` | - |
+| imageRender | 自定义预览内容渲染 | `(originalNode: VNode, info: ImageRenderInfoType) => VNode` | - |
+| toolbarRender | 自定义底部工具栏渲染（参考 AntD v6） | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode` | - |
+| ~~actionsRender~~ | 已废弃，请使用 `toolbarRender` | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode` | - |
+
+### ImageRenderInfoType / ToolbarRenderInfoType
+
+```typescript
+interface ImageRenderInfoType {
+  transform: TransformType
+  current?: number // 当前索引（PreviewGroup）
+  total?: number   // 图片总数（PreviewGroup）
+  image: ImgInfo   // 当前预览图片信息
+}
+
+interface ToolbarRenderInfoType {
+  transform: TransformType
+  current?: number
+  total?: number
+  image: ImgInfo
+  actions: {
+    onFlipY: () => void
+    onFlipX: () => void
+    onRotateLeft: () => void
+    onRotateRight: () => void
+    onZoomOut: () => void
+    onZoomIn: () => void
+    onReset: () => void
+    onClose: () => void
+    onActive?: (offset: number) => void // -1 上一张 / 1 下一张
+  }
+}
+```
 
 ### MaskType
 
@@ -149,9 +187,11 @@ import ImageBasic from './ImageBasic.vue'
 import ImagePreviewGroup from './ImagePreviewGroup.vue'
 import ImagePlaceholder from './ImagePlaceholder.vue'
 import ImageCustomPreview from './ImageCustomPreview.vue'
+import ImageToolbarRender from './ImageToolbarRender.vue'
 
 import ImageBasicSource from './ImageBasic.vue?raw'
 import ImagePreviewGroupSource from './ImagePreviewGroup.vue?raw'
 import ImagePlaceholderSource from './ImagePlaceholder.vue?raw'
 import ImageCustomPreviewSource from './ImageCustomPreview.vue?raw'
+import ImageToolbarRenderSource from './ImageToolbarRender.vue?raw'
 </script>

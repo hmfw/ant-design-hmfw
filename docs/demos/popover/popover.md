@@ -34,6 +34,14 @@
   <PopoverPlacement />
 </DemoBlock>
 
+### 纯展示面板
+
+`Popover._InternalPanelDoNotUseOrYouWillBeFired` 是内部使用的纯展示面板，仅渲染气泡卡片的外观（标题 + 内容 + 箭头），不含触发与定位逻辑，可直接内联到页面中。常规业务请使用 `Popover` 本身。
+
+<DemoBlock title="纯展示面板" :source="PopoverPurePanelSource">
+  <PopoverPurePanel />
+</DemoBlock>
+
 ## API
 
 ### Popover Props

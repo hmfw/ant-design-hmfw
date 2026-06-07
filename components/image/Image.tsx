@@ -5,6 +5,7 @@ import {
   inject,
   provide,
   watch,
+  nextTick,
   onBeforeUnmount,
   Teleport,
   Transition,
@@ -125,6 +126,8 @@ const ImagePreview = defineComponent({
   },
   setup(props) {
     const transform = ref<TransformType>(DEFAULT_TRANSFORM())
+    // 切换图片瞬间禁用过渡，避免从旧图的缩放/旋转状态“回弹”造成卡顿
+    const switching = ref(false)
 
     const scaleStep = computed(() => props.config.scaleStep ?? 0.5)
     const minScale = computed(() => props.config.minScale ?? 1)
@@ -152,11 +155,16 @@ const ImagePreview = defineComponent({
       },
     )
 
-    // 切换图片时复位 transform
+    // 切换图片时复位 transform。切换时关闭过渡，让新图直接以初始状态呈现，
+    // 待下一帧再恢复过渡，避免 translate/scale/rotate 的回弹动画造成卡顿。
     watch(
       () => props.src,
       () => {
+        switching.value = true
         transform.value = DEFAULT_TRANSFORM()
+        nextTick(() => {
+          switching.value = false
+        })
       },
     )
 
@@ -278,10 +286,25 @@ const ImagePreview = defineComponent({
       const scaleY = t.scale * (t.flipY ? -1 : 1)
       return {
         transform: `translate3d(${t.x}px, ${t.y}px, 0) scale3d(${scaleX}, ${scaleY}, 1) rotate(${t.rotate}deg)`,
-        transition: dragging ? 'none' : 'transform 0.3s',
+        // 拖拽或切换图片时禁用过渡：拖拽需即时跟手，切换需避免回弹卡顿
+        transition: dragging || switching.value ? 'none' : 'transform 0.3s',
+        // 提示浏览器开启合成层，减少切换/缩放时的重绘抖动
+        willChange: 'transform',
         cursor: movable.value ? 'grab' : 'default',
       }
     })
+
+    // 当前预览图片信息，供 imageRender / toolbarRender 使用
+    const imgInfo = computed<ImgInfo>(() => ({
+      url: props.src,
+      alt: props.alt,
+    }))
+
+    // 按偏移切换图片（PreviewGroup 场景）：-1 上一张，1 下一张
+    const onActive = (offset: number) => {
+      if (offset < 0) props.onPrev?.()
+      else if (offset > 0) props.onNext?.()
+    }
 
     const actions = {
       onFlipY: flipY,
@@ -292,6 +315,7 @@ const ImagePreview = defineComponent({
       onZoomIn: zoomIn,
       onReset: reset,
       onClose: props.onClose,
+      onActive,
     }
 
     const renderDefaultToolbar = (): VNode => (
@@ -327,11 +351,14 @@ const ImagePreview = defineComponent({
 
     const renderToolbar = (): VNode => {
       const original = renderDefaultToolbar()
-      if (props.config.actionsRender) {
-        return props.config.actionsRender(original, {
+      // 优先使用 AntD v6 对齐的 toolbarRender，其次兼容 deprecated 的 actionsRender
+      const render = props.config.toolbarRender ?? props.config.actionsRender
+      if (render) {
+        return render(original, {
           transform: { ...transform.value },
           current: props.current,
           total: props.total,
+          image: imgInfo.value,
           actions,
         })
       }
@@ -354,7 +381,9 @@ const ImagePreview = defineComponent({
       if (props.config.imageRender) {
         return props.config.imageRender(original, {
           transform: { ...transform.value },
-          image: { url: props.src, alt: props.alt },
+          current: props.current,
+          total: props.total,
+          image: imgInfo.value,
         })
       }
       return original

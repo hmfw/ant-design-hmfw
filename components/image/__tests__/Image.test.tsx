@@ -161,6 +161,55 @@ describe('Image', () => {
     const wrapper = mount(Image, { props: { src: 'test.jpg', rootClassName: 'my-image' } })
     expect(wrapper.find('.my-image').exists()).toBe(true)
   })
+
+  it('toolbarRender customizes the toolbar', async () => {
+    const toolbarRender = vi.fn(() => <div class="custom-toolbar">my toolbar</div>)
+    const wrapper = mount(Image, {
+      props: { src: 'test.jpg', preview: { toolbarRender } },
+      attachTo: document.body,
+    })
+    await wrapper.find('img').trigger('load')
+    await wrapper.find('.hmfw-image-mask').trigger('click')
+    await nextTick()
+    expect(document.querySelector('.custom-toolbar')?.textContent).toBe('my toolbar')
+    // 默认工具栏被替换
+    expect(document.querySelector('.hmfw-image-preview-operations')).toBeFalsy()
+    // info 携带 transform / image / actions
+    const info = toolbarRender.mock.calls[0][1]
+    expect(info.transform.scale).toBe(1)
+    expect(info.image.url).toBe('test.jpg')
+    expect(typeof info.actions.onZoomIn).toBe('function')
+    wrapper.unmount()
+  })
+
+  it('actionsRender still works as deprecated alias', async () => {
+    const actionsRender = vi.fn((original: any) => original)
+    const wrapper = mount(Image, {
+      props: { src: 'test.jpg', preview: { actionsRender } },
+      attachTo: document.body,
+    })
+    await wrapper.find('img').trigger('load')
+    await wrapper.find('.hmfw-image-mask').trigger('click')
+    await nextTick()
+    expect(actionsRender).toHaveBeenCalled()
+    wrapper.unmount()
+  })
+
+  it('imageRender customizes preview content with info', async () => {
+    const imageRender = vi.fn(() => <div class="custom-image">rendered</div>)
+    const wrapper = mount(Image, {
+      props: { src: 'test.jpg', preview: { imageRender } },
+      attachTo: document.body,
+    })
+    await wrapper.find('img').trigger('load')
+    await wrapper.find('.hmfw-image-mask').trigger('click')
+    await nextTick()
+    expect(document.querySelector('.custom-image')?.textContent).toBe('rendered')
+    const info = imageRender.mock.calls[0][1]
+    expect(info.transform.scale).toBe(1)
+    expect(info.image.url).toBe('test.jpg')
+    wrapper.unmount()
+  })
 })
 
 describe('PreviewGroup', () => {
@@ -264,6 +313,40 @@ describe('PreviewGroup', () => {
     nextBtn?.click()
     await nextTick()
     expect(onChange).toHaveBeenCalledWith(1, 0)
+    wrapper.unmount()
+  })
+
+  it('disables transform transition while switching to avoid jank', async () => {
+    const wrapper = mount(PreviewGroup, {
+      props: { items: ['a.jpg', 'b.jpg'], preview: { open: true } },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const nextBtn = document.querySelector('.hmfw-image-preview-switch-right') as HTMLElement
+    nextBtn?.click()
+    // 切换发生的同一 tick 内（nextTick 复位前）过渡应被禁用
+    await nextTick()
+    const img = document.querySelector('.hmfw-image-preview-img') as HTMLElement
+    // 切换后稳定态：transition 恢复，且使用合成层提示
+    expect(img.style.willChange).toBe('transform')
+    wrapper.unmount()
+  })
+
+  it('toolbarRender onActive switches images in group', async () => {
+    let activeFn: ((offset: number) => void) | undefined
+    const toolbarRender = vi.fn((original: any, info: any) => {
+      activeFn = info.actions.onActive
+      return original
+    })
+    const wrapper = mount(PreviewGroup, {
+      props: { items: ['a.jpg', 'b.jpg'], preview: { open: true, toolbarRender } },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-image-preview-count')?.textContent).toContain('1 / 2')
+    activeFn?.(1)
+    await nextTick()
+    expect(document.querySelector('.hmfw-image-preview-count')?.textContent).toContain('2 / 2')
     wrapper.unmount()
   })
 })

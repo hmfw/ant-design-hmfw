@@ -117,6 +117,13 @@ const enUS: Locale = {
     expand: 'Expand',
     collapse: 'Collapse',
   },
+  Calendar: {
+    month: 'Month',
+    year: 'Year',
+    today: 'Today',
+    selectDate: 'Select date',
+    selectMonth: 'Select month',
+  },
 }
 
 export default enUS

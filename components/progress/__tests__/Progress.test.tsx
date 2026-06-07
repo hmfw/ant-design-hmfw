@@ -376,4 +376,93 @@ describe('Progress', () => {
     })
     expect(wrapper.find('.hmfw-progress-indicator-bright').exists()).toBe(false)
   })
+
+  // ===== 仪表盘/圆形 渐变色修复 =====
+
+  it('renders gradient defs for dashboard type with userSpaceOnUse', () => {
+    const wrapper = mount(Progress, {
+      props: {
+        percent: 60,
+        type: 'dashboard',
+        strokeColor: { '0%': '#108ee9', '100%': '#87d068' },
+      },
+    })
+    const grad = wrapper.find('linearGradient')
+    expect(grad.exists()).toBe(true)
+    // 使用 userSpaceOnUse，保证渐变在屏幕空间内可控
+    expect(grad.attributes('gradientUnits')).toBe('userSpaceOnUse')
+    // gradientTransform 抵消 path 的 rotate
+    expect(grad.attributes('gradientTransform')).toMatch(/^rotate\(/)
+    const path = wrapper.find('.hmfw-progress-circle-path')
+    expect(path.attributes('stroke')).toMatch(/^url\(#/)
+  })
+
+  it('sorts gradient stops numerically (out-of-order keys)', () => {
+    const wrapper = mount(Progress, {
+      props: {
+        percent: 50,
+        type: 'circle',
+        strokeColor: { '100%': '#ffcb00', '0%': '#108ee9', '50%': '#87d068' },
+      },
+    })
+    const stops = wrapper.findAll('stop')
+    expect(stops).toHaveLength(3)
+    expect(stops[0].attributes('offset')).toBe('0%')
+    expect(stops[1].attributes('offset')).toBe('50%')
+    expect(stops[2].attributes('offset')).toBe('100%')
+  })
+
+  it('maps from/to gradient to 0%/100% stops for circle', () => {
+    const wrapper = mount(Progress, {
+      props: {
+        percent: 50,
+        type: 'circle',
+        strokeColor: { from: '#108ee9', to: '#87d068' },
+      },
+    })
+    const stops = wrapper.findAll('stop')
+    expect(stops).toHaveLength(2)
+    expect(stops[0].attributes('offset')).toBe('0%')
+    expect(stops[0].attributes('stop-color')).toBe('#108ee9')
+    expect(stops[1].attributes('offset')).toBe('100%')
+    expect(stops[1].attributes('stop-color')).toBe('#87d068')
+  })
+
+  it('keeps gradient id stable across re-renders', async () => {
+    const wrapper = mount(Progress, {
+      props: {
+        percent: 30,
+        type: 'circle',
+        strokeColor: { from: '#108ee9', to: '#87d068' },
+      },
+    })
+    const idBefore = wrapper.find('linearGradient').attributes('id')
+    const strokeBefore = wrapper.find('.hmfw-progress-circle-path').attributes('stroke')
+    await wrapper.setProps({ percent: 80 })
+    expect(wrapper.find('linearGradient').attributes('id')).toBe(idBefore)
+    expect(wrapper.find('.hmfw-progress-circle-path').attributes('stroke')).toBe(strokeBefore)
+  })
+
+  it('gives different gradient ids to different instances', () => {
+    const w1 = mount(Progress, {
+      props: { percent: 50, type: 'circle', strokeColor: { from: '#000', to: '#fff' } },
+    })
+    const w2 = mount(Progress, {
+      props: { percent: 50, type: 'circle', strokeColor: { from: '#000', to: '#fff' } },
+    })
+    expect(w1.find('linearGradient').attributes('id')).not.toBe(
+      w2.find('linearGradient').attributes('id')
+    )
+  })
+
+  it('reverses gradient direction for RTL circle', async () => {
+    const { ConfigProvider } = await import('../../config-provider')
+    const wrapper = mount({
+      components: { ConfigProvider, Progress },
+      template: `<ConfigProvider direction="rtl"><Progress :percent="50" type="circle" :stroke-color="{ from: '#000', to: '#fff' }" /></ConfigProvider>`,
+    })
+    const grad = wrapper.find('linearGradient')
+    // RTL 下起点在右侧（x1 = size），终点在左侧（x2 = 0）
+    expect(Number(grad.attributes('x1'))).toBeGreaterThan(Number(grad.attributes('x2')))
+  })
 })

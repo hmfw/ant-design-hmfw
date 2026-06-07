@@ -1,0 +1,253 @@
+/* Calendar 日历组件样式 */
+
+.hmfw-calendar {
+  box-sizing: border-box;
+  background: var(--hmfw-color-bg-container);
+  font-size: var(--hmfw-font-size);
+  line-height: var(--hmfw-line-height);
+}
+
+/* 全屏模式 */
+.hmfw-calendar-fullscreen {
+  border: 1px solid var(--hmfw-color-border);
+  border-radius: var(--hmfw-border-radius);
+}
+
+/* 迷你模式 */
+.hmfw-calendar-mini {
+  border: 1px solid var(--hmfw-color-border);
+  border-radius: var(--hmfw-border-radius);
+}
+
+/* 头部 */
+.hmfw-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hmfw-color-border);
+}
+
+.hmfw-calendar-fullscreen .hmfw-calendar-header {
+  padding: 16px 24px;
+}
+
+.hmfw-calendar-mini .hmfw-calendar-header {
+  padding: 8px 12px;
+}
+
+.hmfw-calendar-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hmfw-calendar-header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* 内容区 */
+.hmfw-calendar-content {
+  padding: 16px;
+}
+
+.hmfw-calendar-mini .hmfw-calendar-content {
+  padding: 8px;
+}
+
+/* 面板 */
+.hmfw-calendar-panel {
+  width: 100%;
+}
+
+/* 星期头 */
+.hmfw-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.hmfw-calendar-weekday-cell {
+  text-align: center;
+  padding: 8px 0;
+  font-weight: 500;
+  color: var(--hmfw-color-text-secondary);
+  font-size: var(--hmfw-font-size-sm);
+}
+
+.hmfw-calendar-mini .hmfw-calendar-weekday-cell {
+  padding: 4px 0;
+  font-size: 12px;
+}
+
+/* 日期格子容器 */
+.hmfw-calendar-body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+/* 日期单元格 */
+.hmfw-calendar-cell {
+  position: relative;
+  min-height: 80px;
+  padding: 4px 8px;
+  border: 1px solid var(--hmfw-color-border);
+  background: var(--hmfw-color-bg-container);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.hmfw-calendar-mini .hmfw-calendar-cell {
+  min-height: 50px;
+  padding: 2px 4px;
+}
+
+.hmfw-calendar-cell:hover {
+  background: var(--hmfw-color-fill-tertiary);
+}
+
+.hmfw-calendar-cell-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* 非当前月日期 */
+.hmfw-calendar-cell:not(.hmfw-calendar-cell-in-view) {
+  background: var(--hmfw-color-fill-quaternary);
+  color: var(--hmfw-color-text-quaternary);
+}
+
+/* 今天 */
+.hmfw-calendar-cell-today .hmfw-calendar-date {
+  color: var(--hmfw-color-primary);
+  font-weight: 600;
+}
+
+.hmfw-calendar-cell-today::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--hmfw-color-primary);
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+/* 选中日期 */
+.hmfw-calendar-cell-selected {
+  background: var(--hmfw-color-primary-bg);
+  border-color: var(--hmfw-color-primary);
+}
+
+.hmfw-calendar-cell-selected:hover {
+  background: var(--hmfw-color-primary-bg-hover);
+}
+
+.hmfw-calendar-cell-selected .hmfw-calendar-date {
+  color: var(--hmfw-color-primary);
+  font-weight: 600;
+}
+
+/* 禁用日期 */
+.hmfw-calendar-cell-disabled {
+  background: var(--hmfw-color-fill-quaternary);
+  color: var(--hmfw-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.hmfw-calendar-cell-disabled:hover {
+  background: var(--hmfw-color-fill-quaternary);
+}
+
+/* 范围选择模式 */
+.hmfw-calendar-cell-range-start {
+  background: var(--hmfw-color-primary);
+  border-color: var(--hmfw-color-primary);
+}
+
+.hmfw-calendar-cell-range-start .hmfw-calendar-date {
+  color: #fff;
+  font-weight: 600;
+}
+
+.hmfw-calendar-cell-range-end {
+  background: var(--hmfw-color-primary);
+  border-color: var(--hmfw-color-primary);
+}
+
+.hmfw-calendar-cell-range-end .hmfw-calendar-date {
+  color: #fff;
+  font-weight: 600;
+}
+
+.hmfw-calendar-cell-in-range {
+  background: var(--hmfw-color-primary-bg);
+  border-color: var(--hmfw-color-primary-border);
+}
+
+.hmfw-calendar-cell-in-range:hover {
+  background: var(--hmfw-color-primary-bg-hover);
+}
+
+/* 日期数字 */
+.hmfw-calendar-date {
+  font-size: var(--hmfw-font-size);
+}
+
+.hmfw-calendar-mini .hmfw-calendar-date {
+  font-size: var(--hmfw-font-size-sm);
+}
+
+/* 年视图 */
+.hmfw-calendar-year-panel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.hmfw-calendar-month-cell {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--hmfw-font-size-lg);
+  border-radius: var(--hmfw-border-radius);
+}
+
+.hmfw-calendar-mini .hmfw-calendar-month-cell {
+  min-height: 50px;
+  font-size: var(--hmfw-font-size);
+}
+
+/* 月份文本 */
+.hmfw-calendar-month {
+  font-size: var(--hmfw-font-size-lg);
+  font-weight: 500;
+}
+
+.hmfw-calendar-mini .hmfw-calendar-month {
+  font-size: var(--hmfw-font-size);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .hmfw-calendar-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .hmfw-calendar-cell {
+    min-height: 60px;
+    padding: 2px 4px;
+  }
+
+  .hmfw-calendar-month-cell {
+    min-height: 60px;
+  }
+}

@@ -128,7 +128,7 @@ export type {
 export { Select } from './select'
 export type { SelectProps, SelectOption, SelectSize, SelectMode, SelectStatus } from './select'
 
-export { Popover } from './popover'
+export { Popover, PopoverPurePanel } from './popover'
 export type { PopoverProps, PopoverContent } from './popover'
 
 export { InputNumber } from './input-number'
@@ -302,6 +302,19 @@ export type { TreeSelectProps, TreeSelectNode } from './tree-select'
 export { Statistic, Countdown } from './statistic'
 export type { StatisticProps, CountdownProps } from './statistic'
 
+export { Calendar } from './calendar'
+export type {
+  CalendarMode,
+  CellRender as CalendarCellRender,
+  HeaderRender as CalendarHeaderRender,
+  DateCellRender as CalendarDateCellRender,
+  MonthCellRender as CalendarMonthCellRender,
+  ValidRange as CalendarValidRange,
+  CalendarHeaderConfig,
+  CellRenderInfo as CalendarCellRenderInfo,
+  DateCellRenderInfo as CalendarDateCellRenderInfo,
+} from './calendar'
+
 // Install function for Vue.use()
 import { ConfigProvider } from './config-provider'
 import { Icon } from './icon'
@@ -336,8 +349,9 @@ import { Transfer } from './transfer'
 import { RangePicker } from './range-picker'
 import { TreeSelect } from './tree-select'
 import { Statistic, Countdown } from './statistic'
+import { Calendar } from './calendar'
 
-const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Link, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Ribbon, Tag, CheckableTag, Empty, Card, CardGrid, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, RadioButton, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker, Transfer, RangePicker, TreeSelect, Statistic, Countdown]
+const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Link, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Ribbon, Tag, CheckableTag, Empty, Card, CardGrid, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, RadioButton, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker, Transfer, RangePicker, TreeSelect, Statistic, Countdown, Calendar]
 
 export function install(app: VueApp): void {
   components.forEach((component) => {

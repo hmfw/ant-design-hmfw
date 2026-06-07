@@ -66,6 +66,22 @@ block 属性使其适合父元素宽度。
   <SegmentedWithIcon />
 </DemoBlock>
 
+### 图标 + 文本
+
+图标与文本同时存在时自动优化布局，间距统一。
+
+<DemoBlock title="图标 + 文本" :source="SegmentedIconLabelSource">
+  <SegmentedIconLabel />
+</DemoBlock>
+
+### 自定义选项样式
+
+每个选项支持单独的 `className` 与 `style`。
+
+<DemoBlock title="自定义选项样式" :source="SegmentedCustomStyleSource">
+  <SegmentedCustomStyle />
+</DemoBlock>
+
 ## API
 
 ### Segmented Props
@@ -94,6 +110,7 @@ block 属性使其适合父元素宽度。
 | title | HTML title 属性 | `string` | - |
 | tooltip | 提示信息 | `string \| Omit<TooltipProps, 'title'>` | - |
 | className | 自定义类名 | `string` | - |
+| style | 自定义内联样式 | `CSSProperties` | - |
 
 ### Segmented Events
 
@@ -110,6 +127,8 @@ import SegmentedSize from './SegmentedSize.vue'
 import SegmentedVertical from './SegmentedVertical.vue'
 import SegmentedShape from './SegmentedShape.vue'
 import SegmentedWithIcon from './SegmentedWithIcon.vue'
+import SegmentedIconLabel from './SegmentedIconLabel.vue'
+import SegmentedCustomStyle from './SegmentedCustomStyle.vue'
 
 const SegmentedBasicSource = \`<template>
   <Segmented v-model:value="value" :options="options" />
@@ -213,4 +232,46 @@ const options = [
   { value: 'settings', icon: h(Icon, { component: SettingOutlined }), tooltip: 'Settings' },
 ]
 <\/script>\`
+
+const SegmentedIconLabelSource = \`<template>
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    <Segmented v-model:value="value" :options="options" />
+    <Segmented v-model:value="value" :options="options" size="large" />
+    <Segmented v-model:value="value" :options="options" size="small" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, h } from 'vue'
+import { Segmented, Icon } from 'ant-design-hmfw'
+import { PictureOutlined, BarsOutlined } from 'ant-design-hmfw'
+
+const value = ref('list')
+const options = [
+  { value: 'list', label: '列表', icon: h(Icon, { component: BarsOutlined }) },
+  { value: 'grid', label: '网格', icon: h(Icon, { component: PictureOutlined }) },
+]
+<\/script>\`
+
+const SegmentedCustomStyleSource = \`<template>
+  <Segmented v-model:value="value" :options="options" />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Segmented } from 'ant-design-hmfw'
+
+const value = ref('apple')
+const options = [
+  { value: 'apple', label: '苹果', style: { color: '#cf1322', fontWeight: 600 } },
+  { value: 'orange', label: '橙子', style: { color: '#d46b08' } },
+  { value: 'pear', label: '梨', className: 'demo-segmented-pear' },
+]
+<\/script>
+
+<style>
+.demo-segmented-pear {
+  font-style: italic;
+}
+<\/style>\`
 </script>

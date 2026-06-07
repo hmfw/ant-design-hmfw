@@ -147,6 +147,36 @@ export function pickFirstColor(strokeColor?: string | string[] | ProgressGradien
   return undefined
 }
 
+/**
+ * 解析圆形/仪表盘渐变的 stop 列表。
+ * - `from`/`to` 兜底为 0%/100%
+ * - 百分比 key（如 `0%`、`50%`）按数值升序排序
+ * 返回供 <stop offset stop-color> 使用的数组。
+ */
+export function getCircleGradientStops(
+  gradient: ProgressGradient
+): { offset: string; color: string }[] {
+  const { from, to, direction: _direction, ...rest } = gradient as Record<string, string | undefined>
+  const restEntries = Object.entries(rest).filter(([, v]) => typeof v === 'string') as [string, string][]
+
+  if (restEntries.length > 0) {
+    return restEntries
+      .map(([key, color]) => ({
+        offsetNum: parseFloat(String(key).replace(/%/g, '')),
+        color,
+      }))
+      .filter(item => !isNaN(item.offsetNum))
+      .sort((a, b) => a.offsetNum - b.offsetNum)
+      .map(({ offsetNum, color }) => ({ offset: `${offsetNum}%`, color }))
+  }
+
+  // from/to 兜底
+  return [
+    { offset: '0%', color: from || '#1677ff' },
+    { offset: '100%', color: to || '#1677ff' },
+  ]
+}
+
 /** circle 默认 success 描边色 */
 export const PRESET_SUCCESS_COLOR = '#52c41a'
 

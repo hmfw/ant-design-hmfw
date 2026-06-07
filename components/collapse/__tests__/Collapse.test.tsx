@@ -222,5 +222,49 @@ describe('Collapse', () => {
       expect(wrapper.classes()).toContain('hmfw-collapse-icon-position-end')
     })
   })
+
+  describe('showArrow prop', () => {
+    it('shows arrow by default', () => {
+      const wrapper = mount(Collapse, { props: { items } })
+      expect(wrapper.findAll('.hmfw-collapse-expand-icon')).toHaveLength(3)
+    })
+
+    it('hides arrow when showArrow=false on item', () => {
+      const customItems = [
+        { key: '1', label: 'Panel 1', children: 'Content 1', showArrow: false },
+        { key: '2', label: 'Panel 2', children: 'Content 2' },
+      ]
+      const wrapper = mount(Collapse, { props: { items: customItems } })
+      const icons = wrapper.findAll('.hmfw-collapse-expand-icon')
+      expect(icons).toHaveLength(1)
+      // Only second panel should have icon
+      const items = wrapper.findAll('.hmfw-collapse-item')
+      expect(items[0].find('.hmfw-collapse-expand-icon').exists()).toBe(false)
+      expect(items[1].find('.hmfw-collapse-expand-icon').exists()).toBe(true)
+    })
+
+    it('respects showArrow on CollapsePanel', () => {
+      const wrapper = mount(Collapse, {
+        slots: {
+          default: () => [
+            h(CollapsePanel, { key: '1', header: 'Header 1', showArrow: false }, () => 'Content 1'),
+            h(CollapsePanel, { key: '2', header: 'Header 2' }, () => 'Content 2'),
+          ],
+        },
+      })
+      const items = wrapper.findAll('.hmfw-collapse-item')
+      expect(items[0].find('.hmfw-collapse-expand-icon').exists()).toBe(false)
+      expect(items[1].find('.hmfw-collapse-expand-icon').exists()).toBe(true)
+    })
+
+    it('can still click header when showArrow=false', async () => {
+      const customItems = [
+        { key: '1', label: 'Panel 1', children: 'Content 1', showArrow: false },
+      ]
+      const wrapper = mount(Collapse, { props: { items: customItems } })
+      await wrapper.find('.hmfw-collapse-header').trigger('click')
+      expect(wrapper.find('.hmfw-collapse-item').classes()).toContain('hmfw-collapse-item-active')
+    })
+  })
 })
 

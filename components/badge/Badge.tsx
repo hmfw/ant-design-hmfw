@@ -1,6 +1,7 @@
 import { defineComponent, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import { ScrollNumber } from './ScrollNumber'
 import type { BadgeStatus, BadgeSize } from './types'
 
 const PRESET_COLORS = ['pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
@@ -67,10 +68,15 @@ export const Badge = defineComponent({
       if (props.status || (props.color && !slots.default)) {
         const statusCls = cls(
           `${prefixCls}-status-dot`,
-          props.status && `${prefixCls}-status-${props.status}`,
-          props.color && isPresetColor.value && `${prefixCls}-color-${props.color}`,
+          // 只有当没有自定义 color 时才使用 status 预设样式
+          props.status && !props.color && `${prefixCls}-status-${props.status}`,
+          // 只有当没有 status 时才使用 color 预设样式
+          !props.status && props.color && isPresetColor.value && `${prefixCls}-color-${props.color}`,
         )
+        // 自定义颜色优先级：color > status 预设颜色
         const dotStyle = props.color && !isPresetColor.value
+          ? { background: props.color }
+          : props.color && isPresetColor.value
           ? { background: props.color }
           : {}
         return (
@@ -94,7 +100,9 @@ export const Badge = defineComponent({
           style={badgeStyle.value}
           title={props.title ?? String(props.count ?? '')}
         >
-          {!props.dot && displayCount.value}
+          {!props.dot && (
+            <ScrollNumber count={displayCount.value ?? 0} />
+          )}
         </sup>
       )
 

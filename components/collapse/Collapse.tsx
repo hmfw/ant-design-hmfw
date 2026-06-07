@@ -1,9 +1,50 @@
-import { defineComponent, ref, computed, watch, provide, inject, type PropType, type VNode } from 'vue'
+import { defineComponent, ref, computed, watch, provide, inject, Transition, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { RightOutlined } from '../icon/icons'
 import type { CollapseItem, CollapsibleType, ExpandIconProps } from './types'
+
+// 折叠动画钩子
+const collapseMotion = {
+  onBeforeEnter(el: Element) {
+    const element = el as HTMLElement
+    element.style.height = '0'
+    element.style.opacity = '0'
+  },
+  onEnter(el: Element) {
+    const element = el as HTMLElement
+    // 获取内容的实际高度
+    const height = element.scrollHeight
+    // 强制浏览器重排以应用初始状态
+    element.offsetHeight
+    // 设置目标高度和透明度
+    element.style.height = `${height}px`
+    element.style.opacity = '1'
+  },
+  onAfterEnter(el: Element) {
+    const element = el as HTMLElement
+    element.style.height = ''
+    element.style.opacity = ''
+  },
+  onBeforeLeave(el: Element) {
+    const element = el as HTMLElement
+    element.style.height = `${element.offsetHeight}px`
+    element.style.opacity = '1'
+  },
+  onLeave(el: Element) {
+    const element = el as HTMLElement
+    // 强制浏览器重排以应用初始高度
+    element.offsetHeight
+    element.style.height = '0'
+    element.style.opacity = '0'
+  },
+  onAfterLeave(el: Element) {
+    const element = el as HTMLElement
+    element.style.height = ''
+    element.style.opacity = ''
+  },
+}
 
 const COLLAPSE_CONTEXT_KEY = Symbol('collapse-context')
 
@@ -104,6 +145,9 @@ export const Collapse = defineComponent({
         const canClickHeader = !isDisabled && effectiveCollapsible !== 'icon'
         const canClickIcon = !isDisabled && (effectiveCollapsible === 'icon' || effectiveCollapsible === 'header' || effectiveCollapsible === undefined)
 
+        // 如果 forceRender，内容始终渲染但用 CSS 隐藏；否则用 Transition 处理
+        const useTransition = !options.forceRender
+
         return (
           <div
             key={key}
@@ -142,18 +186,44 @@ export const Collapse = defineComponent({
                 <span class={`${prefixCls}-extra`}>{options.extra}</span>
               )}
             </div>
-            {shouldRender && (
-              <div
-                class={cls(`${prefixCls}-content`, {
-                  [`${prefixCls}-content-active`]: isOpen,
-                  [`${prefixCls}-content-inactive`]: !isOpen,
-                })}
-                role="region"
+            {useTransition ? (
+              <Transition
+                name={`${prefixCls}-motion`}
+                onBeforeEnter={collapseMotion.onBeforeEnter}
+                onEnter={collapseMotion.onEnter}
+                onAfterEnter={collapseMotion.onAfterEnter}
+                onBeforeLeave={collapseMotion.onBeforeLeave}
+                onLeave={collapseMotion.onLeave}
+                onAfterLeave={collapseMotion.onAfterLeave}
               >
-                <div class={`${prefixCls}-content-box`}>
-                  {children as any}
+                {(shouldRender && isOpen) && (
+                  <div
+                    class={`${prefixCls}-content`}
+                    role="region"
+                  >
+                    <div class={`${prefixCls}-content-box`}>
+                      {children as any}
+                    </div>
+                  </div>
+                )}
+              </Transition>
+            ) : (
+              shouldRender && (
+                <div
+                  class={cls(`${prefixCls}-content`, {
+                    [`${prefixCls}-content-hidden`]: !isOpen,
+                  })}
+                  role="region"
+                  style={{
+                    height: isOpen ? undefined : '0',
+                    opacity: isOpen ? undefined : '0',
+                  }}
+                >
+                  <div class={`${prefixCls}-content-box`}>
+                    {children as any}
+                  </div>
                 </div>
-              </div>
+              )
             )}
           </div>
         )
@@ -232,6 +302,9 @@ export const CollapsePanel = defineComponent({
       () => isOpen.value || !context.destroyInactivePanel.value || props.forceRender,
     )
 
+    // 如果 forceRender，内容始终渲染但用 CSS 隐藏；否则用 Transition 处理
+    const useTransition = computed(() => !props.forceRender)
+
     const renderExpandIcon = () => {
       if (context.expandIcon.value) {
         return context.expandIcon.value({ isActive: isOpen.value, panelKey: key.value })
@@ -278,16 +351,40 @@ export const CollapsePanel = defineComponent({
           <span class={`${prefixCls}-header-text`}>{props.header}</span>
           {props.extra && <span class={`${prefixCls}-extra`}>{props.extra}</span>}
         </div>
-        {shouldRender.value && (
-          <div
-            class={cls(`${prefixCls}-content`, {
-              [`${prefixCls}-content-active`]: isOpen.value,
-              [`${prefixCls}-content-inactive`]: !isOpen.value,
-            })}
-            role="region"
+        {useTransition.value ? (
+          <Transition
+            name={`${prefixCls}-motion`}
+            onBeforeEnter={collapseMotion.onBeforeEnter}
+            onEnter={collapseMotion.onEnter}
+            onAfterEnter={collapseMotion.onAfterEnter}
+            onBeforeLeave={collapseMotion.onBeforeLeave}
+            onLeave={collapseMotion.onLeave}
+            onAfterLeave={collapseMotion.onAfterLeave}
           >
-            <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
-          </div>
+            {(shouldRender.value && isOpen.value) && (
+              <div
+                class={`${prefixCls}-content`}
+                role="region"
+              >
+                <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
+              </div>
+            )}
+          </Transition>
+        ) : (
+          shouldRender.value && (
+            <div
+              class={cls(`${prefixCls}-content`, {
+                [`${prefixCls}-content-hidden`]: !isOpen.value,
+              })}
+              role="region"
+              style={{
+                height: isOpen.value ? undefined : '0',
+                opacity: isOpen.value ? undefined : '0',
+              }}
+            >
+              <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
+            </div>
+          )
         )}
       </div>
     )
