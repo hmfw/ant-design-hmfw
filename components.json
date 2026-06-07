@@ -1,7 +1,7 @@
 {
   "name": "ant-design-hmfw",
   "version": "0.1.0",
-  "description": "A Vue3 UI component library based on Ant Design v6",
+  "description": "A Vue3 UI component library based on Ant Design v6, featuring 66 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add ant-design-hmfw",
   "usage": {
