@@ -49,7 +49,7 @@ import { Alert } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
+  <div style="display: flex; flex-direction: column; gap: 12px">
     <Alert message="成功提示" type="success" />
     <Alert message="消息提示" type="info" />
     <Alert message="警告提示" type="warning" />
@@ -66,19 +66,9 @@ import { Alert } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <Alert
-      message="成功提示"
-      description="详细的成功描述和对此次成功的说明。"
-      type="success"
-      show-icon
-    />
-    <Alert
-      message="错误提示"
-      description="详细的错误描述和对此次错误的说明。"
-      type="error"
-      show-icon
-    />
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <Alert message="成功提示" description="详细的成功描述和对此次成功的说明。" type="success" show-icon />
+    <Alert message="错误提示" description="详细的错误描述和对此次错误的说明。" type="error" show-icon />
   </div>
 </template>
 
@@ -149,26 +139,22 @@ import { Anchor, AnchorLink } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 24px;">
-    <div style="flex: 1;">
-      <div id="part-1" style="height: 200px; background: #e6f4ff; padding: 16px; margin-bottom: 16px;">
+  <div style="display: flex; gap: 24px">
+    <div style="flex: 1">
+      <div id="part-1" style="height: 200px; background: #e6f4ff; padding: 16px; margin-bottom: 16px">
         <h3>第一部分</h3>
         <p>这是第一部分的内容。</p>
       </div>
-      <div id="part-2" style="height: 200px; background: #f6ffed; padding: 16px; margin-bottom: 16px;">
+      <div id="part-2" style="height: 200px; background: #f6ffed; padding: 16px; margin-bottom: 16px">
         <h3>第二部分</h3>
         <p>这是第二部分的内容。</p>
       </div>
-      <div id="part-3" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px;">
+      <div id="part-3" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px">
         <h3>第三部分</h3>
         <p>这是第三部分的内容。</p>
       </div>
     </div>
-    <Anchor
-      :items="items"
-      :offset-top="64"
-      style="width: 160px;"
-    />
+    <Anchor :items="items" :offset-top="64" style="width: 160px" />
   </div>
 </template>
 
@@ -194,22 +180,28 @@ const items = [
 
 ```vue
 <template>
-  <div style="display: flex; gap: 24px;">
-    <div style="flex: 1;">
-      <div id="components-anchor-demo-basic" style="height: 200px; background: #e6f4ff; padding: 16px; margin-bottom: 16px;">
+  <div style="display: flex; gap: 24px">
+    <div style="flex: 1">
+      <div
+        id="components-anchor-demo-basic"
+        style="height: 200px; background: #e6f4ff; padding: 16px; margin-bottom: 16px"
+      >
         <h3>Basic demo</h3>
         <p>The simplest usage.</p>
       </div>
-      <div id="components-anchor-demo-static" style="height: 200px; background: #f6ffed; padding: 16px; margin-bottom: 16px;">
+      <div
+        id="components-anchor-demo-static"
+        style="height: 200px; background: #f6ffed; padding: 16px; margin-bottom: 16px"
+      >
         <h3>Static Anchor</h3>
         <p>Do not change hash when scrolling.</p>
       </div>
-      <div id="API" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px;">
+      <div id="API" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px">
         <h3>API</h3>
         <p>API documentation.</p>
       </div>
     </div>
-    <Anchor :offset-top="64" style="width: 200px;">
+    <Anchor :offset-top="64" style="width: 200px">
       <AnchorLink href="#components-anchor-demo-basic" title="Basic demo" />
       <AnchorLink href="#components-anchor-demo-static" title="Static demo" />
       <AnchorLink href="#API" title="API">
@@ -360,13 +352,8 @@ import { AutoComplete } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="width: 300px;">
-    <AutoComplete
-      v-model:value="value"
-      :options="options"
-      placeholder="请输入内容"
-      @search="handleSearch"
-    />
+  <div style="width: 300px">
+    <AutoComplete v-model:value="value" :options="options" placeholder="请输入内容" @search="handleSearch" />
   </div>
 </template>
 
@@ -375,18 +362,13 @@ import { ref } from 'vue'
 import { AutoComplete } from 'ant-design-hmfw'
 
 const value = ref('')
-const options = ref([
-  { value: 'Vue' },
-  { value: 'React' },
-  { value: 'Angular' },
-  { value: 'Svelte' },
-])
+const options = ref([{ value: 'Vue' }, { value: 'React' }, { value: 'Angular' }, { value: 'Svelte' }])
 
 const handleSearch = (searchText: string) => {
   const allOptions = ['Vue', 'React', 'Angular', 'Svelte', 'Solid']
   options.value = allOptions
-    .filter(item => item.toLowerCase().includes(searchText.toLowerCase()))
-    .map(item => ({ value: item }))
+    .filter((item) => item.toLowerCase().includes(searchText.toLowerCase()))
+    .map((item) => ({ value: item }))
 }
 </script>
 ```
@@ -395,13 +377,8 @@ const handleSearch = (searchText: string) => {
 
 ```vue
 <template>
-  <div style="width: 300px;">
-    <AutoComplete
-      v-model:value="value"
-      :options="options"
-      placeholder="请输入内容"
-      @search="handleSearch"
-    />
+  <div style="width: 300px">
+    <AutoComplete v-model:value="value" :options="options" placeholder="请输入内容" @search="handleSearch" />
   </div>
 </template>
 
@@ -422,9 +399,7 @@ const handleSearch = (searchText: string) => {
     { value: 'react', label: 'React - 用于构建用户界面的 JavaScript 库' },
     { value: 'angular', label: 'Angular - 现代 Web 开发平台' },
   ]
-  options.value = allOptions.filter(item =>
-    item.value.toLowerCase().includes(searchText.toLowerCase())
-  )
+  options.value = allOptions.filter((item) => item.value.toLowerCase().includes(searchText.toLowerCase()))
 }
 </script>
 ```
@@ -473,10 +448,10 @@ import { Avatar, AvatarGroup } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 16px; align-items: center;">
+  <div style="display: flex; gap: 16px; align-items: center">
     <Avatar :size="64" src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-    <Avatar :size="64">U</Avatar>
-    <Avatar :size="64" style="background-color: #87d068;">USER</Avatar>
+    <Avatar :size="64"> U </Avatar>
+    <Avatar :size="64" style="background-color: #87d068"> USER </Avatar>
   </div>
 </template>
 
@@ -489,11 +464,11 @@ import { Avatar } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 16px; align-items: center;">
-    <Avatar size="small">S</Avatar>
+  <div style="display: flex; gap: 16px; align-items: center">
+    <Avatar size="small"> S </Avatar>
     <Avatar>M</Avatar>
-    <Avatar size="large">L</Avatar>
-    <Avatar :size="64">64</Avatar>
+    <Avatar size="large"> L </Avatar>
+    <Avatar :size="64"> 64 </Avatar>
   </div>
 </template>
 
@@ -540,12 +515,10 @@ import { BackTop } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="height: 1500px; padding: 20px; background: linear-gradient(to bottom, #fff, #f0f0f0);">
-    <p style="margin-bottom: 20px;">向下滚动页面，右下角会出现回到顶部按钮。</p>
-    <p style="margin-bottom: 20px;">默认当页面滚动超过 400px 时显示。</p>
-    <div v-for="i in 50" :key="i" style="margin-bottom: 10px;">
-      内容行 {{ i }}
-    </div>
+  <div style="height: 1500px; padding: 20px; background: linear-gradient(to bottom, #fff, #f0f0f0)">
+    <p style="margin-bottom: 20px">向下滚动页面，右下角会出现回到顶部按钮。</p>
+    <p style="margin-bottom: 20px">默认当页面滚动超过 400px 时显示。</p>
+    <div v-for="i in 50" :key="i" style="margin-bottom: 10px">内容行 {{ i }}</div>
     <BackTop />
   </div>
 </template>
@@ -559,27 +532,27 @@ import { BackTop } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="height: 1500px; padding: 20px;">
-    <p style="margin-bottom: 20px;">向下滚动页面，右下角会出现自定义的回到顶部按钮。</p>
-    <p style="margin-bottom: 20px;">此示例设置 visibilityHeight 为 200px，并自定义了按钮样式。</p>
-    <div v-for="i in 50" :key="i" style="margin-bottom: 10px;">
-      内容行 {{ i }}
-    </div>
+  <div style="height: 1500px; padding: 20px">
+    <p style="margin-bottom: 20px">向下滚动页面，右下角会出现自定义的回到顶部按钮。</p>
+    <p style="margin-bottom: 20px">此示例设置 visibilityHeight 为 200px，并自定义了按钮样式。</p>
+    <div v-for="i in 50" :key="i" style="margin-bottom: 10px">内容行 {{ i }}</div>
     <BackTop :visibility-height="200" @click="onBackTop">
-      <div style="
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 20px;
-        font-weight: bold;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s;
-      ">
+      <div
+        style="
+          width: 50px;
+          height: 50px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 20px;
+          font-weight: bold;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          transition: all 0.3s;
+        "
+      >
         ↑
       </div>
     </BackTop>
@@ -638,18 +611,18 @@ import { Badge, Ribbon } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 24px;">
+  <div style="display: flex; gap: 24px">
     <Badge :count="5">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
+      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
     </Badge>
     <Badge :count="0" show-zero>
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
+      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
     </Badge>
     <Badge :count="99">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
+      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
     </Badge>
     <Badge :count="100">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
+      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
     </Badge>
   </div>
 </template>
@@ -663,7 +636,7 @@ import { Badge } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <Badge status="success" text="成功" />
     <Badge status="error" text="错误" />
     <Badge status="default" text="默认" />
@@ -710,8 +683,8 @@ import { Breadcrumb } from 'ant-design-hmfw'
 | className | 自定义类名 | `string` | - |
 | style | 自定义样式 | `CSSProperties` | - |
 | onClick | 点击事件 | `(e: MouseEvent) => void` | - |
-| data-* | 自定义数据属性 | `any` | - |
-| aria-* | ARIA 无障碍属性 | `any` | - |
+| data-\* | 自定义数据属性 | `any` | - |
+| aria-\* | ARIA 无障碍属性 | `any` | - |
 | type | 类型（必须为 'separator'） | `'separator'` | - |
 | separator | 分隔符内容 | `string \| VNode` | - |
 | key | 唯一标识 | `string \| number` | - |
@@ -728,11 +701,7 @@ import { Breadcrumb } from 'ant-design-hmfw'
 <script setup lang="ts">
 import { Breadcrumb } from 'ant-design-hmfw'
 
-const items = [
-  { title: '首页' },
-  { title: '应用列表' },
-  { title: '某应用' },
-]
+const items = [{ title: '首页' }, { title: '应用列表' }, { title: '某应用' }]
 </script>
 ```
 
@@ -746,11 +715,7 @@ const items = [
 <script setup lang="ts">
 import { Breadcrumb } from 'ant-design-hmfw'
 
-const items = [
-  { title: '首页', href: '/' },
-  { title: '应用列表', href: '/apps' },
-  { title: '某应用' },
-]
+const items = [{ title: '首页', href: '/' }, { title: '应用列表', href: '/apps' }, { title: '某应用' }]
 </script>
 ```
 
@@ -809,12 +774,12 @@ import { Button } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary">Primary Button</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button type="primary"> Primary Button </Button>
     <Button>Default Button</Button>
-    <Button type="dashed">Dashed Button</Button>
-    <Button type="text">Text Button</Button>
-    <Button type="link">Link Button</Button>
+    <Button type="dashed"> Dashed Button </Button>
+    <Button type="text"> Text Button </Button>
+    <Button type="link"> Link Button </Button>
   </div>
 </template>
 
@@ -827,10 +792,10 @@ import { Button } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; align-items: center;">
-    <Button type="primary" size="large">Large</Button>
-    <Button type="primary">Middle</Button>
-    <Button type="primary" size="small">Small</Button>
+  <div style="display: flex; gap: 8px; align-items: center">
+    <Button type="primary" size="large"> Large </Button>
+    <Button type="primary"> Middle </Button>
+    <Button type="primary" size="small"> Small </Button>
   </div>
 </template>
 
@@ -899,7 +864,7 @@ import { Card, CardGrid, CardMeta } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Card title="卡片标题" style="width: 300px;">
+  <Card title="卡片标题" style="width: 300px">
     <p>卡片内容</p>
     <p>卡片内容</p>
     <p>卡片内容</p>
@@ -915,18 +880,15 @@ import { Card } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Card style="width: 300px;">
+  <Card style="width: 300px">
     <template #cover>
       <img
         alt="example"
         src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-        style="width: 100%;"
+        style="width: 100%"
       />
     </template>
-    <CardMeta
-      title="卡片标题"
-      description="这是卡片的描述信息"
-    />
+    <CardMeta title="卡片标题" description="这是卡片的描述信息" />
   </Card>
 </template>
 
@@ -991,8 +953,12 @@ import { Carousel } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Carousel style="height: 160px; background: #364d79; border-radius: 4px; overflow: hidden;">
-    <div v-for="n in 4" :key="n" style="height: 160px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px;">
+  <Carousel style="height: 160px; background: #364d79; border-radius: 4px; overflow: hidden">
+    <div
+      v-for="n in 4"
+      :key="n"
+      style="height: 160px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px"
+    >
       {{ n }}
     </div>
   </Carousel>
@@ -1007,8 +973,12 @@ import { Carousel } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Carousel effect="fade" style="height: 160px; background: #364d79; border-radius: 4px; overflow: hidden;">
-    <div v-for="n in 4" :key="n" style="height: 160px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px;">
+  <Carousel effect="fade" style="height: 160px; background: #364d79; border-radius: 4px; overflow: hidden">
+    <div
+      v-for="n in 4"
+      :key="n"
+      style="height: 160px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px"
+    >
       {{ n }}
     </div>
   </Carousel>
@@ -1093,12 +1063,7 @@ import { Cascader } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Cascader
-    v-model:value="value"
-    :options="options"
-    placeholder="请选择省市区"
-    style="width: 300px;"
-  />
+  <Cascader v-model:value="value" :options="options" placeholder="请选择省市区" style="width: 300px" />
 </template>
 
 <script setup lang="ts">
@@ -1157,7 +1122,7 @@ Hover 展开 — 通过 `expandTrigger` 设置为 `hover` 时，鼠标移入即�
     :options="options"
     expand-trigger="hover"
     placeholder="鼠标悬停展开"
-    style="width: 300px;"
+    style="width: 300px"
   />
 </template>
 
@@ -1292,10 +1257,10 @@ import { Checkbox, CheckboxGroup } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 8px;">
-    <Checkbox v-model:checked="checked1">普通复选框</Checkbox>
-    <Checkbox v-model:checked="checked2" disabled>禁用复选框</Checkbox>
-    <Checkbox v-model:checked="checked3" disabled>禁用选中</Checkbox>
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <Checkbox v-model:checked="checked1"> 普通复选框 </Checkbox>
+    <Checkbox v-model:checked="checked2" disabled> 禁用复选框 </Checkbox>
+    <Checkbox v-model:checked="checked3" disabled> 禁用选中 </Checkbox>
     <p>checked1: {{ checked1 }}, checked2: {{ checked2 }}, checked3: {{ checked3 }}</p>
   </div>
 </template>
@@ -1314,16 +1279,13 @@ CheckboxGroup — 方便的从数组生成 Checkbox 组。
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <div>
-      <p style="margin-bottom: 8px;">水平排列：</p>
-      <CheckboxGroup
-        v-model:value="selectedFruits"
-        :options="fruitOptions"
-      />
+      <p style="margin-bottom: 8px">水平排列：</p>
+      <CheckboxGroup v-model:value="selectedFruits" :options="fruitOptions" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">垂直排列（通过 style 控制）：</p>
+      <p style="margin-bottom: 8px">垂直排列（通过 style 控制）：</p>
       <CheckboxGroup
         v-model:value="selectedColors"
         :options="colorOptions"
@@ -1529,11 +1491,7 @@ const color = ref('#1677ff')
 
 ```vue
 <template>
-  <ColorPicker
-    v-model:value="color"
-    show-text
-    :presets="presets"
-  />
+  <ColorPicker v-model:value="color" show-text :presets="presets" />
 </template>
 
 <script setup lang="ts">
@@ -1582,11 +1540,20 @@ import { ConfigProvider, useConfig, usePrefixCls, useLocale } from 'ant-design-h
 ```vue
 <template>
   <ConfigProvider :theme="theme">
-    <div style="display: flex; flex-direction: column; gap: 12px;">
-      <button style="background: var(--hmfw-color-primary); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <button
+        style="
+          background: var(--hmfw-color-primary);
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 6px;
+          cursor: pointer;
+        "
+      >
         主色按钮
       </button>
-      <p style="color: var(--hmfw-color-primary);">主色文字</p>
+      <p style="color: var(--hmfw-color-primary)">主色文字</p>
     </div>
   </ConfigProvider>
 </template>
@@ -1607,7 +1574,7 @@ const theme = {
 
 ```vue
 <template>
-  <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+  <div style="display: flex; gap: 12px; margin-bottom: 16px">
     <button @click="locale = zhCN">中文</button>
     <button @click="locale = enUS">English</button>
   </div>
@@ -1686,12 +1653,8 @@ import { DatePicker } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
-    <DatePicker
-      v-model:value="date"
-      placeholder="请选择日期"
-      @change="handleChange"
-    />
+  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px">
+    <DatePicker v-model:value="date" placeholder="请选择日期" @change="handleChange" />
     <p>选中日期：{{ date }}</p>
   </div>
 </template>
@@ -1712,27 +1675,11 @@ const handleChange = (value: string) => {
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
-    <DatePicker
-      v-model:value="date"
-      picker="date"
-      placeholder="选择日期"
-    />
-    <DatePicker
-      v-model:value="month"
-      picker="month"
-      placeholder="选择月份"
-    />
-    <DatePicker
-      v-model:value="quarter"
-      picker="quarter"
-      placeholder="选择季度"
-    />
-    <DatePicker
-      v-model:value="year"
-      picker="year"
-      placeholder="选择年份"
-    />
+  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px">
+    <DatePicker v-model:value="date" picker="date" placeholder="选择日期" />
+    <DatePicker v-model:value="month" picker="month" placeholder="选择月份" />
+    <DatePicker v-model:value="quarter" picker="quarter" placeholder="选择季度" />
+    <DatePicker v-model:value="year" picker="year" placeholder="选择年份" />
   </div>
 </template>
 
@@ -1884,11 +1831,11 @@ import { Divider } from 'ant-design-hmfw'
     <p>Lorem ipsum dolor sit amet.</p>
     <Divider>居中文字</Divider>
     <p>Lorem ipsum dolor sit amet.</p>
-    <Divider orientation="left">左对齐</Divider>
+    <Divider orientation="left"> 左对齐 </Divider>
     <p>Lorem ipsum dolor sit amet.</p>
-    <Divider orientation="right">右对齐</Divider>
+    <Divider orientation="right"> 右对齐 </Divider>
     <p>Lorem ipsum dolor sit amet.</p>
-    <Divider orientation="left" plain>朴素文字</Divider>
+    <Divider orientation="left" plain> 朴素文字 </Divider>
     <p>Lorem ipsum dolor sit amet.</p>
   </div>
 </template>
@@ -1966,11 +1913,8 @@ import { Drawer } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Button type="primary" @click="open = true">打开抽屉</Button>
-  <Drawer
-    v-model:open="open"
-    title="基础抽屉"
-  >
+  <Button type="primary" @click="open = true"> 打开抽屉 </Button>
+  <Drawer v-model:open="open" title="基础抽屉">
     <p>抽屉内容</p>
     <p>抽屉内容</p>
     <p>抽屉内容</p>
@@ -1989,17 +1933,13 @@ const open = ref(false)
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px;">
-    <Button @click="show('top')">上</Button>
-    <Button @click="show('right')">右</Button>
-    <Button @click="show('bottom')">下</Button>
-    <Button @click="show('left')">左</Button>
+  <div style="display: flex; gap: 8px">
+    <Button @click="show('top')"> 上 </Button>
+    <Button @click="show('right')"> 右 </Button>
+    <Button @click="show('bottom')"> 下 </Button>
+    <Button @click="show('left')"> 左 </Button>
   </div>
-  <Drawer
-    v-model:open="open"
-    :placement="placement"
-    :title="`从${placementText}滑出`"
-  >
+  <Drawer v-model:open="open" :placement="placement" :title="`从${placementText}滑出`">
     <p>抽屉内容</p>
   </Drawer>
 </template>
@@ -2226,24 +2166,24 @@ import { Flex } from 'ant-design-hmfw'
 <template>
   <Space direction="vertical" style="width: 100%">
     <Flex justify="flex-start" align="center" gap="small">
-      <div style="background: #1677ff; color: #fff; padding: 8px 16px;">item 1</div>
-      <div style="background: #1677ff; color: #fff; padding: 8px 16px;">item 2</div>
-      <div style="background: #1677ff; color: #fff; padding: 8px 16px;">item 3</div>
+      <div style="background: #1677ff; color: #fff; padding: 8px 16px">item 1</div>
+      <div style="background: #1677ff; color: #fff; padding: 8px 16px">item 2</div>
+      <div style="background: #1677ff; color: #fff; padding: 8px 16px">item 3</div>
     </Flex>
     <Flex justify="center" align="center" gap="small">
-      <div style="background: #52c41a; color: #fff; padding: 8px 16px;">item 1</div>
-      <div style="background: #52c41a; color: #fff; padding: 8px 16px;">item 2</div>
-      <div style="background: #52c41a; color: #fff; padding: 8px 16px;">item 3</div>
+      <div style="background: #52c41a; color: #fff; padding: 8px 16px">item 1</div>
+      <div style="background: #52c41a; color: #fff; padding: 8px 16px">item 2</div>
+      <div style="background: #52c41a; color: #fff; padding: 8px 16px">item 3</div>
     </Flex>
     <Flex justify="flex-end" align="center" gap="small">
-      <div style="background: #faad14; color: #fff; padding: 8px 16px;">item 1</div>
-      <div style="background: #faad14; color: #fff; padding: 8px 16px;">item 2</div>
-      <div style="background: #faad14; color: #fff; padding: 8px 16px;">item 3</div>
+      <div style="background: #faad14; color: #fff; padding: 8px 16px">item 1</div>
+      <div style="background: #faad14; color: #fff; padding: 8px 16px">item 2</div>
+      <div style="background: #faad14; color: #fff; padding: 8px 16px">item 3</div>
     </Flex>
     <Flex justify="space-between" align="center">
-      <div style="background: #ff4d4f; color: #fff; padding: 8px 16px;">item 1</div>
-      <div style="background: #ff4d4f; color: #fff; padding: 8px 16px;">item 2</div>
-      <div style="background: #ff4d4f; color: #fff; padding: 8px 16px;">item 3</div>
+      <div style="background: #ff4d4f; color: #fff; padding: 8px 16px">item 1</div>
+      <div style="background: #ff4d4f; color: #fff; padding: 8px 16px">item 2</div>
+      <div style="background: #ff4d4f; color: #fff; padding: 8px 16px">item 3</div>
     </Flex>
   </Space>
 </template>
@@ -2258,9 +2198,9 @@ import { Flex, Space } from 'ant-design-hmfw'
 ```vue
 <template>
   <Flex vertical gap="small" style="width: 200px">
-    <div style="background: #1677ff; color: #fff; padding: 8px 16px; text-align: center;">item 1</div>
-    <div style="background: #1677ff; color: #fff; padding: 8px 16px; text-align: center;">item 2</div>
-    <div style="background: #1677ff; color: #fff; padding: 8px 16px; text-align: center;">item 3</div>
+    <div style="background: #1677ff; color: #fff; padding: 8px 16px; text-align: center">item 1</div>
+    <div style="background: #1677ff; color: #fff; padding: 8px 16px; text-align: center">item 2</div>
+    <div style="background: #1677ff; color: #fff; padding: 8px 16px; text-align: center">item 3</div>
   </Flex>
 </template>
 
@@ -2502,7 +2442,7 @@ import { Form, FormItem, useForm } from 'ant-design-hmfw'
     :model="formState"
     :label-col="{ span: 6 }"
     :wrapper-col="{ span: 18 }"
-    style="max-width: 480px;"
+    style="max-width: 480px"
     @finish="handleFinish"
   >
     <FormItem label="用户名" name="username" :rules="[{ required: true, message: '请输入用户名' }]">
@@ -2512,8 +2452,8 @@ import { Form, FormItem, useForm } from 'ant-design-hmfw'
       <InputPassword v-model:value="formState.password" placeholder="请输入密码" />
     </FormItem>
     <FormItem :wrapper-col="{ offset: 6, span: 18 }">
-      <Button type="primary" html-type="submit">提交</Button>
-      <Button style="margin-left: 8px;" @click="handleReset">重置</Button>
+      <Button type="primary" html-type="submit"> 提交 </Button>
+      <Button style="margin-left: 8px" @click="handleReset"> 重置 </Button>
     </FormItem>
   </Form>
 </template>
@@ -2548,7 +2488,7 @@ const handleReset = () => {
     :rules="rules"
     :label-col="{ span: 5 }"
     :wrapper-col="{ span: 19 }"
-    style="max-width: 480px;"
+    style="max-width: 480px"
   >
     <FormItem label="邮箱" name="email">
       <Input v-model:value="formState.email" placeholder="请输入邮箱" />
@@ -2557,11 +2497,11 @@ const handleReset = () => {
       <Input v-model:value="formState.phone" placeholder="请输入手机号" />
     </FormItem>
     <FormItem label="年龄" name="age">
-      <InputNumber v-model:value="formState.age" :min="1" :max="120" placeholder="请输入年龄" style="width: 100%;" />
+      <InputNumber v-model:value="formState.age" :min="1" :max="120" placeholder="请输入年龄" style="width: 100%" />
     </FormItem>
     <FormItem :wrapper-col="{ offset: 5, span: 19 }">
-      <Button type="primary" @click="handleValidate">校验</Button>
-      <Button style="margin-left: 8px;" @click="handleClear">清除校验</Button>
+      <Button type="primary" @click="handleValidate"> 校验 </Button>
+      <Button style="margin-left: 8px" @click="handleClear"> 清除校验 </Button>
     </FormItem>
   </Form>
 </template>
@@ -2587,9 +2527,7 @@ const rules = {
     { required: true, message: '请输入手机号' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号' },
   ],
-  age: [
-    { required: true, message: '请输入年龄' },
-  ],
+  age: [{ required: true, message: '请输入年龄' }],
 }
 
 const handleValidate = async () => {
@@ -2656,40 +2594,40 @@ import { Row, Col } from 'ant-design-hmfw'
   <Space direction="vertical" style="width: 100%">
     <Row>
       <Col :span="24">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-24</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-24</div>
       </Col>
     </Row>
     <Row>
       <Col :span="12">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-12</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-12</div>
       </Col>
       <Col :span="12">
-        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">col-12</div>
+        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px">col-12</div>
       </Col>
     </Row>
     <Row>
       <Col :span="8">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-8</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-8</div>
       </Col>
       <Col :span="8">
-        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">col-8</div>
+        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px">col-8</div>
       </Col>
       <Col :span="8">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-8</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-8</div>
       </Col>
     </Row>
     <Row>
       <Col :span="6">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-6</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-6</div>
       </Col>
       <Col :span="6">
-        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">col-6</div>
+        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px">col-6</div>
       </Col>
       <Col :span="6">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-6</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-6</div>
       </Col>
       <Col :span="6">
-        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px;">col-6</div>
+        <div style="background: #4096ff; color: #fff; text-align: center; padding: 8px">col-6</div>
       </Col>
     </Row>
   </Space>
@@ -2708,22 +2646,22 @@ import { Row, Col, Space } from 'ant-design-hmfw'
     <div>水平间距</div>
     <Row :gutter="16">
       <Col :span="6">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
+        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px">col-6</div>
       </Col>
       <Col :span="6">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
+        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px">col-6</div>
       </Col>
       <Col :span="6">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
+        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px">col-6</div>
       </Col>
       <Col :span="6">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
+        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px">col-6</div>
       </Col>
     </Row>
     <div>水平 + 垂直间距</div>
     <Row :gutter="[16, 24]">
-      <Col :span="6" v-for="i in 8" :key="i">
-        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px;">col-6</div>
+      <Col v-for="i in 8" :key="i" :span="6">
+        <div style="background: #e6f4ff; border: 1px solid #91caff; text-align: center; padding: 8px">col-6</div>
       </Col>
     </Row>
   </Space>
@@ -2792,10 +2730,11 @@ const filteredIcons = computed(() => {
 })
 
 const copyCode = (iconName: string) => {
-  const componentName = iconName
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('') + 'Outlined'
+  const componentName =
+    iconName
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('') + 'Outlined'
 
   const code = `import { ${componentName} } from 'ant-design-hmfw'\n\n<Icon :component="${componentName}" />`
 
@@ -2825,11 +2764,7 @@ const copyCode = (iconName: string) => {
       <div class="category-filter">
         <label>分类：</label>
         <select v-model="selectedCategory" class="category-select">
-          <option
-            v-for="category in categories"
-            :key="category"
-            :value="category"
-          >
+          <option v-for="category in categories" :key="category" :value="category">
             {{ category === 'all' ? '全部' : category }}
           </option>
         </select>
@@ -2839,9 +2774,7 @@ const copyCode = (iconName: string) => {
     <!-- 结果统计 -->
     <div class="stats">
       找到 <strong>{{ filteredIcons.length }}</strong> 个图标
-      <span v-if="searchQuery" class="search-term">
-        搜索: "{{ searchQuery }}"
-      </span>
+      <span v-if="searchQuery" class="search-term"> 搜索: "{{ searchQuery }}" </span>
     </div>
 
     <!-- 图标网格 -->
@@ -2856,20 +2789,18 @@ const copyCode = (iconName: string) => {
         <div class="icon-display">
           <Icon :component="icon.component" :style="{ fontSize: '32px' }" />
         </div>
-        <div class="icon-name">{{ icon.name }}</div>
-        <div class="icon-category">{{ icon.category }}</div>
+        <div class="icon-name">
+          {{ icon.name }}
+        </div>
+        <div class="icon-category">
+          {{ icon.category }}
+        </div>
         <div class="icon-keywords">
-          <span
-            v-for="keyword in icon.keywords.slice(0, 3)"
-            :key="keyword"
-            class="keyword-tag"
-          >
+          <span v-for="keyword in icon.keywords.slice(0, 3)" :key="keyword" class="keyword-tag">
             {{ keyword }}
           </span>
         </div>
-        <div v-if="copiedIcon === icon.name" class="copied-indicator">
-          ✓ 已复制
-        </div>
+        <div v-if="copiedIcon === icon.name" class="copied-indicator">✓ 已复制</div>
       </div>
     </div>
 
@@ -3080,11 +3011,26 @@ const copyCode = (iconName: string) => {
 
 <script setup lang="ts">
 import {
-  Icon, Space,
-  SearchOutlined, CloseOutlined, CheckOutlined, WarningOutlined, InfoCircleOutlined,
-  LoadingOutlined, UpOutlined, DownOutlined, LeftOutlined, RightOutlined,
-  PlusOutlined, MinusOutlined, EditOutlined, DeleteOutlined, EyeOutlined,
-  HomeOutlined, UserOutlined, SettingOutlined,
+  Icon,
+  Space,
+  SearchOutlined,
+  CloseOutlined,
+  CheckOutlined,
+  WarningOutlined,
+  InfoCircleOutlined,
+  LoadingOutlined,
+  UpOutlined,
+  DownOutlined,
+  LeftOutlined,
+  RightOutlined,
+  PlusOutlined,
+  MinusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  HomeOutlined,
+  UserOutlined,
+  SettingOutlined,
 } from 'ant-design-hmfw'
 </script>
 ```
@@ -3162,8 +3108,16 @@ import { Image, PreviewGroup } from 'ant-design-hmfw'
 <template>
   <Space wrap>
     <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" width="200" />
-    <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" width="200" :preview="false" />
-    <Image src="error.jpg" width="200" fallback="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+    <Image
+      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+      width="200"
+      :preview="false"
+    />
+    <Image
+      src="error.jpg"
+      width="200"
+      fallback="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+    />
   </Space>
 </template>
 
@@ -3179,8 +3133,14 @@ import { Image, Space } from 'ant-design-hmfw'
   <PreviewGroup>
     <Space>
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" width="200" />
-      <Image src="https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp" width="200" />
-      <Image src="https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp" width="200" />
+      <Image
+        src="https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
+        width="200"
+      />
+      <Image
+        src="https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp"
+        width="200"
+      />
     </Space>
   </PreviewGroup>
 </template>
@@ -3277,7 +3237,7 @@ import { Input, InputPassword, TextArea, InputSearch } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px">
     <Input v-model:value="value" placeholder="请输入内容" />
     <Input v-model:value="value" placeholder="禁用状态" disabled />
     <Input v-model:value="value" placeholder="只读状态" readonly />
@@ -3297,7 +3257,7 @@ const value = ref('')
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px">
     <Input v-model:value="value1" placeholder="请输入用户名" prefix="👤" />
     <Input v-model:value="value2" placeholder="请输入金额" prefix="¥" suffix="元" />
     <!-- addon-before/addon-after are deprecated, use Space.Compact instead -->
@@ -3386,9 +3346,9 @@ import { InputNumber } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
-    <InputNumber v-model:value="value" placeholder="请输入数字" style="width: 100%;" />
-    <InputNumber v-model:value="value" disabled placeholder="禁用状态" style="width: 100%;" />
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
+    <InputNumber v-model:value="value" placeholder="请输入数字" style="width: 100%" />
+    <InputNumber v-model:value="value" disabled placeholder="禁用状态" style="width: 100%" />
     <p>当前值：{{ value }}</p>
   </div>
 </template>
@@ -3405,27 +3365,14 @@ const value = ref<number | null>(null)
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
     <div>
-      <p style="margin-bottom: 4px;">范围 1-10，步长 1：</p>
-      <InputNumber
-        v-model:value="value1"
-        :min="1"
-        :max="10"
-        :step="1"
-        style="width: 100%;"
-      />
+      <p style="margin-bottom: 4px">范围 1-10，步长 1：</p>
+      <InputNumber v-model:value="value1" :min="1" :max="10" :step="1" style="width: 100%" />
     </div>
     <div>
-      <p style="margin-bottom: 4px;">范围 0-1，步长 0.1，精度 1：</p>
-      <InputNumber
-        v-model:value="value2"
-        :min="0"
-        :max="1"
-        :step="0.1"
-        :precision="1"
-        style="width: 100%;"
-      />
+      <p style="margin-bottom: 4px">范围 0-1，步长 0.1，精度 1：</p>
+      <InputNumber v-model:value="value2" :min="0" :max="1" :step="0.1" :precision="1" style="width: 100%" />
     </div>
     <p>value1: {{ value1 }}，value2: {{ value2 }}</p>
   </div>
@@ -3489,15 +3436,9 @@ import { Layout, Header, Footer, Content, Sider } from 'ant-design-hmfw'
 ```vue
 <template>
   <Layout style="min-height: 200px">
-    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px;">
-      Header
-    </Header>
-    <Content style="padding: 24px; background: #fff;">
-      Content
-    </Content>
-    <Footer style="text-align: center; background: #f5f5f5;">
-      Footer ©2024 Created by ant-design-hmfw
-    </Footer>
+    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px"> Header </Header>
+    <Content style="padding: 24px; background: #fff"> Content </Content>
+    <Footer style="text-align: center; background: #f5f5f5"> Footer ©2024 Created by ant-design-hmfw </Footer>
   </Layout>
 </template>
 
@@ -3511,20 +3452,14 @@ import { Layout, Header, Content, Footer } from 'ant-design-hmfw'
 ```vue
 <template>
   <Layout style="min-height: 300px">
-    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px;">
-      Header
-    </Header>
+    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px"> Header </Header>
     <Layout>
-      <Sider :width="200" style="background: #fff; border-right: 1px solid #f0f0f0;">
-        <div style="padding: 16px;">Sider</div>
+      <Sider :width="200" style="background: #fff; border-right: 1px solid #f0f0f0">
+        <div style="padding: 16px">Sider</div>
       </Sider>
-      <Content style="padding: 24px; background: #f5f5f5;">
-        Content
-      </Content>
+      <Content style="padding: 24px; background: #f5f5f5"> Content </Content>
     </Layout>
-    <Footer style="text-align: center; background: #f5f5f5;">
-      Footer ©2024
-    </Footer>
+    <Footer style="text-align: center; background: #f5f5f5"> Footer ©2024 </Footer>
   </Layout>
 </template>
 
@@ -3604,11 +3539,7 @@ import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <List
-    :data-source="data"
-    :render-item="renderItem"
-    bordered
-  />
+  <List :data-source="data" :render-item="renderItem" bordered />
 </template>
 
 <script setup lang="ts">
@@ -3637,11 +3568,7 @@ const renderItem = (item: string) => h(List.Item, null, () => item)
 import { h } from 'vue'
 import { List } from 'ant-design-hmfw'
 
-const data = [
-  { title: '列表项 1' },
-  { title: '列表项 2' },
-  { title: '列表项 3' },
-]
+const data = [{ title: '列表项 1' }, { title: '列表项 2' }, { title: '列表项 3' }]
 
 function onEdit(item: any) {
   console.log('编辑', item)
@@ -3655,12 +3582,9 @@ const renderItem = (item: any) =>
   h(
     List.Item,
     {
-      actions: [
-        h('a', { onClick: () => onEdit(item) }, '编辑'),
-        h('a', { onClick: () => onDelete(item) }, '删除'),
-      ],
+      actions: [h('a', { onClick: () => onEdit(item) }, '编辑'), h('a', { onClick: () => onDelete(item) }, '删除')],
     },
-    () => item.title
+    () => item.title,
   )
 </script>
 ```
@@ -3736,12 +3660,7 @@ import { Menu } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Menu
-    mode="horizontal"
-    :items="items"
-    :selected-keys="selectedKeys"
-    @select="onSelect"
-  />
+  <Menu mode="horizontal" :items="items" :selected-keys="selectedKeys" @select="onSelect" />
 </template>
 
 <script setup lang="ts">
@@ -3774,14 +3693,8 @@ const onSelect = ({ key }: { key: string }) => {
 
 ```vue
 <template>
-  <div style="width: 256px; border-right: 1px solid #f0f0f0;">
-    <Menu
-      mode="inline"
-      :items="items"
-      :selected-keys="selectedKeys"
-      :default-open-keys="['sub1']"
-      @select="onSelect"
-    />
+  <div style="width: 256px; border-right: 1px solid #f0f0f0">
+    <Menu mode="inline" :items="items" :selected-keys="selectedKeys" :default-open-keys="['sub1']" @select="onSelect" />
   </div>
 </template>
 
@@ -3872,12 +3785,12 @@ import { message } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="showSuccess">成功</Button>
-    <Button @click="showError">错误</Button>
-    <Button @click="showWarning">警告</Button>
-    <Button @click="showInfo">信息</Button>
-    <Button @click="showLoading">加载中</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="showSuccess"> 成功 </Button>
+    <Button @click="showError"> 错误 </Button>
+    <Button @click="showWarning"> 警告 </Button>
+    <Button @click="showInfo"> 信息 </Button>
+    <Button @click="showLoading"> 加载中 </Button>
   </div>
 </template>
 
@@ -3910,10 +3823,10 @@ function showLoading() {
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px;">
-    <Button @click="showLong">显示 10 秒</Button>
-    <Button @click="showSticky">不自动关闭</Button>
-    <Button @click="showWithCallback">关闭后回调</Button>
+  <div style="display: flex; gap: 8px">
+    <Button @click="showLong"> 显示 10 秒 </Button>
+    <Button @click="showSticky"> 不自动关闭 </Button>
+    <Button @click="showWithCallback"> 关闭后回调 </Button>
   </div>
 </template>
 
@@ -4022,12 +3935,7 @@ import { Modal } from 'ant-design-hmfw'
 ```vue
 <template>
   <button @click="open = true">打开对话框</button>
-  <Modal
-    v-model:open="open"
-    title="基础对话框"
-    @ok="handleOk"
-    @cancel="handleCancel"
-  >
+  <Modal v-model:open="open" title="基础对话框" @ok="handleOk" @cancel="handleCancel">
     <p>对话框内容</p>
     <p>对话框内容</p>
     <p>对话框内容</p>
@@ -4057,12 +3965,7 @@ function handleCancel() {
 ```vue
 <template>
   <button @click="open = true">打开对话框</button>
-  <Modal
-    v-model:open="open"
-    title="自定义页脚"
-    :confirm-loading="confirmLoading"
-    @ok="handleOk"
-  >
+  <Modal v-model:open="open" title="自定义页脚" :confirm-loading="confirmLoading" @ok="handleOk">
     <p>{{ modalText }}</p>
     <template #footer>
       <button @click="open = false">取消</button>
@@ -4145,11 +4048,11 @@ import { notification } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="openSuccess">成功</Button>
-    <Button @click="openError">错误</Button>
-    <Button @click="openWarning">警告</Button>
-    <Button @click="openInfo">信息</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="openSuccess"> 成功 </Button>
+    <Button @click="openError"> 错误 </Button>
+    <Button @click="openWarning"> 警告 </Button>
+    <Button @click="openInfo"> 信息 </Button>
   </div>
 </template>
 
@@ -4190,11 +4093,11 @@ function openInfo() {
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="openWithDuration">默认 4.5 秒</Button>
-    <Button @click="openLongDuration">10 秒关闭</Button>
-    <Button @click="openNeverClose">永不关闭</Button>
-    <Button type="default" @click="notification.destroy()">关闭全部</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="openWithDuration"> 默认 4.5 秒 </Button>
+    <Button @click="openLongDuration"> 10 秒关闭 </Button>
+    <Button @click="openNeverClose"> 永不关闭 </Button>
+    <Button type="default" @click="notification.destroy()"> 关闭全部 </Button>
   </div>
 </template>
 
@@ -4277,7 +4180,7 @@ import { Pagination } from 'ant-design-hmfw'
 ```vue
 <template>
   <Space direction="vertical">
-    <Pagination :total="50" v-model:current="current" />
+    <Pagination v-model:current="current" :total="50" />
     <p>当前页：{{ current }}</p>
   </Space>
 </template>
@@ -4384,13 +4287,7 @@ import { Popconfirm } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Popconfirm
-    title="确定要删除吗？"
-    ok-text="确定"
-    cancel-text="取消"
-    @confirm="onConfirm"
-    @cancel="onCancel"
-  >
+  <Popconfirm title="确定要删除吗？" ok-text="确定" cancel-text="取消" @confirm="onConfirm" @cancel="onCancel">
     <button>删除</button>
   </Popconfirm>
 </template>
@@ -4498,7 +4395,7 @@ import { Popover } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px;">
+  <div style="display: flex; gap: 8px">
     <Popover title="悬停触发" content="鼠标悬停时显示" trigger="hover">
       <button>悬停</button>
     </Popover>
@@ -4563,7 +4460,7 @@ import { Progress } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
+  <div style="display: flex; flex-direction: column; gap: 12px">
     <Progress :percent="30" />
     <Progress :percent="50" status="active" />
     <Progress :percent="70" status="exception" />
@@ -4581,7 +4478,7 @@ import { Progress } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 16px;">
+  <div style="display: flex; gap: 16px">
     <Progress type="circle" :percent="75" />
     <Progress type="circle" :percent="70" status="exception" />
     <Progress type="circle" :percent="100" />
@@ -4650,7 +4547,7 @@ import { QRCode } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 16px;">
+  <div style="display: flex; gap: 16px">
     <QRCode value="https://ant.design" type="canvas" />
     <QRCode value="https://ant.design" type="svg" />
   </div>
@@ -4718,10 +4615,10 @@ import { Radio, RadioGroup, RadioButton } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 8px;">
-    <Radio v-model:checked="checked">单选框</Radio>
-    <Radio v-model:checked="checked2" disabled>禁用单选框</Radio>
-    <Radio v-model:checked="checked3" disabled>禁用选中</Radio>
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <Radio v-model:checked="checked"> 单选框 </Radio>
+    <Radio v-model:checked="checked2" disabled> 禁用单选框 </Radio>
+    <Radio v-model:checked="checked3" disabled> 禁用选中 </Radio>
     <p>checked: {{ checked }}</p>
   </div>
 </template>
@@ -4740,13 +4637,13 @@ RadioGroup — 一组互斥的 Radio 配合使用。
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <div>
-      <p style="margin-bottom: 8px;">水平排列：</p>
+      <p style="margin-bottom: 8px">水平排列：</p>
       <RadioGroup v-model:value="value1" :options="options" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">垂直排列：</p>
+      <p style="margin-bottom: 8px">垂直排列：</p>
       <RadioGroup v-model:value="value2" :options="options" direction="vertical" />
     </div>
     <p>value1: {{ value1 }}，value2: {{ value2 }}</p>
@@ -4919,7 +4816,7 @@ import { Rate } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <Rate v-model:value="value" />
     <Rate v-model:value="value2" disabled />
     <p>评分：{{ value }}</p>
@@ -4939,7 +4836,7 @@ const value2 = ref(2.5)
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <Rate v-model:value="value" allow-half />
     <Rate v-model:value="value2" allow-half disabled />
     <p>评分：{{ value }}</p>
@@ -5014,11 +4911,7 @@ function onBuyAgain() {
 
 ```vue
 <template>
-  <Result
-    status="error"
-    title="提交失败"
-    sub-title="请检查并修改以下信息后，再重新提交。"
-  >
+  <Result status="error" title="提交失败" sub-title="请检查并修改以下信息后，再重新提交。">
     <template #extra>
       <button @click="onRetry">再次提交</button>
     </template>
@@ -5210,20 +5103,9 @@ import { Select } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
-    <Select
-      v-model:value="value"
-      :options="options"
-      placeholder="请选择"
-      style="width: 100%;"
-    />
-    <Select
-      v-model:value="value2"
-      :options="options"
-      placeholder="禁用状态"
-      disabled
-      style="width: 100%;"
-    />
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
+    <Select v-model:value="value" :options="options" placeholder="请选择" style="width: 100%" />
+    <Select v-model:value="value2" :options="options" placeholder="禁用状态" disabled style="width: 100%" />
     <p>选中：{{ value }}</p>
   </div>
 </template>
@@ -5248,13 +5130,13 @@ const options = [
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px">
     <Select
       v-model:value="selected"
       :options="options"
       mode="multiple"
       placeholder="请选择多个选项"
-      style="width: 100%;"
+      style="width: 100%"
     />
     <Select
       v-model:value="selected2"
@@ -5262,7 +5144,7 @@ const options = [
       mode="multiple"
       :max-tag-count="2"
       placeholder="最多显示 2 个标签"
-      style="width: 100%;"
+      style="width: 100%"
     />
     <p>已选：{{ selected }}</p>
   </div>
@@ -5441,13 +5323,13 @@ import { Slider } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px;">
+  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px">
     <div>
-      <p style="margin-bottom: 8px;">基础滑块：{{ value1 }}</p>
+      <p style="margin-bottom: 8px">基础滑块：{{ value1 }}</p>
       <Slider v-model:value="value1" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">禁用状态：</p>
+      <p style="margin-bottom: 8px">禁用状态：</p>
       <Slider v-model:value="value2" disabled />
     </div>
   </div>
@@ -5466,13 +5348,13 @@ const value2 = ref(50)
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px;">
+  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px">
     <div>
-      <p style="margin-bottom: 8px;">范围选择：{{ rangeValue }}</p>
+      <p style="margin-bottom: 8px">范围选择：{{ rangeValue }}</p>
       <Slider v-model:value="rangeValue" range />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">带步长的范围选择：{{ rangeValue2 }}</p>
+      <p style="margin-bottom: 8px">带步长的范围选择：{{ rangeValue2 }}</p>
       <Slider v-model:value="rangeValue2" range :step="10" />
     </div>
   </div>
@@ -5520,9 +5402,9 @@ import { Space } from 'ant-design-hmfw'
 ```vue
 <template>
   <Space>
-    <Button type="primary">按钮一</Button>
+    <Button type="primary"> 按钮一 </Button>
     <Button>按钮二</Button>
-    <Button type="dashed">按钮三</Button>
+    <Button type="dashed"> 按钮三 </Button>
   </Space>
 </template>
 
@@ -5536,9 +5418,9 @@ import { Space, Button } from 'ant-design-hmfw'
 ```vue
 <template>
   <Space direction="vertical" style="width: 100%">
-    <Button type="primary" block>按钮一</Button>
-    <Button block>按钮二</Button>
-    <Button type="dashed" block>按钮三</Button>
+    <Button type="primary" block> 按钮一 </Button>
+    <Button block> 按钮二 </Button>
+    <Button type="dashed" block> 按钮三 </Button>
   </Space>
 </template>
 
@@ -5589,7 +5471,7 @@ import { Spin } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 24px; align-items: center;">
+  <div style="display: flex; gap: 24px; align-items: center">
     <Spin size="small" />
     <Spin />
     <Spin size="large" />
@@ -5683,25 +5565,9 @@ import { Statistic, Space } from '../../../components'
 <template>
   <div class="statistic-demo">
     <Space :size="32">
-      <Statistic
-        title="账户余额"
-        :value="112893"
-        :precision="2"
-        prefix="$"
-      />
-      <Statistic
-        title="增长率"
-        :value="9.3"
-        :precision="2"
-        suffix="%"
-      />
-      <Statistic
-        title="价格"
-        :value="568.08"
-        :precision="2"
-        prefix="¥"
-        :value-style="{ color: '#3f8600' }"
-      />
+      <Statistic title="账户余额" :value="112893" :precision="2" prefix="$" />
+      <Statistic title="增长率" :value="9.3" :precision="2" suffix="%" />
+      <Statistic title="价格" :value="568.08" :precision="2" prefix="¥" :value-style="{ color: '#3f8600' }" />
     </Space>
   </div>
 </template>
@@ -5782,8 +5648,8 @@ import { Steps, ProgressIcon, PanelArrow } from 'ant-design-hmfw'
   <Space direction="vertical" style="width: 100%">
     <Steps :current="current" :items="items" />
     <Space>
-      <Button :disabled="current === 0" @click="current--">上一步</Button>
-      <Button type="primary" :disabled="current === items.length - 1" @click="current++">下一步</Button>
+      <Button :disabled="current === 0" @click="current--"> 上一步 </Button>
+      <Button type="primary" :disabled="current === items.length - 1" @click="current++"> 下一步 </Button>
     </Space>
     <p>当前步骤：{{ current + 1 }}</p>
   </Space>
@@ -5807,11 +5673,7 @@ const items = [
 
 ```vue
 <template>
-  <Steps
-    direction="vertical"
-    :current="1"
-    :items="items"
-  />
+  <Steps direction="vertical" :current="1" :items="items" />
 </template>
 
 <script setup lang="ts">
@@ -5887,12 +5749,12 @@ import { Switch } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <div style="display: flex; align-items: center; gap: 8px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; align-items: center; gap: 8px">
       <Switch v-model:checked="checked" />
       <span>{{ checked ? '开启' : '关闭' }}</span>
     </div>
-    <div style="display: flex; align-items: center; gap: 8px;">
+    <div style="display: flex; align-items: center; gap: 8px">
       <Switch v-model:checked="checked2" disabled />
       <span>禁用状态</span>
     </div>
@@ -5912,22 +5774,10 @@ const checked2 = ref(true)
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
-    <Switch
-      v-model:checked="checked1"
-      checked-children="开"
-      un-checked-children="关"
-    />
-    <Switch
-      v-model:checked="checked2"
-      checked-children="✓"
-      un-checked-children="✗"
-    />
-    <Switch
-      v-model:checked="checked3"
-      checked-children="ON"
-      un-checked-children="OFF"
-    />
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <Switch v-model:checked="checked1" checked-children="开" un-checked-children="关" />
+    <Switch v-model:checked="checked2" checked-children="✓" un-checked-children="✗" />
+    <Switch v-model:checked="checked3" checked-children="ON" un-checked-children="OFF" />
   </div>
 </template>
 
@@ -6244,13 +6094,13 @@ import { Tag, CheckableTag } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
     <Tag>Tag 1</Tag>
     <Tag>
       <a href="https://github.com/ant-design/ant-design">Link</a>
     </Tag>
-    <Tag closable @close="onClose">Tag 2</Tag>
-    <Tag closable :bordered="false">Tag 3</Tag>
+    <Tag closable @close="onClose"> Tag 2 </Tag>
+    <Tag closable :bordered="false"> Tag 3 </Tag>
   </div>
 </template>
 
@@ -6267,18 +6117,18 @@ function onClose() {
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Tag color="magenta">magenta</Tag>
-    <Tag color="red">red</Tag>
-    <Tag color="volcano">volcano</Tag>
-    <Tag color="orange">orange</Tag>
-    <Tag color="gold">gold</Tag>
-    <Tag color="lime">lime</Tag>
-    <Tag color="green">green</Tag>
-    <Tag color="cyan">cyan</Tag>
-    <Tag color="blue">blue</Tag>
-    <Tag color="geekblue">geekblue</Tag>
-    <Tag color="purple">purple</Tag>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Tag color="magenta"> magenta </Tag>
+    <Tag color="red"> red </Tag>
+    <Tag color="volcano"> volcano </Tag>
+    <Tag color="orange"> orange </Tag>
+    <Tag color="gold"> gold </Tag>
+    <Tag color="lime"> lime </Tag>
+    <Tag color="green"> green </Tag>
+    <Tag color="cyan"> cyan </Tag>
+    <Tag color="blue"> blue </Tag>
+    <Tag color="geekblue"> geekblue </Tag>
+    <Tag color="purple"> purple </Tag>
   </div>
 </template>
 
@@ -6345,17 +6195,9 @@ import { TimePicker } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
-    <TimePicker
-      v-model:value="time"
-      placeholder="请选择时间"
-      @change="handleChange"
-    />
-    <TimePicker
-      v-model:value="time2"
-      placeholder="禁用状态"
-      disabled
-    />
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
+    <TimePicker v-model:value="time" placeholder="请选择时间" @change="handleChange" />
+    <TimePicker v-model:value="time2" placeholder="禁用状态" disabled />
     <p>选中时间：{{ time }}</p>
   </div>
 </template>
@@ -6377,30 +6219,18 @@ const handleChange = (value: string) => {
 
 ```vue
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
     <div>
-      <p style="margin-bottom: 4px;">小时步长 2：</p>
-      <TimePicker
-        v-model:value="time1"
-        :hour-step="2"
-        placeholder="小时步长 2"
-      />
+      <p style="margin-bottom: 4px">小时步长 2：</p>
+      <TimePicker v-model:value="time1" :hour-step="2" placeholder="小时步长 2" />
     </div>
     <div>
-      <p style="margin-bottom: 4px;">分钟步长 15：</p>
-      <TimePicker
-        v-model:value="time2"
-        :minute-step="15"
-        placeholder="分钟步长 15"
-      />
+      <p style="margin-bottom: 4px">分钟步长 15：</p>
+      <TimePicker v-model:value="time2" :minute-step="15" placeholder="分钟步长 15" />
     </div>
     <div>
-      <p style="margin-bottom: 4px;">秒步长 30：</p>
-      <TimePicker
-        v-model:value="time3"
-        :second-step="30"
-        placeholder="秒步长 30"
-      />
+      <p style="margin-bottom: 4px">秒步长 30：</p>
+      <TimePicker v-model:value="time3" :second-step="30" placeholder="秒步长 30" />
     </div>
   </div>
 </template>
@@ -6564,14 +6394,11 @@ import { Tooltip } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Tooltip
-      v-for="placement in placements"
-      :key="placement"
-      :placement="placement"
-      title="提示文字"
-    >
-      <button style="width: 100px;">{{ placement }}</button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Tooltip v-for="placement in placements" :key="placement" :placement="placement" title="提示文字">
+      <button style="width: 100px">
+        {{ placement }}
+      </button>
     </Tooltip>
   </div>
 </template>
@@ -6580,10 +6407,18 @@ import { Tooltip } from 'ant-design-hmfw'
 import { Tooltip } from 'ant-design-hmfw'
 
 const placements = [
-  'topLeft', 'top', 'topRight',
-  'leftTop', 'left', 'leftBottom',
-  'rightTop', 'right', 'rightBottom',
-  'bottomLeft', 'bottom', 'bottomRight',
+  'topLeft',
+  'top',
+  'topRight',
+  'leftTop',
+  'left',
+  'leftBottom',
+  'rightTop',
+  'right',
+  'rightBottom',
+  'bottomLeft',
+  'bottom',
+  'bottomRight',
 ]
 </script>
 ```
@@ -6660,7 +6495,7 @@ import { Tour } from 'ant-design-hmfw'
 <template>
   <div>
     <Space>
-      <Button ref="btnRef" type="primary" @click="open = true">开始引导</Button>
+      <Button ref="btnRef" type="primary" @click="open = true"> 开始引导 </Button>
     </Space>
     <Tour v-model:open="open" :steps="steps" @finish="open = false" />
   </div>
@@ -6696,16 +6531,11 @@ const steps: TourStep[] = [
 <template>
   <div>
     <Space>
-      <Button type="primary" @click="openDefault">默认样式</Button>
-      <Button type="primary" @click="openPrimary">主题样式</Button>
+      <Button type="primary" @click="openDefault"> 默认样式 </Button>
+      <Button type="primary" @click="openPrimary"> 主题样式 </Button>
     </Space>
     <Tour v-model:open="defaultOpen" :steps="defaultSteps" @finish="defaultOpen = false" />
-    <Tour
-      v-model:open="primaryOpen"
-      type="primary"
-      :steps="primarySteps"
-      @finish="primaryOpen = false"
-    />
+    <Tour v-model:open="primaryOpen" type="primary" :steps="primarySteps" @finish="primaryOpen = false" />
   </div>
 </template>
 
@@ -6815,12 +6645,7 @@ import { Transfer } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Transfer
-    :data-source="dataSource"
-    v-model:target-keys="targetKeys"
-    :titles="['待选', '已选']"
-    show-search
-  />
+  <Transfer v-model:target-keys="targetKeys" :data-source="dataSource" :titles="['待选', '已选']" show-search />
 </template>
 
 <script setup lang="ts">
@@ -6843,12 +6668,7 @@ const targetKeys = ref(['1', '3', '5'])
 
 ```vue
 <template>
-  <Transfer
-    :data-source="dataSource"
-    v-model:target-keys="targetKeys"
-    :titles="['待选', '已选']"
-    show-search
-  />
+  <Transfer v-model:target-keys="targetKeys" :data-source="dataSource" :titles="['待选', '已选']" show-search />
 </template>
 
 <script setup lang="ts">
@@ -6960,11 +6780,7 @@ import { Tree, DirectoryTree } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <Tree
-    :tree-data="treeData"
-    v-model:expanded-keys="expandedKeys"
-    v-model:selected-keys="selectedKeys"
-  />
+  <Tree v-model:expanded-keys="expandedKeys" v-model:selected-keys="selectedKeys" :tree-data="treeData" />
 </template>
 
 <script setup lang="ts">
@@ -6990,9 +6806,7 @@ const treeData = [
       {
         title: '父节点 1-1',
         key: '0-0-1',
-        children: [
-          { title: '叶子节点', key: '0-0-1-0' },
-        ],
+        children: [{ title: '叶子节点', key: '0-0-1-0' }],
       },
     ],
   },
@@ -7004,12 +6818,7 @@ const treeData = [
 
 ```vue
 <template>
-  <Tree
-    checkable
-    :tree-data="treeData"
-    v-model:checked-keys="checkedKeys"
-    v-model:expanded-keys="expandedKeys"
-  />
+  <Tree v-model:checked-keys="checkedKeys" v-model:expanded-keys="expandedKeys" checkable :tree-data="treeData" />
   <p>已勾选：{{ checkedKeys.join(', ') }}</p>
 </template>
 
@@ -7032,9 +6841,7 @@ const treeData = [
   {
     title: '父节点 2',
     key: '0-1',
-    children: [
-      { title: '子节点 2-1', key: '0-1-0' },
-    ],
+    children: [{ title: '子节点 2-1', key: '0-1-0' }],
   },
 ]
 </script>
@@ -7110,12 +6917,7 @@ import { TreeSelect } from 'ant-design-hmfw'
 ```vue
 <template>
   <Space direction="vertical" style="width: 300px">
-    <TreeSelect
-      v-model:value="value"
-      :tree-data="treeData"
-      placeholder="请选择"
-      style="width: 100%"
-    />
+    <TreeSelect v-model:value="value" :tree-data="treeData" placeholder="请选择" style="width: 100%" />
     <span>选中：{{ value }}</span>
   </Space>
 </template>
@@ -7139,9 +6941,7 @@ const treeData: TreeSelectNode[] = [
   {
     value: 'parent2',
     label: '父节点 2',
-    children: [
-      { value: 'child2-1', label: '子节点 2-1' },
-    ],
+    children: [{ value: 'child2-1', label: '子节点 2-1' }],
   },
 ]
 </script>
@@ -7152,13 +6952,7 @@ const treeData: TreeSelectNode[] = [
 ```vue
 <template>
   <Space direction="vertical" style="width: 300px">
-    <TreeSelect
-      v-model:value="value"
-      :tree-data="treeData"
-      multiple
-      placeholder="请选择"
-      style="width: 100%"
-    />
+    <TreeSelect v-model:value="value" :tree-data="treeData" multiple placeholder="请选择" style="width: 100%" />
     <span>选中：{{ value }}</span>
   </Space>
 </template>
@@ -7182,9 +6976,7 @@ const treeData: TreeSelectNode[] = [
   {
     value: 'parent2',
     label: '父节点 2',
-    children: [
-      { value: 'child2-1', label: '子节点 2-1' },
-    ],
+    children: [{ value: 'child2-1', label: '子节点 2-1' }],
   },
 ]
 </script>
@@ -7257,11 +7049,11 @@ import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'
 ```vue
 <template>
   <Space direction="vertical" :size="16">
-    <Title :level="1">h1. Ant Design</Title>
-    <Title :level="2">h2. Ant Design</Title>
-    <Title :level="3">h3. Ant Design</Title>
-    <Title :level="4">h4. Ant Design</Title>
-    <Title :level="5">h5. Ant Design</Title>
+    <Title :level="1"> h1. Ant Design </Title>
+    <Title :level="2"> h2. Ant Design </Title>
+    <Title :level="3"> h3. Ant Design </Title>
+    <Title :level="4"> h4. Ant Design </Title>
+    <Title :level="5"> h5. Ant Design </Title>
   </Space>
 </template>
 
@@ -7276,11 +7068,11 @@ import { Title, Space } from 'ant-design-hmfw'
 <template>
   <Space direction="vertical">
     <Text>默认文本</Text>
-    <Text type="secondary">次要文本</Text>
-    <Text type="success">成功文本</Text>
-    <Text type="warning">警告文本</Text>
-    <Text type="danger">危险文本</Text>
-    <Text disabled>禁用文本</Text>
+    <Text type="secondary"> 次要文本 </Text>
+    <Text type="success"> 成功文本 </Text>
+    <Text type="warning"> 警告文本 </Text>
+    <Text type="danger"> 危险文本 </Text>
+    <Text disabled> 禁用文本 </Text>
   </Space>
 </template>
 
@@ -7483,7 +7275,7 @@ import { Watermark } from 'ant-design-hmfw'
 ```vue
 <template>
   <Watermark content="Ant Design">
-    <div style="height: 500px;" />
+    <div style="height: 500px" />
   </Watermark>
 </template>
 
@@ -7497,7 +7289,7 @@ import { Watermark } from 'ant-design-hmfw'
 ```vue
 <template>
   <Watermark :content="['Ant Design', 'Happy Working']">
-    <div style="height: 500px;" />
+    <div style="height: 500px" />
   </Watermark>
 </template>
 
