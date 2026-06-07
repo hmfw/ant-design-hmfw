@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { ref, reactive } from 'vue'
 import { Table, Input, Button } from '../../../components'
 import type { TableColumn } from '../../../components'

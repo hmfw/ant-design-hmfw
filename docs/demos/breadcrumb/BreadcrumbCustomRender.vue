@@ -19,8 +19,8 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Breadcrumb, Icon } from '@/components'
-import type { BreadcrumbItemType } from '@/components/breadcrumb/types'
+import { Breadcrumb, Icon } from 'ant-design-hmfw'
+import type { BreadcrumbItem as BreadcrumbItemType } from 'ant-design-hmfw'
 
 const items: BreadcrumbItemType[] = [
   { title: '首页', path: 'home' },

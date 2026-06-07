@@ -7,6 +7,7 @@ import type { CascaderOption, CascaderValue, CascaderExpandTrigger, CascaderShow
 
 export const Cascader = defineComponent({
   name: 'Cascader',
+  inheritAttrs: false,
   props: {
     value: [Array, Object] as PropType<CascaderValue | CascaderValue[]>,
     defaultValue: { type: [Array, Object] as PropType<CascaderValue | CascaderValue[]>, default: () => [] },
@@ -32,7 +33,7 @@ export const Cascader = defineComponent({
     maxTagTextLength: Number,
   },
   emits: ['update:value', 'update:open', 'change', 'search', 'focus', 'blur', 'clear'],
-  setup(props, { emit, expose }) {
+  setup(props, { emit, attrs, expose }) {
     const prefixCls = usePrefixCls('cascader')
 
     const labelField = computed(() => props.fieldNames?.label ?? 'label')
@@ -284,8 +285,10 @@ export const Cascader = defineComponent({
               [`${prefixCls}-multiple`]: props.multiple,
               [`${prefixCls}-status-error`]: props.status === 'error',
               [`${prefixCls}-status-warning`]: props.status === 'warning',
-            }
+            },
+            attrs.class as any,
           )}
+          style={attrs.style as any}
           onClick={open}
         >
           <span class={`${prefixCls}-selector`}>

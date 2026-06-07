@@ -17,6 +17,7 @@ import type { DropdownProps, DropdownPlacement, DropdownTrigger } from './types'
 
 export const Dropdown = defineComponent({
   name: 'Dropdown',
+  inheritAttrs: false,
   props: {
     menu: Object as PropType<DropdownProps['menu']>,
     trigger: {
@@ -47,7 +48,7 @@ export const Dropdown = defineComponent({
     rootClassName: String,
   },
   emits: ['update:open', 'openChange'],
-  setup(props, { slots, emit }) {
+  setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('dropdown')
     const triggerRef = ref<HTMLElement | null>(null)
     const dropdownRef = ref<HTMLElement | null>(null)
@@ -241,6 +242,7 @@ export const Dropdown = defineComponent({
 
       const triggerClasses = cls(
         props.openClassName && visible.value ? props.openClassName : null,
+        attrs.class as any,
       )
 
       return (
@@ -248,7 +250,7 @@ export const Dropdown = defineComponent({
           <div
             ref={triggerRef}
             class={triggerClasses}
-            style={{ display: 'inline-block' }}
+            style={{ display: 'inline-block', ...(attrs.style as any) }}
             onMouseenter={handleMouseEnter}
             onMouseleave={handleMouseLeave}
             onClick={handleClick}

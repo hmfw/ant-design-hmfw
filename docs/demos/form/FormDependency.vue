@@ -10,10 +10,11 @@
       style="max-width: 600px"
     >
       <FormItem label="联系方式类型" name="contactType">
-        <Select v-model:value="formState.contactType" placeholder="请选择">
-          <SelectOption value="email">邮箱</SelectOption>
-          <SelectOption value="phone">手机号</SelectOption>
-        </Select>
+        <Select
+          v-model:value="formState.contactType"
+          :options="contactTypeOptions"
+          placeholder="请选择"
+        />
       </FormItem>
 
       <FormItem
@@ -66,7 +67,7 @@ import { Form, FormItem } from '../../../components/form'
 import { Input } from '../../../components/input'
 import { Button } from '../../../components/button'
 import { Space } from '../../../components/space'
-import { Select, SelectOption } from '../../../components/select'
+import { Select } from '../../../components/select'
 import { Switch } from '../../../components/switch'
 
 const formRef = ref()
@@ -78,6 +79,11 @@ const formState = reactive({
   needNotify: false,
   notifyEmail: '',
 })
+
+const contactTypeOptions = [
+  { value: 'email', label: '邮箱' },
+  { value: 'phone', label: '手机号' },
+]
 
 const result = ref('')
 

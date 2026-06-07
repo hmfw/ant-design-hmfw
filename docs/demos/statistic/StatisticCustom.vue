@@ -12,7 +12,7 @@
         :precision="2"
         suffix="%"
         :value-style="{ color: '#3f8600' }"
-        :prefix="() => h('span', { style: { color: '#3f8600' } }, '↑')"
+        :prefix="h('span', { style: { color: '#3f8600' } }, '↑')"
       />
     </Space>
   </div>

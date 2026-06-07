@@ -13,9 +13,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Breadcrumb } from '@/components'
-import { Button } from '@/components'
-import type { BreadcrumbItemType } from '@/components/breadcrumb/types'
+import { Breadcrumb, Button } from 'ant-design-hmfw'
+import type { BreadcrumbItem as BreadcrumbItemType } from 'ant-design-hmfw'
 
 // 模拟路由状态
 const currentPath = ref('/')

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { Table } from '../../../components'
 import type { TableColumn } from '../../../components'
 

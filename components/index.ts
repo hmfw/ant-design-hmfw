@@ -70,7 +70,7 @@ export type { InputProps, TextAreaProps, InputSize, InputStatus } from './input'
 export { Checkbox, CheckboxGroup } from './checkbox'
 export type { CheckboxProps, CheckboxGroupProps, CheckboxValueType, CheckboxChangeEvent, CheckboxChangeEventTarget, CheckboxOptionType } from './checkbox'
 
-export { Radio, RadioGroup } from './radio'
+export { Radio, RadioGroup, RadioButton } from './radio'
 export type { RadioProps, RadioGroupProps, RadioValueType, RadioChangeEvent } from './radio'
 
 export { Switch } from './switch'
@@ -318,7 +318,7 @@ import { Empty } from './empty'
 import { Card, CardGrid, CardMeta } from './card'
 import { Input, InputPassword, TextArea, InputSearch } from './input'
 import { Checkbox, CheckboxGroup } from './checkbox'
-import { Radio, RadioGroup } from './radio'
+import { Radio, RadioGroup, RadioButton } from './radio'
 import { Switch } from './switch'
 import { Spin } from './spin'
 import { Progress } from './progress'
@@ -337,7 +337,7 @@ import { RangePicker } from './range-picker'
 import { TreeSelect } from './tree-select'
 import { Statistic, Countdown } from './statistic'
 
-const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Link, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Ribbon, Tag, CheckableTag, Empty, Card, CardGrid, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker, Transfer, RangePicker, TreeSelect, Statistic, Countdown]
+const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Link, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Ribbon, Tag, CheckableTag, Empty, Card, CardGrid, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, RadioButton, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker, Transfer, RangePicker, TreeSelect, Statistic, Countdown]
 
 export function install(app: VueApp): void {
   components.forEach((component) => {

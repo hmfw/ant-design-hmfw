@@ -11,31 +11,41 @@
 
 ### 基础用法
 
-<demo src="./StatisticBasic.vue" />
+<DemoBlock title="基础用法" :source="StatisticBasicSource">
+  <StatisticBasic />
+</DemoBlock>
 
 简单的展示统计数值，支持精度控制和后缀。
 
 ### 单位设置
 
-<demo src="./StatisticUnit.vue" />
+<DemoBlock title="单位设置" :source="StatisticUnitSource">
+  <StatisticUnit />
+</DemoBlock>
 
 通过前缀和后缀添加单位，可以使用字符串或 VNode。通过 `valueStyle` 可以设置数值样式。
 
 ### 倒计时
 
-<demo src="./StatisticCountdown.vue" />
+<DemoBlock title="倒计时" :source="StatisticCountdownSource">
+  <StatisticCountdown />
+</DemoBlock>
 
 倒计时组件，支持多种时间格式和倒计时结束回调。
 
 ### 加载状态
 
-<demo src="./StatisticLoading.vue" />
+<DemoBlock title="加载状态" :source="StatisticLoadingSource">
+  <StatisticLoading />
+</DemoBlock>
 
 数据加载中时显示骨架屏占位。
 
 ### 自定义渲染
 
-<demo src="./StatisticCustom.vue" />
+<DemoBlock title="自定义渲染" :source="StatisticCustomSource">
+  <StatisticCustom />
+</DemoBlock>
 
 通过 `valueRender` 可以完全自定义数值的渲染方式。
 
