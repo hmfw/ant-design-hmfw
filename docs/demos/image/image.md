@@ -55,38 +55,38 @@
 
 ### Image Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| src | 图片地址 | `string` | - |
-| alt | 图片描述 | `string` | - |
-| width | 宽度 | `number \| string` | - |
-| height | 高度 | `number \| string` | - |
-| preview | 预览配置，`false` 时禁用 | `boolean \| PreviewConfig` | `true` |
-| fallback | 加载失败时的替代图片地址 | `string` | - |
-| placeholder | 加载占位：`true` 显示骨架动画，或自定义 VNode | `boolean \| VNode \| (() => VNode)` | `false` |
-| rootClassName | 根节点 class | `string` | - |
-| onError | 加载失败回调 | `(e: Event) => void` | - |
+| 参数          | 说明                                          | 类型                                | 默认值  |
+| ------------- | --------------------------------------------- | ----------------------------------- | ------- |
+| src           | 图片地址                                      | `string`                            | -       |
+| alt           | 图片描述                                      | `string`                            | -       |
+| width         | 宽度                                          | `number \| string`                  | -       |
+| height        | 高度                                          | `number \| string`                  | -       |
+| preview       | 预览配置，`false` 时禁用                      | `boolean \| PreviewConfig`          | `true`  |
+| fallback      | 加载失败时的替代图片地址                      | `string`                            | -       |
+| placeholder   | 加载占位：`true` 显示骨架动画，或自定义 VNode | `boolean \| VNode \| (() => VNode)` | `false` |
+| rootClassName | 根节点 class                                  | `string`                            | -       |
+| onError       | 加载失败回调                                  | `(e: Event) => void`                | -       |
 
 ### PreviewConfig
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| open | 受控：是否打开预览 | `boolean` | - |
-| onOpenChange | 预览开关变化回调 | `(open: boolean) => void` | - |
-| src | 自定义预览图片地址（与 thumb 不同） | `string` | - |
-| closeIcon | 自定义关闭图标，`false` 隐藏 | `VNode \| (() => VNode) \| false` | `<CloseOutlined />` |
-| cover | 自定义 hover 遮罩内容 | `VNode \| (() => VNode)` | - |
-| mask | 遮罩配置：`false` 隐藏遮罩，对象形式可配置可点击性 | `boolean \| MaskType` | `true` |
-| scaleStep | 缩放每步倍率（1 + scaleStep） | `number` | `0.5` |
-| minScale | 最小缩放 | `number` | `1` |
-| maxScale | 最大缩放 | `number` | `50` |
-| movable | 是否可拖拽移动 | `boolean` | `true` |
-| getContainer | 预览挂载容器；`false` 时原地渲染 | `string \| HTMLElement \| (() => HTMLElement) \| false` | `document.body` |
-| zIndex | 预览根节点 z-index | `number` | `1080` |
-| onTransform | 预览 transform 变化回调 | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
-| imageRender | 自定义预览内容渲染 | `(originalNode: VNode, info: ImageRenderInfoType) => VNode` | - |
-| toolbarRender | 自定义底部工具栏渲染（参考 AntD v6） | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode` | - |
-| ~~actionsRender~~ | 已废弃，请使用 `toolbarRender` | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode` | - |
+| 参数              | 说明                                               | 类型                                                                    | 默认值              |
+| ----------------- | -------------------------------------------------- | ----------------------------------------------------------------------- | ------------------- |
+| open              | 受控：是否打开预览                                 | `boolean`                                                               | -                   |
+| onOpenChange      | 预览开关变化回调                                   | `(open: boolean) => void`                                               | -                   |
+| src               | 自定义预览图片地址（与 thumb 不同）                | `string`                                                                | -                   |
+| closeIcon         | 自定义关闭图标，`false` 隐藏                       | `VNode \| (() => VNode) \| false`                                       | `<CloseOutlined />` |
+| cover             | 自定义 hover 遮罩内容                              | `VNode \| (() => VNode)`                                                | -                   |
+| mask              | 遮罩配置：`false` 隐藏遮罩，对象形式可配置可点击性 | `boolean \| MaskType`                                                   | `true`              |
+| scaleStep         | 缩放每步倍率（1 + scaleStep）                      | `number`                                                                | `0.5`               |
+| minScale          | 最小缩放                                           | `number`                                                                | `1`                 |
+| maxScale          | 最大缩放                                           | `number`                                                                | `50`                |
+| movable           | 是否可拖拽移动                                     | `boolean`                                                               | `true`              |
+| getContainer      | 预览挂载容器；`false` 时原地渲染                   | `string \| HTMLElement \| (() => HTMLElement) \| false`                 | `document.body`     |
+| zIndex            | 预览根节点 z-index                                 | `number`                                                                | `1080`              |
+| onTransform       | 预览 transform 变化回调                            | `(info: { transform: TransformType; action: TransformAction }) => void` | -                   |
+| imageRender       | 自定义预览内容渲染                                 | `(originalNode: VNode, info: ImageRenderInfoType) => VNode`             | -                   |
+| toolbarRender     | 自定义底部工具栏渲染（参考 AntD v6）               | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode`           | -                   |
+| ~~actionsRender~~ | 已废弃，请使用 `toolbarRender`                     | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode`           | -                   |
 
 ### ImageRenderInfoType / ToolbarRenderInfoType
 
@@ -94,8 +94,8 @@
 interface ImageRenderInfoType {
   transform: TransformType
   current?: number // 当前索引（PreviewGroup）
-  total?: number   // 图片总数（PreviewGroup）
-  image: ImgInfo   // 当前预览图片信息
+  total?: number // 图片总数（PreviewGroup）
+  image: ImgInfo // 当前预览图片信息
 }
 
 interface ToolbarRenderInfoType {
@@ -119,30 +119,30 @@ interface ToolbarRenderInfoType {
 
 ### MaskType
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| enabled | 是否启用遮罩（hover 提示层） | `boolean` | `true` |
-| closable | 点击遮罩是否可关闭预览 | `boolean` | `true` |
+| 参数     | 说明                         | 类型      | 默认值 |
+| -------- | ---------------------------- | --------- | ------ |
+| enabled  | 是否启用遮罩（hover 提示层） | `boolean` | `true` |
+| closable | 点击遮罩是否可关闭预览       | `boolean` | `true` |
 
 ### PreviewGroup Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| preview | 预览配置，`false` 时禁用 | `boolean \| PreviewConfig` | `true` |
-| items | 预览图片项（无子组件时用） | `(string \| ImgInfo)[]` | - |
-| current | 受控：当前预览索引 | `number` | - |
-| onChange | 切换预览图片回调 | `(current: number, prevCurrent: number) => void` | - |
+| 参数     | 说明                       | 类型                                             | 默认值 |
+| -------- | -------------------------- | ------------------------------------------------ | ------ |
+| preview  | 预览配置，`false` 时禁用   | `boolean \| PreviewConfig`                       | `true` |
+| items    | 预览图片项（无子组件时用） | `(string \| ImgInfo)[]`                          | -      |
+| current  | 受控：当前预览索引         | `number`                                         | -      |
+| onChange | 切换预览图片回调           | `(current: number, prevCurrent: number) => void` | -      |
 
 ### TransformType
 
 ```typescript
 interface TransformType {
-  x: number          // 平移 X
-  y: number          // 平移 Y
-  rotate: number     // 旋转角度
-  scale: number      // 缩放倍数
-  flipX: boolean     // 水平翻转
-  flipY: boolean     // 垂直翻转
+  x: number // 平移 X
+  y: number // 平移 Y
+  rotate: number // 旋转角度
+  scale: number // 缩放倍数
+  flipX: boolean // 水平翻转
+  flipY: boolean // 垂直翻转
 }
 ```
 
@@ -150,12 +150,19 @@ interface TransformType {
 
 ```typescript
 type TransformAction =
-  | 'flipY' | 'flipX'
-  | 'rotateLeft' | 'rotateRight'
-  | 'zoomIn' | 'zoomOut'
+  | 'flipY'
+  | 'flipX'
+  | 'rotateLeft'
+  | 'rotateRight'
+  | 'zoomIn'
+  | 'zoomOut'
   | 'reset'
-  | 'close' | 'prev' | 'next'
-  | 'wheel' | 'doubleClick' | 'move'
+  | 'close'
+  | 'prev'
+  | 'next'
+  | 'wheel'
+  | 'doubleClick'
+  | 'move'
 ```
 
 ### ImgInfo
@@ -171,16 +178,16 @@ interface ImgInfo {
 
 ### 预览操作
 
-| 操作 | 说明 | 快捷键 |
-| --- | --- | --- |
-| 左右翻转 | 水平翻转图片 | - |
-| 上下翻转 | 垂直翻转图片 | - |
-| 向左/右旋转 | 旋转 90° | - |
-| 放大/缩小 | 缩放图片 | 滚轮 |
-| 上一张/下一张 | 切换图片（PreviewGroup） | ← / → |
-| 关闭 | 关闭预览 | Esc |
-| 重置 | 双击图片重置/放大 | - |
-| 拖拽移动 | 按住图片拖动 | - |
+| 操作          | 说明                     | 快捷键 |
+| ------------- | ------------------------ | ------ |
+| 左右翻转      | 水平翻转图片             | -      |
+| 上下翻转      | 垂直翻转图片             | -      |
+| 向左/右旋转   | 旋转 90°                 | -      |
+| 放大/缩小     | 缩放图片                 | 滚轮   |
+| 上一张/下一张 | 切换图片（PreviewGroup） | ← / →  |
+| 关闭          | 关闭预览                 | Esc    |
+| 重置          | 双击图片重置/放大        | -      |
+| 拖拽移动      | 按住图片拖动             | -      |
 
 <script setup lang="ts">
 import ImageBasic from './ImageBasic.vue'

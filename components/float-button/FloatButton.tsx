@@ -1,13 +1,4 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  onMounted,
-  onBeforeUnmount,
-  Transition,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, Transition, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
@@ -38,9 +29,7 @@ function renderIcon(icon: IconLike | undefined, fallbackSlot?: () => VNode[] | u
 }
 
 /** Normalize tooltip prop: string → { title: string }, object → pass through. */
-function normalizeTooltip(
-  tooltip: string | TooltipProps | undefined,
-): TooltipProps | undefined {
+function normalizeTooltip(tooltip: string | TooltipProps | undefined): TooltipProps | undefined {
   if (!tooltip) return undefined
   if (typeof tooltip === 'string') return { title: tooltip }
   return tooltip
@@ -82,20 +71,13 @@ export const FloatButton = defineComponent({
       const showContent = mergedContent || slots.description || slots.content
 
       // Default icon: FileTextOutlined when no content/icon provided
-      const mergedIcon =
-        props.icon ?? (showContent ? undefined : FileTextOutlined)
+      const mergedIcon = props.icon ?? (showContent ? undefined : FileTextOutlined)
 
       const body = (
         <div class={`${prefixCls}-body`}>
-          {mergedIcon !== undefined && (
-            <div class={`${prefixCls}-icon`}>
-              {renderIcon(mergedIcon, slots.icon)}
-            </div>
-          )}
+          {mergedIcon !== undefined && <div class={`${prefixCls}-icon`}>{renderIcon(mergedIcon, slots.icon)}</div>}
           {showContent && (
-            <div class={`${prefixCls}-content`}>
-              {slots.content?.() ?? slots.description?.() ?? mergedContent}
-            </div>
+            <div class={`${prefixCls}-content`}>{slots.content?.() ?? slots.description?.() ?? mergedContent}</div>
           )}
         </div>
       )
@@ -130,12 +112,9 @@ export const FloatButton = defineComponent({
         badged
       )
 
-      const rootCls = cls(
-        prefixCls,
-        `${prefixCls}-${props.type}`,
-        `${prefixCls}-${props.shape}`,
-        { [`${prefixCls}-disabled`]: props.disabled },
-      )
+      const rootCls = cls(prefixCls, `${prefixCls}-${props.type}`, `${prefixCls}-${props.shape}`, {
+        [`${prefixCls}-disabled`]: props.disabled,
+      })
 
       if (props.href) {
         return (
@@ -153,13 +132,7 @@ export const FloatButton = defineComponent({
       }
 
       return (
-        <button
-          {...attrs}
-          type={props.htmlType}
-          class={rootCls}
-          onClick={handleClick}
-          disabled={props.disabled}
-        >
+        <button {...attrs} type={props.htmlType} class={rootCls} onClick={handleClick} disabled={props.disabled}>
           {content}
         </button>
       )
@@ -216,12 +189,7 @@ export const FloatButtonGroup = defineComponent({
 
     // Close on outside click when trigger='click'
     const handleDocumentClick = (e: MouseEvent) => {
-      if (
-        props.trigger === 'click' &&
-        isOpen.value &&
-        groupRef.value &&
-        !groupRef.value.contains(e.target as Node)
-      ) {
+      if (props.trigger === 'click' && isOpen.value && groupRef.value && !groupRef.value.contains(e.target as Node)) {
         setOpen(false)
       }
     }
@@ -260,23 +228,12 @@ export const FloatButtonGroup = defineComponent({
         )
       }
 
-      const triggerIcon = isOpen.value
-        ? (props.closeIcon ?? CloseOutlined)
-        : (props.icon ?? PlusOutlined)
+      const triggerIcon = isOpen.value ? (props.closeIcon ?? CloseOutlined) : (props.icon ?? PlusOutlined)
 
       return (
-        <div
-          class={groupCls}
-          ref={groupRef}
-          onMouseenter={handleMouseEnter}
-          onMouseleave={handleMouseLeave}
-        >
+        <div class={groupCls} ref={groupRef} onMouseenter={handleMouseEnter} onMouseleave={handleMouseLeave}>
           <Transition name={`${prefixCls}-group-wrap`}>
-            {isOpen.value && (
-              <div class={`${prefixCls}-group-wrap`}>
-                {slots.default?.()}
-              </div>
-            )}
+            {isOpen.value && <div class={`${prefixCls}-group-wrap`}>{slots.default?.()}</div>}
           </Transition>
           <FloatButton
             type={props.type}
@@ -319,8 +276,7 @@ export const FloatButtonBackTop = defineComponent({
     // container ref is cleared during route navigation) and crash.
     let listenTarget: HTMLElement | Window | Document | null = null
 
-    const getTarget = (): HTMLElement | Window | Document =>
-      props.target ? props.target() : window
+    const getTarget = (): HTMLElement | Window | Document => (props.target ? props.target() : window)
 
     const getScrollTop = (el: HTMLElement | Window | Document) => {
       if (el === window || el === document) {
@@ -337,8 +293,7 @@ export const FloatButtonBackTop = defineComponent({
       const target = getTarget()
       const startTime = Date.now()
       const startScrollTop = getScrollTop(target)
-      const easeInOutCubic = (t: number) =>
-        t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
+      const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1)
 
       const frame = () => {
         const progress = Math.min((Date.now() - startTime) / props.duration, 1)
@@ -346,7 +301,7 @@ export const FloatButtonBackTop = defineComponent({
         if (target === window || target === document) {
           window.scrollTo(0, scrollTop)
         } else {
-          (target as HTMLElement).scrollTop = scrollTop
+          ;(target as HTMLElement).scrollTop = scrollTop
         }
         if (progress < 1) requestAnimationFrame(frame)
       }
@@ -397,7 +352,6 @@ type FloatButtonCompound = typeof FloatButton & {
   Group: typeof FloatButtonGroup
   BackTop: typeof FloatButtonBackTop
 }
-
 ;(FloatButton as FloatButtonCompound).Group = FloatButtonGroup
 ;(FloatButton as FloatButtonCompound).BackTop = FloatButtonBackTop
 

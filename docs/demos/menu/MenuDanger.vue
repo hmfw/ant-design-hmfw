@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 256px;">
+  <div style="width: 256px">
     <Menu mode="inline" :items="items" />
   </div>
 </template>

@@ -12,6 +12,7 @@
 #### 1. 多格式输出 ✅
 
 **支持的格式:**
+
 - ✅ **ESM (ES Modules)** - `dist/index.js` (789 KB)
   - 现代浏览器和构建工具的首选格式
   - 支持 Tree Shaking
@@ -32,6 +33,7 @@
   - `dist/index.d.cts` (329 KB) - CJS 类型
 
 **package.json 导出配置:**
+
 ```json
 {
   "main": "./dist/index.cjs",
@@ -61,12 +63,14 @@
 #### 2. Tree Shaking 支持 ✅
 
 **配置优化:**
+
 - ✅ `treeshake: true` - 启用 Tree Shaking
 - ✅ `splitting: true` - 代码分割（提高加载性能）
 - ✅ `sideEffects: ["**/*.css"]` - 标记副作用文件
 - ✅ `external: ['vue']` - Vue 作为外部依赖
 
 **测试结果:**
+
 ```
 📦 Bundle 大小对比（经过用户构建工具处理后）:
 ┌────────────────────┬────────────┬──────────────┐
@@ -84,14 +88,16 @@
 #### 3. 样式构建优化 ✅
 
 **优化内容:**
+
 - ✅ CSS 文件添加版本和许可信息 banner
 - ✅ 样式文件体积优化（2.59 KB，Gzip 后 0.54 KB）
 - ✅ 支持按需引入样式：
   ```js
-  import 'ant-design-hmfw/style.css'  // 完整样式
+  import 'ant-design-hmfw/style.css' // 完整样式
   ```
 
 **样式文件内容:**
+
 ```css
 /*!
  * ant-design-hmfw v0.1.0
@@ -107,10 +113,12 @@
 #### 4. 构建产物分析 ✅
 
 **新增脚本:**
+
 - ✅ `pnpm analyze:bundle` - 分析构建产物大小和组成
 - ✅ `pnpm analyze:treeshaking` - 测试 Tree Shaking 效果
 
 **构建产物统计:**
+
 ```
 ┌──────────────────┬──────────────┬──────────────┐
 │ 文件             │ 原始大小     │ Gzip 预估    │
@@ -140,19 +148,19 @@ export default defineConfig([
   {
     entry: ['components/index.ts'],
     format: ['esm', 'cjs'],
-    dts: true,                    // 生成类型声明
-    external: ['vue'],            // Vue 作为外部依赖
-    treeshake: true,              // 启用 Tree Shaking
-    splitting: true,              // 代码分割
-    clean: true,                  // 清理输出目录
-    sourcemap: true,              // 生成 source map
-    minify: false,                // 保持可读性
+    dts: true, // 生成类型声明
+    external: ['vue'], // Vue 作为外部依赖
+    treeshake: true, // 启用 Tree Shaking
+    splitting: true, // 代码分割
+    clean: true, // 清理输出目录
+    sourcemap: true, // 生成 source map
+    minify: false, // 保持可读性
   },
   // UMD 构建
   {
     entry: { 'ant-design-hmfw.umd': 'components/index.ts' },
     format: ['iife'],
-    globalName: 'AntDesignHmfw',  // 全局变量名
+    globalName: 'AntDesignHmfw', // 全局变量名
     external: ['vue'],
     minify: false,
     sourcemap: true,
@@ -216,7 +224,7 @@ require('ant-design-hmfw/style.css')
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
 <!-- 引入 ant-design-hmfw -->
-<link rel="stylesheet" href="https://unpkg.com/ant-design-hmfw/dist/style.css">
+<link rel="stylesheet" href="https://unpkg.com/ant-design-hmfw/dist/style.css" />
 <script src="https://unpkg.com/ant-design-hmfw/dist/ant-design-hmfw.umd.js"></script>
 
 <script>
@@ -232,7 +240,7 @@ require('ant-design-hmfw/style.css')
 ### Gzip 压缩后的体积
 
 | 格式 | 原始大小 | Gzip 后 | 压缩率 |
-|------|----------|---------|--------|
+| ---- | -------- | ------- | ------ |
 | ESM  | 789 KB   | 160 KB  | 79.7%  |
 | CJS  | 810 KB   | 161 KB  | 80.1%  |
 | UMD  | 2,985 KB | 572 KB  | 80.8%  |
@@ -240,12 +248,12 @@ require('ant-design-hmfw/style.css')
 
 ### 与同类库对比
 
-| 库 | Gzip 后大小 | 组件数 | 说明 |
-|----|------------|--------|------|
-| ant-design-hmfw | 160 KB | 66 | 本库 (Vue 3) |
-| Element Plus | ~150 KB | 60+ | Vue 3 组件库 |
-| Ant Design Vue | ~200 KB | 60+ | Vue 3 组件库 |
-| Ant Design React | ~250 KB | 70+ | React 组件库 |
+| 库               | Gzip 后大小 | 组件数 | 说明         |
+| ---------------- | ----------- | ------ | ------------ |
+| ant-design-hmfw  | 160 KB      | 66     | 本库 (Vue 3) |
+| Element Plus     | ~150 KB     | 60+    | Vue 3 组件库 |
+| Ant Design Vue   | ~200 KB     | 60+    | Vue 3 组件库 |
+| Ant Design React | ~250 KB     | 70+    | React 组件库 |
 
 ✅ **结论**: 体积控制良好，与主流组件库相当
 
@@ -290,7 +298,7 @@ require('ant-design-hmfw/style.css')
 ✅ **Tree Shaking** - 配置完善，用户可按需引入  
 ✅ **样式优化** - 体积小，加载快  
 ✅ **类型声明** - TypeScript 支持完整  
-✅ **分析工具** - 可随时检查构建产物  
+✅ **分析工具** - 可随时检查构建产物
 
 ### 关键指标
 

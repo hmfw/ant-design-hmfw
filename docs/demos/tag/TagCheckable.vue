@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 8px;">
+  <div style="display: flex; gap: 8px">
     <CheckableTag
       v-for="tag in tags"
       :key="tag"
@@ -22,7 +22,7 @@ function handleChange(tag: string, checked: boolean) {
   if (checked) {
     selectedTags.value = [...selectedTags.value, tag]
   } else {
-    selectedTags.value = selectedTags.value.filter(t => t !== tag)
+    selectedTags.value = selectedTags.value.filter((t) => t !== tag)
   }
 }
 </script>

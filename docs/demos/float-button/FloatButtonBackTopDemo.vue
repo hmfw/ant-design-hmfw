@@ -1,14 +1,9 @@
 <template>
-  <div class="back-top-demo" ref="containerRef">
+  <div ref="containerRef" class="back-top-demo">
     <div class="back-top-demo__inner">
       <p v-for="n in 30" :key="n">向下滚动这块区域，第 {{ n }} 行…</p>
     </div>
-    <FloatButton.BackTop
-      :target="getTarget"
-      :visibility-height="80"
-      tooltip="回到顶部"
-      :style="pos"
-    />
+    <FloatButton.BackTop :target="getTarget" :visibility-height="80" tooltip="回到顶部" :style="pos" />
   </div>
 </template>
 

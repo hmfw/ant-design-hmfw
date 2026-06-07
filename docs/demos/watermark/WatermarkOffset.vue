@@ -6,7 +6,7 @@
     :rotate="-45"
     :font="{ fontSize: 18, fontWeight: 'bold', fontStyle: 'italic' }"
   >
-    <div style="height: 500px;" />
+    <div style="height: 500px" />
   </Watermark>
 </template>
 

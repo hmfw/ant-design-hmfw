@@ -1,7 +1,7 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="showTop">顶部显示（默认）</Button>
-    <Button @click="showTopCustom">顶部自定义距离</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="showTop"> 顶部显示（默认） </Button>
+    <Button @click="showTopCustom"> 顶部自定义距离 </Button>
   </div>
 </template>
 

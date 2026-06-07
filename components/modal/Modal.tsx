@@ -1,6 +1,15 @@
 import {
-  defineComponent, ref, watch, computed, onBeforeUnmount, Teleport, Transition, h,
-  type PropType, type VNode, type CSSProperties,
+  defineComponent,
+  ref,
+  watch,
+  computed,
+  onBeforeUnmount,
+  Teleport,
+  Transition,
+  h,
+  type PropType,
+  type VNode,
+  type CSSProperties,
 } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
@@ -12,9 +21,10 @@ import type { ButtonProps } from '../button/types'
 import type { IconComponent } from '../icon/types'
 import type { ModalContent, ModalWidth, LegacyButtonType, GetContainer, ModalClassNames, ModalStyles } from './types'
 
-const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+const FOCUSABLE =
+  'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
 
-function trapFocus(el: HTMLElement, focusTriggerAfterClose: boolean): (() => void) {
+function trapFocus(el: HTMLElement, focusTriggerAfterClose: boolean): () => void {
   const prev = document.activeElement as HTMLElement | null
   const nodes = () => Array.from(el.querySelectorAll<HTMLElement>(FOCUSABLE))
   nodes()[0]?.focus()
@@ -25,9 +35,15 @@ function trapFocus(el: HTMLElement, focusTriggerAfterClose: boolean): (() => voi
     const first = focusable[0]
     const last = focusable[focusable.length - 1]
     if (e.shiftKey) {
-      if (document.activeElement === first) { e.preventDefault(); last.focus() }
+      if (document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      }
     } else {
-      if (document.activeElement === last) { e.preventDefault(); first.focus() }
+      if (document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
     }
   }
   el.addEventListener('keydown', handler)
@@ -54,7 +70,10 @@ function unlockScroll() {
   if (lockCount === 0) document.body.style.overflow = cachedOverflow
 }
 
-function renderContent(content: ModalContent | undefined, slot?: () => VNode[] | undefined): VNode[] | VNode | string | number | undefined {
+function renderContent(
+  content: ModalContent | undefined,
+  slot?: () => VNode[] | undefined,
+): VNode[] | VNode | string | number | undefined {
   if (slot) {
     const s = slot()
     if (s && s.length) return s
@@ -70,7 +89,10 @@ export const Modal = defineComponent({
   props: {
     open: { type: Boolean, default: undefined },
     defaultOpen: Boolean,
-    title: { type: [String, Number, Object, Function] as PropType<ModalContent>, default: undefined },
+    title: {
+      type: [String, Number, Object, Function] as PropType<ModalContent>,
+      default: undefined,
+    },
     width: { type: [Number, String] as PropType<ModalWidth>, default: 520 },
     centered: Boolean,
     closable: { type: Boolean, default: true },
@@ -90,7 +112,10 @@ export const Modal = defineComponent({
     destroyOnHidden: { type: Boolean, default: undefined },
     forceRender: Boolean,
     zIndex: { type: Number, default: 1000 },
-    getContainer: { type: [String, Object, Function, Boolean] as PropType<GetContainer>, default: undefined },
+    getContainer: {
+      type: [String, Object, Function, Boolean] as PropType<GetContainer>,
+      default: undefined,
+    },
     wrapClassName: { type: String, default: undefined },
     rootClassName: { type: String, default: undefined },
     focusTriggerAfterClose: { type: Boolean, default: true },
@@ -108,24 +133,33 @@ export const Modal = defineComponent({
     const dialogRef = ref<HTMLElement | null>(null)
     let cleanupTrap: (() => void) | null = null
 
-    watch(() => props.open, (v) => { if (v !== undefined) innerOpen.value = v })
+    watch(
+      () => props.open,
+      (v) => {
+        if (v !== undefined) innerOpen.value = v
+      },
+    )
 
-    const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
+    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
-    watch(isOpen, async (v) => {
-      if (v) {
-        lockScroll()
-        await Promise.resolve()
-        if (dialogRef.value) cleanupTrap = trapFocus(dialogRef.value, props.focusTriggerAfterClose)
-      } else {
-        cleanupTrap?.()
-        cleanupTrap = null
-        unlockScroll()
-      }
-      // afterOpenChange fires once the transition would have settled; async so
-      // fake-timer tests can intercept it too
-      setTimeout(() => emit('afterOpenChange', v), 0)
-    }, { flush: 'post' })
+    watch(
+      isOpen,
+      async (v) => {
+        if (v) {
+          lockScroll()
+          await Promise.resolve()
+          if (dialogRef.value) cleanupTrap = trapFocus(dialogRef.value, props.focusTriggerAfterClose)
+        } else {
+          cleanupTrap?.()
+          cleanupTrap = null
+          unlockScroll()
+        }
+        // afterOpenChange fires once the transition would have settled; async so
+        // fake-timer tests can intercept it too
+        setTimeout(() => emit('afterOpenChange', v), 0)
+      },
+      { flush: 'post' },
+    )
 
     onBeforeUnmount(() => {
       cleanupTrap?.()
@@ -147,7 +181,9 @@ export const Modal = defineComponent({
       if (props.mask && props.maskClosable) close(e)
     }
 
-    const handleOk = (e: MouseEvent) => { emit('ok', e) }
+    const handleOk = (e: MouseEvent) => {
+      emit('ok', e)
+    }
 
     const onAfterLeave = () => {
       emit('afterClose')
@@ -162,10 +198,7 @@ export const Modal = defineComponent({
       if (props.footer === false || props.footer === null) return null
       if (slots.footer) {
         return (
-          <div
-            class={cls(`${prefixCls}-footer`, props.classNames?.footer)}
-            style={props.styles?.footer}
-          >
+          <div class={cls(`${prefixCls}-footer`, props.classNames?.footer)} style={props.styles?.footer}>
             {slots.footer()}
           </div>
         )
@@ -173,10 +206,7 @@ export const Modal = defineComponent({
       const isDangerOk = props.okType === 'danger'
       const okType = isDangerOk ? 'primary' : props.okType
       return (
-        <div
-          class={cls(`${prefixCls}-footer`, props.classNames?.footer)}
-          style={props.styles?.footer}
-        >
+        <div class={cls(`${prefixCls}-footer`, props.classNames?.footer)} style={props.styles?.footer}>
           <Button {...props.cancelButtonProps} onClick={(e: MouseEvent) => close(e)}>
             {props.cancelText ?? locale.value.Modal.cancelText}
           </Button>
@@ -197,11 +227,10 @@ export const Modal = defineComponent({
       const titleNode = renderContent(props.title, slots.title)
       if (titleNode == null || titleNode === '') return null
       return (
-        <div
-          class={cls(`${prefixCls}-header`, props.classNames?.header)}
-          style={props.styles?.header}
-        >
-          <div id={`${prefixCls}-title`} class={`${prefixCls}-title`}>{titleNode}</div>
+        <div class={cls(`${prefixCls}-header`, props.classNames?.header)} style={props.styles?.header}>
+          <div id={`${prefixCls}-title`} class={`${prefixCls}-title`}>
+            {titleNode}
+          </div>
         </div>
       )
     }
@@ -267,12 +296,9 @@ export const Modal = defineComponent({
                   />
                 )}
                 <div
-                  class={cls(
-                    `${prefixCls}-wrap`,
-                    props.wrapClassName,
-                    props.classNames?.wrapper,
-                    { [`${prefixCls}-centered`]: props.centered }
-                  )}
+                  class={cls(`${prefixCls}-wrap`, props.wrapClassName, props.classNames?.wrapper, {
+                    [`${prefixCls}-centered`]: props.centered,
+                  })}
                   style={props.styles?.wrapper}
                   onClick={handleMaskClick}
                 >

@@ -17,10 +17,15 @@ export const Steps = defineComponent({
     orientation: { type: String as PropType<'horizontal' | 'vertical'> },
     size: { type: String as PropType<'default' | 'small'>, default: 'default' },
     status: { type: String as PropType<StepStatus>, default: 'process' },
-    type: { type: String as PropType<'default' | 'navigation' | 'inline' | 'panel' | 'dot'>, default: 'default' },
+    type: {
+      type: String as PropType<'default' | 'navigation' | 'inline' | 'panel' | 'dot'>,
+      default: 'default',
+    },
     labelPlacement: { type: String as PropType<'horizontal' | 'vertical'> },
     titlePlacement: { type: String as PropType<'horizontal' | 'vertical'> },
-    progressDot: { type: [Boolean, Function] as PropType<boolean | ((iconDot: VNode, info: IconRenderInfo) => VNode)> },
+    progressDot: {
+      type: [Boolean, Function] as PropType<boolean | ((iconDot: VNode, info: IconRenderInfo) => VNode)>,
+    },
     variant: { type: String as PropType<'filled' | 'outlined'>, default: 'filled' },
     percent: Number,
     responsive: { type: Boolean, default: true },
@@ -67,7 +72,7 @@ export const Steps = defineComponent({
     })
 
     // Merge percent (inline type doesn't show percent)
-    const mergedPercent = computed(() => isInline.value ? undefined : props.percent)
+    const mergedPercent = computed(() => (isInline.value ? undefined : props.percent))
 
     const getStepStatus = (index: number, item: StepItem): StepStatus => {
       if (item.status) return item.status
@@ -141,21 +146,16 @@ export const Steps = defineComponent({
 
       return (
         <div
-          class={cls(
-            prefixCls,
-            `${prefixCls}-${mergedOrientation.value}`,
-            `${prefixCls}-${props.variant}`,
-            {
-              [`${prefixCls}-${props.size}`]: props.size !== 'default',
-              [`${prefixCls}-label-${mergedTitlePlacement.value}`]: mergedTitlePlacement.value !== 'horizontal',
-              [`${prefixCls}-dot`]: isDot.value,
-              [`${prefixCls}-navigation`]: props.type === 'navigation',
-              [`${prefixCls}-inline`]: isInline.value,
-              [`${prefixCls}-panel`]: mergedType.value === 'panel',
-              [`${prefixCls}-with-progress`]: mergedPercent.value !== undefined,
-              [`${prefixCls}-ellipsis`]: props.ellipsis,
-            }
-          )}
+          class={cls(prefixCls, `${prefixCls}-${mergedOrientation.value}`, `${prefixCls}-${props.variant}`, {
+            [`${prefixCls}-${props.size}`]: props.size !== 'default',
+            [`${prefixCls}-label-${mergedTitlePlacement.value}`]: mergedTitlePlacement.value !== 'horizontal',
+            [`${prefixCls}-dot`]: isDot.value,
+            [`${prefixCls}-navigation`]: props.type === 'navigation',
+            [`${prefixCls}-inline`]: isInline.value,
+            [`${prefixCls}-panel`]: mergedType.value === 'panel',
+            [`${prefixCls}-with-progress`]: mergedPercent.value !== undefined,
+            [`${prefixCls}-ellipsis`]: props.ellipsis,
+          })}
           role="list"
           aria-label="步骤条"
         >
@@ -183,13 +183,9 @@ export const Steps = defineComponent({
                   <div class={`${prefixCls}-item-content`}>
                     <div class={`${prefixCls}-item-title`}>
                       {item.title}
-                      {item.subTitle && (
-                        <span class={`${prefixCls}-item-subtitle`}>{item.subTitle}</span>
-                      )}
+                      {item.subTitle && <span class={`${prefixCls}-item-subtitle`}>{item.subTitle}</span>}
                     </div>
-                    {content && (
-                      <div class={`${prefixCls}-item-description`}>{content}</div>
-                    )}
+                    {content && <div class={`${prefixCls}-item-description`}>{content}</div>}
                   </div>
                 </div>
                 {mergedType.value === 'panel' && <PanelArrow prefixCls={prefixCls} />}
@@ -201,4 +197,3 @@ export const Steps = defineComponent({
     }
   },
 })
-

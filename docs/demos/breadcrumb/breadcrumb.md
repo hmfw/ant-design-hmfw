@@ -78,11 +78,11 @@
 
 ### Breadcrumb Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| items | 路由栈信息 | `ItemType[]` | `[]` |
-| separator | 分隔符 | `string \| VNode` | `'/'` |
-| params | 路径参数 | `Record<string, any>` | `{}` |
+| 参数      | 说明       | 类型                  | 默认值 |
+| --------- | ---------- | --------------------- | ------ |
+| items     | 路由栈信息 | `ItemType[]`          | `[]`   |
+| separator | 分隔符     | `string \| VNode`     | `'/'`  |
+| params    | 路径参数   | `Record<string, any>` | `{}`   |
 
 ### ItemType
 
@@ -90,25 +90,25 @@
 
 **BreadcrumbItemType:**
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| key | 唯一标识 | `string \| number` | - |
-| title | 名称 | `string \| number \| VNode` | - |
-| href | 链接地址 | `string` | - |
-| path | 路径（会自动拼接前面的路径） | `string` | - |
-| className | 自定义类名 | `string` | - |
-| style | 自定义样式 | `CSSProperties` | - |
-| onClick | 点击事件 | `(e: MouseEvent) => void` | - |
-| data-* | 自定义数据属性 | `any` | - |
-| aria-* | ARIA 无障碍属性 | `any` | - |
+| 参数      | 说明                         | 类型                        | 默认值 |
+| --------- | ---------------------------- | --------------------------- | ------ |
+| key       | 唯一标识                     | `string \| number`          | -      |
+| title     | 名称                         | `string \| number \| VNode` | -      |
+| href      | 链接地址                     | `string`                    | -      |
+| path      | 路径（会自动拼接前面的路径） | `string`                    | -      |
+| className | 自定义类名                   | `string`                    | -      |
+| style     | 自定义样式                   | `CSSProperties`             | -      |
+| onClick   | 点击事件                     | `(e: MouseEvent) => void`   | -      |
+| data-\*   | 自定义数据属性               | `any`                       | -      |
+| aria-\*   | ARIA 无障碍属性              | `any`                       | -      |
 
 **BreadcrumbSeparatorType:**
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| type | 类型（必须为 'separator'） | `'separator'` | - |
-| separator | 分隔符内容 | `string \| VNode` | - |
-| key | 唯一标识 | `string \| number` | - |
+| 参数      | 说明                       | 类型               | 默认值 |
+| --------- | -------------------------- | ------------------ | ------ |
+| type      | 类型（必须为 'separator'） | `'separator'`      | -      |
+| separator | 分隔符内容                 | `string \| VNode`  | -      |
+| key       | 唯一标识                   | `string \| number` | -      |
 
 <script setup>
 import BreadcrumbBasic from './BreadcrumbBasic.vue'

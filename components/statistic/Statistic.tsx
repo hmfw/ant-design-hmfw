@@ -11,7 +11,7 @@ function formatNumber(
   value: string | number | undefined,
   precision?: number,
   groupSeparator = ',',
-  decimalSeparator = '.'
+  decimalSeparator = '.',
 ): string {
   if (value === undefined || value === null || value === '') {
     return ''
@@ -23,9 +23,7 @@ function formatNumber(
   }
 
   // 应用精度
-  let formattedValue = precision !== undefined
-    ? numValue.toFixed(precision)
-    : String(numValue)
+  const formattedValue = precision !== undefined ? numValue.toFixed(precision) : String(numValue)
 
   // 分离整数和小数部分
   const parts = formattedValue.split('.')
@@ -36,9 +34,7 @@ function formatNumber(
   const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator)
 
   // 组合整数和小数部分
-  return decimalPart !== undefined
-    ? `${formattedInteger}${decimalSeparator}${decimalPart}`
-    : formattedInteger
+  return decimalPart !== undefined ? `${formattedInteger}${decimalSeparator}${decimalPart}` : formattedInteger
 }
 
 export const Statistic = defineComponent({
@@ -63,30 +59,19 @@ export const Statistic = defineComponent({
       // 如果是加载状态，显示骨架屏
       if (props.loading) {
         return (
-          <div class={cls(prefixCls, {
-            [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
-          })}>
-            {props.title && (
-              <div class={`${prefixCls}-title`}>
-                {props.title}
-              </div>
-            )}
-            <Skeleton
-              active
-              title={false}
-              paragraph={{ rows: 1, width: '100%' }}
-            />
+          <div
+            class={cls(prefixCls, {
+              [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
+            })}
+          >
+            {props.title && <div class={`${prefixCls}-title`}>{props.title}</div>}
+            <Skeleton active title={false} paragraph={{ rows: 1, width: '100%' }} />
           </div>
         )
       }
 
       // 格式化数值
-      const formattedValue = formatNumber(
-        props.value,
-        props.precision,
-        props.groupSeparator,
-        props.decimalSeparator
-      )
+      const formattedValue = formatNumber(props.value, props.precision, props.groupSeparator, props.decimalSeparator)
 
       // 渲染数值内容
       const renderValue = () => {
@@ -97,28 +82,16 @@ export const Statistic = defineComponent({
       }
 
       return (
-        <div class={cls(prefixCls, {
-          [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
-        })}>
-          {props.title && (
-            <div class={`${prefixCls}-title`}>
-              {props.title}
-            </div>
-          )}
+        <div
+          class={cls(prefixCls, {
+            [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
+          })}
+        >
+          {props.title && <div class={`${prefixCls}-title`}>{props.title}</div>}
           <div class={`${prefixCls}-content`} style={props.valueStyle}>
-            {props.prefix && (
-              <span class={`${prefixCls}-content-prefix`}>
-                {props.prefix}
-              </span>
-            )}
-            <span class={`${prefixCls}-content-value`}>
-              {renderValue()}
-            </span>
-            {props.suffix && (
-              <span class={`${prefixCls}-content-suffix`}>
-                {props.suffix}
-              </span>
-            )}
+            {props.prefix && <span class={`${prefixCls}-content-prefix`}>{props.prefix}</span>}
+            <span class={`${prefixCls}-content-value`}>{renderValue()}</span>
+            {props.suffix && <span class={`${prefixCls}-content-suffix`}>{props.suffix}</span>}
           </div>
         </div>
       )

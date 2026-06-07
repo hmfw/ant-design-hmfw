@@ -208,7 +208,7 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     lineHeightSM: 1.6666666666666667,
     lineHeightLG: 1.5,
     lineHeightHeading1: 1.2105263157894737,
-    lineHeightHeading2: 1.2666666666666667,
+    lineHeightHeading2: 1.2666666666666666,
     lineHeightHeading3: 1.3333333333333333,
     lineHeightHeading4: 1.4,
     lineHeightHeading5: 1.5,

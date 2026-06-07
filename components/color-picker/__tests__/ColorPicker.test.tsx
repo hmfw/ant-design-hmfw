@@ -20,7 +20,8 @@ describe('color-utils', () => {
     const hsb = hexToHsb(hex)
     const back = hsbToHex(hsb)
     // Allow ±1 rounding difference
-    const r1 = hexToRgb(hex), r2 = hexToRgb(back)
+    const r1 = hexToRgb(hex),
+      r2 = hexToRgb(back)
     expect(Math.abs(r1.r - r2.r)).toBeLessThanOrEqual(2)
     expect(Math.abs(r1.g - r2.g)).toBeLessThanOrEqual(2)
     expect(Math.abs(r1.b - r2.b)).toBeLessThanOrEqual(2)

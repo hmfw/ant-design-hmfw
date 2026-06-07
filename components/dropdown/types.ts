@@ -1,13 +1,7 @@
 import type { VNode } from 'vue'
 import type { MenuProps } from '../menu'
 
-export type DropdownPlacement =
-  | 'top'
-  | 'topLeft'
-  | 'topRight'
-  | 'bottom'
-  | 'bottomLeft'
-  | 'bottomRight'
+export type DropdownPlacement = 'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight'
 
 export type DropdownTrigger = 'hover' | 'click' | 'contextMenu'
 

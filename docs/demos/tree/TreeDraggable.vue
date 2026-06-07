@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p style="margin-bottom: 12px; color: #666;">
+    <p style="margin-bottom: 12px; color: #666">
       拖动节点可重新排列。已内置边界检查：节点不能拖到自身或自己的后代上（防止循环引用）。
     </p>
     <Tree
@@ -11,7 +11,7 @@
       :allow-drop="allowDrop"
       @drop="onDrop"
     />
-    <p style="margin-top: 12px; color: #999; font-size: 12px;">
+    <p style="margin-top: 12px; color: #999; font-size: 12px">
       本示例通过 allowDrop 额外限制：叶子节点不能作为放置目标。
     </p>
   </div>
@@ -33,9 +33,7 @@ const treeData = ref([
   {
     title: '父节点 2',
     key: '0-1',
-    children: [
-      { title: '子节点 2-1', key: '0-1-0' },
-    ],
+    children: [{ title: '子节点 2-1', key: '0-1-0' }],
   },
 ])
 

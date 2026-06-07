@@ -36,16 +36,22 @@ export const Pagination = defineComponent({
     const innerPageSize = ref(props.defaultPageSize)
     const jumpValue = ref('')
 
-    watch(() => props.current, (v) => { if (v !== undefined) innerCurrent.value = v })
-    watch(() => props.pageSize, (v) => { if (v !== undefined) innerPageSize.value = v })
-
-    const currentPage = computed(() =>
-      props.current !== undefined ? props.current : innerCurrent.value,
+    watch(
+      () => props.current,
+      (v) => {
+        if (v !== undefined) innerCurrent.value = v
+      },
+    )
+    watch(
+      () => props.pageSize,
+      (v) => {
+        if (v !== undefined) innerPageSize.value = v
+      },
     )
 
-    const currentPageSize = computed(() =>
-      props.pageSize !== undefined ? props.pageSize : innerPageSize.value,
-    )
+    const currentPage = computed(() => (props.current !== undefined ? props.current : innerCurrent.value))
+
+    const currentPageSize = computed(() => (props.pageSize !== undefined ? props.pageSize : innerPageSize.value))
 
     const totalPages = computed(() => Math.ceil(props.total / currentPageSize.value))
 
@@ -108,10 +114,15 @@ export const Pagination = defineComponent({
         // Simple mode: just show current/total
         return (
           <ul
-            class={cls(prefixCls, `${prefixCls}-simple`, {
-              [`${prefixCls}-mini`]: props.size === 'small',
-              [`${prefixCls}-disabled`]: !!props.disabled,
-            }, props.align ? `${prefixCls}-${props.align}` : null)}
+            class={cls(
+              prefixCls,
+              `${prefixCls}-simple`,
+              {
+                [`${prefixCls}-mini`]: props.size === 'small',
+                [`${prefixCls}-disabled`]: !!props.disabled,
+              },
+              props.align ? `${prefixCls}-${props.align}` : null,
+            )}
             role="navigation"
             aria-label="分页"
           >
@@ -175,18 +186,18 @@ export const Pagination = defineComponent({
 
       return (
         <ul
-          class={cls(prefixCls, {
-            [`${prefixCls}-mini`]: props.size === 'small',
-            [`${prefixCls}-disabled`]: !!props.disabled,
-          }, props.align ? `${prefixCls}-${props.align}` : null)}
+          class={cls(
+            prefixCls,
+            {
+              [`${prefixCls}-mini`]: props.size === 'small',
+              [`${prefixCls}-disabled`]: !!props.disabled,
+            },
+            props.align ? `${prefixCls}-${props.align}` : null,
+          )}
           role="navigation"
           aria-label="分页"
         >
-          {props.showTotal && (
-            <li class={`${prefixCls}-total-text`}>
-              {props.showTotal(props.total, range.value)}
-            </li>
-          )}
+          {props.showTotal && <li class={`${prefixCls}-total-text`}>{props.showTotal(props.total, range.value)}</li>}
           {renderItem(
             cur - 1,
             'prev',
@@ -256,7 +267,9 @@ export const Pagination = defineComponent({
                   aria-label={`第 ${p} 页`}
                   aria-current={p === cur ? 'page' : undefined}
                   tabindex={p === cur ? 0 : -1}
-                >{p}</button>
+                >
+                  {p}
+                </button>
               </li>,
             )
           })}
@@ -309,4 +322,3 @@ export const Pagination = defineComponent({
     }
   },
 })
-

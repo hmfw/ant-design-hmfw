@@ -1,11 +1,6 @@
 <template>
-  <div style="width: 256px;">
-    <Menu
-      mode="inline"
-      :items="items"
-      :selected-keys="selectedKeys"
-      @select="onSelect"
-    />
+  <div style="width: 256px">
+    <Menu mode="inline" :items="items" :selected-keys="selectedKeys" @select="onSelect" />
   </div>
 </template>
 
@@ -20,17 +15,17 @@ const items = [
   {
     key: '1',
     label: '导航一',
-    icon: h('span', { style: { color: '#1890ff' } }, '📄')
+    icon: h('span', { style: { color: '#1890ff' } }, '📄'),
   },
   {
     key: '2',
     label: '导航二',
-    icon: h('span', { style: { color: '#52c41a' } }, '📋')
+    icon: h('span', { style: { color: '#52c41a' } }, '📋'),
   },
   {
     key: '3',
     label: '导航三',
-    icon: h('span', { style: { color: '#fa8c16' } }, '⚙️')
+    icon: h('span', { style: { color: '#fa8c16' } }, '⚙️'),
   },
   {
     key: 'sub',

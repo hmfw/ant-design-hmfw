@@ -1,9 +1,5 @@
 <template>
-  <Tree
-    show-line
-    :tree-data="treeData"
-    :default-expand-all="true"
-  />
+  <Tree show-line :tree-data="treeData" :default-expand-all="true" />
 </template>
 
 <script setup lang="ts">

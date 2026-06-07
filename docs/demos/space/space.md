@@ -2,7 +2,6 @@
 
 设置组件之间的间距。
 
-
 ## 何时使用
 
 - 避免组件紧贴在一起，拉开统一的空间
@@ -55,19 +54,19 @@
 
 ### Space Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| size | 间距大小，数组形式表示 `[水平, 垂直]` | `'small' \| 'middle' \| 'large' \| number \| [number, number]` | `'small'` |
-| direction | 间距方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| vertical | `direction="vertical"` 的简写 | `boolean` | `false` |
-| align | 对齐方式 | `'start' \| 'end' \| 'center' \| 'baseline'` | - |
-| wrap | 是否自动换行，仅水平方向有效 | `boolean` | `false` |
-| separator | 设置分隔符 | `VNode \| string` | - |
-| split | `separator` 的别名（已废弃，请使用 `separator`） | `VNode \| string` | - |
+| 参数      | 说明                                             | 类型                                                           | 默认值         |
+| --------- | ------------------------------------------------ | -------------------------------------------------------------- | -------------- |
+| size      | 间距大小，数组形式表示 `[水平, 垂直]`            | `'small' \| 'middle' \| 'large' \| number \| [number, number]` | `'small'`      |
+| direction | 间距方向                                         | `'horizontal' \| 'vertical'`                                   | `'horizontal'` |
+| vertical  | `direction="vertical"` 的简写                    | `boolean`                                                      | `false`        |
+| align     | 对齐方式                                         | `'start' \| 'end' \| 'center' \| 'baseline'`                   | -              |
+| wrap      | 是否自动换行，仅水平方向有效                     | `boolean`                                                      | `false`        |
+| separator | 设置分隔符                                       | `VNode \| string`                                              | -              |
+| split     | `separator` 的别名（已废弃，请使用 `separator`） | `VNode \| string`                                              | -              |
 
 ### Space Slots
 
-| 名称 | 说明 |
-| --- | --- |
-| default | 子元素内容 |
-| split | 自定义分隔符（优先级高于 `separator` prop） |
+| 名称    | 说明                                        |
+| ------- | ------------------------------------------- |
+| default | 子元素内容                                  |
+| split   | 自定义分隔符（优先级高于 `separator` prop） |

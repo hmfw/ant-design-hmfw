@@ -26,10 +26,13 @@ export interface RadioGroupProps {
   size?: 'large' | 'middle' | 'small'
   name?: string
   block?: boolean
-  options?: Array<RadioValueType | {
-    label: string
-    value: RadioValueType
-    disabled?: boolean
-    id?: string
-  }>
+  options?: Array<
+    | RadioValueType
+    | {
+        label: string
+        value: RadioValueType
+        disabled?: boolean
+        id?: string
+      }
+  >
 }

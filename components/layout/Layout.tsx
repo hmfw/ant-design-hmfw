@@ -1,4 +1,15 @@
-import { defineComponent, computed, provide, inject, ref, onMounted, onUnmounted, type PropType, type VNode, type CSSProperties } from 'vue'
+import {
+  defineComponent,
+  computed,
+  provide,
+  inject,
+  ref,
+  onMounted,
+  onUnmounted,
+  type PropType,
+  type VNode,
+  type CSSProperties,
+} from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
@@ -119,9 +130,7 @@ export const Sider = defineComponent({
     const internalCollapsed = ref(props.defaultCollapsed ?? false)
     const below = ref(false)
 
-    const isCollapsed = computed(() =>
-      props.collapsed !== undefined ? props.collapsed : internalCollapsed.value,
-    )
+    const isCollapsed = computed(() => (props.collapsed !== undefined ? props.collapsed : internalCollapsed.value))
 
     const handleSetCollapsed = (value: boolean, type: CollapseType) => {
       if (props.collapsed === undefined) {
@@ -162,21 +171,16 @@ export const Sider = defineComponent({
       mql?.removeEventListener('change', handleBreakpoint)
     })
 
-    const rawWidth = computed(() =>
-      isCollapsed.value ? props.collapsedWidth : props.width,
-    )
+    const rawWidth = computed(() => (isCollapsed.value ? props.collapsedWidth : props.width))
 
-    const isNumeric = (val: any) =>
-      !Number.isNaN(Number.parseFloat(val)) && Number.isFinite(Number(val))
+    const isNumeric = (val: any) => !Number.isNaN(Number.parseFloat(val)) && Number.isFinite(Number(val))
 
     const siderWidth = computed(() => {
       const val = rawWidth.value
       return isNumeric(val) ? `${val}px` : String(val)
     })
 
-    const isZeroWidth = computed(() =>
-      Number.parseFloat(String(props.collapsedWidth || 0)) === 0
-    )
+    const isZeroWidth = computed(() => Number.parseFloat(String(props.collapsedWidth || 0)) === 0)
 
     const classes = computed(() =>
       cls(siderPrefixCls, `${siderPrefixCls}-${props.theme}`, {
@@ -191,18 +195,19 @@ export const Sider = defineComponent({
       const width = siderWidth.value
 
       // Zero-width trigger (floating button when collapsedWidth === 0)
-      const zeroWidthTrigger = isZeroWidth.value && isCollapsed.value ? (
-        <span
-          onClick={toggle}
-          class={cls(
-            `${siderPrefixCls}-zero-width-trigger`,
-            `${siderPrefixCls}-zero-width-trigger-${props.reverseArrow ? 'right' : 'left'}`,
-          )}
-          style={props.zeroWidthTriggerStyle}
-        >
-          {props.trigger !== undefined ? props.trigger : <Icon component={MinusOutlined} />}
-        </span>
-      ) : null
+      const zeroWidthTrigger =
+        isZeroWidth.value && isCollapsed.value ? (
+          <span
+            onClick={toggle}
+            class={cls(
+              `${siderPrefixCls}-zero-width-trigger`,
+              `${siderPrefixCls}-zero-width-trigger-${props.reverseArrow ? 'right' : 'left'}`,
+            )}
+            style={props.zeroWidthTriggerStyle}
+          >
+            {props.trigger !== undefined ? props.trigger : <Icon component={MinusOutlined} />}
+          </span>
+        ) : null
 
       // Default trigger icons
       const defaultTrigger = () => {
@@ -213,13 +218,14 @@ export const Sider = defineComponent({
       }
 
       // Regular trigger (bottom bar)
-      const triggerDom = props.trigger !== null
-        ? zeroWidthTrigger || (
-            <div class={`${siderPrefixCls}-trigger`} onClick={toggle} style={{ width }}>
-              {props.trigger !== undefined ? props.trigger : defaultTrigger()}
-            </div>
-          )
-        : null
+      const triggerDom =
+        props.trigger !== null
+          ? zeroWidthTrigger || (
+              <div class={`${siderPrefixCls}-trigger`} onClick={toggle} style={{ width }}>
+                {props.trigger !== undefined ? props.trigger : defaultTrigger()}
+              </div>
+            )
+          : null
 
       const divStyle: CSSProperties = {
         flex: `0 0 ${width}`,

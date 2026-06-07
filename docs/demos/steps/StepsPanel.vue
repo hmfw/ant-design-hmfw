@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 20px;">
+  <div style="padding: 20px">
     <Steps :items="items" type="panel" :current="current" @change="onChange" />
   </div>
 </template>

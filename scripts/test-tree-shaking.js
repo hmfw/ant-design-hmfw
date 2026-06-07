@@ -31,18 +31,18 @@ const testCases = [
   {
     name: '完整引入',
     code: `import AntDesignHmfw from '../dist/index.js'; console.log(AntDesignHmfw);`,
-    file: 'test-full.js'
+    file: 'test-full.js',
   },
   {
     name: '只引入 Button',
     code: `import { Button } from '../dist/index.js'; console.log(Button);`,
-    file: 'test-button.js'
+    file: 'test-button.js',
   },
   {
     name: '引入多个组件',
     code: `import { Button, Input, Select } from '../dist/index.js'; console.log(Button, Input, Select);`,
-    file: 'test-multiple.js'
-  }
+    file: 'test-multiple.js',
+  },
 ]
 
 const results = []
@@ -59,7 +59,7 @@ for (const testCase of testCases) {
     // 使用 esbuild 打包并生成 metafile
     execSync(
       `npx esbuild ${testFile} --bundle --outfile=${bundleFile} --metafile=${metaFile} --external:vue --format=esm --minify`,
-      { stdio: 'pipe' }
+      { stdio: 'pipe' },
     )
 
     const bundleSize = statSync(bundleFile).size
@@ -74,7 +74,7 @@ for (const testCase of testCases) {
       name: testCase.name,
       size: bundleSize,
       readable: (bundleSize / 1024).toFixed(2) + ' KB',
-      modules: includedModules
+      modules: includedModules,
     })
 
     console.log(`✅ ${testCase.name}`)

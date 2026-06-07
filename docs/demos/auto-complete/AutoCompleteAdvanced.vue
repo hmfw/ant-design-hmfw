@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px">
     <AutoComplete
       v-model:value="value1"
       :options="options1"
@@ -37,34 +37,18 @@ const value2 = ref('')
 const value3 = ref('Vue')
 const value4 = ref('')
 
-const options1 = ref([
-  { value: 'Vue' },
-  { value: 'React' },
-  { value: 'Angular' },
-])
+const options1 = ref([{ value: 'Vue' }, { value: 'React' }, { value: 'Angular' }])
 
-const options2 = ref([
-  { value: 'TypeScript' },
-  { value: 'JavaScript' },
-  { value: 'Python' },
-])
+const options2 = ref([{ value: 'TypeScript' }, { value: 'JavaScript' }, { value: 'Python' }])
 
-const options3 = ref([
-  { value: 'Vue' },
-  { value: 'React' },
-  { value: 'Angular' },
-])
+const options3 = ref([{ value: 'Vue' }, { value: 'React' }, { value: 'Angular' }])
 
-const filteredOptions = ref([
-  { value: 'Vue' },
-  { value: 'React' },
-  { value: 'Angular' },
-])
+const filteredOptions = ref([{ value: 'Vue' }, { value: 'React' }, { value: 'Angular' }])
 
 const handleSearch = (searchText: string) => {
   const allOptions = ['Vue', 'React', 'Angular']
   filteredOptions.value = allOptions
-    .filter(item => item.toLowerCase().includes(searchText.toLowerCase()))
-    .map(item => ({ value: item }))
+    .filter((item) => item.toLowerCase().includes(searchText.toLowerCase()))
+    .map((item) => ({ value: item }))
 }
 </script>

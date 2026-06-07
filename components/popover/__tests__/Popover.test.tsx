@@ -266,9 +266,7 @@ describe('Popover', () => {
       attachTo: document.body,
     })
     await nextTick()
-    expect(document.querySelector('.hmfw-popover-inner-content')?.textContent).toContain(
-      'Rendered Content',
-    )
+    expect(document.querySelector('.hmfw-popover-inner-content')?.textContent).toContain('Rendered Content')
     wrapper.unmount()
   })
 
@@ -285,9 +283,7 @@ describe('Popover', () => {
     })
     await nextTick()
     expect(document.querySelector('.hmfw-popover-title')?.classList.contains('my-title')).toBe(true)
-    expect(
-      document.querySelector('.hmfw-popover-inner-content')?.classList.contains('my-content'),
-    ).toBe(true)
+    expect(document.querySelector('.hmfw-popover-inner-content')?.classList.contains('my-content')).toBe(true)
     wrapper.unmount()
   })
 
@@ -342,7 +338,7 @@ describe('Popover', () => {
     await wrapper.find('div').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
-    let popup = document.querySelector('.hmfw-popover')
+    const popup = document.querySelector('.hmfw-popover')
     expect(popup?.classList.contains('hmfw-popover-hidden')).toBe(false)
     wrapper.unmount()
   })
@@ -362,7 +358,13 @@ describe('Popover', () => {
 
   it('destroyOnHidden removes popup DOM when closed', async () => {
     const wrapper = mount(Popover, {
-      props: { title: 'T', content: 'C', destroyOnHidden: true, mouseEnterDelay: 0, mouseLeaveDelay: 0 },
+      props: {
+        title: 'T',
+        content: 'C',
+        destroyOnHidden: true,
+        mouseEnterDelay: 0,
+        mouseLeaveDelay: 0,
+      },
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })

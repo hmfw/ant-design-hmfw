@@ -47,18 +47,14 @@ export default defineComponent({
     })
 
     const classes = computed(() =>
-      cls(
-        prefixCls,
-        `${prefixCls}-${props.type}`,
-        {
-          [`${prefixCls}-with-text`]: hasChildren.value && props.type === 'horizontal',
-          [`${prefixCls}-with-text-${props.orientation}`]: hasChildren.value && props.type === 'horizontal',
-          [`${prefixCls}-${mergedVariant.value}`]: mergedVariant.value !== 'solid',
-          [`${prefixCls}-plain`]: props.plain,
-          [`${prefixCls}-sm`]: props.size === 'small' && props.type === 'horizontal',
-          [`${prefixCls}-md`]: props.size === 'middle' && props.type === 'horizontal',
-        }
-      )
+      cls(prefixCls, `${prefixCls}-${props.type}`, {
+        [`${prefixCls}-with-text`]: hasChildren.value && props.type === 'horizontal',
+        [`${prefixCls}-with-text-${props.orientation}`]: hasChildren.value && props.type === 'horizontal',
+        [`${prefixCls}-${mergedVariant.value}`]: mergedVariant.value !== 'solid',
+        [`${prefixCls}-plain`]: props.plain,
+        [`${prefixCls}-sm`]: props.size === 'small' && props.type === 'horizontal',
+        [`${prefixCls}-md`]: props.size === 'middle' && props.type === 'horizontal',
+      }),
     )
 
     const innerStyle = computed(() => {
@@ -66,13 +62,11 @@ export default defineComponent({
 
       if (props.orientationMargin !== undefined) {
         if (props.orientation === 'left') {
-          style.marginLeft = typeof props.orientationMargin === 'number'
-            ? `${props.orientationMargin}px`
-            : props.orientationMargin
+          style.marginLeft =
+            typeof props.orientationMargin === 'number' ? `${props.orientationMargin}px` : props.orientationMargin
         } else if (props.orientation === 'right') {
-          style.marginRight = typeof props.orientationMargin === 'number'
-            ? `${props.orientationMargin}px`
-            : props.orientationMargin
+          style.marginRight =
+            typeof props.orientationMargin === 'number' ? `${props.orientationMargin}px` : props.orientationMargin
         }
       }
 

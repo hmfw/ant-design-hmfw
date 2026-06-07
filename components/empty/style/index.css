@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   padding: 32px 0;
-  color: var(--hmfw-color-text-secondary, rgba(0,0,0,0.45));
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
   font-size: var(--hmfw-font-size-base);
 }
 
@@ -45,7 +45,7 @@
 }
 
 .hmfw-empty-description {
-  color: var(--hmfw-color-text-secondary, rgba(0,0,0,0.45));
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
 }
 
 .hmfw-empty-footer {
@@ -93,4 +93,3 @@
   --hmfw-empty-img-outline: #434343;
   --hmfw-empty-img-bg: #1f1f1f;
 }
-

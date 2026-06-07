@@ -87,7 +87,9 @@ describe('DatePicker', () => {
     const wrapper = mount(DatePicker, { attachTo: document.body })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
-    const day = document.querySelector<HTMLButtonElement>('.hmfw-date-picker-day:not(.hmfw-date-picker-day-other-month)')
+    const day = document.querySelector<HTMLButtonElement>(
+      '.hmfw-date-picker-day:not(.hmfw-date-picker-day-other-month)',
+    )
     day?.click()
     await wrapper.vm.$nextTick()
     expect(wrapper.emitted('change')).toBeTruthy()
@@ -220,11 +222,16 @@ describe('DatePicker', () => {
 
   it('respects minDate constraint', async () => {
     // defaultValue 固定面板在 2026-05，避免依赖系统当前月份（否则跨月后点到的"10号"可能合法）
-    const wrapper = mount(DatePicker, { props: { minDate: '2026-05-15', defaultValue: '2026-05-20' }, attachTo: document.body })
+    const wrapper = mount(DatePicker, {
+      props: { minDate: '2026-05-15', defaultValue: '2026-05-20' },
+      attachTo: document.body,
+    })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
     const days = document.querySelectorAll('.hmfw-date-picker-day')
-    const day10 = Array.from(days).find(d => d.textContent === '10' && !d.classList.contains('hmfw-date-picker-day-other-month')) as HTMLButtonElement
+    const day10 = Array.from(days).find(
+      (d) => d.textContent === '10' && !d.classList.contains('hmfw-date-picker-day-other-month'),
+    ) as HTMLButtonElement
     day10?.click()
     await wrapper.vm.$nextTick()
     // 5/10 早于 minDate 5/15，应被拦截，不触发 update:value（挂载 defaultValue 不 emit）
@@ -234,11 +241,16 @@ describe('DatePicker', () => {
 
   it('respects maxDate constraint', async () => {
     // defaultValue 固定面板在 2026-05，避免依赖系统当前月份
-    const wrapper = mount(DatePicker, { props: { maxDate: '2026-05-15', defaultValue: '2026-05-10' }, attachTo: document.body })
+    const wrapper = mount(DatePicker, {
+      props: { maxDate: '2026-05-15', defaultValue: '2026-05-10' },
+      attachTo: document.body,
+    })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
     const days = document.querySelectorAll('.hmfw-date-picker-day')
-    const day20 = Array.from(days).find(d => d.textContent === '20' && !d.classList.contains('hmfw-date-picker-day-other-month')) as HTMLButtonElement
+    const day20 = Array.from(days).find(
+      (d) => d.textContent === '20' && !d.classList.contains('hmfw-date-picker-day-other-month'),
+    ) as HTMLButtonElement
     day20?.click()
     await wrapper.vm.$nextTick()
     // 5/20 晚于 maxDate 5/15，应被拦截，不触发 update:value
@@ -290,7 +302,9 @@ describe('DatePicker', () => {
     const wrapper = mount(DatePicker, { props: { showTime: true }, attachTo: document.body })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
-    const day = document.querySelector<HTMLButtonElement>('.hmfw-date-picker-day:not(.hmfw-date-picker-day-other-month)')
+    const day = document.querySelector<HTMLButtonElement>(
+      '.hmfw-date-picker-day:not(.hmfw-date-picker-day-other-month)',
+    )
     day?.click()
     await wrapper.vm.$nextTick()
     // showTime 模式下点日期不关闭
@@ -299,11 +313,16 @@ describe('DatePicker', () => {
   })
 
   it('showTime clicking hour cell updates display', async () => {
-    const wrapper = mount(DatePicker, { props: { showTime: true, defaultValue: '2026-06-06 10:30:45' }, attachTo: document.body })
+    const wrapper = mount(DatePicker, {
+      props: { showTime: true, defaultValue: '2026-06-06 10:30:45' },
+      attachTo: document.body,
+    })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
-    const hourCells = document.querySelectorAll('.hmfw-date-picker-time-column')[0].querySelectorAll('.hmfw-date-picker-time-cell')
-    const hour15 = Array.from(hourCells).find(c => c.textContent === '15') as HTMLElement
+    const hourCells = document
+      .querySelectorAll('.hmfw-date-picker-time-column')[0]
+      .querySelectorAll('.hmfw-date-picker-time-cell')
+    const hour15 = Array.from(hourCells).find((c) => c.textContent === '15') as HTMLElement
     hour15?.click()
     await wrapper.vm.$nextTick()
     // 选中态正确
@@ -315,7 +334,10 @@ describe('DatePicker', () => {
   })
 
   it('showTime OK button emits change and closes panel', async () => {
-    const wrapper = mount(DatePicker, { props: { showTime: true, defaultValue: '2026-06-06 10:30:45' }, attachTo: document.body })
+    const wrapper = mount(DatePicker, {
+      props: { showTime: true, defaultValue: '2026-06-06 10:30:45' },
+      attachTo: document.body,
+    })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
     const okBtn = document.querySelector('.hmfw-date-picker-panel-footer-ok') as HTMLElement
@@ -329,7 +351,10 @@ describe('DatePicker', () => {
   })
 
   it('showTime with format without seconds hides second column', async () => {
-    const wrapper = mount(DatePicker, { props: { showTime: { format: 'HH:mm' } }, attachTo: document.body })
+    const wrapper = mount(DatePicker, {
+      props: { showTime: { format: 'HH:mm' } },
+      attachTo: document.body,
+    })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
     // 只有时/分两列
@@ -338,7 +363,10 @@ describe('DatePicker', () => {
   })
 
   it('showTime with hourStep/minuteStep respects steps', async () => {
-    const wrapper = mount(DatePicker, { props: { showTime: { hourStep: 2, minuteStep: 15 } }, attachTo: document.body })
+    const wrapper = mount(DatePicker, {
+      props: { showTime: { hourStep: 2, minuteStep: 15 } },
+      attachTo: document.body,
+    })
     await wrapper.find('.hmfw-date-picker').trigger('click')
     await wrapper.vm.$nextTick()
     const columns = document.querySelectorAll('.hmfw-date-picker-time-column')

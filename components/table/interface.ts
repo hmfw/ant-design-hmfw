@@ -57,10 +57,7 @@ export interface ColumnTitleProps<T = any> {
   filters?: Record<string, FilterValue>
 }
 
-export type ColumnTitle<T = any> =
-  | string
-  | VNode
-  | ((props: ColumnTitleProps<T>) => VNode | string)
+export type ColumnTitle<T = any> = string | VNode | ((props: ColumnTitleProps<T>) => VNode | string)
 
 export interface TableColumn<T = any> {
   key?: string
@@ -203,7 +200,7 @@ export interface TableProps<T = any> {
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,
     sorter: SorterResult<T> | SorterResult<T>[],
-    extra?: TableCurrentDataSource<T>
+    extra?: TableCurrentDataSource<T>,
   ) => void
 
   onRow?: (record: T, index: number) => Record<string, any>

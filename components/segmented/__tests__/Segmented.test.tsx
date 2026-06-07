@@ -88,7 +88,9 @@ describe('Segmented', () => {
   })
 
   it('orientation takes priority over vertical', () => {
-    const wrapper = mount(Segmented, { props: { options, vertical: true, orientation: 'horizontal' } })
+    const wrapper = mount(Segmented, {
+      props: { options, vertical: true, orientation: 'horizontal' },
+    })
     expect(wrapper.classes()).not.toContain('hmfw-segmented-vertical')
   })
 
@@ -183,17 +185,13 @@ describe('Segmented', () => {
   })
 
   it('renders text span with dedicated class when label present', () => {
-    const objOptions: SegmentedOption[] = [
-      { value: 'a', label: 'Alpha', icon: h('span', '★') },
-    ]
+    const objOptions: SegmentedOption[] = [{ value: 'a', label: 'Alpha', icon: h('span', '★') }]
     const wrapper = mount(Segmented, { props: { options: objOptions } })
     expect(wrapper.find('.hmfw-segmented-item-text').text()).toBe('Alpha')
   })
 
   it('applies title attribute', () => {
-    const objOptions: SegmentedOption[] = [
-      { label: 'A', value: 'a', title: 'Option A' },
-    ]
+    const objOptions: SegmentedOption[] = [{ label: 'A', value: 'a', title: 'Option A' }]
     const wrapper = mount(Segmented, { props: { options: objOptions } })
     expect(wrapper.find('.hmfw-segmented-item').attributes('title')).toBe('Option A')
   })
@@ -209,12 +207,9 @@ describe('Segmented', () => {
   })
 
   it('wraps tooltip around item when tooltip is provided', () => {
-    const objOptions: SegmentedOption[] = [
-      { label: 'A', value: 'a', tooltip: 'Tooltip A' },
-    ]
+    const objOptions: SegmentedOption[] = [{ label: 'A', value: 'a', tooltip: 'Tooltip A' }]
     const wrapper = mount(Segmented, { props: { options: objOptions } })
     // Tooltip component should wrap the item
     expect(wrapper.findComponent({ name: 'Tooltip' }).exists()).toBe(true)
   })
 })
-

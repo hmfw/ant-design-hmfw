@@ -1,8 +1,8 @@
 <template>
-  <div style="display: flex; gap: 8px;">
-    <Button @click="showLong">显示 10 秒</Button>
-    <Button @click="showSticky">不自动关闭</Button>
-    <Button @click="showWithCallback">关闭后回调</Button>
+  <div style="display: flex; gap: 8px">
+    <Button @click="showLong"> 显示 10 秒 </Button>
+    <Button @click="showSticky"> 不自动关闭 </Button>
+    <Button @click="showWithCallback"> 关闭后回调 </Button>
   </div>
 </template>
 

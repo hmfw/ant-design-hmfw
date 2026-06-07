@@ -1,10 +1,5 @@
 <template>
-  <Tabs
-    v-model:activeKey="activeKey"
-    type="editable-card"
-    :items="items"
-    @edit="onEdit"
-  />
+  <Tabs v-model:active-key="activeKey" type="editable-card" :items="items" @edit="onEdit" />
 </template>
 
 <script setup lang="ts">
@@ -34,8 +29,7 @@ const onEdit = (targetKey: string | MouseEvent, action: 'add' | 'remove') => {
     const newItems = items.value.filter((item) => item.key !== targetKey)
 
     if (newItems.length && targetKey === activeKey.value) {
-      const newActiveKey =
-        newItems[targetIndex === newItems.length ? targetIndex - 1 : targetIndex].key
+      const newActiveKey = newItems[targetIndex === newItems.length ? targetIndex - 1 : targetIndex].key
       activeKey.value = newActiveKey
     }
 

@@ -9,7 +9,6 @@
 
 ## 代码演示
 
-
 ### 基础用法
 
 简单的空状态展示。
@@ -62,20 +61,20 @@
 
 ### Empty Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| description | 自定义描述内容，为 `false` 时不显示 | `string \| false` | `'暂无数据'` |
-| image | 显示图片：图片地址字符串，或预设标识 `'default'` / `'simple'`，为 `false` 时不显示 | `string \| false` | `'default'` |
-| imageStyle | 图片样式（优先级高于 imageWidth/imageHeight） | `CSSProperties` | - |
-| imageWidth | 图片宽度，数字按 px 处理，亦可传带单位字符串 | `number \| string` | - |
-| imageHeight | 图片高度，数字按 px 处理，亦可传带单位字符串 | `number \| string` | - |
+| 参数        | 说明                                                                               | 类型               | 默认值       |
+| ----------- | ---------------------------------------------------------------------------------- | ------------------ | ------------ |
+| description | 自定义描述内容，为 `false` 时不显示                                                | `string \| false`  | `'暂无数据'` |
+| image       | 显示图片：图片地址字符串，或预设标识 `'default'` / `'simple'`，为 `false` 时不显示 | `string \| false`  | `'default'`  |
+| imageStyle  | 图片样式（优先级高于 imageWidth/imageHeight）                                      | `CSSProperties`    | -            |
+| imageWidth  | 图片宽度，数字按 px 处理，亦可传带单位字符串                                       | `number \| string` | -            |
+| imageHeight | 图片高度，数字按 px 处理，亦可传带单位字符串                                       | `number \| string` | -            |
 
 预设常量：`PRESENTED_IMAGE_DEFAULT`（`'default'`）、`PRESENTED_IMAGE_SIMPLE`（`'simple'`）。
 
 ### Empty Slots
 
-| 名称 | 说明 |
-| --- | --- |
-| default | 底部内容 |
+| 名称        | 说明           |
+| ----------- | -------------- |
+| default     | 底部内容       |
 | description | 自定义描述内容 |
-| image | 自定义图片 |
+| image       | 自定义图片     |

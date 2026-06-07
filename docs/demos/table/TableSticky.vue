@@ -18,7 +18,7 @@ const dataSource = ref<DataType[]>(
     age: 20 + (i % 50),
     address: `北京市朝阳区某街道 ${i + 1} 号`,
     tags: i % 2 === 0 ? ['开发者', '设计师'] : ['产品经理'],
-  }))
+  })),
 )
 
 const columns: TableColumn<DataType>[] = [
@@ -53,8 +53,17 @@ const columns: TableColumn<DataType>[] = [
 </script>
 
 <template>
-  <div style="height: 600px; overflow: auto;">
-    <div style="height: 300px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+  <div style="height: 600px; overflow: auto">
+    <div
+      style="
+        height: 300px;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      "
+    >
       <p>向下滚动查看表头吸顶效果</p>
     </div>
     <Table
@@ -65,7 +74,16 @@ const columns: TableColumn<DataType>[] = [
       :sticky="true"
       bordered
     />
-    <div style="height: 300px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; margin-top: 16px;">
+    <div
+      style="
+        height: 300px;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 16px;
+      "
+    >
       <p>底部内容</p>
     </div>
   </div>

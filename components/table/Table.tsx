@@ -1,4 +1,14 @@
-import { defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick, type PropType, type CSSProperties } from 'vue'
+import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onUnmounted,
+  nextTick,
+  type PropType,
+  type CSSProperties,
+} from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Spin } from '../spin'
@@ -40,19 +50,30 @@ export const Table = defineComponent({
     loading: Boolean,
     bordered: Boolean,
     size: { type: String as PropType<'default' | 'middle' | 'small'>, default: 'default' },
-    scroll: Object as PropType<{ x?: number | string; y?: number | string; scrollToFirstRowOnChange?: boolean }>,
-    pagination: { type: [Boolean, Object] as PropType<false | TablePaginationConfig>, default: undefined },
+    scroll: Object as PropType<{
+      x?: number | string
+      y?: number | string
+      scrollToFirstRowOnChange?: boolean
+    }>,
+    pagination: {
+      type: [Boolean, Object] as PropType<false | TablePaginationConfig>,
+      default: undefined,
+    },
     rowSelection: Object as PropType<TableRowSelection<any>>,
     expandable: Object as PropType<ExpandableConfig<any>>,
     locale: Object as PropType<{ emptyText?: string }>,
     showHeader: { type: Boolean, default: true },
-    sticky: [Boolean, Object] as PropType<boolean | { offsetHeader?: number; offsetScroll?: number; getContainer?: () => HTMLElement }>,
+    sticky: [Boolean, Object] as PropType<
+      boolean | { offsetHeader?: number; offsetScroll?: number; getContainer?: () => HTMLElement }
+    >,
     summary: Function as PropType<(pageData: any[]) => any>,
     title: [String, Function] as PropType<string | ((currentData: any[]) => any)>,
     footer: [String, Function] as PropType<string | ((currentData: any[]) => any)>,
     onRow: Function as PropType<(record: any, index: number) => Record<string, any>>,
     onHeaderRow: Function as PropType<(columns: TableColumn[], index: number) => Record<string, any>>,
-    onChange: Function as PropType<(pagination: any, filters: any, sorter: any, extra?: TableCurrentDataSource) => void>,
+    onChange: Function as PropType<
+      (pagination: any, filters: any, sorter: any, extra?: TableCurrentDataSource) => void
+    >,
   },
   emits: ['change'],
   setup(props, { emit }) {
@@ -88,9 +109,10 @@ export const Table = defineComponent({
 
     const updateBreakpoint = () => {
       const width = window.innerWidth
-      const breakpoint = Object.entries(BREAKPOINTS)
-        .reverse()
-        .find(([_, minWidth]) => width >= minWidth)?.[0] || 'xs'
+      const breakpoint =
+        Object.entries(BREAKPOINTS)
+          .reverse()
+          .find(([_, minWidth]) => width >= minWidth)?.[0] || 'xs'
       currentBreakpoint.value = breakpoint
     }
 
@@ -105,10 +127,12 @@ export const Table = defineComponent({
 
     // Filter columns by responsive breakpoint
     const responsiveColumns = computed(() => {
-      return props.columns?.filter(col => {
-        if (!col.responsive || col.responsive.length === 0) return true
-        return col.responsive.includes(currentBreakpoint.value)
-      }) ?? []
+      return (
+        props.columns?.filter((col) => {
+          if (!col.responsive || col.responsive.length === 0) return true
+          return col.responsive.includes(currentBreakpoint.value)
+        }) ?? []
+      )
     })
 
     // Sort state - support multiple columns
@@ -120,15 +144,19 @@ export const Table = defineComponent({
     const pageSize = ref(10)
 
     // Initialize filter state from columns
-    watch(() => responsiveColumns.value, (cols) => {
-      if (!cols) return
-      cols.forEach((col) => {
-        const key = col.key ?? col.dataIndex ?? ''
-        if (col.filteredValue !== undefined && col.filteredValue !== null) {
-          filterState.value[key] = col.filteredValue as (string | number)[]
-        }
-      })
-    }, { immediate: true })
+    watch(
+      () => responsiveColumns.value,
+      (cols) => {
+        if (!cols) return
+        cols.forEach((col) => {
+          const key = col.key ?? col.dataIndex ?? ''
+          if (col.filteredValue !== undefined && col.filteredValue !== null) {
+            filterState.value[key] = col.filteredValue as (string | number)[]
+          }
+        })
+      },
+      { immediate: true },
+    )
 
     const getRowKey = (record: any, index: number): Key => {
       if (typeof props.rowKey === 'function') return props.rowKey(record)
@@ -148,9 +176,7 @@ export const Table = defineComponent({
         const key = col.key ?? col.dataIndex ?? ''
         const filterVals = filterState.value[key]
         if (filterVals?.length && col.onFilter) {
-          data = data.filter((record) =>
-            filterVals.some((v) => col.onFilter!(v, record)),
-          )
+          data = data.filter((record) => filterVals.some((v) => col.onFilter!(v, record)))
         }
       })
       return data
@@ -158,7 +184,7 @@ export const Table = defineComponent({
 
     // Sorted data - support multiple columns
     const sortedData = computed(() => {
-      let data = [...filteredData.value]
+      const data = [...filteredData.value]
       if (sortStates.value.length === 0) return data
 
       data.sort((a, b) => {
@@ -269,7 +295,7 @@ export const Table = defineComponent({
       const key = col.key ?? col.dataIndex ?? ''
       const isMultiple = event?.shiftKey || (typeof col.sorter === 'object' && 'multiple' in col.sorter)
 
-      const existingIndex = sortStates.value.findIndex(s => s.key === key)
+      const existingIndex = sortStates.value.findIndex((s) => s.key === key)
 
       if (existingIndex >= 0) {
         const existing = sortStates.value[existingIndex]
@@ -288,7 +314,7 @@ export const Table = defineComponent({
         }
       }
 
-      const sorterResults: SorterResult[] = sortStates.value.map(s => ({
+      const sorterResults: SorterResult[] = sortStates.value.map((s) => ({
         column: s.column,
         order: s.order,
         field: s.column.dataIndex,
@@ -315,7 +341,7 @@ export const Table = defineComponent({
         action: 'paginate',
       }
 
-      const sorterResults: SorterResult[] = sortStates.value.map(s => ({
+      const sorterResults: SorterResult[] = sortStates.value.map((s) => ({
         column: s.column,
         order: s.order,
         field: s.column.dataIndex,
@@ -329,18 +355,28 @@ export const Table = defineComponent({
     }
 
     const selectedKeys = ref<Key[]>(props.rowSelection?.selectedRowKeys ?? [])
-    watch(() => props.rowSelection?.selectedRowKeys, (v) => { if (v) selectedKeys.value = v })
+    watch(
+      () => props.rowSelection?.selectedRowKeys,
+      (v) => {
+        if (v) selectedKeys.value = v
+      },
+    )
 
     // Expandable state
     const expandedKeys = ref<Key[]>(props.expandable?.expandedRowKeys ?? props.expandable?.defaultExpandedRowKeys ?? [])
-    watch(() => props.expandable?.expandedRowKeys, (v) => { if (v !== undefined) expandedKeys.value = v })
+    watch(
+      () => props.expandable?.expandedRowKeys,
+      (v) => {
+        if (v !== undefined) expandedKeys.value = v
+      },
+    )
 
     const handleExpand = (expanded: boolean, record: any) => {
       const key = getRowKey(record, 0)
       if (expanded) {
         expandedKeys.value = [...expandedKeys.value, key]
       } else {
-        expandedKeys.value = expandedKeys.value.filter(k => k !== key)
+        expandedKeys.value = expandedKeys.value.filter((k) => k !== key)
       }
       props.expandable?.onExpand?.(expanded, record)
       props.expandable?.onExpandedRowsChange?.(expandedKeys.value)
@@ -355,7 +391,7 @@ export const Table = defineComponent({
         action: 'filter',
       }
 
-      const sorterResults: SorterResult[] = sortStates.value.map(s => ({
+      const sorterResults: SorterResult[] = sortStates.value.map((s) => ({
         column: s.column,
         order: s.order,
         field: s.column.dataIndex,
@@ -375,9 +411,7 @@ export const Table = defineComponent({
       if (props.rowSelection.type === 'radio') {
         next = checked ? [key] : []
       } else {
-        next = checked
-          ? [...selectedKeys.value, key]
-          : selectedKeys.value.filter((k) => k !== key)
+        next = checked ? [...selectedKeys.value, key] : selectedKeys.value.filter((k) => k !== key)
         method = 'multiple'
       }
 
@@ -402,22 +436,27 @@ export const Table = defineComponent({
       const isRadio = props.rowSelection?.type === 'radio'
       const hasExpandable = !!props.expandable?.expandedRowRender
 
-      const allSelected = pagedData.value.length > 0 &&
-        pagedData.value.every((r, i) => selectedKeys.value.includes(getRowKey(r, i)))
+      const allSelected =
+        pagedData.value.length > 0 && pagedData.value.every((r, i) => selectedKeys.value.includes(getRowKey(r, i)))
       const someSelected = pagedData.value.some((r, i) => selectedKeys.value.includes(getRowKey(r, i)))
 
       const colSpan = (responsiveColumns.value.length ?? 0) + (showSelection ? 1 : 0) + (hasExpandable ? 1 : 0)
 
       // Sticky 配置
-      const stickyConfig = typeof props.sticky === 'object'
-        ? props.sticky
-        : (props.sticky ? { offsetHeader: 0, offsetScroll: 0 } : undefined)
+      const stickyConfig =
+        typeof props.sticky === 'object'
+          ? props.sticky
+          : props.sticky
+            ? { offsetHeader: 0, offsetScroll: 0 }
+            : undefined
 
-      const theadStyle: CSSProperties = stickyConfig ? {
-        position: 'sticky',
-        top: `${stickyConfig.offsetHeader || 0}px`,
-        zIndex: 3,
-      } : {}
+      const theadStyle: CSSProperties = stickyConfig
+        ? {
+            position: 'sticky',
+            top: `${stickyConfig.offsetHeader || 0}px`,
+            zIndex: 3,
+          }
+        : {}
 
       const tableEl = (
         <div
@@ -441,10 +480,12 @@ export const Table = defineComponent({
               class={`${prefixCls}-content`}
               style={{
                 ...(props.scroll?.x ? { overflowX: 'auto' } : {}),
-                ...(virtualEnabled.value ? {
-                  overflowY: 'auto',
-                  maxHeight: typeof props.scroll?.y === 'number' ? `${props.scroll.y}px` : props.scroll?.y,
-                } : {}),
+                ...(virtualEnabled.value
+                  ? {
+                      overflowY: 'auto',
+                      maxHeight: typeof props.scroll?.y === 'number' ? `${props.scroll.y}px` : props.scroll?.y,
+                    }
+                  : {}),
               }}
               onScroll={handleScroll}
               role="presentation"
@@ -453,16 +494,30 @@ export const Table = defineComponent({
                 role="table"
                 aria-rowcount={pagedData.value.length}
                 aria-colcount={colSpan}
-                style={props.scroll?.x ? { minWidth: typeof props.scroll.x === 'number' ? `${props.scroll.x}px` : props.scroll.x } : {}}
+                style={
+                  props.scroll?.x
+                    ? {
+                        minWidth: typeof props.scroll.x === 'number' ? `${props.scroll.x}px` : props.scroll.x,
+                      }
+                    : {}
+                }
               >
                 {props.showHeader && (
                   <thead class={`${prefixCls}-thead`} role="rowgroup" style={theadStyle}>
                     <tr {...(props.onHeaderRow?.(responsiveColumns.value ?? [], 0) ?? {})} role="row">
                       {hasExpandable && (
-                        <th class={`${prefixCls}-cell ${prefixCls}-expand-icon-col`} style={{ width: '48px' }} role="columnheader"></th>
+                        <th
+                          class={`${prefixCls}-cell ${prefixCls}-expand-icon-col`}
+                          style={{ width: '48px' }}
+                          role="columnheader"
+                        ></th>
                       )}
                       {showSelection && (
-                        <th class={`${prefixCls}-cell ${prefixCls}-selection-column`} role="columnheader" aria-label="Row selection">
+                        <th
+                          class={`${prefixCls}-cell ${prefixCls}-selection-column`}
+                          role="columnheader"
+                          aria-label="Row selection"
+                        >
                           {!isRadio && (
                             <Checkbox
                               checked={allSelected}
@@ -474,7 +529,7 @@ export const Table = defineComponent({
                       )}
                       {responsiveColumns.value.map((col) => {
                         const key = col.key ?? col.dataIndex ?? ''
-                        const sortState = sortStates.value.find(s => s.key === key)
+                        const sortState = sortStates.value.find((s) => s.key === key)
                         const isSorted = !!sortState
                         const fixedLeft = col.fixed === 'left'
                         const fixedRight = col.fixed === 'right'
@@ -486,7 +541,15 @@ export const Table = defineComponent({
                             key={key}
                             scope="col"
                             role="columnheader"
-                            aria-sort={isSorted ? (sortState.order === 'ascend' ? 'ascending' : 'descending') : (col.sorter ? 'none' : undefined)}
+                            aria-sort={
+                              isSorted
+                                ? sortState.order === 'ascend'
+                                  ? 'ascending'
+                                  : 'descending'
+                                : col.sorter
+                                  ? 'none'
+                                  : undefined
+                            }
                             tabindex={col.sorter ? 0 : undefined}
                             onKeydown={(e) => {
                               if (col.sorter && (e.key === 'Enter' || e.key === ' ')) {
@@ -501,7 +564,11 @@ export const Table = defineComponent({
                               [`${prefixCls}-cell-fix-right`]: fixedRight,
                             })}
                             style={{
-                              width: col.width ? (typeof col.width === 'number' ? `${col.width}px` : col.width) : undefined,
+                              width: col.width
+                                ? typeof col.width === 'number'
+                                  ? `${col.width}px`
+                                  : col.width
+                                : undefined,
                               textAlign: col.align ?? 'left',
                             }}
                             onClick={(e) => col.sorter && handleSort(col, e)}
@@ -510,8 +577,20 @@ export const Table = defineComponent({
                               {col.title}
                               {col.sorter && (
                                 <span class={`${prefixCls}-column-sorter`}>
-                                  <span class={cls(`${prefixCls}-column-sorter-up`, { active: isSorted && sortState?.order === 'ascend' })}>▲</span>
-                                  <span class={cls(`${prefixCls}-column-sorter-down`, { active: isSorted && sortState?.order === 'descend' })}>▼</span>
+                                  <span
+                                    class={cls(`${prefixCls}-column-sorter-up`, {
+                                      active: isSorted && sortState?.order === 'ascend',
+                                    })}
+                                  >
+                                    ▲
+                                  </span>
+                                  <span
+                                    class={cls(`${prefixCls}-column-sorter-down`, {
+                                      active: isSorted && sortState?.order === 'descend',
+                                    })}
+                                  >
+                                    ▼
+                                  </span>
                                 </span>
                               )}
                               {hasFilter && (
@@ -632,7 +711,7 @@ export const Table = defineComponent({
                                 </td>
                               )
                             })}
-                          </tr>
+                          </tr>,
                         ]
 
                         // Add expanded row if applicable
@@ -642,24 +721,25 @@ export const Table = defineComponent({
                               <td colspan={colSpan} class={`${prefixCls}-cell`} role="cell">
                                 {props.expandable.expandedRowRender(record, rowIndex, 0, isExpanded)}
                               </td>
-                            </tr>
+                            </tr>,
                           )
                         }
 
                         return rows
                       })}
                       {/* 底部占位元素 */}
-                      {visibleEndIndex.value < pagedData.value.length && (() => {
-                        let remainingHeight = 0
-                        for (let i = visibleEndIndex.value; i < pagedData.value.length; i++) {
-                          remainingHeight += getRowHeight(pagedData.value[i], i)
-                        }
-                        return remainingHeight > 0 ? (
-                          <tr style={{ height: `${remainingHeight}px` }} aria-hidden="true">
-                            <td colspan={colSpan}></td>
-                          </tr>
-                        ) : null
-                      })()}
+                      {visibleEndIndex.value < pagedData.value.length &&
+                        (() => {
+                          let remainingHeight = 0
+                          for (let i = visibleEndIndex.value; i < pagedData.value.length; i++) {
+                            remainingHeight += getRowHeight(pagedData.value[i], i)
+                          }
+                          return remainingHeight > 0 ? (
+                            <tr style={{ height: `${remainingHeight}px` }} aria-hidden="true">
+                              <td colspan={colSpan}></td>
+                            </tr>
+                          ) : null
+                        })()}
                     </>
                   ) : (
                     pagedData.value.flatMap((record, rowIndex) => {
@@ -730,7 +810,7 @@ export const Table = defineComponent({
                               </td>
                             )
                           })}
-                        </tr>
+                        </tr>,
                       ]
 
                       // Add expanded row if applicable
@@ -740,7 +820,7 @@ export const Table = defineComponent({
                             <td colspan={colSpan} class={`${prefixCls}-cell`} role="cell">
                               {props.expandable.expandedRowRender(record, rowIndex, 0, isExpanded)}
                             </td>
-                          </tr>
+                          </tr>,
                         )
                       }
 
@@ -749,9 +829,7 @@ export const Table = defineComponent({
                   )}
                 </tbody>
                 {props.summary && !isEmpty && (
-                  <tfoot class={`${prefixCls}-summary`}>
-                    {props.summary(pagedData.value)}
-                  </tfoot>
+                  <tfoot class={`${prefixCls}-summary`}>{props.summary(pagedData.value)}</tfoot>
                 )}
               </table>
             </div>
@@ -781,7 +859,15 @@ export const Table = defineComponent({
       if (props.loading) {
         return (
           <div style={{ position: 'relative' }}>
-            <Spin style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 10 }} />
+            <Spin
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 10,
+              }}
+            />
             <div style={{ opacity: 0.5 }}>{tableEl}</div>
           </div>
         )

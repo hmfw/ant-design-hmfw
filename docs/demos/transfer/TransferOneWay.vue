@@ -1,10 +1,5 @@
 <template>
-  <Transfer
-    :data-source="dataSource"
-    v-model:target-keys="targetKeys"
-    :titles="['源', '目标']"
-    one-way
-  />
+  <Transfer v-model:target-keys="targetKeys" :data-source="dataSource" :titles="['源', '目标']" one-way />
 </template>
 
 <script setup lang="ts">

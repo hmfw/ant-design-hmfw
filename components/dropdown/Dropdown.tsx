@@ -31,7 +31,10 @@ export const Dropdown = defineComponent({
     open: { type: Boolean, default: undefined },
     defaultOpen: Boolean,
     disabled: Boolean,
-    arrow: { type: [Boolean, Object] as PropType<boolean | { pointAtCenter?: boolean }>, default: false },
+    arrow: {
+      type: [Boolean, Object] as PropType<boolean | { pointAtCenter?: boolean }>,
+      default: false,
+    },
     autoFocus: Boolean,
     overlayClassName: String,
     overlayStyle: Object as PropType<Record<string, any>>,
@@ -64,7 +67,7 @@ export const Dropdown = defineComponent({
       () => props.open,
       (v) => {
         if (v !== undefined) innerOpen.value = v
-      }
+      },
     )
 
     const triggers = computed(() => {
@@ -171,11 +174,7 @@ export const Dropdown = defineComponent({
 
     const handleOutsideClick = (e: MouseEvent) => {
       if (!visible.value) return
-      if (
-        triggerRef.value?.contains(e.target as Node) ||
-        dropdownRef.value?.contains(e.target as Node)
-      )
-        return
+      if (triggerRef.value?.contains(e.target as Node) || dropdownRef.value?.contains(e.target as Node)) return
       setOpen(false, 'trigger')
     }
 
@@ -209,12 +208,7 @@ export const Dropdown = defineComponent({
       }
 
       const menuNode = (
-        <Menu
-          {...props.menu}
-          mode="vertical"
-          selectable={props.menu.selectable ?? false}
-          onClick={handleMenuClick}
-        />
+        <Menu {...props.menu} mode="vertical" selectable={props.menu.selectable ?? false} onClick={handleMenuClick} />
       )
 
       // Apply popupRender or dropdownRender
@@ -240,10 +234,7 @@ export const Dropdown = defineComponent({
       const shouldDestroy = props.destroyOnHidden ?? props.destroyPopupOnHide ?? false
       const shouldRender = visible.value || !shouldDestroy || props.forceRender
 
-      const triggerClasses = cls(
-        props.openClassName && visible.value ? props.openClassName : null,
-        attrs.class as any,
-      )
+      const triggerClasses = cls(props.openClassName && visible.value ? props.openClassName : null, attrs.class as any)
 
       return (
         <>
@@ -270,7 +261,7 @@ export const Dropdown = defineComponent({
                   {
                     [`${prefixCls}-hidden`]: !visible.value,
                     [`${prefixCls}-show-arrow`]: !!props.arrow,
-                  }
+                  },
                 )}
                 style={{
                   position: 'absolute',
@@ -291,4 +282,3 @@ export const Dropdown = defineComponent({
     }
   },
 })
-

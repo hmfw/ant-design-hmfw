@@ -1,9 +1,6 @@
 <template>
-  <Button type="primary" @click="open = true">打开抽屉</Button>
-  <Drawer
-    v-model:open="open"
-    title="基础抽屉"
-  >
+  <Button type="primary" @click="open = true"> 打开抽屉 </Button>
+  <Drawer v-model:open="open" title="基础抽屉">
     <p>抽屉内容</p>
     <p>抽屉内容</p>
     <p>抽屉内容</p>

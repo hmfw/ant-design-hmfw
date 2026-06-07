@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div style="margin-bottom: 16px;">
-      <label style="margin-right: 8px;">触发方式:</label>
-      <select v-model="triggerAction" style="padding: 4px 8px;">
+    <div style="margin-bottom: 16px">
+      <label style="margin-right: 8px">触发方式:</label>
+      <select v-model="triggerAction" style="padding: 4px 8px">
         <option value="hover">hover</option>
         <option value="click">click</option>
       </select>

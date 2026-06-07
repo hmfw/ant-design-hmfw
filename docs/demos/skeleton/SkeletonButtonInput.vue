@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <SkeletonButton active />
     <SkeletonButton active size="small" />
     <SkeletonButton active shape="round" />

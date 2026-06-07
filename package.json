@@ -78,7 +78,10 @@
     "test:watch": "vitest --config vitest.config.ts",
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint . --ext .ts,.tsx,.vue",
+    "lint": "eslint . --ext .ts,.tsx,.vue,.js,.mjs",
+    "lint:fix": "eslint . --ext .ts,.tsx,.vue,.js,.mjs --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "gen:icons": "tsx scripts/generate-icons.ts",
     "gen:llm": "tsx scripts/generate-llm-manifest.ts",
     "prebuild:lib": "pnpm gen:icons",
@@ -88,7 +91,24 @@
     "precheck": "node scripts/prepublish-check.js",
     "verify:release": "node scripts/verify-release.js",
     "prepublishOnly": "pnpm test && pnpm typecheck && pnpm build:lib",
-    "release": "pnpm prepublishOnly && npm publish"
+    "release": "pnpm prepublishOnly && npm publish",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.vue": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{css,less,scss}": [
+      "prettier --write"
+    ],
+    "*.{md,json,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "peerDependencies": {
     "vue": ">=3.3.0 <4.0.0"
@@ -102,9 +122,14 @@
     "@vitest/coverage-v8": "^1.4.0",
     "@vue/test-utils": "^2.4.0",
     "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.9.2",
+    "husky": "^9.1.7",
     "jsdom": "^24.0.0",
+    "lint-staged": "^17.0.7",
     "markdown-it-anchor": "^9.2.0",
     "markdown-it-prism": "^2.3.0",
+    "prettier": "^3.8.3",
     "prismjs": "^1.29.0",
     "tsup": "^8.0.0",
     "tsx": "^4.22.3",
@@ -113,6 +138,7 @@
     "vite": "^5.4.0",
     "vitest": "^1.4.0",
     "vue": "^3.4.0",
+    "vue-eslint-parser": "^10.4.1",
     "vue-router": "^4.3.0"
   },
   "engines": {

@@ -31,10 +31,6 @@ function toolbarRender(originalNode: VNode, info: ToolbarRenderInfoType) {
 
 // 自定义预览内容：给图片加一个圆角边框包裹
 function imageRender(originalNode: VNode, _info: ImageRenderInfoType) {
-  return (
-    <div style="padding:8px;border-radius:8px;background:rgba(255,255,255,.08)">
-      {originalNode}
-    </div>
-  )
+  return <div style="padding:8px;border-radius:8px;background:rgba(255,255,255,.08)">{originalNode}</div>
 }
 </script>

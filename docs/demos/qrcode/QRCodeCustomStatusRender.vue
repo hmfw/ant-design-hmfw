@@ -1,21 +1,13 @@
 <template>
-  <div style="display: flex; gap: 16px;">
+  <div style="display: flex; gap: 16px">
     <QRCode
       value="https://ant.design"
       status="expired"
       :status-render="customStatusRender"
       :on-refresh="handleRefresh"
     />
-    <QRCode
-      value="https://ant.design"
-      status="loading"
-      :status-render="customStatusRender"
-    />
-    <QRCode
-      value="https://ant.design"
-      status="scanned"
-      :status-render="customStatusRender"
-    />
+    <QRCode value="https://ant.design" status="loading" :status-render="customStatusRender" />
+    <QRCode value="https://ant.design" status="scanned" :status-render="customStatusRender" />
   </div>
 </template>
 
@@ -28,18 +20,23 @@ const customStatusRender = (info: StatusRenderInfo) => {
   if (info.status === 'expired') {
     return h('div', { style: { color: '#ff4d4f' } }, [
       h('div', '❌ 已过期'),
-      info.onRefresh && h('button', {
-        onClick: info.onRefresh,
-        style: {
-          marginTop: '8px',
-          padding: '4px 12px',
-          border: '1px solid #ff4d4f',
-          borderRadius: '4px',
-          background: 'transparent',
-          color: '#ff4d4f',
-          cursor: 'pointer'
-        }
-      }, '重新生成')
+      info.onRefresh &&
+        h(
+          'button',
+          {
+            onClick: info.onRefresh,
+            style: {
+              marginTop: '8px',
+              padding: '4px 12px',
+              border: '1px solid #ff4d4f',
+              borderRadius: '4px',
+              background: 'transparent',
+              color: '#ff4d4f',
+              cursor: 'pointer',
+            },
+          },
+          '重新生成',
+        ),
     ])
   }
   if (info.status === 'loading') {

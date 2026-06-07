@@ -1,24 +1,11 @@
 <template>
   <div class="statistic-demo">
     <Space :size="32">
-      <Statistic
-        title="用户数"
-        :value="value"
-        :loading="loading"
-      />
-      <Statistic
-        title="活跃用户"
-        :value="93"
-        suffix="/ 100"
-        :loading="loading"
-      />
-      <Countdown
-        title="倒计时"
-        :value="Date.now() + 60000"
-        :loading="loading"
-      />
+      <Statistic title="用户数" :value="value" :loading="loading" />
+      <Statistic title="活跃用户" :value="93" suffix="/ 100" :loading="loading" />
+      <Countdown title="倒计时" :value="Date.now() + 60000" :loading="loading" />
     </Space>
-    <div style="margin-top: 16px;">
+    <div style="margin-top: 16px">
       <Button @click="toggleLoading">
         {{ loading ? '显示内容' : '显示加载' }}
       </Button>

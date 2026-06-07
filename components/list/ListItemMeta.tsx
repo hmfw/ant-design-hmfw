@@ -17,12 +17,13 @@ export const ListItemMeta = defineComponent({
       const title = slots.title?.() ?? props.title
       const description = slots.description?.() ?? props.description
 
-      const content = (title || description) ? (
-        <div class={`${prefixCls}-item-meta-content`}>
-          {title && <h4 class={`${prefixCls}-item-meta-title`}>{title}</h4>}
-          {description && <div class={`${prefixCls}-item-meta-description`}>{description}</div>}
-        </div>
-      ) : null
+      const content =
+        title || description ? (
+          <div class={`${prefixCls}-item-meta-content`}>
+            {title && <h4 class={`${prefixCls}-item-meta-title`}>{title}</h4>}
+            {description && <div class={`${prefixCls}-item-meta-description`}>{description}</div>}
+          </div>
+        ) : null
 
       return (
         <div class={`${prefixCls}-item-meta`}>

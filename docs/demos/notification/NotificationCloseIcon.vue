@@ -1,8 +1,8 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary" @click="openWithCustomIcon">自定义关闭图标</Button>
-    <Button @click="setGlobalCloseIcon">设置全局关闭图标</Button>
-    <Button @click="resetGlobalCloseIcon">重置全局配置</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button type="primary" @click="openWithCustomIcon"> 自定义关闭图标 </Button>
+    <Button @click="setGlobalCloseIcon"> 设置全局关闭图标 </Button>
+    <Button @click="resetGlobalCloseIcon"> 重置全局配置 </Button>
   </div>
 </template>
 

@@ -2,7 +2,6 @@
 
 评分组件。
 
-
 ## 何时使用
 
 - 对评价进行展示。
@@ -78,44 +77,44 @@
 
 ### Rate Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-|------|------|------|--------|
-| value(v-model) | 当前数，受控值 | `number` | - |
-| defaultValue | 默认值 | `number` | `0` |
-| count | star 总数 | `number` | `5` |
-| allowHalf | 是否允许半选 | `boolean` | `false` |
-| allowClear | 是否允许再次点击后清除 | `boolean` | `true` |
-| disabled | 只读，无法进行交互 | `boolean` | `false` |
-| character | 自定义字符 | `string \| ((ctx: RateCharacterRenderContext) => any)` | `'★'` |
-| tooltips | 自定义每项的提示信息 | `(string \| TooltipProps)[]` | - |
-| size | 组件尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
-| keyboard | 是否支持键盘操作 | `boolean` | `true` |
-| autoFocus | 自动获取焦点 | `boolean` | `false` |
+| 参数           | 说明                   | 类型                                                   | 默认值     |
+| -------------- | ---------------------- | ------------------------------------------------------ | ---------- |
+| value(v-model) | 当前数，受控值         | `number`                                               | -          |
+| defaultValue   | 默认值                 | `number`                                               | `0`        |
+| count          | star 总数              | `number`                                               | `5`        |
+| allowHalf      | 是否允许半选           | `boolean`                                              | `false`    |
+| allowClear     | 是否允许再次点击后清除 | `boolean`                                              | `true`     |
+| disabled       | 只读，无法进行交互     | `boolean`                                              | `false`    |
+| character      | 自定义字符             | `string \| ((ctx: RateCharacterRenderContext) => any)` | `'★'`      |
+| tooltips       | 自定义每项的提示信息   | `(string \| TooltipProps)[]`                           | -          |
+| size           | 组件尺寸               | `'small' \| 'middle' \| 'large'`                       | `'middle'` |
+| keyboard       | 是否支持键盘操作       | `boolean`                                              | `true`     |
+| autoFocus      | 自动获取焦点           | `boolean`                                              | `false`    |
 
 ### Rate Events
 
-| 事件名 | 说明 | 回调参数 |
-|--------|------|----------|
-| update:value | 选择时的回调 | `(value: number) => void` |
-| change | 选择时的回调 | `(value: number) => void` |
-| hoverChange | 鼠标经过时数值变化的回调 | `(value: number \| undefined) => void` |
-| focus | 获取焦点时的回调 | `() => void` |
-| blur | 失去焦点时的回调 | `() => void` |
-| keydown | 键盘按下时的回调 | `(event: KeyboardEvent) => void` |
+| 事件名       | 说明                     | 回调参数                               |
+| ------------ | ------------------------ | -------------------------------------- |
+| update:value | 选择时的回调             | `(value: number) => void`              |
+| change       | 选择时的回调             | `(value: number) => void`              |
+| hoverChange  | 鼠标经过时数值变化的回调 | `(value: number \| undefined) => void` |
+| focus        | 获取焦点时的回调         | `() => void`                           |
+| blur         | 失去焦点时的回调         | `() => void`                           |
+| keydown      | 键盘按下时的回调         | `(event: KeyboardEvent) => void`       |
 
 ### Rate Methods
 
-| 方法名 | 说明 | 参数 |
-|--------|------|------|
-| focus | 获取焦点 | - |
-| blur | 失去焦点 | - |
+| 方法名 | 说明     | 参数 |
+| ------ | -------- | ---- |
+| focus  | 获取焦点 | -    |
+| blur   | 失去焦点 | -    |
 
 ### RateCharacterRenderContext
 
-| 属性 | 说明 | 类型 |
-|------|------|------|
+| 属性  | 说明                        | 类型     |
+| ----- | --------------------------- | -------- |
 | index | 当前星星的索引（从 0 开始） | `number` |
-| value | 当前评分值 | `number` |
+| value | 当前评分值                  | `number` |
 
 <script setup>
 import RateBasic from './RateBasic.vue'

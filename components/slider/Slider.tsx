@@ -1,10 +1,4 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  type PropType,
-} from 'vue'
+import { defineComponent, ref, computed, watch, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls, KEYS } from '../_utils'
 import type { SliderMarkValue, SliderMarks, SliderTooltipProps } from './types'
@@ -59,15 +53,20 @@ export const Slider = defineComponent({
       return normalize(val)
     })
 
-    watch(() => props.value, (v) => {
-      if (v !== undefined) {
-        innerValue.value = normalize(v) as any
-      }
-    })
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) {
+          innerValue.value = normalize(v) as any
+        }
+      },
+    )
 
     const getMarkPoints = () => {
       if (!props.marks) return []
-      return Object.keys(props.marks).map(Number).sort((a, b) => a - b)
+      return Object.keys(props.marks)
+        .map(Number)
+        .sort((a, b) => a - b)
     }
 
     const snapToStep = (v: number) => {
@@ -75,9 +74,7 @@ export const Slider = defineComponent({
       if (props.step === null) {
         const markPoints = getMarkPoints()
         const validPoints = [props.min, ...markPoints, props.max]
-        const closest = validPoints.reduce((prev, curr) =>
-          Math.abs(curr - v) < Math.abs(prev - v) ? curr : prev
-        )
+        const closest = validPoints.reduce((prev, curr) => (Math.abs(curr - v) < Math.abs(prev - v) ? curr : prev))
         return closest
       }
       const steps = Math.round((v - props.min) / props.step)
@@ -93,13 +90,9 @@ export const Slider = defineComponent({
       const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
       let ratio: number
       if (props.vertical) {
-        ratio = props.reverse
-          ? (clientY - rect.top) / rect.height
-          : 1 - (clientY - rect.top) / rect.height
+        ratio = props.reverse ? (clientY - rect.top) / rect.height : 1 - (clientY - rect.top) / rect.height
       } else {
-        ratio = props.reverse
-          ? 1 - (clientX - rect.left) / rect.width
-          : (clientX - rect.left) / rect.width
+        ratio = props.reverse ? 1 - (clientX - rect.left) / rect.width : (clientX - rect.left) / rect.width
       }
       ratio = Math.max(0, Math.min(1, ratio))
       return snapToStep(props.min + ratio * (props.max - props.min))
@@ -228,10 +221,16 @@ export const Slider = defineComponent({
 
       const trackStyle = props.vertical
         ? props.included
-          ? { bottom: `${props.range ? startPct : 0}%`, height: `${props.range ? endPct - startPct : endPct}%` }
+          ? {
+              bottom: `${props.range ? startPct : 0}%`,
+              height: `${props.range ? endPct - startPct : endPct}%`,
+            }
           : {}
         : props.included
-          ? { left: `${props.range ? startPct : 0}%`, width: `${props.range ? endPct - startPct : endPct}%` }
+          ? {
+              left: `${props.range ? startPct : 0}%`,
+              width: `${props.range ? endPct - startPct : endPct}%`,
+            }
           : {}
 
       const markEntries = props.marks
@@ -274,11 +273,7 @@ export const Slider = defineComponent({
             [`${prefixCls}-with-marks`]: markEntries.length > 0,
           })}
         >
-          <div
-            ref={trackRef}
-            class={`${prefixCls}-rail`}
-            onClick={handleTrackClick}
-          >
+          <div ref={trackRef} class={`${prefixCls}-rail`} onClick={handleTrackClick}>
             <div class={`${prefixCls}-track`} style={trackStyle} />
 
             {/* Dots from marks */}
@@ -289,9 +284,7 @@ export const Slider = defineComponent({
                 <span
                   key={mv}
                   class={cls(`${prefixCls}-dot`, {
-                    [`${prefixCls}-dot-active`]: props.range
-                      ? mv >= startVal && mv <= endVal
-                      : mv <= endVal,
+                    [`${prefixCls}-dot-active`]: props.range ? mv >= startVal && mv <= endVal : mv <= endVal,
                   })}
                   style={dotStyle}
                 />
@@ -306,9 +299,7 @@ export const Slider = defineComponent({
                 <span
                   key={dp}
                   class={cls(`${prefixCls}-dot`, {
-                    [`${prefixCls}-dot-active`]: props.range
-                      ? dp >= startVal && dp <= endVal
-                      : dp <= endVal,
+                    [`${prefixCls}-dot-active`]: props.range ? dp >= startVal && dp <= endVal : dp <= endVal,
                   })}
                   style={dotStyle}
                 />
@@ -332,8 +323,12 @@ export const Slider = defineComponent({
                 tabindex={props.disabled ? -1 : 0}
                 onMousedown={startDrag('start')}
                 onTouchstart={startDrag('start')}
-                onMouseenter={() => { tooltipVisible.value = 'start' }}
-                onMouseleave={() => { if (dragging.value !== 'start') tooltipVisible.value = null }}
+                onMouseenter={() => {
+                  tooltipVisible.value = 'start'
+                }}
+                onMouseleave={() => {
+                  if (dragging.value !== 'start') tooltipVisible.value = null
+                }}
                 onKeydown={handleKeyDown('start')}
               >
                 {shouldShowTooltip('start') && formatTooltip(startVal) !== null && (
@@ -358,8 +353,12 @@ export const Slider = defineComponent({
               tabindex={props.disabled ? -1 : 0}
               onMousedown={startDrag(props.range ? 'end' : 'end')}
               onTouchstart={startDrag(props.range ? 'end' : 'end')}
-              onMouseenter={() => { tooltipVisible.value = 'end' }}
-              onMouseleave={() => { if (dragging.value !== 'end') tooltipVisible.value = null }}
+              onMouseenter={() => {
+                tooltipVisible.value = 'end'
+              }}
+              onMouseleave={() => {
+                if (dragging.value !== 'end') tooltipVisible.value = null
+              }}
               onKeydown={handleKeyDown(props.range ? 'end' : 'start')}
             >
               {shouldShowTooltip('end') && formatTooltip(endVal) !== null && (
@@ -379,9 +378,7 @@ export const Slider = defineComponent({
                   <span
                     key={mv}
                     class={cls(`${prefixCls}-mark-text`, {
-                      [`${prefixCls}-mark-text-active`]: props.range
-                        ? mv >= startVal && mv <= endVal
-                        : mv <= endVal,
+                      [`${prefixCls}-mark-text-active`]: props.range ? mv >= startVal && mv <= endVal : mv <= endVal,
                     })}
                     style={combinedStyle}
                     onClick={() => handleMarkClick(mv)}

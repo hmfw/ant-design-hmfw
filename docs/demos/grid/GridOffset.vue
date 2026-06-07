@@ -2,18 +2,18 @@
   <Space direction="vertical" style="width: 100%">
     <Row>
       <Col :span="8">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-8</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-8</div>
       </Col>
       <Col :span="8" :offset="8">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-8 offset-8</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-8 offset-8</div>
       </Col>
     </Row>
     <Row>
       <Col :span="6" :offset="6">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-6 offset-6</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-6 offset-6</div>
       </Col>
       <Col :span="6" :offset="6">
-        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px;">col-6 offset-6</div>
+        <div style="background: #1677ff; color: #fff; text-align: center; padding: 8px">col-6 offset-6</div>
       </Col>
     </Row>
   </Space>

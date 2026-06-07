@@ -1,29 +1,16 @@
 <template>
   <div>
     <h3>基础虚拟滚动（10,000 项）</h3>
-    <List
-      :data-source="data"
-      virtual
-      :height="400"
-      :item-height="48"
-    >
+    <List :data-source="data" virtual :height="400" :item-height="48">
       <template #renderItem="{ item, index }">
         <ListItem>
-          <ListItemMeta
-            :title="`Item ${index + 1}`"
-            :description="`This is item ${index + 1} with ID: ${item.id}`"
-          />
+          <ListItemMeta :title="`Item ${index + 1}`" :description="`This is item ${index + 1} with ID: ${item.id}`" />
         </ListItem>
       </template>
     </List>
 
     <h3 style="margin-top: 24px">带头像的虚拟滚动（50,000 项）</h3>
-    <List
-      :data-source="largeData"
-      virtual
-      :height="400"
-      :item-height="73"
-    >
+    <List :data-source="largeData" virtual :height="400" :item-height="73">
       <template #renderItem="{ item, index }">
         <ListItem>
           <ListItemMeta

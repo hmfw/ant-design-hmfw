@@ -1,11 +1,11 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <div>
-      <p style="margin-bottom: 8px;">水平排列：</p>
+      <p style="margin-bottom: 8px">水平排列：</p>
       <RadioGroup v-model:value="value1" :options="options" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">垂直排列：</p>
+      <p style="margin-bottom: 8px">垂直排列：</p>
       <RadioGroup v-model:value="value2" :options="options" direction="vertical" />
     </div>
     <p>value1: {{ value1 }}，value2: {{ value2 }}</p>

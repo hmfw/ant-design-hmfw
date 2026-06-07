@@ -1,5 +1,5 @@
 <template>
-  <Table :columns="columns" :dataSource="data" :scroll="{ x: 1200 }" bordered />
+  <Table :columns="columns" :data-source="data" :scroll="{ x: 1200 }" bordered />
 </template>
 
 <script setup lang="ts">
@@ -53,8 +53,32 @@ const columns = [
 ]
 
 const data = [
-  { key: '1', name: 'Joe', age: 32, col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data 4' },
-  { key: '2', name: 'Jim', age: 28, col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data 4' },
-  { key: '3', name: 'Alice', age: 35, col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data 4' },
+  {
+    key: '1',
+    name: 'Joe',
+    age: 32,
+    col1: 'Data 1',
+    col2: 'Data 2',
+    col3: 'Data 3',
+    col4: 'Data 4',
+  },
+  {
+    key: '2',
+    name: 'Jim',
+    age: 28,
+    col1: 'Data 1',
+    col2: 'Data 2',
+    col3: 'Data 3',
+    col4: 'Data 4',
+  },
+  {
+    key: '3',
+    name: 'Alice',
+    age: 35,
+    col1: 'Data 1',
+    col2: 'Data 2',
+    col3: 'Data 3',
+    col4: 'Data 4',
+  },
 ]
 </script>

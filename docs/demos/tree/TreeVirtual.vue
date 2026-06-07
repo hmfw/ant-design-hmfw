@@ -10,7 +10,7 @@
       show-line
     />
 
-    <div style="margin-top: 16px; color: #666;">
+    <div style="margin-top: 16px; color: #666">
       总节点数: {{ treeData.length }} 个根节点，约 {{ totalNodes }} 个节点
     </div>
   </div>

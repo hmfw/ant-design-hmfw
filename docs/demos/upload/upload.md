@@ -2,7 +2,6 @@
 
 文件选择上传和拖拽上传控件。
 
-
 ## 何时使用
 
 上传是将信息（网页、文字、图片、视频等）通过网页或者上传工具发布到远程服务器上的过程。
@@ -65,55 +64,55 @@
 
 ### Upload Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-|------|------|------|--------|
-| fileList(v-model) | 已经上传的文件列表（受控） | `UploadFile[]` | - |
-| defaultFileList | 默认已经上传的文件列表（非受控） | `UploadFile[]` | - |
-| accept | 接受上传的文件类型，详见 input accept Attribute | `string` | - |
-| action | 上传的地址，支持函数返回字符串或 Promise | `string \| ((file: File) => string \| Promise<string>)` | - |
-| data | 上传所需额外参数，支持函数返回对象或 Promise | `object \| ((file: UploadFile) => object \| Promise<object>)` | - |
-| disabled | 是否禁用 | `boolean` | `false` |
-| listType | 上传列表的内建样式 | `'text' \| 'picture' \| 'picture-card' \| 'picture-circle'` | `'text'` |
-| type | 触发器类型，`drag` 即拖拽上传区域 | `'select' \| 'drag'` | `'select'` |
-| maxCount | 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件 | `number` | - |
-| multiple | 是否支持多选文件 | `boolean` | `false` |
-| name | 发到后台的文件参数名 | `string` | `'file'` |
-| showUploadList | 是否展示文件列表，可对象配置 | `boolean \| { showRemoveIcon?: boolean; showPreviewIcon?: boolean }` | `true` |
-| beforeUpload | 上传文件之前的钩子，返回 `false` 取消，返回 `File/Blob` 替换上传目标 | `(file: File, fileList: File[]) => boolean \| File \| Blob \| Promise<...>` | - |
-| customRequest | 覆盖默认上传行为；第二参数 `{ defaultRequest }` 可回退默认实现 | `(options, info?: { defaultRequest }) => void` | - |
-| onRemove | 删除文件的拦截钩子，返回 `false` 阻止删除 | `(file: UploadFile) => boolean \| Promise<boolean>` | - |
-| openFileDialogOnClick | 点击触发器是否弹出文件选择框 | `boolean` | `true` |
-| method | 上传请求 HTTP 方法 | `string` | `'post'` |
-| isImageUrl | 自定义判断是否为图片以决定是否显示缩略图 | `(file: UploadFile) => boolean` | 内置：扩展名 + MIME 检测 |
-| itemRender | 自定义文件项渲染 | `(originNode, file, fileList, actions) => VNode` | - |
+| 参数                  | 说明                                                                 | 类型                                                                        | 默认值                   |
+| --------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------ |
+| fileList(v-model)     | 已经上传的文件列表（受控）                                           | `UploadFile[]`                                                              | -                        |
+| defaultFileList       | 默认已经上传的文件列表（非受控）                                     | `UploadFile[]`                                                              | -                        |
+| accept                | 接受上传的文件类型，详见 input accept Attribute                      | `string`                                                                    | -                        |
+| action                | 上传的地址，支持函数返回字符串或 Promise                             | `string \| ((file: File) => string \| Promise<string>)`                     | -                        |
+| data                  | 上传所需额外参数，支持函数返回对象或 Promise                         | `object \| ((file: UploadFile) => object \| Promise<object>)`               | -                        |
+| disabled              | 是否禁用                                                             | `boolean`                                                                   | `false`                  |
+| listType              | 上传列表的内建样式                                                   | `'text' \| 'picture' \| 'picture-card' \| 'picture-circle'`                 | `'text'`                 |
+| type                  | 触发器类型，`drag` 即拖拽上传区域                                    | `'select' \| 'drag'`                                                        | `'select'`               |
+| maxCount              | 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件            | `number`                                                                    | -                        |
+| multiple              | 是否支持多选文件                                                     | `boolean`                                                                   | `false`                  |
+| name                  | 发到后台的文件参数名                                                 | `string`                                                                    | `'file'`                 |
+| showUploadList        | 是否展示文件列表，可对象配置                                         | `boolean \| { showRemoveIcon?: boolean; showPreviewIcon?: boolean }`        | `true`                   |
+| beforeUpload          | 上传文件之前的钩子，返回 `false` 取消，返回 `File/Blob` 替换上传目标 | `(file: File, fileList: File[]) => boolean \| File \| Blob \| Promise<...>` | -                        |
+| customRequest         | 覆盖默认上传行为；第二参数 `{ defaultRequest }` 可回退默认实现       | `(options, info?: { defaultRequest }) => void`                              | -                        |
+| onRemove              | 删除文件的拦截钩子，返回 `false` 阻止删除                            | `(file: UploadFile) => boolean \| Promise<boolean>`                         | -                        |
+| openFileDialogOnClick | 点击触发器是否弹出文件选择框                                         | `boolean`                                                                   | `true`                   |
+| method                | 上传请求 HTTP 方法                                                   | `string`                                                                    | `'post'`                 |
+| isImageUrl            | 自定义判断是否为图片以决定是否显示缩略图                             | `(file: UploadFile) => boolean`                                             | 内置：扩展名 + MIME 检测 |
+| itemRender            | 自定义文件项渲染                                                     | `(originNode, file, fileList, actions) => VNode`                            | -                        |
 
 ### UploadFile
 
-| 参数 | 说明 | 类型 |
-|------|------|------|
-| uid | 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突 | `string` |
-| name | 文件名 | `string` |
-| size | 文件大小（字节） | `number` |
-| type | 文件类型 | `string` |
-| status | 上传状态 | `'uploading' \| 'done' \| 'error' \| 'removed'` |
-| percent | 上传进度 | `number` |
-| url | 下载链接额外的 html 属性 | `string` |
-| thumbUrl | 缩略图地址 | `string` |
+| 参数     | 说明                                                   | 类型                                            |
+| -------- | ------------------------------------------------------ | ----------------------------------------------- |
+| uid      | 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突 | `string`                                        |
+| name     | 文件名                                                 | `string`                                        |
+| size     | 文件大小（字节）                                       | `number`                                        |
+| type     | 文件类型                                               | `string`                                        |
+| status   | 上传状态                                               | `'uploading' \| 'done' \| 'error' \| 'removed'` |
+| percent  | 上传进度                                               | `number`                                        |
+| url      | 下载链接额外的 html 属性                               | `string`                                        |
+| thumbUrl | 缩略图地址                                             | `string`                                        |
 
 ### Upload Events
 
-| 事件名 | 说明 | 回调参数 |
-|--------|------|----------|
-| update:fileList | 文件列表变化时的回调 | `(fileList: UploadFile[]) => void` |
-| change | 上传文件改变时的状态。进度变化时 `event` 字段携带 `{ percent }` | `(info: { file: UploadFile; fileList: UploadFile[]; event?: { percent: number } }) => void` |
-| remove | 点击移除文件后触发（被 `onRemove` 拦截 false 时不触发） | `(file: UploadFile) => void` |
-| preview | 点击文件链接或预览图标时的回调 | `(file: UploadFile) => void` |
-| drop | 文件拖拽到上传区域释放时触发 | `(event: DragEvent) => void` |
+| 事件名          | 说明                                                            | 回调参数                                                                                    |
+| --------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| update:fileList | 文件列表变化时的回调                                            | `(fileList: UploadFile[]) => void`                                                          |
+| change          | 上传文件改变时的状态。进度变化时 `event` 字段携带 `{ percent }` | `(info: { file: UploadFile; fileList: UploadFile[]; event?: { percent: number } }) => void` |
+| remove          | 点击移除文件后触发（被 `onRemove` 拦截 false 时不触发）         | `(file: UploadFile) => void`                                                                |
+| preview         | 点击文件链接或预览图标时的回调                                  | `(file: UploadFile) => void`                                                                |
+| drop            | 文件拖拽到上传区域释放时触发                                    | `(event: DragEvent) => void`                                                                |
 
 ### Upload Slots
 
-| 插槽名 | 说明 |
-|--------|------|
+| 插槽名  | 说明                             |
+| ------- | -------------------------------- |
 | default | 触发上传的控件，通常为按钮或图标 |
 
 ## Upload.Dragger

@@ -1,6 +1,6 @@
 <template>
   <Space direction="vertical">
-    <Pagination :total="50" v-model:current="current" />
+    <Pagination v-model:current="current" :total="50" />
     <p>当前页：{{ current }}</p>
   </Space>
 </template>

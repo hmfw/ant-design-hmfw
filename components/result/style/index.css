@@ -47,10 +47,18 @@
 }
 
 /* Status colors — 仅对非 custom 图标生效 */
-.hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom) { color: #52c41a; }
-.hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom)   { color: #ff4d4f; }
-.hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom)    { color: #1677ff; }
-.hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom) { color: #faad14; }
+.hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #52c41a;
+}
+.hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #ff4d4f;
+}
+.hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #1677ff;
+}
+.hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #faad14;
+}
 
 /* Exception statuses 渲染为插画 */
 .hmfw-result-icon.hmfw-result-image {
@@ -80,10 +88,18 @@
   }
 
   /* 状态图标颜色 — 暗黑模式下使用适配色值 */
-  .hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom) { color: #49aa19; }
-  .hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom)   { color: #dc4446; }
-  .hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom)    { color: #1668dc; }
-  .hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom) { color: #d89614; }
+  .hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+    color: #49aa19;
+  }
+  .hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+    color: #dc4446;
+  }
+  .hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+    color: #1668dc;
+  }
+  .hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+    color: #d89614;
+  }
 
   /* 异常插画暗黑适配 */
   .hmfw-result-icon.hmfw-result-image svg ellipse {

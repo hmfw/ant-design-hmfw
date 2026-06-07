@@ -4,9 +4,22 @@ import { cls } from '../_utils'
 import type { TagColor } from './types'
 
 const PRESET_COLORS = [
-  'magenta', 'red', 'volcano', 'orange', 'gold',
-  'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple',
-  'success', 'processing', 'error', 'warning', 'default',
+  'magenta',
+  'red',
+  'volcano',
+  'orange',
+  'gold',
+  'lime',
+  'green',
+  'cyan',
+  'blue',
+  'geekblue',
+  'purple',
+  'success',
+  'processing',
+  'error',
+  'warning',
+  'default',
 ]
 
 export const Tag = defineComponent({
@@ -32,9 +45,7 @@ export const Tag = defineComponent({
     const prefixCls = usePrefixCls('tag')
     const visible = ref(true)
 
-    const isPresetColor = computed(() =>
-      props.color ? PRESET_COLORS.includes(props.color) : false,
-    )
+    const isPresetColor = computed(() => (props.color ? PRESET_COLORS.includes(props.color) : false))
 
     const classes = computed(() =>
       cls(prefixCls, {

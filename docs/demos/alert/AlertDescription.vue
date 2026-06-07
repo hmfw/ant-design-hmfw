@@ -1,17 +1,7 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <Alert
-      message="成功提示"
-      description="详细的成功描述和对此次成功的说明。"
-      type="success"
-      show-icon
-    />
-    <Alert
-      message="错误提示"
-      description="详细的错误描述和对此次错误的说明。"
-      type="error"
-      show-icon
-    />
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <Alert message="成功提示" description="详细的成功描述和对此次成功的说明。" type="success" show-icon />
+    <Alert message="错误提示" description="详细的错误描述和对此次错误的说明。" type="error" show-icon />
   </div>
 </template>
 

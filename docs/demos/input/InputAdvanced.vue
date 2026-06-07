@@ -5,7 +5,7 @@
       <Input
         v-model:value="value1"
         placeholder="自定义样式的 Input"
-        :classNames="{
+        :class-names="{
           affixWrapper: 'custom-wrapper',
           input: 'custom-input',
           prefix: 'custom-prefix',
@@ -22,9 +22,9 @@
       <Input
         v-model:value="value2"
         placeholder="带字符计数"
-        :maxLength="50"
-        :showCount="true"
-        :classNames="{ count: 'custom-count' }"
+        :max-length="50"
+        :show-count="true"
+        :class-names="{ count: 'custom-count' }"
         :styles="{ count: { color: '#52c41a', fontWeight: 'bold' } }"
       />
     </Space>
@@ -35,10 +35,12 @@
         v-model:value="textareaValue"
         placeholder="按 Enter 键触发事件（可以用 Ctrl+Enter 换行）"
         :rows="4"
-        @pressEnter="handlePressEnter"
+        @press-enter="handlePressEnter"
       />
       <div v-if="pressEnterCount > 0" style="padding: 8px; background: #f0f9ff; border-radius: 4px">
-        <span>Enter 键被按下了 <strong>{{ pressEnterCount }}</strong> 次</span>
+        <span
+          >Enter 键被按下了 <strong>{{ pressEnterCount }}</strong> 次</span
+        >
       </div>
     </Space>
 
@@ -47,9 +49,9 @@
       v-model:value="styledTextareaValue"
       placeholder="带样式的 TextArea"
       :rows="3"
-      :showCount="true"
-      :maxLength="200"
-      :classNames="{ textarea: 'custom-textarea', count: 'custom-count' }"
+      :show-count="true"
+      :max-length="200"
+      :class-names="{ textarea: 'custom-textarea', count: 'custom-count' }"
       :styles="{
         textarea: { borderColor: '#722ed1', borderRadius: '8px' },
         count: { color: '#722ed1', fontSize: '14px' },

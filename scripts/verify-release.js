@@ -42,7 +42,6 @@ try {
   if (currentVersion.includes('-')) {
     console.log(`   ℹ️  这是一个预发布版本 (pre-release)\n`)
   }
-
 } catch (error) {
   console.log(`   ❌ 读取 package.json 失败: ${error.message}\n`)
   hasErrors = true
@@ -120,16 +119,13 @@ try {
     type: 'module',
   }
 
-  writeFileSync(
-    resolve(testDir, 'package.json'),
-    JSON.stringify(testPackageJson, null, 2)
-  )
+  writeFileSync(resolve(testDir, 'package.json'), JSON.stringify(testPackageJson, null, 2))
 
   // 安装本地包
   console.log('   正在安装本地包...')
   execSync(`npm install ${resolve(rootDir, tarballName)}`, {
     stdio: 'pipe',
-    cwd: testDir
+    cwd: testDir,
   })
 
   // 验证安装
@@ -142,7 +138,7 @@ try {
     const requiredFiles = ['dist/index.js', 'dist/index.cjs', 'dist/style.css', 'README.md', 'LICENSE']
     const installedDir = resolve(testDir, 'node_modules/ant-design-hmfw')
 
-    requiredFiles.forEach(file => {
+    requiredFiles.forEach((file) => {
       if (existsSync(resolve(installedDir, file))) {
         console.log(`   ✅ ${file}`)
       } else {
@@ -150,7 +146,6 @@ try {
         hasErrors = true
       }
     })
-
   } else {
     console.log('   ❌ 安装失败！\n')
     hasErrors = true
@@ -161,7 +156,6 @@ try {
   rmSync(testDir, { recursive: true, force: true })
   rmSync(resolve(rootDir, tarballName), { force: true })
   console.log('   ✅ 清理完成\n')
-
 } catch (error) {
   console.log(`   ❌ 本地安装测试失败: ${error.message}\n`)
   hasErrors = true
@@ -198,15 +192,12 @@ try {
     type: 'module',
   }
 
-  writeFileSync(
-    resolve(importTestDir, 'package.json'),
-    JSON.stringify(testPackageJson, null, 2)
-  )
+  writeFileSync(resolve(importTestDir, 'package.json'), JSON.stringify(testPackageJson, null, 2))
 
   // 安装包
   execSync(`npm install ${resolve(rootDir, tarballName)} vue@3`, {
     stdio: 'pipe',
-    cwd: importTestDir
+    cwd: importTestDir,
   })
 
   // 测试 ESM 导入
@@ -236,7 +227,6 @@ console.log('Select:', typeof Select)
   rmSync(importTestDir, { recursive: true, force: true })
   rmSync(resolve(rootDir, tarballName), { force: true })
   console.log('   ✅ 清理完成\n')
-
 } catch (error) {
   console.log(`   ❌ 导入测试失败: ${error.message}\n`)
   hasErrors = true
@@ -262,7 +252,10 @@ try {
   }
 
   // 检查当前分支
-  const currentBranch = execSync('git branch --show-current', { encoding: 'utf-8', cwd: rootDir }).trim()
+  const currentBranch = execSync('git branch --show-current', {
+    encoding: 'utf-8',
+    cwd: rootDir,
+  }).trim()
   console.log(`   当前分支: ${currentBranch}`)
 
   if (currentBranch !== 'main' && currentBranch !== 'master') {
@@ -271,7 +264,6 @@ try {
   } else {
     console.log('   ✅ 在主分支上\n')
   }
-
 } catch (error) {
   console.log(`   ⚠️  Git 检查失败: ${error.message}\n`)
 }
@@ -299,7 +291,6 @@ try {
     console.log('   ⚠️  不是官方 registry\n')
     warnings.push(`当前 registry: ${registry}`)
   }
-
 } catch (error) {
   console.log(`   ⚠️  NPM 配置检查失败: ${error.message}\n`)
 }
@@ -314,7 +305,7 @@ if (hasErrors) {
   process.exit(1)
 } else if (warnings.length > 0) {
   console.log('⚠️  发布流程验证通过，但有以下警告：\n')
-  warnings.forEach(warning => console.log(`   • ${warning}`))
+  warnings.forEach((warning) => console.log(`   • ${warning}`))
   console.log('\n建议处理这些警告后再发布。\n')
 } else {
   console.log('✅ 发布流程验证全部通过！\n')

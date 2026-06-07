@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 16px; align-items: center;">
+  <div style="display: flex; gap: 16px; align-items: center">
     <!-- 自定义 z-index -->
     <Popconfirm
       title="自定义 z-index"
@@ -24,22 +24,12 @@
     </Popconfirm>
 
     <!-- 隐藏箭头 -->
-    <Popconfirm
-      title="无箭头气泡框"
-      ok-text="确定"
-      cancel-text="取消"
-      :arrow="false"
-    >
+    <Popconfirm title="无箭头气泡框" ok-text="确定" cancel-text="取消" :arrow="false">
       <button>隐藏箭头</button>
     </Popconfirm>
 
     <!-- 箭头指向中心 -->
-    <Popconfirm
-      title="箭头指向中心"
-      ok-text="确定"
-      cancel-text="取消"
-      :arrow="{ pointAtCenter: true }"
-    >
+    <Popconfirm title="箭头指向中心" ok-text="确定" cancel-text="取消" :arrow="{ pointAtCenter: true }">
       <button>箭头指向中心</button>
     </Popconfirm>
   </div>

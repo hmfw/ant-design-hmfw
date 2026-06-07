@@ -1,20 +1,9 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  h,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { defineComponent, ref, computed, h, type PropType, type VNode } from 'vue'
 import { Tooltip } from '../tooltip'
 import { Button } from '../button'
 import { usePrefixCls, useLocale } from '../config-provider'
 import type { ButtonProps } from '../button/types'
-import type {
-  TooltipPlacement,
-  TooltipTrigger,
-  TooltipArrow,
-} from '../tooltip/types'
+import type { TooltipPlacement, TooltipTrigger, TooltipArrow } from '../tooltip/types'
 import type { PopconfirmContent, PopconfirmOkType } from './types'
 
 /**
@@ -62,7 +51,7 @@ export const Popconfirm = defineComponent({
 
     const innerOpen = ref(props.defaultOpen ?? false)
     const isControlled = computed(() => props.open !== undefined)
-    const visibleOpen = computed(() => isControlled.value ? props.open! : innerOpen.value)
+    const visibleOpen = computed(() => (isControlled.value ? props.open! : innerOpen.value))
 
     const setOpen = (v: boolean) => {
       if (props.disabled && v) return
@@ -75,10 +64,7 @@ export const Popconfirm = defineComponent({
      * Resolve render-fn / VNode / string content. The slot takes precedence
      * over the prop (so consumers can swap a default-string prop with rich VNodes).
      */
-    const resolveNode = (
-      value: PopconfirmContent | undefined,
-      slot: (() => VNode[] | undefined) | undefined,
-    ) => {
+    const resolveNode = (value: PopconfirmContent | undefined, slot: (() => VNode[] | undefined) | undefined) => {
       if (slot) return slot()
       if (typeof value === 'function') return (value as () => VNode | string | number)()
       if (value !== undefined && value !== null && value !== '') return value
@@ -126,15 +112,12 @@ export const Popconfirm = defineComponent({
       // Tooltip's wrapper.
       const overlayChildren: VNode[] = [
         h('div', { class: `${prefixCls}-message` }, [
-          iconNode &&
-            h('span', { class: `${prefixCls}-message-icon` }, iconNode as VNode),
+          iconNode && h('span', { class: `${prefixCls}-message-icon` }, iconNode as VNode),
           h('div', { class: `${prefixCls}-message-title` }, titleNode as VNode),
         ]),
       ]
       if (descriptionNode) {
-        overlayChildren.push(
-          h('div', { class: `${prefixCls}-description` }, descriptionNode as VNode),
-        )
+        overlayChildren.push(h('div', { class: `${prefixCls}-description` }, descriptionNode as VNode))
       }
       overlayChildren.push(
         h('div', { class: `${prefixCls}-buttons` }, [

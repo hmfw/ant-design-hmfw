@@ -69,6 +69,7 @@ components/{name}/
 #### **数据录入组件**
 
 **Form 表单**
+
 - [x] 缺少 `scrollToFirstError` 方法（表单验证失败后自动滚动）
 - [x] 缺少 `preserve` 属性（字段卸载时是否保留值）
 - [x] 缺少 `validateTrigger` 全局配置
@@ -76,12 +77,14 @@ components/{name}/
 - [x] 表单联动场景未充分测试（依赖验证、动态字段）
 
 **Input 输入框**
+
 - [x] 缺少 `count` / `showCount` 组合属性（字符计数显示）
 - [x] 缺少 `status` 属性（error / warning 状态）
 - [x] `onPressEnter` 在 Input.TextArea 中未实现
 - [x] 缺少 `classNames` / `styles` 细粒度样式控制
 
 **Select 选择器**
+
 - [x] 大数据场景性能问题（未实现虚拟滚动）
 - [x] 缺少 `fieldNames` 自定义字段名
 - [x] 缺少 `labelRender` 自定义渲染选中标签
@@ -89,12 +92,14 @@ components/{name}/
 - [x] 多选模式下 `maxTagCount` / `maxTagPlaceholder` 缺失
 
 **DatePicker 日期选择器**
+
 - [x] 缺少 `presets` 快捷选项（今天、本周、本月等）
 - [x] 缺少 `cellRender` 自定义单元格内容
 - [x] 范围选择器缺少 `onCalendarChange` 回调
 - [x] 时间面板交互与 AntD 有差异
 
 **Checkbox / Radio**
+
 - [x] 缺少 `skipGroup` 属性（跳过 CheckboxGroup 控制）
 - [x] Radio.Button 样式与 AntD 不一致
 - [x] 缺少 `id` 属性自动绑定到原生 input
@@ -102,6 +107,7 @@ components/{name}/
 #### **数据展示组件**
 
 **Table 表格**
+
 - [x] **严重**: 虚拟滚动未实现（大数据场景卡顿）
 - [x] 缺少 `sticky` 吸顶功能
 - [x] 树形数据展开/收起动画缺失
@@ -110,12 +116,14 @@ components/{name}/
 - [x] 缺少 `onChange` 的 `extra` 参数（当前分页器信息）
 
 **Tree 树形控件**
+
 - [x] 虚拟滚动未实现
 - [x] 缺少 `fieldNames` 自定义字段
 - [x] 缺少 `blockNode` 块级节点
 - [x] 拖拽功能缺少边界检查
 
 **List 列表**
+
 - [x] 缺少 `grid.column` 响应式配置（xs/sm/md/lg/xl）
 - [x] 虚拟滚动未实现
 - [x] 无限滚动示例缺失
@@ -123,12 +131,14 @@ components/{name}/
 #### **反馈组件**
 
 **Modal 对话框**
+
 - [x] 缺少 `modalRender` 自定义渲染容器
 - [x] 缺少 `focusTriggerAfterClose` 控制焦点返回（注：焦点管理功能复杂，已部分实现）
 - [x] 静态方法 `Modal.confirm` 的 `icon` 不支持自定义组件
 - [x] 缺少 `classNames` / `styles` 细粒度控制
 
 **Message / Notification**
+
 - [x] 缺少 `top` / `bottom` 偏移量配置
 - [x] 缺少 `prefixCls` 自定义样式前缀
 - [x] 缺少 `getContainer` 挂载节点配置（注：已通过 Teleport 实现）
@@ -141,23 +151,27 @@ components/{name}/
 #### **导航组件**
 
 **Menu 菜单**
+
 - [x] 缺少 `triggerSubMenuAction` 配置（hover / click）
 - [x] 内联模式缩进计算与 AntD 有差异
 - [x] 缺少 `itemIcon` / `expandIcon` 全局图标配置
 - [x] 菜单项 Tooltip 在收起状态下未显示
 
 **Tabs 标签页**
+
 - [x] 缺少 `renderTabBar` 自定义标签栏
 - [x] 缺少 `popupClassName` 配置下拉菜单样式
 - [x] 卡片模式下新增/删除动画缺失
 - [x] 缺少 `centered` 居中模式
 
 **Breadcrumb 面包屑**
+
 - [x] 缺少 `itemRender` 自定义渲染项
 - [x] 缺少路由集成示例（vue-router）
 - [x] 下拉菜单样式与 AntD 不一致
 
 **Pagination 分页**
+
 - [x] 缺少 `showTitle` 控制 title 显示
 - [x] 缺少 `itemRender` 自定义渲染项
 - [x] 简洁模式样式与 AntD 有差异
@@ -165,31 +179,37 @@ components/{name}/
 #### **布局组件**
 
 **Layout**
+
 - [x] Sider 响应式断点未完全实现
 - [x] 缺少 `zero-width` 触发器样式（注：已通过 trigger=null 支持）
 - [x] 主题切换动画缺失
 
 **Grid (Row / Col)**
+
 - [x] 缺少 `wrap` 属性控制换行
 - [x] 响应式 gutter 数组格式未支持 `[horizontal, vertical]`
 
 **Space**
+
 - [x] 缺少 `split` 分隔符
 - [x] 垂直模式下对齐方式异常
 
 #### **反馈组件（续）**
 
 **Drawer 抽屉**
+
 - [x] 缺少 `rootClassName` / `rootStyle`
 - [x] 缺少 `contentWrapperStyle` 控制内容包裹层
 - [x] 多层 Drawer 时遮罩层级混乱（通过 DrawerManager 自动管理）
 
 **Popconfirm 气泡确认框**
+
 - [x] 缺少 `showCancel` 控制取消按钮显示
 - [x] 缺少 `okButtonProps` / `cancelButtonProps` 按钮属性透传
 - [x] 图标自定义受限
 
 **Tooltip / Popover**
+
 - [x] 缺少 `arrow.pointAtCenter` 箭头居中
 - [x] 缺少 `fresh` 属性强制重新计算位置
 - [x] 动态内容时定位不更新
@@ -197,21 +217,25 @@ components/{name}/
 #### **数据展示（续）**
 
 **Card 卡片**
+
 - [x] 缺少 `tabBarExtraContent` 标签栏额外内容
 - [x] 加载状态骨架屏样式与 AntD 不一致
 - [x] Grid 卡片缺少 hover 效果
 
 **Descriptions 描述列表**
+
 - [x] 缺少 `contentStyle` / `labelStyle` 样式控制
 - [x] 垂直模式下边框样式异常
 - [x] 响应式列数计算有误
 
 **Timeline 时间轴**
+
 - [x] 缺少 `label` 标签（左右布局时使用）
 - [x] 缺少自定义位置模式
 - [x] 图标垂直居中问题
 
 **Statistic 统计数值**
+
 - [x] 缺少 `loading` 加载状态
 - [x] 数字滚动动画未实现（注：实现为 valueRender 自定义渲染）
 - [x] 倒计时完成回调 `onFinish` 缺失
@@ -223,15 +247,18 @@ components/{name}/
 #### **通用组件**
 
 **Button**
+
 - [x] 缺少 `classNames` / `styles` 细粒度控制
 - [x] `iconPosition` 为 'end' 时间距调整
 - [x] 紧凑模式样式细节
 
 **Icon**
+
 - [x] 图标库未完全同步 AntD v6 最新版本（注：补全 79 个常用图标）
 - [x] 缺少自定义图标脚本文件（注：scripts/examples/build-custom-icons.ts）
 
 **Typography**
+
 - [x] 缺少 `onEllipsis` 省略时回调
 - [x] `ellipsis.tooltip` 不支持自定义配置
 - [x] 代码块复制功能图标未本地化
@@ -239,41 +266,49 @@ components/{name}/
 #### **数据录入（续）**
 
 **Upload 上传**
+
 - [x] 缺少 `isImageUrl` 自定义图片判断
 - [x] 缺少 `itemRender` 自定义文件列表项
 - [x] 拖拽上传动画效果缺失
 - [x] 大文件分片上传示例缺失
 
 **Cascader 级联选择**
+
 - [x] 缺少 `displayRender` 自定义渲染显示
 - [x] 搜索模式下高亮匹配字符未实现
 - [x] 缺少 `showCheckedStrategy` 控制回填策略
 
 **Transfer 穿梭框**
+
 - [x] 缺少 `selectAllLabels` 自定义全选文本（注：现状已实现，新增补强）
 - [x] 缺少 `oneWay` 单向模式（注：现状已实现，新增补强）
 - [x] 拖拽排序功能缺失
 
 **Rate 评分**
+
 - [x] 缺少 `tooltips` 提示文案数组（注：现状已实现，补 Home/End 等键盘增强）
 - [x] 半星模式交互不流畅
 - [x] 键盘操作支持不完整
 
 **Slider 滑动输入条**
+
 - [x] 缺少 `keyboard` 控制键盘事件响应（注：现状已实现，补强配置项）
 - [x] 垂直模式下 Tooltip 位置异常
 - [x] 范围滑块拖拽越界问题
 
 **Switch 开关**
+
 - [x] 缺少 `loading` 加载状态（注：现状已实现，补样式优化与异步 onChange）
 - [x] `unCheckedChildren` 长文本时样式异常
 
 **TimePicker 时间选择器**
+
 - [x] 缺少 `needConfirm` 控制是否需要确认
 - [x] 12 小时制切换动画缺失
 - [x] 滚动到选中项性能优化
 
 **TreeSelect 树选择**
+
 - [x] 虚拟滚动未实现
 - [x] 缺少 `treeIcon` 配置
 - [x] 多选标签显示策略与 AntD 不一致
@@ -281,68 +316,82 @@ components/{name}/
 #### **数据展示（续）**
 
 **Avatar 头像**
+
 - [x] 缺少 `crossOrigin` / `referrerPolicy` 图片属性
 - [x] Group 最大数量超出时省略样式
 - [x] 响应式大小配置缺失
 
 **Badge 徽标**
+
 - [x] Ribbon 缎带模式缺少 `placement` 配置
 - [x] 数字滚动动画缺失
 - [x] `status` 点状态颜色自定义受限
 
 **Calendar 日历**
+
 - [x] 缺少 `cellRender` v6 新 API
 - [x] 自定义头部渲染复杂场景支持不足
 - [x] 范围选择模式缺失
 
 **Carousel 走马灯**
+
 - [x] 缺少 `waitForAnimate` 动画等待
 - [x] 缺少 `adaptiveHeight` 自适应高度
 - [x] 切换动画性能优化
 
 **Collapse 折叠面板**
+
 - [x] 缺少 `collapsible` 配置每个面板是否可折叠
 - [x] 缺少 `showArrow` 控制箭头显示
 - [x] 展开/收起动画抖动
 
 **Empty 空状态**
+
 - [x] 缺少暗黑模式图片
 - [x] 自定义图片尺寸配置缺失
 
 **Image 图片**
+
 - [x] 预览组件缺少 `toolbarRender` 自定义工具栏
 - [x] 多图预览切换动画卡顿
 - [x] 缺少 `imageRender` 自定义渲染
 
 **Popover**
+
 - [x] `_InternalPanelDoNotUseOrYouWillBeFired` 内部组件未实现
 
 **Progress 进度条**
+
 - [x] 缺少 `steps` 步骤进度条
 - [x] 缺少 `success.percent` 成功进度段
 - [x] 仪表盘模式渐变色显示异常
 
 **Segmented 分段控制器**
+
 - [x] 缺少 `options` 的 `className` / `style` 配置
 - [x] 切换动画滑块位置计算偏差
 - [x] 图标+文本模式布局优化
 
 **Skeleton 骨架屏**
+
 - [x] 缺少 `node` 自定义节点
 - [x] 动画性能优化
 - [x] 暗黑模式下颜色对比度不足
 
 **Spin 加载中**
+
 - [x] 缺少 `fullscreen` 全屏模式
 - [x] 自定义指示器大小适配问题
 - [x] 延迟显示时间计算不准确
 
 **Tag 标签**
+
 - [x] 缺少 `bordered` 控制边框
 - [x] 缺少 `closeIcon` 自定义关闭图标
 - [x] CheckableTag 样式与 AntD 有差异
 
 **Watermark 水印**
+
 - [x] 缺少 `inherit` 继承父元素尺寸
 - [x] 多行文本水印布局优化
 - [x] 防删除保护机制
@@ -350,11 +399,13 @@ components/{name}/
 #### **反馈组件（续）**
 
 **Alert 警告提示**
+
 - [x] 缺少 `action` 自定义操作项
 - [x] Banner 模式边距调整
 - [x] 图标与文本垂直对齐问题
 
 **Result 结果**
+
 - [x] 缺少 `extra` 额外内容配置
 - [x] 自定义图标尺寸不生效
 - [x] 暗黑模式下颜色适配
@@ -364,11 +415,13 @@ components/{name}/
 ## 💡 使用说明
 
 每次完成一个 TODO 项时：
+
 1. 在对应行前加 `[x]` 标记完成
 2. 在 COMPARISON.md 中更新对应组件的状态
 3. 提交 commit，消息格式：`feat(组件名): 完成 XX 功能`
 
 需要调整优先级时：
+
 - 移动 TODO 项到对应优先级区域
 - 在项目后添加调整原因注释
 

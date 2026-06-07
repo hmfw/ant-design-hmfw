@@ -24,7 +24,7 @@ export function getSuccessPercent({ success }: Pick<ProgressProps, 'success'>): 
 export function getSize(
   size: ProgressProps['size'],
   type: 'line' | 'circle' | 'dashboard' | 'step',
-  extra?: { steps?: number; strokeWidth?: number }
+  extra?: { steps?: number; strokeWidth?: number },
 ): [number, number] {
   let width = -1
   let height = -1
@@ -84,7 +84,7 @@ export function handleGradient(strokeColor: ProgressGradient, isRTL = false): st
   if (restEntries.length > 0) {
     const stops = restEntries
       .map(([key, value]) => ({ key: parseFloat(String(key).replace(/%/g, '')), value }))
-      .filter(item => !isNaN(item.key))
+      .filter((item) => !isNaN(item.key))
       .sort((a, b) => a.key - b.key)
       .map(({ key, value }) => `${value} ${key}%`)
       .join(', ')
@@ -110,7 +110,7 @@ export function isLightColor(color?: string): boolean {
     if (value.length === 3) {
       value = value
         .split('')
-        .map(c => c + c)
+        .map((c) => c + c)
         .join('')
     }
     if (value.length >= 6) {
@@ -123,8 +123,8 @@ export function isLightColor(color?: string): boolean {
   } else {
     const m = hex.match(/rgba?\(([^)]+)\)/i)
     if (!m) return false
-    const parts = m[1].split(',').map(s => parseFloat(s.trim()))
-    if (parts.length < 3 || parts.some(n => isNaN(n))) return false
+    const parts = m[1].split(',').map((s) => parseFloat(s.trim()))
+    if (parts.length < 3 || parts.some((n) => isNaN(n))) return false
     ;[r, g, b] = parts as [number, number, number]
   }
 
@@ -140,9 +140,7 @@ export function pickFirstColor(strokeColor?: string | string[] | ProgressGradien
   if (Array.isArray(strokeColor)) return strokeColor[0]
   // gradient: 取 from / 第一个 % key
   if ('from' in strokeColor && typeof strokeColor.from === 'string') return strokeColor.from
-  const stops = Object.entries(strokeColor).filter(
-    ([k, v]) => k !== 'direction' && typeof v === 'string'
-  )
+  const stops = Object.entries(strokeColor).filter(([k, v]) => k !== 'direction' && typeof v === 'string')
   if (stops.length > 0) return stops[0][1] as string
   return undefined
 }
@@ -153,9 +151,7 @@ export function pickFirstColor(strokeColor?: string | string[] | ProgressGradien
  * - 百分比 key（如 `0%`、`50%`）按数值升序排序
  * 返回供 <stop offset stop-color> 使用的数组。
  */
-export function getCircleGradientStops(
-  gradient: ProgressGradient
-): { offset: string; color: string }[] {
+export function getCircleGradientStops(gradient: ProgressGradient): { offset: string; color: string }[] {
   const { from, to, direction: _direction, ...rest } = gradient as Record<string, string | undefined>
   const restEntries = Object.entries(rest).filter(([, v]) => typeof v === 'string') as [string, string][]
 
@@ -165,7 +161,7 @@ export function getCircleGradientStops(
         offsetNum: parseFloat(String(key).replace(/%/g, '')),
         color,
       }))
-      .filter(item => !isNaN(item.offsetNum))
+      .filter((item) => !isNaN(item.offsetNum))
       .sort((a, b) => a.offsetNum - b.offsetNum)
       .map(({ offsetNum, color }) => ({ offset: `${offsetNum}%`, color }))
   }

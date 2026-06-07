@@ -67,11 +67,11 @@
 - `message.warning(content, [duration], onClose)`
 - `message.loading(content, [duration], onClose)`
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| content | 提示内容 | `string \| number \| VNode \| () => VNodeChild \| config` | - |
-| duration | 自动关闭的延时，单位秒。设为 0 时不自动关闭。也可直接传入 `onClose` 回调 | `number \| () => void` | `3` |
-| onClose | 关闭时触发的回调函数 | `() => void` | - |
+| 参数     | 说明                                                                     | 类型                                                      | 默认值 |
+| -------- | ------------------------------------------------------------------------ | --------------------------------------------------------- | ------ |
+| content  | 提示内容                                                                 | `string \| number \| VNode \| () => VNodeChild \| config` | -      |
+| duration | 自动关闭的延时，单位秒。设为 0 时不自动关闭。也可直接传入 `onClose` 回调 | `number \| () => void`                                    | `3`    |
+| onClose  | 关闭时触发的回调函数                                                     | `() => void`                                              | -      |
 
 所有方法均返回 `MessageType`：它既是一个可调用的函数（调用即手动关闭），又是 thenable，可通过 `.then()` 在关闭后执行回调。
 
@@ -94,18 +94,18 @@ message.success('成功', 1).then(() => {
 
 config 对象属性如下：
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| content | 提示内容 | `string \| number \| VNode \| () => VNodeChild` | - |
-| duration | 自动关闭的延时，单位秒。设为 0 时不自动关闭 | `number` | `3` |
-| type | 提示类型 | `'info' \| 'success' \| 'error' \| 'warning' \| 'loading'` | - |
-| icon | 自定义图标 | `VNode \| () => VNodeChild` | - |
-| key | 当前提示的唯一标识，相同 key 会更新已有提示 | `string \| number` | - |
-| style | 自定义内联样式 | `CSSProperties` | - |
-| className | 自定义 CSS class | `string` | - |
-| pauseOnHover | 悬停时是否暂停计时器，默认为全局配置的 `pauseOnHover` | `boolean` | `true` |
-| onClick | 点击时触发的回调函数 | `(e: MouseEvent) => void` | - |
-| onClose | 关闭时触发的回调函数 | `() => void` | - |
+| 参数         | 说明                                                  | 类型                                                       | 默认值 |
+| ------------ | ----------------------------------------------------- | ---------------------------------------------------------- | ------ |
+| content      | 提示内容                                              | `string \| number \| VNode \| () => VNodeChild`            | -      |
+| duration     | 自动关闭的延时，单位秒。设为 0 时不自动关闭           | `number`                                                   | `3`    |
+| type         | 提示类型                                              | `'info' \| 'success' \| 'error' \| 'warning' \| 'loading'` | -      |
+| icon         | 自定义图标                                            | `VNode \| () => VNodeChild`                                | -      |
+| key          | 当前提示的唯一标识，相同 key 会更新已有提示           | `string \| number`                                         | -      |
+| style        | 自定义内联样式                                        | `CSSProperties`                                            | -      |
+| className    | 自定义 CSS class                                      | `string`                                                   | -      |
+| pauseOnHover | 悬停时是否暂停计时器，默认为全局配置的 `pauseOnHover` | `boolean`                                                  | `true` |
+| onClick      | 点击时触发的回调函数                                  | `(e: MouseEvent) => void`                                  | -      |
+| onClose      | 关闭时触发的回调函数                                  | `() => void`                                               | -      |
 
 ### 全局方法
 
@@ -125,16 +125,17 @@ message.config({
 })
 ```
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| top | 消息距离顶部的位置，单位 px | `string \| number` | `8` |
-| duration | 默认自动关闭延时，单位秒 | `number` | `3` |
-| maxCount | 最大显示数，超过限制时关闭最早的提示 | `number` | - |
-| getContainer | 配置渲染节点的输出位置 | `() => HTMLElement` | `() => document.body` |
-| pauseOnHover | 悬停时是否暂停计时器（全局配置，单条消息可覆盖） | `boolean` | `true` |
-| prefixCls | 提示组件 class 前缀（预留，当前版本暂未实现） | `string` | `'hmfw-message'` |
+| 参数         | 说明                                             | 类型                | 默认值                |
+| ------------ | ------------------------------------------------ | ------------------- | --------------------- |
+| top          | 消息距离顶部的位置，单位 px                      | `string \| number`  | `8`                   |
+| duration     | 默认自动关闭延时，单位秒                         | `number`            | `3`                   |
+| maxCount     | 最大显示数，超过限制时关闭最早的提示             | `number`            | -                     |
+| getContainer | 配置渲染节点的输出位置                           | `() => HTMLElement` | `() => document.body` |
+| pauseOnHover | 悬停时是否暂停计时器（全局配置，单条消息可覆盖） | `boolean`           | `true`                |
+| prefixCls    | 提示组件 class 前缀（预留，当前版本暂未实现）    | `string`            | `'hmfw-message'`      |
 
 > **注意**：
+>
 > - 当设置 `top` 时，所有消息从顶部显示
 > - `pauseOnHover` 可在全局配置，也可在单条消息中覆盖
 > - 当前实现未支持 RTL（`rtl`）与 stack 折叠（`stack`）、`bottom` 定位，后续统一补充

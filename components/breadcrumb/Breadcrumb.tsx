@@ -51,12 +51,7 @@ export const Breadcrumb = defineComponent({
       default: () => ({}),
     },
     itemRender: Function as PropType<
-      (
-        item: BreadcrumbItemType,
-        params: Record<string, any>,
-        items: BreadcrumbItemType[],
-        paths: string[]
-      ) => VNode
+      (item: BreadcrumbItemType, params: Record<string, any>, items: BreadcrumbItemType[], paths: string[]) => VNode
     >,
   },
   setup(props) {
@@ -75,21 +70,22 @@ export const Breadcrumb = defineComponent({
 
       // 如果有下拉菜单，包裹在 Dropdown 中
       if (menu && menu.items && menu.items.length > 0) {
-        const linkContent = href !== undefined ? (
-          <a {...passedProps} class={cls(`${prefixCls}-link`, className)} href={href}>
-            <span class={`${prefixCls}-overlay-link`}>
-              {children}
-              <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
+        const linkContent =
+          href !== undefined ? (
+            <a {...passedProps} class={cls(`${prefixCls}-link`, className)} href={href}>
+              <span class={`${prefixCls}-overlay-link`}>
+                {children}
+                <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
+              </span>
+            </a>
+          ) : (
+            <span {...passedProps} class={cls(`${prefixCls}-link`, className)}>
+              <span class={`${prefixCls}-overlay-link`}>
+                {children}
+                <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
+              </span>
             </span>
-          </a>
-        ) : (
-          <span {...passedProps} class={cls(`${prefixCls}-link`, className)}>
-            <span class={`${prefixCls}-overlay-link`}>
-              {children}
-              <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
-            </span>
-          </span>
-        )
+          )
 
         return (
           <Dropdown menu={menu} trigger={['hover']}>
@@ -118,18 +114,14 @@ export const Breadcrumb = defineComponent({
       const paths: string[] = []
       // 提取所有非分隔符项用于 itemRender
       const breadcrumbItems = items.filter(
-        (item): item is BreadcrumbItemType => !('type' in item && item.type === 'separator')
+        (item): item is BreadcrumbItemType => !('type' in item && item.type === 'separator'),
       )
 
       const crumbs = items.map((item, index) => {
         if ('type' in item && item.type === 'separator') {
           const sepItem = item as BreadcrumbSeparatorType
           return (
-            <li
-              key={sepItem.key ?? `separator-${index}`}
-              class={`${prefixCls}-separator`}
-              aria-hidden="true"
-            >
+            <li key={sepItem.key ?? `separator-${index}`} class={`${prefixCls}-separator`} aria-hidden="true">
               {sepItem.separator === '' ? sepItem.separator : sepItem.separator || props.separator}
             </li>
           )

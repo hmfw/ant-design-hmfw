@@ -1,9 +1,9 @@
 <template>
-  <div style="display: flex; gap: 8px; align-items: center;">
+  <div style="display: flex; gap: 8px; align-items: center">
     <Button type="primary" shape="circle" :icon="SearchOutlined" />
-    <Button type="primary" shape="circle">A</Button>
-    <Button type="primary" shape="round">Round</Button>
-    <Button type="primary">Default</Button>
+    <Button type="primary" shape="circle"> A </Button>
+    <Button type="primary" shape="round"> Round </Button>
+    <Button type="primary"> Default </Button>
   </div>
 </template>
 

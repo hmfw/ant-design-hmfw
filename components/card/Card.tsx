@@ -60,7 +60,7 @@ export const Card = defineComponent({
           innerActiveKey.value = val
         }
       },
-      { immediate: true }
+      { immediate: true },
     )
 
     const handleTabChange = (key: string) => {
@@ -96,12 +96,11 @@ export const Card = defineComponent({
       const hasHead = props.title || slots.title || slots.extra
       const hasTabs = props.tabList && props.tabList.length > 0
 
-      const coverNode = slots.cover && (
-        <div class={`${prefixCls}-cover`}>{slots.cover()}</div>
-      )
+      const coverNode = slots.cover && <div class={`${prefixCls}-cover`}>{slots.cover()}</div>
 
       // 解析 loading 配置
-      const loadingConfig = typeof props.loading === 'object' ? props.loading : { avatar: false, paragraph: { rows: 3 } }
+      const loadingConfig =
+        typeof props.loading === 'object' ? props.loading : { avatar: false, paragraph: { rows: 3 } }
       const showAvatar = typeof props.loading === 'object' && loadingConfig.avatar
       const paragraphRows = typeof props.loading === 'object' ? (loadingConfig.paragraph?.rows ?? 3) : 3
 
@@ -122,9 +121,7 @@ export const Card = defineComponent({
               </div>
             ))}
           </div>
-          {slots.tabBarExtraContent && (
-            <div class={`${prefixCls}-tabs-extra`}>{slots.tabBarExtraContent()}</div>
-          )}
+          {slots.tabBarExtraContent && <div class={`${prefixCls}-tabs-extra`}>{slots.tabBarExtraContent()}</div>}
         </div>
       )
 
@@ -133,13 +130,9 @@ export const Card = defineComponent({
           {hasHead && (
             <div class={`${prefixCls}-head-wrapper`}>
               {(props.title || slots.title) && (
-                <div class={`${prefixCls}-head-title`}>
-                  {slots.title ? slots.title() : props.title}
-                </div>
+                <div class={`${prefixCls}-head-title`}>{slots.title ? slots.title() : props.title}</div>
               )}
-              {slots.extra && (
-                <div class={`${prefixCls}-extra`}>{slots.extra()}</div>
-              )}
+              {slots.extra && <div class={`${prefixCls}-extra`}>{slots.extra()}</div>}
             </div>
           )}
           {tabsNode}
@@ -166,9 +159,7 @@ export const Card = defineComponent({
         </div>
       )
 
-      const actionsNode = slots.actions && (
-        <ul class={`${prefixCls}-actions`}>{slots.actions()}</ul>
-      )
+      const actionsNode = slots.actions && <ul class={`${prefixCls}-actions`}>{slots.actions()}</ul>
 
       return (
         <div class={cls(classes.value, { [`${prefixCls}-contain-grid`]: hasGrid })}>
@@ -216,14 +207,10 @@ export const CardMeta = defineComponent({
 
     return () => (
       <div class={metaPrefixCls}>
-        {slots.avatar && (
-          <div class={`${metaPrefixCls}-avatar`}>{slots.avatar()}</div>
-        )}
+        {slots.avatar && <div class={`${metaPrefixCls}-avatar`}>{slots.avatar()}</div>}
         <div class={`${metaPrefixCls}-detail`}>
           {(props.title || slots.title) && (
-            <div class={`${metaPrefixCls}-title`}>
-              {slots.title ? slots.title() : props.title}
-            </div>
+            <div class={`${metaPrefixCls}-title`}>{slots.title ? slots.title() : props.title}</div>
           )}
           {(props.description || slots.description) && (
             <div class={`${metaPrefixCls}-description`}>

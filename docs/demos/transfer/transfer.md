@@ -61,59 +61,61 @@
 
 ### Transfer Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| dataSource | 数据源 | `TransferItem[]` | `[]` |
-| targetKeys (v-model) | 右侧列表的 key 集合 | `TransferKey[]` | `[]` |
-| selectedKeys (v-model) | 选中项的 key 集合 | `TransferKey[]` | `[]` |
-| titles | 标题集合 | `(VNode \| string)[]` | `['', '']` |
-| operations | 操作按钮文案（已废弃） | `string[]` | `[]` |
-| render | 自定义渲染函数 | `(item: TransferItem) => RenderResult` | - |
-| rowKey | 自定义提取 key | `(record: TransferItem) => TransferKey` | - |
-| showSearch | 显示搜索框 | `boolean \| TransferSearchOption` | `false` |
-| filterOption | 自定义搜索函数 | `(input: string, item: TransferItem, direction: TransferDirection) => boolean` | - |
-| footer | 列表底部渲染 | `(info: TransferListContext) => VNode \| string \| null` | - |
-| listStyle | 列表样式 | `CSSProperties \| ((info: { direction: TransferDirection }) => CSSProperties)` | - |
-| disabled | 是否禁用 | `boolean` | `false` |
-| showSelectAll | 是否展示全选勾选框 | `boolean` | `true` |
-| selectAllLabels | 自定义全选文案 | `SelectAllLabel[]` | - |
-| oneWay | 单向模式 | `boolean` | `false` |
-| draggable | 是否允许通过拖拽对右侧列表项排序 | `boolean` | `false` |
-| pagination | 分页配置 | `boolean \| PaginationType` | - |
-| status | 校验状态 | `'error' \| 'warning'` | - |
-| locale | 文案配置 | `Partial<TransferLocale>` | - |
-| rootClassName | 根元素 class | `string` | - |
-| classNames | 语义化 class | `TransferSemanticClassNames` | - |
-| styles | 语义化 style | `TransferSemanticStyles` | - |
+| 参数                   | 说明                             | 类型                                                                           | 默认值     |
+| ---------------------- | -------------------------------- | ------------------------------------------------------------------------------ | ---------- |
+| dataSource             | 数据源                           | `TransferItem[]`                                                               | `[]`       |
+| targetKeys (v-model)   | 右侧列表的 key 集合              | `TransferKey[]`                                                                | `[]`       |
+| selectedKeys (v-model) | 选中项的 key 集合                | `TransferKey[]`                                                                | `[]`       |
+| titles                 | 标题集合                         | `(VNode \| string)[]`                                                          | `['', '']` |
+| operations             | 操作按钮文案（已废弃）           | `string[]`                                                                     | `[]`       |
+| render                 | 自定义渲染函数                   | `(item: TransferItem) => RenderResult`                                         | -          |
+| rowKey                 | 自定义提取 key                   | `(record: TransferItem) => TransferKey`                                        | -          |
+| showSearch             | 显示搜索框                       | `boolean \| TransferSearchOption`                                              | `false`    |
+| filterOption           | 自定义搜索函数                   | `(input: string, item: TransferItem, direction: TransferDirection) => boolean` | -          |
+| footer                 | 列表底部渲染                     | `(info: TransferListContext) => VNode \| string \| null`                       | -          |
+| listStyle              | 列表样式                         | `CSSProperties \| ((info: { direction: TransferDirection }) => CSSProperties)` | -          |
+| disabled               | 是否禁用                         | `boolean`                                                                      | `false`    |
+| showSelectAll          | 是否展示全选勾选框               | `boolean`                                                                      | `true`     |
+| selectAllLabels        | 自定义全选文案                   | `SelectAllLabel[]`                                                             | -          |
+| oneWay                 | 单向模式                         | `boolean`                                                                      | `false`    |
+| draggable              | 是否允许通过拖拽对右侧列表项排序 | `boolean`                                                                      | `false`    |
+| pagination             | 分页配置                         | `boolean \| PaginationType`                                                    | -          |
+| status                 | 校验状态                         | `'error' \| 'warning'`                                                         | -          |
+| locale                 | 文案配置                         | `Partial<TransferLocale>`                                                      | -          |
+| rootClassName          | 根元素 class                     | `string`                                                                       | -          |
+| classNames             | 语义化 class                     | `TransferSemanticClassNames`                                                   | -          |
+| styles                 | 语义化 style                     | `TransferSemanticStyles`                                                       | -          |
 
 ### Transfer Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| change | 右侧列表变化时触发 | `(targetKeys: TransferKey[], direction: TransferDirection, moveKeys: TransferKey[])` |
-| selectChange | 选中项变化时触发 | `(sourceSelectedKeys: TransferKey[], targetSelectedKeys: TransferKey[])` |
-| search | 搜索框内容变化时触发 | `(direction: TransferDirection, value: string)` |
-| scroll | 列表滚动时触发 | `(direction: TransferDirection, e: Event)` |
-| reorder | 右侧列表通过拖拽重新排序后触发 | `(info: TransferReorderInfo)` |
+| 事件名       | 说明                           | 回调参数                                                                             |
+| ------------ | ------------------------------ | ------------------------------------------------------------------------------------ |
+| change       | 右侧列表变化时触发             | `(targetKeys: TransferKey[], direction: TransferDirection, moveKeys: TransferKey[])` |
+| selectChange | 选中项变化时触发               | `(sourceSelectedKeys: TransferKey[], targetSelectedKeys: TransferKey[])`             |
+| search       | 搜索框内容变化时触发           | `(direction: TransferDirection, value: string)`                                      |
+| scroll       | 列表滚动时触发                 | `(direction: TransferDirection, e: Event)`                                           |
+| reorder      | 右侧列表通过拖拽重新排序后触发 | `(info: TransferReorderInfo)`                                                        |
 
 ### TransferItem
 
-| 参数 | 说明 | 类型 |
-| --- | --- | --- |
-| key | 唯一标识 | `string \| number` |
-| title | 标题 | `string` |
-| description | 描述 | `string` |
-| disabled | 是否禁用 | `boolean` |
+| 参数        | 说明     | 类型               |
+| ----------- | -------- | ------------------ |
+| key         | 唯一标识 | `string \| number` |
+| title       | 标题     | `string`           |
+| description | 描述     | `string`           |
+| disabled    | 是否禁用 | `boolean`          |
 
 ### PaginationType
 
 ```ts
-type PaginationType = boolean | {
-  pageSize?: number
-  simple?: boolean
-  showSizeChanger?: boolean
-  showLessItems?: boolean
-}
+type PaginationType =
+  | boolean
+  | {
+      pageSize?: number
+      simple?: boolean
+      showSizeChanger?: boolean
+      showLessItems?: boolean
+    }
 ```
 
 ### TransferLocale

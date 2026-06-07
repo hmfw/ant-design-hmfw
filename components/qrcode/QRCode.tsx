@@ -36,9 +36,7 @@ function gfPoly(keys: number[]) {
   for (let i = 0; i < keys.length; i++) {
     const q = [1, GF_EXP[i]]
     const r = new Array(p.length + 1).fill(0)
-    for (let j = 0; j < p.length; j++)
-      for (let k = 0; k < q.length; k++)
-        r[j + k] ^= gfMul(p[j], q[k])
+    for (let j = 0; j < p.length; j++) for (let k = 0; k < q.length; k++) r[j + k] ^= gfMul(p[j], q[k])
     p = r
   }
   return p
@@ -111,7 +109,13 @@ function setAlignmentPattern(m: number[][], r: number, c: number) {
 }
 
 const ALIGN_POS: Record<number, number[]> = {
-  1: [], 2: [6, 18], 3: [6, 22], 4: [6, 26], 5: [6, 30], 6: [6, 34], 7: [6, 22, 38],
+  1: [],
+  2: [6, 18],
+  3: [6, 22],
+  4: [6, 26],
+  5: [6, 30],
+  6: [6, 34],
+  7: [6, 22, 38],
 }
 
 function applyMask(m: number[][], mask: number, size: number) {
@@ -121,14 +125,12 @@ function applyMask(m: number[][], mask: number, size: number) {
     (_: number, c: number) => c % 3 === 0,
     (r: number, c: number) => (r + c) % 3 === 0,
     (r: number, c: number) => (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0,
-    (r: number, c: number) => ((r * c) % 2 + (r * c) % 3) === 0,
-    (r: number, c: number) => ((r * c) % 2 + (r * c) % 3) % 2 === 0,
-    (r: number, c: number) => ((r + c) % 2 + (r * c) % 3) % 2 === 0,
+    (r: number, c: number) => ((r * c) % 2) + ((r * c) % 3) === 0,
+    (r: number, c: number) => (((r * c) % 2) + ((r * c) % 3)) % 2 === 0,
+    (r: number, c: number) => (((r + c) % 2) + ((r * c) % 3)) % 2 === 0,
   ]
   const fn = patterns[mask]
-  for (let r = 0; r < size; r++)
-    for (let c = 0; c < size; c++)
-      if (m[r][c] !== -1 && fn(r, c)) m[r][c] ^= 1
+  for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) if (m[r][c] !== -1 && fn(r, c)) m[r][c] ^= 1
 }
 
 function setFormatInfo(m: number[][], ecLevel: string, mask: number, size: number) {
@@ -140,13 +142,38 @@ function setFormatInfo(m: number[][], ecLevel: string, mask: number, size: numbe
   const bits = Array.from({ length: 15 }, (_, i) => (fmt >> (14 - i)) & 1)
 
   const pos1 = [
-    [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 7], [8, 8],
-    [7, 8], [5, 8], [4, 8], [3, 8], [2, 8], [1, 8], [0, 8],
+    [8, 0],
+    [8, 1],
+    [8, 2],
+    [8, 3],
+    [8, 4],
+    [8, 5],
+    [8, 7],
+    [8, 8],
+    [7, 8],
+    [5, 8],
+    [4, 8],
+    [3, 8],
+    [2, 8],
+    [1, 8],
+    [0, 8],
   ]
   const pos2 = [
-    [size - 1, 8], [size - 2, 8], [size - 3, 8], [size - 4, 8], [size - 5, 8],
-    [size - 6, 8], [size - 7, 8], [size - 8, 8], [8, size - 8],
-    [8, size - 7], [8, size - 6], [8, size - 5], [8, size - 4], [8, size - 3], [8, size - 2],
+    [size - 1, 8],
+    [size - 2, 8],
+    [size - 3, 8],
+    [size - 4, 8],
+    [size - 5, 8],
+    [size - 6, 8],
+    [size - 7, 8],
+    [size - 8, 8],
+    [8, size - 8],
+    [8, size - 7],
+    [8, size - 6],
+    [8, size - 5],
+    [8, size - 4],
+    [8, size - 3],
+    [8, size - 2],
   ]
 
   bits.forEach((b, i) => {
@@ -196,8 +223,12 @@ function generateQR(text: string, ecLevel: QRCodeErrorLevel = 'M'): boolean[][] 
   setFinderPattern(m, 0, size - 7)
   setFinderPattern(m, size - 7, 0)
   for (let i = 0; i < 8; i++) {
-    [0, size - 8].forEach((c) => { if (m[i][c] === -1) m[i][c] = 0 })
-    ;[0, size - 8].forEach((r) => { if (m[r][i] === -1) m[r][i] = 0 })
+    ;[0, size - 8].forEach((c) => {
+      if (m[i][c] === -1) m[i][c] = 0
+    })
+    ;[0, size - 8].forEach((r) => {
+      if (m[r][i] === -1) m[r][i] = 0
+    })
     if (m[size - 1 - i]?.[7] === -1) m[size - 1 - i][7] = 0
     if (m[7]?.[size - 1 - i] === -1) m[7][size - 1 - i] = 0
     if (m[size - 8]?.[i] === -1) m[size - 8][i] = 0
@@ -209,7 +240,8 @@ function generateQR(text: string, ecLevel: QRCodeErrorLevel = 'M'): boolean[][] 
   const ap = ALIGN_POS[version] ?? []
   for (let i = 0; i < ap.length; i++)
     for (let j = 0; j < ap.length; j++) {
-      const r = ap[i], c = ap[j]
+      const r = ap[i],
+        c = ap[j]
       if (m[r][c] === -1) setAlignmentPattern(m, r, c)
     }
 
@@ -256,7 +288,10 @@ export const QRCode = defineComponent({
     errorLevel: { type: String as PropType<QRCodeErrorLevel>, default: 'M' },
     status: { type: String as PropType<QRCodeStatus>, default: 'active' },
     icon: String,
-    iconSize: { type: [Number, Object] as PropType<number | { width: number; height: number }>, default: 40 },
+    iconSize: {
+      type: [Number, Object] as PropType<number | { width: number; height: number }>,
+      default: 40,
+    },
     bordered: { type: Boolean, default: true },
     statusRender: Function as PropType<(info: StatusRenderInfo) => any>,
     marginSize: Number,
@@ -282,7 +317,7 @@ export const QRCode = defineComponent({
     if (import.meta.env.DEV) {
       if (props.icon && props.errorLevel === 'L') {
         console.warn(
-          '[hmfw: QRCode] ErrorLevel `L` is not recommended to be used with `icon`, for scanning result would be affected by low level.'
+          '[hmfw: QRCode] ErrorLevel `L` is not recommended to be used with `icon`, for scanning result would be affected by low level.',
         )
       }
     }
@@ -302,7 +337,7 @@ export const QRCode = defineComponent({
       m.forEach((row, r) =>
         row.forEach((dark, c) => {
           if (dark) ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize)
-        })
+        }),
       )
       if (props.icon) {
         const img = new Image()
@@ -322,9 +357,20 @@ export const QRCode = defineComponent({
     onMounted(() => {
       if (props.type === 'canvas') drawCanvas()
     })
-    watch([() => props.value, () => props.size, () => props.color, () => props.bgColor, () => props.errorLevel, () => props.icon, () => props.iconSize], () => {
-      if (props.type === 'canvas') drawCanvas()
-    })
+    watch(
+      [
+        () => props.value,
+        () => props.size,
+        () => props.color,
+        () => props.bgColor,
+        () => props.errorLevel,
+        () => props.icon,
+        () => props.iconSize,
+      ],
+      () => {
+        if (props.type === 'canvas') drawCanvas()
+      },
+    )
 
     const renderSVG = () => {
       const m = matrix.value
@@ -373,10 +419,10 @@ export const QRCode = defineComponent({
 
       if (props.icon) {
         const iSize = iconSizeValue.value
-        const x = (matrixSize - iSize.width / props.size * matrixSize) / 2 + margin
-        const y = (matrixSize - iSize.height / props.size * matrixSize) / 2 + margin
-        const w = iSize.width / props.size * matrixSize
-        const h = iSize.height / props.size * matrixSize
+        const x = (matrixSize - (iSize.width / props.size) * matrixSize) / 2 + margin
+        const y = (matrixSize - (iSize.height / props.size) * matrixSize) / 2 + margin
+        const w = (iSize.width / props.size) * matrixSize
+        const h = (iSize.height / props.size) * matrixSize
         children.push(
           createElement('rect', {
             x: x - 0.1,
@@ -392,7 +438,7 @@ export const QRCode = defineComponent({
             width: w,
             height: h,
             crossOrigin: 'anonymous',
-          })
+          }),
         )
       }
 
@@ -408,11 +454,7 @@ export const QRCode = defineComponent({
           <>
             <p class={`${prefixCls}-expired`}>二维码过期</p>
             {info.onRefresh && (
-              <button
-                type="button"
-                class={`${prefixCls}-refresh`}
-                onClick={info.onRefresh}
-              >
+              <button type="button" class={`${prefixCls}-refresh`} onClick={info.onRefresh}>
                 <Icon component={LoadingOutlined} style={{ marginRight: '4px' }} />
                 点击刷新
               </button>
@@ -435,12 +477,9 @@ export const QRCode = defineComponent({
         return null
       }
 
-      const rootClasses = cls(
-        prefixCls,
-        {
-          [`${prefixCls}-borderless`]: !props.bordered,
-        }
-      )
+      const rootClasses = cls(prefixCls, {
+        [`${prefixCls}-borderless`]: !props.bordered,
+      })
 
       const canvasAttrs: Record<string, any> = {
         width: props.size,
@@ -464,11 +503,7 @@ export const QRCode = defineComponent({
             backgroundColor: props.bgColor,
           }}
         >
-          {props.type === 'canvas' ? (
-            <canvas ref={canvasRef} {...canvasAttrs} />
-          ) : (
-            renderSVG()
-          )}
+          {props.type === 'canvas' ? <canvas ref={canvasRef} {...canvasAttrs} /> : renderSVG()}
           {props.status !== 'active' && (
             <div class={`${prefixCls}-cover`}>
               {(props.statusRender ?? defaultStatusRender)({
@@ -482,11 +517,3 @@ export const QRCode = defineComponent({
     }
   },
 })
-
-
-
-
-
-
-
-

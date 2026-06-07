@@ -61,7 +61,9 @@ export const Select = defineComponent({
     tokenSeparators: Array as PropType<string[]>,
     optionRender: Function as PropType<(option: SelectOption, info: { index: number }) => any>,
     labelRender: Function as PropType<(props: LabeledValue) => any>,
-    tagRender: Function as PropType<(props: { label: string; value: string | number; closable: boolean; onClose: () => void }) => any>,
+    tagRender: Function as PropType<
+      (props: { label: string; value: string | number; closable: boolean; onClose: () => void }) => any
+    >,
     autoClearSearchValue: {
       type: Boolean,
       default: true,
@@ -137,25 +139,22 @@ export const Select = defineComponent({
       return [v as string | number]
     }
 
-    const innerValue = ref<(string | number)[] | undefined>(
-      extractRawValues(props.defaultValue ?? props.value),
-    )
+    const innerValue = ref<(string | number)[] | undefined>(extractRawValues(props.defaultValue ?? props.value))
     const innerOpen = ref(false)
     const searchText = ref('')
     const dropdownPos = ref({ top: 0, left: 0, width: 0 })
 
     const isControlled = computed(() => props.value !== undefined)
-    const currentRawValues = computed(() =>
-      isControlled.value ? extractRawValues(props.value) : innerValue.value,
+    const currentRawValues = computed(() => (isControlled.value ? extractRawValues(props.value) : innerValue.value))
+
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) innerValue.value = extractRawValues(v)
+      },
     )
 
-    watch(() => props.value, (v) => {
-      if (v !== undefined) innerValue.value = extractRawValues(v)
-    })
-
-    const isOpen = computed(() =>
-      props.open !== undefined ? props.open : innerOpen.value,
-    )
+    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
     const selectedValues = computed(() => currentRawValues.value ?? [])
 
@@ -194,7 +193,9 @@ export const Select = defineComponent({
           return props.filterOption(input, opt)
         }
         if (props.filterOption === false) return true
-        return String(opt[labelField.value as keyof SelectOption]).toLowerCase().includes(input)
+        return String(opt[labelField.value as keyof SelectOption])
+          .toLowerCase()
+          .includes(input)
       })
     })
 
@@ -234,7 +235,7 @@ export const Select = defineComponent({
     const updateValue = (rawVals: (string | number)[] | undefined) => {
       innerValue.value = rawVals
       const emitVal = buildEmitValue(rawVals)
-      const emitOpts = rawVals && rawVals.length > 0 ? buildEmitOptions(rawVals) : (isMultiple.value ? [] : undefined)
+      const emitOpts = rawVals && rawVals.length > 0 ? buildEmitOptions(rawVals) : isMultiple.value ? [] : undefined
       emit('update:value', emitVal)
       emit('change', emitVal, emitOpts)
     }
@@ -288,7 +289,10 @@ export const Select = defineComponent({
       if (isTags.value && props.tokenSeparators && props.tokenSeparators.length > 0) {
         for (const sep of props.tokenSeparators) {
           if (val.includes(sep)) {
-            const tokens = val.split(sep).map((t) => t.trim()).filter(Boolean)
+            const tokens = val
+              .split(sep)
+              .map((t) => t.trim())
+              .filter(Boolean)
             const vals = [...selectedValues.value]
             tokens.forEach((token) => {
               if (!vals.includes(token)) {
@@ -349,10 +353,7 @@ export const Select = defineComponent({
 
     const handleOutsideClick = (e: MouseEvent) => {
       if (!isOpen.value) return
-      if (
-        selectorRef.value?.contains(e.target as Node) ||
-        dropdownRef.value?.contains(e.target as Node)
-      ) return
+      if (selectorRef.value?.contains(e.target as Node) || dropdownRef.value?.contains(e.target as Node)) return
       closeDropdown()
     }
 
@@ -382,16 +383,16 @@ export const Select = defineComponent({
       const showClear = props.allowClear && hasValue && !props.disabled
 
       const displayTags = isMultiple.value
-        ? (props.maxTagCount !== undefined
+        ? props.maxTagCount !== undefined
           ? selectedValues.value.slice(0, props.maxTagCount)
-          : selectedValues.value)
+          : selectedValues.value
         : []
-      const overflowCount = isMultiple.value && props.maxTagCount !== undefined
-        ? Math.max(0, selectedValues.value.length - props.maxTagCount)
-        : 0
-      const omittedValues = isMultiple.value && props.maxTagCount !== undefined
-        ? selectedValues.value.slice(props.maxTagCount)
-        : []
+      const overflowCount =
+        isMultiple.value && props.maxTagCount !== undefined
+          ? Math.max(0, selectedValues.value.length - props.maxTagCount)
+          : 0
+      const omittedValues =
+        isMultiple.value && props.maxTagCount !== undefined ? selectedValues.value.slice(props.maxTagCount) : []
 
       const renderTag = (val: string | number, idx: number) => {
         const label = selectedLabels.value[selectedValues.value.indexOf(val)]
@@ -405,10 +406,7 @@ export const Select = defineComponent({
           <span key={val} class={`${prefixCls}-selection-item`}>
             <span class={`${prefixCls}-selection-item-content`}>{label}</span>
             {!props.disabled && (
-              <span
-                class={`${prefixCls}-selection-item-remove`}
-                onClick={(e) => removeTag(val, e)}
-              >
+              <span class={`${prefixCls}-selection-item-remove`} onClick={(e) => removeTag(val, e)}>
                 ×
               </span>
             )}
@@ -433,11 +431,9 @@ export const Select = defineComponent({
             // OptGroup
             result.push(
               <div key={`group-${i}`} class={`${prefixCls}-item-group`}>
-                <div class={`${prefixCls}-item-group-label`}>
-                  {opt[labelField.value as keyof SelectOption]}
-                </div>
+                <div class={`${prefixCls}-item-group-label`}>{opt[labelField.value as keyof SelectOption]}</div>
                 {renderOptions(opt[optionsField.value as keyof SelectOption] as SelectOption[], level + 1)}
-              </div>
+              </div>,
             )
           } else {
             const val = opt[valueField.value as keyof SelectOption] as string | number
@@ -458,7 +454,9 @@ export const Select = defineComponent({
                 aria-disabled={opt.disabled || undefined}
                 title={opt.title ?? label}
                 onMousedown={(e) => e.preventDefault()}
-                onMouseenter={() => { if (!opt.disabled) activeIndex.value = filteredOptions.value.indexOf(opt) }}
+                onMouseenter={() => {
+                  if (!opt.disabled) activeIndex.value = filteredOptions.value.indexOf(opt)
+                }}
                 onClick={() => selectOption(opt)}
               >
                 {props.optionRender ? (
@@ -466,12 +464,10 @@ export const Select = defineComponent({
                 ) : (
                   <>
                     <div class={`${prefixCls}-item-option-content`}>{label}</div>
-                    {isSelected && (
-                      <span class={`${prefixCls}-item-option-state`}>✓</span>
-                    )}
+                    {isSelected && <span class={`${prefixCls}-item-option-state`}>✓</span>}
                   </>
                 )}
-              </div>
+              </div>,
             )
           }
         })
@@ -509,7 +505,7 @@ export const Select = defineComponent({
                   <span class={`${prefixCls}-selection-item`}>
                     {typeof props.maxTagPlaceholder === 'function'
                       ? props.maxTagPlaceholder(omittedValues)
-                      : props.maxTagPlaceholder ?? `+${overflowCount}`}
+                      : (props.maxTagPlaceholder ?? `+${overflowCount}`)}
                   </span>
                 )}
                 {props.showSearch && (
@@ -523,7 +519,9 @@ export const Select = defineComponent({
                   />
                 )}
                 {!hasValue && !searchText.value && (
-                  <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder ?? locale.value.Select.placeholder}</span>
+                  <span class={`${prefixCls}-selection-placeholder`}>
+                    {props.placeholder ?? locale.value.Select.placeholder}
+                  </span>
                 )}
               </>
             ) : (
@@ -532,7 +530,9 @@ export const Select = defineComponent({
                   <span class={`${prefixCls}-selection-item`}>{renderSelectedLabel()}</span>
                 ) : (
                   !searchText.value && (
-                    <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder ?? locale.value.Select.placeholder}</span>
+                    <span class={`${prefixCls}-selection-placeholder`}>
+                      {props.placeholder ?? locale.value.Select.placeholder}
+                    </span>
                   )
                 )}
                 {props.showSearch && isOpen.value && (
@@ -557,7 +557,9 @@ export const Select = defineComponent({
           </div>
 
           {showClear && (
-            <span class={`${prefixCls}-clear`} onClick={clearAll}>×</span>
+            <span class={`${prefixCls}-clear`} onClick={clearAll}>
+              ×
+            </span>
           )}
 
           {isOpen.value && (
@@ -577,7 +579,9 @@ export const Select = defineComponent({
                 }}
               >
                 {filteredOptions.value.length === 0 ? (
-                  <div class={`${prefixCls}-item-empty`}>{props.notFoundContent ?? locale.value.Select.notFoundContent}</div>
+                  <div class={`${prefixCls}-item-empty`}>
+                    {props.notFoundContent ?? locale.value.Select.notFoundContent}
+                  </div>
                 ) : props.virtual ? (
                   <VirtualList
                     data={filteredOptions.value}
@@ -597,15 +601,19 @@ export const Select = defineComponent({
                             [`${prefixCls}-item-active`]: isActive,
                             [`${prefixCls}-item-disabled`]: opt.disabled,
                           }),
-                          onClick: () => { if (!opt.disabled) selectOption(opt) },
-                          onMouseenter: () => { if (!opt.disabled) activeIndex.value = index },
+                          onClick: () => {
+                            if (!opt.disabled) selectOption(opt)
+                          },
+                          onMouseenter: () => {
+                            if (!opt.disabled) activeIndex.value = index
+                          },
                         },
                         props.optionRender
                           ? props.optionRender(opt, { index })
                           : [
                               h('div', { class: `${prefixCls}-item-content` }, label),
                               isSelected && h('span', { class: `${prefixCls}-item-check` }, '✓'),
-                            ]
+                            ],
                       )
                     }}
                     itemKey={(opt: SelectOption, index: number) =>
@@ -623,4 +631,3 @@ export const Select = defineComponent({
     }
   },
 })
-

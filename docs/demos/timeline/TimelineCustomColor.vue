@@ -12,4 +12,3 @@ const items = [
   { content: '自定义颜色', color: '#00CCFF' },
 ]
 </script>
-

@@ -9,7 +9,7 @@
         <option value="right">right</option>
       </select>
     </div>
-    <Tabs :items="items" :tabPosition="tabPosition" />
+    <Tabs :items="items" :tab-position="tabPosition" />
   </div>
 </template>
 

@@ -15,14 +15,16 @@ export interface RowProps {
 
 export type ColSpan = number | string
 export type FlexType = number | 'none' | 'auto' | string
-export type ColSize = number | {
-  flex?: FlexType
-  span?: number
-  offset?: number
-  order?: number
-  pull?: number
-  push?: number
-}
+export type ColSize =
+  | number
+  | {
+      flex?: FlexType
+      span?: number
+      offset?: number
+      order?: number
+      pull?: number
+      push?: number
+    }
 
 export interface ColProps {
   flex?: FlexType

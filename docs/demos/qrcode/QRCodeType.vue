@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 16px;">
+  <div style="display: flex; gap: 16px">
     <QRCode value="https://ant.design" type="canvas" />
     <QRCode value="https://ant.design" type="svg" />
   </div>

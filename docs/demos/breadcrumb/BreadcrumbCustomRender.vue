@@ -33,19 +33,15 @@ const itemRenderWithIcon = (
   item: BreadcrumbItemType,
   params: Record<string, any>,
   items: BreadcrumbItemType[],
-  paths: string[]
+  paths: string[],
 ) => {
   const isLast = items.indexOf(item) === items.length - 1
   const iconType = item.title === '首页' ? 'home' : item.title === '产品' ? 'appstore' : 'file'
 
-  const content = h(
-    'span',
-    { style: 'display: flex; align-items: center; gap: 4px;' },
-    [
-      h(Icon, { type: iconType, style: 'font-size: 14px;' }),
-      h('span', item.title as string),
-    ]
-  )
+  const content = h('span', { style: 'display: flex; align-items: center; gap: 4px;' }, [
+    h(Icon, { type: iconType, style: 'font-size: 14px;' }),
+    h('span', item.title as string),
+  ])
 
   if (isLast) {
     return h('span', { class: 'hmfw-breadcrumb-link' }, [content])
@@ -58,7 +54,7 @@ const itemRenderWithIcon = (
       href: `#/${paths.join('/')}`,
       style: 'color: #1890ff;',
     },
-    [content]
+    [content],
   )
 }
 
@@ -67,7 +63,7 @@ const itemRenderWithBadge = (
   item: BreadcrumbItemType,
   params: Record<string, any>,
   items: BreadcrumbItemType[],
-  paths: string[]
+  paths: string[],
 ) => {
   const isLast = items.indexOf(item) === items.length - 1
   const showBadge = item.title === '产品'
@@ -81,12 +77,11 @@ const itemRenderWithBadge = (
         h(
           'span',
           {
-            style:
-              'background: #ff4d4f; color: white; padding: 0 6px; border-radius: 10px; font-size: 12px;',
+            style: 'background: #ff4d4f; color: white; padding: 0 6px; border-radius: 10px; font-size: 12px;',
           },
-          'New'
+          'New',
         ),
-    ].filter(Boolean)
+    ].filter(Boolean),
   )
 
   if (isLast) {
@@ -99,7 +94,7 @@ const itemRenderWithBadge = (
       class: 'hmfw-breadcrumb-link',
       href: `#/${paths.join('/')}`,
     },
-    [content]
+    [content],
   )
 }
 
@@ -108,7 +103,7 @@ const itemRenderWithLink = (
   item: BreadcrumbItemType,
   params: Record<string, any>,
   items: BreadcrumbItemType[],
-  paths: string[]
+  paths: string[],
 ) => {
   const isLast = items.indexOf(item) === items.length - 1
 
@@ -119,7 +114,7 @@ const itemRenderWithLink = (
         class: 'hmfw-breadcrumb-link',
         style: 'font-weight: 600; color: #262626;',
       },
-      item.title as string
+      item.title as string,
     )
   }
 
@@ -128,8 +123,7 @@ const itemRenderWithLink = (
     {
       class: 'hmfw-breadcrumb-link',
       href: `#/${paths.join('/')}`,
-      style:
-        'color: #1890ff; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px;',
+      style: 'color: #1890ff; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px;',
       onMouseenter: (e: MouseEvent) => {
         ;(e.target as HTMLElement).style.color = '#40a9ff'
       },
@@ -137,7 +131,7 @@ const itemRenderWithLink = (
         ;(e.target as HTMLElement).style.color = '#1890ff'
       },
     },
-    item.title as string
+    item.title as string,
   )
 }
 </script>

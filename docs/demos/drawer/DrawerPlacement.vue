@@ -1,15 +1,11 @@
 <template>
-  <div style="display: flex; gap: 8px;">
-    <Button @click="show('top')">上</Button>
-    <Button @click="show('right')">右</Button>
-    <Button @click="show('bottom')">下</Button>
-    <Button @click="show('left')">左</Button>
+  <div style="display: flex; gap: 8px">
+    <Button @click="show('top')"> 上 </Button>
+    <Button @click="show('right')"> 右 </Button>
+    <Button @click="show('bottom')"> 下 </Button>
+    <Button @click="show('left')"> 左 </Button>
   </div>
-  <Drawer
-    v-model:open="open"
-    :placement="placement"
-    :title="`从${placementText}滑出`"
-  >
+  <Drawer v-model:open="open" :placement="placement" :title="`从${placementText}滑出`">
     <p>抽屉内容</p>
   </Drawer>
 </template>

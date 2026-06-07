@@ -80,8 +80,14 @@ export const Descriptions = defineComponent({
     title: [String, Object],
     extra: [String, Object],
     bordered: Boolean,
-    column: { type: [Number, Object] as PropType<number | Partial<Record<Breakpoint, number>>>, default: 3 },
-    size: { type: String as PropType<'default' | 'middle' | 'small' | 'medium'>, default: 'default' },
+    column: {
+      type: [Number, Object] as PropType<number | Partial<Record<Breakpoint, number>>>,
+      default: 3,
+    },
+    size: {
+      type: String as PropType<'default' | 'middle' | 'small' | 'medium'>,
+      default: 'default',
+    },
     layout: { type: String as PropType<'horizontal' | 'vertical'>, default: 'horizontal' },
     colon: { type: Boolean, default: true },
     items: Array as PropType<DescriptionsItemProps[]>,
@@ -131,9 +137,8 @@ export const Descriptions = defineComponent({
         if (span === 'filled') {
           return { ...rest, filled: true, computedSpan: 1 }
         }
-        const computedSpan = typeof span === 'number'
-          ? span
-          : matchScreen(screens, span as Partial<Record<Breakpoint, number>>) ?? 1
+        const computedSpan =
+          typeof span === 'number' ? span : (matchScreen(screens, span as Partial<Record<Breakpoint, number>>) ?? 1)
         return { ...rest, computedSpan }
       })
     })
@@ -210,20 +215,12 @@ export const Descriptions = defineComponent({
 
       const renderLabel = (item: InternalDescriptionsItem) => {
         const mergedLabelStyle = { ...props.labelStyle, ...item.labelStyle }
-        return (
-          <span style={mergedLabelStyle}>
-            {item.label}
-          </span>
-        )
+        return <span style={mergedLabelStyle}>{item.label}</span>
       }
 
       const renderContent = (item: InternalDescriptionsItem) => {
         const mergedContentStyle = { ...props.contentStyle, ...item.contentStyle }
-        return (
-          <span style={mergedContentStyle}>
-            {item.children as any}
-          </span>
-        )
+        return <span style={mergedContentStyle}>{item.children as any}</span>
       }
 
       return (
@@ -236,12 +233,8 @@ export const Descriptions = defineComponent({
         >
           {(props.title || props.extra || slots.title || slots.extra) && (
             <div class={`${prefixCls}-header`}>
-              {(props.title || slots.title) && (
-                <div class={`${prefixCls}-title`}>{slots.title?.() ?? props.title}</div>
-              )}
-              {(props.extra || slots.extra) && (
-                <div class={`${prefixCls}-extra`}>{slots.extra?.() ?? props.extra}</div>
-              )}
+              {(props.title || slots.title) && <div class={`${prefixCls}-title`}>{slots.title?.() ?? props.title}</div>}
+              {(props.extra || slots.extra) && <div class={`${prefixCls}-extra`}>{slots.extra?.() ?? props.extra}</div>}
             </div>
           )}
           <div class={`${prefixCls}-view`}>
@@ -281,10 +274,7 @@ export const Descriptions = defineComponent({
                     return (
                       <tr key={rowIdx} class={`${prefixCls}-row`}>
                         {row.map((item, i) => [
-                          <th
-                            key={`label-${item.key ?? i}`}
-                            class={`${prefixCls}-item-label`}
-                          >
+                          <th key={`label-${item.key ?? i}`} class={`${prefixCls}-item-label`}>
                             {renderLabel(item)}
                           </th>,
                           <td
@@ -302,11 +292,7 @@ export const Descriptions = defineComponent({
                   return (
                     <tr key={rowIdx} class={`${prefixCls}-row`}>
                       {row.map((item, i) => (
-                        <td
-                          key={`item-${item.key ?? i}`}
-                          class={`${prefixCls}-item`}
-                          colspan={item.computedSpan ?? 1}
-                        >
+                        <td key={`item-${item.key ?? i}`} class={`${prefixCls}-item`} colspan={item.computedSpan ?? 1}>
                           <div class={`${prefixCls}-item-container`}>
                             {item.label && (
                               <span
@@ -317,9 +303,7 @@ export const Descriptions = defineComponent({
                                 {renderLabel(item)}
                               </span>
                             )}
-                            <span class={`${prefixCls}-item-content`}>
-                              {renderContent(item)}
-                            </span>
+                            <span class={`${prefixCls}-item-content`}>{renderContent(item)}</span>
                           </div>
                         </td>
                       ))}

@@ -10,7 +10,6 @@
 
 ## 代码演示
 
-
 ### 基础用法
 
 最简单的占位效果。
@@ -63,72 +62,72 @@
 
 ### Skeleton Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| active | 是否展示动画效果 | `boolean` | `false` |
-| avatar | 是否显示头像占位图 | `boolean \| SkeletonAvatarProps` | `false` |
-| paragraph | 是否显示段落占位图 | `boolean \| SkeletonParagraphProps` | `true` |
-| title | 是否显示标题占位图 | `boolean \| SkeletonTitleProps` | `true` |
-| loading | 为 true 时，显示占位图，反之则直接展示子组件 | `boolean` | `true` |
-| round | 为 true 时，段落和标题显示圆角 | `boolean` | `false` |
+| 参数      | 说明                                         | 类型                                | 默认值  |
+| --------- | -------------------------------------------- | ----------------------------------- | ------- |
+| active    | 是否展示动画效果                             | `boolean`                           | `false` |
+| avatar    | 是否显示头像占位图                           | `boolean \| SkeletonAvatarProps`    | `false` |
+| paragraph | 是否显示段落占位图                           | `boolean \| SkeletonParagraphProps` | `true`  |
+| title     | 是否显示标题占位图                           | `boolean \| SkeletonTitleProps`     | `true`  |
+| loading   | 为 true 时，显示占位图，反之则直接展示子组件 | `boolean`                           | `true`  |
+| round     | 为 true 时，段落和标题显示圆角               | `boolean`                           | `false` |
 
 ### SkeletonAvatarProps
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| size | 大小 | `'large' \| 'default' \| 'small' \| number` | `'large'` |
-| shape | 形状 | `'circle' \| 'square'` | `'circle'` |
+| 参数  | 说明 | 类型                                        | 默认值     |
+| ----- | ---- | ------------------------------------------- | ---------- |
+| size  | 大小 | `'large' \| 'default' \| 'small' \| number` | `'large'`  |
+| shape | 形状 | `'circle' \| 'square'`                      | `'circle'` |
 
 ### SkeletonTitleProps
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| width | 标题宽度 | `string \| number` | - |
+| 参数  | 说明     | 类型               | 默认值 |
+| ----- | -------- | ------------------ | ------ |
+| width | 标题宽度 | `string \| number` | -      |
 
 ### SkeletonParagraphProps
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| rows | 段落行数 | `number` | `3` (无头像时) / `2` (有头像时) |
-| width | 段落宽度，可传数组分别指定每行宽度 | `string \| number \| Array<string \| number>` | - |
+| 参数  | 说明                               | 类型                                          | 默认值                          |
+| ----- | ---------------------------------- | --------------------------------------------- | ------------------------------- |
+| rows  | 段落行数                           | `number`                                      | `3` (无头像时) / `2` (有头像时) |
+| width | 段落宽度，可传数组分别指定每行宽度 | `string \| number \| Array<string \| number>` | -                               |
 
 ### Skeleton.Button Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| active | 是否展示动画效果 | `boolean` | `false` |
-| size | 大小 | `'large' \| 'default' \| 'small'` | `'default'` |
-| shape | 形状 | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
-| block | 将按钮宽度调整为其父宽度 | `boolean` | `false` |
+| 参数   | 说明                     | 类型                                           | 默认值      |
+| ------ | ------------------------ | ---------------------------------------------- | ----------- |
+| active | 是否展示动画效果         | `boolean`                                      | `false`     |
+| size   | 大小                     | `'large' \| 'default' \| 'small'`              | `'default'` |
+| shape  | 形状                     | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
+| block  | 将按钮宽度调整为其父宽度 | `boolean`                                      | `false`     |
 
 ### Skeleton.Input Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| active | 是否展示动画效果 | `boolean` | `false` |
-| size | 大小 | `'large' \| 'default' \| 'small'` | `'default'` |
-| block | 将输入框宽度调整为其父宽度 | `boolean` | `false` |
+| 参数   | 说明                       | 类型                              | 默认值      |
+| ------ | -------------------------- | --------------------------------- | ----------- |
+| active | 是否展示动画效果           | `boolean`                         | `false`     |
+| size   | 大小                       | `'large' \| 'default' \| 'small'` | `'default'` |
+| block  | 将输入框宽度调整为其父宽度 | `boolean`                         | `false`     |
 
 ### Skeleton.Avatar Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| active | 是否展示动画效果 | `boolean` | `false` |
-| size | 大小 | `'large' \| 'default' \| 'small' \| number` | `'default'` |
-| shape | 形状 | `'circle' \| 'square'` | `'circle'` |
+| 参数   | 说明             | 类型                                        | 默认值      |
+| ------ | ---------------- | ------------------------------------------- | ----------- |
+| active | 是否展示动画效果 | `boolean`                                   | `false`     |
+| size   | 大小             | `'large' \| 'default' \| 'small' \| number` | `'default'` |
+| shape  | 形状             | `'circle' \| 'square'`                      | `'circle'`  |
 
 ### Skeleton.Image Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
+| 参数   | 说明             | 类型      | 默认值  |
+| ------ | ---------------- | --------- | ------- |
 | active | 是否展示动画效果 | `boolean` | `false` |
 
 ### Skeleton.Node Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| active | 是否展示动画效果 | `boolean` | `false` |
-| nodeStyle | 作用于内部占位节点的内联样式（常用于设定占位尺寸） | `CSSProperties` | - |
+| 参数      | 说明                                               | 类型            | 默认值  |
+| --------- | -------------------------------------------------- | --------------- | ------- |
+| active    | 是否展示动画效果                                   | `boolean`       | `false` |
+| nodeStyle | 作用于内部占位节点的内联样式（常用于设定占位尺寸） | `CSSProperties` | -       |
 
 <script setup lang="ts">
 import SkeletonBasic from './SkeletonBasic.vue'
@@ -145,4 +144,3 @@ import SkeletonButtonInputSource from './SkeletonButtonInput.vue?raw'
 import SkeletonAvatarSource from './SkeletonAvatar.vue?raw'
 import SkeletonImageNodeSource from './SkeletonImageNode.vue?raw'
 </script>
-

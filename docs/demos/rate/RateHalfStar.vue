@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <Rate v-model:value="value" allow-half />
     <Rate v-model:value="value2" allow-half disabled />
     <p>评分：{{ value }}</p>

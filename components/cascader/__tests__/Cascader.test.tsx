@@ -11,9 +11,7 @@ const options = [
       {
         value: 'hangzhou',
         label: '杭州',
-        children: [
-          { value: 'xihu', label: '西湖' },
-        ],
+        children: [{ value: 'xihu', label: '西湖' }],
       },
       { value: 'ningbo', label: '宁波' },
     ],
@@ -21,9 +19,7 @@ const options = [
   {
     value: 'jiangsu',
     label: '江苏',
-    children: [
-      { value: 'nanjing', label: '南京' },
-    ],
+    children: [{ value: 'nanjing', label: '南京' }],
   },
 ]
 
@@ -252,12 +248,7 @@ describe('Cascader', () => {
           options,
           multiple: true,
           showCheckedStrategy: 'SHOW_PARENT',
-          value: [
-            ['zhejiang'],
-            ['zhejiang', 'hangzhou'],
-            ['zhejiang', 'hangzhou', 'xihu'],
-            ['jiangsu', 'nanjing'],
-          ],
+          value: [['zhejiang'], ['zhejiang', 'hangzhou'], ['zhejiang', 'hangzhou', 'xihu'], ['jiangsu', 'nanjing']],
         },
       })
       // 只应显示 ['zhejiang'] 和 ['jiangsu', 'nanjing']，因为其他是 zhejiang 的子路径
@@ -273,12 +264,7 @@ describe('Cascader', () => {
           options,
           multiple: true,
           showCheckedStrategy: 'SHOW_CHILD',
-          value: [
-            ['zhejiang'],
-            ['zhejiang', 'hangzhou'],
-            ['zhejiang', 'hangzhou', 'xihu'],
-            ['jiangsu', 'nanjing'],
-          ],
+          value: [['zhejiang'], ['zhejiang', 'hangzhou'], ['zhejiang', 'hangzhou', 'xihu'], ['jiangsu', 'nanjing']],
         },
       })
       // 只应显示叶子节点 ['zhejiang', 'hangzhou', 'xihu'] 和 ['jiangsu', 'nanjing']
@@ -294,11 +280,7 @@ describe('Cascader', () => {
           options,
           multiple: true,
           showCheckedStrategy: 'SHOW_PARENT' as any, // 默认值
-          value: [
-            ['zhejiang'],
-            ['zhejiang', 'hangzhou'],
-            ['jiangsu', 'nanjing'],
-          ],
+          value: [['zhejiang'], ['zhejiang', 'hangzhou'], ['jiangsu', 'nanjing']],
         },
       })
       // SHOW_PARENT 默认会过滤子路径，所以只显示 ['zhejiang'] 和 ['jiangsu', 'nanjing']

@@ -22,16 +22,10 @@ export type ShowCheckedStrategy = 'SHOW_ALL' | 'SHOW_PARENT' | 'SHOW_CHILD'
 export type TreeSelectValue = string | number | (string | number)[]
 
 /** 全局 treeIcon：true 显示默认图标；false/undefined 不显示；其他形式作为自定义渲染 */
-export type TreeIcon =
-  | boolean
-  | VNode
-  | string
-  | ((node: TreeSelectNode) => VNode | string | null)
+export type TreeIcon = boolean | VNode | string | ((node: TreeSelectNode) => VNode | string | null)
 
 /** 选中项超出 maxTagCount 时占位渲染 */
-export type MaxTagPlaceholder =
-  | string
-  | ((omittedValues: Array<string | number>) => string)
+export type MaxTagPlaceholder = string | ((omittedValues: Array<string | number>) => string)
 
 export interface TreeSelectProps {
   value?: TreeSelectValue

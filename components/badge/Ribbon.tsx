@@ -3,7 +3,21 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { RibbonPlacement } from './types'
 
-const PRESET_COLORS = ['pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
+const PRESET_COLORS = [
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime',
+]
 
 export const Ribbon = defineComponent({
   name: 'BadgeRibbon',
@@ -18,9 +32,7 @@ export const Ribbon = defineComponent({
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('ribbon')
 
-    const isPresetColor = computed(() =>
-      props.color ? PRESET_COLORS.includes(props.color) : false,
-    )
+    const isPresetColor = computed(() => (props.color ? PRESET_COLORS.includes(props.color) : false))
 
     const ribbonCls = computed(() =>
       cls(prefixCls, `${prefixCls}-placement-${props.placement}`, {
@@ -28,13 +40,9 @@ export const Ribbon = defineComponent({
       }),
     )
 
-    const colorStyle = computed(() =>
-      props.color && !isPresetColor.value ? { background: props.color } : {},
-    )
+    const colorStyle = computed(() => (props.color && !isPresetColor.value ? { background: props.color } : {}))
 
-    const cornerColorStyle = computed(() =>
-      props.color && !isPresetColor.value ? { color: props.color } : {},
-    )
+    const cornerColorStyle = computed(() => (props.color && !isPresetColor.value ? { color: props.color } : {}))
 
     return () => (
       <div class={`${prefixCls}-wrapper`}>

@@ -53,12 +53,15 @@ const resolvedOutputFile = join(__dirname, OUTPUT_FILE)
 function toPascalCase(str: string): string {
   return str
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join('')
 }
 
 /** 解析 SVG 文件，提取 viewBox 与所有 path 的 d 属性 */
-function parseSvg(svgContent: string): { viewBox: string; paths: Array<{ d: string; fill?: string }> } {
+function parseSvg(svgContent: string): {
+  viewBox: string
+  paths: Array<{ d: string; fill?: string }>
+} {
   const viewBoxMatch = svgContent.match(/viewBox="([^"]+)"/)
   const viewBox = viewBoxMatch ? viewBoxMatch[1] : DEFAULT_VIEW_BOX
 
@@ -83,7 +86,7 @@ function generateIconComponent(name: string, viewBox: string, paths: Array<{ d: 
   const componentName = `${COMPONENT_PREFIX}${toPascalCase(baseName)}${suffix}`
 
   const pathsCode = paths
-    .map(p => p.fill ? `h('path', { d: '${p.d}', fill: '${p.fill}' })` : `h('path', { d: '${p.d}' })`)
+    .map((p) => (p.fill ? `h('path', { d: '${p.d}', fill: '${p.fill}' })` : `h('path', { d: '${p.d}' })`))
     .join(', ')
 
   return `export const ${componentName}: IconComponent = () =>
@@ -105,7 +108,7 @@ function main() {
   }
 
   const svgFiles = readdirSync(resolvedSvgDir)
-    .filter(f => f.endsWith('.svg'))
+    .filter((f) => f.endsWith('.svg'))
     .sort()
 
   if (svgFiles.length === 0) {

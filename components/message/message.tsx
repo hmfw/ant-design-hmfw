@@ -57,8 +57,7 @@ const timers = new Map<string | number, ReturnType<typeof setTimeout>>()
 const closeResolvers = new Map<string | number, () => void>()
 
 let keyIndex = 0
-let globalConfig: Required<Pick<ConfigOptions, 'duration' | 'top' | 'pauseOnHover'>> &
-  ConfigOptions = {
+let globalConfig: Required<Pick<ConfigOptions, 'duration' | 'top' | 'pauseOnHover'>> & ConfigOptions = {
   duration: DEFAULT_DURATION,
   top: DEFAULT_TOP,
   pauseOnHover: true,
@@ -124,10 +123,7 @@ function ensureContainer() {
               return (
                 <div
                   key={item.mergedKey}
-                  class={cls(
-                    'hmfw-message-notice-wrapper',
-                    item.leaving && 'hmfw-message-notice-wrapper-leave',
-                  )}
+                  class={cls('hmfw-message-notice-wrapper', item.leaving && 'hmfw-message-notice-wrapper-leave')}
                   onMouseenter={() => {
                     if (item.pauseOnHover ?? globalConfig.pauseOnHover) clearTimer(item.mergedKey)
                   }}
@@ -136,11 +132,7 @@ function ensureContainer() {
                   }}
                 >
                   <div
-                    class={cls(
-                      'hmfw-message-notice',
-                      item.type && `hmfw-message-notice-${item.type}`,
-                      item.className,
-                    )}
+                    class={cls('hmfw-message-notice', item.type && `hmfw-message-notice-${item.type}`, item.className)}
                     style={item.style}
                     onClick={(e: MouseEvent) => item.onClick?.(e)}
                   >
@@ -246,10 +238,7 @@ function normalizeArgs(
   onClose?: () => void,
 ): ArgsProps {
   const config: ArgsProps =
-    jointContent != null &&
-    typeof jointContent === 'object' &&
-    !isVNode(jointContent) &&
-    'content' in jointContent
+    jointContent != null && typeof jointContent === 'object' && !isVNode(jointContent) && 'content' in jointContent
       ? { ...(jointContent as ArgsProps) }
       : { content: jointContent as MessageContent }
 
@@ -266,8 +255,7 @@ function normalizeArgs(
 }
 
 function makeTypeOpen(type: NoticeType): TypeOpen {
-  return (jointContent, duration, onClose) =>
-    open(normalizeArgs(type, jointContent, duration, onClose))
+  return (jointContent, duration, onClose) => open(normalizeArgs(type, jointContent, duration, onClose))
 }
 
 function config(options: ConfigOptions) {

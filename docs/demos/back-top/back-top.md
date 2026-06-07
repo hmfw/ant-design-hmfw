@@ -50,37 +50,36 @@ import BackTopTargetSource from './BackTopTarget.vue?raw'
 
 ### BackTop Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| visibilityHeight | 滚动高度达到此参数值才出现 BackTop | `number` | `400` |
-| target | 设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数 | `() => HTMLElement \| Window \| Document` | `() => window` |
-| duration | 回到顶部所需时间（ms） | `number` | `450` |
-| className | 自定义类名 | `string` | - |
-| rootClassName | 根节点类名 | `string` | - |
-| style | 自定义样式 | `CSSProperties` | - |
-| prefixCls | 自定义前缀 | `string` | `'hmfw'` |
+| 参数             | 说明                                                          | 类型                                      | 默认值         |
+| ---------------- | ------------------------------------------------------------- | ----------------------------------------- | -------------- |
+| visibilityHeight | 滚动高度达到此参数值才出现 BackTop                            | `number`                                  | `400`          |
+| target           | 设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数 | `() => HTMLElement \| Window \| Document` | `() => window` |
+| duration         | 回到顶部所需时间（ms）                                        | `number`                                  | `450`          |
+| className        | 自定义类名                                                    | `string`                                  | -              |
+| rootClassName    | 根节点类名                                                    | `string`                                  | -              |
+| style            | 自定义样式                                                    | `CSSProperties`                           | -              |
+| prefixCls        | 自定义前缀                                                    | `string`                                  | `'hmfw'`       |
 
 ### BackTop Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| click | 点击按钮的回调函数 | `(e: MouseEvent) => void` |
+| 事件名 | 说明               | 回调参数                  |
+| ------ | ------------------ | ------------------------- |
+| click  | 点击按钮的回调函数 | `(e: MouseEvent) => void` |
 
 ### BackTop Slots
 
-| 名称 | 说明 |
-| --- | --- |
+| 名称    | 说明                           |
+| ------- | ------------------------------ |
 | default | 自定义内容，默认为向上箭头图标 |
 
 ## 设计 Token
 
-| Token | 说明 | 默认值 |
-| --- | --- | --- |
-| controlHeightLG | 按钮尺寸 | `40px` |
-| colorTextDescription | 背景颜色 | `rgba(0, 0, 0, 0.45)` |
-| colorText | 悬停背景颜色 | `rgba(0, 0, 0, 0.85)` |
-| colorTextLightSolid | 图标颜色 | `#fff` |
-| fontSizeHeading3 | 图标字体大小 | `24px` |
-| motionDurationMid | 动画时长 | `0.2s` |
-| zIndexBase | 基础 z-index | `0` |
-
+| Token                | 说明         | 默认值                |
+| -------------------- | ------------ | --------------------- |
+| controlHeightLG      | 按钮尺寸     | `40px`                |
+| colorTextDescription | 背景颜色     | `rgba(0, 0, 0, 0.45)` |
+| colorText            | 悬停背景颜色 | `rgba(0, 0, 0, 0.85)` |
+| colorTextLightSolid  | 图标颜色     | `#fff`                |
+| fontSizeHeading3     | 图标字体大小 | `24px`                |
+| motionDurationMid    | 动画时长     | `0.2s`                |
+| zIndexBase           | 基础 z-index | `0`                   |

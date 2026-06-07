@@ -1,8 +1,8 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 8px;">
-    <Button type="primary" block>Primary Block</Button>
-    <Button block>Default Block</Button>
-    <Button type="dashed" block>Dashed Block</Button>
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <Button type="primary" block> Primary Block </Button>
+    <Button block> Default Block </Button>
+    <Button type="dashed" block> Dashed Block </Button>
   </div>
 </template>
 

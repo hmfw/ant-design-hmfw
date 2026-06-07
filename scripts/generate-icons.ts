@@ -15,7 +15,7 @@ const OUTPUT_FILE = join(__dirname, '../components/icon/icons.ts')
 function toPascalCase(str: string): string {
   return str
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join('')
 }
 
@@ -76,7 +76,7 @@ function main() {
 
   // 读取所有 SVG 文件
   const svgFiles = readdirSync(SVG_DIR)
-    .filter(file => file.endsWith('.svg'))
+    .filter((file) => file.endsWith('.svg'))
     .sort()
 
   if (svgFiles.length === 0) {

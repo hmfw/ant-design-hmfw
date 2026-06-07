@@ -1,4 +1,8 @@
-import { Radio as RadioComponent, RadioGroup as RadioGroupComponent, RadioButton as RadioButtonComponent } from './Radio'
+import {
+  Radio as RadioComponent,
+  RadioGroup as RadioGroupComponent,
+  RadioButton as RadioButtonComponent,
+} from './Radio'
 
 export type { RadioProps, RadioGroupProps, RadioValueType, RadioChangeEvent } from './types'
 
@@ -13,4 +17,3 @@ Radio.Button = RadioButtonComponent
 
 export { Radio, RadioGroupComponent as RadioGroup, RadioButtonComponent as RadioButton }
 export default Radio
-

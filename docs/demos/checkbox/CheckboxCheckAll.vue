@@ -1,20 +1,12 @@
 <template>
   <div>
-    <div style="border-bottom: 1px solid #e8e8e8; padding-bottom: 8px; margin-bottom: 8px;">
-      <Checkbox
-        v-model:checked="checkAll"
-        :indeterminate="indeterminate"
-        @change="handleCheckAllChange"
-      >
+    <div style="border-bottom: 1px solid #e8e8e8; padding-bottom: 8px; margin-bottom: 8px">
+      <Checkbox v-model:checked="checkAll" :indeterminate="indeterminate" @change="handleCheckAllChange">
         全选
       </Checkbox>
     </div>
-    <CheckboxGroup
-      v-model:value="checkedList"
-      :options="options"
-      @change="handleGroupChange"
-    />
-    <p style="margin-top: 8px;">已选：{{ checkedList }}</p>
+    <CheckboxGroup v-model:value="checkedList" :options="options" @change="handleGroupChange" />
+    <p style="margin-top: 8px">已选：{{ checkedList }}</p>
   </div>
 </template>
 
@@ -34,7 +26,7 @@ const checkAll = ref(false)
 const indeterminate = ref(true)
 
 const handleCheckAllChange = (checked: boolean) => {
-  checkedList.value = checked ? options.map(o => o.value) : []
+  checkedList.value = checked ? options.map((o) => o.value) : []
   indeterminate.value = false
 }
 

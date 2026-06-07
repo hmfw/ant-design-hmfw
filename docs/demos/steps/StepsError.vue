@@ -1,9 +1,5 @@
 <template>
-  <Steps
-    :current="1"
-    status="error"
-    :items="items"
-  />
+  <Steps :current="1" status="error" :items="items" />
 </template>
 
 <script setup lang="ts">

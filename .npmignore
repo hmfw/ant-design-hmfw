@@ -26,6 +26,8 @@ tsup.config.ts
 vite.config.ts
 .eslintrc.json
 .eslintignore
+.prettierrc
+.prettierignore
 
 # 文档和总结
 COMPARISON/
@@ -42,6 +44,7 @@ TESTING.md
 *.tgz
 node_modules/
 pnpm-lock.yaml
+.husky/
 
 # Git
 .git

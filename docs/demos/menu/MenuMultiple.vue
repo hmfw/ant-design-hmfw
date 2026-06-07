@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 256px;">
+  <div style="width: 256px">
     <Menu mode="inline" :items="items" multiple :default-selected-keys="['1', '2']" />
   </div>
 </template>

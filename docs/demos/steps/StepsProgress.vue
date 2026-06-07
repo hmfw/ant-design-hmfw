@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 20px;">
+  <div style="padding: 20px">
     <Steps :items="items" :current="1" :percent="60" />
   </div>
 </template>

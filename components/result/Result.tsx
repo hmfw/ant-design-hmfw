@@ -1,12 +1,7 @@
 import { defineComponent, type PropType, type VNode, type VNodeChild } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import {
-  CheckCircleFilled,
-  CloseCircleFilled,
-  ExclamationCircleFilled,
-  WarningFilled,
-} from '../icon'
+import { CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, WarningFilled } from '../icon'
 
 export type ResultStatus = 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500'
 
@@ -24,7 +19,9 @@ const EXCEPTION_STATUS = ['404', '403', '500']
 const ExceptionImage = (text: string) => () => (
   <svg width="252" height="160" viewBox="0 0 252 160" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="126" cy="140" rx="110" ry="14" fill="#f5f5f5" />
-    <text x="126" y="96" font-size="84" font-weight="700" fill="#bfbfbf" text-anchor="middle" font-family="sans-serif">{text}</text>
+    <text x="126" y="96" font-size="84" font-weight="700" fill="#bfbfbf" text-anchor="middle" font-family="sans-serif">
+      {text}
+    </text>
   </svg>
 )
 
@@ -43,7 +40,10 @@ export const Result = defineComponent({
     // 额外操作区：支持字符串、VNode、数组，亦可用 extra slot
     extra: [String, Object, Array, Function] as PropType<VNodeChild>,
     // icon 为 false/null 时隐藏图标（异常状态插画不受影响，对齐 AntD）
-    icon: { type: [String, Object, Array, Function, Boolean] as PropType<VNodeChild | false>, default: undefined },
+    icon: {
+      type: [String, Object, Array, Function, Boolean] as PropType<VNodeChild | false>,
+      default: undefined,
+    },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('result')
@@ -69,18 +69,10 @@ export const Result = defineComponent({
         iconNode = null
       } else if (props.icon !== undefined) {
         // 自定义 icon prop（VNode/字符串等）：添加 custom 类
-        iconNode = (
-          <div class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-custom`)}>
-            {props.icon}
-          </div>
-        )
+        iconNode = <div class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-custom`)}>{props.icon}</div>
       } else {
         const fallback = iconMap[status]?.() ?? null
-        iconNode = (
-          <div class={`${prefixCls}-icon`}>
-            {fallback}
-          </div>
-        )
+        iconNode = <div class={`${prefixCls}-icon`}>{fallback}</div>
       }
 
       const extraNode = slots.extra?.() ?? props.extra
@@ -89,18 +81,12 @@ export const Result = defineComponent({
       return (
         <div class={cls(prefixCls, `${prefixCls}-${status}`)}>
           {iconNode}
-          {(props.title || slots.title) && (
-            <div class={`${prefixCls}-title`}>{slots.title?.() ?? props.title}</div>
-          )}
+          {(props.title || slots.title) && <div class={`${prefixCls}-title`}>{slots.title?.() ?? props.title}</div>}
           {(props.subTitle || slots.subTitle) && (
             <div class={`${prefixCls}-subtitle`}>{slots.subTitle?.() ?? props.subTitle}</div>
           )}
-          {hasExtra && (
-            <div class={`${prefixCls}-extra`}>{extraNode}</div>
-          )}
-          {slots.default && (
-            <div class={`${prefixCls}-body`}>{slots.default()}</div>
-          )}
+          {hasExtra && <div class={`${prefixCls}-extra`}>{extraNode}</div>}
+          {slots.default && <div class={`${prefixCls}-body`}>{slots.default()}</div>}
         </div>
       )
     }

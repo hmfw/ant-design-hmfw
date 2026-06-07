@@ -1,5 +1,11 @@
 export { Cascader } from './Cascader'
-export type { CascaderProps, CascaderOption, CascaderValue, CascaderExpandTrigger, CascaderShowCheckedStrategy } from './types'
+export type {
+  CascaderProps,
+  CascaderOption,
+  CascaderValue,
+  CascaderExpandTrigger,
+  CascaderShowCheckedStrategy,
+} from './types'
 
 // Constants for showCheckedStrategy
 export const SHOW_PARENT = 'SHOW_PARENT'

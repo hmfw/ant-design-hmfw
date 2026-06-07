@@ -1,11 +1,5 @@
 <template>
-  <Popconfirm
-    title="确定要删除吗？"
-    ok-text="确定"
-    cancel-text="取消"
-    @confirm="onConfirm"
-    @cancel="onCancel"
-  >
+  <Popconfirm title="确定要删除吗？" ok-text="确定" cancel-text="取消" @confirm="onConfirm" @cancel="onCancel">
     <button>删除</button>
   </Popconfirm>
 </template>

@@ -100,7 +100,6 @@ try {
     console.log(`   ⚠️  peerDependencies 未配置`)
     warnings.push('peerDependencies 未配置')
   }
-
 } catch (error) {
   console.log(`   ❌ package.json 解析失败: ${error.message}`)
   hasErrors = true
@@ -131,14 +130,9 @@ try {
 // 检查构建产物
 console.log('\n5️⃣  检查构建产物大小...\n')
 
-const distFiles = [
-  'dist/index.js',
-  'dist/index.cjs',
-  'dist/ant-design-hmfw.umd.js',
-  'dist/style.css',
-]
+const distFiles = ['dist/index.js', 'dist/index.cjs', 'dist/ant-design-hmfw.umd.js', 'dist/style.css']
 
-distFiles.forEach(file => {
+distFiles.forEach((file) => {
   const fullPath = resolve(rootDir, file)
   if (existsSync(fullPath)) {
     const size = statSync(fullPath).size
@@ -172,7 +166,7 @@ if (hasErrors) {
   process.exit(1)
 } else if (warnings.length > 0) {
   console.log('⚠️  发布前检查通过，但有以下警告：\n')
-  warnings.forEach(warning => console.log(`   • ${warning}`))
+  warnings.forEach((warning) => console.log(`   • ${warning}`))
   console.log('\n✅ 可以发布，但建议处理上述警告。\n')
 } else {
   console.log('✅ 发布前检查全部通过！可以安全发布。\n')

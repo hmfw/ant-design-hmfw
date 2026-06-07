@@ -53,7 +53,11 @@
   position: relative;
   min-width: 0;
   background: #001529;
-  transition: all 0.2s, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    all 0.2s,
+    background-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .hmfw-layout-sider-has-trigger {
@@ -113,7 +117,11 @@
   text-align: center;
   background: #002140;
   cursor: pointer;
-  transition: all 0.2s, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition:
+    all 0.2s,
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;

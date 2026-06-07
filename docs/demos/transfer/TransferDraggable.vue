@@ -1,12 +1,12 @@
 <template>
   <Transfer
-    :data-source="dataSource"
     v-model:target-keys="targetKeys"
+    :data-source="dataSource"
     :titles="['源', '目标（可拖拽排序）']"
     draggable
     @reorder="handleReorder"
   />
-  <p style="margin-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px;">
+  <p style="margin-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px">
     当前顺序：{{ targetKeys.join(', ') || '（空）' }}
   </p>
 </template>

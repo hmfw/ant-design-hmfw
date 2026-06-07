@@ -1,15 +1,15 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px;">
+  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px">
     <div>
-      <p style="margin-bottom: 8px;">自定义 Tooltip 格式：{{ value1 }}</p>
+      <p style="margin-bottom: 8px">自定义 Tooltip 格式：{{ value1 }}</p>
       <Slider v-model:value="value1" :tooltip="{ formatter: (v) => `${v}%` }" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">隐藏 Tooltip：{{ value2 }}</p>
+      <p style="margin-bottom: 8px">隐藏 Tooltip：{{ value2 }}</p>
       <Slider v-model:value="value2" :tooltip="{ formatter: null }" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">始终显示 Tooltip：{{ value3 }}</p>
+      <p style="margin-bottom: 8px">始终显示 Tooltip：{{ value3 }}</p>
       <Slider v-model:value="value3" :tooltip="{ open: true }" />
     </div>
   </div>

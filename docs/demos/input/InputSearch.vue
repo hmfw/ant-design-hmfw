@@ -1,16 +1,7 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
-    <InputSearch
-      v-model:value="keyword"
-      placeholder="请输入搜索内容"
-      @search="handleSearch"
-    />
-    <InputSearch
-      v-model:value="keyword2"
-      placeholder="带按钮的搜索框"
-      enter-button
-      @search="handleSearch"
-    />
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px">
+    <InputSearch v-model:value="keyword" placeholder="请输入搜索内容" @search="handleSearch" />
+    <InputSearch v-model:value="keyword2" placeholder="带按钮的搜索框" enter-button @search="handleSearch" />
     <InputSearch
       v-model:value="keyword3"
       placeholder="加载中"

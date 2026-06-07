@@ -172,4 +172,3 @@ describe('Timeline', () => {
     expect(wrapper.attributes('style')).toContain('10%')
   })
 })
-

@@ -1,10 +1,6 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
-    <DatePicker
-      v-model:value="date"
-      placeholder="请选择日期"
-      @change="handleChange"
-    />
+  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px">
+    <DatePicker v-model:value="date" placeholder="请选择日期" @change="handleChange" />
     <p>选中日期：{{ date }}</p>
   </div>
 </template>

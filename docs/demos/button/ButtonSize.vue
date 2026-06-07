@@ -1,8 +1,8 @@
 <template>
-  <div style="display: flex; gap: 8px; align-items: center;">
-    <Button type="primary" size="large">Large</Button>
-    <Button type="primary">Middle</Button>
-    <Button type="primary" size="small">Small</Button>
+  <div style="display: flex; gap: 8px; align-items: center">
+    <Button type="primary" size="large"> Large </Button>
+    <Button type="primary"> Middle </Button>
+    <Button type="primary" size="small"> Small </Button>
   </div>
 </template>
 

@@ -141,10 +141,11 @@ describe('Form (extended)', () => {
   it('renders requiredMark="optional" suffix on non-required items', () => {
     const ChildForm = defineComponent({
       setup() {
-        return () => h(Form, { requiredMark: 'optional' }, () => [
-          h(FormItem, { label: 'A', name: 'a' }),
-          h(FormItem, { label: 'B', name: 'b', required: true }),
-        ])
+        return () =>
+          h(Form, { requiredMark: 'optional' }, () => [
+            h(FormItem, { label: 'A', name: 'a' }),
+            h(FormItem, { label: 'B', name: 'b', required: true }),
+          ])
       },
     })
     const wrapper = mount(ChildForm)
@@ -165,11 +166,10 @@ describe('Form (extended)', () => {
   it('labelCol/wrapperCol on Form propagate to FormItems', () => {
     const ChildForm = defineComponent({
       setup() {
-        return () => h(
-          Form,
-          { labelCol: { span: 6 }, wrapperCol: { span: 18 } },
-          () => h(FormItem, { label: 'A' }, { default: () => h('input') }),
-        )
+        return () =>
+          h(Form, { labelCol: { span: 6 }, wrapperCol: { span: 18 } }, () =>
+            h(FormItem, { label: 'A' }, { default: () => h('input') }),
+          )
       },
     })
     const wrapper = mount(ChildForm)
@@ -191,11 +191,17 @@ describe('Form (extended)', () => {
     const ChildForm = defineComponent({
       setup() {
         const model = reactive<Record<string, unknown>>({ name: '' })
-        return () => h(
-          Form,
-          { model, onValuesChange: (changed: any) => { (window as any).__changed = changed } },
-          () => h(Probe),
-        )
+        return () =>
+          h(
+            Form,
+            {
+              model,
+              onValuesChange: (changed: any) => {
+                ;(window as any).__changed = changed
+              },
+            },
+            () => h(Probe),
+          )
       },
     })
     mount(ChildForm)
@@ -479,9 +485,7 @@ describe('Form - Field Dependency & Linkage', () => {
 
     // Validate confirm password - should fail
     await expect(formApi!.validateFields(['confirmPassword'])).rejects.toMatchObject({
-      errorFields: expect.arrayContaining([
-        expect.objectContaining({ name: 'confirmPassword' })
-      ])
+      errorFields: expect.arrayContaining([expect.objectContaining({ name: 'confirmPassword' })]),
     })
 
     // Set confirm to match
@@ -528,9 +532,7 @@ describe('Form - Field Dependency & Linkage', () => {
 
     // Now validation should include extra field (empty)
     await expect(formApi!.validateFields()).rejects.toMatchObject({
-      errorFields: expect.arrayContaining([
-        expect.objectContaining({ name: 'extra' })
-      ])
+      errorFields: expect.arrayContaining([expect.objectContaining({ name: 'extra' })]),
     })
 
     // Fill extra field
@@ -570,9 +572,7 @@ describe('Form - Field Dependency & Linkage', () => {
     formApi!.setFieldValue('type', 'email')
     formApi!.setFieldValue('contact', 'invalid')
     await expect(formApi!.validateFields(['contact'])).rejects.toMatchObject({
-      errorFields: expect.arrayContaining([
-        expect.objectContaining({ name: 'contact' })
-      ])
+      errorFields: expect.arrayContaining([expect.objectContaining({ name: 'contact' })]),
     })
 
     formApi!.setFieldValue('contact', 'test@example.com')
@@ -582,9 +582,7 @@ describe('Form - Field Dependency & Linkage', () => {
     formApi!.setFieldValue('type', 'phone')
     formApi!.setFieldValue('contact', 'abc')
     await expect(formApi!.validateFields(['contact'])).rejects.toMatchObject({
-      errorFields: expect.arrayContaining([
-        expect.objectContaining({ name: 'contact' })
-      ])
+      errorFields: expect.arrayContaining([expect.objectContaining({ name: 'contact' })]),
     })
 
     formApi!.setFieldValue('contact', '12345')

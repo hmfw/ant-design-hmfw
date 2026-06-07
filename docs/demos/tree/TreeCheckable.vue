@@ -1,10 +1,5 @@
 <template>
-  <Tree
-    checkable
-    :tree-data="treeData"
-    v-model:checked-keys="checkedKeys"
-    v-model:expanded-keys="expandedKeys"
-  />
+  <Tree v-model:checked-keys="checkedKeys" v-model:expanded-keys="expandedKeys" checkable :tree-data="treeData" />
   <p>已勾选：{{ checkedKeys.join(', ') }}</p>
 </template>
 
@@ -27,9 +22,7 @@ const treeData = [
   {
     title: '父节点 2',
     key: '0-1',
-    children: [
-      { title: '子节点 2-1', key: '0-1-0' },
-    ],
+    children: [{ title: '子节点 2-1', key: '0-1-0' }],
   },
 ]
 </script>

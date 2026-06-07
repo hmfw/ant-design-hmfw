@@ -198,7 +198,10 @@ describe('Card.Grid', () => {
   })
 
   it('can disable hoverable', () => {
-    const wrapper = mount(CardGrid, { props: { hoverable: false }, slots: { default: () => 'Grid' } })
+    const wrapper = mount(CardGrid, {
+      props: { hoverable: false },
+      slots: { default: () => 'Grid' },
+    })
     expect(wrapper.classes()).not.toContain('hmfw-card-grid-hoverable')
   })
 

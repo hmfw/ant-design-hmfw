@@ -30,9 +30,7 @@ export default defineComponent({
   setup(props) {
     const prefixCls = usePrefixCls('icon')
 
-    const classes = computed(() =>
-      cls(prefixCls, props.spin && `${prefixCls}-spin`, props.class),
-    )
+    const classes = computed(() => cls(prefixCls, props.spin && `${prefixCls}-spin`, props.class))
 
     const iconStyle = computed<CSSProperties>(() => {
       const base: CSSProperties = typeof props.style === 'string' ? {} : (props.style ?? {})
@@ -47,12 +45,7 @@ export default defineComponent({
       if (!Comp) return null
 
       return (
-        <span
-          role="img"
-          aria-hidden="true"
-          class={classes.value}
-          style={iconStyle.value}
-        >
+        <span role="img" aria-hidden="true" class={classes.value} style={iconStyle.value}>
           <Comp />
         </span>
       )

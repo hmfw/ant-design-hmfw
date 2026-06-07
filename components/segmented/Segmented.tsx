@@ -30,9 +30,7 @@ export const Segmented = defineComponent({
 
     // Normalize options to SegmentedOption[]
     const normalizeOptions = computed((): SegmentedOption[] =>
-      props.options.map((opt) =>
-        typeof opt === 'object' ? opt : { label: String(opt), value: opt },
-      ),
+      props.options.map((opt) => (typeof opt === 'object' ? opt : { label: String(opt), value: opt })),
     )
 
     // Determine initial value
@@ -153,12 +151,9 @@ export const Segmented = defineComponent({
     })
 
     // 监听 value / 选项 / 方向变化以更新滑块
-    watch(
-      [currentValue, normalizeOptions, isVertical],
-      () => {
-        nextTick(() => realignThumb())
-      },
-    )
+    watch([currentValue, normalizeOptions, isVertical], () => {
+      nextTick(() => realignThumb())
+    })
 
     // 渲染选项内容（图标 + 文本）
     const renderItemContent = (opt: SegmentedOption) => {
@@ -218,17 +213,13 @@ export const Segmented = defineComponent({
 
     return () => (
       <div
-        class={cls(
-          prefixCls,
-          `${prefixCls}-${props.size}`,
-          {
-            [`${prefixCls}-disabled`]: props.disabled,
-            [`${prefixCls}-block`]: props.block,
-            [`${prefixCls}-vertical`]: isVertical.value,
-            [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
-            [`${prefixCls}-shape-${props.shape}`]: props.shape === 'round',
-          },
-        )}
+        class={cls(prefixCls, `${prefixCls}-${props.size}`, {
+          [`${prefixCls}-disabled`]: props.disabled,
+          [`${prefixCls}-block`]: props.block,
+          [`${prefixCls}-vertical`]: isVertical.value,
+          [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
+          [`${prefixCls}-shape-${props.shape}`]: props.shape === 'round',
+        })}
       >
         <div ref={groupRef} class={`${prefixCls}-group`}>
           {/* Animated thumb */}
@@ -240,4 +231,3 @@ export const Segmented = defineComponent({
     )
   },
 })
-

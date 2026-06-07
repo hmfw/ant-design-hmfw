@@ -1,32 +1,18 @@
 <template>
-  <div style="display: flex; gap: 32px; flex-direction: column;">
+  <div style="display: flex; gap: 32px; flex-direction: column">
     <div>
       <h4>倒计时完成回调</h4>
-      <div style="display: flex; gap: 32px; align-items: flex-start;">
-        <Countdown
-          title="5秒倒计时"
-          :value="shortDeadline"
-          format="s 秒"
-          @finish="onFinish"
-        />
-        <div v-if="finished" style="color: #52c41a; padding-top: 30px;">
-          倒计时已完成！
-        </div>
+      <div style="display: flex; gap: 32px; align-items: flex-start">
+        <Countdown title="5秒倒计时" :value="shortDeadline" format="s 秒" @finish="onFinish" />
+        <div v-if="finished" style="color: #52c41a; padding-top: 30px">倒计时已完成！</div>
       </div>
     </div>
 
     <div>
       <h4>倒计时变化回调</h4>
-      <div style="display: flex; gap: 32px; align-items: flex-start;">
-        <Countdown
-          title="剩余时间"
-          :value="deadline"
-          format="HH:mm:ss"
-          @change="onChange"
-        />
-        <div style="padding-top: 30px;">
-          剩余毫秒: {{ remaining }}
-        </div>
+      <div style="display: flex; gap: 32px; align-items: flex-start">
+        <Countdown title="剩余时间" :value="deadline" format="HH:mm:ss" @change="onChange" />
+        <div style="padding-top: 30px">剩余毫秒: {{ remaining }}</div>
       </div>
     </div>
   </div>

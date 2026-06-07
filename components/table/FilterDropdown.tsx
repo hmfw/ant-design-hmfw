@@ -16,14 +16,16 @@ export const FilterDropdown = defineComponent({
     onConfirm: { type: Function as PropType<(selectedKeys: Key[]) => void>, required: true },
   },
   setup(props) {
-    const selectedKeys = ref<Key[]>([...props.filteredValue.filter(v => typeof v === 'string' || typeof v === 'number') as Key[]])
+    const selectedKeys = ref<Key[]>([
+      ...(props.filteredValue.filter((v) => typeof v === 'string' || typeof v === 'number') as Key[]),
+    ])
 
     const handleCheckChange = (key: Key, checked: boolean) => {
       if (props.filterMultiple) {
         if (checked) {
           selectedKeys.value = [...selectedKeys.value, key]
         } else {
-          selectedKeys.value = selectedKeys.value.filter(k => k !== key)
+          selectedKeys.value = selectedKeys.value.filter((k) => k !== key)
         }
       } else {
         selectedKeys.value = checked ? [key] : []
@@ -44,10 +46,7 @@ export const FilterDropdown = defineComponent({
         const checked = selectedKeys.value.includes(filter.value as Key)
         return (
           <div key={String(filter.value)} class={`${props.prefixCls}-dropdown-menu-item`}>
-            <Checkbox
-              checked={checked}
-              onChange={(newChecked) => handleCheckChange(filter.value as Key, newChecked)}
-            >
+            <Checkbox checked={checked} onChange={(newChecked) => handleCheckChange(filter.value as Key, newChecked)}>
               {filter.text}
             </Checkbox>
           </div>
@@ -57,9 +56,7 @@ export const FilterDropdown = defineComponent({
 
     return () => (
       <div class={`${props.prefixCls}-dropdown`}>
-        <div class={`${props.prefixCls}-dropdown-menu`}>
-          {renderFilterItems()}
-        </div>
+        <div class={`${props.prefixCls}-dropdown-menu`}>{renderFilterItems()}</div>
         <div class={`${props.prefixCls}-dropdown-btns`}>
           <Button size="small" onClick={handleReset}>
             {props.locale.filterReset || '重置'}

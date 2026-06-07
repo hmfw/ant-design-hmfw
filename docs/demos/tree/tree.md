@@ -85,78 +85,78 @@
 
 ### Tree Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| treeData | treeNodes 数据 | `TreeDataNode[]` | `[]` |
-| expandedKeys (v-model) | 展开指定的树节点 | `(string \| number)[]` | - |
-| defaultExpandedKeys | 默认展开指定的树节点 | `(string \| number)[]` | `[]` |
-| defaultExpandAll | 默认展开所有树节点 | `boolean` | `false` |
-| defaultExpandParent | 默认展开父节点 | `boolean` | `true` |
-| autoExpandParent | 展开时自动展开父节点 | `boolean` | `false` |
-| selectedKeys (v-model) | 设置选中的树节点 | `(string \| number)[]` | - |
-| defaultSelectedKeys | 默认选中的树节点 | `(string \| number)[]` | `[]` |
-| checkedKeys (v-model) | 选中复选框的树节点；`checkStrictly` 时为 `{ checked, halfChecked }` | `(string \| number)[] \| { checked, halfChecked }` | - |
-| defaultCheckedKeys | 默认勾选的树节点 | `(string \| number)[]` | `[]` |
-| checkable | 节点前添加 Checkbox 复选框 | `boolean` | `false` |
-| checkStrictly | 父子节点选中状态不再关联 | `boolean` | `false` |
-| multiple | 支持点选多个节点 | `boolean` | `false` |
-| selectable | 是否可选中 | `boolean` | `true` |
-| disabled | 将树禁用 | `boolean` | `false` |
-| draggable | 节点可拖拽 | `boolean \| (node) => boolean \| { icon?, nodeDraggable? }` | `false` |
-| allowDrop | 是否允许拖放到目标节点，返回 `false` 阻止 | `({ dragNode, dropNode, dropPosition }) => boolean` | - |
-| showLine | 是否展示连接线 | `boolean \| { showLeafIcon }` | `false` |
-| showIcon | 是否展示节点图标 | `boolean` | `false` |
-| blockNode | 节点是否占据一行 | `boolean` | `false` |
-| indent | 每级缩进像素 | `number` | `24` |
-| filterTreeNode | 按需高亮节点，返回 `true` 高亮 | `(node) => boolean` | - |
-| icon | 自定义节点图标（名称或渲染函数） | `string \| (node, ctx) => VNode` | - |
-| switcherIcon | 自定义展开/收起图标 | `string \| ({ expanded, isLeaf }) => VNode` | - |
-| titleRender | 自定义节点标题渲染 | `(node) => VNode` | - |
-| fieldNames | 自定义节点 title、key、children 的字段 | `{ title?, key?, children? }` | - |
-| virtual | 是否开启虚拟滚动 | `boolean` | `false` |
-| height | 虚拟滚动容器高度（开启 virtual 时必需） | `number \| string` | - |
-| itemHeight | 虚拟滚动每项高度 | `number` | `28` |
-| rootClassName | 根节点 className | `string` | - |
-| classNames | 语义化 class（`root`/`item`/`itemIcon`/`itemTitle`/`itemSwitcher`） | `object` | - |
-| styles | 语义化内联样式（同上 key） | `object` | - |
+| 参数                   | 说明                                                                | 类型                                                        | 默认值  |
+| ---------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------- | ------- |
+| treeData               | treeNodes 数据                                                      | `TreeDataNode[]`                                            | `[]`    |
+| expandedKeys (v-model) | 展开指定的树节点                                                    | `(string \| number)[]`                                      | -       |
+| defaultExpandedKeys    | 默认展开指定的树节点                                                | `(string \| number)[]`                                      | `[]`    |
+| defaultExpandAll       | 默认展开所有树节点                                                  | `boolean`                                                   | `false` |
+| defaultExpandParent    | 默认展开父节点                                                      | `boolean`                                                   | `true`  |
+| autoExpandParent       | 展开时自动展开父节点                                                | `boolean`                                                   | `false` |
+| selectedKeys (v-model) | 设置选中的树节点                                                    | `(string \| number)[]`                                      | -       |
+| defaultSelectedKeys    | 默认选中的树节点                                                    | `(string \| number)[]`                                      | `[]`    |
+| checkedKeys (v-model)  | 选中复选框的树节点；`checkStrictly` 时为 `{ checked, halfChecked }` | `(string \| number)[] \| { checked, halfChecked }`          | -       |
+| defaultCheckedKeys     | 默认勾选的树节点                                                    | `(string \| number)[]`                                      | `[]`    |
+| checkable              | 节点前添加 Checkbox 复选框                                          | `boolean`                                                   | `false` |
+| checkStrictly          | 父子节点选中状态不再关联                                            | `boolean`                                                   | `false` |
+| multiple               | 支持点选多个节点                                                    | `boolean`                                                   | `false` |
+| selectable             | 是否可选中                                                          | `boolean`                                                   | `true`  |
+| disabled               | 将树禁用                                                            | `boolean`                                                   | `false` |
+| draggable              | 节点可拖拽                                                          | `boolean \| (node) => boolean \| { icon?, nodeDraggable? }` | `false` |
+| allowDrop              | 是否允许拖放到目标节点，返回 `false` 阻止                           | `({ dragNode, dropNode, dropPosition }) => boolean`         | -       |
+| showLine               | 是否展示连接线                                                      | `boolean \| { showLeafIcon }`                               | `false` |
+| showIcon               | 是否展示节点图标                                                    | `boolean`                                                   | `false` |
+| blockNode              | 节点是否占据一行                                                    | `boolean`                                                   | `false` |
+| indent                 | 每级缩进像素                                                        | `number`                                                    | `24`    |
+| filterTreeNode         | 按需高亮节点，返回 `true` 高亮                                      | `(node) => boolean`                                         | -       |
+| icon                   | 自定义节点图标（名称或渲染函数）                                    | `string \| (node, ctx) => VNode`                            | -       |
+| switcherIcon           | 自定义展开/收起图标                                                 | `string \| ({ expanded, isLeaf }) => VNode`                 | -       |
+| titleRender            | 自定义节点标题渲染                                                  | `(node) => VNode`                                           | -       |
+| fieldNames             | 自定义节点 title、key、children 的字段                              | `{ title?, key?, children? }`                               | -       |
+| virtual                | 是否开启虚拟滚动                                                    | `boolean`                                                   | `false` |
+| height                 | 虚拟滚动容器高度（开启 virtual 时必需）                             | `number \| string`                                          | -       |
+| itemHeight             | 虚拟滚动每项高度                                                    | `number`                                                    | `28`    |
+| rootClassName          | 根节点 className                                                    | `string`                                                    | -       |
+| classNames             | 语义化 class（`root`/`item`/`itemIcon`/`itemTitle`/`itemSwitcher`） | `object`                                                    | -       |
+| styles                 | 语义化内联样式（同上 key）                                          | `object`                                                    | -       |
 
 ### DirectoryTree Props
 
 继承全部 Tree Props，并新增：
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
+| 参数         | 说明                             | 类型                                | 默认值    |
+| ------------ | -------------------------------- | ----------------------------------- | --------- |
 | expandAction | 点击展开节点的方式，`false` 关闭 | `false \| 'click' \| 'doubleClick'` | `'click'` |
-| showIcon | 是否展示图标 | `boolean` | `true` |
+| showIcon     | 是否展示图标                     | `boolean`                           | `true`    |
 
 ### TreeDataNode
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| key | 节点唯一标识 | `string \| number` | - |
-| title | 标题 | `string` | - |
-| children | 子节点 | `TreeDataNode[]` | - |
-| disabled | 禁掉响应 | `boolean` | `false` |
-| disableCheckbox | 禁掉 checkbox | `boolean` | `false` |
-| selectable | 是否可选中 | `boolean` | `true` |
-| checkable | 是否可勾选 | `boolean` | - |
-| isLeaf | 设置为叶子节点 | `boolean` | - |
-| icon | 自定义图标 | `string \| (node) => VNode` | - |
+| 参数            | 说明           | 类型                        | 默认值  |
+| --------------- | -------------- | --------------------------- | ------- |
+| key             | 节点唯一标识   | `string \| number`          | -       |
+| title           | 标题           | `string`                    | -       |
+| children        | 子节点         | `TreeDataNode[]`            | -       |
+| disabled        | 禁掉响应       | `boolean`                   | `false` |
+| disableCheckbox | 禁掉 checkbox  | `boolean`                   | `false` |
+| selectable      | 是否可选中     | `boolean`                   | `true`  |
+| checkable       | 是否可勾选     | `boolean`                   | -       |
+| isLeaf          | 设置为叶子节点 | `boolean`                   | -       |
+| icon            | 自定义图标     | `string \| (node) => VNode` | -       |
 
 ### Tree Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| update:expandedKeys | 展开/收起节点时触发 | `(keys: Key[]) => void` |
-| update:selectedKeys | 点击树节点触发 | `(keys: Key[]) => void` |
-| update:checkedKeys | 点击复选框触发 | `(keys: Key[] \| { checked, halfChecked }) => void` |
-| expand | 展开/收起节点时触发 | `(keys, { expanded, node, nativeEvent }) => void` |
-| select | 点击树节点触发 | `(keys, { event, selected, node, selectedNodes, nativeEvent }) => void` |
-| check | 点击复选框触发 | `(keys, { event, checked, node, checkedNodes, halfCheckedKeys, nativeEvent }) => void` |
-| dblclick | 双击节点 | `(event, node) => void` |
-| rightClick | 右键节点 | `({ event, node }) => void` |
-| dragstart / dragenter / dragover / dragleave / dragend | 拖拽过程事件 | `({ event, node, ... }) => void` |
-| drop | 拖拽释放 | `({ node, dragNode, dragNodesKeys, dropPosition, dropToGap, nativeEvent }) => void` |
+| 事件名                                                 | 说明                | 回调参数                                                                               |
+| ------------------------------------------------------ | ------------------- | -------------------------------------------------------------------------------------- |
+| update:expandedKeys                                    | 展开/收起节点时触发 | `(keys: Key[]) => void`                                                                |
+| update:selectedKeys                                    | 点击树节点触发      | `(keys: Key[]) => void`                                                                |
+| update:checkedKeys                                     | 点击复选框触发      | `(keys: Key[] \| { checked, halfChecked }) => void`                                    |
+| expand                                                 | 展开/收起节点时触发 | `(keys, { expanded, node, nativeEvent }) => void`                                      |
+| select                                                 | 点击树节点触发      | `(keys, { event, selected, node, selectedNodes, nativeEvent }) => void`                |
+| check                                                  | 点击复选框触发      | `(keys, { event, checked, node, checkedNodes, halfCheckedKeys, nativeEvent }) => void` |
+| dblclick                                               | 双击节点            | `(event, node) => void`                                                                |
+| rightClick                                             | 右键节点            | `({ event, node }) => void`                                                            |
+| dragstart / dragenter / dragover / dragleave / dragend | 拖拽过程事件        | `({ event, node, ... }) => void`                                                       |
+| drop                                                   | 拖拽释放            | `({ node, dragNode, dragNodesKeys, dropPosition, dropToGap, nativeEvent }) => void`    |
 
 ### 键盘支持
 

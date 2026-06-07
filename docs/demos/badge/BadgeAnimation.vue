@@ -1,16 +1,16 @@
 <template>
-  <div style="display: flex; gap: 24px; align-items: center;">
+  <div style="display: flex; gap: 24px; align-items: center">
     <Badge :count="count">
-      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px;" />
+      <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
     </Badge>
-    <div style="display: flex; gap: 8px;">
+    <div style="display: flex; gap: 8px">
       <button @click="increase">+</button>
       <button @click="decrease">-</button>
       <button @click="randomize">随机</button>
     </div>
     <div>当前值: {{ count }}</div>
   </div>
-  <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
+  <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px">
     <h4>Status 颜色自定义</h4>
     <Badge status="success" color="#ff6b6b" text="自定义红色" />
     <Badge status="processing" color="#4ecb73" text="自定义绿色" />

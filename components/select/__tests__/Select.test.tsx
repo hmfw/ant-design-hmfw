@@ -182,9 +182,7 @@ describe('Select', () => {
       },
       {
         label: 'Vegetables',
-        options: [
-          { label: 'Carrot', value: 'carrot' },
-        ],
+        options: [{ label: 'Carrot', value: 'carrot' }],
       },
     ]
     const wrapper = mount(Select, {

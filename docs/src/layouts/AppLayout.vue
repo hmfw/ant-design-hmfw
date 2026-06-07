@@ -21,9 +21,7 @@ import { componentsSidebar, guideSidebar } from '../nav/sidebar'
 
 const route = useRoute()
 
-const activeSidebar = computed(() =>
-  route.path.startsWith('/guide') ? guideSidebar : componentsSidebar
-)
+const activeSidebar = computed(() => (route.path.startsWith('/guide') ? guideSidebar : componentsSidebar))
 </script>
 
 <style scoped>

@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import {
-  searchIcons,
-  getIconsByCategory,
-  getAllCategories,
-  getAllIcons,
-} from '../utils'
+import { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '../utils'
 import { iconMetadata } from '../metadata'
 
 describe('Icon Utils', () => {
@@ -18,13 +13,13 @@ describe('Icon Utils', () => {
     it('finds icons by keyword', () => {
       const results = searchIcons('house')
       expect(results.length).toBeGreaterThan(0)
-      expect(results.some(r => r.name === 'home')).toBe(true)
+      expect(results.some((r) => r.name === 'home')).toBe(true)
     })
 
     it('finds icons by category', () => {
       const results = searchIcons('navigation')
       expect(results.length).toBeGreaterThan(0)
-      expect(results.every(r => r.category === 'navigation')).toBe(true)
+      expect(results.every((r) => r.category === 'navigation')).toBe(true)
     })
 
     it('returns empty array for no matches', () => {
@@ -52,7 +47,7 @@ describe('Icon Utils', () => {
     it('returns all icons in a category', () => {
       const results = getIconsByCategory('action')
       expect(results.length).toBeGreaterThan(0)
-      expect(results.every(r => r.category === 'action')).toBe(true)
+      expect(results.every((r) => r.category === 'action')).toBe(true)
     })
 
     it('returns empty array for non-existent category', () => {
@@ -96,7 +91,7 @@ describe('Icon Utils', () => {
 
     it('each icon has required properties', () => {
       const icons = getAllIcons()
-      icons.forEach(icon => {
+      icons.forEach((icon) => {
         expect(icon).toHaveProperty('name')
         expect(icon).toHaveProperty('component')
         expect(icon).toHaveProperty('category')
@@ -107,7 +102,7 @@ describe('Icon Utils', () => {
 
     it('all components are functions', () => {
       const icons = getAllIcons()
-      icons.forEach(icon => {
+      icons.forEach((icon) => {
         expect(typeof icon.component).toBe('function')
       })
     })
@@ -115,8 +110,8 @@ describe('Icon Utils', () => {
     // P2: 新增覆盖
     it('resolves -filled icon names to Filled component variants', () => {
       const icons = getAllIcons()
-      const bellFilled = icons.find(i => i.name === 'bell-filled')
-      const bellOutlined = icons.find(i => i.name === 'bell')
+      const bellFilled = icons.find((i) => i.name === 'bell-filled')
+      const bellOutlined = icons.find((i) => i.name === 'bell')
       expect(bellFilled).toBeDefined()
       expect(bellOutlined).toBeDefined()
       // outlined 与 filled 必须是不同的组件
@@ -125,14 +120,26 @@ describe('Icon Utils', () => {
 
     it('includes the new AntD v6 sync icons', () => {
       const icons = getAllIcons()
-      const names = icons.map(i => i.name)
+      const names = icons.map((i) => i.name)
       const expected = [
-        'calendar', 'clock-circle', 'mail', 'phone', 'bell',
-        'star', 'heart', 'lock', 'unlock', 'global',
-        'arrow-up', 'arrow-down', 'caret-up',
-        'copy', 'reload', 'sync',
+        'calendar',
+        'clock-circle',
+        'mail',
+        'phone',
+        'bell',
+        'star',
+        'heart',
+        'lock',
+        'unlock',
+        'global',
+        'arrow-up',
+        'arrow-down',
+        'caret-up',
+        'copy',
+        'reload',
+        'sync',
       ]
-      expected.forEach(name => {
+      expected.forEach((name) => {
         expect(names).toContain(name)
       })
     })

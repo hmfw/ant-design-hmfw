@@ -14,6 +14,7 @@
 ## ✅ 已完成
 
 ### 基础架构
+
 - [x] Monorepo 结构 (pnpm workspace)
 - [x] TypeScript 配置
 - [x] 构建工具 (tsup)
@@ -21,6 +22,7 @@
 - [x] 开发 Playground (Vite)
 
 ### 设计系统
+
 - [x] Design Tokens 系统（Seed → Map → Alias 三层）
 - [x] ConfigProvider 全局配置（主题 + 国际化）
 - [x] 工具函数 (cls, usePrefixCls)
@@ -28,73 +30,73 @@
 
 ### 已完成组件（66 个，按实现顺序）
 
-| 组件 | 说明 | 测试 | Playground |
-|------|------|------|-----------|
-| Icon | 图标组件（79 个内置图标，同步 AntD v6） | ✓ | ✓ |
-| Button | 按钮（type/size/loading/danger/block） | ✓ | ✓ |
-| Space | 间距布局（方向/尺寸/对齐/分隔符） | ✓ | ✓ |
-| Divider | 分割线（水平/垂直/文字方向） | ✓ | ✓ |
-| Grid (Row/Col) | 24 列栅格系统（响应式断点/gutter） | ✓ | ✓ |
-| Typography (Text/Title/Paragraph) | 排版组件 | ✓ | ✓ |
-| Layout (Header/Footer/Sider/Content) | 页面布局（可折叠侧边栏/响应式断点） | ✓ | ✓ |
-| Avatar / AvatarGroup | 头像（图片/图标/文字/尺寸/形状/组） | ✓ | ✓ |
-| Badge | 徽标（数字/点状/状态/溢出） | ✓ | ✓ |
-| Tag / CheckableTag | 标签（预设颜色/自定义颜色/可关闭/可选中） | ✓ | ✓ |
-| Empty | 空状态（默认图/自定义图/描述/底部操作） | ✓ | ✓ |
-| Card / CardMeta | 卡片（标题/extra/封面/操作栏/加载/小尺寸） | ✓ | ✓ |
-| Input / InputPassword / TextArea / InputSearch | 输入框系列（前缀/后缀/清除/字数统计） | ✓ | ✓ |
-| Checkbox / CheckboxGroup | 多选框（受控/非受控/indeterminate/group） | ✓ | ✓ |
-| Radio / RadioGroup | 单选框（受控/非受控/group） | ✓ | ✓ |
-| Switch | 开关（loading/size/checkedChildren） | ✓ | ✓ |
-| Spin | 加载中（size/tip/嵌套内容遮罩） | ✓ | ✓ |
-| Progress | 进度条（line/circle/dashboard/status/自定义颜色） | ✓ | ✓ |
-| Breadcrumb | 面包屑（items/自定义 separator） | ✓ | ✓ |
-| Pagination | 分页（受控/非受控/省略号/showTotal） | ✓ | ✓ |
-| Tabs | 标签页（line/card/受控/非受控/disabled） | ✓ | ✓ |
-| Modal | 对话框（Teleport/mask/footer/centered） | ✓ | ✓ |
-| Drawer | 抽屉（四方向/Teleport/mask） | ✓ | ✓ |
-| message | 全局提示（success/error/warning/info/loading） | ✓ | ✓ |
-| Tooltip | 文字提示（12方向/trigger/color/受控） | ✓ | ✓ |
-| Alert | 警告提示（4类型/showIcon/closable/banner/描述） | ✓ | ✓ |
-| notification | 通知提醒框（4类型/4位置/命令式API） | ✓ | ✓ |
-| Select | 选择器（单选/多选/搜索/allowClear/尺寸/状态） | ✓ | ✓ |
-| Popover | 气泡卡片（title+content/12方向/trigger/受控） | ✓ | ✓ |
-| InputNumber | 数字输入框（min/max/step/precision/addon/prefix） | ✓ | ✓ |
-| Collapse / CollapsePanel | 折叠面板（accordion/bordered/ghost/size/icon位置） | ✓ | ✓ |
-| Descriptions | 描述列表（title/extra/bordered/column/size/layout） | ✓ | ✓ |
-| Steps | 步骤条（current/direction/size/status/progressDot） | ✓ | ✓ |
-| Result | 结果页（success/error/warning/info/404/403/500） | ✓ | ✓ |
-| Skeleton / SkeletonButton / SkeletonInput | 骨架屏（active/avatar/paragraph/title/round） | ✓ | ✓ |
-| Rate | 评分（count/allowHalf/allowClear/disabled/character/tooltips） | ✓ | ✓ |
-| Slider | 滑动输入条（range/marks/step/vertical/tooltip） | ✓ | ✓ |
-| Timeline | 时间轴（color/pending/reverse/mode/label） | ✓ | ✓ |
-| List / ListItem / ListItemMeta | 列表（bordered/size/split/loading/pagination） | ✓ | ✓ |
-| Dropdown | 下拉菜单（hover/click/placement/overlay/disabled） | ✓ | ✓ |
-| Popconfirm | 气泡确认框（title/description/okText/cancelText/placement） | ✓ | ✓ |
-| Segmented | 分段控制器（options/disabled/block/size/icon） | ✓ | ✓ |
-| Table | 表格（排序/筛选/分页/行选择/自定义渲染） | ✓ | ✓ |
-| Menu | 导航菜单（horizontal/vertical/inline/dark/collapsed） | ✓ | ✓ |
-| Form / FormItem | 表单容器（校验/布局/validateStatus/help） | ✓ | ✓ |
-| Watermark | 水印（content/font/rotate/gap） | ✓ | ✓ |
-| BackTop | 回到顶部（visibilityHeight/target/duration） | ✓ | ✓ |
-| FloatButton / FloatButtonGroup / FloatButton.BackTop | 悬浮按钮（type/shape/icon/Badge集成/Tooltip集成/href/htmlType/trigger/placement/受控/复合API） | ✓ | ✓ |
-| QRCode | 二维码（纯 Canvas 实现，状态/颜色/纠错级别） | ✓ | ✓ |
-| Anchor | 锚点（垂直/水平/嵌套/ink bar） | ✓ | ✓ |
-| Tree | 树形控件（展开/选择/多选/勾选/显示线/fieldNames） | ✓ | ✓ |
-| TimePicker | 时间选择框（时分秒/步进/受控/状态/格式） | ✓ | ✓ |
-| DatePicker | 日期选择框（date/month/year/quarter/禁用日期/showTime） | ✓ | ✓ |
-| Upload | 上传（text/picture/picture-card/picture-circle/拖拽/customRequest） | ✓ | ✓ |
-| Flex | 弹性布局（justify/align/gap/wrap/vertical/自定义标签） | ✓ | ✓ |
-| AutoComplete | 自动完成（filterOption/backfill/受控/键盘导航） | ✓ | ✓ |
-| Cascader | 级联选择（多列/hover展开/搜索/changeOnSelect/fieldNames） | ✓ | ✓ |
-| App | 全局上下文（useApp() 获取 message/notification/modal） | ✓ | ✓ |
-| Image / PreviewGroup | 图片预览（缩放/旋转/多图切换） | ✓ | ✓ |
-| Carousel | 走马灯（scrollx/fade/autoplay/dots/arrows） | ✓ | ✓ |
-| Tour | 漫游引导（步骤/遮罩/spotlight/指示器） | ✓ | ✓ |
-| ColorPicker | 颜色选择器（HSB拾色/hue滑块/预设颜色） | ✓ | ✓ |
-| Transfer | 穿梭框（双列表/搜索/全选/受控） | ✓ | ✓ |
-| RangePicker | 日期范围选择（双日历/范围高亮/hover预览） | ✓ | ✓ |
-| TreeSelect | 树形下拉选择（展开/多选/checkbox/fieldNames） | ✓ | ✓ |
+| 组件                                                 | 说明                                                                                           | 测试 | Playground |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---- | ---------- |
+| Icon                                                 | 图标组件（79 个内置图标，同步 AntD v6）                                                        | ✓    | ✓          |
+| Button                                               | 按钮（type/size/loading/danger/block）                                                         | ✓    | ✓          |
+| Space                                                | 间距布局（方向/尺寸/对齐/分隔符）                                                              | ✓    | ✓          |
+| Divider                                              | 分割线（水平/垂直/文字方向）                                                                   | ✓    | ✓          |
+| Grid (Row/Col)                                       | 24 列栅格系统（响应式断点/gutter）                                                             | ✓    | ✓          |
+| Typography (Text/Title/Paragraph)                    | 排版组件                                                                                       | ✓    | ✓          |
+| Layout (Header/Footer/Sider/Content)                 | 页面布局（可折叠侧边栏/响应式断点）                                                            | ✓    | ✓          |
+| Avatar / AvatarGroup                                 | 头像（图片/图标/文字/尺寸/形状/组）                                                            | ✓    | ✓          |
+| Badge                                                | 徽标（数字/点状/状态/溢出）                                                                    | ✓    | ✓          |
+| Tag / CheckableTag                                   | 标签（预设颜色/自定义颜色/可关闭/可选中）                                                      | ✓    | ✓          |
+| Empty                                                | 空状态（默认图/自定义图/描述/底部操作）                                                        | ✓    | ✓          |
+| Card / CardMeta                                      | 卡片（标题/extra/封面/操作栏/加载/小尺寸）                                                     | ✓    | ✓          |
+| Input / InputPassword / TextArea / InputSearch       | 输入框系列（前缀/后缀/清除/字数统计）                                                          | ✓    | ✓          |
+| Checkbox / CheckboxGroup                             | 多选框（受控/非受控/indeterminate/group）                                                      | ✓    | ✓          |
+| Radio / RadioGroup                                   | 单选框（受控/非受控/group）                                                                    | ✓    | ✓          |
+| Switch                                               | 开关（loading/size/checkedChildren）                                                           | ✓    | ✓          |
+| Spin                                                 | 加载中（size/tip/嵌套内容遮罩）                                                                | ✓    | ✓          |
+| Progress                                             | 进度条（line/circle/dashboard/status/自定义颜色）                                              | ✓    | ✓          |
+| Breadcrumb                                           | 面包屑（items/自定义 separator）                                                               | ✓    | ✓          |
+| Pagination                                           | 分页（受控/非受控/省略号/showTotal）                                                           | ✓    | ✓          |
+| Tabs                                                 | 标签页（line/card/受控/非受控/disabled）                                                       | ✓    | ✓          |
+| Modal                                                | 对话框（Teleport/mask/footer/centered）                                                        | ✓    | ✓          |
+| Drawer                                               | 抽屉（四方向/Teleport/mask）                                                                   | ✓    | ✓          |
+| message                                              | 全局提示（success/error/warning/info/loading）                                                 | ✓    | ✓          |
+| Tooltip                                              | 文字提示（12方向/trigger/color/受控）                                                          | ✓    | ✓          |
+| Alert                                                | 警告提示（4类型/showIcon/closable/banner/描述）                                                | ✓    | ✓          |
+| notification                                         | 通知提醒框（4类型/4位置/命令式API）                                                            | ✓    | ✓          |
+| Select                                               | 选择器（单选/多选/搜索/allowClear/尺寸/状态）                                                  | ✓    | ✓          |
+| Popover                                              | 气泡卡片（title+content/12方向/trigger/受控）                                                  | ✓    | ✓          |
+| InputNumber                                          | 数字输入框（min/max/step/precision/addon/prefix）                                              | ✓    | ✓          |
+| Collapse / CollapsePanel                             | 折叠面板（accordion/bordered/ghost/size/icon位置）                                             | ✓    | ✓          |
+| Descriptions                                         | 描述列表（title/extra/bordered/column/size/layout）                                            | ✓    | ✓          |
+| Steps                                                | 步骤条（current/direction/size/status/progressDot）                                            | ✓    | ✓          |
+| Result                                               | 结果页（success/error/warning/info/404/403/500）                                               | ✓    | ✓          |
+| Skeleton / SkeletonButton / SkeletonInput            | 骨架屏（active/avatar/paragraph/title/round）                                                  | ✓    | ✓          |
+| Rate                                                 | 评分（count/allowHalf/allowClear/disabled/character/tooltips）                                 | ✓    | ✓          |
+| Slider                                               | 滑动输入条（range/marks/step/vertical/tooltip）                                                | ✓    | ✓          |
+| Timeline                                             | 时间轴（color/pending/reverse/mode/label）                                                     | ✓    | ✓          |
+| List / ListItem / ListItemMeta                       | 列表（bordered/size/split/loading/pagination）                                                 | ✓    | ✓          |
+| Dropdown                                             | 下拉菜单（hover/click/placement/overlay/disabled）                                             | ✓    | ✓          |
+| Popconfirm                                           | 气泡确认框（title/description/okText/cancelText/placement）                                    | ✓    | ✓          |
+| Segmented                                            | 分段控制器（options/disabled/block/size/icon）                                                 | ✓    | ✓          |
+| Table                                                | 表格（排序/筛选/分页/行选择/自定义渲染）                                                       | ✓    | ✓          |
+| Menu                                                 | 导航菜单（horizontal/vertical/inline/dark/collapsed）                                          | ✓    | ✓          |
+| Form / FormItem                                      | 表单容器（校验/布局/validateStatus/help）                                                      | ✓    | ✓          |
+| Watermark                                            | 水印（content/font/rotate/gap）                                                                | ✓    | ✓          |
+| BackTop                                              | 回到顶部（visibilityHeight/target/duration）                                                   | ✓    | ✓          |
+| FloatButton / FloatButtonGroup / FloatButton.BackTop | 悬浮按钮（type/shape/icon/Badge集成/Tooltip集成/href/htmlType/trigger/placement/受控/复合API） | ✓    | ✓          |
+| QRCode                                               | 二维码（纯 Canvas 实现，状态/颜色/纠错级别）                                                   | ✓    | ✓          |
+| Anchor                                               | 锚点（垂直/水平/嵌套/ink bar）                                                                 | ✓    | ✓          |
+| Tree                                                 | 树形控件（展开/选择/多选/勾选/显示线/fieldNames）                                              | ✓    | ✓          |
+| TimePicker                                           | 时间选择框（时分秒/步进/受控/状态/格式）                                                       | ✓    | ✓          |
+| DatePicker                                           | 日期选择框（date/month/year/quarter/禁用日期/showTime）                                        | ✓    | ✓          |
+| Upload                                               | 上传（text/picture/picture-card/picture-circle/拖拽/customRequest）                            | ✓    | ✓          |
+| Flex                                                 | 弹性布局（justify/align/gap/wrap/vertical/自定义标签）                                         | ✓    | ✓          |
+| AutoComplete                                         | 自动完成（filterOption/backfill/受控/键盘导航）                                                | ✓    | ✓          |
+| Cascader                                             | 级联选择（多列/hover展开/搜索/changeOnSelect/fieldNames）                                      | ✓    | ✓          |
+| App                                                  | 全局上下文（useApp() 获取 message/notification/modal）                                         | ✓    | ✓          |
+| Image / PreviewGroup                                 | 图片预览（缩放/旋转/多图切换）                                                                 | ✓    | ✓          |
+| Carousel                                             | 走马灯（scrollx/fade/autoplay/dots/arrows）                                                    | ✓    | ✓          |
+| Tour                                                 | 漫游引导（步骤/遮罩/spotlight/指示器）                                                         | ✓    | ✓          |
+| ColorPicker                                          | 颜色选择器（HSB拾色/hue滑块/预设颜色）                                                         | ✓    | ✓          |
+| Transfer                                             | 穿梭框（双列表/搜索/全选/受控）                                                                | ✓    | ✓          |
+| RangePicker                                          | 日期范围选择（双日历/范围高亮/hover预览）                                                      | ✓    | ✓          |
+| TreeSelect                                           | 树形下拉选择（展开/多选/checkbox/fieldNames）                                                  | ✓    | ✓          |
 
 ---
 
@@ -113,6 +115,7 @@
 ## 🚀 发布准备
 
 ### 文档系统
+
 - [x] 搭建文档站（Vite + unplugin-vue-markdown）
 - [x] 首页（hero + features）
 - [x] 快速上手指南
@@ -121,12 +124,14 @@
 - [x] 全部 66 个组件文档（含代码演示 + API 表格）
 
 ### 构建和发布
+
 - [ ] 配置 npm 发布流程（package.json publishConfig）
 - [ ] 设置 CI/CD (GitHub Actions) — 自动测试 + 发布
 - [ ] 版本管理策略
 - [ ] Changelog 生成
 
 ### E2E 测试
+
 - [ ] Playwright 覆盖核心交互流程（DatePicker/TimePicker/Upload/Tree 等）
 
 ---
@@ -134,6 +139,7 @@
 ## 💡 需要考虑的特性
 
 ### 核心功能
+
 - [ ] 国际化 (i18n) - 多语言支持（基础框架已有 zh-CN/en-US）
 - [ ] 主题定制 - CSS Variables + 动态主题切换
 - [ ] 无障碍 (a11y) - ARIA 属性、键盘导航
@@ -141,6 +147,7 @@
 - [ ] SSR 支持 - Nuxt.js 兼容性
 
 ### 质量保证
+
 - [ ] 单元测试覆盖率 >80%
 - [ ] E2E 测试 (Playwright)
 - [ ] 性能优化
@@ -163,6 +170,7 @@
 ## 🔄 开发流程
 
 ### 单个组件开发流程
+
 1. 创建组件目录结构（`ComponentName.tsx` / `types.ts` / `index.ts` / `style/index.css` / `__tests__/`）
 2. 实现组件逻辑 (TSX)
 3. 编写样式文件 (CSS)
@@ -180,6 +188,7 @@
 ## 📝 更新日志
 
 ### 2026-05-24
+
 - ✅ 初始化项目结构（Monorepo + tsup + vitest + Vite playground）
 - ✅ 实现 Icon、Button、Space、Divider 组件
 - ✅ 实现 Grid (Row/Col) 组件

@@ -46,8 +46,12 @@ export const App = defineComponent({
         <Modal
           open={modalState.open}
           {...modalState.props}
-          onUpdate:open={(val: boolean) => { modalState.open = val }}
-          onCancel={() => { modalState.open = false }}
+          onUpdate:open={(val: boolean) => {
+            modalState.open = val
+          }}
+          onCancel={() => {
+            modalState.open = false
+          }}
         />
       </>
     )

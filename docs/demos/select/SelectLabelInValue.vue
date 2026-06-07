@@ -1,11 +1,11 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px">
     <Select
       v-model:value="value"
       :options="options"
       label-in-value
       placeholder="选择一个选项"
-      style="width: 100%;"
+      style="width: 100%"
       @change="handleChange"
     />
     <p>选中值：{{ JSON.stringify(value) }}</p>

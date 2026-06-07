@@ -1,11 +1,6 @@
 <template>
   <div class="float-btn-demo">
-    <FloatButtonGroup
-      trigger="click"
-      type="primary"
-      :icon="SettingOutlined"
-      :style="left"
-    >
+    <FloatButtonGroup trigger="click" type="primary" :icon="SettingOutlined" :style="left">
       <FloatButton :icon="EditOutlined" tooltip="编辑" />
       <FloatButton :icon="SearchOutlined" tooltip="搜索" />
     </FloatButtonGroup>

@@ -113,6 +113,7 @@ $ pnpm analyze:treeshaking
 ### tsup.config.ts
 
 **主要变更:**
+
 - ✅ 支持多格式输出 (ESM, CJS, UMD)
 - ✅ 添加 banner 信息
 - ✅ 修复 UMD 构建的 import.meta 问题
@@ -121,6 +122,7 @@ $ pnpm analyze:treeshaking
 ### package.json
 
 **主要变更:**
+
 - ✅ 添加 `unpkg` 和 `jsdelivr` 字段
 - ✅ 完善 `exports` 配置
 - ✅ 添加构建分析脚本
@@ -137,15 +139,15 @@ $ pnpm analyze:treeshaking
 
 ### 体积对比
 
-| 指标 | 值 | 说明 |
-|------|-------|------|
-| ESM 原始 | 789 KB | 未压缩 |
-| ESM Gzip | 160 KB | 压缩后 (79.7% 压缩率) |
-| CJS 原始 | 810 KB | 未压缩 |
-| CJS Gzip | 161 KB | 压缩后 (80.1% 压缩率) |
-| UMD 原始 | 2.99 MB | 未压缩 |
-| UMD Gzip | 572 KB | 压缩后 (80.8% 压缩率) |
-| CSS 原始 | 2.59 KB | 未压缩 |
+| 指标     | 值      | 说明                  |
+| -------- | ------- | --------------------- |
+| ESM 原始 | 789 KB  | 未压缩                |
+| ESM Gzip | 160 KB  | 压缩后 (79.7% 压缩率) |
+| CJS 原始 | 810 KB  | 未压缩                |
+| CJS Gzip | 161 KB  | 压缩后 (80.1% 压缩率) |
+| UMD 原始 | 2.99 MB | 未压缩                |
+| UMD Gzip | 572 KB  | 压缩后 (80.8% 压缩率) |
+| CSS 原始 | 2.59 KB | 未压缩                |
 | CSS Gzip | 0.54 KB | 压缩后 (79.2% 压缩率) |
 
 ### 构建速度
@@ -177,7 +179,7 @@ require('ant-design-hmfw/style.css')
 ### UMD (CDN)
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/ant-design-hmfw/dist/style.css">
+<link rel="stylesheet" href="https://unpkg.com/ant-design-hmfw/dist/style.css" />
 <script src="https://unpkg.com/vue@3"></script>
 <script src="https://unpkg.com/ant-design-hmfw"></script>
 <script>
@@ -208,6 +210,7 @@ require('ant-design-hmfw/style.css')
 ### 下一步建议
 
 可以进入 **阶段 4.2 - NPM 包发布准备**，包括：
+
 - 完善 README.md
 - 创建 CHANGELOG.md
 - 配置发布流程

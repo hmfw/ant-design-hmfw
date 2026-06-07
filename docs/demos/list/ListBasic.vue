@@ -1,9 +1,5 @@
 <template>
-  <List
-    :data-source="data"
-    :render-item="renderItem"
-    bordered
-  />
+  <List :data-source="data" :render-item="renderItem" bordered />
 </template>
 
 <script setup lang="ts">

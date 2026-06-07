@@ -11,7 +11,10 @@ describe('TimePicker', () => {
   })
 
   it('shows placeholder', () => {
-    const wrapper = mount(TimePicker, { props: { placeholder: '选择时间' }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { placeholder: '选择时间' },
+      attachTo: document.body,
+    })
     const input = wrapper.find('input')
     expect(input.attributes('placeholder')).toBe('选择时间')
     wrapper.unmount()
@@ -54,37 +57,51 @@ describe('TimePicker', () => {
     wrapper.unmount()
   })
 
-
   it('formats value with custom format', () => {
-    const wrapper = mount(TimePicker, { props: { value: '14:30:00', format: 'HH:mm' }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { value: '14:30:00', format: 'HH:mm' },
+      attachTo: document.body,
+    })
     const input = wrapper.find('input')
     expect(input.element.value).toBe('14:30')
     wrapper.unmount()
   })
 
   it('use12Hours displays AM/PM', () => {
-    const wrapper = mount(TimePicker, { props: { value: '14:30:00', use12Hours: true, format: 'h:mm a' }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { value: '14:30:00', use12Hours: true, format: 'h:mm a' },
+      attachTo: document.body,
+    })
     const input = wrapper.find('input')
     expect(input.element.value).toBe('2:30 pm')
     wrapper.unmount()
   })
 
   it('use12Hours handles midnight correctly', () => {
-    const wrapper = mount(TimePicker, { props: { value: '00:30:00', use12Hours: true, format: 'h:mm a' }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { value: '00:30:00', use12Hours: true, format: 'h:mm a' },
+      attachTo: document.body,
+    })
     const input = wrapper.find('input')
     expect(input.element.value).toBe('12:30 am')
     wrapper.unmount()
   })
 
   it('use12Hours handles noon correctly', () => {
-    const wrapper = mount(TimePicker, { props: { value: '12:30:00', use12Hours: true, format: 'h:mm a' }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { value: '12:30:00', use12Hours: true, format: 'h:mm a' },
+      attachTo: document.body,
+    })
     const input = wrapper.find('input')
     expect(input.element.value).toBe('12:30 pm')
     wrapper.unmount()
   })
 
   it('hourStep generates correct hours', async () => {
-    const wrapper = mount(TimePicker, { props: { hourStep: 2, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { hourStep: 2, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const columns = document.querySelectorAll('.hmfw-time-picker-panel-column')
     const hourCells = columns[0].querySelectorAll('.hmfw-time-picker-panel-cell')
@@ -96,7 +113,10 @@ describe('TimePicker', () => {
   })
 
   it('minuteStep generates correct minutes', async () => {
-    const wrapper = mount(TimePicker, { props: { minuteStep: 15, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { minuteStep: 15, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const columns = document.querySelectorAll('.hmfw-time-picker-panel-column')
     const minuteCells = columns[1].querySelectorAll('.hmfw-time-picker-panel-cell')
@@ -109,7 +129,10 @@ describe('TimePicker', () => {
   })
 
   it('secondStep generates correct seconds', async () => {
-    const wrapper = mount(TimePicker, { props: { secondStep: 30, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { secondStep: 30, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const columns = document.querySelectorAll('.hmfw-time-picker-panel-column')
     const secondCells = columns[2].querySelectorAll('.hmfw-time-picker-panel-cell')
@@ -119,10 +142,12 @@ describe('TimePicker', () => {
     wrapper.unmount()
   })
 
-
   it('disabledTime hides disabled hours when hideDisabledOptions is true', async () => {
     const disabledTime = () => ({ disabledHours: () => [0, 1, 2, 22, 23] })
-    const wrapper = mount(TimePicker, { props: { disabledTime, hideDisabledOptions: true, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { disabledTime, hideDisabledOptions: true, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const columns = document.querySelectorAll('.hmfw-time-picker-panel-column')
     const hourCells = columns[0].querySelectorAll('.hmfw-time-picker-panel-cell')
@@ -132,7 +157,10 @@ describe('TimePicker', () => {
 
   it('disabledTime shows disabled hours with disabled class when hideDisabledOptions is false', async () => {
     const disabledTime = () => ({ disabledHours: () => [0, 1, 2] })
-    const wrapper = mount(TimePicker, { props: { disabledTime, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { disabledTime, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const columns = document.querySelectorAll('.hmfw-time-picker-panel-column')
     const hourCells = columns[0].querySelectorAll('.hmfw-time-picker-panel-cell')
@@ -145,7 +173,10 @@ describe('TimePicker', () => {
   })
 
   it('needConfirm shows OK button', async () => {
-    const wrapper = mount(TimePicker, { props: { needConfirm: true, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { needConfirm: true, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const okBtn = document.querySelector('.hmfw-time-picker-panel-footer-ok')
     expect(okBtn).toBeTruthy()
@@ -153,7 +184,10 @@ describe('TimePicker', () => {
   })
 
   it('needConfirm does not emit change until OK is clicked', async () => {
-    const wrapper = mount(TimePicker, { props: { needConfirm: true, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { needConfirm: true, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const columns = document.querySelectorAll('.hmfw-time-picker-panel-column')
     const hourCells = columns[0].querySelectorAll('.hmfw-time-picker-panel-cell')
@@ -168,7 +202,10 @@ describe('TimePicker', () => {
   })
 
   it('changeOnScroll emits change immediately when needConfirm is false', async () => {
-    const wrapper = mount(TimePicker, { props: { changeOnScroll: true, needConfirm: false, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { changeOnScroll: true, needConfirm: false, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const columns = document.querySelectorAll('.hmfw-time-picker-panel-column')
     const hourCells = columns[0].querySelectorAll('.hmfw-time-picker-panel-cell')
@@ -180,7 +217,10 @@ describe('TimePicker', () => {
 
   it('renderExtraFooter renders custom footer content', async () => {
     const renderExtraFooter = () => 'Custom Footer'
-    const wrapper = mount(TimePicker, { props: { renderExtraFooter, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { renderExtraFooter, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const extra = document.querySelector('.hmfw-time-picker-panel-footer-extra')
     expect(extra?.textContent).toBe('Custom Footer')
@@ -206,7 +246,10 @@ describe('TimePicker', () => {
   })
 
   it('emits change with two arguments', async () => {
-    const wrapper = mount(TimePicker, { props: { open: true, needConfirm: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { open: true, needConfirm: true },
+      attachTo: document.body,
+    })
     await nextTick()
     const okBtn = document.querySelector('.hmfw-time-picker-panel-footer-ok') as HTMLElement
     okBtn.click()
@@ -244,7 +287,10 @@ describe('TimePicker', () => {
 
   // 新增：needConfirm=true 时临时态与确认态分离
   it('needConfirm=true separates staged and confirmed values', async () => {
-    const wrapper = mount(TimePicker, { props: { needConfirm: true, open: true, value: '10:00:00' }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { needConfirm: true, open: true, value: '10:00:00' },
+      attachTo: document.body,
+    })
     await nextTick()
 
     // 点击一个不同的小时
@@ -272,7 +318,10 @@ describe('TimePicker', () => {
 
   // 新增：needConfirm=true 关闭面板时回滚未确认值
   it('needConfirm=true discards staged values on close', async () => {
-    const wrapper = mount(TimePicker, { props: { needConfirm: true, value: '10:00:00' }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { needConfirm: true, value: '10:00:00' },
+      attachTo: document.body,
+    })
 
     // 打开面板
     await wrapper.find('.hmfw-time-picker').trigger('click')
@@ -298,7 +347,10 @@ describe('TimePicker', () => {
 
   // 新增：needConfirm=false 时点击立即生效
   it('needConfirm=false applies changes immediately', async () => {
-    const wrapper = mount(TimePicker, { props: { needConfirm: false, open: true, value: '10:00:00' }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { needConfirm: false, open: true, value: '10:00:00' },
+      attachTo: document.body,
+    })
     await nextTick()
 
     // 点击一个不同的小时（非 changeOnScroll 模式）
@@ -315,7 +367,10 @@ describe('TimePicker', () => {
 
   // 新增：changeOnScroll + needConfirm=false 点击即提交
   it('changeOnScroll with needConfirm=false triggers change on click', async () => {
-    const wrapper = mount(TimePicker, { props: { changeOnScroll: true, needConfirm: false, open: true }, attachTo: document.body })
+    const wrapper = mount(TimePicker, {
+      props: { changeOnScroll: true, needConfirm: false, open: true },
+      attachTo: document.body,
+    })
     await nextTick()
 
     const columns = document.querySelectorAll('.hmfw-time-picker-panel-column')
@@ -336,9 +391,9 @@ describe('TimePicker', () => {
         open: true,
         value: '09:00:00', // 9 AM
         needConfirm: true,
-        format: 'HH:mm:ss' // 使用 24 小时制格式输出以便验证
+        format: 'HH:mm:ss', // 使用 24 小时制格式输出以便验证
       },
-      attachTo: document.body
+      attachTo: document.body,
     })
     await nextTick()
 
@@ -368,15 +423,15 @@ describe('TimePicker', () => {
       props: {
         needConfirm: true,
         showNow: true,
-        open: true
+        open: true,
       },
-      attachTo: document.body
+      attachTo: document.body,
     })
     await nextTick()
 
     // 找到"此刻"按钮（第一个 footer-btn）
     const footerBtns = document.querySelectorAll('.hmfw-time-picker-panel-footer-btn')
-    const nowBtn = Array.from(footerBtns).find(btn => btn.textContent === '此刻') as HTMLElement
+    const nowBtn = Array.from(footerBtns).find((btn) => btn.textContent === '此刻') as HTMLElement
     nowBtn.click()
     await nextTick()
 
@@ -406,4 +461,3 @@ describe('TimePicker', () => {
     wrapper.unmount()
   })
 })
-

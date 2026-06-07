@@ -1,11 +1,6 @@
 <template>
-  <div style="width: 300px;">
-    <AutoComplete
-      v-model:value="email"
-      :options="emailOptions"
-      placeholder="请输入邮箱"
-      @search="handleEmailSearch"
-    />
+  <div style="width: 300px">
+    <AutoComplete v-model:value="email" :options="emailOptions" placeholder="请输入邮箱" @search="handleEmailSearch" />
   </div>
 </template>
 
@@ -24,7 +19,7 @@ const handleEmailSearch = (searchText: string) => {
     return
   }
 
-  emailOptions.value = emailSuffixes.map(suffix => ({
+  emailOptions.value = emailSuffixes.map((suffix) => ({
     value: searchText + suffix,
   }))
 }

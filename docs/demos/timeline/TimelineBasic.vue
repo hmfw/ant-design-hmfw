@@ -12,4 +12,3 @@ const items = [
   { content: '网络异常正在修复 2015-09-01' },
 ]
 </script>
-

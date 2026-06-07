@@ -60,9 +60,7 @@ export interface UploadProps {
   ) => void
   headers?: Record<string, string>
   /** AntD v6: object or async function. */
-  data?:
-    | Record<string, unknown>
-    | ((file: UploadFile) => Record<string, unknown> | Promise<Record<string, unknown>>)
+  data?: Record<string, unknown> | ((file: UploadFile) => Record<string, unknown> | Promise<Record<string, unknown>>)
   withCredentials?: boolean
   openFileDialogOnClick?: boolean
   method?: string
@@ -70,12 +68,7 @@ export interface UploadProps {
   /** 自定义判断文件是否为图片（用于显示缩略图）。 */
   isImageUrl?: (file: UploadFile) => boolean
   /** 自定义文件列表项渲染。 */
-  itemRender?: (
-    originNode: VNode,
-    file: UploadFile,
-    fileList: UploadFile[],
-    actions: ItemRenderActions,
-  ) => VNode
+  itemRender?: (originNode: VNode, file: UploadFile, fileList: UploadFile[], actions: ItemRenderActions) => VNode
 }
 
 export interface CustomRequestOptions {

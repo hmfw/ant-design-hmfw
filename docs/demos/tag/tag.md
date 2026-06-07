@@ -9,7 +9,6 @@
 
 ## 代码演示
 
-
 ### 基础用法
 
 基本标签的用法，可以通过添加 closable 变为可关闭标签。
@@ -54,31 +53,31 @@
 
 ### Tag Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| color | 标签色（预设色或自定义色值） | `string` | - |
-| closable | 标签是否可以关闭，关闭后自动隐藏 | `boolean` | `false` |
-| closeIcon | 自定义关闭图标组件 | `Component` | - |
-| icon | 标签图标组件 | `Component` | - |
-| bordered | 是否有边框 | `boolean` | `true` |
-| href | 设置后标签渲染为 `<a>` 链接 | `string` | - |
-| target | 链接打开方式，配合 `href` | `string` | - |
-| disabled | 禁用状态 | `boolean` | `false` |
+| 参数      | 说明                             | 类型        | 默认值  |
+| --------- | -------------------------------- | ----------- | ------- |
+| color     | 标签色（预设色或自定义色值）     | `string`    | -       |
+| closable  | 标签是否可以关闭，关闭后自动隐藏 | `boolean`   | `false` |
+| closeIcon | 自定义关闭图标组件               | `Component` | -       |
+| icon      | 标签图标组件                     | `Component` | -       |
+| bordered  | 是否有边框                       | `boolean`   | `true`  |
+| href      | 设置后标签渲染为 `<a>` 链接      | `string`    | -       |
+| target    | 链接打开方式，配合 `href`        | `string`    | -       |
+| disabled  | 禁用状态                         | `boolean`   | `false` |
 
 ### Tag Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| close | 关闭时的回调，调用 `e.preventDefault()` 可阻止自动隐藏 | `(e: MouseEvent) => void` |
+| 事件名 | 说明                                                   | 回调参数                  |
+| ------ | ------------------------------------------------------ | ------------------------- |
+| close  | 关闭时的回调，调用 `e.preventDefault()` 可阻止自动隐藏 | `(e: MouseEvent) => void` |
 
 ### CheckableTag Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
+| 参数    | 说明               | 类型      | 默认值  |
+| ------- | ------------------ | --------- | ------- |
 | checked | 设置标签的选中状态 | `boolean` | `false` |
 
 ### CheckableTag Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
+| 事件名 | 说明                 | 回调参数                     |
+| ------ | -------------------- | ---------------------------- |
 | change | 点击标签时触发的回调 | `(checked: boolean) => void` |

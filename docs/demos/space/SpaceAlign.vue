@@ -13,10 +13,10 @@
     <!-- 垂直模式下的对齐演示 -->
     <div style="display: flex; gap: 24px">
       <Space direction="vertical" :align="align" style="border: 1px dashed #d9d9d9; padding: 16px">
-        <Button type="primary">Primary Button</Button>
+        <Button type="primary"> Primary Button </Button>
         <Button>Default Button</Button>
-        <Button type="dashed" size="small">Small Button</Button>
-        <Button type="link" size="large">Large Link</Button>
+        <Button type="dashed" size="small"> Small Button </Button>
+        <Button type="link" size="large"> Large Link </Button>
       </Space>
     </div>
   </div>

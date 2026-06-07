@@ -87,7 +87,9 @@ const summaryRender = (pageData: DataType[]) => {
 
   return (
     <tr>
-      <td colspan="3" style="text-align: right; font-weight: 600;">总计：</td>
+      <td colspan="3" style="text-align: right; font-weight: 600;">
+        总计：
+      </td>
       <td style="text-align: right; font-weight: 600;">{totalQuantity}</td>
       <td style="text-align: right; font-weight: 600;">¥{totalAmount.toFixed(2)}</td>
     </tr>
@@ -96,11 +98,5 @@ const summaryRender = (pageData: DataType[]) => {
 </script>
 
 <template>
-  <Table
-    :data-source="dataSource"
-    :columns="columns"
-    :pagination="false"
-    :summary="summaryRender"
-    bordered
-  />
+  <Table :data-source="dataSource" :columns="columns" :pagination="false" :summary="summaryRender" bordered />
 </template>

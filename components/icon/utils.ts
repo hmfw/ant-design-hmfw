@@ -26,7 +26,7 @@ function toComponentName(iconName: string): string {
   const baseName = isFilled ? iconName.slice(0, -'-filled'.length) : iconName
   const pascal = baseName
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join('')
   return pascal + (isFilled ? 'Filled' : 'Outlined')
 }
@@ -49,7 +49,7 @@ export function searchIcons(query: string): IconSearchResult[] {
     }
 
     // 检查关键词匹配
-    metadata.keywords.forEach(keyword => {
+    metadata.keywords.forEach((keyword) => {
       if (keyword.toLowerCase() === normalizedQuery) {
         score += 5 // 完全匹配
       } else if (keyword.toLowerCase().includes(normalizedQuery)) {
@@ -64,7 +64,7 @@ export function searchIcons(query: string): IconSearchResult[] {
 
     // 检查标签匹配
     if (metadata.tags) {
-      metadata.tags.forEach(tag => {
+      metadata.tags.forEach((tag) => {
         if (tag.toLowerCase().includes(normalizedQuery)) {
           score += 2
         }
@@ -126,7 +126,7 @@ export function getIconsByCategory(category: string): IconSearchResult[] {
  */
 export function getAllCategories(): string[] {
   const categories = new Set<string>()
-  Object.values(iconMetadata).forEach(metadata => {
+  Object.values(iconMetadata).forEach((metadata) => {
     categories.add(metadata.category)
   })
   return Array.from(categories).sort()

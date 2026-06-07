@@ -142,8 +142,7 @@ describe('Spin', () => {
     const wrapper = mount(Spin, {
       props: { percent: 42 },
       slots: {
-        indicator: (params: { percent?: number }) =>
-          h('span', { class: 'my-pct' }, String(params?.percent)),
+        indicator: (params: { percent?: number }) => h('span', { class: 'my-pct' }, String(params?.percent)),
       },
     })
     expect(wrapper.find('.my-pct').text()).toBe('42')

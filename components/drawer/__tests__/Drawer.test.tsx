@@ -30,7 +30,11 @@ describe('Drawer', () => {
     const w1 = mount(Drawer, { props: { open: true, title: 'My Drawer' }, attachTo: document.body })
     expect(document.querySelector('.hmfw-drawer-title')?.textContent).toBe('My Drawer')
     w1.unmount()
-    const w2 = mount(Drawer, { props: { open: true }, slots: { title: 'Slot Title' }, attachTo: document.body })
+    const w2 = mount(Drawer, {
+      props: { open: true },
+      slots: { title: 'Slot Title' },
+      attachTo: document.body,
+    })
     expect(document.querySelector('.hmfw-drawer-title')?.textContent).toBe('Slot Title')
     w2.unmount()
   })
@@ -46,7 +50,10 @@ describe('Drawer', () => {
   })
 
   it('applies placement class', () => {
-    const wrapper = mount(Drawer, { props: { open: true, placement: 'left' }, attachTo: document.body })
+    const wrapper = mount(Drawer, {
+      props: { open: true, placement: 'left' },
+      attachTo: document.body,
+    })
     expect(document.querySelector('.hmfw-drawer-left')).toBeTruthy()
     wrapper.unmount()
   })
@@ -60,7 +67,10 @@ describe('Drawer', () => {
   })
 
   it('hides close button when closable=false', () => {
-    const wrapper = mount(Drawer, { props: { open: true, title: 'x', closable: false }, attachTo: document.body })
+    const wrapper = mount(Drawer, {
+      props: { open: true, title: 'x', closable: false },
+      attachTo: document.body,
+    })
     expect(document.querySelector('.hmfw-drawer-close')).toBeFalsy()
     wrapper.unmount()
   })
@@ -73,7 +83,10 @@ describe('Drawer', () => {
   })
 
   it('does not close on mask click when maskClosable=false', () => {
-    const wrapper = mount(Drawer, { props: { open: true, maskClosable: false }, attachTo: document.body })
+    const wrapper = mount(Drawer, {
+      props: { open: true, maskClosable: false },
+      attachTo: document.body,
+    })
     ;(document.querySelector('.hmfw-drawer-mask') as HTMLElement)?.click()
     expect(wrapper.emitted('close')).toBeFalsy()
     wrapper.unmount()
@@ -96,7 +109,10 @@ describe('Drawer', () => {
   })
 
   it('does not close on Escape when keyboard=false', async () => {
-    const wrapper = mount(Drawer, { props: { open: true, keyboard: false }, attachTo: document.body })
+    const wrapper = mount(Drawer, {
+      props: { open: true, keyboard: false },
+      attachTo: document.body,
+    })
     const root = document.querySelector('.hmfw-drawer-root') as HTMLElement
     root.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     await nextTick()
@@ -142,7 +158,10 @@ describe('Drawer', () => {
   })
 
   it('uses height for top/bottom placement', () => {
-    const wrapper = mount(Drawer, { props: { open: true, placement: 'top', height: 200 }, attachTo: document.body })
+    const wrapper = mount(Drawer, {
+      props: { open: true, placement: 'top', height: 200 },
+      attachTo: document.body,
+    })
     const wrap = document.querySelector('.hmfw-drawer-content-wrapper') as HTMLElement
     expect(wrap.style.height).toBe('200px')
     expect(wrap.style.width).toBe('')
@@ -172,7 +191,10 @@ describe('Drawer', () => {
   })
 
   it('renders no header when nothing to show', () => {
-    const wrapper = mount(Drawer, { props: { open: true, closable: false }, attachTo: document.body })
+    const wrapper = mount(Drawer, {
+      props: { open: true, closable: false },
+      attachTo: document.body,
+    })
     expect(document.querySelector('.hmfw-drawer-header')).toBeFalsy()
     wrapper.unmount()
   })
@@ -221,7 +243,10 @@ describe('Drawer', () => {
 
   it('applies contentWrapperStyle to content-wrapper', () => {
     const wrapper = mount(Drawer, {
-      props: { open: true, contentWrapperStyle: { backgroundColor: 'rgb(255, 0, 0)', border: '2px solid blue' } },
+      props: {
+        open: true,
+        contentWrapperStyle: { backgroundColor: 'rgb(255, 0, 0)', border: '2px solid blue' },
+      },
       attachTo: document.body,
     })
     const contentWrapper = document.querySelector('.hmfw-drawer-content-wrapper') as HTMLElement

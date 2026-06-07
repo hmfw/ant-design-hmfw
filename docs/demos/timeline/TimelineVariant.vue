@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 32px;">
+  <div style="display: flex; gap: 32px">
     <div>
       <h4>Outlined (默认)</h4>
       <Timeline :items="items" />

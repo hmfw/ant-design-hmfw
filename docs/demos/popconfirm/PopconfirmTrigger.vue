@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 16px; align-items: center;">
+  <div style="display: flex; gap: 16px; align-items: center">
     <!-- hover 触发 -->
     <Popconfirm
       title="确定要删除吗？"

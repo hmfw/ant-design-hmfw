@@ -2,8 +2,8 @@
   <Space direction="vertical" style="width: 100%">
     <Steps :current="current" :items="items" />
     <Space>
-      <Button :disabled="current === 0" @click="current--">上一步</Button>
-      <Button type="primary" :disabled="current === items.length - 1" @click="current++">下一步</Button>
+      <Button :disabled="current === 0" @click="current--"> 上一步 </Button>
+      <Button type="primary" :disabled="current === items.length - 1" @click="current++"> 下一步 </Button>
     </Space>
     <p>当前步骤：{{ current + 1 }}</p>
   </Space>

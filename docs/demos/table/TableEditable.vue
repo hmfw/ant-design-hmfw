@@ -42,7 +42,7 @@ const edit = (record: DataType) => {
 }
 
 const save = (key: number) => {
-  const index = dataSource.value.findIndex(item => item.key === key)
+  const index = dataSource.value.findIndex((item) => item.key === key)
   if (index > -1) {
     Object.assign(dataSource.value[index], editForm)
   }
@@ -61,12 +61,7 @@ const columns: TableColumn<DataType>[] = [
     width: 200,
     render: (text: string, record: DataType) => {
       if (isEditing(record)) {
-        return (
-          <Input
-            value={editForm.name}
-            onChange={(e) => (editForm.name = (e.target as HTMLInputElement).value)}
-          />
-        )
+        return <Input value={editForm.name} onChange={(e) => (editForm.name = (e.target as HTMLInputElement).value)} />
       }
       return text
     },
@@ -96,10 +91,7 @@ const columns: TableColumn<DataType>[] = [
     render: (text: string, record: DataType) => {
       if (isEditing(record)) {
         return (
-          <Input
-            value={editForm.address}
-            onChange={(e) => (editForm.address = (e.target as HTMLInputElement).value)}
-          />
+          <Input value={editForm.address} onChange={(e) => (editForm.address = (e.target as HTMLInputElement).value)} />
         )
       }
       return text
@@ -133,10 +125,5 @@ const columns: TableColumn<DataType>[] = [
 </script>
 
 <template>
-  <Table
-    :data-source="dataSource"
-    :columns="columns"
-    :pagination="false"
-    bordered
-  />
+  <Table :data-source="dataSource" :columns="columns" :pagination="false" bordered />
 </template>

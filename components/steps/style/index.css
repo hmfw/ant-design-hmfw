@@ -285,7 +285,9 @@
   width: 0;
   height: 2px;
   background-color: var(--hmfw-color-primary, #1677ff);
-  transition: width var(--hmfw-motion-duration-mid, 0.3s), left var(--hmfw-motion-duration-mid, 0.3s);
+  transition:
+    width var(--hmfw-motion-duration-mid, 0.3s),
+    left var(--hmfw-motion-duration-mid, 0.3s);
   content: '';
 }
 
@@ -402,4 +404,3 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-

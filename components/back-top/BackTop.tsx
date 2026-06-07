@@ -80,12 +80,7 @@ function scrollTo(
   const frameFunc = () => {
     const timestamp = Date.now()
     const time = timestamp - startTime
-    const nextScrollTop = easeInOutCubic(
-      time > duration ? duration : time,
-      scrollTop,
-      y,
-      duration,
-    )
+    const nextScrollTop = easeInOutCubic(time > duration ? duration : time, scrollTop, y, duration)
 
     if (container === window || (container as any).window === container) {
       ;(container as Window).scrollTo(window.pageXOffset, nextScrollTop)
@@ -177,17 +172,9 @@ export const BackTop = defineComponent({
     )
 
     return () => (
-      <div
-        ref={containerRef}
-        class={classes.value}
-        style={props.style}
-        onClick={scrollToTop}
-      >
-        <Transition name="hmfw-fade">
-          {visible.value && (slots.default?.() || defaultElement())}
-        </Transition>
+      <div ref={containerRef} class={classes.value} style={props.style} onClick={scrollToTop}>
+        <Transition name="hmfw-fade">{visible.value && (slots.default?.() || defaultElement())}</Transition>
       </div>
     )
   },
 })
-

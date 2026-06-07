@@ -5,10 +5,10 @@
       :options="options"
       :multiple="true"
       placeholder="支持多选"
-      style="width: 300px;"
+      style="width: 300px"
       @change="handleChange"
     />
-    <p style="margin-top: 8px;">当前值：{{ value }}</p>
+    <p style="margin-top: 8px">当前值：{{ value }}</p>
   </div>
 </template>
 
@@ -34,9 +34,7 @@ const options = [
       {
         value: 'ningbo',
         label: '宁波',
-        children: [
-          { value: 'haishu', label: '海曙区' },
-        ],
+        children: [{ value: 'haishu', label: '海曙区' }],
       },
     ],
   },
@@ -47,9 +45,7 @@ const options = [
       {
         value: 'nanjing',
         label: '南京',
-        children: [
-          { value: 'xuanwu', label: '玄武区' },
-        ],
+        children: [{ value: 'xuanwu', label: '玄武区' }],
       },
     ],
   },

@@ -1,9 +1,5 @@
 <template>
-  <Steps
-    progress-dot
-    :current="1"
-    :items="items"
-  />
+  <Steps progress-dot :current="1" :items="items" />
 </template>
 
 <script setup lang="ts">

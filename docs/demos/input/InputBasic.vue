@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px">
     <Input v-model:value="value" placeholder="请输入内容" />
     <Input v-model:value="value" placeholder="禁用状态" disabled />
     <Input v-model:value="value" placeholder="只读状态" readonly />

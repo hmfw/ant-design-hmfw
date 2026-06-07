@@ -1,5 +1,5 @@
 <template>
-  <Tabs :items="items" :tabBarExtraContent="extra" />
+  <Tabs :items="items" :tab-bar-extra-content="extra" />
 </template>
 
 <script setup lang="ts">

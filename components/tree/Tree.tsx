@@ -1,15 +1,22 @@
-import {
-  defineComponent, ref, computed, watch, nextTick, type PropType, type VNodeChild,
-} from 'vue'
+import { defineComponent, ref, computed, watch, nextTick, type PropType, type VNodeChild } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Checkbox } from '../checkbox'
 import { VirtualList } from '../_internal/virtual-list'
 import * as Icons from '../icon'
 import type {
-  TreeDataNode, TreeExpandedKeys, TreeSelectedKeys, TreeCheckedKeys,
-  CheckedKeysObject, FieldNames, ShowLineConfig, DraggableConfig, AllowDropOptions,
-  TreeSemanticClassNames, TreeSemanticStyles, Key,
+  TreeDataNode,
+  TreeExpandedKeys,
+  TreeSelectedKeys,
+  TreeCheckedKeys,
+  CheckedKeysObject,
+  FieldNames,
+  ShowLineConfig,
+  DraggableConfig,
+  AllowDropOptions,
+  TreeSemanticClassNames,
+  TreeSemanticStyles,
+  Key,
 } from './types'
 
 interface Entity {
@@ -82,12 +89,26 @@ export const Tree = defineComponent({
     classNames: Object as PropType<TreeSemanticClassNames>,
     styles: Object as PropType<TreeSemanticStyles>,
     /** DirectoryTree 用：展开触发方式 */
-    expandAction: { type: [Boolean, String] as PropType<false | 'click' | 'doubleClick'>, default: undefined },
+    expandAction: {
+      type: [Boolean, String] as PropType<false | 'click' | 'doubleClick'>,
+      default: undefined,
+    },
   },
   emits: [
-    'update:expandedKeys', 'update:selectedKeys', 'update:checkedKeys',
-    'expand', 'select', 'check', 'dblclick', 'rightClick',
-    'dragstart', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop',
+    'update:expandedKeys',
+    'update:selectedKeys',
+    'update:checkedKeys',
+    'expand',
+    'select',
+    'check',
+    'dblclick',
+    'rightClick',
+    'dragstart',
+    'dragenter',
+    'dragover',
+    'dragleave',
+    'dragend',
+    'drop',
   ],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tree')
@@ -109,7 +130,11 @@ export const Tree = defineComponent({
           const pos = `${parentPos}-${index}`
           const children = getChildren(node) ?? []
           map.set(key, {
-            node, parentKey, level, pos, index,
+            node,
+            parentKey,
+            level,
+            pos,
+            index,
             childrenKeys: children.map((c) => getKey(c)),
           })
           if (children.length) walk(children, key, level + 1, pos)
@@ -166,19 +191,25 @@ export const Tree = defineComponent({
 
     const expandedKeys = computed(() => props.expandedKeys ?? innerExpanded.value)
     const selectedKeys = computed(() => props.selectedKeys ?? innerSelected.value)
-    const checkedKeys = computed(() => (
-      props.checkedKeys !== undefined ? normalizeChecked(props.checkedKeys) : innerChecked.value
-    ))
+    const checkedKeys = computed(() =>
+      props.checkedKeys !== undefined ? normalizeChecked(props.checkedKeys) : innerChecked.value,
+    )
 
     // treeData 变化时，按 defaultExpandAll 重算展开
-    watch(() => props.treeData, () => {
-      if (props.defaultExpandAll) innerExpanded.value = getAllKeys()
-    })
+    watch(
+      () => props.treeData,
+      () => {
+        if (props.defaultExpandAll) innerExpanded.value = getAllKeys()
+      },
+    )
 
     // autoExpandParent：受控展开变化时自动补全祖先
-    watch(() => props.expandedKeys, (val) => {
-      if (val && props.autoExpandParent) innerExpanded.value = conductExpandParent(val)
-    })
+    watch(
+      () => props.expandedKeys,
+      (val) => {
+        if (val && props.autoExpandParent) innerExpanded.value = conductExpandParent(val)
+      },
+    )
 
     // ============ 半选计算（checkStrictly 关闭时） ============
     const halfCheckedKeys = computed<Set<Key>>(() => {
@@ -198,24 +229,22 @@ export const Tree = defineComponent({
     // __FLATTEN__
 
     // ============ 扁平化可见节点 ============
-    const flattenNodes = (nodes: TreeDataNode[], level = 0, parentPos = '0'): FlatNode[] => (
+    const flattenNodes = (nodes: TreeDataNode[], level = 0, parentPos = '0'): FlatNode[] =>
       nodes.flatMap((node, i) => {
         const key = getKey(node)
         const children = getChildren(node)
         const pos = `${parentPos}-${i}`
-        const hasChildren = !!(children?.length)
+        const hasChildren = !!children?.length
         const result: FlatNode[] = [{ node, level, hasChildren, pos }]
         if (hasChildren && expandedKeys.value.includes(key)) {
           result.push(...flattenNodes(children!, level + 1, pos))
         }
         return result
       })
-    )
     const flatNodes = computed(() => flattenNodes(props.treeData))
 
-    const collectNodes = (keys: Key[]): TreeDataNode[] => (
+    const collectNodes = (keys: Key[]): TreeDataNode[] =>
       keys.map((k) => keyEntities.value.get(k)?.node).filter(Boolean) as TreeDataNode[]
-    )
 
     // ============ 展开 ============
     const setExpanded = (next: Key[]) => {
@@ -225,9 +254,7 @@ export const Tree = defineComponent({
 
     const handleExpand = (key: Key, node: TreeDataNode, nativeEvent?: Event) => {
       const willExpand = !expandedKeys.value.includes(key)
-      const next = willExpand
-        ? [...expandedKeys.value, key]
-        : expandedKeys.value.filter((k) => k !== key)
+      const next = willExpand ? [...expandedKeys.value, key] : expandedKeys.value.filter((k) => k !== key)
       setExpanded(next)
       emit('expand', next, { expanded: willExpand, node, nativeEvent })
     }
@@ -238,9 +265,7 @@ export const Tree = defineComponent({
       const willSelect = !selectedKeys.value.includes(key)
       let next: Key[]
       if (props.multiple) {
-        next = willSelect
-          ? [...selectedKeys.value, key]
-          : selectedKeys.value.filter((k) => k !== key)
+        next = willSelect ? [...selectedKeys.value, key] : selectedKeys.value.filter((k) => k !== key)
       } else {
         next = selectedKeys.value[0] === key ? [] : [key]
       }
@@ -262,9 +287,7 @@ export const Tree = defineComponent({
       let next: Key[]
 
       if (props.checkStrictly) {
-        next = wasChecked
-          ? checkedKeys.value.filter((k) => k !== key)
-          : [...checkedKeys.value, key]
+        next = wasChecked ? checkedKeys.value.filter((k) => k !== key) : [...checkedKeys.value, key]
       } else {
         const descendants = getDescendantKeys(key).filter((d) => {
           const n = keyEntities.value.get(d)?.node
@@ -487,9 +510,10 @@ export const Tree = defineComponent({
 
     const renderSwitcher = (node: TreeDataNode, hasChildren: boolean, isExpanded: boolean): VNodeChild => {
       if (props.switcherIcon) {
-        const custom = typeof props.switcherIcon === 'function'
-          ? props.switcherIcon({ expanded: isExpanded, isLeaf: !hasChildren })
-          : renderIcon(props.switcherIcon, node)
+        const custom =
+          typeof props.switcherIcon === 'function'
+            ? props.switcherIcon({ expanded: isExpanded, isLeaf: !hasChildren })
+            : renderIcon(props.switcherIcon, node)
         if (custom) return custom
       }
       if (!hasChildren) return null
@@ -531,20 +555,20 @@ export const Tree = defineComponent({
           aria-disabled={isDisabled || undefined}
           style={{ paddingLeft: `${level * props.indent}px`, ...ss('item') }}
           draggable={draggableNode || undefined}
-          onFocus={() => { activeKey.value = key }}
+          onFocus={() => {
+            activeKey.value = key
+          }}
           onKeydown={(e: KeyboardEvent) => handleNodeKeydown(e, key, node, hasChildren)}
           onContextmenu={(e: Event) => handleRightClick(key, node, e)}
-          onDragstart={draggableNode ? ((e: DragEvent) => handleDragStart(e, key, node)) : undefined}
-          onDragenter={props.draggable ? ((e: DragEvent) => handleDragEnter(e, key, node)) : undefined}
-          onDragover={props.draggable ? ((e: DragEvent) => handleDragOver(e, key, node)) : undefined}
-          onDragleave={props.draggable ? ((e: DragEvent) => handleDragLeave(e, node)) : undefined}
-          onDragend={props.draggable ? ((e: DragEvent) => handleDragEnd(e, node)) : undefined}
-          onDrop={props.draggable ? ((e: DragEvent) => handleDrop(e, key, node)) : undefined}
+          onDragstart={draggableNode ? (e: DragEvent) => handleDragStart(e, key, node) : undefined}
+          onDragenter={props.draggable ? (e: DragEvent) => handleDragEnter(e, key, node) : undefined}
+          onDragover={props.draggable ? (e: DragEvent) => handleDragOver(e, key, node) : undefined}
+          onDragleave={props.draggable ? (e: DragEvent) => handleDragLeave(e, node) : undefined}
+          onDragend={props.draggable ? (e: DragEvent) => handleDragEnd(e, node) : undefined}
+          onDrop={props.draggable ? (e: DragEvent) => handleDrop(e, key, node) : undefined}
         >
           {/* 拖拽把手 */}
-          {draggableNode && dragIcon.value && (
-            <span class={`${prefixCls}-draggable-icon`}>⋮⋮</span>
-          )}
+          {draggableNode && dragIcon.value && <span class={`${prefixCls}-draggable-icon`}>⋮⋮</span>}
 
           {/* Switcher */}
           <span
@@ -589,17 +613,15 @@ export const Tree = defineComponent({
             onClick={(e: Event) => handleTitleClick(key, node, hasChildren, e)}
             onDblclick={(e: Event) => handleTitleDblclick(key, node, hasChildren, e)}
           >
-            <span class={`${prefixCls}-title`}>
-              {props.titleRender ? props.titleRender(node) : getTitle(node)}
-            </span>
+            <span class={`${prefixCls}-title`}>{props.titleRender ? props.titleRender(node) : getTitle(node)}</span>
           </span>
         </div>
       )
     }
 
     return () => {
-      const treeContent = props.virtual && props.height
-        ? (
+      const treeContent =
+        props.virtual && props.height ? (
           <VirtualList
             data={flatNodes.value}
             height={props.height}
@@ -607,8 +629,9 @@ export const Tree = defineComponent({
             renderItem={(flatNode: FlatNode, index: number) => renderTreeNode(flatNode, index)}
             itemKey={(flatNode: FlatNode) => getKey(flatNode.node)}
           />
+        ) : (
+          flatNodes.value.map((flatNode, index) => renderTreeNode(flatNode, index))
         )
-        : flatNodes.value.map((flatNode, index) => renderTreeNode(flatNode, index))
 
       return (
         <div

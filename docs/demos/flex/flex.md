@@ -2,7 +2,6 @@
 
 弹性布局。
 
-
 ## 何时使用
 
 - 需要在水平或垂直方向上排列元素时
@@ -47,18 +46,18 @@
 
 ### Flex Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| vertical | 是否垂直方向排列 | `boolean` | `false` |
-| wrap | 是否自动换行 | `boolean \| string` | `false` |
-| justify | 主轴对齐方式，对应 `justify-content` | `'flex-start' \| 'center' \| 'flex-end' \| 'space-between' \| 'space-around' \| 'space-evenly' \| 'start' \| 'end' \| ...` | - |
-| align | 交叉轴对齐方式，对应 `align-items` | `'flex-start' \| 'center' \| 'flex-end' \| 'stretch' \| 'baseline' \| 'start' \| 'end' \| ...` | - |
-| gap | 子元素间距 | `'small' \| 'middle' \| 'large' \| number` | - |
-| flex | flex CSS 简写属性 | `string \| number` | - |
-| component | 自定义元素类型 | `string` | `'div'` |
+| 参数      | 说明                                 | 类型                                                                                                                       | 默认值  |
+| --------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | ------- |
+| vertical  | 是否垂直方向排列                     | `boolean`                                                                                                                  | `false` |
+| wrap      | 是否自动换行                         | `boolean \| string`                                                                                                        | `false` |
+| justify   | 主轴对齐方式，对应 `justify-content` | `'flex-start' \| 'center' \| 'flex-end' \| 'space-between' \| 'space-around' \| 'space-evenly' \| 'start' \| 'end' \| ...` | -       |
+| align     | 交叉轴对齐方式，对应 `align-items`   | `'flex-start' \| 'center' \| 'flex-end' \| 'stretch' \| 'baseline' \| 'start' \| 'end' \| ...`                             | -       |
+| gap       | 子元素间距                           | `'small' \| 'middle' \| 'large' \| number`                                                                                 | -       |
+| flex      | flex CSS 简写属性                    | `string \| number`                                                                                                         | -       |
+| component | 自定义元素类型                       | `string`                                                                                                                   | `'div'` |
 
 ### Flex Slots
 
-| 名称 | 说明 |
-| --- | --- |
+| 名称    | 说明       |
+| ------- | ---------- |
 | default | 子元素内容 |

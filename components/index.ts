@@ -23,12 +23,7 @@ export * from './icon/icons'
 // Icon metadata and utilities
 export { iconMetadata } from './icon/metadata'
 export type { IconMetadata } from './icon/metadata'
-export {
-  searchIcons,
-  getIconsByCategory,
-  getAllCategories,
-  getAllIcons,
-} from './icon/utils'
+export { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from './icon/utils'
 export type { IconSearchResult } from './icon/utils'
 
 export { Button } from './button'
@@ -44,7 +39,15 @@ export { Row, Col } from './grid'
 export type { RowProps, ColProps, Gutter, Align, Justify, ColSpan, ColSize } from './grid'
 
 export { Text, Title, Paragraph, Link } from './typography'
-export type { TextProps, TitleProps, ParagraphProps, LinkProps, TypographyType, TitleLevel, CopyableConfig } from './typography'
+export type {
+  TextProps,
+  TitleProps,
+  ParagraphProps,
+  LinkProps,
+  TypographyType,
+  TitleLevel,
+  CopyableConfig,
+} from './typography'
 
 export { Layout, Header, Footer, Content, Sider } from './layout'
 export type { LayoutProps, SiderProps, LayoutBreakpoint } from './layout'
@@ -68,7 +71,14 @@ export { Input, InputPassword, TextArea, InputSearch } from './input'
 export type { InputProps, TextAreaProps, InputSize, InputStatus } from './input'
 
 export { Checkbox, CheckboxGroup } from './checkbox'
-export type { CheckboxProps, CheckboxGroupProps, CheckboxValueType, CheckboxChangeEvent, CheckboxChangeEventTarget, CheckboxOptionType } from './checkbox'
+export type {
+  CheckboxProps,
+  CheckboxGroupProps,
+  CheckboxValueType,
+  CheckboxChangeEvent,
+  CheckboxChangeEventTarget,
+  CheckboxOptionType,
+} from './checkbox'
 
 export { Radio, RadioGroup, RadioButton } from './radio'
 export type { RadioProps, RadioGroupProps, RadioValueType, RadioChangeEvent } from './radio'
@@ -212,8 +222,14 @@ export type { AnchorProps, AnchorLinkItem } from './anchor'
 
 export { Tree, DirectoryTree } from './tree'
 export type {
-  TreeProps, TreeDataNode, TreeExpandedKeys, TreeSelectedKeys, TreeCheckedKeys,
-  CheckedKeysObject, DirectoryTreeProps, ExpandAction,
+  TreeProps,
+  TreeDataNode,
+  TreeExpandedKeys,
+  TreeSelectedKeys,
+  TreeCheckedKeys,
+  CheckedKeysObject,
+  DirectoryTreeProps,
+  ExpandAction,
 } from './tree'
 
 export { TimePicker } from './time-picker'
@@ -351,7 +367,63 @@ import { TreeSelect } from './tree-select'
 import { Statistic, Countdown } from './statistic'
 import { Calendar } from './calendar'
 
-const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Link, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Ribbon, Tag, CheckableTag, Empty, Card, CardGrid, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, RadioButton, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker, Transfer, RangePicker, TreeSelect, Statistic, Countdown, Calendar]
+const components = [
+  ConfigProvider,
+  AppComponent,
+  Icon,
+  Button,
+  Space,
+  Divider,
+  Row,
+  Col,
+  Text,
+  Title,
+  Paragraph,
+  Link,
+  Layout,
+  Header,
+  Footer,
+  Content,
+  Sider,
+  Avatar,
+  AvatarGroup,
+  Badge,
+  Ribbon,
+  Tag,
+  CheckableTag,
+  Empty,
+  Card,
+  CardGrid,
+  CardMeta,
+  Input,
+  InputPassword,
+  TextArea,
+  InputSearch,
+  Checkbox,
+  CheckboxGroup,
+  Radio,
+  RadioGroup,
+  RadioButton,
+  Switch,
+  Spin,
+  Progress,
+  Breadcrumb,
+  Pagination,
+  Tabs,
+  Modal,
+  Drawer,
+  Image,
+  PreviewGroup,
+  Carousel,
+  Tour,
+  ColorPicker,
+  Transfer,
+  RangePicker,
+  TreeSelect,
+  Statistic,
+  Countdown,
+  Calendar,
+]
 
 export function install(app: VueApp): void {
   components.forEach((component) => {

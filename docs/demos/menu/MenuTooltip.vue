@@ -1,13 +1,15 @@
 <template>
   <div>
-    <Button
-      type="primary"
-      style="margin-bottom: 16px;"
-      @click="collapsed = !collapsed"
-    >
+    <Button type="primary" style="margin-bottom: 16px" @click="collapsed = !collapsed">
       {{ collapsed ? '展开' : '折叠' }}
     </Button>
-    <div :style="{ width: collapsed ? '80px' : '256px', borderRight: '1px solid #f0f0f0', transition: 'width 0.2s' }">
+    <div
+      :style="{
+        width: collapsed ? '80px' : '256px',
+        borderRight: '1px solid #f0f0f0',
+        transition: 'width 0.2s',
+      }"
+    >
       <Menu
         mode="inline"
         :items="items"
@@ -32,18 +34,18 @@ const items = [
     key: '1',
     label: '导航一',
     icon: h('span', '🏠'),
-    title: '这是导航一的提示'
+    title: '这是导航一的提示',
   },
   {
     key: '2',
     label: '导航二',
     icon: h('span', '👤'),
-    title: '这是导航二的提示'
+    title: '这是导航二的提示',
   },
   {
     key: '3',
     label: '导航三',
-    icon: h('span', '⚙️')
+    icon: h('span', '⚙️'),
   },
   {
     key: 'sub',

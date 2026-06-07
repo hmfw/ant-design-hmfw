@@ -96,9 +96,7 @@ describe('Collapse', () => {
     it('toggles Panel children', async () => {
       const wrapper = mount(Collapse, {
         slots: {
-          default: () => [
-            h(CollapsePanel, { key: '1', header: 'Header 1' }, () => 'Content 1'),
-          ],
+          default: () => [h(CollapsePanel, { key: '1', header: 'Header 1' }, () => 'Content 1')],
         },
       })
       await wrapper.find('.hmfw-collapse-header').trigger('click')
@@ -108,9 +106,7 @@ describe('Collapse', () => {
     it('respects Panel disabled prop', async () => {
       const wrapper = mount(Collapse, {
         slots: {
-          default: () => [
-            h(CollapsePanel, { key: '1', header: 'Header 1', disabled: true }, () => 'Content 1'),
-          ],
+          default: () => [h(CollapsePanel, { key: '1', header: 'Header 1', disabled: true }, () => 'Content 1')],
         },
       })
       await wrapper.find('.hmfw-collapse-header').trigger('click')
@@ -151,9 +147,7 @@ describe('Collapse', () => {
     })
 
     it('item-level collapsible overrides parent', async () => {
-      const customItems = [
-        { key: '1', label: 'Panel 1', children: 'Content 1', collapsible: 'icon' as const },
-      ]
+      const customItems = [{ key: '1', label: 'Panel 1', children: 'Content 1', collapsible: 'icon' as const }]
       const wrapper = mount(Collapse, {
         props: { items: customItems, collapsible: 'header' },
       })
@@ -178,9 +172,7 @@ describe('Collapse', () => {
     })
 
     it('passes isActive to expandIcon', async () => {
-      const customIcon = vi.fn(({ isActive }) =>
-        h('span', { class: 'custom-icon' }, isActive ? '↓' : '→'),
-      )
+      const customIcon = vi.fn(({ isActive }) => h('span', { class: 'custom-icon' }, isActive ? '↓' : '→'))
       const wrapper = mount(Collapse, {
         props: { items, expandIcon: customIcon },
       })
@@ -203,9 +195,7 @@ describe('Collapse', () => {
     })
 
     it('forceRender keeps panel content', () => {
-      const customItems = [
-        { key: '1', label: 'Panel 1', children: 'Content 1', forceRender: true },
-      ]
+      const customItems = [{ key: '1', label: 'Panel 1', children: 'Content 1', forceRender: true }]
       const wrapper = mount(Collapse, {
         props: { items: customItems, destroyInactivePanel: true },
       })
@@ -258,13 +248,10 @@ describe('Collapse', () => {
     })
 
     it('can still click header when showArrow=false', async () => {
-      const customItems = [
-        { key: '1', label: 'Panel 1', children: 'Content 1', showArrow: false },
-      ]
+      const customItems = [{ key: '1', label: 'Panel 1', children: 'Content 1', showArrow: false }]
       const wrapper = mount(Collapse, { props: { items: customItems } })
       await wrapper.find('.hmfw-collapse-header').trigger('click')
       expect(wrapper.find('.hmfw-collapse-item').classes()).toContain('hmfw-collapse-item-active')
     })
   })
 })
-

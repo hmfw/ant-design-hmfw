@@ -1,10 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import {
-  FloatButton,
-  FloatButtonGroup,
-  FloatButtonBackTop,
-} from '../FloatButton'
+import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '../FloatButton'
 import FloatButtonDefault from '../FloatButton'
 import { SettingOutlined } from '../../icon/icons'
 
@@ -268,13 +264,11 @@ describe('FloatButtonBackTop', () => {
     })
     const scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
     let rafCalls = 0
-    const rafSpy = vi
-      .spyOn(window, 'requestAnimationFrame')
-      .mockImplementation((cb: FrameRequestCallback) => {
-        // Run the first frame only, to avoid an infinite synchronous loop
-        if (rafCalls++ === 0) cb(0)
-        return 0
-      })
+    const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: FrameRequestCallback) => {
+      // Run the first frame only, to avoid an infinite synchronous loop
+      if (rafCalls++ === 0) cb(0)
+      return 0
+    })
     window.dispatchEvent(new Event('scroll'))
     await wrapper.vm.$nextTick()
     await wrapper.find('.hmfw-float-btn').trigger('click')

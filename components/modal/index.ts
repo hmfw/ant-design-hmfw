@@ -33,6 +33,4 @@ Modal.destroyAll = () => {
 }
 
 export { Modal }
-export type {
-  ModalProps, ModalFuncProps, ModalFuncReturn, ModalContent, ModalWidth, LegacyButtonType,
-} from './types'
+export type { ModalProps, ModalFuncProps, ModalFuncReturn, ModalContent, ModalWidth, LegacyButtonType } from './types'

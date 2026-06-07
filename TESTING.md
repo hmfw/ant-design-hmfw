@@ -26,6 +26,7 @@ playwright-cli open http://localhost:5173/components/select
 ```
 
 验证：
+
 - 点击 Select 触发器，下拉菜单出现在触发器正下方
 - 选中一项后下拉关闭，选中值显示在触发器内
 - 点击页面空白处，下拉关闭
@@ -38,6 +39,7 @@ playwright-cli open http://localhost:5173/components/date-picker
 ```
 
 验证：
+
 - 点击输入框，日历面板出现在输入框下方
 - 点击某一天，面板关闭，输入框显示日期
 - 点击 `«` `‹` 导航按钮，月份/年份切换
@@ -50,6 +52,7 @@ playwright-cli open http://localhost:5173/components/range-picker
 ```
 
 验证：
+
 - 点击输入框，出现两个并排日历
 - 左右面板显示相邻月份
 - 点击开始日期后，悬停其他日期有范围高亮
@@ -62,6 +65,7 @@ playwright-cli open http://localhost:5173/components/tooltip
 ```
 
 验证：
+
 - 悬停触发器，气泡出现在正确方向（top/bottom/left/right）
 - 气泡有 `role="tooltip"` 属性
 - 鼠标离开后气泡消失
@@ -78,6 +82,7 @@ playwright-cli open http://localhost:5173/components/modal
 ```
 
 验证：
+
 - 点击按钮，Modal 出现，背景遮罩存在
 - 点击取消/关闭按钮，Modal 消失
 - 点击遮罩，Modal 消失
@@ -91,6 +96,7 @@ playwright-cli open http://localhost:5173/components/drawer
 ```
 
 验证：
+
 - 四个方向（上/下/左/右）的抽屉都能正常打开关闭
 - 点击遮罩关闭
 
@@ -101,6 +107,7 @@ playwright-cli open http://localhost:5173/components/color-picker
 ```
 
 验证：
+
 - 点击色块，面板出现
 - 拖动饱和度/亮度区域，颜色实时变化
 - 拖动色相滑块，颜色变化
@@ -120,9 +127,9 @@ playwright-cli console error
 
 ```js
 // Tabs
-document.querySelectorAll('[role="tablist"]').length  // 应 > 0
-document.querySelectorAll('[role="tab"]').length       // 应 > 0
-document.querySelector('[aria-selected="true"]')       // 应存在
+document.querySelectorAll('[role="tablist"]').length // 应 > 0
+document.querySelectorAll('[role="tab"]').length // 应 > 0
+document.querySelector('[aria-selected="true"]') // 应存在
 
 // Progress
 document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow')

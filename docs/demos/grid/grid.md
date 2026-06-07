@@ -2,7 +2,6 @@
 
 24 栅格系统。
 
-
 ## 何时使用
 
 - 需要对页面进行栅格化布局时
@@ -55,26 +54,26 @@
 
 ### Row Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| gutter | 栅格间距，支持 `[水平, 垂直]` 和响应式对象 | `number \| string \| [number \| string, number \| string] \| { xs?: number, sm?: number, ... }` | `0` |
-| justify | 水平排列方式，支持响应式对象 | `'start' \| 'end' \| 'center' \| 'space-around' \| 'space-between' \| 'space-evenly' \| { xs?: ..., sm?: ..., ... }` | `'start'` |
-| align | 垂直对齐方式，支持响应式对象 | `'top' \| 'middle' \| 'bottom' \| 'stretch' \| { xs?: ..., sm?: ..., ... }` | `'top'` |
-| wrap | 是否自动换行 | `boolean` | `true` |
+| 参数    | 说明                                       | 类型                                                                                                                 | 默认值    |
+| ------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- | --------- |
+| gutter  | 栅格间距，支持 `[水平, 垂直]` 和响应式对象 | `number \| string \| [number \| string, number \| string] \| { xs?: number, sm?: number, ... }`                      | `0`       |
+| justify | 水平排列方式，支持响应式对象               | `'start' \| 'end' \| 'center' \| 'space-around' \| 'space-between' \| 'space-evenly' \| { xs?: ..., sm?: ..., ... }` | `'start'` |
+| align   | 垂直对齐方式，支持响应式对象               | `'top' \| 'middle' \| 'bottom' \| 'stretch' \| { xs?: ..., sm?: ..., ... }`                                          | `'top'`   |
+| wrap    | 是否自动换行                               | `boolean`                                                                                                            | `true`    |
 
 ### Col Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| flex | flex 布局属性 | `number \| 'auto' \| 'none' \| string` | - |
-| span | 栅格占位格数，0 时隐藏 | `number \| string` | - |
-| offset | 栅格左侧的间隔格数 | `number` | `0` |
-| order | 栅格顺序 | `number` | `0` |
-| push | 栅格向右移动格数 | `number` | `0` |
-| pull | 栅格向左移动格数 | `number` | `0` |
-| xs | `<576px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| sm | `≥576px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| md | `≥768px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| lg | `≥992px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| xl | `≥1200px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| xxl | `≥1600px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
+| 参数   | 说明                   | 类型                                                                                                          | 默认值 |
+| ------ | ---------------------- | ------------------------------------------------------------------------------------------------------------- | ------ |
+| flex   | flex 布局属性          | `number \| 'auto' \| 'none' \| string`                                                                        | -      |
+| span   | 栅格占位格数，0 时隐藏 | `number \| string`                                                                                            | -      |
+| offset | 栅格左侧的间隔格数     | `number`                                                                                                      | `0`    |
+| order  | 栅格顺序               | `number`                                                                                                      | `0`    |
+| push   | 栅格向右移动格数       | `number`                                                                                                      | `0`    |
+| pull   | 栅格向左移动格数       | `number`                                                                                                      | `0`    |
+| xs     | `<576px` 响应式栅格    | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
+| sm     | `≥576px` 响应式栅格    | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
+| md     | `≥768px` 响应式栅格    | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
+| lg     | `≥992px` 响应式栅格    | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
+| xl     | `≥1200px` 响应式栅格   | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
+| xxl    | `≥1600px` 响应式栅格   | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |

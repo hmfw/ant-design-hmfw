@@ -133,7 +133,7 @@ export default defineComponent({
           innerLoading.value = false
         }
       },
-      { immediate: true }
+      { immediate: true },
     )
 
     onBeforeUnmount(() => {
@@ -177,8 +177,8 @@ export default defineComponent({
           [`${prefixCls}-two-chinese-chars`]: hasTwoCNChar.value,
           [`${prefixCls}-icon-end`]: props.iconPosition === 'end',
         },
-        props.classNames?.root
-      )
+        props.classNames?.root,
+      ),
     )
 
     const handleClick = (e: MouseEvent) => {
@@ -195,7 +195,12 @@ export default defineComponent({
       if (innerLoading.value) {
         iconNode = (
           <span
-            class={cls(`${prefixCls}-icon`, `${prefixCls}-loading-icon`, props.classNames?.icon, props.classNames?.loading)}
+            class={cls(
+              `${prefixCls}-icon`,
+              `${prefixCls}-loading-icon`,
+              props.classNames?.icon,
+              props.classNames?.loading,
+            )}
             style={{ ...(props.styles?.icon || {}), ...(props.styles?.loading || {}) }}
           >
             <Icon component={LoadingOutlined} spin />
@@ -203,10 +208,7 @@ export default defineComponent({
         )
       } else if (props.icon) {
         iconNode = (
-          <span
-            class={cls(`${prefixCls}-icon`, props.classNames?.icon)}
-            style={props.styles?.icon}
-          >
+          <span class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon}>
             <Icon component={props.icon} />
           </span>
         )

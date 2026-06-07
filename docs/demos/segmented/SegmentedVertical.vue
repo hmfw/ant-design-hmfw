@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 16px;">
+  <div style="display: flex; gap: 16px">
     <Segmented v-model:value="value" :options="options" vertical />
   </div>
 </template>

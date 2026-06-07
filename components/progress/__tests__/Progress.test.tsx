@@ -450,9 +450,7 @@ describe('Progress', () => {
     const w2 = mount(Progress, {
       props: { percent: 50, type: 'circle', strokeColor: { from: '#000', to: '#fff' } },
     })
-    expect(w1.find('linearGradient').attributes('id')).not.toBe(
-      w2.find('linearGradient').attributes('id')
-    )
+    expect(w1.find('linearGradient').attributes('id')).not.toBe(w2.find('linearGradient').attributes('id'))
   })
 
   it('reverses gradient direction for RTL circle', async () => {

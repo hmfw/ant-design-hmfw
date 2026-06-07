@@ -1,7 +1,7 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary" @click="openWithProgress">显示进度条</Button>
-    <Button @click="openWithoutProgress">不显示进度条</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button type="primary" @click="openWithProgress"> 显示进度条 </Button>
+    <Button @click="openWithoutProgress"> 不显示进度条 </Button>
   </div>
 </template>
 

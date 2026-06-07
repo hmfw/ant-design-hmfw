@@ -63,7 +63,12 @@ describe('Tabs', () => {
 
   it('renders tab icons', () => {
     const itemsWithIcons = [
-      { key: 'tab1', label: 'Tab 1', icon: h('span', { class: 'test-icon' }, 'Icon'), children: 'Content 1' },
+      {
+        key: 'tab1',
+        label: 'Tab 1',
+        icon: h('span', { class: 'test-icon' }, 'Icon'),
+        children: 'Content 1',
+      },
     ]
     const wrapper = mount(Tabs, { props: { items: itemsWithIcons } })
     expect(wrapper.find('.hmfw-tabs-tab-icon').exists()).toBe(true)
@@ -99,9 +104,7 @@ describe('Tabs', () => {
   })
 
   it('emits edit event on remove button click', async () => {
-    const closableItems = [
-      { key: 'tab1', label: 'Tab 1', children: 'Content 1' },
-    ]
+    const closableItems = [{ key: 'tab1', label: 'Tab 1', children: 'Content 1' }]
     const wrapper = mount(Tabs, { props: { items: closableItems, type: 'editable-card' } })
     await wrapper.find('.hmfw-tabs-tab-remove').trigger('click')
     expect(wrapper.emitted('edit')).toBeTruthy()
@@ -195,4 +198,3 @@ describe('Tabs', () => {
     expect(wrapper.find('.hmfw-tabs-content-animated').exists()).toBe(true)
   })
 })
-

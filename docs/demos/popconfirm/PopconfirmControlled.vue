@@ -1,7 +1,7 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <!-- 受控模式 -->
-    <div style="display: flex; gap: 16px; align-items: center;">
+    <div style="display: flex; gap: 16px; align-items: center">
       <Popconfirm
         v-model:open="visible"
         title="确定要删除吗？"
@@ -19,28 +19,18 @@
     </div>
 
     <!-- 禁用状态 -->
-    <div style="display: flex; gap: 16px; align-items: center;">
-      <Popconfirm
-        title="确定要删除吗？"
-        ok-text="删除"
-        cancel-text="取消"
-        :disabled="disabled"
-      >
-        <button :disabled="disabled">{{ disabled ? '已禁用' : '可点击' }}</button>
+    <div style="display: flex; gap: 16px; align-items: center">
+      <Popconfirm title="确定要删除吗？" ok-text="删除" cancel-text="取消" :disabled="disabled">
+        <button :disabled="disabled">
+          {{ disabled ? '已禁用' : '可点击' }}
+        </button>
       </Popconfirm>
-      <button @click="disabled = !disabled">
-        切换禁用状态
-      </button>
+      <button @click="disabled = !disabled">切换禁用状态</button>
     </div>
 
     <!-- 隐藏取消按钮 -->
-    <div style="display: flex; gap: 16px; align-items: center;">
-      <Popconfirm
-        title="点击确定继续"
-        ok-text="确定"
-        :show-cancel="false"
-        @confirm="() => console.log('已确定')"
-      >
+    <div style="display: flex; gap: 16px; align-items: center">
+      <Popconfirm title="点击确定继续" ok-text="确定" :show-cancel="false" @confirm="() => console.log('已确定')">
         <button>无取消按钮</button>
       </Popconfirm>
     </div>

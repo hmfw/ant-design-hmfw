@@ -1,12 +1,6 @@
 <template>
-  <div style="width: 256px; border-right: 1px solid #f0f0f0;">
-    <Menu
-      mode="inline"
-      :items="items"
-      :selected-keys="selectedKeys"
-      :default-open-keys="['sub1']"
-      @select="onSelect"
-    />
+  <div style="width: 256px; border-right: 1px solid #f0f0f0">
+    <Menu mode="inline" :items="items" :selected-keys="selectedKeys" :default-open-keys="['sub1']" @select="onSelect" />
   </div>
 </template>
 

@@ -1,15 +1,15 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <div>
-      <p style="margin-bottom: 4px;">使用表情：</p>
+      <p style="margin-bottom: 4px">使用表情：</p>
       <Rate v-model:value="value1" character="😊" />
     </div>
     <div>
-      <p style="margin-bottom: 4px;">使用文字：</p>
+      <p style="margin-bottom: 4px">使用文字：</p>
       <Rate v-model:value="value2" character="好" />
     </div>
     <div>
-      <p style="margin-bottom: 4px;">使用字母：</p>
+      <p style="margin-bottom: 4px">使用字母：</p>
       <Rate v-model:value="value3" character="A" />
     </div>
   </div>

@@ -1,15 +1,13 @@
 <template>
   <div class="virtual-list-demo">
     <h4>虚拟滚动演示（10,000 条数据）</h4>
-    <p style="margin-bottom: 16px; color: #666;">
-      只渲染可见区域的项，滚动流畅无卡顿
-    </p>
+    <p style="margin-bottom: 16px; color: #666">只渲染可见区域的项，滚动流畅无卡顿</p>
 
-    <div style="display: flex; gap: 16px; margin-bottom: 16px;">
-      <Button @click="scrollToTop">滚动到顶部</Button>
-      <Button @click="scrollToMiddle">滚动到中间</Button>
-      <Button @click="scrollToBottom">滚动到底部</Button>
-      <Button @click="scrollToIndex(5000)">滚动到第 5000 项</Button>
+    <div style="display: flex; gap: 16px; margin-bottom: 16px">
+      <Button @click="scrollToTop"> 滚动到顶部 </Button>
+      <Button @click="scrollToMiddle"> 滚动到中间 </Button>
+      <Button @click="scrollToBottom"> 滚动到底部 </Button>
+      <Button @click="scrollToIndex(5000)"> 滚动到第 5000 项 </Button>
     </div>
 
     <VirtualList
@@ -22,9 +20,9 @@
       :item-key="(item) => item.id"
     />
 
-    <div style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 4px;">
+    <div style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 4px">
       <strong>性能对比：</strong>
-      <ul style="margin: 8px 0; padding-left: 20px;">
+      <ul style="margin: 8px 0; padding-left: 20px">
         <li>常规列表：渲染 10,000 个 DOM 节点，卡顿严重</li>
         <li>虚拟滚动：仅渲染约 15-20 个可见节点，流畅丝滑</li>
       </ul>
@@ -61,7 +59,7 @@ const renderItem = (item: any, index: number) =>
     [
       h('div', { style: { fontWeight: 'bold', color: '#262626' } }, item.title),
       h('div', { style: { fontSize: '12px', color: '#8c8c8c' } }, item.description),
-    ]
+    ],
   )
 
 const scrollToTop = () => {

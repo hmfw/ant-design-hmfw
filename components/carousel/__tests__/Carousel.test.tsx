@@ -11,8 +11,12 @@ const slides = () => [
 ]
 
 describe('Carousel', () => {
-  beforeEach(() => { vi.useFakeTimers() })
-  afterEach(() => { vi.useRealTimers() })
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
 
   it('renders slides', () => {
     const wrapper = mount(Carousel, { slots: { default: slides } })

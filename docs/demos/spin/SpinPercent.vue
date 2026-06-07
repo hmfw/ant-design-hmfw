@@ -1,9 +1,11 @@
 <template>
-  <div style="display: flex; gap: 32px; align-items: center;">
+  <div style="display: flex; gap: 32px; align-items: center">
     <Spin :percent="percent" />
     <Spin :percent="percent" size="large" />
     <Spin percent="auto" :spinning="autoSpinning" />
-    <button @click="toggleAuto">{{ autoSpinning ? '停止 auto' : '开始 auto' }}</button>
+    <button @click="toggleAuto">
+      {{ autoSpinning ? '停止 auto' : '开始 auto' }}
+    </button>
   </div>
 </template>
 

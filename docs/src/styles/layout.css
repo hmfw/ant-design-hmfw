@@ -150,7 +150,9 @@ body,
   text-decoration: none;
   border-radius: 4px;
   margin: 1px 8px;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

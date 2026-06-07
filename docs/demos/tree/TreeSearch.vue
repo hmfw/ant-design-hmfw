@@ -2,13 +2,9 @@
   <input
     v-model="searchValue"
     placeholder="输入关键字高亮匹配节点"
-    style="margin-bottom: 8px; padding: 4px 8px; width: 240px;"
+    style="margin-bottom: 8px; padding: 4px 8px; width: 240px"
   />
-  <Tree
-    :tree-data="treeData"
-    :default-expand-all="true"
-    :filter-tree-node="filterNode"
-  />
+  <Tree :tree-data="treeData" :default-expand-all="true" :filter-tree-node="filterNode" />
 </template>
 
 <script setup lang="ts">
@@ -29,9 +25,7 @@ const treeData = [
   {
     title: '父节点 2',
     key: '0-1',
-    children: [
-      { title: '子节点 cherry', key: '0-1-0' },
-    ],
+    children: [{ title: '子节点 cherry', key: '0-1-0' }],
   },
 ]
 

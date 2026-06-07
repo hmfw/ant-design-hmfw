@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 8px;">
+  <div style="display: flex; gap: 8px">
     <Popover title="悬停触发" content="鼠标悬停时显示" trigger="hover">
       <button>悬停</button>
     </Popover>

@@ -65,24 +65,18 @@ export const AnchorLink = defineComponent({
     const wrapperClass = computed(() =>
       cls(`${prefixCls}-link`, {
         [`${prefixCls}-link-active`]: active.value,
-      })
+      }),
     )
 
     const titleClass = computed(() =>
       cls(`${prefixCls}-link-title`, {
         [`${prefixCls}-link-title-active`]: active.value,
-      })
+      }),
     )
 
     return () => (
       <div class={wrapperClass.value}>
-        <a
-          class={titleClass.value}
-          href={props.href}
-          title={props.title}
-          target={props.target}
-          onClick={handleClick}
-        >
+        <a class={titleClass.value} href={props.href} title={props.title} target={props.target} onClick={handleClick}>
           {props.title}
         </a>
         {context?.direction !== 'horizontal' ? slots.default?.() : null}

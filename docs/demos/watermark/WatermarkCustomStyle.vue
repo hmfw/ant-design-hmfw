@@ -4,7 +4,7 @@
     :font="{ color: 'rgba(23, 119, 255, 0.15)', fontSize: 20, fontWeight: 'bold' }"
     :rotate="-22"
   >
-    <div style="height: 500px;" />
+    <div style="height: 500px" />
   </Watermark>
 </template>
 

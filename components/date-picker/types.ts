@@ -40,5 +40,13 @@ export interface DatePickerProps {
   minDate?: string
   maxDate?: string
   renderExtraFooter?: () => any
-  cellRender?: (current: Date, info: { originNode: any; today: Date; range?: 'start' | 'end'; type: 'date' | 'month' | 'year' }) => any
+  cellRender?: (
+    current: Date,
+    info: {
+      originNode: any
+      today: Date
+      range?: 'start' | 'end'
+      type: 'date' | 'month' | 'year'
+    },
+  ) => any
 }

@@ -69,9 +69,7 @@ export default defineComponent({
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('space')
 
-    const mergedDirection = computed<SpaceDirection>(() =>
-      props.vertical ? 'vertical' : props.direction
-    )
+    const mergedDirection = computed<SpaceDirection>(() => (props.vertical ? 'vertical' : props.direction))
 
     // 优先级：slot > separator prop > split prop
     const mergedSeparator = computed(() => slots.split?.() ?? props.separator ?? props.split)
@@ -92,14 +90,10 @@ export default defineComponent({
 
     const classes = computed(() => {
       const align = mergedAlign.value
-      return cls(
-        prefixCls,
-        `${prefixCls}-${mergedDirection.value}`,
-        {
-          [`${prefixCls}-align-${align}`]: !!align,
-          [`${prefixCls}-wrap`]: props.wrap,
-        }
-      )
+      return cls(prefixCls, `${prefixCls}-${mergedDirection.value}`, {
+        [`${prefixCls}-align-${align}`]: !!align,
+        [`${prefixCls}-wrap`]: props.wrap,
+      })
     })
 
     const containerStyle = computed(() => {
@@ -122,7 +116,7 @@ export default defineComponent({
         items.push(
           <div key={child.key ?? `item-${index}`} class={`${prefixCls}-item`}>
             {child}
-          </div>
+          </div>,
         )
 
         // 在元素之间插入分隔符
@@ -130,7 +124,7 @@ export default defineComponent({
           items.push(
             <span key={`split-${index}`} class={`${prefixCls}-item-split`}>
               {separator}
-            </span>
+            </span>,
           )
         }
       })

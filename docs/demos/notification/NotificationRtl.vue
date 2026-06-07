@@ -1,8 +1,8 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary" @click="enableRtl">启用 RTL 模式</Button>
-    <Button @click="disableRtl">禁用 RTL 模式</Button>
-    <Button @click="openNotification">打开通知</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button type="primary" @click="enableRtl"> 启用 RTL 模式 </Button>
+    <Button @click="disableRtl"> 禁用 RTL 模式 </Button>
+    <Button @click="openNotification"> 打开通知 </Button>
   </div>
 </template>
 

@@ -3,13 +3,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { LoadingOutlined } from '../icon/icons'
-import type {
-  TimelineProps,
-  TimelineItemProps,
-  TimelineMode,
-  TimelineOrientation,
-  TimelineVariant,
-} from './types'
+import type { TimelineProps, TimelineItemProps, TimelineMode, TimelineOrientation, TimelineVariant } from './types'
 
 // Helper to normalize mode (left/right → start/end)
 function normalizeMode(mode?: TimelineMode): 'start' | 'end' | 'alternate' {
@@ -113,7 +107,8 @@ export const Timeline = defineComponent({
 
       // Add pending item if needed
       if (props.pending) {
-        const pendingContent = typeof props.pending === 'string' ? props.pending : props.pending === true ? undefined : props.pending
+        const pendingContent =
+          typeof props.pending === 'string' ? props.pending : props.pending === true ? undefined : props.pending
         rawItems.push({
           content: pendingContent,
           icon: props.pendingDot,
@@ -162,11 +157,15 @@ export const Timeline = defineComponent({
             const isPresetColor = ['blue', 'red', 'green', 'gray'].includes(color)
             const hasCustomIcon = !!icon || item.loading
 
-            const itemClass = cls(`${prefixCls}-item`, {
-              [`${prefixCls}-item-last`]: isLast,
-              [`${prefixCls}-item-${placement}`]: placement === 'end',
-              [`${prefixCls}-item-loading`]: item.loading,
-            }, item.className)
+            const itemClass = cls(
+              `${prefixCls}-item`,
+              {
+                [`${prefixCls}-item-last`]: isLast,
+                [`${prefixCls}-item-${placement}`]: placement === 'end',
+                [`${prefixCls}-item-loading`]: item.loading,
+              },
+              item.className,
+            )
 
             const headClass = cls(`${prefixCls}-item-head`, {
               [`${prefixCls}-item-head-${color}`]: isPresetColor,
@@ -181,16 +180,12 @@ export const Timeline = defineComponent({
 
             return (
               <li key={item.key ?? index} class={itemClass}>
-                {title && (
-                  <div class={`${prefixCls}-item-label`}>{title}</div>
-                )}
+                {title && <div class={`${prefixCls}-item-label`}>{title}</div>}
                 <div class={`${prefixCls}-item-tail`} />
                 <div class={headClass} style={headStyle}>
                   {icon}
                 </div>
-                <div class={`${prefixCls}-item-content`}>
-                  {content as any}
-                </div>
+                <div class={`${prefixCls}-item-content`}>{content as any}</div>
               </li>
             )
           })}

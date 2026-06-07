@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### 核心功能
+
 - 🎉 实现 66 个高质量组件，涵盖所有常用场景
 - 🎨 完整的主题系统，支持 CSS Variables 动态定制
 - 🌍 国际化支持（中文、英文）
@@ -23,11 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 组件列表
 
 **通用组件 (3)**
+
 - Button - 按钮
 - Icon - 图标（79 个内置图标）
 - Typography - 排版（Text, Title, Paragraph, Link）
 
 **布局组件 (5)**
+
 - Divider - 分割线
 - Flex - 弹性布局
 - Grid - 栅格系统（Row, Col）
@@ -35,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Space - 间距
 
 **导航组件 (7)**
+
 - Anchor - 锚点
 - Breadcrumb - 面包屑
 - Dropdown - 下拉菜单
@@ -44,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tabs - 标签页
 
 **数据录入组件 (18)**
+
 - AutoComplete - 自动完成
 - Cascader - 级联选择
 - Checkbox - 多选框
@@ -64,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upload - 上传
 
 **数据展示组件 (18)**
+
 - Avatar - 头像
 - Badge - 徽标
 - Calendar - 日历
@@ -87,6 +93,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Watermark - 水印
 
 **反馈组件 (11)**
+
 - Alert - 警告提示
 - Drawer - 抽屉
 - Message - 全局提示
@@ -99,12 +106,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tour - 漫游引导
 
 **其他组件 (4)**
+
 - App - 全局上下文
 - BackTop - 回到顶部
 - ConfigProvider - 全局配置
 - FloatButton - 悬浮按钮
 
 #### 构建优化
+
 - 📦 支持多格式输出：ESM、CJS、UMD
 - 🌲 Tree Shaking 支持，按需引入
 - 📝 完整的 TypeScript 类型声明
@@ -112,16 +121,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🎨 CSS 样式优化（2.59 KB → 0.54 KB Gzip）
 
 #### 开发工具
+
 - 🔍 Bundle 分析工具（`pnpm analyze:bundle`）
 - 🌲 Tree Shaking 测试（`pnpm analyze:treeshaking`）
 - 📚 完整的文档站点
 - 🧪 单元测试框架（Vitest）
 
 ### Fixed
+
 - 🐛 修复 266 个组件 bug（详见 COMPARISON 目录）
 - 🎯 优化 94 个功能点（详见 ROUND1-4 SUMMARY）
 
 ### Performance
+
 - ⚡ VirtualList 支持 10,000+ 数据流畅滚动
 - 🚀 构建产物体积优化（ESM: 160 KB Gzip）
 

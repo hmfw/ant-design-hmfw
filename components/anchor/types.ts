@@ -26,4 +26,3 @@ export interface AnchorLinkProps {
   replace?: boolean
   targetOffset?: number
 }
-

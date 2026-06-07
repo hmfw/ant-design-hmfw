@@ -1,11 +1,18 @@
 import {
-  defineComponent, ref, computed, watch, onMounted, onBeforeUnmount, nextTick, Teleport, type PropType, type VNode,
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+  Teleport,
+  type PropType,
+  type VNode,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type {
-  TreeSelectNode, ShowCheckedStrategy, TreeSelectValue, TreeIcon, MaxTagPlaceholder,
-} from './types'
+import type { TreeSelectNode, ShowCheckedStrategy, TreeSelectValue, TreeIcon, MaxTagPlaceholder } from './types'
 
 type Key = string | number
 
@@ -51,7 +58,17 @@ export const TreeSelect = defineComponent({
     maxTagPlaceholder: [String, Function] as PropType<MaxTagPlaceholder>,
     maxTagTextLength: Number,
   },
-  emits: ['update:value', 'update:open', 'change', 'search', 'select', 'treeExpand', 'dropdownVisibleChange', 'openChange', 'clear'],
+  emits: [
+    'update:value',
+    'update:open',
+    'change',
+    'search',
+    'select',
+    'treeExpand',
+    'dropdownVisibleChange',
+    'openChange',
+    'clear',
+  ],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tree-select')
     const selectorRef = ref<HTMLElement | null>(null)
@@ -78,10 +95,13 @@ export const TreeSelect = defineComponent({
       return v
     }
 
-    const innerValue = ref<TreeSelectValue | undefined>(
-      normalizeValue(props.defaultValue ?? props.value),
+    const innerValue = ref<TreeSelectValue | undefined>(normalizeValue(props.defaultValue ?? props.value))
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
     )
-    watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = v })
 
     const currentValue = computed(() => (props.value !== undefined ? props.value : innerValue.value))
     const selectedValues = computed<Key[]>(() => {
@@ -139,12 +159,20 @@ export const TreeSelect = defineComponent({
         for (const c of children) {
           const s = visit(c)
           if (s === 'checked') anyChecked = true
-          else if (s === 'half') { anyChecked = true; allChecked = false }
-          else allChecked = false
+          else if (s === 'half') {
+            anyChecked = true
+            allChecked = false
+          } else allChecked = false
         }
-        if (allChecked) { checked.add(key); return 'checked' }
+        if (allChecked) {
+          checked.add(key)
+          return 'checked'
+        }
         checked.delete(key)
-        if (anyChecked) { half.add(key); return 'half' }
+        if (anyChecked) {
+          half.add(key)
+          return 'half'
+        }
         return 'none'
       }
       rootKeys.forEach(visit)
@@ -160,21 +188,25 @@ export const TreeSelect = defineComponent({
       return props.treeDefaultExpandedKeys
     })
     const expandedKeys = ref<Key[]>([...initExpandedKeys.value])
-    watch(initExpandedKeys, (v) => { expandedKeys.value = [...v] })
+    watch(initExpandedKeys, (v) => {
+      expandedKeys.value = [...v]
+    })
 
     // ===================== Flatten tree =====================
     function flattenTree(nodes: TreeSelectNode[], level = 0, forceExpand = false): FlatNode[] {
       return nodes.flatMap((node) => {
         const children = getChildren(node)
         const key = getValue(node)
-        const result: FlatNode[] = [{
-          node,
-          level,
-          hasChildren: !!(children?.length),
-          valueKey: key,
-          label: getLabel(node),
-          forceExpand,
-        }]
+        const result: FlatNode[] = [
+          {
+            node,
+            level,
+            hasChildren: !!children?.length,
+            valueKey: key,
+            label: getLabel(node),
+            forceExpand,
+          },
+        ]
         if (children?.length && (forceExpand || expandedKeys.value.includes(key))) {
           result.push(...flattenTree(children, level + 1, forceExpand))
         }
@@ -212,14 +244,16 @@ export const TreeSelect = defineComponent({
           const isAncestor = ancestorKeys.has(k)
           if (!isMatch && !isAncestor) return []
           const children = getChildren(node)
-          const result: FlatNode[] = [{
-            node,
-            level,
-            hasChildren: !!(children?.length),
-            valueKey: k,
-            label: getLabel(node),
-            forceExpand: isAncestor,
-          }]
+          const result: FlatNode[] = [
+            {
+              node,
+              level,
+              hasChildren: !!children?.length,
+              valueKey: k,
+              label: getLabel(node),
+              forceExpand: isAncestor,
+            },
+          ]
           if (children && isAncestor) {
             result.push(...filter(children, level + 1))
           }
@@ -230,13 +264,11 @@ export const TreeSelect = defineComponent({
     })
 
     // ===================== Display labels =====================
-    const selectedLabels = computed(() =>
-      selectedValues.value.map((v) => maps.value.labelMap.get(v) ?? String(v)),
-    )
+    const selectedLabels = computed(() => selectedValues.value.map((v) => maps.value.labelMap.get(v) ?? String(v)))
 
     // ===================== Virtual scroll =====================
-    const useVirtual = computed(() =>
-      props.virtual && props.itemHeight > 0 && flatNodes.value.length * props.itemHeight > props.listHeight,
+    const useVirtual = computed(
+      () => props.virtual && props.itemHeight > 0 && flatNodes.value.length * props.itemHeight > props.listHeight,
     )
     const visibleRange = computed(() => {
       if (!useVirtual.value) return { start: 0, end: flatNodes.value.length, offset: 0 }
@@ -377,7 +409,11 @@ export const TreeSelect = defineComponent({
         if (props.maxCount !== undefined && newVals.length > props.maxCount) return
         innerValue.value = newVals
         emit('update:value', newVals)
-        emit('change', newVals, newVals.map((v) => maps.value.labelMap.get(v) ?? String(v)))
+        emit(
+          'change',
+          newVals,
+          newVals.map((v) => maps.value.labelMap.get(v) ?? String(v)),
+        )
         emit('select', key, node)
         if (props.autoClearSearchValue) searchText.value = ''
       } else if (isMultiple.value) {
@@ -391,7 +427,11 @@ export const TreeSelect = defineComponent({
         }
         innerValue.value = vals
         emit('update:value', vals)
-        emit('change', vals, vals.map((v) => maps.value.labelMap.get(v) ?? String(v)))
+        emit(
+          'change',
+          vals,
+          vals.map((v) => maps.value.labelMap.get(v) ?? String(v)),
+        )
         emit('select', key, node)
         if (props.autoClearSearchValue) searchText.value = ''
       } else {
@@ -409,7 +449,11 @@ export const TreeSelect = defineComponent({
       const vals = selectedValues.value.filter((v) => v !== val)
       innerValue.value = vals
       emit('update:value', vals)
-      emit('change', vals, vals.map((v) => maps.value.labelMap.get(v) ?? String(v)))
+      emit(
+        'change',
+        vals,
+        vals.map((v) => maps.value.labelMap.get(v) ?? String(v)),
+      )
     }
 
     function clearAll(e: MouseEvent) {
@@ -455,7 +499,10 @@ export const TreeSelect = defineComponent({
             class={cls(`${prefixCls}-tree-switcher`, {
               [`${prefixCls}-tree-switcher-noop`]: !hasChildren,
             })}
-            onClick={(e) => { e.stopPropagation(); if (hasChildren && !forceExpand) toggleExpand(valueKey) }}
+            onClick={(e) => {
+              e.stopPropagation()
+              if (hasChildren && !forceExpand) toggleExpand(valueKey)
+            }}
           >
             {hasChildren && !forceExpand ? (isExpanded ? '▾' : '▸') : null}
           </span>
@@ -466,18 +513,16 @@ export const TreeSelect = defineComponent({
                 [`${prefixCls}-tree-checkbox-indeterminate`]: isHalf,
                 [`${prefixCls}-tree-checkbox-disabled`]: node.disabled || node.disableCheckbox,
               })}
-              onClick={(e) => { e.stopPropagation(); selectNode(node) }}
+              onClick={(e) => {
+                e.stopPropagation()
+                selectNode(node)
+              }}
             >
               <span class={`${prefixCls}-tree-checkbox-inner`} />
             </span>
           )}
-          {iconNode !== null && (
-            <span class={`${prefixCls}-tree-icon`}>{iconNode}</span>
-          )}
-          <span
-            class={`${prefixCls}-tree-node-content`}
-            onClick={() => selectNode(node)}
-          >
+          {iconNode !== null && <span class={`${prefixCls}-tree-icon`}>{iconNode}</span>}
+          <span class={`${prefixCls}-tree-node-content`} onClick={() => selectNode(node)}>
             {label}
           </span>
         </div>
@@ -502,23 +547,26 @@ export const TreeSelect = defineComponent({
       }
 
       return (
-        <div class={cls(prefixCls, `${prefixCls}-${props.size}`, {
-          [`${prefixCls}-open`]: isOpen.value,
-          [`${prefixCls}-disabled`]: props.disabled,
-          [`${prefixCls}-status-error`]: props.status === 'error',
-          [`${prefixCls}-status-warning`]: props.status === 'warning',
-        })}>
-          <div
-            ref={selectorRef}
-            class={`${prefixCls}-selector`}
-            onClick={isOpen.value ? closeDropdown : openDropdown}
-          >
+        <div
+          class={cls(prefixCls, `${prefixCls}-${props.size}`, {
+            [`${prefixCls}-open`]: isOpen.value,
+            [`${prefixCls}-disabled`]: props.disabled,
+            [`${prefixCls}-status-error`]: props.status === 'error',
+            [`${prefixCls}-status-warning`]: props.status === 'warning',
+          })}
+        >
+          <div ref={selectorRef} class={`${prefixCls}-selector`} onClick={isOpen.value ? closeDropdown : openDropdown}>
             {isMultiple.value ? (
               <>
                 {selectedLabels.value.slice(0, visibleTagCount.value).map((label, i) => (
                   <span key={selectedValues.value[i]} class={`${prefixCls}-selection-item`}>
                     <span class={`${prefixCls}-selection-item-content`}>{truncateLabel(label)}</span>
-                    <span class={`${prefixCls}-selection-item-remove`} onClick={(e) => removeTag(selectedValues.value[i], e)}>×</span>
+                    <span
+                      class={`${prefixCls}-selection-item-remove`}
+                      onClick={(e) => removeTag(selectedValues.value[i], e)}
+                    >
+                      ×
+                    </span>
                   </span>
                 ))}
                 {selectedValues.value.length > visibleTagCount.value && (
@@ -566,11 +614,19 @@ export const TreeSelect = defineComponent({
           </div>
 
           <div class={`${prefixCls}-arrow`}>
-            <span class={cls(`${prefixCls}-arrow-icon`, { [`${prefixCls}-arrow-icon-open`]: isOpen.value })}>▾</span>
+            <span
+              class={cls(`${prefixCls}-arrow-icon`, {
+                [`${prefixCls}-arrow-icon-open`]: isOpen.value,
+              })}
+            >
+              ▾
+            </span>
           </div>
 
           {showClear && (
-            <span class={`${prefixCls}-clear`} onClick={clearAll}>×</span>
+            <span class={`${prefixCls}-clear`} onClick={clearAll}>
+              ×
+            </span>
           )}
 
           {isOpen.value && (
@@ -617,9 +673,9 @@ export const TreeSelect = defineComponent({
                             right: 0,
                           }}
                         >
-                          {flatNodes.value.slice(visibleRange.value.start, visibleRange.value.end).map((flat) =>
-                            renderTreeNode(flat, checkedSet, halfSet),
-                          )}
+                          {flatNodes.value
+                            .slice(visibleRange.value.start, visibleRange.value.end)
+                            .map((flat) => renderTreeNode(flat, checkedSet, halfSet))}
                         </div>
                       </div>
                     ) : (
@@ -635,4 +691,3 @@ export const TreeSelect = defineComponent({
     }
   },
 })
-

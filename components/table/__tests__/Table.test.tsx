@@ -80,8 +80,15 @@ describe('Table', () => {
   })
 
   it('renders pagination when pagination prop set', () => {
-    const manyData = Array.from({ length: 15 }, (_, i) => ({ key: String(i), name: `User ${i}`, age: 20 + i, city: 'City' }))
-    const wrapper = mount(Table, { props: { columns, dataSource: manyData, pagination: { pageSize: 10 } } })
+    const manyData = Array.from({ length: 15 }, (_, i) => ({
+      key: String(i),
+      name: `User ${i}`,
+      age: 20 + i,
+      city: 'City',
+    }))
+    const wrapper = mount(Table, {
+      props: { columns, dataSource: manyData, pagination: { pageSize: 10 } },
+    })
     expect(wrapper.find('.hmfw-table-pagination').exists()).toBe(true)
   })
 
@@ -137,7 +144,9 @@ describe('Table', () => {
   it('renders filter trigger when column has filters', () => {
     const filterCols = [
       {
-        key: 'name', dataIndex: 'name', title: 'Name',
+        key: 'name',
+        dataIndex: 'name',
+        title: 'Name',
         filters: [{ text: 'Alice', value: 'Alice' }],
         onFilter: (value: any, record: any) => record.name === value,
       },
@@ -237,8 +246,15 @@ describe('Table', () => {
   })
 
   it('paginates data to pageSize', () => {
-    const manyData = Array.from({ length: 15 }, (_, i) => ({ key: String(i), name: `User ${i}`, age: 20 + i, city: 'City' }))
-    const wrapper = mount(Table, { props: { columns, dataSource: manyData, pagination: { pageSize: 10 } } })
+    const manyData = Array.from({ length: 15 }, (_, i) => ({
+      key: String(i),
+      name: `User ${i}`,
+      age: 20 + i,
+      city: 'City',
+    }))
+    const wrapper = mount(Table, {
+      props: { columns, dataSource: manyData, pagination: { pageSize: 10 } },
+    })
     expect(wrapper.findAll('tbody tr')).toHaveLength(10)
   })
 })

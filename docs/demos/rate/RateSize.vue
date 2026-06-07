@@ -1,15 +1,15 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <div>
-      <p style="margin-bottom: 4px;">Large:</p>
+      <p style="margin-bottom: 4px">Large:</p>
       <Rate v-model:value="value" size="large" />
     </div>
     <div>
-      <p style="margin-bottom: 4px;">Middle (default):</p>
+      <p style="margin-bottom: 4px">Middle (default):</p>
       <Rate v-model:value="value" />
     </div>
     <div>
-      <p style="margin-bottom: 4px;">Small:</p>
+      <p style="margin-bottom: 4px">Small:</p>
       <Rate v-model:value="value" size="small" />
     </div>
   </div>

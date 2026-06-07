@@ -28,20 +28,20 @@
 
 ### ColorPicker Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| value (v-model) | 颜色值（HEX 格式） | `string` | `'#1677ff'` |
-| defaultValue | 默认颜色值 | `string` | `'#1677ff'` |
-| disabled | 是否禁用 | `boolean` | `false` |
-| size | 尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
-| showText | 是否显示颜色文本 | `boolean` | `false` |
-| allowClear | 是否允许清除 | `boolean` | `false` |
-| presets | 预设颜色组 | `Array<{ label: string; colors: string[] }>` | `[]` |
+| 参数            | 说明               | 类型                                         | 默认值      |
+| --------------- | ------------------ | -------------------------------------------- | ----------- |
+| value (v-model) | 颜色值（HEX 格式） | `string`                                     | `'#1677ff'` |
+| defaultValue    | 默认颜色值         | `string`                                     | `'#1677ff'` |
+| disabled        | 是否禁用           | `boolean`                                    | `false`     |
+| size            | 尺寸               | `'small' \| 'middle' \| 'large'`             | `'middle'`  |
+| showText        | 是否显示颜色文本   | `boolean`                                    | `false`     |
+| allowClear      | 是否允许清除       | `boolean`                                    | `false`     |
+| presets         | 预设颜色组         | `Array<{ label: string; colors: string[] }>` | `[]`        |
 
 ### ColorPicker Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| change | 颜色变化时 | `(value: string) => void` |
-| clear | 清除时 | `() => void` |
+| 事件名     | 说明            | 回调参数                  |
+| ---------- | --------------- | ------------------------- |
+| change     | 颜色变化时      | `(value: string) => void` |
+| clear      | 清除时          | `() => void`              |
 | openChange | 面板显示/隐藏时 | `(open: boolean) => void` |

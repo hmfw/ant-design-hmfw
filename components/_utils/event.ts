@@ -10,11 +10,7 @@ export function on<T extends Event>(
   return () => el.removeEventListener(event, handler as EventListener, options)
 }
 
-export function once<T extends Event>(
-  el: EventTarget,
-  event: string,
-  handler: EventHandler<T>,
-): void {
+export function once<T extends Event>(el: EventTarget, event: string, handler: EventHandler<T>): void {
   const wrapper = (e: Event) => {
     handler(e as T)
     el.removeEventListener(event, wrapper)

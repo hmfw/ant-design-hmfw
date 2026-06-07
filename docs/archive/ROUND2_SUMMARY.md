@@ -10,6 +10,7 @@
 ### 1. List 组件 - 响应式 Grid 配置 ✅
 
 **新增功能：**
+
 - ✅ 实现 `grid` 的响应式配置支持：
   - `xs` - 超小屏 (< 576px)
   - `sm` - 小屏 (≥ 576px)
@@ -19,14 +20,17 @@
   - `xxl` - 超超大屏 (≥ 1600px)
 
 **实现细节：**
+
 - 修改 `ListItem.tsx` 的 `Col` 组件使用方式
 - 支持同时配置 `column` 和响应式属性
 - 向下兼容原有的 `column` 属性
 
 **新增演示：**
+
 - ✅ `ListResponsiveGrid.vue` - 展示响应式网格布局
 
 **文档更新：**
+
 - ✅ 更新 `list.md`，添加响应式网格演示
 
 **测试结果：** ✅ 所有测试通过
@@ -36,9 +40,11 @@
 ### 2. VirtualList 通用虚拟滚动组件 ✅
 
 **组件位置：**
+
 - `components/_internal/virtual-list/`
 
 **功能特性：**
+
 - ✅ 固定高度虚拟滚动
 - ✅ 缓冲区渲染（上下各渲染额外 N 项，默认 5 项）
 - ✅ 滚动到指定索引（支持 top/center/bottom 对齐）
@@ -47,12 +53,14 @@
 - ✅ 支持大数据量（测试 10,000 条数据）
 
 **实现细节：**
+
 - 只渲染可见区域的项（约 10-20 项 vs 10,000 项）
 - 使用 `transform translateY` 优化性能
 - 通过占位容器撑开总高度
 - 支持数字或字符串形式的 height 属性
 
 **新增文件：**
+
 - ✅ `VirtualList.tsx` - 核心实现（155 行）
 - ✅ `types.ts` - 类型定义
 - ✅ `index.ts` - 导出
@@ -67,12 +75,14 @@
 ### 3. Card 组件 - 已跳过 ⏭️
 
 **决策原因：**
+
 - Card 组件已有较完善的实现
 - `tabBarExtraContent` 需要与 Tabs 组件深度集成，工作量大
 - Grid hover 效果已实现
 - 加载状态骨架屏已有基本实现
 
 **建议：**
+
 - 将 Card 的优化作为 P2 低优先级任务
 
 ---
@@ -82,12 +92,14 @@
 ### 应用虚拟滚动到各组件
 
 **涉及组件：**
+
 - Select（P0）- 最简单场景
 - List（P0）- 中等场景
 - Tree（P0）- 复杂场景（嵌套结构）
 - Table（P0）- 最复杂场景（表格行 + 固定列）
 
 **建议实施顺序：**
+
 1. Select 组件（固定高度，简单）
 2. List 组件（固定高度，中等）
 3. Tree 组件（可变高度，复杂）
@@ -100,12 +112,14 @@
 ## 📊 统计数据
 
 ### 代码变更
+
 - **修改文件：** 3 个
 - **新增文件：** 7 个
 - **新增代码行数：** ~750 行
 - **测试用例：** +10 个
 
 ### 功能完成度
+
 - **List：** 1/3 (33%) - 响应式 grid ✅，虚拟滚动 ❌（组件已完成，待应用）
 - **VirtualList：** 1/1 (100%) - 核心组件完成 ✅
 - **Card：** 0/1 (0%) - 跳过 ⏭️
@@ -114,6 +128,7 @@
 - **总体（核心任务）：** 2/4 (50%)
 
 ### 测试覆盖
+
 - **全部测试：** 1563 个通过 ✅
 - **新增测试：** 10 个（VirtualList）
 - **测试通过率：** 100%
@@ -125,6 +140,7 @@
 ### 1. 创建了可复用的虚拟滚动基础设施
 
 通过实现通用 VirtualList 组件：
+
 - ✅ 避免了在 4 个组件中重复实现
 - ✅ 统一的 API 和行为
 - ✅ 易于维护和升级
@@ -133,6 +149,7 @@
 ### 2. 验证了响应式配置的简单性
 
 List 的响应式 grid 只需：
+
 - 传递响应式属性到 Col 组件
 - 10 行代码即可完成
 - 充分利用现有 Grid 系统
@@ -202,18 +219,19 @@ const endIndex = Math.min(total, index + visibleCount + buffer)
 
 ### 性能对比
 
-| 数据量 | 常规列表 | 虚拟滚动 | 性能提升 |
-|--------|----------|----------|----------|
-| 100 项 | 流畅 | 流畅 | - |
-| 1,000 项 | 略卡 | 流畅 | 10x |
-| 10,000 项 | 严重卡顿 | 流畅 | 100x+ |
-| 100,000 项 | 浏览器崩溃 | 流畅 | ∞ |
+| 数据量     | 常规列表   | 虚拟滚动 | 性能提升 |
+| ---------- | ---------- | -------- | -------- |
+| 100 项     | 流畅       | 流畅     | -        |
+| 1,000 项   | 略卡       | 流畅     | 10x      |
+| 10,000 项  | 严重卡顿   | 流畅     | 100x+    |
+| 100,000 项 | 浏览器崩溃 | 流畅     | ∞        |
 
 ---
 
 ## ✅ 交付物清单
 
 ### 代码文件
+
 - [x] `components/list/ListItem.tsx` - 响应式支持
 - [x] `components/_internal/virtual-list/VirtualList.tsx` - 核心组件
 - [x] `components/_internal/virtual-list/types.ts` - 类型定义
@@ -221,13 +239,16 @@ const endIndex = Math.min(total, index + visibleCount + buffer)
 - [x] `components/_internal/virtual-list/style/index.css` - 样式
 
 ### 测试文件
+
 - [x] `components/_internal/virtual-list/__tests__/VirtualList.test.tsx` - 10 个测试
 
 ### 演示文件
+
 - [x] `docs/demos/list/ListResponsiveGrid.vue` - 响应式 grid
 - [x] `docs/demos/_internal/VirtualListDemo.vue` - 虚拟滚动演示
 
 ### 文档更新
+
 - [x] `docs/demos/list/list.md` - 添加响应式演示
 - [x] `TODO.md` - 更新进度
 - [x] `ROUND2_SUMMARY.md` - 阶段总结
@@ -237,6 +258,7 @@ const endIndex = Math.min(total, index + visibleCount + buffer)
 ## 🎉 阶段总结
 
 第二轮任务核心目标达成：
+
 - ✅ List 响应式 grid 完成
 - ✅ **通用虚拟滚动组件完成**（关键基础设施）
 - ✅ 所有测试通过
@@ -251,6 +273,6 @@ const endIndex = Math.min(total, index + visibleCount + buffer)
 **报告生成时间：** 2026/06/06  
 **执行人：** Claude (Opus 4.8)  
 **提交记录：**
+
 - `17c6980` - List 响应式 grid
 - `df1c026` - VirtualList 通用组件
-

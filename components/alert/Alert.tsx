@@ -1,13 +1,7 @@
 import { defineComponent, ref, computed, type PropType, type VNodeChild } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import {
-  CheckCircleFilled,
-  InfoCircleFilled,
-  ExclamationCircleFilled,
-  CloseCircleFilled,
-  CloseOutlined,
-} from '../icon'
+import { CheckCircleFilled, InfoCircleFilled, ExclamationCircleFilled, CloseCircleFilled, CloseOutlined } from '../icon'
 import type { AlertType, AlertVariant, AlertClosable } from './types'
 
 // 与 AntD v6 对齐：使用 Filled 状态图标
@@ -69,9 +63,7 @@ export const Alert = defineComponent({
     })
 
     // banner 模式默认显示图标（与 AntD v6 对齐）
-    const isShowIcon = computed(() =>
-      props.banner && props.showIcon === undefined ? true : !!props.showIcon,
-    )
+    const isShowIcon = computed(() => (props.banner && props.showIcon === undefined ? true : !!props.showIcon))
 
     const mergedTitle = computed(() => props.title ?? props.message)
 
@@ -140,22 +132,12 @@ export const Alert = defineComponent({
             [`${prefixCls}-no-icon`]: !isShowIcon.value,
           })}
         >
-          {isShowIcon.value && (
-            <span class={`${prefixCls}-icon`}>{iconNode}</span>
-          )}
+          {isShowIcon.value && <span class={`${prefixCls}-icon`}>{iconNode}</span>}
           <div class={`${prefixCls}-section`}>
-            {titleNode != null && titleNode !== '' && (
-              <div class={`${prefixCls}-title`}>{titleNode}</div>
-            )}
-            {hasDesc && (
-              <div class={`${prefixCls}-description`}>
-                {slots.description?.() ?? props.description}
-              </div>
-            )}
+            {titleNode != null && titleNode !== '' && <div class={`${prefixCls}-title`}>{titleNode}</div>}
+            {hasDesc && <div class={`${prefixCls}-description`}>{slots.description?.() ?? props.description}</div>}
           </div>
-          {actionNode != null && (
-            <div class={`${prefixCls}-actions`}>{actionNode}</div>
-          )}
+          {actionNode != null && <div class={`${prefixCls}-actions`}>{actionNode}</div>}
           {isClosable.value && (
             <button
               type="button"

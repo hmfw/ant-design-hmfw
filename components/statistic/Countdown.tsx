@@ -25,15 +25,15 @@ function formatCountdown(milliseconds: number, format = 'HH:mm:ss'): string {
 
   // 支持的占位符
   const replacements: Record<string, string> = {
-    'DD': String(totalDays).padStart(2, '0'),
-    'D': String(totalDays),
-    'HH': String(hours).padStart(2, '0'),
-    'H': String(hours),
-    'mm': String(minutes).padStart(2, '0'),
-    'm': String(minutes),
-    'ss': String(seconds).padStart(2, '0'),
-    's': String(seconds),
-    'SSS': String(milliseconds % 1000).padStart(3, '0'),
+    DD: String(totalDays).padStart(2, '0'),
+    D: String(totalDays),
+    HH: String(hours).padStart(2, '0'),
+    H: String(hours),
+    mm: String(minutes).padStart(2, '0'),
+    m: String(minutes),
+    ss: String(seconds).padStart(2, '0'),
+    s: String(seconds),
+    SSS: String(milliseconds % 1000).padStart(3, '0'),
   }
 
   return format.replace(/DD|D|HH|H|mm|m|ss|s|SSS/g, (match) => {
@@ -67,9 +67,7 @@ export const Countdown = defineComponent({
     const calculateRemaining = (): number => {
       if (!props.value) return 0
 
-      const targetTime = props.value instanceof Date
-        ? props.value.getTime()
-        : props.value
+      const targetTime = props.value instanceof Date ? props.value.getTime() : props.value
 
       const now = Date.now()
       return Math.max(0, targetTime - now)
@@ -121,9 +119,12 @@ export const Countdown = defineComponent({
     }
 
     // 监听 value 变化，重新启动倒计时
-    watch(() => props.value, () => {
-      startCountdown()
-    })
+    watch(
+      () => props.value,
+      () => {
+        startCountdown()
+      },
+    )
 
     onMounted(() => {
       startCountdown()
@@ -137,19 +138,13 @@ export const Countdown = defineComponent({
       // 如果是加载状态，显示骨架屏
       if (props.loading) {
         return (
-          <div class={cls(prefixCls, {
-            [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
-          })}>
-            {props.title && (
-              <div class={`${prefixCls}-title`}>
-                {props.title}
-              </div>
-            )}
-            <Skeleton
-              active
-              title={false}
-              paragraph={{ rows: 1, width: '100%' }}
-            />
+          <div
+            class={cls(prefixCls, {
+              [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
+            })}
+          >
+            {props.title && <div class={`${prefixCls}-title`}>{props.title}</div>}
+            <Skeleton active title={false} paragraph={{ rows: 1, width: '100%' }} />
           </div>
         )
       }
@@ -166,28 +161,16 @@ export const Countdown = defineComponent({
       }
 
       return (
-        <div class={cls(prefixCls, `${prefixCls}-countdown`, {
-          [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
-        })}>
-          {props.title && (
-            <div class={`${prefixCls}-title`}>
-              {props.title}
-            </div>
-          )}
+        <div
+          class={cls(prefixCls, `${prefixCls}-countdown`, {
+            [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
+          })}
+        >
+          {props.title && <div class={`${prefixCls}-title`}>{props.title}</div>}
           <div class={`${prefixCls}-content`} style={props.valueStyle}>
-            {props.prefix && (
-              <span class={`${prefixCls}-content-prefix`}>
-                {props.prefix}
-              </span>
-            )}
-            <span class={`${prefixCls}-content-value`}>
-              {renderValue()}
-            </span>
-            {props.suffix && (
-              <span class={`${prefixCls}-content-suffix`}>
-                {props.suffix}
-              </span>
-            )}
+            {props.prefix && <span class={`${prefixCls}-content-prefix`}>{props.prefix}</span>}
+            <span class={`${prefixCls}-content-value`}>{renderValue()}</span>
+            {props.suffix && <span class={`${prefixCls}-content-suffix`}>{props.suffix}</span>}
           </div>
         </div>
       )

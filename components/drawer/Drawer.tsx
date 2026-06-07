@@ -1,6 +1,14 @@
 import {
-  defineComponent, ref, watch, computed, onBeforeUnmount, Teleport, Transition,
-  type PropType, type VNode, type CSSProperties,
+  defineComponent,
+  ref,
+  watch,
+  computed,
+  onBeforeUnmount,
+  Teleport,
+  Transition,
+  type PropType,
+  type VNode,
+  type CSSProperties,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
@@ -10,9 +18,10 @@ import { Skeleton } from '../skeleton'
 import type { IconComponent } from '../icon/types'
 import { drawerManager } from './manager'
 
-const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+const FOCUSABLE =
+  'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
 
-function trapFocus(el: HTMLElement, focusTriggerAfterClose: boolean): (() => void) {
+function trapFocus(el: HTMLElement, focusTriggerAfterClose: boolean): () => void {
   const prev = document.activeElement as HTMLElement | null
   const nodes = () => Array.from(el.querySelectorAll<HTMLElement>(FOCUSABLE))
   nodes()[0]?.focus()
@@ -23,9 +32,15 @@ function trapFocus(el: HTMLElement, focusTriggerAfterClose: boolean): (() => voi
     const first = focusable[0]
     const last = focusable[focusable.length - 1]
     if (e.shiftKey) {
-      if (document.activeElement === first) { e.preventDefault(); last.focus() }
+      if (document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      }
     } else {
-      if (document.activeElement === last) { e.preventDefault(); first.focus() }
+      if (document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
     }
   }
   el.addEventListener('keydown', handler)
@@ -62,7 +77,10 @@ export type DrawerGetContainer = string | HTMLElement | (() => HTMLElement) | fa
 const DEFAULT_SIZE = 378
 const LARGE_SIZE = 736
 
-function renderContent(content: DrawerContent | undefined, slot?: () => VNode[] | undefined): VNode[] | VNode | string | number | undefined {
+function renderContent(
+  content: DrawerContent | undefined,
+  slot?: () => VNode[] | undefined,
+): VNode[] | VNode | string | number | undefined {
   if (slot) {
     const s = slot()
     if (s && s.length) return s
@@ -82,7 +100,10 @@ export const Drawer = defineComponent({
   props: {
     open: { type: Boolean, default: undefined },
     defaultOpen: Boolean,
-    title: { type: [String, Number, Object, Function] as PropType<DrawerContent>, default: undefined },
+    title: {
+      type: [String, Number, Object, Function] as PropType<DrawerContent>,
+      default: undefined,
+    },
     placement: { type: String as PropType<DrawerPlacement>, default: 'right' },
     size: { type: [String, Number] as PropType<DrawerSize>, default: undefined },
     width: { type: [Number, String], default: DEFAULT_SIZE },
@@ -98,7 +119,10 @@ export const Drawer = defineComponent({
     destroyOnHidden: { type: Boolean, default: undefined },
     forceRender: Boolean,
     focusTriggerAfterClose: { type: Boolean, default: true },
-    getContainer: { type: [String, Object, Function, Boolean] as PropType<DrawerGetContainer>, default: undefined },
+    getContainer: {
+      type: [String, Object, Function, Boolean] as PropType<DrawerGetContainer>,
+      default: undefined,
+    },
     rootClassName: { type: String, default: undefined },
     rootStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     bodyStyle: { type: Object as PropType<CSSProperties>, default: undefined },
@@ -122,29 +146,47 @@ export const Drawer = defineComponent({
     // 计算动态 zIndex
     const computedZIndex = computed(() => drawerManager.getZIndex(drawerUid, props.zIndex))
 
-    watch(() => props.open, (v) => { if (v !== undefined) innerOpen.value = v })
+    watch(
+      () => props.open,
+      (v) => {
+        if (v !== undefined) innerOpen.value = v
+      },
+    )
 
-    const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
+    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
-    watch(isOpen, async (v) => {
-      if (v) {
-        if (props.mask) { lockScroll(); didLock = true }
-        await Promise.resolve()
-        if (drawerRef.value) cleanupTrap = trapFocus(drawerRef.value, props.focusTriggerAfterClose)
-      } else {
-        cleanupTrap?.()
-        cleanupTrap = null
-        if (didLock) { unlockScroll(); didLock = false }
-      }
-      // afterOpenChange fires once the transition would have settled; async so
-      // fake-timer tests can intercept it too
-      setTimeout(() => emit('afterOpenChange', v), 0)
-    }, { flush: 'post' })
+    watch(
+      isOpen,
+      async (v) => {
+        if (v) {
+          if (props.mask) {
+            lockScroll()
+            didLock = true
+          }
+          await Promise.resolve()
+          if (drawerRef.value) cleanupTrap = trapFocus(drawerRef.value, props.focusTriggerAfterClose)
+        } else {
+          cleanupTrap?.()
+          cleanupTrap = null
+          if (didLock) {
+            unlockScroll()
+            didLock = false
+          }
+        }
+        // afterOpenChange fires once the transition would have settled; async so
+        // fake-timer tests can intercept it too
+        setTimeout(() => emit('afterOpenChange', v), 0)
+      },
+      { flush: 'post' },
+    )
 
     onBeforeUnmount(() => {
       cleanupTrap?.()
       cleanupTrap = null
-      if (didLock) { unlockScroll(); didLock = false }
+      if (didLock) {
+        unlockScroll()
+        didLock = false
+      }
       drawerManager.unregister(drawerUid)
     })
 
@@ -192,12 +234,7 @@ export const Drawer = defineComponent({
     const renderCloseIcon = () => {
       if (!props.closable) return null
       return (
-        <button
-          type="button"
-          class={`${prefixCls}-close`}
-          onClick={(e: MouseEvent) => close(e)}
-          aria-label="Close"
-        >
+        <button type="button" class={`${prefixCls}-close`} onClick={(e: MouseEvent) => close(e)} aria-label="Close">
           <Icon component={props.closeIcon ?? CloseOutlined} />
         </button>
       )
@@ -211,13 +248,17 @@ export const Drawer = defineComponent({
       if (!hasTitle && !props.closable && !extraNode) return null
       return (
         <div
-          class={cls(`${prefixCls}-header`, { [`${prefixCls}-header-close-only`]: props.closable && !hasTitle && !extraNode })}
+          class={cls(`${prefixCls}-header`, {
+            [`${prefixCls}-header-close-only`]: props.closable && !hasTitle && !extraNode,
+          })}
           style={props.headerStyle}
         >
           <div class={`${prefixCls}-header-title`}>
             {renderCloseIcon()}
             {hasTitle && (
-              <div id={ariaId} class={`${prefixCls}-title`}>{titleNode}</div>
+              <div id={ariaId} class={`${prefixCls}-title`}>
+                {titleNode}
+              </div>
             )}
           </div>
           {extraNode && <div class={`${prefixCls}-extra`}>{extraNode}</div>}
@@ -228,7 +269,11 @@ export const Drawer = defineComponent({
     const renderFooter = () => {
       const footerNode = slots.footer?.()
       if (!footerNode || (Array.isArray(footerNode) && !footerNode.length)) return null
-      return <div class={`${prefixCls}-footer`} style={props.footerStyle}>{footerNode}</div>
+      return (
+        <div class={`${prefixCls}-footer`} style={props.footerStyle}>
+          {footerNode}
+        </div>
+      )
     }
 
     const renderBody = () => {
@@ -251,13 +296,13 @@ export const Drawer = defineComponent({
           <Transition name={`hmfw-drawer-${props.placement}`} appear>
             {(isOpen.value || props.forceRender) && (
               <div
-                class={cls(`${prefixCls}-root`, props.rootClassName, { [`${prefixCls}-no-mask`]: !props.mask })}
+                class={cls(`${prefixCls}-root`, props.rootClassName, {
+                  [`${prefixCls}-no-mask`]: !props.mask,
+                })}
                 style={{ ...rootStyle, display: isOpen.value ? '' : 'none' }}
                 onKeydown={handleKeydown}
               >
-                {props.mask && (
-                  <div class={`${prefixCls}-mask`} style={props.maskStyle} onClick={handleMaskClick} />
-                )}
+                {props.mask && <div class={`${prefixCls}-mask`} style={props.maskStyle} onClick={handleMaskClick} />}
                 <div
                   ref={drawerRef}
                   class={cls(`${prefixCls}-content-wrapper`, `${prefixCls}-${props.placement}`)}

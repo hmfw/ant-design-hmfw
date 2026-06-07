@@ -126,9 +126,7 @@ export const Empty = defineComponent({
         </div>
       )
 
-      const footerNode = slots.default && (
-        <div class={`${prefixCls}-footer`}>{slots.default()}</div>
-      )
+      const footerNode = slots.default && <div class={`${prefixCls}-footer`}>{slots.default()}</div>
 
       return (
         <div class={cls(prefixCls, { [`${prefixCls}-normal`]: isSimple })}>

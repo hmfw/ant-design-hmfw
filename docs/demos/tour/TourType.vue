@@ -1,16 +1,11 @@
 <template>
   <div>
     <Space>
-      <Button type="primary" @click="openDefault">默认样式</Button>
-      <Button type="primary" @click="openPrimary">主题样式</Button>
+      <Button type="primary" @click="openDefault"> 默认样式 </Button>
+      <Button type="primary" @click="openPrimary"> 主题样式 </Button>
     </Space>
     <Tour v-model:open="defaultOpen" :steps="defaultSteps" @finish="defaultOpen = false" />
-    <Tour
-      v-model:open="primaryOpen"
-      type="primary"
-      :steps="primarySteps"
-      @finish="primaryOpen = false"
-    />
+    <Tour v-model:open="primaryOpen" type="primary" :steps="primarySteps" @finish="primaryOpen = false" />
   </div>
 </template>
 

@@ -3,7 +3,7 @@
     :model="formState"
     :label-col="{ span: 6 }"
     :wrapper-col="{ span: 18 }"
-    style="max-width: 480px;"
+    style="max-width: 480px"
     @finish="handleFinish"
   >
     <FormItem label="用户名" name="username" :rules="[{ required: true, message: '请输入用户名' }]">
@@ -13,8 +13,8 @@
       <InputPassword v-model:value="formState.password" placeholder="请输入密码" />
     </FormItem>
     <FormItem :wrapper-col="{ offset: 6, span: 18 }">
-      <Button type="primary" html-type="submit">提交</Button>
-      <Button style="margin-left: 8px;" @click="handleReset">重置</Button>
+      <Button type="primary" html-type="submit"> 提交 </Button>
+      <Button style="margin-left: 8px" @click="handleReset"> 重置 </Button>
     </FormItem>
   </Form>
 </template>

@@ -27,10 +27,11 @@ const filteredIcons = computed(() => {
 })
 
 const copyCode = (iconName: string) => {
-  const componentName = iconName
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('') + 'Outlined'
+  const componentName =
+    iconName
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('') + 'Outlined'
 
   const code = `import { ${componentName} } from 'ant-design-hmfw'\n\n<Icon :component="${componentName}" />`
 
@@ -60,11 +61,7 @@ const copyCode = (iconName: string) => {
       <div class="category-filter">
         <label>分类：</label>
         <select v-model="selectedCategory" class="category-select">
-          <option
-            v-for="category in categories"
-            :key="category"
-            :value="category"
-          >
+          <option v-for="category in categories" :key="category" :value="category">
             {{ category === 'all' ? '全部' : category }}
           </option>
         </select>
@@ -74,9 +71,7 @@ const copyCode = (iconName: string) => {
     <!-- 结果统计 -->
     <div class="stats">
       找到 <strong>{{ filteredIcons.length }}</strong> 个图标
-      <span v-if="searchQuery" class="search-term">
-        搜索: "{{ searchQuery }}"
-      </span>
+      <span v-if="searchQuery" class="search-term"> 搜索: "{{ searchQuery }}" </span>
     </div>
 
     <!-- 图标网格 -->
@@ -91,20 +86,18 @@ const copyCode = (iconName: string) => {
         <div class="icon-display">
           <Icon :component="icon.component" :style="{ fontSize: '32px' }" />
         </div>
-        <div class="icon-name">{{ icon.name }}</div>
-        <div class="icon-category">{{ icon.category }}</div>
+        <div class="icon-name">
+          {{ icon.name }}
+        </div>
+        <div class="icon-category">
+          {{ icon.category }}
+        </div>
         <div class="icon-keywords">
-          <span
-            v-for="keyword in icon.keywords.slice(0, 3)"
-            :key="keyword"
-            class="keyword-tag"
-          >
+          <span v-for="keyword in icon.keywords.slice(0, 3)" :key="keyword" class="keyword-tag">
             {{ keyword }}
           </span>
         </div>
-        <div v-if="copiedIcon === icon.name" class="copied-indicator">
-          ✓ 已复制
-        </div>
+        <div v-if="copiedIcon === icon.name" class="copied-indicator">✓ 已复制</div>
       </div>
     </div>
 

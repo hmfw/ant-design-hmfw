@@ -1,6 +1,14 @@
 import {
-  defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick,
-  type PropType, type VNodeChild, Teleport,
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onUnmounted,
+  nextTick,
+  type PropType,
+  type VNodeChild,
+  Teleport,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
@@ -23,7 +31,10 @@ function parseTime(val?: string) {
   const lower = val.toLowerCase()
   const isPM = lower.includes('pm')
   const isAM = lower.includes('am')
-  const parts = val.replace(/[^\d:]/g, '').split(':').map((x) => Number(x))
+  const parts = val
+    .replace(/[^\d:]/g, '')
+    .split(':')
+    .map((x) => Number(x))
   let h = parts[0] || 0
   const m = parts[1] || 0
   const s = parts[2] || 0
@@ -37,17 +48,28 @@ function formatTime(h: number, m: number, s: number, fmt: string) {
   const h12 = h % 12 === 0 ? 12 : h % 12
   return fmt.replace(/HH|H|hh|h|mm|m|ss|s|A|a/g, (token) => {
     switch (token) {
-      case 'HH': return pad(h)
-      case 'H': return String(h)
-      case 'hh': return pad(h12)
-      case 'h': return String(h12)
-      case 'mm': return pad(m)
-      case 'm': return String(m)
-      case 'ss': return pad(s)
-      case 's': return String(s)
-      case 'A': return isPM ? 'PM' : 'AM'
-      case 'a': return isPM ? 'pm' : 'am'
-      default: return token
+      case 'HH':
+        return pad(h)
+      case 'H':
+        return String(h)
+      case 'hh':
+        return pad(h12)
+      case 'h':
+        return String(h12)
+      case 'mm':
+        return pad(m)
+      case 'm':
+        return String(m)
+      case 'ss':
+        return pad(s)
+      case 's':
+        return String(s)
+      case 'A':
+        return isPM ? 'PM' : 'AM'
+      case 'a':
+        return isPM ? 'pm' : 'am'
+      default:
+        return token
     }
   })
 }
@@ -108,7 +130,7 @@ export const TimePicker = defineComponent({
     const secondColRef = ref<HTMLElement>()
     const periodColRef = ref<HTMLElement>()
 
-    const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
+    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
     const displayValue = computed(() => {
       if (props.value !== undefined) {
@@ -133,28 +155,31 @@ export const TimePicker = defineComponent({
       return { h: innerH.value, m: innerM.value, s: innerS.value }
     })
 
-    watch(() => props.value, (v) => {
-      if (v !== undefined) {
-        if (!v) {
-          innerH.value = 0
-          innerM.value = 0
-          innerS.value = 0
-          stagedH.value = 0
-          stagedM.value = 0
-          stagedS.value = 0
-          hasValue.value = false
-        } else {
-          const p = parseTime(v)
-          innerH.value = p.h
-          innerM.value = p.m
-          innerS.value = p.s
-          stagedH.value = p.h
-          stagedM.value = p.m
-          stagedS.value = p.s
-          hasValue.value = true
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) {
+          if (!v) {
+            innerH.value = 0
+            innerM.value = 0
+            innerS.value = 0
+            stagedH.value = 0
+            stagedM.value = 0
+            stagedS.value = 0
+            hasValue.value = false
+          } else {
+            const p = parseTime(v)
+            innerH.value = p.h
+            innerM.value = p.m
+            innerS.value = p.s
+            stagedH.value = p.h
+            stagedM.value = p.m
+            stagedS.value = p.s
+            hasValue.value = true
+          }
         }
-      }
-    })
+      },
+    )
 
     const panelPos = ref({ top: 0, left: 0 })
 
@@ -235,10 +260,7 @@ export const TimePicker = defineComponent({
     }
 
     const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        !triggerRef.value?.contains(e.target as Node) &&
-        !panelRef.value?.contains(e.target as Node)
-      ) close()
+      if (!triggerRef.value?.contains(e.target as Node) && !panelRef.value?.contains(e.target as Node)) close()
     }
 
     onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
@@ -285,7 +307,7 @@ export const TimePicker = defineComponent({
       { value: 'PM', disabled: false },
     ])
 
-    const currentPeriod = computed(() => currentVal.value.h >= 12 ? 'PM' : 'AM')
+    const currentPeriod = computed(() => (currentVal.value.h >= 12 ? 'PM' : 'AM'))
 
     const showSec = computed(() => hasSeconds(props.format))
 
@@ -297,7 +319,7 @@ export const TimePicker = defineComponent({
     const scrollColumnToValue = (
       colRef: HTMLElement | undefined,
       value: number | string,
-      cacheKey: 'h' | 'm' | 's' | 'p'
+      cacheKey: 'h' | 'm' | 's' | 'p',
     ) => {
       if (!colRef) return
       // 缓存优化：值未变化时跳过
@@ -319,7 +341,7 @@ export const TimePicker = defineComponent({
     watch(isOpen, (open) => {
       if (open) {
         nextTick(() => {
-          const h = props.use12Hours ? (currentVal.value.h % 12 || 12) : currentVal.value.h
+          const h = props.use12Hours ? currentVal.value.h % 12 || 12 : currentVal.value.h
           scrollColumnToValue(hourColRef.value, h, 'h')
           scrollColumnToValue(minuteColRef.value, currentVal.value.m, 'm')
           if (showSec.value) {
@@ -336,21 +358,24 @@ export const TimePicker = defineComponent({
     })
 
     // 值变化时滚动（仅在面板打开时）
-    watch(() => [currentVal.value.h, currentVal.value.m, currentVal.value.s, currentPeriod.value], () => {
-      if (isOpen.value) {
-        nextTick(() => {
-          const h = props.use12Hours ? (currentVal.value.h % 12 || 12) : currentVal.value.h
-          scrollColumnToValue(hourColRef.value, h, 'h')
-          scrollColumnToValue(minuteColRef.value, currentVal.value.m, 'm')
-          if (showSec.value) {
-            scrollColumnToValue(secondColRef.value, currentVal.value.s, 's')
-          }
-          if (props.use12Hours) {
-            scrollColumnToValue(periodColRef.value, currentPeriod.value, 'p')
-          }
-        })
-      }
-    })
+    watch(
+      () => [currentVal.value.h, currentVal.value.m, currentVal.value.s, currentPeriod.value],
+      () => {
+        if (isOpen.value) {
+          nextTick(() => {
+            const h = props.use12Hours ? currentVal.value.h % 12 || 12 : currentVal.value.h
+            scrollColumnToValue(hourColRef.value, h, 'h')
+            scrollColumnToValue(minuteColRef.value, currentVal.value.m, 'm')
+            if (showSec.value) {
+              scrollColumnToValue(secondColRef.value, currentVal.value.s, 's')
+            }
+            if (props.use12Hours) {
+              scrollColumnToValue(periodColRef.value, currentPeriod.value, 'p')
+            }
+          })
+        }
+      },
+    )
 
     const handleHourClick = (h: number, disabled: boolean) => {
       if (disabled) return
@@ -426,7 +451,9 @@ export const TimePicker = defineComponent({
               onBlur={() => emit('blur')}
             />
             {props.allowClear && displayValue.value && !props.disabled && (
-              <span class={`${prefixCls}-clear`} onClick={clearValue}>✕</span>
+              <span class={`${prefixCls}-clear`} onClick={clearValue}>
+                ✕
+              </span>
             )}
             <span class={`${prefixCls}-suffix`}>🕐</span>
           </span>
@@ -437,7 +464,12 @@ export const TimePicker = defineComponent({
             <div
               ref={panelRef}
               class={`${prefixCls}-panel-container`}
-              style={{ position: 'absolute', top: `${panelPos.value.top}px`, left: `${panelPos.value.left}px`, zIndex: 1050 }}
+              style={{
+                position: 'absolute',
+                top: `${panelPos.value.top}px`,
+                left: `${panelPos.value.left}px`,
+                zIndex: 1050,
+              }}
             >
               <div class={`${prefixCls}-panel`}>
                 <div class={`${prefixCls}-panel-inner`}>
@@ -512,15 +544,20 @@ export const TimePicker = defineComponent({
                   )}
                 </div>
                 <div class={`${prefixCls}-panel-footer`}>
-                  <div class={`${prefixCls}-panel-footer-extra`}>
-                    {props.renderExtraFooter?.()}
-                  </div>
+                  <div class={`${prefixCls}-panel-footer-extra`}>{props.renderExtraFooter?.()}</div>
                   <div class={`${prefixCls}-panel-footer-actions`}>
                     {props.showNow && (
-                      <button class={`${prefixCls}-panel-footer-btn`} onClick={handleNow}>此刻</button>
+                      <button class={`${prefixCls}-panel-footer-btn`} onClick={handleNow}>
+                        此刻
+                      </button>
                     )}
                     {props.needConfirm && (
-                      <button class={`${prefixCls}-panel-footer-btn ${prefixCls}-panel-footer-ok`} onClick={confirmTime}>确定</button>
+                      <button
+                        class={`${prefixCls}-panel-footer-btn ${prefixCls}-panel-footer-ok`}
+                        onClick={confirmTime}
+                      >
+                        确定
+                      </button>
                     )}
                   </div>
                 </div>

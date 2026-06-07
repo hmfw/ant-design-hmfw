@@ -22,7 +22,10 @@ export default defineConfig({
         md.use(MarkdownItAnchor, {
           permalink: false,
           slugify: (s: string) =>
-            s.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, ''),
+            s
+              .toLowerCase()
+              .replace(/\s+/g, '-')
+              .replace(/[^\w-]/g, ''),
         })
       },
     }),

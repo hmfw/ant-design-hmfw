@@ -140,9 +140,8 @@ export default defineComponent({
       if (rowContext) {
         const [horizontalGutter] = rowContext.gutter.value
         if (horizontalGutter) {
-          const hGutter = typeof horizontalGutter === 'number'
-            ? `${horizontalGutter / 2}px`
-            : `calc(${horizontalGutter} / 2)`
+          const hGutter =
+            typeof horizontalGutter === 'number' ? `${horizontalGutter / 2}px` : `calc(${horizontalGutter} / 2)`
           style.paddingInline = hGutter
         }
       }

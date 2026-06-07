@@ -30,7 +30,11 @@ describe('Modal', () => {
     const w1 = mount(Modal, { props: { open: true, title: 'My Title' }, attachTo: document.body })
     expect(document.querySelector('.hmfw-modal-title')?.textContent).toBe('My Title')
     w1.unmount()
-    const w2 = mount(Modal, { props: { open: true }, slots: { title: 'Slot Title' }, attachTo: document.body })
+    const w2 = mount(Modal, {
+      props: { open: true },
+      slots: { title: 'Slot Title' },
+      attachTo: document.body,
+    })
     expect(document.querySelector('.hmfw-modal-title')?.textContent).toBe('Slot Title')
     w2.unmount()
   })
@@ -46,7 +50,10 @@ describe('Modal', () => {
   })
   // MORE_TESTS
   it('confirmLoading blocks cancel via close button', async () => {
-    const wrapper = mount(Modal, { props: { open: true, confirmLoading: true }, attachTo: document.body })
+    const wrapper = mount(Modal, {
+      props: { open: true, confirmLoading: true },
+      attachTo: document.body,
+    })
     const closeBtn = document.querySelector('.hmfw-modal-close') as HTMLElement
     closeBtn?.click()
     expect(wrapper.emitted('cancel')).toBeFalsy()
@@ -54,7 +61,10 @@ describe('Modal', () => {
   })
 
   it('maskClosable=false keeps modal open on mask click', async () => {
-    const wrapper = mount(Modal, { props: { open: true, maskClosable: false }, attachTo: document.body })
+    const wrapper = mount(Modal, {
+      props: { open: true, maskClosable: false },
+      attachTo: document.body,
+    })
     ;(document.querySelector('.hmfw-modal-wrap') as HTMLElement)?.click()
     expect(wrapper.emitted('cancel')).toBeFalsy()
     wrapper.unmount()
@@ -73,7 +83,10 @@ describe('Modal', () => {
   })
 
   it('closable=false hides close button', () => {
-    const wrapper = mount(Modal, { props: { open: true, closable: false }, attachTo: document.body })
+    const wrapper = mount(Modal, {
+      props: { open: true, closable: false },
+      attachTo: document.body,
+    })
     expect(document.querySelector('.hmfw-modal-close')).toBeFalsy()
     wrapper.unmount()
   })
@@ -87,7 +100,10 @@ describe('Modal', () => {
   })
 
   it('Esc key ignored when keyboard=false', async () => {
-    const wrapper = mount(Modal, { props: { open: true, keyboard: false }, attachTo: document.body })
+    const wrapper = mount(Modal, {
+      props: { open: true, keyboard: false },
+      attachTo: document.body,
+    })
     const root = document.querySelector('.hmfw-modal-root') as HTMLElement
     root?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     expect(wrapper.emitted('cancel')).toBeFalsy()
@@ -113,7 +129,10 @@ describe('Modal', () => {
   })
 
   it('okType="danger" renders danger primary OK button', () => {
-    const wrapper = mount(Modal, { props: { open: true, okType: 'danger' }, attachTo: document.body })
+    const wrapper = mount(Modal, {
+      props: { open: true, okType: 'danger' },
+      attachTo: document.body,
+    })
     const ok = document.querySelectorAll('.hmfw-modal-footer .hmfw-btn')[1]
     expect(ok?.classList.contains('hmfw-btn-dangerous')).toBe(true)
     expect(ok?.classList.contains('hmfw-btn-primary')).toBe(true)
@@ -159,7 +178,9 @@ describe('Modal', () => {
 
     it('onOk returning Promise keeps OK button loading until resolved', async () => {
       let resolveFn: () => void = () => {}
-      const promise = new Promise<void>((r) => { resolveFn = r })
+      const promise = new Promise<void>((r) => {
+        resolveFn = r
+      })
       Modal.confirm({ title: 'Async', onOk: () => promise })
       await nextTick()
       const okBtn = document.querySelectorAll('.hmfw-modal-confirm-btns .hmfw-btn')[1] as HTMLElement
@@ -181,4 +202,3 @@ describe('Modal', () => {
     })
   })
 })
-

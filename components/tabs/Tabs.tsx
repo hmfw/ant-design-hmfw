@@ -40,11 +40,14 @@ export const Tabs = defineComponent({
     const navListRef = ref<HTMLElement | null>(null)
     const inkBarRef = ref<HTMLElement | null>(null)
 
-    watch(() => props.activeKey, (v) => { if (v !== undefined) innerKey.value = v })
-
-    const currentKey = computed(() =>
-      props.activeKey !== undefined ? props.activeKey : innerKey.value,
+    watch(
+      () => props.activeKey,
+      (v) => {
+        if (v !== undefined) innerKey.value = v
+      },
     )
+
+    const currentKey = computed(() => (props.activeKey !== undefined ? props.activeKey : innerKey.value))
 
     const animatedConfig = computed(() => {
       if (typeof props.animated === 'boolean') {
@@ -125,9 +128,7 @@ export const Tabs = defineComponent({
       // Find next non-disabled tab
       let attempts = 0
       while (items[targetIndex]?.disabled && attempts < items.length) {
-        targetIndex = event.key === 'ArrowLeft' || event.key === 'ArrowUp'
-          ? targetIndex - 1
-          : targetIndex + 1
+        targetIndex = event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? targetIndex - 1 : targetIndex + 1
         if (targetIndex < 0) targetIndex = items.length - 1
         if (targetIndex >= items.length) targetIndex = 0
         attempts++
@@ -148,9 +149,12 @@ export const Tabs = defineComponent({
 
       const isVertical = props.tabPosition === 'left' || props.tabPosition === 'right'
 
-      const tabBarGutterStyle = props.tabBarGutter !== undefined
-        ? (isVertical ? { marginBottom: `${props.tabBarGutter}px` } : { marginRight: `${props.tabBarGutter}px` })
-        : {}
+      const tabBarGutterStyle =
+        props.tabBarGutter !== undefined
+          ? isVertical
+            ? { marginBottom: `${props.tabBarGutter}px` }
+            : { marginRight: `${props.tabBarGutter}px` }
+          : {}
 
       const renderExtraContent = () => {
         if (!props.tabBarExtraContent) return null
@@ -169,9 +173,11 @@ export const Tabs = defineComponent({
       }
 
       return (
-        <div class={cls(prefixCls, `${prefixCls}-${props.type}`, sizeClass, posClass, {
-          [`${prefixCls}-centered`]: props.centered,
-        })}>
+        <div
+          class={cls(prefixCls, `${prefixCls}-${props.type}`, sizeClass, posClass, {
+            [`${prefixCls}-centered`]: props.centered,
+          })}
+        >
           <div class={`${prefixCls}-nav`} style={props.tabBarStyle as any}>
             {renderExtraContent()}
             <div class={`${prefixCls}-nav-wrap`}>
@@ -221,12 +227,7 @@ export const Tabs = defineComponent({
                   )
                 })}
                 {isEditable && !props.hideAdd && (
-                  <button
-                    type="button"
-                    class={`${prefixCls}-nav-add`}
-                    aria-label="add"
-                    onClick={handleAdd}
-                  >
+                  <button type="button" class={`${prefixCls}-nav-add`} aria-label="add" onClick={handleAdd}>
                     {props.addIcon || <Icon component={PlusOutlined} />}
                   </button>
                 )}

@@ -51,7 +51,7 @@ export const InputNumber = defineComponent({
     const inputRef = ref<HTMLInputElement>()
 
     const isControlled = computed(() => props.value !== undefined)
-    const currentValue = computed(() => isControlled.value ? props.value : innerValue.value)
+    const currentValue = computed(() => (isControlled.value ? props.value : innerValue.value))
 
     // Expose methods
     expose({
@@ -70,9 +70,12 @@ export const InputNumber = defineComponent({
       nativeElement: computed(() => inputRef.value),
     })
 
-    watch(() => props.value, (v) => {
-      if (v !== undefined) innerValue.value = v
-    })
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
+    )
 
     const clamp = (v: number) => Math.min(props.max, Math.max(props.min, v))
 
@@ -141,8 +144,14 @@ export const InputNumber = defineComponent({
 
     const handleKeydown = (e: KeyboardEvent) => {
       if (!props.keyboard) return
-      if (e.key === 'ArrowUp') { e.preventDefault(); step(1, 'keydown') }
-      if (e.key === 'ArrowDown') { e.preventDefault(); step(-1, 'keydown') }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        step(1, 'keydown')
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        step(-1, 'keydown')
+      }
       if (e.key === 'Enter') emit('pressEnter', e)
     }
 
@@ -173,13 +182,15 @@ export const InputNumber = defineComponent({
       const downIcon = controlsConfig.downIcon ?? (isSpinner ? '−' : '▼')
 
       const inputEl = (
-        <div class={cls(prefixCls, `${prefixCls}-${props.size}`, `${prefixCls}-${props.variant}`, {
-          [`${prefixCls}-focused`]: focused.value,
-          [`${prefixCls}-disabled`]: props.disabled,
-          [`${prefixCls}-readonly`]: props.readOnly,
-          [`${prefixCls}-status-${props.status}`]: !!props.status,
-          [`${prefixCls}-without-controls`]: !showControls,
-        })}>
+        <div
+          class={cls(prefixCls, `${prefixCls}-${props.size}`, `${prefixCls}-${props.variant}`, {
+            [`${prefixCls}-focused`]: focused.value,
+            [`${prefixCls}-disabled`]: props.disabled,
+            [`${prefixCls}-readonly`]: props.readOnly,
+            [`${prefixCls}-status-${props.status}`]: !!props.status,
+            [`${prefixCls}-without-controls`]: !showControls,
+          })}
+        >
           {(props.prefix || slots.prefix) && (
             <span class={`${prefixCls}-prefix`}>{slots.prefix?.() ?? props.prefix}</span>
           )}
@@ -203,17 +214,25 @@ export const InputNumber = defineComponent({
             <div class={`${prefixCls}-handler-wrap`}>
               <span
                 class={cls(`${prefixCls}-handler`, `${prefixCls}-handler-up`, {
-                  [`${prefixCls}-handler-up-disabled`]: props.disabled || (currentValue.value !== undefined && currentValue.value >= props.max),
+                  [`${prefixCls}-handler-up-disabled`]:
+                    props.disabled || (currentValue.value !== undefined && currentValue.value >= props.max),
                 })}
-                onMousedown={(e) => { e.preventDefault(); step(1) }}
+                onMousedown={(e) => {
+                  e.preventDefault()
+                  step(1)
+                }}
               >
                 <span class={`${prefixCls}-handler-up-inner`}>{upIcon}</span>
               </span>
               <span
                 class={cls(`${prefixCls}-handler`, `${prefixCls}-handler-down`, {
-                  [`${prefixCls}-handler-down-disabled`]: props.disabled || (currentValue.value !== undefined && currentValue.value <= props.min),
+                  [`${prefixCls}-handler-down-disabled`]:
+                    props.disabled || (currentValue.value !== undefined && currentValue.value <= props.min),
                 })}
-                onMousedown={(e) => { e.preventDefault(); step(-1) }}
+                onMousedown={(e) => {
+                  e.preventDefault()
+                  step(-1)
+                }}
               >
                 <span class={`${prefixCls}-handler-down-inner`}>{downIcon}</span>
               </span>

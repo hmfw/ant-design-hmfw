@@ -1,11 +1,11 @@
 <template>
-  <div style="max-width: 300px;">
+  <div style="max-width: 300px">
     <Select
       v-model:value="value"
       :options="options"
       :show-search="true"
       placeholder="请搜索并选择"
-      style="width: 100%;"
+      style="width: 100%"
       @search="handleSearch"
     />
   </div>
@@ -29,8 +29,6 @@ const allOptions = [
 const options = ref(allOptions)
 
 const handleSearch = (searchText: string) => {
-  options.value = allOptions.filter(item =>
-    item.label.includes(searchText)
-  )
+  options.value = allOptions.filter((item) => item.label.includes(searchText))
 }
 </script>

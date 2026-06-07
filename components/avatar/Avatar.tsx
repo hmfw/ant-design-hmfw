@@ -68,7 +68,16 @@ export const Avatar = defineComponent({
       default: undefined,
     },
     crossOrigin: String as PropType<'' | 'anonymous' | 'use-credentials'>,
-    referrerPolicy: String as PropType<'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'>,
+    referrerPolicy: String as PropType<
+      | 'no-referrer'
+      | 'no-referrer-when-downgrade'
+      | 'origin'
+      | 'origin-when-cross-origin'
+      | 'same-origin'
+      | 'strict-origin'
+      | 'strict-origin-when-cross-origin'
+      | 'unsafe-url'
+    >,
     gap: {
       type: Number,
       default: 4,
@@ -141,9 +150,7 @@ export const Avatar = defineComponent({
       const textWidth = textRef.value.offsetWidth
       const gap = props.gap * 2
       if (avatarWidth && textWidth && gap < avatarWidth) {
-        scale.value = avatarWidth - gap < textWidth
-          ? (avatarWidth - gap) / textWidth
-          : 1
+        scale.value = avatarWidth - gap < textWidth ? (avatarWidth - gap) / textWidth : 1
       }
     }
 
@@ -175,9 +182,10 @@ export const Avatar = defineComponent({
       } else if (slots.default) {
         // 始终包含 translateX(-50%) 确保水平居中
         // left: 50% 由 CSS 类设置，配合 translateX(-50%) 实现居中
-        const textStyle = scale.value !== 1
-          ? { transform: `scale(${scale.value}) translateX(-50%)` }
-          : { transform: 'translateX(-50%)' }
+        const textStyle =
+          scale.value !== 1
+            ? { transform: `scale(${scale.value}) translateX(-50%)` }
+            : { transform: 'translateX(-50%)' }
         children = (
           <span ref={textRef} class={`${prefixCls}-string`} style={textStyle}>
             {slots.default()}
@@ -243,7 +251,7 @@ export const AvatarGroup = defineComponent({
               shape={props.shape}
               style={props.maxStyle}
               v-slots={{
-                default: () => `+${overflowCount}`
+                default: () => `+${overflowCount}`,
               }}
             />
           )}

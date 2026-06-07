@@ -1,11 +1,6 @@
 <template>
   <button @click="open = true">打开对话框</button>
-  <Modal
-    v-model:open="open"
-    title="自定义页脚"
-    :confirm-loading="confirmLoading"
-    @ok="handleOk"
-  >
+  <Modal v-model:open="open" title="自定义页脚" :confirm-loading="confirmLoading" @ok="handleOk">
     <p>{{ modalText }}</p>
     <template #footer>
       <button @click="open = false">取消</button>

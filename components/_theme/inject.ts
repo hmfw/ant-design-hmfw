@@ -55,11 +55,7 @@ export function injectCssVars(tokens: MapTokens, prefix = 'hmfw'): void {
   style.textContent = tokensToCssVars(tokens, prefix)
 }
 
-export function injectScopedCssVars(
-  el: HTMLElement,
-  tokens: Partial<MapTokens>,
-  prefix = 'hmfw',
-): void {
+export function injectScopedCssVars(el: HTMLElement, tokens: Partial<MapTokens>, prefix = 'hmfw'): void {
   for (const [key, value] of Object.entries(tokens)) {
     if (typeof value === 'string' || typeof value === 'number') {
       const cssKey = `--${prefix}-${toKebab(key)}`

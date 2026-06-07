@@ -1,6 +1,4 @@
-import {
-  defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick, type PropType, Teleport,
-} from 'vue'
+import { defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick, type PropType, Teleport } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { AutoCompleteOption, AutoCompleteAllowClear } from './types'
@@ -45,10 +43,15 @@ export const AutoComplete = defineComponent({
     const dropdownPos = ref({ top: 0, left: 0, width: 0 })
 
     const isControlled = computed(() => props.value !== undefined)
-    const inputValue = computed(() => isControlled.value ? props.value! : innerValue.value)
-    const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
+    const inputValue = computed(() => (isControlled.value ? props.value! : innerValue.value))
+    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
-    watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = v })
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
+    )
 
     const filteredOptions = computed(() => {
       const input = inputValue.value
@@ -57,22 +60,19 @@ export const AutoComplete = defineComponent({
       if (typeof props.filterOption === 'function') {
         return props.options.filter((opt) => (props.filterOption as Function)(input, opt))
       }
-      return props.options.filter((opt) =>
-        opt.value.toLowerCase().includes(input.toLowerCase()) ||
-        (opt.label ?? opt.value).toLowerCase().includes(input.toLowerCase())
+      return props.options.filter(
+        (opt) =>
+          opt.value.toLowerCase().includes(input.toLowerCase()) ||
+          (opt.label ?? opt.value).toLowerCase().includes(input.toLowerCase()),
       )
     })
 
     // AntD only renders the popup when there are options to show; an empty
     // `options` list never displays an empty panel (even with `open` set).
-    const hasPanelContent = computed(() =>
-      filteredOptions.value.length > 0 || !!props.notFoundContent
-    )
+    const hasPanelContent = computed(() => filteredOptions.value.length > 0 || !!props.notFoundContent)
 
     // index of the first non-disabled option, used by defaultActiveFirstOption
-    const firstEnabledIndex = computed(() =>
-      filteredOptions.value.findIndex((o) => !o.disabled)
-    )
+    const firstEnabledIndex = computed(() => filteredOptions.value.findIndex((o) => !o.disabled))
 
     const resetActive = () => {
       activeIndex.value = props.defaultActiveFirstOption ? firstEnabledIndex.value : -1
@@ -81,14 +81,17 @@ export const AutoComplete = defineComponent({
     // Options often arrive asynchronously (controlled `search` pattern). Keep the
     // highlighted index valid: clamp out-of-range, and re-highlight the first
     // option when the list changes while the panel is open.
-    watch(() => filteredOptions.value, (opts) => {
-      if (!isOpen.value) return
-      if (activeIndex.value >= opts.length || (activeIndex.value >= 0 && opts[activeIndex.value]?.disabled)) {
-        resetActive()
-      } else if (activeIndex.value === -1) {
-        resetActive()
-      }
-    })
+    watch(
+      () => filteredOptions.value,
+      (opts) => {
+        if (!isOpen.value) return
+        if (activeIndex.value >= opts.length || (activeIndex.value >= 0 && opts[activeIndex.value]?.disabled)) {
+          resetActive()
+        } else if (activeIndex.value === -1) {
+          resetActive()
+        }
+      },
+    )
 
     const setOpen = (next: boolean) => {
       if (innerOpen.value === next) return
@@ -149,7 +152,7 @@ export const AutoComplete = defineComponent({
       nextTick(() => {
         const node = dropdownRef.value?.querySelector(`.${prefixCls}-dropdown-item-active`)
         if (node && typeof (node as HTMLElement).scrollIntoView === 'function') {
-          (node as HTMLElement).scrollIntoView({ block: 'nearest' })
+          ;(node as HTMLElement).scrollIntoView({ block: 'nearest' })
         }
       })
     }
@@ -197,10 +200,8 @@ export const AutoComplete = defineComponent({
     }
 
     const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        !triggerRef.value?.contains(e.target as Node) &&
-        !dropdownRef.value?.contains(e.target as Node)
-      ) closeDropdown()
+      if (!triggerRef.value?.contains(e.target as Node) && !dropdownRef.value?.contains(e.target as Node))
+        closeDropdown()
     }
 
     onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
@@ -224,17 +225,12 @@ export const AutoComplete = defineComponent({
       <>
         <div
           ref={triggerRef}
-          class={cls(
-            prefixCls,
-            `${inputPfx}-affix-wrapper`,
-            sfx.value && `${inputPfx}-affix-wrapper-${sfx.value}`,
-            {
-              [`${inputPfx}-affix-wrapper-disabled`]: props.disabled,
-              [`${inputPfx}-affix-wrapper-status-error`]: props.status === 'error',
-              [`${inputPfx}-affix-wrapper-status-warning`]: props.status === 'warning',
-              [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
-            }
-          )}
+          class={cls(prefixCls, `${inputPfx}-affix-wrapper`, sfx.value && `${inputPfx}-affix-wrapper-${sfx.value}`, {
+            [`${inputPfx}-affix-wrapper-disabled`]: props.disabled,
+            [`${inputPfx}-affix-wrapper-status-error`]: props.status === 'error',
+            [`${inputPfx}-affix-wrapper-status-warning`]: props.status === 'warning',
+            [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
+          })}
           style={attrs.style as any}
         >
           {slots.prefix && <span class={`${inputPfx}-prefix`}>{slots.prefix()}</span>}
@@ -245,13 +241,19 @@ export const AutoComplete = defineComponent({
             disabled={props.disabled}
             placeholder={props.placeholder}
             onInput={handleInput}
-            onFocus={(e) => { openDropdown(); resetActive(); emit('focus', e) }}
+            onFocus={(e) => {
+              openDropdown()
+              resetActive()
+              emit('focus', e)
+            }}
             onBlur={(e) => emit('blur', e)}
             onKeydown={handleKeydown}
             autocomplete="off"
           />
           {!!props.allowClear && inputValue.value && !props.disabled && (
-            <span class={`${inputPfx}-clear-icon`} onMousedown={handleClear}>{renderClearIcon()}</span>
+            <span class={`${inputPfx}-clear-icon`} onMousedown={handleClear}>
+              {renderClearIcon()}
+            </span>
           )}
           {slots.suffix && <span class={`${inputPfx}-suffix`}>{slots.suffix()}</span>}
         </div>
@@ -278,8 +280,13 @@ export const AutoComplete = defineComponent({
                       [`${prefixCls}-dropdown-item-disabled`]: opt.disabled,
                       [`${prefixCls}-dropdown-item-selected`]: opt.value === inputValue.value,
                     })}
-                    onMouseenter={() => { if (!opt.disabled) activeIndex.value = i }}
-                    onMousedown={(e) => { e.preventDefault(); handleSelect(opt) }}
+                    onMouseenter={() => {
+                      if (!opt.disabled) activeIndex.value = i
+                    }}
+                    onMousedown={(e) => {
+                      e.preventDefault()
+                      handleSelect(opt)
+                    }}
                   >
                     {opt.label ?? opt.value}
                   </div>

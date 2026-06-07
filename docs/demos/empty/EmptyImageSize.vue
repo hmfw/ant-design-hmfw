@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 32px; align-items: flex-end; flex-wrap: wrap;">
+  <div style="display: flex; gap: 32px; align-items: flex-end; flex-wrap: wrap">
     <Empty :image-width="48" :image-height="32" description="小尺寸" />
     <Empty description="默认尺寸" />
     <Empty :image-width="160" :image-height="100" description="大尺寸" />

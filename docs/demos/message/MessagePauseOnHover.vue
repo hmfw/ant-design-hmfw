@@ -1,8 +1,8 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="pauseEnabled">悬停暂停（默认）</Button>
-    <Button @click="pauseDisabled">悬停不暂停</Button>
-    <Button @click="pauseCustom">单独配置</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="pauseEnabled"> 悬停暂停（默认） </Button>
+    <Button @click="pauseDisabled"> 悬停不暂停 </Button>
+    <Button @click="pauseCustom"> 单独配置 </Button>
   </div>
 </template>
 

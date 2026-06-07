@@ -107,29 +107,63 @@
   vertical-align: middle;
 }
 
-.hmfw-badge-status-success { background: var(--hmfw-color-success, #52c41a); }
+.hmfw-badge-status-success {
+  background: var(--hmfw-color-success, #52c41a);
+}
 .hmfw-badge-status-processing {
   background: var(--hmfw-color-primary, #1677ff);
   animation: hmfw-badge-processing 1.2s infinite ease-in-out;
 }
-.hmfw-badge-status-default { background: var(--hmfw-color-text-placeholder, #d9d9d9); }
-.hmfw-badge-status-error { background: var(--hmfw-color-error, #ff4d4f); }
-.hmfw-badge-status-warning { background: var(--hmfw-color-warning, #faad14); }
+.hmfw-badge-status-default {
+  background: var(--hmfw-color-text-placeholder, #d9d9d9);
+}
+.hmfw-badge-status-error {
+  background: var(--hmfw-color-error, #ff4d4f);
+}
+.hmfw-badge-status-warning {
+  background: var(--hmfw-color-warning, #faad14);
+}
 
 /* Preset colors for status dot */
-.hmfw-badge-color-pink     { background: #eb2f96; }
-.hmfw-badge-color-red      { background: #f5222d; }
-.hmfw-badge-color-volcano  { background: #fa541c; }
-.hmfw-badge-color-orange   { background: #fa8c16; }
-.hmfw-badge-color-gold     { background: #faad14; }
-.hmfw-badge-color-yellow   { background: #fadb14; }
-.hmfw-badge-color-lime     { background: #a0d911; }
-.hmfw-badge-color-green    { background: #52c41a; }
-.hmfw-badge-color-cyan     { background: #13c2c2; }
-.hmfw-badge-color-blue     { background: #1677ff; }
-.hmfw-badge-color-geekblue { background: #2f54eb; }
-.hmfw-badge-color-purple   { background: #722ed1; }
-.hmfw-badge-color-magenta  { background: #eb2f96; }
+.hmfw-badge-color-pink {
+  background: #eb2f96;
+}
+.hmfw-badge-color-red {
+  background: #f5222d;
+}
+.hmfw-badge-color-volcano {
+  background: #fa541c;
+}
+.hmfw-badge-color-orange {
+  background: #fa8c16;
+}
+.hmfw-badge-color-gold {
+  background: #faad14;
+}
+.hmfw-badge-color-yellow {
+  background: #fadb14;
+}
+.hmfw-badge-color-lime {
+  background: #a0d911;
+}
+.hmfw-badge-color-green {
+  background: #52c41a;
+}
+.hmfw-badge-color-cyan {
+  background: #13c2c2;
+}
+.hmfw-badge-color-blue {
+  background: #1677ff;
+}
+.hmfw-badge-color-geekblue {
+  background: #2f54eb;
+}
+.hmfw-badge-color-purple {
+  background: #722ed1;
+}
+.hmfw-badge-color-magenta {
+  background: #eb2f96;
+}
 
 .hmfw-badge-status-text {
   font-size: var(--hmfw-font-size-base);
@@ -137,9 +171,18 @@
 }
 
 @keyframes hmfw-badge-processing {
-  0% { transform: scale(0.8); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(0.8); opacity: 0.5; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
 }
 
 /* Ribbon 缎带 */
@@ -197,16 +240,42 @@
   border-inline-start-color: transparent;
 }
 
-.hmfw-ribbon-color-pink     { background: #eb2f96; }
-.hmfw-ribbon-color-red      { background: #f5222d; }
-.hmfw-ribbon-color-volcano  { background: #fa541c; }
-.hmfw-ribbon-color-orange   { background: #fa8c16; }
-.hmfw-ribbon-color-gold     { background: #faad14; }
-.hmfw-ribbon-color-yellow   { background: #fadb14; }
-.hmfw-ribbon-color-lime     { background: #a0d911; }
-.hmfw-ribbon-color-green    { background: #52c41a; }
-.hmfw-ribbon-color-cyan     { background: #13c2c2; }
-.hmfw-ribbon-color-blue     { background: #1677ff; }
-.hmfw-ribbon-color-geekblue { background: #2f54eb; }
-.hmfw-ribbon-color-purple   { background: #722ed1; }
-.hmfw-ribbon-color-magenta  { background: #eb2f96; }
+.hmfw-ribbon-color-pink {
+  background: #eb2f96;
+}
+.hmfw-ribbon-color-red {
+  background: #f5222d;
+}
+.hmfw-ribbon-color-volcano {
+  background: #fa541c;
+}
+.hmfw-ribbon-color-orange {
+  background: #fa8c16;
+}
+.hmfw-ribbon-color-gold {
+  background: #faad14;
+}
+.hmfw-ribbon-color-yellow {
+  background: #fadb14;
+}
+.hmfw-ribbon-color-lime {
+  background: #a0d911;
+}
+.hmfw-ribbon-color-green {
+  background: #52c41a;
+}
+.hmfw-ribbon-color-cyan {
+  background: #13c2c2;
+}
+.hmfw-ribbon-color-blue {
+  background: #1677ff;
+}
+.hmfw-ribbon-color-geekblue {
+  background: #2f54eb;
+}
+.hmfw-ribbon-color-purple {
+  background: #722ed1;
+}
+.hmfw-ribbon-color-magenta {
+  background: #eb2f96;
+}

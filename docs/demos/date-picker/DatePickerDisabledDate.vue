@@ -1,15 +1,7 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
-    <DatePicker
-      v-model:value="date"
-      :disabled-date="disablePastDates"
-      placeholder="不可选择过去日期"
-    />
-    <DatePicker
-      v-model:value="date2"
-      :disabled-date="disableFutureDates"
-      placeholder="不可选择未来日期"
-    />
+  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px">
+    <DatePicker v-model:value="date" :disabled-date="disablePastDates" placeholder="不可选择过去日期" />
+    <DatePicker v-model:value="date2" :disabled-date="disableFutureDates" placeholder="不可选择未来日期" />
   </div>
 </template>
 

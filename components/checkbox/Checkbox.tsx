@@ -38,7 +38,12 @@ export const Checkbox = defineComponent({
 
     const innerChecked = ref(props.defaultChecked ?? false)
 
-    watch(() => props.checked, (v) => { if (v !== undefined) innerChecked.value = v })
+    watch(
+      () => props.checked,
+      (v) => {
+        if (v !== undefined) innerChecked.value = v
+      },
+    )
 
     const isChecked = computed(() => {
       if (!props.skipGroup && group) return group.value.includes(props.value as CheckboxValueType)
@@ -68,11 +73,14 @@ export const Checkbox = defineComponent({
     })
 
     // Update indeterminate state
-    watch(() => props.indeterminate, (val) => {
-      if (inputRef.value) {
-        inputRef.value.indeterminate = val ?? false
-      }
-    })
+    watch(
+      () => props.indeterminate,
+      (val) => {
+        if (inputRef.value) {
+          inputRef.value.indeterminate = val ?? false
+        }
+      },
+    )
 
     const handleChange = (e: Event) => {
       if (isDisabled.value) return
@@ -97,7 +105,6 @@ export const Checkbox = defineComponent({
       }
       emit('change', changeEvent)
     }
-
 
     const handleClick = (e: MouseEvent) => {
       emit('click', e)
@@ -147,11 +154,13 @@ export const Checkbox = defineComponent({
         onMouseenter={handleMouseEnter}
         onMouseleave={handleMouseLeave}
       >
-        <span class={cls(prefixCls, {
-          [`${prefixCls}-checked`]: isChecked.value,
-          [`${prefixCls}-indeterminate`]: props.indeterminate,
-          [`${prefixCls}-disabled`]: isDisabled.value,
-        })}>
+        <span
+          class={cls(prefixCls, {
+            [`${prefixCls}-checked`]: isChecked.value,
+            [`${prefixCls}-indeterminate`]: props.indeterminate,
+            [`${prefixCls}-disabled`]: isDisabled.value,
+          })}
+        >
           <input
             ref={inputRef}
             type="checkbox"
@@ -195,9 +204,14 @@ export const CheckboxGroup = defineComponent({
     const innerValue = ref<CheckboxValueType[]>(props.defaultValue ?? [])
     const registeredValues = ref<CheckboxValueType[]>([])
 
-    watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = v })
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
+    )
 
-    const currentValue = computed(() => props.value !== undefined ? props.value : innerValue.value)
+    const currentValue = computed(() => (props.value !== undefined ? props.value : innerValue.value))
 
     const registerValue = (val: CheckboxValueType) => {
       if (!registeredValues.value.includes(val)) {
@@ -206,17 +220,15 @@ export const CheckboxGroup = defineComponent({
     }
 
     const cancelValue = (val: CheckboxValueType) => {
-      registeredValues.value = registeredValues.value.filter(v => v !== val)
+      registeredValues.value = registeredValues.value.filter((v) => v !== val)
     }
 
     const handleChange = (val: CheckboxValueType, checked: boolean) => {
-      const next = checked
-        ? [...currentValue.value, val]
-        : currentValue.value.filter((v) => v !== val)
+      const next = checked ? [...currentValue.value, val] : currentValue.value.filter((v) => v !== val)
 
       // Filter to only include registered values and sort by registration order
       const filteredNext = next
-        .filter(v => registeredValues.value.includes(v))
+        .filter((v) => registeredValues.value.includes(v))
         .sort((a, b) => {
           const indexA = registeredValues.value.indexOf(a)
           const indexB = registeredValues.value.indexOf(b)
@@ -229,9 +241,15 @@ export const CheckboxGroup = defineComponent({
     }
 
     provide<CheckboxGroupContext>(CHECKBOX_GROUP_KEY, {
-      get value() { return currentValue.value },
-      get disabled() { return props.disabled ?? false },
-      get name() { return props.name },
+      get value() {
+        return currentValue.value
+      },
+      get disabled() {
+        return props.disabled ?? false
+      },
+      get name() {
+        return props.name
+      },
       onChange: handleChange,
       registerValue,
       cancelValue,
@@ -239,7 +257,7 @@ export const CheckboxGroup = defineComponent({
 
     const normalizedOptions = computed(() => {
       if (!props.options) return []
-      return props.options.map(opt => {
+      return props.options.map((opt) => {
         if (typeof opt === 'object' && opt !== null && 'value' in opt) {
           return opt as CheckboxOptionType
         }
@@ -266,7 +284,7 @@ export const CheckboxGroup = defineComponent({
                   id={opt.id}
                   required={opt.required}
                   v-slots={{
-                    default: () => opt.label
+                    default: () => opt.label,
                   }}
                 />
               )
@@ -274,8 +292,11 @@ export const CheckboxGroup = defineComponent({
           </div>
         )
       }
-      return <div class={groupClass} style={props.style}>{slots.default?.()}</div>
+      return (
+        <div class={groupClass} style={props.style}>
+          {slots.default?.()}
+        </div>
+      )
     }
   },
 })
-

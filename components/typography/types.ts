@@ -23,7 +23,7 @@ export type EllipsisTooltipConfig =
   | boolean
   | string
   | number
-  | { title?: TooltipProps['title'] } & Omit<TooltipProps, 'title'>
+  | ({ title?: TooltipProps['title'] } & Omit<TooltipProps, 'title'>)
 
 export interface EllipsisConfig {
   /** 最多显示的行数，超出省略 */

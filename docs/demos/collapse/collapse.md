@@ -9,7 +9,6 @@
 
 ## 代码演示
 
-
 ### 基本用法
 
 可以同时展开多个面板。
@@ -70,52 +69,52 @@
 
 ### Collapse Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| activeKey (v-model) | 当前激活 tab 面板的 key | `string[] \| string` | - |
-| defaultActiveKey | 初始化选中面板的 key | `string[] \| string` | - |
-| accordion | 手风琴模式 | `boolean` | `false` |
-| bordered | 带边框风格的折叠面板 | `boolean` | `true` |
-| ghost | 使折叠面板透明且无边框 | `boolean` | `false` |
-| size | 设置折叠面板大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
-| expandIconPosition | 设置图标位置 | `'start' \| 'end'` | `'start'` |
-| collapsible | 设置可折叠触发区域 | `'header' \| 'icon' \| 'disabled'` | `'header'` |
-| expandIcon | 自定义展开图标 | `(props: { isActive?: boolean, panelKey?: string }) => VNode` | - |
-| destroyInactivePanel | 销毁折叠隐藏的面板 | `boolean` | `false` |
-| items | 面板数据 | `CollapseItem[]` | - |
+| 参数                 | 说明                    | 类型                                                          | 默认值     |
+| -------------------- | ----------------------- | ------------------------------------------------------------- | ---------- |
+| activeKey (v-model)  | 当前激活 tab 面板的 key | `string[] \| string`                                          | -          |
+| defaultActiveKey     | 初始化选中面板的 key    | `string[] \| string`                                          | -          |
+| accordion            | 手风琴模式              | `boolean`                                                     | `false`    |
+| bordered             | 带边框风格的折叠面板    | `boolean`                                                     | `true`     |
+| ghost                | 使折叠面板透明且无边框  | `boolean`                                                     | `false`    |
+| size                 | 设置折叠面板大小        | `'small' \| 'middle' \| 'large'`                              | `'middle'` |
+| expandIconPosition   | 设置图标位置            | `'start' \| 'end'`                                            | `'start'`  |
+| collapsible          | 设置可折叠触发区域      | `'header' \| 'icon' \| 'disabled'`                            | `'header'` |
+| expandIcon           | 自定义展开图标          | `(props: { isActive?: boolean, panelKey?: string }) => VNode` | -          |
+| destroyInactivePanel | 销毁折叠隐藏的面板      | `boolean`                                                     | `false`    |
+| items                | 面板数据                | `CollapseItem[]`                                              | -          |
 
 ### Collapse Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| change | 切换面板的回调 | `(keys: string[]) => void` |
+| 事件名           | 说明           | 回调参数                   |
+| ---------------- | -------------- | -------------------------- |
+| change           | 切换面板的回调 | `(keys: string[]) => void` |
 | update:activeKey | 切换面板的回调 | `(keys: string[]) => void` |
 
 ### CollapseItem
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| key | 对应 activeKey | `string` | - |
-| label | 面板头内容 | `string` | - |
-| children | 面板内容 | `any` | - |
-| disabled | 禁用后的面板展开与否将无法通过用户交互改变 | `boolean` | `false` |
-| showArrow | 是否展示箭头 | `boolean` | `true` |
-| extra | 自定义渲染每个面板右上角的内容 | `string \| VNode` | - |
-| collapsible | 设置可折叠触发区域 | `'header' \| 'icon' \| 'disabled'` | - |
-| forceRender | 被隐藏时是否渲染 DOM 结构 | `boolean` | `false` |
-| style | 自定义面板样式 | `CSSProperties` | - |
+| 参数        | 说明                                       | 类型                               | 默认值  |
+| ----------- | ------------------------------------------ | ---------------------------------- | ------- |
+| key         | 对应 activeKey                             | `string`                           | -       |
+| label       | 面板头内容                                 | `string`                           | -       |
+| children    | 面板内容                                   | `any`                              | -       |
+| disabled    | 禁用后的面板展开与否将无法通过用户交互改变 | `boolean`                          | `false` |
+| showArrow   | 是否展示箭头                               | `boolean`                          | `true`  |
+| extra       | 自定义渲染每个面板右上角的内容             | `string \| VNode`                  | -       |
+| collapsible | 设置可折叠触发区域                         | `'header' \| 'icon' \| 'disabled'` | -       |
+| forceRender | 被隐藏时是否渲染 DOM 结构                  | `boolean`                          | `false` |
+| style       | 自定义面板样式                             | `CSSProperties`                    | -       |
 
 ### CollapsePanel Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| key | 对应 activeKey | `string` | - |
-| header | 面板头内容 | `string` | - |
-| disabled | 禁用后的面板展开与否将无法通过用户交互改变 | `boolean` | `false` |
-| showArrow | 是否展示箭头 | `boolean` | `true` |
-| extra | 自定义渲染每个面板右上角的内容 | `string \| VNode` | - |
-| collapsible | 设置可折叠触发区域 | `'header' \| 'icon' \| 'disabled'` | - |
-| forceRender | 被隐藏时是否渲染 DOM 结构 | `boolean` | `false` |
+| 参数        | 说明                                       | 类型                               | 默认值  |
+| ----------- | ------------------------------------------ | ---------------------------------- | ------- |
+| key         | 对应 activeKey                             | `string`                           | -       |
+| header      | 面板头内容                                 | `string`                           | -       |
+| disabled    | 禁用后的面板展开与否将无法通过用户交互改变 | `boolean`                          | `false` |
+| showArrow   | 是否展示箭头                               | `boolean`                          | `true`  |
+| extra       | 自定义渲染每个面板右上角的内容             | `string \| VNode`                  | -       |
+| collapsible | 设置可折叠触发区域                         | `'header' \| 'icon' \| 'disabled'` | -       |
+| forceRender | 被隐藏时是否渲染 DOM 结构                  | `boolean`                          | `false` |
 
 <script setup>
 import CollapseBasic from './CollapseBasic.vue'
@@ -133,4 +132,3 @@ import CollapseExtraSource from './CollapseExtra.vue?raw'
 import CollapseSize from './CollapseSize.vue'
 import CollapseSizeSource from './CollapseSize.vue?raw'
 </script>
-

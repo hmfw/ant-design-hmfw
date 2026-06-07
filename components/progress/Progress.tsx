@@ -5,12 +5,7 @@ import { useConfig, usePrefixCls } from '../config-provider'
 import { Tooltip } from '../tooltip'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import {
-  CheckCircleFilled,
-  CloseCircleFilled,
-  CheckOutlined,
-  CloseOutlined,
-} from '../icon/icons'
+import { CheckCircleFilled, CloseCircleFilled, CheckOutlined, CloseOutlined } from '../icon/icons'
 import type {
   ProgressType,
   ProgressStatus,
@@ -88,12 +83,10 @@ export const Progress = defineComponent({
 
     // strokeColor 归一化：数组 → 第一个；line 渐变保留对象，circle/steps 用 string/array
     const strokeColorNotArray = computed(() =>
-      Array.isArray(props.strokeColor) ? props.strokeColor[0] : props.strokeColor
+      Array.isArray(props.strokeColor) ? props.strokeColor[0] : props.strokeColor,
     )
     const strokeColorNotGradient = computed(() =>
-      typeof props.strokeColor === 'string' || Array.isArray(props.strokeColor)
-        ? props.strokeColor
-        : undefined
+      typeof props.strokeColor === 'string' || Array.isArray(props.strokeColor) ? props.strokeColor : undefined,
     )
 
     const strokeColorIsBright = computed(() => {
@@ -138,13 +131,9 @@ export const Progress = defineComponent({
         const fmt = props.format ?? ((p?: number) => `${p}%`)
         textNode = fmt(validProgress(props.percent), validProgress(successPercent)) as any
       } else if (computedStatus.value === 'exception') {
-        textNode = isLineType.value
-          ? <Icon component={CloseCircleFilled} />
-          : <Icon component={CloseOutlined} />
+        textNode = isLineType.value ? <Icon component={CloseCircleFilled} /> : <Icon component={CloseOutlined} />
       } else if (computedStatus.value === 'success') {
-        textNode = isLineType.value
-          ? <Icon component={CheckCircleFilled} />
-          : <Icon component={CheckOutlined} />
+        textNode = isLineType.value ? <Icon component={CheckCircleFilled} /> : <Icon component={CheckOutlined} />
       }
 
       const indicatorClass = cls(
@@ -154,7 +143,7 @@ export const Progress = defineComponent({
           [`${prefixCls}-indicator-${infoAlign.value}`]: isPureLineType.value,
           [`${prefixCls}-indicator-${infoPosition.value}`]: isPureLineType.value,
         },
-        props.classNames?.indicator
+        props.classNames?.indicator,
       )
 
       const title = typeof textNode === 'string' || typeof textNode === 'number' ? String(textNode) : undefined
@@ -168,7 +157,9 @@ export const Progress = defineComponent({
 
     // ====== Line ======
     const renderLine = () => {
-      const [width, height] = getSize(normalizedSize.value as any, 'line', { strokeWidth: props.strokeWidth })
+      const [width, height] = getSize(normalizedSize.value as any, 'line', {
+        strokeWidth: props.strokeWidth,
+      })
       const borderRadius = props.strokeLinecap === 'square' || props.strokeLinecap === 'butt' ? 0 : undefined
 
       const railStyle: CSSProperties = {
@@ -195,13 +186,16 @@ export const Progress = defineComponent({
       }
       Object.assign(trackStyle, props.styles?.track || {})
 
-      const successTrackStyle: CSSProperties | null = successPercent !== undefined ? {
-        width: `${validProgress(successPercent)}%`,
-        height: `${height}px`,
-        borderRadius: borderRadius !== undefined ? `${borderRadius}px` : undefined,
-        backgroundColor: props.success?.strokeColor,
-        ...props.styles?.track,
-      } : null
+      const successTrackStyle: CSSProperties | null =
+        successPercent !== undefined
+          ? {
+              width: `${validProgress(successPercent)}%`,
+              height: `${height}px`,
+              borderRadius: borderRadius !== undefined ? `${borderRadius}px` : undefined,
+              backgroundColor: props.success?.strokeColor,
+              ...props.styles?.track,
+            }
+          : null
 
       const indicator = renderIndicator()
       const trackCls = `${prefixCls}-track`
@@ -251,14 +245,16 @@ export const Progress = defineComponent({
         const isActive = i <= current - 1
         const color = Array.isArray(props.strokeColor)
           ? props.strokeColor[i]
-          : (typeof props.strokeColor === 'string' ? props.strokeColor : undefined)
+          : typeof props.strokeColor === 'string'
+            ? props.strokeColor
+            : undefined
         stepsItems.push(
           <div
             key={i}
             class={cls(
               `${prefixCls}-steps-item`,
               { [`${prefixCls}-steps-item-active`]: isActive },
-              props.classNames?.track
+              props.classNames?.track,
             )}
             style={{
               backgroundColor: isActive ? color : mergedRailColor.value,
@@ -266,7 +262,7 @@ export const Progress = defineComponent({
               height: `${height}px`,
               ...props.styles?.track,
             }}
-          />
+          />,
         )
       }
 
@@ -286,8 +282,7 @@ export const Progress = defineComponent({
     // ====== Circle / Dashboard ======
     const circleSize = computed(() => {
       // width 是已废弃的兼容 prop：仅在没有显式 size 时生效
-      const usedSize =
-        props.size === 'medium' && props.width !== undefined ? props.width : normalizedSize.value
+      const usedSize = props.size === 'medium' && props.width !== undefined ? props.width : normalizedSize.value
       const [w] = getSize(usedSize as any, props.type === 'dashboard' ? 'dashboard' : 'circle')
       return w
     })
@@ -303,8 +298,7 @@ export const Progress = defineComponent({
       const isDashboard = props.type === 'dashboard'
 
       // gapDegree 默认值
-      const gapDegree =
-        props.gapDegree !== undefined ? props.gapDegree : (isDashboard ? 75 : 0)
+      const gapDegree = props.gapDegree !== undefined ? props.gapDegree : isDashboard ? 75 : 0
 
       // gapPlacement 取值（支持 v6 新 API gapPlacement，回退到旧 gapPosition）
       const placement: GapPlacement | GapPosition | undefined =
@@ -323,8 +317,7 @@ export const Progress = defineComponent({
       const mainPercent = validProgress(props.percent)
       const offset = totalArc * (1 - mainPercent / 100)
 
-      const successOffset =
-        successPercent !== undefined ? totalArc * (1 - validProgress(successPercent) / 100) : null
+      const successOffset = successPercent !== undefined ? totalArc * (1 - validProgress(successPercent) / 100) : null
 
       // circle 渐变定义
       const sc = strokeColorNotArray.value
@@ -344,7 +337,7 @@ export const Progress = defineComponent({
       const bodyClass = cls(
         `${prefixCls}-body`,
         { [`${prefixCls}-circle-gradient`]: isGradient },
-        props.classNames?.body
+        props.classNames?.body,
       )
 
       const node = (
@@ -409,11 +402,7 @@ export const Progress = defineComponent({
             />
             {successOffset !== null && (
               <circle
-                class={cls(
-                  `${prefixCls}-circle-path`,
-                  `${prefixCls}-circle-path-success`,
-                  props.classNames?.track
-                )}
+                class={cls(`${prefixCls}-circle-path`, `${prefixCls}-circle-path-success`, props.classNames?.track)}
                 cx={size / 2}
                 cy={size / 2}
                 r={radius}
@@ -456,11 +445,11 @@ export const Progress = defineComponent({
         },
         props.rootClassName,
         props.classNames?.root,
-        attrs.class as string
+        attrs.class as string,
       )
 
       // 透传 aria-label：用户提供时优先；否则用 percent
-      const userAriaLabel = (attrs['aria-label'] as string | undefined)
+      const userAriaLabel = attrs['aria-label'] as string | undefined
       const ariaLabel = userAriaLabel ?? `${percentNumber.value}%`
       const userAriaLabelledby = attrs['aria-labelledby'] as string | undefined
 
@@ -483,11 +472,7 @@ export const Progress = defineComponent({
           aria-label={ariaLabel}
           aria-labelledby={userAriaLabelledby}
         >
-          {stepsCount.value
-            ? renderSteps()
-            : isLineType.value
-              ? renderLine()
-              : renderCircle()}
+          {stepsCount.value ? renderSteps() : isLineType.value ? renderLine() : renderCircle()}
         </div>
       )
     }

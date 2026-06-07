@@ -1,11 +1,4 @@
-import {
-  defineComponent,
-  ref,
-  provide,
-  inject,
-  computed,
-  type PropType,
-} from 'vue'
+import { defineComponent, ref, provide, inject, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 
@@ -210,8 +203,8 @@ export function useForm() {
     /** Scroll to first error field. */
     scrollToField: (name: string) => {
       const prefixCls = 'hmfw-form'
-      const el = document.querySelector(`[data-field-name="${name}"]`)
-        ?? document.querySelector(`.${prefixCls}-item-has-error`)
+      const el =
+        document.querySelector(`[data-field-name="${name}"]`) ?? document.querySelector(`.${prefixCls}-item-has-error`)
       el?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' })
     },
   }
@@ -222,7 +215,10 @@ export const Form = defineComponent({
   props: {
     model: Object as PropType<Record<string, unknown>>,
     rules: Object as PropType<Record<string, FormRule | FormRule[]>>,
-    layout: { type: String as PropType<'horizontal' | 'vertical' | 'inline'>, default: 'horizontal' },
+    layout: {
+      type: String as PropType<'horizontal' | 'vertical' | 'inline'>,
+      default: 'horizontal',
+    },
     labelCol: Object as PropType<{ span?: number; offset?: number }>,
     wrapperCol: Object as PropType<{ span?: number; offset?: number }>,
     colon: { type: Boolean, default: true },
@@ -271,21 +267,51 @@ export const Form = defineComponent({
     }
 
     provide(FORM_CONTEXT_KEY, {
-      get model() { return props.model ?? {} },
-      get rules() { return props.rules ?? {} },
-      get layout() { return props.layout },
-      get colon() { return props.colon },
-      get labelAlign() { return props.labelAlign },
-      get size() { return props.size },
-      get disabled() { return props.disabled ?? false },
-      get labelCol() { return props.labelCol },
-      get wrapperCol() { return props.wrapperCol },
-      get validateTrigger() { return props.validateTrigger ?? 'change' },
-      get requiredMark() { return props.requiredMark ?? true },
-      get preserve() { return props.preserve ?? false },
-      get errors() { return errors.value },
-      get touched() { return touched.value },
-      setError: (name: string, error: string) => { errors.value = { ...errors.value, [name]: error } },
+      get model() {
+        return props.model ?? {}
+      },
+      get rules() {
+        return props.rules ?? {}
+      },
+      get layout() {
+        return props.layout
+      },
+      get colon() {
+        return props.colon
+      },
+      get labelAlign() {
+        return props.labelAlign
+      },
+      get size() {
+        return props.size
+      },
+      get disabled() {
+        return props.disabled ?? false
+      },
+      get labelCol() {
+        return props.labelCol
+      },
+      get wrapperCol() {
+        return props.wrapperCol
+      },
+      get validateTrigger() {
+        return props.validateTrigger ?? 'change'
+      },
+      get requiredMark() {
+        return props.requiredMark ?? true
+      },
+      get preserve() {
+        return props.preserve ?? false
+      },
+      get errors() {
+        return errors.value
+      },
+      get touched() {
+        return touched.value
+      },
+      setError: (name: string, error: string) => {
+        errors.value = { ...errors.value, [name]: error }
+      },
       clearError: (name: string) => {
         const next = { ...errors.value }
         delete next[name]
@@ -309,7 +335,10 @@ export const Form = defineComponent({
       } else {
         emit('finishFailed', {
           values: props.model,
-          errorFields: Object.entries(errors.value).map(([name, error]) => ({ name, errors: [error] })),
+          errorFields: Object.entries(errors.value).map(([name, error]) => ({
+            name,
+            errors: [error],
+          })),
         })
         if (props.scrollToFirstError) scrollToFirstErrorField()
       }
@@ -327,19 +356,24 @@ export const Form = defineComponent({
       if (results.every(Boolean)) return props.model
       throw {
         values: props.model,
-        errorFields: Object.entries(errors.value).map(([name, error]) => ({ name, errors: [error] })),
+        errorFields: Object.entries(errors.value).map(([name, error]) => ({
+          name,
+          errors: [error],
+        })),
       }
     }
     const clearValidate = (nameList?: string[]) => {
       const names = nameList ?? Object.keys(errors.value)
       const next = { ...errors.value }
-      names.forEach((n) => { delete next[n] })
+      names.forEach((n) => {
+        delete next[n]
+      })
       errors.value = next
     }
     const resetFields = () => clearValidate()
     const scrollToField = (name: string) => {
-      const el = document.querySelector(`[data-field-name="${name}"]`)
-        ?? document.querySelector(`.${prefixCls}-item-has-error`)
+      const el =
+        document.querySelector(`[data-field-name="${name}"]`) ?? document.querySelector(`.${prefixCls}-item-has-error`)
       el?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' })
     }
 
@@ -455,45 +489,44 @@ export const FormItem = defineComponent({
     return () => {
       const labelStyle = isHorizontal.value ? colToStyle(mergedLabelCol.value) : undefined
       const wrapperStyle = isHorizontal.value ? colToStyle(mergedWrapperCol.value) : undefined
-      const showOptionalMark =
-        ctx?.requiredMark === 'optional' && !isRequired.value
+      const showOptionalMark = ctx?.requiredMark === 'optional' && !isRequired.value
 
       return (
-        <div class={cls(`${prefixCls}-item`, {
-          [`${prefixCls}-item-has-error`]: status.value === 'error',
-          [`${prefixCls}-item-has-warning`]: status.value === 'warning',
-          [`${prefixCls}-item-has-success`]: status.value === 'success',
-          [`${prefixCls}-item-required`]: isRequired.value && ctx?.requiredMark !== false,
-        })}>
+        <div
+          class={cls(`${prefixCls}-item`, {
+            [`${prefixCls}-item-has-error`]: status.value === 'error',
+            [`${prefixCls}-item-has-warning`]: status.value === 'warning',
+            [`${prefixCls}-item-has-success`]: status.value === 'success',
+            [`${prefixCls}-item-required`]: isRequired.value && ctx?.requiredMark !== false,
+          })}
+        >
           {(props.label !== undefined || slots.label) && (
             <div class={`${prefixCls}-item-label`} style={labelStyle}>
               <label class={cls({ [`${prefixCls}-item-no-colon`]: !showColon.value })}>
                 {slots.label ? slots.label() : props.label}
                 {props.tooltip && (
-                  <span class={`${prefixCls}-item-tooltip`} title={props.tooltip}>ⓘ</span>
+                  <span class={`${prefixCls}-item-tooltip`} title={props.tooltip}>
+                    ⓘ
+                  </span>
                 )}
-                {showOptionalMark && (
-                  <span class={`${prefixCls}-item-optional`}>（可选）</span>
-                )}
+                {showOptionalMark && <span class={`${prefixCls}-item-optional`}>（可选）</span>}
               </label>
             </div>
           )}
           <div class={`${prefixCls}-item-control`} style={wrapperStyle}>
-            <div class={`${prefixCls}-item-control-input`}>
-              {slots.default?.()}
-            </div>
+            <div class={`${prefixCls}-item-control-input`}>{slots.default?.()}</div>
             {(error.value || props.help) && (
-              <div class={cls(`${prefixCls}-item-explain`, {
-                [`${prefixCls}-item-explain-error`]: status.value === 'error',
-                [`${prefixCls}-item-explain-warning`]: status.value === 'warning',
-                [`${prefixCls}-item-explain-success`]: status.value === 'success',
-              })}>
+              <div
+                class={cls(`${prefixCls}-item-explain`, {
+                  [`${prefixCls}-item-explain-error`]: status.value === 'error',
+                  [`${prefixCls}-item-explain-warning`]: status.value === 'warning',
+                  [`${prefixCls}-item-explain-success`]: status.value === 'success',
+                })}
+              >
                 {error.value ?? props.help}
               </div>
             )}
-            {props.extra && (
-              <div class={`${prefixCls}-item-extra`}>{props.extra}</div>
-            )}
+            {props.extra && <div class={`${prefixCls}-item-extra`}>{props.extra}</div>}
           </div>
         </div>
       )

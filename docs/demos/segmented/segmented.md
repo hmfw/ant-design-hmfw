@@ -9,7 +9,6 @@
 
 ## 代码演示
 
-
 ### 基础用法
 
 基本分段控制器。
@@ -86,38 +85,38 @@ block 属性使其适合父元素宽度。
 
 ### Segmented Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| value (v-model) | 当前选中的值 | `string \| number` | - |
-| defaultValue | 默认选中的值 | `string \| number` | - |
-| options | 数据化配置选项内容 | `string[] \| number[] \| SegmentedOption[]` | `[]` |
-| disabled | 是否禁用 | `boolean` | `false` |
-| block | 将宽度调整为父元素宽度 | `boolean` | `false` |
-| size | 控件大小 | `'large' \| 'middle' \| 'small'` | `'middle'` |
-| vertical | 垂直方向 | `boolean` | `false` |
-| orientation | 方向(优先级高于 vertical) | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| shape | 形状 | `'default' \| 'round'` | `'default'` |
-| name | 为所有 radio input 设置 name 属性 | `string` | - |
+| 参数            | 说明                              | 类型                                        | 默认值         |
+| --------------- | --------------------------------- | ------------------------------------------- | -------------- |
+| value (v-model) | 当前选中的值                      | `string \| number`                          | -              |
+| defaultValue    | 默认选中的值                      | `string \| number`                          | -              |
+| options         | 数据化配置选项内容                | `string[] \| number[] \| SegmentedOption[]` | `[]`           |
+| disabled        | 是否禁用                          | `boolean`                                   | `false`        |
+| block           | 将宽度调整为父元素宽度            | `boolean`                                   | `false`        |
+| size            | 控件大小                          | `'large' \| 'middle' \| 'small'`            | `'middle'`     |
+| vertical        | 垂直方向                          | `boolean`                                   | `false`        |
+| orientation     | 方向(优先级高于 vertical)         | `'horizontal' \| 'vertical'`                | `'horizontal'` |
+| shape           | 形状                              | `'default' \| 'round'`                      | `'default'`    |
+| name            | 为所有 radio input 设置 name 属性 | `string`                                    | -              |
 
 ### SegmentedOption
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| value | 选项值 | `string \| number` | - |
-| label | 选项标签 | `string \| VNode` | - |
-| icon | 选项图标 | `VNode` | - |
-| disabled | 是否禁用 | `boolean` | `false` |
-| title | HTML title 属性 | `string` | - |
-| tooltip | 提示信息 | `string \| Omit<TooltipProps, 'title'>` | - |
-| className | 自定义类名 | `string` | - |
-| style | 自定义内联样式 | `CSSProperties` | - |
+| 参数      | 说明            | 类型                                    | 默认值  |
+| --------- | --------------- | --------------------------------------- | ------- |
+| value     | 选项值          | `string \| number`                      | -       |
+| label     | 选项标签        | `string \| VNode`                       | -       |
+| icon      | 选项图标        | `VNode`                                 | -       |
+| disabled  | 是否禁用        | `boolean`                               | `false` |
+| title     | HTML title 属性 | `string`                                | -       |
+| tooltip   | 提示信息        | `string \| Omit<TooltipProps, 'title'>` | -       |
+| className | 自定义类名      | `string`                                | -       |
+| style     | 自定义内联样式  | `CSSProperties`                         | -       |
 
 ### Segmented Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
+| 事件名       | 说明                 | 回调参数                            |
+| ------------ | -------------------- | ----------------------------------- |
 | update:value | 选项变化时的回调函数 | `(value: string \| number) => void` |
-| change | 选项变化时的回调函数 | `(value: string \| number) => void` |
+| change       | 选项变化时的回调函数 | `(value: string \| number) => void` |
 
 <script setup>
 import SegmentedBasic from './SegmentedBasic.vue'

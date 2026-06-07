@@ -1,5 +1,5 @@
 <template>
-  <Table :columns="columns" :dataSource="data" :expandable="expandable" />
+  <Table :columns="columns" :data-source="data" :expandable="expandable" />
 </template>
 
 <script setup lang="ts">
@@ -27,9 +27,27 @@ const columns = [
 ]
 
 const data = [
-  { key: '1', name: 'Joe', age: 32, address: 'New York', description: 'My name is Joe, I am 32 years old, living in New York.' },
-  { key: '2', name: 'Jim', age: 28, address: 'London', description: 'My name is Jim, I am 28 years old, living in London.' },
-  { key: '3', name: 'Alice', age: 35, address: 'Sydney', description: 'My name is Alice, I am 35 years old, living in Sydney.' },
+  {
+    key: '1',
+    name: 'Joe',
+    age: 32,
+    address: 'New York',
+    description: 'My name is Joe, I am 32 years old, living in New York.',
+  },
+  {
+    key: '2',
+    name: 'Jim',
+    age: 28,
+    address: 'London',
+    description: 'My name is Jim, I am 28 years old, living in London.',
+  },
+  {
+    key: '3',
+    name: 'Alice',
+    age: 35,
+    address: 'Sydney',
+    description: 'My name is Alice, I am 35 years old, living in Sydney.',
+  },
 ]
 
 const expandable = {

@@ -1,12 +1,7 @@
 <template>
-  <div style="width: 300px;">
-    <DatePicker
-      v-model:value="datetime"
-      :show-time="true"
-      placeholder="选择日期和时间"
-      @change="handleChange"
-    />
-    <p style="margin-top: 8px;">选中：{{ datetime }}</p>
+  <div style="width: 300px">
+    <DatePicker v-model:value="datetime" :show-time="true" placeholder="选择日期和时间" @change="handleChange" />
+    <p style="margin-top: 8px">选中：{{ datetime }}</p>
   </div>
 </template>
 

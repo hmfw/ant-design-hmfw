@@ -5,7 +5,7 @@
     :rules="rules"
     :label-col="{ span: 5 }"
     :wrapper-col="{ span: 19 }"
-    style="max-width: 480px;"
+    style="max-width: 480px"
   >
     <FormItem label="邮箱" name="email">
       <Input v-model:value="formState.email" placeholder="请输入邮箱" />
@@ -14,11 +14,11 @@
       <Input v-model:value="formState.phone" placeholder="请输入手机号" />
     </FormItem>
     <FormItem label="年龄" name="age">
-      <InputNumber v-model:value="formState.age" :min="1" :max="120" placeholder="请输入年龄" style="width: 100%;" />
+      <InputNumber v-model:value="formState.age" :min="1" :max="120" placeholder="请输入年龄" style="width: 100%" />
     </FormItem>
     <FormItem :wrapper-col="{ offset: 5, span: 19 }">
-      <Button type="primary" @click="handleValidate">校验</Button>
-      <Button style="margin-left: 8px;" @click="handleClear">清除校验</Button>
+      <Button type="primary" @click="handleValidate"> 校验 </Button>
+      <Button style="margin-left: 8px" @click="handleClear"> 清除校验 </Button>
     </FormItem>
   </Form>
 </template>
@@ -44,9 +44,7 @@ const rules = {
     { required: true, message: '请输入手机号' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号' },
   ],
-  age: [
-    { required: true, message: '请输入年龄' },
-  ],
+  age: [{ required: true, message: '请输入年龄' }],
 }
 
 const handleValidate = async () => {

@@ -8,13 +8,15 @@ const treeData = [
     key: '0-0',
     title: 'parent 1',
     children: [
-      { key: '0-0-0', title: 'parent 1-0', children: [
-        { key: '0-0-0-0', title: 'leaf' },
-        { key: '0-0-0-1', title: 'leaf' },
-      ]},
-      { key: '0-0-1', title: 'parent 1-1', children: [
-        { key: '0-0-1-0', title: 'leaf' },
-      ]},
+      {
+        key: '0-0-0',
+        title: 'parent 1-0',
+        children: [
+          { key: '0-0-0-0', title: 'leaf' },
+          { key: '0-0-0-1', title: 'leaf' },
+        ],
+      },
+      { key: '0-0-1', title: 'parent 1-1', children: [{ key: '0-0-1-0', title: 'leaf' }] },
     ],
   },
 ]
@@ -87,7 +89,12 @@ describe('Tree', () => {
 
   it('renders custom fieldNames', () => {
     const data = [{ id: '1', label: 'Node 1', items: [] }]
-    const wrapper = mount(Tree, { props: { treeData: data as any, fieldNames: { key: 'id', title: 'label', children: 'items' } } })
+    const wrapper = mount(Tree, {
+      props: {
+        treeData: data as any,
+        fieldNames: { key: 'id', title: 'label', children: 'items' },
+      },
+    })
     expect(wrapper.find('.hmfw-tree-title').text()).toBe('Node 1')
   })
 
@@ -150,7 +157,10 @@ describe('Tree', () => {
   it('accepts checkedKeys as object form', () => {
     const wrapper = mount(Tree, {
       props: {
-        treeData, checkable: true, checkStrictly: true, defaultExpandAll: true,
+        treeData,
+        checkable: true,
+        checkStrictly: true,
+        defaultExpandAll: true,
         checkedKeys: { checked: ['0-0'], halfChecked: [] },
       },
     })
@@ -290,7 +300,9 @@ describe('Tree', () => {
 
   it('respects allowDrop callback returning false', async () => {
     const allowDrop = vi.fn(() => false)
-    const wrapper = mount(Tree, { props: { treeData, draggable: true, allowDrop, defaultExpandAll: true } })
+    const wrapper = mount(Tree, {
+      props: { treeData, draggable: true, allowDrop, defaultExpandAll: true },
+    })
     const nodes = wrapper.findAll('.hmfw-tree-treenode')
     // 拖叶子 0-0-0-0 到 0-0-1（合法组合，会进入 allowDrop 校验）
     await nodes[2].trigger('dragstart')
@@ -302,7 +314,9 @@ describe('Tree', () => {
 
   it('allows drop when allowDrop returns true', async () => {
     const allowDrop = vi.fn(() => true)
-    const wrapper = mount(Tree, { props: { treeData, draggable: true, allowDrop, defaultExpandAll: true } })
+    const wrapper = mount(Tree, {
+      props: { treeData, draggable: true, allowDrop, defaultExpandAll: true },
+    })
     const nodes = wrapper.findAll('.hmfw-tree-treenode')
     await nodes[2].trigger('dragstart')
     await nodes[4].trigger('drop')

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p style="margin-bottom: 20px;">在指定容器内滚动时显示回到顶部按钮。</p>
+    <p style="margin-bottom: 20px">在指定容器内滚动时显示回到顶部按钮。</p>
     <div
       ref="containerRef"
       style="
@@ -12,9 +12,7 @@
         position: relative;
       "
     >
-      <div v-for="i in 100" :key="i" style="margin-bottom: 10px;">
-        容器内容行 {{ i }}
-      </div>
+      <div v-for="i in 100" :key="i" style="margin-bottom: 10px">容器内容行 {{ i }}</div>
       <BackTop :target="getContainer" :visibility-height="100" />
     </div>
   </div>

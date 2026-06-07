@@ -48,6 +48,6 @@ export interface BreadcrumbProps {
     item: BreadcrumbItemType,
     params: Record<string, any>,
     items: BreadcrumbItemType[],
-    paths: string[]
+    paths: string[],
   ) => VNode
 }

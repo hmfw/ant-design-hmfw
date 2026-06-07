@@ -1,10 +1,5 @@
 <template>
-  <Card
-    title="卡片标题"
-    :tabList="tabList"
-    :activeTabKey="activeKey"
-    @tabChange="onTabChange"
-  >
+  <Card title="卡片标题" :tab-list="tabList" :active-tab-key="activeKey" @tab-change="onTabChange">
     <template #tabBarExtraContent>
       <a href="#">更多</a>
     </template>

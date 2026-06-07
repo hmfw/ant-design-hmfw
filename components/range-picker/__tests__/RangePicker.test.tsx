@@ -158,9 +158,7 @@ describe('RangePicker', () => {
     const wrapper = mount(RangePicker, { attachTo: document.body })
     await wrapper.find('.hmfw-date-picker-range').trigger('click')
     await wrapper.vm.$nextTick()
-    const days = Array.from(
-      document.querySelectorAll('.hmfw-date-picker-panel .hmfw-date-picker-day'),
-    ) as HTMLElement[]
+    const days = Array.from(document.querySelectorAll('.hmfw-date-picker-panel .hmfw-date-picker-day')) as HTMLElement[]
     // pick a later day first, then an earlier day
     days[20].click()
     await wrapper.vm.$nextTick()
@@ -175,9 +173,7 @@ describe('RangePicker', () => {
     const wrapper = mount(RangePicker, { props: { order: false }, attachTo: document.body })
     await wrapper.find('.hmfw-date-picker-range').trigger('click')
     await wrapper.vm.$nextTick()
-    const days = Array.from(
-      document.querySelectorAll('.hmfw-date-picker-panel .hmfw-date-picker-day'),
-    ) as HTMLElement[]
+    const days = Array.from(document.querySelectorAll('.hmfw-date-picker-panel .hmfw-date-picker-day')) as HTMLElement[]
     days[20].click()
     await wrapper.vm.$nextTick()
     days[10].click()
@@ -190,9 +186,7 @@ describe('RangePicker', () => {
   it('renders presets and applies them on click', async () => {
     const wrapper = mount(RangePicker, {
       props: {
-        presets: [
-          { label: 'Fixed', value: ['2024-01-01', '2024-01-07'] as [string, string] },
-        ],
+        presets: [{ label: 'Fixed', value: ['2024-01-01', '2024-01-07'] as [string, string] }],
       },
       attachTo: document.body,
     })
@@ -210,9 +204,7 @@ describe('RangePicker', () => {
   it('supports preset value as a factory function', async () => {
     const wrapper = mount(RangePicker, {
       props: {
-        presets: [
-          { label: 'Dynamic', value: () => ['2025-05-01', '2025-05-10'] as [string, string] },
-        ],
+        presets: [{ label: 'Dynamic', value: () => ['2025-05-01', '2025-05-10'] as [string, string] }],
       },
       attachTo: document.body,
     })

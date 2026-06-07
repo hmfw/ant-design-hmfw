@@ -1,10 +1,8 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary" loading>Loading</Button>
-    <Button type="primary" size="small" loading>Loading</Button>
-    <Button type="primary" :loading="loading" @click="handleClick">
-      Click me!
-    </Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button type="primary" loading> Loading </Button>
+    <Button type="primary" size="small" loading> Loading </Button>
+    <Button type="primary" :loading="loading" @click="handleClick"> Click me! </Button>
   </div>
 </template>
 

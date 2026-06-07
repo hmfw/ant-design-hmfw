@@ -12,4 +12,3 @@ const Dropdown = InternalDropdown as DropdownType
 Dropdown.Button = DropdownButton
 
 export { Dropdown }
-

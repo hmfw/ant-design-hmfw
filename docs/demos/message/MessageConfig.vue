@@ -1,7 +1,7 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="setConfig">设置 maxCount = 3 / top = 100</Button>
-    <Button @click="spam">连续弹出 5 条</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="setConfig"> 设置 maxCount = 3 / top = 100 </Button>
+    <Button @click="spam"> 连续弹出 5 条 </Button>
   </div>
 </template>
 

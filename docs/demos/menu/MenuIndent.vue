@@ -1,12 +1,6 @@
 <template>
-  <div style="width: 256px;">
-    <Menu
-      mode="inline"
-      :items="items"
-      :selected-keys="selectedKeys"
-      :inline-indent="40"
-      @select="onSelect"
-    />
+  <div style="width: 256px">
+    <Menu mode="inline" :items="items" :selected-keys="selectedKeys" :inline-indent="40" @select="onSelect" />
   </div>
 </template>
 

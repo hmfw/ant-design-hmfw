@@ -21,9 +21,9 @@
 
 ### App Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| — | 无额外 props，仅作为上下文容器 | — | — |
+| 参数 | 说明                           | 类型 | 默认值 |
+| ---- | ------------------------------ | ---- | ------ |
+| —    | 无额外 props，仅作为上下文容器 | —    | —      |
 
 ### useApp()
 
@@ -35,20 +35,20 @@ import { useApp } from 'ant-design-hmfw'
 const { message, notification, modal } = useApp()
 ```
 
-| 属性 | 说明 | 类型 |
-| --- | --- | --- |
-| message | 全局提示实例 | 同 `message` API |
-| notification | 通知提醒实例 | 同 `notification` API |
-| modal | 对话框命令式方法 | `{ confirm, info, success, warning, error }` |
+| 属性         | 说明             | 类型                                         |
+| ------------ | ---------------- | -------------------------------------------- |
+| message      | 全局提示实例     | 同 `message` API                             |
+| notification | 通知提醒实例     | 同 `notification` API                        |
+| modal        | 对话框命令式方法 | `{ confirm, info, success, warning, error }` |
 
 ### modal 方法
 
-| 方法 | 说明 |
-| --- | --- |
+| 方法                   | 说明       |
+| ---------------------- | ---------- |
 | `modal.confirm(props)` | 确认对话框 |
-| `modal.info(props)` | 信息对话框 |
+| `modal.info(props)`    | 信息对话框 |
 | `modal.success(props)` | 成功对话框 |
 | `modal.warning(props)` | 警告对话框 |
-| `modal.error(props)` | 错误对话框 |
+| `modal.error(props)`   | 错误对话框 |
 
 props 与 `Modal` 组件的 props 一致，参见 [Modal API](/components/modal)。

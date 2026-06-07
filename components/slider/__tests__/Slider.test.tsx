@@ -104,7 +104,15 @@ describe('Slider', () => {
     })
     const rail = wrapper.find('.hmfw-slider-rail').element
     vi.spyOn(rail, 'getBoundingClientRect').mockReturnValue({
-      left: 0, top: 0, width: 200, height: 10, right: 200, bottom: 10, x: 0, y: 0, toJSON: () => {},
+      left: 0,
+      top: 0,
+      width: 200,
+      height: 10,
+      right: 200,
+      bottom: 10,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
     })
     await wrapper.find('.hmfw-slider-rail').trigger('click', { clientX: 100 })
     expect(wrapper.emitted('change')).toBeTruthy()
@@ -306,7 +314,9 @@ describe('Slider', () => {
     })
 
     it('range keyboard navigation respects bounds', async () => {
-      const wrapper = mount(Slider, { props: { range: true, value: [10, 95], step: 10, min: 0, max: 100 } })
+      const wrapper = mount(Slider, {
+        props: { range: true, value: [10, 95], step: 10, min: 0, max: 100 },
+      })
       const handles = wrapper.findAll('[role="slider"]')
       await handles[1].trigger('keydown', { key: 'ArrowRight' })
       // End handle should clamp to 100
@@ -325,7 +335,9 @@ describe('Slider', () => {
     })
 
     it('vertical slider has correct container class', () => {
-      const wrapper = mount(Slider, { props: { value: 50, vertical: true, tooltip: { open: true } } })
+      const wrapper = mount(Slider, {
+        props: { value: 50, vertical: true, tooltip: { open: true } },
+      })
       expect(wrapper.classes()).toContain('hmfw-slider-vertical')
       const tooltip = wrapper.find('.hmfw-slider-tooltip')
       expect(tooltip.exists()).toBe(true)
@@ -372,7 +384,7 @@ describe('Slider', () => {
 
     it('keyboard: step=null uses step size 1', async () => {
       const wrapper = mount(Slider, {
-        props: { value: 50, step: null, marks: { 0: '0', 50: '50', 100: '100' } }
+        props: { value: 50, step: null, marks: { 0: '0', 50: '50', 100: '100' } },
       })
       const handle = wrapper.find('[role="slider"]')
       await handle.trigger('keydown', { key: 'ArrowRight' })

@@ -1,12 +1,12 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
     <InputNumber
       v-model:value="price"
       :min="0"
       prefix="¥"
       addon-after="元"
       placeholder="请输入价格"
-      style="width: 100%;"
+      style="width: 100%"
     />
     <InputNumber
       v-model:value="percent"
@@ -14,7 +14,7 @@
       :max="100"
       addon-after="%"
       placeholder="请输入百分比"
-      style="width: 100%;"
+      style="width: 100%"
     />
     <InputNumber
       v-model:value="weight"
@@ -22,7 +22,7 @@
       addon-before="重量"
       addon-after="kg"
       placeholder="请输入重量"
-      style="width: 100%;"
+      style="width: 100%"
     />
   </div>
 </template>

@@ -1,11 +1,11 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="open('topLeft')">左上角</Button>
-    <Button @click="open('topRight')">右上角</Button>
-    <Button @click="open('bottomLeft')">左下角</Button>
-    <Button @click="open('bottomRight')">右下角</Button>
-    <Button @click="open('top')">顶部居中</Button>
-    <Button @click="open('bottom')">底部居中</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="open('topLeft')"> 左上角 </Button>
+    <Button @click="open('topRight')"> 右上角 </Button>
+    <Button @click="open('bottomLeft')"> 左下角 </Button>
+    <Button @click="open('bottomRight')"> 右下角 </Button>
+    <Button @click="open('top')"> 顶部居中 </Button>
+    <Button @click="open('bottom')"> 底部居中 </Button>
   </div>
 </template>
 

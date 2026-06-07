@@ -209,4 +209,3 @@ describe('RadioGroup', () => {
     expect(radios[1].classes()).toContain('hmfw-radio-checked')
   })
 })
-

@@ -1,5 +1,5 @@
 <template>
-  <Pagination simple :total="50" v-model:current="current" />
+  <Pagination v-model:current="current" simple :total="50" />
 </template>
 
 <script setup lang="ts">

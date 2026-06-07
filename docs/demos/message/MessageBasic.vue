@@ -1,10 +1,10 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="showSuccess">成功</Button>
-    <Button @click="showError">错误</Button>
-    <Button @click="showWarning">警告</Button>
-    <Button @click="showInfo">信息</Button>
-    <Button @click="showLoading">加载中</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="showSuccess"> 成功 </Button>
+    <Button @click="showError"> 错误 </Button>
+    <Button @click="showWarning"> 警告 </Button>
+    <Button @click="showInfo"> 信息 </Button>
+    <Button @click="showLoading"> 加载中 </Button>
   </div>
 </template>
 

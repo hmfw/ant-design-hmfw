@@ -1,10 +1,5 @@
 <template>
-  <Transfer
-    :data-source="dataSource"
-    v-model:target-keys="targetKeys"
-    :titles="['待选', '已选']"
-    show-search
-  />
+  <Transfer v-model:target-keys="targetKeys" :data-source="dataSource" :titles="['待选', '已选']" show-search />
 </template>
 
 <script setup lang="ts">

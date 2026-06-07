@@ -18,4 +18,3 @@ export type {
   TableSemanticClassNames,
   TableSemanticStyles,
 } from './interface'
-

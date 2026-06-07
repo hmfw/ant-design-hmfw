@@ -50,7 +50,9 @@
   padding: 0;
   cursor: pointer;
   border-radius: 2px;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
   opacity: 0;
 }
 
@@ -62,8 +64,12 @@
   background: rgba(0, 0, 0, 0.6) !important;
 }
 
-.hmfw-carousel-arrow-left { left: 8px; }
-.hmfw-carousel-arrow-right { right: 8px; }
+.hmfw-carousel-arrow-left {
+  left: 8px;
+}
+.hmfw-carousel-arrow-right {
+  right: 8px;
+}
 
 /* Dots */
 .hmfw-carousel-dots {
@@ -119,7 +125,9 @@
   border-radius: 1px;
   cursor: pointer;
   padding: 0;
-  transition: background 0.2s, width 0.2s;
+  transition:
+    background 0.2s,
+    width 0.2s;
 }
 
 .hmfw-carousel-dots li:hover button {
@@ -164,4 +172,3 @@
     width: 100%;
   }
 }
-

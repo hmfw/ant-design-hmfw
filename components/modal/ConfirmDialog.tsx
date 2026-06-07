@@ -2,9 +2,7 @@ import { defineComponent, computed, ref, h, isVNode, type PropType, type VNode }
 import { Modal } from './Modal'
 import { Button } from '../button'
 import { Icon } from '../icon'
-import {
-  InfoCircleFilled, CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled,
-} from '../icon/icons'
+import { InfoCircleFilled, CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled } from '../icon/icons'
 import { useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import type { IconComponent } from '../icon/types'
@@ -48,8 +46,9 @@ export const ConfirmDialog = defineComponent({
       return (cfg.value.icon as IconComponent) ?? ICON_MAP[type.value]
     })
 
-    const okText = computed(() =>
-      cfg.value.okText ?? (okCancel.value ? locale.value.Modal.okText : locale.value.Modal.justOkText))
+    const okText = computed(
+      () => cfg.value.okText ?? (okCancel.value ? locale.value.Modal.okText : locale.value.Modal.justOkText),
+    )
     const cancelText = computed(() => cfg.value.cancelText ?? locale.value.Modal.cancelText)
 
     const handleOk = async (e: MouseEvent) => {
@@ -119,7 +118,11 @@ export const ConfirmDialog = defineComponent({
           onAfterClose={() => emit('afterClose')}
         >
           <div class={cls(confirmPrefixCls, `${confirmPrefixCls}-${type.value}`)}>
-            <div class={cls(`${confirmPrefixCls}-body`, { [`${confirmPrefixCls}-no-icon`]: !iconComp })}>
+            <div
+              class={cls(`${confirmPrefixCls}-body`, {
+                [`${confirmPrefixCls}-no-icon`]: !iconComp,
+              })}
+            >
               {iconComp && (
                 <span class={`${confirmPrefixCls}-icon`}>
                   {isVNode(iconComp) ? iconComp : <Icon component={iconComp as IconComponent} />}

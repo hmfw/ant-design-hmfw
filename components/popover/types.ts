@@ -1,9 +1,5 @@
 import type { VNode } from 'vue'
-import type {
-  TooltipPlacement,
-  TooltipTrigger,
-  TooltipArrow,
-} from '../tooltip/types'
+import type { TooltipPlacement, TooltipTrigger, TooltipArrow } from '../tooltip/types'
 
 /** Popover title/content can be plain text, VNode, or a render function. */
 export type PopoverContent = string | number | VNode | (() => VNode | string | number)

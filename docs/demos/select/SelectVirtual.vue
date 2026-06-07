@@ -1,13 +1,11 @@
 <template>
   <div class="select-virtual-demo">
     <h4>虚拟滚动（10,000 个选项）</h4>
-    <p style="margin-bottom: 16px; color: #666;">
-      使用虚拟滚动技术，即使有 10,000 个选项也能流畅交互
-    </p>
+    <p style="margin-bottom: 16px; color: #666">使用虚拟滚动技术，即使有 10,000 个选项也能流畅交互</p>
 
-    <div style="display: flex; gap: 16px; margin-bottom: 24px;">
-      <div style="flex: 1;">
-        <h5 style="margin-bottom: 8px;">启用虚拟滚动 ✅</h5>
+    <div style="display: flex; gap: 16px; margin-bottom: 24px">
+      <div style="flex: 1">
+        <h5 style="margin-bottom: 8px">启用虚拟滚动 ✅</h5>
         <Select
           v-model:value="value1"
           :options="options"
@@ -18,13 +16,11 @@
           :list-height="256"
           :list-item-height="32"
         />
-        <div style="margin-top: 8px; font-size: 12px; color: #8c8c8c;">
-          已选择：{{ value1 || '未选择' }}
-        </div>
+        <div style="margin-top: 8px; font-size: 12px; color: #8c8c8c">已选择：{{ value1 || '未选择' }}</div>
       </div>
 
-      <div style="flex: 1;">
-        <h5 style="margin-bottom: 8px;">普通模式（对比）</h5>
+      <div style="flex: 1">
+        <h5 style="margin-bottom: 8px">普通模式（对比）</h5>
         <Select
           v-model:value="value2"
           :options="smallOptions"
@@ -32,21 +28,17 @@
           show-search
           style="width: 100%"
         />
-        <div style="margin-top: 8px; font-size: 12px; color: #8c8c8c;">
-          仅 100 个选项用于对比
-        </div>
+        <div style="margin-top: 8px; font-size: 12px; color: #8c8c8c">仅 100 个选项用于对比</div>
       </div>
     </div>
 
-    <div style="padding: 12px; background: #f5f5f5; border-radius: 4px;">
+    <div style="padding: 12px; background: #f5f5f5; border-radius: 4px">
       <strong>性能对比：</strong>
-      <ul style="margin: 8px 0; padding-left: 20px;">
+      <ul style="margin: 8px 0; padding-left: 20px">
         <li><strong>虚拟滚动模式：</strong>10,000 个选项，只渲染可见的 8-10 项，流畅无卡顿</li>
         <li><strong>普通模式：</strong>超过 1,000 个选项会明显卡顿，10,000 个会导致浏览器卡死</li>
       </ul>
-      <div style="margin-top: 8px; color: #1890ff;">
-        💡 建议：当选项超过 100 个时启用 <code>virtual</code> 属性
-      </div>
+      <div style="margin-top: 8px; color: #1890ff">💡 建议：当选项超过 100 个时启用 <code>virtual</code> 属性</div>
     </div>
   </div>
 </template>

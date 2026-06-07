@@ -64,8 +64,8 @@ try {
   console.log(`📤 导出统计:\n`)
   console.log(`   总导出数: ${exports.length} 个`)
   console.log(`   组件数: 约 66 个`)
-  console.log(`   工具函数: ${exports.filter(e => !e.includes('Outlined') && !e.includes('Filled')).length - 66} 个`)
-  console.log(`   图标: ${exports.filter(e => e.includes('Outlined') || e.includes('Filled')).length} 个\n`)
+  console.log(`   工具函数: ${exports.filter((e) => !e.includes('Outlined') && !e.includes('Filled')).length - 66} 个`)
+  console.log(`   图标: ${exports.filter((e) => e.includes('Outlined') || e.includes('Filled')).length} 个\n`)
 
   // 检查 sideEffects
   const packageJson = JSON.parse(readFileSync(resolve(__dirname, '../package.json'), 'utf-8'))
@@ -80,7 +80,6 @@ try {
   console.log(`   1. 保持当前配置用于通用场景（splitting 提高加载性能）`)
   console.log(`   2. 用户通过现代构建工具（Vite/Webpack）可以获得更好的 Tree Shaking`)
   console.log(`   3. 按需引入时，用户的构建工具会进一步优化\n`)
-
 } catch (error) {
   console.error('分析失败:', error.message)
 }

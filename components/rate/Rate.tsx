@@ -14,7 +14,10 @@ export const Rate = defineComponent({
     allowHalf: Boolean,
     allowClear: { type: Boolean, default: true },
     disabled: Boolean,
-    character: { type: [String, Function] as PropType<string | ((ctx: RateCharacterRenderContext) => any)>, default: '★' },
+    character: {
+      type: [String, Function] as PropType<string | ((ctx: RateCharacterRenderContext) => any)>,
+      default: '★',
+    },
     tooltips: Array as PropType<(string | TooltipProps)[]>,
     size: String as PropType<RateSize>,
     keyboard: { type: Boolean, default: true },
@@ -30,14 +33,19 @@ export const Rate = defineComponent({
     const focused = ref(false)
 
     const isControlled = computed(() => props.value !== undefined)
-    const currentValue = computed(() => isControlled.value ? props.value! : innerValue.value)
+    const currentValue = computed(() => (isControlled.value ? props.value! : innerValue.value))
 
     // 从 ConfigProvider 合并默认尺寸
     const mergedSize = computed(() => props.size ?? config.value.componentSize)
     // RTL 支持：rtl 下方向键语义反向
     const isRTL = computed(() => config.value.direction === 'rtl')
 
-    watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = v })
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
+    )
 
     onMounted(() => {
       if (props.autoFocus) {
@@ -191,8 +199,14 @@ export const Rate = defineComponent({
             [`${prefixCls}-rtl`]: isRTL.value,
           })}
           onMouseleave={handleMouseLeave}
-          onFocus={() => { focused.value = true; emit('focus') }}
-          onBlur={() => { focused.value = false; emit('blur') }}
+          onFocus={() => {
+            focused.value = true
+            emit('focus')
+          }}
+          onBlur={() => {
+            focused.value = false
+            emit('blur')
+          }}
           onKeydown={handleKeyDown}
           tabindex={props.disabled ? -1 : 0}
           role="radiogroup"

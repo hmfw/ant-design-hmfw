@@ -65,15 +65,9 @@ const columns: TableColumn<DataType>[] = [
 
 <template>
   <div>
-    <p style="margin-bottom: 16px;">
+    <p style="margin-bottom: 16px">
       共 <strong>{{ dataSource.length }}</strong> 条数据，使用虚拟滚动优化性能
     </p>
-    <Table
-      :data-source="dataSource"
-      :columns="columns"
-      :pagination="false"
-      :scroll="{ y: 400, x: 900 }"
-      bordered
-    />
+    <Table :data-source="dataSource" :columns="columns" :pagination="false" :scroll="{ y: 400, x: 900 }" bordered />
   </div>
 </template>

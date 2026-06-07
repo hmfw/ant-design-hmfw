@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+  <div style="display: flex; gap: 12px; flex-wrap: wrap">
     <Button
       type="primary"
       :icon="SearchOutlined"
@@ -9,20 +9,11 @@
       自定义图标颜色
     </Button>
 
-    <Button
-      :icon="SearchOutlined"
-      icon-position="end"
-      :styles="{ root: { borderColor: '#722ed1', color: '#722ed1' } }"
-    >
+    <Button :icon="SearchOutlined" icon-position="end" :styles="{ root: { borderColor: '#722ed1', color: '#722ed1' } }">
       尾部图标 + 自定义边框
     </Button>
 
-    <Button
-      loading
-      :class-names="{ loading: 'demo-loading-emphasis' }"
-    >
-      加载中
-    </Button>
+    <Button loading :class-names="{ loading: 'demo-loading-emphasis' }"> 加载中 </Button>
   </div>
 </template>
 

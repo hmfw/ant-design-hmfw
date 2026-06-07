@@ -1,12 +1,12 @@
-import {
-  defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick, type PropType, Teleport,
-} from 'vue'
+import { defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick, type PropType, Teleport } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import type { DatePickerMode, PresetItem, ShowTimeConfig } from './types'
 
 // --- Date utilities ---
-function pad(n: number) { return String(n).padStart(2, '0') }
+function pad(n: number) {
+  return String(n).padStart(2, '0')
+}
 
 function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
   return fmt
@@ -43,7 +43,6 @@ function getDaysInMonth(year: number, month: number) {
 function getFirstDayOfWeek(year: number, month: number) {
   return new Date(year, month, 1).getDay()
 }
-
 
 // --- Date panel ---
 function buildCalendar(year: number, month: number) {
@@ -87,7 +86,17 @@ export const DatePicker = defineComponent({
     minDate: String,
     maxDate: String,
     renderExtraFooter: Function as PropType<() => any>,
-    cellRender: Function as PropType<(current: Date, info: { originNode: any; today: Date; range?: 'start' | 'end'; type: 'date' | 'month' | 'year' }) => any>,
+    cellRender: Function as PropType<
+      (
+        current: Date,
+        info: {
+          originNode: any
+          today: Date
+          range?: 'start' | 'end'
+          type: 'date' | 'month' | 'year'
+        },
+      ) => any
+    >,
   },
   emits: ['update:value', 'change', 'openChange', 'panelChange'],
   setup(props, { emit }) {
@@ -131,21 +140,21 @@ export const DatePicker = defineComponent({
     const viewMonth = ref((innerValue.value ?? now).getMonth())
     const innerOpen = ref(props.defaultOpen ?? false)
     const panelMode = ref<'date' | 'month' | 'year'>(
-      props.picker === 'year' ? 'year' : props.picker === 'month' ? 'month' : 'date'
+      props.picker === 'year' ? 'year' : props.picker === 'month' ? 'month' : 'date',
     )
     const triggerRef = ref<HTMLElement>()
     const panelRef = ref<HTMLElement>()
     const panelPos = ref({ top: 0, left: 0 })
 
-    const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
+    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
     const selectedDate = computed(() => {
       if (props.value) return parseDate(props.value)
       return innerValue.value
     })
 
-    const minDateObj = computed(() => props.minDate ? parseDate(props.minDate) : null)
-    const maxDateObj = computed(() => props.maxDate ? parseDate(props.maxDate) : null)
+    const minDateObj = computed(() => (props.minDate ? parseDate(props.minDate) : null))
+    const maxDateObj = computed(() => (props.maxDate ? parseDate(props.maxDate) : null))
 
     const displayText = computed(() => {
       const d = selectedDate.value
@@ -157,7 +166,12 @@ export const DatePicker = defineComponent({
       return formatDate(d, fmt.value)
     })
 
-    watch(() => props.value, (v) => { innerValue.value = parseDate(v) })
+    watch(
+      () => props.value,
+      (v) => {
+        innerValue.value = parseDate(v)
+      },
+    )
 
     const updatePos = () => {
       if (!triggerRef.value) return
@@ -188,8 +202,7 @@ export const DatePicker = defineComponent({
     }
 
     const handleOutsideClick = (e: MouseEvent) => {
-      if (!triggerRef.value?.contains(e.target as Node) && !panelRef.value?.contains(e.target as Node))
-        closePanel()
+      if (!triggerRef.value?.contains(e.target as Node) && !panelRef.value?.contains(e.target as Node)) closePanel()
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -215,8 +228,14 @@ export const DatePicker = defineComponent({
 
       // showTime 模式下，保留已选时间，合成完整日期时间
       if (hasShowTime.value) {
-        const combined = new Date(d.getFullYear(), d.getMonth(), d.getDate(),
-                                    innerHour.value, innerMinute.value, innerSecond.value)
+        const combined = new Date(
+          d.getFullYear(),
+          d.getMonth(),
+          d.getDate(),
+          innerHour.value,
+          innerMinute.value,
+          innerSecond.value,
+        )
         innerValue.value = combined
         // 不立即关闭面板，等用户点"确定"
         return
@@ -224,9 +243,10 @@ export const DatePicker = defineComponent({
 
       // 非 showTime 模式：选择日期后立即 emit 并关闭
       innerValue.value = d
-      const str = props.picker === 'quarter'
-        ? `${d.getFullYear()}-Q${Math.floor(d.getMonth() / 3) + 1}`
-        : formatDate(d, fmt.value)
+      const str =
+        props.picker === 'quarter'
+          ? `${d.getFullYear()}-Q${Math.floor(d.getMonth() / 3) + 1}`
+          : formatDate(d, fmt.value)
       emit('update:value', str)
       emit('change', str, d)
       closePanel()
@@ -278,13 +298,17 @@ export const DatePicker = defineComponent({
     }
 
     const prevMonth = () => {
-      if (viewMonth.value === 0) { viewYear.value--; viewMonth.value = 11 }
-      else viewMonth.value--
+      if (viewMonth.value === 0) {
+        viewYear.value--
+        viewMonth.value = 11
+      } else viewMonth.value--
       emit('panelChange', null, panelMode.value)
     }
     const nextMonth = () => {
-      if (viewMonth.value === 11) { viewYear.value++; viewMonth.value = 0 }
-      else viewMonth.value++
+      if (viewMonth.value === 11) {
+        viewYear.value++
+        viewMonth.value = 0
+      } else viewMonth.value++
       emit('panelChange', null, panelMode.value)
     }
     const prevYear = () => {
@@ -301,15 +325,15 @@ export const DatePicker = defineComponent({
     // showTime 时间列数据
     const hourStep = computed(() => {
       const cfg = showTimeConfig.value
-      return (cfg && typeof cfg === 'object' && 'hourStep' in cfg && cfg.hourStep) ? cfg.hourStep : 1
+      return cfg && typeof cfg === 'object' && 'hourStep' in cfg && cfg.hourStep ? cfg.hourStep : 1
     })
     const minuteStep = computed(() => {
       const cfg = showTimeConfig.value
-      return (cfg && typeof cfg === 'object' && 'minuteStep' in cfg && cfg.minuteStep) ? cfg.minuteStep : 1
+      return cfg && typeof cfg === 'object' && 'minuteStep' in cfg && cfg.minuteStep ? cfg.minuteStep : 1
     })
     const secondStep = computed(() => {
       const cfg = showTimeConfig.value
-      return (cfg && typeof cfg === 'object' && 'secondStep' in cfg && cfg.secondStep) ? cfg.secondStep : 1
+      return cfg && typeof cfg === 'object' && 'secondStep' in cfg && cfg.secondStep ? cfg.secondStep : 1
     })
 
     const hours = computed(() => {
@@ -332,9 +356,10 @@ export const DatePicker = defineComponent({
     const showSecondColumn = computed(() => {
       if (!hasShowTime.value) return false
       // 如果 showTimeConfig 指定了 format，用它；否则用 fmt
-      const timeFormat = (showTimeConfig.value && 'format' in showTimeConfig.value && showTimeConfig.value.format)
-        ? showTimeConfig.value.format
-        : fmt.value
+      const timeFormat =
+        showTimeConfig.value && 'format' in showTimeConfig.value && showTimeConfig.value.format
+          ? showTimeConfig.value.format
+          : fmt.value
       return timeFormat.includes('ss') || timeFormat.includes('s')
     })
 
@@ -359,23 +384,47 @@ export const DatePicker = defineComponent({
       <div class={cls(`${prefixCls}-panel`, { [`${prefixCls}-panel-has-time`]: hasShowTime.value })}>
         {/* Header */}
         <div class={`${prefixCls}-panel-header`}>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>«</button>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={prevMonth}>‹</button>
+          <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>
+            «
+          </button>
+          <button class={`${prefixCls}-panel-header-btn`} onClick={prevMonth}>
+            ‹
+          </button>
           <span class={`${prefixCls}-panel-header-title`}>
-            <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'year'; emit('panelChange', null, 'year') }}>
+            <button
+              class={`${prefixCls}-panel-header-title-btn`}
+              onClick={() => {
+                panelMode.value = 'year'
+                emit('panelChange', null, 'year')
+              }}
+            >
               {viewYear.value}年
             </button>
-            <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'month'; emit('panelChange', null, 'month') }}>
+            <button
+              class={`${prefixCls}-panel-header-title-btn`}
+              onClick={() => {
+                panelMode.value = 'month'
+                emit('panelChange', null, 'month')
+              }}
+            >
               {locale.value.DatePicker.months[viewMonth.value]}
             </button>
           </span>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={nextMonth}>›</button>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>»</button>
+          <button class={`${prefixCls}-panel-header-btn`} onClick={nextMonth}>
+            ›
+          </button>
+          <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>
+            »
+          </button>
         </div>
         {/* Weekday row */}
         <div class={`${prefixCls}-panel-body`}>
           <div class={`${prefixCls}-weekdays`}>
-            {locale.value.DatePicker.weekdays.map((d) => <span key={d} class={`${prefixCls}-weekday`}>{d}</span>)}
+            {locale.value.DatePicker.weekdays.map((d) => (
+              <span key={d} class={`${prefixCls}-weekday`}>
+                {d}
+              </span>
+            ))}
           </div>
           <div class={`${prefixCls}-days`}>
             {calendar.value.map(({ date, inCurrentMonth }, i) => {
@@ -411,12 +460,17 @@ export const DatePicker = defineComponent({
           <div class={`${prefixCls}-time-panel`}>
             <div class={`${prefixCls}-time-content`}>
               {/* 小时列 */}
-              <ul class={`${prefixCls}-time-column`} ref={(el) => scrollToActiveTime(el as HTMLElement, innerHour.value)}>
+              <ul
+                class={`${prefixCls}-time-column`}
+                ref={(el) => scrollToActiveTime(el as HTMLElement, innerHour.value)}
+              >
                 {hours.value.map((h) => (
                   <li
                     key={h}
                     data-value={h}
-                    class={cls(`${prefixCls}-time-cell`, { [`${prefixCls}-time-cell-selected`]: innerHour.value === h })}
+                    class={cls(`${prefixCls}-time-cell`, {
+                      [`${prefixCls}-time-cell-selected`]: innerHour.value === h,
+                    })}
                     onClick={() => selectHour(h)}
                   >
                     {pad(h)}
@@ -424,12 +478,17 @@ export const DatePicker = defineComponent({
                 ))}
               </ul>
               {/* 分钟列 */}
-              <ul class={`${prefixCls}-time-column`} ref={(el) => scrollToActiveTime(el as HTMLElement, innerMinute.value)}>
+              <ul
+                class={`${prefixCls}-time-column`}
+                ref={(el) => scrollToActiveTime(el as HTMLElement, innerMinute.value)}
+              >
                 {minutes.value.map((m) => (
                   <li
                     key={m}
                     data-value={m}
-                    class={cls(`${prefixCls}-time-cell`, { [`${prefixCls}-time-cell-selected`]: innerMinute.value === m })}
+                    class={cls(`${prefixCls}-time-cell`, {
+                      [`${prefixCls}-time-cell-selected`]: innerMinute.value === m,
+                    })}
                     onClick={() => selectMinute(m)}
                   >
                     {pad(m)}
@@ -438,12 +497,17 @@ export const DatePicker = defineComponent({
               </ul>
               {/* 秒列 */}
               {showSecondColumn.value && (
-                <ul class={`${prefixCls}-time-column`} ref={(el) => scrollToActiveTime(el as HTMLElement, innerSecond.value)}>
+                <ul
+                  class={`${prefixCls}-time-column`}
+                  ref={(el) => scrollToActiveTime(el as HTMLElement, innerSecond.value)}
+                >
                   {seconds.value.map((s) => (
                     <li
                       key={s}
                       data-value={s}
-                      class={cls(`${prefixCls}-time-cell`, { [`${prefixCls}-time-cell-selected`]: innerSecond.value === s })}
+                      class={cls(`${prefixCls}-time-cell`, {
+                        [`${prefixCls}-time-cell-selected`]: innerSecond.value === s,
+                      })}
                       onClick={() => selectSecond(s)}
                     >
                       {pad(s)}
@@ -476,7 +540,9 @@ export const DatePicker = defineComponent({
                 </button>
               )}
               {props.showTime && (
-                <button class={`${prefixCls}-panel-footer-ok`} onClick={confirmDateTime}>{locale.value.DatePicker.ok}</button>
+                <button class={`${prefixCls}-panel-footer-ok`} onClick={confirmDateTime}>
+                  {locale.value.DatePicker.ok}
+                </button>
               )}
             </div>
           </div>
@@ -487,13 +553,23 @@ export const DatePicker = defineComponent({
     const renderMonthPanel = () => (
       <div class={`${prefixCls}-panel`}>
         <div class={`${prefixCls}-panel-header`}>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>«</button>
+          <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>
+            «
+          </button>
           <span class={`${prefixCls}-panel-header-title`}>
-            <button class={`${prefixCls}-panel-header-title-btn`} onClick={() => { panelMode.value = 'year'; emit('panelChange', null, 'year') }}>
+            <button
+              class={`${prefixCls}-panel-header-title-btn`}
+              onClick={() => {
+                panelMode.value = 'year'
+                emit('panelChange', null, 'year')
+              }}
+            >
               {viewYear.value}年
             </button>
           </span>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>»</button>
+          <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>
+            »
+          </button>
         </div>
         <div class={`${prefixCls}-panel-body`}>
           <div class={`${prefixCls}-months`}>
@@ -507,7 +583,10 @@ export const DatePicker = defineComponent({
                   onClick={() => {
                     viewMonth.value = i
                     if (props.picker === 'month') selectDate(d)
-                    else { panelMode.value = 'date'; emit('panelChange', null, 'date') }
+                    else {
+                      panelMode.value = 'date'
+                      emit('panelChange', null, 'date')
+                    }
                   }}
                 >
                   {m}
@@ -522,11 +601,25 @@ export const DatePicker = defineComponent({
     const renderYearPanel = () => (
       <div class={`${prefixCls}-panel`}>
         <div class={`${prefixCls}-panel-header`}>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={() => { viewYear.value -= 10 }}>«</button>
+          <button
+            class={`${prefixCls}-panel-header-btn`}
+            onClick={() => {
+              viewYear.value -= 10
+            }}
+          >
+            «
+          </button>
           <span class={`${prefixCls}-panel-header-title`}>
             {yearRange.value[0]}年 - {yearRange.value[yearRange.value.length - 1]}年
           </span>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={() => { viewYear.value += 10 }}>»</button>
+          <button
+            class={`${prefixCls}-panel-header-btn`}
+            onClick={() => {
+              viewYear.value += 10
+            }}
+          >
+            »
+          </button>
         </div>
         <div class={`${prefixCls}-panel-body`}>
           <div class={`${prefixCls}-years`}>
@@ -539,7 +632,10 @@ export const DatePicker = defineComponent({
                   onClick={() => {
                     viewYear.value = y
                     if (props.picker === 'year') selectDate(new Date(y, 0, 1))
-                    else { panelMode.value = 'month'; emit('panelChange', null, 'month') }
+                    else {
+                      panelMode.value = 'month'
+                      emit('panelChange', null, 'month')
+                    }
                   }}
                 >
                   {y}年
@@ -554,22 +650,28 @@ export const DatePicker = defineComponent({
     const renderQuarterPanel = () => (
       <div class={`${prefixCls}-panel`}>
         <div class={`${prefixCls}-panel-header`}>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>«</button>
+          <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>
+            «
+          </button>
           <span class={`${prefixCls}-panel-header-title`}>{viewYear.value}年</span>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>»</button>
+          <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>
+            »
+          </button>
         </div>
         <div class={`${prefixCls}-panel-body`}>
           <div class={`${prefixCls}-quarters`}>
             {[1, 2, 3, 4].map((q) => {
               const d = new Date(viewYear.value, (q - 1) * 3, 1)
-              const isSelected = selectedDate.value ? (
-                selectedDate.value.getFullYear() === viewYear.value &&
-                Math.floor(selectedDate.value.getMonth() / 3) + 1 === q
-              ) : false
+              const isSelected = selectedDate.value
+                ? selectedDate.value.getFullYear() === viewYear.value &&
+                  Math.floor(selectedDate.value.getMonth() / 3) + 1 === q
+                : false
               return (
                 <button
                   key={q}
-                  class={cls(`${prefixCls}-quarter`, { [`${prefixCls}-quarter-selected`]: isSelected })}
+                  class={cls(`${prefixCls}-quarter`, {
+                    [`${prefixCls}-quarter-selected`]: isSelected,
+                  })}
                   onClick={() => selectDate(d)}
                 >
                   Q{q}
@@ -602,7 +704,9 @@ export const DatePicker = defineComponent({
               class={`${prefixCls}-input-inner`}
             />
             {props.allowClear && displayText.value && !props.disabled && (
-              <span class={`${prefixCls}-clear`} onClick={clearValue}>✕</span>
+              <span class={`${prefixCls}-clear`} onClick={clearValue}>
+                ✕
+              </span>
             )}
             <span class={`${prefixCls}-suffix`}>📅</span>
           </span>
@@ -613,7 +717,12 @@ export const DatePicker = defineComponent({
             <div
               ref={panelRef}
               class={`${prefixCls}-popup`}
-              style={{ position: 'absolute', top: `${panelPos.value.top}px`, left: `${panelPos.value.left}px`, zIndex: 1050 }}
+              style={{
+                position: 'absolute',
+                top: `${panelPos.value.top}px`,
+                left: `${panelPos.value.left}px`,
+                zIndex: 1050,
+              }}
             >
               {panelMode.value === 'date' && props.picker !== 'quarter' && renderDatePanel()}
               {panelMode.value === 'month' && renderMonthPanel()}

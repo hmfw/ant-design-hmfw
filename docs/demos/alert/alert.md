@@ -9,7 +9,6 @@
 
 ## 代码演示
 
-
 ### 四种类型
 
 共有四种样式 success、info、warning、error。
@@ -54,35 +53,35 @@
 
 ### Alert Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| type | 指定警告提示的样式 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'`（banner 模式为 `'warning'`） |
-| variant | 样式变体 | `'outlined' \| 'filled'` | `'outlined'` |
-| title | 警告提示内容 | `string` | - |
-| message | `title` 的别名（已废弃，请使用 `title`） | `string` | - |
-| description | 警告提示的辅助性文字介绍 | `string` | - |
-| showIcon | 是否显示辅助图标（banner 模式默认 `true`） | `boolean` | `false` |
-| icon | 自定义图标（`showIcon` 为 `true` 时有效） | `VNode \| slot` | - |
-| closable | 是否显示关闭按钮，可传对象自定义图标与无障碍标签 | `boolean \| { closeIcon?, 'aria-label'? }` | `false` |
-| closeIcon | 自定义关闭按钮图标 | `VNode \| slot` | - |
-| closeText | 自定义关闭按钮文字（已废弃，请使用 `closeIcon`） | `string` | - |
-| action | 自定义操作项 | `VNode \| slot` | - |
-| role | 根节点 `role` 属性 | `string` | `'alert'` |
-| banner | 是否用作顶部公告 | `boolean` | `false` |
+| 参数        | 说明                                             | 类型                                          | 默认值                                |
+| ----------- | ------------------------------------------------ | --------------------------------------------- | ------------------------------------- |
+| type        | 指定警告提示的样式                               | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'`（banner 模式为 `'warning'`） |
+| variant     | 样式变体                                         | `'outlined' \| 'filled'`                      | `'outlined'`                          |
+| title       | 警告提示内容                                     | `string`                                      | -                                     |
+| message     | `title` 的别名（已废弃，请使用 `title`）         | `string`                                      | -                                     |
+| description | 警告提示的辅助性文字介绍                         | `string`                                      | -                                     |
+| showIcon    | 是否显示辅助图标（banner 模式默认 `true`）       | `boolean`                                     | `false`                               |
+| icon        | 自定义图标（`showIcon` 为 `true` 时有效）        | `VNode \| slot`                               | -                                     |
+| closable    | 是否显示关闭按钮，可传对象自定义图标与无障碍标签 | `boolean \| { closeIcon?, 'aria-label'? }`    | `false`                               |
+| closeIcon   | 自定义关闭按钮图标                               | `VNode \| slot`                               | -                                     |
+| closeText   | 自定义关闭按钮文字（已废弃，请使用 `closeIcon`） | `string`                                      | -                                     |
+| action      | 自定义操作项                                     | `VNode \| slot`                               | -                                     |
+| role        | 根节点 `role` 属性                               | `string`                                      | `'alert'`                             |
+| banner      | 是否用作顶部公告                                 | `boolean`                                     | `false`                               |
 
 ### Alert Slots
 
-| 名称 | 说明 |
-| --- | --- |
-| title / message | 标题内容 |
-| description | 辅助性文字介绍 |
-| icon | 自定义图标 |
-| closeIcon | 自定义关闭按钮 |
-| action | 自定义操作项 |
+| 名称            | 说明           |
+| --------------- | -------------- |
+| title / message | 标题内容       |
+| description     | 辅助性文字介绍 |
+| icon            | 自定义图标     |
+| closeIcon       | 自定义关闭按钮 |
+| action          | 自定义操作项   |
 
 ### Alert Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| close | 关闭时触发的回调函数 | `(e: MouseEvent) => void` |
-| afterClose | 关闭动画结束后触发的回调函数 | `() => void` |
+| 事件名     | 说明                         | 回调参数                  |
+| ---------- | ---------------------------- | ------------------------- |
+| close      | 关闭时触发的回调函数         | `(e: MouseEvent) => void` |
+| afterClose | 关闭动画结束后触发的回调函数 | `() => void`              |

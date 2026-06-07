@@ -1,10 +1,5 @@
 <template>
-  <Table
-    :data-source="dataSource"
-    :columns="columns"
-    row-key="key"
-    :row-selection="rowSelection"
-  />
+  <Table :data-source="dataSource" :columns="columns" row-key="key" :row-selection="rowSelection" />
   <p>已选择：{{ selectedKeys.join(', ') }}</p>
 </template>
 

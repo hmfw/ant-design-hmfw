@@ -2,25 +2,12 @@
   <div class="form-dependency-demo">
     <h4>表单联动场景演示</h4>
 
-    <Form
-      ref="formRef"
-      :model="formState"
-      :rules="rules"
-      :layout="'vertical'"
-      style="max-width: 600px"
-    >
+    <Form ref="formRef" :model="formState" :rules="rules" :layout="'vertical'" style="max-width: 600px">
       <FormItem label="联系方式类型" name="contactType">
-        <Select
-          v-model:value="formState.contactType"
-          :options="contactTypeOptions"
-          placeholder="请选择"
-        />
+        <Select v-model:value="formState.contactType" :options="contactTypeOptions" placeholder="请选择" />
       </FormItem>
 
-      <FormItem
-        :label="formState.contactType === 'email' ? '邮箱地址' : '手机号码'"
-        name="contact"
-      >
+      <FormItem :label="formState.contactType === 'email' ? '邮箱地址' : '手机号码'" name="contact">
         <Input
           v-model:value="formState.contact"
           :placeholder="formState.contactType === 'email' ? '请输入邮箱' : '请输入手机号'"
@@ -32,11 +19,7 @@
       </FormItem>
 
       <FormItem label="确认密码" name="confirmPassword">
-        <Input
-          v-model:value="formState.confirmPassword"
-          type="password"
-          placeholder="请再次输入密码"
-        />
+        <Input v-model:value="formState.confirmPassword" type="password" placeholder="请再次输入密码" />
       </FormItem>
 
       <FormItem label="是否需要通知" name="needNotify">
@@ -49,13 +32,16 @@
 
       <FormItem>
         <Space>
-          <Button type="primary" @click="handleSubmit">提交</Button>
-          <Button @click="handleReset">重置</Button>
+          <Button type="primary" @click="handleSubmit"> 提交 </Button>
+          <Button @click="handleReset"> 重置 </Button>
         </Space>
       </FormItem>
     </Form>
 
-    <div v-if="result" style="margin-top: 16px; padding: 12px; background: #f0f9ff; border-radius: 4px; border: 1px solid #91d5ff">
+    <div
+      v-if="result"
+      style="margin-top: 16px; padding: 12px; background: #f0f9ff; border-radius: 4px; border: 1px solid #91d5ff"
+    >
       <pre>{{ result }}</pre>
     </div>
   </div>
@@ -120,19 +106,25 @@ const rules = computed(() => ({
 }))
 
 // 监听密码变化，自动重新验证确认密码
-watch(() => formState.password, () => {
-  if (formState.confirmPassword) {
-    formRef.value?.validateFields(['confirmPassword']).catch(() => {})
-  }
-})
+watch(
+  () => formState.password,
+  () => {
+    if (formState.confirmPassword) {
+      formRef.value?.validateFields(['confirmPassword']).catch(() => {})
+    }
+  },
+)
 
 // 监听联系方式类型变化，清空联系方式输入并重新验证
-watch(() => formState.contactType, () => {
-  formState.contact = ''
-  if (formRef.value) {
-    formRef.value.clearValidate(['contact'])
-  }
-})
+watch(
+  () => formState.contactType,
+  () => {
+    formState.contact = ''
+    if (formRef.value) {
+      formRef.value.clearValidate(['contact'])
+    }
+  },
+)
 
 const handleSubmit = async () => {
   try {

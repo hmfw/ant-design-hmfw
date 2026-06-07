@@ -20,7 +20,7 @@ function getGutterValue(gutter: Gutter | undefined, screens: ScreenMap): number 
 
 function getResponsiveValue<T extends string>(
   prop: T | Partial<Record<string, T>> | undefined,
-  screens: ScreenMap
+  screens: ScreenMap,
 ): T | undefined {
   if (typeof prop === 'string') {
     return prop
@@ -77,9 +77,8 @@ export default defineComponent({
       const style: CSSProperties = {}
 
       if (horizontalGutter) {
-        const hGutter = typeof horizontalGutter === 'number'
-          ? `${horizontalGutter / -2}px`
-          : `calc(${horizontalGutter} / -2)`
+        const hGutter =
+          typeof horizontalGutter === 'number' ? `${horizontalGutter / -2}px` : `calc(${horizontalGutter} / -2)`
         style.marginInline = hGutter
       }
 
@@ -91,14 +90,11 @@ export default defineComponent({
     })
 
     const classes = computed(() => {
-      return cls(
-        prefixCls,
-        {
-          [`${prefixCls}-no-wrap`]: !props.wrap,
-          [`${prefixCls}-${mergedJustify.value}`]: !!mergedJustify.value,
-          [`${prefixCls}-${mergedAlign.value}`]: !!mergedAlign.value,
-        }
-      )
+      return cls(prefixCls, {
+        [`${prefixCls}-no-wrap`]: !props.wrap,
+        [`${prefixCls}-${mergedJustify.value}`]: !!mergedJustify.value,
+        [`${prefixCls}-${mergedAlign.value}`]: !!mergedAlign.value,
+      })
     })
 
     // Provide gutter and wrap to Col components

@@ -122,7 +122,7 @@ describe('InputPassword', () => {
   it('supports controlled visibility', async () => {
     const onVisibleChange = vi.fn()
     const wrapper = mount(InputPassword, {
-      props: { visibilityToggle: { visible: false, onVisibleChange } }
+      props: { visibilityToggle: { visible: false, onVisibleChange } },
     })
     expect(wrapper.find('input').attributes('type')).toBe('password')
     await wrapper.find('.hmfw-input-password-icon').trigger('click')
@@ -131,7 +131,7 @@ describe('InputPassword', () => {
 
   it('supports custom iconRender', () => {
     const wrapper = mount(InputPassword, {
-      props: { iconRender: (visible: boolean) => visible ? 'SHOW' : 'HIDE' }
+      props: { iconRender: (visible: boolean) => (visible ? 'SHOW' : 'HIDE') },
     })
     expect(wrapper.find('.hmfw-input-password-icon').text()).toContain('HIDE')
   })

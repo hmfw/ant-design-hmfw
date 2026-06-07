@@ -1,5 +1,5 @@
 <template>
-  <Card title="卡片标题" :loading="loading" style="width: 300px;">
+  <Card title="卡片标题" :loading="loading" style="width: 300px">
     <p>卡片内容</p>
     <p>卡片内容</p>
   </Card>

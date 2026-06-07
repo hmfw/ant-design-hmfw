@@ -132,4 +132,3 @@ describe('Anchor', () => {
     expect(wrapper.find('.hmfw-anchor-ink').exists()).toBe(true)
   })
 })
-

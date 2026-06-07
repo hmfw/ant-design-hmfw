@@ -68,28 +68,28 @@
 
 ### Descriptions Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| title | 描述列表的标题 | `string \| VNode` | - |
-| extra | 描述列表的操作区域 | `string \| VNode \| slot` | - |
-| bordered | 是否展示边框 | `boolean` | `false` |
-| column | 一行的 DescriptionItems 数量,可以是响应式对象 | `number \| Record<Breakpoint, number>` | `3` |
-| size | 设置列表的大小 | `'default' \| 'middle' \| 'small' \| 'medium'` | `'default'` |
-| layout | 描述布局 | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| colon | 配置 Descriptions.Item 的 colon 的默认值 | `boolean` | `true` |
-| items | 描述列表的数据项 | `DescriptionsItem[]` | - |
-| labelStyle | 自定义标签样式(全局) | `CSSProperties` | - |
-| contentStyle | 自定义内容样式(全局) | `CSSProperties` | - |
+| 参数         | 说明                                          | 类型                                           | 默认值         |
+| ------------ | --------------------------------------------- | ---------------------------------------------- | -------------- |
+| title        | 描述列表的标题                                | `string \| VNode`                              | -              |
+| extra        | 描述列表的操作区域                            | `string \| VNode \| slot`                      | -              |
+| bordered     | 是否展示边框                                  | `boolean`                                      | `false`        |
+| column       | 一行的 DescriptionItems 数量,可以是响应式对象 | `number \| Record<Breakpoint, number>`         | `3`            |
+| size         | 设置列表的大小                                | `'default' \| 'middle' \| 'small' \| 'medium'` | `'default'`    |
+| layout       | 描述布局                                      | `'horizontal' \| 'vertical'`                   | `'horizontal'` |
+| colon        | 配置 Descriptions.Item 的 colon 的默认值      | `boolean`                                      | `true`         |
+| items        | 描述列表的数据项                              | `DescriptionsItem[]`                           | -              |
+| labelStyle   | 自定义标签样式(全局)                          | `CSSProperties`                                | -              |
+| contentStyle | 自定义内容样式(全局)                          | `CSSProperties`                                | -              |
 
 ### DescriptionsItem
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| label | 内容的描述 | `string` | - |
-| children | 内容 | `any` | - |
-| span | 包含列的数量,可以是响应式对象或 'filled' | `number \| 'filled' \| Record<Breakpoint, number>` | `1` |
-| labelStyle | 自定义标签样式 | `CSSProperties` | - |
-| contentStyle | 自定义内容样式 | `CSSProperties` | - |
+| 参数         | 说明                                     | 类型                                               | 默认值 |
+| ------------ | ---------------------------------------- | -------------------------------------------------- | ------ |
+| label        | 内容的描述                               | `string`                                           | -      |
+| children     | 内容                                     | `any`                                              | -      |
+| span         | 包含列的数量,可以是响应式对象或 'filled' | `number \| 'filled' \| Record<Breakpoint, number>` | `1`    |
+| labelStyle   | 自定义标签样式                           | `CSSProperties`                                    | -      |
+| contentStyle | 自定义内容样式                           | `CSSProperties`                                    | -      |
 
 ### Breakpoint
 
@@ -98,6 +98,7 @@ type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 ```
 
 响应式断点:
+
 - xs: `>= 0px`
 - sm: `>= 576px`
 - md: `>= 768px`
@@ -119,6 +120,7 @@ type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 ### 响应式列数自动更新
 
 `column` 属性支持传入响应式对象（按断点配置列数）。组件内部将 `useBreakpoint()` 实现为真正的响应式 composable：
+
 - 在 `onMounted` 中绑定 `window.resize` 事件监听
 - 使用 `debounce` 防抖（100ms 延迟）优化 resize 性能，避免频繁重渲染
 - 在 `onUnmounted` 中自动清理监听器
@@ -133,11 +135,11 @@ type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 
 新增的 `debounce` 防抖工具函数位于 `components/_utils/function.ts`，作为内部工具供组件库使用。
 
-| 函数 | 说明 | 类型 |
-| --- | --- | --- |
+| 函数     | 说明                                             | 类型                                             |
+| -------- | ------------------------------------------------ | ------------------------------------------------ |
 | debounce | 在指定延迟后执行函数，延迟期间再次调用则重新计时 | `<T>(fn: T, delay: number) => (...args) => void` |
 
 参数说明:
+
 - `fn`: 需要防抖的目标函数
 - `delay`: 延迟时间，单位毫秒
-

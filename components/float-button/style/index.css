@@ -15,7 +15,12 @@
   cursor: pointer;
   font-family: var(--hmfw-font-family);
   background: transparent;
-  box-shadow: var(--hmfw-box-shadow, 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05));
+  box-shadow: var(
+    --hmfw-box-shadow,
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05)
+  );
   border-radius: var(--hmfw-border-radius-lg, 8px);
   transition: all var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
 }
@@ -119,7 +124,12 @@
 .hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) {
   gap: 0;
   border-radius: var(--hmfw-border-radius-lg, 8px);
-  box-shadow: var(--hmfw-box-shadow, 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05));
+  box-shadow: var(
+    --hmfw-box-shadow,
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05)
+  );
 }
 .hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn {
   box-shadow: none;
@@ -208,7 +218,8 @@
  * ======================================================================== */
 .hmfw-float-btn-fade-enter-active,
 .hmfw-float-btn-fade-leave-active {
-  transition: opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out),
+  transition:
+    opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out),
     transform var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
 }
 .hmfw-float-btn-fade-enter-from,
@@ -219,7 +230,8 @@
 
 .hmfw-float-btn-group-wrap-enter-active,
 .hmfw-float-btn-group-wrap-leave-active {
-  transition: opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out),
+  transition:
+    opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out),
     transform var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
 }
 .hmfw-float-btn-group-wrap-enter-from,

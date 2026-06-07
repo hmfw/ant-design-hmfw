@@ -1,15 +1,12 @@
 <template>
   <div class="upload-chunked-demo">
-    <Upload
-      v-model:file-list="fileList"
-      :custom-request="chunkedRequest"
-      :before-upload="beforeUpload"
-      multiple
-    >
+    <Upload v-model:file-list="fileList" :custom-request="chunkedRequest" :before-upload="beforeUpload" multiple>
       <Button>分片上传</Button>
     </Upload>
     <div v-if="logs.length" class="upload-chunked-log">
-      <div v-for="(log, i) in logs" :key="i">{{ log }}</div>
+      <div v-for="(log, i) in logs" :key="i">
+        {{ log }}
+      </div>
     </div>
   </div>
 </template>

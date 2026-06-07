@@ -1,9 +1,9 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="openWithDuration">默认 4.5 秒</Button>
-    <Button @click="openLongDuration">10 秒关闭</Button>
-    <Button @click="openNeverClose">永不关闭</Button>
-    <Button type="default" @click="notification.destroy()">关闭全部</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="openWithDuration"> 默认 4.5 秒 </Button>
+    <Button @click="openLongDuration"> 10 秒关闭 </Button>
+    <Button @click="openNeverClose"> 永不关闭 </Button>
+    <Button type="default" @click="notification.destroy()"> 关闭全部 </Button>
   </div>
 </template>
 

@@ -139,10 +139,12 @@ describe('Checkbox', () => {
       setup() {
         return () => (
           <CheckboxGroup value={['a']}>
-            <Checkbox value="a" skipGroup>Skip Group</Checkbox>
+            <Checkbox value="a" skipGroup>
+              Skip Group
+            </Checkbox>
           </CheckboxGroup>
         )
-      }
+      },
     })
     const input = wrapper.find('input').element as HTMLInputElement
     // Even though group has value=['a'], skipGroup makes it independent
@@ -156,10 +158,12 @@ describe('Checkbox', () => {
         const groupValue = ref<string[]>([])
         return () => (
           <CheckboxGroup value={groupValue.value}>
-            <Checkbox value="a" skipGroup checked={checked.value}>Independent</Checkbox>
+            <Checkbox value="a" skipGroup checked={checked.value}>
+              Independent
+            </Checkbox>
           </CheckboxGroup>
         )
-      }
+      },
     })
     const input = wrapper.find('input').element as HTMLInputElement
     expect(input.checked).toBe(true)
@@ -170,12 +174,19 @@ describe('Checkbox', () => {
       setup() {
         const groupValue = ref<string[]>([])
         return () => (
-          <CheckboxGroup value={groupValue.value} onUpdate:value={(v: any) => { groupValue.value = v }}>
+          <CheckboxGroup
+            value={groupValue.value}
+            onUpdate:value={(v: any) => {
+              groupValue.value = v
+            }}
+          >
             <Checkbox value="a">Normal</Checkbox>
-            <Checkbox value="b" skipGroup>Skip</Checkbox>
+            <Checkbox value="b" skipGroup>
+              Skip
+            </Checkbox>
           </CheckboxGroup>
         )
-      }
+      },
     })
 
     const inputs = wrapper.findAll('input')
@@ -200,7 +211,12 @@ describe('CheckboxGroup', () => {
 
   it('renders object options', () => {
     const wrapper = mount(CheckboxGroup, {
-      props: { options: [{ label: 'Apple', value: 'apple' }, { label: 'Banana', value: 'banana' }] },
+      props: {
+        options: [
+          { label: 'Apple', value: 'apple' },
+          { label: 'Banana', value: 'banana' },
+        ],
+      },
     })
     expect(wrapper.text()).toContain('Apple')
     expect(wrapper.text()).toContain('Banana')
@@ -231,7 +247,7 @@ describe('CheckboxGroup', () => {
       props: { options: ['A', 'B'], name: 'test-group' },
     })
     const inputs = wrapper.findAll('input')
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
       expect(input.attributes('name')).toBe('test-group')
     })
   })
@@ -241,7 +257,7 @@ describe('CheckboxGroup', () => {
       props: { options: ['A', 'B'], disabled: true },
     })
     const inputs = wrapper.findAll('input')
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
       expect(input.attributes('disabled')).toBeDefined()
     })
   })
@@ -251,9 +267,9 @@ describe('CheckboxGroup', () => {
       props: {
         options: [
           { label: 'A', value: 'a', disabled: false },
-          { label: 'B', value: 'b' }
+          { label: 'B', value: 'b' },
         ],
-        disabled: true
+        disabled: true,
       },
     })
     const checkboxes = wrapper.findAllComponents(Checkbox)
@@ -266,7 +282,7 @@ describe('CheckboxGroup', () => {
       props: {
         options: ['A'],
         style: { color: 'red' },
-        className: 'custom-class'
+        className: 'custom-class',
       },
     })
     expect(wrapper.classes()).toContain('custom-class')
@@ -276,9 +292,7 @@ describe('CheckboxGroup', () => {
   it('supports option style and className', () => {
     const wrapper = mount(CheckboxGroup, {
       props: {
-        options: [
-          { label: 'A', value: 'a', style: { color: 'blue' }, className: 'opt-class' }
-        ]
+        options: [{ label: 'A', value: 'a', style: { color: 'blue' }, className: 'opt-class' }],
       },
     })
     const checkbox = wrapper.find('.hmfw-checkbox-wrapper')
@@ -288,9 +302,7 @@ describe('CheckboxGroup', () => {
   it('supports option title, id, required', () => {
     const wrapper = mount(CheckboxGroup, {
       props: {
-        options: [
-          { label: 'A', value: 'a', title: 'Title A', id: 'id-a', required: true }
-        ]
+        options: [{ label: 'A', value: 'a', title: 'Title A', id: 'id-a', required: true }],
       },
     })
     const input = wrapper.find('input')
@@ -302,11 +314,8 @@ describe('CheckboxGroup', () => {
   it('renders children when no options provided', () => {
     const wrapper = mount(CheckboxGroup, {
       slots: {
-        default: () => [
-          <Checkbox value="a">A</Checkbox>,
-          <Checkbox value="b">B</Checkbox>
-        ]
-      }
+        default: () => [<Checkbox value="a">A</Checkbox>, <Checkbox value="b">B</Checkbox>],
+      },
     })
     expect(wrapper.findAll('input').length).toBe(2)
   })
@@ -337,4 +346,3 @@ describe('CheckboxGroup', () => {
     expect(emitted[emitted.length - 1][0]).toEqual(['A', 'B', 'C'])
   })
 })
-

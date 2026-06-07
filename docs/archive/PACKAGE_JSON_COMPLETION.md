@@ -13,16 +13,32 @@
 #### 新增/优化字段
 
 - [x] **description** - 更详细的描述
+
   ```json
   "A Vue3 UI component library based on Ant Design v6, featuring 66 high-quality components with TypeScript support"
   ```
 
 - [x] **keywords** - 扩展关键词（12 个）
+
   ```json
-  ["vue", "vue3", "ui", "components", "component-library", "ant-design", "antd", "design-system", "typescript", "tsx", "ui-framework", "vue-components"]
+  [
+    "vue",
+    "vue3",
+    "ui",
+    "components",
+    "component-library",
+    "ant-design",
+    "antd",
+    "design-system",
+    "typescript",
+    "tsx",
+    "ui-framework",
+    "vue-components"
+  ]
   ```
 
 - [x] **author** - 作者信息
+
   ```json
   {
     "name": "hmfw",
@@ -31,6 +47,7 @@
   ```
 
 - [x] **bugs** - 问题追踪 URL
+
   ```json
   {
     "url": "https://github.com/hmfw/ant-design-hmfw/issues"
@@ -55,11 +72,13 @@
 ### 2. 必需文件创建 ✅
 
 #### LICENSE (MIT)
+
 - [x] 创建 MIT 许可证文件
 - [x] Copyright 年份：2026
 - [x] 项目名称：ant-design-hmfw
 
 #### CHANGELOG.md
+
 - [x] 创建更新日志
 - [x] 遵循 [Keep a Changelog](https://keepachangelog.com/) 格式
 - [x] 记录 v0.1.0 版本内容：
@@ -69,6 +88,7 @@
   - 性能优化
 
 #### .npmignore
+
 - [x] 创建 npm 发布忽略文件
 - [x] 排除源代码目录（components/, docs/, scripts/）
 - [x] 排除配置文件
@@ -82,6 +102,7 @@
 #### scripts/prepublish-check.js
 
 **功能：**
+
 - ✅ 检查必需文件是否存在（8 个文件）
 - ✅ 验证 package.json 配置完整性
 - ✅ 运行所有测试
@@ -90,6 +111,7 @@
 - ✅ 检查 Git 工作区状态
 
 **使用：**
+
 ```bash
 pnpm precheck
 ```
@@ -183,9 +205,18 @@ Tarball Details:
   "version": "0.1.0",
   "description": "A Vue3 UI component library based on Ant Design v6, featuring 66 high-quality components with TypeScript support",
   "keywords": [
-    "vue", "vue3", "ui", "components", "component-library",
-    "ant-design", "antd", "design-system", "typescript", "tsx",
-    "ui-framework", "vue-components"
+    "vue",
+    "vue3",
+    "ui",
+    "components",
+    "component-library",
+    "ant-design",
+    "antd",
+    "design-system",
+    "typescript",
+    "tsx",
+    "ui-framework",
+    "vue-components"
   ],
   "author": {
     "name": "hmfw",
@@ -221,12 +252,7 @@ Tarball Details:
     },
     "./style.css": "./dist/style.css"
   },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "CHANGELOG.md"
-  ],
+  "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
   "peerDependencies": {
     "vue": ">=3.3.0 <4.0.0"
   },
@@ -251,6 +277,7 @@ Tarball Details:
 ## 🎯 发布准备状态
 
 ### ✅ 已完成
+
 - [x] package.json 字段完善
 - [x] peerDependencies 配置正确
 - [x] files 白名单配置
@@ -265,12 +292,14 @@ Tarball Details:
 ### 📦 可发布状态
 
 **包信息：**
+
 - 名称：ant-design-hmfw
 - 版本：0.1.0
 - 大小：2.8 MB (压缩后)
 - 文件数：13 个
 
 **质量指标：**
+
 - ✅ 测试覆盖：1888/1890 通过
 - ✅ 类型安全：100%
 - ✅ 文档完整：✅

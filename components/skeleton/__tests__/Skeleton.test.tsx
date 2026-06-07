@@ -293,5 +293,3 @@ describe('SkeletonNode', () => {
     expect(wrapper.find('circle').exists()).toBe(true)
   })
 })
-
-

@@ -4,7 +4,21 @@ import { cls } from '../_utils'
 import { ScrollNumber } from './ScrollNumber'
 import type { BadgeStatus, BadgeSize } from './types'
 
-const PRESET_COLORS = ['pink', 'red', 'yellow', 'orange', 'cyan', 'green', 'blue', 'purple', 'geekblue', 'magenta', 'volcano', 'gold', 'lime']
+const PRESET_COLORS = [
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime',
+]
 
 export const Badge = defineComponent({
   name: 'Badge',
@@ -47,9 +61,7 @@ export const Badge = defineComponent({
       return false
     })
 
-    const isPresetColor = computed(() =>
-      props.color ? PRESET_COLORS.includes(props.color) : false,
-    )
+    const isPresetColor = computed(() => (props.color ? PRESET_COLORS.includes(props.color) : false))
 
     const badgeStyle = computed(() => {
       const style: Record<string, string> = {}
@@ -74,11 +86,12 @@ export const Badge = defineComponent({
           !props.status && props.color && isPresetColor.value && `${prefixCls}-color-${props.color}`,
         )
         // 自定义颜色优先级：color > status 预设颜色
-        const dotStyle = props.color && !isPresetColor.value
-          ? { background: props.color }
-          : props.color && isPresetColor.value
-          ? { background: props.color }
-          : {}
+        const dotStyle =
+          props.color && !isPresetColor.value
+            ? { background: props.color }
+            : props.color && isPresetColor.value
+              ? { background: props.color }
+              : {}
         return (
           <span class={cls(prefixCls, `${prefixCls}-status`)}>
             <span class={statusCls} style={dotStyle} />
@@ -95,14 +108,8 @@ export const Badge = defineComponent({
       })
 
       const sup = !isHidden.value && (
-        <sup
-          class={supCls}
-          style={badgeStyle.value}
-          title={props.title ?? String(props.count ?? '')}
-        >
-          {!props.dot && (
-            <ScrollNumber count={displayCount.value ?? 0} />
-          )}
+        <sup class={supCls} style={badgeStyle.value} title={props.title ?? String(props.count ?? '')}>
+          {!props.dot && <ScrollNumber count={displayCount.value ?? 0} />}
         </sup>
       )
 

@@ -2,7 +2,6 @@
 
 语义化的矢量图形，用于展示常用的操作和状态。
 
-
 ## 何时使用
 
 - 需要展示操作图标时
@@ -55,13 +54,13 @@
 
 ### Icon Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| component | 图标组件（SVG 函数式组件） | `IconComponent` | - |
-| spin | 是否旋转 | `boolean` | `false` |
-| rotate | 旋转角度（deg） | `number` | - |
-| style | 自定义样式（可用于设置 `font-size`、`color`） | `string \| CSSProperties` | - |
-| class | 自定义类名 | `string` | - |
+| 参数      | 说明                                          | 类型                      | 默认值  |
+| --------- | --------------------------------------------- | ------------------------- | ------- |
+| component | 图标组件（SVG 函数式组件）                    | `IconComponent`           | -       |
+| spin      | 是否旋转                                      | `boolean`                 | `false` |
+| rotate    | 旋转角度（deg）                               | `number`                  | -       |
+| style     | 自定义样式（可用于设置 `font-size`、`color`） | `string \| CSSProperties` | -       |
+| class     | 自定义类名                                    | `string`                  | -       |
 
 ### 内置图标
 
@@ -71,39 +70,92 @@
 ```ts
 import {
   // 反馈
-  CheckOutlined, WarningOutlined, InfoCircleOutlined, LoadingOutlined,
-  CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, InfoCircleFilled,
+  CheckOutlined,
+  WarningOutlined,
+  InfoCircleOutlined,
+  LoadingOutlined,
+  CheckCircleFilled,
+  CloseCircleFilled,
+  ExclamationCircleFilled,
+  InfoCircleFilled,
   QuestionCircleOutlined,
 
   // 操作
-  SearchOutlined, PlusOutlined, MinusOutlined, EditOutlined, DeleteOutlined,
-  EyeOutlined, SettingOutlined, CopyOutlined, ReloadOutlined, SyncOutlined,
-  SaveOutlined, ShareAltOutlined, DownloadOutlined, FilterOutlined,
+  SearchOutlined,
+  PlusOutlined,
+  MinusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  SettingOutlined,
+  CopyOutlined,
+  ReloadOutlined,
+  SyncOutlined,
+  SaveOutlined,
+  ShareAltOutlined,
+  DownloadOutlined,
+  FilterOutlined,
 
   // 方向
-  UpOutlined, DownOutlined, LeftOutlined, RightOutlined,
-  ArrowUpOutlined, ArrowDownOutlined, ArrowLeftOutlined, ArrowRightOutlined,
-  CaretUpOutlined, CaretDownOutlined, CaretLeftOutlined, CaretRightOutlined,
-  DoubleLeftOutlined, DoubleRightOutlined, SwapOutlined,
-  FullscreenOutlined, FullscreenExitOutlined,
-  ZoomInOutlined, ZoomOutOutlined, RotateLeftOutlined, RotateRightOutlined,
+  UpOutlined,
+  DownOutlined,
+  LeftOutlined,
+  RightOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  CaretUpOutlined,
+  CaretDownOutlined,
+  CaretLeftOutlined,
+  CaretRightOutlined,
+  DoubleLeftOutlined,
+  DoubleRightOutlined,
+  SwapOutlined,
+  FullscreenOutlined,
+  FullscreenExitOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+  RotateLeftOutlined,
+  RotateRightOutlined,
 
   // 导航
-  HomeOutlined, MenuOutlined, BarsOutlined, EllipsisOutlined,
-  LoginOutlined, LogoutOutlined, GlobalOutlined,
+  HomeOutlined,
+  MenuOutlined,
+  BarsOutlined,
+  EllipsisOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+  GlobalOutlined,
 
   // 通用
-  UserOutlined, BellOutlined, BellFilled, StarOutlined, StarFilled,
-  HeartOutlined, HeartFilled, LockOutlined, UnlockOutlined,
-  CloudOutlined, LinkOutlined, MessageOutlined,
-  MailOutlined, PhoneOutlined, CalendarOutlined, ClockCircleOutlined,
+  UserOutlined,
+  BellOutlined,
+  BellFilled,
+  StarOutlined,
+  StarFilled,
+  HeartOutlined,
+  HeartFilled,
+  LockOutlined,
+  UnlockOutlined,
+  CloudOutlined,
+  LinkOutlined,
+  MessageOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  CalendarOutlined,
+  ClockCircleOutlined,
 
   // 文件
-  FolderOutlined, FolderOpenOutlined, FileOutlined,
-  PictureOutlined, VideoCameraOutlined,
+  FolderOutlined,
+  FolderOpenOutlined,
+  FileOutlined,
+  PictureOutlined,
+  VideoCameraOutlined,
 
   // 品牌
-  AndroidOutlined, AppleOutlined,
+  AndroidOutlined,
+  AppleOutlined,
 } from 'ant-design-hmfw'
 ```
 

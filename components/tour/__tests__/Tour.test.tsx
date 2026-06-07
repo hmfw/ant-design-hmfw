@@ -37,9 +37,7 @@ describe('Tour', () => {
     })
     await wrapper.vm.$nextTick()
     expect(document.querySelector('.hmfw-tour-title')?.textContent).toBe('Step 1')
-    expect(document.querySelector('.hmfw-tour-description')?.textContent).toBe(
-      'First step description',
-    )
+    expect(document.querySelector('.hmfw-tour-description')?.textContent).toBe('First step description')
     wrapper.unmount()
   })
 
@@ -146,9 +144,7 @@ describe('Tour', () => {
   })
 
   it('supports VNode title', async () => {
-    const stepsWithVNode: TourStep[] = [
-      { title: h('strong', {}, 'Bold Title'), description: 'Desc' },
-    ]
+    const stepsWithVNode: TourStep[] = [{ title: h('strong', {}, 'Bold Title'), description: 'Desc' }]
     const wrapper = mount(Tour, {
       props: { open: true, steps: stepsWithVNode },
       attachTo: document.body,
@@ -159,9 +155,7 @@ describe('Tour', () => {
   })
 
   it('supports render function title', async () => {
-    const stepsWithFn: TourStep[] = [
-      { title: () => h('em', {}, 'Italic Title'), description: 'Desc' },
-    ]
+    const stepsWithFn: TourStep[] = [{ title: () => h('em', {}, 'Italic Title'), description: 'Desc' }]
     const wrapper = mount(Tour, {
       props: { open: true, steps: stepsWithFn },
       attachTo: document.body,
@@ -242,9 +236,7 @@ describe('Tour', () => {
 
   it('calls nextButtonProps onClick before advancing', async () => {
     const onClick = vi.fn()
-    const stepsWithCb: TourStep[] = [
-      { title: 'Step 1', description: 'Desc', nextButtonProps: { onClick } },
-    ]
+    const stepsWithCb: TourStep[] = [{ title: 'Step 1', description: 'Desc', nextButtonProps: { onClick } }]
     const wrapper = mount(Tour, {
       props: { open: true, steps: stepsWithCb },
       attachTo: document.body,

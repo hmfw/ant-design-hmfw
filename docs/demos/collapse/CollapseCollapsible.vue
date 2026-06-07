@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <Collapse collapsible="header" :default-active-key="['1']" :items="headerItems" />
     <Collapse collapsible="icon" :default-active-key="['1']" :items="iconItems" />
     <Collapse collapsible="disabled" :items="disabledItems" />

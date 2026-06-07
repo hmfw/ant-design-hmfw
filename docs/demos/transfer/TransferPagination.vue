@@ -1,7 +1,7 @@
 <template>
   <Transfer
-    :data-source="dataSource"
     v-model:target-keys="targetKeys"
+    :data-source="dataSource"
     :titles="['源', '目标']"
     :pagination="{ pageSize: 5 }"
   />

@@ -1,10 +1,5 @@
 <template>
-  <List
-    :data-source="data"
-    :render-item="renderItem"
-    :pagination="{ pageSize: 3 }"
-    bordered
-  />
+  <List :data-source="data" :render-item="renderItem" :pagination="{ pageSize: 3 }" bordered />
 </template>
 
 <script setup lang="ts">

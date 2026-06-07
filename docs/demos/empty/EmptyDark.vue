@@ -1,12 +1,10 @@
 <template>
   <div>
-    <p style="margin-bottom: 12px;">
-      切换主题预览插画配色（暗黑模式下默认插画自动适配深色背景）：
-    </p>
-    <div :data-theme="theme" style="margin-bottom: 12px;">
+    <p style="margin-bottom: 12px">切换主题预览插画配色（暗黑模式下默认插画自动适配深色背景）：</p>
+    <div :data-theme="theme" style="margin-bottom: 12px">
       <button @click="theme = 'light'">浅色</button>
       <button @click="theme = 'dark'">暗黑</button>
-      <span style="margin-left: 12px;">当前：{{ theme }}</span>
+      <span style="margin-left: 12px">当前：{{ theme }}</span>
     </div>
     <div
       :data-theme="theme"

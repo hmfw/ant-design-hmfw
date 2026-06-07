@@ -1,17 +1,9 @@
 <template>
-  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-    <Dropdown.Button :menu="menu">
-      Dropdown
-    </Dropdown.Button>
-    <Dropdown.Button :menu="menu" type="primary">
-      Primary
-    </Dropdown.Button>
-    <Dropdown.Button :menu="menu" danger>
-      Danger
-    </Dropdown.Button>
-    <Dropdown.Button :menu="menu" disabled>
-      Disabled
-    </Dropdown.Button>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap">
+    <Dropdown.Button :menu="menu"> Dropdown </Dropdown.Button>
+    <Dropdown.Button :menu="menu" type="primary"> Primary </Dropdown.Button>
+    <Dropdown.Button :menu="menu" danger> Danger </Dropdown.Button>
+    <Dropdown.Button :menu="menu" disabled> Disabled </Dropdown.Button>
   </div>
 </template>
 

@@ -30,8 +30,7 @@ export const Switch = defineComponent({
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('switch')
     // checked 优先于 value 别名
-    const resolveControlled = () =>
-      props.checked !== undefined ? props.checked : props.value
+    const resolveControlled = () => (props.checked !== undefined ? props.checked : props.value)
     const innerChecked = ref(props.defaultChecked ?? false)
     const buttonRef = ref<HTMLButtonElement>()
     // 由 onChange 返回的 Promise 触发的内部 loading
@@ -119,16 +118,10 @@ export const Switch = defineComponent({
         onBlur={handleBlur}
         disabled={isDisabled.value}
       >
-        <span class={`${prefixCls}-handle`}>
-          {isLoading.value && <span class={`${prefixCls}-loading-icon`} />}
-        </span>
+        <span class={`${prefixCls}-handle`}>{isLoading.value && <span class={`${prefixCls}-loading-icon`} />}</span>
         <span class={`${prefixCls}-inner`}>
-          <span class={`${prefixCls}-inner-checked`}>
-            {slots.checkedChildren?.() ?? props.checkedChildren}
-          </span>
-          <span class={`${prefixCls}-inner-unchecked`}>
-            {slots.unCheckedChildren?.() ?? props.unCheckedChildren}
-          </span>
+          <span class={`${prefixCls}-inner-checked`}>{slots.checkedChildren?.() ?? props.checkedChildren}</span>
+          <span class={`${prefixCls}-inner-unchecked`}>{slots.unCheckedChildren?.() ?? props.unCheckedChildren}</span>
         </span>
       </button>
     )

@@ -136,7 +136,10 @@ describe('Image', () => {
 
   it('renders custom placeholder VNode', () => {
     const wrapper = mount(Image, {
-      props: { src: 'test.jpg', placeholder: () => <div class="custom-placeholder">Loading...</div> },
+      props: {
+        src: 'test.jpg',
+        placeholder: () => <div class="custom-placeholder">Loading...</div>,
+      },
     })
     expect(wrapper.find('.custom-placeholder').exists()).toBe(true)
   })

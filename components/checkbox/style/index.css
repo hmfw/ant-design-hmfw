@@ -9,7 +9,7 @@
 
 .hmfw-checkbox-wrapper-disabled {
   cursor: not-allowed;
-  color: var(--hmfw-color-text-disabled, rgba(0,0,0,0.25));
+  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
 }
 
 .hmfw-checkbox {
@@ -84,12 +84,12 @@
 }
 
 .hmfw-checkbox-disabled .hmfw-checkbox-inner {
-  background: var(--hmfw-color-bg-container-disabled, rgba(0,0,0,0.04));
+  background: var(--hmfw-color-bg-container-disabled, rgba(0, 0, 0, 0.04));
   border-color: var(--hmfw-color-border, #d9d9d9);
 }
 
 .hmfw-checkbox-disabled.hmfw-checkbox-checked .hmfw-checkbox-inner::after {
-  border-color: var(--hmfw-color-text-disabled, rgba(0,0,0,0.25));
+  border-color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
 }
 
 .hmfw-checkbox-label {

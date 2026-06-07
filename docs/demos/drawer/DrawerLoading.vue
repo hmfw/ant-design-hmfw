@@ -1,10 +1,6 @@
 <template>
-  <Button @click="showLoading">打开（加载中）</Button>
-  <Drawer
-    v-model:open="open"
-    title="加载中"
-    :loading="loading"
-  >
+  <Button @click="showLoading"> 打开（加载中） </Button>
+  <Drawer v-model:open="open" title="加载中" :loading="loading">
     <p>数据加载完成后的抽屉内容。</p>
   </Drawer>
 </template>

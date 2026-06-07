@@ -1,9 +1,9 @@
 <template>
-  <div style="padding: 16px; background: #1677ff;">
-    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-      <Button type="primary" ghost>Primary Ghost</Button>
-      <Button ghost>Default Ghost</Button>
-      <Button type="dashed" ghost>Dashed Ghost</Button>
+  <div style="padding: 16px; background: #1677ff">
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <Button type="primary" ghost> Primary Ghost </Button>
+      <Button ghost> Default Ghost </Button>
+      <Button type="dashed" ghost> Dashed Ghost </Button>
     </div>
   </div>
 </template>

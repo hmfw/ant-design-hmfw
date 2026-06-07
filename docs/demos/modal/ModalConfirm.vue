@@ -1,10 +1,10 @@
 <template>
-  <Button @click="confirm">删除项目</Button>
-  <Button @click="info">提示信息</Button>
-  <Button @click="success">成功</Button>
-  <Button @click="error">错误</Button>
-  <Button @click="warning">警告</Button>
-  <Button @click="asyncConfirm">异步确认</Button>
+  <Button @click="confirm"> 删除项目 </Button>
+  <Button @click="info"> 提示信息 </Button>
+  <Button @click="success"> 成功 </Button>
+  <Button @click="error"> 错误 </Button>
+  <Button @click="warning"> 警告 </Button>
+  <Button @click="asyncConfirm"> 异步确认 </Button>
 </template>
 
 <script setup lang="ts">

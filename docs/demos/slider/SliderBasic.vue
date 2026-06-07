@@ -1,11 +1,11 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px;">
+  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px">
     <div>
-      <p style="margin-bottom: 8px;">基础滑块：{{ value1 }}</p>
+      <p style="margin-bottom: 8px">基础滑块：{{ value1 }}</p>
       <Slider v-model:value="value1" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">禁用状态：</p>
+      <p style="margin-bottom: 8px">禁用状态：</p>
       <Slider v-model:value="value2" disabled />
     </div>
   </div>

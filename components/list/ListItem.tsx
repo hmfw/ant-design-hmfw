@@ -23,9 +23,7 @@ export const ListItem = defineComponent({
       const children = slots.default?.()
       if (!children || children.length === 0) return true
       const hasMultipleNodes = children.length > 1
-      const hasTextNode = children.some(
-        (node) => typeof node.children === 'string' || typeof node.type === 'symbol'
-      )
+      const hasTextNode = children.some((node) => typeof node.children === 'string' || typeof node.type === 'symbol')
       return !(hasTextNode && hasMultipleNodes)
     })
 

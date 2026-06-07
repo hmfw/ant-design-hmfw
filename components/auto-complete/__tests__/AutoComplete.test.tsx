@@ -165,7 +165,10 @@ describe('AutoComplete', () => {
   })
 
   it('backfill writes the highlighted value while navigating', async () => {
-    const wrapper = mount(AutoComplete, { props: { options, backfill: true }, attachTo: document.body })
+    const wrapper = mount(AutoComplete, {
+      props: { options, backfill: true },
+      attachTo: document.body,
+    })
     const input = wrapper.find('input')
     await input.trigger('focus')
     await input.trigger('keydown', { key: 'ArrowDown' })
@@ -228,7 +231,10 @@ describe('AutoComplete', () => {
   })
 
   it('respects defaultOpen', async () => {
-    const wrapper = mount(AutoComplete, { props: { options, defaultOpen: true }, attachTo: document.body })
+    const wrapper = mount(AutoComplete, {
+      props: { options, defaultOpen: true },
+      attachTo: document.body,
+    })
     await wrapper.vm.$nextTick()
     expect(document.querySelector('.hmfw-auto-complete-dropdown')).toBeTruthy()
     wrapper.unmount()

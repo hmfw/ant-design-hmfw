@@ -1,7 +1,7 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="openWithUpdate">打开并更新</Button>
-    <Button @click="openWithConfig">全局配置</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="openWithUpdate"> 打开并更新 </Button>
+    <Button @click="openWithConfig"> 全局配置 </Button>
   </div>
 </template>
 

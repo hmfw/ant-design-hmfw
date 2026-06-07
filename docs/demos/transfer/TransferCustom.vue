@@ -1,7 +1,7 @@
 <template>
   <Transfer
-    :data-source="dataSource"
     v-model:target-keys="targetKeys"
+    :data-source="dataSource"
     :titles="['待选', '已选']"
     :render="(item) => `[${item.title}]`"
   />

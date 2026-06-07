@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+  <div style="display: flex; gap: 32px; flex-wrap: wrap">
     <Badge.Ribbon text="Hippies">
       <div class="ribbon-card">缎带在右侧（默认）</div>
     </Badge.Ribbon>

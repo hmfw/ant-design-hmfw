@@ -1,10 +1,5 @@
 <template>
-  <Upload
-    v-model:file-list="fileList"
-    :custom-request="customRequest"
-    :item-render="itemRender"
-    multiple
-  >
+  <Upload v-model:file-list="fileList" :custom-request="customRequest" :item-render="itemRender" multiple>
     <Button>自定义渲染</Button>
   </Upload>
 </template>
@@ -15,8 +10,20 @@ import { Upload, Button } from 'ant-design-hmfw'
 import type { UploadFile, ItemRenderActions } from 'ant-design-hmfw'
 
 const fileList = ref<UploadFile[]>([
-  { uid: '-1', name: 'design.pdf', status: 'done', url: 'https://example.com/design.pdf', size: 204800 },
-  { uid: '-2', name: 'cover.png', status: 'done', url: 'https://example.com/cover.png', size: 102400 },
+  {
+    uid: '-1',
+    name: 'design.pdf',
+    status: 'done',
+    url: 'https://example.com/design.pdf',
+    size: 204800,
+  },
+  {
+    uid: '-2',
+    name: 'cover.png',
+    status: 'done',
+    url: 'https://example.com/cover.png',
+    size: 102400,
+  },
 ])
 
 const customRequest = ({ file, onSuccess, onProgress }: any) => {
@@ -35,17 +42,16 @@ const customRequest = ({ file, onSuccess, onProgress }: any) => {
  * 自定义渲染：使用 actions 触发内置的预览/删除行为，外观完全自定义。
  * (originNode, file, fileList, actions) => VNode
  */
-const itemRender = (
-  _originNode: any,
-  file: UploadFile,
-  _list: UploadFile[],
-  actions: ItemRenderActions,
-) => (
+const itemRender = (_originNode: any, file: UploadFile, _list: UploadFile[], actions: ItemRenderActions) => (
   <div class="custom-upload-item" data-status={file.status}>
     <span class="custom-upload-item-name">📎 {file.name}</span>
     <span class="custom-upload-item-status">{file.status}</span>
-    <button class="custom-upload-item-btn" onClick={actions.preview}>预览</button>
-    <button class="custom-upload-item-btn danger" onClick={actions.remove}>删除</button>
+    <button class="custom-upload-item-btn" onClick={actions.preview}>
+      预览
+    </button>
+    <button class="custom-upload-item-btn danger" onClick={actions.remove}>
+      删除
+    </button>
   </div>
 )
 </script>

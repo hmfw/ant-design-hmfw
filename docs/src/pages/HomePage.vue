@@ -6,15 +6,21 @@
       <p class="home__text">Vue3 UI 组件库</p>
       <p class="home__tagline">基于 Ant Design v6 设计规范，使用 TypeScript + TSX 原生实现</p>
       <div class="home__actions">
-        <RouterLink to="/guide/getting-started" class="home__btn home__btn--brand">快速上手</RouterLink>
-        <RouterLink to="/components/button" class="home__btn home__btn--alt">组件文档</RouterLink>
+        <RouterLink to="/guide/getting-started" class="home__btn home__btn--brand"> 快速上手 </RouterLink>
+        <RouterLink to="/components/button" class="home__btn home__btn--alt"> 组件文档 </RouterLink>
       </div>
     </div>
     <div class="home__features">
       <div v-for="f in features" :key="f.title" class="home__feature">
-        <div class="home__feature-icon">{{ f.icon }}</div>
-        <div class="home__feature-title">{{ f.title }}</div>
-        <div class="home__feature-details">{{ f.details }}</div>
+        <div class="home__feature-icon">
+          {{ f.icon }}
+        </div>
+        <div class="home__feature-title">
+          {{ f.title }}
+        </div>
+        <div class="home__feature-details">
+          {{ f.details }}
+        </div>
       </div>
     </div>
     <footer class="home__footer">
@@ -29,7 +35,11 @@ import NavBar from '../components/NavBar.vue'
 
 const features = [
   { icon: '⚡', title: '高性能', details: '基于 esbuild 的 tsup 构建，支持 Tree Shaking 按需加载' },
-  { icon: '🎨', title: '主题定制', details: '完整的 CSS Variables 设计 Token 系统，轻松定制品牌色' },
+  {
+    icon: '🎨',
+    title: '主题定制',
+    details: '完整的 CSS Variables 设计 Token 系统，轻松定制品牌色',
+  },
   { icon: '🔒', title: '类型安全', details: '完整的 TypeScript 类型定义，提供优秀的 IDE 支持' },
   { icon: '🧪', title: '测试覆盖', details: '65 个测试文件，655 个测试用例，全部通过' },
   { icon: '📦', title: '66 个组件', details: '覆盖表单、数据展示、反馈、导航等各类场景' },
@@ -89,7 +99,9 @@ const features = [
   font-size: 15px;
   font-weight: 500;
   text-decoration: none;
-  transition: opacity 0.2s, box-shadow 0.2s;
+  transition:
+    opacity 0.2s,
+    box-shadow 0.2s;
 }
 
 .home__btn--brand {
@@ -126,7 +138,9 @@ const features = [
   padding: 24px;
   border: 1px solid var(--doc-c-divider);
   border-radius: 8px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .home__feature:hover {
@@ -166,11 +180,17 @@ const features = [
 }
 
 @media (max-width: 768px) {
-  .home__name { font-size: 40px; }
-  .home__features { grid-template-columns: 1fr 1fr; }
+  .home__name {
+    font-size: 40px;
+  }
+  .home__features {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 480px) {
-  .home__features { grid-template-columns: 1fr; }
+  .home__features {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

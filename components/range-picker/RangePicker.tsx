@@ -1,11 +1,11 @@
-import {
-  defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport,
-} from 'vue'
+import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import type { RangeValue, RangePreset } from './types'
 
-function pad(n: number) { return String(n).padStart(2, '0') }
+function pad(n: number) {
+  return String(n).padStart(2, '0')
+}
 
 function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
   return fmt
@@ -85,7 +85,12 @@ export const RangePicker = defineComponent({
     }
 
     const innerValue = ref<[Date | null, Date | null]>(parseValue(props.defaultValue ?? props.value))
-    watch(() => props.value, (v) => { innerValue.value = parseValue(v) })
+    watch(
+      () => props.value,
+      (v) => {
+        innerValue.value = parseValue(v)
+      },
+    )
 
     const startDate = computed(() => {
       if (props.value) return parseDate(props.value[0])
@@ -97,15 +102,15 @@ export const RangePicker = defineComponent({
     })
 
     const innerOpen = ref(false)
-    const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
+    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
     const selecting = ref<'start' | 'end'>('start')
     const hoverDate = ref<Date | null>(null)
 
     // Left panel shows start month, right panel shows next month
     const leftYear = ref((startDate.value ?? now).getFullYear())
     const leftMonth = ref((startDate.value ?? now).getMonth())
-    const rightYear = computed(() => leftMonth.value === 11 ? leftYear.value + 1 : leftYear.value)
-    const rightMonth = computed(() => leftMonth.value === 11 ? 0 : leftMonth.value + 1)
+    const rightYear = computed(() => (leftMonth.value === 11 ? leftYear.value + 1 : leftYear.value))
+    const rightMonth = computed(() => (leftMonth.value === 11 ? 0 : leftMonth.value + 1))
 
     const triggerRef = ref<HTMLElement>()
     const panelRef = ref<HTMLElement>()
@@ -113,13 +118,11 @@ export const RangePicker = defineComponent({
 
     // Whole-picker disabled state (boolean form only).
     const isDisabled = computed(() => typeof props.disabled === 'boolean' && props.disabled)
-    const startDisabled = computed(() =>
-      Array.isArray(props.disabled) ? !!props.disabled[0] : !!props.disabled)
-    const endDisabled = computed(() =>
-      Array.isArray(props.disabled) ? !!props.disabled[1] : !!props.disabled)
+    const startDisabled = computed(() => (Array.isArray(props.disabled) ? !!props.disabled[0] : !!props.disabled))
+    const endDisabled = computed(() => (Array.isArray(props.disabled) ? !!props.disabled[1] : !!props.disabled))
 
-    const displayStart = computed(() => startDate.value ? formatDate(startDate.value, props.format) : '')
-    const displayEnd = computed(() => endDate.value ? formatDate(endDate.value, props.format) : '')
+    const displayStart = computed(() => (startDate.value ? formatDate(startDate.value, props.format) : ''))
+    const displayEnd = computed(() => (endDate.value ? formatDate(endDate.value, props.format) : ''))
 
     const hasValue = computed(() => !!(startDate.value || endDate.value))
 
@@ -151,14 +154,13 @@ export const RangePicker = defineComponent({
     }
 
     const handleOutsideClick = (e: MouseEvent) => {
-      if (!triggerRef.value?.contains(e.target as Node) && !panelRef.value?.contains(e.target as Node))
-        closePanel()
+      if (!triggerRef.value?.contains(e.target as Node) && !panelRef.value?.contains(e.target as Node)) closePanel()
     }
 
     onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
     onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
 
-    const toStr = (d: Date | null) => d ? formatDate(d, props.format) : null
+    const toStr = (d: Date | null) => (d ? formatDate(d, props.format) : null)
 
     const emitCalendarChange = (pair: [Date | null, Date | null], range: 'start' | 'end') => {
       emit('calendarChange', [toStr(pair[0]), toStr(pair[1])] as RangeValue, pair, { range })
@@ -180,7 +182,9 @@ export const RangePicker = defineComponent({
       } else {
         let start = innerValue.value[0]
         let end = d
-        if (props.order && start && end < start) { [start, end] = [end, start] }
+        if (props.order && start && end < start) {
+          ;[start, end] = [end, start]
+        }
         const pair: [Date | null, Date | null] = [start, end]
         emitCalendarChange(pair, 'end')
         commit(pair)
@@ -205,12 +209,16 @@ export const RangePicker = defineComponent({
     }
 
     const prevMonth = () => {
-      if (leftMonth.value === 0) { leftYear.value--; leftMonth.value = 11 }
-      else leftMonth.value--
+      if (leftMonth.value === 0) {
+        leftYear.value--
+        leftMonth.value = 11
+      } else leftMonth.value--
     }
     const nextMonth = () => {
-      if (leftMonth.value === 11) { leftYear.value++; leftMonth.value = 0 }
-      else leftMonth.value++
+      if (leftMonth.value === 11) {
+        leftYear.value++
+        leftMonth.value = 0
+      } else leftMonth.value++
     }
 
     function isInRange(d: Date): boolean {
@@ -236,22 +244,46 @@ export const RangePicker = defineComponent({
       return (
         <div class={`${prefixCls}-panel`}>
           <div class={`${prefixCls}-panel-header`}>
-            {side === 'left' && <button class={`${prefixCls}-panel-header-btn`} onClick={prevMonth}>‹</button>}
-            {side === 'right' && <span class={`${prefixCls}-panel-header-btn`} style="visibility:hidden">‹</span>}
+            {side === 'left' && (
+              <button class={`${prefixCls}-panel-header-btn`} onClick={prevMonth}>
+                ‹
+              </button>
+            )}
+            {side === 'right' && (
+              <span class={`${prefixCls}-panel-header-btn`} style="visibility:hidden">
+                ‹
+              </span>
+            )}
             <span class={`${prefixCls}-panel-header-title`}>
               {year}年 {locale.value.DatePicker.months[month]}
             </span>
-            {side === 'right' && <button class={`${prefixCls}-panel-header-btn`} onClick={nextMonth}>›</button>}
-            {side === 'left' && <span class={`${prefixCls}-panel-header-btn`} style="visibility:hidden">›</span>}
+            {side === 'right' && (
+              <button class={`${prefixCls}-panel-header-btn`} onClick={nextMonth}>
+                ›
+              </button>
+            )}
+            {side === 'left' && (
+              <span class={`${prefixCls}-panel-header-btn`} style="visibility:hidden">
+                ›
+              </span>
+            )}
           </div>
           <div class={`${prefixCls}-panel-body`}>
             <div class={`${prefixCls}-weekdays`}>
-              {locale.value.DatePicker.weekdays.map((d) => <span key={d} class={`${prefixCls}-weekday`}>{d}</span>)}
+              {locale.value.DatePicker.weekdays.map((d) => (
+                <span key={d} class={`${prefixCls}-weekday`}>
+                  {d}
+                </span>
+              ))}
             </div>
             <div class={`${prefixCls}-days`}>
               {calendar.map(({ date, inCurrentMonth }, i) => {
                 const isToday = isSameDay(date, now)
-                const isDisabledDay = props.disabledDate?.(date, { type: 'date', from: innerValue.value[0] ?? undefined }) ?? false
+                const isDisabledDay =
+                  props.disabledDate?.(date, {
+                    type: 'date',
+                    from: innerValue.value[0] ?? undefined,
+                  }) ?? false
                 const inRange = isInRange(date)
                 const rangeStart = isRangeStart(date)
                 const rangeEnd = isRangeEnd(date)
@@ -269,8 +301,12 @@ export const RangePicker = defineComponent({
                     })}
                     disabled={isDisabledDay}
                     onClick={() => selectDate(date)}
-                    onMouseenter={() => { if (selecting.value === 'end') hoverDate.value = date }}
-                    onMouseleave={() => { if (selecting.value === 'end') hoverDate.value = null }}
+                    onMouseenter={() => {
+                      if (selecting.value === 'end') hoverDate.value = date
+                    }}
+                    onMouseleave={() => {
+                      if (selecting.value === 'end') hoverDate.value = null
+                    }}
                   >
                     {date.getDate()}
                   </button>
@@ -311,7 +347,9 @@ export const RangePicker = defineComponent({
               class={`${prefixCls}-input-inner`}
             />
             {props.allowClear && hasValue.value && !isDisabled.value && (
-              <span class={`${prefixCls}-clear`} onClick={clearValue}>✕</span>
+              <span class={`${prefixCls}-clear`} onClick={clearValue}>
+                ✕
+              </span>
             )}
             <span class={`${prefixCls}-suffix`}>📅</span>
           </span>
@@ -322,18 +360,19 @@ export const RangePicker = defineComponent({
             <div
               ref={panelRef}
               class={`${prefixCls}-popup ${prefixCls}-range-popup`}
-              style={{ position: 'absolute', top: `${panelPos.value.top}px`, left: `${panelPos.value.left}px`, zIndex: 1050 }}
+              style={{
+                position: 'absolute',
+                top: `${panelPos.value.top}px`,
+                left: `${panelPos.value.left}px`,
+                zIndex: 1050,
+              }}
             >
               <div class={`${prefixCls}-range-wrapper`}>
                 {props.presets && props.presets.length > 0 && (
                   <div class={`${prefixCls}-presets`}>
                     <ul>
                       {props.presets.map((preset) => (
-                        <li
-                          key={preset.label}
-                          class={`${prefixCls}-preset`}
-                          onClick={() => applyPreset(preset)}
-                        >
+                        <li key={preset.label} class={`${prefixCls}-preset`} onClick={() => applyPreset(preset)}>
                           {preset.label}
                         </li>
                       ))}

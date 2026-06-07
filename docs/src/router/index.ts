@@ -22,7 +22,10 @@ export const router = createRouter({
       path: '/',
       component: AppLayout,
       children: [
-        { path: 'guide/getting-started', component: () => import('../../guide/getting-started.md') },
+        {
+          path: 'guide/getting-started',
+          component: () => import('../../guide/getting-started.md'),
+        },
         { path: 'guide/theming', component: () => import('../../guide/theming.md') },
         { path: 'guide/i18n', component: () => import('../../guide/i18n.md') },
         ...componentRoutes,

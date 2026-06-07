@@ -29,16 +29,10 @@ export default defineComponent({
       const copyNode = renderCopy(props, () => text)
 
       const ellipsisCfg = getEllipsisConfig(props.ellipsis)
-      const tooltipProps = isEllipsis.value
-        ? resolveEllipsisTooltipProps(ellipsisCfg.tooltip, text)
-        : null
+      const tooltipProps = isEllipsis.value ? resolveEllipsisTooltipProps(ellipsisCfg.tooltip, text) : null
 
       const node = (
-        <span
-          ref={elRef}
-          class={getTypographyClass(prefixCls, props)}
-          style={getEllipsisStyle(props)}
-        >
+        <span ref={elRef} class={getTypographyClass(prefixCls, props)} style={getEllipsisStyle(props)}>
           {children}
           {copyNode}
         </span>

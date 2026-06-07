@@ -113,10 +113,7 @@ describe('Result', () => {
   })
 
   it('renders extra prop as array of VNodes', () => {
-    const extraArr = [
-      h('button', { class: 'btn-1' }, '返回'),
-      h('button', { class: 'btn-2' }, '重试'),
-    ]
+    const extraArr = [h('button', { class: 'btn-1' }, '返回'), h('button', { class: 'btn-2' }, '重试')]
     const wrapper = mount(Result, {
       props: { title: 'T', extra: extraArr },
     })

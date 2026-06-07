@@ -1,11 +1,11 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 40px; padding: 0 16px;">
+  <div style="display: flex; flex-direction: column; gap: 40px; padding: 0 16px">
     <div>
-      <p style="margin-bottom: 8px;">带刻度标记：{{ value1 }}</p>
+      <p style="margin-bottom: 8px">带刻度标记：{{ value1 }}</p>
       <Slider v-model:value="value1" :marks="marks" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">只能选择刻度点：{{ value2 }}</p>
+      <p style="margin-bottom: 8px">只能选择刻度点：{{ value2 }}</p>
       <Slider v-model:value="value2" :marks="marks" :step="null" />
     </div>
   </div>

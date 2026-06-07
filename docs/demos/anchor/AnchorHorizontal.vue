@@ -1,17 +1,13 @@
 <template>
   <div>
-    <Anchor
-      direction="horizontal"
-      :items="items"
-      style="margin-bottom: 24px;"
-    />
-    <div id="h-part-1" style="height: 160px; background: #e6f4ff; padding: 16px; margin-bottom: 16px;">
+    <Anchor direction="horizontal" :items="items" style="margin-bottom: 24px" />
+    <div id="h-part-1" style="height: 160px; background: #e6f4ff; padding: 16px; margin-bottom: 16px">
       <h3>第一部分</h3>
     </div>
-    <div id="h-part-2" style="height: 160px; background: #f6ffed; padding: 16px; margin-bottom: 16px;">
+    <div id="h-part-2" style="height: 160px; background: #f6ffed; padding: 16px; margin-bottom: 16px">
       <h3>第二部分</h3>
     </div>
-    <div id="h-part-3" style="height: 160px; background: #fff7e6; padding: 16px;">
+    <div id="h-part-3" style="height: 160px; background: #fff7e6; padding: 16px">
       <h3>第三部分</h3>
     </div>
   </div>

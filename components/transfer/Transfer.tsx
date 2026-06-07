@@ -34,10 +34,16 @@ export const Transfer = defineComponent({
     operations: { type: Array as PropType<string[]>, default: () => [] },
     render: Function as PropType<(item: TransferItem) => RenderResult>,
     rowKey: Function as PropType<(record: TransferItem) => TransferKey>,
-    showSearch: { type: [Boolean, Object] as PropType<boolean | TransferSearchOption>, default: false },
+    showSearch: {
+      type: [Boolean, Object] as PropType<boolean | TransferSearchOption>,
+      default: false,
+    },
     filterOption: Function as PropType<(input: string, item: TransferItem, direction: TransferDirection) => boolean>,
     footer: Function as PropType<(info: TransferListContext) => VNode | string | null>,
-    listStyle: { type: [Object, Function] as PropType<CSSProperties | ((info: { direction: TransferDirection }) => CSSProperties)>, default: () => ({}) },
+    listStyle: {
+      type: [Object, Function] as PropType<CSSProperties | ((info: { direction: TransferDirection }) => CSSProperties)>,
+      default: () => ({}),
+    },
     disabled: Boolean,
     showSelectAll: { type: Boolean, default: true },
     selectAllLabels: { type: Array as PropType<SelectAllLabel[]>, default: () => [] },
@@ -61,8 +67,18 @@ export const Transfer = defineComponent({
     const innerTargetKeys = ref<TransferKey[]>([...props.defaultTargetKeys])
     const innerSelectedKeys = ref<TransferKey[]>([...props.defaultSelectedKeys])
 
-    watch(() => props.targetKeys, (v) => { if (v) innerTargetKeys.value = [...v] })
-    watch(() => props.selectedKeys, (v) => { if (v) innerSelectedKeys.value = [...v] })
+    watch(
+      () => props.targetKeys,
+      (v) => {
+        if (v) innerTargetKeys.value = [...v]
+      },
+    )
+    watch(
+      () => props.selectedKeys,
+      (v) => {
+        if (v) innerSelectedKeys.value = [...v]
+      },
+    )
 
     const targetKeys = computed(() => props.targetKeys ?? innerTargetKeys.value)
     const selectedKeys = computed(() => props.selectedKeys ?? innerSelectedKeys.value)
@@ -72,24 +88,24 @@ export const Transfer = defineComponent({
       props.dataSource.map((item) => ({
         ...item,
         key: props.rowKey ? props.rowKey(item) : item.key,
-      }))
+      })),
     )
 
     const leftDataSource = computed(() =>
-      mergedDataSource.value.filter((item) => !targetKeys.value.includes(item.key as TransferKey))
+      mergedDataSource.value.filter((item) => !targetKeys.value.includes(item.key as TransferKey)),
     )
     const targetKeyMap = computed(() => new Map(mergedDataSource.value.map((i) => [i.key, i])))
     // 右侧按 targetKeys 顺序排列（对齐 AntD：新移入的排在前）
-    const rightDataSource = computed(() =>
-      targetKeys.value.map((k) => targetKeyMap.value.get(k)).filter(Boolean) as TransferItem[]
+    const rightDataSource = computed(
+      () => targetKeys.value.map((k) => targetKeyMap.value.get(k)).filter(Boolean) as TransferItem[],
     )
 
     // 两侧选中态
     const sourceSelectedKeys = computed(() =>
-      selectedKeys.value.filter((k) => leftDataSource.value.some((i) => i.key === k))
+      selectedKeys.value.filter((k) => leftDataSource.value.some((i) => i.key === k)),
     )
     const targetSelectedKeys = computed(() =>
-      selectedKeys.value.filter((k) => rightDataSource.value.some((i) => i.key === k))
+      selectedKeys.value.filter((k) => rightDataSource.value.some((i) => i.key === k)),
     )
 
     function setSelectedKeys(next: TransferKey[]) {
@@ -111,9 +127,7 @@ export const Transfer = defineComponent({
       const newMoveKeys = moveKeys.filter((k) => !disabledKeys.has(k))
       const moveSet = new Set(newMoveKeys)
       const newTargetKeys =
-        direction === 'right'
-          ? [...newMoveKeys, ...targetKeys.value]
-          : targetKeys.value.filter((k) => !moveSet.has(k))
+        direction === 'right' ? [...newMoveKeys, ...targetKeys.value] : targetKeys.value.filter((k) => !moveSet.has(k))
 
       innerTargetKeys.value = newTargetKeys
       emit('update:targetKeys', newTargetKeys)

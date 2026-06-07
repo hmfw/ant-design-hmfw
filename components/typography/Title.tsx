@@ -37,9 +37,7 @@ export default defineComponent({
       const Tag = `h${props.level}` as any
 
       const ellipsisCfg = getEllipsisConfig(props.ellipsis)
-      const tooltipProps = isEllipsis.value
-        ? resolveEllipsisTooltipProps(ellipsisCfg.tooltip, text)
-        : null
+      const tooltipProps = isEllipsis.value ? resolveEllipsisTooltipProps(ellipsisCfg.tooltip, text) : null
 
       const node = (
         <Tag

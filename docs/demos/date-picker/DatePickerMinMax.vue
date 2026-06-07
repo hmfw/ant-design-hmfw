@@ -1,11 +1,6 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px;">
-    <DatePicker
-      v-model:value="date"
-      :min-date="minDate"
-      :max-date="maxDate"
-      placeholder="只能选择本月"
-    />
+  <div style="display: flex; flex-direction: column; gap: 16px; width: 300px">
+    <DatePicker v-model:value="date" :min-date="minDate" :max-date="maxDate" placeholder="只能选择本月" />
     <p>选中日期：{{ date }}</p>
   </div>
 </template>

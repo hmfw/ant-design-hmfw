@@ -1,9 +1,9 @@
 <template>
   <Tree.DirectoryTree
-    multiple
-    :tree-data="treeData"
     v-model:expanded-keys="expandedKeys"
     v-model:selected-keys="selectedKeys"
+    multiple
+    :tree-data="treeData"
   />
 </template>
 
@@ -30,9 +30,7 @@ const treeData = [
       {
         title: 'utils',
         key: '0-0-1',
-        children: [
-          { title: 'index.ts', key: '0-0-1-0', isLeaf: true },
-        ],
+        children: [{ title: 'index.ts', key: '0-0-1-0', isLeaf: true }],
       },
     ],
   },

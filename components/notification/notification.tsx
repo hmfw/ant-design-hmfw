@@ -8,13 +8,7 @@ import {
   InfoCircleFilled,
   CloseOutlined,
 } from '../icon/icons'
-import type {
-  ArgsProps,
-  ConfigOptions,
-  NotificationPlacement,
-  NotificationType,
-  NotificationContent,
-} from './types'
+import type { ArgsProps, ConfigOptions, NotificationPlacement, NotificationType, NotificationContent } from './types'
 
 interface NoticeItem extends ArgsProps {
   id: string
@@ -229,14 +223,10 @@ const NotificationContainer = defineComponent({
                 )}
                 <div class="hmfw-notification-notice-message-wrapper">
                   {notice.message && (
-                    <div class="hmfw-notification-notice-message">
-                      {this.renderContent(notice.message)}
-                    </div>
+                    <div class="hmfw-notification-notice-message">{this.renderContent(notice.message)}</div>
                   )}
                   {notice.description && (
-                    <div class="hmfw-notification-notice-description">
-                      {this.renderContent(notice.description)}
-                    </div>
+                    <div class="hmfw-notification-notice-description">{this.renderContent(notice.description)}</div>
                   )}
                   {notice.btn && (
                     <div class="hmfw-notification-notice-btn">

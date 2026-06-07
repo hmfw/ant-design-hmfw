@@ -194,14 +194,13 @@ describe('Switch', () => {
 
   it('clears auto-loading when onChange Promise rejects', async () => {
     let rejectFn: ((err: Error) => void) | null = null
-    const onChange = vi.fn(
-      () =>
-        // 测试侧静默 rejection，避免 unhandled rejection 影响其它用例
-        new Promise<void>((_, reject) => {
-          rejectFn = (err) => reject(err)
-        }).catch(() => {
-          /* swallow */
-        }),
+    const onChange = vi.fn(() =>
+      // 测试侧静默 rejection，避免 unhandled rejection 影响其它用例
+      new Promise<void>((_, reject) => {
+        rejectFn = (err) => reject(err)
+      }).catch(() => {
+        /* swallow */
+      }),
     )
     const wrapper = mount(Switch, { props: { onChange } })
 

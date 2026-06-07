@@ -12,12 +12,17 @@
 
 .hmfw-card-hoverable {
   cursor: pointer;
-  transition: box-shadow 0.3s, border-color 0.3s;
+  transition:
+    box-shadow 0.3s,
+    border-color 0.3s;
 }
 
 .hmfw-card-hoverable:hover {
   border-color: transparent;
-  box-shadow: 0 1px 2px -2px rgba(0,0,0,0.16), 0 3px 6px 0 rgba(0,0,0,0.12), 0 5px 12px 4px rgba(0,0,0,0.09);
+  box-shadow:
+    0 1px 2px -2px rgba(0, 0, 0, 0.16),
+    0 3px 6px 0 rgba(0, 0, 0, 0.12),
+    0 5px 12px 4px rgba(0, 0, 0, 0.09);
 }
 
 .hmfw-card-head {
@@ -64,15 +69,21 @@
 .hmfw-card-grid {
   width: 33.33%;
   padding: 24px;
-  box-shadow: 1px 0 0 0 #f0f0f0, 0 1px 0 0 #f0f0f0, 1px 1px 0 0 #f0f0f0,
-    1px 0 0 0 #f0f0f0 inset, 0 1px 0 0 #f0f0f0 inset;
+  box-shadow:
+    1px 0 0 0 #f0f0f0,
+    0 1px 0 0 #f0f0f0,
+    1px 1px 0 0 #f0f0f0,
+    1px 0 0 0 #f0f0f0 inset,
+    0 1px 0 0 #f0f0f0 inset;
   transition: all 0.3s;
 }
 
 .hmfw-card-grid-hoverable:hover {
   position: relative;
   z-index: 1;
-  box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12),
+  box-shadow:
+    0 1px 2px -2px rgba(0, 0, 0, 0.16),
+    0 3px 6px 0 rgba(0, 0, 0, 0.12),
     0 5px 12px 4px rgba(0, 0, 0, 0.09);
 }
 
@@ -128,7 +139,7 @@
   flex: 1;
   padding: 12px 0;
   text-align: center;
-  color: var(--hmfw-color-text-secondary, rgba(0,0,0,0.45));
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
   cursor: pointer;
   transition: color 0.3s;
 }
@@ -151,7 +162,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(90deg, rgba(0,0,0,0.06) 25%, rgba(0,0,0,0.15) 37%, rgba(0,0,0,0.06) 63%);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.06) 25%, rgba(0, 0, 0, 0.15) 37%, rgba(0, 0, 0, 0.06) 63%);
   background-size: 400% 100%;
   animation: hmfw-card-loading 1.4s ease infinite;
   flex-shrink: 0;
@@ -166,21 +177,35 @@
 
 .hmfw-card-loading-block {
   height: 14px;
-  background: linear-gradient(90deg, rgba(0,0,0,0.06) 25%, rgba(0,0,0,0.15) 37%, rgba(0,0,0,0.06) 63%);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.06) 25%, rgba(0, 0, 0, 0.15) 37%, rgba(0, 0, 0, 0.06) 63%);
   background-size: 400% 100%;
   border-radius: 4px;
   animation: hmfw-card-loading 1.4s ease infinite;
 }
 
-.hmfw-card-loading-block:nth-child(1) { width: 100%; }
-.hmfw-card-loading-block:nth-child(2) { width: 75%; }
-.hmfw-card-loading-block:nth-child(3) { width: 50%; }
-.hmfw-card-loading-block:nth-child(4) { width: 60%; }
-.hmfw-card-loading-block:nth-child(5) { width: 80%; }
+.hmfw-card-loading-block:nth-child(1) {
+  width: 100%;
+}
+.hmfw-card-loading-block:nth-child(2) {
+  width: 75%;
+}
+.hmfw-card-loading-block:nth-child(3) {
+  width: 50%;
+}
+.hmfw-card-loading-block:nth-child(4) {
+  width: 60%;
+}
+.hmfw-card-loading-block:nth-child(5) {
+  width: 80%;
+}
 
 @keyframes hmfw-card-loading {
-  0% { background-position: 100% 50%; }
-  100% { background-position: 0 50%; }
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
 }
 
 /* 针对 small 尺寸的骨架屏调整 */
@@ -215,7 +240,7 @@
 }
 
 .hmfw-card-meta-description {
-  color: var(--hmfw-color-text-secondary, rgba(0,0,0,0.45));
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
   margin-top: 4px;
 }
 
@@ -240,7 +265,7 @@
 .hmfw-card-tab {
   position: relative;
   padding: 8px 0;
-  color: var(--hmfw-color-text-secondary, rgba(0,0,0,0.45));
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
   cursor: pointer;
   transition: color 0.3s;
   user-select: none;
@@ -266,7 +291,7 @@
 }
 
 .hmfw-card-tab-disabled {
-  color: var(--hmfw-color-text-disabled, rgba(0,0,0,0.25));
+  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
   cursor: not-allowed;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
     <Tooltip title="粉色提示" color="pink">
       <button>粉色</button>
     </Tooltip>

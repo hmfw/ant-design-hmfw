@@ -27,7 +27,12 @@ function buildSlugMap(): Record<string, string[]> {
   while ((m = re.exec(src))) {
     const names = m[1]
       .split(',')
-      .map((s) => s.trim().split(/\s+as\s+/)[0].trim())
+      .map((s) =>
+        s
+          .trim()
+          .split(/\s+as\s+/)[0]
+          .trim(),
+      )
       .filter(Boolean)
     const slug = m[2]
     map[slug] = (map[slug] || []).concat(names)
@@ -101,9 +106,23 @@ function parseApiTables(md: string): TableBlock[] {
   return blocks
 }
 
-interface PropRow { section: string; name: string; description: string; type: string; default: string }
-interface EventRow { section: string; name: string; description: string; params: string }
-interface SlotRow { name: string; description: string }
+interface PropRow {
+  section: string
+  name: string
+  description: string
+  type: string
+  default: string
+}
+interface EventRow {
+  section: string
+  name: string
+  description: string
+  params: string
+}
+interface SlotRow {
+  name: string
+  description: string
+}
 
 /** 把表格块按表头分类为 props / events / slots */
 function classifyTables(blocks: TableBlock[]) {
@@ -114,20 +133,43 @@ function classifyTables(blocks: TableBlock[]) {
   for (const b of blocks) {
     const h = b.headers
     if (idx(h, '事件名') >= 0) {
-      const ni = idx(h, '事件名'), di = idx(h, '说明'), pi = idx(h, '回调参数')
-      for (const r of b.rows) events.push({ section: b.section, name: r[ni] || '', description: r[di] || '', params: pi >= 0 ? r[pi] || '' : '' })
+      const ni = idx(h, '事件名'),
+        di = idx(h, '说明'),
+        pi = idx(h, '回调参数')
+      for (const r of b.rows)
+        events.push({
+          section: b.section,
+          name: r[ni] || '',
+          description: r[di] || '',
+          params: pi >= 0 ? r[pi] || '' : '',
+        })
     } else if (idx(h, '插槽名') >= 0) {
-      const ni = idx(h, '插槽名'), di = idx(h, '说明')
+      const ni = idx(h, '插槽名'),
+        di = idx(h, '说明')
       for (const r of b.rows) slots.push({ name: r[ni] || '', description: di >= 0 ? r[di] || '' : '' })
     } else if (idx(h, '参数') >= 0) {
-      const ni = idx(h, '参数'), di = idx(h, '说明'), ti = idx(h, '类型'), vi = idx(h, '默认值')
-      for (const r of b.rows) props.push({ section: b.section, name: r[ni] || '', description: di >= 0 ? r[di] || '' : '', type: ti >= 0 ? r[ti] || '' : '', default: vi >= 0 ? r[vi] || '' : '' })
+      const ni = idx(h, '参数'),
+        di = idx(h, '说明'),
+        ti = idx(h, '类型'),
+        vi = idx(h, '默认值')
+      for (const r of b.rows)
+        props.push({
+          section: b.section,
+          name: r[ni] || '',
+          description: di >= 0 ? r[di] || '' : '',
+          type: ti >= 0 ? r[ti] || '' : '',
+          default: vi >= 0 ? r[vi] || '' : '',
+        })
     }
   }
   return { props, events, slots }
 }
 
-interface Demo { title: string; description: string; code: string }
+interface Demo {
+  title: string
+  description: string
+  code: string
+}
 
 /** 解析「代码演示」段，提取 demo 标题/说明/源码 */
 function parseDemos(md: string, dir: string): Demo[] {
@@ -163,8 +205,17 @@ const slugs = readdirSync(DEMOS_DIR, { withFileTypes: true })
   .sort()
 
 interface Component {
-  name: string; slug: string; title: string; description: string; whenToUse: string
-  import: string; props: PropRow[]; events: EventRow[]; slots: SlotRow[]; demos: Demo[]; docUrl: string
+  name: string
+  slug: string
+  title: string
+  description: string
+  whenToUse: string
+  import: string
+  props: PropRow[]
+  events: EventRow[]
+  slots: SlotRow[]
+  demos: Demo[]
+  docUrl: string
 }
 
 const components: Component[] = []
@@ -186,11 +237,21 @@ for (const slug of slugs) {
   const demos = parseDemos(md, dir)
 
   components.push({
-    name: names[0], slug, title, description: desc, whenToUse,
-    import: importStmt, props, events, slots, demos,
+    name: names[0],
+    slug,
+    title,
+    description: desc,
+    whenToUse,
+    import: importStmt,
+    props,
+    events,
+    slots,
+    demos,
     docUrl: `${SITE}/components/${slug}`,
   })
-  console.log(`  ✓ ${slug} — ${props.length} props, ${events.length} events, ${slots.length} slots, ${demos.length} demos`)
+  console.log(
+    `  ✓ ${slug} — ${props.length} props, ${events.length} events, ${slots.length} slots, ${demos.length} demos`,
+  )
 }
 
 // ---------- components.json ----------
@@ -243,16 +304,28 @@ for (const c of components) {
     for (const p of c.props) (bySection[p.section] ||= []).push(p)
     for (const [sec, rows] of Object.entries(bySection)) {
       if (sec) full += `**${sec}**\n\n`
-      full += mdTable(['参数', '说明', '类型', '默认值'], rows.map((r) => [r.name, r.description, r.type, r.default])) + '\n'
+      full +=
+        mdTable(
+          ['参数', '说明', '类型', '默认值'],
+          rows.map((r) => [r.name, r.description, r.type, r.default]),
+        ) + '\n'
     }
   }
   if (c.events.length) {
     full += `### Events\n\n`
-    full += mdTable(['事件名', '说明', '回调参数'], c.events.map((e) => [e.name, e.description, e.params])) + '\n'
+    full +=
+      mdTable(
+        ['事件名', '说明', '回调参数'],
+        c.events.map((e) => [e.name, e.description, e.params]),
+      ) + '\n'
   }
   if (c.slots.length) {
     full += `### Slots\n\n`
-    full += mdTable(['插槽名', '说明'], c.slots.map((s) => [s.name, s.description])) + '\n'
+    full +=
+      mdTable(
+        ['插槽名', '说明'],
+        c.slots.map((s) => [s.name, s.description]),
+      ) + '\n'
   }
   const demos = c.demos.filter((d) => d.code).slice(0, 2)
   if (demos.length) {

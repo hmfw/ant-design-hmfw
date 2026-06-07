@@ -1,8 +1,8 @@
 <template>
   <Space>
-    <Button type="primary">按钮一</Button>
+    <Button type="primary"> 按钮一 </Button>
     <Button>按钮二</Button>
-    <Button type="dashed">按钮三</Button>
+    <Button type="dashed"> 按钮三 </Button>
   </Space>
 </template>
 

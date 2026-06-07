@@ -1,6 +1,4 @@
-import {
-  defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport, type VNode,
-} from 'vue'
+import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { CascaderOption, CascaderValue, CascaderExpandTrigger, CascaderShowCheckedStrategy } from './types'
@@ -10,7 +8,10 @@ export const Cascader = defineComponent({
   inheritAttrs: false,
   props: {
     value: [Array, Object] as PropType<CascaderValue | CascaderValue[]>,
-    defaultValue: { type: [Array, Object] as PropType<CascaderValue | CascaderValue[]>, default: () => [] },
+    defaultValue: {
+      type: [Array, Object] as PropType<CascaderValue | CascaderValue[]>,
+      default: () => [],
+    },
     options: { type: Array as PropType<CascaderOption[]>, default: () => [] },
     disabled: Boolean,
     placeholder: { type: String, default: '请选择' },
@@ -27,7 +28,10 @@ export const Cascader = defineComponent({
     defaultOpen: Boolean,
     notFoundContent: { type: String, default: '无匹配结果' },
     loadData: Function as PropType<(selectedOptions: CascaderOption[]) => void>,
-    showCheckedStrategy: { type: String as PropType<CascaderShowCheckedStrategy>, default: 'SHOW_PARENT' },
+    showCheckedStrategy: {
+      type: String as PropType<CascaderShowCheckedStrategy>,
+      default: 'SHOW_PARENT',
+    },
     maxTagCount: Number,
     maxTagPlaceholder: [String, Function] as PropType<string | ((omittedValues: CascaderValue[]) => string)>,
     maxTagTextLength: Number,
@@ -42,7 +46,8 @@ export const Cascader = defineComponent({
 
     const getLabel = (opt: CascaderOption) => opt[labelField.value as keyof CascaderOption] as string
     const getValue = (opt: CascaderOption) => opt[valueField.value as keyof CascaderOption] as string | number
-    const getChildren = (opt: CascaderOption) => opt[childrenField.value as keyof CascaderOption] as CascaderOption[] | undefined
+    const getChildren = (opt: CascaderOption) =>
+      opt[childrenField.value as keyof CascaderOption] as CascaderOption[] | undefined
 
     // Normalize value to array of paths (for multiple) or single path
     const normalizeValue = (v: CascaderValue | CascaderValue[] | undefined): CascaderValue[] => {
@@ -67,10 +72,15 @@ export const Cascader = defineComponent({
     const inputRef = ref<HTMLInputElement>()
 
     const isControlled = computed(() => props.value !== undefined)
-    const currentValue = computed(() => isControlled.value ? normalizeValue(props.value) : innerValue.value)
-    const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
+    const currentValue = computed(() => (isControlled.value ? normalizeValue(props.value) : innerValue.value))
+    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
-    watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = normalizeValue(v) })
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) innerValue.value = normalizeValue(v)
+      },
+    )
 
     // Build option path from value path
     const getOptionPath = (valPath: CascaderValue, opts: CascaderOption[]): CascaderOption[] => {
@@ -101,9 +111,8 @@ export const Cascader = defineComponent({
         // 只显示叶子节点：过滤掉那些有子路径被选中的父路径
         return paths.filter((path) => {
           // 检查是否有其他路径以当前路径为前缀（即当前路径是父节点）
-          const hasChild = paths.some((otherPath) =>
-            otherPath.length > path.length &&
-            path.every((v, i) => v === otherPath[i])
+          const hasChild = paths.some(
+            (otherPath) => otherPath.length > path.length && path.every((v, i) => v === otherPath[i]),
           )
           return !hasChild
         })
@@ -113,9 +122,8 @@ export const Cascader = defineComponent({
         // 只显示父节点：过滤掉那些父路径已被选中的子路径
         return paths.filter((path) => {
           // 检查是否有其他路径是当前路径的前缀（即有父路径被选中）
-          const hasParent = paths.some((otherPath) =>
-            otherPath.length < path.length &&
-            otherPath.every((v, i) => v === path[i])
+          const hasParent = paths.some(
+            (otherPath) => otherPath.length < path.length && otherPath.every((v, i) => v === path[i]),
           )
           return !hasParent
         })
@@ -140,9 +148,7 @@ export const Cascader = defineComponent({
 
       const nodes: VNode[] = []
       if (before) nodes.push(before as any)
-      nodes.push(
-        <span class={`${prefixCls}-menu-item-highlight`}>{match}</span> as VNode
-      )
+      nodes.push((<span class={`${prefixCls}-menu-item-highlight`}>{match}</span>) as VNode)
       if (after) nodes.push(...highlightText(after, keyword))
 
       return nodes
@@ -184,8 +190,17 @@ export const Cascader = defineComponent({
 
     // Search: flatten all leaf paths
     const flatOptions = computed(() => {
-      const result: Array<{ labels: string[]; values: (string | number)[]; options: CascaderOption[] }> = []
-      const flatten = (opts: CascaderOption[], labels: string[], values: (string | number)[], optPath: CascaderOption[]) => {
+      const result: Array<{
+        labels: string[]
+        values: (string | number)[]
+        options: CascaderOption[]
+      }> = []
+      const flatten = (
+        opts: CascaderOption[],
+        labels: string[],
+        values: (string | number)[],
+        optPath: CascaderOption[],
+      ) => {
         for (const opt of opts) {
           const newLabels = [...labels, getLabel(opt)]
           const newValues = [...values, getValue(opt)]
@@ -205,9 +220,7 @@ export const Cascader = defineComponent({
     const filteredOptions = computed(() => {
       if (!searchText.value) return null
       const q = searchText.value.toLowerCase()
-      return flatOptions.value.filter((item) =>
-        item.labels.some((l) => l.toLowerCase().includes(q))
-      )
+      return flatOptions.value.filter((item) => item.labels.some((l) => l.toLowerCase().includes(q)))
     })
 
     const updatePos = () => {
@@ -238,10 +251,7 @@ export const Cascader = defineComponent({
     }
 
     const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        !triggerRef.value?.contains(e.target as Node) &&
-        !dropdownRef.value?.contains(e.target as Node)
-      ) close()
+      if (!triggerRef.value?.contains(e.target as Node) && !dropdownRef.value?.contains(e.target as Node)) close()
     }
 
     onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
@@ -250,7 +260,7 @@ export const Cascader = defineComponent({
     const emitChange = (paths: CascaderValue[]) => {
       const outValue = props.multiple ? paths : (paths[0] ?? [])
       const outOptions = props.multiple
-        ? paths.map(p => getOptionPath(p, props.options))
+        ? paths.map((p) => getOptionPath(p, props.options))
         : getOptionPath(paths[0] ?? [], props.options)
       emit('update:value', outValue)
       emit('change', outValue, outOptions)
@@ -274,7 +284,7 @@ export const Cascader = defineComponent({
         // Multiple mode: toggle selection
         if (isLeaf || props.changeOnSelect) {
           const paths = [...currentValue.value]
-          const idx = paths.findIndex(p => p.length === newPath.length && p.every((v, i) => v === newPath[i]))
+          const idx = paths.findIndex((p) => p.length === newPath.length && p.every((v, i) => v === newPath[i]))
           if (idx >= 0) {
             paths.splice(idx, 1)
           } else {
@@ -320,7 +330,7 @@ export const Cascader = defineComponent({
 
     const handleRemoveTag = (path: CascaderValue, e: MouseEvent) => {
       e.stopPropagation()
-      const paths = currentValue.value.filter(p => !(p.length === path.length && p.every((v, i) => v === path[i])))
+      const paths = currentValue.value.filter((p) => !(p.length === path.length && p.every((v, i) => v === path[i])))
       innerValue.value = paths
       emitChange(paths)
     }
@@ -368,10 +378,9 @@ export const Cascader = defineComponent({
                     <span key={path.join('-')} class={`${prefixCls}-selection-item`}>
                       <span class={`${prefixCls}-selection-item-content`}>{text}</span>
                       {!props.disabled && (
-                        <span
-                          class={`${prefixCls}-selection-item-remove`}
-                          onClick={(e) => handleRemoveTag(path, e)}
-                        >×</span>
+                        <span class={`${prefixCls}-selection-item-remove`} onClick={(e) => handleRemoveTag(path, e)}>
+                          ×
+                        </span>
                       )}
                     </span>
                   )
@@ -408,7 +417,9 @@ export const Cascader = defineComponent({
                     ref={inputRef}
                     class={`${prefixCls}-search-input`}
                     value={searchText.value}
-                    placeholder={typeof displayText.value === 'string' ? displayText.value || props.placeholder : props.placeholder}
+                    placeholder={
+                      typeof displayText.value === 'string' ? displayText.value || props.placeholder : props.placeholder
+                    }
                     onInput={(e) => {
                       searchText.value = (e.target as HTMLInputElement).value
                       emit('search', searchText.value)
@@ -417,9 +428,11 @@ export const Cascader = defineComponent({
                     autofocus={true}
                   />
                 ) : (
-                  <span class={cls(`${prefixCls}-selection-item`, {
-                    [`${prefixCls}-selection-placeholder`]: !displayText.value,
-                  })}>
+                  <span
+                    class={cls(`${prefixCls}-selection-item`, {
+                      [`${prefixCls}-selection-placeholder`]: !displayText.value,
+                    })}
+                  >
                     {displayText.value || props.placeholder}
                   </span>
                 )}
@@ -428,11 +441,9 @@ export const Cascader = defineComponent({
           </span>
           <span class={`${prefixCls}-suffix`}>
             {props.allowClear && currentValue.value.length > 0 && !props.disabled ? (
-              <span
-                class={`${prefixCls}-clear`}
-                onMousedown={handleClear}
-                onClick={(e) => e.stopPropagation()}
-              >✕</span>
+              <span class={`${prefixCls}-clear`} onMousedown={handleClear} onClick={(e) => e.stopPropagation()}>
+                ✕
+              </span>
             ) : (
               <span class={cls(`${prefixCls}-arrow`, { [`${prefixCls}-arrow-open`]: isOpen.value })}>▾</span>
             )}
@@ -456,15 +467,20 @@ export const Cascader = defineComponent({
                 <div class={`${prefixCls}-menu ${prefixCls}-menu-search`}>
                   {filteredOptions.value.length === 0 ? (
                     <div class={`${prefixCls}-menu-item-empty`}>{props.notFoundContent}</div>
-                  ) : filteredOptions.value.map((item, i) => (
-                    <div
-                      key={i}
-                      class={`${prefixCls}-menu-item`}
-                      onMousedown={(e) => { e.preventDefault(); handleSearchSelect(item.values, item.options) }}
-                    >
-                      {highlightText(item.labels.join(' / '), searchText.value)}
-                    </div>
-                  ))}
+                  ) : (
+                    filteredOptions.value.map((item, i) => (
+                      <div
+                        key={i}
+                        class={`${prefixCls}-menu-item`}
+                        onMousedown={(e) => {
+                          e.preventDefault()
+                          handleSearchSelect(item.values, item.options)
+                        }}
+                      >
+                        {highlightText(item.labels.join(' / '), searchText.value)}
+                      </div>
+                    ))
+                  )}
                 </div>
               ) : (
                 /* Normal columns */
@@ -474,10 +490,10 @@ export const Cascader = defineComponent({
                       {colOpts.map((opt) => {
                         const val = getValue(opt)
                         const children = getChildren(opt)
-                        const hasChildren = !!(children?.length) && !opt.isLeaf
+                        const hasChildren = !!children?.length && !opt.isLeaf
                         const isActive = activePath.value[colIndex] === val
                         const isSelected = props.multiple
-                          ? currentValue.value.some(p => p[colIndex] === val && p.length > colIndex)
+                          ? currentValue.value.some((p) => p[colIndex] === val && p.length > colIndex)
                           : currentValue.value[0]?.[colIndex] === val
 
                         return (
@@ -494,7 +510,8 @@ export const Cascader = defineComponent({
                           >
                             {props.multiple && (
                               <span class={`${prefixCls}-menu-item-checkbox`}>
-                                {currentValue.value.some(p => p.length === colIndex + 1 && p[colIndex] === val) && '✓'}
+                                {currentValue.value.some((p) => p.length === colIndex + 1 && p[colIndex] === val) &&
+                                  '✓'}
                               </span>
                             )}
                             <span class={`${prefixCls}-menu-item-content`}>{getLabel(opt)}</span>
@@ -513,4 +530,3 @@ export const Cascader = defineComponent({
     )
   },
 })
-

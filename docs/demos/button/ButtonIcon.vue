@@ -1,9 +1,9 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button type="primary" :icon="SearchOutlined">Search</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button type="primary" :icon="SearchOutlined"> Search </Button>
     <Button type="primary" :icon="SearchOutlined" />
-    <Button type="primary" :icon="CheckOutlined">Confirm</Button>
-    <Button type="dashed" :icon="CloseOutlined">Cancel</Button>
+    <Button type="primary" :icon="CheckOutlined"> Confirm </Button>
+    <Button type="dashed" :icon="CloseOutlined"> Cancel </Button>
   </div>
 </template>
 

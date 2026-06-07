@@ -2,7 +2,6 @@
 
 文本的基本格式。
 
-
 ## 何时使用
 
 - 当需要展示标题、段落、列表内容时
@@ -79,50 +78,50 @@
 
 ### 通用 Props（Text / Title / Paragraph / Link 共享）
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| type | 文本类型 | `'secondary' \| 'success' \| 'warning' \| 'danger'` | - |
-| disabled | 禁用状态 | `boolean` | `false` |
-| mark | 标记样式 | `boolean` | `false` |
-| code | 代码样式 | `boolean` | `false` |
-| keyboard | 键盘样式 | `boolean` | `false` |
-| underline | 下划线 | `boolean` | `false` |
-| delete | 删除线 | `boolean` | `false` |
-| strong | 加粗 | `boolean` | `false` |
-| italic | 斜体 | `boolean` | `false` |
-| copyable | 是否可复制，对象形式 `{ text?, onCopy?, tooltips?, icon? }` | `boolean \| CopyableConfig` | `false` |
-| ellipsis | 单行省略；对象形式 `{ rows?, tooltip?, onEllipsis? }` 支持多行省略、悬停 Tooltip 与回调 | `boolean \| EllipsisConfig` | `false` |
+| 参数      | 说明                                                                                    | 类型                                                | 默认值  |
+| --------- | --------------------------------------------------------------------------------------- | --------------------------------------------------- | ------- |
+| type      | 文本类型                                                                                | `'secondary' \| 'success' \| 'warning' \| 'danger'` | -       |
+| disabled  | 禁用状态                                                                                | `boolean`                                           | `false` |
+| mark      | 标记样式                                                                                | `boolean`                                           | `false` |
+| code      | 代码样式                                                                                | `boolean`                                           | `false` |
+| keyboard  | 键盘样式                                                                                | `boolean`                                           | `false` |
+| underline | 下划线                                                                                  | `boolean`                                           | `false` |
+| delete    | 删除线                                                                                  | `boolean`                                           | `false` |
+| strong    | 加粗                                                                                    | `boolean`                                           | `false` |
+| italic    | 斜体                                                                                    | `boolean`                                           | `false` |
+| copyable  | 是否可复制，对象形式 `{ text?, onCopy?, tooltips?, icon? }`                             | `boolean \| CopyableConfig`                         | `false` |
+| ellipsis  | 单行省略；对象形式 `{ rows?, tooltip?, onEllipsis? }` 支持多行省略、悬停 Tooltip 与回调 | `boolean \| EllipsisConfig`                         | `false` |
 
 ### Title Props
 
 继承通用 Props，额外：
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| level | 标题级别 | `1 \| 2 \| 3 \| 4 \| 5` | `1` |
+| 参数  | 说明     | 类型                    | 默认值 |
+| ----- | -------- | ----------------------- | ------ |
+| level | 标题级别 | `1 \| 2 \| 3 \| 4 \| 5` | `1`    |
 
 ### Link Props
 
 继承通用 Props，额外：
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| href | 链接地址 | `string` | - |
-| target | 链接打开方式 | `string` | - |
+| 参数   | 说明         | 类型     | 默认值 |
+| ------ | ------------ | -------- | ------ |
+| href   | 链接地址     | `string` | -      |
+| target | 链接打开方式 | `string` | -      |
 
 ### CopyableConfig
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| text | 自定义复制内容 | `string` | 节点文本 |
-| onCopy | 复制回调 | `(e: MouseEvent) => void` | - |
+| 参数     | 说明                                                     | 类型                        | 默认值      |
+| -------- | -------------------------------------------------------- | --------------------------- | ----------- |
+| text     | 自定义复制内容                                           | `string`                    | 节点文本    |
+| onCopy   | 复制回调                                                 | `(e: MouseEvent) => void`   | -           |
 | tooltips | Tooltip 文案 `[复制前, 复制后]`，传 `false` 关闭 Tooltip | `false \| [string, string]` | 跟随 locale |
-| icon | 自定义图标 `[复制前, 复制后]` | `[VNode, VNode]` | - |
+| icon     | 自定义图标 `[复制前, 复制后]`                            | `[VNode, VNode]`            | -           |
 
 ### EllipsisConfig
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| rows | 最多显示行数 | `number` | `1` |
-| tooltip | 省略时显示 Tooltip：`true` 用纯文本，字符串/数字自定义文案，对象传入完整 `TooltipProps` | `boolean \| string \| number \| TooltipProps` | - |
-| onEllipsis | 省略状态变化回调 | `(ellipsis: boolean) => void` | - |
+| 参数       | 说明                                                                                    | 类型                                          | 默认值 |
+| ---------- | --------------------------------------------------------------------------------------- | --------------------------------------------- | ------ |
+| rows       | 最多显示行数                                                                            | `number`                                      | `1`    |
+| tooltip    | 省略时显示 Tooltip：`true` 用纯文本，字符串/数字自定义文案，对象传入完整 `TooltipProps` | `boolean \| string \| number \| TooltipProps` | -      |
+| onEllipsis | 省略状态变化回调                                                                        | `(ellipsis: boolean) => void`                 | -      |

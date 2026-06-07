@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 16px;">
+  <div style="display: flex; gap: 16px">
     <QRCode value="https://ant.design" status="active" />
     <QRCode value="https://ant.design" status="expired" @refresh="onRefresh" />
     <QRCode value="https://ant.design" status="loading" />

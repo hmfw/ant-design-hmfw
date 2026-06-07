@@ -10,28 +10,63 @@
       <span v-if="title" class="demo-block__title">{{ title }}</span>
       <div class="demo-block__actions">
         <div class="demo-block__lang-tabs">
-          <button
-            class="demo-block__lang-btn"
-            :class="{ active: lang === 'ts' }"
-            @click="lang = 'ts'"
-          >TypeScript</button>
-          <button
-            class="demo-block__lang-btn"
-            :class="{ active: lang === 'js' }"
-            @click="lang = 'js'"
-          >JavaScript</button>
+          <button class="demo-block__lang-btn" :class="{ active: lang === 'ts' }" @click="lang = 'ts'">
+            TypeScript
+          </button>
+          <button class="demo-block__lang-btn" :class="{ active: lang === 'js' }" @click="lang = 'js'">
+            JavaScript
+          </button>
         </div>
         <button class="demo-block__icon-btn" :title="copied ? '已复制' : '复制代码'" @click="copyCode">
-          <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <svg
+            v-if="!copied"
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
         </button>
         <button class="demo-block__toggle-btn" @click="expanded = !expanded">
           <span>{{ expanded ? '收起代码' : '查看代码' }}</span>
           <svg
-            xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            :style="{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }"
-          ><polyline points="6 9 12 15 18 9"/></svg>
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            :style="{
+              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s',
+            }"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </button>
       </div>
     </div>
@@ -69,14 +104,14 @@ function tsToJs(src: string): string {
     .replace(/\n{3,}/g, '\n\n')
 }
 
-const displaySource = computed(() =>
-  lang.value === 'ts' ? props.source : tsToJs(props.source)
-)
+const displaySource = computed(() => (lang.value === 'ts' ? props.source : tsToJs(props.source)))
 
 async function copyCode() {
   await navigator.clipboard.writeText(displaySource.value)
   copied.value = true
-  setTimeout(() => { copied.value = false }, 2000)
+  setTimeout(() => {
+    copied.value = false
+  }, 2000)
 }
 </script>
 
@@ -135,7 +170,9 @@ async function copyCode() {
   border: none;
   cursor: pointer;
   color: var(--vp-c-text-2, var(--doc-c-text-2));
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   line-height: 20px;
 }
 
@@ -160,7 +197,9 @@ async function copyCode() {
   cursor: pointer;
   color: var(--vp-c-text-2, var(--doc-c-text-2));
   border-radius: 4px;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .demo-block__icon-btn:hover {
@@ -179,7 +218,10 @@ async function copyCode() {
   border-radius: 4px;
   cursor: pointer;
   color: var(--vp-c-text-2, var(--doc-c-text-2));
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
   line-height: 20px;
   white-space: nowrap;
 }

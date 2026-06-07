@@ -24,7 +24,12 @@ export const Input = defineComponent({
     },
     allowClear: [Boolean, Object] as PropType<boolean | { clearIcon?: VNode; disabled?: boolean }>,
     maxLength: Number,
-    showCount: [Boolean, Object] as PropType<boolean | { formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string }>,
+    showCount: [Boolean, Object] as PropType<
+      | boolean
+      | {
+          formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string
+        }
+    >,
     type: {
       type: String,
       default: 'text',
@@ -59,7 +64,9 @@ export const Input = defineComponent({
 
     watch(
       () => props.value,
-      (v) => { if (v !== undefined) innerValue.value = v },
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
     )
 
     // Expose focus/blur methods
@@ -131,9 +138,14 @@ export const Input = defineComponent({
       inputRef.value?.focus()
     }
 
-    const hasFix = computed(() =>
-      slots.prefix || slots.suffix || props.prefix || props.suffix ||
-      (props.allowClear && !allowClearConfig.value.disabled) || props.showCount
+    const hasFix = computed(
+      () =>
+        slots.prefix ||
+        slots.suffix ||
+        props.prefix ||
+        props.suffix ||
+        (props.allowClear && !allowClearConfig.value.disabled) ||
+        props.showCount,
     )
 
     return () => {
@@ -161,7 +173,9 @@ export const Input = defineComponent({
 
       const clearIcon = allowClearConfig.value.clearIcon || <CloseOutlined />
       const clearBtn = props.allowClear && innerValue.value && !allowClearConfig.value.disabled && (
-        <span class={`${prefixCls}-clear-icon`} onClick={handleClear}>{clearIcon}</span>
+        <span class={`${prefixCls}-clear-icon`} onClick={handleClear}>
+          {clearIcon}
+        </span>
       )
 
       const countNode = (() => {
@@ -186,11 +200,22 @@ export const Input = defineComponent({
       const suffixNode = slots.suffix?.() || (props.suffix && <span>{props.suffix}</span>)
 
       return (
-        <span class={cls(wrapperCls.value, props.rootClassName, props.classNames?.affixWrapper)} style={props.styles?.affixWrapper}>
-          {prefixNode && <span class={cls(`${prefixCls}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>{prefixNode}</span>}
+        <span
+          class={cls(wrapperCls.value, props.rootClassName, props.classNames?.affixWrapper)}
+          style={props.styles?.affixWrapper}
+        >
+          {prefixNode && (
+            <span class={cls(`${prefixCls}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
+              {prefixNode}
+            </span>
+          )}
           {inputEl}
           {clearBtn}
-          {suffixNode && <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>{suffixNode}</span>}
+          {suffixNode && (
+            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              {suffixNode}
+            </span>
+          )}
           {countNode}
         </span>
       )
@@ -216,7 +241,9 @@ export const InputPassword = defineComponent({
       default: '',
     },
     visibilityToggle: {
-      type: [Boolean, Object] as PropType<boolean | { visible?: boolean; onVisibleChange?: (visible: boolean) => void }>,
+      type: [Boolean, Object] as PropType<
+        boolean | { visible?: boolean; onVisibleChange?: (visible: boolean) => void }
+      >,
       default: true,
     },
     iconRender: Function as PropType<(visible: boolean) => VNode | string>,
@@ -236,18 +263,25 @@ export const InputPassword = defineComponent({
 
     const mergedSize = computed(() => props.size ?? config.value.componentSize)
 
-    const visibilityControlled = computed(() =>
-      typeof props.visibilityToggle === 'object' && props.visibilityToggle.visible !== undefined
+    const visibilityControlled = computed(
+      () => typeof props.visibilityToggle === 'object' && props.visibilityToggle.visible !== undefined,
     )
 
     watch(
       () => props.value,
-      (v) => { if (v !== undefined) innerValue.value = v },
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
     )
 
     watch(
-      () => visibilityControlled.value && typeof props.visibilityToggle === 'object' ? props.visibilityToggle.visible : undefined,
-      (v) => { if (v !== undefined) visible.value = v },
+      () =>
+        visibilityControlled.value && typeof props.visibilityToggle === 'object'
+          ? props.visibilityToggle.visible
+          : undefined,
+      (v) => {
+        if (v !== undefined) visible.value = v
+      },
     )
 
     // Expose focus/blur methods
@@ -356,7 +390,12 @@ export const TextArea = defineComponent({
       default: 4,
     },
     maxLength: Number,
-    showCount: [Boolean, Object] as PropType<boolean | { formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string }>,
+    showCount: [Boolean, Object] as PropType<
+      | boolean
+      | {
+          formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string
+        }
+    >,
     status: {
       type: String as PropType<InputStatus>,
       default: '',
@@ -381,7 +420,9 @@ export const TextArea = defineComponent({
 
     watch(
       () => props.value,
-      (v) => { if (v !== undefined) innerValue.value = v },
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
     )
 
     // Expose focus/blur methods
@@ -492,7 +533,9 @@ export const TextArea = defineComponent({
 
       const clearIcon = allowClearConfig.value.clearIcon || <CloseOutlined />
       const clearBtn = props.allowClear && innerValue.value && !allowClearConfig.value.disabled && (
-        <span class={`${prefixCls}-clear-icon`} onClick={handleClear}>{clearIcon}</span>
+        <span class={`${prefixCls}-clear-icon`} onClick={handleClear}>
+          {clearIcon}
+        </span>
       )
 
       const countNode = (() => {
@@ -556,7 +599,9 @@ export const InputSearch = defineComponent({
 
     watch(
       () => props.value,
-      (v) => { if (v !== undefined) innerValue.value = v },
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
     )
 
     // Expose focus/blur methods
@@ -599,16 +644,20 @@ export const InputSearch = defineComponent({
     }
 
     return () => {
-      const icon = props.loading
-        ? <LoadingOutlined class="hmfw-icon-loading" />
-        : (props.searchIcon || <SearchOutlined />)
+      const icon = props.loading ? (
+        <LoadingOutlined class="hmfw-icon-loading" />
+      ) : (
+        props.searchIcon || <SearchOutlined />
+      )
 
       return (
-        <span class={cls(`${prefixCls}-search`, `${prefixCls}-affix-wrapper`, props.rootClassName, {
-          [`${prefixCls}-affix-wrapper-lg`]: mergedSize.value === 'large',
-          [`${prefixCls}-affix-wrapper-sm`]: mergedSize.value === 'small',
-          [`${prefixCls}-affix-wrapper-disabled`]: props.disabled,
-        })}>
+        <span
+          class={cls(`${prefixCls}-search`, `${prefixCls}-affix-wrapper`, props.rootClassName, {
+            [`${prefixCls}-affix-wrapper-lg`]: mergedSize.value === 'large',
+            [`${prefixCls}-affix-wrapper-sm`]: mergedSize.value === 'small',
+            [`${prefixCls}-affix-wrapper-disabled`]: props.disabled,
+          })}
+        >
           <input
             ref={inputRef}
             class={prefixCls}

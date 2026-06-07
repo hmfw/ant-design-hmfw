@@ -12,21 +12,24 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type {
-  TooltipPlacement,
-  TooltipTrigger,
-  TooltipArrow,
-  TooltipTitle,
-} from './types'
+import type { TooltipPlacement, TooltipTrigger, TooltipArrow, TooltipTitle } from './types'
 
 let tooltipIdCounter = 0
 
 /** Pairs of placements for `autoAdjustOverflow` flipping. */
 const FLIP_PLACEMENT: Record<TooltipPlacement, TooltipPlacement> = {
-  top: 'bottom', topLeft: 'bottomLeft', topRight: 'bottomRight',
-  bottom: 'top', bottomLeft: 'topLeft', bottomRight: 'topRight',
-  left: 'right', leftTop: 'rightTop', leftBottom: 'rightBottom',
-  right: 'left', rightTop: 'leftTop', rightBottom: 'leftBottom',
+  top: 'bottom',
+  topLeft: 'bottomLeft',
+  topRight: 'bottomRight',
+  bottom: 'top',
+  bottomLeft: 'topLeft',
+  bottomRight: 'topRight',
+  left: 'right',
+  leftTop: 'rightTop',
+  leftBottom: 'rightBottom',
+  right: 'left',
+  rightTop: 'leftTop',
+  rightBottom: 'leftBottom',
 }
 
 export const Tooltip = defineComponent({
@@ -102,17 +105,18 @@ export const Tooltip = defineComponent({
     })
 
     const showArrow = computed(() => props.arrow !== false)
-    const arrowPointAtCenter = computed(() =>
-      typeof props.arrow === 'object' && props.arrow !== null && props.arrow.pointAtCenter === true,
+    const arrowPointAtCenter = computed(
+      () => typeof props.arrow === 'object' && props.arrow !== null && props.arrow.pointAtCenter === true,
     )
 
-    const mergedDestroyOnHidden = computed(() =>
-      props.destroyOnHidden ?? props.destroyTooltipOnHide ?? false,
-    )
+    const mergedDestroyOnHidden = computed(() => props.destroyOnHidden ?? props.destroyTooltipOnHide ?? false)
 
-    watch(() => props.open, (v) => {
-      if (v !== undefined) innerOpen.value = v
-    })
+    watch(
+      () => props.open,
+      (v) => {
+        if (v !== undefined) innerOpen.value = v
+      },
+    )
 
     const triggers = computed(() => {
       const t = props.trigger
@@ -226,14 +230,20 @@ export const Tooltip = defineComponent({
     })
 
     /** 监听 fresh 属性变化，强制重新计算位置。 */
-    watch(() => props.fresh, () => {
-      if (visible.value) updatePosition()
-    })
+    watch(
+      () => props.fresh,
+      () => {
+        if (visible.value) updatePosition()
+      },
+    )
 
     /** 监听 fresh 属性变化，强制重新计算位置。 */
-    watch(() => props.fresh, () => {
-      if (visible.value) updatePosition()
-    })
+    watch(
+      () => props.fresh,
+      () => {
+        if (visible.value) updatePosition()
+      },
+    )
 
     /** Reposition while open (scrolling, window resize). */
     const onScrollOrResize = () => {
@@ -242,13 +252,19 @@ export const Tooltip = defineComponent({
 
     const handleMouseEnter = () => {
       if (!triggers.value.includes('hover')) return
-      if (leaveTimer) { clearTimeout(leaveTimer); leaveTimer = null }
+      if (leaveTimer) {
+        clearTimeout(leaveTimer)
+        leaveTimer = null
+      }
       enterTimer = setTimeout(() => setOpen(true), props.mouseEnterDelay * 1000)
     }
 
     const handleMouseLeave = () => {
       if (!triggers.value.includes('hover')) return
-      if (enterTimer) { clearTimeout(enterTimer); enterTimer = null }
+      if (enterTimer) {
+        clearTimeout(enterTimer)
+        enterTimer = null
+      }
       leaveTimer = setTimeout(() => setOpen(false), props.mouseLeaveDelay * 1000)
     }
 
@@ -276,10 +292,7 @@ export const Tooltip = defineComponent({
 
     const handleOutsideClick = (e: MouseEvent) => {
       if (!visible.value) return
-      if (
-        triggerRef.value?.contains(e.target as Node) ||
-        tooltipRef.value?.contains(e.target as Node)
-      ) return
+      if (triggerRef.value?.contains(e.target as Node) || tooltipRef.value?.contains(e.target as Node)) return
       if (triggers.value.includes('click') || triggers.value.includes('contextMenu')) {
         setOpen(false)
       }
@@ -334,9 +347,8 @@ export const Tooltip = defineComponent({
       // Don't mount the popup at all when there's no title (AntD parity).
       const shouldRender = hasTitle.value && (visible.value || !mergedDestroyOnHidden.value)
 
-      const popupTarget = props.getPopupContainer && triggerRef.value
-        ? props.getPopupContainer(triggerRef.value)
-        : 'body'
+      const popupTarget =
+        props.getPopupContainer && triggerRef.value ? props.getPopupContainer(triggerRef.value) : 'body'
 
       return (
         <>
@@ -359,14 +371,10 @@ export const Tooltip = defineComponent({
                 ref={tooltipRef}
                 id={tooltipId}
                 role="tooltip"
-                class={cls(
-                  prefixCls.value,
-                  `${prefixCls.value}-placement-${actualPlacement.value}`,
-                  {
-                    [`${prefixCls.value}-hidden`]: !visible.value,
-                    [`${prefixCls.value}-arrow-point-at-center`]: arrowPointAtCenter.value,
-                  },
-                )}
+                class={cls(prefixCls.value, `${prefixCls.value}-placement-${actualPlacement.value}`, {
+                  [`${prefixCls.value}-hidden`]: !visible.value,
+                  [`${prefixCls.value}-arrow-point-at-center`]: arrowPointAtCenter.value,
+                })}
                 style={tooltipStyle}
                 onMouseenter={handleMouseEnter}
                 onMouseleave={handleMouseLeave}

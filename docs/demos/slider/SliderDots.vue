@@ -1,11 +1,11 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px;">
+  <div style="display: flex; flex-direction: column; gap: 24px; padding: 0 16px">
     <div>
-      <p style="margin-bottom: 8px;">带刻度点：{{ value1 }}</p>
+      <p style="margin-bottom: 8px">带刻度点：{{ value1 }}</p>
       <Slider v-model:value="value1" :dots="true" :step="10" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">范围选择 + 刻度点：{{ value2 }}</p>
+      <p style="margin-bottom: 8px">范围选择 + 刻度点：{{ value2 }}</p>
       <Slider v-model:value="value2" range :dots="true" :step="20" />
     </div>
   </div>

@@ -1,10 +1,6 @@
 import type { VNode } from 'vue'
 import type { ButtonProps, ButtonType } from '../button/types'
-import type {
-  TooltipPlacement,
-  TooltipTrigger,
-  TooltipArrow,
-} from '../tooltip/types'
+import type { TooltipPlacement, TooltipTrigger, TooltipArrow } from '../tooltip/types'
 
 /** Popconfirm title/description/icon — text, VNode, or render function. */
 export type PopconfirmContent = string | number | VNode | (() => VNode | string | number)

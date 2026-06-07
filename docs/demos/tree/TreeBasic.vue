@@ -1,9 +1,5 @@
 <template>
-  <Tree
-    :tree-data="treeData"
-    v-model:expanded-keys="expandedKeys"
-    v-model:selected-keys="selectedKeys"
-  />
+  <Tree v-model:expanded-keys="expandedKeys" v-model:selected-keys="selectedKeys" :tree-data="treeData" />
 </template>
 
 <script setup lang="ts">
@@ -29,9 +25,7 @@ const treeData = [
       {
         title: '父节点 1-1',
         key: '0-0-1',
-        children: [
-          { title: '叶子节点', key: '0-0-1-0' },
-        ],
+        children: [{ title: '叶子节点', key: '0-0-1-0' }],
       },
     ],
   },

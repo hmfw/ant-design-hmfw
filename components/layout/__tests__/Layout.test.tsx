@@ -222,7 +222,7 @@ describe('Sider', () => {
       mount(Sider, { props: { breakpoint: 'md', onBreakpoint } })
 
       // 模拟断点匹配
-      listeners.forEach(handler => handler({ matches: true }))
+      listeners.forEach((handler) => handler({ matches: true }))
       await flushPromises()
 
       expect(onBreakpoint).toHaveBeenCalledWith(true)
@@ -235,7 +235,7 @@ describe('Sider', () => {
       wrapper.emitted('breakpoint')
 
       // 模拟断点匹配
-      listeners.forEach(handler => handler({ matches: true }))
+      listeners.forEach((handler) => handler({ matches: true }))
       await flushPromises()
 
       const events = wrapper.emitted('breakpoint') as any[]
@@ -251,7 +251,7 @@ describe('Sider', () => {
       expect(wrapper.classes()).not.toContain('hmfw-layout-sider-collapsed')
 
       // 模拟断点匹配（屏幕变小）
-      listeners.forEach(handler => handler({ matches: true }))
+      listeners.forEach((handler) => handler({ matches: true }))
       await flushPromises()
 
       expect(wrapper.classes()).toContain('hmfw-layout-sider-collapsed')
@@ -267,7 +267,7 @@ describe('Sider', () => {
       expect(wrapper.classes()).toContain('hmfw-layout-sider-collapsed')
 
       // 模拟断点不匹配（屏幕变大）
-      listeners.forEach(handler => handler({ matches: false }))
+      listeners.forEach((handler) => handler({ matches: false }))
       await flushPromises()
 
       expect(wrapper.classes()).not.toContain('hmfw-layout-sider-collapsed')

@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <Collapse :items="items" size="small" />
     <Collapse :items="items" size="middle" />
     <Collapse :items="items" size="large" />

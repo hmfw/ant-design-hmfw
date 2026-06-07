@@ -1,0 +1,27 @@
+# 构建产物
+dist/
+docs-dist/
+coverage/
+test-build/
+
+# 依赖
+node_modules/
+pnpm-lock.yaml
+
+# 工具目录
+.claude/
+.playwright-cli/
+.analysis/
+
+# 自动生成文件
+**/generated/
+**/auto-generated/
+
+# 非代码文件
+*.min.js
+*.umd.js
+*.tgz
+
+# 配置
+.gitignore
+.npmignore

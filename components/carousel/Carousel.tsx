@@ -176,9 +176,7 @@ export const Carousel = defineComponent({
     // Initialize current index on mount
     onMounted(() => {
       if (count.value > 0 && props.initialSlide > 0) {
-        const init = props.infinite
-          ? props.initialSlide % count.value
-          : Math.min(props.initialSlide, count.value - 1)
+        const init = props.infinite ? props.initialSlide % count.value : Math.min(props.initialSlide, count.value - 1)
         current.value = init
       }
       updateAdaptiveHeight()
@@ -187,9 +185,12 @@ export const Carousel = defineComponent({
 
     onBeforeUnmount(stopAutoplay)
 
-    watch(() => props.autoplay, (v) => {
-      v ? startAutoplay() : stopAutoplay()
-    })
+    watch(
+      () => props.autoplay,
+      (v) => {
+        v ? startAutoplay() : stopAutoplay()
+      },
+    )
 
     // 监听 current 变化更新高度
     watch(current, () => {
@@ -197,9 +198,12 @@ export const Carousel = defineComponent({
     })
 
     // 监听 adaptiveHeight 开关变化
-    watch(() => props.adaptiveHeight, () => {
-      updateAdaptiveHeight()
-    })
+    watch(
+      () => props.adaptiveHeight,
+      () => {
+        updateAdaptiveHeight()
+      },
+    )
 
     // Expose ref methods
     expose({
@@ -219,17 +223,11 @@ export const Carousel = defineComponent({
 
     return () => {
       if (count.value === 0) {
-        return (
-          <div
-            class={cls(prefixCls, props.rootClassName)}
-          />
-        )
+        return <div class={cls(prefixCls, props.rootClassName)} />
       }
 
       const speedInSec = `${props.speed / 1000}s`
-      const dotDurationStyle = showDotDuration.value
-        ? { '--carousel-dot-duration': `${props.autoplaySpeed}ms` }
-        : {}
+      const dotDurationStyle = showDotDuration.value ? { '--carousel-dot-duration': `${props.autoplaySpeed}ms` } : {}
 
       return (
         <div
@@ -264,9 +262,7 @@ export const Carousel = defineComponent({
                       transform: isVertical.value
                         ? `translateY(-${current.value * 100}%)`
                         : `translateX(-${current.value * 100}%)`,
-                      transition: transitioning.value
-                        ? `transform ${speedInSec} ${props.easing}`
-                        : 'none',
+                      transition: transitioning.value ? `transform ${speedInSec} ${props.easing}` : 'none',
                     }
               }
             >
@@ -328,22 +324,13 @@ export const Carousel = defineComponent({
 
           {enableDots.value && count.value > 1 && (
             <ul
-              class={cls(
-                `${prefixCls}-dots`,
-                `${prefixCls}-dots-${dotPositionClass.value}`,
-                dotsClassName.value,
-                {
-                  [`${prefixCls}-dots-progress`]: showDotDuration.value,
-                  [`${prefixCls}-dots-disabled`]: props.waitForAnimate && transitioning.value,
-                },
-              )}
+              class={cls(`${prefixCls}-dots`, `${prefixCls}-dots-${dotPositionClass.value}`, dotsClassName.value, {
+                [`${prefixCls}-dots-progress`]: showDotDuration.value,
+                [`${prefixCls}-dots-disabled`]: props.waitForAnimate && transitioning.value,
+              })}
             >
               {slides.value.map((_, i) => (
-                <li
-                  key={i}
-                  class={cls({ [`${prefixCls}-dot-active`]: i === current.value })}
-                  onClick={() => goTo(i)}
-                >
+                <li key={i} class={cls({ [`${prefixCls}-dot-active`]: i === current.value })} onClick={() => goTo(i)}>
                   <button aria-label={`Go to slide ${i + 1}`} />
                 </li>
               ))}

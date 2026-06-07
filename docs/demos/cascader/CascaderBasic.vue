@@ -1,10 +1,5 @@
 <template>
-  <Cascader
-    v-model:value="value"
-    :options="options"
-    placeholder="请选择省市区"
-    style="width: 300px;"
-  />
+  <Cascader v-model:value="value" :options="options" placeholder="请选择省市区" style="width: 300px" />
 </template>
 
 <script setup lang="ts">

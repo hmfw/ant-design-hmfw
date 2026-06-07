@@ -37,9 +37,7 @@ export const List = defineComponent({
     const prefixCls = usePrefixCls('list')
 
     // Pagination state
-    const paginationConfig = computed(() =>
-      typeof props.pagination === 'object' ? props.pagination : {}
-    )
+    const paginationConfig = computed(() => (typeof props.pagination === 'object' ? props.pagination : {}))
 
     const internalCurrent = ref(paginationConfig.value.defaultCurrent || 1)
     const internalPageSize = ref(paginationConfig.value.defaultPageSize || 10)
@@ -50,7 +48,7 @@ export const List = defineComponent({
         if (val !== undefined) {
           internalCurrent.value = val
         }
-      }
+      },
     )
 
     watch(
@@ -59,7 +57,7 @@ export const List = defineComponent({
         if (val !== undefined) {
           internalPageSize.value = val
         }
-      }
+      },
     )
 
     const currentPage = computed(() => paginationConfig.value.current ?? internalCurrent.value)
@@ -79,7 +77,7 @@ export const List = defineComponent({
 
     // Loading state
     const loadingConfig = computed(() =>
-      typeof props.loading === 'boolean' ? { spinning: props.loading } : props.loading || {}
+      typeof props.loading === 'boolean' ? { spinning: props.loading } : props.loading || {},
     )
     const isLoading = computed(() => !!loadingConfig.value.spinning)
 
@@ -166,9 +164,7 @@ export const List = defineComponent({
         }
       } else if (isEmpty) {
         childrenContent = (
-          <div class={`${prefixCls}-empty-text`}>
-            {props.locale?.emptyText || <Empty description="暂无数据" />}
-          </div>
+          <div class={`${prefixCls}-empty-text`}>{props.locale?.emptyText || <Empty description="暂无数据" />}</div>
         )
       }
 
@@ -192,19 +188,16 @@ export const List = defineComponent({
       // Map size to class suffix
       const sizeClass = props.size === 'small' ? 'sm' : props.size === 'large' ? 'lg' : ''
 
-      const classes = cls(
-        prefixCls,
-        {
-          [`${prefixCls}-sm`]: props.size === 'small',
-          [`${prefixCls}-lg`]: props.size === 'large',
-          [`${prefixCls}-bordered`]: !!props.bordered,
-          [`${prefixCls}-split`]: !!props.split,
-          [`${prefixCls}-loading`]: !!isLoading.value,
-          [`${prefixCls}-grid`]: !!props.grid,
-          [`${prefixCls}-vertical`]: props.itemLayout === 'vertical',
-          [`${prefixCls}-something-after-last-item`]: !!isSomethingAfterLastItem,
-        }
-      )
+      const classes = cls(prefixCls, {
+        [`${prefixCls}-sm`]: props.size === 'small',
+        [`${prefixCls}-lg`]: props.size === 'large',
+        [`${prefixCls}-bordered`]: !!props.bordered,
+        [`${prefixCls}-split`]: !!props.split,
+        [`${prefixCls}-loading`]: !!isLoading.value,
+        [`${prefixCls}-grid`]: !!props.grid,
+        [`${prefixCls}-vertical`]: props.itemLayout === 'vertical',
+        [`${prefixCls}-something-after-last-item`]: !!isSomethingAfterLastItem,
+      })
 
       return (
         <div class={classes}>
@@ -219,11 +212,9 @@ export const List = defineComponent({
           {(props.footer || slots.footer) && (
             <div class={`${prefixCls}-footer`}>{slots.footer?.() ?? props.footer}</div>
           )}
-          {props.loadMore ||
-            ((paginationPosition === 'bottom' || paginationPosition === 'both') && paginationNode)}
+          {props.loadMore || ((paginationPosition === 'bottom' || paginationPosition === 'both') && paginationNode)}
         </div>
       )
     }
   },
 })
-

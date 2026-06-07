@@ -34,27 +34,27 @@
 
 ### RangePicker Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| value (v-model) | 日期范围 | `[string \| null, string \| null]` | - |
-| defaultValue | 默认日期范围 | `[string \| null, string \| null]` | - |
-| format | 日期格式 | `string` | `'YYYY-MM-DD'` |
-| disabled | 是否禁用，可分别禁用起止 | `boolean \| [boolean, boolean]` | `false` |
-| placeholder | 占位文本，缺省时使用当前语言包 | `[string, string]` | locale.rangePlaceholder |
-| allowClear | 是否允许清除 | `boolean` | `true` |
-| allowEmpty | 允许起止留空 | `[boolean, boolean]` | - |
-| order | 自动排序起止日期 | `boolean` | `true` |
-| separator | 起止输入框之间的分隔符 | `string` | `'→'` |
-| presets | 预设范围快捷选项 | `{ label: string, value: RangeValue \| (() => RangeValue) }[]` | - |
-| size | 尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
-| disabledDate | 不可选日期 | `(date: Date, info?: { from?: Date, type?: string }) => boolean` | - |
-| status | 校验状态 | `'error' \| 'warning' \| ''` | `''` |
-| open | 受控的弹层显隐 | `boolean` | - |
+| 参数            | 说明                           | 类型                                                             | 默认值                  |
+| --------------- | ------------------------------ | ---------------------------------------------------------------- | ----------------------- |
+| value (v-model) | 日期范围                       | `[string \| null, string \| null]`                               | -                       |
+| defaultValue    | 默认日期范围                   | `[string \| null, string \| null]`                               | -                       |
+| format          | 日期格式                       | `string`                                                         | `'YYYY-MM-DD'`          |
+| disabled        | 是否禁用，可分别禁用起止       | `boolean \| [boolean, boolean]`                                  | `false`                 |
+| placeholder     | 占位文本，缺省时使用当前语言包 | `[string, string]`                                               | locale.rangePlaceholder |
+| allowClear      | 是否允许清除                   | `boolean`                                                        | `true`                  |
+| allowEmpty      | 允许起止留空                   | `[boolean, boolean]`                                             | -                       |
+| order           | 自动排序起止日期               | `boolean`                                                        | `true`                  |
+| separator       | 起止输入框之间的分隔符         | `string`                                                         | `'→'`                   |
+| presets         | 预设范围快捷选项               | `{ label: string, value: RangeValue \| (() => RangeValue) }[]`   | -                       |
+| size            | 尺寸                           | `'small' \| 'middle' \| 'large'`                                 | `'middle'`              |
+| disabledDate    | 不可选日期                     | `(date: Date, info?: { from?: Date, type?: string }) => boolean` | -                       |
+| status          | 校验状态                       | `'error' \| 'warning' \| ''`                                     | `''`                    |
+| open            | 受控的弹层显隐                 | `boolean`                                                        | -                       |
 
 ### RangePicker Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| change | 日期范围变化时 | `(value: RangeValue, dates: [Date \| null, Date \| null]) => void` |
+| 事件名         | 说明               | 回调参数                                                                                              |
+| -------------- | ------------------ | ----------------------------------------------------------------------------------------------------- |
+| change         | 日期范围变化时     | `(value: RangeValue, dates: [Date \| null, Date \| null]) => void`                                    |
 | calendarChange | 面板选择起止日期时 | `(value: RangeValue, dates: [Date \| null, Date \| null], info: { range: 'start' \| 'end' }) => void` |
-| openChange | 弹出/关闭时 | `(open: boolean) => void` |
+| openChange     | 弹出/关闭时        | `(open: boolean) => void`                                                                             |

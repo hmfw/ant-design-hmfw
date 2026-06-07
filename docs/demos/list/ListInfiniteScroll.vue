@@ -3,14 +3,11 @@
     <h3>无限滚动示例</h3>
     <div
       ref="scrollContainer"
-      style="height: 400px; overflow: auto; border: 1px solid #d9d9d9; border-radius: 4px;"
+      style="height: 400px; overflow: auto; border: 1px solid #d9d9d9; border-radius: 4px"
       @scroll="handleScroll"
     >
-      <List
-        :data-source="displayData"
-        :loading="loading"
-      >
-        <template #renderItem="{ item, index }">
+      <List :data-source="displayData" :loading="loading">
+        <template #renderItem="{ item }">
           <ListItem>
             <ListItemMeta
               :avatar="`https://api.dicebear.com/7.x/miniavs/svg?seed=${item.id}`"
@@ -20,16 +17,12 @@
           </ListItem>
         </template>
       </List>
-      <div v-if="loading" style="text-align: center; padding: 12px;">
+      <div v-if="loading" style="text-align: center; padding: 12px">
         <Spin />
       </div>
-      <div v-if="noMore" style="text-align: center; padding: 12px; color: #999;">
-        已加载全部数据
-      </div>
+      <div v-if="noMore" style="text-align: center; padding: 12px; color: #999">已加载全部数据</div>
     </div>
-    <div style="margin-top: 16px; color: #666;">
-      已加载: {{ displayData.length }} / {{ totalData.length }} 项
-    </div>
+    <div style="margin-top: 16px; color: #666">已加载: {{ displayData.length }} / {{ totalData.length }} 项</div>
   </div>
 </template>
 

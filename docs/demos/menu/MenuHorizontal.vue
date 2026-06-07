@@ -1,10 +1,5 @@
 <template>
-  <Menu
-    mode="horizontal"
-    :items="items"
-    :selected-keys="selectedKeys"
-    @select="onSelect"
-  />
+  <Menu mode="horizontal" :items="items" :selected-keys="selectedKeys" @select="onSelect" />
 </template>
 
 <script setup lang="ts">

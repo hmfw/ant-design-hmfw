@@ -114,12 +114,7 @@ describe('BackTop', () => {
   })
 
   it('supports RTL direction', async () => {
-    const wrapper = mount(
-      () =>
-        h(ConfigProvider, { direction: 'rtl' }, () =>
-          h(BackTop, { visibilityHeight: 0 }),
-        ),
-    )
+    const wrapper = mount(() => h(ConfigProvider, { direction: 'rtl' }, () => h(BackTop, { visibilityHeight: 0 })))
     await nextTick()
 
     expect(wrapper.find('.hmfw-back-top-rtl').exists()).toBe(true)
@@ -150,6 +145,3 @@ describe('BackTop', () => {
     expect(wrapper.props('target')).toBe(target)
   })
 })
-
-
-

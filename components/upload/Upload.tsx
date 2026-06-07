@@ -1,6 +1,4 @@
-import {
-  defineComponent, ref, computed, TransitionGroup, type PropType,
-} from 'vue'
+import { defineComponent, ref, computed, TransitionGroup, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type {
@@ -15,7 +13,9 @@ import type {
 } from './types'
 
 let uidCounter = 0
-function genUid() { return `__upload_${Date.now()}_${uidCounter++}` }
+function genUid() {
+  return `__upload_${Date.now()}_${uidCounter++}`
+}
 
 function formatSize(bytes?: number) {
   if (!bytes) return ''
@@ -53,10 +53,7 @@ async function resolveAction(action: UploadProps['action'], file: File): Promise
 }
 
 /** Resolve `data` per AntD v6: plain object or (file) => object | Promise<object>. */
-async function resolveData(
-  data: UploadProps['data'],
-  file: UploadFile,
-): Promise<Record<string, unknown>> {
+async function resolveData(data: UploadProps['data'], file: UploadFile): Promise<Record<string, unknown>> {
   if (typeof data === 'function') return (await data(file)) ?? {}
   return data ?? {}
 }
@@ -154,24 +151,28 @@ export const Upload = defineComponent({
 
       const onSuccess = (response: unknown) => {
         const list = fileList.value.map((f) =>
-          f.uid === uid ? { ...f, status: 'done' as const, response, percent: 100 } : f
+          f.uid === uid ? { ...f, status: 'done' as const, response, percent: 100 } : f,
         )
         updateList(list)
-        emit('change', { file: { ...uploadFile, status: 'done', percent: 100, response }, fileList: list })
+        emit('change', {
+          file: { ...uploadFile, status: 'done', percent: 100, response },
+          fileList: list,
+        })
       }
 
       const onError = (error: Error, response?: unknown) => {
         const list = fileList.value.map((f) =>
-          f.uid === uid ? { ...f, status: 'error' as const, error, response } : f
+          f.uid === uid ? { ...f, status: 'error' as const, error, response } : f,
         )
         updateList(list)
-        emit('change', { file: { ...uploadFile, status: 'error', error, response }, fileList: list })
+        emit('change', {
+          file: { ...uploadFile, status: 'error', error, response },
+          fileList: list,
+        })
       }
 
       const onProgress = (event: { percent: number }) => {
-        const list = fileList.value.map((f) =>
-          f.uid === uid ? { ...f, percent: event.percent } : f
-        )
+        const list = fileList.value.map((f) => (f.uid === uid ? { ...f, percent: event.percent } : f))
         updateList(list)
         // AntD v6: progress events include the original event payload.
         emit('change', { file: { ...uploadFile, percent: event.percent }, fileList: list, event })
@@ -239,7 +240,9 @@ export const Upload = defineComponent({
       e.preventDefault()
       dragDepth.value = Math.max(0, dragDepth.value - 1)
     }
-    const handleDragOver = (e: DragEvent) => { e.preventDefault() }
+    const handleDragOver = (e: DragEvent) => {
+      e.preventDefault()
+    }
 
     const handleDrop = (e: DragEvent) => {
       e.preventDefault()
@@ -306,10 +309,11 @@ export const Upload = defineComponent({
           )}
           {isCardType.value ? (
             <div class={`${prefixCls}-list-item-card`}>
-              {showThumb && thumbSrc
-                ? <img src={thumbSrc} alt={file.name} />
-                : <span class={`${prefixCls}-list-item-icon`}>📄</span>
-              }
+              {showThumb && thumbSrc ? (
+                <img src={thumbSrc} alt={file.name} />
+              ) : (
+                <span class={`${prefixCls}-list-item-icon`}>📄</span>
+              )}
               {file.status === 'uploading' && (
                 <div class={`${prefixCls}-list-item-progress`}>
                   <div class={`${prefixCls}-list-item-progress-bar`} style={{ width: `${file.percent ?? 0}%` }} />
@@ -317,13 +321,19 @@ export const Upload = defineComponent({
               )}
               <div class={`${prefixCls}-list-item-card-actions`}>
                 {(file.url || file.thumbUrl) && showPreview.value && (
-                  <button class={`${prefixCls}-list-item-action`} onClick={() => emit('preview', file)}>👁</button>
+                  <button class={`${prefixCls}-list-item-action`} onClick={() => emit('preview', file)}>
+                    👁
+                  </button>
                 )}
                 {showDownload.value && file.url && (
-                  <button class={`${prefixCls}-list-item-action`} onClick={() => emit('download', file)}>⬇</button>
+                  <button class={`${prefixCls}-list-item-action`} onClick={() => emit('download', file)}>
+                    ⬇
+                  </button>
                 )}
                 {showRemove.value && (
-                  <button class={`${prefixCls}-list-item-action`} onClick={() => handleRemove(file)}>🗑</button>
+                  <button class={`${prefixCls}-list-item-action`} onClick={() => handleRemove(file)}>
+                    🗑
+                  </button>
                 )}
               </div>
             </div>
@@ -366,11 +376,7 @@ export const Upload = defineComponent({
       // TransitionGroup 在 TSX 下的类型不接受 class — 用 as any 绕过
       const TG = TransitionGroup as any
       return (
-        <TG
-          tag="div"
-          class={`${prefixCls}-list ${prefixCls}-list-${props.listType}`}
-          name={`${prefixCls}-animate`}
-        >
+        <TG tag="div" class={`${prefixCls}-list ${prefixCls}-list-${props.listType}`} name={`${prefixCls}-animate`}>
           {fileList.value.map((file) => {
             const originNode = renderItem(file)
             // itemRender 钩子 —— 用户接管单项渲染但仍可通过 actions 触发内置行为
@@ -386,7 +392,11 @@ export const Upload = defineComponent({
                 </div>
               )
             }
-            return <div key={file.uid} class={`${prefixCls}-list-item-container`}>{originNode}</div>
+            return (
+              <div key={file.uid} class={`${prefixCls}-list-item-container`}>
+                {originNode}
+              </div>
+            )
           })}
         </TG>
       )
@@ -410,7 +420,9 @@ export const Upload = defineComponent({
             onDragleave={handleDragLeave}
             onDrop={handleDrop}
           >
-            {slots.default ? slots.default() : (
+            {slots.default ? (
+              slots.default()
+            ) : (
               <div class={`${prefixCls}-select-btn`}>
                 <span class={`${prefixCls}-select-icon`}>+</span>
                 <span class={`${prefixCls}-select-text`}>上传</span>
@@ -434,9 +446,7 @@ export const Upload = defineComponent({
             onDragleave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <div class={`${prefixCls}-drag-container`}>
-              {slots.default?.()}
-            </div>
+            <div class={`${prefixCls}-drag-container`}>{slots.default?.()}</div>
           </div>
         )
       }
@@ -454,10 +464,12 @@ export const Upload = defineComponent({
     }
 
     return () => (
-      <div class={cls(prefixCls, {
-        [`${prefixCls}-picture-card-wrapper`]: props.listType === 'picture-card',
-        [`${prefixCls}-picture-circle-wrapper`]: props.listType === 'picture-circle',
-      })}>
+      <div
+        class={cls(prefixCls, {
+          [`${prefixCls}-picture-card-wrapper`]: props.listType === 'picture-card',
+          [`${prefixCls}-picture-circle-wrapper`]: props.listType === 'picture-circle',
+        })}
+      >
         <input
           ref={inputRef}
           type="file"
@@ -465,7 +477,7 @@ export const Upload = defineComponent({
           multiple={props.multiple}
           style={{ display: 'none' }}
           onChange={handleChange}
-          // @ts-ignore
+          // @ts-expect-error - webkitdirectory 是非标准 HTML 属性
           webkitdirectory={props.directory || undefined}
         />
         {isCardType.value ? (

@@ -1,10 +1,18 @@
 import type { VNode } from 'vue'
 
 export type TooltipPlacement =
-  | 'top' | 'topLeft' | 'topRight'
-  | 'bottom' | 'bottomLeft' | 'bottomRight'
-  | 'left' | 'leftTop' | 'leftBottom'
-  | 'right' | 'rightTop' | 'rightBottom'
+  | 'top'
+  | 'topLeft'
+  | 'topRight'
+  | 'bottom'
+  | 'bottomLeft'
+  | 'bottomRight'
+  | 'left'
+  | 'leftTop'
+  | 'leftBottom'
+  | 'right'
+  | 'rightTop'
+  | 'rightBottom'
 
 export type TooltipTrigger = 'hover' | 'click' | 'focus' | 'contextMenu'
 

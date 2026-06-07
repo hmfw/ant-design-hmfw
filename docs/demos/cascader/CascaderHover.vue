@@ -4,7 +4,7 @@
     :options="options"
     expand-trigger="hover"
     placeholder="鼠标悬停展开"
-    style="width: 300px;"
+    style="width: 300px"
   />
 </template>
 

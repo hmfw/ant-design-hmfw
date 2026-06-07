@@ -10,14 +10,8 @@
     </div>
     <div>
       <h4>链接模式</h4>
-      <Pagination
-        :total="50"
-        :item-render="itemRenderLink"
-        @change="handleChange"
-      />
-      <p style="margin-top: 8px; color: #666;">
-        点击页码查看链接效果（当前页：{{ current }}）
-      </p>
+      <Pagination :total="50" :item-render="itemRenderLink" @change="handleChange" />
+      <p style="margin-top: 8px; color: #666">点击页码查看链接效果（当前页：{{ current }}）</p>
     </div>
   </Space>
 </template>
@@ -30,11 +24,7 @@ import type { VNode } from 'vue'
 const current = ref(1)
 
 // 自定义上一页/下一页文本
-const itemRenderText = (
-  page: number,
-  type: string,
-  originalElement: VNode
-) => {
+const itemRenderText = (page: number, type: string, originalElement: VNode) => {
   if (type === 'prev') {
     return h('a', '上一页')
   }
@@ -45,11 +35,7 @@ const itemRenderText = (
 }
 
 // 自定义页码样式
-const itemRenderCustom = (
-  page: number,
-  type: string,
-  originalElement: VNode
-) => {
+const itemRenderCustom = (page: number, type: string, originalElement: VNode) => {
   if (type === 'page') {
     return h(
       'a',
@@ -62,25 +48,21 @@ const itemRenderCustom = (
           fontWeight: 'bold',
         },
       },
-      `[${page}]`
+      `[${page}]`,
     )
   }
   return originalElement
 }
 
 // 自定义链接
-const itemRenderLink = (
-  page: number,
-  type: string,
-  originalElement: VNode
-) => {
+const itemRenderLink = (page: number, type: string, originalElement: VNode) => {
   if (type === 'page') {
     return h(
       'a',
       {
         href: `#page-${page}`,
       },
-      page
+      page,
     )
   }
   if (type === 'prev') {
@@ -96,5 +78,3 @@ const handleChange = (page: number) => {
   current.value = page
 }
 </script>
-
-

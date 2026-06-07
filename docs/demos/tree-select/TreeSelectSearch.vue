@@ -1,12 +1,6 @@
 <template>
   <Space direction="vertical" style="width: 300px">
-    <TreeSelect
-      v-model:value="value"
-      :tree-data="treeData"
-      show-search
-      placeholder="搜索节点"
-      style="width: 100%"
-    />
+    <TreeSelect v-model:value="value" :tree-data="treeData" show-search placeholder="搜索节点" style="width: 100%" />
     <span>选中：{{ value }}</span>
   </Space>
 </template>

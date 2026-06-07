@@ -86,32 +86,31 @@ import TimelineHorizontalSource from './TimelineHorizontal.vue?raw'
 
 ### Timeline Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| items | 选项配置 | `TimelineItemProps[]` | - |
-| mode | 通过设置 mode 可以改变时间轴和内容的相对位置 | `'left' \| 'right' \| 'start' \| 'end' \| 'alternate'` | `'left'` |
-| orientation | 设置时间轴的方向 | `'vertical' \| 'horizontal'` | `'vertical'` |
-| variant | 设置样式变体 | `'outlined' \| 'filled'` | `'outlined'` |
-| reverse | 节点排序 | `boolean` | `false` |
-| titleSpan | 设置标题占比空间（到 dot 中心点距离） | `number \| string` | - |
-| pending | 指定最后一个幽灵节点是否存在或内容（已废弃，建议使用 items 中的 loading） | `boolean \| string \| VNode` | - |
-| pendingDot | 当最后一个幽灵节点存在时，指定其时间图点（已废弃） | `string \| VNode` | - |
+| 参数        | 说明                                                                      | 类型                                                   | 默认值       |
+| ----------- | ------------------------------------------------------------------------- | ------------------------------------------------------ | ------------ |
+| items       | 选项配置                                                                  | `TimelineItemProps[]`                                  | -            |
+| mode        | 通过设置 mode 可以改变时间轴和内容的相对位置                              | `'left' \| 'right' \| 'start' \| 'end' \| 'alternate'` | `'left'`     |
+| orientation | 设置时间轴的方向                                                          | `'vertical' \| 'horizontal'`                           | `'vertical'` |
+| variant     | 设置样式变体                                                              | `'outlined' \| 'filled'`                               | `'outlined'` |
+| reverse     | 节点排序                                                                  | `boolean`                                              | `false`      |
+| titleSpan   | 设置标题占比空间（到 dot 中心点距离）                                     | `number \| string`                                     | -            |
+| pending     | 指定最后一个幽灵节点是否存在或内容（已废弃，建议使用 items 中的 loading） | `boolean \| string \| VNode`                           | -            |
+| pendingDot  | 当最后一个幽灵节点存在时，指定其时间图点（已废弃）                        | `string \| VNode`                                      | -            |
 
 ### TimelineItemProps
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| title | 设置标题 | `string \| VNode` | - |
-| content | 设置内容 | `string \| VNode` | - |
-| icon | 自定义节点图标 | `string \| VNode` | - |
-| placement | 自定义节点位置 | `'start' \| 'end'` | - |
-| loading | 设置加载状态 | `boolean` | `false` |
-| color | 指定圆圈颜色 | `'blue' \| 'red' \| 'green' \| 'gray' \| string` | `'blue'` |
-| className | 自定义类名 | `string` | - |
-| style | 自定义样式 | `CSSProperties` | - |
-| key | 唯一标识 | `string \| number` | - |
-| label | 设置标签（已废弃，使用 title） | `string \| VNode` | - |
-| children | 内容（已废弃，使用 content） | `unknown` | - |
-| dot | 自定义时间轴点（已废弃，使用 icon） | `string \| VNode` | - |
-| position | 自定义节点位置（已废弃，使用 placement） | `'left' \| 'right'` | - |
-
+| 参数      | 说明                                     | 类型                                             | 默认值   |
+| --------- | ---------------------------------------- | ------------------------------------------------ | -------- |
+| title     | 设置标题                                 | `string \| VNode`                                | -        |
+| content   | 设置内容                                 | `string \| VNode`                                | -        |
+| icon      | 自定义节点图标                           | `string \| VNode`                                | -        |
+| placement | 自定义节点位置                           | `'start' \| 'end'`                               | -        |
+| loading   | 设置加载状态                             | `boolean`                                        | `false`  |
+| color     | 指定圆圈颜色                             | `'blue' \| 'red' \| 'green' \| 'gray' \| string` | `'blue'` |
+| className | 自定义类名                               | `string`                                         | -        |
+| style     | 自定义样式                               | `CSSProperties`                                  | -        |
+| key       | 唯一标识                                 | `string \| number`                               | -        |
+| label     | 设置标签（已废弃，使用 title）           | `string \| VNode`                                | -        |
+| children  | 内容（已废弃，使用 content）             | `unknown`                                        | -        |
+| dot       | 自定义时间轴点（已废弃，使用 icon）      | `string \| VNode`                                | -        |
+| position  | 自定义节点位置（已废弃，使用 placement） | `'left' \| 'right'`                              | -        |

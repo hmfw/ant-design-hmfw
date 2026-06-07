@@ -1,9 +1,5 @@
 <template>
-  <ColorPicker
-    v-model:value="color"
-    show-text
-    :presets="presets"
-  />
+  <ColorPicker v-model:value="color" show-text :presets="presets" />
 </template>
 
 <script setup lang="ts">

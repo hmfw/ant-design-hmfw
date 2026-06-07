@@ -14,7 +14,7 @@ export function autoDemoImports(): Plugin {
         const dir = path.dirname(file)
         const mdPath = path.join(dir, path.basename(dir) + '.md')
         const mods = server.moduleGraph.getModulesByFile(mdPath)
-        mods?.forEach(m => server.moduleGraph.invalidateModule(m))
+        mods?.forEach((m) => server.moduleGraph.invalidateModule(m))
       }
       server.watcher.on('add', invalidate)
       server.watcher.on('unlink', invalidate)
@@ -22,10 +22,13 @@ export function autoDemoImports(): Plugin {
     transform(code, id) {
       if (!id.endsWith('.md') || !id.includes('/demos/')) return
       const dir = path.dirname(id)
-      const vueFiles = fs.readdirSync(dir).filter(f => f.endsWith('.vue')).sort()
+      const vueFiles = fs
+        .readdirSync(dir)
+        .filter((f) => f.endsWith('.vue'))
+        .sort()
       if (!vueFiles.length) return
       const imports = vueFiles
-        .map(f => {
+        .map((f) => {
           const name = f.slice(0, -4)
           return `import ${name} from './${f}'\nimport ${name}Source from './${f}?raw'`
         })

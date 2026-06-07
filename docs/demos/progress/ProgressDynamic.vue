@@ -1,6 +1,6 @@
 <template>
   <Progress :percent="percent" />
-  <div style="display: flex; gap: 8px; margin-top: 12px;">
+  <div style="display: flex; gap: 8px; margin-top: 12px">
     <button @click="decline">-</button>
     <button @click="increase">+</button>
   </div>

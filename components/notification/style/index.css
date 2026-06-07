@@ -12,11 +12,19 @@
   margin-bottom: 16px;
   background: var(--hmfw-color-bg-elevated, #fff);
   border-radius: var(--hmfw-border-radius, 8px);
-  box-shadow: var(--hmfw-box-shadow-secondary, 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05));
+  box-shadow: var(
+    --hmfw-box-shadow-secondary,
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05)
+  );
   cursor: pointer;
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 0.3s, transform 0.3s, max-height 0.3s;
+  transition:
+    opacity 0.3s,
+    transform 0.3s,
+    max-height 0.3s;
   overflow: hidden;
   max-height: 500px;
   word-wrap: break-word;
@@ -112,7 +120,9 @@
   font-size: 14px;
   line-height: 1;
   flex-shrink: 0;
-  transition: color 0.2s, background-color 0.2s;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
   border-radius: var(--hmfw-border-radius-sm, 4px);
 }
 

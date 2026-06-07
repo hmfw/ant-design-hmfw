@@ -1,14 +1,11 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <div>
-      <p style="margin-bottom: 8px;">水平排列：</p>
-      <CheckboxGroup
-        v-model:value="selectedFruits"
-        :options="fruitOptions"
-      />
+      <p style="margin-bottom: 8px">水平排列：</p>
+      <CheckboxGroup v-model:value="selectedFruits" :options="fruitOptions" />
     </div>
     <div>
-      <p style="margin-bottom: 8px;">垂直排列（通过 style 控制）：</p>
+      <p style="margin-bottom: 8px">垂直排列（通过 style 控制）：</p>
       <CheckboxGroup
         v-model:value="selectedColors"
         :options="colorOptions"

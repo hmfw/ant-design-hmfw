@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+  <div style="display: flex; gap: 12px; margin-bottom: 16px">
     <button @click="locale = zhCN">中文</button>
     <button @click="locale = enUS">English</button>
   </div>

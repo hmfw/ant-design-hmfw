@@ -142,9 +142,7 @@ export const Spin = defineComponent({
       const holderCls = `${dotCls}-holder`
       const circleStyle = {
         strokeDashoffset: `${circumference / 4}`,
-        strokeDasharray: `${(circumference * safePtg) / 100} ${
-          (circumference * (100 - safePtg)) / 100
-        }`,
+        strokeDasharray: `${(circumference * safePtg) / 100} ${(circumference * (100 - safePtg)) / 100}`,
       }
       return (
         <span
@@ -185,7 +183,11 @@ export const Spin = defineComponent({
     const renderIndicator = () => {
       if (slots.indicator) {
         const sizeVal = sizeMap[props.size] || sizeMap.default
-        const indicatorStyle = { width: `${sizeVal}px`, height: `${sizeVal}px`, fontSize: `${sizeVal}px` }
+        const indicatorStyle = {
+          width: `${sizeVal}px`,
+          height: `${sizeVal}px`,
+          fontSize: `${sizeVal}px`,
+        }
         return (
           <span class={`${prefixCls}-dot`} style={indicatorStyle}>
             {slots.indicator({ percent: mergedPercent.value })}
@@ -245,9 +247,7 @@ export const Spin = defineComponent({
 
       return (
         <div class={cls(`${prefixCls}-nested-loading`)}>
-          {active.value && (
-            <div class={`${prefixCls}-container`}>{renderSpin()}</div>
-          )}
+          {active.value && <div class={`${prefixCls}-container`}>{renderSpin()}</div>}
           <div class={cls(`${prefixCls}-blur-container`, { [`${prefixCls}-blur`]: active.value })}>
             {slots.default()}
           </div>

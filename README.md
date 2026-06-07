@@ -42,27 +42,31 @@
 ## 📦 安装
 
 ### 使用 npm
+
 ```bash
 npm install ant-design-hmfw
 ```
 
 ### 使用 pnpm (推荐)
+
 ```bash
 pnpm add ant-design-hmfw
 ```
 
 ### 使用 yarn
+
 ```bash
 yarn add ant-design-hmfw
 ```
 
 ### CDN
+
 ```html
 <!-- 引入 Vue 3 -->
 <script src="https://unpkg.com/vue@3"></script>
 
 <!-- 引入 ant-design-hmfw -->
-<link rel="stylesheet" href="https://unpkg.com/ant-design-hmfw/dist/style.css">
+<link rel="stylesheet" href="https://unpkg.com/ant-design-hmfw/dist/style.css" />
 <script src="https://unpkg.com/ant-design-hmfw"></script>
 ```
 
@@ -91,9 +95,7 @@ app.mount('#app')
 ```vue
 <template>
   <div>
-    <Button type="primary" @click="handleClick">
-      点击我
-    </Button>
+    <Button type="primary" @click="handleClick"> 点击我 </Button>
     <Input v-model:value="text" placeholder="请输入内容" />
   </div>
 </template>
@@ -138,7 +140,7 @@ import 'ant-design-hmfw/style.css'
 
 const formData = reactive({
   username: '',
-  password: ''
+  password: '',
 })
 
 const handleSubmit = () => {
@@ -185,12 +187,12 @@ import { ConfigProvider } from 'ant-design-hmfw'
 import 'ant-design-hmfw/style.css'
 
 const customTheme = {
-  colorPrimary: '#00b96b',    // 主色
-  colorSuccess: '#52c41a',    // 成功色
-  colorWarning: '#faad14',    // 警告色
-  colorError: '#ff4d4f',      // 错误色
-  borderRadius: 8,            // 圆角
-  fontSize: 14,               // 字体大小
+  colorPrimary: '#00b96b', // 主色
+  colorSuccess: '#52c41a', // 成功色
+  colorWarning: '#faad14', // 警告色
+  colorError: '#ff4d4f', // 错误色
+  borderRadius: 8, // 圆角
+  fontSize: 14, // 字体大小
 }
 </script>
 ```
@@ -200,24 +202,31 @@ const customTheme = {
 ## 📦 组件列表
 
 ### 通用组件 (3)
+
 Button 按钮 • Icon 图标 • Typography 排版
 
 ### 布局组件 (5)
+
 Divider 分割线 • Flex 弹性布局 • Grid 栅格 • Layout 布局 • Space 间距
 
 ### 导航组件 (7)
+
 Anchor 锚点 • Breadcrumb 面包屑 • Dropdown 下拉菜单 • Menu 导航菜单 • Pagination 分页 • Steps 步骤条 • Tabs 标签页
 
 ### 数据录入组件 (18)
+
 AutoComplete • Cascader • Checkbox • ColorPicker • DatePicker • Form • Input • InputNumber • Radio • RangePicker • Rate • Select • Slider • Switch • TimePicker • Transfer • TreeSelect • Upload
 
 ### 数据展示组件 (18)
+
 Avatar • Badge • Calendar • Card • Carousel • Collapse • Descriptions • Empty • Image • List • Popover • Progress • QRCode • Segmented • Statistic • Table • Tag • Timeline • Tooltip • Tree • Watermark
 
 ### 反馈组件 (11)
+
 Alert • Drawer • Message • Modal • Notification • Popconfirm • Result • Skeleton • Spin • Tour
 
 ### 其他组件 (4)
+
 App • BackTop • ConfigProvider • FloatButton
 
 > 📖 查看 [完整文档](https://hmfw.github.io/ant-design-hmfw) 了解每个组件的详细用法和 API
@@ -236,16 +245,16 @@ App • BackTop • ConfigProvider • FloatButton
   colorWarning: '#faad14',
   colorError: '#ff4d4f',
   colorInfo: '#1677ff',
-  
+
   // 字体
   fontSize: 14,
   fontSizeBase: 14,
   fontFamily: '-apple-system, BlinkMacSystemFont, ...',
-  
+
   // 尺寸
   borderRadius: 6,
   controlHeight: 32,
-  
+
   // 间距
   padding: 16,
   margin: 16,
@@ -290,8 +299,8 @@ const locale = ref(zhCN)
 支持现代浏览器和 Node.js 18+
 
 | ![Edge](https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Firefox](https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Chrome](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Safari](https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png) |
-| --- | --- | --- | --- |
-| Edge ≥ 79 | Firefox latest 2 | Chrome latest 2 | Safari latest 2 |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Edge ≥ 79                                                                                     | Firefox latest 2                                                                                       | Chrome latest 2                                                                                     | Safari latest 2                                                                                     |
 
 ---
 

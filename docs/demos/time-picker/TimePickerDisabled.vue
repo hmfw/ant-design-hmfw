@@ -1,15 +1,11 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
     <div>
-      <p style="margin-bottom: 4px;">禁用部分小时：</p>
-      <TimePicker
-        v-model:value="time1"
-        :disabled-time="disabledTime1"
-        placeholder="禁用 0-5 时"
-      />
+      <p style="margin-bottom: 4px">禁用部分小时：</p>
+      <TimePicker v-model:value="time1" :disabled-time="disabledTime1" placeholder="禁用 0-5 时" />
     </div>
     <div>
-      <p style="margin-bottom: 4px;">隐藏禁用选项：</p>
+      <p style="margin-bottom: 4px">隐藏禁用选项：</p>
       <TimePicker
         v-model:value="time2"
         :disabled-time="disabledTime2"

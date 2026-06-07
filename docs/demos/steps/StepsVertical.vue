@@ -1,9 +1,5 @@
 <template>
-  <Steps
-    direction="vertical"
-    :current="1"
-    :items="items"
-  />
+  <Steps direction="vertical" :current="1" :items="items" />
 </template>
 
 <script setup lang="ts">

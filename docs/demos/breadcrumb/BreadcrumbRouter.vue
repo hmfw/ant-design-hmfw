@@ -2,10 +2,10 @@
   <div class="breadcrumb-router-demo">
     <Breadcrumb :items="breadcrumbItems" />
     <div class="demo-nav">
-      <Button @click="navigateTo('/')">首页</Button>
-      <Button @click="navigateTo('/products')">产品列表</Button>
-      <Button @click="navigateTo('/products/123')">产品详情</Button>
-      <Button @click="navigateTo('/products/123/reviews')">产品评价</Button>
+      <Button @click="navigateTo('/')"> 首页 </Button>
+      <Button @click="navigateTo('/products')"> 产品列表 </Button>
+      <Button @click="navigateTo('/products/123')"> 产品详情 </Button>
+      <Button @click="navigateTo('/products/123/reviews')"> 产品评价 </Button>
     </div>
     <div class="current-path">当前路径：{{ currentPath }}</div>
   </div>

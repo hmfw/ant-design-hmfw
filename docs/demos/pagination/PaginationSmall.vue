@@ -1,13 +1,7 @@
 <template>
   <Space direction="vertical">
-    <Pagination size="small" :total="50" v-model:current="current" />
-    <Pagination
-      size="small"
-      :total="50"
-      v-model:current="current"
-      show-size-changer
-      show-quick-jumper
-    />
+    <Pagination v-model:current="current" size="small" :total="50" />
+    <Pagination v-model:current="current" size="small" :total="50" show-size-changer show-quick-jumper />
   </Space>
 </template>
 

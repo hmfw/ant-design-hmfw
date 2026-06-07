@@ -1,9 +1,9 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-    <Button @click="openSuccess">成功</Button>
-    <Button @click="openError">错误</Button>
-    <Button @click="openWarning">警告</Button>
-    <Button @click="openInfo">信息</Button>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Button @click="openSuccess"> 成功 </Button>
+    <Button @click="openError"> 错误 </Button>
+    <Button @click="openWarning"> 警告 </Button>
+    <Button @click="openInfo"> 信息 </Button>
   </div>
 </template>
 

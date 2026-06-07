@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 24px; align-items: center;">
+  <div style="display: flex; gap: 24px; align-items: center">
     <Spin size="small" />
     <Spin />
     <Spin size="large" />

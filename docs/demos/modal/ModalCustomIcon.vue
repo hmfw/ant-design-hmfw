@@ -1,6 +1,6 @@
 <template>
-  <Button @click="showCustomIcon">使用自定义 VNode 图标</Button>
-  <Button @click="showNoIcon">隐藏图标</Button>
+  <Button @click="showCustomIcon"> 使用自定义 VNode 图标 </Button>
+  <Button @click="showNoIcon"> 隐藏图标 </Button>
 </template>
 
 <script setup lang="ts">
@@ -11,12 +11,16 @@ function showCustomIcon() {
   Modal.info({
     title: '自定义图标',
     content: '这个对话框使用了自定义的 VNode 作为图标。',
-    icon: h('span', {
-      style: {
-        fontSize: '24px',
-        color: '#1890ff',
+    icon: h(
+      'span',
+      {
+        style: {
+          fontSize: '24px',
+          color: '#1890ff',
+        },
       },
-    }, '🎨'),
+      '🎨',
+    ),
   })
 }
 

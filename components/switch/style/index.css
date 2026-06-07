@@ -10,7 +10,9 @@
   border: 0;
   border-radius: 100px;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
   vertical-align: middle;
   /* overflow:hidden 确保 inner 长文本被胶囊裁掉，handle 仍通过定位显示 */
   overflow: hidden;
@@ -52,7 +54,9 @@
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 2px 4px rgba(0, 35, 11, 0.2);
-  transition: left 0.2s, width 0.2s;
+  transition:
+    left 0.2s,
+    width 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;

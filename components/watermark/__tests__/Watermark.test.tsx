@@ -257,9 +257,7 @@ describe('Watermark', () => {
       expect(fillTextMock).toHaveBeenCalled()
       const calls = fillTextMock.mock.calls
       // 至少被调用了 2 次（两行内容）
-      const textCalls = calls.filter(
-        (c: any[]) => c[0] === 'Line A' || c[0] === 'Line B',
-      )
+      const textCalls = calls.filter((c: any[]) => c[0] === 'Line A' || c[0] === 'Line B')
       expect(textCalls.length).toBeGreaterThanOrEqual(2)
     })
   })

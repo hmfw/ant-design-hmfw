@@ -25,10 +25,7 @@ export interface RenderResultObject {
 export type RenderResult = VNode | RenderResultObject | string | null
 
 /** 全选标签：节点或函数（接收已选/总数信息） */
-export type SelectAllLabel =
-  | VNode
-  | string
-  | ((info: { selectedCount: number; totalCount: number }) => VNode | string)
+export type SelectAllLabel = VNode | string | ((info: { selectedCount: number; totalCount: number }) => VNode | string)
 
 /** 分页配置 */
 export type PaginationType =

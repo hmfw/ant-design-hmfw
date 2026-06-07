@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 16px; align-items: center;">
+  <div style="display: flex; gap: 16px; align-items: center">
     <!-- 异步确认 -->
     <Popconfirm
       title="确定要提交吗？"
@@ -13,12 +13,7 @@
     </Popconfirm>
 
     <!-- 禁用按钮 -->
-    <Popconfirm
-      title="确定要执行吗？"
-      ok-text="确定"
-      cancel-text="取消"
-      :ok-button-props="{ disabled: true }"
-    >
+    <Popconfirm title="确定要执行吗？" ok-text="确定" cancel-text="取消" :ok-button-props="{ disabled: true }">
       <button>确定按钮禁用</button>
     </Popconfirm>
 

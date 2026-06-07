@@ -1,17 +1,7 @@
-import {
-  defineComponent,
-  computed,
-  h,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { defineComponent, computed, h, type PropType, type VNode } from 'vue'
 import { Tooltip } from '../tooltip'
 import { usePrefixCls } from '../config-provider'
-import type {
-  TooltipPlacement,
-  TooltipTrigger,
-  TooltipArrow,
-} from '../tooltip/types'
+import type { TooltipPlacement, TooltipTrigger, TooltipArrow } from '../tooltip/types'
 import type { PopoverContent, PopoverClassNames, PopoverStyles } from './types'
 import { PurePanel } from './PurePanel'
 
@@ -66,10 +56,7 @@ const InternalPopover = defineComponent({
     })
 
     /** Resolve title/content (string | VNode | render fn | slot) to renderable nodes. */
-    const resolveNode = (
-      value: PopoverContent | undefined,
-      slot: (() => VNode[] | undefined) | undefined,
-    ) => {
+    const resolveNode = (value: PopoverContent | undefined, slot: (() => VNode[] | undefined) | undefined) => {
       if (typeof value === 'function') return (value as () => VNode | string | number)()
       if (value !== undefined && value !== null && value !== '') return value
       return slot?.()
@@ -81,9 +68,7 @@ const InternalPopover = defineComponent({
       const resolveSemantic = <T,>(
         value: T | ((info: { props: Record<string, unknown> }) => T) | undefined,
       ): T | undefined =>
-        typeof value === 'function'
-          ? (value as (info: { props: Record<string, unknown> }) => T)({ props })
-          : value
+        typeof value === 'function' ? (value as (info: { props: Record<string, unknown> }) => T)({ props }) : value
       const mergedClassNames = resolveSemantic(props.classNames) ?? {}
       const mergedStyles = resolveSemantic(props.styles) ?? {}
 
@@ -95,10 +80,8 @@ const InternalPopover = defineComponent({
       const titleNode = resolveNode(props.title, slots.title)
       const contentNode = resolveNode(props.content, slots.content)
 
-      const titleVisible =
-        titleNode !== undefined && titleNode !== null && titleNode !== ''
-      const contentVisible =
-        contentNode !== undefined && contentNode !== null && contentNode !== ''
+      const titleVisible = titleNode !== undefined && titleNode !== null && titleNode !== ''
+      const contentVisible = contentNode !== undefined && contentNode !== null && contentNode !== ''
 
       // AntD only renders the content div when content is non-empty (title-only
       // popovers don't get an empty padded content box).
@@ -182,4 +165,3 @@ export const Popover = InternalPopover as typeof InternalPopover & {
 }
 
 Popover._InternalPanelDoNotUseOrYouWillBeFired = PurePanel
-

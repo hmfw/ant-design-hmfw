@@ -1,22 +1,9 @@
 <template>
   <div class="statistic-demo">
     <Space direction="vertical" :size="16">
-      <Countdown
-        title="倒计时"
-        :value="deadline"
-        format="HH:mm:ss"
-      />
-      <Countdown
-        title="天数倒计时"
-        :value="deadline2"
-        format="DD 天 HH 时 mm 分 ss 秒"
-      />
-      <Countdown
-        title="毫秒倒计时"
-        :value="deadline3"
-        format="HH:mm:ss:SSS"
-        @finish="onFinish"
-      />
+      <Countdown title="倒计时" :value="deadline" format="HH:mm:ss" />
+      <Countdown title="天数倒计时" :value="deadline2" format="DD 天 HH 时 mm 分 ss 秒" />
+      <Countdown title="毫秒倒计时" :value="deadline3" format="HH:mm:ss:SSS" @finish="onFinish" />
     </Space>
   </div>
 </template>

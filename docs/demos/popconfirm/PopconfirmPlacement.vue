@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
     <Popconfirm
       v-for="placement in placements"
       :key="placement"
@@ -16,9 +16,17 @@
 import { Popconfirm } from 'ant-design-hmfw'
 
 const placements = [
-  'topLeft', 'top', 'topRight',
-  'leftTop', 'left', 'leftBottom',
-  'rightTop', 'right', 'rightBottom',
-  'bottomLeft', 'bottom', 'bottomRight',
+  'topLeft',
+  'top',
+  'topRight',
+  'leftTop',
+  'left',
+  'leftBottom',
+  'rightTop',
+  'right',
+  'rightBottom',
+  'bottomLeft',
+  'bottom',
+  'bottomRight',
 ]
 </script>

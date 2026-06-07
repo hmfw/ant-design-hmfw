@@ -1,6 +1,6 @@
 <template>
   <aside v-if="anchors.length > 0" class="toc">
-<ul class="toc__list">
+    <ul class="toc__list">
       <li
         v-for="anchor in anchors"
         :key="anchor.id"
@@ -147,7 +147,9 @@ watch(() => route.path, updateAnchors)
   color: var(--doc-c-text-2);
   text-decoration: none;
   border-radius: 4px;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
   line-height: 1.5;
   white-space: nowrap;
   overflow: hidden;

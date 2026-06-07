@@ -75,13 +75,14 @@ export const Collapse = defineComponent({
     const innerKeys = ref<string[]>(normalize(props.defaultActiveKey ?? props.activeKey))
 
     const isControlled = computed(() => props.activeKey !== undefined)
-    const currentKeys = computed(() =>
-      isControlled.value ? normalize(props.activeKey) : innerKeys.value,
-    )
+    const currentKeys = computed(() => (isControlled.value ? normalize(props.activeKey) : innerKeys.value))
 
-    watch(() => props.activeKey, (v) => {
-      if (v !== undefined) innerKeys.value = normalize(v)
-    })
+    watch(
+      () => props.activeKey,
+      (v) => {
+        if (v !== undefined) innerKeys.value = normalize(v)
+      },
+    )
 
     const toggle = (key: string) => {
       const keys = currentKeys.value
@@ -112,12 +113,7 @@ export const Collapse = defineComponent({
       if (props.expandIcon) {
         return props.expandIcon({ isActive, panelKey })
       }
-      return (
-        <Icon
-          component={RightOutlined}
-          style={{ transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)' }}
-        />
-      )
+      return <Icon component={RightOutlined} style={{ transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)' }} />
     }
 
     return () => {
@@ -143,7 +139,9 @@ export const Collapse = defineComponent({
         const effectiveCollapsible = options.collapsible ?? props.collapsible
         const isDisabled = options.disabled || effectiveCollapsible === 'disabled'
         const canClickHeader = !isDisabled && effectiveCollapsible !== 'icon'
-        const canClickIcon = !isDisabled && (effectiveCollapsible === 'icon' || effectiveCollapsible === 'header' || effectiveCollapsible === undefined)
+        const canClickIcon =
+          !isDisabled &&
+          (effectiveCollapsible === 'icon' || effectiveCollapsible === 'header' || effectiveCollapsible === undefined)
 
         // 如果 forceRender，内容始终渲染但用 CSS 隐藏；否则用 Transition 处理
         const useTransition = !options.forceRender
@@ -176,15 +174,15 @@ export const Collapse = defineComponent({
                       toggle(key)
                     }
                   }}
-                  style={{ cursor: canClickIcon && effectiveCollapsible === 'icon' ? 'pointer' : 'inherit' }}
+                  style={{
+                    cursor: canClickIcon && effectiveCollapsible === 'icon' ? 'pointer' : 'inherit',
+                  }}
                 >
                   {renderExpandIcon(isOpen, key)}
                 </span>
               )}
               <span class={`${prefixCls}-header-text`}>{label}</span>
-              {options.extra && (
-                <span class={`${prefixCls}-extra`}>{options.extra}</span>
-              )}
+              {options.extra && <span class={`${prefixCls}-extra`}>{options.extra}</span>}
             </div>
             {useTransition ? (
               <Transition
@@ -196,14 +194,9 @@ export const Collapse = defineComponent({
                 onLeave={collapseMotion.onLeave}
                 onAfterLeave={collapseMotion.onAfterLeave}
               >
-                {(shouldRender && isOpen) && (
-                  <div
-                    class={`${prefixCls}-content`}
-                    role="region"
-                  >
-                    <div class={`${prefixCls}-content-box`}>
-                      {children as any}
-                    </div>
+                {shouldRender && isOpen && (
+                  <div class={`${prefixCls}-content`} role="region">
+                    <div class={`${prefixCls}-content-box`}>{children as any}</div>
                   </div>
                 )}
               </Transition>
@@ -219,9 +212,7 @@ export const Collapse = defineComponent({
                     opacity: isOpen ? undefined : '0',
                   }}
                 >
-                  <div class={`${prefixCls}-content-box`}>
-                    {children as any}
-                  </div>
+                  <div class={`${prefixCls}-content-box`}>{children as any}</div>
                 </div>
               )
             )}
@@ -230,12 +221,14 @@ export const Collapse = defineComponent({
       }
 
       return (
-        <div class={cls(prefixCls, {
-          [`${prefixCls}-borderless`]: !props.bordered,
-          [`${prefixCls}-ghost`]: props.ghost,
-          [`${prefixCls}-${props.size}`]: props.size !== 'middle',
-          [`${prefixCls}-icon-position-end`]: props.expandIconPosition === 'end',
-        })}>
+        <div
+          class={cls(prefixCls, {
+            [`${prefixCls}-borderless`]: !props.bordered,
+            [`${prefixCls}-ghost`]: props.ghost,
+            [`${prefixCls}-${props.size}`]: props.size !== 'middle',
+            [`${prefixCls}-icon-position-end`]: props.expandIconPosition === 'end',
+          })}
+        >
           {items.map((item) =>
             renderPanel(item.key, item.label, item.children, {
               disabled: item.disabled,
@@ -298,9 +291,7 @@ export const CollapsePanel = defineComponent({
     const canClickHeader = computed(() => !isDisabled.value && effectiveCollapsible.value !== 'icon')
     const canClickIcon = computed(() => !isDisabled.value && effectiveCollapsible.value !== 'disabled')
 
-    const shouldRender = computed(
-      () => isOpen.value || !context.destroyInactivePanel.value || props.forceRender,
-    )
+    const shouldRender = computed(() => isOpen.value || !context.destroyInactivePanel.value || props.forceRender)
 
     // 如果 forceRender，内容始终渲染但用 CSS 隐藏；否则用 Transition 处理
     const useTransition = computed(() => !props.forceRender)
@@ -309,12 +300,7 @@ export const CollapsePanel = defineComponent({
       if (context.expandIcon.value) {
         return context.expandIcon.value({ isActive: isOpen.value, panelKey: key.value })
       }
-      return (
-        <Icon
-          component={RightOutlined}
-          style={{ transform: isOpen.value ? 'rotate(90deg)' : 'rotate(0deg)' }}
-        />
-      )
+      return <Icon component={RightOutlined} style={{ transform: isOpen.value ? 'rotate(90deg)' : 'rotate(0deg)' }} />
     }
 
     return () => (
@@ -343,7 +329,9 @@ export const CollapsePanel = defineComponent({
                   context.toggle(key.value)
                 }
               }}
-              style={{ cursor: canClickIcon.value && effectiveCollapsible.value === 'icon' ? 'pointer' : 'inherit' }}
+              style={{
+                cursor: canClickIcon.value && effectiveCollapsible.value === 'icon' ? 'pointer' : 'inherit',
+              }}
             >
               {renderExpandIcon()}
             </span>
@@ -361,11 +349,8 @@ export const CollapsePanel = defineComponent({
             onLeave={collapseMotion.onLeave}
             onAfterLeave={collapseMotion.onAfterLeave}
           >
-            {(shouldRender.value && isOpen.value) && (
-              <div
-                class={`${prefixCls}-content`}
-                role="region"
-              >
+            {shouldRender.value && isOpen.value && (
+              <div class={`${prefixCls}-content`} role="region">
                 <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
               </div>
             )}

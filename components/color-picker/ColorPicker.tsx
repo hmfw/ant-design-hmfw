@@ -26,7 +26,10 @@ export const ColorPicker = defineComponent({
     size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
     showText: Boolean,
     allowClear: Boolean,
-    presets: { type: Array as PropType<Array<{ label: string; colors: string[] }>>, default: () => [] },
+    presets: {
+      type: Array as PropType<Array<{ label: string; colors: string[] }>>,
+      default: () => [],
+    },
   },
   emits: ['update:value', 'change', 'clear', 'openChange'],
   setup(props, { emit }) {
@@ -37,7 +40,12 @@ export const ColorPicker = defineComponent({
     const panelPos = ref({ top: 0, left: 0 })
 
     const innerValue = ref(props.value ?? props.defaultValue ?? DEFAULT_COLOR)
-    watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = v })
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
+    )
 
     const hsb = ref<HSB>(hexToHsb(isValidHex(innerValue.value) ? innerValue.value : DEFAULT_COLOR))
     const hexInput = ref(innerValue.value)
@@ -77,8 +85,12 @@ export const ColorPicker = defineComponent({
       getSBFromEvent(e)
     }
 
-    function onSBMouseMove(e: MouseEvent) { if (draggingSB.value) getSBFromEvent(e) }
-    function onSBMouseUp() { draggingSB.value = false }
+    function onSBMouseMove(e: MouseEvent) {
+      if (draggingSB.value) getSBFromEvent(e)
+    }
+    function onSBMouseUp() {
+      draggingSB.value = false
+    }
 
     // Hue slider drag
     const hueRef = ref<HTMLElement | null>(null)
@@ -91,9 +103,16 @@ export const ColorPicker = defineComponent({
       applyHsb({ ...hsb.value, h: Math.round(h) })
     }
 
-    function onHueMouseDown(e: MouseEvent) { draggingHue.value = true; getHueFromEvent(e) }
-    function onHueMouseMove(e: MouseEvent) { if (draggingHue.value) getHueFromEvent(e) }
-    function onHueMouseUp() { draggingHue.value = false }
+    function onHueMouseDown(e: MouseEvent) {
+      draggingHue.value = true
+      getHueFromEvent(e)
+    }
+    function onHueMouseMove(e: MouseEvent) {
+      if (draggingHue.value) getHueFromEvent(e)
+    }
+    function onHueMouseUp() {
+      draggingHue.value = false
+    }
 
     onMounted(() => {
       document.addEventListener('mousemove', onSBMouseMove)
@@ -168,7 +187,11 @@ export const ColorPicker = defineComponent({
     }
 
     return () => (
-      <div class={cls(prefixCls, `${prefixCls}-${props.size}`, { [`${prefixCls}-disabled`]: props.disabled })}>
+      <div
+        class={cls(prefixCls, `${prefixCls}-${props.size}`, {
+          [`${prefixCls}-disabled`]: props.disabled,
+        })}
+      >
         <div
           ref={triggerRef}
           class={cls(`${prefixCls}-trigger`, { [`${prefixCls}-trigger-open`]: open.value })}
@@ -177,13 +200,8 @@ export const ColorPicker = defineComponent({
           aria-haspopup="true"
           aria-expanded={open.value}
         >
-          <div
-            class={`${prefixCls}-color-block`}
-            style={{ background: innerValue.value || 'transparent' }}
-          />
-          {props.showText && (
-            <span class={`${prefixCls}-text`}>{innerValue.value || '—'}</span>
-          )}
+          <div class={`${prefixCls}-color-block`} style={{ background: innerValue.value || 'transparent' }} />
+          {props.showText && <span class={`${prefixCls}-text`}>{innerValue.value || '—'}</span>}
         </div>
 
         {open.value && (
@@ -199,12 +217,7 @@ export const ColorPicker = defineComponent({
               }}
             >
               {/* Saturation/Brightness picker */}
-              <div
-                ref={sbRef}
-                class={`${prefixCls}-sb`}
-                style={sbBgStyle.value}
-                onMousedown={onSBMouseDown}
-              >
+              <div ref={sbRef} class={`${prefixCls}-sb`} style={sbBgStyle.value} onMousedown={onSBMouseDown}>
                 <div class={`${prefixCls}-sb-white`} />
                 <div class={`${prefixCls}-sb-black`} />
                 <div class={`${prefixCls}-sb-cursor`} style={sbCursorStyle.value} />
@@ -212,11 +225,7 @@ export const ColorPicker = defineComponent({
 
               {/* Hue slider */}
               <div class={`${prefixCls}-sliders`}>
-                <div
-                  ref={hueRef}
-                  class={`${prefixCls}-hue`}
-                  onMousedown={onHueMouseDown}
-                >
+                <div ref={hueRef} class={`${prefixCls}-hue`} onMousedown={onHueMouseDown}>
                   <div class={`${prefixCls}-hue-cursor`} style={hueCursorStyle.value} />
                 </div>
               </div>
@@ -264,7 +273,9 @@ export const ColorPicker = defineComponent({
               )}
 
               {props.allowClear && (
-                <div class={`${prefixCls}-clear-btn`} onClick={clearColor}>清除</div>
+                <div class={`${prefixCls}-clear-btn`} onClick={clearColor}>
+                  清除
+                </div>
               )}
             </div>
           </Teleport>

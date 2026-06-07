@@ -1,5 +1,5 @@
 <template>
-  <Button @click="openMessage">开始加载</Button>
+  <Button @click="openMessage"> 开始加载 </Button>
 </template>
 
 <script setup lang="ts">

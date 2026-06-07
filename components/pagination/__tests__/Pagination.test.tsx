@@ -61,8 +61,7 @@ describe('Pagination', () => {
   })
 
   it('renders showTotal', () => {
-    const showTotal = (total: number, range: [number, number]) =>
-      `${range[0]}-${range[1]} of ${total} items`
+    const showTotal = (total: number, range: [number, number]) => `${range[0]}-${range[1]} of ${total} items`
     const wrapper = mount(Pagination, {
       props: { total: 50, pageSize: 10, current: 2, showTotal },
     })

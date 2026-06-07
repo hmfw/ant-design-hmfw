@@ -1,9 +1,9 @@
 <template>
-  <Button @click="open = true">打开自定义样式对话框</Button>
+  <Button @click="open = true"> 打开自定义样式对话框 </Button>
   <Modal
     v-model:open="open"
     title="细粒度样式控制"
-    :classNames="{
+    :class-names="{
       header: 'custom-header',
       body: 'custom-body',
       footer: 'custom-footer',
@@ -45,4 +45,3 @@ function handleOk() {
   padding: 16px 24px;
 }
 </style>
-

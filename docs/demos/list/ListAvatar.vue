@@ -30,6 +30,6 @@ const renderItem = (item: any) =>
       avatar: h(Avatar, { src: item.avatar }),
       title: item.title,
       description: item.description,
-    })
+    }),
   )
 </script>

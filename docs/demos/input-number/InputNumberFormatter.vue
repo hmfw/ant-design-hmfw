@@ -1,23 +1,18 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
     <div>
-      <p style="margin-bottom: 4px;">千分位格式化：</p>
-      <InputNumber
-        v-model:value="value1"
-        :formatter="formatter1"
-        :parser="parser1"
-        style="width: 100%;"
-      />
+      <p style="margin-bottom: 4px">千分位格式化：</p>
+      <InputNumber v-model:value="value1" :formatter="formatter1" :parser="parser1" style="width: 100%" />
     </div>
     <div>
-      <p style="margin-bottom: 4px;">百分比：</p>
+      <p style="margin-bottom: 4px">百分比：</p>
       <InputNumber
         v-model:value="value2"
         :min="0"
         :max="100"
         :formatter="formatter2"
         :parser="parser2"
-        style="width: 100%;"
+        style="width: 100%"
       />
     </div>
   </div>

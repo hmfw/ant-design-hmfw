@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
@@ -6,8 +6,8 @@
       // GitHub Pages SPA 路由重定向
       // 当访问不存在的路径时，GitHub Pages 会返回这个 404.html
       // 我们将路径信息保存到 sessionStorage，然后重定向到 index.html
-      sessionStorage.setItem('redirect', location.pathname + location.search + location.hash);
-      location.replace(location.origin + '/ant-design-hmfw/');
+      sessionStorage.setItem('redirect', location.pathname + location.search + location.hash)
+      location.replace(location.origin + '/ant-design-hmfw/')
     </script>
   </head>
   <body></body>

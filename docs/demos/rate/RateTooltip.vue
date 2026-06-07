@@ -1,13 +1,7 @@
 <template>
   <div>
-    <Rate
-      v-model:value="value"
-      :tooltips="tooltips"
-      @hover-change="handleHoverChange"
-    />
-    <p style="margin-top: 8px;">
-      当前：{{ tooltips[value - 1] || '未评分' }}
-    </p>
+    <Rate v-model:value="value" :tooltips="tooltips" @hover-change="handleHoverChange" />
+    <p style="margin-top: 8px">当前：{{ tooltips[value - 1] || '未评分' }}</p>
   </div>
 </template>
 

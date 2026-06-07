@@ -7,7 +7,9 @@
 
 .hmfw-spin-dot-holder {
   display: inline-block;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
   transform-origin: 50% 50%;
   line-height: 1;
 }
@@ -60,18 +62,43 @@
   height: 14px;
 }
 
-.hmfw-spin-dot-item:nth-child(1) { top: 0; left: 0; animation-delay: 0s; }
-.hmfw-spin-dot-item:nth-child(2) { top: 0; right: 0; animation-delay: 0.4s; }
-.hmfw-spin-dot-item:nth-child(3) { bottom: 0; right: 0; animation-delay: 0.8s; }
-.hmfw-spin-dot-item:nth-child(4) { bottom: 0; left: 0; animation-delay: 1.2s; }
+.hmfw-spin-dot-item:nth-child(1) {
+  top: 0;
+  left: 0;
+  animation-delay: 0s;
+}
+.hmfw-spin-dot-item:nth-child(2) {
+  top: 0;
+  right: 0;
+  animation-delay: 0.4s;
+}
+.hmfw-spin-dot-item:nth-child(3) {
+  bottom: 0;
+  right: 0;
+  animation-delay: 0.8s;
+}
+.hmfw-spin-dot-item:nth-child(4) {
+  bottom: 0;
+  left: 0;
+  animation-delay: 1.2s;
+}
 
 @keyframes hmfw-spin-rotate {
-  to { transform: rotate(405deg); }
+  to {
+    transform: rotate(405deg);
+  }
 }
 
 @keyframes hmfw-spin-dot {
-  0%, 100% { transform: scale(0.75); opacity: 0.3; }
-  50% { transform: scale(1); opacity: 1; }
+  0%,
+  100% {
+    transform: scale(0.75);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .hmfw-spin-description {
@@ -89,8 +116,12 @@
 
 .hmfw-spin-dot-circle {
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.3s ease, stroke-dasharray 0.3s ease, stroke 0.3s ease,
-    stroke-width 0.3s ease, opacity 0.3s ease;
+  transition:
+    stroke-dashoffset 0.3s ease,
+    stroke-dasharray 0.3s ease,
+    stroke 0.3s ease,
+    stroke-width 0.3s ease,
+    opacity 0.3s ease;
   fill-opacity: 0;
   stroke: currentColor;
 }
@@ -111,7 +142,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .hmfw-spin-blur-container {

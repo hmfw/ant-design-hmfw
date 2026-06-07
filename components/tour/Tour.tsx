@@ -26,7 +26,12 @@ function getTargetEl(target: TourStep['target']): HTMLElement | null {
   return document.querySelector<HTMLElement>(target)
 }
 
-interface Rect { top: number; left: number; width: number; height: number }
+interface Rect {
+  top: number
+  left: number
+  width: number
+  height: number
+}
 
 function getRect(el: HTMLElement | null): Rect | null {
   if (!el) return null
@@ -119,8 +124,14 @@ export const Tour = defineComponent({
     },
     zIndex: { type: Number, default: 1001 },
     gap: { type: Object as PropType<TourProps['gap']>, default: undefined },
-    indicatorsRender: { type: Function as PropType<TourProps['indicatorsRender']>, default: undefined },
-    closeIcon: { type: [Object, Function, Boolean] as PropType<TourProps['closeIcon']>, default: undefined },
+    indicatorsRender: {
+      type: Function as PropType<TourProps['indicatorsRender']>,
+      default: undefined,
+    },
+    closeIcon: {
+      type: [Object, Function, Boolean] as PropType<TourProps['closeIcon']>,
+      default: undefined,
+    },
   },
   emits: ['update:open', 'update:current', 'change', 'close', 'finish'],
   setup(props, { emit }) {
@@ -132,9 +143,7 @@ export const Tour = defineComponent({
     const targetRect = ref<Rect | null>(null)
 
     const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
-    const currentStep = computed(() =>
-      props.current !== undefined ? props.current : innerCurrent.value,
-    )
+    const currentStep = computed(() => (props.current !== undefined ? props.current : innerCurrent.value))
     const step = computed(() => props.steps[currentStep.value] ?? null)
     const total = computed(() => props.steps.length)
 
@@ -162,14 +171,11 @@ export const Tour = defineComponent({
       const el = step.value ? getTargetEl(step.value.target) : null
       if (!el) return
 
-      const scrollOptions =
-        step.value?.scrollIntoViewOptions ?? props.scrollIntoViewOptions ?? true
+      const scrollOptions = step.value?.scrollIntoViewOptions ?? props.scrollIntoViewOptions ?? true
 
       if (scrollOptions) {
         const options: ScrollIntoViewOptions =
-          typeof scrollOptions === 'boolean'
-            ? { block: 'center', behavior: 'smooth' }
-            : scrollOptions
+          typeof scrollOptions === 'boolean' ? { block: 'center', behavior: 'smooth' } : scrollOptions
         el.scrollIntoView(options)
       }
     }
@@ -250,8 +256,7 @@ export const Tour = defineComponent({
       const isLast = currentStep.value === total.value - 1
       const showMask = mergedMask.value !== false
       const maskStyle = typeof mergedMask.value === 'object' ? mergedMask.value.style : undefined
-      const maskColor =
-        typeof mergedMask.value === 'object' ? mergedMask.value.color : 'rgba(0,0,0,0.45)'
+      const maskColor = typeof mergedMask.value === 'object' ? mergedMask.value.color : 'rgba(0,0,0,0.45)'
 
       const closeIcon = getCloseIcon()
 
@@ -337,14 +342,11 @@ export const Tour = defineComponent({
                   ]),
 
                 // Title
-                step.value.title &&
-                  h('div', { class: `${prefixCls}-title` }, [renderContent(step.value.title)]),
+                step.value.title && h('div', { class: `${prefixCls}-title` }, [renderContent(step.value.title)]),
 
                 // Description
                 step.value.description &&
-                  h('div', { class: `${prefixCls}-description` }, [
-                    renderContent(step.value.description),
-                  ]),
+                  h('div', { class: `${prefixCls}-description` }, [renderContent(step.value.description)]),
 
                 // Footer
                 h('div', { class: `${prefixCls}-footer` }, [
@@ -381,8 +383,7 @@ export const Tour = defineComponent({
                           ...step.value.prevButtonProps,
                         },
                         {
-                          default: () =>
-                            step.value?.prevButtonProps?.children ?? '上一步',
+                          default: () => step.value?.prevButtonProps?.children ?? '上一步',
                         },
                       ),
                     h(
@@ -399,8 +400,7 @@ export const Tour = defineComponent({
                         ...step.value.nextButtonProps,
                       },
                       {
-                        default: () =>
-                          step.value?.nextButtonProps?.children ?? (isLast ? '完成' : '下一步'),
+                        default: () => step.value?.nextButtonProps?.children ?? (isLast ? '完成' : '下一步'),
                       },
                     ),
                   ]),

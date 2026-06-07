@@ -1,14 +1,4 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  onMounted,
-  onUnmounted,
-  watch,
-  nextTick,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { defineComponent, ref, computed, onMounted, onUnmounted, watch, nextTick, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { AnchorLinkItem } from './types'
@@ -81,9 +71,7 @@ export const Anchor = defineComponent({
     const updateInk = () => {
       if (!wrapperRef.value || !inkRef.value) return
 
-      const linkNode = wrapperRef.value.querySelector<HTMLElement>(
-        `.${prefixCls}-link-title-active`
-      )
+      const linkNode = wrapperRef.value.querySelector<HTMLElement>(`.${prefixCls}-link-title-active`)
 
       if (linkNode) {
         const { style: inkStyle } = inkRef.value
@@ -100,11 +88,7 @@ export const Anchor = defineComponent({
       }
     }
 
-    const getInternalCurrentAnchor = (
-      _links: string[],
-      _offsetTop: number,
-      _bounds: number
-    ): string => {
+    const getInternalCurrentAnchor = (_links: string[], _offsetTop: number, _bounds: number): string => {
       interface Section {
         link: string
         top: number
@@ -154,7 +138,7 @@ export const Anchor = defineComponent({
       const currentActiveLink = getInternalCurrentAnchor(
         links.value,
         props.targetOffset ?? props.offsetTop ?? 0,
-        props.bounds
+        props.bounds,
       )
 
       setCurrentActiveLink(currentActiveLink)
@@ -190,16 +174,14 @@ export const Anchor = defineComponent({
       const scroll = () => {
         const elapsed = Date.now() - startTime
         const progress = Math.min(elapsed / duration, 1)
-        const easeInOut = progress < 0.5
-          ? 2 * progress * progress
-          : -1 + (4 - 2 * progress) * progress
+        const easeInOut = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress
 
         const currentY = scrollTop + (y - scrollTop) * easeInOut
 
         if (container === window) {
           window.scrollTo(0, currentY)
         } else {
-          (container as HTMLElement).scrollTop = currentY
+          ;(container as HTMLElement).scrollTop = currentY
         }
 
         if (progress < 1) {
@@ -241,31 +223,47 @@ export const Anchor = defineComponent({
       }
     })
 
-    watch(() => props.items, () => {
-      handleScroll()
-    }, { deep: true })
+    watch(
+      () => props.items,
+      () => {
+        handleScroll()
+      },
+      { deep: true },
+    )
 
-    watch(() => links.value, () => {
-      handleScroll()
-    })
+    watch(
+      () => links.value,
+      () => {
+        handleScroll()
+      },
+    )
 
-    watch(() => activeLink.value, () => {
-      nextTick(() => {
-        updateInk()
-      })
-    })
+    watch(
+      () => activeLink.value,
+      () => {
+        nextTick(() => {
+          updateInk()
+        })
+      },
+    )
 
-    watch(() => props.getCurrentAnchor, () => {
-      if (props.getCurrentAnchor && activeLink.value) {
-        setCurrentActiveLink(props.getCurrentAnchor(activeLink.value))
-      }
-    })
+    watch(
+      () => props.getCurrentAnchor,
+      () => {
+        if (props.getCurrentAnchor && activeLink.value) {
+          setCurrentActiveLink(props.getCurrentAnchor(activeLink.value))
+        }
+      },
+    )
 
-    watch(() => props.direction, () => {
-      nextTick(() => {
-        updateInk()
-      })
-    })
+    watch(
+      () => props.direction,
+      () => {
+        nextTick(() => {
+          updateInk()
+        })
+      },
+    )
 
     const renderLinks = (items: AnchorLinkItem[]): VNode[] => {
       return items.map((item) => (
@@ -276,9 +274,7 @@ export const Anchor = defineComponent({
           target={item.target}
           targetOffset={item.targetOffset}
         >
-          {props.direction === 'vertical' && item.children?.length
-            ? renderLinks(item.children)
-            : null}
+          {props.direction === 'vertical' && item.children?.length ? renderLinks(item.children) : null}
         </AnchorLink>
       ))
     }
@@ -286,13 +282,13 @@ export const Anchor = defineComponent({
     const wrapperClass = computed(() =>
       cls(`${prefixCls}-wrapper`, {
         [`${prefixCls}-wrapper-horizontal`]: props.direction === 'horizontal',
-      })
+      }),
     )
 
     const anchorClass = computed(() =>
       cls(prefixCls, {
         [`${prefixCls}-fixed`]: !props.affix,
-      })
+      }),
     )
 
     const inkClass = computed(() =>

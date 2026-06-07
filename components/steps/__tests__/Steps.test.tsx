@@ -32,10 +32,7 @@ describe('Steps', () => {
   })
 
   it('shows error status', () => {
-    const errorItems: StepItem[] = [
-      ...items.slice(0, 2),
-      { title: 'Step 3', status: 'error' },
-    ]
+    const errorItems: StepItem[] = [...items.slice(0, 2), { title: 'Step 3', status: 'error' }]
     const wrapper = mount(Steps, { props: { items: errorItems, current: 2 } })
     expect(wrapper.findAll('.hmfw-steps-item')[2].classes()).toContain('hmfw-steps-item-error')
   })
@@ -62,9 +59,7 @@ describe('Steps', () => {
   })
 
   it('supports content field', () => {
-    const contentItems: StepItem[] = [
-      { title: 'Step 1', content: 'Content 1' },
-    ]
+    const contentItems: StepItem[] = [{ title: 'Step 1', content: 'Content 1' }]
     const wrapper = mount(Steps, { props: { items: contentItems } })
     expect(wrapper.find('.hmfw-steps-item-description').text()).toBe('Content 1')
   })
@@ -76,10 +71,7 @@ describe('Steps', () => {
   })
 
   it('does not emit change for disabled step', async () => {
-    const disabledItems: StepItem[] = [
-      { title: 'Step 1', disabled: true },
-      { title: 'Step 2' },
-    ]
+    const disabledItems: StepItem[] = [{ title: 'Step 1', disabled: true }, { title: 'Step 2' }]
     const wrapper = mount(Steps, { props: { items: disabledItems, current: 1 } })
     await wrapper.findAll('.hmfw-steps-item')[0].trigger('click')
     expect(wrapper.emitted('change')).toBeFalsy()
@@ -148,19 +140,14 @@ describe('Steps', () => {
 
   it('supports item onClick handler', async () => {
     const onClick = vi.fn()
-    const clickableItems: StepItem[] = [
-      { title: 'Step 1', onClick },
-      { title: 'Step 2' },
-    ]
+    const clickableItems: StepItem[] = [{ title: 'Step 1', onClick }, { title: 'Step 2' }]
     const wrapper = mount(Steps, { props: { items: clickableItems, current: 1 } })
     await wrapper.findAll('.hmfw-steps-item')[0].trigger('click')
     expect(onClick).toHaveBeenCalled()
   })
 
   it('renders subtitle', () => {
-    const subtitleItems: StepItem[] = [
-      { title: 'Step 1', subTitle: 'Sub 1' },
-    ]
+    const subtitleItems: StepItem[] = [{ title: 'Step 1', subTitle: 'Sub 1' }]
     const wrapper = mount(Steps, { props: { items: subtitleItems } })
     expect(wrapper.find('.hmfw-steps-item-subtitle').text()).toBe('Sub 1')
   })
@@ -186,4 +173,3 @@ describe('Steps', () => {
     expect(wrapper.classes()).toContain('hmfw-steps-label-vertical')
   })
 })
-

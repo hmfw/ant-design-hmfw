@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <Switch v-model:checked="checked1">
       <template #checkedChildren>
         <Icon :component="CheckOutlined" />
@@ -8,11 +8,7 @@
         <Icon :component="CloseOutlined" />
       </template>
     </Switch>
-    <Switch
-      v-model:checked="checked2"
-      checked-children="✓"
-      un-checked-children="✗"
-    />
+    <Switch v-model:checked="checked2" checked-children="✓" un-checked-children="✗" />
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; gap: 16px; align-items: center;">
+  <div style="display: flex; gap: 16px; align-items: center">
     <Dropdown :menu="menu" :arrow="true">
       <Button>With Arrow</Button>
     </Dropdown>

@@ -1,13 +1,7 @@
 <template>
   <div class="form-advanced-api-demo">
     <h4>批量查询 API 演示</h4>
-    <Form
-      ref="formRef"
-      :model="formState"
-      :rules="rules"
-      :layout="'vertical'"
-      style="max-width: 600px"
-    >
+    <Form ref="formRef" :model="formState" :rules="rules" :layout="'vertical'" style="max-width: 600px">
       <FormItem label="用户名" name="username">
         <Input v-model:value="formState.username" placeholder="请输入用户名" />
       </FormItem>
@@ -22,10 +16,10 @@
 
       <FormItem>
         <Space>
-          <Button type="primary" @click="handleValidate">验证表单</Button>
-          <Button @click="handleGetErrors">获取错误</Button>
-          <Button @click="handleCheckTouched">检查触摸状态</Button>
-          <Button @click="handleReset">重置</Button>
+          <Button type="primary" @click="handleValidate"> 验证表单 </Button>
+          <Button @click="handleGetErrors"> 获取错误 </Button>
+          <Button @click="handleCheckTouched"> 检查触摸状态 </Button>
+          <Button @click="handleReset"> 重置 </Button>
         </Space>
       </FormItem>
     </Form>

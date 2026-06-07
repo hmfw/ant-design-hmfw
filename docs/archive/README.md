@@ -5,6 +5,7 @@
 ## 📁 文件说明
 
 ### 工作总结
+
 - **WORK_SUMMARY.md** - 前两轮工作完整总结（2026/06/06）
 - **ROUND1_SUMMARY.md** - 第一轮任务执行总结（数据录入组件）
 - **ROUND2_SUMMARY.md** - 第二轮任务执行总结（数据展示组件 + VirtualList）
@@ -12,6 +13,7 @@
 - **ROUND4_SUMMARY.md** - 第四轮任务执行总结（布局 + 数据展示组件）
 
 ### 专项工作
+
 - **CHECKBOX_RADIO_SUMMARY.md** - Checkbox/Radio 功能完成总结（2026/06/06）
 - **TODO.md** - 基于 COMPARISON.md 生成的待办清单（已完成）
 

@@ -1,12 +1,7 @@
 <template>
-  <Card
-    style="width: 100%"
-    title="带额外内容的标签页"
-    :tabList="tabList"
-    v-model:activeTabKey="activeKey"
-  >
+  <Card v-model:active-tab-key="activeKey" style="width: 100%" title="带额外内容的标签页" :tab-list="tabList">
     <template #tabBarExtraContent>
-      <a href="#" style="color: #1890ff;">更多</a>
+      <a href="#" style="color: #1890ff">更多</a>
     </template>
     <p v-if="activeKey === 'article'">文章内容展示区域</p>
     <p v-if="activeKey === 'app'">应用内容展示区域</p>

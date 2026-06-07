@@ -17,7 +17,7 @@
         placeholder
       />
     </Space>
-    <p style="color: #999; font-size: 14px;">大图加载时显示占位动画</p>
+    <p style="color: #999; font-size: 14px">大图加载时显示占位动画</p>
   </Space>
 </template>
 

@@ -16,7 +16,10 @@ describe('ConfigProvider', () => {
   it('provides default config to children', () => {
     let config: ReturnType<typeof useConfig> | null = null
     const Consumer = defineComponent({
-      setup() { config = useConfig(); return () => null },
+      setup() {
+        config = useConfig()
+        return () => null
+      },
     })
     mount(ConfigProvider, { slots: { default: () => [<Consumer />] } })
     expect(config!.value.prefixCls).toBe('hmfw')
@@ -27,7 +30,10 @@ describe('ConfigProvider', () => {
   it('provides custom prefixCls', () => {
     let config: ReturnType<typeof useConfig> | null = null
     const Consumer = defineComponent({
-      setup() { config = useConfig(); return () => null },
+      setup() {
+        config = useConfig()
+        return () => null
+      },
     })
     mount(ConfigProvider, {
       props: { prefixCls: 'mylib' },
@@ -39,7 +45,10 @@ describe('ConfigProvider', () => {
   it('provides custom locale', () => {
     let config: ReturnType<typeof useConfig> | null = null
     const Consumer = defineComponent({
-      setup() { config = useConfig(); return () => null },
+      setup() {
+        config = useConfig()
+        return () => null
+      },
     })
     mount(ConfigProvider, {
       props: { locale: enUS },
@@ -51,7 +60,10 @@ describe('ConfigProvider', () => {
   it('provides componentSize', () => {
     let config: ReturnType<typeof useConfig> | null = null
     const Consumer = defineComponent({
-      setup() { config = useConfig(); return () => null },
+      setup() {
+        config = useConfig()
+        return () => null
+      },
     })
     mount(ConfigProvider, {
       props: { componentSize: 'large' },
@@ -63,7 +75,10 @@ describe('ConfigProvider', () => {
   it('provides direction', () => {
     let config: ReturnType<typeof useConfig> | null = null
     const Consumer = defineComponent({
-      setup() { config = useConfig(); return () => null },
+      setup() {
+        config = useConfig()
+        return () => null
+      },
     })
     mount(ConfigProvider, {
       props: { direction: 'rtl' },
@@ -102,7 +117,10 @@ describe('usePrefixCls', () => {
   it('returns prefixCls-componentName', () => {
     let cls = ''
     const Consumer = defineComponent({
-      setup() { cls = usePrefixCls('button'); return () => null },
+      setup() {
+        cls = usePrefixCls('button')
+        return () => null
+      },
     })
     mount(Consumer)
     expect(cls).toBe('hmfw-button')
@@ -111,7 +129,10 @@ describe('usePrefixCls', () => {
   it('uses custom prefixCls from ConfigProvider', () => {
     let cls = ''
     const Consumer = defineComponent({
-      setup() { cls = usePrefixCls('button'); return () => null },
+      setup() {
+        cls = usePrefixCls('button')
+        return () => null
+      },
     })
     mount(ConfigProvider, {
       props: { prefixCls: 'custom' },
@@ -125,7 +146,10 @@ describe('useLocale', () => {
   it('returns default zhCN locale', () => {
     let locale: ReturnType<typeof useLocale> | null = null
     const Consumer = defineComponent({
-      setup() { locale = useLocale(); return () => null },
+      setup() {
+        locale = useLocale()
+        return () => null
+      },
     })
     mount(Consumer)
     expect(locale!.value).toBeDefined()
@@ -135,7 +159,10 @@ describe('useLocale', () => {
   it('returns custom locale from ConfigProvider', () => {
     let locale: ReturnType<typeof useLocale> | null = null
     const Consumer = defineComponent({
-      setup() { locale = useLocale(); return () => null },
+      setup() {
+        locale = useLocale()
+        return () => null
+      },
     })
     mount(ConfigProvider, {
       props: { locale: enUS },

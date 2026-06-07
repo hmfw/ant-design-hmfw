@@ -1,19 +1,10 @@
 <template>
   <div>
     <h3>普通模式（默认）</h3>
-    <Tree
-      :tree-data="treeData"
-      :default-expanded-keys="['0-0']"
-      :default-selected-keys="['0-0-0']"
-    />
+    <Tree :tree-data="treeData" :default-expanded-keys="['0-0']" :default-selected-keys="['0-0-0']" />
 
     <h3 style="margin-top: 24px">块级节点模式（blockNode）</h3>
-    <Tree
-      :tree-data="treeData"
-      :default-expanded-keys="['0-0']"
-      :default-selected-keys="['0-0-0']"
-      block-node
-    />
+    <Tree :tree-data="treeData" :default-expanded-keys="['0-0']" :default-selected-keys="['0-0-0']" block-node />
   </div>
 </template>
 

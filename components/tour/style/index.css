@@ -33,7 +33,12 @@
   position: relative;
   background: var(--hmfw-color-bg-elevated, #fff);
   border-radius: var(--hmfw-border-radius, 8px);
-  box-shadow: var(--hmfw-box-shadow-secondary, 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05));
+  box-shadow: var(
+    --hmfw-box-shadow-secondary,
+    0 6px 16px rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05)
+  );
   padding: 20px 20px 16px;
 }
 
@@ -59,7 +64,9 @@
   color: var(--hmfw-color-text-tertiary, rgba(0, 0, 0, 0.45));
   line-height: 1;
   border-radius: var(--hmfw-border-radius-sm, 4px);
-  transition: color 0.2s, background-color 0.2s;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
 }
 
 .hmfw-tour-close:hover {
@@ -131,7 +138,9 @@
   border-radius: 50%;
   background: var(--hmfw-color-fill-tertiary, rgba(0, 0, 0, 0.15));
   cursor: pointer;
-  transition: background 0.2s, width 0.2s;
+  transition:
+    background 0.2s,
+    width 0.2s;
 }
 
 .hmfw-tour-indicator:hover {

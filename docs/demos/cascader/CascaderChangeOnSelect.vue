@@ -5,10 +5,10 @@
       :options="options"
       :change-on-select="true"
       placeholder="选择即改变"
-      style="width: 300px;"
+      style="width: 300px"
       @change="handleChange"
     />
-    <p style="margin-top: 8px;">当前值：{{ value }}</p>
+    <p style="margin-top: 8px">当前值：{{ value }}</p>
   </div>
 </template>
 
@@ -26,9 +26,7 @@ const options = [
       {
         value: 'hangzhou',
         label: '杭州',
-        children: [
-          { value: 'xihu', label: '西湖区' },
-        ],
+        children: [{ value: 'xihu', label: '西湖区' }],
       },
     ],
   },

@@ -4,7 +4,7 @@
     :options="options"
     :show-search="true"
     placeholder="请搜索并选择"
-    style="width: 300px;"
+    style="width: 300px"
     @search="handleSearch"
   />
 </template>
@@ -37,9 +37,7 @@ const options = [
       {
         value: 'nanjing',
         label: '南京',
-        children: [
-          { value: 'xuanwu', label: '玄武区' },
-        ],
+        children: [{ value: 'xuanwu', label: '玄武区' }],
       },
     ],
   },

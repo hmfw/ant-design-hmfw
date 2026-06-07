@@ -20,17 +20,20 @@ export const ScrollNumber = defineComponent({
     const isAnimating = ref(false)
 
     // 监听 count 变化
-    watch(() => props.count, (newVal, oldVal) => {
-      if (String(newVal) !== String(oldVal)) {
-        previousValue.value = currentValue.value
-        currentValue.value = String(newVal)
-        isAnimating.value = true
-        // 动画结束后重置状态
-        setTimeout(() => {
-          isAnimating.value = false
-        }, 300)
-      }
-    })
+    watch(
+      () => props.count,
+      (newVal, oldVal) => {
+        if (String(newVal) !== String(oldVal)) {
+          previousValue.value = currentValue.value
+          currentValue.value = String(newVal)
+          isAnimating.value = true
+          // 动画结束后重置状态
+          setTimeout(() => {
+            isAnimating.value = false
+          }, 300)
+        }
+      },
+    )
 
     // 将字符串拆分为单个字符
     const displayChars = computed(() => {
@@ -60,9 +63,10 @@ export const ScrollNumber = defineComponent({
 
             // 如果需要动画，渲染从上一个数字到当前数字的序列
             if (shouldAnimate) {
-              const digits = prevNum! < num
-                ? Array.from({ length: num - prevNum! + 1 }, (_, i) => prevNum! + i)
-                : Array.from({ length: prevNum! - num + 1 }, (_, i) => prevNum! - i)
+              const digits =
+                prevNum! < num
+                  ? Array.from({ length: num - prevNum! + 1 }, (_, i) => prevNum! + i)
+                  : Array.from({ length: prevNum! - num + 1 }, (_, i) => prevNum! - i)
 
               return (
                 <span key={index} class={`${prefixCls}-symbol`}>

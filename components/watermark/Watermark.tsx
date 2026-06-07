@@ -163,17 +163,7 @@ function getClips(
   const [fCtx, fCanvas] = prepareCanvas(filledWidth, filledHeight)
 
   const drawImg = (targetX = 0, targetY = 0) => {
-    fCtx.drawImage(
-      rCanvas,
-      cutLeft,
-      cutTop,
-      cutWidth,
-      cutHeight,
-      targetX,
-      targetY,
-      cutWidth,
-      cutHeight,
-    )
+    fCtx.drawImage(rCanvas, cutLeft, cutTop, cutWidth, cutHeight, targetX, targetY, cutWidth, cutHeight)
   }
   drawImg()
   drawImg(cutWidth + realGapX, -cutHeight / 2 - realGapY / 2)
@@ -276,10 +266,7 @@ export const Watermark = defineComponent({
         const contents = toArray(props.content)
         const sizes = contents.map((item) => {
           const metrics = ctx.measureText(item!)
-          return [
-            metrics.width,
-            metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent,
-          ]
+          return [metrics.width, metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent]
         })
         defaultWidth = Math.ceil(Math.max(...sizes.map((size) => size[0])))
         // 优化多行高度计算：使用 getLineHeight 以获取合适的行间距
@@ -392,8 +379,7 @@ export const Watermark = defineComponent({
       watermarkMap.delete(container)
     }
 
-    const isWatermarkEle = (ele: Node) =>
-      Array.from(watermarkMap.values()).includes(ele as HTMLDivElement)
+    const isWatermarkEle = (ele: Node) => Array.from(watermarkMap.values()).includes(ele as HTMLDivElement)
 
     const renderAll = () => {
       if (base64Url.value && markWidthRef.value) {
@@ -447,11 +433,7 @@ export const Watermark = defineComponent({
             break
           }
           // 检测容器固定样式被篡改
-          if (
-            mutation.target === target &&
-            mutation.attributeName === 'style' &&
-            target === containerRef.value
-          ) {
+          if (mutation.target === target && mutation.attributeName === 'style' && target === containerRef.value) {
             Object.keys(fixedStyle).forEach((key) => {
               const oriValue = fixedStyle[key]
               const currentValue = (target.style as any)[key]
@@ -538,9 +520,7 @@ export const Watermark = defineComponent({
       const { class: attrClass, style: attrStyle, ...restAttrs } = attrs as Record<string, unknown>
 
       // inherit=true 时容器跟随父元素自适应尺寸
-      const inheritStyle: Record<string, string> = props.inherit
-        ? { width: '100%', height: '100%' }
-        : {}
+      const inheritStyle: Record<string, string> = props.inherit ? { width: '100%', height: '100%' } : {}
 
       return (
         <div

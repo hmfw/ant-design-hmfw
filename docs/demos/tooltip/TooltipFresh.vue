@@ -6,7 +6,7 @@
         <button>悬停查看提示</button>
       </Tooltip>
     </div>
-    <button @click="moveButton" style="margin-top: 20px;">移动按钮</button>
+    <button style="margin-top: 20px" @click="moveButton">移动按钮</button>
   </div>
 </template>
 

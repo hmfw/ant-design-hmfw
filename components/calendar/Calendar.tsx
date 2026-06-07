@@ -1,17 +1,23 @@
-import {
-  defineComponent, ref, computed, watch, type PropType, h,
-} from 'vue'
+import { defineComponent, ref, computed, watch, type PropType, h } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Select } from '../select'
 import { Radio, RadioGroup } from '../radio'
 import type {
-  CalendarMode, CellRender, HeaderRender, ValidRange,
-  DateCellRender, MonthCellRender, DateRange, DateRangeString,
+  CalendarMode,
+  CellRender,
+  HeaderRender,
+  ValidRange,
+  DateCellRender,
+  MonthCellRender,
+  DateRange,
+  DateRangeString,
 } from './types'
 
 // 日期工具函数
-function pad(n: number) { return String(n).padStart(2, '0') }
+function pad(n: number) {
+  return String(n).padStart(2, '0')
+}
 
 function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
   return fmt
@@ -28,14 +34,11 @@ function parseDate(val: string | Date | undefined): Date | null {
 }
 
 function isSameDay(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() &&
-         a.getMonth() === b.getMonth() &&
-         a.getDate() === b.getDate()
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
 }
 
 function isSameMonth(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() &&
-         a.getMonth() === b.getMonth()
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()
 }
 
 function isInRange(date: Date, start: Date | null, end: Date | null): boolean {
@@ -125,9 +128,7 @@ export const Calendar = defineComponent({
     const innerMode = ref<CalendarMode>(props.mode)
 
     // 范围选择状态
-    const innerRangeValue = ref<DateRange>(
-      props.defaultRangeValue ?? props.rangeValue ?? [null, null]
-    )
+    const innerRangeValue = ref<DateRange>(props.defaultRangeValue ?? props.rangeValue ?? [null, null])
     const rangeSelectingStart = ref(true) // true = 选择开始日期, false = 选择结束日期
 
     // 视图年月
@@ -153,24 +154,33 @@ export const Calendar = defineComponent({
       return innerRangeValue.value
     })
 
-    watch(() => props.value, (v) => {
-      const parsed = parseDate(v)
-      if (parsed) {
-        innerValue.value = parsed
-        viewYear.value = parsed.getFullYear()
-        viewMonth.value = parsed.getMonth()
-      }
-    })
+    watch(
+      () => props.value,
+      (v) => {
+        const parsed = parseDate(v)
+        if (parsed) {
+          innerValue.value = parsed
+          viewYear.value = parsed.getFullYear()
+          viewMonth.value = parsed.getMonth()
+        }
+      },
+    )
 
-    watch(() => props.rangeValue, (v) => {
-      if (v) {
-        innerRangeValue.value = v
-      }
-    })
+    watch(
+      () => props.rangeValue,
+      (v) => {
+        if (v) {
+          innerRangeValue.value = v
+        }
+      },
+    )
 
-    watch(() => props.mode, (v) => {
-      innerMode.value = v
-    })
+    watch(
+      () => props.mode,
+      (v) => {
+        innerMode.value = v
+      },
+    )
 
     // validRange 边界检查
     const isDateInValidRange = (date: Date): boolean => {
@@ -213,10 +223,7 @@ export const Calendar = defineComponent({
             // 确保 start <= end
             const range: DateRange = start <= end ? [start, end] : [end, start]
             innerRangeValue.value = range
-            const rangeStr: DateRangeString = [
-              formatDate(range[0]!, 'YYYY-MM-DD'),
-              formatDate(range[1]!, 'YYYY-MM-DD'),
-            ]
+            const rangeStr: DateRangeString = [formatDate(range[0]!, 'YYYY-MM-DD'), formatDate(range[1]!, 'YYYY-MM-DD')]
             emit('update:rangeValue', range)
             emit('rangeChange', rangeStr, range)
           }
@@ -281,7 +288,7 @@ export const Calendar = defineComponent({
       locale.value.DatePicker.months.map((label, i) => ({
         label,
         value: i,
-      }))
+      })),
     )
 
     // 头部模式切换
@@ -357,11 +364,7 @@ export const Calendar = defineComponent({
     // 渲染月份单元格内容
     const renderMonthCell = (month: number) => {
       const date = new Date(viewYear.value, month, 1)
-      const originNode = h(
-        'div',
-        { class: `${prefixCls}-month` },
-        locale.value.DatePicker.months[month]
-      )
+      const originNode = h('div', { class: `${prefixCls}-month` }, locale.value.DatePicker.months[month])
 
       // 优先使用新 API cellRender
       if (props.cellRender) {
@@ -428,9 +431,7 @@ export const Calendar = defineComponent({
                 })}
                 onClick={() => !isDisabled && selectDate(date)}
               >
-                <div class={`${prefixCls}-cell-inner`}>
-                  {renderDateCell(date, inCurrentMonth)}
-                </div>
+                <div class={`${prefixCls}-cell-inner`}>{renderDateCell(date, inCurrentMonth)}</div>
               </div>
             )
           })}
@@ -456,9 +457,7 @@ export const Calendar = defineComponent({
                 })}
                 onClick={() => !isDisabled && selectMonth(i)}
               >
-                <div class={`${prefixCls}-cell-inner`}>
-                  {renderMonthCell(i)}
-                </div>
+                <div class={`${prefixCls}-cell-inner`}>{renderMonthCell(i)}</div>
               </div>
             )
           })}
@@ -485,9 +484,7 @@ export const Calendar = defineComponent({
           })}
         >
           {headerContent}
-          <div class={`${prefixCls}-content`}>
-            {innerMode.value === 'month' ? renderMonthView() : renderYearView()}
-          </div>
+          <div class={`${prefixCls}-content`}>{innerMode.value === 'month' ? renderMonthView() : renderYearView()}</div>
         </div>
       )
     }

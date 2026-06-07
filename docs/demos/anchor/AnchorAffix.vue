@@ -1,11 +1,5 @@
 <template>
-  <Anchor
-    affix
-    :offset-top="80"
-    :items="items"
-    @change="onChange"
-    @click="onClick"
-  />
+  <Anchor affix :offset-top="80" :items="items" @change="onChange" @click="onClick" />
 </template>
 
 <script setup lang="ts">

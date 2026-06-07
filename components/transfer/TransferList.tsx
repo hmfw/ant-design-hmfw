@@ -28,10 +28,7 @@ interface RenderedItem {
 
 function isRenderResultPlainObject(result: RenderResult): result is RenderResultObject {
   return (
-    !!result &&
-    typeof result === 'object' &&
-    !('__v_isVNode' in (result as object)) &&
-    'value' in (result as object)
+    !!result && typeof result === 'object' && !('__v_isVNode' in (result as object)) && 'value' in (result as object)
   )
 }
 
@@ -60,12 +57,18 @@ export const TransferList = defineComponent({
     dataSource: { type: Array as PropType<TransferItem[]>, default: () => [] },
     checkedKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
     disabled: Boolean,
-    showSearch: { type: [Boolean, Object] as PropType<boolean | TransferSearchOption>, default: false },
+    showSearch: {
+      type: [Boolean, Object] as PropType<boolean | TransferSearchOption>,
+      default: false,
+    },
     showSelectAll: { type: Boolean, default: true },
     showRemove: Boolean,
     draggable: Boolean,
     pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
-    selectAllLabel: { type: [String, Object, Function] as PropType<SelectAllLabel>, default: undefined },
+    selectAllLabel: {
+      type: [String, Object, Function] as PropType<SelectAllLabel>,
+      default: undefined,
+    },
     render: Function as PropType<(item: TransferItem) => RenderResult>,
     filterOption: Function as PropType<(input: string, item: TransferItem, direction: TransferDirection) => boolean>,
     footer: Function as PropType<(info: any) => VNode | string | null>,
@@ -74,7 +77,10 @@ export const TransferList = defineComponent({
     styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
     // locale
     searchPlaceholder: { type: String, default: '请输入搜索内容' },
-    notFoundContent: { type: [String, Object, Array] as PropType<VNode | string | (VNode | string)[]>, default: undefined },
+    notFoundContent: {
+      type: [String, Object, Array] as PropType<VNode | string | (VNode | string)[]>,
+      default: undefined,
+    },
     itemUnit: { type: String, default: '项' },
     itemsUnit: { type: String, default: '项' },
     selectAll: { type: String, default: '全选所有' },
@@ -93,10 +99,15 @@ export const TransferList = defineComponent({
     const searchOptions = computed(() =>
       props.showSearch && typeof props.showSearch === 'object'
         ? { defaultValue: '', placeholder: '', ...props.showSearch }
-        : { defaultValue: '', placeholder: '' }
+        : { defaultValue: '', placeholder: '' },
     )
     const filterValue = ref(searchOptions.value.defaultValue || '')
-    watch(() => searchOptions.value.defaultValue, (v) => { filterValue.value = v || '' })
+    watch(
+      () => searchOptions.value.defaultValue,
+      (v) => {
+        filterValue.value = v || ''
+      },
+    )
 
     // 分页：内部当前页
     const current = ref(1)
@@ -110,8 +121,10 @@ export const TransferList = defineComponent({
       const renderResult = props.render ? props.render(item) : null
       const isPlain = isRenderResultPlainObject(renderResult)
       const renderedEl = isPlain ? (renderResult as RenderResultObject).label : (renderResult as VNode | string | null)
-      const renderedText = isPlain ? (renderResult as RenderResultObject).value : getTextFromRenderResult(renderResult, item)
-      return { item, renderedEl: renderedEl ?? (item.title ?? String(item.key)), renderedText }
+      const renderedText = isPlain
+        ? (renderResult as RenderResultObject).value
+        : getTextFromRenderResult(renderResult, item)
+      return { item, renderedEl: renderedEl ?? item.title ?? String(item.key), renderedText }
     }
 
     function matchFilter(text: string, item: TransferItem): boolean {
@@ -148,7 +161,7 @@ export const TransferList = defineComponent({
     })
 
     const checkedActiveItems = computed(() =>
-      filteredItems.value.filter((item) => props.checkedKeys.includes(item.key as TransferKey) && !item.disabled)
+      filteredItems.value.filter((item) => props.checkedKeys.includes(item.key as TransferKey) && !item.disabled),
     )
 
     // 全选态：none / part / all
@@ -246,7 +259,9 @@ export const TransferList = defineComponent({
       if (e.dataTransfer) {
         e.dataTransfer.effectAllowed = 'move'
         // 部分浏览器（Firefox）需要 setData 才能触发 drag
-        try { e.dataTransfer.setData('text/plain', String(key)) } catch {}
+        try {
+          e.dataTransfer.setData('text/plain', String(key))
+        } catch {}
       }
     }
 
@@ -363,7 +378,9 @@ export const TransferList = defineComponent({
           return (
             <li
               key={key}
-              class={cls(`${lp}-content-item`, sn('item'), dragClass, { [`${lp}-content-item-disabled`]: mergedDisabled })}
+              class={cls(`${lp}-content-item`, sn('item'), dragClass, {
+                [`${lp}-content-item-disabled`]: mergedDisabled,
+              })}
               style={ss('item')}
               {...dragHandlers}
             >
@@ -391,7 +408,12 @@ export const TransferList = defineComponent({
             {...dragHandlers}
             onClick={(e: MouseEvent) => !mergedDisabled && emit('itemSelect', key, !checked, e)}
           >
-            <Checkbox class={cls(`${lp}-checkbox`, sn('itemIcon'))} style={ss('itemIcon')} checked={checked} disabled={mergedDisabled} />
+            <Checkbox
+              class={cls(`${lp}-checkbox`, sn('itemIcon'))}
+              style={ss('itemIcon')}
+              checked={checked}
+              disabled={mergedDisabled}
+            />
             {labelNode}
           </li>
         )
@@ -404,7 +426,9 @@ export const TransferList = defineComponent({
       const bodyNode = pagedRenderItems.value.length ? (
         <>
           <ul
-            class={cls(`${lp}-content`, sn('list'), { [`${lp}-content-show-remove`]: props.showRemove })}
+            class={cls(`${lp}-content`, sn('list'), {
+              [`${lp}-content-show-remove`]: props.showRemove,
+            })}
             style={ss('list')}
             onScroll={(e: Event) => emit('scroll', props.direction, e)}
           >
@@ -420,7 +444,9 @@ export const TransferList = defineComponent({
               class={`${lp}-pagination`}
               total={filteredRenderItems.value.length}
               current={current.value}
-              onChange={(cur: number) => { current.value = cur }}
+              onChange={(cur: number) => {
+                current.value = cur
+              }}
             />
           )}
         </>
@@ -460,7 +486,12 @@ export const TransferList = defineComponent({
               {props.titleText}
             </span>
           </div>
-          <div class={cls(`${lp}-body`, sn('body'), { [`${lp}-body-with-search`]: !!props.showSearch })} style={ss('body')}>
+          <div
+            class={cls(`${lp}-body`, sn('body'), {
+              [`${lp}-body-with-search`]: !!props.showSearch,
+            })}
+            style={ss('body')}
+          >
             {search}
             {bodyNode}
           </div>

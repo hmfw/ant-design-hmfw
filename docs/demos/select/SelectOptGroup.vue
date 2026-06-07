@@ -1,11 +1,6 @@
 <template>
-  <div style="max-width: 400px;">
-    <Select
-      v-model:value="value"
-      :options="options"
-      placeholder="选择城市"
-      style="width: 100%;"
-    />
+  <div style="max-width: 400px">
+    <Select v-model:value="value" :options="options" placeholder="选择城市" style="width: 100%" />
   </div>
 </template>
 

@@ -1,15 +1,6 @@
-import {
-  defineComponent,
-  computed,
-  h,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { defineComponent, computed, h, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import type {
-  TooltipPlacement,
-  TooltipArrow,
-} from '../tooltip/types'
+import type { TooltipPlacement, TooltipArrow } from '../tooltip/types'
 import type { PopoverContent, PopoverClassNames, PopoverStyles } from './types'
 
 /**
@@ -47,10 +38,7 @@ export const PurePanel = defineComponent({
     const showArrow = computed(() => props.arrow !== false)
 
     /** 将 title/content（string | VNode | 渲染函数 | 插槽）解析为可渲染节点。 */
-    const resolveNode = (
-      value: PopoverContent | undefined,
-      slot: (() => VNode[] | undefined) | undefined,
-    ) => {
+    const resolveNode = (value: PopoverContent | undefined, slot: (() => VNode[] | undefined) | undefined) => {
       if (typeof value === 'function') return (value as () => VNode | string | number)()
       if (value !== undefined && value !== null && value !== '') return value
       return slot?.()
@@ -61,18 +49,14 @@ export const PurePanel = defineComponent({
       const resolveSemantic = <T,>(
         value: T | ((info: { props: Record<string, unknown> }) => T) | undefined,
       ): T | undefined =>
-        typeof value === 'function'
-          ? (value as (info: { props: Record<string, unknown> }) => T)({ props })
-          : value
+        typeof value === 'function' ? (value as (info: { props: Record<string, unknown> }) => T)({ props }) : value
       const mergedClassNames = resolveSemantic(props.classNames) ?? {}
       const mergedStyles = resolveSemantic(props.styles) ?? {}
 
       const titleNode = resolveNode(props.title, slots.title)
       const contentNode = resolveNode(props.content, slots.content)
-      const titleVisible =
-        titleNode !== undefined && titleNode !== null && titleNode !== ''
-      const contentVisible =
-        contentNode !== undefined && contentNode !== null && contentNode !== ''
+      const titleVisible = titleNode !== undefined && titleNode !== null && titleNode !== ''
+      const contentVisible = contentNode !== undefined && contentNode !== null && contentNode !== ''
 
       // 标题与内容仅在非空时渲染，避免出现空的带内边距盒子（与 Popover 行为一致）。
       const overlayChildren = [
@@ -109,18 +93,18 @@ export const PurePanel = defineComponent({
         'div',
         {
           ...attrs,
-          class: [
-            `${prefixCls}-pure`,
-            prefixCls,
-            `${prefixCls}-placement-${props.placement}`,
-          ],
+          class: [`${prefixCls}-pure`, prefixCls, `${prefixCls}-placement-${props.placement}`],
           style: rootStyle,
         },
         [
-          h('div', { class: `${prefixCls}-content` }, [
-            showArrow.value && h('div', { class: `${prefixCls}-arrow` }),
-            h('div', { class: `${prefixCls}-inner`, role: 'tooltip' }, innerChildren),
-          ].filter(Boolean) as VNode[]),
+          h(
+            'div',
+            { class: `${prefixCls}-content` },
+            [
+              showArrow.value && h('div', { class: `${prefixCls}-arrow` }),
+              h('div', { class: `${prefixCls}-inner`, role: 'tooltip' }, innerChildren),
+            ].filter(Boolean) as VNode[],
+          ),
         ],
       )
     }

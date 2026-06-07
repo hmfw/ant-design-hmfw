@@ -1,12 +1,12 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
+  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px">
     <Select
       v-model:value="value"
       :options="options"
       mode="tags"
       :token-separators="[',']"
       placeholder="输入标签，用逗号分隔"
-      style="width: 100%;"
+      style="width: 100%"
     />
     <p>已选：{{ value }}</p>
   </div>

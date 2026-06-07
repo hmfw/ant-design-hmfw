@@ -256,11 +256,22 @@ describe('Notification', () => {
   })
 
   it('supports different placements', async () => {
-    const placements: Array<'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'top' | 'bottom'> =
-      ['topLeft', 'topRight', 'bottomLeft', 'bottomRight', 'top', 'bottom']
+    const placements: Array<'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'top' | 'bottom'> = [
+      'topLeft',
+      'topRight',
+      'bottomLeft',
+      'bottomRight',
+      'top',
+      'bottom',
+    ]
 
     for (const placement of placements) {
-      notification.open({ message: `Placement ${placement}`, placement, duration: 0, key: placement })
+      notification.open({
+        message: `Placement ${placement}`,
+        placement,
+        duration: 0,
+        key: placement,
+      })
       await flushAll()
     }
 

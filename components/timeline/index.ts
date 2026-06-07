@@ -17,4 +17,3 @@ export type {
   TimelineItemPlacement,
   TimelineItemColor,
 } from './types'
-

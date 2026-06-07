@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 20px;">
+  <div style="padding: 20px">
     <Steps :items="items" type="inline" :current="1" />
   </div>
 </template>

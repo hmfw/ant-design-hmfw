@@ -1,11 +1,6 @@
 <template>
-  <Button @click="open = true">打开自定义容器</Button>
-  <Modal
-    v-model:open="open"
-    title="自定义渲染容器"
-    :modal-render="modalRender"
-    @ok="handleOk"
-  >
+  <Button @click="open = true"> 打开自定义容器 </Button>
+  <Modal v-model:open="open" title="自定义渲染容器" :modal-render="modalRender" @ok="handleOk">
     <p>这是对话框内容。</p>
     <p>外层容器已通过 modalRender 自定义渲染。</p>
   </Modal>
@@ -28,7 +23,7 @@ function modalRender(node: VNode): VNode {
         borderRadius: '12px',
       },
     },
-    [node]
+    [node],
   )
 }
 
@@ -37,4 +32,3 @@ function handleOk() {
   open.value = false
 }
 </script>
-

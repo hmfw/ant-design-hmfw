@@ -1,11 +1,7 @@
 <template>
   <div>
     <h3>使用默认字段（key/title/children）</h3>
-    <Tree
-      :tree-data="defaultTreeData"
-      :default-expanded-keys="['1']"
-      :default-selected-keys="['1-1']"
-    />
+    <Tree :tree-data="defaultTreeData" :default-expanded-keys="['1']" :default-selected-keys="['1-1']" />
 
     <h3 style="margin-top: 24px">自定义字段（fieldNames）</h3>
     <Tree

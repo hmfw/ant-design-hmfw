@@ -90,7 +90,9 @@ describe('QRCode', () => {
   })
 
   it('supports iconSize as object', () => {
-    const wrapper = mount(QRCode, { props: { value: 'test', icon: 'test.png', iconSize: { width: 60, height: 40 } } })
+    const wrapper = mount(QRCode, {
+      props: { value: 'test', icon: 'test.png', iconSize: { width: 60, height: 40 } },
+    })
     expect(wrapper.exists()).toBe(true)
   })
 
@@ -101,7 +103,10 @@ describe('QRCode', () => {
   })
 
   it('passes aria attributes to svg', () => {
-    const wrapper = mount(QRCode, { props: { value: 'test', type: 'svg' }, attrs: { 'aria-label': 'Test QR' } })
+    const wrapper = mount(QRCode, {
+      props: { value: 'test', type: 'svg' },
+      attrs: { 'aria-label': 'Test QR' },
+    })
     const svg = wrapper.find('svg')
     expect(svg.attributes('aria-label')).toBe('Test QR')
   })
@@ -126,7 +131,7 @@ describe('QRCode', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     mount(QRCode, { props: { value: 'test', icon: 'test.png', errorLevel: 'L' } })
     expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('ErrorLevel `L` is not recommended to be used with `icon`')
+      expect.stringContaining('ErrorLevel `L` is not recommended to be used with `icon`'),
     )
     warnSpy.mockRestore()
   })
@@ -134,9 +139,7 @@ describe('QRCode', () => {
   it('warns when value is empty', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     mount(QRCode, { props: { value: '' } })
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('need to receive `value` props')
-    )
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('need to receive `value` props'))
     warnSpy.mockRestore()
   })
 
@@ -151,5 +154,3 @@ describe('QRCode', () => {
     expect(wrapper.exists()).toBe(true)
   })
 })
-
-

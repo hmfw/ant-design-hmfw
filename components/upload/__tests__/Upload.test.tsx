@@ -43,9 +43,7 @@ describe('Upload', () => {
   })
 
   it('renders existing fileList', () => {
-    const fileList = [
-      { uid: '1', name: 'test.png', status: 'done' as const, size: 1024 },
-    ]
+    const fileList = [{ uid: '1', name: 'test.png', status: 'done' as const, size: 1024 }]
     const wrapper = mount(Upload, { props: { fileList } })
     expect(wrapper.find('.hmfw-upload-list-item').exists()).toBe(true)
     expect(wrapper.find('.hmfw-upload-list-item-name').text()).toBe('test.png')
@@ -59,9 +57,7 @@ describe('Upload', () => {
   })
 
   it('emits remove when item removed', async () => {
-    const fileList = [
-      { uid: '1', name: 'test.png', status: 'done' as const },
-    ]
+    const fileList = [{ uid: '1', name: 'test.png', status: 'done' as const }]
     const wrapper = mount(Upload, { props: { fileList, showUploadList: true } })
     const removeBtn = wrapper.find('.hmfw-upload-list-item-remove')
     if (removeBtn.exists()) {
@@ -298,9 +294,7 @@ describe('Upload', () => {
   // ============ itemRender ============
   describe('itemRender', () => {
     it('itemRender replaces default rendering', () => {
-      const itemRender = vi.fn(
-        (_origin: any, file: UploadFile) => h('div', { class: 'my-custom-item' }, file.name),
-      )
+      const itemRender = vi.fn((_origin: any, file: UploadFile) => h('div', { class: 'my-custom-item' }, file.name))
       const fileList = [{ uid: '1', name: 'custom.txt', status: 'done' as const }]
       const wrapper = mount(Upload, { props: { fileList, itemRender } })
       expect(itemRender).toHaveBeenCalled()

@@ -1,4 +1,11 @@
-type ClassValue = string | number | boolean | undefined | null | Record<string, boolean | undefined | null> | ClassValue[]
+type ClassValue =
+  | string
+  | number
+  | boolean
+  | undefined
+  | null
+  | Record<string, boolean | undefined | null>
+  | ClassValue[]
 
 export function cls(...args: ClassValue[]): string {
   const classes: string[] = []

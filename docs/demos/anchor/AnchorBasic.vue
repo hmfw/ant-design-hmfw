@@ -1,24 +1,20 @@
 <template>
-  <div style="display: flex; gap: 24px;">
-    <div style="flex: 1;">
-      <div id="part-1" style="height: 200px; background: #e6f4ff; padding: 16px; margin-bottom: 16px;">
+  <div style="display: flex; gap: 24px">
+    <div style="flex: 1">
+      <div id="part-1" style="height: 200px; background: #e6f4ff; padding: 16px; margin-bottom: 16px">
         <h3>第一部分</h3>
         <p>这是第一部分的内容。</p>
       </div>
-      <div id="part-2" style="height: 200px; background: #f6ffed; padding: 16px; margin-bottom: 16px;">
+      <div id="part-2" style="height: 200px; background: #f6ffed; padding: 16px; margin-bottom: 16px">
         <h3>第二部分</h3>
         <p>这是第二部分的内容。</p>
       </div>
-      <div id="part-3" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px;">
+      <div id="part-3" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px">
         <h3>第三部分</h3>
         <p>这是第三部分的内容。</p>
       </div>
     </div>
-    <Anchor
-      :items="items"
-      :offset-top="64"
-      style="width: 160px;"
-    />
+    <Anchor :items="items" :offset-top="64" style="width: 160px" />
   </div>
 </template>
 

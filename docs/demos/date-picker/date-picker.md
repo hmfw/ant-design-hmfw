@@ -2,7 +2,6 @@
 
 输入或选择日期的控件。
 
-
 ## 何时使用
 
 当用户需要输入一个日期，可以点击标准输入框，弹出日期面板进行选择。
@@ -61,40 +60,40 @@
 
 ### DatePicker Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-|------|------|------|--------|
-| value(v-model) | 日期 | `string` | - |
-| defaultValue | 默认日期 | `string` | - |
-| format | 展示的日期格式 | `string` | `'YYYY-MM-DD'` |
-| disabled | 禁用 | `boolean` | `false` |
-| size | 输入框大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
-| placeholder | 输入框提示文字 | `string` | - |
-| allowClear | 是否显示清除按钮 | `boolean` | `true` |
-| picker | 设置选择器类型 | `'date' \| 'month' \| 'year' \| 'quarter'` | `'date'` |
-| showTime | 增加时间选择功能，可配置时分秒步长 | `boolean \| { format?, hourStep?, minuteStep?, secondStep? }` | `false` |
-| showToday | 是否展示"今天"按钮 | `boolean` | `true` |
-| showNow | 是否展示"此刻"按钮（优先于 showToday） | `boolean` | `false` |
-| disabledDate | 不可选择的日期 | `(dateStr: string) => boolean` | - |
-| status | 设置校验状态 | `'error' \| 'warning'` | - |
-| open | 控制弹层是否展开 | `boolean` | - |
-| defaultOpen | 默认是否展开弹层 | `boolean` | `false` |
-| presets | 预设时间范围快捷选择 | `PresetItem[]` | - |
-| minDate | 最小可选日期 | `string` | - |
-| maxDate | 最大可选日期 | `string` | - |
-| renderExtraFooter | 在面板中添加额外的页脚 | `() => VNode` | - |
+| 参数              | 说明                                   | 类型                                                          | 默认值         |
+| ----------------- | -------------------------------------- | ------------------------------------------------------------- | -------------- |
+| value(v-model)    | 日期                                   | `string`                                                      | -              |
+| defaultValue      | 默认日期                               | `string`                                                      | -              |
+| format            | 展示的日期格式                         | `string`                                                      | `'YYYY-MM-DD'` |
+| disabled          | 禁用                                   | `boolean`                                                     | `false`        |
+| size              | 输入框大小                             | `'small' \| 'middle' \| 'large'`                              | `'middle'`     |
+| placeholder       | 输入框提示文字                         | `string`                                                      | -              |
+| allowClear        | 是否显示清除按钮                       | `boolean`                                                     | `true`         |
+| picker            | 设置选择器类型                         | `'date' \| 'month' \| 'year' \| 'quarter'`                    | `'date'`       |
+| showTime          | 增加时间选择功能，可配置时分秒步长     | `boolean \| { format?, hourStep?, minuteStep?, secondStep? }` | `false`        |
+| showToday         | 是否展示"今天"按钮                     | `boolean`                                                     | `true`         |
+| showNow           | 是否展示"此刻"按钮（优先于 showToday） | `boolean`                                                     | `false`        |
+| disabledDate      | 不可选择的日期                         | `(dateStr: string) => boolean`                                | -              |
+| status            | 设置校验状态                           | `'error' \| 'warning'`                                        | -              |
+| open              | 控制弹层是否展开                       | `boolean`                                                     | -              |
+| defaultOpen       | 默认是否展开弹层                       | `boolean`                                                     | `false`        |
+| presets           | 预设时间范围快捷选择                   | `PresetItem[]`                                                | -              |
+| minDate           | 最小可选日期                           | `string`                                                      | -              |
+| maxDate           | 最大可选日期                           | `string`                                                      | -              |
+| renderExtraFooter | 在面板中添加额外的页脚                 | `() => VNode`                                                 | -              |
 
 ### DatePicker Events
 
-| 事件名 | 说明 | 回调参数 |
-|--------|------|----------|
-| update:value | 日期发生变化的回调 | `(value: string) => void` |
-| change | 日期发生变化的回调 | `(value: string, dateString: string) => void` |
-| openChange | 弹出日历和关闭日历的回调 | `(open: boolean) => void` |
-| panelChange | 日历面板切换的回调 | `(value: any, mode: string) => void` |
+| 事件名       | 说明                     | 回调参数                                      |
+| ------------ | ------------------------ | --------------------------------------------- |
+| update:value | 日期发生变化的回调       | `(value: string) => void`                     |
+| change       | 日期发生变化的回调       | `(value: string, dateString: string) => void` |
+| openChange   | 弹出日历和关闭日历的回调 | `(open: boolean) => void`                     |
+| panelChange  | 日历面板切换的回调       | `(value: any, mode: string) => void`          |
 
 ### PresetItem
 
-| 参数 | 说明 | 类型 |
-|------|------|------|
-| label | 预设项显示文本 | `string` |
-| value | 预设值 | `string \| (() => string)` |
+| 参数  | 说明           | 类型                       |
+| ----- | -------------- | -------------------------- |
+| label | 预设项显示文本 | `string`                   |
+| value | 预设值         | `string \| (() => string)` |

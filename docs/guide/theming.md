@@ -35,36 +35,36 @@ const theme = {
 
 ### 颜色
 
-| Token | 说明 | 默认值 |
-|-------|------|--------|
-| `colorPrimary` | 主色 | `#1677ff` |
-| `colorSuccess` | 成功色 | `#52c41a` |
-| `colorWarning` | 警告色 | `#faad14` |
-| `colorError` | 错误色 | `#ff4d4f` |
-| `colorInfo` | 信息色 | `#1677ff` |
+| Token           | 说明       | 默认值             |
+| --------------- | ---------- | ------------------ |
+| `colorPrimary`  | 主色       | `#1677ff`          |
+| `colorSuccess`  | 成功色     | `#52c41a`          |
+| `colorWarning`  | 警告色     | `#faad14`          |
+| `colorError`    | 错误色     | `#ff4d4f`          |
+| `colorInfo`     | 信息色     | `#1677ff`          |
 | `colorTextBase` | 基础文字色 | `rgba(0,0,0,0.88)` |
-| `colorBgBase` | 基础背景色 | `#ffffff` |
+| `colorBgBase`   | 基础背景色 | `#ffffff`          |
 
 ### 字体
 
-| Token | 说明 | 默认值 |
-|-------|------|--------|
-| `fontSize` | 基础字号 | `14` |
-| `fontFamily` | 字体族 | `系统字体` |
-| `lineHeight` | 行高 | `1.5714` |
+| Token        | 说明     | 默认值     |
+| ------------ | -------- | ---------- |
+| `fontSize`   | 基础字号 | `14`       |
+| `fontFamily` | 字体族   | `系统字体` |
+| `lineHeight` | 行高     | `1.5714`   |
 
 ### 圆角
 
-| Token | 说明 | 默认值 |
-|-------|------|--------|
-| `borderRadius` | 基础圆角 | `6` |
+| Token          | 说明     | 默认值 |
+| -------------- | -------- | ------ |
+| `borderRadius` | 基础圆角 | `6`    |
 
 ### 间距
 
-| Token | 说明 | 默认值 |
-|-------|------|--------|
-| `sizeUnit` | 间距单位 | `4` |
-| `sizeStep` | 间距步长 | `4` |
+| Token      | 说明     | 默认值 |
+| ---------- | -------- | ------ |
+| `sizeUnit` | 间距单位 | `4`    |
+| `sizeStep` | 间距步长 | `4`    |
 
 ## 直接使用 CSS Variables
 

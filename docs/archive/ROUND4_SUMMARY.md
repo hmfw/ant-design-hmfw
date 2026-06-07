@@ -26,6 +26,7 @@
 ### 导航组件 (1)
 
 #### 1. Breadcrumb 面包屑 ✅
+
 - itemRender 自定义渲染项
 - vue-router 路由集成示例
 - 下拉菜单功能（dropdown 集成）
@@ -33,31 +34,37 @@
 ### 布局组件 (3)
 
 #### 2. Layout 布局 ✅
+
 - Sider 响应式断点完全实现
 - zero-width 触发器样式
 - 主题切换动画（0.3s ease）
 
 #### 3. Grid 栅格 ✅
+
 - wrap 属性控制换行
 - 响应式 gutter 数组格式
 
 #### 4. Space 间距 ✅
+
 - split 分隔符 slot 支持
 - 垂直模式对齐方式修复
 
 ### 反馈组件 (3)
 
 #### 5. Drawer 抽屉 ✅
+
 - rootClassName / rootStyle
 - contentWrapperStyle 控制内容包裹层
 - DrawerManager 自动管理 zIndex
 
 #### 6. Popconfirm 气泡确认框 ✅
+
 - showCancel 控制取消按钮显示
 - okButtonProps / cancelButtonProps 按钮属性透传
 - 图标自定义增强
 
 #### 7. Tooltip 文字提示 ✅
+
 - arrow.pointAtCenter 箭头居中
 - fresh 属性强制重新计算位置
 - ResizeObserver 动态内容时定位更新
@@ -65,23 +72,27 @@
 ### 数据展示组件 (4)
 
 #### 8. Card 卡片 ✅
+
 - 骨架屏样式优化（avatar、paragraph 配置）
 - tabList 标签页功能（含 tabBarExtraContent）
 - v-model:activeTabKey 双向绑定
 - Grid hover 效果
 
 #### 9. Descriptions 描述列表 ✅
+
 - contentStyle / labelStyle 样式控制
 - 垂直模式下边框样式修复
 - 响应式列数计算修复（使用 useBreakpoint）
 - 新增 debounce 工具函数
 
 #### 10. Timeline 时间轴 ✅
+
 - label 左右布局支持
 - 自定义位置模式
 - 图标垂直居中修复
 
 #### 11. Statistic 统计数值 ✅
+
 - loading 加载状态（集成 Skeleton）
 - Countdown 倒计时（requestAnimationFrame）
 - onFinish 完成回调
@@ -94,12 +105,14 @@
 ## 📂 主要变更
 
 ### 新增文件
+
 - `components/_utils/function.ts` - debounce 工具函数
 - `components/drawer/manager.ts` - Drawer 多层管理
 - `components/statistic/` - 完整的 Statistic 组件
 - 16+ 个演示文件
 
 ### 修改文件
+
 - 10+ 组件的核心实现
 - 10+ 组件的样式文件
 - 10+ 组件的测试文件
@@ -109,12 +122,12 @@
 
 ## 📈 项目进度总览
 
-| 轮次 | 完成日期 | 组件数 | 功能数 | 状态 |
-|------|----------|--------|--------|------|
-| 第一轮 | 06/06-06/20 | 6 | ~25 | ✅ 100% |
-| 第二轮 | 06/21-07/04 | 3 | ~15 | ✅ 100% |
-| 第三轮 | 06/07 | 6 | 23 | ✅ 100% |
-| 第四轮 | 06/07 | 11 | 31 | ✅ 100% |
+| 轮次   | 完成日期    | 组件数 | 功能数 | 状态    |
+| ------ | ----------- | ------ | ------ | ------- |
+| 第一轮 | 06/06-06/20 | 6      | ~25    | ✅ 100% |
+| 第二轮 | 06/21-07/04 | 3      | ~15    | ✅ 100% |
+| 第三轮 | 06/07       | 6      | 23     | ✅ 100% |
+| 第四轮 | 06/07       | 11     | 31     | ✅ 100% |
 
 **累计完成**: 26 个组件，~94 个功能点
 

@@ -9,7 +9,6 @@
 
 ## 代码演示
 
-
 ### 基础卡片
 
 包含标题、内容、操作区域。
@@ -70,54 +69,54 @@
 
 ### Card Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| title | 卡片标题 | `string` | - |
-| extra | 卡片右上角的操作区域 | `string \| slot` | - |
-| bordered | 是否有边框 | `boolean` | `true` |
-| variant | 边框变体（优先于 `bordered`） | `'borderless' \| 'outlined'` | - |
-| type | 卡片类型，可设为 `inner` | `'inner'` | - |
-| loading | 当卡片内容还在加载中时，可以用 loading 展示一个占位 | `boolean \| { avatar?: boolean; paragraph?: { rows?: number } }` | `false` |
-| size | 卡片的尺寸 | `'default' \| 'small'` | `'default'` |
-| hoverable | 鼠标移过时可浮起 | `boolean` | `false` |
-| bodyStyle | 内容区域自定义样式 | `CSSProperties` | - |
-| headStyle | 标题区域自定义样式 | `CSSProperties` | - |
-| tabList | 标签页列表 | `Array<{ key: string; label: string; disabled?: boolean }>` | - |
-| activeTabKey | 当前激活标签的 key | `string` | - |
-| defaultActiveTabKey | 默认激活标签的 key | `string` | - |
-| onTabChange | 标签切换回调 | `(key: string) => void` | - |
+| 参数                | 说明                                                | 类型                                                             | 默认值      |
+| ------------------- | --------------------------------------------------- | ---------------------------------------------------------------- | ----------- |
+| title               | 卡片标题                                            | `string`                                                         | -           |
+| extra               | 卡片右上角的操作区域                                | `string \| slot`                                                 | -           |
+| bordered            | 是否有边框                                          | `boolean`                                                        | `true`      |
+| variant             | 边框变体（优先于 `bordered`）                       | `'borderless' \| 'outlined'`                                     | -           |
+| type                | 卡片类型，可设为 `inner`                            | `'inner'`                                                        | -           |
+| loading             | 当卡片内容还在加载中时，可以用 loading 展示一个占位 | `boolean \| { avatar?: boolean; paragraph?: { rows?: number } }` | `false`     |
+| size                | 卡片的尺寸                                          | `'default' \| 'small'`                                           | `'default'` |
+| hoverable           | 鼠标移过时可浮起                                    | `boolean`                                                        | `false`     |
+| bodyStyle           | 内容区域自定义样式                                  | `CSSProperties`                                                  | -           |
+| headStyle           | 标题区域自定义样式                                  | `CSSProperties`                                                  | -           |
+| tabList             | 标签页列表                                          | `Array<{ key: string; label: string; disabled?: boolean }>`      | -           |
+| activeTabKey        | 当前激活标签的 key                                  | `string`                                                         | -           |
+| defaultActiveTabKey | 默认激活标签的 key                                  | `string`                                                         | -           |
+| onTabChange         | 标签切换回调                                        | `(key: string) => void`                                          | -           |
 
 ### Card Slots
 
-| 名称 | 说明 |
-| --- | --- |
-| default | 卡片内容 |
-| title | 卡片标题 |
-| extra | 卡片右上角的操作区域 |
-| cover | 卡片封面 |
-| actions | 卡片操作组 |
-| tabBarExtraContent | 标签栏额外内容 |
+| 名称               | 说明                 |
+| ------------------ | -------------------- |
+| default            | 卡片内容             |
+| title              | 卡片标题             |
+| extra              | 卡片右上角的操作区域 |
+| cover              | 卡片封面             |
+| actions            | 卡片操作组           |
+| tabBarExtraContent | 标签栏额外内容       |
 
 ### Card Events
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| tabChange | 标签切换时触发 | `(key: string) => void` |
+| 事件名              | 说明                           | 回调参数                |
+| ------------------- | ------------------------------ | ----------------------- |
+| tabChange           | 标签切换时触发                 | `(key: string) => void` |
 | update:activeTabKey | 标签切换时触发（支持 v-model） | `(key: string) => void` |
 
 ### Card.Grid Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
+| 参数      | 说明             | 类型      | 默认值 |
+| --------- | ---------------- | --------- | ------ |
 | hoverable | 鼠标移过时可浮起 | `boolean` | `true` |
 
 ### CardMeta Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| title | 标题内容 | `string` | - |
-| description | 描述内容 | `string` | - |
-| avatar | 头像/图标 | `string \| slot` | - |
+| 参数        | 说明      | 类型             | 默认值 |
+| ----------- | --------- | ---------------- | ------ |
+| title       | 标题内容  | `string`         | -      |
+| description | 描述内容  | `string`         | -      |
+| avatar      | 头像/图标 | `string \| slot` | -      |
 
 <script setup>
 import CardBasic from './CardBasic.vue'
@@ -136,4 +135,3 @@ import CardGridSource from './CardGrid.vue?raw'
 import CardInnerSource from './CardInner.vue?raw'
 import CardTabsSource from './CardTabs.vue?raw'
 </script>
-

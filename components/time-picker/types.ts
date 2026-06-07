@@ -31,4 +31,3 @@ export interface TimePickerProps {
   variant?: 'outlined' | 'borderless' | 'filled' | 'underlined'
   placement?: 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 }
-

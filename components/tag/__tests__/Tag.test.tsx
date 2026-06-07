@@ -51,7 +51,10 @@ describe('Tag', () => {
   })
 
   it('renders as anchor when href is set', () => {
-    const wrapper = mount(Tag, { props: { href: 'https://example.com' }, slots: { default: 'Link' } })
+    const wrapper = mount(Tag, {
+      props: { href: 'https://example.com' },
+      slots: { default: 'Link' },
+    })
     expect(wrapper.element.tagName).toBe('A')
     expect(wrapper.attributes('href')).toBe('https://example.com')
   })

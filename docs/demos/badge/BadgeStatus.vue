@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px">
     <Badge status="success" text="成功" />
     <Badge status="error" text="错误" />
     <Badge status="default" text="默认" />

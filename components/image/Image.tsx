@@ -67,7 +67,11 @@ function normalizePreview(preview: boolean | PreviewConfig | undefined): Preview
 }
 
 /** 解析 mask 配置：返回 { enabled, closable, coverNode } */
-function resolveMask(cfg: PreviewConfig): { enabled: boolean; closable: boolean; coverNode: VNode | null } {
+function resolveMask(cfg: PreviewConfig): {
+  enabled: boolean
+  closable: boolean
+  coverNode: VNode | null
+} {
   const cover = renderContent(cfg.cover)
   // mask 作为 VNode 是 deprecated 的 cover 别名
   let coverNode: VNode | null = cover
@@ -333,14 +337,18 @@ const ImagePreview = defineComponent({
           <Icon component={RotateRightOutlined} />
         </button>
         <button
-          class={cls(`${previewCls}-op-btn`, { [`${previewCls}-op-btn-disabled`]: transform.value.scale <= minScale.value })}
+          class={cls(`${previewCls}-op-btn`, {
+            [`${previewCls}-op-btn-disabled`]: transform.value.scale <= minScale.value,
+          })}
           onClick={zoomOut}
           title="缩小"
         >
           <Icon component={ZoomOutOutlined} />
         </button>
         <button
-          class={cls(`${previewCls}-op-btn`, { [`${previewCls}-op-btn-disabled`]: transform.value.scale >= maxScale.value })}
+          class={cls(`${previewCls}-op-btn`, {
+            [`${previewCls}-op-btn-disabled`]: transform.value.scale >= maxScale.value,
+          })}
           onClick={zoomIn}
           title="放大"
         >
@@ -400,7 +408,11 @@ const ImagePreview = defineComponent({
                 style={props.config.zIndex != null ? { zIndex: props.config.zIndex } : undefined}
                 onClick={handleMaskClick}
               >
-                <div class={cls(`${previewCls}-mask`, { [`${previewCls}-mask-hidden`]: !maskInfo.value.enabled })} />
+                <div
+                  class={cls(`${previewCls}-mask`, {
+                    [`${previewCls}-mask-hidden`]: !maskInfo.value.enabled,
+                  })}
+                />
                 <button class={`${previewCls}-close`} onClick={props.onClose} title="关闭">
                   {getCloseIcon()}
                 </button>
@@ -457,7 +469,10 @@ export const Image = defineComponent({
     height: [Number, String] as PropType<number | string>,
     preview: { type: [Boolean, Object] as PropType<boolean | PreviewConfig>, default: true },
     fallback: String,
-    placeholder: { type: [Boolean, Object, Function] as PropType<ImageProps['placeholder']>, default: false },
+    placeholder: {
+      type: [Boolean, Object, Function] as PropType<ImageProps['placeholder']>,
+      default: false,
+    },
     rootClassName: String,
     onError: Function as PropType<(e: Event) => void>,
   },
@@ -534,9 +549,7 @@ export const Image = defineComponent({
       height: typeof props.height === 'number' ? `${props.height}px` : props.height,
     }))
 
-    const displaySrc = computed(() =>
-      status.value === 'error' && props.fallback ? props.fallback : props.src,
-    )
+    const displaySrc = computed(() => (status.value === 'error' && props.fallback ? props.fallback : props.src))
 
     const previewSrc = computed(() => previewConfig.value?.src ?? props.src ?? '')
 
@@ -616,9 +629,7 @@ export const PreviewGroup = defineComponent({
     const cfg = computed<PreviewConfig | null>(() => normalizePreview(props.preview))
 
     const isControlled = computed(() => cfg.value?.open ?? cfg.value?.visible)
-    const visible = computed(() =>
-      isControlled.value !== undefined ? !!isControlled.value : selfVisible.value,
-    )
+    const visible = computed(() => (isControlled.value !== undefined ? !!isControlled.value : selfVisible.value))
     const currentControlled = computed(() => props.current)
     const current = computed(() =>
       currentControlled.value !== undefined ? currentControlled.value : selfCurrent.value,

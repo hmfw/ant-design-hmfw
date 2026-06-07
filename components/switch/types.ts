@@ -6,10 +6,7 @@ export type SwitchSize = 'default' | 'small'
  * onChange 处理器返回 void 或 Promise
  * 返回 Promise 时 Switch 自动进入 loading 状态，直到 Promise 完成
  */
-export type SwitchChangeEventHandler = (
-  checked: boolean,
-  event: MouseEvent,
-) => void | Promise<void>
+export type SwitchChangeEventHandler = (checked: boolean, event: MouseEvent) => void | Promise<void>
 
 export interface SwitchProps {
   checked?: boolean
