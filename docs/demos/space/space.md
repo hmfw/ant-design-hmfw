@@ -70,3 +70,4 @@
 | 名称 | 说明 |
 | --- | --- |
 | default | 子元素内容 |
+| split | 自定义分隔符（优先级高于 `separator` prop） |

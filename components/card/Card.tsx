@@ -1,7 +1,7 @@
-import { defineComponent, computed, type PropType, Fragment, type VNode } from 'vue'
+import { defineComponent, computed, ref, watch, type PropType, Fragment, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { CardType, CardVariant } from './types'
+import type { CardType, CardVariant, CardLoadingConfig, TabItem } from './types'
 
 // 判断子节点中是否包含 Card.Grid
 function containsGrid(children: VNode[]): boolean {
@@ -27,7 +27,10 @@ export const Card = defineComponent({
       default: undefined,
     },
     hoverable: Boolean,
-    loading: Boolean,
+    loading: {
+      type: [Boolean, Object] as PropType<boolean | CardLoadingConfig>,
+      default: false,
+    },
     size: {
       type: String as PropType<'default' | 'small'>,
       default: 'default',
@@ -38,9 +41,36 @@ export const Card = defineComponent({
     },
     bodyStyle: Object as PropType<Record<string, string>>,
     headStyle: Object as PropType<Record<string, string>>,
+    tabList: Array as PropType<TabItem[]>,
+    activeTabKey: String,
+    defaultActiveTabKey: String,
+    onTabChange: Function as PropType<(key: string) => void>,
   },
-  setup(props, { slots }) {
+  emits: ['update:activeTabKey', 'tabChange'],
+  setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('card')
+
+    // 标签页受控/非受控逻辑
+    const innerActiveKey = ref(props.defaultActiveTabKey ?? props.tabList?.[0]?.key)
+
+    watch(
+      () => props.activeTabKey,
+      (val) => {
+        if (val !== undefined) {
+          innerActiveKey.value = val
+        }
+      },
+      { immediate: true }
+    )
+
+    const handleTabChange = (key: string) => {
+      if (props.activeTabKey === undefined) {
+        innerActiveKey.value = key
+      }
+      emit('update:activeTabKey', key)
+      emit('tabChange', key)
+      props.onTabChange?.(key)
+    }
 
     // variant 优先于 bordered：'borderless' → 无边框；'outlined' → 有边框
     const mergedBordered = computed(() => {
@@ -48,11 +78,15 @@ export const Card = defineComponent({
       return props.bordered
     })
 
+    const isLoading = computed(() => {
+      return props.loading === true || (typeof props.loading === 'object' && !!props.loading)
+    })
+
     const classes = computed(() =>
       cls(prefixCls, {
         [`${prefixCls}-bordered`]: mergedBordered.value,
         [`${prefixCls}-hoverable`]: props.hoverable,
-        [`${prefixCls}-loading`]: props.loading,
+        [`${prefixCls}-loading`]: isLoading.value,
         [`${prefixCls}-small`]: props.size === 'small',
         [`${prefixCls}-type-${props.type}`]: !!props.type,
       }),
@@ -60,22 +94,55 @@ export const Card = defineComponent({
 
     return () => {
       const hasHead = props.title || slots.title || slots.extra
+      const hasTabs = props.tabList && props.tabList.length > 0
+
       const coverNode = slots.cover && (
         <div class={`${prefixCls}-cover`}>{slots.cover()}</div>
       )
 
-      const headNode = hasHead && (
-        <div class={`${prefixCls}-head`} style={props.headStyle}>
-          <div class={`${prefixCls}-head-wrapper`}>
-            {(props.title || slots.title) && (
-              <div class={`${prefixCls}-head-title`}>
-                {slots.title ? slots.title() : props.title}
+      // 解析 loading 配置
+      const loadingConfig = typeof props.loading === 'object' ? props.loading : { avatar: false, paragraph: { rows: 3 } }
+      const showAvatar = typeof props.loading === 'object' && loadingConfig.avatar
+      const paragraphRows = typeof props.loading === 'object' ? (loadingConfig.paragraph?.rows ?? 3) : 3
+
+      // 标签页节点
+      const tabsNode = hasTabs && (
+        <div class={`${prefixCls}-head-tabs`}>
+          <div class={`${prefixCls}-tabs-nav`}>
+            {props.tabList!.map((tab) => (
+              <div
+                key={tab.key}
+                class={cls(`${prefixCls}-tab`, {
+                  [`${prefixCls}-tab-active`]: tab.key === innerActiveKey.value,
+                  [`${prefixCls}-tab-disabled`]: tab.disabled,
+                })}
+                onClick={() => !tab.disabled && handleTabChange(tab.key)}
+              >
+                {tab.label}
               </div>
-            )}
-            {slots.extra && (
-              <div class={`${prefixCls}-extra`}>{slots.extra()}</div>
-            )}
+            ))}
           </div>
+          {slots.tabBarExtraContent && (
+            <div class={`${prefixCls}-tabs-extra`}>{slots.tabBarExtraContent()}</div>
+          )}
+        </div>
+      )
+
+      const headNode = (hasHead || hasTabs) && (
+        <div class={`${prefixCls}-head`} style={props.headStyle}>
+          {hasHead && (
+            <div class={`${prefixCls}-head-wrapper`}>
+              {(props.title || slots.title) && (
+                <div class={`${prefixCls}-head-title`}>
+                  {slots.title ? slots.title() : props.title}
+                </div>
+              )}
+              {slots.extra && (
+                <div class={`${prefixCls}-extra`}>{slots.extra()}</div>
+              )}
+            </div>
+          )}
+          {tabsNode}
         </div>
       )
 
@@ -84,11 +151,14 @@ export const Card = defineComponent({
 
       const bodyNode = (
         <div class={`${prefixCls}-body`} style={props.bodyStyle}>
-          {props.loading ? (
+          {isLoading.value ? (
             <div class={`${prefixCls}-loading-content`}>
-              {[1, 2, 3].map((i) => (
-                <div key={i} class={`${prefixCls}-loading-block`} />
-              ))}
+              {showAvatar && <div class={`${prefixCls}-loading-avatar`} />}
+              <div class={`${prefixCls}-loading-detail`}>
+                {Array.from({ length: paragraphRows }).map((_, i) => (
+                  <div key={i} class={`${prefixCls}-loading-block`} />
+                ))}
+              </div>
             </div>
           ) : (
             defaultChildren

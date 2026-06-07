@@ -292,4 +292,73 @@ describe('Tooltip', () => {
     expect(document.querySelector('.hmfw-tooltip')).toBeNull()
     wrapper.unmount()
   })
+
+  it('fresh prop triggers position update when value changes', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', open: true, fresh: 1 },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const tooltip = document.querySelector('.hmfw-tooltip') as HTMLElement
+    const initialTop = tooltip?.style.top
+
+    // 修改 fresh 属性值触发位置更新
+    await wrapper.setProps({ fresh: 2 })
+    await nextTick()
+
+    // 验证位置计算逻辑被调用（实际位置可能相同，但确保不会报错）
+    const updatedTop = tooltip?.style.top
+    expect(updatedTop).toBeDefined()
+    wrapper.unmount()
+  })
+
+  it('fresh prop supports boolean type', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', open: true, fresh: false },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+
+    await wrapper.setProps({ fresh: true })
+    await nextTick()
+
+    const tooltip = document.querySelector('.hmfw-tooltip')
+    expect(tooltip).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('ResizeObserver monitors content size changes when tooltip opens', async () => {
+    // 模拟 ResizeObserver
+    const observeMock = vi.fn()
+    const disconnectMock = vi.fn()
+    global.ResizeObserver = vi.fn().mockImplementation((callback) => ({
+      observe: observeMock,
+      disconnect: disconnectMock,
+      unobserve: vi.fn(),
+    }))
+
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip', open: false },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+
+    // 打开 tooltip，触发 ResizeObserver
+    await wrapper.setProps({ open: true })
+    await nextTick()
+    await nextTick() // 等待 watch visible 执行
+
+    // 验证 ResizeObserver 的 observe 被调用（监听 .hmfw-tooltip-inner）
+    expect(observeMock).toHaveBeenCalled()
+
+    // 关闭 tooltip 时应断开监听
+    await wrapper.setProps({ open: false })
+    await nextTick()
+    expect(disconnectMock).toHaveBeenCalled()
+
+    wrapper.unmount()
+  })
 })

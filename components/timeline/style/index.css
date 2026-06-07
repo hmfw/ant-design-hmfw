@@ -39,7 +39,7 @@
   border: 2px solid transparent;
   border-radius: 50%;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 4px; /* 调整为4px，使小圆点与第一行文本基线更好地对齐 */
   background-color: var(--hmfw-color-bg-container, #fff);
   box-sizing: border-box;
 }
@@ -72,7 +72,7 @@
   font-size: var(--hmfw-font-size-base, 14px);
   line-height: 1;
   padding: 0;
-  margin-top: 0;
+  margin-top: 0; /* 自定义图标使用 margin-top: 0，通过 flex 自动居中 */
   display: flex;
   align-items: center;
   justify-content: center;

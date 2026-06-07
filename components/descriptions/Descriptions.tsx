@@ -1,6 +1,6 @@
-import { defineComponent, computed, type PropType, type VNode } from 'vue'
+import { defineComponent, computed, ref, onMounted, onUnmounted, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
-import { cls } from '../_utils'
+import { cls, debounce } from '../_utils'
 import type { DescriptionsItemProps, Breakpoint } from './types'
 
 interface InternalDescriptionsItem extends DescriptionsItemProps {
@@ -19,22 +19,44 @@ const DEFAULT_COLUMN_MAP: Record<Breakpoint, number> = {
   xs: 1,
 }
 
-// Simple responsive breakpoint detection (client-side only)
-function useBreakpoint(): Partial<Record<Breakpoint, boolean>> {
-  // For SSR safety, return empty object
-  if (typeof window === 'undefined') {
-    return {}
+// 响应式断点检测 composable（支持窗口 resize）
+function useBreakpoint() {
+  // 创建响应式 ref 存储窗口宽度
+  const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
+
+  // 更新窗口宽度
+  const updateWidth = () => {
+    if (typeof window !== 'undefined') {
+      windowWidth.value = window.innerWidth
+    }
   }
 
-  const width = window.innerWidth
-  return {
-    xs: width >= 0,
-    sm: width >= 576,
-    md: width >= 768,
-    lg: width >= 992,
-    xl: width >= 1200,
-    xxl: width >= 1600,
-  }
+  // 防抖处理，避免频繁计算（100ms 延迟）
+  const debouncedUpdate = debounce(updateWidth, 100)
+
+  // 挂载时添加 resize 监听器
+  onMounted(() => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', debouncedUpdate)
+    }
+  })
+
+  // 卸载时移除 resize 监听器
+  onUnmounted(() => {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', debouncedUpdate)
+    }
+  })
+
+  // 返回响应式的断点状态
+  return computed(() => ({
+    xs: windowWidth.value >= 0,
+    sm: windowWidth.value >= 576,
+    md: windowWidth.value >= 768,
+    lg: windowWidth.value >= 992,
+    xl: windowWidth.value >= 1200,
+    xxl: windowWidth.value >= 1600,
+  }))
 }
 
 // Match screen breakpoints (mobile-first cascade)
@@ -70,9 +92,12 @@ export const Descriptions = defineComponent({
     const prefixCls = usePrefixCls('descriptions')
     const config = useConfig()
 
+    // 使用响应式断点检测
+    const breakpointStates = useBreakpoint()
+
     // Compute responsive column count
     const mergedColumn = computed(() => {
-      const screens = useBreakpoint()
+      const screens = breakpointStates.value
       if (typeof props.column === 'number') {
         return props.column
       }
@@ -100,7 +125,7 @@ export const Descriptions = defineComponent({
 
     // Process items with responsive span
     const processedItems = computed(() => {
-      const screens = useBreakpoint()
+      const screens = breakpointStates.value
       return mergedItems.value.map((item) => {
         const { span, ...rest } = item
         if (span === 'filled') {

@@ -163,4 +163,44 @@ describe('Space', () => {
     })
     expect(wrapper.classes()).toContain('hmfw-space-vertical')
   })
+
+  it('supports split slot', () => {
+    const wrapper = mount(Space, {
+      slots: {
+        default: () => [h('span', 'A'), h('span', 'B'), h('span', 'C')],
+        split: () => h('span', { class: 'custom-divider' }, '|'),
+      },
+    })
+    const splits = wrapper.findAll('.hmfw-space-item-split')
+    expect(splits).toHaveLength(2) // 3 items = 2 splits
+    expect(splits[0].find('.custom-divider').exists()).toBe(true)
+  })
+
+  it('slot takes precedence over separator prop', () => {
+    const wrapper = mount(Space, {
+      props: { separator: h('span', 'prop-sep') },
+      slots: {
+        default: () => [h('span', 'A'), h('span', 'B')],
+        split: () => h('span', { class: 'slot-sep' }, 'slot-sep'),
+      },
+    })
+    const splits = wrapper.findAll('.hmfw-space-item-split')
+    expect(splits).toHaveLength(1)
+    expect(splits[0].find('.slot-sep').exists()).toBe(true)
+  })
+
+  it('separator prop takes precedence over split prop', () => {
+    const wrapper = mount(Space, {
+      props: {
+        separator: h('span', { class: 'separator' }, '::'),
+        split: h('span', 'old-split'),
+      },
+      slots: {
+        default: () => [h('span', 'A'), h('span', 'B')],
+      },
+    })
+    const splits = wrapper.findAll('.hmfw-space-item-split')
+    expect(splits).toHaveLength(1)
+    expect(splits[0].find('.separator').exists()).toBe(true)
+  })
 })

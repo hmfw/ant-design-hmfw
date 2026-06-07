@@ -299,6 +299,9 @@ export type { RangePickerProps, RangeValue } from './range-picker'
 export { TreeSelect } from './tree-select'
 export type { TreeSelectProps, TreeSelectNode } from './tree-select'
 
+export { Statistic, Countdown } from './statistic'
+export type { StatisticProps, CountdownProps } from './statistic'
+
 // Install function for Vue.use()
 import { ConfigProvider } from './config-provider'
 import { Icon } from './icon'
@@ -332,8 +335,9 @@ import { ColorPicker } from './color-picker'
 import { Transfer } from './transfer'
 import { RangePicker } from './range-picker'
 import { TreeSelect } from './tree-select'
+import { Statistic, Countdown } from './statistic'
 
-const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Link, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Ribbon, Tag, CheckableTag, Empty, Card, CardGrid, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker, Transfer, RangePicker, TreeSelect]
+const components = [ConfigProvider, AppComponent, Icon, Button, Space, Divider, Row, Col, Text, Title, Paragraph, Link, Layout, Header, Footer, Content, Sider, Avatar, AvatarGroup, Badge, Ribbon, Tag, CheckableTag, Empty, Card, CardGrid, CardMeta, Input, InputPassword, TextArea, InputSearch, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Spin, Progress, Breadcrumb, Pagination, Tabs, Modal, Drawer, Image, PreviewGroup, Carousel, Tour, ColorPicker, Transfer, RangePicker, TreeSelect, Statistic, Countdown]
 
 export function install(app: VueApp): void {
   components.forEach((component) => {

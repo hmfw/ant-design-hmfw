@@ -9,7 +9,6 @@
 
 ## 代码演示
 
-
 ### 基础用法
 
 最简单的用法。
@@ -32,6 +31,54 @@
 
 <DemoBlock title="不同位置" :source="PopconfirmPlacementSource">
   <PopconfirmPlacement />
+</DemoBlock>
+
+### 自定义图标
+
+可以通过 `icon` 属性或插槽自定义图标，也可以设置为空字符串隐藏图标。
+
+<DemoBlock title="自定义图标" :source="PopconfirmIconSource">
+  <PopconfirmIcon />
+</DemoBlock>
+
+### 按钮类型
+
+使用 `okType` 设置确认按钮的类型。`danger` 是 `primary + danger` 的简写形式。
+
+<DemoBlock title="按钮类型" :source="PopconfirmDangerSource">
+  <PopconfirmDanger />
+</DemoBlock>
+
+### 异步关闭
+
+通过 `okButtonProps` 和 `cancelButtonProps` 可以控制按钮的 loading 状态，实现异步确认。
+
+<DemoBlock title="异步关闭" :source="PopconfirmAsyncSource">
+  <PopconfirmAsync />
+</DemoBlock>
+
+### 受控模式
+
+使用 `v-model:open` 控制气泡框的显示隐藏，可以通过 `disabled` 禁用，也可以隐藏取消按钮。
+
+<DemoBlock title="受控模式" :source="PopconfirmControlledSource">
+  <PopconfirmControlled />
+</DemoBlock>
+
+### 触发方式
+
+通过 `trigger` 设置触发行为，支持 `hover`、`click`、`focus`、`contextMenu`。
+
+<DemoBlock title="触发方式" :source="PopconfirmTriggerSource">
+  <PopconfirmTrigger />
+</DemoBlock>
+
+### 自定义配置
+
+可以自定义 z-index、样式、箭头等配置。
+
+<DemoBlock title="自定义配置" :source="PopconfirmCustomSource">
+  <PopconfirmCustom />
 </DemoBlock>
 
 ## API

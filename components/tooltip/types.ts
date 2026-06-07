@@ -37,4 +37,6 @@ export interface TooltipProps {
   zIndex?: number
   /** Specify a function to provide a mount container for the popup. */
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
+  /** 强制重新计算位置的标记，当该值变化时触发位置更新（适用于触发元素位置动态变化的场景）。 */
+  fresh?: boolean | number
 }

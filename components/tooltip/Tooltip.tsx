@@ -67,6 +67,7 @@ export const Tooltip = defineComponent({
     autoAdjustOverflow: { type: Boolean, default: true },
     zIndex: Number,
     getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
+    fresh: [Boolean, Number] as PropType<boolean | number>,
     /** Override the default `hmfw-tooltip` prefix (used by Popover/Popconfirm wrappers). */
     customPrefixCls: String,
     /** Extra inline style merged onto the popup element (used by wrappers for `overlayStyle`). */
@@ -86,6 +87,7 @@ export const Tooltip = defineComponent({
     const actualPlacement = ref<TooltipPlacement>(props.placement)
     let enterTimer: ReturnType<typeof setTimeout> | null = null
     let leaveTimer: ReturnType<typeof setTimeout> | null = null
+    let resizeObserver: ResizeObserver | null = null
 
     const isControlled = computed(() => props.open !== undefined)
     const visible = computed(() => (isControlled.value ? props.open! : innerOpen.value))
@@ -101,7 +103,7 @@ export const Tooltip = defineComponent({
 
     const showArrow = computed(() => props.arrow !== false)
     const arrowPointAtCenter = computed(() =>
-      typeof props.arrow === 'object' && props.arrow?.pointAtCenter === true,
+      typeof props.arrow === 'object' && props.arrow !== null && props.arrow.pointAtCenter === true,
     )
 
     const mergedDestroyOnHidden = computed(() =>
@@ -212,7 +214,25 @@ export const Tooltip = defineComponent({
       if (v) {
         await nextTick()
         updatePosition()
+        // 当 tooltip 显示时，启动 ResizeObserver 监听内容尺寸变化。
+        if (resizeObserver && tooltipRef.value) {
+          const inner = tooltipRef.value.querySelector('.hmfw-tooltip-inner')
+          if (inner) resizeObserver.observe(inner as Element)
+        }
+      } else {
+        // 隐藏时断开监听。
+        if (resizeObserver) resizeObserver.disconnect()
       }
+    })
+
+    /** 监听 fresh 属性变化，强制重新计算位置。 */
+    watch(() => props.fresh, () => {
+      if (visible.value) updatePosition()
+    })
+
+    /** 监听 fresh 属性变化，强制重新计算位置。 */
+    watch(() => props.fresh, () => {
+      if (visible.value) updatePosition()
     })
 
     /** Reposition while open (scrolling, window resize). */
@@ -270,6 +290,16 @@ export const Tooltip = defineComponent({
       // capture-phase scroll listener catches scroll on any ancestor.
       window.addEventListener('scroll', onScrollOrResize, true)
       window.addEventListener('resize', onScrollOrResize)
+
+      // 使用 ResizeObserver 监听 tooltip 内容尺寸变化，自动重新计算位置。
+      if (tooltipRef.value && 'ResizeObserver' in window) {
+        resizeObserver = new ResizeObserver(() => {
+          if (visible.value) {
+            nextTick(() => updatePosition())
+          }
+        })
+        // 监听需要在 visible 变为 true 后才能获取到元素，所以在 watch visible 中启动监听。
+      }
     })
     onBeforeUnmount(() => {
       document.removeEventListener('click', handleOutsideClick)
@@ -277,6 +307,7 @@ export const Tooltip = defineComponent({
       window.removeEventListener('resize', onScrollOrResize)
       if (enterTimer) clearTimeout(enterTimer)
       if (leaveTimer) clearTimeout(leaveTimer)
+      if (resizeObserver) resizeObserver.disconnect()
     })
 
     return () => {

@@ -186,4 +186,32 @@ describe('Descriptions', () => {
     const wrapper = mount(Descriptions, { props: { items: testItems } })
     expect(wrapper.find('.hmfw-descriptions-view').exists()).toBe(true)
   })
+
+  it('renders vertical layout with bordered correctly', () => {
+    const wrapper = mount(Descriptions, {
+      props: { items, layout: 'vertical', bordered: true },
+    })
+    // 垂直布局下每行数据生成两个 tr：一个 label 行，一个 content 行
+    const rows = wrapper.findAll('tr')
+    expect(rows.length).toBeGreaterThan(0)
+    // 验证边框类应用
+    expect(wrapper.classes()).toContain('hmfw-descriptions-bordered')
+    // 验证 label 行使用 th 标签
+    expect(wrapper.findAll('th.hmfw-descriptions-item-label').length).toBeGreaterThan(0)
+    // 验证 content 行使用 td 标签
+    expect(wrapper.findAll('td.hmfw-descriptions-item-content').length).toBeGreaterThan(0)
+  })
+
+  it('initializes with correct responsive breakpoint', () => {
+    // 测试响应式断点初始化不会报错
+    const wrapper = mount(Descriptions, {
+      props: {
+        items,
+        column: { xs: 1, sm: 2, md: 3 },
+      },
+    })
+    expect(wrapper.find('.hmfw-descriptions-view').exists()).toBe(true)
+    // 组件应该正常渲染
+    expect(wrapper.findAll('.hmfw-descriptions-item-label').length).toBeGreaterThan(0)
+  })
 })

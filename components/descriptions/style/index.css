@@ -158,6 +158,18 @@
   display: none;
 }
 
+/* 垂直布局边框样式修复 */
+/* 垂直布局时，label 和 content 在不同行，需要特殊处理边框 */
+.hmfw-descriptions-bordered .hmfw-descriptions-row > th,
+.hmfw-descriptions-bordered .hmfw-descriptions-row > td {
+  border-inline-end: 1px solid var(--hmfw-color-border, rgba(5, 5, 5, 0.06));
+}
+
+.hmfw-descriptions-bordered .hmfw-descriptions-row > th:last-child,
+.hmfw-descriptions-bordered .hmfw-descriptions-row > td:last-child {
+  border-inline-end: none;
+}
+
 /* Sizes */
 .hmfw-descriptions-middle .hmfw-descriptions-row > th,
 .hmfw-descriptions-middle .hmfw-descriptions-row > td {

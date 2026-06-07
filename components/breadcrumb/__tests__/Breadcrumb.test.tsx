@@ -225,4 +225,106 @@ describe('Breadcrumb', () => {
     })
     expect(wrapper.find('ol').exists()).toBe(true)
   })
+
+  it('supports itemRender for custom rendering', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          { title: 'Home', path: 'home' },
+          { title: 'List', path: 'list' },
+        ],
+        itemRender: (item, params, items, paths) => {
+          return h('span', { class: 'custom-render' }, `Custom: ${item.title}`)
+        },
+      },
+    })
+    const customElements = wrapper.findAll('.custom-render')
+    expect(customElements.length).toBe(2)
+    expect(customElements[0].text()).toBe('Custom: Home')
+    expect(customElements[1].text()).toBe('Custom: List')
+  })
+
+  it('itemRender receives correct parameters', () => {
+    let receivedParams: any = null
+    mount(Breadcrumb, {
+      props: {
+        items: [
+          { title: 'Home', path: 'home' },
+          { title: 'User :id', path: ':id' },
+        ],
+        params: { id: '123' },
+        itemRender: (item, params, items, paths) => {
+          receivedParams = { item, params, items, paths }
+          return h('span', item.title as string)
+        },
+      },
+    })
+    expect(receivedParams).not.toBeNull()
+    expect(receivedParams.params).toEqual({ id: '123' })
+    expect(receivedParams.items.length).toBe(2)
+    expect(receivedParams.paths).toEqual(['home', '123'])
+  })
+
+  it('itemRender with links', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          { title: 'Home', path: 'home' },
+          { title: 'List', path: 'list' },
+        ],
+        itemRender: (item, params, items, paths) => {
+          const isLast = items.indexOf(item) === items.length - 1
+          if (isLast) {
+            return h('span', { class: 'custom-last' }, item.title as string)
+          }
+          return h('a', { class: 'custom-link', href: `#/${paths.join('/')}` }, item.title as string)
+        },
+      },
+    })
+    expect(wrapper.find('.custom-link').exists()).toBe(true)
+    expect(wrapper.find('.custom-last').exists()).toBe(true)
+    expect(wrapper.find('.custom-link').attributes('href')).toBe('#/home')
+  })
+
+  it('supports dropdown menu', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          { title: 'Home', path: 'home' },
+          {
+            title: 'Apps',
+            path: 'apps',
+            menu: {
+              items: [
+                { key: 'app1', label: 'App 1' },
+                { key: 'app2', label: 'App 2' },
+              ],
+            },
+          },
+        ],
+      },
+    })
+    // 检查是否渲染了 Dropdown
+    expect(wrapper.findComponent({ name: 'Dropdown' }).exists()).toBe(true)
+    // 检查是否有下拉箭头图标
+    expect(wrapper.find('.hmfw-breadcrumb-overlay-link').exists()).toBe(true)
+  })
+
+  it('renders dropdown icon', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          {
+            title: 'Menu',
+            menu: {
+              items: [{ key: '1', label: 'Item 1' }],
+            },
+          },
+        ],
+      },
+    })
+    const overlayLink = wrapper.find('.hmfw-breadcrumb-overlay-link')
+    expect(overlayLink.exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'Icon' }).exists()).toBe(true)
+  })
 })

@@ -55,6 +55,7 @@
 }
 
 /* Generate col-{n} classes for span */
+.hmfw-col-0 { display: none; }
 .hmfw-col-1 { flex: 0 0 4.16666667%; max-width: 4.16666667%; }
 .hmfw-col-2 { flex: 0 0 8.33333333%; max-width: 8.33333333%; }
 .hmfw-col-3 { flex: 0 0 12.5%; max-width: 12.5%; }

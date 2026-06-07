@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { nextTick, h } from 'vue'
-import { Drawer } from '../index'
+import { Drawer, drawerManager } from '../index'
 
 // Clean up teleported nodes + restore body overflow between tests
 afterEach(() => {
@@ -217,5 +217,56 @@ describe('Drawer', () => {
     })
     expect(document.querySelector('.hmfw-drawer-close .my-close')).toBeTruthy()
     wrapper.unmount()
+  })
+
+  it('applies contentWrapperStyle to content-wrapper', () => {
+    const wrapper = mount(Drawer, {
+      props: { open: true, contentWrapperStyle: { backgroundColor: 'rgb(255, 0, 0)', border: '2px solid blue' } },
+      attachTo: document.body,
+    })
+    const contentWrapper = document.querySelector('.hmfw-drawer-content-wrapper') as HTMLElement
+    expect(contentWrapper).toBeTruthy()
+    expect(contentWrapper.style.backgroundColor).toBe('rgb(255, 0, 0)')
+    expect(contentWrapper.style.border).toBe('2px solid blue')
+    wrapper.unmount()
+  })
+
+  it('manages zIndex for multiple drawers (later drawer has higher zIndex)', async () => {
+    // 打开第一个 Drawer
+    const wrapper1 = mount(Drawer, { props: { open: true, zIndex: 1000 }, attachTo: document.body })
+    await nextTick()
+    const root1 = document.querySelectorAll('.hmfw-drawer-root')[0] as HTMLElement
+    const zIndex1 = parseInt(root1.style.zIndex)
+
+    // 打开第二个 Drawer
+    const wrapper2 = mount(Drawer, { props: { open: true, zIndex: 1000 }, attachTo: document.body })
+    await nextTick()
+    const root2 = document.querySelectorAll('.hmfw-drawer-root')[1] as HTMLElement
+    const zIndex2 = parseInt(root2.style.zIndex)
+
+    // 第二个 Drawer 的 zIndex 应该更高
+    expect(zIndex2).toBeGreaterThan(zIndex1)
+    expect(zIndex2 - zIndex1).toBe(2) // 每个 Drawer 占用 2 层
+
+    wrapper2.unmount()
+    wrapper1.unmount()
+  })
+
+  it('reuses zIndex slots when drawer is closed', async () => {
+    const wrapper1 = mount(Drawer, { props: { open: true, zIndex: 1000 }, attachTo: document.body })
+    await nextTick()
+    const wrapper2 = mount(Drawer, { props: { open: true, zIndex: 1000 }, attachTo: document.body })
+    await nextTick()
+
+    const initialManagerSize = drawerManager.size
+
+    // 关闭第二个 Drawer
+    wrapper2.unmount()
+    await nextTick()
+
+    // Manager 中的 Drawer 数量应该减少
+    expect(drawerManager.size).toBe(initialManagerSize - 1)
+
+    wrapper1.unmount()
   })
 })

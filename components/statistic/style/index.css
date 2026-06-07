@@ -1,0 +1,59 @@
+@import '../style/themes/default.css';
+
+.hmfw-statistic {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: var(--hmfw-color-text);
+  font-size: var(--hmfw-font-size);
+  line-height: var(--hmfw-line-height);
+  list-style: none;
+  font-family: var(--hmfw-font-family);
+}
+
+.hmfw-statistic-title {
+  margin-bottom: 4px;
+  color: var(--hmfw-color-text-secondary);
+  font-size: var(--hmfw-font-size);
+  line-height: var(--hmfw-line-height);
+}
+
+.hmfw-statistic-content {
+  color: var(--hmfw-color-text-heading);
+  font-size: 24px;
+  font-family: var(--hmfw-font-family);
+  line-height: 1.35;
+}
+
+.hmfw-statistic-content-value {
+  display: inline-block;
+  direction: ltr;
+}
+
+.hmfw-statistic-content-prefix,
+.hmfw-statistic-content-suffix {
+  display: inline-block;
+}
+
+.hmfw-statistic-content-prefix {
+  margin-inline-end: 4px;
+}
+
+.hmfw-statistic-content-suffix {
+  margin-inline-start: 4px;
+}
+
+/* RTL 支持 */
+.hmfw-statistic-rtl {
+  direction: rtl;
+}
+
+.hmfw-statistic-rtl .hmfw-statistic-content-prefix {
+  margin-inline-end: 0;
+  margin-inline-start: 4px;
+}
+
+.hmfw-statistic-rtl .hmfw-statistic-content-suffix {
+  margin-inline-start: 0;
+  margin-inline-end: 4px;
+}

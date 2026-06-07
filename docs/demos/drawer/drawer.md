@@ -69,6 +69,7 @@
 | getContainer | 挂载节点，`false` 时渲染在当前位置 | `string \| HTMLElement \| () => HTMLElement \| false` | `body` |
 | rootClassName | 根容器（含遮罩）的类名 | `string` | - |
 | rootStyle | 根容器（含遮罩）的样式 | `CSSProperties` | - |
+| contentWrapperStyle | 抽屉内容包裹层的样式 | `CSSProperties` | - |
 | bodyStyle | 抽屉内容部分的样式 | `CSSProperties` | - |
 | headerStyle | 抽屉头部的样式 | `CSSProperties` | - |
 | footerStyle | 抽屉页脚的样式 | `CSSProperties` | - |

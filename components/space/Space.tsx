@@ -73,7 +73,8 @@ export default defineComponent({
       props.vertical ? 'vertical' : props.direction
     )
 
-    const mergedSeparator = computed(() => props.separator ?? props.split)
+    // 优先级：slot > separator prop > split prop
+    const mergedSeparator = computed(() => slots.split?.() ?? props.separator ?? props.split)
 
     const mergedAlign = computed(() => {
       if (props.align) return props.align

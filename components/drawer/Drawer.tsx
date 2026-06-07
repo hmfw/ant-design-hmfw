@@ -8,6 +8,7 @@ import { Icon } from '../icon'
 import { CloseOutlined } from '../icon/icons'
 import { Skeleton } from '../skeleton'
 import type { IconComponent } from '../icon/types'
+import { drawerManager } from './manager'
 
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
 
@@ -104,6 +105,7 @@ export const Drawer = defineComponent({
     headerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     footerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     maskStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    contentWrapperStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   },
   emits: ['update:open', 'close', 'afterOpenChange'],
   setup(props, { slots, emit, attrs }) {
@@ -113,6 +115,12 @@ export const Drawer = defineComponent({
     const drawerRef = ref<HTMLElement | null>(null)
     let cleanupTrap: (() => void) | null = null
     let didLock = false
+
+    // 注册到全局 DrawerManager
+    const drawerUid = drawerManager.register()
+
+    // 计算动态 zIndex
+    const computedZIndex = computed(() => drawerManager.getZIndex(drawerUid, props.zIndex))
 
     watch(() => props.open, (v) => { if (v !== undefined) innerOpen.value = v })
 
@@ -137,6 +145,7 @@ export const Drawer = defineComponent({
       cleanupTrap?.()
       cleanupTrap = null
       if (didLock) { unlockScroll(); didLock = false }
+      drawerManager.unregister(drawerUid)
     })
 
     const close = (e?: Event) => {
@@ -234,7 +243,7 @@ export const Drawer = defineComponent({
 
     return () => {
       const hasTitle = renderContent(props.title, slots.title) != null
-      const rootStyle: CSSProperties = { zIndex: props.zIndex, ...props.rootStyle }
+      const rootStyle: CSSProperties = { zIndex: computedZIndex.value, ...props.rootStyle }
       const teleportDisabled = props.getContainer === false
 
       return (
@@ -252,7 +261,7 @@ export const Drawer = defineComponent({
                 <div
                   ref={drawerRef}
                   class={cls(`${prefixCls}-content-wrapper`, `${prefixCls}-${props.placement}`)}
-                  style={sizeStyle.value}
+                  style={{ ...sizeStyle.value, ...props.contentWrapperStyle }}
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby={hasTitle ? ariaId : undefined}

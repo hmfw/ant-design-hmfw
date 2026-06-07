@@ -1,4 +1,5 @@
 import type { VNode, CSSProperties } from 'vue'
+import type { MenuProps } from '../menu'
 
 export interface BreadcrumbItemType {
   key?: string | number
@@ -14,6 +15,10 @@ export interface BreadcrumbItemType {
   className?: string
   style?: CSSProperties
   onClick?: (e: MouseEvent) => void
+  /**
+   * 下拉菜单配置
+   */
+  menu?: MenuProps
   /** Custom data attributes */
   [key: `data-${string}`]: any
   /** ARIA attributes */
@@ -32,4 +37,17 @@ export interface BreadcrumbProps {
   items?: ItemType[]
   separator?: string | VNode
   params?: Record<string, any>
+  /**
+   * 自定义渲染面包屑项
+   * @param item 当前项
+   * @param params 参数对象
+   * @param items 所有项
+   * @param paths 路径数组
+   */
+  itemRender?: (
+    item: BreadcrumbItemType,
+    params: Record<string, any>,
+    items: BreadcrumbItemType[],
+    paths: string[]
+  ) => VNode
 }

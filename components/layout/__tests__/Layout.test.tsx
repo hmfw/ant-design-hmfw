@@ -70,6 +70,15 @@ describe('Sider', () => {
     expect(wrapper.classes()).toContain('hmfw-layout-sider-light')
   })
 
+  it('switches theme smoothly with transition', async () => {
+    const wrapper = mount(Sider, { props: { theme: 'dark' } })
+    expect(wrapper.classes()).toContain('hmfw-layout-sider-dark')
+
+    await wrapper.setProps({ theme: 'light' })
+    expect(wrapper.classes()).toContain('hmfw-layout-sider-light')
+    expect(wrapper.classes()).not.toContain('hmfw-layout-sider-dark')
+  })
+
   it('collapses when defaultCollapsed is true', () => {
     const wrapper = mount(Sider, { props: { defaultCollapsed: true } })
     expect(wrapper.classes()).toContain('hmfw-layout-sider-collapsed')
@@ -173,5 +182,121 @@ describe('Sider', () => {
     const wrapper = mount(Sider, { props: { collapsible: true, reverseArrow: true } })
     // Icon component should be rendered with RightOutlined when collapsed=false and reverseArrow=true
     expect(wrapper.find('.hmfw-layout-sider-trigger').exists()).toBe(true)
+  })
+
+  describe('responsive breakpoint', () => {
+    let matchMediaMock: any
+    let listeners: Array<(e: any) => void> = []
+
+    beforeEach(() => {
+      listeners = []
+      matchMediaMock = vi.fn((query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addEventListener: vi.fn((event: string, handler: any) => {
+          if (event === 'change') {
+            listeners.push(handler)
+          }
+        }),
+        removeEventListener: vi.fn((event: string, handler: any) => {
+          if (event === 'change') {
+            const index = listeners.indexOf(handler)
+            if (index > -1) {
+              listeners.splice(index, 1)
+            }
+          }
+        }),
+        dispatchEvent: vi.fn(),
+      }))
+      window.matchMedia = matchMediaMock
+    })
+
+    it('sets up breakpoint listener on mount', () => {
+      mount(Sider, { props: { breakpoint: 'md' } })
+      expect(matchMediaMock).toHaveBeenCalledWith('screen and (max-width: 767.98px)')
+    })
+
+    it('triggers onBreakpoint callback when breakpoint matches', async () => {
+      const onBreakpoint = vi.fn()
+      mount(Sider, { props: { breakpoint: 'md', onBreakpoint } })
+
+      // 模拟断点匹配
+      listeners.forEach(handler => handler({ matches: true }))
+      await flushPromises()
+
+      expect(onBreakpoint).toHaveBeenCalledWith(true)
+    })
+
+    it('emits breakpoint event when breakpoint matches', async () => {
+      const wrapper = mount(Sider, { props: { breakpoint: 'md' } })
+
+      // 清空初始事件（mount 时会触发一次）
+      wrapper.emitted('breakpoint')
+
+      // 模拟断点匹配
+      listeners.forEach(handler => handler({ matches: true }))
+      await flushPromises()
+
+      const events = wrapper.emitted('breakpoint') as any[]
+      expect(events[events.length - 1]).toEqual([true])
+    })
+
+    it('auto-collapses when breakpoint is triggered', async () => {
+      const onCollapse = vi.fn()
+      const wrapper = mount(Sider, {
+        props: { breakpoint: 'md', collapsible: true, onCollapse },
+      })
+
+      expect(wrapper.classes()).not.toContain('hmfw-layout-sider-collapsed')
+
+      // 模拟断点匹配（屏幕变小）
+      listeners.forEach(handler => handler({ matches: true }))
+      await flushPromises()
+
+      expect(wrapper.classes()).toContain('hmfw-layout-sider-collapsed')
+      expect(onCollapse).toHaveBeenCalledWith(true, 'responsive')
+    })
+
+    it('auto-expands when breakpoint is no longer matched', async () => {
+      const onCollapse = vi.fn()
+      const wrapper = mount(Sider, {
+        props: { breakpoint: 'md', collapsible: true, defaultCollapsed: true, onCollapse },
+      })
+
+      expect(wrapper.classes()).toContain('hmfw-layout-sider-collapsed')
+
+      // 模拟断点不匹配（屏幕变大）
+      listeners.forEach(handler => handler({ matches: false }))
+      await flushPromises()
+
+      expect(wrapper.classes()).not.toContain('hmfw-layout-sider-collapsed')
+      expect(onCollapse).toHaveBeenCalledWith(false, 'responsive')
+    })
+
+    it('cleans up breakpoint listener on unmount', () => {
+      const wrapper = mount(Sider, { props: { breakpoint: 'md' } })
+      const removeEventListener = matchMediaMock.mock.results[0]?.value?.removeEventListener
+
+      wrapper.unmount()
+
+      expect(removeEventListener).toHaveBeenCalled()
+      expect(listeners.length).toBe(0)
+    })
+
+    it('does not set up breakpoint listener when breakpoint is not provided', () => {
+      mount(Sider, { props: { collapsible: true } })
+      expect(matchMediaMock).not.toHaveBeenCalled()
+    })
+
+    it('supports all breakpoint sizes', () => {
+      const breakpoints = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl']
+      const expectedWidths = ['479.98px', '575.98px', '767.98px', '991.98px', '1199.98px', '1599.98px', '1839.98px']
+
+      breakpoints.forEach((bp, index) => {
+        mount(Sider, { props: { breakpoint: bp as any } })
+        expect(matchMediaMock).toHaveBeenCalledWith(`screen and (max-width: ${expectedWidths[index]})`)
+      })
+    })
   })
 })

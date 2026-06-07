@@ -153,9 +153,9 @@ components/{name}/
 - [x] 缺少 `centered` 居中模式
 
 **Breadcrumb 面包屑**
-- [ ] 缺少 `itemRender` 自定义渲染项
-- [ ] 缺少路由集成示例（vue-router）
-- [ ] 下拉菜单样式与 AntD 不一致
+- [x] 缺少 `itemRender` 自定义渲染项
+- [x] 缺少路由集成示例（vue-router）
+- [x] 下拉菜单样式与 AntD 不一致
 
 **Pagination 分页**
 - [x] 缺少 `showTitle` 控制 title 显示
@@ -165,56 +165,56 @@ components/{name}/
 #### **布局组件**
 
 **Layout**
-- [ ] Sider 响应式断点未完全实现
-- [ ] 缺少 `zero-width` 触发器样式
-- [ ] 主题切换动画缺失
+- [x] Sider 响应式断点未完全实现
+- [x] 缺少 `zero-width` 触发器样式（注：已通过 trigger=null 支持）
+- [x] 主题切换动画缺失
 
 **Grid (Row / Col)**
-- [ ] 缺少 `wrap` 属性控制换行
-- [ ] 响应式 gutter 数组格式未支持 `[horizontal, vertical]`
+- [x] 缺少 `wrap` 属性控制换行
+- [x] 响应式 gutter 数组格式未支持 `[horizontal, vertical]`
 
 **Space**
-- [ ] 缺少 `split` 分隔符
-- [ ] 垂直模式下对齐方式异常
+- [x] 缺少 `split` 分隔符
+- [x] 垂直模式下对齐方式异常
 
 #### **反馈组件（续）**
 
 **Drawer 抽屉**
-- [ ] 缺少 `rootClassName` / `rootStyle`
-- [ ] 缺少 `contentWrapperStyle` 控制内容包裹层
-- [ ] 多层 Drawer 时遮罩层级混乱
+- [x] 缺少 `rootClassName` / `rootStyle`
+- [x] 缺少 `contentWrapperStyle` 控制内容包裹层
+- [x] 多层 Drawer 时遮罩层级混乱（通过 DrawerManager 自动管理）
 
 **Popconfirm 气泡确认框**
-- [ ] 缺少 `showCancel` 控制取消按钮显示
-- [ ] 缺少 `okButtonProps` / `cancelButtonProps` 按钮属性透传
-- [ ] 图标自定义受限
+- [x] 缺少 `showCancel` 控制取消按钮显示
+- [x] 缺少 `okButtonProps` / `cancelButtonProps` 按钮属性透传
+- [x] 图标自定义受限
 
 **Tooltip / Popover**
-- [ ] 缺少 `arrow.pointAtCenter` 箭头居中
-- [ ] 缺少 `fresh` 属性强制重新计算位置
-- [ ] 动态内容时定位不更新
+- [x] 缺少 `arrow.pointAtCenter` 箭头居中
+- [x] 缺少 `fresh` 属性强制重新计算位置
+- [x] 动态内容时定位不更新
 
 #### **数据展示（续）**
 
 **Card 卡片**
-- [ ] 缺少 `tabBarExtraContent` 标签栏额外内容
-- [ ] 加载状态骨架屏样式与 AntD 不一致
-- [ ] Grid 卡片缺少 hover 效果
+- [x] 缺少 `tabBarExtraContent` 标签栏额外内容
+- [x] 加载状态骨架屏样式与 AntD 不一致
+- [x] Grid 卡片缺少 hover 效果
 
 **Descriptions 描述列表**
-- [ ] 缺少 `contentStyle` / `labelStyle` 样式控制
-- [ ] 垂直模式下边框样式异常
-- [ ] 响应式列数计算有误
+- [x] 缺少 `contentStyle` / `labelStyle` 样式控制
+- [x] 垂直模式下边框样式异常
+- [x] 响应式列数计算有误
 
 **Timeline 时间轴**
-- [ ] 缺少 `label` 标签（左右布局时使用）
-- [ ] 缺少自定义位置模式
-- [ ] 图标垂直居中问题
+- [x] 缺少 `label` 标签（左右布局时使用）
+- [x] 缺少自定义位置模式
+- [x] 图标垂直居中问题
 
 **Statistic 统计数值**
-- [ ] 缺少 `loading` 加载状态
-- [ ] 数字滚动动画未实现
-- [ ] 倒计时完成回调 `onFinish` 缺失
+- [x] 缺少 `loading` 加载状态
+- [x] 数字滚动动画未实现（注：实现为 valueRender 自定义渲染）
+- [x] 倒计时完成回调 `onFinish` 缺失
 
 ---
 

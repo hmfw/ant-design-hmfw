@@ -51,6 +51,14 @@
   <LayoutCustomTrigger />
 </DemoBlock>
 
+### 主题切换
+
+侧边栏支持 `light` 和 `dark` 两种主题，主题切换时会有平滑的过渡动画。
+
+<DemoBlock title="主题切换" :source="LayoutThemeSource">
+  <LayoutTheme />
+</DemoBlock>
+
 ## API
 
 ### Layout Props

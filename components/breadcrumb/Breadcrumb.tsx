@@ -2,6 +2,8 @@ import { defineComponent, computed, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { ItemType, BreadcrumbItemType, BreadcrumbSeparatorType } from './types'
+import { Dropdown } from '../dropdown'
+import { Icon, DownOutlined } from '../icon'
 
 const getPath = (params: Record<string, any>, path?: string) => {
   if (path === undefined) {
@@ -48,6 +50,14 @@ export const Breadcrumb = defineComponent({
       type: Object as PropType<Record<string, any>>,
       default: () => ({}),
     },
+    itemRender: Function as PropType<
+      (
+        item: BreadcrumbItemType,
+        params: Record<string, any>,
+        items: BreadcrumbItemType[],
+        paths: string[]
+      ) => VNode
+    >,
   },
   setup(props) {
     const prefixCls = usePrefixCls('breadcrumb')
@@ -57,10 +67,35 @@ export const Breadcrumb = defineComponent({
         return null
       }
 
-      const { className, onClick, ...restItem } = item
+      const { className, onClick, menu, ...restItem } = item
       const passedProps = {
         ...pickAttrs(restItem),
         onClick,
+      }
+
+      // 如果有下拉菜单，包裹在 Dropdown 中
+      if (menu && menu.items && menu.items.length > 0) {
+        const linkContent = href !== undefined ? (
+          <a {...passedProps} class={cls(`${prefixCls}-link`, className)} href={href}>
+            <span class={`${prefixCls}-overlay-link`}>
+              {children}
+              <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
+            </span>
+          </a>
+        ) : (
+          <span {...passedProps} class={cls(`${prefixCls}-link`, className)}>
+            <span class={`${prefixCls}-overlay-link`}>
+              {children}
+              <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
+            </span>
+          </span>
+        )
+
+        return (
+          <Dropdown menu={menu} trigger={['hover']}>
+            {linkContent}
+          </Dropdown>
+        )
       }
 
       if (href !== undefined) {
@@ -81,6 +116,10 @@ export const Breadcrumb = defineComponent({
     return () => {
       const items = props.items ?? []
       const paths: string[] = []
+      // 提取所有非分隔符项用于 itemRender
+      const breadcrumbItems = items.filter(
+        (item): item is BreadcrumbItemType => !('type' in item && item.type === 'separator')
+      )
 
       const crumbs = items.map((item, index) => {
         if ('type' in item && item.type === 'separator') {
@@ -116,8 +155,14 @@ export const Breadcrumb = defineComponent({
           href = `#/${paths.join('/')}`
         }
 
-        const name = getBreadcrumbName(breadcrumbItem, props.params)
-        const link = renderItem(breadcrumbItem, name, href)
+        // 使用 itemRender 自定义渲染或使用默认渲染
+        let link: any
+        if (props.itemRender) {
+          link = props.itemRender(breadcrumbItem, props.params, breadcrumbItems, [...paths])
+        } else {
+          const name = getBreadcrumbName(breadcrumbItem, props.params)
+          link = renderItem(breadcrumbItem, name, href)
+        }
 
         return (
           <>

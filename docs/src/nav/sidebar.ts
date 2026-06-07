@@ -78,6 +78,7 @@ export const componentsSidebar: SidebarGroup[] = [
       { text: 'Result 结果', link: '/components/result' },
       { text: 'Segmented 分段控制器', link: '/components/segmented' },
       { text: 'Skeleton 骨架屏', link: '/components/skeleton' },
+      { text: 'Statistic 统计数值', link: '/components/statistic' },
       { text: 'Table 表格', link: '/components/table' },
       { text: 'Tag 标签', link: '/components/tag' },
       { text: 'Timeline 时间轴', link: '/components/timeline' },

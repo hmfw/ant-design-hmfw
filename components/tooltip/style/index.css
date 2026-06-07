@@ -93,3 +93,28 @@
 .hmfw-tooltip-placement-right .hmfw-tooltip-arrow { top: 50%; transform: translateY(-50%) rotate(-90deg); }
 .hmfw-tooltip-placement-rightTop .hmfw-tooltip-arrow { top: 8px; }
 .hmfw-tooltip-placement-rightBottom .hmfw-tooltip-arrow { bottom: 8px; }
+
+/* Arrow point at center — 箭头指向触发元素中心 */
+.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-topLeft .hmfw-tooltip-arrow,
+.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-topRight .hmfw-tooltip-arrow {
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-bottomLeft .hmfw-tooltip-arrow,
+.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-bottomRight .hmfw-tooltip-arrow {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-leftTop .hmfw-tooltip-arrow,
+.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-leftBottom .hmfw-tooltip-arrow {
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-rightTop .hmfw-tooltip-arrow,
+.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-rightBottom .hmfw-tooltip-arrow {
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+}

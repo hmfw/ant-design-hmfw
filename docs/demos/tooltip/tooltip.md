@@ -33,6 +33,30 @@
   <TooltipCustomColor />
 </DemoBlock>
 
+### 箭头居中
+
+设置 `arrow.pointAtCenter` 可以让箭头始终指向触发元素的中心。
+
+<DemoBlock title="箭头居中" :source="TooltipArrowCenterSource">
+  <TooltipArrowCenter />
+</DemoBlock>
+
+### 强制重新计算位置
+
+使用 `fresh` 属性可以强制重新计算浮层位置，适用于触发元素位置动态变化的场景。
+
+<DemoBlock title="强制重新计算位置" :source="TooltipFreshSource">
+  <TooltipFresh />
+</DemoBlock>
+
+### 动态内容自适应
+
+当浮层内容动态变化时，Tooltip 会自动重新计算位置，确保浮层不会溢出视口。
+
+<DemoBlock title="动态内容自适应" :source="TooltipDynamicContentSource">
+  <TooltipDynamicContent />
+</DemoBlock>
+
 ## API
 
 ### Tooltip Props
@@ -46,10 +70,11 @@
 | open (v-model) | 用于手动控制浮层显隐 | `boolean` | - |
 | defaultOpen | 默认是否显示（非受控） | `boolean` | `false` |
 | color | 背景颜色 | `string` | - |
-| arrow | 是否显示箭头，可对象配置 | `boolean \| { pointAtCenter?: boolean }` | `true` |
+| arrow | 是否显示箭头，可对象配置 `{ pointAtCenter?: boolean }` 使箭头指向元素中心 | `boolean \| { pointAtCenter?: boolean }` | `true` |
 | mouseEnterDelay | 鼠标移入后延时显示，单位秒 | `number` | `0.1` |
 | mouseLeaveDelay | 鼠标移出后延时隐藏，单位秒 | `number` | `0.1` |
 | disabled | 禁用 tooltip | `boolean` | `false` |
+| fresh | 强制重新计算浮层位置（变化时触发重新定位） | `number \| string` | - |
 | autoAdjustOverflow | 浮层超出视口时自动翻转方向 | `boolean` | `true` |
 | zIndex | 自定义浮层 z-index | `number` | `1070` |
 | destroyOnHidden | 隐藏时销毁浮层 DOM | `boolean` | `false` |
@@ -70,3 +95,17 @@
 | --- | --- |
 | default | 触发提示的元素 |
 | title | 提示文字（与 `title` prop 二选一） |
+
+## 特性说明
+
+### 自动定位更新
+
+Tooltip 使用 ResizeObserver 监听浮层内容尺寸变化，当内容动态变化时会自动重新计算位置，确保浮层不会溢出视口边界。
+
+### 箭头居中
+
+设置 `arrow: { pointAtCenter: true }` 可以让箭头始终指向触发元素的中心位置，而不是跟随浮层边缘。这在触发元素较宽或使用 `topLeft`、`bottomRight` 等偏移位置时特别有用。
+
+### 强制重新定位
+
+通过改变 `fresh` 属性的值（通常使用递增的数字），可以强制 Tooltip 重新计算浮层位置。这在触发元素位置动态变化（如动画、拖拽）时很有用。

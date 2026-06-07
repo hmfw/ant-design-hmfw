@@ -52,3 +52,19 @@
 .hmfw-breadcrumb-link:hover {
   color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
 }
+
+/* 下拉菜单样式 */
+.hmfw-breadcrumb-overlay-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hmfw-breadcrumb-overlay-link .hmfw-icon {
+  font-size: 10px;
+  transition: transform var(--hmfw-motion-duration-mid, 0.2s);
+}
+
+.hmfw-breadcrumb-link:hover .hmfw-breadcrumb-overlay-link .hmfw-icon {
+  transform: translateY(1px);
+}

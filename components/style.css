@@ -64,6 +64,7 @@
 @import './transfer/style/index.css';
 @import './range-picker/style/index.css';
 @import './tree-select/style/index.css';
+@import './statistic/style/index.css';
 
 /* Global reset */
 * {
