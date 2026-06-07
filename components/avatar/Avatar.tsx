@@ -62,7 +62,7 @@ export const Avatar = defineComponent({
     src: String,
     srcSet: String,
     alt: String,
-    icon: Object,
+    icon: [Object, Function],
     draggable: {
       type: [Boolean, String] as PropType<boolean | 'true' | 'false'>,
       default: undefined,
@@ -173,9 +173,11 @@ export const Avatar = defineComponent({
         const IconComp = props.icon as any
         children = <IconComp />
       } else if (slots.default) {
+        // 始终包含 translateX(-50%) 确保水平居中
+        // left: 50% 由 CSS 类设置，配合 translateX(-50%) 实现居中
         const textStyle = scale.value !== 1
-          ? { transform: `scale(${scale.value})`, position: 'absolute' as const, display: 'inline-block' }
-          : { display: 'inline-block' }
+          ? { transform: `scale(${scale.value}) translateX(-50%)` }
+          : { transform: 'translateX(-50%)' }
         children = (
           <span ref={textRef} class={`${prefixCls}-string`} style={textStyle}>
             {slots.default()}
