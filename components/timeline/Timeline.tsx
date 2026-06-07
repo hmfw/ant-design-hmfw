@@ -1,9 +1,9 @@
-import { defineComponent, computed, type PropType, type VNode, Fragment, Comment, isVNode } from 'vue'
+import { defineComponent, type PropType, type VNode, Fragment, Comment } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { LoadingOutlined } from '../icon/icons'
-import type { TimelineProps, TimelineItemProps, TimelineMode, TimelineOrientation, TimelineVariant } from './types'
+import type { TimelineItemProps, TimelineMode, TimelineOrientation, TimelineVariant } from './types'
 
 // Helper to normalize mode (left/right → start/end)
 function normalizeMode(mode?: TimelineMode): 'start' | 'end' | 'alternate' {

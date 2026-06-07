@@ -1,6 +1,5 @@
 import { defineComponent, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import type { ListItemMetaProps } from './types'
 
 export const ListItemMeta = defineComponent({
   name: 'ListItemMeta',

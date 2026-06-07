@@ -7,7 +7,6 @@ import type {
   CalendarMode,
   CellRender,
   HeaderRender,
-  ValidRange,
   DateCellRender,
   MonthCellRender,
   DateRange,
@@ -242,37 +241,6 @@ export const Calendar = defineComponent({
       viewMonth.value = month
     }
 
-    // 导航按钮
-    const prevMonth = () => {
-      if (viewMonth.value === 0) {
-        viewYear.value--
-        viewMonth.value = 11
-      } else {
-        viewMonth.value--
-      }
-      emit('panelChange', null, innerMode.value)
-    }
-
-    const nextMonth = () => {
-      if (viewMonth.value === 11) {
-        viewYear.value++
-        viewMonth.value = 0
-      } else {
-        viewMonth.value++
-      }
-      emit('panelChange', null, innerMode.value)
-    }
-
-    const prevYear = () => {
-      viewYear.value--
-      emit('panelChange', null, innerMode.value)
-    }
-
-    const nextYear = () => {
-      viewYear.value++
-      emit('panelChange', null, innerMode.value)
-    }
-
     // 头部年份选项
     const yearOptions = computed(() => {
       const currentYear = now.getFullYear()
@@ -340,7 +308,7 @@ export const Calendar = defineComponent({
     }
 
     // 渲染日期单元格内容
-    const renderDateCell = (date: Date, inCurrentMonth: boolean) => {
+    const renderDateCell = (date: Date, _inCurrentMonth: boolean) => {
       const originNode = h('div', { class: `${prefixCls}-date` }, date.getDate())
 
       // 优先使用新 API cellRender

@@ -1,5 +1,4 @@
 import type { CSSProperties, VNode } from 'vue'
-import type { PaginationProps } from '../pagination'
 import type { CheckboxProps } from '../checkbox'
 
 export type Key = string | number

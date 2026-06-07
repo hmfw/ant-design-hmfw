@@ -1,4 +1,4 @@
-import { defineComponent, computed, type PropType, type VNode } from 'vue'
+import { defineComponent, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { ItemType, BreadcrumbItemType, BreadcrumbSeparatorType } from './types'
@@ -128,7 +128,7 @@ export const Breadcrumb = defineComponent({
         }
 
         const breadcrumbItem = item as BreadcrumbItemType
-        const { path, key, className, style, onClick } = breadcrumbItem
+        const { path, key, className, style } = breadcrumbItem
         const mergedPath = getPath(props.params, path)
 
         if (mergedPath !== undefined) {

@@ -2,7 +2,6 @@ import { defineComponent, type PropType, type CSSProperties, type VNode, ref, on
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Skeleton } from '../skeleton'
-import type { CountdownProps } from './types'
 
 /**
  * 格式化时间，支持多种占位符
@@ -74,7 +73,7 @@ export const Countdown = defineComponent({
     }
 
     // 更新倒计时
-    const updateCountdown = (timestamp: number) => {
+    const updateCountdown = (_timestamp: number) => {
       // 计算剩余时间
       const remaining = calculateRemaining()
       remainingTime.value = remaining

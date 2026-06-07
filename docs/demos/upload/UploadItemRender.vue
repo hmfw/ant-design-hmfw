@@ -26,7 +26,7 @@ const fileList = ref<UploadFile[]>([
   },
 ])
 
-const customRequest = ({ file, onSuccess, onProgress }: any) => {
+const customRequest = ({ onSuccess, onProgress }: any) => {
   let percent = 0
   const timer = setInterval(() => {
     percent += 25

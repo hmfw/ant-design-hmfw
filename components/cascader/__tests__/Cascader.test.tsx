@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { Cascader } from '../Cascader'
 import { nextTick, h } from 'vue'
 
@@ -86,7 +86,7 @@ describe('Cascader', () => {
   })
 
   it('displayRender receives selectedOptions', () => {
-    const displayRender = vi.fn((labels, selectedOptions) => labels.join(' > '))
+    const displayRender = vi.fn((labels, _selectedOptions) => labels.join(' > '))
     mount(Cascader, {
       props: {
         options,
@@ -151,7 +151,7 @@ describe('Cascader', () => {
     // Check that change was emitted with correct signature
     const changeEvents = wrapper.emitted('change')
     if (changeEvents && changeEvents.length > 0) {
-      const [value, selectedOptions] = changeEvents[0]
+      const [_value, selectedOptions] = changeEvents[0]
       expect(Array.isArray(selectedOptions)).toBe(true)
     }
   })

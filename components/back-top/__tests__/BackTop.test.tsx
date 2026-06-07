@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { nextTick, h } from 'vue'
 import { BackTop } from '../BackTop'
 import ConfigProvider from '../../config-provider/ConfigProvider'

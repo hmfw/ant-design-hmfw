@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, watch, onMounted, type PropType } from 
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Tooltip } from '../tooltip'
-import type { RateProps, RateSize, RateCharacterRenderContext } from './types'
+import type { RateSize, RateCharacterRenderContext } from './types'
 import type { TooltipProps } from '../tooltip'
 
 export const Rate = defineComponent({

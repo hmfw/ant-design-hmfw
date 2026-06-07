@@ -1,4 +1,4 @@
-import { defineComponent, computed, ref, h, isVNode, type PropType, type VNode } from 'vue'
+import { defineComponent, computed, ref, isVNode, type PropType, type VNode } from 'vue'
 import { Modal } from './Modal'
 import { Button } from '../button'
 import { Icon } from '../icon'

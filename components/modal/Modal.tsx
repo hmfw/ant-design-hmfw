@@ -6,10 +6,8 @@ import {
   onBeforeUnmount,
   Teleport,
   Transition,
-  h,
   type PropType,
   type VNode,
-  type CSSProperties,
 } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'

@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { InputNumber } from '../InputNumber'
 import { nextTick } from 'vue'
 
@@ -104,7 +104,7 @@ describe('InputNumber', () => {
       expect(info).toHaveProperty('input')
       return `$${value}`
     })
-    const wrapper = mount(InputNumber, { props: { defaultValue: 100, formatter } })
+    mount(InputNumber, { props: { defaultValue: 100, formatter } })
     await nextTick()
     expect(formatter).toHaveBeenCalled()
   })

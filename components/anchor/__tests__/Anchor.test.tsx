@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { Anchor } from '../Anchor'
 import { AnchorLink } from '../AnchorLink'

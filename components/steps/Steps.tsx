@@ -3,7 +3,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { CheckOutlined, CloseOutlined } from '../icon/icons'
-import type { StepsProps, StepItem, StepStatus, IconRenderInfo } from './types'
+import type { StepItem, StepStatus, IconRenderInfo } from './types'
 import { ProgressIcon } from './ProgressIcon'
 import { PanelArrow } from './PanelArrow'
 

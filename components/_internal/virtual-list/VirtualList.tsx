@@ -1,5 +1,5 @@
-import { defineComponent, ref, computed, watch, onMounted, onBeforeUnmount, type PropType } from 'vue'
-import type { VirtualListProps, VirtualListInstance } from './types'
+import { defineComponent, ref, computed, type PropType } from 'vue'
+import type { VirtualListInstance } from './types'
 
 export const VirtualList = defineComponent({
   name: 'VirtualList',
@@ -43,9 +43,6 @@ export const VirtualList = defineComponent({
 
     // 总内容高度
     const totalHeight = computed(() => props.data.length * props.itemHeight)
-
-    // 可见区域可以容纳的项数
-    const visibleCount = computed(() => Math.ceil(containerHeight.value / props.itemHeight))
 
     // 开始索引（包含缓冲区）
     const startIndex = computed(() => {

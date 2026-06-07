@@ -1,5 +1,4 @@
 import { inject, provide, type InjectionKey } from 'vue'
-import type { AnchorLinkItem } from './types'
 
 export interface AnchorContext {
   registerLink: (link: string, targetOffset?: number) => void

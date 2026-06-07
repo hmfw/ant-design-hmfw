@@ -312,7 +312,6 @@ export const TimePicker = defineComponent({
     const showSec = computed(() => hasSeconds(props.format))
 
     // 性能优化：使用 transform 替代 scrollIntoView，带缓存和节流
-    const ITEM_HEIGHT = 36 // 4px padding * 2 + 28px line-height
     let scrollRafId = 0
     const lastScrolledValue = ref<Record<string, number | string>>({})
 

@@ -85,10 +85,6 @@ export const Progress = defineComponent({
     const strokeColorNotArray = computed(() =>
       Array.isArray(props.strokeColor) ? props.strokeColor[0] : props.strokeColor,
     )
-    const strokeColorNotGradient = computed(() =>
-      typeof props.strokeColor === 'string' || Array.isArray(props.strokeColor) ? props.strokeColor : undefined,
-    )
-
     const strokeColorIsBright = computed(() => {
       const first = pickFirstColor(props.strokeColor)
       return isLightColor(first)

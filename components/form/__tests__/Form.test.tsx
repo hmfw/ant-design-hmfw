@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { Form, FormItem, useForm } from '../Form'
-import { defineComponent, h, nextTick, reactive, ref, computed, inject } from 'vue'
+import { defineComponent, h, nextTick, reactive, ref, computed } from 'vue'
 
 describe('Form', () => {
   it('renders form element', () => {
@@ -520,7 +520,7 @@ describe('Form - Field Dependency & Linkage', () => {
       },
     })
 
-    const wrapper = mount(ChildForm)
+    mount(ChildForm)
 
     // Initially only name field
     formApi!.setFieldValue('name', 'John')

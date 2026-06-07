@@ -19,14 +19,6 @@ import type { BreadcrumbItem as BreadcrumbItemType } from 'ant-design-hmfw'
 // 模拟路由状态
 const currentPath = ref('/')
 
-// 路由配置（模拟 vue-router 的 routes）
-const routeConfig: Record<string, { title: string; path: string }> = {
-  '/': { title: '首页', path: '/' },
-  '/products': { title: '产品列表', path: '/products' },
-  '/products/:id': { title: '产品详情', path: '/products/:id' },
-  '/products/:id/reviews': { title: '产品评价', path: '/products/:id/reviews' },
-}
-
 // 从路径生成面包屑
 const breadcrumbItems = computed<BreadcrumbItemType[]>(() => {
   const path = currentPath.value

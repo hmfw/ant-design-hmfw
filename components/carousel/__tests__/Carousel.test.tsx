@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { h, ref } from 'vue'
+import { h } from 'vue'
 import { Carousel } from '../Carousel'
 import type { CarouselRef } from '../types'
 

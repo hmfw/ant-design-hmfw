@@ -196,7 +196,7 @@ export function useForm() {
       return ctx?.touched[name] ?? false
     },
     /** Check if fields are validating (not implemented yet, returns false). */
-    isFieldsValidating: (nameList?: string[]) => {
+    isFieldsValidating: (_nameList?: string[]) => {
       // Placeholder - would need async validation state tracking
       return false
     },

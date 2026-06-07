@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls, KEYS } from '../_utils'
-import type { SliderMarkValue, SliderMarks, SliderTooltipProps } from './types'
+import type { SliderMarks, SliderTooltipProps } from './types'
 
 export const Slider = defineComponent({
   name: 'Slider',

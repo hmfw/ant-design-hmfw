@@ -117,13 +117,6 @@ export const Select = defineComponent({
 
     const allOptions = computed(() => [...flatOptions.value, ...dynamicOptions.value])
 
-    // Normalize value helpers
-    const normalizeRawValue = (v: any): (string | number)[] | undefined => {
-      if (v === undefined || v === null) return isMultiple.value ? [] : undefined
-      if (Array.isArray(v)) return v
-      return [v]
-    }
-
     const extractRawValues = (v: SelectValue | undefined): (string | number)[] | undefined => {
       if (v === undefined || v === null) return isMultiple.value ? [] : undefined
       if (Array.isArray(v)) {
@@ -394,7 +387,7 @@ export const Select = defineComponent({
       const omittedValues =
         isMultiple.value && props.maxTagCount !== undefined ? selectedValues.value.slice(props.maxTagCount) : []
 
-      const renderTag = (val: string | number, idx: number) => {
+      const renderTag = (val: string | number, _idx: number) => {
         const label = selectedLabels.value[selectedValues.value.indexOf(val)]
         const onClose = () => removeTag(val, new MouseEvent('click'))
 

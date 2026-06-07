@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { ref } from 'vue'
 import { Menu } from 'ant-design-hmfw'
 
 const selectedKeys = ref(['1'])

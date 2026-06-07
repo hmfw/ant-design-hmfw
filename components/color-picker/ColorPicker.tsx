@@ -12,7 +12,7 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { hexToHsb, hsbToHex, isValidHex, type HSB } from './color-utils'
-import type { ColorPickerProps, ColorFormat } from './types'
+import type { ColorFormat } from './types'
 
 const DEFAULT_COLOR = '#1677ff'
 

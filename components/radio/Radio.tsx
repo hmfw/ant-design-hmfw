@@ -1,15 +1,4 @@
-import {
-  defineComponent,
-  ref,
-  watch,
-  inject,
-  computed,
-  provide,
-  toRef,
-  type PropType,
-  type ComputedRef,
-  type Ref,
-} from 'vue'
+import { defineComponent, ref, watch, inject, computed, provide, type PropType, type ComputedRef } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { RadioValueType, RadioChangeEvent } from './types'
@@ -153,11 +142,6 @@ export const RadioButton = defineComponent({
   },
   emits: ['update:checked', 'change'],
   setup(props, { slots, emit }) {
-    const group = inject<RadioGroupContext | null>(RADIO_GROUP_KEY, null)
-    const contextWithButton = computed<RadioGroupContext | null>(() =>
-      group ? { ...group, optionType: computed(() => 'button' as const) } : null,
-    )
-
     return () => (
       <Radio
         {...props}

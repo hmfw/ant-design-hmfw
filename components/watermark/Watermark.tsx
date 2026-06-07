@@ -12,7 +12,7 @@ import {
   type InjectionKey,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import type { WatermarkProps, WatermarkFont } from './types'
+import type { WatermarkFont } from './types'
 
 /** 多行文本行间距（px） */
 const FontGap = 3

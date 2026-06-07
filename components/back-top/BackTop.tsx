@@ -12,7 +12,6 @@ import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { UpOutlined } from '../icon/icons'
-import type { BackTopProps } from './types'
 
 // Throttle by requestAnimationFrame
 function throttleByAnimationFrame<T extends (...args: any[]) => void>(fn: T) {

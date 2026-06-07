@@ -1,6 +1,5 @@
-import { defineComponent, computed, ref, watch, type PropType, Transition } from 'vue'
+import { defineComponent, computed, ref, watch, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
 
 export const ScrollNumber = defineComponent({
   name: 'ScrollNumber',

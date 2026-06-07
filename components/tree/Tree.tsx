@@ -521,7 +521,7 @@ export const Tree = defineComponent({
     }
 
     // 渲染单个树节点
-    const renderTreeNode = (flatNode: FlatNode, index: number) => {
+    const renderTreeNode = (flatNode: FlatNode, _index: number) => {
       const { node, level, hasChildren } = flatNode
       const key = getKey(node)
       const isExpanded = expandedKeys.value.includes(key)

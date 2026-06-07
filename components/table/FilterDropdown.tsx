@@ -1,9 +1,7 @@
-import { defineComponent, ref, computed, type PropType } from 'vue'
+import { defineComponent, ref, type PropType } from 'vue'
 import { Checkbox } from '../checkbox'
 import { Button } from '../button'
-import { Dropdown } from '../dropdown'
 import type { ColumnFilterItem, FilterValue, Key } from './interface'
-import { cls } from '../_utils'
 
 export const FilterDropdown = defineComponent({
   name: 'FilterDropdown',

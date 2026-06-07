@@ -31,7 +31,7 @@ const beforeUpload = (file: File) => {
   return true
 }
 
-const customRequest = ({ file, onSuccess, onError, onProgress }: any) => {
+const customRequest = ({ file, onSuccess, onProgress }: any) => {
   // 模拟上传进度
   let percent = 0
   const timer = setInterval(() => {

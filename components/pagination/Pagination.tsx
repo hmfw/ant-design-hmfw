@@ -211,7 +211,7 @@ export const Pagination = defineComponent({
               </button>
             </li>,
           )}
-          {pages.map((p, i) => {
+          {pages.map((p) => {
             if (p === -1) {
               // jump-prev
               return renderItem(

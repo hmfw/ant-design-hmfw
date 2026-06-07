@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, onUnmounted, computed, type PropType } from 'vue'
+import { defineComponent, onMounted, onUnmounted, computed } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { useAnchorContext } from './context'
@@ -33,7 +33,6 @@ export const AnchorLink = defineComponent({
     })
 
     const handleClick = (e: MouseEvent) => {
-      const target = e.currentTarget as HTMLAnchorElement
       context?.onClick?.(e, { title: props.title, href: props.href })
       context?.scrollTo(props.href, props.targetOffset)
 

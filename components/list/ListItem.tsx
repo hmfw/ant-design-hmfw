@@ -3,7 +3,6 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Col } from '../grid'
 import { useListContext } from './context'
-import type { ListItemProps } from './types'
 
 export const ListItem = defineComponent({
   name: 'ListItem',

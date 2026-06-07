@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { Tooltip } from '../Tooltip'
 import { nextTick } from 'vue'
 
@@ -301,7 +301,6 @@ describe('Tooltip', () => {
     })
     await nextTick()
     const tooltip = document.querySelector('.hmfw-tooltip') as HTMLElement
-    const initialTop = tooltip?.style.top
 
     // 修改 fresh 属性值触发位置更新
     await wrapper.setProps({ fresh: 2 })
@@ -333,7 +332,7 @@ describe('Tooltip', () => {
     // 模拟 ResizeObserver
     const observeMock = vi.fn()
     const disconnectMock = vi.fn()
-    global.ResizeObserver = vi.fn().mockImplementation((callback) => ({
+    global.ResizeObserver = vi.fn().mockImplementation((_callback) => ({
       observe: observeMock,
       disconnect: disconnectMock,
       unobserve: vi.fn(),

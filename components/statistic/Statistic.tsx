@@ -2,7 +2,6 @@ import { defineComponent, type PropType, type CSSProperties, type VNode } from '
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Skeleton } from '../skeleton'
-import type { StatisticProps } from './types'
 
 /**
  * 格式化数字，添加千分位分隔符和精度控制

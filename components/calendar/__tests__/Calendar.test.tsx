@@ -116,7 +116,7 @@ describe('Calendar', () => {
       const emitted = wrapper.emitted('rangeChange') as any[]
       expect(emitted).toBeTruthy()
       // 验证范围顺序已调整
-      const [rangeStr, range] = emitted[0]
+      const [_rangeStr, range] = emitted[0]
       expect(range[0].getTime()).toBeLessThanOrEqual(range[1].getTime())
     })
 

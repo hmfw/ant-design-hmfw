@@ -44,7 +44,7 @@ const data = Array.from({ length: 10000 }, (_, i) => ({
   description: `这是第 ${i + 1} 项的描述内容`,
 }))
 
-const renderItem = (item: any, index: number) =>
+const renderItem = (item: any, _index: number) =>
   h(
     'div',
     {

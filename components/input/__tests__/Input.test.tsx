@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { Input, InputPassword, TextArea, InputSearch } from '../Input'
-import { nextTick } from 'vue'
 
 describe('Input', () => {
   it('renders correctly', () => {

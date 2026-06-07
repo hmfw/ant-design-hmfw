@@ -4,7 +4,6 @@
 
 <script setup lang="ts">
 import { Timeline } from 'ant-design-hmfw'
-import { h } from 'vue'
 
 const items = [
   { content: '创建服务现场', loading: true },

@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import Divider from '../Divider'
-import { h } from 'vue'
 
 describe('Divider', () => {
   it('renders correctly', () => {

@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { defineComponent, inject } from 'vue'
+import { defineComponent } from 'vue'
 import ConfigProvider from '../ConfigProvider'
-import { CONFIG_PROVIDER_KEY, useConfig, usePrefixCls, useLocale } from '../context'
+import { useConfig, usePrefixCls, useLocale } from '../context'
 import { enUS } from '../../_locale'
 
 describe('ConfigProvider', () => {
@@ -93,7 +93,7 @@ describe('ConfigProvider', () => {
       attachTo: document.body,
     })
     await wrapper.vm.$nextTick()
-    const style = document.documentElement.style.cssText || document.head.querySelector('style')?.textContent || ''
+    const _style = document.documentElement.style.cssText || document.head.querySelector('style')?.textContent || ''
     // CSS vars are injected — just verify no error thrown
     expect(wrapper.exists()).toBe(true)
     wrapper.unmount()

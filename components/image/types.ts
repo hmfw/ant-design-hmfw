@@ -1,4 +1,4 @@
-import type { VNode, CSSProperties } from 'vue'
+import type { VNode } from 'vue'
 
 /** 预览操作 transform 状态 */
 export interface TransformType {

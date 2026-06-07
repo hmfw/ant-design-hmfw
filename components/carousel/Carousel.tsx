@@ -1,16 +1,9 @@
-import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, nextTick, type VNode } from 'vue'
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
 import { LeftOutlined, RightOutlined } from '../icon'
-import type {
-  CarouselEffect,
-  CarouselDotPosition,
-  CarouselDotPlacement,
-  CarouselDotsConfig,
-  CarouselAutoplayConfig,
-  CarouselRef,
-} from './types'
+import type { CarouselDotPlacement, CarouselRef } from './types'
 
 export const Carousel = defineComponent({
   name: 'Carousel',

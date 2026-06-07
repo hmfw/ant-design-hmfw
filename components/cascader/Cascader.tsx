@@ -309,7 +309,7 @@ export const Cascader = defineComponent({
       activePath.value = newPath
     }
 
-    const handleSearchSelect = (values: (string | number)[], options: CascaderOption[]) => {
+    const handleSearchSelect = (values: (string | number)[], _options: CascaderOption[]) => {
       if (props.multiple) {
         const paths = [...currentValue.value, values]
         innerValue.value = paths

@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { h } from 'vue'
 import { Steps } from '../Steps'
 import type { StepItem } from '../types'
@@ -132,7 +132,7 @@ describe('Steps', () => {
   })
 
   it('supports custom iconRender', () => {
-    const iconRender = vi.fn((node) => h('div', { class: 'custom-icon' }, 'Custom'))
+    const iconRender = vi.fn((_node) => h('div', { class: 'custom-icon' }, 'Custom'))
     const wrapper = mount(Steps, { props: { items, iconRender } })
     expect(wrapper.find('.custom-icon').exists()).toBe(true)
     expect(iconRender).toHaveBeenCalled()

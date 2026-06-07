@@ -4,10 +4,10 @@ import { cls } from '../_utils'
 import { Spin } from '../spin'
 import { Empty } from '../empty'
 import { Pagination } from '../pagination'
-import { Row, Col } from '../grid'
+import { Row } from '../grid'
 import { VirtualList } from '../_internal/virtual-list'
 import { provideListContext } from './context'
-import type { ListProps, ListSize, ListItemLayout, ListGridType, PaginationConfig } from './types'
+import type { ListSize, ListItemLayout, ListGridType, PaginationConfig } from './types'
 
 export const List = defineComponent({
   name: 'List',
@@ -67,12 +67,6 @@ export const List = defineComponent({
       internalCurrent.value = page
       internalPageSize.value = size
       paginationConfig.value.onChange?.(page, size)
-    }
-
-    const handleSizeChange = (current: number, size: number) => {
-      internalCurrent.value = current
-      internalPageSize.value = size
-      paginationConfig.value.onShowSizeChange?.(current, size)
     }
 
     // Loading state
@@ -170,7 +164,6 @@ export const List = defineComponent({
 
       // Pagination rendering
       const paginationPosition = paginationConfig.value.position || 'bottom'
-      const paginationAlign = paginationConfig.value.align || 'end'
       const showPagination = !!props.pagination && items.length > 0
       const paginationNode = showPagination ? (
         <div class={`${prefixCls}-pagination`}>
@@ -184,9 +177,6 @@ export const List = defineComponent({
       ) : null
 
       const isSomethingAfterLastItem = !!(props.loadMore || showPagination || props.footer || slots.footer)
-
-      // Map size to class suffix
-      const sizeClass = props.size === 'small' ? 'sm' : props.size === 'large' ? 'lg' : ''
 
       const classes = cls(prefixCls, {
         [`${prefixCls}-sm`]: props.size === 'small',

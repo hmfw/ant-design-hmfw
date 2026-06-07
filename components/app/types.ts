@@ -1,6 +1,5 @@
 import type { message } from '../message'
 import type { notification } from '../notification'
-import type { Modal } from '../modal'
 
 export interface AppConfig {
   message: typeof message

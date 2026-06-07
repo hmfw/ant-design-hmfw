@@ -1,14 +1,4 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onUnmounted,
-  nextTick,
-  type PropType,
-  type CSSProperties,
-} from 'vue'
+import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Spin } from '../spin'
@@ -20,7 +10,6 @@ import { Dropdown } from '../dropdown'
 import { FilterDropdown } from './FilterDropdown'
 import type {
   TableColumn,
-  TableProps,
   TableRowSelection,
   TablePaginationConfig,
   Key,
@@ -230,12 +219,6 @@ export const Table = defineComponent({
     })
 
     // 虚拟滚动相关计算
-    const totalHeight = computed(() => {
-      if (!virtualEnabled.value) return 0
-      return pagedData.value.reduce((sum, record, index) => {
-        return sum + getRowHeight(record, index)
-      }, 0)
-    })
 
     const visibleStartIndex = computed(() => {
       if (!virtualEnabled.value) return 0

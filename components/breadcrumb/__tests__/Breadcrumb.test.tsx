@@ -216,7 +216,7 @@ describe('Breadcrumb', () => {
           { title: 'Home', path: 'home' },
           { title: 'List', path: 'list' },
         ],
-        itemRender: (item, params, items, paths) => {
+        itemRender: (item) => {
           return h('span', { class: 'custom-render' }, `Custom: ${item.title}`)
         },
       },
