@@ -52,7 +52,7 @@ export const Avatar = defineComponent({
   name: 'Avatar',
   props: {
     size: {
-      type: [String, Number] as PropType<AvatarSize>,
+      type: [String, Number, Object] as PropType<AvatarSize>,
       default: undefined,
     },
     shape: {
@@ -198,7 +198,7 @@ export const AvatarGroup = defineComponent({
     maxCount: Number,
     maxStyle: Object as PropType<Record<string, string>>,
     size: {
-      type: [String, Number] as PropType<AvatarSize>,
+      type: [String, Number, Object] as PropType<AvatarSize>,
       default: undefined,
     },
     shape: {
