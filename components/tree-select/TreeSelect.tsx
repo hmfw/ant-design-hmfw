@@ -1,9 +1,11 @@
 import {
-  defineComponent, ref, computed, watch, onMounted, onBeforeUnmount, nextTick, Teleport, type PropType,
+  defineComponent, ref, computed, watch, onMounted, onBeforeUnmount, nextTick, Teleport, type PropType, type VNode,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { TreeSelectNode, ShowCheckedStrategy, TreeSelectValue } from './types'
+import type {
+  TreeSelectNode, ShowCheckedStrategy, TreeSelectValue, TreeIcon, MaxTagPlaceholder,
+} from './types'
 
 type Key = string | number
 
@@ -41,15 +43,24 @@ export const TreeSelect = defineComponent({
     open: { type: Boolean, default: undefined },
     defaultOpen: Boolean,
     fieldNames: Object as PropType<{ label?: string; value?: string; children?: string }>,
+    virtual: { type: Boolean, default: true },
+    listHeight: { type: Number, default: 256 },
+    itemHeight: { type: Number, default: 28 },
+    treeIcon: [Boolean, Object, String, Function] as PropType<TreeIcon>,
+    maxTagCount: [Number, String] as PropType<number | 'responsive'>,
+    maxTagPlaceholder: [String, Function] as PropType<MaxTagPlaceholder>,
+    maxTagTextLength: Number,
   },
   emits: ['update:value', 'update:open', 'change', 'search', 'select', 'treeExpand', 'dropdownVisibleChange', 'openChange', 'clear'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tree-select')
     const selectorRef = ref<HTMLElement | null>(null)
     const dropdownRef = ref<HTMLElement | null>(null)
+    const listRef = ref<HTMLElement | null>(null)
     const innerOpen = ref(!!props.defaultOpen)
     const dropdownPos = ref({ top: 0, left: 0, width: 0 })
     const searchText = ref('')
+    const scrollTop = ref(0)
 
     const labelField = computed(() => props.fieldNames?.label ?? 'label')
     const valueField = computed(() => props.fieldNames?.value ?? 'value')
@@ -223,6 +234,67 @@ export const TreeSelect = defineComponent({
       selectedValues.value.map((v) => maps.value.labelMap.get(v) ?? String(v)),
     )
 
+    // ===================== Virtual scroll =====================
+    const useVirtual = computed(() =>
+      props.virtual && props.itemHeight > 0 && flatNodes.value.length * props.itemHeight > props.listHeight,
+    )
+    const visibleRange = computed(() => {
+      if (!useVirtual.value) return { start: 0, end: flatNodes.value.length, offset: 0 }
+      const total = flatNodes.value.length
+      const buffer = 5
+      const start = Math.max(0, Math.floor(scrollTop.value / props.itemHeight) - buffer)
+      const visibleCount = Math.ceil(props.listHeight / props.itemHeight) + buffer * 2
+      const end = Math.min(total, start + visibleCount)
+      return { start, end, offset: start * props.itemHeight }
+    })
+    const handleListScroll = (e: Event) => {
+      scrollTop.value = (e.target as HTMLElement).scrollTop
+    }
+    // 切换搜索/数据/展开时复位滚动
+    watch([searchText, () => props.treeData, expandedKeys], () => {
+      scrollTop.value = 0
+      if (listRef.value) listRef.value.scrollTop = 0
+    })
+
+    // ===================== Tag display helpers =====================
+    const truncateLabel = (label: string) => {
+      const max = props.maxTagTextLength
+      if (max && max > 0 && label.length > max) return `${label.slice(0, max)}...`
+      return label
+    }
+    const renderMaxTagPlaceholder = (omitted: Key[]): string => {
+      const placeholder = props.maxTagPlaceholder
+      if (typeof placeholder === 'function') return placeholder(omitted)
+      if (typeof placeholder === 'string') return placeholder
+      return `+ ${omitted.length} ...`
+    }
+    const visibleTagCount = computed(() => {
+      const total = selectedValues.value.length
+      const max = props.maxTagCount
+      if (max === undefined || max === 'responsive') return total
+      const n = Number(max)
+      if (!Number.isFinite(n) || n < 0) return total
+      return Math.min(n, total)
+    })
+
+    // ===================== Tree icon =====================
+    const renderTreeIcon = (node: TreeSelectNode): VNode | string | null => {
+      // 节点级 icon 优先
+      if (node.icon !== undefined && node.icon !== null) {
+        if (typeof node.icon === 'function') return (node.icon as (n: TreeSelectNode) => VNode | string)(node)
+        return node.icon as VNode | string
+      }
+      const ti = props.treeIcon
+      if (ti === undefined || ti === null || ti === false) return null
+      if (ti === true) {
+        // 默认图标：父节点显示文件夹图标，叶子显示文件图标
+        const ch = getChildren(node)
+        return ch?.length ? '📁' : '📄'
+      }
+      if (typeof ti === 'function') return (ti as (n: TreeSelectNode) => VNode | string | null)(node)
+      return ti as VNode | string
+    }
+
     // ===================== Dropdown =====================
     async function openDropdown() {
       if (props.disabled) return
@@ -358,6 +430,60 @@ export const TreeSelect = defineComponent({
     onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
     onBeforeUnmount(() => document.removeEventListener('mousedown', handleOutsideClick))
 
+    // ===================== Render helpers =====================
+    const renderTreeNode = (flat: FlatNode, checkedSet: Set<Key>, halfSet: Set<Key>): VNode => {
+      const { node, level, hasChildren, valueKey, label, forceExpand } = flat
+      const isSelected = selectedValues.value.includes(valueKey)
+      const isExpanded = forceExpand || expandedKeys.value.includes(valueKey)
+      const isChecked = checkedSet.has(valueKey)
+      const isHalf = halfSet.has(valueKey)
+      const iconNode = renderTreeIcon(node)
+      return (
+        <div
+          key={valueKey}
+          class={cls(`${prefixCls}-tree-node`, {
+            [`${prefixCls}-tree-node-selected`]: isSelected,
+            [`${prefixCls}-tree-node-disabled`]: node.disabled,
+          })}
+          style={{
+            paddingLeft: `${level * 20 + 8}px`,
+            height: useVirtual.value ? `${props.itemHeight}px` : undefined,
+            minHeight: useVirtual.value ? `${props.itemHeight}px` : undefined,
+          }}
+        >
+          <span
+            class={cls(`${prefixCls}-tree-switcher`, {
+              [`${prefixCls}-tree-switcher-noop`]: !hasChildren,
+            })}
+            onClick={(e) => { e.stopPropagation(); if (hasChildren && !forceExpand) toggleExpand(valueKey) }}
+          >
+            {hasChildren && !forceExpand ? (isExpanded ? '▾' : '▸') : null}
+          </span>
+          {props.treeCheckable && (
+            <span
+              class={cls(`${prefixCls}-tree-checkbox`, {
+                [`${prefixCls}-tree-checkbox-checked`]: isChecked,
+                [`${prefixCls}-tree-checkbox-indeterminate`]: isHalf,
+                [`${prefixCls}-tree-checkbox-disabled`]: node.disabled || node.disableCheckbox,
+              })}
+              onClick={(e) => { e.stopPropagation(); selectNode(node) }}
+            >
+              <span class={`${prefixCls}-tree-checkbox-inner`} />
+            </span>
+          )}
+          {iconNode !== null && (
+            <span class={`${prefixCls}-tree-icon`}>{iconNode}</span>
+          )}
+          <span
+            class={`${prefixCls}-tree-node-content`}
+            onClick={() => selectNode(node)}
+          >
+            {label}
+          </span>
+        </div>
+      )
+    }
+
     // ===================== Render =====================
     return () => {
       const hasValue = selectedValues.value.length > 0
@@ -389,12 +515,19 @@ export const TreeSelect = defineComponent({
           >
             {isMultiple.value ? (
               <>
-                {selectedLabels.value.map((label, i) => (
+                {selectedLabels.value.slice(0, visibleTagCount.value).map((label, i) => (
                   <span key={selectedValues.value[i]} class={`${prefixCls}-selection-item`}>
-                    <span class={`${prefixCls}-selection-item-content`}>{label}</span>
+                    <span class={`${prefixCls}-selection-item-content`}>{truncateLabel(label)}</span>
                     <span class={`${prefixCls}-selection-item-remove`} onClick={(e) => removeTag(selectedValues.value[i], e)}>×</span>
                   </span>
                 ))}
+                {selectedValues.value.length > visibleTagCount.value && (
+                  <span class={cls(`${prefixCls}-selection-item`, `${prefixCls}-selection-overflow`)}>
+                    <span class={`${prefixCls}-selection-item-content`}>
+                      {renderMaxTagPlaceholder(selectedValues.value.slice(visibleTagCount.value))}
+                    </span>
+                  </span>
+                )}
                 {props.showSearch && (
                   <input
                     class={`${prefixCls}-selection-search`}
@@ -456,49 +589,43 @@ export const TreeSelect = defineComponent({
                 {flatNodes.value.length === 0 ? (
                   <div class={`${prefixCls}-dropdown-empty`}>{props.notFoundContent}</div>
                 ) : (
-                  flatNodes.value.map(({ node, level, hasChildren, valueKey, label, forceExpand }) => {
-                    const isSelected = selectedValues.value.includes(valueKey)
-                    const isExpanded = forceExpand || expandedKeys.value.includes(valueKey)
-                    const isChecked = checkedSet.has(valueKey)
-                    const isHalf = halfSet.has(valueKey)
-                    return (
+                  <div
+                    ref={listRef}
+                    class={`${prefixCls}-dropdown-list`}
+                    style={{
+                      maxHeight: `${props.listHeight}px`,
+                      overflowY: 'auto',
+                      position: 'relative',
+                    }}
+                    onScroll={handleListScroll}
+                  >
+                    {useVirtual.value ? (
                       <div
-                        key={valueKey}
-                        class={cls(`${prefixCls}-tree-node`, {
-                          [`${prefixCls}-tree-node-selected`]: isSelected,
-                          [`${prefixCls}-tree-node-disabled`]: node.disabled,
-                        })}
-                        style={{ paddingLeft: `${level * 20 + 8}px` }}
+                        class={`${prefixCls}-dropdown-list-holder`}
+                        style={{
+                          height: `${flatNodes.value.length * props.itemHeight}px`,
+                          position: 'relative',
+                        }}
                       >
-                        <span
-                          class={cls(`${prefixCls}-tree-switcher`, {
-                            [`${prefixCls}-tree-switcher-noop`]: !hasChildren,
-                          })}
-                          onClick={(e) => { e.stopPropagation(); if (hasChildren && !forceExpand) toggleExpand(valueKey) }}
+                        <div
+                          class={`${prefixCls}-dropdown-list-inner`}
+                          style={{
+                            transform: `translateY(${visibleRange.value.offset}px)`,
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                          }}
                         >
-                          {hasChildren && !forceExpand ? (isExpanded ? '▾' : '▸') : null}
-                        </span>
-                        {props.treeCheckable && (
-                          <span
-                            class={cls(`${prefixCls}-tree-checkbox`, {
-                              [`${prefixCls}-tree-checkbox-checked`]: isChecked,
-                              [`${prefixCls}-tree-checkbox-indeterminate`]: isHalf,
-                              [`${prefixCls}-tree-checkbox-disabled`]: node.disabled || node.disableCheckbox,
-                            })}
-                            onClick={(e) => { e.stopPropagation(); selectNode(node) }}
-                          >
-                            <span class={`${prefixCls}-tree-checkbox-inner`} />
-                          </span>
-                        )}
-                        <span
-                          class={`${prefixCls}-tree-node-content`}
-                          onClick={() => selectNode(node)}
-                        >
-                          {label}
-                        </span>
+                          {flatNodes.value.slice(visibleRange.value.start, visibleRange.value.end).map((flat) =>
+                            renderTreeNode(flat, checkedSet, halfSet),
+                          )}
+                        </div>
                       </div>
-                    )
-                  })
+                    ) : (
+                      flatNodes.value.map((flat) => renderTreeNode(flat, checkedSet, halfSet))
+                    )}
+                  </div>
                 )}
               </div>
             </Teleport>

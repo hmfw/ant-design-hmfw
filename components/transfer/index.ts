@@ -11,6 +11,7 @@ export type {
   TransferSearchOption,
   TransferLocale,
   TransferListContext,
+  TransferReorderInfo,
   TransferSemanticClassNames,
   TransferSemanticStyles,
 } from './types'

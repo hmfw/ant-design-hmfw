@@ -49,6 +49,14 @@
   <TransferOneWay />
 </DemoBlock>
 
+### 拖拽排序
+
+设置 `draggable` 后，右侧列表项可通过 HTML5 拖拽调整顺序。
+
+<DemoBlock title="拖拽排序" :source="TransferDraggableSource">
+  <TransferDraggable />
+</DemoBlock>
+
 ## API
 
 ### Transfer Props
@@ -70,6 +78,7 @@
 | showSelectAll | 是否展示全选勾选框 | `boolean` | `true` |
 | selectAllLabels | 自定义全选文案 | `SelectAllLabel[]` | - |
 | oneWay | 单向模式 | `boolean` | `false` |
+| draggable | 是否允许通过拖拽对右侧列表项排序 | `boolean` | `false` |
 | pagination | 分页配置 | `boolean \| PaginationType` | - |
 | status | 校验状态 | `'error' \| 'warning'` | - |
 | locale | 文案配置 | `Partial<TransferLocale>` | - |
@@ -85,6 +94,7 @@
 | selectChange | 选中项变化时触发 | `(sourceSelectedKeys: TransferKey[], targetSelectedKeys: TransferKey[])` |
 | search | 搜索框内容变化时触发 | `(direction: TransferDirection, value: string)` |
 | scroll | 列表滚动时触发 | `(direction: TransferDirection, e: Event)` |
+| reorder | 右侧列表通过拖拽重新排序后触发 | `(info: TransferReorderInfo)` |
 
 ### TransferItem
 
@@ -143,6 +153,19 @@ interface TransferSemanticClassNames {
 }
 ```
 
+### TransferReorderInfo
+
+```ts
+interface TransferReorderInfo {
+  direction: TransferDirection
+  oldTargetKeys: TransferKey[]
+  newTargetKeys: TransferKey[]
+  activeKey: TransferKey
+  fromIndex: number
+  toIndex: number
+}
+```
+
 ## 特性说明
 
 ### 搜索
@@ -156,6 +179,10 @@ interface TransferSemanticClassNames {
 ### 单向模式
 
 设置 `oneWay` 后，只显示右箭头按钮，右侧列表每项显示删除按钮，用于"添加到列表"的场景。
+
+### 拖拽排序
+
+设置 `draggable` 后，右侧目标列表的每一项变为可拖拽元素（基于 HTML5 Drag and Drop）。拖拽并释放后会触发 `update:targetKeys` 与 `reorder` 事件，`reorder` 回调携带旧/新 `targetKeys` 顺序、被拖拽项 `activeKey` 以及 `fromIndex` / `toIndex`。禁用项不可拖拽。
 
 ### Shift 多选
 

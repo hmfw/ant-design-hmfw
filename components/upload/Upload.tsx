@@ -1,5 +1,5 @@
 import {
-  defineComponent, ref, computed, type PropType,
+  defineComponent, ref, computed, TransitionGroup, type PropType,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
@@ -11,6 +11,7 @@ import type {
   ShowUploadListInterface,
   CustomRequestOptions,
   BeforeUploadValue,
+  ItemRenderActions,
 } from './types'
 
 let uidCounter = 0
@@ -21,6 +22,28 @@ function formatSize(bytes?: number) {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`
+}
+
+const IMAGE_EXT_RE = /\.(jpg|jpeg|png|gif|bmp|webp|svg|ico|tiff?|avif|apng|heic|heif)$/i
+
+/**
+ * 判断是否为图片 URL/file —— AntD v6 默认行为：
+ * 1) thumbUrl 存在 → 是
+ * 2) MIME type 以 `image/` 开头 → 是
+ * 3) URL 扩展名匹配常见图片格式 → 是
+ * 4) data:image/... base64 URL → 是
+ * 5) 其他网络路径（http/https/相对）默认按图片处理（与 AntD 保持一致）
+ */
+export function isImageUrl(file: UploadFile): boolean {
+  if (file.thumbUrl) return true
+  if (file.type && file.type.indexOf('image/') === 0) return true
+  const url = file.url || ''
+  if (!url) return false
+  if (IMAGE_EXT_RE.test(url)) return true
+  if (/^data:image\//.test(url)) return true
+  // AntD v6: 非图片扩展名（已知文档/视频/音频）直接拒绝
+  if (/\.[^./\\]+$/.test(url)) return false
+  return true
 }
 
 /** Resolve `action` against AntD v6 signature: string | (file) => string | Promise<string>. */
@@ -64,6 +87,8 @@ export const Upload = defineComponent({
     openFileDialogOnClick: { type: Boolean, default: true },
     method: { type: String, default: 'post' },
     onRemove: Function as PropType<UploadProps['onRemove']>,
+    isImageUrl: Function as PropType<UploadProps['isImageUrl']>,
+    itemRender: Function as PropType<UploadProps['itemRender']>,
   },
   emits: ['update:fileList', 'change', 'remove', 'preview', 'download', 'drop'],
   setup(props, { slots, emit }) {
@@ -253,68 +278,117 @@ export const Upload = defineComponent({
       if (typeof props.showUploadList === 'object') return props.showUploadList.showPreviewIcon !== false
       return true
     })
+    const showDownload = computed(() => {
+      if (typeof props.showUploadList === 'object') return !!props.showUploadList.showDownloadIcon
+      return false
+    })
+
+    /** 检查文件是否应展示图片缩略图 —— 优先使用 props.isImageUrl 覆盖。 */
+    const checkImageUrl = (file: UploadFile): boolean => {
+      if (props.isImageUrl) return props.isImageUrl(file)
+      return isImageUrl(file)
+    }
+
+    /** 渲染单个文件项的默认 DOM —— 抽出来便于 itemRender 包装。 */
+    const renderItem = (file: UploadFile) => {
+      const showThumb = checkImageUrl(file)
+      const thumbSrc = file.thumbUrl || file.url
+      return (
+        <div
+          class={cls(`${prefixCls}-list-item`, {
+            [`${prefixCls}-list-item-${file.status}`]: !!file.status,
+          })}
+        >
+          {(props.listType === 'picture' || isCardType.value) && showThumb && thumbSrc && !isCardType.value && (
+            <div class={`${prefixCls}-list-item-thumbnail`}>
+              <img src={thumbSrc} alt={file.name} />
+            </div>
+          )}
+          {isCardType.value ? (
+            <div class={`${prefixCls}-list-item-card`}>
+              {showThumb && thumbSrc
+                ? <img src={thumbSrc} alt={file.name} />
+                : <span class={`${prefixCls}-list-item-icon`}>📄</span>
+              }
+              {file.status === 'uploading' && (
+                <div class={`${prefixCls}-list-item-progress`}>
+                  <div class={`${prefixCls}-list-item-progress-bar`} style={{ width: `${file.percent ?? 0}%` }} />
+                </div>
+              )}
+              <div class={`${prefixCls}-list-item-card-actions`}>
+                {(file.url || file.thumbUrl) && showPreview.value && (
+                  <button class={`${prefixCls}-list-item-action`} onClick={() => emit('preview', file)}>👁</button>
+                )}
+                {showDownload.value && file.url && (
+                  <button class={`${prefixCls}-list-item-action`} onClick={() => emit('download', file)}>⬇</button>
+                )}
+                {showRemove.value && (
+                  <button class={`${prefixCls}-list-item-action`} onClick={() => handleRemove(file)}>🗑</button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div class={`${prefixCls}-list-item-info`}>
+              <span class={`${prefixCls}-list-item-icon`}>
+                {file.status === 'error' ? '❌' : file.status === 'done' ? '✅' : '📄'}
+              </span>
+              <span class={`${prefixCls}-list-item-name`}>{file.name}</span>
+              <span class={`${prefixCls}-list-item-size`}>{formatSize(file.size)}</span>
+              {file.status === 'uploading' && (
+                <div class={`${prefixCls}-list-item-progress`}>
+                  <div class={`${prefixCls}-list-item-progress-bar`} style={{ width: `${file.percent ?? 0}%` }} />
+                </div>
+              )}
+              {showDownload.value && file.url && (
+                <button
+                  class={`${prefixCls}-list-item-action ${prefixCls}-list-item-download`}
+                  onClick={() => emit('download', file)}
+                >
+                  ⬇
+                </button>
+              )}
+              {showRemove.value && (
+                <button
+                  class={`${prefixCls}-list-item-action ${prefixCls}-list-item-remove`}
+                  onClick={() => handleRemove(file)}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )
+    }
 
     const renderFileList = () => {
       if (!showList.value || fileList.value.length === 0) return null
+      // TransitionGroup 在 TSX 下的类型不接受 class — 用 as any 绕过
+      const TG = TransitionGroup as any
       return (
-        <div class={`${prefixCls}-list ${prefixCls}-list-${props.listType}`}>
-          {fileList.value.map((file) => (
-            <div
-              key={file.uid}
-              class={cls(`${prefixCls}-list-item`, {
-                [`${prefixCls}-list-item-${file.status}`]: !!file.status,
-              })}
-            >
-              {(props.listType === 'picture' || isCardType.value) && file.thumbUrl && (
-                <div class={`${prefixCls}-list-item-thumbnail`}>
-                  <img src={file.thumbUrl} alt={file.name} />
+        <TG
+          tag="div"
+          class={`${prefixCls}-list ${prefixCls}-list-${props.listType}`}
+          name={`${prefixCls}-animate`}
+        >
+          {fileList.value.map((file) => {
+            const originNode = renderItem(file)
+            // itemRender 钩子 —— 用户接管单项渲染但仍可通过 actions 触发内置行为
+            if (props.itemRender) {
+              const actions: ItemRenderActions = {
+                download: () => emit('download', file),
+                preview: () => emit('preview', file),
+                remove: () => handleRemove(file),
+              }
+              return (
+                <div key={file.uid} class={`${prefixCls}-list-item-container`}>
+                  {props.itemRender(originNode, file, fileList.value, actions)}
                 </div>
-              )}
-              {isCardType.value ? (
-                <div class={`${prefixCls}-list-item-card`}>
-                  {file.thumbUrl
-                    ? <img src={file.thumbUrl} alt={file.name} />
-                    : <span class={`${prefixCls}-list-item-icon`}>📄</span>
-                  }
-                  {file.status === 'uploading' && (
-                    <div class={`${prefixCls}-list-item-progress`}>
-                      <div class={`${prefixCls}-list-item-progress-bar`} style={{ width: `${file.percent ?? 0}%` }} />
-                    </div>
-                  )}
-                  <div class={`${prefixCls}-list-item-card-actions`}>
-                    {file.url && showPreview.value && (
-                      <button class={`${prefixCls}-list-item-action`} onClick={() => emit('preview', file)}>👁</button>
-                    )}
-                    {showRemove.value && (
-                      <button class={`${prefixCls}-list-item-action`} onClick={() => handleRemove(file)}>🗑</button>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div class={`${prefixCls}-list-item-info`}>
-                  <span class={`${prefixCls}-list-item-icon`}>
-                    {file.status === 'error' ? '❌' : file.status === 'done' ? '✅' : '📄'}
-                  </span>
-                  <span class={`${prefixCls}-list-item-name`}>{file.name}</span>
-                  <span class={`${prefixCls}-list-item-size`}>{formatSize(file.size)}</span>
-                  {file.status === 'uploading' && (
-                    <div class={`${prefixCls}-list-item-progress`}>
-                      <div class={`${prefixCls}-list-item-progress-bar`} style={{ width: `${file.percent ?? 0}%` }} />
-                    </div>
-                  )}
-                  {showRemove.value && (
-                    <button
-                      class={`${prefixCls}-list-item-action ${prefixCls}-list-item-remove`}
-                      onClick={() => handleRemove(file)}
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+              )
+            }
+            return <div key={file.uid} class={`${prefixCls}-list-item-container`}>{originNode}</div>
+          })}
+        </TG>
       )
     }
 

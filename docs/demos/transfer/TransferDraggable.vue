@@ -1,0 +1,29 @@
+<template>
+  <Transfer
+    :data-source="dataSource"
+    v-model:target-keys="targetKeys"
+    :titles="['源', '目标（可拖拽排序）']"
+    draggable
+    @reorder="handleReorder"
+  />
+  <p style="margin-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px;">
+    当前顺序：{{ targetKeys.join(', ') || '（空）' }}
+  </p>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Transfer } from 'ant-design-hmfw'
+import type { TransferItem, TransferReorderInfo } from 'ant-design-hmfw'
+
+const dataSource: TransferItem[] = Array.from({ length: 8 }, (_, i) => ({
+  key: String(i),
+  title: `Item ${i + 1}`,
+}))
+
+const targetKeys = ref<(string | number)[]>(['0', '1', '2', '3'])
+
+function handleReorder(info: TransferReorderInfo) {
+  console.log('reorder', info)
+}
+</script>

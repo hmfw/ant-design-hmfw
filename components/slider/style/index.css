@@ -168,3 +168,11 @@
 .hmfw-slider-vertical .hmfw-slider-mark-text {
   transform: translateY(50%);
 }
+
+/* 垂直方向 Tooltip */
+.hmfw-slider-vertical .hmfw-slider-tooltip {
+  bottom: auto;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+}

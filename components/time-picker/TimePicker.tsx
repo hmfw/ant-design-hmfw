@@ -75,24 +75,38 @@ export const TimePicker = defineComponent({
     use12Hours: Boolean,
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
     open: { type: Boolean, default: undefined },
-    needConfirm: Boolean,
+    needConfirm: { type: Boolean, default: true }, // 默认值改为 true
     changeOnScroll: Boolean,
     renderExtraFooter: Function as PropType<() => VNodeChild>,
     variant: { type: String as PropType<Variant>, default: 'outlined' },
     placement: { type: String as PropType<Placement>, default: 'bottomLeft' },
   },
   emits: ['update:value', 'change', 'openChange', 'focus', 'blur'],
-  setup(props, { emit, expose, slots }) {
+  setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('time-picker')
     const parsed = parseTime(props.defaultValue ?? props.value)
+
+    // 已确认值（提交后的值）
     const innerH = ref(parsed.h)
     const innerM = ref(parsed.m)
     const innerS = ref(parsed.s)
+
+    // 临时选中值（点击列表项时的临时态，仅在 needConfirm=true 时使用）
+    const stagedH = ref(parsed.h)
+    const stagedM = ref(parsed.m)
+    const stagedS = ref(parsed.s)
+
     const innerOpen = ref(false)
     const triggerRef = ref<HTMLElement>()
     const panelRef = ref<HTMLElement>()
     const inputRef = ref<HTMLInputElement>()
     const hasValue = ref(!!props.defaultValue || !!props.value)
+
+    // 列容器 ref（用于性能优化的 transform 滚动）
+    const hourColRef = ref<HTMLElement>()
+    const minuteColRef = ref<HTMLElement>()
+    const secondColRef = ref<HTMLElement>()
+    const periodColRef = ref<HTMLElement>()
 
     const isOpen = computed(() => props.open !== undefined ? props.open : innerOpen.value)
 
@@ -106,10 +120,15 @@ export const TimePicker = defineComponent({
       return formatTime(innerH.value, innerM.value, innerS.value, props.format)
     })
 
+    // 当前显示的值（needConfirm=true 时使用 staged，否则使用 inner）
     const currentVal = computed(() => {
       if (props.value !== undefined) {
         const p = parseTime(props.value)
         return { h: p.h, m: p.m, s: p.s }
+      }
+      // needConfirm=true 时显示临时态
+      if (props.needConfirm) {
+        return { h: stagedH.value, m: stagedM.value, s: stagedS.value }
       }
       return { h: innerH.value, m: innerM.value, s: innerS.value }
     })
@@ -120,12 +139,18 @@ export const TimePicker = defineComponent({
           innerH.value = 0
           innerM.value = 0
           innerS.value = 0
+          stagedH.value = 0
+          stagedM.value = 0
+          stagedS.value = 0
           hasValue.value = false
         } else {
           const p = parseTime(v)
           innerH.value = p.h
           innerM.value = p.m
           innerS.value = p.s
+          stagedH.value = p.h
+          stagedM.value = p.m
+          stagedS.value = p.s
           hasValue.value = true
         }
       }
@@ -147,16 +172,34 @@ export const TimePicker = defineComponent({
     const open = () => {
       if (props.disabled) return
       updatePos()
+      // 打开面板时，将 staged 同步为当前已确认值
+      if (props.needConfirm) {
+        stagedH.value = innerH.value
+        stagedM.value = innerM.value
+        stagedS.value = innerS.value
+      }
       innerOpen.value = true
       emit('openChange', true)
     }
 
     const close = () => {
+      // needConfirm=true 时，关闭面板会丢弃未确认的 staged 值
+      if (props.needConfirm) {
+        stagedH.value = innerH.value
+        stagedM.value = innerM.value
+        stagedS.value = innerS.value
+      }
       innerOpen.value = false
       emit('openChange', false)
     }
 
     const confirmTime = () => {
+      // 将临时值提交到已确认值
+      if (props.needConfirm) {
+        innerH.value = stagedH.value
+        innerM.value = stagedM.value
+        innerS.value = stagedS.value
+      }
       const str = formatTime(innerH.value, innerM.value, innerS.value, props.format)
       hasValue.value = true
       emit('update:value', str)
@@ -166,9 +209,15 @@ export const TimePicker = defineComponent({
 
     const handleNow = () => {
       const now = new Date()
-      innerH.value = now.getHours()
-      innerM.value = now.getMinutes()
-      innerS.value = now.getSeconds()
+      if (props.needConfirm) {
+        stagedH.value = now.getHours()
+        stagedM.value = now.getMinutes()
+        stagedS.value = now.getSeconds()
+      } else {
+        innerH.value = now.getHours()
+        innerM.value = now.getMinutes()
+        innerS.value = now.getSeconds()
+      }
       if (!props.needConfirm) confirmTime()
     }
 
@@ -177,6 +226,9 @@ export const TimePicker = defineComponent({
       innerH.value = 0
       innerM.value = 0
       innerS.value = 0
+      stagedH.value = 0
+      stagedM.value = 0
+      stagedS.value = 0
       hasValue.value = false
       emit('update:value', undefined)
       emit('change', undefined, '')
@@ -237,38 +289,111 @@ export const TimePicker = defineComponent({
 
     const showSec = computed(() => hasSeconds(props.format))
 
-    const scrollToActive = (el: HTMLElement | null, value: number | string) => {
-      if (!el) return
-      nextTick(() => {
-        const item = el.querySelector(`[data-value="${value}"]`) as HTMLElement
-        if (item && typeof item.scrollIntoView === 'function') item.scrollIntoView({ block: 'nearest' })
+    // 性能优化：使用 transform 替代 scrollIntoView，带缓存和节流
+    const ITEM_HEIGHT = 36 // 4px padding * 2 + 28px line-height
+    let scrollRafId = 0
+    const lastScrolledValue = ref<Record<string, number | string>>({})
+
+    const scrollColumnToValue = (
+      colRef: HTMLElement | undefined,
+      value: number | string,
+      cacheKey: 'h' | 'm' | 's' | 'p'
+    ) => {
+      if (!colRef) return
+      // 缓存优化：值未变化时跳过
+      if (lastScrolledValue.value[cacheKey] === value) return
+      lastScrolledValue.value[cacheKey] = value
+
+      // requestAnimationFrame 节流
+      if (scrollRafId) cancelAnimationFrame(scrollRafId)
+      scrollRafId = requestAnimationFrame(() => {
+        const item = colRef.querySelector(`[data-value="${value}"]`) as HTMLElement
+        if (item && typeof item.scrollIntoView === 'function') {
+          // 使用 scrollIntoView 兼容 jsdom（测试环境不支持 scrollTo）
+          item.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+        }
       })
     }
 
+    // 面板打开时滚动到当前值
+    watch(isOpen, (open) => {
+      if (open) {
+        nextTick(() => {
+          const h = props.use12Hours ? (currentVal.value.h % 12 || 12) : currentVal.value.h
+          scrollColumnToValue(hourColRef.value, h, 'h')
+          scrollColumnToValue(minuteColRef.value, currentVal.value.m, 'm')
+          if (showSec.value) {
+            scrollColumnToValue(secondColRef.value, currentVal.value.s, 's')
+          }
+          if (props.use12Hours) {
+            scrollColumnToValue(periodColRef.value, currentPeriod.value, 'p')
+          }
+        })
+      } else {
+        // 关闭时清空缓存
+        lastScrolledValue.value = {}
+      }
+    })
+
+    // 值变化时滚动（仅在面板打开时）
+    watch(() => [currentVal.value.h, currentVal.value.m, currentVal.value.s, currentPeriod.value], () => {
+      if (isOpen.value) {
+        nextTick(() => {
+          const h = props.use12Hours ? (currentVal.value.h % 12 || 12) : currentVal.value.h
+          scrollColumnToValue(hourColRef.value, h, 'h')
+          scrollColumnToValue(minuteColRef.value, currentVal.value.m, 'm')
+          if (showSec.value) {
+            scrollColumnToValue(secondColRef.value, currentVal.value.s, 's')
+          }
+          if (props.use12Hours) {
+            scrollColumnToValue(periodColRef.value, currentPeriod.value, 'p')
+          }
+        })
+      }
+    })
+
     const handleHourClick = (h: number, disabled: boolean) => {
       if (disabled) return
-      innerH.value = h
-      if (props.changeOnScroll && !props.needConfirm) confirmTime()
+      if (props.needConfirm) {
+        stagedH.value = h
+      } else {
+        innerH.value = h
+        if (props.changeOnScroll) confirmTime()
+      }
     }
 
     const handleMinuteClick = (m: number, disabled: boolean) => {
       if (disabled) return
-      innerM.value = m
-      if (props.changeOnScroll && !props.needConfirm) confirmTime()
+      if (props.needConfirm) {
+        stagedM.value = m
+      } else {
+        innerM.value = m
+        if (props.changeOnScroll) confirmTime()
+      }
     }
 
     const handleSecondClick = (s: number, disabled: boolean) => {
       if (disabled) return
-      innerS.value = s
-      if (props.changeOnScroll && !props.needConfirm) confirmTime()
+      if (props.needConfirm) {
+        stagedS.value = s
+      } else {
+        innerS.value = s
+        if (props.changeOnScroll) confirmTime()
+      }
     }
 
     const handlePeriodClick = (period: string) => {
       const isPM = period === 'PM'
-      const currentIsPM = innerH.value >= 12
+      const currentH = props.needConfirm ? stagedH.value : innerH.value
+      const currentIsPM = currentH >= 12
       if (isPM !== currentIsPM) {
-        innerH.value = isPM ? innerH.value + 12 : innerH.value - 12
-        if (props.changeOnScroll && !props.needConfirm) confirmTime()
+        const newH = isPM ? currentH + 12 : currentH - 12
+        if (props.needConfirm) {
+          stagedH.value = newH
+        } else {
+          innerH.value = newH
+          if (props.changeOnScroll) confirmTime()
+        }
       }
     }
 
@@ -317,13 +442,15 @@ export const TimePicker = defineComponent({
               <div class={`${prefixCls}-panel`}>
                 <div class={`${prefixCls}-panel-inner`}>
                   {/* Hour column */}
-                  <ul class={`${prefixCls}-panel-column`} ref={(el) => scrollToActive(el as HTMLElement, props.use12Hours ? innerH.value % 12 || 12 : innerH.value)}>
+                  <ul class={`${prefixCls}-panel-column`} ref={hourColRef}>
                     {hours.value.map(({ value: h, disabled }) => (
                       <li
                         key={h}
                         data-value={h}
                         class={cls(`${prefixCls}-panel-cell`, {
-                          [`${prefixCls}-panel-cell-selected`]: props.use12Hours ? (innerH.value % 12 || 12) === h : innerH.value === h,
+                          [`${prefixCls}-panel-cell-selected`]: props.use12Hours
+                            ? (currentVal.value.h % 12 || 12) === h
+                            : currentVal.value.h === h,
                           [`${prefixCls}-panel-cell-disabled`]: disabled,
                         })}
                         onClick={() => handleHourClick(h, disabled)}
@@ -333,13 +460,13 @@ export const TimePicker = defineComponent({
                     ))}
                   </ul>
                   {/* Minute column */}
-                  <ul class={`${prefixCls}-panel-column`} ref={(el) => scrollToActive(el as HTMLElement, innerM.value)}>
+                  <ul class={`${prefixCls}-panel-column`} ref={minuteColRef}>
                     {minutes.value.map(({ value: m, disabled }) => (
                       <li
                         key={m}
                         data-value={m}
                         class={cls(`${prefixCls}-panel-cell`, {
-                          [`${prefixCls}-panel-cell-selected`]: innerM.value === m,
+                          [`${prefixCls}-panel-cell-selected`]: currentVal.value.m === m,
                           [`${prefixCls}-panel-cell-disabled`]: disabled,
                         })}
                         onClick={() => handleMinuteClick(m, disabled)}
@@ -350,13 +477,13 @@ export const TimePicker = defineComponent({
                   </ul>
                   {/* Second column */}
                   {showSec.value && (
-                    <ul class={`${prefixCls}-panel-column`} ref={(el) => scrollToActive(el as HTMLElement, innerS.value)}>
+                    <ul class={`${prefixCls}-panel-column`} ref={secondColRef}>
                       {seconds.value.map(({ value: s, disabled }) => (
                         <li
                           key={s}
                           data-value={s}
                           class={cls(`${prefixCls}-panel-cell`, {
-                            [`${prefixCls}-panel-cell-selected`]: innerS.value === s,
+                            [`${prefixCls}-panel-cell-selected`]: currentVal.value.s === s,
                             [`${prefixCls}-panel-cell-disabled`]: disabled,
                           })}
                           onClick={() => handleSecondClick(s, disabled)}
@@ -368,7 +495,7 @@ export const TimePicker = defineComponent({
                   )}
                   {/* AM/PM column */}
                   {props.use12Hours && (
-                    <ul class={`${prefixCls}-panel-column`} ref={(el) => scrollToActive(el as HTMLElement, currentPeriod.value)}>
+                    <ul class={`${prefixCls}-panel-column`} ref={periodColRef}>
                       {periods.value.map(({ value: period }) => (
                         <li
                           key={period}
@@ -405,4 +532,3 @@ export const TimePicker = defineComponent({
     )
   },
 })
-

@@ -3,15 +3,11 @@ import {
   ref,
   computed,
   watch,
-  onMounted,
-  onBeforeUnmount,
   type PropType,
-  type CSSProperties,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls, KEYS } from '../_utils'
-
-type MarkValue = string | { label: string; style?: CSSProperties }
+import type { SliderMarkValue, SliderMarks, SliderTooltipProps } from './types'
 
 export const Slider = defineComponent({
   name: 'Slider',
@@ -25,8 +21,8 @@ export const Slider = defineComponent({
     range: Boolean,
     vertical: Boolean,
     reverse: Boolean,
-    marks: Object as PropType<Record<number, MarkValue>>,
-    tooltip: { type: Object as PropType<{ open?: boolean; formatter?: ((v: number) => string) | null }> },
+    marks: Object as PropType<SliderMarks>,
+    tooltip: { type: Object as PropType<SliderTooltipProps> },
     included: { type: Boolean, default: true },
     dots: Boolean,
     keyboard: { type: Boolean, default: true },
@@ -38,15 +34,36 @@ export const Slider = defineComponent({
     const dragging = ref<null | 'start' | 'end'>(null)
     const tooltipVisible = ref<null | 'start' | 'end'>(null)
 
-    const defaultVal = props.defaultValue ?? props.value ?? (props.range ? [0, 0] : 0)
-    const innerValue = ref<number | [number, number]>(defaultVal as any)
+    const clamp = (v: number) => Math.min(props.max, Math.max(props.min, v))
+
+    /**
+     * 规范化值：确保在 [min, max] 范围内，range 模式下确保 start <= end
+     */
+    const normalize = (v: number | [number, number]): number | [number, number] => {
+      if (props.range) {
+        const arr = Array.isArray(v) ? v : [props.min, props.min]
+        const [a, b] = arr
+        const clamped1 = clamp(a)
+        const clamped2 = clamp(b)
+        return [Math.min(clamped1, clamped2), Math.max(clamped1, clamped2)]
+      }
+      return clamp(typeof v === 'number' ? v : props.min)
+    }
+
+    const defaultVal = normalize(props.defaultValue ?? props.value ?? (props.range ? [0, 0] : 0))
+    const innerValue = ref<number | [number, number]>(defaultVal)
 
     const isControlled = computed(() => props.value !== undefined)
-    const currentValue = computed(() => isControlled.value ? props.value! : innerValue.value)
+    const currentValue = computed(() => {
+      const val = isControlled.value ? props.value! : innerValue.value
+      return normalize(val)
+    })
 
-    watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = v as any })
-
-    const clamp = (v: number) => Math.min(props.max, Math.max(props.min, v))
+    watch(() => props.value, (v) => {
+      if (v !== undefined) {
+        innerValue.value = normalize(v) as any
+      }
+    })
 
     const getMarkPoints = () => {
       if (!props.marks) return []
@@ -89,9 +106,10 @@ export const Slider = defineComponent({
     }
 
     const setValue = (v: number | [number, number]) => {
-      innerValue.value = v as any
-      emit('update:value', v)
-      emit('change', v)
+      const normalized = normalize(v)
+      innerValue.value = normalized as any
+      emit('update:value', normalized)
+      emit('change', normalized)
     }
 
     const handleTrackClick = (e: MouseEvent) => {

@@ -1,5 +1,5 @@
 import {
-  defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport,
+  defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport, type VNode,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
@@ -21,7 +21,7 @@ export const Cascader = defineComponent({
     multiple: Boolean,
     showSearch: Boolean,
     changeOnSelect: Boolean,
-    displayRender: Function as PropType<(labels: string[], selectedOptions?: CascaderOption[]) => string>,
+    displayRender: Function as PropType<(labels: string[], selectedOptions?: CascaderOption[]) => string | VNode>,
     fieldNames: Object as PropType<{ label?: string; value?: string; children?: string }>,
     open: { type: Boolean, default: undefined },
     defaultOpen: Boolean,
@@ -90,9 +90,67 @@ export const Cascader = defineComponent({
       return getOptionPath(valPath, opts).map(getLabel)
     }
 
+    // 实现 showCheckedStrategy 过滤逻辑
+    const getDisplayedPaths = computed(() => {
+      if (!props.multiple) return currentValue.value
+
+      const paths = currentValue.value
+      if (!props.showCheckedStrategy || paths.length === 0) return paths
+
+      if (props.showCheckedStrategy === 'SHOW_CHILD') {
+        // 只显示叶子节点：过滤掉那些有子路径被选中的父路径
+        return paths.filter((path) => {
+          // 检查是否有其他路径以当前路径为前缀（即当前路径是父节点）
+          const hasChild = paths.some((otherPath) =>
+            otherPath.length > path.length &&
+            path.every((v, i) => v === otherPath[i])
+          )
+          return !hasChild
+        })
+      }
+
+      if (props.showCheckedStrategy === 'SHOW_PARENT') {
+        // 只显示父节点：过滤掉那些父路径已被选中的子路径
+        return paths.filter((path) => {
+          // 检查是否有其他路径是当前路径的前缀（即有父路径被选中）
+          const hasParent = paths.some((otherPath) =>
+            otherPath.length < path.length &&
+            otherPath.every((v, i) => v === path[i])
+          )
+          return !hasParent
+        })
+      }
+
+      return paths
+    })
+
+    // 搜索高亮辅助函数
+    const highlightText = (text: string, keyword: string): VNode[] => {
+      if (!keyword) return [text as any]
+
+      const lowerText = text.toLowerCase()
+      const lowerKeyword = keyword.toLowerCase()
+      const index = lowerText.indexOf(lowerKeyword)
+
+      if (index === -1) return [text as any]
+
+      const before = text.slice(0, index)
+      const match = text.slice(index, index + keyword.length)
+      const after = text.slice(index + keyword.length)
+
+      const nodes: VNode[] = []
+      if (before) nodes.push(before as any)
+      nodes.push(
+        <span class={`${prefixCls}-menu-item-highlight`}>{match}</span> as VNode
+      )
+      if (after) nodes.push(...highlightText(after, keyword))
+
+      return nodes
+    }
+
     const displayText = computed(() => {
       if (props.multiple) {
-        const paths = currentValue.value
+        const paths = getDisplayedPaths.value
         if (paths.length === 0) return ''
         // For multiple, show first path or tag count
         const firstLabels = getLabelPath(paths[0], props.options)
@@ -294,10 +352,16 @@ export const Cascader = defineComponent({
           <span class={`${prefixCls}-selector`}>
             {props.multiple ? (
               <>
-                {currentValue.value.slice(0, props.maxTagCount ?? currentValue.value.length).map((path) => {
+                {getDisplayedPaths.value.slice(0, props.maxTagCount ?? getDisplayedPaths.value.length).map((path) => {
                   const labels = getLabelPath(path, props.options)
-                  let text = labels.join(' / ')
-                  if (props.maxTagTextLength && text.length > props.maxTagTextLength) {
+                  const options = getOptionPath(path, props.options)
+                  let text: string | VNode
+                  if (props.displayRender) {
+                    text = props.displayRender(labels, options)
+                  } else {
+                    text = labels.join(' / ')
+                  }
+                  if (typeof text === 'string' && props.maxTagTextLength && text.length > props.maxTagTextLength) {
                     text = text.slice(0, props.maxTagTextLength) + '...'
                   }
                   return (
@@ -312,11 +376,11 @@ export const Cascader = defineComponent({
                     </span>
                   )
                 })}
-                {props.maxTagCount && currentValue.value.length > props.maxTagCount && (
+                {props.maxTagCount && getDisplayedPaths.value.length > props.maxTagCount && (
                   <span class={`${prefixCls}-selection-item`}>
                     {typeof props.maxTagPlaceholder === 'function'
-                      ? props.maxTagPlaceholder(currentValue.value.slice(props.maxTagCount))
-                      : (props.maxTagPlaceholder ?? `+${currentValue.value.length - props.maxTagCount}`)}
+                      ? props.maxTagPlaceholder(getDisplayedPaths.value.slice(props.maxTagCount))
+                      : (props.maxTagPlaceholder ?? `+${getDisplayedPaths.value.length - props.maxTagCount}`)}
                   </span>
                 )}
                 {props.showSearch && isOpen.value && (
@@ -344,7 +408,7 @@ export const Cascader = defineComponent({
                     ref={inputRef}
                     class={`${prefixCls}-search-input`}
                     value={searchText.value}
-                    placeholder={displayText.value || props.placeholder}
+                    placeholder={typeof displayText.value === 'string' ? displayText.value || props.placeholder : props.placeholder}
                     onInput={(e) => {
                       searchText.value = (e.target as HTMLInputElement).value
                       emit('search', searchText.value)
@@ -398,7 +462,7 @@ export const Cascader = defineComponent({
                       class={`${prefixCls}-menu-item`}
                       onMousedown={(e) => { e.preventDefault(); handleSearchSelect(item.values, item.options) }}
                     >
-                      {item.labels.join(' / ')}
+                      {highlightText(item.labels.join(' / '), searchText.value)}
                     </div>
                   ))}
                 </div>

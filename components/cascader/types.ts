@@ -1,3 +1,5 @@
+import type { VNode } from 'vue'
+
 export interface CascaderOption {
   value: string | number
   label: string
@@ -24,7 +26,7 @@ export interface CascaderProps {
   multiple?: boolean
   showSearch?: boolean
   changeOnSelect?: boolean
-  displayRender?: (labels: string[], selectedOptions?: CascaderOption[]) => string
+  displayRender?: (labels: string[], selectedOptions?: CascaderOption[]) => string | VNode
   fieldNames?: { label?: string; value?: string; children?: string }
   open?: boolean
   defaultOpen?: boolean

@@ -159,6 +159,27 @@
   padding: 16px;
 }
 
+/* ===== 拖拽排序 ===== */
+.hmfw-transfer-list-content-item-draggable {
+  cursor: grab;
+}
+
+.hmfw-transfer-list-content-item-draggable:active {
+  cursor: grabbing;
+}
+
+.hmfw-transfer-list-content-item-dragging {
+  opacity: 0.5;
+}
+
+.hmfw-transfer-list-content-item-drag-over-before {
+  box-shadow: inset 0 2px 0 0 var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-transfer-list-content-item-drag-over-after {
+  box-shadow: inset 0 -2px 0 0 var(--hmfw-color-primary, #1677ff);
+}
+
 /* ===== Footer / Pagination ===== */
 .hmfw-transfer-list-footer {
   border-top: 1px solid var(--hmfw-color-border, #d9d9d9);

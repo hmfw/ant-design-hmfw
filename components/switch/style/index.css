@@ -2,16 +2,18 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  box-sizing: border-box;
   min-width: 44px;
   height: 22px;
-  padding: 0 4px;
-  background: rgba(0,0,0,0.25);
+  padding: 0;
+  background: rgba(0, 0, 0, 0.25);
   border: 0;
   border-radius: 100px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s, opacity 0.2s;
   vertical-align: middle;
-  box-sizing: border-box;
+  /* overflow:hidden 确保 inner 长文本被胶囊裁掉，handle 仍通过定位显示 */
+  overflow: hidden;
 }
 
 .hmfw-switch:focus-visible {
@@ -28,6 +30,19 @@
   opacity: 0.4;
 }
 
+/* loading 时保留正常背景色与对比度，仅禁用交互；
+   单独 loading（未 disabled）不再叠加 disabled 透明度 */
+.hmfw-switch-loading {
+  cursor: not-allowed;
+}
+.hmfw-switch-loading:not(.hmfw-switch-disabled) {
+  opacity: 1;
+}
+/* 同时 disabled 与 loading 时保持 disabled 的视觉处理 */
+.hmfw-switch-loading.hmfw-switch-disabled {
+  opacity: 0.4;
+}
+
 .hmfw-switch-handle {
   position: absolute;
   top: 2px;
@@ -36,8 +51,8 @@
   height: 18px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0,35,11,0.2);
-  transition: left 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 35, 11, 0.2);
+  transition: left 0.2s, width 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,20 +62,49 @@
   left: calc(100% - 20px);
 }
 
+/* inner 容器：双轨道布局，用 margin 切换显示 checked / unchecked 内容
+   max-width 通过 hmfw-switch 的 overflow:hidden 限制，避免长文本撑破组件 */
 .hmfw-switch-inner {
   display: block;
   overflow: hidden;
+  margin-inline: 24px 6px;
   font-size: 12px;
   color: #fff;
-  padding-inline: 6px 22px;
-  transition: padding 0.2s;
-  min-width: 28px;
-  text-align: right;
+  transition: margin-inline 0.2s;
+  pointer-events: none;
 }
 
 .hmfw-switch-checked .hmfw-switch-inner {
-  padding-inline: 22px 6px;
+  margin-inline: 6px 24px;
+}
+
+.hmfw-switch-inner-checked,
+.hmfw-switch-inner-unchecked {
+  display: block;
+  /* 长文本省略号兜底 */
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: margin-top 0.2s;
+}
+
+/* 默认显示 unchecked 文案 */
+.hmfw-switch-inner-checked {
+  margin-top: -22px;
   text-align: left;
+}
+.hmfw-switch-inner-unchecked {
+  margin-top: 0;
+  text-align: right;
+}
+
+/* checked 状态翻转显示 */
+.hmfw-switch-checked .hmfw-switch-inner-checked {
+  margin-top: 0;
+}
+.hmfw-switch-checked .hmfw-switch-inner-unchecked {
+  margin-top: -22px;
 }
 
 /* Small */
@@ -78,17 +122,45 @@
   left: calc(100% - 14px);
 }
 
-/* Loading */
+.hmfw-switch-small .hmfw-switch-inner {
+  margin-inline: 18px 4px;
+  font-size: 12px;
+}
+.hmfw-switch-small.hmfw-switch-checked .hmfw-switch-inner {
+  margin-inline: 4px 18px;
+}
+
+.hmfw-switch-small .hmfw-switch-inner-checked {
+  margin-top: -16px;
+}
+.hmfw-switch-small.hmfw-switch-checked .hmfw-switch-inner-checked {
+  margin-top: 0;
+}
+.hmfw-switch-small.hmfw-switch-checked .hmfw-switch-inner-unchecked {
+  margin-top: -16px;
+}
+
+/* Loading 旋转圈 */
 .hmfw-switch-loading-icon {
   display: inline-block;
   width: 10px;
   height: 10px;
-  border: 2px solid rgba(0,0,0,0.2);
+  border: 2px solid rgba(0, 0, 0, 0.2);
   border-top-color: var(--hmfw-color-primary, #1677ff);
   border-radius: 50%;
   animation: hmfw-switch-spin 0.6s linear infinite;
+  box-sizing: border-box;
+}
+
+/* 小尺寸 handle 12px 内放 8px 图标更协调 */
+.hmfw-switch-small .hmfw-switch-loading-icon {
+  width: 8px;
+  height: 8px;
+  border-width: 1.5px;
 }
 
 @keyframes hmfw-switch-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }

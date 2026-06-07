@@ -1,4 +1,4 @@
-export { Upload, UploadDragger } from './Upload'
+export { Upload, UploadDragger, isImageUrl } from './Upload'
 export type {
   UploadProps,
   UploadFile,
@@ -8,4 +8,5 @@ export type {
   ShowUploadListInterface,
   CustomRequestOptions,
   BeforeUploadValue,
+  ItemRenderActions,
 } from './types'

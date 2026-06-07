@@ -102,6 +102,22 @@ export interface TransferListContext {
   disabled?: boolean
 }
 
+/** 拖拽排序触发的回调信息 */
+export interface TransferReorderInfo {
+  /** 拖拽发生在哪一侧（目前仅 'right'） */
+  direction: TransferDirection
+  /** 重排前的 targetKeys 顺序 */
+  oldTargetKeys: TransferKey[]
+  /** 重排后的 targetKeys 顺序 */
+  newTargetKeys: TransferKey[]
+  /** 被拖拽项的 key */
+  activeKey: TransferKey
+  /** 被拖拽项原下标 */
+  fromIndex: number
+  /** 被拖拽项目标下标 */
+  toIndex: number
+}
+
 export interface TransferProps {
   dataSource?: TransferItem[]
   /** 右侧列表 key 集合（v-model:targetKeys） */
@@ -132,6 +148,10 @@ export interface TransferProps {
   selectAllLabels?: SelectAllLabel[]
   /** 单向模式：只能从左移到右，右侧项可单独移除 */
   oneWay?: boolean
+  /** 是否允许通过拖拽对右侧（target）列表项排序 */
+  draggable?: boolean
+  /** 拖拽排序后触发，info 中包含旧/新 targetKeys 与拖拽下标 */
+  onReorder?: (info: TransferReorderInfo) => void
   /** 分页 */
   pagination?: PaginationType
   /** 校验状态 */

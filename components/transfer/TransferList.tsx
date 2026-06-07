@@ -63,6 +63,7 @@ export const TransferList = defineComponent({
     showSearch: { type: [Boolean, Object] as PropType<boolean | TransferSearchOption>, default: false },
     showSelectAll: { type: Boolean, default: true },
     showRemove: Boolean,
+    draggable: Boolean,
     pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
     selectAllLabel: { type: [String, Object, Function] as PropType<SelectAllLabel>, default: undefined },
     render: Function as PropType<(item: TransferItem) => RenderResult>,
@@ -83,7 +84,7 @@ export const TransferList = defineComponent({
     removeAll: { type: String, default: '删除全部' },
     removeCurrent: { type: String, default: '删除当页' },
   },
-  emits: ['itemSelect', 'itemSelectAll', 'itemRemove', 'filter', 'scroll'],
+  emits: ['itemSelect', 'itemSelectAll', 'itemRemove', 'reorder', 'filter', 'scroll'],
   setup(props, { emit }) {
     const listPrefixCls = computed(() => `${props.prefixCls}-list`)
     const sectionPrefixCls = computed(() => `${props.prefixCls}-section`)
@@ -228,6 +229,63 @@ export const TransferList = defineComponent({
       return props.styles[key]
     }
 
+    // ===== 拖拽排序状态 =====
+    // 当前正在拖拽的项 key
+    const draggingKey = ref<TransferKey | null>(null)
+    // 当前作为放置目标的项 key
+    const dragOverKey = ref<TransferKey | null>(null)
+    // 放置位置：true 表示放到目标项之后，false 表示之前
+    const dragOverAfter = ref(false)
+
+    function canDragItem(item: TransferItem): boolean {
+      return !!props.draggable && !props.disabled && !item.disabled
+    }
+
+    function handleDragStart(e: DragEvent, key: TransferKey) {
+      draggingKey.value = key
+      if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = 'move'
+        // 部分浏览器（Firefox）需要 setData 才能触发 drag
+        try { e.dataTransfer.setData('text/plain', String(key)) } catch {}
+      }
+    }
+
+    function handleDragOver(e: DragEvent, key: TransferKey) {
+      if (draggingKey.value === null || draggingKey.value === key) return
+      e.preventDefault()
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
+      // 根据鼠标在目标项中的相对位置判断放在前还是后
+      const target = e.currentTarget as HTMLElement
+      const rect = target.getBoundingClientRect()
+      const offset = e.clientY - rect.top
+      const after = offset > rect.height / 2
+      if (dragOverKey.value !== key || dragOverAfter.value !== after) {
+        dragOverKey.value = key
+        dragOverAfter.value = after
+      }
+    }
+
+    function handleDragLeave(_e: DragEvent, key: TransferKey) {
+      if (dragOverKey.value === key) {
+        dragOverKey.value = null
+      }
+    }
+
+    function handleDrop(e: DragEvent, key: TransferKey) {
+      e.preventDefault()
+      const fromKey = draggingKey.value
+      const after = dragOverAfter.value
+      draggingKey.value = null
+      dragOverKey.value = null
+      if (fromKey === null || fromKey === key) return
+      emit('reorder', fromKey, key, after)
+    }
+
+    function handleDragEnd() {
+      draggingKey.value = null
+      dragOverKey.value = null
+    }
+
     return () => {
       const lp = listPrefixCls.value
       const hasEnabled = props.dataSource.some((d) => !d.disabled)
@@ -277,6 +335,25 @@ export const TransferList = defineComponent({
         const key = item.key as TransferKey
         const mergedDisabled = props.disabled || item.disabled
         const checked = props.checkedKeys.includes(key)
+        const isDragging = draggingKey.value === key
+        const isDragOver = dragOverKey.value === key
+        const dragHandlers = canDragItem(item)
+          ? {
+              draggable: true,
+              onDragstart: (e: DragEvent) => handleDragStart(e, key),
+              onDragover: (e: DragEvent) => handleDragOver(e, key),
+              onDragleave: (e: DragEvent) => handleDragLeave(e, key),
+              onDrop: (e: DragEvent) => handleDrop(e, key),
+              onDragend: () => handleDragEnd(),
+            }
+          : {}
+        const dragClass = {
+          [`${lp}-content-item-draggable`]: !!props.draggable && !mergedDisabled,
+          [`${lp}-content-item-dragging`]: isDragging,
+          [`${lp}-content-item-drag-over`]: isDragOver && !isDragging,
+          [`${lp}-content-item-drag-over-after`]: isDragOver && !isDragging && dragOverAfter.value,
+          [`${lp}-content-item-drag-over-before`]: isDragOver && !isDragging && !dragOverAfter.value,
+        }
         const labelNode = (
           <span class={cls(`${lp}-content-item-text`, sn('itemContent'))} style={ss('itemContent')}>
             {renderedEl}
@@ -284,7 +361,12 @@ export const TransferList = defineComponent({
         )
         if (props.showRemove) {
           return (
-            <li key={key} class={cls(`${lp}-content-item`, sn('item'), { [`${lp}-content-item-disabled`]: mergedDisabled })} style={ss('item')}>
+            <li
+              key={key}
+              class={cls(`${lp}-content-item`, sn('item'), dragClass, { [`${lp}-content-item-disabled`]: mergedDisabled })}
+              style={ss('item')}
+              {...dragHandlers}
+            >
               {labelNode}
               <button
                 type="button"
@@ -301,11 +383,12 @@ export const TransferList = defineComponent({
         return (
           <li
             key={key}
-            class={cls(`${lp}-content-item`, sn('item'), {
+            class={cls(`${lp}-content-item`, sn('item'), dragClass, {
               [`${lp}-content-item-disabled`]: mergedDisabled,
               [`${lp}-content-item-checked`]: checked && !mergedDisabled,
             })}
             style={ss('item')}
+            {...dragHandlers}
             onClick={(e: MouseEvent) => !mergedDisabled && emit('itemSelect', key, !checked, e)}
           >
             <Checkbox class={cls(`${lp}-checkbox`, sn('itemIcon'))} style={ss('itemIcon')} checked={checked} disabled={mergedDisabled} />

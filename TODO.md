@@ -239,44 +239,44 @@ components/{name}/
 #### **数据录入（续）**
 
 **Upload 上传**
-- [ ] 缺少 `isImageUrl` 自定义图片判断
-- [ ] 缺少 `itemRender` 自定义文件列表项
-- [ ] 拖拽上传动画效果缺失
-- [ ] 大文件分片上传示例缺失
+- [x] 缺少 `isImageUrl` 自定义图片判断
+- [x] 缺少 `itemRender` 自定义文件列表项
+- [x] 拖拽上传动画效果缺失
+- [x] 大文件分片上传示例缺失
 
 **Cascader 级联选择**
-- [ ] 缺少 `displayRender` 自定义渲染显示
-- [ ] 搜索模式下高亮匹配字符未实现
-- [ ] 缺少 `showCheckedStrategy` 控制回填策略
+- [x] 缺少 `displayRender` 自定义渲染显示
+- [x] 搜索模式下高亮匹配字符未实现
+- [x] 缺少 `showCheckedStrategy` 控制回填策略
 
 **Transfer 穿梭框**
-- [ ] 缺少 `selectAllLabels` 自定义全选文本
-- [ ] 缺少 `oneWay` 单向模式
-- [ ] 拖拽排序功能缺失
+- [x] 缺少 `selectAllLabels` 自定义全选文本（注：现状已实现，新增补强）
+- [x] 缺少 `oneWay` 单向模式（注：现状已实现，新增补强）
+- [x] 拖拽排序功能缺失
 
 **Rate 评分**
-- [ ] 缺少 `tooltips` 提示文案数组
-- [ ] 半星模式交互不流畅
-- [ ] 键盘操作支持不完整
+- [x] 缺少 `tooltips` 提示文案数组（注：现状已实现，补 Home/End 等键盘增强）
+- [x] 半星模式交互不流畅
+- [x] 键盘操作支持不完整
 
 **Slider 滑动输入条**
-- [ ] 缺少 `keyboard` 控制键盘事件响应
-- [ ] 垂直模式下 Tooltip 位置异常
-- [ ] 范围滑块拖拽越界问题
+- [x] 缺少 `keyboard` 控制键盘事件响应（注：现状已实现，补强配置项）
+- [x] 垂直模式下 Tooltip 位置异常
+- [x] 范围滑块拖拽越界问题
 
 **Switch 开关**
-- [ ] 缺少 `loading` 加载状态
-- [ ] `unCheckedChildren` 长文本时样式异常
+- [x] 缺少 `loading` 加载状态（注：现状已实现，补样式优化与异步 onChange）
+- [x] `unCheckedChildren` 长文本时样式异常
 
 **TimePicker 时间选择器**
-- [ ] 缺少 `needConfirm` 控制是否需要确认
-- [ ] 12 小时制切换动画缺失
-- [ ] 滚动到选中项性能优化
+- [x] 缺少 `needConfirm` 控制是否需要确认
+- [x] 12 小时制切换动画缺失
+- [x] 滚动到选中项性能优化
 
 **TreeSelect 树选择**
-- [ ] 虚拟滚动未实现
-- [ ] 缺少 `treeIcon` 配置
-- [ ] 多选标签显示策略与 AntD 不一致
+- [x] 虚拟滚动未实现
+- [x] 缺少 `treeIcon` 配置
+- [x] 多选标签显示策略与 AntD 不一致
 
 #### **数据展示（续）**
 

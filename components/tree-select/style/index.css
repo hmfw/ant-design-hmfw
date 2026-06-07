@@ -158,15 +158,42 @@
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-  max-height: 300px;
-  overflow-y: auto;
   padding: 4px 0;
+}
+
+.hmfw-tree-select-dropdown-list {
+  /* max-height 由组件 listHeight 注入，启用虚拟滚动时使用 */
+}
+
+.hmfw-tree-select-dropdown-list-holder {
+  width: 100%;
+}
+
+.hmfw-tree-select-dropdown-list-inner {
+  width: 100%;
 }
 
 .hmfw-tree-select-dropdown-empty {
   padding: 10px 12px;
   color: rgba(0, 0, 0, 0.25);
   text-align: center;
+}
+
+.hmfw-tree-select-tree-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 4px;
+  flex-shrink: 0;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.hmfw-tree-select-selection-overflow {
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.65);
+  padding: 0 8px;
 }
 
 /* Tree nodes in dropdown */

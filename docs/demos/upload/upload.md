@@ -45,6 +45,22 @@
   <UploadCustom />
 </DemoBlock>
 
+### 自定义文件项渲染
+
+通过 `item-render` 自定义文件列表项外观，可通过 `actions` 调用内置的 `preview`、`download`、`remove` 行为。
+
+<DemoBlock title="自定义文件项渲染" :source="UploadItemRenderSource">
+  <UploadItemRender />
+</DemoBlock>
+
+### 分片上传
+
+大文件场景下，通过 `custom-request` 配合 `File.slice()` 切片，多次请求上传到服务端，最后合并。下面演示了串行分片 + 进度上报的实现思路。
+
+<DemoBlock title="分片上传" :source="UploadChunkedSource">
+  <UploadChunked />
+</DemoBlock>
+
 ## API
 
 ### Upload Props
@@ -68,6 +84,8 @@
 | onRemove | 删除文件的拦截钩子，返回 `false` 阻止删除 | `(file: UploadFile) => boolean \| Promise<boolean>` | - |
 | openFileDialogOnClick | 点击触发器是否弹出文件选择框 | `boolean` | `true` |
 | method | 上传请求 HTTP 方法 | `string` | `'post'` |
+| isImageUrl | 自定义判断是否为图片以决定是否显示缩略图 | `(file: UploadFile) => boolean` | 内置：扩展名 + MIME 检测 |
+| itemRender | 自定义文件项渲染 | `(originNode, file, fileList, actions) => VNode` | - |
 
 ### UploadFile
 

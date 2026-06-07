@@ -24,6 +24,11 @@ describe('Switch', () => {
     expect(wrapper.attributes('aria-checked')).toBe('true')
   })
 
+  it('respects value prop as checked alias', () => {
+    const wrapper = mount(Switch, { props: { value: true } })
+    expect(wrapper.attributes('aria-checked')).toBe('true')
+  })
+
   it('toggles on click', async () => {
     const wrapper = mount(Switch)
     await wrapper.trigger('click')
@@ -58,12 +63,20 @@ describe('Switch', () => {
 
   it('shows checkedChildren when on', () => {
     const wrapper = mount(Switch, { props: { checked: true, checkedChildren: 'ON' } })
-    expect(wrapper.text()).toContain('ON')
+    expect(wrapper.find('.hmfw-switch-inner-checked').text()).toContain('ON')
   })
 
   it('shows unCheckedChildren when off', () => {
     const wrapper = mount(Switch, { props: { checked: false, unCheckedChildren: 'OFF' } })
-    expect(wrapper.text()).toContain('OFF')
+    expect(wrapper.find('.hmfw-switch-inner-unchecked').text()).toContain('OFF')
+  })
+
+  it('renders both tracks for smooth transition', () => {
+    const wrapper = mount(Switch, {
+      props: { checked: true, checkedChildren: 'ON', unCheckedChildren: 'OFF' },
+    })
+    expect(wrapper.find('.hmfw-switch-inner-checked').text()).toBe('ON')
+    expect(wrapper.find('.hmfw-switch-inner-unchecked').text()).toBe('OFF')
   })
 
   it('supports VNode children via slots', () => {
@@ -73,7 +86,7 @@ describe('Switch', () => {
         checkedChildren: () => '<span>✓</span>',
       },
     })
-    expect(wrapper.find('.hmfw-switch-inner').text()).toContain('✓')
+    expect(wrapper.find('.hmfw-switch-inner-checked').text()).toContain('✓')
   })
 
   it('supports autoFocus prop', async () => {
@@ -101,6 +114,16 @@ describe('Switch', () => {
     expect(wrapper.attributes('tabindex')).toBe('5')
   })
 
+  it('supports className prop', () => {
+    const wrapper = mount(Switch, { props: { className: 'my-switch' } })
+    expect(wrapper.classes()).toContain('my-switch')
+  })
+
+  it('supports style prop', () => {
+    const wrapper = mount(Switch, { props: { style: { marginLeft: '8px' } } })
+    expect(wrapper.attributes('style')).toContain('margin-left: 8px')
+  })
+
   it('emits focus event', async () => {
     const wrapper = mount(Switch)
     await wrapper.trigger('focus')
@@ -121,11 +144,16 @@ describe('Switch', () => {
     expect(wrapper.classes()).toContain('hmfw-switch-loading')
   })
 
+  it('disables interaction when loading', () => {
+    const wrapper = mount(Switch, { props: { loading: true } })
+    expect(wrapper.attributes('disabled')).toBeDefined()
+  })
+
   it('maintains checked state in controlled mode', async () => {
     const wrapper = mount(Switch, { props: { checked: true } })
     expect(wrapper.attributes('aria-checked')).toBe('true')
     await wrapper.trigger('click')
-    // Still checked because it's controlled
+    // 受控模式下保持 checked，由外部决定
     expect(wrapper.attributes('aria-checked')).toBe('true')
   })
 
@@ -133,7 +161,79 @@ describe('Switch', () => {
     const wrapper = mount(Switch, { props: { defaultChecked: false } })
     expect(wrapper.attributes('aria-checked')).toBe('false')
     await wrapper.trigger('click')
-    // Changed because it's uncontrolled
     expect(wrapper.attributes('aria-checked')).toBe('true')
+  })
+
+  it('auto-enters loading when onChange returns a Promise', async () => {
+    let resolveFn: (() => void) | null = null
+    const onChange = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveFn = resolve
+        }),
+    )
+    const wrapper = mount(Switch, { props: { onChange } })
+
+    await wrapper.trigger('click')
+    await nextTick()
+
+    expect(onChange).toHaveBeenCalled()
+    expect(wrapper.classes()).toContain('hmfw-switch-loading')
+    expect(wrapper.find('.hmfw-switch-loading-icon').exists()).toBe(true)
+
+    // 二次点击在 loading 期间应被忽略
+    await wrapper.trigger('click')
+    expect(onChange).toHaveBeenCalledTimes(1)
+
+    resolveFn!()
+    // 等待 Promise.finally 回调与 Vue 响应式更新
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    await nextTick()
+    expect(wrapper.classes()).not.toContain('hmfw-switch-loading')
+  })
+
+  it('clears auto-loading when onChange Promise rejects', async () => {
+    let rejectFn: ((err: Error) => void) | null = null
+    const onChange = vi.fn(
+      () =>
+        // 测试侧静默 rejection，避免 unhandled rejection 影响其它用例
+        new Promise<void>((_, reject) => {
+          rejectFn = (err) => reject(err)
+        }).catch(() => {
+          /* swallow */
+        }),
+    )
+    const wrapper = mount(Switch, { props: { onChange } })
+
+    await wrapper.trigger('click')
+    await nextTick()
+    expect(wrapper.classes()).toContain('hmfw-switch-loading')
+
+    rejectFn!(new Error('failed'))
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    await nextTick()
+    expect(wrapper.classes()).not.toContain('hmfw-switch-loading')
+  })
+
+  it('does not enter loading when onChange returns void', async () => {
+    const onChange = vi.fn(() => undefined)
+    const wrapper = mount(Switch, { props: { onChange } })
+
+    await wrapper.trigger('click')
+    await nextTick()
+    expect(wrapper.classes()).not.toContain('hmfw-switch-loading')
+  })
+
+  it('renders long text without breaking layout (ellipsis)', () => {
+    const wrapper = mount(Switch, {
+      props: {
+        checked: true,
+        checkedChildren: 'A very long checked label that should be truncated',
+      },
+    })
+    const inner = wrapper.find('.hmfw-switch-inner-checked')
+    expect(inner.exists()).toBe(true)
+    // 子元素带省略号样式（运行时 jsdom 不计算样式，只校验类与文本存在）
+    expect(inner.text()).toContain('A very long')
   })
 })

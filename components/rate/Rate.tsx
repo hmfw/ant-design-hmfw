@@ -32,8 +32,10 @@ export const Rate = defineComponent({
     const isControlled = computed(() => props.value !== undefined)
     const currentValue = computed(() => isControlled.value ? props.value! : innerValue.value)
 
-    // Merge size from config
+    // 从 ConfigProvider 合并默认尺寸
     const mergedSize = computed(() => props.size ?? config.value.componentSize)
+    // RTL 支持：rtl 下方向键语义反向
+    const isRTL = computed(() => config.value.direction === 'rtl')
 
     watch(() => props.value, (v) => { if (v !== undefined) innerValue.value = v })
 
@@ -43,7 +45,6 @@ export const Rate = defineComponent({
       }
     })
 
-    // Expose focus/blur methods
     expose({
       focus: () => containerRef.value?.focus(),
       blur: () => containerRef.value?.blur(),
@@ -96,26 +97,37 @@ export const Rate = defineComponent({
 
       const { key } = e
       const val = currentValue.value
+      const step = props.allowHalf ? 0.5 : 1
+      // RTL 下左右方向键语义反转
+      const increaseKeys = isRTL.value ? ['ArrowLeft', 'ArrowUp'] : ['ArrowRight', 'ArrowUp']
+      const decreaseKeys = isRTL.value ? ['ArrowRight', 'ArrowDown'] : ['ArrowLeft', 'ArrowDown']
 
-      if (key === 'ArrowRight' || key === 'ArrowUp') {
+      if (increaseKeys.includes(key)) {
         e.preventDefault()
-        const step = props.allowHalf ? 0.5 : 1
         const next = Math.min(val + step, props.count)
-        setValue(next)
-      } else if (key === 'ArrowLeft' || key === 'ArrowDown') {
+        if (next !== val) setValue(next)
+      } else if (decreaseKeys.includes(key)) {
         e.preventDefault()
-        const step = props.allowHalf ? 0.5 : 1
         const next = Math.max(val - step, 0)
-        setValue(next)
+        if (next !== val) setValue(next)
+      } else if (key === 'Home') {
+        // ARIA APG slider 风格：跳到最小值 0
+        e.preventDefault()
+        if (val !== 0) setValue(0)
+      } else if (key === 'End') {
+        // ARIA APG slider 风格：跳到最大值 count
+        e.preventDefault()
+        if (val !== props.count) setValue(props.count)
       }
     }
 
-    const renderCharacter = (index: number) => {
+    const renderCharacter = (index: number, isHalf: boolean) => {
+      const ctx: RateCharacterRenderContext = { index, value: currentValue.value, isHalf }
       if (typeof props.character === 'function') {
-        return props.character({ index, value: currentValue.value })
+        return props.character(ctx)
       }
       if (slots.character) {
-        return slots.character({ index, value: currentValue.value })
+        return slots.character(ctx)
       }
       return props.character
     }
@@ -123,7 +135,6 @@ export const Rate = defineComponent({
     const renderStar = (index: number) => {
       const status = getStarStatus(index)
       const tooltipItem = props.tooltips?.[index]
-      const char = renderCharacter(index)
 
       const starNode = (
         <li
@@ -144,7 +155,7 @@ export const Rate = defineComponent({
               onClick={() => !props.disabled && handleClick(index, true)}
               onMousemove={() => !props.disabled && handleMouseMove(index, true)}
             >
-              {char}
+              {renderCharacter(index, true)}
             </div>
           )}
           <div
@@ -152,14 +163,14 @@ export const Rate = defineComponent({
             onClick={() => !props.disabled && handleClick(index, false)}
             onMousemove={() => !props.disabled && handleMouseMove(index, false)}
           >
-            {char}
+            {renderCharacter(index, false)}
           </div>
         </li>
       )
 
       if (!tooltipItem) return starNode
 
-      // Support both string and TooltipProps
+      // tooltips 支持 string 与 TooltipProps 两种形式
       if (typeof tooltipItem === 'string') {
         return <Tooltip title={tooltipItem}>{starNode}</Tooltip>
       } else {
@@ -177,6 +188,7 @@ export const Rate = defineComponent({
             [`${prefixCls}-disabled`]: props.disabled,
             [`${prefixCls}-small`]: mergedSize.value === 'small',
             [`${prefixCls}-large`]: mergedSize.value === 'large',
+            [`${prefixCls}-rtl`]: isRTL.value,
           })}
           onMouseleave={handleMouseLeave}
           onFocus={() => { focused.value = true; emit('focus') }}
@@ -184,6 +196,8 @@ export const Rate = defineComponent({
           onKeydown={handleKeyDown}
           tabindex={props.disabled ? -1 : 0}
           role="radiogroup"
+          dir={isRTL.value ? 'rtl' : undefined}
+          aria-disabled={props.disabled || undefined}
         >
           {stars.map(renderStar)}
         </ul>

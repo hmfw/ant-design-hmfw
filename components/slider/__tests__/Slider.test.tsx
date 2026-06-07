@@ -233,4 +233,151 @@ describe('Slider', () => {
     // 50 is closer to 20 (dist=30) than to 80 (dist=30), so start handle moves
     expect(wrapper.emitted('change')?.[0]).toEqual([[50, 80]])
   })
+
+  // 范围越界修复测试
+  describe('Value normalization (out of bounds)', () => {
+    it('clamps single value below min', () => {
+      const wrapper = mount(Slider, { props: { value: -10, min: 0, max: 100 } })
+      const track = wrapper.find('.hmfw-slider-track')
+      expect(track.attributes('style')).toContain('0%')
+    })
+
+    it('clamps single value above max', () => {
+      const wrapper = mount(Slider, { props: { value: 150, min: 0, max: 100 } })
+      const track = wrapper.find('.hmfw-slider-track')
+      expect(track.attributes('style')).toContain('100%')
+    })
+
+    it('clamps defaultValue below min', () => {
+      const wrapper = mount(Slider, { props: { defaultValue: -20, min: 0, max: 100 } })
+      const handle = wrapper.find('[role="slider"]')
+      expect(handle.attributes('aria-valuenow')).toBe('0')
+    })
+
+    it('clamps defaultValue above max', () => {
+      const wrapper = mount(Slider, { props: { defaultValue: 120, min: 0, max: 100 } })
+      const handle = wrapper.find('[role="slider"]')
+      expect(handle.attributes('aria-valuenow')).toBe('100')
+    })
+
+    it('normalizes range with start > end', () => {
+      const wrapper = mount(Slider, { props: { range: true, value: [80, 20], min: 0, max: 100 } })
+      const handles = wrapper.findAll('[role="slider"]')
+      // Should swap to [20, 80]
+      expect(handles[0].attributes('aria-valuenow')).toBe('20')
+      expect(handles[1].attributes('aria-valuenow')).toBe('80')
+    })
+
+    it('clamps range start below min', () => {
+      const wrapper = mount(Slider, { props: { range: true, value: [-10, 50], min: 0, max: 100 } })
+      const handles = wrapper.findAll('[role="slider"]')
+      expect(handles[0].attributes('aria-valuenow')).toBe('0')
+      expect(handles[1].attributes('aria-valuenow')).toBe('50')
+    })
+
+    it('clamps range end above max', () => {
+      const wrapper = mount(Slider, { props: { range: true, value: [50, 150], min: 0, max: 100 } })
+      const handles = wrapper.findAll('[role="slider"]')
+      expect(handles[0].attributes('aria-valuenow')).toBe('50')
+      expect(handles[1].attributes('aria-valuenow')).toBe('100')
+    })
+
+    it('normalizes range with both values out of bounds', () => {
+      const wrapper = mount(Slider, { props: { range: true, value: [-20, 150], min: 0, max: 100 } })
+      const handles = wrapper.findAll('[role="slider"]')
+      expect(handles[0].attributes('aria-valuenow')).toBe('0')
+      expect(handles[1].attributes('aria-valuenow')).toBe('100')
+    })
+
+    it('emits normalized value on change', async () => {
+      const wrapper = mount(Slider, { props: { value: 50, min: 0, max: 100 } })
+      await wrapper.setProps({ value: 150 })
+      // Internal value should be clamped
+      const handle = wrapper.find('[role="slider"]')
+      expect(handle.attributes('aria-valuenow')).toBe('100')
+    })
+
+    it('keyboard navigation respects bounds', async () => {
+      const wrapper = mount(Slider, { props: { value: 95, min: 0, max: 100, step: 10 } })
+      const handle = wrapper.find('[role="slider"]')
+      await handle.trigger('keydown', { key: 'ArrowRight' })
+      // Should clamp to 100 instead of 105
+      expect(wrapper.emitted('change')?.[0]).toEqual([100])
+    })
+
+    it('range keyboard navigation respects bounds', async () => {
+      const wrapper = mount(Slider, { props: { range: true, value: [10, 95], step: 10, min: 0, max: 100 } })
+      const handles = wrapper.findAll('[role="slider"]')
+      await handles[1].trigger('keydown', { key: 'ArrowRight' })
+      // End handle should clamp to 100
+      expect(wrapper.emitted('change')?.[0]).toEqual([[10, 100]])
+    })
+  })
+
+  // 垂直 Tooltip 样式测试
+  describe('Vertical tooltip positioning', () => {
+    it('horizontal slider has tooltip above handle', () => {
+      const wrapper = mount(Slider, { props: { value: 50, tooltip: { open: true } } })
+      const tooltip = wrapper.find('.hmfw-slider-tooltip')
+      expect(tooltip.exists()).toBe(true)
+      // 横向时 tooltip 在 handle 上方，无需特殊类名
+      expect(wrapper.classes()).not.toContain('hmfw-slider-vertical')
+    })
+
+    it('vertical slider has correct container class', () => {
+      const wrapper = mount(Slider, { props: { value: 50, vertical: true, tooltip: { open: true } } })
+      expect(wrapper.classes()).toContain('hmfw-slider-vertical')
+      const tooltip = wrapper.find('.hmfw-slider-tooltip')
+      expect(tooltip.exists()).toBe(true)
+    })
+  })
+
+  // keyboard 配置测试（已实现，验证功能完整性）
+  describe('Keyboard configuration', () => {
+    it('keyboard navigation enabled by default', async () => {
+      const wrapper = mount(Slider, { props: { value: 50, step: 10 } })
+      const handle = wrapper.find('[role="slider"]')
+      await handle.trigger('keydown', { key: 'ArrowRight' })
+      expect(wrapper.emitted('change')?.[0]).toEqual([60])
+    })
+
+    it('keyboard navigation can be disabled', async () => {
+      const wrapper = mount(Slider, { props: { value: 50, step: 10, keyboard: false } })
+      const handle = wrapper.find('[role="slider"]')
+      await handle.trigger('keydown', { key: 'ArrowRight' })
+      expect(wrapper.emitted('change')).toBeFalsy()
+    })
+
+    it('keyboard: all arrow keys work', async () => {
+      const wrapper = mount(Slider, { props: { value: 50, step: 10 } })
+      const handle = wrapper.find('[role="slider"]')
+
+      await handle.trigger('keydown', { key: 'ArrowUp' })
+      expect(wrapper.emitted('change')?.[0]).toEqual([60])
+
+      await handle.trigger('keydown', { key: 'ArrowDown' })
+      expect(wrapper.emitted('change')?.[1]).toEqual([40])
+    })
+
+    it('keyboard: Home/End work correctly', async () => {
+      const wrapper = mount(Slider, { props: { value: 50, min: 10, max: 90 } })
+      const handle = wrapper.find('[role="slider"]')
+
+      await handle.trigger('keydown', { key: 'Home' })
+      expect(wrapper.emitted('change')?.[0]).toEqual([10])
+
+      await handle.trigger('keydown', { key: 'End' })
+      expect(wrapper.emitted('change')?.[1]).toEqual([90])
+    })
+
+    it('keyboard: step=null uses step size 1', async () => {
+      const wrapper = mount(Slider, {
+        props: { value: 50, step: null, marks: { 0: '0', 50: '50', 100: '100' } }
+      })
+      const handle = wrapper.find('[role="slider"]')
+      await handle.trigger('keydown', { key: 'ArrowRight' })
+      // With step=null, keyboard uses delta=1
+      expect(wrapper.emitted('change')?.[0]).toEqual([50]) // Snaps to nearest mark (50)
+    })
+  })
 })

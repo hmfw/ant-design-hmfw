@@ -248,3 +248,57 @@
 .hmfw-upload-select-text {
   font-size: 14px;
 }
+
+/* ============ 文件列表进出场动画 ============ */
+/* 容器：移除时使用 absolute 让兄弟元素平滑收拢 */
+.hmfw-upload-list-item-container {
+  transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+}
+
+/* 进入起始状态：从透明 + 缩小 + 向上偏移 */
+.hmfw-upload-animate-enter-from {
+  opacity: 0;
+  transform: scale(0.95) translateY(-8px);
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* 进入终态由默认样式承担 */
+.hmfw-upload-animate-enter-active {
+  transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease,
+    padding 0.3s ease, margin 0.3s ease;
+  overflow: hidden;
+}
+
+/* 离开终态：collapse 到 0 高度 + 淡出 */
+.hmfw-upload-animate-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden;
+}
+
+.hmfw-upload-animate-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease,
+    padding 0.3s ease, margin 0.3s ease;
+  overflow: hidden;
+  /* leave 时元素脱离布局流，避免兄弟元素跳动 */
+  position: absolute;
+  width: 100%;
+}
+
+/* picture-card / picture-circle 模式下的卡片不需要 absolute（横向排布） */
+.hmfw-upload-list-picture-card .hmfw-upload-animate-leave-active,
+.hmfw-upload-list-picture-circle .hmfw-upload-animate-leave-active {
+  position: static;
+  width: auto;
+}
+
+/* TransitionGroup move 类：移动时的过渡 */
+.hmfw-upload-animate-move {
+  transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+}

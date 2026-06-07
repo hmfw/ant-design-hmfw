@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
 import { Cascader } from '../Cascader'
-import { nextTick } from 'vue'
+import { nextTick, h } from 'vue'
 
 const options = [
   {
@@ -65,7 +65,7 @@ describe('Cascader', () => {
     expect(wrapper.find('.hmfw-cascader-selection-item').text()).toBe('浙江 / 杭州 / 西湖')
   })
 
-  it('custom displayRender', () => {
+  it('custom displayRender with string', () => {
     const wrapper = mount(Cascader, {
       props: {
         options,
@@ -74,6 +74,19 @@ describe('Cascader', () => {
       },
     })
     expect(wrapper.find('.hmfw-cascader-selection-item').text()).toBe('浙江 > 杭州')
+  })
+
+  it('custom displayRender with VNode', () => {
+    const wrapper = mount(Cascader, {
+      props: {
+        options,
+        value: ['zhejiang', 'hangzhou'],
+        displayRender: (labels: string[]) => h('strong', labels.join(' - ')),
+      },
+    })
+    const item = wrapper.find('.hmfw-cascader-selection-item strong')
+    expect(item.exists()).toBe(true)
+    expect(item.text()).toBe('浙江 - 杭州')
   })
 
   it('displayRender receives selectedOptions', () => {
@@ -230,5 +243,104 @@ describe('Cascader', () => {
     const wrapper = mount(Cascader, { props: { options } })
     expect(wrapper.vm.focus).toBeDefined()
     expect(wrapper.vm.blur).toBeDefined()
+  })
+
+  describe('showCheckedStrategy', () => {
+    it('SHOW_PARENT filters child paths when parent is selected', () => {
+      const wrapper = mount(Cascader, {
+        props: {
+          options,
+          multiple: true,
+          showCheckedStrategy: 'SHOW_PARENT',
+          value: [
+            ['zhejiang'],
+            ['zhejiang', 'hangzhou'],
+            ['zhejiang', 'hangzhou', 'xihu'],
+            ['jiangsu', 'nanjing'],
+          ],
+        },
+      })
+      // 只应显示 ['zhejiang'] 和 ['jiangsu', 'nanjing']，因为其他是 zhejiang 的子路径
+      const tags = wrapper.findAll('.hmfw-cascader-selection-item-content')
+      expect(tags.length).toBe(2)
+      expect(tags[0].text()).toBe('浙江')
+      expect(tags[1].text()).toBe('江苏 / 南京')
+    })
+
+    it('SHOW_CHILD filters parent paths when children are selected', () => {
+      const wrapper = mount(Cascader, {
+        props: {
+          options,
+          multiple: true,
+          showCheckedStrategy: 'SHOW_CHILD',
+          value: [
+            ['zhejiang'],
+            ['zhejiang', 'hangzhou'],
+            ['zhejiang', 'hangzhou', 'xihu'],
+            ['jiangsu', 'nanjing'],
+          ],
+        },
+      })
+      // 只应显示叶子节点 ['zhejiang', 'hangzhou', 'xihu'] 和 ['jiangsu', 'nanjing']
+      const tags = wrapper.findAll('.hmfw-cascader-selection-item-content')
+      expect(tags.length).toBe(2)
+      expect(tags[0].text()).toBe('浙江 / 杭州 / 西湖')
+      expect(tags[1].text()).toBe('江苏 / 南京')
+    })
+
+    it('shows all paths when showCheckedStrategy is not set', () => {
+      const wrapper = mount(Cascader, {
+        props: {
+          options,
+          multiple: true,
+          showCheckedStrategy: 'SHOW_PARENT' as any, // 默认值
+          value: [
+            ['zhejiang'],
+            ['zhejiang', 'hangzhou'],
+            ['jiangsu', 'nanjing'],
+          ],
+        },
+      })
+      // SHOW_PARENT 默认会过滤子路径，所以只显示 ['zhejiang'] 和 ['jiangsu', 'nanjing']
+      const tags = wrapper.findAll('.hmfw-cascader-selection-item-content')
+      expect(tags.length).toBe(2)
+      expect(tags[0].text()).toBe('浙江')
+      expect(tags[1].text()).toBe('江苏 / 南京')
+    })
+  })
+
+  describe('search highlight', () => {
+    it('highlights matched text in search results', async () => {
+      const wrapper = mount(Cascader, {
+        props: { options, showSearch: true },
+        attachTo: document.body,
+      })
+      await wrapper.find('.hmfw-cascader').trigger('click')
+      await nextTick()
+      const input = wrapper.find('.hmfw-cascader-search-input')
+      await input.setValue('杭州')
+      await nextTick()
+      const dropdown = document.querySelector('.hmfw-cascader-dropdown')
+      const highlight = dropdown?.querySelector('.hmfw-cascader-menu-item-highlight')
+      expect(highlight).not.toBeNull()
+      expect(highlight?.textContent).toBe('杭州')
+      wrapper.unmount()
+    })
+
+    it('highlights case-insensitive matches', async () => {
+      const wrapper = mount(Cascader, {
+        props: { options, showSearch: true },
+        attachTo: document.body,
+      })
+      await wrapper.find('.hmfw-cascader').trigger('click')
+      await nextTick()
+      const input = wrapper.find('.hmfw-cascader-search-input')
+      await input.setValue('浙')
+      await nextTick()
+      const dropdown = document.querySelector('.hmfw-cascader-dropdown')
+      const highlights = dropdown?.querySelectorAll('.hmfw-cascader-menu-item-highlight')
+      expect(highlights && highlights.length > 0).toBe(true)
+      wrapper.unmount()
+    })
   })
 })

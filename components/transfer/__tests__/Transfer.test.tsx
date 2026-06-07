@@ -257,4 +257,125 @@ describe('Transfer', () => {
     expect((sections[0].element as HTMLElement).style.background).toBe('blue')
     expect((sections[1].element as HTMLElement).style.background).toBe('green')
   })
+
+  // ===== 拖拽排序 =====
+  it('does not render draggable attr by default on right items', () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, targetKeys: ['1', '2', '4'] },
+    })
+    const rightItems = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
+    expect(rightItems[0].attributes('draggable')).toBeFalsy()
+  })
+
+  it('marks right items draggable when draggable=true', () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, targetKeys: ['1', '2', '4'], draggable: true },
+    })
+    const rightItems = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
+    expect(rightItems[0].attributes('draggable')).toBe('true')
+    // 左侧不可拖拽
+    const leftItems = wrapper.findAll('.hmfw-transfer-section')[0].findAll('.hmfw-transfer-list-content-item')
+    expect(leftItems[0].attributes('draggable')).toBeFalsy()
+  })
+
+  it('disabled item is not draggable even when draggable=true', () => {
+    const wrapper = mount(Transfer, {
+      props: {
+        dataSource: [
+          { key: '1', title: 'A' },
+          { key: '2', title: 'B', disabled: true },
+        ],
+        targetKeys: ['1', '2'],
+        draggable: true,
+      },
+    })
+    const rightItems = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
+    expect(rightItems[0].attributes('draggable')).toBe('true')
+    expect(rightItems[1].attributes('draggable')).toBeFalsy()
+  })
+
+  it('reorder via drag and drop updates targetKeys (drop after target)', async () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, targetKeys: ['1', '2', '4'], draggable: true },
+    })
+    const rightItems = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
+    // 拖拽 item[0] (key='1') 到 item[2] (key='4') 之后
+    await rightItems[0].trigger('dragstart')
+    // 模拟 dragover：mock currentTarget bounding rect 让鼠标在下半部分
+    const dragOverEvent = new Event('dragover', { bubbles: true, cancelable: true }) as any
+    Object.defineProperty(dragOverEvent, 'clientY', { value: 100 })
+    Object.defineProperty(dragOverEvent, 'currentTarget', {
+      value: { getBoundingClientRect: () => ({ top: 0, height: 40 }) },
+    })
+    await rightItems[2].element.dispatchEvent(dragOverEvent)
+    await rightItems[2].trigger('drop')
+    const updates = wrapper.emitted('update:targetKeys') as any[]
+    expect(updates).toBeTruthy()
+    expect(updates[updates.length - 1][0]).toEqual(['2', '4', '1'])
+  })
+
+  it('reorder via drag and drop updates targetKeys (drop before target)', async () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, targetKeys: ['1', '2', '4'], draggable: true },
+    })
+    const rightItems = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
+    // 拖拽 item[2] (key='4') 到 item[0] (key='1') 之前
+    await rightItems[2].trigger('dragstart')
+    const dragOverEvent = new Event('dragover', { bubbles: true, cancelable: true }) as any
+    Object.defineProperty(dragOverEvent, 'clientY', { value: 5 })
+    Object.defineProperty(dragOverEvent, 'currentTarget', {
+      value: { getBoundingClientRect: () => ({ top: 0, height: 40 }) },
+    })
+    await rightItems[0].element.dispatchEvent(dragOverEvent)
+    await rightItems[0].trigger('drop')
+    const updates = wrapper.emitted('update:targetKeys') as any[]
+    expect(updates[updates.length - 1][0]).toEqual(['4', '1', '2'])
+  })
+
+  it('reorder emits reorder event with info', async () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, targetKeys: ['1', '2', '4'], draggable: true },
+    })
+    const rightItems = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
+    await rightItems[0].trigger('dragstart')
+    const dragOverEvent = new Event('dragover', { bubbles: true, cancelable: true }) as any
+    Object.defineProperty(dragOverEvent, 'clientY', { value: 100 })
+    Object.defineProperty(dragOverEvent, 'currentTarget', {
+      value: { getBoundingClientRect: () => ({ top: 0, height: 40 }) },
+    })
+    await rightItems[2].element.dispatchEvent(dragOverEvent)
+    await rightItems[2].trigger('drop')
+    const reorder = wrapper.emitted('reorder') as any[]
+    expect(reorder).toBeTruthy()
+    expect(reorder[0][0]).toMatchObject({
+      direction: 'right',
+      activeKey: '1',
+      oldTargetKeys: ['1', '2', '4'],
+      newTargetKeys: ['2', '4', '1'],
+      fromIndex: 0,
+      toIndex: 2,
+    })
+  })
+
+  it('reorder dragging same item does nothing', async () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, targetKeys: ['1', '2', '4'], draggable: true },
+    })
+    const rightItems = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
+    await rightItems[0].trigger('dragstart')
+    await rightItems[0].trigger('drop')
+    expect(wrapper.emitted('reorder')).toBeFalsy()
+  })
+
+  it('drag end clears dragging state', async () => {
+    const wrapper = mount(Transfer, {
+      props: { dataSource, targetKeys: ['1', '2', '4'], draggable: true },
+    })
+    const rightItems = wrapper.findAll('.hmfw-transfer-section')[1].findAll('.hmfw-transfer-list-content-item')
+    await rightItems[0].trigger('dragstart')
+    await rightItems[0].trigger('dragend')
+    // dragend 后再 drop 不应触发 reorder（因为 draggingKey 已清空）
+    await rightItems[2].trigger('drop')
+    expect(wrapper.emitted('reorder')).toBeFalsy()
+  })
 })

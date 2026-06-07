@@ -144,6 +144,10 @@
   overflow-y: auto;
   border-right: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
   scrollbar-width: none;
+  scroll-behavior: smooth;
+  /* 性能优化 */
+  contain: layout style paint;
+  will-change: scroll-position;
 }
 
 .hmfw-time-picker-panel-column:last-child {
@@ -160,8 +164,10 @@
   cursor: pointer;
   font-size: 14px;
   color: var(--hmfw-color-text, rgba(0,0,0,0.88));
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
   line-height: 28px;
+  /* 性能优化 */
+  contain: layout style;
 }
 
 .hmfw-time-picker-panel-cell:hover {

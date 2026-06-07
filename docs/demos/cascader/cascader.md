@@ -51,6 +51,29 @@
   <CascaderMultiple />
 </DemoBlock>
 
+### 高级功能
+
+展示搜索高亮、showCheckedStrategy 和自定义 displayRender（支持 VNode）。
+
+<DemoBlock title="高级功能" :source="CascaderAdvancedSource">
+  <CascaderAdvanced />
+</DemoBlock>
+
+<script setup>
+import CascaderBasic from './CascaderBasic.vue'
+import CascaderBasicSource from './CascaderBasic.vue?raw'
+import CascaderHover from './CascaderHover.vue'
+import CascaderHoverSource from './CascaderHover.vue?raw'
+import CascaderSearch from './CascaderSearch.vue'
+import CascaderSearchSource from './CascaderSearch.vue?raw'
+import CascaderChangeOnSelect from './CascaderChangeOnSelect.vue'
+import CascaderChangeOnSelectSource from './CascaderChangeOnSelect.vue?raw'
+import CascaderMultiple from './CascaderMultiple.vue'
+import CascaderMultipleSource from './CascaderMultiple.vue?raw'
+import CascaderAdvanced from './CascaderAdvanced.vue'
+import CascaderAdvancedSource from './CascaderAdvanced.vue?raw'
+</script>
+
 ## API
 
 ### Cascader Props
@@ -69,7 +92,7 @@
 | multiple | 支持多选 | `boolean` | `false` |
 | showSearch | 在选择框中显示搜索框 | `boolean` | `false` |
 | changeOnSelect | 当此项为 true 时，点选每级菜单选项值都会发生变化 | `boolean` | `false` |
-| displayRender | 选择后展示的渲染函数 | `(labels: string[], selectedOptions?: CascaderOption[]) => string` | - |
+| displayRender | 选择后展示的渲染函数 | `(labels: string[], selectedOptions?: CascaderOption[]) => string \| VNode` | - |
 | fieldNames | 自定义 options 中 label value children 的字段 | `{ label?: string; value?: string; children?: string }` | `{ label: 'label', value: 'value', children: 'children' }` |
 | open(v-model) | 控制浮层显隐 | `boolean` | - |
 | defaultOpen | 默认展开浮层 | `boolean` | `false` |

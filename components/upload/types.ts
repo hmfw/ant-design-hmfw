@@ -1,6 +1,8 @@
 export type UploadListType = 'text' | 'picture' | 'picture-card' | 'picture-circle'
 export type UploadType = 'select' | 'drag'
 
+import type { VNode } from 'vue'
+
 export interface UploadFile {
   uid: string
   name: string
@@ -30,6 +32,13 @@ export interface ShowUploadListInterface {
 /** Result of beforeUpload — `false` cancels; `File/Blob` replaces the upload target. */
 export type BeforeUploadValue = boolean | void | File | Blob
 
+/** Actions exposed to itemRender callback. */
+export interface ItemRenderActions {
+  download: () => void
+  preview: () => void
+  remove: () => void
+}
+
 export interface UploadProps {
   accept?: string
   /** AntD v6: `string | ((file) => string | Promise<string>)`. */
@@ -58,6 +67,15 @@ export interface UploadProps {
   openFileDialogOnClick?: boolean
   method?: string
   onRemove?: (file: UploadFile) => void | boolean | Promise<void | boolean>
+  /** 自定义判断文件是否为图片（用于显示缩略图）。 */
+  isImageUrl?: (file: UploadFile) => boolean
+  /** 自定义文件列表项渲染。 */
+  itemRender?: (
+    originNode: VNode,
+    file: UploadFile,
+    fileList: UploadFile[],
+    actions: ItemRenderActions,
+  ) => VNode
 }
 
 export interface CustomRequestOptions {

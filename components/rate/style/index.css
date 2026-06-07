@@ -87,3 +87,13 @@
 .hmfw-rate-star-second {
   display: block;
 }
+
+/* RTL：半星位置反转到右侧 */
+.hmfw-rate-rtl {
+  direction: rtl;
+}
+
+.hmfw-rate-rtl .hmfw-rate-star-first {
+  left: auto;
+  right: 0;
+}

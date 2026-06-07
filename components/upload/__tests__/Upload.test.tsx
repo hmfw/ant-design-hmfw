@@ -1,7 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import { nextTick } from 'vue'
-import { Upload, UploadDragger } from '../Upload'
+import { nextTick, h } from 'vue'
+import { Upload, UploadDragger, isImageUrl } from '../Upload'
+import type { UploadFile, ItemRenderActions } from '../types'
 
 describe('Upload', () => {
   it('renders correctly', () => {
@@ -243,5 +244,139 @@ describe('Upload', () => {
       },
     })
     expect(wrapper.find('.hmfw-upload-list-item-remove').exists()).toBe(false)
+  })
+
+  // ============ isImageUrl ============
+  describe('isImageUrl', () => {
+    it('returns true when thumbUrl is present', () => {
+      expect(isImageUrl({ uid: '1', name: 'a', thumbUrl: 'data:image/png;base64,xxx' })).toBe(true)
+    })
+
+    it('returns true for image MIME type', () => {
+      expect(isImageUrl({ uid: '1', name: 'a.png', type: 'image/png' })).toBe(true)
+    })
+
+    it('returns true for known image extension', () => {
+      expect(isImageUrl({ uid: '1', name: 'a', url: 'https://x/a.JPG' })).toBe(true)
+      expect(isImageUrl({ uid: '1', name: 'a', url: '/foo/bar.svg' })).toBe(true)
+      expect(isImageUrl({ uid: '1', name: 'a', url: '/foo/bar.webp' })).toBe(true)
+    })
+
+    it('returns false for non-image extension', () => {
+      expect(isImageUrl({ uid: '1', name: 'a', url: '/foo/bar.pdf' })).toBe(false)
+      expect(isImageUrl({ uid: '1', name: 'a', url: '/foo/bar.zip' })).toBe(false)
+    })
+
+    it('returns true for data:image URL', () => {
+      expect(isImageUrl({ uid: '1', name: 'a', url: 'data:image/jpeg;base64,abc' })).toBe(true)
+    })
+
+    it('returns true for ambiguous URL (no extension)', () => {
+      // AntD v6 默认行为：无扩展名按图片处理
+      expect(isImageUrl({ uid: '1', name: 'a', url: 'https://x/some-id' })).toBe(true)
+    })
+
+    it('returns false when no url and no thumb', () => {
+      expect(isImageUrl({ uid: '1', name: 'a' })).toBe(false)
+    })
+
+    it('custom isImageUrl prop overrides default', () => {
+      const customCheck = vi.fn().mockReturnValue(false)
+      const wrapper = mount(Upload, {
+        props: {
+          fileList: [{ uid: '1', name: 'a.png', status: 'done' as const, url: '/a.png' }],
+          listType: 'picture',
+          isImageUrl: customCheck,
+        },
+      })
+      expect(customCheck).toHaveBeenCalled()
+      // 自定义返回 false 时，缩略图不应渲染
+      expect(wrapper.find('.hmfw-upload-list-item-thumbnail').exists()).toBe(false)
+    })
+  })
+
+  // ============ itemRender ============
+  describe('itemRender', () => {
+    it('itemRender replaces default rendering', () => {
+      const itemRender = vi.fn(
+        (_origin: any, file: UploadFile) => h('div', { class: 'my-custom-item' }, file.name),
+      )
+      const fileList = [{ uid: '1', name: 'custom.txt', status: 'done' as const }]
+      const wrapper = mount(Upload, { props: { fileList, itemRender } })
+      expect(itemRender).toHaveBeenCalled()
+      expect(wrapper.find('.my-custom-item').exists()).toBe(true)
+      expect(wrapper.find('.my-custom-item').text()).toBe('custom.txt')
+    })
+
+    it('itemRender receives originNode, file, fileList, actions', () => {
+      const itemRender = vi.fn((_o: any, _f: any, _l: any, _a: any) => h('div', { class: 'wrap' }))
+      const fileList = [{ uid: '1', name: 'a.txt', status: 'done' as const }]
+      mount(Upload, { props: { fileList, itemRender } })
+      const args = itemRender.mock.calls[0]
+      expect(args.length).toBe(4)
+      expect(args[1]).toEqual(fileList[0])
+      expect(args[2]).toEqual(fileList)
+      // actions 钩子
+      expect(typeof (args[3] as any).preview).toBe('function')
+      expect(typeof (args[3] as any).remove).toBe('function')
+      expect(typeof (args[3] as any).download).toBe('function')
+    })
+
+    it('itemRender actions.remove triggers internal remove flow', async () => {
+      let actionsRef: ItemRenderActions | null = null
+      const itemRender = (_o: any, _f: any, _l: any, a: ItemRenderActions) => {
+        actionsRef = a
+        return h('div', { class: 'wrap' })
+      }
+      const fileList = [{ uid: '1', name: 'a.txt', status: 'done' as const }]
+      const wrapper = mount(Upload, { props: { fileList, itemRender } })
+      actionsRef!.remove()
+      await nextTick()
+      await Promise.resolve()
+      expect(wrapper.emitted('remove')).toBeTruthy()
+    })
+
+    it('itemRender actions.preview emits preview', () => {
+      let actionsRef: ItemRenderActions | null = null
+      const itemRender = (_o: any, _f: any, _l: any, a: ItemRenderActions) => {
+        actionsRef = a
+        return h('div')
+      }
+      const fileList = [{ uid: '1', name: 'a.txt', status: 'done' as const }]
+      const wrapper = mount(Upload, { props: { fileList, itemRender } })
+      actionsRef!.preview()
+      expect(wrapper.emitted('preview')).toBeTruthy()
+    })
+
+    it('itemRender actions.download emits download', () => {
+      let actionsRef: ItemRenderActions | null = null
+      const itemRender = (_o: any, _f: any, _l: any, a: ItemRenderActions) => {
+        actionsRef = a
+        return h('div')
+      }
+      const fileList = [{ uid: '1', name: 'a.txt', status: 'done' as const }]
+      const wrapper = mount(Upload, { props: { fileList, itemRender } })
+      actionsRef!.download()
+      expect(wrapper.emitted('download')).toBeTruthy()
+    })
+  })
+
+  // ============ download ============
+  it('renders download button when showDownloadIcon=true and url present', () => {
+    const wrapper = mount(Upload, {
+      props: {
+        fileList: [{ uid: '1', name: 'd.png', status: 'done' as const, url: '/d.png' }],
+        showUploadList: { showDownloadIcon: true },
+      },
+    })
+    expect(wrapper.find('.hmfw-upload-list-item-download').exists()).toBe(true)
+  })
+
+  // ============ TransitionGroup wrapper ============
+  it('uses TransitionGroup for file list animations', () => {
+    const fileList = [{ uid: '1', name: 'a.txt', status: 'done' as const }]
+    const wrapper = mount(Upload, { props: { fileList } })
+    // 每个 item 都包了一层 container 用于动画
+    expect(wrapper.find('.hmfw-upload-list-item-container').exists()).toBe(true)
   })
 })

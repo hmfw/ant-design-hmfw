@@ -237,3 +237,9 @@
   text-align: center;
   font-size: 14px;
 }
+
+.hmfw-cascader-menu-item-highlight {
+  color: var(--hmfw-color-error, #ff4d4f);
+  font-weight: 600;
+  background: var(--hmfw-color-error-bg, #fff2f0);
+}

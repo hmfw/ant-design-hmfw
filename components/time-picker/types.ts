@@ -25,8 +25,8 @@ export interface TimePickerProps {
   use12Hours?: boolean
   status?: 'error' | 'warning' | ''
   open?: boolean
-  needConfirm?: boolean
-  changeOnScroll?: boolean
+  needConfirm?: boolean // 默认 true，是否需要点击确定按钮才提交变更
+  changeOnScroll?: boolean // 默认 false，是否滚动时即触发 change（与 needConfirm 互斥）
   renderExtraFooter?: () => VNodeChild
   variant?: 'outlined' | 'borderless' | 'filled' | 'underlined'
   placement?: 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'

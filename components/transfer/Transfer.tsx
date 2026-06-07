@@ -16,6 +16,7 @@ import type {
   TransferLocale,
   InputStatus,
   TransferListContext,
+  TransferReorderInfo,
   TransferSemanticClassNames,
   TransferSemanticStyles,
 } from './types'
@@ -41,6 +42,7 @@ export const Transfer = defineComponent({
     showSelectAll: { type: Boolean, default: true },
     selectAllLabels: { type: Array as PropType<SelectAllLabel[]>, default: () => [] },
     oneWay: Boolean,
+    draggable: Boolean,
     pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
     status: String as PropType<InputStatus>,
     locale: { type: Object as PropType<Partial<TransferLocale>>, default: () => ({}) },
@@ -48,7 +50,7 @@ export const Transfer = defineComponent({
     classNames: { type: Object as PropType<TransferSemanticClassNames>, default: () => ({}) },
     styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
   },
-  emits: ['update:targetKeys', 'change', 'update:selectedKeys', 'selectChange', 'search', 'scroll'],
+  emits: ['update:targetKeys', 'change', 'update:selectedKeys', 'selectChange', 'search', 'scroll', 'reorder'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('transfer')
     const globalLocale = useLocale()
@@ -179,6 +181,38 @@ export const Transfer = defineComponent({
       emit('change', newTargetKeys, 'left', [...keys])
     }
 
+    /**
+     * 拖拽排序：将 fromKey 移动到 toKey 位置（after=true 表示放到 toKey 后面）。
+     * 仅作用于右侧 targetKeys，不会修改左右归属，不触发 change。
+     */
+    function onReorder(fromKey: TransferKey, toKey: TransferKey, after: boolean) {
+      if (fromKey === toKey) return
+      const oldKeys = [...targetKeys.value]
+      const fromIndex = oldKeys.indexOf(fromKey)
+      const toIndexRaw = oldKeys.indexOf(toKey)
+      if (fromIndex < 0 || toIndexRaw < 0) return
+
+      // 先移除 fromKey
+      const next = oldKeys.slice()
+      next.splice(fromIndex, 1)
+      // 在新数组中重新计算 toKey 下标（移除后位置可能左移 1）
+      const adjustedTo = next.indexOf(toKey)
+      const insertIndex = after ? adjustedTo + 1 : adjustedTo
+      next.splice(insertIndex, 0, fromKey)
+
+      innerTargetKeys.value = next
+      emit('update:targetKeys', next)
+      const info: TransferReorderInfo = {
+        direction: 'right',
+        oldTargetKeys: oldKeys,
+        newTargetKeys: next,
+        activeKey: fromKey,
+        fromIndex,
+        toIndex: next.indexOf(fromKey),
+      }
+      emit('reorder', info)
+    }
+
     function handleListStyle(direction: TransferDirection): CSSProperties {
       return typeof props.listStyle === 'function' ? props.listStyle({ direction }) : props.listStyle
     }
@@ -203,6 +237,7 @@ export const Transfer = defineComponent({
         showSearch: props.showSearch,
         showSelectAll: props.showSelectAll,
         showRemove: props.oneWay && !isLeft,
+        draggable: !!props.draggable && !isLeft,
         pagination: props.pagination,
         selectAllLabel: props.selectAllLabels?.[isLeft ? 0 : 1],
         render: props.render,
@@ -227,6 +262,7 @@ export const Transfer = defineComponent({
         onItemSelectAll: (keys: TransferKey[], checkAll: boolean | 'replace') =>
           onItemSelectAll(direction, keys, checkAll),
         onItemRemove: (keys: TransferKey[]) => onRightItemRemove(keys),
+        onReorder: (fromKey: TransferKey, toKey: TransferKey, after: boolean) => onReorder(fromKey, toKey, after),
         onFilter: (dir: TransferDirection, val: string) => emit('search', dir, val),
         onScroll: (dir: TransferDirection, e: Event) => emit('scroll', dir, e),
       }
