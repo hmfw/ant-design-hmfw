@@ -19,7 +19,9 @@
 
 .hmfw-spin-dot {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 20px;
   height: 20px;
   animation: hmfw-spin-rotate 1.2s infinite linear;

@@ -269,6 +269,29 @@ describe('SkeletonNode', () => {
     const wrapper = mount(SkeletonNode, { props: { nodeStyle: { width: '160px' } } })
     expect(wrapper.find('.hmfw-skeleton-node').attributes('style')).toContain('width: 160px')
   })
+
+  it('applies fullSize class when fullSize=true', () => {
+    const wrapper = mount(SkeletonNode, { props: { fullSize: true } })
+    expect(wrapper.find('.hmfw-skeleton-node').classes()).toContain('hmfw-skeleton-node-full')
+  })
+
+  it('does not apply fullSize class by default', () => {
+    const wrapper = mount(SkeletonNode)
+    expect(wrapper.find('.hmfw-skeleton-node').classes()).not.toContain('hmfw-skeleton-node-full')
+  })
+
+  it('applies active class for animation', () => {
+    const wrapper = mount(SkeletonNode, { props: { active: true } })
+    expect(wrapper.classes()).toContain('hmfw-skeleton-active')
+  })
+
+  it('renders complex slot content', () => {
+    const wrapper = mount(SkeletonNode, {
+      slots: { default: '<svg class="custom-icon"><circle cx="10" cy="10" r="5"/></svg>' },
+    })
+    expect(wrapper.find('.custom-icon').exists()).toBe(true)
+    expect(wrapper.find('circle').exists()).toBe(true)
+  })
 })
 
 

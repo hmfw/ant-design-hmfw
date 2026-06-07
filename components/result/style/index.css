@@ -9,6 +9,12 @@
   line-height: 1;
 }
 
+/* 自定义 icon 时不强制设定颜色和尺寸，让用户样式生效 */
+.hmfw-result-icon.hmfw-result-icon-custom {
+  color: inherit;
+  font-size: inherit;
+}
+
 .hmfw-result-title {
   color: rgba(0, 0, 0, 0.88);
   font-size: 24px;
@@ -29,6 +35,7 @@
   display: flex;
   justify-content: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .hmfw-result-body {
@@ -39,11 +46,11 @@
   text-align: left;
 }
 
-/* Status colors */
-.hmfw-result-success .hmfw-result-icon { color: #52c41a; }
-.hmfw-result-error .hmfw-result-icon   { color: #ff4d4f; }
-.hmfw-result-info .hmfw-result-icon    { color: #1677ff; }
-.hmfw-result-warning .hmfw-result-icon { color: #faad14; }
+/* Status colors — 仅对非 custom 图标生效 */
+.hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom) { color: #52c41a; }
+.hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom)   { color: #ff4d4f; }
+.hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom)    { color: #1677ff; }
+.hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom) { color: #faad14; }
 
 /* Exception statuses 渲染为插画 */
 .hmfw-result-icon.hmfw-result-image {
@@ -54,4 +61,128 @@
 .hmfw-result-icon.hmfw-result-image svg {
   max-width: 100%;
   height: auto;
+}
+
+/* ===== 暗黑模式适配 ===== */
+
+/* 方式一：跟随系统 prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+  .hmfw-result-title {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .hmfw-result-subtitle {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .hmfw-result-body {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  /* 状态图标颜色 — 暗黑模式下使用适配色值 */
+  .hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom) { color: #49aa19; }
+  .hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom)   { color: #dc4446; }
+  .hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom)    { color: #1668dc; }
+  .hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom) { color: #d89614; }
+
+  /* 异常插画暗黑适配 */
+  .hmfw-result-icon.hmfw-result-image svg ellipse {
+    fill: rgba(255, 255, 255, 0.04);
+  }
+
+  .hmfw-result-icon.hmfw-result-image svg text {
+    fill: rgba(255, 255, 255, 0.25);
+  }
+}
+
+/* 方式二：显式暗黑主题类（优先级高于 media query，可强制覆盖） */
+.hmfw-theme-dark .hmfw-result-title,
+[data-theme='dark'] .hmfw-result-title {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hmfw-theme-dark .hmfw-result-subtitle,
+[data-theme='dark'] .hmfw-result-subtitle {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.hmfw-theme-dark .hmfw-result-body,
+[data-theme='dark'] .hmfw-result-body {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.hmfw-theme-dark .hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom),
+[data-theme='dark'] .hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #49aa19;
+}
+
+.hmfw-theme-dark .hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom),
+[data-theme='dark'] .hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #dc4446;
+}
+
+.hmfw-theme-dark .hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom),
+[data-theme='dark'] .hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #1668dc;
+}
+
+.hmfw-theme-dark .hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom),
+[data-theme='dark'] .hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #d89614;
+}
+
+.hmfw-theme-dark .hmfw-result-icon.hmfw-result-image svg ellipse,
+[data-theme='dark'] .hmfw-result-icon.hmfw-result-image svg ellipse {
+  fill: rgba(255, 255, 255, 0.04);
+}
+
+.hmfw-theme-dark .hmfw-result-icon.hmfw-result-image svg text,
+[data-theme='dark'] .hmfw-result-icon.hmfw-result-image svg text {
+  fill: rgba(255, 255, 255, 0.25);
+}
+
+/* 显式浅色：即使系统为暗色也保持浅色 */
+.hmfw-theme-light .hmfw-result-title,
+[data-theme='light'] .hmfw-result-title {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.hmfw-theme-light .hmfw-result-subtitle,
+[data-theme='light'] .hmfw-result-subtitle {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.hmfw-theme-light .hmfw-result-body,
+[data-theme='light'] .hmfw-result-body {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.hmfw-theme-light .hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom),
+[data-theme='light'] .hmfw-result-success .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #52c41a;
+}
+
+.hmfw-theme-light .hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom),
+[data-theme='light'] .hmfw-result-error .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #ff4d4f;
+}
+
+.hmfw-theme-light .hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom),
+[data-theme='light'] .hmfw-result-info .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #1677ff;
+}
+
+.hmfw-theme-light .hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom),
+[data-theme='light'] .hmfw-result-warning .hmfw-result-icon:not(.hmfw-result-icon-custom) {
+  color: #faad14;
+}
+
+.hmfw-theme-light .hmfw-result-icon.hmfw-result-image svg ellipse,
+[data-theme='light'] .hmfw-result-icon.hmfw-result-image svg ellipse {
+  fill: #f5f5f5;
+}
+
+.hmfw-theme-light .hmfw-result-icon.hmfw-result-image svg text,
+[data-theme='light'] .hmfw-result-icon.hmfw-result-image svg text {
+  fill: #bfbfbf;
 }

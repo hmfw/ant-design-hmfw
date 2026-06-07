@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
+import { h } from 'vue'
 import { Tag, CheckableTag } from '../Tag'
 
 describe('Tag', () => {
@@ -75,6 +76,46 @@ describe('Tag', () => {
   it('has border by default', () => {
     const wrapper = mount(Tag)
     expect(wrapper.classes()).not.toContain('hmfw-tag-borderless')
+  })
+
+  // closeIcon 相关测试
+  it('hides close button when closeIcon is false', () => {
+    const wrapper = mount(Tag, { props: { closable: true, closeIcon: false } })
+    expect(wrapper.find('.hmfw-tag-close-icon').exists()).toBe(false)
+  })
+
+  it('renders custom closeIcon as render function', () => {
+    const wrapper = mount(Tag, {
+      props: {
+        closable: true,
+        closeIcon: () => h('span', { class: 'custom-close' }, 'X'),
+      },
+    })
+    expect(wrapper.find('.hmfw-tag-close-icon').exists()).toBe(true)
+    expect(wrapper.find('.custom-close').exists()).toBe(true)
+    expect(wrapper.find('.custom-close').text()).toBe('X')
+  })
+
+  it('renders closeIcon slot', () => {
+    const wrapper = mount(Tag, {
+      props: { closable: true },
+      slots: { closeIcon: () => h('span', { class: 'slot-close' }, 'Y') },
+    })
+    expect(wrapper.find('.hmfw-tag-close-icon').exists()).toBe(true)
+    expect(wrapper.find('.slot-close').exists()).toBe(true)
+    expect(wrapper.find('.slot-close').text()).toBe('Y')
+  })
+
+  it('closeIcon slot takes priority over prop', () => {
+    const wrapper = mount(Tag, {
+      props: {
+        closable: true,
+        closeIcon: () => h('span', { class: 'prop-icon' }, 'P'),
+      },
+      slots: { closeIcon: () => h('span', { class: 'slot-icon' }, 'S') },
+    })
+    expect(wrapper.find('.slot-icon').exists()).toBe(true)
+    expect(wrapper.find('.prop-icon').exists()).toBe(false)
   })
 })
 

@@ -213,4 +213,54 @@ describe('Alert', () => {
     const wrapper = mount(Alert, { props: { message: 'msg' } })
     expect(wrapper.classes()).toContain('hmfw-alert-no-icon')
   })
+
+  // === P2 优化项测试 ===
+
+  it('banner mode has no border-radius style (via banner class)', () => {
+    const wrapper = mount(Alert, { props: { message: 'msg', banner: true } })
+    expect(wrapper.classes()).toContain('hmfw-alert-banner')
+    // banner 类确保样式中 border-radius: 0 生效
+    expect(wrapper.classes()).not.toContain('hmfw-alert-with-description')
+  })
+
+  it('banner mode with description applies both banner and description classes', () => {
+    const wrapper = mount(Alert, {
+      props: { message: 'title', description: 'desc', banner: true },
+    })
+    expect(wrapper.classes()).toContain('hmfw-alert-banner')
+    expect(wrapper.classes()).toContain('hmfw-alert-with-description')
+  })
+
+  it('icon aligns with title when description is present (flex-start structure)', () => {
+    const wrapper = mount(Alert, {
+      props: { message: 'Title', description: 'Long description text', showIcon: true },
+    })
+    // 有 description 时应用 with-description 类（flex-start 对齐）
+    expect(wrapper.classes()).toContain('hmfw-alert-with-description')
+    const icon = wrapper.find('.hmfw-alert-icon')
+    expect(icon.exists()).toBe(true)
+    // 图标在 section 之前
+    const children = Array.from(wrapper.element.children).map((c) => c.className)
+    const iconIdx = children.findIndex((c) => c.includes('hmfw-alert-icon'))
+    const sectionIdx = children.findIndex((c) => c.includes('hmfw-alert-section'))
+    expect(iconIdx).toBeLessThan(sectionIdx)
+  })
+
+  it('action renders alongside close button with description present', () => {
+    const wrapper = mount(Alert, {
+      props: {
+        message: 'Title',
+        description: 'desc',
+        closable: true,
+        action: h('button', { class: 'desc-act' }, 'retry'),
+      },
+    })
+    expect(wrapper.find('.hmfw-alert-actions .desc-act').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-alert-close-icon').exists()).toBe(true)
+    // action 在 close 之前
+    const children = Array.from(wrapper.element.children).map((c) => c.className)
+    const actionsIdx = children.findIndex((c) => c.includes('hmfw-alert-actions'))
+    const closeIdx = children.findIndex((c) => c.includes('hmfw-alert-close-icon'))
+    expect(actionsIdx).toBeLessThan(closeIdx)
+  })
 })

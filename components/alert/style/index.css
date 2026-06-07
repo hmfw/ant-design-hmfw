@@ -1,7 +1,7 @@
 .hmfw-alert {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 8px 12px;
   border-radius: 6px;
   font-size: 14px;
@@ -16,7 +16,6 @@
 }
 
 .hmfw-alert-with-description {
-  align-items: flex-start;
   padding: 16px;
 }
 
@@ -47,11 +46,16 @@
   padding: 0;
 }
 
-/* Banner */
+/* Banner：无圆角、无边框、贴边展示，水平内边距加大 */
 .hmfw-alert-banner {
   margin-bottom: 0;
   border: 0 !important;
   border-radius: 0;
+  padding: 8px 16px;
+}
+
+.hmfw-alert-banner.hmfw-alert-with-description {
+  padding: 16px 24px;
 }
 
 /* Variant: filled（更强的背景填充，无边框） */
@@ -84,11 +88,17 @@
   font-size: 16px;
   line-height: 0;
   flex-shrink: 0;
+  align-self: flex-start;
+  /* 无 description 时：与单行文本垂直居中（line-height 1.5714 * 14px ≈ 22px，图标 16px） */
+  margin-top: 3px;
 }
 
 .hmfw-alert-with-description .hmfw-alert-icon {
   margin-right: 12px;
   font-size: 24px;
+  /* 与标题首行对齐：标题 font-size 16px, line-height 1.5714 ≈ 25.14px，图标 24px */
+  align-self: flex-start;
+  margin-top: 1px;
 }
 
 .hmfw-alert-icon-success,
@@ -153,6 +163,9 @@
   line-height: 1;
   transition: color 0.2s;
   flex-shrink: 0;
+  align-self: flex-start;
+  /* 与首行文本垂直居中对齐 */
+  margin-top: 4px;
 }
 
 .hmfw-alert-close-icon:hover {
@@ -163,4 +176,7 @@
 .hmfw-alert-actions {
   margin-left: 8px;
   flex-shrink: 0;
+  align-self: flex-start;
+  /* 与首行文本垂直居中对齐 */
+  margin-top: 2px;
 }

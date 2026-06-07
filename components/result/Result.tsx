@@ -1,4 +1,4 @@
-import { defineComponent, type PropType, type VNode } from 'vue'
+import { defineComponent, type PropType, type VNode, type VNodeChild } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import {
@@ -40,10 +40,10 @@ export const Result = defineComponent({
     status: { type: String as PropType<ResultStatus>, default: 'info' },
     title: String,
     subTitle: String,
-    // 额外操作区，亦可用 extra slot
-    extra: String,
+    // 额外操作区：支持字符串、VNode、数组，亦可用 extra slot
+    extra: [String, Object, Array, Function] as PropType<VNodeChild>,
     // icon 为 false/null 时隐藏图标（异常状态插画不受影响，对齐 AntD）
-    icon: { type: [String, Boolean] as PropType<string | false>, default: undefined },
+    icon: { type: [String, Object, Array, Function, Boolean] as PropType<VNodeChild | false>, default: undefined },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('result')
@@ -62,21 +62,29 @@ export const Result = defineComponent({
           </div>
         )
       } else if (slots.icon) {
-        iconNode = <div class={`${prefixCls}-icon`}>{slots.icon()}</div>
+        // 自定义 icon slot：添加 custom 类，避免默认状态颜色/尺寸覆盖用户样式
+        iconNode = <div class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-custom`)}>{slots.icon()}</div>
       } else if (props.icon === false) {
         // 仅普通状态在 icon=false 时隐藏图标
         iconNode = null
+      } else if (props.icon !== undefined) {
+        // 自定义 icon prop（VNode/字符串等）：添加 custom 类
+        iconNode = (
+          <div class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-custom`)}>
+            {props.icon}
+          </div>
+        )
       } else {
         const fallback = iconMap[status]?.() ?? null
         iconNode = (
           <div class={`${prefixCls}-icon`}>
-            {props.icon ?? fallback}
+            {fallback}
           </div>
         )
       }
 
       const extraNode = slots.extra?.() ?? props.extra
-      const hasExtra = slots.extra || props.extra
+      const hasExtra = slots.extra || props.extra != null
 
       return (
         <div class={cls(prefixCls, `${prefixCls}-${status}`)}>

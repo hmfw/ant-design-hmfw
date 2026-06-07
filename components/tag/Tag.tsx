@@ -1,4 +1,4 @@
-import { defineComponent, computed, ref, type PropType } from 'vue'
+import { defineComponent, computed, ref, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { TagColor } from './types'
@@ -14,7 +14,10 @@ export const Tag = defineComponent({
   props: {
     color: String as PropType<TagColor>,
     closable: Boolean,
-    closeIcon: Object,
+    closeIcon: {
+      type: [Object, Boolean, Function] as PropType<boolean | VNode | (() => VNode)>,
+      default: undefined,
+    },
     bordered: {
       type: Boolean,
       default: true,
@@ -66,12 +69,37 @@ export const Tag = defineComponent({
       }
     }
 
+    /** 渲染关闭图标内容 */
+    const renderCloseIcon = () => {
+      // closeIcon slot 优先
+      const closeIconSlot = slots.closeIcon?.()
+      if (closeIconSlot) return closeIconSlot
+
+      // closeIcon prop
+      if (props.closeIcon === undefined || props.closeIcon === true) {
+        // 默认图标
+        return '×'
+      }
+      if (props.closeIcon === false) {
+        // 不应该到这里，外层已处理
+        return null
+      }
+      if (typeof props.closeIcon === 'function') {
+        return (props.closeIcon as () => VNode)()
+      }
+      // VNode 对象
+      const CloseIconComp = props.closeIcon as any
+      return <CloseIconComp />
+    }
+
     return () => {
       if (!visible.value) return null
 
       const IconComp = props.icon as any
-      const CloseIconComp = props.closeIcon as any
       const TagWrapper = (props.href ? 'a' : 'span') as any
+
+      // 判断是否显示关闭按钮：closable 为 true 且 closeIcon 不为 false
+      const showClose = props.closable && props.closeIcon !== false
 
       return (
         <TagWrapper
@@ -83,7 +111,7 @@ export const Tag = defineComponent({
         >
           {props.icon && <IconComp class={`${prefixCls}-icon`} />}
           {slots.default?.()}
-          {props.closable && (
+          {showClose && (
             <span
               class={`${prefixCls}-close-icon`}
               onClick={handleClose}
@@ -93,7 +121,7 @@ export const Tag = defineComponent({
               aria-label="close"
               aria-disabled={props.disabled || undefined}
             >
-              {CloseIconComp ? <CloseIconComp /> : '×'}
+              {renderCloseIcon()}
             </span>
           )}
         </TagWrapper>

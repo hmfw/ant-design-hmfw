@@ -14,6 +14,7 @@ import {
 import { usePrefixCls } from '../config-provider'
 import type { WatermarkProps, WatermarkFont } from './types'
 
+/** 多行文本行间距（px） */
 const FontGap = 3
 const BaseSize = 2
 const DEFAULT_GAP_X = 100
@@ -73,6 +74,16 @@ function prepareCanvas(
   return [ctx, canvas, realWidth, realHeight]
 }
 
+/**
+ * 计算多行文本的行高（含行间距）
+ * 优化：根据字体大小自动调节行间距，确保多行排列更紧凑、居中
+ */
+function getLineHeight(fontSize: number, ratio: number): number {
+  // 行间距为字号的 0.3 倍，最小 FontGap
+  const gap = Math.max(FontGap, Math.round(fontSize * 0.3))
+  return fontSize * ratio + gap * ratio
+}
+
 function getClips(
   content: string | string[] | HTMLImageElement,
   rotate: number,
@@ -90,14 +101,21 @@ function getClips(
   } else {
     const { color, fontSize, fontStyle, fontWeight, fontFamily, textAlign } = font
     const mergedFontSize = Number(fontSize) * ratio
+    const lineHeight = getLineHeight(Number(fontSize), ratio)
 
     ctx.font = `${fontStyle} normal ${fontWeight} ${mergedFontSize}px/${height}px ${fontFamily}`
     ctx.fillStyle = color
     ctx.textAlign = textAlign
     ctx.textBaseline = 'top'
     const contents = toArray(content)
+
+    // 计算多行文本总高度，用于垂直居中
+    const totalTextHeight = contents.length * mergedFontSize + (contents.length - 1) * (lineHeight - mergedFontSize)
+    const startY = (contentHeight - totalTextHeight) / 2
+
     contents.forEach((item, index) => {
-      ctx.fillText(item ?? '', contentWidth / 2, index * (mergedFontSize + FontGap * ratio))
+      const y = startY + index * lineHeight
+      ctx.fillText(item ?? '', contentWidth / 2, y)
     })
   }
 
@@ -193,6 +211,8 @@ export const Watermark = defineComponent({
     const markWidthRef = ref(0)
     let rafId: number | null = null
     let rafLock = false
+    // 标记组件是否正在卸载，避免卸载时触发 onRemove
+    let isUnmounting = false
 
     // 嵌套子元素集合
     const subElements = ref(new Set<HTMLElement>())
@@ -262,9 +282,11 @@ export const Watermark = defineComponent({
           ]
         })
         defaultWidth = Math.ceil(Math.max(...sizes.map((size) => size[0])))
+        // 优化多行高度计算：使用 getLineHeight 以获取合适的行间距
+        const lineHeight = getLineHeight(fontSize, 1)
         defaultHeight =
           Math.ceil(Math.max(...sizes.map((size) => size[1]))) * contents.length +
-          (contents.length - 1) * FontGap
+          (contents.length - 1) * (lineHeight - fontSize)
       }
       return [props.width ?? defaultWidth, props.height ?? defaultHeight]
     }
@@ -401,28 +423,35 @@ export const Watermark = defineComponent({
       { deep: true },
     )
 
-    // 监听容器：水印被移除则重建；容器固定样式被篡改则还原
+    // 增强防删除保护：监听水印 DOM 节点的 removal / attribute change，被删/被改时立刻重建
     const observeTarget = (target: HTMLElement) => {
       if (observers.has(target)) {
         return
       }
       const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          let needRerender = false
+        // 组件卸载时不处理
+        if (isUnmounting) return
+
+        let needRerender = false
+        for (const mutation of mutations) {
+          // 检测水印节点被移除
           if (mutation.removedNodes.length) {
-            needRerender = Array.from(mutation.removedNodes).some(isWatermarkEle)
+            if (Array.from(mutation.removedNodes).some(isWatermarkEle)) {
+              needRerender = true
+              break
+            }
           }
+          // 检测水印节点属性被篡改（style、class、hidden 等）
           if (mutation.type === 'attributes' && isWatermarkEle(mutation.target)) {
             needRerender = true
+            break
           }
-          if (needRerender) {
-            syncWatermark()
-          } else if (
+          // 检测容器固定样式被篡改
+          if (
             mutation.target === target &&
             mutation.attributeName === 'style' &&
             target === containerRef.value
           ) {
-            // 容器固定样式被外部修改后还原
             Object.keys(fixedStyle).forEach((key) => {
               const oriValue = fixedStyle[key]
               const currentValue = (target.style as any)[key]
@@ -431,12 +460,17 @@ export const Watermark = defineComponent({
               }
             })
           }
-        })
+        }
+        if (needRerender) {
+          syncWatermark()
+        }
       })
       observer.observe(target, {
         childList: true,
         attributes: true,
         subtree: true,
+        // 记录旧属性值，以便检测属性变化
+        attributeOldValue: true,
       })
       observers.set(target, observer)
     }
@@ -470,6 +504,7 @@ export const Watermark = defineComponent({
     })
 
     onBeforeUnmount(() => {
+      isUnmounting = true
       if (rafId !== null) {
         cancelAnimationFrame(rafId)
       }
@@ -501,12 +536,18 @@ export const Watermark = defineComponent({
 
     return () => {
       const { class: attrClass, style: attrStyle, ...restAttrs } = attrs as Record<string, unknown>
+
+      // inherit=true 时容器跟随父元素自适应尺寸
+      const inheritStyle: Record<string, string> = props.inherit
+        ? { width: '100%', height: '100%' }
+        : {}
+
       return (
         <div
           {...restAttrs}
           ref={containerRef}
           class={[prefixCls, props.rootClassName, attrClass]}
-          style={[fixedStyle as CSSProperties, attrStyle as CSSProperties]}
+          style={[{ ...fixedStyle, ...inheritStyle } as CSSProperties, attrStyle as CSSProperties]}
         >
           {slots.default?.()}
         </div>

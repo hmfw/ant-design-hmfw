@@ -1,3 +1,4 @@
+/* 骨架屏加载动画 - 纯 CSS keyframes，使用 background-position 动画避免 layout reflow */
 @keyframes hmfw-skeleton-loading {
   0% { background-position: 100% 50%; }
   100% { background-position: 0 50%; }
@@ -29,7 +30,7 @@
 .hmfw-skeleton-avatar {
   display: inline-block;
   vertical-align: top;
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
   width: var(--hmfw-control-height, 32px);
   height: var(--hmfw-control-height, 32px);
 }
@@ -56,7 +57,7 @@
 .hmfw-skeleton-title {
   width: 100%;
   height: 16px;
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
   border-radius: var(--hmfw-border-radius-sm, 4px);
   margin: 0;
 }
@@ -83,7 +84,7 @@
 .hmfw-skeleton-paragraph li {
   width: 100%;
   height: 16px;
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
   border-radius: var(--hmfw-border-radius-sm, 4px);
   list-style: none;
 }
@@ -98,7 +99,7 @@
   border-radius: var(--hmfw-border-radius, 6px);
 }
 
-/* Active animation */
+/* Active animation - 纯 CSS keyframes 驱动，background-position 动画不触发 layout reflow */
 .hmfw-skeleton-active .hmfw-skeleton-avatar,
 .hmfw-skeleton-active .hmfw-skeleton-title,
 .hmfw-skeleton-active .hmfw-skeleton-paragraph li,
@@ -108,12 +109,13 @@
 .hmfw-skeleton-active .hmfw-skeleton-node {
   background: linear-gradient(
     90deg,
-    var(--hmfw-color-fill-secondary, rgba(0,0,0,0.06)) 25%,
-    var(--hmfw-color-fill, rgba(0,0,0,0.15)) 37%,
-    var(--hmfw-color-fill-secondary, rgba(0,0,0,0.06)) 63%
+    var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0,0,0,0.06))) 25%,
+    var(--hmfw-skeleton-color-highlight, var(--hmfw-color-fill, rgba(0,0,0,0.15))) 37%,
+    var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0,0,0,0.06))) 63%
   );
   background-size: 400% 100%;
-  animation: hmfw-skeleton-loading var(--hmfw-motion-duration-slow, 1.4s) ease infinite;
+  animation: hmfw-skeleton-loading 1.4s ease infinite;
+  will-change: background-position;
 }
 
 /* Element wrapper */
@@ -126,7 +128,7 @@
 .hmfw-skeleton-button {
   display: inline-block;
   vertical-align: top;
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
   border-radius: var(--hmfw-border-radius-sm, 4px);
   width: calc(var(--hmfw-control-height, 32px) * 2);
   min-width: calc(var(--hmfw-control-height, 32px) * 2);
@@ -181,7 +183,7 @@
 .hmfw-skeleton-input {
   display: inline-block;
   vertical-align: top;
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
   border-radius: var(--hmfw-border-radius-sm, 4px);
   width: calc(var(--hmfw-control-height, 32px) * 5);
   min-width: calc(var(--hmfw-control-height, 32px) * 5);
@@ -216,7 +218,7 @@
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
   border-radius: var(--hmfw-border-radius-sm, 4px);
   width: calc(var(--hmfw-control-height, 32px) * 1.5 * 2);
   height: calc(var(--hmfw-control-height, 32px) * 1.5 * 2);
@@ -239,9 +241,51 @@
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
   border-radius: var(--hmfw-border-radius-sm, 4px);
   width: calc(var(--hmfw-control-height, 32px) * 1.5 * 2);
   height: calc(var(--hmfw-control-height, 32px) * 1.5 * 2);
+}
+
+/* SkeletonNode 支持 fullSize 子节点填满整个区域 */
+.hmfw-skeleton-node-full {
+  width: 100%;
+  height: 100%;
+}
+
+/* 尊重用户减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .hmfw-skeleton-active .hmfw-skeleton-avatar,
+  .hmfw-skeleton-active .hmfw-skeleton-title,
+  .hmfw-skeleton-active .hmfw-skeleton-paragraph li,
+  .hmfw-skeleton-active .hmfw-skeleton-button,
+  .hmfw-skeleton-active .hmfw-skeleton-input,
+  .hmfw-skeleton-active .hmfw-skeleton-image,
+  .hmfw-skeleton-active .hmfw-skeleton-node {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+/* 暗黑模式适配 - 提升背景色与高亮色对比度 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hmfw-skeleton-color-base: rgba(255, 255, 255, 0.08);
+    --hmfw-skeleton-color-highlight: rgba(255, 255, 255, 0.18);
+  }
+
+  .hmfw-skeleton-avatar,
+  .hmfw-skeleton-title,
+  .hmfw-skeleton-paragraph li,
+  .hmfw-skeleton-button,
+  .hmfw-skeleton-input,
+  .hmfw-skeleton-image,
+  .hmfw-skeleton-node {
+    background: var(--hmfw-skeleton-color-base, rgba(255, 255, 255, 0.08));
+  }
+
+  .hmfw-skeleton-image-path {
+    fill: rgba(255, 255, 255, 0.2);
+  }
 }
 

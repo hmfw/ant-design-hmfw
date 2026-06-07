@@ -263,6 +263,7 @@ export const SkeletonNode = defineComponent({
   name: 'SkeletonNode',
   props: {
     active: Boolean,
+    fullSize: Boolean,
     nodeStyle: Object as PropType<CSSProperties>,
   },
   setup(props, { slots }) {
@@ -271,7 +272,9 @@ export const SkeletonNode = defineComponent({
       <div class={cls(`${prefixCls}`, `${prefixCls}-element`, {
         [`${prefixCls}-active`]: props.active,
       })}>
-        <div class={`${prefixCls}-node`} style={props.nodeStyle}>
+        <div class={cls(`${prefixCls}-node`, {
+          [`${prefixCls}-node-full`]: props.fullSize,
+        })} style={props.nodeStyle}>
           {slots.default?.()}
         </div>
       </div>

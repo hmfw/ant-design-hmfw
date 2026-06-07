@@ -194,4 +194,137 @@ describe('Watermark', () => {
     expect(style).toContain('width: calc(100% - 150px)')
     expect(style).toContain('height: calc(100% - 150px)')
   })
+
+  // ===== P2 新增测试 =====
+
+  describe('inherit 属性 - 父元素自适应尺寸', () => {
+    it('inherit=true（默认）时容器应用 width:100% 和 height:100%', () => {
+      const wrapper = mount(Watermark, { props: { content: 'Test' } })
+      const container = wrapper.find('.hmfw-watermark')
+      const style = container.attributes('style') || ''
+      expect(style).toContain('width: 100%')
+      expect(style).toContain('height: 100%')
+    })
+
+    it('inherit=false 时容器不应用自适应尺寸样式', () => {
+      const wrapper = mount(Watermark, { props: { content: 'Test', inherit: false } })
+      const container = wrapper.find('.hmfw-watermark')
+      const style = container.attributes('style') || ''
+      // inherit=false 时不应有 width/height: 100% 的 inherit 样式
+      // 注意：固定样式 position/overflow 仍应存在
+      expect(style).toContain('position: relative')
+      expect(style).toContain('overflow: hidden')
+      expect(style).not.toContain('width: 100%')
+      expect(style).not.toContain('height: 100%')
+    })
+  })
+
+  describe('多行文本水印布局优化', () => {
+    it('多行 content 数组渲染正确', () => {
+      const wrapper = mount(Watermark, {
+        props: { content: ['第一行', '第二行', '第三行'] },
+      })
+      expect(wrapper.find('.hmfw-watermark').exists()).toBe(true)
+    })
+
+    it('多行文本使用 fillText 正确调用（垂直居中）', async () => {
+      const fillTextMock = vi.fn()
+      HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
+        save: vi.fn(),
+        translate: vi.fn(),
+        rotate: vi.fn(),
+        scale: vi.fn(),
+        drawImage: vi.fn(),
+        fillText: fillTextMock,
+        measureText: vi.fn((text: string) => ({
+          width: text.length * 10,
+          fontBoundingBoxAscent: 10,
+          fontBoundingBoxDescent: 2,
+        })),
+        font: '',
+        fillStyle: '',
+        textAlign: 'center',
+        textBaseline: 'top',
+      })) as any
+
+      mount(Watermark, {
+        props: { content: ['Line A', 'Line B'] },
+      })
+      await nextTick()
+      await new Promise((resolve) => setTimeout(resolve, 50))
+
+      // fillText 应该被调用（多行内容每行调用一次）
+      expect(fillTextMock).toHaveBeenCalled()
+      const calls = fillTextMock.mock.calls
+      // 至少被调用了 2 次（两行内容）
+      const textCalls = calls.filter(
+        (c: any[]) => c[0] === 'Line A' || c[0] === 'Line B',
+      )
+      expect(textCalls.length).toBeGreaterThanOrEqual(2)
+    })
+  })
+
+  describe('增强防删除保护', () => {
+    it('水印节点属性被篡改后自动恢复', async () => {
+      const wrapper = mount(Watermark, { props: { content: 'Protected' } })
+      await nextTick()
+      await new Promise((resolve) => setTimeout(resolve, 50))
+      const markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+      expect(markDiv).toBeTruthy()
+      // 篡改水印节点的 style 属性
+      markDiv.setAttribute('style', 'display: none;')
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      // 水印应被重建恢复
+      const restoredMark = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+      expect(restoredMark).toBeTruthy()
+      expect(restoredMark.getAttribute('style')).toContain('visibility: visible !important')
+    })
+
+    it('水印节点被设置 hidden 属性后自动恢复', async () => {
+      const wrapper = mount(Watermark, { props: { content: 'Protected' } })
+      await nextTick()
+      await new Promise((resolve) => setTimeout(resolve, 50))
+      const markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+      expect(markDiv).toBeTruthy()
+      // 尝试隐藏水印
+      markDiv.setAttribute('hidden', '')
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      // 水印节点应自动移除 hidden 属性
+      const restoredMark = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+      expect(restoredMark).toBeTruthy()
+      expect(restoredMark.hasAttribute('hidden')).toBe(false)
+    })
+
+    it('水印节点被 remove 后立即重建', async () => {
+      const wrapper = mount(Watermark, { props: { content: 'Test' } })
+      await nextTick()
+      await new Promise((resolve) => setTimeout(resolve, 50))
+      let markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+      expect(markDiv).toBeTruthy()
+
+      // 模拟外部删除
+      markDiv.remove()
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      // 水印应立即重建
+      markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+      expect(markDiv).toBeTruthy()
+      expect(markDiv.getAttribute('style')).toContain('background-image')
+    })
+
+    it('水印被添加 class 后自动清除', async () => {
+      const wrapper = mount(Watermark, { props: { content: 'Test' } })
+      await nextTick()
+      await new Promise((resolve) => setTimeout(resolve, 50))
+      const markDiv = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+      expect(markDiv).toBeTruthy()
+      // 尝试给水印节点添加 class
+      markDiv.setAttribute('class', 'hacker-hide')
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      // 水印应自动清除 class
+      const restoredMark = wrapper.element.querySelector('div[style*="background-image"]') as HTMLElement
+      expect(restoredMark).toBeTruthy()
+      expect(restoredMark.hasAttribute('class')).toBe(false)
+    })
+  })
 })

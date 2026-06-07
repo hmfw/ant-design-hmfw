@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import { nextTick, h } from 'vue'
+import { nextTick, h, ref } from 'vue'
 import { Spin } from '../Spin'
 
 describe('Spin', () => {
@@ -147,5 +147,106 @@ describe('Spin', () => {
       },
     })
     expect(wrapper.find('.my-pct').text()).toBe('42')
+  })
+
+  // ======================= 自定义 indicator 尺寸自适应 =======================
+  it('custom indicator wrapper adapts to size=small', () => {
+    const wrapper = mount(Spin, {
+      props: { size: 'small' },
+      slots: {
+        indicator: () => h('span', { class: 'custom-icon' }, 'X'),
+      },
+    })
+    const dot = wrapper.find('.hmfw-spin-dot')
+    expect(dot.exists()).toBe(true)
+    // small 对应 14px
+    expect(dot.attributes('style')).toContain('width: 14px')
+    expect(dot.attributes('style')).toContain('height: 14px')
+    expect(dot.attributes('style')).toContain('font-size: 14px')
+  })
+
+  it('custom indicator wrapper adapts to size=large', () => {
+    const wrapper = mount(Spin, {
+      props: { size: 'large' },
+      slots: {
+        indicator: () => h('span', { class: 'custom-icon' }, 'X'),
+      },
+    })
+    const dot = wrapper.find('.hmfw-spin-dot')
+    expect(dot.exists()).toBe(true)
+    // large 对应 32px
+    expect(dot.attributes('style')).toContain('width: 32px')
+    expect(dot.attributes('style')).toContain('height: 32px')
+    expect(dot.attributes('style')).toContain('font-size: 32px')
+  })
+
+  it('custom indicator wrapper uses default size (20px) when size is not set', () => {
+    const wrapper = mount(Spin, {
+      slots: {
+        indicator: () => h('span', { class: 'custom-icon' }, 'X'),
+      },
+    })
+    const dot = wrapper.find('.hmfw-spin-dot')
+    expect(dot.attributes('style')).toContain('width: 20px')
+    expect(dot.attributes('style')).toContain('height: 20px')
+  })
+
+  // ======================= delay 计时逻辑修复 =======================
+  it('delay timer does not fire before mount (onMounted timing)', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(Spin, {
+      props: { spinning: true, delay: 100 },
+      slots: { default: '<div>Content</div>' },
+    })
+    // 挂载后 delay 计时开始，但还未到时
+    expect(wrapper.find('.hmfw-spin-container').exists()).toBe(false)
+    // 推进 100ms，delay 到期
+    vi.advanceTimersByTime(100)
+    await nextTick()
+    expect(wrapper.find('.hmfw-spin-container').exists()).toBe(true)
+    vi.useRealTimers()
+  })
+
+  it('delay timer is immediately cleared when spinning changes to false', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(Spin, {
+      props: { spinning: true, delay: 300 },
+      slots: { default: '<div>Content</div>' },
+    })
+    // 未到 delay，不显示
+    expect(wrapper.find('.hmfw-spin-container').exists()).toBe(false)
+    // 推进 100ms（尚在 delay 内）
+    vi.advanceTimersByTime(100)
+    await nextTick()
+    expect(wrapper.find('.hmfw-spin-container').exists()).toBe(false)
+    // spinning 改为 false，应立即清空 timer
+    await wrapper.setProps({ spinning: false })
+    await nextTick()
+    // 即使再推进 300ms 也不会显示
+    vi.advanceTimersByTime(300)
+    await nextTick()
+    expect(wrapper.find('.hmfw-spin-container').exists()).toBe(false)
+    vi.useRealTimers()
+  })
+
+  // ======================= fullscreen 全屏模式 =======================
+  it('fullscreen mode uses fixed positioning with mask', () => {
+    const wrapper = mount(Spin, { props: { fullscreen: true } })
+    const fullscreenEl = wrapper.find('.hmfw-spin-fullscreen')
+    expect(fullscreenEl.exists()).toBe(true)
+    expect(fullscreenEl.classes()).toContain('hmfw-spin-fullscreen-show')
+  })
+
+  it('fullscreen mode hides when spinning=false', () => {
+    const wrapper = mount(Spin, { props: { fullscreen: true, spinning: false } })
+    const fullscreenEl = wrapper.find('.hmfw-spin-fullscreen')
+    expect(fullscreenEl.exists()).toBe(true)
+    // 不应有 show 类
+    expect(fullscreenEl.classes()).not.toContain('hmfw-spin-fullscreen-show')
+  })
+
+  it('fullscreen mode does not render nested-loading wrapper', () => {
+    const wrapper = mount(Spin, { props: { fullscreen: true } })
+    expect(wrapper.find('.hmfw-spin-nested-loading').exists()).toBe(false)
   })
 })

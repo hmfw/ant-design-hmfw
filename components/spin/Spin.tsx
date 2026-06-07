@@ -1,4 +1,4 @@
-import { defineComponent, ref, watch, onBeforeUnmount, computed, type PropType } from 'vue'
+import { defineComponent, ref, watch, onBeforeUnmount, onMounted, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { SpinSize } from './types'
@@ -40,8 +40,10 @@ export const Spin = defineComponent({
     const prefixCls = usePrefixCls('spin')
 
     // delay：spinning 置 true 后延迟 delay ms 才真正显示，避免闪烁
+    // 无 delay 且 spinning 为 true 时直接激活；有 delay 时等 onMounted 后才计时
     const active = ref(props.spinning && !props.delay)
     let timer: ReturnType<typeof setTimeout> | null = null
+    let mounted = false
 
     const clearTimer = () => {
       if (timer) {
@@ -50,23 +52,37 @@ export const Spin = defineComponent({
       }
     }
 
-    // 根据 spinning/delay 计算 active，挂载时立即生效（修复 delay-on-mount）
+    // 根据 spinning/delay 计算 active
     const applySpinning = (val: boolean | undefined) => {
       clearTimer()
       if (val) {
         if (props.delay > 0) {
-          timer = setTimeout(() => {
-            active.value = true
-          }, props.delay)
+          // 仅 mounted 后才开始计时，避免 setup 阶段提前触发
+          if (mounted) {
+            timer = setTimeout(() => {
+              active.value = true
+            }, props.delay)
+          }
         } else {
           active.value = true
         }
       } else {
+        // spinning 改为 false 时立即清空 timer 并隐藏
         active.value = false
       }
     }
 
     watch(() => props.spinning, applySpinning, { immediate: true })
+
+    onMounted(() => {
+      mounted = true
+      // 如果挂载时 spinning=true 且有 delay，此时才真正开始计时
+      if (props.spinning && props.delay > 0 && !active.value) {
+        timer = setTimeout(() => {
+          active.value = true
+        }, props.delay)
+      }
+    })
 
     // ======================= percent =======================
     const isAuto = computed(() => props.percent === 'auto')
@@ -163,9 +179,18 @@ export const Spin = defineComponent({
       )
     }
 
+    // 根据 size 返回对应的像素尺寸，用于自定义 indicator 的容器自适应
+    const sizeMap: Record<SpinSize, number> = { small: 14, default: 20, large: 32 }
+
     const renderIndicator = () => {
       if (slots.indicator) {
-        return <span class={`${prefixCls}-dot`}>{slots.indicator({ percent: mergedPercent.value })}</span>
+        const sizeVal = sizeMap[props.size] || sizeMap.default
+        const indicatorStyle = { width: `${sizeVal}px`, height: `${sizeVal}px`, fontSize: `${sizeVal}px` }
+        return (
+          <span class={`${prefixCls}-dot`} style={indicatorStyle}>
+            {slots.indicator({ percent: mergedPercent.value })}
+          </span>
+        )
       }
       // percent>0 时隐藏四点 holder，仅显示环形进度（与 AntD v6 一致）
       const showProgress = mergedPercent.value !== undefined && mergedPercent.value > 0
