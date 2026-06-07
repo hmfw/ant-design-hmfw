@@ -1541,7 +1541,7 @@ import { ConfigProvider, useConfig, usePrefixCls, useLocale } from 'ant-design-h
 <template>
   <ConfigProvider :theme="theme">
     <div style="display: flex; flex-direction: column; gap: 12px">
-      <button
+      <Button
         style="
           background: var(--hmfw-color-primary);
           color: white;
@@ -1552,14 +1552,14 @@ import { ConfigProvider, useConfig, usePrefixCls, useLocale } from 'ant-design-h
         "
       >
         主色按钮
-      </button>
+      </Button>
       <p style="color: var(--hmfw-color-primary)">主色文字</p>
     </div>
   </ConfigProvider>
 </template>
 
 <script setup lang="ts">
-import { ConfigProvider } from 'ant-design-hmfw'
+import { ConfigProvider, Button } from 'ant-design-hmfw'
 
 const theme = {
   token: {
@@ -1575,8 +1575,8 @@ const theme = {
 ```vue
 <template>
   <div style="display: flex; gap: 12px; margin-bottom: 16px">
-    <button @click="locale = zhCN">中文</button>
-    <button @click="locale = enUS">English</button>
+    <Button @click="locale = zhCN">中文</Button>
+    <Button @click="locale = enUS">English</Button>
   </div>
   <ConfigProvider :locale="locale">
     <p>当前语言：{{ locale.locale }}</p>
@@ -1585,7 +1585,7 @@ const theme = {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ConfigProvider, zhCN, enUS } from 'ant-design-hmfw'
+import { ConfigProvider, Button, zhCN, enUS } from 'ant-design-hmfw'
 
 const locale = ref(zhCN)
 </script>
@@ -3934,7 +3934,7 @@ import { Modal } from 'ant-design-hmfw'
 
 ```vue
 <template>
-  <button @click="open = true">打开对话框</button>
+  <Button @click="open = true">打开对话框</Button>
   <Modal v-model:open="open" title="基础对话框" @ok="handleOk" @cancel="handleCancel">
     <p>对话框内容</p>
     <p>对话框内容</p>
@@ -3944,7 +3944,7 @@ import { Modal } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Modal } from 'ant-design-hmfw'
+import { Modal, Button } from 'ant-design-hmfw'
 
 const open = ref(false)
 
@@ -3964,19 +3964,19 @@ function handleCancel() {
 
 ```vue
 <template>
-  <button @click="open = true">打开对话框</button>
+  <Button @click="open = true">打开对话框</Button>
   <Modal v-model:open="open" title="自定义页脚" :confirm-loading="confirmLoading" @ok="handleOk">
     <p>{{ modalText }}</p>
     <template #footer>
-      <button @click="open = false">取消</button>
-      <button @click="handleOk">确认</button>
+      <Button @click="open = false">取消</Button>
+      <Button @click="handleOk">确认</Button>
     </template>
   </Modal>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Modal } from 'ant-design-hmfw'
+import { Modal, Button } from 'ant-design-hmfw'
 
 const open = ref(false)
 const confirmLoading = ref(false)
@@ -4288,12 +4288,12 @@ import { Popconfirm } from 'ant-design-hmfw'
 ```vue
 <template>
   <Popconfirm title="确定要删除吗？" ok-text="确定" cancel-text="取消" @confirm="onConfirm" @cancel="onCancel">
-    <button>删除</button>
+    <Button>删除</Button>
   </Popconfirm>
 </template>
 
 <script setup lang="ts">
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm, Button } from 'ant-design-hmfw'
 
 function onConfirm() {
   console.log('已确认删除')
@@ -4316,12 +4316,12 @@ function onCancel() {
     cancel-text="再想想"
     @confirm="onConfirm"
   >
-    <button>提交</button>
+    <Button>提交</Button>
   </Popconfirm>
 </template>
 
 <script setup lang="ts">
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm, Button } from 'ant-design-hmfw'
 
 function onConfirm() {
   console.log('已提交')
@@ -4382,12 +4382,12 @@ import { Popover, PopoverPurePanel } from 'ant-design-hmfw'
 ```vue
 <template>
   <Popover title="标题" content="这是气泡卡片的内容">
-    <button>鼠标移入</button>
+    <Button>鼠标移入</Button>
   </Popover>
 </template>
 
 <script setup lang="ts">
-import { Popover } from 'ant-design-hmfw'
+import { Popover, Button } from 'ant-design-hmfw'
 </script>
 ```
 
@@ -4397,19 +4397,19 @@ import { Popover } from 'ant-design-hmfw'
 <template>
   <div style="display: flex; gap: 8px">
     <Popover title="悬停触发" content="鼠标悬停时显示" trigger="hover">
-      <button>悬停</button>
+      <Button>悬停</Button>
     </Popover>
     <Popover title="点击触发" content="点击时显示" trigger="click">
-      <button>点击</button>
+      <Button>点击</Button>
     </Popover>
     <Popover title="聚焦触发" content="聚焦时显示" trigger="focus">
-      <button>聚焦</button>
+      <Button>聚焦</Button>
     </Popover>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Popover } from 'ant-design-hmfw'
+import { Popover, Button } from 'ant-design-hmfw'
 </script>
 ```
 
@@ -4888,14 +4888,14 @@ import { Result } from 'ant-design-hmfw'
     sub-title="订单号：2017182818828182881，云顾问正在对接中，请耐心等待。"
   >
     <template #extra>
-      <button @click="onGoOrder">查看订单</button>
-      <button @click="onBuyAgain">再次购买</button>
+      <Button @click="onGoOrder">查看订单</Button>
+      <Button @click="onBuyAgain">再次购买</Button>
     </template>
   </Result>
 </template>
 
 <script setup lang="ts">
-import { Result } from 'ant-design-hmfw'
+import { Result, Button } from 'ant-design-hmfw'
 
 function onGoOrder() {
   console.log('查看订单')
@@ -4913,13 +4913,13 @@ function onBuyAgain() {
 <template>
   <Result status="error" title="提交失败" sub-title="请检查并修改以下信息后，再重新提交。">
     <template #extra>
-      <button @click="onRetry">再次提交</button>
+      <Button @click="onRetry">再次提交</Button>
     </template>
   </Result>
 </template>
 
 <script setup lang="ts">
-import { Result } from 'ant-design-hmfw'
+import { Result, Button } from 'ant-design-hmfw'
 
 function onRetry() {
   console.log('重试')
@@ -6381,12 +6381,12 @@ import { Tooltip } from 'ant-design-hmfw'
 ```vue
 <template>
   <Tooltip title="这是提示文字">
-    <button>鼠标移入</button>
+    <Button>鼠标移入</Button>
   </Tooltip>
 </template>
 
 <script setup lang="ts">
-import { Tooltip } from 'ant-design-hmfw'
+import { Tooltip, Button } from 'ant-design-hmfw'
 </script>
 ```
 
@@ -6396,15 +6396,15 @@ import { Tooltip } from 'ant-design-hmfw'
 <template>
   <div style="display: flex; gap: 8px; flex-wrap: wrap">
     <Tooltip v-for="placement in placements" :key="placement" :placement="placement" title="提示文字">
-      <button style="width: 100px">
+      <Button style="width: 100px">
         {{ placement }}
-      </button>
+      </Button>
     </Tooltip>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Tooltip } from 'ant-design-hmfw'
+import { Tooltip, Button } from 'ant-design-hmfw'
 
 const placements = [
   'topLeft',
