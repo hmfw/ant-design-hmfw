@@ -1,0 +1,48 @@
+# 源文件
+components/
+docs/
+scripts/
+
+# 配置文件
+.github/
+.vscode/
+.claude/
+.playwright-cli/
+coverage/
+docs-dist/
+test-build/
+.analysis/
+
+# 测试文件
+**/__tests__/
+*.test.ts
+*.test.tsx
+vitest.config.ts
+
+# 构建配置
+tsconfig.json
+tsconfig.base.json
+tsup.config.ts
+vite.config.ts
+.eslintrc.json
+.eslintignore
+
+# 文档和总结
+COMPARISON/
+COMPARISON.md
+IMPLEMENTATION_PLAN.md
+BUILD_OPTIMIZATION.md
+ROADMAP.md
+TESTING.md
+*.SUMMARY.md
+
+# 开发工具
+.DS_Store
+*.log
+*.tgz
+node_modules/
+pnpm-lock.yaml
+
+# Git
+.git
+.gitignore

@@ -1,18 +1,32 @@
 {
   "name": "ant-design-hmfw",
   "version": "0.1.0",
-  "description": "A Vue3 UI component library based on Ant Design v6",
+  "description": "A Vue3 UI component library based on Ant Design v6, featuring 66 high-quality components with TypeScript support",
   "keywords": [
+    "vue",
     "vue3",
     "ui",
+    "components",
     "component-library",
     "ant-design",
-    "typescript"
+    "antd",
+    "design-system",
+    "typescript",
+    "tsx",
+    "ui-framework",
+    "vue-components"
   ],
+  "author": {
+    "name": "hmfw",
+    "url": "https://github.com/hmfw"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/hmfw/ant-design-hmfw.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hmfw/ant-design-hmfw/issues"
   },
   "homepage": "https://hmfw.github.io/ant-design-hmfw",
   "publishConfig": {
@@ -23,35 +37,58 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "unpkg": "./dist/ant-design-hmfw.umd.js",
+  "jsdelivr": "./dist/ant-design-hmfw.umd.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./es": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./lib": {
+      "types": "./dist/index.d.cts",
+      "require": "./dist/index.cjs"
+    },
+    "./dist/*": "./dist/*",
+    "./style.css": "./dist/style.css",
     "./dist/style.css": "./dist/style.css",
-    "./style.css": "./dist/style.css"
+    "./package.json": "./package.json"
   },
   "sideEffects": [
     "**/*.css",
     "dist/style.css"
   ],
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "dev": "vite",
+    "build": "pnpm build:lib",
     "build:lib": "tsup",
     "build:docs": "vite build",
+    "preview": "vite preview",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx,.vue",
     "gen:icons": "tsx scripts/generate-icons.ts",
     "gen:llm": "tsx scripts/generate-llm-manifest.ts",
     "prebuild:lib": "pnpm gen:icons",
     "prebuild:docs": "pnpm gen:llm",
-    "release": "pnpm build:lib && npm publish"
+    "analyze:bundle": "node scripts/analyze-bundle.js",
+    "analyze:treeshaking": "node scripts/test-tree-shaking.js",
+    "precheck": "node scripts/prepublish-check.js",
+    "verify:release": "node scripts/verify-release.js",
+    "prepublishOnly": "pnpm test && pnpm typecheck && pnpm build:lib",
+    "release": "pnpm prepublishOnly && npm publish"
   },
   "peerDependencies": {
     "vue": ">=3.3.0 <4.0.0"
