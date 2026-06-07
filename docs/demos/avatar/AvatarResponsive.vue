@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Avatar } from '../../../components'
-import { UserOutlined } from '@ant-design/icons-vue'
+import { UserOutlined } from 'ant-design-hmfw'
 </script>
 
 <template>
