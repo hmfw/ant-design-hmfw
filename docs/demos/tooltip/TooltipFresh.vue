@@ -3,16 +3,16 @@
     <p>fresh 属性用于强制重新计算浮层位置，适用于触发元素位置动态变化的场景。</p>
     <div class="moving-container" :style="{ marginLeft: offset + 'px' }">
       <Tooltip title="我会跟随按钮移动" :fresh="fresh">
-        <button>悬停查看提示</button>
+        <Button>悬停查看提示</Button>
       </Tooltip>
     </div>
-    <button style="margin-top: 20px" @click="moveButton">移动按钮</button>
+    <Button style="margin-top: 20px" @click="moveButton">移动按钮</Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tooltip } from 'ant-design-hmfw'
+import { Tooltip, Button } from 'ant-design-hmfw'
 
 const offset = ref(0)
 const fresh = ref(0)

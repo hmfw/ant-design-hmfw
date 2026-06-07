@@ -1,11 +1,11 @@
 <template>
   <Empty description="暂无数据">
-    <button @click="onCreate">立即创建</button>
+    <Button @click="onCreate">立即创建</Button>
   </Empty>
 </template>
 
 <script setup lang="ts">
-import { Empty } from 'ant-design-hmfw'
+import { Empty, Button } from 'ant-design-hmfw'
 
 function onCreate() {
   console.log('创建')

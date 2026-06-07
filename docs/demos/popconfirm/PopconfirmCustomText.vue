@@ -6,12 +6,12 @@
     cancel-text="再想想"
     @confirm="onConfirm"
   >
-    <button>提交</button>
+    <Button>提交</Button>
   </Popconfirm>
 </template>
 
 <script setup lang="ts">
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm, Button } from 'ant-design-hmfw'
 
 function onConfirm() {
   console.log('已提交')

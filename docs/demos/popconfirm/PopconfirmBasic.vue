@@ -1,11 +1,11 @@
 <template>
   <Popconfirm title="确定要删除吗？" ok-text="确定" cancel-text="取消" @confirm="onConfirm" @cancel="onCancel">
-    <button>删除</button>
+    <Button>删除</Button>
   </Popconfirm>
 </template>
 
 <script setup lang="ts">
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm, Button } from 'ant-design-hmfw'
 
 function onConfirm() {
   console.log('已确认删除')

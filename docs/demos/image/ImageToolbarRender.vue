@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="tsx">
-import { Image } from 'ant-design-hmfw'
+import { Image, Button } from 'ant-design-hmfw'
 import type { VNode } from 'vue'
 import type { ToolbarRenderInfoType, ImageRenderInfoType } from 'ant-design-hmfw'
 
@@ -18,12 +18,12 @@ function toolbarRender(originalNode: VNode, info: ToolbarRenderInfoType) {
       {originalNode}
       <div style="display:flex;gap:12px;color:#fff;font-size:13px;align-items:center">
         <span>缩放 {Math.round(info.transform.scale * 100)}%</span>
-        <button
+        <Button
           onClick={info.actions.onReset}
           style="padding:2px 10px;border:none;border-radius:4px;background:rgba(255,255,255,.2);color:#fff;cursor:pointer"
         >
           重置
-        </button>
+        </Button>
       </div>
     </div>
   )

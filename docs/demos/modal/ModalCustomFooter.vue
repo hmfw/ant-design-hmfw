@@ -1,17 +1,17 @@
 <template>
-  <button @click="open = true">打开对话框</button>
+  <Button @click="open = true">打开对话框</Button>
   <Modal v-model:open="open" title="自定义页脚" :confirm-loading="confirmLoading" @ok="handleOk">
     <p>{{ modalText }}</p>
     <template #footer>
-      <button @click="open = false">取消</button>
-      <button @click="handleOk">确认</button>
+      <Button @click="open = false">取消</Button>
+      <Button @click="handleOk">确认</Button>
     </template>
   </Modal>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Modal } from 'ant-design-hmfw'
+import { Modal, Button } from 'ant-design-hmfw'
 
 const open = ref(false)
 const confirmLoading = ref(false)

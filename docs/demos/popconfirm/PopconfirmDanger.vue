@@ -9,23 +9,23 @@
       cancel-text="取消"
       @confirm="onConfirm"
     >
-      <button>删除（danger）</button>
+      <Button>删除（danger）</Button>
     </Popconfirm>
 
     <!-- 普通主题 -->
     <Popconfirm title="确定要保存吗？" ok-type="primary" ok-text="保存" cancel-text="取消" @confirm="onConfirm">
-      <button>保存（primary）</button>
+      <Button>保存（primary）</Button>
     </Popconfirm>
 
     <!-- 默认主题 -->
     <Popconfirm title="确定要继续吗？" ok-type="default" ok-text="继续" cancel-text="取消" @confirm="onConfirm">
-      <button>继续（default）</button>
+      <Button>继续（default）</Button>
     </Popconfirm>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm, Button } from 'ant-design-hmfw'
 
 function onConfirm() {
   console.log('已确认操作')

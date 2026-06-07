@@ -5,25 +5,25 @@
       <div class="demo-item">
         <h4>默认箭头位置</h4>
         <Tooltip title="默认箭头跟随浮层边缘" placement="topLeft">
-          <button style="width: 200px">长按钮 - 默认箭头</button>
+          <Button style="width: 200px">长按钮 - 默认箭头</Button>
         </Tooltip>
       </div>
       <div class="demo-item">
         <h4>箭头居中</h4>
         <Tooltip title="箭头指向按钮中心" placement="topLeft" :arrow="{ pointAtCenter: true }">
-          <button style="width: 200px">长按钮 - 箭头居中</button>
+          <Button style="width: 200px">长按钮 - 箭头居中</Button>
         </Tooltip>
       </div>
     </div>
     <div class="demo-row" style="margin-top: 80px">
       <div class="demo-item">
         <Tooltip title="bottomRight 默认" placement="bottomRight">
-          <button style="width: 200px">bottomRight - 默认</button>
+          <Button style="width: 200px">bottomRight - 默认</Button>
         </Tooltip>
       </div>
       <div class="demo-item">
         <Tooltip title="bottomRight 居中" placement="bottomRight" :arrow="{ pointAtCenter: true }">
-          <button style="width: 200px">bottomRight - 居中</button>
+          <Button style="width: 200px">bottomRight - 居中</Button>
         </Tooltip>
       </div>
     </div>
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { Tooltip } from 'ant-design-hmfw'
+import { Tooltip, Button } from 'ant-design-hmfw'
 </script>
 
 <style scoped>

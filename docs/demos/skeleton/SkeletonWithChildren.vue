@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="loading = !loading">切换加载状态</button>
+    <Button @click="loading = !loading">切换加载状态</Button>
     <Skeleton :loading="loading" active avatar>
       <div style="display: flex; gap: 12px; margin-top: 16px">
         <img
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Skeleton } from 'ant-design-hmfw'
+import { Skeleton, Button } from 'ant-design-hmfw'
 
 const loading = ref(true)
 </script>

@@ -1,20 +1,20 @@
 <template>
   <div style="display: flex; gap: 12px; margin-bottom: 16px">
-    <button @click="size = 'small'">小</button>
-    <button @click="size = 'middle'">中</button>
-    <button @click="size = 'large'">大</button>
+    <Button @click="size = 'small'">小</Button>
+    <Button @click="size = 'middle'">中</Button>
+    <Button @click="size = 'large'">大</Button>
   </div>
   <ConfigProvider :component-size="size">
     <div style="display: flex; flex-direction: column; gap: 12px">
       <input :style="inputStyle" placeholder="输入框" />
-      <button :style="btnStyle">按钮</button>
+      <Button :style="btnStyle">按钮</Button>
     </div>
   </ConfigProvider>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ConfigProvider } from 'ant-design-hmfw'
+import { ConfigProvider, Button } from 'ant-design-hmfw'
 
 const size = ref<'small' | 'middle' | 'large'>('middle')
 

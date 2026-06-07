@@ -4,9 +4,9 @@
       <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
     </Badge>
     <div style="display: flex; gap: 8px">
-      <button @click="increase">+</button>
-      <button @click="decrease">-</button>
-      <button @click="randomize">随机</button>
+      <Button @click="increase">+</Button>
+      <Button @click="decrease">-</Button>
+      <Button @click="randomize">随机</Button>
     </div>
     <div>当前值: {{ count }}</div>
   </div>
@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Badge } from 'ant-design-hmfw'
+import { Badge, Button } from 'ant-design-hmfw'
 
 const count = ref(5)
 

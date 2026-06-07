@@ -8,7 +8,7 @@
       ok-text="确定"
       cancel-text="取消"
     >
-      <button>自定义 z-index</button>
+      <Button>自定义 z-index</Button>
     </Popconfirm>
 
     <!-- 自定义样式 -->
@@ -20,21 +20,21 @@
       :overlay-style="{ maxWidth: '400px' }"
       :overlay-inner-style="{ backgroundColor: '#f0f5ff', padding: '16px' }"
     >
-      <button>自定义样式</button>
+      <Button>自定义样式</Button>
     </Popconfirm>
 
     <!-- 隐藏箭头 -->
     <Popconfirm title="无箭头气泡框" ok-text="确定" cancel-text="取消" :arrow="false">
-      <button>隐藏箭头</button>
+      <Button>隐藏箭头</Button>
     </Popconfirm>
 
     <!-- 箭头指向中心 -->
     <Popconfirm title="箭头指向中心" ok-text="确定" cancel-text="取消" :arrow="{ pointAtCenter: true }">
-      <button>箭头指向中心</button>
+      <Button>箭头指向中心</Button>
     </Popconfirm>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm, Button } from 'ant-design-hmfw'
 </script>

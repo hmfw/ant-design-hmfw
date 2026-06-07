@@ -1,5 +1,5 @@
 <template>
-  <button @click="open = true">打开对话框</button>
+  <Button @click="open = true">打开对话框</Button>
   <Modal v-model:open="open" title="基础对话框" @ok="handleOk" @cancel="handleCancel">
     <p>对话框内容</p>
     <p>对话框内容</p>
@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Modal } from 'ant-design-hmfw'
+import { Modal, Button } from 'ant-design-hmfw'
 
 const open = ref(false)
 

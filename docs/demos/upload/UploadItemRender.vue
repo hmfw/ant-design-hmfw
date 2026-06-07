@@ -46,12 +46,12 @@ const itemRender = (_originNode: any, file: UploadFile, _list: UploadFile[], act
   <div class="custom-upload-item" data-status={file.status}>
     <span class="custom-upload-item-name">📎 {file.name}</span>
     <span class="custom-upload-item-status">{file.status}</span>
-    <button class="custom-upload-item-btn" onClick={actions.preview}>
+    <Button class="custom-upload-item-btn" onClick={actions.preview}>
       预览
-    </button>
-    <button class="custom-upload-item-btn danger" onClick={actions.remove}>
+    </Button>
+    <Button class="custom-upload-item-btn danger" onClick={actions.remove}>
       删除
-    </button>
+    </Button>
   </div>
 )
 </script>

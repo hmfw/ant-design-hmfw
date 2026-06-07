@@ -7,13 +7,13 @@
       title="确定要执行此操作吗？"
       @confirm="() => console.log(placement)"
     >
-      <button>{{ placement }}</button>
+      <Button>{{ placement }}</Button>
     </Popconfirm>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm, Button } from 'ant-design-hmfw'
 
 const placements = [
   'topLeft',

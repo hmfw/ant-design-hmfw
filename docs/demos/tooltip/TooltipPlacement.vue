@@ -1,15 +1,15 @@
 <template>
   <div style="display: flex; gap: 8px; flex-wrap: wrap">
     <Tooltip v-for="placement in placements" :key="placement" :placement="placement" title="提示文字">
-      <button style="width: 100px">
+      <Button style="width: 100px">
         {{ placement }}
-      </button>
+      </Button>
     </Tooltip>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Tooltip } from 'ant-design-hmfw'
+import { Tooltip, Button } from 'ant-design-hmfw'
 
 const placements = [
   'topLeft',

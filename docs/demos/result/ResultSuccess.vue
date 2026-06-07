@@ -5,14 +5,14 @@
     sub-title="订单号：2017182818828182881，云顾问正在对接中，请耐心等待。"
   >
     <template #extra>
-      <button @click="onGoOrder">查看订单</button>
-      <button @click="onBuyAgain">再次购买</button>
+      <Button @click="onGoOrder">查看订单</Button>
+      <Button @click="onBuyAgain">再次购买</Button>
     </template>
   </Result>
 </template>
 
 <script setup lang="ts">
-import { Result } from 'ant-design-hmfw'
+import { Result, Button } from 'ant-design-hmfw'
 
 function onGoOrder() {
   console.log('查看订单')

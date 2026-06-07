@@ -9,12 +9,12 @@
       :ok-button-props="{ loading: loading1 }"
       @confirm="handleAsyncConfirm"
     >
-      <button>异步提交</button>
+      <Button>异步提交</Button>
     </Popconfirm>
 
     <!-- 禁用按钮 -->
     <Popconfirm title="确定要执行吗？" ok-text="确定" cancel-text="取消" :ok-button-props="{ disabled: true }">
-      <button>确定按钮禁用</button>
+      <Button>确定按钮禁用</Button>
     </Popconfirm>
 
     <!-- 自定义按钮属性 -->
@@ -27,14 +27,14 @@
       :cancel-button-props="{ disabled: loading2 }"
       @confirm="handleForceDelete"
     >
-      <button>强制删除</button>
+      <Button>强制删除</Button>
     </Popconfirm>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm, Button } from 'ant-design-hmfw'
 
 const loading1 = ref(false)
 const loading2 = ref(false)

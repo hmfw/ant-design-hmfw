@@ -8,7 +8,7 @@
       cancel-text="取消"
       @confirm="() => console.log('hover 确认')"
     >
-      <button>鼠标悬停触发</button>
+      <Button>鼠标悬停触发</Button>
     </Popconfirm>
 
     <!-- click 触发（默认） -->
@@ -19,7 +19,7 @@
       cancel-text="取消"
       @confirm="() => console.log('click 确认')"
     >
-      <button>点击触发</button>
+      <Button>点击触发</Button>
     </Popconfirm>
 
     <!-- focus 触发 -->
@@ -30,7 +30,7 @@
       cancel-text="取消"
       @confirm="() => console.log('focus 确认')"
     >
-      <button>聚焦触发</button>
+      <Button>聚焦触发</Button>
     </Popconfirm>
 
     <!-- contextMenu 触发 -->
@@ -41,11 +41,11 @@
       cancel-text="取消"
       @confirm="() => console.log('contextMenu 确认')"
     >
-      <button>右键触发</button>
+      <Button>右键触发</Button>
     </Popconfirm>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm, Button } from 'ant-design-hmfw'
 </script>

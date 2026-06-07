@@ -4,12 +4,12 @@
 
     <div style="display: flex; gap: 20px; margin-top: 20px">
       <Tooltip :title="tooltipContent" placement="top" :open="open">
-        <button @click="open = !open">{{ open ? '关闭' : '打开' }}提示</button>
+        <Button @click="open = !open">{{ open ? '关闭' : '打开' }}提示</Button>
       </Tooltip>
 
-      <button @click="toggleContent">
+      <Button @click="toggleContent">
         {{ isLongContent ? '切换为短内容' : '切换为长内容' }}
-      </button>
+      </Button>
     </div>
 
     <p style="margin-top: 20px; color: #666; font-size: 12px">提示：打开浮层后切换内容长度，浮层位置会自动调整</p>
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Tooltip } from 'ant-design-hmfw'
+import { Tooltip, Button } from 'ant-design-hmfw'
 
 const open = ref(false)
 const isLongContent = ref(false)

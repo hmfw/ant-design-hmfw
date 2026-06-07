@@ -5,12 +5,12 @@
     </Sider>
     <Layout>
       <Header style="background: #fff; padding: 0 24px; line-height: 64px; display: flex; align-items: center">
-        <button
+        <Button
           style="border: none; background: none; cursor: pointer; font-size: 18px; padding: 8px"
           @click="collapsed = !collapsed"
         >
           {{ collapsed ? '☰' : '✕' }}
-        </button>
+        </Button>
         <span style="margin-left: 16px">Custom Trigger in Header</span>
       </Header>
       <Content style="padding: 24px; background: #f5f5f5">
@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Layout, Header, Content, Sider } from 'ant-design-hmfw'
+import { Layout, Header, Content, Sider, Button } from 'ant-design-hmfw'
 
 const collapsed = ref(false)
 </script>

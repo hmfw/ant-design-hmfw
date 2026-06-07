@@ -1,12 +1,12 @@
 <template>
   <div>
     <div style="margin-bottom: 16px">
-      <button
+      <Button
         style="padding: 8px 16px; cursor: pointer; border: 1px solid #d9d9d9; border-radius: 4px; background: #fff"
         @click="toggleTheme"
       >
         切换主题 (当前: {{ theme === 'dark' ? '暗色' : '亮色' }})
-      </button>
+      </Button>
     </div>
     <Layout style="min-height: 400px">
       <Sider :theme="theme" collapsible>
@@ -36,6 +36,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Layout, Header, Content, Sider } from '../../../components/layout'
+import { Button } from 'ant-design-hmfw'
 
 const theme = ref<'light' | 'dark'>('dark')
 

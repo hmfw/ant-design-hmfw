@@ -3,15 +3,15 @@
     <Spin :percent="percent" />
     <Spin :percent="percent" size="large" />
     <Spin percent="auto" :spinning="autoSpinning" />
-    <button @click="toggleAuto">
+    <Button @click="toggleAuto">
       {{ autoSpinning ? '停止 auto' : '开始 auto' }}
-    </button>
+    </Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { Spin } from 'ant-design-hmfw'
+import { Spin, Button } from 'ant-design-hmfw'
 
 // 受控 percent：手动在 0~100 之间循环递增，演示环形进度指示器。
 const percent = ref(0)

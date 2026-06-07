@@ -1,11 +1,11 @@
 <template>
   <Space :size="[8, 16]" wrap>
-    <button v-for="n in 20" :key="n" class="demo-btn">按钮 {{ n }}</button>
+    <Button v-for="n in 20" :key="n" class="demo-btn">按钮 {{ n }}</Button>
   </Space>
 </template>
 
 <script setup lang="ts">
-import { Space } from 'ant-design-hmfw'
+import { Space, Button } from 'ant-design-hmfw'
 </script>
 
 <style scoped>

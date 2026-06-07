@@ -1,7 +1,7 @@
 <template>
   <ConfigProvider :theme="theme">
     <div style="display: flex; flex-direction: column; gap: 12px">
-      <button
+      <Button
         style="
           background: var(--hmfw-color-primary);
           color: white;
@@ -12,14 +12,14 @@
         "
       >
         主色按钮
-      </button>
+      </Button>
       <p style="color: var(--hmfw-color-primary)">主色文字</p>
     </div>
   </ConfigProvider>
 </template>
 
 <script setup lang="ts">
-import { ConfigProvider } from 'ant-design-hmfw'
+import { ConfigProvider, Button } from 'ant-design-hmfw'
 
 const theme = {
   token: {
