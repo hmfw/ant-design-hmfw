@@ -787,6 +787,8 @@ import { Button } from 'ant-design-hmfw'
 | href | 点击跳转的地址，指定此属性后按钮渲染为 a 标签 | `string` | - |
 | target | 相当于 a 标签的 target 属性，href 存在时生效 | `string` | - |
 | autoInsertSpace | 是否在两个汉字之间插入空格 | `boolean` | `true` |
+| classNames | 语义化结构 className（细粒度控制图标、loading 等子元素） | `{ root?: string; icon?: string; loading?: string }` | - |
+| styles | 语义化结构 style | `{ root?: CSSProperties; icon?: CSSProperties; loading?: CSSProperties }` | - |
 
 ### Events
 
@@ -859,11 +861,15 @@ import { Card, CardGrid, CardMeta } from 'ant-design-hmfw'
 | bordered | 是否有边框 | `boolean` | `true` |
 | variant | 边框变体（优先于 `bordered`） | `'borderless' \| 'outlined'` | - |
 | type | 卡片类型，可设为 `inner` | `'inner'` | - |
-| loading | 当卡片内容还在加载中时，可以用 loading 展示一个占位 | `boolean` | `false` |
+| loading | 当卡片内容还在加载中时，可以用 loading 展示一个占位 | `boolean \| { avatar?: boolean; paragraph?: { rows?: number } }` | `false` |
 | size | 卡片的尺寸 | `'default' \| 'small'` | `'default'` |
 | hoverable | 鼠标移过时可浮起 | `boolean` | `false` |
 | bodyStyle | 内容区域自定义样式 | `CSSProperties` | - |
 | headStyle | 标题区域自定义样式 | `CSSProperties` | - |
+| tabList | 标签页列表 | `Array<{ key: string; label: string; disabled?: boolean }>` | - |
+| activeTabKey | 当前激活标签的 key | `string` | - |
+| defaultActiveTabKey | 默认激活标签的 key | `string` | - |
+| onTabChange | 标签切换回调 | `(key: string) => void` | - |
 
 **Card.Grid Props**
 
@@ -878,6 +884,13 @@ import { Card, CardGrid, CardMeta } from 'ant-design-hmfw'
 | title | 标题内容 | `string` | - |
 | description | 描述内容 | `string` | - |
 | avatar | 头像/图标 | `string \| slot` | - |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| tabChange | 标签切换时触发 | `(key: string) => void` |
+| update:activeTabKey | 标签切换时触发（支持 v-model） | `(key: string) => void` |
 
 ### 示例
 
@@ -1035,7 +1048,7 @@ import { Cascader } from 'ant-design-hmfw'
 | multiple | 支持多选 | `boolean` | `false` |
 | showSearch | 在选择框中显示搜索框 | `boolean` | `false` |
 | changeOnSelect | 当此项为 true 时，点选每级菜单选项值都会发生变化 | `boolean` | `false` |
-| displayRender | 选择后展示的渲染函数 | `(labels: string[], selectedOptions?: CascaderOption[]) => string` | - |
+| displayRender | 选择后展示的渲染函数 | `(labels: string[], selectedOptions?: CascaderOption[]) => string \| VNode` | - |
 | fieldNames | 自定义 options 中 label value children 的字段 | `{ label?: string; value?: string; children?: string }` | `{ label: 'label', value: 'value', children: 'children' }` |
 | open(v-model) | 控制浮层显隐 | `boolean` | - |
 | defaultOpen | 默认展开浮层 | `boolean` | `false` |
@@ -1638,7 +1651,7 @@ import { DatePicker } from 'ant-design-hmfw'
 | placeholder | 输入框提示文字 | `string` | - |
 | allowClear | 是否显示清除按钮 | `boolean` | `true` |
 | picker | 设置选择器类型 | `'date' \| 'month' \| 'year' \| 'quarter'` | `'date'` |
-| showTime | 增加时间选择功能 | `boolean` | `false` |
+| showTime | 增加时间选择功能，可配置时分秒步长 | `boolean \| { format?, hourStep?, minuteStep?, secondStep? }` | `false` |
 | showToday | 是否展示"今天"按钮 | `boolean` | `true` |
 | showNow | 是否展示"此刻"按钮（优先于 showToday） | `boolean` | `false` |
 | disabledDate | 不可选择的日期 | `(dateStr: string) => boolean` | - |
@@ -1923,6 +1936,7 @@ import { Drawer } from 'ant-design-hmfw'
 | getContainer | 挂载节点，`false` 时渲染在当前位置 | `string \| HTMLElement \| () => HTMLElement \| false` | `body` |
 | rootClassName | 根容器（含遮罩）的类名 | `string` | - |
 | rootStyle | 根容器（含遮罩）的样式 | `CSSProperties` | - |
+| contentWrapperStyle | 抽屉内容包裹层的样式 | `CSSProperties` | - |
 | bodyStyle | 抽屉内容部分的样式 | `CSSProperties` | - |
 | headerStyle | 抽屉头部的样式 | `CSSProperties` | - |
 | footerStyle | 抽屉页脚的样式 | `CSSProperties` | - |
@@ -2412,6 +2426,7 @@ import { Form, FormItem, useForm } from 'ant-design-hmfw'
 | validateTrigger | 统一设置字段触发验证的时机 | `'blur' \| 'change' \| ('blur' \| 'change')[]` | `'change'` |
 | requiredMark | 必选样式：`true` 显示星号，`false` 不显示，`'optional'` 反向标注「可选」 | `boolean \| 'optional'` | `true` |
 | scrollToFirstError | 提交失败自动滚动到第一个错误字段 | `boolean` | `false` |
+| preserve | 字段卸载时是否保留字段值 | `boolean` | `false` |
 
 **FormItem Props**
 
@@ -2454,6 +2469,9 @@ import { Form, FormItem, useForm } from 'ant-design-hmfw'
 | `() => void` | 重置一组字段的校验信息 |  |  |
 | `() => void` | 触发表单提交，效果等同 `<button type="submit">` |  |  |
 | `() => object` | 取当前表单全部字段值 |  |  |
+| `(nameList?: string[]) => { name: string, errors: string[] }[]` | 获取所有字段的错误信息 |  |  |
+| `(nameList?: string[], allTouched?: boolean) => boolean` | 检查字段是否被用户操作过 |  |  |
+| `(name: string) => void` | 滚动到指定字段位置 |  |  |
 
 ### Events
 
@@ -3200,6 +3218,8 @@ import { Input, InputPassword, TextArea, InputSearch } from 'ant-design-hmfw'
 | readonly | 是否只读 | `boolean` | `false` |
 | id | 输入框的 id | `string` | - |
 | rootClassName | 根节点的 className | `string` | - |
+| classNames | 细粒度样式类名 | `{ affixWrapper?: string; prefix?: string; suffix?: string; input?: string; count?: string }` | - |
+| styles | 细粒度样式对象 | `{ affixWrapper?: CSSProperties; prefix?: CSSProperties; suffix?: CSSProperties; input?: CSSProperties; count?: CSSProperties }` | - |
 
 **InputPassword Props**
 
@@ -3217,6 +3237,8 @@ import { Input, InputPassword, TextArea, InputSearch } from 'ant-design-hmfw'
 | autoSize | 自适应内容高度，可设置为 true \| false 或对象 | `boolean \| { minRows?: number; maxRows?: number }` | `false` |
 | allowClear | 可以点击清除图标删除内容 | `boolean \| { clearIcon?: VNode; disabled?: boolean }` | `false` |
 | showCount | 是否展示字数，支持自定义格式化 | `boolean \| { formatter: (info) => VNode \| string }` | `false` |
+| classNames | 细粒度样式类名 | `{ textarea?: string; count?: string }` | - |
+| styles | 细粒度样式对象 | `{ textarea?: CSSProperties; count?: CSSProperties }` | - |
 
 **InputSearch Props**
 
@@ -3539,6 +3561,9 @@ import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
 | footer | 列表底部 | `string \| VNode` | - |
 | locale | 默认文案设置，目前包括空数据文案 | `{ emptyText?: string \| VNode }` | - |
 | loadMore | 加载更多 | `VNode` | - |
+| virtual | 是否开启虚拟滚动 | `boolean` | `false` |
+| height | 虚拟滚动容器高度（开启 virtual 时必需） | `number \| string` | - |
+| itemHeight | 虚拟滚动每项高度 | `number` | `48` |
 
 **PaginationConfig**
 
@@ -3661,12 +3686,12 @@ import { Menu } from 'ant-design-hmfw'
 | defaultSelectedKeys | 初始选中的菜单项 key 数组 | `string[]` | `[]` |
 | openKeys | 当前展开的 SubMenu 菜单项 key 数组 | `string[]` | - |
 | defaultOpenKeys | 初始展开的 SubMenu 菜单项 key 数组 | `string[]` | `[]` |
-| inlineCollapsed | inline 时菜单是否收起状态 | `boolean` | `false` |
-| inlineIndent | inline 模式的菜单缩进宽度 | `number` | `24` |
+| inlineCollapsed | inline 时菜单是否收起状态，收起时会自动显示 Tooltip | `boolean` | `false` |
+| inlineIndent | inline 模式的菜单缩进宽度（单位：px），分组内项目会递增 depth 正确计算缩进 | `number` | `24` |
 | multiple | 是否允许多选 | `boolean` | `false` |
 | selectable | 是否允许选中 | `boolean` | `true` |
 | expandIcon | 自定义展开图标 | `VNode \| ((props: { isOpen: boolean }) => VNode)` | - |
-| triggerSubMenuAction | SubMenu 展开/关闭的触发行为 | `'hover' \| 'click'` | `'hover'` |
+| triggerSubMenuAction | SubMenu 展开/关闭的触发行为，支持鼠标悬停或点击 | `'hover' \| 'click'` | `'hover'` |
 
 **ItemType**
 
@@ -3674,10 +3699,10 @@ import { Menu } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | key | 唯一标识 | `string` | - |
 | label | 菜单项标题 | `string` | - |
-| icon | 图标 | `VNode \| (() => VNode)` | - |
+| icon | 图标，支持 VNode 或返回 VNode 的函数 | `VNode \| (() => VNode)` | - |
 | disabled | 是否禁用 | `boolean` | `false` |
-| danger | 是否为危险选项 | `boolean` | `false` |
-| title | 设置收缩时展示的悬浮标题 | `string` | - |
+| danger | 是否为危险选项，用于删除等操作 | `boolean` | `false` |
+| title | 设置收缩时展示的悬浮标题，inlineCollapsed 时显示为 Tooltip | `string` | - |
 | key | 唯一标识 | `string` | - |
 | label | 子菜单标题 | `string` | - |
 | icon | 图标 | `VNode \| (() => VNode)` | - |
@@ -3690,7 +3715,7 @@ import { Menu } from 'ant-design-hmfw'
 | type | 类型标识 | `'group'` | - |
 | key | 唯一标识 | `string` | - |
 | label | 分组标题 | `string` | - |
-| children | 分组内的菜单项 | `ItemType[]` | - |
+| children | 分组内的菜单项，深度会递增以正确计算 inline 模式缩进 | `ItemType[]` | - |
 
 ### Events
 
@@ -3822,7 +3847,7 @@ import { message } from 'ant-design-hmfw'
 | key | 当前提示的唯一标识，相同 key 会更新已有提示 | `string \| number` | - |
 | style | 自定义内联样式 | `CSSProperties` | - |
 | className | 自定义 CSS class | `string` | - |
-| pauseOnHover | 悬停时是否暂停计时器 | `boolean` | `true` |
+| pauseOnHover | 悬停时是否暂停计时器，默认为全局配置的 `pauseOnHover` | `boolean` | `true` |
 | onClick | 点击时触发的回调函数 | `(e: MouseEvent) => void` | - |
 | onClose | 关闭时触发的回调函数 | `() => void` | - |
 
@@ -3830,11 +3855,12 @@ import { message } from 'ant-design-hmfw'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| top | 消息距离顶部的位置 | `string \| number` | `8` |
+| top | 消息距离顶部的位置，单位 px | `string \| number` | `8` |
 | duration | 默认自动关闭延时，单位秒 | `number` | `3` |
 | maxCount | 最大显示数，超过限制时关闭最早的提示 | `number` | - |
 | getContainer | 配置渲染节点的输出位置 | `() => HTMLElement` | `() => document.body` |
-| pauseOnHover | 悬停时是否暂停计时器 | `boolean` | `true` |
+| pauseOnHover | 悬停时是否暂停计时器（全局配置，单条消息可覆盖） | `boolean` | `true` |
+| prefixCls | 提示组件 class 前缀（预留，当前版本暂未实现） | `string` | `'hmfw-message'` |
 
 ### 示例
 
@@ -3953,6 +3979,9 @@ import { Modal } from 'ant-design-hmfw'
 | focusTriggerAfterClose | 关闭后是否将焦点还给打开前的元素 | `boolean` | `true` |
 | bodyStyle | body 内联样式 | `CSSProperties` | - |
 | maskStyle | mask 内联样式 | `CSSProperties` | - |
+| classNames | 细粒度控制各部分的 class | `{ header?: string; body?: string; footer?: string; mask?: string; wrapper?: string; content?: string }` | - |
+| styles | 细粒度控制各部分的 style | `{ header?: CSSProperties; body?: CSSProperties; footer?: CSSProperties; mask?: CSSProperties; wrapper?: CSSProperties; content?: CSSProperties }` | - |
+| modalRender | 自定义渲染对话框容器 | `(node: VNode) => VNode` | - |
 
 **静态方法**
 
@@ -3960,7 +3989,7 @@ import { Modal } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | title | 标题 | `string \| number \| VNode \| () => VNode` | - |
 | content | 内容 | `string \| number \| VNode \| () => VNode` | - |
-| icon | 自定义图标，传 `null` 隐藏 | `IconComponent \| null` | 按 `type` 自动选择 |
+| icon | 自定义图标，传 `null` 隐藏；支持 VNode | `IconComponent \| VNode \| null` | 按 `type` 自动选择 |
 | type | 类型；决定默认图标和 `okCancel` 默认值 | `'info' \| 'success' \| 'error' \| 'warning' \| 'confirm'` | `'confirm'` |
 | okCancel | 是否显示取消按钮（默认仅 `confirm` 显示） | `boolean` | - |
 | okText / cancelText / okType | 同 Modal Props | - | - |
@@ -4088,6 +4117,7 @@ import { notification } from 'ant-design-hmfw'
 | style | 自定义内联样式 | `CSSProperties` | - |
 | className | 自定义 CSS class | `string` | - |
 | pauseOnHover | 鼠标悬停时暂停自动关闭 | `boolean` | `true` |
+| showProgress | 显示倒计时进度条 | `boolean` | `false` |
 | role | 可访问性角色属性 | `'alert' \| 'status'` | `'alert'` |
 
 **全局配置方法**
@@ -4101,6 +4131,7 @@ import { notification } from 'ant-design-hmfw'
 | maxCount | 最大显示数，超过限制时，最早的消息会被自动关闭 | `number` | - |
 | getContainer | 配置渲染节点的输出位置 | `() => HTMLElement` | `() => document.body` |
 | pauseOnHover | 鼠标悬停时暂停自动关闭 | `boolean` | `true` |
+| showProgress | 全局显示倒计时进度条 | `boolean` | `false` |
 | closeIcon | 自定义关闭图标 | `VNode \| () => VNode` | - |
 | rtl | 是否开启 RTL 模式 | `boolean` | `false` |
 
@@ -4222,9 +4253,9 @@ import { Pagination } from 'ant-design-hmfw'
 | simple | 当添加该属性时，显示为简单分页 | `boolean` | `false` |
 | disabled | 禁用分页 | `boolean` | `false` |
 | hideOnSinglePage | 只有一页时是否隐藏分页器 | `boolean` | `false` |
-| itemRender | 自定义页码的结构 | `(page: number, type: 'page' \| 'prev' \| 'next' \| 'jump-prev' \| 'jump-next', originalElement: VNode) => VNode` | - |
+| itemRender | 自定义页码的结构，可以自定义上一页/下一页文本、页码样式等 | `(page: number, type: 'page' \| 'prev' \| 'next' \| 'jump-prev' \| 'jump-next', originalElement: VNode) => VNode` | - |
 | responsive | 当屏幕尺寸小于 576px 时，自动变为 small | `boolean` | `false` |
-| align | 对齐方式 | `'start' \| 'center' \| 'end'` | - |
+| align | 分页器的对齐方式，可选 `start`（左对齐）、`center`（居中）、`end`（右对齐） | `'start' \| 'center' \| 'end'` | - |
 
 ### Events
 
@@ -4635,7 +4666,7 @@ import { QRCode } from 'ant-design-hmfw'
 
 导入：
 ```ts
-import { Radio, RadioGroup } from 'ant-design-hmfw'
+import { Radio, RadioGroup, RadioButton } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -5125,6 +5156,9 @@ import { Select } from 'ant-design-hmfw'
 | labelRender | 自定义选中项渲染 | `(props: LabeledValue) => VNode` | - |
 | tagRender | 自定义 tag 渲染（multiple/tags 模式） | `(props: { label, value, closable, onClose }) => VNode` | - |
 | fieldNames | 自定义字段名 | `{ label?: string; value?: string; options?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
+| virtual | 启用虚拟滚动（推荐选项数 > 100 时使用） | `boolean` | `false` |
+| listHeight | 下拉列表高度（启用虚拟滚动时） | `number` | `256` |
+| listItemHeight | 下拉列表每项高度（启用虚拟滚动时） | `number` | `32` |
 
 **SelectOption**
 
@@ -5565,6 +5599,123 @@ import { Spin } from 'ant-design-hmfw'
 
 ---
 
+## Statistic 统计数值
+
+展示统计数值。
+
+导入：
+```ts
+import { Statistic, Countdown } from 'ant-design-hmfw'
+```
+
+### Props
+
+**Statistic Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| title | 标题 | `string \| VNode` | - |
+| value | 数值 | `string \| number` | - |
+| precision | 数值精度 | `number` | - |
+| prefix | 前缀 | `string \| VNode` | - |
+| suffix | 后缀 | `string \| VNode` | - |
+| valueStyle | 数值样式 | `CSSProperties` | - |
+| groupSeparator | 千分位分隔符 | `string` | `,` |
+| decimalSeparator | 小数点分隔符 | `string` | `.` |
+| loading | 加载状态 | `boolean` | `false` |
+| valueRender | 自定义渲染数值 | `(value: string) => VNode` | - |
+
+**Countdown Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| title | 标题 | `string \| VNode` | - |
+| value | 目标时间（时间戳或 Date） | `number \| Date` | - |
+| format | 时间格式 | `string` | `HH:mm:ss` |
+| prefix | 前缀 | `string \| VNode` | - |
+| suffix | 后缀 | `string \| VNode` | - |
+| valueStyle | 数值样式 | `CSSProperties` | - |
+| loading | 加载状态 | `boolean` | `false` |
+| valueRender | 自定义渲染数值 | `(value: string) => VNode` | - |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| finish | 倒计时完成时触发 | `() => void` |
+| change | 倒计时变化时触发 | `(value: number) => void` |
+
+### 示例
+
+基础用法
+
+```vue
+<template>
+  <div class="statistic-demo">
+    <Space :size="32">
+      <Statistic title="用户数" :value="112893" />
+      <Statistic title="账户余额（元）" :value="112893" :precision="2" />
+      <Statistic title="活跃用户" :value="93" suffix="/ 100" />
+    </Space>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { Statistic, Space } from '../../../components'
+</script>
+
+<style scoped>
+.statistic-demo {
+  padding: 24px;
+  background: #fafafa;
+}
+</style>
+```
+
+单位设置
+
+```vue
+<template>
+  <div class="statistic-demo">
+    <Space :size="32">
+      <Statistic
+        title="账户余额"
+        :value="112893"
+        :precision="2"
+        prefix="$"
+      />
+      <Statistic
+        title="增长率"
+        :value="9.3"
+        :precision="2"
+        suffix="%"
+      />
+      <Statistic
+        title="价格"
+        :value="568.08"
+        :precision="2"
+        prefix="¥"
+        :value-style="{ color: '#3f8600' }"
+      />
+    </Space>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { Statistic, Space } from '../../../components'
+</script>
+
+<style scoped>
+.statistic-demo {
+  padding: 24px;
+  background: #fafafa;
+}
+</style>
+```
+
+
+---
+
 ## Steps 步骤条
 
 引导用户按照流程完成任务的导航条。
@@ -5813,7 +5964,9 @@ import { Table } from 'ant-design-hmfw'
 | size | 表格大小 | `'default' \| 'middle' \| 'small'` | `'default'` |
 | bordered | 是否展示外边框和列边框 | `boolean` | `false` |
 | showHeader | 是否显示表头 | `boolean` | `true` |
+| sticky | 设置粘性头部和滚动条 | `boolean \| { offsetHeader?: number, offsetScroll?: number }` | `false` |
 | scroll | 表格是否可滚动 | `{ x?: number \| string, y?: number \| string }` | - |
+| summary | 总结栏 | `(pageData: any[]) => VNode` | - |
 | title | 表格标题 | `string \| ((data: any[]) => VNode)` | - |
 | footer | 表格页脚 | `string \| ((data: any[]) => VNode)` | - |
 | locale | 国际化配置 | `{ emptyText?: string }` | - |
@@ -6367,10 +6520,11 @@ import { Tooltip } from 'ant-design-hmfw'
 | open (v-model) | 用于手动控制浮层显隐 | `boolean` | - |
 | defaultOpen | 默认是否显示（非受控） | `boolean` | `false` |
 | color | 背景颜色 | `string` | - |
-| arrow | 是否显示箭头，可对象配置 | `boolean \| { pointAtCenter?: boolean }` | `true` |
+| arrow | 是否显示箭头，可对象配置 `{ pointAtCenter?: boolean }` 使箭头指向元素中心 | `boolean \| { pointAtCenter?: boolean }` | `true` |
 | mouseEnterDelay | 鼠标移入后延时显示，单位秒 | `number` | `0.1` |
 | mouseLeaveDelay | 鼠标移出后延时隐藏，单位秒 | `number` | `0.1` |
 | disabled | 禁用 tooltip | `boolean` | `false` |
+| fresh | 强制重新计算浮层位置（变化时触发重新定位） | `number \| string` | - |
 | autoAdjustOverflow | 浮层超出视口时自动翻转方向 | `boolean` | `true` |
 | zIndex | 自定义浮层 z-index | `number` | `1070` |
 | destroyOnHidden | 隐藏时销毁浮层 DOM | `boolean` | `false` |
@@ -6623,6 +6777,7 @@ import { Transfer } from 'ant-design-hmfw'
 | showSelectAll | 是否展示全选勾选框 | `boolean` | `true` |
 | selectAllLabels | 自定义全选文案 | `SelectAllLabel[]` | - |
 | oneWay | 单向模式 | `boolean` | `false` |
+| draggable | 是否允许通过拖拽对右侧列表项排序 | `boolean` | `false` |
 | pagination | 分页配置 | `boolean \| PaginationType` | - |
 | status | 校验状态 | `'error' \| 'warning'` | - |
 | locale | 文案配置 | `Partial<TransferLocale>` | - |
@@ -6647,6 +6802,7 @@ import { Transfer } from 'ant-design-hmfw'
 | selectChange | 选中项变化时触发 | `(sourceSelectedKeys: TransferKey[], targetSelectedKeys: TransferKey[])` |
 | search | 搜索框内容变化时触发 | `(direction: TransferDirection, value: string)` |
 | scroll | 列表滚动时触发 | `(direction: TransferDirection, e: Event)` |
+| reorder | 右侧列表通过拖拽重新排序后触发 | `(info: TransferReorderInfo)` |
 
 ### 示例
 
@@ -6740,6 +6896,7 @@ import { Tree, DirectoryTree } from 'ant-design-hmfw'
 | selectable | 是否可选中 | `boolean` | `true` |
 | disabled | 将树禁用 | `boolean` | `false` |
 | draggable | 节点可拖拽 | `boolean \| (node) => boolean \| { icon?, nodeDraggable? }` | `false` |
+| allowDrop | 是否允许拖放到目标节点，返回 `false` 阻止 | `({ dragNode, dropNode, dropPosition }) => boolean` | - |
 | showLine | 是否展示连接线 | `boolean \| { showLeafIcon }` | `false` |
 | showIcon | 是否展示节点图标 | `boolean` | `false` |
 | blockNode | 节点是否占据一行 | `boolean` | `false` |
@@ -6749,6 +6906,9 @@ import { Tree, DirectoryTree } from 'ant-design-hmfw'
 | switcherIcon | 自定义展开/收起图标 | `string \| ({ expanded, isLeaf }) => VNode` | - |
 | titleRender | 自定义节点标题渲染 | `(node) => VNode` | - |
 | fieldNames | 自定义节点 title、key、children 的字段 | `{ title?, key?, children? }` | - |
+| virtual | 是否开启虚拟滚动 | `boolean` | `false` |
+| height | 虚拟滚动容器高度（开启 virtual 时必需） | `number \| string` | - |
+| itemHeight | 虚拟滚动每项高度 | `number` | `28` |
 | rootClassName | 根节点 className | `string` | - |
 | classNames | 语义化 class（`root`/`item`/`itemIcon`/`itemTitle`/`itemSwitcher`） | `object` | - |
 | styles | 语义化内联样式（同上 key） | `object` | - |
@@ -7052,8 +7212,8 @@ import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'
 | delete | 删除线 | `boolean` | `false` |
 | strong | 加粗 | `boolean` | `false` |
 | italic | 斜体 | `boolean` | `false` |
-| copyable | 是否可复制，对象形式 `{ text?, onCopy? }` | `boolean \| CopyableConfig` | `false` |
-| ellipsis | 单行省略 | `boolean` | `false` |
+| copyable | 是否可复制，对象形式 `{ text?, onCopy?, tooltips?, icon? }` | `boolean \| CopyableConfig` | `false` |
+| ellipsis | 单行省略；对象形式 `{ rows?, tooltip?, onEllipsis? }` 支持多行省略、悬停 Tooltip 与回调 | `boolean \| EllipsisConfig` | `false` |
 
 **Title Props**
 
@@ -7067,6 +7227,23 @@ import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | href | 链接地址 | `string` | - |
 | target | 链接打开方式 | `string` | - |
+
+**CopyableConfig**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| text | 自定义复制内容 | `string` | 节点文本 |
+| onCopy | 复制回调 | `(e: MouseEvent) => void` | - |
+| tooltips | Tooltip 文案 `[复制前, 复制后]`，传 `false` 关闭 Tooltip | `false \| [string, string]` | 跟随 locale |
+| icon | 自定义图标 `[复制前, 复制后]` | `[VNode, VNode]` | - |
+
+**EllipsisConfig**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| rows | 最多显示行数 | `number` | `1` |
+| tooltip | 省略时显示 Tooltip：`true` 用纯文本，字符串/数字自定义文案，对象传入完整 `TooltipProps` | `boolean \| string \| number \| TooltipProps` | - |
+| onEllipsis | 省略状态变化回调 | `(ellipsis: boolean) => void` | - |
 
 ### 示例
 
@@ -7144,6 +7321,8 @@ import { Upload, UploadDragger } from 'ant-design-hmfw'
 | onRemove | 删除文件的拦截钩子，返回 `false` 阻止删除 | `(file: UploadFile) => boolean \| Promise<boolean>` | - |
 | openFileDialogOnClick | 点击触发器是否弹出文件选择框 | `boolean` | `true` |
 | method | 上传请求 HTTP 方法 | `string` | `'post'` |
+| isImageUrl | 自定义判断是否为图片以决定是否显示缩略图 | `(file: UploadFile) => boolean` | 内置：扩展名 + MIME 检测 |
+| itemRender | 自定义文件项渲染 | `(originNode, file, fileList, actions) => VNode` | - |
 
 **UploadFile**
 
