@@ -111,5 +111,30 @@ describe('Icon Utils', () => {
         expect(typeof icon.component).toBe('function')
       })
     })
+
+    // P2: 新增覆盖
+    it('resolves -filled icon names to Filled component variants', () => {
+      const icons = getAllIcons()
+      const bellFilled = icons.find(i => i.name === 'bell-filled')
+      const bellOutlined = icons.find(i => i.name === 'bell')
+      expect(bellFilled).toBeDefined()
+      expect(bellOutlined).toBeDefined()
+      // outlined 与 filled 必须是不同的组件
+      expect(bellFilled!.component).not.toBe(bellOutlined!.component)
+    })
+
+    it('includes the new AntD v6 sync icons', () => {
+      const icons = getAllIcons()
+      const names = icons.map(i => i.name)
+      const expected = [
+        'calendar', 'clock-circle', 'mail', 'phone', 'bell',
+        'star', 'heart', 'lock', 'unlock', 'global',
+        'arrow-up', 'arrow-down', 'caret-up',
+        'copy', 'reload', 'sync',
+      ]
+      expected.forEach(name => {
+        expect(names).toContain(name)
+      })
+    })
   })
 })

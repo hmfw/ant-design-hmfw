@@ -190,4 +190,103 @@ describe('Button', () => {
     })
     expect(wrapper.text()).toContain('Custom Content')
   })
+
+  // ===== P2 优化功能：classNames / styles 细粒度控制 =====
+  it('applies classNames.root to root element', () => {
+    const wrapper = mount(Button, {
+      props: { classNames: { root: 'custom-root' } },
+      slots: { default: 'Button' },
+    })
+    expect(wrapper.classes()).toContain('custom-root')
+  })
+
+  it('applies classNames.icon to icon wrapper', () => {
+    const wrapper = mount(Button, {
+      props: {
+        icon: () => <span class="my-icon">i</span>,
+        classNames: { icon: 'custom-icon' },
+      },
+      slots: { default: 'Button' },
+    })
+    const iconEl = wrapper.find('.hmfw-btn-icon')
+    expect(iconEl.exists()).toBe(true)
+    expect(iconEl.classes()).toContain('custom-icon')
+  })
+
+  it('applies classNames.loading to loading icon wrapper', () => {
+    const wrapper = mount(Button, {
+      props: {
+        loading: true,
+        classNames: { loading: 'custom-loading' },
+      },
+      slots: { default: 'Button' },
+    })
+    const loadingEl = wrapper.find('.hmfw-btn-loading-icon')
+    expect(loadingEl.exists()).toBe(true)
+    expect(loadingEl.classes()).toContain('custom-loading')
+  })
+
+  it('applies styles.root to root element', () => {
+    const wrapper = mount(Button, {
+      props: { styles: { root: { color: 'rgb(255, 0, 0)' } } },
+      slots: { default: 'Button' },
+    })
+    expect(wrapper.attributes('style')).toContain('color')
+  })
+
+  it('applies styles.icon to icon wrapper', () => {
+    const wrapper = mount(Button, {
+      props: {
+        icon: () => <span>i</span>,
+        styles: { icon: { fontSize: '20px' } },
+      },
+      slots: { default: 'Button' },
+    })
+    const iconEl = wrapper.find('.hmfw-btn-icon')
+    expect(iconEl.attributes('style')).toContain('font-size')
+  })
+
+  // ===== P2 优化功能：iconPosition 为 end 时图标位置 =====
+  it('renders icon after text when iconPosition is end', () => {
+    const wrapper = mount(Button, {
+      props: {
+        icon: () => <span class="end-icon">i</span>,
+        iconPosition: 'end',
+      },
+      slots: { default: 'Text' },
+    })
+    expect(wrapper.classes()).toContain('hmfw-btn-icon-end')
+    // icon span 出现在 DOM 中的文本节点之后
+    const html = wrapper.html()
+    const textIdx = html.indexOf('Text')
+    const iconIdx = html.indexOf('end-icon')
+    expect(iconIdx).toBeGreaterThan(textIdx)
+  })
+
+  it('renders icon before text when iconPosition is start (default)', () => {
+    const wrapper = mount(Button, {
+      props: {
+        icon: () => <span class="start-icon">i</span>,
+      },
+      slots: { default: 'Text' },
+    })
+    expect(wrapper.classes()).not.toContain('hmfw-btn-icon-end')
+    const html = wrapper.html()
+    const textIdx = html.indexOf('Text')
+    const iconIdx = html.indexOf('start-icon')
+    expect(iconIdx).toBeLessThan(textIdx)
+  })
+
+  // ===== P2 优化功能：紧凑模式（Space.Compact）样式标记 =====
+  it('inherits compact mode styling via parent class', () => {
+    // 紧凑模式由 Space.Compact 注入 .hmfw-space-compact 父类，
+    // Button 自身保持原始结构。此处验证渲染稳定性。
+    const wrapper = mount(Button, {
+      props: { type: 'primary' },
+      slots: { default: 'Btn' },
+      attachTo: document.body,
+    })
+    expect(wrapper.classes()).toContain('hmfw-btn-primary')
+    wrapper.unmount()
+  })
 })

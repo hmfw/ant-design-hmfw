@@ -1,5 +1,6 @@
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { usePrefixCls } from '../config-provider'
+import { Tooltip } from '../tooltip'
 import {
   baseTypographyProps,
   getTypographyClass,
@@ -7,6 +8,9 @@ import {
   wrapDecorations,
   extractText,
   useCopyable,
+  useEllipsisDetect,
+  getEllipsisConfig,
+  resolveEllipsisTooltipProps,
 } from './Base'
 
 export default defineComponent({
@@ -19,14 +23,23 @@ export default defineComponent({
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('typography')
     const { renderCopy } = useCopyable(prefixCls)
+    const elRef = ref<HTMLElement | null>(null)
+    const { isEllipsis } = useEllipsisDetect(elRef, props)
 
     return () => {
       const raw = slots.default?.()
       const children = wrapDecorations(props, raw)
-      const copyNode = renderCopy(props, () => extractText(raw))
+      const text = extractText(raw)
+      const copyNode = renderCopy(props, () => text)
 
-      return (
+      const ellipsisCfg = getEllipsisConfig(props.ellipsis)
+      const tooltipProps = isEllipsis.value
+        ? resolveEllipsisTooltipProps(ellipsisCfg.tooltip, text)
+        : null
+
+      const node = (
         <a
+          ref={elRef}
           class={getTypographyClass(prefixCls, props, `${prefixCls}-link`)}
           style={getEllipsisStyle(props)}
           href={props.disabled ? undefined : props.href}
@@ -37,6 +50,11 @@ export default defineComponent({
           {copyNode}
         </a>
       )
+
+      if (tooltipProps) {
+        return <Tooltip {...tooltipProps}>{node}</Tooltip>
+      }
+      return node
     }
   },
 })

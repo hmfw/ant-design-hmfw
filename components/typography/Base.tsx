@@ -1,7 +1,25 @@
-import { ref, type PropType, type VNode, type CSSProperties } from 'vue'
+import {
+  ref,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  nextTick,
+  type Ref,
+  type PropType,
+  type VNode,
+  type CSSProperties,
+} from 'vue'
 import { CheckOutlined } from '../icon'
 import { cls } from '../_utils'
-import type { TypographyType, CopyableConfig, EllipsisConfig } from './types'
+import { useLocale } from '../config-provider'
+import { Tooltip } from '../tooltip'
+import type {
+  TypographyType,
+  CopyableConfig,
+  EllipsisConfig,
+  EllipsisTooltipConfig,
+} from './types'
 
 // 内联 Copy 图标（图标系统暂无 CopyOutlined）
 const CopyIcon = () =>
@@ -25,12 +43,12 @@ export const baseTypographyProps = {
   delete: { type: Boolean, default: false },
   strong: { type: Boolean, default: false },
   italic: { type: Boolean, default: false },
-  /** 是否可复制，对象形式可配置复制内容/回调 */
+  /** 是否可复制，对象形式可配置复制内容/回调/tooltip 文案 */
   copyable: {
     type: [Boolean, Object] as PropType<boolean | CopyableConfig>,
     default: false,
   },
-  /** 省略：true 单行省略，或 { rows } 指定行数 */
+  /** 省略：true 单行省略，或 { rows, tooltip, onEllipsis } 完整配置 */
   ellipsis: {
     type: [Boolean, Object] as PropType<boolean | EllipsisConfig>,
     default: false,
@@ -56,6 +74,14 @@ function getEllipsisRows(ellipsis: boolean | EllipsisConfig | undefined): number
   if (!ellipsis) return 0
   if (ellipsis === true) return 1
   return ellipsis.rows && ellipsis.rows > 0 ? ellipsis.rows : 1
+}
+
+/** 提取 ellipsis 对象配置，true/false/undefined 时返回空对象 */
+export function getEllipsisConfig(
+  ellipsis: boolean | EllipsisConfig | undefined,
+): EllipsisConfig {
+  if (!ellipsis || ellipsis === true) return {}
+  return ellipsis
 }
 
 // 计算根元素 class
@@ -133,12 +159,27 @@ async function copyToClipboard(text: string): Promise<void> {
 // 渲染 copyable 复制按钮（返回 VNode 或 null）
 export function useCopyable(prefixCls: string) {
   const copied = ref(false)
+  const locale = useLocale()
   let timer: ReturnType<typeof setTimeout> | undefined
 
   const renderCopy = (props: BaseProps, getText: () => string) => {
     if (!props.copyable) return null
     const config: CopyableConfig =
       typeof props.copyable === 'object' ? props.copyable : {}
+
+    // 文案优先级：用户自定义 tooltips > locale > 默认（aria-label 用）
+    const typoLocale = locale.value.Typography
+    const customTooltips = Array.isArray(config.tooltips) ? config.tooltips : null
+    const copyText = customTooltips
+      ? customTooltips[0]
+      : typoLocale?.copy ?? 'Copy'
+    const copiedText = customTooltips
+      ? customTooltips[1]
+      : typoLocale?.copied ?? 'Copied'
+
+    // 自定义图标支持
+    const beforeIcon = config.icon?.[0] ?? <CopyIcon />
+    const afterIcon = config.icon?.[1] ?? <CheckOutlined />
 
     const onClick = async (e: MouseEvent) => {
       e.stopPropagation()
@@ -156,19 +197,135 @@ export function useCopyable(prefixCls: string) {
       }
     }
 
-    return (
+    const button = (
       <button
         type="button"
         class={cls(`${prefixCls}-copy`, {
           [`${prefixCls}-copy-success`]: copied.value,
         })}
-        aria-label={copied.value ? 'Copied' : 'Copy'}
+        aria-label={copied.value ? copiedText : copyText}
+        title={copied.value ? copiedText : copyText}
         onClick={onClick}
       >
-        {copied.value ? <CheckOutlined /> : <CopyIcon />}
+        {copied.value ? afterIcon : beforeIcon}
       </button>
+    )
+
+    // tooltips 显式为 false 时不包 Tooltip
+    if (config.tooltips === false) {
+      return button
+    }
+
+    return (
+      <Tooltip title={copied.value ? copiedText : copyText}>
+        {button}
+      </Tooltip>
     )
   }
 
   return { renderCopy }
+}
+
+/**
+ * useEllipsisDetect：检测多行/单行省略状态变化并触发 onEllipsis 回调。
+ * 同时返回 isEllipsis ref，供 tooltip 渲染判断。
+ *
+ * 检测策略：
+ * - 单行省略：比较 scrollWidth 与 clientWidth
+ * - 多行省略：比较 scrollHeight 与 clientHeight
+ * - 监听 ResizeObserver（容器/内容尺寸变化）
+ */
+export function useEllipsisDetect(
+  el: Ref<HTMLElement | null>,
+  props: BaseProps,
+) {
+  const isEllipsis = ref(false)
+
+  const enabled = computed(() => !!props.ellipsis)
+  const config = computed(() => getEllipsisConfig(props.ellipsis))
+  const rows = computed(() => getEllipsisRows(props.ellipsis))
+
+  let ro: ResizeObserver | null = null
+  let lastValue = false
+
+  const measure = () => {
+    if (!enabled.value) {
+      if (lastValue) {
+        lastValue = false
+        isEllipsis.value = false
+        config.value.onEllipsis?.(false)
+      }
+      return
+    }
+    const node = el.value
+    if (!node) return
+    let truncated = false
+    if (rows.value <= 1) {
+      truncated = node.scrollWidth > node.clientWidth + 1
+    } else {
+      truncated = node.scrollHeight > node.clientHeight + 1
+    }
+    if (truncated !== lastValue) {
+      lastValue = truncated
+      isEllipsis.value = truncated
+      config.value.onEllipsis?.(truncated)
+    } else {
+      isEllipsis.value = truncated
+    }
+  }
+
+  const setup = () => {
+    teardown()
+    if (!enabled.value) return
+    const node = el.value
+    if (!node) return
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => measure())
+      ro.observe(node)
+    }
+    nextTick(measure)
+  }
+
+  const teardown = () => {
+    if (ro) {
+      ro.disconnect()
+      ro = null
+    }
+  }
+
+  onMounted(() => setup())
+  onBeforeUnmount(() => teardown())
+
+  // 当 ellipsis / rows 变化时，重新设置观察器
+  watch(
+    () => [enabled.value, rows.value],
+    () => {
+      setup()
+      nextTick(measure)
+    },
+  )
+
+  return { isEllipsis, measure }
+}
+
+/**
+ * 将 ellipsis.tooltip 配置标准化为 Tooltip props
+ * - false / undefined → null（不渲染）
+ * - true → { title: 节点文本 }
+ * - string/number → { title: 值 }
+ * - 对象 → 直接展开为 Tooltip props
+ */
+export function resolveEllipsisTooltipProps(
+  tooltip: EllipsisTooltipConfig | undefined,
+  fallbackText: string,
+): Record<string, unknown> | null {
+  if (tooltip === false || tooltip === undefined) return null
+  if (tooltip === true) return { title: fallbackText }
+  if (typeof tooltip === 'string' || typeof tooltip === 'number') {
+    return { title: tooltip }
+  }
+  if (typeof tooltip === 'object') {
+    return { title: fallbackText, ...tooltip }
+  }
+  return null
 }

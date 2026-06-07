@@ -223,18 +223,18 @@ components/{name}/
 #### **通用组件**
 
 **Button**
-- [ ] 缺少 `classNames` / `styles` 细粒度控制
-- [ ] `iconPosition` 为 'end' 时间距调整
-- [ ] 紧凑模式样式细节
+- [x] 缺少 `classNames` / `styles` 细粒度控制
+- [x] `iconPosition` 为 'end' 时间距调整
+- [x] 紧凑模式样式细节
 
 **Icon**
-- [ ] 图标库未完全同步 AntD v6 最新版本
-- [ ] 缺少自定义图标脚本文件
+- [x] 图标库未完全同步 AntD v6 最新版本（注：补全 79 个常用图标）
+- [x] 缺少自定义图标脚本文件（注：scripts/examples/build-custom-icons.ts）
 
 **Typography**
-- [ ] 缺少 `onEllipsis` 省略时回调
-- [ ] `ellipsis.tooltip` 不支持自定义配置
-- [ ] 代码块复制功能图标未本地化
+- [x] 缺少 `onEllipsis` 省略时回调
+- [x] `ellipsis.tooltip` 不支持自定义配置
+- [x] 代码块复制功能图标未本地化
 
 #### **数据录入（续）**
 

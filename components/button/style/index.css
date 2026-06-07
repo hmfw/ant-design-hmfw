@@ -28,9 +28,21 @@
   border-radius: 32px;
 }
 
-/* Icon position */
+/* Icon 子元素样式（包裹 span，便于细粒度控制） */
+.hmfw-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+/* Icon 位置 - 通过 flex order 翻转，避免 row-reverse 影响 gap 与子节点间距 */
 .hmfw-btn-icon-end {
-  flex-direction: row-reverse;
+  /* 保持正向布局，使用 order 调整图标位置，间距由 gap 统一控制 */
+}
+
+.hmfw-btn-icon-end .hmfw-btn-icon {
+  order: 1;
 }
 
 /* Two Chinese characters spacing */
@@ -240,4 +252,75 @@ a.hmfw-btn-disabled {
 
 .hmfw-btn.hmfw-btn-background-ghost:hover:not(.hmfw-btn-disabled) {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================== */
+/* Space.Compact 紧凑模式样式细节优化              */
+/* ============================================== */
+
+/* 水平紧凑：相邻按钮的边框合并、圆角去除中间 */
+.hmfw-space-compact .hmfw-btn {
+  position: relative;
+}
+
+.hmfw-space-compact .hmfw-btn:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+
+.hmfw-space-compact .hmfw-btn:first-child:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.hmfw-space-compact .hmfw-btn:last-child:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* 合并相邻边框，避免双线 */
+.hmfw-space-compact .hmfw-btn + .hmfw-btn {
+  margin-left: -1px;
+}
+
+/* hover/focus 时提升 z-index，确保边框颜色不被相邻按钮覆盖 */
+.hmfw-space-compact .hmfw-btn:hover,
+.hmfw-space-compact .hmfw-btn:focus,
+.hmfw-space-compact .hmfw-btn:active {
+  z-index: 2;
+}
+
+/* primary 类型按钮紧凑模式：相邻按钮间用半透明白线分隔 */
+.hmfw-space-compact .hmfw-btn-primary:not(:last-child) {
+  border-right-color: rgba(255, 255, 255, 0.25);
+}
+
+.hmfw-space-compact .hmfw-btn-primary:not(:first-child) {
+  border-left-color: rgba(255, 255, 255, 0.25);
+}
+
+/* 垂直紧凑（vertical） */
+.hmfw-space-compact-vertical .hmfw-btn:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+
+.hmfw-space-compact-vertical .hmfw-btn:first-child:not(:last-child) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.hmfw-space-compact-vertical .hmfw-btn:last-child:not(:first-child) {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.hmfw-space-compact-vertical .hmfw-btn + .hmfw-btn {
+  margin-top: -1px;
+}
+
+.hmfw-space-compact-vertical .hmfw-btn-primary:not(:last-child) {
+  border-bottom-color: rgba(255, 255, 255, 0.25);
+}
+
+.hmfw-space-compact-vertical .hmfw-btn-primary:not(:first-child) {
+  border-top-color: rgba(255, 255, 255, 0.25);
 }

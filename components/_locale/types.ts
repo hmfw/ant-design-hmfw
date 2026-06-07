@@ -109,4 +109,10 @@ export interface Locale {
     removeCurrent: string
     notFoundContent: string
   }
+  Typography: {
+    copy: string
+    copied: string
+    expand: string
+    collapse: string
+  }
 }

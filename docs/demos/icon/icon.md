@@ -65,28 +65,51 @@
 
 ### 内置图标
 
-| 导出名 | 说明 |
-| --- | --- |
-| `SearchOutlined` | 搜索 |
-| `CloseOutlined` | 关闭 |
-| `CheckOutlined` | 勾选 |
-| `WarningOutlined` | 警告 |
-| `InfoCircleOutlined` | 信息 |
-| `LoadingOutlined` | 加载中 |
-| `UpOutlined` | 向上 |
-| `DownOutlined` | 向下 |
-| `LeftOutlined` | 向左 |
-| `RightOutlined` | 向右 |
-| `PlusOutlined` | 加号 |
-| `MinusOutlined` | 减号 |
-| `EditOutlined` | 编辑 |
-| `DeleteOutlined` | 删除 |
-| `EyeOutlined` | 查看 |
-| `HomeOutlined` | 首页 |
-| `UserOutlined` | 用户 |
-| `SettingOutlined` | 设置 |
+图标库已同步 Ant Design v6，提供 79 个常用图标，覆盖反馈、操作、方向、导航、文件、通用等分类。
+完整列表请通过上方「图标浏览器」查看，或导入后直接使用，例如：
+
+```ts
+import {
+  // 反馈
+  CheckOutlined, WarningOutlined, InfoCircleOutlined, LoadingOutlined,
+  CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, InfoCircleFilled,
+  QuestionCircleOutlined,
+
+  // 操作
+  SearchOutlined, PlusOutlined, MinusOutlined, EditOutlined, DeleteOutlined,
+  EyeOutlined, SettingOutlined, CopyOutlined, ReloadOutlined, SyncOutlined,
+  SaveOutlined, ShareAltOutlined, DownloadOutlined, FilterOutlined,
+
+  // 方向
+  UpOutlined, DownOutlined, LeftOutlined, RightOutlined,
+  ArrowUpOutlined, ArrowDownOutlined, ArrowLeftOutlined, ArrowRightOutlined,
+  CaretUpOutlined, CaretDownOutlined, CaretLeftOutlined, CaretRightOutlined,
+  DoubleLeftOutlined, DoubleRightOutlined, SwapOutlined,
+  FullscreenOutlined, FullscreenExitOutlined,
+  ZoomInOutlined, ZoomOutOutlined, RotateLeftOutlined, RotateRightOutlined,
+
+  // 导航
+  HomeOutlined, MenuOutlined, BarsOutlined, EllipsisOutlined,
+  LoginOutlined, LogoutOutlined, GlobalOutlined,
+
+  // 通用
+  UserOutlined, BellOutlined, BellFilled, StarOutlined, StarFilled,
+  HeartOutlined, HeartFilled, LockOutlined, UnlockOutlined,
+  CloudOutlined, LinkOutlined, MessageOutlined,
+  MailOutlined, PhoneOutlined, CalendarOutlined, ClockCircleOutlined,
+
+  // 文件
+  FolderOutlined, FolderOpenOutlined, FileOutlined,
+  PictureOutlined, VideoCameraOutlined,
+
+  // 品牌
+  AndroidOutlined, AppleOutlined,
+} from 'ant-design-hmfw'
+```
 
 ### 自定义图标
+
+#### 方案一：内联函数式组件
 
 实现 `IconComponent` 类型（`FunctionalComponent<SVGAttributes>`）即可传入任意 SVG 图标：
 
@@ -103,3 +126,15 @@ const MyIcon: IconComponent = () => (
 ```vue
 <Icon :component="MyIcon" />
 ```
+
+#### 方案二：脚本批量生成
+
+如果你有大量自定义 SVG（品牌 Logo、业务图标），推荐通过脚本批量生成图标组件文件。
+仓库 `scripts/examples/build-custom-icons.ts` 提供了完整的脚本示例，使用方法见
+`scripts/examples/README.md`。
+
+简要流程：
+
+1. 复制 `scripts/examples/build-custom-icons.ts` 到你的项目并改写顶部配置
+2. 把 SVG 文件（kebab-case 命名）放入 `SVG_DIR`
+3. 运行 `npx tsx scripts/build-my-icons.ts`，生成的图标组件可直接 `import` 使用

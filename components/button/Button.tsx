@@ -3,10 +3,18 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { LoadingOutlined } from '../icon/icons'
-import type { ButtonType, ButtonSize, ButtonHTMLType, ButtonShape, LoadingConfig } from './types'
+import type {
+  ButtonType,
+  ButtonSize,
+  ButtonHTMLType,
+  ButtonShape,
+  LoadingConfig,
+  ButtonClassNames,
+  ButtonStyles,
+} from './types'
 import type { IconComponent } from '../icon/types'
 
-// Check if string contains exactly two Chinese characters
+// 判断是否恰好为两个中文字符
 const isTwoCNChar = (str: string): boolean => {
   return /^[一-龥]{2}$/.test(str)
 }
@@ -70,6 +78,16 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    // 语义化结构 className（细粒度控制图标、loading 等子元素）
+    classNames: {
+      type: Object as PropType<ButtonClassNames>,
+      default: undefined,
+    },
+    // 语义化结构 style
+    styles: {
+      type: Object as PropType<ButtonStyles>,
+      default: undefined,
+    },
   },
   emits: ['click'],
   setup(props, { emit, slots, attrs }) {
@@ -79,7 +97,7 @@ export default defineComponent({
     const delayTimer = ref<ReturnType<typeof setTimeout> | null>(null)
     const hasTwoCNChar = ref(false)
 
-    // Parse loading config
+    // 解析 loading 配置
     const loadingConfig = computed(() => {
       if (typeof props.loading === 'object' && props.loading !== null) {
         return {
@@ -93,7 +111,7 @@ export default defineComponent({
       }
     })
 
-    // Handle loading delay
+    // 处理 loading 延迟
     watch(
       () => loadingConfig.value,
       (config) => {
@@ -124,7 +142,7 @@ export default defineComponent({
       }
     })
 
-    // Check for two Chinese characters
+    // 检查两个中文字符
     const checkTwoCNChar = () => {
       if (!buttonRef.value || !props.autoInsertSpace) {
         return
@@ -158,7 +176,8 @@ export default defineComponent({
           [`${prefixCls}-background-ghost`]: props.ghost,
           [`${prefixCls}-two-chinese-chars`]: hasTwoCNChar.value,
           [`${prefixCls}-icon-end`]: props.iconPosition === 'end',
-        }
+        },
+        props.classNames?.root
       )
     )
 
@@ -171,17 +190,33 @@ export default defineComponent({
     }
 
     return () => {
-      const iconNode = innerLoading.value ? (
-        <Icon component={LoadingOutlined} spin />
-      ) : props.icon ? (
-        <Icon component={props.icon} />
-      ) : null
+      // 图标节点：包一层 span，便于通过 classNames.icon / classNames.loading 注入样式
+      let iconNode: any = null
+      if (innerLoading.value) {
+        iconNode = (
+          <span
+            class={cls(`${prefixCls}-icon`, `${prefixCls}-loading-icon`, props.classNames?.icon, props.classNames?.loading)}
+            style={{ ...(props.styles?.icon || {}), ...(props.styles?.loading || {}) }}
+          >
+            <Icon component={LoadingOutlined} spin />
+          </span>
+        )
+      } else if (props.icon) {
+        iconNode = (
+          <span
+            class={cls(`${prefixCls}-icon`, props.classNames?.icon)}
+            style={props.styles?.icon}
+          >
+            <Icon component={props.icon} />
+          </span>
+        )
+      }
 
       const slotContent = slots.default?.()
       const hasSlotContent = !!slotContent?.length
       const hasIcon = !hasSlotContent && !!(props.icon || innerLoading.value)
 
-      // Insert space between two Chinese characters
+      // 在两个中文字符之间插入空格
       let children = slotContent
       if (hasSlotContent && hasTwoCNChar.value && props.autoInsertSpace) {
         const text = buttonRef.value?.textContent || ''
@@ -199,13 +234,15 @@ export default defineComponent({
       )
 
       const buttonClasses = cls(classes.value, { [`${prefixCls}-icon-only`]: hasIcon })
+      const rootStyle = props.styles?.root
 
-      // Render as anchor if href is provided
+      // href 存在时渲染为 a 标签
       if (props.href !== undefined) {
         return (
           <a
             ref={buttonRef}
             class={buttonClasses}
+            style={rootStyle}
             href={isDisabled.value ? undefined : props.href}
             target={props.target}
             aria-disabled={isDisabled.value || undefined}
@@ -223,6 +260,7 @@ export default defineComponent({
           ref={buttonRef}
           type={props.htmlType}
           class={buttonClasses}
+          style={rootStyle}
           disabled={isDisabled.value}
           aria-busy={innerLoading.value || undefined}
           aria-disabled={isDisabled.value || undefined}
@@ -235,4 +273,3 @@ export default defineComponent({
     }
   },
 })
-

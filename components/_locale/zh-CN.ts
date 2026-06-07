@@ -111,6 +111,12 @@ const zhCN: Locale = {
     removeCurrent: '删除当页',
     notFoundContent: '列表为空',
   },
+  Typography: {
+    copy: '复制',
+    copied: '复制成功',
+    expand: '展开',
+    collapse: '收起',
+  },
 }
 
 export default zhCN

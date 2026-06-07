@@ -12,6 +12,8 @@ export type {
   TypographyType,
   TitleLevel,
   CopyableConfig,
+  EllipsisConfig,
+  EllipsisTooltipConfig,
 } from './types'
 
 export default {

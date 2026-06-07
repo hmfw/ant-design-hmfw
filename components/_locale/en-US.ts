@@ -111,6 +111,12 @@ const enUS: Locale = {
     removeCurrent: 'Remove current page',
     notFoundContent: 'The list is empty',
   },
+  Typography: {
+    copy: 'Copy',
+    copied: 'Copied',
+    expand: 'Expand',
+    collapse: 'Collapse',
+  },
 }
 
 export default enUS

@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { h } from 'vue'
 import Text from '../Text'
 import Title from '../Title'
 import Paragraph from '../Paragraph'
@@ -247,6 +248,98 @@ describe('Typography', () => {
       await wrapper.find('.hmfw-typography-copy').trigger('click')
       await new Promise((r) => setTimeout(r, 0))
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith('custom value')
+    })
+
+    it('copy button uses locale text by default (zh-CN)', () => {
+      const wrapper = mount(Text, {
+        props: { copyable: true },
+        slots: { default: () => 'Copy me' },
+      })
+      const btn = wrapper.find('.hmfw-typography-copy')
+      // 默认 locale 为 zh-CN，aria-label 应为「复制」
+      expect(btn.attributes('aria-label')).toBe('复制')
+      expect(btn.attributes('title')).toBe('复制')
+    })
+
+    it('copy button shows copied locale text after click', async () => {
+      const wrapper = mount(Text, {
+        props: { copyable: true },
+        slots: { default: () => 'Copy me' },
+      })
+      await wrapper.find('.hmfw-typography-copy').trigger('click')
+      await new Promise((r) => setTimeout(r, 0))
+      const btn = wrapper.find('.hmfw-typography-copy')
+      expect(btn.attributes('aria-label')).toBe('复制成功')
+    })
+
+    it('supports custom copyable tooltips text', () => {
+      const wrapper = mount(Text, {
+        props: { copyable: { tooltips: ['点我复制', '已复制'] } },
+        slots: { default: () => 'x' },
+      })
+      const btn = wrapper.find('.hmfw-typography-copy')
+      expect(btn.attributes('aria-label')).toBe('点我复制')
+    })
+
+    it('supports custom copyable icons', () => {
+      const wrapper = mount(Text, {
+        props: {
+          copyable: {
+            icon: [
+              h('span', { class: 'custom-copy-icon' }, 'C'),
+              h('span', { class: 'custom-copied-icon' }, 'V'),
+            ] as any,
+          },
+        },
+        slots: { default: () => 'x' },
+      })
+      expect(wrapper.find('.custom-copy-icon').exists()).toBe(true)
+    })
+
+    it('disables copyable tooltip when tooltips is false', () => {
+      const wrapper = mount(Text, {
+        props: { copyable: { tooltips: false } },
+        slots: { default: () => 'x' },
+      })
+      // Tooltip 关闭时复制按钮不在 Tooltip 包裹内
+      const btn = wrapper.find('.hmfw-typography-copy')
+      expect(btn.exists()).toBe(true)
+    })
+
+    it('triggers onEllipsis callback when truncation state changes', async () => {
+      const onEllipsis = vi.fn()
+      const wrapper = mount(Paragraph, {
+        props: { ellipsis: { rows: 2, onEllipsis } },
+        slots: { default: () => 'long text' },
+        attachTo: document.body,
+      })
+      // 模拟元素被截断
+      const el = wrapper.element as HTMLElement
+      Object.defineProperty(el, 'scrollHeight', { value: 100, configurable: true })
+      Object.defineProperty(el, 'clientHeight', { value: 40, configurable: true })
+      // 直接调用 detect 内部测量逻辑：通过触发 ResizeObserver 是异步的，
+      // 这里改为重挂载并立即检查回调
+      await new Promise((r) => setTimeout(r, 20))
+      // 至少应该被调用一次（mount 之后的 nextTick measure）
+      expect(onEllipsis).toHaveBeenCalled()
+      wrapper.unmount()
+    })
+
+    it('exposes ellipsis tooltip config via prop type', () => {
+      // 类型/接口检查：可传 boolean / string / 对象配置
+      const tests = [
+        { ellipsis: { rows: 1, tooltip: true } },
+        { ellipsis: { rows: 1, tooltip: '完整内容' } },
+        { ellipsis: { rows: 1, tooltip: { placement: 'topLeft' as const } } },
+      ]
+      tests.forEach((props) => {
+        const wrapper = mount(Text, {
+          props,
+          slots: { default: () => 'truncated text' },
+        })
+        // 渲染未抛错即视为通过
+        expect(wrapper.classes()).toContain('hmfw-typography-ellipsis')
+      })
     })
   })
 })

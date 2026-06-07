@@ -3,11 +3,32 @@ import type { IconComponent } from './types'
 import * as Icons from './icons'
 
 export interface IconSearchResult {
+  /** 图标名称（kebab-case，如 'bell-filled'） */
   name: string
+  /** 图标组件 */
   component: IconComponent
+  /** 分类 */
   category: string
+  /** 关键词列表 */
   keywords: string[]
+  /** 匹配相关度评分（仅 search 时有效） */
   score: number
+}
+
+/**
+ * 将 kebab-case 名称转换为对应的导出组件名
+ * - 'bell' -> 'BellOutlined'
+ * - 'bell-filled' -> 'BellFilled'
+ * - 'arrow-up' -> 'ArrowUpOutlined'
+ */
+function toComponentName(iconName: string): string {
+  const isFilled = iconName.endsWith('-filled')
+  const baseName = isFilled ? iconName.slice(0, -'-filled'.length) : iconName
+  const pascal = baseName
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('')
+  return pascal + (isFilled ? 'Filled' : 'Outlined')
 }
 
 /**
@@ -51,13 +72,8 @@ export function searchIcons(query: string): IconSearchResult[] {
     }
 
     if (score > 0) {
-      // 转换图标名称为组件名称（如 'home' -> 'HomeOutlined'）
-      const componentName = iconName
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join('') + 'Outlined'
-
-      const component = (Icons as any)[componentName] as IconComponent | undefined
+      const componentName = toComponentName(iconName)
+      const component = (Icons as unknown as Record<string, IconComponent | undefined>)[componentName]
 
       if (component) {
         results.push({
@@ -86,12 +102,8 @@ export function getIconsByCategory(category: string): IconSearchResult[] {
 
   Object.entries(iconMetadata).forEach(([iconName, metadata]) => {
     if (metadata.category.toLowerCase() === normalizedCategory) {
-      const componentName = iconName
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join('') + 'Outlined'
-
-      const component = (Icons as any)[componentName] as IconComponent | undefined
+      const componentName = toComponentName(iconName)
+      const component = (Icons as unknown as Record<string, IconComponent | undefined>)[componentName]
 
       if (component) {
         results.push({
@@ -128,12 +140,8 @@ export function getAllIcons(): IconSearchResult[] {
   const results: IconSearchResult[] = []
 
   Object.entries(iconMetadata).forEach(([iconName, metadata]) => {
-    const componentName = iconName
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('') + 'Outlined'
-
-    const component = (Icons as any)[componentName] as IconComponent | undefined
+    const componentName = toComponentName(iconName)
+    const component = (Icons as unknown as Record<string, IconComponent | undefined>)[componentName]
 
     if (component) {
       results.push({

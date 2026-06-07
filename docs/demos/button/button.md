@@ -122,6 +122,14 @@
   <ButtonLoadingDelay />
 </DemoBlock>
 
+### 语义化 className 与 style
+
+通过 `classNames` / `styles` 对 root、icon、loading 等子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="ButtonClassNamesSource">
+  <ButtonClassNames />
+</DemoBlock>
+
 ## API
 
 ### Button Props
@@ -142,6 +150,8 @@
 | href | 点击跳转的地址，指定此属性后按钮渲染为 a 标签 | `string` | - |
 | target | 相当于 a 标签的 target 属性，href 存在时生效 | `string` | - |
 | autoInsertSpace | 是否在两个汉字之间插入空格 | `boolean` | `true` |
+| classNames | 语义化结构 className（细粒度控制图标、loading 等子元素） | `{ root?: string; icon?: string; loading?: string }` | - |
+| styles | 语义化结构 style | `{ root?: CSSProperties; icon?: CSSProperties; loading?: CSSProperties }` | - |
 
 ### Button Events
 
