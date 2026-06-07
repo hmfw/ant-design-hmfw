@@ -61,6 +61,8 @@ export const Menu = defineComponent({
     )
 
     const handleSelect = (key: string) => {
+      // 始终发射 click 事件，以便 Dropdown 等容器可以在点击菜单项时关闭
+      emit('click', { key })
       if (!props.selectable) return
       let next: string[]
       const isCurrentlySelected = currentSelected.value.includes(key)
@@ -83,7 +85,6 @@ export const Menu = defineComponent({
         emit('update:selectedKeys', next)
         emit('select', { key, selectedKeys: next })
       }
-      emit('click', { key })
     }
 
     const handleDeselect = (key: string) => {

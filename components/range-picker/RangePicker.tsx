@@ -157,8 +157,21 @@ export const RangePicker = defineComponent({
       if (!triggerRef.value?.contains(e.target as Node) && !panelRef.value?.contains(e.target as Node)) closePanel()
     }
 
-    onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
-    onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen.value) {
+        closePanel()
+        e.preventDefault()
+      }
+    }
+
+    onMounted(() => {
+      document.addEventListener('mousedown', handleOutsideClick)
+      document.addEventListener('keydown', handleKeyDown)
+    })
+    onUnmounted(() => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+      document.removeEventListener('keydown', handleKeyDown)
+    })
 
     const toStr = (d: Date | null) => (d ? formatDate(d, props.format) : null)
 

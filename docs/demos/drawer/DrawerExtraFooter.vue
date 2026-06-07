@@ -2,16 +2,20 @@
   <div style="display: flex; gap: 8px">
     <Button
       @click="
-        open = true
-        size = 'default'
+        () => {
+          open = true
+          size = 'default'
+        }
       "
     >
       默认 378px
     </Button>
     <Button
       @click="
-        open = true
-        size = 'large'
+        () => {
+          open = true
+          size = 'large'
+        }
       "
     >
       大号 736px

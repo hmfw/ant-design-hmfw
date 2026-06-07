@@ -178,14 +178,23 @@ export const Dropdown = defineComponent({
       setOpen(false, 'trigger')
     }
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && visible.value) {
+        setOpen(false, 'trigger')
+        e.preventDefault()
+      }
+    }
+
     onMounted(() => {
       document.addEventListener('mousedown', handleOutsideClick)
+      document.addEventListener('keydown', handleKeyDown)
       window.addEventListener('resize', updatePosition)
       window.addEventListener('scroll', updatePosition, true)
     })
 
     onBeforeUnmount(() => {
       document.removeEventListener('mousedown', handleOutsideClick)
+      document.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('resize', updatePosition)
       window.removeEventListener('scroll', updatePosition, true)
       if (enterTimer) clearTimeout(enterTimer)

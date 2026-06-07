@@ -5,4 +5,6 @@ coverage
 *.local
 .DS_Store
 .playwright-cli/
+playwright-report/
+test-results/
 .claude/

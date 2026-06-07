@@ -298,8 +298,16 @@ export const Tooltip = defineComponent({
       }
     }
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && visible.value) {
+        setOpen(false)
+        e.preventDefault()
+      }
+    }
+
     onMounted(() => {
       document.addEventListener('click', handleOutsideClick)
+      document.addEventListener('keydown', handleKeyDown)
       // capture-phase scroll listener catches scroll on any ancestor.
       window.addEventListener('scroll', onScrollOrResize, true)
       window.addEventListener('resize', onScrollOrResize)
@@ -316,6 +324,7 @@ export const Tooltip = defineComponent({
     })
     onBeforeUnmount(() => {
       document.removeEventListener('click', handleOutsideClick)
+      document.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('scroll', onScrollOrResize, true)
       window.removeEventListener('resize', onScrollOrResize)
       if (enterTimer) clearTimeout(enterTimer)
