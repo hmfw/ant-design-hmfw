@@ -592,8 +592,8 @@
         {
           "section": "Avatar Props",
           "name": "size",
-          "description": "头像大小",
-          "type": "`number | 'small' | 'default' | 'large'`",
+          "description": "头像大小，支持响应式配置",
+          "type": "`number | 'small' | 'default' | 'large' | { xs?: number; sm?: number; md?: number; lg?: number; xl?: number; xxl?: number }`",
           "default": "`'default'`"
         },
         {
@@ -647,6 +647,13 @@
         },
         {
           "section": "Avatar Props",
+          "name": "referrerPolicy",
+          "description": "referrer 策略",
+          "type": "`'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'`",
+          "default": "-"
+        },
+        {
+          "section": "Avatar Props",
           "name": "gap",
           "description": "字符类型距离左右两侧边界单位像素",
           "type": "`number`",
@@ -669,8 +676,8 @@
         {
           "section": "AvatarGroup Props",
           "name": "size",
-          "description": "头像大小（下发给子 Avatar）",
-          "type": "`number | 'small' | 'default' | 'large'`",
+          "description": "头像大小（下发给子 Avatar），支持响应式配置",
+          "type": "`number | 'small' | 'default' | 'large' | { xs?: number; sm?: number; md?: number; lg?: number; xl?: number; xxl?: number }`",
           "default": "`'default'`"
         },
         {
@@ -693,6 +700,11 @@
           "title": "不同尺寸",
           "description": "支持三种预设尺寸和自定义尺寸。",
           "code": "<template>\n  <div style=\"display: flex; gap: 16px; align-items: center;\">\n    <Avatar size=\"small\">S</Avatar>\n    <Avatar>M</Avatar>\n    <Avatar size=\"large\">L</Avatar>\n    <Avatar :size=\"64\">64</Avatar>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Avatar } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "响应式尺寸",
+          "description": "支持响应式尺寸配置，根据屏幕断点自动调整头像大小。",
+          "code": "<script setup lang=\"ts\">\nimport { Avatar } from '../../../components'\nimport { UserOutlined } from 'ant-design-hmfw'\n</script>\n\n<template>\n  <div style=\"display: flex; gap: 16px; align-items: center;\">\n    <Avatar :size=\"{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }\">\n      <template #default>响应式</template>\n    </Avatar>\n    <Avatar :size=\"{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }\" :icon=\"UserOutlined\" />\n    <div style=\"color: #999; font-size: 12px;\">\n      调整浏览器窗口宽度查看头像尺寸变化\n    </div>\n  </div>\n</template>"
         },
         {
           "title": "头像组",
@@ -3623,8 +3635,22 @@
         {
           "section": "Empty Props",
           "name": "imageStyle",
-          "description": "图片样式",
+          "description": "图片样式（优先级高于 imageWidth/imageHeight）",
           "type": "`CSSProperties`",
+          "default": "-"
+        },
+        {
+          "section": "Empty Props",
+          "name": "imageWidth",
+          "description": "图片宽度，数字按 px 处理，亦可传带单位字符串",
+          "type": "`number | string`",
+          "default": "-"
+        },
+        {
+          "section": "Empty Props",
+          "name": "imageHeight",
+          "description": "图片高度，数字按 px 处理，亦可传带单位字符串",
+          "type": "`number | string`",
           "default": "-"
         }
       ],
@@ -3650,6 +3676,16 @@
           "title": "简约模式",
           "description": "通过 `image=\"simple\"`（或 `PRESENTED_IMAGE_SIMPLE`）使用更紧凑的简约空状态。",
           "code": "<template>\n  <Empty :image=\"PRESENTED_IMAGE_SIMPLE\" description=\"简约空状态\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Empty, PRESENTED_IMAGE_SIMPLE } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "自定义图片尺寸",
+          "description": "通过 `imageWidth` / `imageHeight`（数字按 px 处理，也可传带单位字符串）或 `imageStyle` 控制默认插画的尺寸。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 32px; align-items: flex-end; flex-wrap: wrap;\">\n    <Empty :image-width=\"48\" :image-height=\"32\" description=\"小尺寸\" />\n    <Empty description=\"默认尺寸\" />\n    <Empty :image-width=\"160\" :image-height=\"100\" description=\"大尺寸\" />\n    <Empty :image-style=\"{ height: '64px' }\" description=\"imageStyle 控制\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Empty } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "暗黑模式",
+          "description": "默认插画的配色通过 CSS 变量驱动，会自动跟随系统配色（`prefers-color-scheme: dark`）。也可在祖先元素上设置 `data-theme=\"dark\"`（或 `.hmfw-theme-dark` 类）强制使用暗色插画。",
+          "code": "<template>\n  <div>\n    <p style=\"margin-bottom: 12px;\">\n      切换主题预览插画配色（暗黑模式下默认插画自动适配深色背景）：\n    </p>\n    <div :data-theme=\"theme\" style=\"margin-bottom: 12px;\">\n      <button @click=\"theme = 'light'\">浅色</button>\n      <button @click=\"theme = 'dark'\">暗黑</button>\n      <span style=\"margin-left: 12px;\">当前：{{ theme }}</span>\n    </div>\n    <div\n      :data-theme=\"theme\"\n      :style=\"{\n        padding: '24px',\n        borderRadius: '8px',\n        background: theme === 'dark' ? '#141414' : '#ffffff',\n        color: theme === 'dark' ? 'rgba(255,255,255,0.65)' : 'inherit',\n      }\"\n    >\n      <Empty description=\"暗黑模式下的空状态\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Empty } from 'ant-design-hmfw'\n\n// 通过祖先元素的 data-theme=\"dark\" / data-theme=\"light\" 切换插画配色\n// 也可使用 .hmfw-theme-dark / .hmfw-theme-light 类，或直接跟随系统配色\nconst theme = ref<'light' | 'dark'>('dark')\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/empty"
@@ -4791,13 +4827,20 @@
           "section": "PreviewConfig",
           "name": "imageRender",
           "description": "自定义预览内容渲染",
-          "type": "`(originalNode: VNode, info: { transform: TransformType; image: ImgInfo }) => VNode`",
+          "type": "`(originalNode: VNode, info: ImageRenderInfoType) => VNode`",
           "default": "-"
         },
         {
           "section": "PreviewConfig",
-          "name": "actionsRender",
-          "description": "自定义底部操作栏渲染",
+          "name": "toolbarRender",
+          "description": "自定义底部工具栏渲染（参考 AntD v6）",
+          "type": "`(originalNode: VNode, info: ToolbarRenderInfoType) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "PreviewConfig",
+          "name": "~~actionsRender~~",
+          "description": "已废弃，请使用 `toolbarRender`",
           "type": "`(originalNode: VNode, info: ToolbarRenderInfoType) => VNode`",
           "default": "-"
         },
@@ -4866,6 +4909,11 @@
           "title": "自定义预览",
           "description": "自定义预览图地址、缩放范围、关闭图标等。",
           "code": "<template>\n  <Space wrap>\n    <Image\n      src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n      width=\"200\"\n      :preview=\"{\n        src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n        minScale: 0.5,\n        maxScale: 10,\n        scaleStep: 0.2,\n      }\"\n    />\n    <Image\n      src=\"https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp\"\n      width=\"200\"\n      :preview=\"{ mask: { enabled: false } }\"\n    />\n    <Image\n      src=\"https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp\"\n      width=\"200\"\n      :preview=\"{ closeIcon: false }\"\n    />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Image, Space } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "自定义工具栏与预览内容",
+          "description": "通过 `toolbarRender` 自定义底部工具栏，`imageRender` 自定义预览内容容器。两者的 `info` 都会回传 `transform`、`current`、`total`、`image` 等信息。",
+          "code": "<template>\n  <Image\n    src=\"https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp\"\n    width=\"200\"\n    :preview=\"{ toolbarRender, imageRender }\"\n  />\n</template>\n\n<script setup lang=\"tsx\">\nimport { Image } from 'ant-design-hmfw'\nimport type { VNode } from 'vue'\nimport type { ToolbarRenderInfoType, ImageRenderInfoType } from 'ant-design-hmfw'\n\n// 自定义工具栏：保留原始操作栏，并在其下方追加缩放比例与“重置”按钮\nfunction toolbarRender(originalNode: VNode, info: ToolbarRenderInfoType) {\n  return (\n    <div style=\"display:flex;flex-direction:column;align-items:center;gap:8px\">\n      {originalNode}\n      <div style=\"display:flex;gap:12px;color:#fff;font-size:13px;align-items:center\">\n        <span>缩放 {Math.round(info.transform.scale * 100)}%</span>\n        <button\n          onClick={info.actions.onReset}\n          style=\"padding:2px 10px;border:none;border-radius:4px;background:rgba(255,255,255,.2);color:#fff;cursor:pointer\"\n        >\n          重置\n        </button>\n      </div>\n    </div>\n  )\n}\n\n// 自定义预览内容：给图片加一个圆角边框包裹\nfunction imageRender(originalNode: VNode, _info: ImageRenderInfoType) {\n  return (\n    <div style=\"padding:8px;border-radius:8px;background:rgba(255,255,255,.08)\">\n      {originalNode}\n    </div>\n  )\n}\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/image"
@@ -7402,7 +7450,7 @@
       "title": "Popover 气泡卡片",
       "description": "点击/鼠标移入元素，弹出气泡式的卡片浮层。",
       "whenToUse": "",
-      "import": "import { Popover } from 'ant-design-hmfw'",
+      "import": "import { Popover, PopoverPurePanel } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Popover Props",
@@ -7574,6 +7622,11 @@
           "title": "十二个方向",
           "description": "位置有十二个方向。",
           "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap;\">\n    <Popover\n      v-for=\"placement in placements\"\n      :key=\"placement\"\n      :placement=\"placement\"\n      title=\"标题\"\n      content=\"内容\"\n    >\n      <button>{{ placement }}</button>\n    </Popover>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Popover } from 'ant-design-hmfw'\n\nconst placements = [\n  'topLeft', 'top', 'topRight',\n  'leftTop', 'left', 'leftBottom',\n  'rightTop', 'right', 'rightBottom',\n  'bottomLeft', 'bottom', 'bottomRight',\n]\n</script>"
+        },
+        {
+          "title": "纯展示面板",
+          "description": "`Popover._InternalPanelDoNotUseOrYouWillBeFired` 是内部使用的纯展示面板，仅渲染气泡卡片的外观（标题 + 内容 + 箭头），不含触发与定位逻辑，可直接内联到页面中。常规业务请使用 `Popover` 本身。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 24px; flex-wrap: wrap;\">\n    <Popover._InternalPanelDoNotUseOrYouWillBeFired\n      title=\"标题\"\n      content=\"这是直接内联渲染的气泡卡片面板\"\n    />\n    <Popover._InternalPanelDoNotUseOrYouWillBeFired\n      title=\"仅标题\"\n      placement=\"bottom\"\n    />\n    <Popover._InternalPanelDoNotUseOrYouWillBeFired\n      content=\"无箭头 + 自定义背景色\"\n      :arrow=\"false\"\n      color=\"#1677ff\"\n      :styles=\"{ content: { color: '#fff' } }\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Popover } from 'ant-design-hmfw'\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/popover"
@@ -7767,12 +7820,12 @@
         {
           "title": "步骤进度条",
           "description": "步骤进度条。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px;\">\n    <div>\n      <div style=\"margin-bottom: 8px;\">Steps Progress (5 steps)</div>\n      <Progress :percent=\"50\" :steps=\"5\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Steps Progress (10 steps)</div>\n      <Progress :percent=\"30\" :steps=\"10\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Small Steps</div>\n      <Progress :percent=\"60\" :steps=\"5\" size=\"small\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Steps with Custom Color</div>\n      <Progress :percent=\"80\" :steps=\"5\" stroke-color=\"#52c41a\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Progress } from 'ant-design-hmfw'\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px;\">\n    <div>\n      <div style=\"margin-bottom: 8px;\">Steps Progress (5 steps)</div>\n      <Progress :percent=\"50\" :steps=\"5\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Steps Progress (10 steps)</div>\n      <Progress :percent=\"30\" :steps=\"10\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Small Steps</div>\n      <Progress :percent=\"60\" :steps=\"5\" size=\"small\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Steps with Custom Color</div>\n      <Progress :percent=\"80\" :steps=\"5\" stroke-color=\"#52c41a\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">对象形式 steps（指定段数与间距）</div>\n      <Progress :percent=\"50\" :steps=\"{ count: 4, gap: 12 }\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">分段渐变色（数组）</div>\n      <Progress\n        :percent=\"60\"\n        :steps=\"5\"\n        :stroke-color=\"['#f5222d', '#fa8c16', '#fadb14', '#52c41a', '#1677ff']\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Progress } from 'ant-design-hmfw'\n</script>"
         },
         {
           "title": "渐变色",
-          "description": "渐变色进度条和成功分段。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px;\">\n    <div>\n      <div style=\"margin-bottom: 8px;\">Gradient (from-to)</div>\n      <Progress :percent=\"60\" :stroke-color=\"{ from: '#108ee9', to: '#87d068' }\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Gradient (multi-stop)</div>\n      <Progress\n        :percent=\"80\"\n        :stroke-color=\"{\n          '0%': '#108ee9',\n          '50%': '#87d068',\n          '100%': '#ffcb00',\n        }\"\n      />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">Success Segment</div>\n      <Progress :percent=\"60\" :success=\"{ percent: 30, strokeColor: '#52c41a' }\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Progress } from 'ant-design-hmfw'\n</script>"
+          "description": "渐变色进度条、成功分段，以及圆形 / 仪表盘渐变。圆形与仪表盘的渐变在屏幕空间内始终保持水平方向，不受缺口旋转影响。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px;\">\n    <div>\n      <div style=\"margin-bottom: 8px;\">线形渐变（from-to）</div>\n      <Progress :percent=\"60\" :stroke-color=\"{ from: '#108ee9', to: '#87d068' }\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">线形渐变（多色 stop）</div>\n      <Progress\n        :percent=\"80\"\n        :stroke-color=\"{\n          '0%': '#108ee9',\n          '50%': '#87d068',\n          '100%': '#ffcb00',\n        }\"\n      />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">成功分段 success.percent</div>\n      <Progress :percent=\"60\" :success=\"{ percent: 30, strokeColor: '#52c41a' }\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px;\">圆形 / 仪表盘渐变</div>\n      <div style=\"display: flex; gap: 24px;\">\n        <Progress\n          type=\"circle\"\n          :percent=\"70\"\n          :stroke-color=\"{ '0%': '#108ee9', '100%': '#87d068' }\"\n        />\n        <Progress\n          type=\"dashboard\"\n          :percent=\"70\"\n          :stroke-color=\"{ '0%': '#108ee9', '100%': '#87d068' }\"\n        />\n        <Progress\n          type=\"circle\"\n          :percent=\"90\"\n          :stroke-color=\"{ from: '#1677ff', to: '#ff4d4f' }\"\n        />\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Progress } from 'ant-design-hmfw'\n</script>"
         },
         {
           "title": "自定义",
@@ -8612,6 +8665,13 @@
           "description": "自定义类名",
           "type": "`string`",
           "default": "-"
+        },
+        {
+          "section": "SegmentedOption",
+          "name": "style",
+          "description": "自定义内联样式",
+          "type": "`CSSProperties`",
+          "default": "-"
         }
       ],
       "events": [
@@ -8664,6 +8724,16 @@
           "title": "带图标",
           "description": "在选项中使用图标。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px;\">\n    <Segmented v-model:value=\"value\" :options=\"options\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from 'ant-design-hmfw'\nimport { UserOutlined, SettingOutlined, HomeOutlined } from 'ant-design-hmfw'\n\nconst value = ref('home')\nconst options = [\n  { value: 'home', icon: h(Icon, { component: HomeOutlined }), tooltip: 'Home Page' },\n  { value: 'user', icon: h(Icon, { component: UserOutlined }), tooltip: 'User Profile' },\n  { value: 'settings', icon: h(Icon, { component: SettingOutlined }), tooltip: 'Settings' },\n]\n</script>"
+        },
+        {
+          "title": "图标 + 文本",
+          "description": "图标与文本同时存在时自动优化布局，间距统一。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px;\">\n    <Segmented v-model:value=\"value\" :options=\"options\" />\n    <Segmented v-model:value=\"value\" :options=\"options\" size=\"large\" />\n    <Segmented v-model:value=\"value\" :options=\"options\" size=\"small\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from 'ant-design-hmfw'\nimport { PictureOutlined, BarsOutlined } from 'ant-design-hmfw'\n\nconst value = ref('list')\n// 图标 + 文本同时存在的布局\nconst options = [\n  { value: 'list', label: '列表', icon: h(Icon, { component: BarsOutlined }) },\n  { value: 'grid', label: '网格', icon: h(Icon, { component: PictureOutlined }) },\n]\n</script>"
+        },
+        {
+          "title": "自定义选项样式",
+          "description": "每个选项支持单独的 `className` 与 `style`。",
+          "code": "<template>\n  <Segmented v-model:value=\"value\" :options=\"options\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Segmented } from 'ant-design-hmfw'\n\nconst value = ref('apple')\n// 每个选项支持单独的 className 和 style\nconst options = [\n  { value: 'apple', label: '苹果', style: { color: '#cf1322', fontWeight: 600 } },\n  { value: 'orange', label: '橙子', style: { color: '#d46b08' } },\n  { value: 'pear', label: '梨', className: 'demo-segmented-pear' },\n]\n</script>\n\n<style>\n.demo-segmented-pear {\n  font-style: italic;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/segmented"
