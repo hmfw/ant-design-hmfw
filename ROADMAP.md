@@ -71,7 +71,7 @@
 - [x] **P1 数据展示** ✅ — Table、Transfer、Upload、TreeSelect、TimePicker、Steps、Carousel、Collapse、Rate、Slider · 已完成（35 测试）
 - [x] **P1 反馈/消息** ✅ — Notification、Message、Tour、Segmented、Switch、Radio、Checkbox · 已完成（20 测试）
 - [x] **视觉回归试点** ✅ — Tag、Alert、Button 静态 demo 截图对比（10 基线）· 独立配置 `playwright.visual.config.ts`，`pnpm visual` 比对、`pnpm visual:update` 更新基线。基线在 macOS 生成入库，CI(Linux) 渲染差异暂不强制运行
-- [ ] **测试覆盖率报告** — 目标 80%+ · 1 天
+- [x] **测试覆盖率报告** ✅ — 语句 91.11% / 分支 82.49% / 函数 77.41% / 行 91.11%（阈值 80/65/65/80 全过）。`pnpm test:coverage` 输出 text-summary + html + lcov + json，CI 跑覆盖率门禁并上传报告
 
 #### 5.3 无障碍性
 
