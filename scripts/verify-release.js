@@ -135,7 +135,7 @@ try {
     console.log(`   ✅ 安装成功 (v${installed.version})`)
 
     // 检查必要文件
-    const requiredFiles = ['dist/index.js', 'dist/index.cjs', 'dist/style.css', 'README.md', 'LICENSE']
+    const requiredFiles = ['dist/index.js', 'dist/style.css', 'README.md', 'LICENSE']
     const installedDir = resolve(testDir, 'node_modules/ant-design-hmfw')
 
     requiredFiles.forEach((file) => {

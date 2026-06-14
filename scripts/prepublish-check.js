@@ -28,7 +28,6 @@ const requiredFiles = [
   { path: 'LICENSE', name: 'LICENSE 许可证' },
   { path: 'CHANGELOG.md', name: 'CHANGELOG 更新日志' },
   { path: 'dist/index.js', name: 'ESM 构建产物' },
-  { path: 'dist/index.cjs', name: 'CJS 构建产物' },
   { path: 'dist/index.d.ts', name: 'TypeScript 类型声明' },
   { path: 'dist/style.css', name: 'CSS 样式文件' },
 ]
@@ -56,7 +55,6 @@ try {
     { key: 'version', value: packageJson.version, required: true },
     { key: 'description', value: packageJson.description, required: true },
     { key: 'license', value: packageJson.license, required: true },
-    { key: 'main', value: packageJson.main, required: true },
     { key: 'module', value: packageJson.module, required: true },
     { key: 'types', value: packageJson.types, required: true },
     { key: 'repository.url', value: packageJson.repository?.url, required: true },
@@ -130,7 +128,7 @@ try {
 // 检查构建产物
 console.log('\n5️⃣  检查构建产物大小...\n')
 
-const distFiles = ['dist/index.js', 'dist/index.cjs', 'dist/ant-design-hmfw.umd.js', 'dist/style.css']
+const distFiles = ['dist/index.js', 'dist/ant-design-hmfw.umd.js', 'dist/style.css']
 
 distFiles.forEach((file) => {
   const fullPath = resolve(rootDir, file)

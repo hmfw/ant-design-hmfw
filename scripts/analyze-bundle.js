@@ -23,7 +23,6 @@ const gzipKB = (buf) => gzipSync(buf).length
 const BUDGETS = [
   { name: 'UMD (CDN)', file: 'ant-design-hmfw.umd.js', gzipLimit: 500 },
   { name: 'ESM 入口', file: 'index.js', gzipLimit: 200 },
-  { name: 'CJS 入口', file: 'index.cjs', gzipLimit: 200 },
   { name: '样式', file: 'style.css', gzipLimit: 60 },
 ]
 

@@ -57,7 +57,7 @@
 
 #### 5.1 性能优化
 
-- [x] **打包体积分析优化** ✅ — 改 transpile-only 产物（对齐 antd es/ 结构：每组件独立目录、相对引用、无 chunk/hash），tree-shaking 单组件 378→8.5KB（削减 97.9%）；补全产物扩展名兼容 Node 原生 ESM；ESM/CJS 去 sourcemap（仅留 UMD），npm 包大幅瘦身；UMD/CDN 572→385KB gzip；`pnpm size` 体积护栏接入 CI 防回归
+- [x] **打包体积分析优化** ✅ — 改 transpile-only 产物（对齐 antd es/ 结构：每组件独立目录、相对引用、无 chunk/hash），tree-shaking 单组件 378→8.5KB（削减 97.9%）；补全产物扩展名兼容 Node 原生 ESM；per-component .d.ts 支持子路径类型解析；改为纯 ESM 包（移除 CJS/.cjs，去 sourcemap 仅留 UMD），npm 包大幅瘦身；UMD/CDN 572→385KB gzip；`pnpm size` 体积护栏接入 CI 防回归
 - [ ] 虚拟滚动扩展到更多组件
 - [ ] SSR 兼容（Nuxt 集成测试）
 - 预计时间: 5-8 天
