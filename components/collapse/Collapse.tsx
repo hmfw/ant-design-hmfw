@@ -1,4 +1,16 @@
-import { defineComponent, ref, computed, watch, provide, inject, Transition, type PropType, type VNode } from 'vue'
+import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  provide,
+  inject,
+  Transition,
+  cloneVNode,
+  Fragment,
+  type PropType,
+  type VNode,
+} from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
@@ -118,7 +130,21 @@ export const Collapse = defineComponent({
 
     return () => {
       const items = props.items ?? []
-      const panelChildren = slots.default?.()
+      // 插槽模式下，Vue 会把 <CollapsePanel key="1"> 的 key 存到 vnode.key，
+      // 子组件无法通过 attrs 读取，因此在父级把 vnode.key 透传给 panelKey 属性。
+      const normalizePanelKey = (vnode: VNode, fallbackIndex: number): VNode => {
+        const resolvedKey = vnode.key != null ? String(vnode.key) : String(fallbackIndex)
+        return cloneVNode(vnode, { panelKey: resolvedKey })
+      }
+      const rawChildren = slots.default?.() ?? []
+      let panelIndex = 0
+      const panelChildren = rawChildren.flatMap((vnode) => {
+        // 处理 v-for 包裹的 Fragment
+        if (vnode.type === Fragment && Array.isArray(vnode.children)) {
+          return (vnode.children as VNode[]).map((child) => normalizePanelKey(child, panelIndex++))
+        }
+        return [normalizePanelKey(vnode, panelIndex++)]
+      })
 
       const renderPanel = (
         key: string,

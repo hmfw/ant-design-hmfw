@@ -1,7 +1,7 @@
 # ant-design-hmfw 项目路线图
 
 > **更新日期**: 2026/06/14  
-> **项目状态**: 核心开发完成，E2E P0 弹层 + 表单 + 导航/键盘组件测试全覆盖，进入完善和发布阶段
+> **项目状态**: 核心开发完成，E2E P0 弹层/表单/导航 + P1 数据展示组件测试全覆盖，进入完善和发布阶段
 
 ---
 
@@ -17,12 +17,12 @@
 
 ### 项目数据
 
-| 指标       | 数值              | 指标       | 数值                |
-| ---------- | ----------------- | ---------- | ------------------- |
-| 组件数     | 66（80+ 导出）    | Bug 修复   | 266                 |
-| 测试用例   | 1983（含 93 E2E） | 功能增强   | ~94                 |
-| TypeScript | 100%              | ESLint     | 0/0                 |
-| 文档演示   | 200+              | 代码格式化 | Prettier + Husky ✅ |
+| 指标       | 数值               | 指标       | 数值                |
+| ---------- | ------------------ | ---------- | ------------------- |
+| 组件数     | 66（80+ 导出）     | Bug 修复   | 266                 |
+| 测试用例   | 2018（含 128 E2E） | 功能增强   | ~94                 |
+| TypeScript | 100%               | ESLint     | 0/0                 |
+| 文档演示   | 200+               | 代码格式化 | Prettier + Husky ✅ |
 
 ---
 
@@ -64,11 +64,11 @@
 
 #### 5.2 E2E 测试
 
-- [x] **基础设施** ✅ — Playwright Test v1.60、根目录配置、93 测试 18 组件
+- [x] **基础设施** ✅ — Playwright Test v1.60、根目录配置、128 测试 28 组件
 - [x] **P0 弹层定位** ✅ — DatePicker、RangePicker、Select、Drawer、Dropdown、Popover、Popconfirm、Tooltip、Modal · 已完成
 - [x] **P0 表单交互** ✅ — Form、Input、InputNumber、ColorPicker · 已完成（21 测试）
 - [x] **P0 导航/键盘** ✅ — Cascader、Menu、Tabs、Pagination、Tree · 已完成（27 测试）
-- [ ] **P1 数据展示**（10） — Table、Transfer、Upload、TreeSelect、TimePicker、Steps、Carousel、Collapse、Rate、Slider · 3 天
+- [x] **P1 数据展示** ✅ — Table、Transfer、Upload、TreeSelect、TimePicker、Steps、Carousel、Collapse、Rate、Slider · 已完成（35 测试）
 - [ ] **P1 反馈/消息**（7） — Notification、Message、Tour、Segmented、Switch、Radio、Checkbox · 2 天
 - [ ] **视觉回归试点** — Select/Modal/Button 截图对比 · 1 天
 - [ ] **测试覆盖率报告** — 目标 80%+ · 1 天
