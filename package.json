@@ -94,6 +94,7 @@
     "visual:report": "playwright show-report playwright-report-visual",
     "analyze:bundle": "node scripts/analyze-bundle.js",
     "analyze:treeshaking": "node scripts/test-tree-shaking.js",
+    "size": "node scripts/analyze-bundle.js && node scripts/test-tree-shaking.js",
     "precheck": "node scripts/prepublish-check.js",
     "verify:release": "node scripts/verify-release.js",
     "prepublishOnly": "pnpm test && pnpm typecheck && pnpm build:lib",
