@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+    "emitDeclarationOnly": true,
+    "rootDir": "components",
+    "outDir": "dist",
+    "types": ["vite/client", "node"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "skipLibCheck": true
+  },
+  "include": ["components/**/*.ts", "components/**/*.tsx"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "components/**/__tests__/**",
+    "components/**/*.test.ts",
+    "components/**/*.test.tsx",
+    "components/**/*.spec.ts",
+    "components/**/*.spec.tsx",
+    "components/_visual/**"
+  ]
+}
