@@ -13,7 +13,7 @@
  * 解析时 TS 自动匹配同名 .d.ts。存在性检查以实际声明文件为准。
  */
 
-import { readdirSync, readFileSync, writeFileSync, statSync, existsSync } from 'fs'
+import { readdirSync, readFileSync, writeFileSync, statSync, existsSync, unlinkSync } from 'fs'
 import { resolve, dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -73,3 +73,54 @@ for (const file of collect(distDir)) {
 }
 
 console.log(`✅ 补全相对引用扩展名：处理 ${patched} 个文件`)
+
+// ── 第二遍：删除「运行时为空」的 .js ───────────────────────────────
+// transpile-only 下，纯类型源文件（types.ts / interface.ts 等）擦除后只剩
+// banner 注释，产出 0 体积的空 .js。基于内容统一识别并清理，而非按文件名：
+//   1. 剥离注释/空白后无任何可执行内容（空 / `export {}` / `"use strict"`）→ 运行时为空
+//   2. 删除前查引用图：编译后的 .js 里任何残留相对 import 都是真实运行时引用
+//      （类型 import 已被 esbuild 擦除），被引用则保留
+//   3. index.js 永不删（子路径入口安全）；.d.ts 一律保留（类型链走声明文件）
+function isRuntimeEmpty(src) {
+  const stripped = src
+    .replace(/\/\*[\s\S]*?\*\//g, '') // 块注释（含 banner）
+    .replace(/\/\/[^\n]*/g, '') // 行注释
+    .replace(/["']use strict["'];?/g, '') // use strict 指令
+    .replace(/export\s*\{\s*\}\s*;?/g, '') // 空再导出
+    .replace(/\s+/g, '') // 所有空白
+  return stripped.length === 0
+}
+
+const jsFiles = []
+function collectJs(dir) {
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, e.name)
+    if (e.isDirectory()) collectJs(full)
+    else if (e.name.endsWith('.js') && !e.name.includes('.umd.')) jsFiles.push(full)
+  }
+}
+collectJs(distDir)
+
+// 建立运行时引用集合：被任意 .js import 的绝对路径
+const referenced = new Set()
+const importRe = /\bfrom\s*['"](\.\.?\/[^'"]*)['"]|\bimport\s*\(\s*['"](\.\.?\/[^'"]*)['"]/g
+for (const file of jsFiles) {
+  const src = readFileSync(file, 'utf-8')
+  let m
+  while ((m = importRe.exec(src)) !== null) {
+    const spec = m[1] || m[2]
+    referenced.add(resolve(dirname(file), spec))
+  }
+}
+
+let removed = 0
+for (const file of jsFiles) {
+  if (file.endsWith('/index.js') || file.endsWith('\\index.js')) continue
+  if (referenced.has(file)) continue
+  if (isRuntimeEmpty(readFileSync(file, 'utf-8'))) {
+    unlinkSync(file)
+    removed++
+  }
+}
+
+if (removed > 0) console.log(`🧹 清理运行时为空的 .js：删除 ${removed} 个文件（类型声明 .d.ts 保留）`)
