@@ -6,5 +6,7 @@ coverage
 .DS_Store
 .playwright-cli/
 playwright-report/
+playwright-report-visual/
 test-results/
+test-results-visual/
 .claude/
