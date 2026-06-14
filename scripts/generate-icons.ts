@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, readdirSync } from 'fs'
 import { join, basename } from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import prettier from 'prettier'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -71,7 +72,7 @@ function generateIconComponent(name: string, viewBox: string, paths: string[]): 
 }
 
 // 主函数
-function main() {
+async function main() {
   console.log('🔍 Scanning SVG files...')
 
   // 读取所有 SVG 文件
@@ -114,7 +115,11 @@ import { h } from 'vue'
 ${components.join('\n\n')}
 `
 
-  writeFileSync(OUTPUT_FILE, output, 'utf8')
+  // 用项目 prettier 配置格式化，确保生成结果与提交格式一致（避免每次构建脏 diff）
+  const prettierConfig = await prettier.resolveConfig(OUTPUT_FILE)
+  const formatted = await prettier.format(output, { ...prettierConfig, parser: 'typescript' })
+
+  writeFileSync(OUTPUT_FILE, formatted, 'utf8')
   console.log(`\n✅ Generated ${OUTPUT_FILE}`)
   console.log(`📊 Total: ${components.length} icon components`)
 }
