@@ -16,17 +16,13 @@ export default defineConfig([
       '!components/_visual/**',
     ],
     format: ['esm'],
-    // 类型只为 barrel 入口生成（用户从包名导入，exports 将类型指向 dist/index.d.ts）；
-    // 为全部入口生成 DTS 会 OOM 且无必要。
     dts: { entry: 'components/index.ts' },
     external: ['vue'],
-    bundle: false, // 不打包，仅转译；输出镜像源码模块树
+    bundle: false,
     clean: true,
-    // ESM 为不压缩的转译产物，报错栈已接近源码，逐文件 sourcemap 价值低且
-    // 会让 npm 包文件数/体积翻倍（对齐 antd es/：不附带 sourcemap）。
     sourcemap: false,
     outDir: 'dist',
-    minify: false, // 保持可读性，让用户的构建工具处理压缩
+    minify: false,
     esbuildOptions(options) {
       options.jsx = 'automatic'
       options.jsxImportSource = 'vue'
@@ -35,7 +31,6 @@ export default defineConfig([
       }
     },
     onSuccess: async () => {
-      // 将 components/style.css 中的 @import 内联成单个可用的 dist/style.css
       const pkg = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8'))
       const entryCss = resolve(__dirname, 'components/style.css')
       const rawList = readFileSync(entryCss, 'utf-8')
@@ -52,7 +47,6 @@ export default defineConfig([
       }
       const banner = `/*!\n * ant-design-hmfw v${pkg.version}\n * MIT License\n * https://github.com/hmfw/ant-design-hmfw\n */\n`
       writeFileSync(resolve(__dirname, 'dist/style.css'), banner + parts.join('\n'))
-
       console.log(`✅ ESM build completed! 内联 ${parts.length} 个组件样式 → dist/style.css`)
     },
   },
@@ -66,7 +60,6 @@ export default defineConfig([
     external: ['vue'],
     outDir: 'dist',
     outExtension: () => ({ js: '.js' }),
-    // UMD 直接被 CDN/<script> 加载，必须压缩；ESM 保持可读交给用户构建工具
     minify: true,
     sourcemap: true,
     esbuildOptions(options) {

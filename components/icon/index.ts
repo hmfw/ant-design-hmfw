@@ -1,6 +1,6 @@
 export { default as Icon } from './Icon'
 export type { IconProps, IconComponent } from './types'
-export * from './icons'
+export * from './icons/index'
 
 // 图标元数据和工具函数
 export { iconMetadata } from './metadata'

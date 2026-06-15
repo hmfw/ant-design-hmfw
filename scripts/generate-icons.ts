@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync, readdirSync } from 'fs'
+import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync } from 'fs'
 import { join, basename } from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
@@ -10,7 +10,8 @@ const __dirname = dirname(__filename)
 
 // SVG 文件目录
 const SVG_DIR = join(__dirname, '../components/icon/svg')
-const OUTPUT_FILE = join(__dirname, '../components/icon/icons.ts')
+const OUTPUT_DIR = join(__dirname, '../components/icon/icons')
+const INDEX_FILE = join(OUTPUT_DIR, 'index.ts')
 
 // 将 kebab-case 转换为 PascalCase
 function toPascalCase(str: string): string {
@@ -52,8 +53,12 @@ function parseSvg(svgContent: string): { viewBox: string; paths: string[] } {
   return { viewBox, paths }
 }
 
-// 生成图标组件代码
-function generateIconComponent(name: string, viewBox: string, paths: string[]): string {
+// 生成图标组件代码（单个文件）
+function generateIconComponent(
+  name: string,
+  viewBox: string,
+  paths: string[],
+): { componentName: string; code: string } {
   // 文件名以 -filled 结尾时生成 Filled 后缀组件，否则默认 Outlined
   const isFilled = name.endsWith('-filled')
   const baseName = isFilled ? name.slice(0, -'-filled'.length) : name
@@ -61,14 +66,23 @@ function generateIconComponent(name: string, viewBox: string, paths: string[]): 
   const componentName = `${toPascalCase(baseName)}${suffix}`
   const pathsCode = paths.length > 0 ? paths.join(', ') : ''
 
-  return `export const ${componentName}: IconComponent = () =>
+  const code = `import type { IconComponent } from '../types'
+import { h } from 'vue'
+
+// 此文件由 scripts/generate-icons.ts 自动生成
+// 请勿手动编辑，运行 pnpm gen:icons 重新生成
+
+export const ${componentName}: IconComponent = () =>
   h('svg', {
     viewBox: '${viewBox}',
     width: '1em',
     height: '1em',
     fill: 'currentColor',
     focusable: false,
-  }, [${pathsCode}])`
+  }, [${pathsCode}])
+`
+
+  return { componentName, code }
 }
 
 // 主函数
@@ -87,8 +101,13 @@ async function main() {
 
   console.log(`📦 Found ${svgFiles.length} SVG files`)
 
-  // 生成代码
-  const components: string[] = []
+  // 清空并重建输出目录
+  rmSync(OUTPUT_DIR, { recursive: true, force: true })
+  mkdirSync(OUTPUT_DIR, { recursive: true })
+
+  // 生成独立的图标文件
+  const componentNames: string[] = []
+  const prettierConfig = await prettier.resolveConfig(INDEX_FILE)
 
   for (const file of svgFiles) {
     const filePath = join(SVG_DIR, file)
@@ -97,31 +116,32 @@ async function main() {
 
     try {
       const { viewBox, paths } = parseSvg(svgContent)
-      const component = generateIconComponent(name, viewBox, paths)
-      components.push(component)
-      console.log(`  ✓ ${name}`)
+      const { componentName, code } = generateIconComponent(name, viewBox, paths)
+
+      // 格式化并写入单独文件
+      const formatted = await prettier.format(code, { ...prettierConfig, parser: 'typescript' })
+      const outputFile = join(OUTPUT_DIR, `${componentName}.ts`)
+      writeFileSync(outputFile, formatted, 'utf8')
+
+      componentNames.push(componentName)
+      console.log(`  ✓ ${componentName}`)
     } catch (error) {
       console.error(`  ✗ ${name}: ${error}`)
     }
   }
 
-  // 生成完整的 icons.ts 文件
-  const output = `import type { IconComponent } from './types'
-import { h } from 'vue'
-
-// 此文件由 scripts/generate-icons.ts 自动生成
+  // 生成 index.ts 统一导出
+  const indexContent = `// 此文件由 scripts/generate-icons.ts 自动生成
 // 请勿手动编辑，运行 pnpm gen:icons 重新生成
 
-${components.join('\n\n')}
+${componentNames.map((name) => `export { ${name} } from './${name}'`).join('\n')}
 `
 
-  // 用项目 prettier 配置格式化，确保生成结果与提交格式一致（避免每次构建脏 diff）
-  const prettierConfig = await prettier.resolveConfig(OUTPUT_FILE)
-  const formatted = await prettier.format(output, { ...prettierConfig, parser: 'typescript' })
+  const formattedIndex = await prettier.format(indexContent, { ...prettierConfig, parser: 'typescript' })
+  writeFileSync(INDEX_FILE, formattedIndex, 'utf8')
 
-  writeFileSync(OUTPUT_FILE, formatted, 'utf8')
-  console.log(`\n✅ Generated ${OUTPUT_FILE}`)
-  console.log(`📊 Total: ${components.length} icon components`)
+  console.log(`\n✅ Generated ${componentNames.length} icon files in ${OUTPUT_DIR}`)
+  console.log(`✅ Generated ${INDEX_FILE}`)
 }
 
 main()
