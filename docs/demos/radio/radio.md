@@ -45,12 +45,14 @@ id 属性会自动绑定到原生 input 元素，方便配合 label 使用。
 
 ### Radio Props
 
-| 参数             | 说明                              | 类型               | 默认值  |
-| ---------------- | --------------------------------- | ------------------ | ------- |
-| checked(v-model) | 指定当前是否选中                  | `boolean`          | `false` |
-| defaultChecked   | 初始是否选中                      | `boolean`          | `false` |
-| disabled         | 禁用 Radio                        | `boolean`          | `false` |
-| value            | 根据 value 进行比较，判断是否选中 | `string \| number` | -       |
+| 参数             | 说明                                              | 类型               | 默认值  |
+| ---------------- | ------------------------------------------------- | ------------------ | ------- |
+| checked(v-model) | 指定当前是否选中                                  | `boolean`          | `false` |
+| defaultChecked   | 初始是否选中                                      | `boolean`          | `false` |
+| disabled         | 禁用 Radio                                        | `boolean`          | `false` |
+| value            | 根据 value 进行比较，判断是否选中                 | `string \| number` | -       |
+| classNames       | 语义化 className（[详见下方](#语义化-classname)） | `RadioClassNames`  | -       |
+| styles           | 语义化 style（[详见下方](#语义化-style)）         | `RadioStyles`      | -       |
 
 ### RadioGroup Props
 
@@ -84,3 +86,106 @@ id 属性会自动绑定到原生 input 元素，方便配合 label 使用。
 | 插槽名  | 说明         |
 | ------- | ------------ |
 | default | Radio 的内容 |
+
+## 语义化 className
+
+通过 `classNames` 属性可以自定义 Radio 各部分的 className。
+
+### RadioClassNames
+
+| 属性名 | 说明                                     | 类型     | 版本 |
+| ------ | ---------------------------------------- | -------- | ---- |
+| root   | 根节点 `label.hmfw-radio-wrapper`        | `string` | -    |
+| radio  | 单选框容器 `span.hmfw-radio`             | `string` | -    |
+| input  | 原生 input 元素 `input.hmfw-radio-input` | `string` | -    |
+| inner  | 视觉圆形选择框 `span.hmfw-radio-inner`   | `string` | -    |
+| label  | 文本标签 `span.hmfw-radio-label`         | `string` | -    |
+
+### DOM 结构
+
+```html
+<label class="hmfw-radio-wrapper">
+  <!-- root -->
+  <span class="hmfw-radio">
+    <!-- radio -->
+    <input class="hmfw-radio-input" />
+    <!-- input -->
+    <span class="hmfw-radio-inner" />
+    <!-- inner -->
+  </span>
+  <span class="hmfw-radio-label">文字</span>
+  <!-- label，可选 -->
+</label>
+```
+
+### 使用示例
+
+```vue
+<template>
+  <Radio
+    :classNames="{
+      root: 'my-radio-root',
+      radio: 'my-radio-box',
+      inner: 'my-radio-inner',
+      label: 'my-radio-label',
+    }"
+  >
+    自定义样式
+  </Radio>
+</template>
+```
+
+**注意事项：**
+
+- `label` 的 className 仅在有文本内容（即 default slot 有内容）时生效
+- `input` 元素是原生 `<input type="radio">`，通常隐藏不可见
+- `inner` 是视觉上的圆形选择框，可以完全自定义其外观（方形、心形等）
+
+## 语义化 style
+
+通过 `styles` 属性可以自定义 Radio 各部分的 style。
+
+### RadioStyles
+
+| 属性名 | 说明                                     | 类型            | 版本 |
+| ------ | ---------------------------------------- | --------------- | ---- |
+| root   | 根节点 `label.hmfw-radio-wrapper`        | `CSSProperties` | -    |
+| radio  | 单选框容器 `span.hmfw-radio`             | `CSSProperties` | -    |
+| input  | 原生 input 元素 `input.hmfw-radio-input` | `CSSProperties` | -    |
+| inner  | 视觉圆形选择框 `span.hmfw-radio-inner`   | `CSSProperties` | -    |
+| label  | 文本标签 `span.hmfw-radio-label`         | `CSSProperties` | -    |
+
+### 使用示例
+
+```vue
+<template>
+  <Radio
+    :styles="{
+      root: { padding: '8px 16px', border: '2px solid #1890ff' },
+      radio: { transform: 'scale(1.2)' },
+      label: { fontWeight: 'bold', color: '#1890ff' },
+    }"
+  >
+    动态样式
+  </Radio>
+</template>
+```
+
+### 语义化 className 与 style
+
+<DemoBlock title="语义化 className 与 style" :source="RadioClassNamesSource">
+  <RadioClassNames />
+</DemoBlock>
+
+<script setup lang="ts">
+import RadioBasic from './RadioBasic.vue'
+import RadioBasicSource from './RadioBasic.vue?raw'
+import RadioGroup from './RadioGroup.vue'
+import RadioGroupSource from './RadioGroup.vue?raw'
+import RadioButton from './RadioButton.vue'
+import RadioButtonSource from './RadioButton.vue?raw'
+import RadioIdBinding from './RadioIdBinding.vue'
+import RadioIdBindingSource from './RadioIdBinding.vue?raw'
+import RadioClassNames from './RadioClassNames.vue'
+import RadioClassNamesSource from './RadioClassNames.vue?raw'
+</script>

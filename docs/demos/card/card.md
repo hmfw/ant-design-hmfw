@@ -85,6 +85,8 @@
 | activeTabKey        | 当前激活标签的 key                                  | `string`                                                         | -           |
 | defaultActiveTabKey | 默认激活标签的 key                                  | `string`                                                         | -           |
 | onTabChange         | 标签切换回调                                        | `(key: string) => void`                                          | -           |
+| classNames          | 语义化 className（[详见下方](#语义化-classname)）   | `CardClassNames`                                                 | -           |
+| styles              | 语义化 style（[详见下方](#语义化-style)）           | `CardStyles`                                                     | -           |
 
 ### Card Slots
 
@@ -118,6 +120,109 @@
 | description | 描述内容  | `string`         | -      |
 | avatar      | 头像/图标 | `string \| slot` | -      |
 
+## 语义化 className
+
+通过 `classNames` 属性可以自定义 Card 各部分的 className。
+
+### CardClassNames
+
+| 属性名  | 说明                            | 类型     | 版本 |
+| ------- | ------------------------------- | -------- | ---- |
+| root    | 根节点 `div.hmfw-card`          | `string` | -    |
+| head    | 头部容器 `div.hmfw-card-head`   | `string` | -    |
+| title   | 标题 `div.hmfw-card-head-title` | `string` | -    |
+| extra   | 右侧扩展 `div.hmfw-card-extra`  | `string` | -    |
+| body    | 主体内容 `div.hmfw-card-body`   | `string` | -    |
+| actions | 底部操作 `ul.hmfw-card-actions` | `string` | -    |
+
+### DOM 结构
+
+```html
+<div class="hmfw-card">
+  <!-- root -->
+  <div class="hmfw-card-cover">封面</div>
+  <div class="hmfw-card-head">
+    <!-- head -->
+    <div class="hmfw-card-head-wrapper">
+      <div class="hmfw-card-head-title">标题</div>
+      <!-- title -->
+      <div class="hmfw-card-extra">扩展</div>
+      <!-- extra -->
+    </div>
+  </div>
+  <div class="hmfw-card-body">内容</div>
+  <!-- body -->
+  <ul class="hmfw-card-actions">
+    操作组
+  </ul>
+  <!-- actions -->
+</div>
+```
+
+### 使用示例
+
+```vue
+<template>
+  <Card
+    title="标题"
+    :classNames="{
+      root: 'my-card-root',
+      head: 'my-card-head',
+      title: 'my-card-title',
+      body: 'my-card-body',
+      actions: 'my-card-actions',
+    }"
+  >
+    内容
+  </Card>
+</template>
+```
+
+**注意事项：**
+
+- `title` 仅在设置了 `title` 属性或 `title` 插槽时渲染
+- `extra` 仅在设置了 `extra` 插槽时渲染
+- `actions` 仅在设置了 `actions` 插槽时渲染
+- `styles.head` 会与 `headStyle` 合并，`styles.body` 会与 `bodyStyle` 合并
+
+## 语义化 style
+
+通过 `styles` 属性可以自定义 Card 各部分的 style。
+
+### CardStyles
+
+| 属性名  | 说明                            | 类型            | 版本 |
+| ------- | ------------------------------- | --------------- | ---- |
+| root    | 根节点 `div.hmfw-card`          | `CSSProperties` | -    |
+| head    | 头部容器 `div.hmfw-card-head`   | `CSSProperties` | -    |
+| title   | 标题 `div.hmfw-card-head-title` | `CSSProperties` | -    |
+| extra   | 右侧扩展 `div.hmfw-card-extra`  | `CSSProperties` | -    |
+| body    | 主体内容 `div.hmfw-card-body`   | `CSSProperties` | -    |
+| actions | 底部操作 `ul.hmfw-card-actions` | `CSSProperties` | -    |
+
+### 使用示例
+
+```vue
+<template>
+  <Card
+    title="动态样式"
+    :styles="{
+      root: { border: '2px solid #1890ff', borderRadius: '12px' },
+      head: { background: '#667eea', color: 'white' },
+      body: { padding: '24px' },
+    }"
+  >
+    内容
+  </Card>
+</template>
+```
+
+### 语义化 className 与 style
+
+<DemoBlock title="语义化 className 与 style" :source="CardClassNamesSource">
+  <CardClassNames />
+</DemoBlock>
+
 <script setup>
 import CardBasic from './CardBasic.vue'
 import CardCover from './CardCover.vue'
@@ -126,6 +231,7 @@ import CardLoadingAvatar from './CardLoadingAvatar.vue'
 import CardGrid from './CardGrid.vue'
 import CardInner from './CardInner.vue'
 import CardTabs from './CardTabs.vue'
+import CardClassNames from './CardClassNames.vue'
 
 import CardBasicSource from './CardBasic.vue?raw'
 import CardCoverSource from './CardCover.vue?raw'
@@ -134,4 +240,5 @@ import CardLoadingAvatarSource from './CardLoadingAvatar.vue?raw'
 import CardGridSource from './CardGrid.vue?raw'
 import CardInnerSource from './CardInner.vue?raw'
 import CardTabsSource from './CardTabs.vue?raw'
+import CardClassNamesSource from './CardClassNames.vue?raw'
 </script>

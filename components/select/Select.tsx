@@ -78,6 +78,8 @@ export const Select = defineComponent({
       type: Number,
       default: 32,
     },
+    classNames: Object as PropType<import('./types').SelectClassNames>,
+    styles: Object as PropType<import('./types').SelectStyles>,
   },
   emits: ['update:value', 'change', 'search', 'select', 'deselect', 'clear', 'dropdownVisibleChange', 'focus', 'blur'],
   setup(props, { emit, expose }) {
@@ -437,11 +439,17 @@ export const Select = defineComponent({
             result.push(
               <div
                 key={val}
-                class={cls(`${prefixCls}-item`, `${prefixCls}-item-option`, {
-                  [`${prefixCls}-item-option-selected`]: isSelected,
-                  [`${prefixCls}-item-option-disabled`]: opt.disabled,
-                  [`${prefixCls}-item-option-active`]: !opt.disabled && isActive,
-                })}
+                class={cls(
+                  `${prefixCls}-item`,
+                  `${prefixCls}-item-option`,
+                  {
+                    [`${prefixCls}-item-option-selected`]: isSelected,
+                    [`${prefixCls}-item-option-disabled`]: opt.disabled,
+                    [`${prefixCls}-item-option-active`]: !opt.disabled && isActive,
+                  },
+                  props.classNames?.option,
+                )}
+                style={props.styles?.option}
                 role="option"
                 aria-selected={isSelected}
                 aria-disabled={opt.disabled || undefined}
@@ -456,8 +464,20 @@ export const Select = defineComponent({
                   props.optionRender(opt, { index: filteredOptions.value.indexOf(opt) })
                 ) : (
                   <>
-                    <div class={`${prefixCls}-item-option-content`}>{label}</div>
-                    {isSelected && <span class={`${prefixCls}-item-option-state`}>✓</span>}
+                    <div
+                      class={cls(`${prefixCls}-item-option-content`, props.classNames?.optionLabel)}
+                      style={props.styles?.optionLabel}
+                    >
+                      {label}
+                    </div>
+                    {isSelected && (
+                      <span
+                        class={cls(`${prefixCls}-item-option-state`, props.classNames?.optionState)}
+                        style={props.styles?.optionState}
+                      >
+                        ✓
+                      </span>
+                    )}
                   </>
                 )}
               </div>,
@@ -469,18 +489,25 @@ export const Select = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, `${prefixCls}-${props.size}`, {
-            [`${prefixCls}-open`]: isOpen.value,
-            [`${prefixCls}-disabled`]: props.disabled,
-            [`${prefixCls}-loading`]: props.loading,
-            [`${prefixCls}-multiple`]: isMultiple.value,
-            [`${prefixCls}-status-${props.status}`]: !!props.status,
-            [`${prefixCls}-allow-clear`]: props.allowClear,
-          })}
+          class={cls(
+            prefixCls,
+            `${prefixCls}-${props.size}`,
+            {
+              [`${prefixCls}-open`]: isOpen.value,
+              [`${prefixCls}-disabled`]: props.disabled,
+              [`${prefixCls}-loading`]: props.loading,
+              [`${prefixCls}-multiple`]: isMultiple.value,
+              [`${prefixCls}-status-${props.status}`]: !!props.status,
+              [`${prefixCls}-allow-clear`]: props.allowClear,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
         >
           <div
             ref={selectorRef}
-            class={`${prefixCls}-selector`}
+            class={cls(`${prefixCls}-selector`, props.classNames?.selector)}
+            style={props.styles?.selector}
             role="combobox"
             aria-expanded={isOpen.value}
             aria-haspopup="listbox"
@@ -495,7 +522,7 @@ export const Select = defineComponent({
               <>
                 {displayTags.map((val) => renderTag(val, selectedValues.value.indexOf(val)))}
                 {overflowCount > 0 && (
-                  <span class={`${prefixCls}-selection-item`}>
+                  <span class={cls(`${prefixCls}-selection-item`, props.classNames?.item)} style={props.styles?.item}>
                     {typeof props.maxTagPlaceholder === 'function'
                       ? props.maxTagPlaceholder(omittedValues)
                       : (props.maxTagPlaceholder ?? `+${overflowCount}`)}
@@ -512,7 +539,10 @@ export const Select = defineComponent({
                   />
                 )}
                 {!hasValue && !searchText.value && (
-                  <span class={`${prefixCls}-selection-placeholder`}>
+                  <span
+                    class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
+                    style={props.styles?.placeholder}
+                  >
                     {props.placeholder ?? locale.value.Select.placeholder}
                   </span>
                 )}
@@ -520,10 +550,15 @@ export const Select = defineComponent({
             ) : (
               <>
                 {hasValue && !searchText.value ? (
-                  <span class={`${prefixCls}-selection-item`}>{renderSelectedLabel()}</span>
+                  <span class={cls(`${prefixCls}-selection-item`, props.classNames?.item)} style={props.styles?.item}>
+                    {renderSelectedLabel()}
+                  </span>
                 ) : (
                   !searchText.value && (
-                    <span class={`${prefixCls}-selection-placeholder`}>
+                    <span
+                      class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
+                      style={props.styles?.placeholder}
+                    >
                       {props.placeholder ?? locale.value.Select.placeholder}
                     </span>
                   )
@@ -541,7 +576,7 @@ export const Select = defineComponent({
             )}
           </div>
 
-          <div class={`${prefixCls}-arrow`}>
+          <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow}>
             {props.loading ? (
               <span class={`${prefixCls}-loading-icon`}>⟳</span>
             ) : (
@@ -550,7 +585,11 @@ export const Select = defineComponent({
           </div>
 
           {showClear && (
-            <span class={`${prefixCls}-clear`} onClick={clearAll}>
+            <span
+              class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+              style={props.styles?.clear}
+              onClick={clearAll}
+            >
               ×
             </span>
           )}
@@ -559,7 +598,7 @@ export const Select = defineComponent({
             <Teleport to="body">
               <div
                 ref={dropdownRef}
-                class={`${prefixCls}-dropdown`}
+                class={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
                 role="listbox"
                 aria-multiselectable={isMultiple.value || undefined}
                 style={{
@@ -569,6 +608,7 @@ export const Select = defineComponent({
                   width: props.dropdownMatchSelectWidth ? `${dropdownPos.value.width}px` : 'auto',
                   minWidth: `${dropdownPos.value.width}px`,
                   zIndex: '1050',
+                  ...props.styles?.dropdown,
                 }}
               >
                 {filteredOptions.value.length === 0 ? (
@@ -589,11 +629,16 @@ export const Select = defineComponent({
                       return h(
                         'div',
                         {
-                          class: cls(`${prefixCls}-item`, {
-                            [`${prefixCls}-item-selected`]: isSelected,
-                            [`${prefixCls}-item-active`]: isActive,
-                            [`${prefixCls}-item-disabled`]: opt.disabled,
-                          }),
+                          class: cls(
+                            `${prefixCls}-item`,
+                            {
+                              [`${prefixCls}-item-selected`]: isSelected,
+                              [`${prefixCls}-item-active`]: isActive,
+                              [`${prefixCls}-item-disabled`]: opt.disabled,
+                            },
+                            props.classNames?.option,
+                          ),
+                          style: props.styles?.option,
                           onClick: () => {
                             if (!opt.disabled) selectOption(opt)
                           },
@@ -604,8 +649,23 @@ export const Select = defineComponent({
                         props.optionRender
                           ? props.optionRender(opt, { index })
                           : [
-                              h('div', { class: `${prefixCls}-item-content` }, label),
-                              isSelected && h('span', { class: `${prefixCls}-item-check` }, '✓'),
+                              h(
+                                'div',
+                                {
+                                  class: cls(`${prefixCls}-item-content`, props.classNames?.optionLabel),
+                                  style: props.styles?.optionLabel,
+                                },
+                                label,
+                              ),
+                              isSelected &&
+                                h(
+                                  'span',
+                                  {
+                                    class: cls(`${prefixCls}-item-check`, props.classNames?.optionState),
+                                    style: props.styles?.optionState,
+                                  },
+                                  '✓',
+                                ),
                             ],
                       )
                     }}

@@ -428,26 +428,30 @@ pnpm dev
 
 ## 当前进度
 
-### 已完成组件（7/67）
+### 已完成组件（11/67）
 
-| 组件         | 类型定义 Key 数量                                                                           | 文档 | Demo | 状态 |
-| ------------ | ------------------------------------------------------------------------------------------- | ---- | ---- | ---- |
-| **Button**   | 3 (root, icon, loading)                                                                     | ✅   | ✅   | 完成 |
-| **Input**    | 5 (affixWrapper, prefix, suffix, input, count)                                              | ✅   | ✅   | 完成 |
-| **Modal**    | 6 (mask, wrapper, content, header, body, footer)                                            | ✅   | ✅   | 完成 |
-| **Popover**  | 2 (title, content)                                                                          | ✅   | ✅   | 完成 |
-| **Progress** | 5 (root, body, rail, track, indicator)                                                      | ✅   | ✅   | 完成 |
-| **Transfer** | 11 (root, section, header, title, body, list, item, itemIcon, itemContent, footer, actions) | ✅   | ✅   | 完成 |
-| **Tree**     | 5 (root, item, itemIcon, itemTitle, itemSwitcher)                                           | ✅   | ✅   | 完成 |
+| 组件         | 类型定义 Key 数量                                                                                | 文档 | Demo | 状态 |
+| ------------ | ------------------------------------------------------------------------------------------------ | ---- | ---- | ---- |
+| **Button**   | 3 (root, icon, loading)                                                                          | ✅   | ✅   | 完成 |
+| **Input**    | 5 (affixWrapper, prefix, suffix, input, count)                                                   | ✅   | ✅   | 完成 |
+| **Modal**    | 6 (mask, wrapper, content, header, body, footer)                                                 | ✅   | ✅   | 完成 |
+| **Popover**  | 2 (title, content)                                                                               | ✅   | ✅   | 完成 |
+| **Progress** | 5 (root, body, rail, track, indicator)                                                           | ✅   | ✅   | 完成 |
+| **Transfer** | 11 (root, section, header, title, body, list, item, itemIcon, itemContent, footer, actions)      | ✅   | ✅   | 完成 |
+| **Tree**     | 5 (root, item, itemIcon, itemTitle, itemSwitcher)                                                | ✅   | ✅   | 完成 |
+| **Checkbox** | 5 (root, checkbox, input, inner, label)                                                          | ✅   | ✅   | 完成 |
+| **Radio**    | 5 (root, radio, input, inner, label)                                                             | ✅   | ✅   | 完成 |
+| **Card**     | 6 (root, head, title, extra, body, actions)                                                      | ✅   | ✅   | 完成 |
+| **Select**   | 10 (root, selector, item, placeholder, arrow, clear, dropdown, option, optionLabel, optionState) | ✅   | ✅   | 完成 |
 
 ### 待实现组件（优先级排序）
 
 #### 第一批：高频组件
 
-- [ ] **Select** - 下拉选择（建议 key: dropdown, option, optionIcon, optionLabel）
-- [ ] **Checkbox** - 复选框（建议 key: root, input, inner, label）
-- [ ] **Radio** - 单选框（建议 key: root, input, inner, label）
-- [ ] **Card** - 卡片（建议 key: root, head, title, extra, body, actions）
+- [x] **Select** - 下拉选择 ✅
+- [x] **Checkbox** - 复选框 ✅
+- [x] **Radio** - 单选框 ✅
+- [x] **Card** - 卡片 ✅
 - [ ] **Form** - 表单（建议 key: root, item, label, control, feedback, extra）
 - [ ] **Table** - 表格（建议 key: root, header, body, row, cell, pagination）
 - [ ] **Tabs** - 标签页（建议 key: root, nav, tab, tabActive, content）
@@ -828,6 +832,7 @@ open http://localhost:5173/components/{component}
 
 ## 更新日志
 
+- **2026-06-17** - 完成 Checkbox, Radio, Card, Select 共 4 个组件（累计 11/67）
 - **2026-06-17** - 完成 Button, Input, Modal, Popover, Progress, Transfer, Tree 共 7 个组件
 - **2026-06-17** - 创建本开发指南
 

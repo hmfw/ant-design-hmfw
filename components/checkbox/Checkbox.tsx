@@ -29,6 +29,8 @@ export const Checkbox = defineComponent({
     tabIndex: Number,
     required: Boolean,
     skipGroup: Boolean,
+    classNames: Object as PropType<import('./types').CheckboxClassNames>,
+    styles: Object as PropType<import('./types').CheckboxStyles>,
   },
   emits: ['update:checked', 'change', 'click', 'mouseenter', 'mouseleave', 'keypress', 'keydown', 'focus', 'blur'],
   setup(props, { slots, emit, expose }) {
@@ -146,25 +148,36 @@ export const Checkbox = defineComponent({
 
     return () => (
       <label
-        class={cls(`${prefixCls}-wrapper`, {
-          [`${prefixCls}-wrapper-checked`]: isChecked.value,
-          [`${prefixCls}-wrapper-disabled`]: isDisabled.value,
-        })}
+        class={cls(
+          `${prefixCls}-wrapper`,
+          {
+            [`${prefixCls}-wrapper-checked`]: isChecked.value,
+            [`${prefixCls}-wrapper-disabled`]: isDisabled.value,
+          },
+          props.classNames?.root,
+        )}
+        style={props.styles?.root}
         onClick={handleClick}
         onMouseenter={handleMouseEnter}
         onMouseleave={handleMouseLeave}
       >
         <span
-          class={cls(prefixCls, {
-            [`${prefixCls}-checked`]: isChecked.value,
-            [`${prefixCls}-indeterminate`]: props.indeterminate,
-            [`${prefixCls}-disabled`]: isDisabled.value,
-          })}
+          class={cls(
+            prefixCls,
+            {
+              [`${prefixCls}-checked`]: isChecked.value,
+              [`${prefixCls}-indeterminate`]: props.indeterminate,
+              [`${prefixCls}-disabled`]: isDisabled.value,
+            },
+            props.classNames?.checkbox,
+          )}
+          style={props.styles?.checkbox}
         >
           <input
             ref={inputRef}
             type="checkbox"
-            class={`${prefixCls}-input`}
+            class={cls(`${prefixCls}-input`, props.classNames?.input)}
+            style={props.styles?.input}
             checked={isChecked.value}
             disabled={isDisabled.value || undefined}
             name={mergedName.value}
@@ -179,9 +192,13 @@ export const Checkbox = defineComponent({
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
-          <span class={`${prefixCls}-inner`} />
+          <span class={cls(`${prefixCls}-inner`, props.classNames?.inner)} style={props.styles?.inner} />
         </span>
-        {slots.default && <span class={`${prefixCls}-label`}>{slots.default()}</span>}
+        {slots.default && (
+          <span class={cls(`${prefixCls}-label`, props.classNames?.label)} style={props.styles?.label}>
+            {slots.default()}
+          </span>
+        )}
       </label>
     )
   },

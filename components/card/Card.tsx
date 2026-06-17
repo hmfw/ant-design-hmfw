@@ -45,6 +45,8 @@ export const Card = defineComponent({
     activeTabKey: String,
     defaultActiveTabKey: String,
     onTabChange: Function as PropType<(key: string) => void>,
+    classNames: Object as PropType<import('./types').CardClassNames>,
+    styles: Object as PropType<import('./types').CardStyles>,
   },
   emits: ['update:activeTabKey', 'tabChange'],
   setup(props, { slots, emit }) {
@@ -126,13 +128,22 @@ export const Card = defineComponent({
       )
 
       const headNode = (hasHead || hasTabs) && (
-        <div class={`${prefixCls}-head`} style={props.headStyle}>
+        <div
+          class={cls(`${prefixCls}-head`, props.classNames?.head)}
+          style={{ ...props.headStyle, ...props.styles?.head }}
+        >
           {hasHead && (
             <div class={`${prefixCls}-head-wrapper`}>
               {(props.title || slots.title) && (
-                <div class={`${prefixCls}-head-title`}>{slots.title ? slots.title() : props.title}</div>
+                <div class={cls(`${prefixCls}-head-title`, props.classNames?.title)} style={props.styles?.title}>
+                  {slots.title ? slots.title() : props.title}
+                </div>
               )}
-              {slots.extra && <div class={`${prefixCls}-extra`}>{slots.extra()}</div>}
+              {slots.extra && (
+                <div class={cls(`${prefixCls}-extra`, props.classNames?.extra)} style={props.styles?.extra}>
+                  {slots.extra()}
+                </div>
+              )}
             </div>
           )}
           {tabsNode}
@@ -143,7 +154,10 @@ export const Card = defineComponent({
       const hasGrid = Array.isArray(defaultChildren) && containsGrid(defaultChildren)
 
       const bodyNode = (
-        <div class={`${prefixCls}-body`} style={props.bodyStyle}>
+        <div
+          class={cls(`${prefixCls}-body`, props.classNames?.body)}
+          style={{ ...props.bodyStyle, ...props.styles?.body }}
+        >
           {isLoading.value ? (
             <div class={`${prefixCls}-loading-content`}>
               {showAvatar && <div class={`${prefixCls}-loading-avatar`} />}
@@ -159,10 +173,17 @@ export const Card = defineComponent({
         </div>
       )
 
-      const actionsNode = slots.actions && <ul class={`${prefixCls}-actions`}>{slots.actions()}</ul>
+      const actionsNode = slots.actions && (
+        <ul class={cls(`${prefixCls}-actions`, props.classNames?.actions)} style={props.styles?.actions}>
+          {slots.actions()}
+        </ul>
+      )
 
       return (
-        <div class={cls(classes.value, { [`${prefixCls}-contain-grid`]: hasGrid })}>
+        <div
+          class={cls(classes.value, { [`${prefixCls}-contain-grid`]: hasGrid }, props.classNames?.root)}
+          style={props.styles?.root}
+        >
           {coverNode}
           {headNode}
           {bodyNode}

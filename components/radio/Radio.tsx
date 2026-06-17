@@ -23,6 +23,8 @@ export const Radio = defineComponent({
     value: [String, Number, Boolean] as PropType<RadioValueType>,
     name: String,
     id: String,
+    classNames: Object as PropType<import('./types').RadioClassNames>,
+    styles: Object as PropType<import('./types').RadioStyles>,
   },
   emits: ['update:checked', 'change'],
   setup(props, { slots, emit }) {
@@ -99,21 +101,32 @@ export const Radio = defineComponent({
 
       return (
         <label
-          class={cls(`${actualPrefixCls.value}-wrapper`, {
-            [`${actualPrefixCls.value}-wrapper-checked`]: isChecked.value,
-            [`${actualPrefixCls.value}-wrapper-disabled`]: isDisabled.value,
-            [`${actualPrefixCls.value}-wrapper-block`]: isBlock.value,
-          })}
+          class={cls(
+            `${actualPrefixCls.value}-wrapper`,
+            {
+              [`${actualPrefixCls.value}-wrapper-checked`]: isChecked.value,
+              [`${actualPrefixCls.value}-wrapper-disabled`]: isDisabled.value,
+              [`${actualPrefixCls.value}-wrapper-block`]: isBlock.value,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
         >
           <span
-            class={cls(actualPrefixCls.value, {
-              [`${actualPrefixCls.value}-checked`]: isChecked.value,
-              [`${actualPrefixCls.value}-disabled`]: isDisabled.value,
-            })}
+            class={cls(
+              actualPrefixCls.value,
+              {
+                [`${actualPrefixCls.value}-checked`]: isChecked.value,
+                [`${actualPrefixCls.value}-disabled`]: isDisabled.value,
+              },
+              props.classNames?.radio,
+            )}
+            style={props.styles?.radio}
           >
             <input
               type="radio"
-              class={`${actualPrefixCls.value}-input`}
+              class={cls(`${actualPrefixCls.value}-input`, props.classNames?.input)}
+              style={props.styles?.input}
               checked={isChecked.value}
               disabled={isDisabled.value}
               name={radioName.value}
@@ -121,9 +134,13 @@ export const Radio = defineComponent({
               id={props.id}
               onChange={handleChange}
             />
-            <span class={`${actualPrefixCls.value}-inner`} />
+            <span class={cls(`${actualPrefixCls.value}-inner`, props.classNames?.inner)} style={props.styles?.inner} />
           </span>
-          {slots.default && <span class={`${actualPrefixCls.value}-label`}>{slots.default()}</span>}
+          {slots.default && (
+            <span class={cls(`${actualPrefixCls.value}-label`, props.classNames?.label)} style={props.styles?.label}>
+              {slots.default()}
+            </span>
+          )}
         </label>
       )
     }

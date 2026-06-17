@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'vue'
+
 export type CardType = 'inner'
 export type CardVariant = 'borderless' | 'outlined'
 
@@ -15,6 +17,42 @@ export interface TabItem {
   key: string
   label: string
   disabled?: boolean
+}
+
+/**
+ * Card 各部分的语义化 className
+ */
+export interface CardClassNames {
+  /** 根节点 div.hmfw-card */
+  root?: string
+  /** 头部容器 div.hmfw-card-head */
+  head?: string
+  /** 标题 div.hmfw-card-head-title */
+  title?: string
+  /** 右侧扩展 div.hmfw-card-extra */
+  extra?: string
+  /** 主体内容 div.hmfw-card-body */
+  body?: string
+  /** 底部操作 ul.hmfw-card-actions */
+  actions?: string
+}
+
+/**
+ * Card 各部分的语义化 style
+ */
+export interface CardStyles {
+  /** 根节点 div.hmfw-card */
+  root?: CSSProperties
+  /** 头部容器 div.hmfw-card-head */
+  head?: CSSProperties
+  /** 标题 div.hmfw-card-head-title */
+  title?: CSSProperties
+  /** 右侧扩展 div.hmfw-card-extra */
+  extra?: CSSProperties
+  /** 主体内容 div.hmfw-card-body */
+  body?: CSSProperties
+  /** 底部操作 ul.hmfw-card-actions */
+  actions?: CSSProperties
 }
 
 export interface CardProps {
@@ -39,6 +77,10 @@ export interface CardProps {
   tabBarExtraContent?: unknown
   /** 标签切换回调 */
   onTabChange?: (key: string) => void
+  /** 语义化 className */
+  classNames?: CardClassNames
+  /** 语义化 style */
+  styles?: CardStyles
 }
 
 export interface CardGridProps {

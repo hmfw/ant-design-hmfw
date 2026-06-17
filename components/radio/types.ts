@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'vue'
+
 export type RadioValueType = string | number | boolean
 
 export interface RadioChangeEvent {
@@ -8,6 +10,38 @@ export interface RadioChangeEvent {
   nativeEvent: Event
 }
 
+/**
+ * Radio 各部分的语义化 className
+ */
+export interface RadioClassNames {
+  /** 根节点 label.hmfw-radio-wrapper */
+  root?: string
+  /** 单选框容器 span.hmfw-radio */
+  radio?: string
+  /** 原生 input 元素 input.hmfw-radio-input */
+  input?: string
+  /** 视觉圆形选择框 span.hmfw-radio-inner */
+  inner?: string
+  /** 文本标签 span.hmfw-radio-label */
+  label?: string
+}
+
+/**
+ * Radio 各部分的语义化 style
+ */
+export interface RadioStyles {
+  /** 根节点 label.hmfw-radio-wrapper */
+  root?: CSSProperties
+  /** 单选框容器 span.hmfw-radio */
+  radio?: CSSProperties
+  /** 原生 input 元素 input.hmfw-radio-input */
+  input?: CSSProperties
+  /** 视觉圆形选择框 span.hmfw-radio-inner */
+  inner?: CSSProperties
+  /** 文本标签 span.hmfw-radio-label */
+  label?: CSSProperties
+}
+
 export interface RadioProps {
   checked?: boolean
   defaultChecked?: boolean
@@ -15,6 +49,10 @@ export interface RadioProps {
   value?: RadioValueType
   name?: string
   id?: string
+  /** 语义化 className */
+  classNames?: RadioClassNames
+  /** 语义化 style */
+  styles?: RadioStyles
 }
 
 export interface RadioGroupProps {
