@@ -81,6 +81,14 @@
   <TreeVirtual />
 </DemoBlock>
 
+### 语义化 className 与 style
+
+通过 `classNames` / `styles` 对树节点、图标、标题、展开开关等子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="TreeClassNamesSource">
+  <TreeClassNames />
+</DemoBlock>
+
 ## API
 
 ### Tree Props
@@ -117,8 +125,8 @@
 | height                 | 虚拟滚动容器高度（开启 virtual 时必需）                             | `number \| string`                                          | -       |
 | itemHeight             | 虚拟滚动每项高度                                                    | `number`                                                    | `28`    |
 | rootClassName          | 根节点 className                                                    | `string`                                                    | -       |
-| classNames             | 语义化 class（`root`/`item`/`itemIcon`/`itemTitle`/`itemSwitcher`） | `object`                                                    | -       |
-| styles                 | 语义化内联样式（同上 key）                                          | `object`                                                    | -       |
+| classNames             | 语义化结构 class，见下方 [语义化 className](#语义化-classname)      | `object`                                                    | -       |
+| styles                 | 语义化结构 style，见下方 [语义化 style](#语义化-style)              | `object`                                                    | -       |
 
 ### DirectoryTree Props
 
@@ -162,6 +170,272 @@
 
 聚焦节点后支持：`↑`/`↓` 移动焦点，`→` 展开（或进入子节点），`←` 收起（或回到父节点），`Enter`/`Space` 选中或勾选。
 
+---
+
+## 语义化 className
+
+通过 `classNames` 属性可以对树形控件的各个子节点应用自定义 className，支持细粒度样式控制。
+
+### 类型定义
+
+```typescript
+interface TreeSemanticClassNames {
+  root?: string // 树根容器
+  item?: string // 树节点项
+  itemIcon?: string // 节点图标
+  itemTitle?: string // 节点标题
+  itemSwitcher?: string // 展开/收起开关
+}
+```
+
+### DOM 结构与默认 className
+
+```html
+<div class="hmfw-tree">
+  <!-- ↑ classNames.root 应用于此 -->
+
+  <!-- 树节点（每个节点一个） -->
+  <div class="hmfw-tree-treenode">
+    <!-- ↑ classNames.item 应用于此 -->
+
+    <!-- 展开/收起开关 -->
+    <span class="hmfw-tree-switcher">
+      <!-- ↑ classNames.itemSwitcher 应用于此 -->
+      <svg>展开/收起图标</svg>
+    </span>
+
+    <!-- 复选框（checkable 时） -->
+    <span class="hmfw-tree-checkbox">
+      <input type="checkbox" />
+    </span>
+
+    <!-- 节点图标（showIcon 时） -->
+    <span class="hmfw-tree-iconEle">
+      <!-- ↑ classNames.itemIcon 应用于此 -->
+      <svg>节点图标</svg>
+    </span>
+
+    <!-- 节点标题 -->
+    <span class="hmfw-tree-title">
+      <!-- ↑ classNames.itemTitle 应用于此 -->
+      节点文字
+    </span>
+  </div>
+
+  <!-- 子节点（嵌套结构） -->
+  <div class="hmfw-tree-treenode">...</div>
+</div>
+```
+
+### 使用示例
+
+```vue
+<template>
+  <!-- 自定义节点样式 -->
+  <Tree
+    :tree-data="treeData"
+    :class-names="{
+      item: 'my-tree-item',
+    }"
+  />
+
+  <!-- 自定义图标和标题 -->
+  <Tree
+    :tree-data="treeData"
+    show-icon
+    :class-names="{
+      itemIcon: 'my-tree-icon',
+      itemTitle: 'my-tree-title',
+    }"
+  />
+
+  <!-- 自定义展开/收起开关 -->
+  <Tree
+    :tree-data="treeData"
+    :class-names="{
+      itemSwitcher: 'my-tree-switcher',
+    }"
+  />
+
+  <!-- 完整自定义 -->
+  <Tree
+    :tree-data="treeData"
+    show-icon
+    checkable
+    :class-names="{
+      root: 'my-tree-root',
+      item: 'my-tree-item',
+      itemIcon: 'my-tree-icon',
+      itemTitle: 'my-tree-title',
+      itemSwitcher: 'my-tree-switcher',
+    }"
+  />
+</template>
+
+<script setup lang="ts">
+import { Tree } from 'ant-design-hmfw'
+
+const treeData = [
+  {
+    key: '1',
+    title: '父节点 1',
+    children: [
+      { key: '1-1', title: '子节点 1-1' },
+      { key: '1-2', title: '子节点 1-2' },
+    ],
+  },
+  {
+    key: '2',
+    title: '父节点 2',
+    children: [{ key: '2-1', title: '子节点 2-1' }],
+  },
+]
+</script>
+
+<style scoped>
+:deep(.my-tree-root) {
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+:deep(.my-tree-item) {
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+:deep(.my-tree-item:hover) {
+  background: #e6f7ff;
+  transform: translateX(4px);
+}
+
+:deep(.my-tree-icon) {
+  color: #1890ff;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+:deep(.my-tree-title) {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+:deep(.my-tree-switcher) {
+  color: #722ed1;
+  font-size: 16px;
+}
+
+:deep(.my-tree-switcher svg) {
+  transition: transform 0.3s;
+}
+</style>
+```
+
+---
+
+## 语义化 style
+
+通过 `styles` 属性可以对树形控件的各个子节点应用内联样式。
+
+### 类型定义
+
+```typescript
+interface TreeSemanticStyles {
+  root?: Record<string, string | number> // 树根容器
+  item?: Record<string, string | number> // 树节点项
+  itemIcon?: Record<string, string | number> // 节点图标
+  itemTitle?: Record<string, string | number> // 节点标题
+  itemSwitcher?: Record<string, string | number> // 展开/收起开关
+}
+```
+
+### 使用示例
+
+```vue
+<template>
+  <!-- 内联样式控制节点 -->
+  <Tree
+    :tree-data="treeData"
+    :styles="{
+      item: {
+        padding: '8px 12px',
+        borderRadius: '4px',
+      },
+    }"
+  />
+
+  <!-- 自定义图标和标题 -->
+  <Tree
+    :tree-data="treeData"
+    show-icon
+    :styles="{
+      itemIcon: {
+        color: '#1890ff',
+        fontSize: '18px',
+        marginRight: '8px',
+      },
+      itemTitle: {
+        fontWeight: '500',
+        color: '#333',
+        fontSize: '14px',
+      },
+    }"
+  />
+
+  <!-- 自定义开关 -->
+  <Tree
+    :tree-data="treeData"
+    :styles="{
+      itemSwitcher: {
+        color: '#722ed1',
+        fontSize: '16px',
+      },
+    }"
+  />
+
+  <!-- 完整自定义 -->
+  <Tree
+    :tree-data="treeData"
+    show-icon
+    :styles="{
+      root: {
+        background: '#fafafa',
+        padding: '16px',
+        borderRadius: '8px',
+      },
+      item: {
+        padding: '8px 12px',
+        borderRadius: '4px',
+      },
+      itemIcon: {
+        color: '#1890ff',
+        fontSize: '18px',
+      },
+      itemTitle: {
+        fontWeight: '500',
+        fontSize: '14px',
+      },
+      itemSwitcher: {
+        color: '#722ed1',
+      },
+    }"
+  />
+</template>
+```
+
+### 注意事项
+
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `item` / `itemIcon` / `itemTitle` / `itemSwitcher` 会应用到**所有节点**，无法针对单个节点定制（如需单节点样式，请使用 `titleRender` 自定义渲染）
+- `itemIcon` 仅在 `showIcon={true}` 或节点有自定义 `icon` 时生效
+- `itemSwitcher` 对所有节点生效，包括叶子节点（叶子节点的 switcher 默认显示为占位符）
+- 虚拟滚动模式（`virtual={true}`）下，样式应用方式相同，但需注意性能影响
+- 拖拽过程中的视觉反馈（如拖拽占位符）不受 `classNames` / `styles` 控制，由内置样式决定
+
+---
+
 ### 不支持的能力（待后补）
 
 异步加载 `loadData`/`loadedKeys`、`TreeNode` 子组件式 JSX 声明、拖拽插入位置指示线（当前拖放仅支持放入目标节点子级，触发 `drop` 事件，并已内置循环引用边界检查与 `allowDrop` 校验）。
@@ -185,4 +459,6 @@ import TreeFieldNames from './TreeFieldNames.vue'
 import TreeFieldNamesSource from './TreeFieldNames.vue?raw'
 import TreeVirtual from './TreeVirtual.vue'
 import TreeVirtualSource from './TreeVirtual.vue?raw'
+import TreeClassNames from './TreeClassNames.vue'
+import TreeClassNamesSource from './TreeClassNames.vue?raw'
 </script>

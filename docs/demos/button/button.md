@@ -133,24 +133,24 @@
 
 ### Button Props
 
-| 参数            | 说明                                                     | 类型                                                                      | 默认值      |
-| --------------- | -------------------------------------------------------- | ------------------------------------------------------------------------- | ----------- |
-| type            | 设置按钮类型                                             | `'default' \| 'primary' \| 'dashed' \| 'text' \| 'link'`                  | `'default'` |
-| size            | 设置按钮大小                                             | `'small' \| 'middle' \| 'large'`                                          | `'middle'`  |
-| shape           | 设置按钮形状                                             | `'default' \| 'circle' \| 'round'`                                        | `'default'` |
-| htmlType        | 设置 button 原生的 type 值                               | `'submit' \| 'button' \| 'reset'`                                         | `'button'`  |
-| loading         | 设置按钮载入状态                                         | `boolean \| { delay?: number }`                                           | `false`     |
-| disabled        | 设置按钮失效状态                                         | `boolean`                                                                 | `false`     |
-| danger          | 设置危险按钮                                             | `boolean`                                                                 | `false`     |
-| block           | 将按钮宽度调整为其父宽度的选项                           | `boolean`                                                                 | `false`     |
-| ghost           | 幽灵属性，使按钮背景透明                                 | `boolean`                                                                 | `false`     |
-| icon            | 设置按钮的图标组件                                       | `IconComponent`                                                           | -           |
-| iconPosition    | 设置图标位置                                             | `'start' \| 'end'`                                                        | `'start'`   |
-| href            | 点击跳转的地址，指定此属性后按钮渲染为 a 标签            | `string`                                                                  | -           |
-| target          | 相当于 a 标签的 target 属性，href 存在时生效             | `string`                                                                  | -           |
-| autoInsertSpace | 是否在两个汉字之间插入空格                               | `boolean`                                                                 | `true`      |
-| classNames      | 语义化结构 className（细粒度控制图标、loading 等子元素） | `{ root?: string; icon?: string; loading?: string }`                      | -           |
-| styles          | 语义化结构 style                                         | `{ root?: CSSProperties; icon?: CSSProperties; loading?: CSSProperties }` | -           |
+| 参数            | 说明                                                           | 类型                                                     | 默认值      |
+| --------------- | -------------------------------------------------------------- | -------------------------------------------------------- | ----------- |
+| type            | 设置按钮类型                                                   | `'default' \| 'primary' \| 'dashed' \| 'text' \| 'link'` | `'default'` |
+| size            | 设置按钮大小                                                   | `'small' \| 'middle' \| 'large'`                         | `'middle'`  |
+| shape           | 设置按钮形状                                                   | `'default' \| 'circle' \| 'round'`                       | `'default'` |
+| htmlType        | 设置 button 原生的 type 值                                     | `'submit' \| 'button' \| 'reset'`                        | `'button'`  |
+| loading         | 设置按钮载入状态                                               | `boolean \| { delay?: number }`                          | `false`     |
+| disabled        | 设置按钮失效状态                                               | `boolean`                                                | `false`     |
+| danger          | 设置危险按钮                                                   | `boolean`                                                | `false`     |
+| block           | 将按钮宽度调整为其父宽度的选项                                 | `boolean`                                                | `false`     |
+| ghost           | 幽灵属性，使按钮背景透明                                       | `boolean`                                                | `false`     |
+| icon            | 设置按钮的图标组件                                             | `IconComponent`                                          | -           |
+| iconPosition    | 设置图标位置                                                   | `'start' \| 'end'`                                       | `'start'`   |
+| href            | 点击跳转的地址，指定此属性后按钮渲染为 a 标签                  | `string`                                                 | -           |
+| target          | 相当于 a 标签的 target 属性，href 存在时生效                   | `string`                                                 | -           |
+| autoInsertSpace | 是否在两个汉字之间插入空格                                     | `boolean`                                                | `true`      |
+| classNames      | 语义化结构 class，见下方 [语义化 className](#语义化-classname) | `ButtonClassNames`                                       | -           |
+| styles          | 语义化结构 style，见下方 [语义化 style](#语义化-style)         | `ButtonStyles`                                           | -           |
 
 ### Button Events
 
@@ -163,3 +163,148 @@
 | 插槽名  | 说明     |
 | ------- | -------- |
 | default | 按钮内容 |
+
+---
+
+## 语义化 className
+
+通过 `classNames` 属性可以对按钮的各个子节点应用自定义 className，支持细粒度样式控制。
+
+### 类型定义
+
+```typescript
+interface ButtonClassNames {
+  root?: string // 按钮根节点（<button> 或 <a>）
+  icon?: string // 图标容器
+  loading?: string // 加载状态图标容器（与 icon 叠加）
+}
+```
+
+### DOM 结构与默认 className
+
+```html
+<!-- 基础按钮 -->
+<button class="hmfw-button hmfw-button-default">
+  <!-- ↑ classNames.root 应用于此 -->
+  <span>按钮文字</span>
+</button>
+
+<!-- 带图标按钮 -->
+<button class="hmfw-button hmfw-button-primary">
+  <span class="hmfw-button-icon">
+    <!-- ↑ classNames.icon 应用于此 -->
+    <svg>...</svg>
+  </span>
+  <span>搜索</span>
+</button>
+
+<!-- 加载状态 -->
+<button class="hmfw-button hmfw-button-primary hmfw-button-loading">
+  <!-- ↑ classNames.root 应用于此 -->
+  <span class="hmfw-button-icon hmfw-button-loading-icon">
+    <!-- ↑ classNames.icon + classNames.loading 叠加应用 -->
+    <svg class="hmfw-icon-spin">...</svg>
+  </span>
+  <span>提交中</span>
+</button>
+```
+
+### 使用示例
+
+```vue
+<template>
+  <!-- 自定义图标样式 -->
+  <Button type="primary" :icon="SearchOutlined" :class-names="{ icon: 'my-icon-wrapper' }"> 搜索 </Button>
+
+  <!-- 自定义加载动画 -->
+  <Button loading :class-names="{ loading: 'my-loading-emphasis' }"> 加载中 </Button>
+
+  <!-- 自定义根节点样式 -->
+  <Button :class-names="{ root: 'my-button-root' }"> 自定义按钮 </Button>
+</template>
+
+<style scoped>
+:deep(.my-icon-wrapper) {
+  color: #fadb14;
+  filter: drop-shadow(0 0 2px rgba(250, 219, 20, 0.6));
+}
+
+:deep(.my-loading-emphasis) {
+  font-size: 16px;
+}
+
+:deep(.my-button-root) {
+  border-radius: 16px;
+}
+</style>
+```
+
+### 注意事项
+
+- 加载状态时，`classNames.loading` 与 `classNames.icon` 会**叠加**应用在同一个 `<span>` 上
+- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-button-loading`）合并
+
+---
+
+## 语义化 style
+
+通过 `styles` 属性可以对按钮的各个子节点应用内联样式。
+
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface ButtonStyles {
+  root?: CSSProperties // 按钮根节点
+  icon?: CSSProperties // 图标容器
+  loading?: CSSProperties // 加载状态图标容器（与 icon 合并）
+}
+```
+
+### 使用示例
+
+```vue
+<template>
+  <!-- 内联样式控制图标 -->
+  <Button
+    type="primary"
+    :icon="SearchOutlined"
+    :styles="{
+      icon: { color: '#fadb14', fontSize: '18px' },
+    }"
+  >
+    搜索
+  </Button>
+
+  <!-- 自定义边框颜色 -->
+  <Button
+    :icon="SearchOutlined"
+    icon-position="end"
+    :styles="{
+      root: {
+        borderColor: '#722ed1',
+        color: '#722ed1',
+      },
+    }"
+  >
+    尾部图标
+  </Button>
+
+  <!-- 组合使用 -->
+  <Button
+    :icon="SearchOutlined"
+    :styles="{
+      root: { borderRadius: '16px' },
+      icon: { fontSize: '20px' },
+    }"
+  >
+    组合样式
+  </Button>
+</template>
+```
+
+### 注意事项
+
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- 加载状态时，`styles.loading` 与 `styles.icon` 会**合并**（loading 的样式优先）

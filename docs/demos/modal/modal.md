@@ -69,38 +69,38 @@
 
 ### Modal Props
 
-| 参数                   | 说明                                        | 类型                                                                                                                                               | 默认值            |
-| ---------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
-| open (v-model)         | 对话框是否可见                              | `boolean`                                                                                                                                          | `false`           |
-| defaultOpen            | 非受控初始可见状态                          | `boolean`                                                                                                                                          | `false`           |
-| title                  | 标题                                        | `string \| number \| VNode \| () => VNode \| slot`                                                                                                 | -                 |
-| width                  | 宽度                                        | `number \| string`                                                                                                                                 | `520`             |
-| centered               | 垂直居中展示                                | `boolean`                                                                                                                                          | `false`           |
-| closable               | 是否显示右上角关闭按钮                      | `boolean`                                                                                                                                          | `true`            |
-| closeIcon              | 自定义关闭图标                              | `IconComponent`                                                                                                                                    | `CloseOutlined`   |
-| mask                   | 是否展示遮罩                                | `boolean`                                                                                                                                          | `true`            |
-| maskClosable           | 点击遮罩是否允许关闭                        | `boolean`                                                                                                                                          | `true`            |
-| keyboard               | 是否支持 Esc 键关闭                         | `boolean`                                                                                                                                          | `true`            |
-| footer                 | 底部内容；`null` / `false` 隐藏             | `boolean \| null \| slot`                                                                                                                          | `true`            |
-| okText                 | 确认按钮文字                                | `string`                                                                                                                                           | locale.okText     |
-| cancelText             | 取消按钮文字                                | `string`                                                                                                                                           | locale.cancelText |
-| okType                 | 确认按钮类型，支持 `'danger'` 简写          | `LegacyButtonType`                                                                                                                                 | `'primary'`       |
-| okButtonProps          | 透传到 OK Button 的 props                   | `ButtonProps`                                                                                                                                      | -                 |
-| cancelButtonProps      | 透传到 Cancel Button 的 props               | `ButtonProps`                                                                                                                                      | -                 |
-| confirmLoading         | 确定按钮 loading；同时阻止取消/Esc/遮罩关闭 | `boolean`                                                                                                                                          | `false`           |
-| loading                | 整个对话框 body 显示骨架屏                  | `boolean`                                                                                                                                          | `false`           |
-| destroyOnHidden        | 关闭后销毁 body 内的子元素（5.25+ 命名）    | `boolean`                                                                                                                                          | `false`           |
-| destroyOnClose         | `destroyOnHidden` 的兼容别名                | `boolean`                                                                                                                                          | `false`           |
-| forceRender            | 强制渲染对话框                              | `boolean`                                                                                                                                          | `false`           |
-| zIndex                 | 层级                                        | `number`                                                                                                                                           | `1000`            |
-| wrapClassName          | 应用到包裹层 `.hmfw-modal-wrap` 的 class    | `string`                                                                                                                                           | -                 |
-| rootClassName          | 应用到根元素 `.hmfw-modal-root` 的 class    | `string`                                                                                                                                           | -                 |
-| focusTriggerAfterClose | 关闭后是否将焦点还给打开前的元素            | `boolean`                                                                                                                                          | `true`            |
-| bodyStyle              | body 内联样式                               | `CSSProperties`                                                                                                                                    | -                 |
-| maskStyle              | mask 内联样式                               | `CSSProperties`                                                                                                                                    | -                 |
-| classNames             | 细粒度控制各部分的 class                    | `{ header?: string; body?: string; footer?: string; mask?: string; wrapper?: string; content?: string }`                                           | -                 |
-| styles                 | 细粒度控制各部分的 style                    | `{ header?: CSSProperties; body?: CSSProperties; footer?: CSSProperties; mask?: CSSProperties; wrapper?: CSSProperties; content?: CSSProperties }` | -                 |
-| modalRender            | 自定义渲染对话框容器                        | `(node: VNode) => VNode`                                                                                                                           | -                 |
+| 参数                   | 说明                                                           | 类型                                                                                                                                               | 默认值            |
+| ---------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| open (v-model)         | 对话框是否可见                                                 | `boolean`                                                                                                                                          | `false`           |
+| defaultOpen            | 非受控初始可见状态                                             | `boolean`                                                                                                                                          | `false`           |
+| title                  | 标题                                                           | `string \| number \| VNode \| () => VNode \| slot`                                                                                                 | -                 |
+| width                  | 宽度                                                           | `number \| string`                                                                                                                                 | `520`             |
+| centered               | 垂直居中展示                                                   | `boolean`                                                                                                                                          | `false`           |
+| closable               | 是否显示右上角关闭按钮                                         | `boolean`                                                                                                                                          | `true`            |
+| closeIcon              | 自定义关闭图标                                                 | `IconComponent`                                                                                                                                    | `CloseOutlined`   |
+| mask                   | 是否展示遮罩                                                   | `boolean`                                                                                                                                          | `true`            |
+| maskClosable           | 点击遮罩是否允许关闭                                           | `boolean`                                                                                                                                          | `true`            |
+| keyboard               | 是否支持 Esc 键关闭                                            | `boolean`                                                                                                                                          | `true`            |
+| footer                 | 底部内容；`null` / `false` 隐藏                                | `boolean \| null \| slot`                                                                                                                          | `true`            |
+| okText                 | 确认按钮文字                                                   | `string`                                                                                                                                           | locale.okText     |
+| cancelText             | 取消按钮文字                                                   | `string`                                                                                                                                           | locale.cancelText |
+| okType                 | 确认按钮类型，支持 `'danger'` 简写                             | `LegacyButtonType`                                                                                                                                 | `'primary'`       |
+| okButtonProps          | 透传到 OK Button 的 props                                      | `ButtonProps`                                                                                                                                      | -                 |
+| cancelButtonProps      | 透传到 Cancel Button 的 props                                  | `ButtonProps`                                                                                                                                      | -                 |
+| confirmLoading         | 确定按钮 loading；同时阻止取消/Esc/遮罩关闭                    | `boolean`                                                                                                                                          | `false`           |
+| loading                | 整个对话框 body 显示骨架屏                                     | `boolean`                                                                                                                                          | `false`           |
+| destroyOnHidden        | 关闭后销毁 body 内的子元素（5.25+ 命名）                       | `boolean`                                                                                                                                          | `false`           |
+| destroyOnClose         | `destroyOnHidden` 的兼容别名                                   | `boolean`                                                                                                                                          | `false`           |
+| forceRender            | 强制渲染对话框                                                 | `boolean`                                                                                                                                          | `false`           |
+| zIndex                 | 层级                                                           | `number`                                                                                                                                           | `1000`            |
+| wrapClassName          | 应用到包裹层 `.hmfw-modal-wrap` 的 class                       | `string`                                                                                                                                           | -                 |
+| rootClassName          | 应用到根元素 `.hmfw-modal-root` 的 class                       | `string`                                                                                                                                           | -                 |
+| focusTriggerAfterClose | 关闭后是否将焦点还给打开前的元素                               | `boolean`                                                                                                                                          | `true`            |
+| bodyStyle              | body 内联样式                                                  | `CSSProperties`                                                                                                                                    | -                 |
+| maskStyle              | mask 内联样式                                                  | `CSSProperties`                                                                                                                                    | -                 |
+| classNames             | 语义化结构 class，见下方 [语义化 className](#语义化-classname) | `{ header?: string; body?: string; footer?: string; mask?: string; wrapper?: string; content?: string }`                                           | -                 |
+| styles                 | 语义化结构 style，见下方 [语义化 style](#语义化-style)         | `{ header?: CSSProperties; body?: CSSProperties; footer?: CSSProperties; mask?: CSSProperties; wrapper?: CSSProperties; content?: CSSProperties }` | -                 |
+| modalRender            | 自定义渲染对话框容器                                           | `(node: VNode) => VNode`                                                                                                                           | -                 |
 
 ### Modal Events
 
@@ -143,3 +143,269 @@
 | onOk                                                                  | 点击 OK；返回 Promise 时按钮 loading 直到 resolve | `() => any \| Promise<any>`                                | -                  |
 | onCancel                                                              | 点击 Cancel                                       | `() => void`                                               | -                  |
 | afterClose                                                            | 销毁后回调                                        | `() => void`                                               | -                  |
+
+---
+
+## 语义化 className
+
+通过 `classNames` 属性可以对对话框的各个子节点应用自定义 className，支持细粒度样式控制。
+
+### 类型定义
+
+```typescript
+interface ModalClassNames {
+  mask?: string // 遮罩层
+  wrapper?: string // 容器包裹层
+  content?: string // 内容容器
+  header?: string // 标题区域
+  body?: string // 内容区域
+  footer?: string // 底部操作区
+}
+```
+
+### DOM 结构与默认 className
+
+```html
+<div class="hmfw-modal-root">
+  <!-- 遮罩层 -->
+  <div class="hmfw-modal-mask">
+    <!-- ↑ classNames.mask 应用于此 -->
+  </div>
+
+  <!-- 容器包裹层 -->
+  <div class="hmfw-modal-wrap">
+    <!-- ↑ classNames.wrapper 应用于此 -->
+
+    <!-- 内容容器 -->
+    <div class="hmfw-modal-content">
+      <!-- ↑ classNames.content 应用于此 -->
+
+      <!-- 关闭按钮 -->
+      <button class="hmfw-modal-close">×</button>
+
+      <!-- 标题区域 -->
+      <div class="hmfw-modal-header">
+        <!-- ↑ classNames.header 应用于此 -->
+        <div class="hmfw-modal-title">标题文字</div>
+      </div>
+
+      <!-- 内容区域 -->
+      <div class="hmfw-modal-body">
+        <!-- ↑ classNames.body 应用于此 -->
+        对话框内容
+      </div>
+
+      <!-- 底部操作区 -->
+      <div class="hmfw-modal-footer">
+        <!-- ↑ classNames.footer 应用于此 -->
+        <button>取消</button>
+        <button>确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### 使用示例
+
+```vue
+<template>
+  <!-- 自定义遮罩和内容容器 -->
+  <Modal
+    v-model:open="visible1"
+    title="自定义样式"
+    :class-names="{
+      mask: 'my-modal-mask',
+      content: 'my-modal-content',
+    }"
+  >
+    <p>对话框内容</p>
+  </Modal>
+
+  <!-- 自定义头部和底部 -->
+  <Modal
+    v-model:open="visible2"
+    title="渐变头部"
+    :class-names="{
+      header: 'my-modal-header',
+      footer: 'my-modal-footer',
+    }"
+  >
+    <p>对话框内容</p>
+  </Modal>
+
+  <!-- 自定义 body 区域 -->
+  <Modal
+    v-model:open="visible3"
+    title="自定义内容区"
+    :class-names="{
+      body: 'my-modal-body',
+    }"
+  >
+    <p>对话框内容</p>
+  </Modal>
+
+  <!-- 组合使用 -->
+  <Modal
+    v-model:open="visible4"
+    title="完整自定义"
+    :class-names="{
+      mask: 'my-mask',
+      wrapper: 'my-wrapper',
+      content: 'my-content',
+      header: 'my-header',
+      body: 'my-body',
+      footer: 'my-footer',
+    }"
+  >
+    <p>完全自定义的对话框</p>
+  </Modal>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Modal } from 'ant-design-hmfw'
+
+const visible1 = ref(false)
+const visible2 = ref(false)
+const visible3 = ref(false)
+const visible4 = ref(false)
+</script>
+
+<style scoped>
+:deep(.my-modal-mask) {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+:deep(.my-modal-content) {
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+:deep(.my-modal-header) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px 16px 0 0;
+  padding: 20px 24px;
+}
+
+:deep(.my-modal-body) {
+  background: #f0f5ff;
+  padding: 32px 24px;
+  font-size: 16px;
+}
+
+:deep(.my-modal-footer) {
+  background: #fafafa;
+  border-top: 2px solid #e8e8e8;
+  padding: 16px 24px;
+  border-radius: 0 0 16px 16px;
+}
+</style>
+```
+
+---
+
+## 语义化 style
+
+通过 `styles` 属性可以对对话框的各个子节点应用内联样式。
+
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface ModalStyles {
+  mask?: CSSProperties // 遮罩层
+  wrapper?: CSSProperties // 容器包裹层
+  content?: CSSProperties // 内容容器
+  header?: CSSProperties // 标题区域
+  body?: CSSProperties // 内容区域
+  footer?: CSSProperties // 底部操作区
+}
+```
+
+### 使用示例
+
+```vue
+<template>
+  <!-- 内联样式控制遮罩 -->
+  <Modal
+    v-model:open="visible1"
+    title="自定义遮罩"
+    :styles="{
+      mask: {
+        background: 'rgba(0, 0, 0, 0.7)',
+        backdropFilter: 'blur(4px)',
+      },
+    }"
+  >
+    <p>对话框内容</p>
+  </Modal>
+
+  <!-- 自定义内容容器 -->
+  <Modal
+    v-model:open="visible2"
+    title="圆角对话框"
+    :styles="{
+      content: {
+        borderRadius: '16px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+      },
+    }"
+  >
+    <p>对话框内容</p>
+  </Modal>
+
+  <!-- 自定义头部和底部 -->
+  <Modal
+    v-model:open="visible3"
+    title="渐变头部"
+    :styles="{
+      header: {
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white',
+        padding: '20px 24px',
+      },
+      footer: {
+        background: '#fafafa',
+        borderTop: '2px solid #e8e8e8',
+      },
+    }"
+  >
+    <p>对话框内容</p>
+  </Modal>
+
+  <!-- 组合使用 -->
+  <Modal
+    v-model:open="visible4"
+    title="完整自定义"
+    :styles="{
+      mask: { background: 'rgba(0, 0, 0, 0.8)' },
+      content: { borderRadius: '16px' },
+      header: {
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white',
+      },
+      body: {
+        background: '#f0f5ff',
+        padding: '32px 24px',
+        fontSize: '16px',
+      },
+      footer: { background: '#fafafa' },
+    }"
+  >
+    <p>完全自定义的对话框</p>
+  </Modal>
+</template>
+```
+
+### 注意事项
+
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `mask` / `wrapper` / `content` 影响对话框的外层结构，`header` / `body` / `footer` 影响内容区域
+- 当同时设置 `bodyStyle` prop 和 `styles.body` 时，两者会合并（`styles.body` 优先）
+- 当同时设置 `maskStyle` prop 和 `styles.mask` 时，两者会合并（`styles.mask` 优先）
+- `wrapper` 是对话框的定位容器，修改其样式可能影响居中效果，建议谨慎使用
+- 静态方法（`Modal.confirm` 等）创建的对话框暂不支持 `classNames` / `styles`，可使用 `className` / `wrapClassName` 配合全局样式
