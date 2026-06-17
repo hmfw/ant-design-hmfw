@@ -428,7 +428,7 @@ pnpm dev
 
 ## 当前进度
 
-### 已完成组件（11/67）
+### 已完成组件（15/67）
 
 | 组件         | 类型定义 Key 数量                                                                                | 文档 | Demo | 状态 |
 | ------------ | ------------------------------------------------------------------------------------------------ | ---- | ---- | ---- |
@@ -443,19 +443,23 @@ pnpm dev
 | **Radio**    | 5 (root, radio, input, inner, label)                                                             | ✅   | ✅   | 完成 |
 | **Card**     | 6 (root, head, title, extra, body, actions)                                                      | ✅   | ✅   | 完成 |
 | **Select**   | 10 (root, selector, item, placeholder, arrow, clear, dropdown, option, optionLabel, optionState) | ✅   | ✅   | 完成 |
+| **Tabs**     | 8 (root, nav, tab, tabActive, tabIcon, inkBar, content, tabpane)                                 | ✅   | ✅   | 完成 |
+| **Dropdown** | 4 (trigger, dropdown, arrow, content)                                                            | ✅   | ✅   | 完成 |
+| **Form**     | Form 1 (root) + FormItem 5 (root, label, control, feedback, extra)                               | ✅   | ✅   | 完成 |
+| **Table**    | 7 (root, header, body, row, cell, footer, pagination)                                            | ✅   | ✅   | 完成 |
 
 ### 待实现组件（优先级排序）
 
-#### 第一批：高频组件
+#### 第一批：高频组件 ✅ 全部完成
 
 - [x] **Select** - 下拉选择 ✅
 - [x] **Checkbox** - 复选框 ✅
 - [x] **Radio** - 单选框 ✅
 - [x] **Card** - 卡片 ✅
-- [ ] **Form** - 表单（建议 key: root, item, label, control, feedback, extra）
-- [ ] **Table** - 表格（建议 key: root, header, body, row, cell, pagination）
-- [ ] **Tabs** - 标签页（建议 key: root, nav, tab, tabActive, content）
-- [ ] **Dropdown** - 下拉菜单（建议 key: trigger, dropdown, menu, item）
+- [x] **Form** - 表单 ✅
+- [x] **Table** - 表格 ✅
+- [x] **Tabs** - 标签页 ✅
+- [x] **Dropdown** - 下拉菜单 ✅
 
 #### 第二批：布局/容器组件
 
@@ -832,6 +836,7 @@ open http://localhost:5173/components/{component}
 
 ## 更新日志
 
+- **2026-06-17** - 完成 Tabs, Dropdown, Form, Table 共 4 个组件，第一批高频组件全部完成（累计 15/67）
 - **2026-06-17** - 完成 Checkbox, Radio, Card, Select 共 4 个组件（累计 11/67）
 - **2026-06-17** - 完成 Button, Input, Modal, Popover, Progress, Transfer, Tree 共 7 个组件
 - **2026-06-17** - 创建本开发指南

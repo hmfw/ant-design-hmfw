@@ -63,6 +63,9 @@ export const Table = defineComponent({
     onChange: Function as PropType<
       (pagination: any, filters: any, sorter: any, extra?: TableCurrentDataSource) => void
     >,
+    classNames: Object as PropType<import('./interface').TableSemanticClassNames>,
+    styles: Object as PropType<import('./interface').TableSemanticStyles>,
+    rootClassName: String,
   },
   emits: ['change'],
   setup(props, { emit }) {
@@ -443,12 +446,19 @@ export const Table = defineComponent({
 
       const tableEl = (
         <div
-          class={cls(prefixCls, `${prefixCls}-${props.size}`, {
-            [`${prefixCls}-bordered`]: props.bordered,
-            [`${prefixCls}-loading`]: props.loading,
-            [`${prefixCls}-scroll-horizontal`]: !!props.scroll?.x,
-            [`${prefixCls}-sticky`]: !!stickyConfig,
-          })}
+          class={cls(
+            prefixCls,
+            `${prefixCls}-${props.size}`,
+            {
+              [`${prefixCls}-bordered`]: props.bordered,
+              [`${prefixCls}-loading`]: props.loading,
+              [`${prefixCls}-scroll-horizontal`]: !!props.scroll?.x,
+              [`${prefixCls}-sticky`]: !!stickyConfig,
+            },
+            props.rootClassName,
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
           role="region"
           aria-label="Data table"
         >
@@ -486,7 +496,11 @@ export const Table = defineComponent({
                 }
               >
                 {props.showHeader && (
-                  <thead class={`${prefixCls}-thead`} role="rowgroup" style={theadStyle}>
+                  <thead
+                    class={cls(`${prefixCls}-thead`, props.classNames?.header)}
+                    role="rowgroup"
+                    style={{ ...theadStyle, ...props.styles?.header }}
+                  >
                     <tr {...(props.onHeaderRow?.(responsiveColumns.value ?? [], 0) ?? {})} role="row">
                       {hasExpandable && (
                         <th
@@ -609,7 +623,11 @@ export const Table = defineComponent({
                     </tr>
                   </thead>
                 )}
-                <tbody class={`${prefixCls}-tbody`} role="rowgroup">
+                <tbody
+                  class={cls(`${prefixCls}-tbody`, props.classNames?.body)}
+                  role="rowgroup"
+                  style={props.styles?.body}
+                >
                   {isEmpty ? (
                     <tr class={`${prefixCls}-placeholder`} role="row">
                       <td colspan={colSpan} role="cell">
@@ -637,9 +655,14 @@ export const Table = defineComponent({
                             role="row"
                             aria-selected={showSelection ? isSelected : undefined}
                             aria-expanded={hasExpandable ? isExpanded : undefined}
-                            class={cls(`${prefixCls}-row`, {
-                              [`${prefixCls}-row-selected`]: isSelected,
-                            })}
+                            class={cls(
+                              `${prefixCls}-row`,
+                              {
+                                [`${prefixCls}-row-selected`]: isSelected,
+                              },
+                              props.classNames?.row,
+                            )}
+                            style={props.styles?.row}
                             {...(props.onRow?.(record, rowIndex) ?? {})}
                           >
                             {hasExpandable && (
@@ -683,12 +706,16 @@ export const Table = defineComponent({
                                 <td
                                   key={colKey}
                                   role="cell"
-                                  class={cls(`${prefixCls}-cell`, {
-                                    [`${prefixCls}-cell-ellipsis`]: col.ellipsis,
-                                    [`${prefixCls}-cell-fix-left`]: fixedLeft,
-                                    [`${prefixCls}-cell-fix-right`]: fixedRight,
-                                  })}
-                                  style={{ textAlign: col.align ?? 'left' }}
+                                  class={cls(
+                                    `${prefixCls}-cell`,
+                                    {
+                                      [`${prefixCls}-cell-ellipsis`]: col.ellipsis,
+                                      [`${prefixCls}-cell-fix-left`]: fixedLeft,
+                                      [`${prefixCls}-cell-fix-right`]: fixedRight,
+                                    },
+                                    props.classNames?.cell,
+                                  )}
+                                  style={{ textAlign: col.align ?? 'left', ...props.styles?.cell }}
                                 >
                                   {content}
                                 </td>
@@ -736,9 +763,14 @@ export const Table = defineComponent({
                           role="row"
                           aria-selected={showSelection ? isSelected : undefined}
                           aria-expanded={hasExpandable ? isExpanded : undefined}
-                          class={cls(`${prefixCls}-row`, {
-                            [`${prefixCls}-row-selected`]: isSelected,
-                          })}
+                          class={cls(
+                            `${prefixCls}-row`,
+                            {
+                              [`${prefixCls}-row-selected`]: isSelected,
+                            },
+                            props.classNames?.row,
+                          )}
+                          style={props.styles?.row}
                           {...(props.onRow?.(record, rowIndex) ?? {})}
                         >
                           {hasExpandable && (
@@ -782,12 +814,16 @@ export const Table = defineComponent({
                               <td
                                 key={colKey}
                                 role="cell"
-                                class={cls(`${prefixCls}-cell`, {
-                                  [`${prefixCls}-cell-ellipsis`]: col.ellipsis,
-                                  [`${prefixCls}-cell-fix-left`]: fixedLeft,
-                                  [`${prefixCls}-cell-fix-right`]: fixedRight,
-                                })}
-                                style={{ textAlign: col.align ?? 'left' }}
+                                class={cls(
+                                  `${prefixCls}-cell`,
+                                  {
+                                    [`${prefixCls}-cell-ellipsis`]: col.ellipsis,
+                                    [`${prefixCls}-cell-fix-left`]: fixedLeft,
+                                    [`${prefixCls}-cell-fix-right`]: fixedRight,
+                                  },
+                                  props.classNames?.cell,
+                                )}
+                                style={{ textAlign: col.align ?? 'left', ...props.styles?.cell }}
                               >
                                 {content}
                               </td>
@@ -818,12 +854,15 @@ export const Table = defineComponent({
             </div>
           </div>
           {props.footer && (
-            <div class={`${prefixCls}-footer`}>
+            <div class={cls(`${prefixCls}-footer`, props.classNames?.footer)} style={props.styles?.footer}>
               {typeof props.footer === 'function' ? props.footer(sortedData.value) : props.footer}
             </div>
           )}
           {paginationConfig.value && !isEmpty && (
-            <div class={`${prefixCls}-pagination ${prefixCls}-pagination-right`}>
+            <div
+              class={cls(`${prefixCls}-pagination`, `${prefixCls}-pagination-right`, props.classNames?.pagination)}
+              style={props.styles?.pagination}
+            >
               <Pagination
                 total={paginationConfig.value.total}
                 pageSize={paginationConfig.value.pageSize}

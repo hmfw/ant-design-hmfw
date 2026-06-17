@@ -84,6 +84,8 @@
 | forceRender        | 强制渲染 Dropdown                                         | `boolean`                                                                       | `false`               |
 | openClassName      | 菜单展开时给触发元素添加的类名                            | `string`                                                                        | -                     |
 | rootClassName      | 下拉根元素的类名称                                        | `string`                                                                        | -                     |
+| classNames         | 语义化 className（[详见下方](#语义化-classname)）         | `DropdownClassNames`                                                            | -                     |
+| styles             | 语义化 style（[详见下方](#语义化-style)）                 | `DropdownStyles`                                                                | -                     |
 
 ### Dropdown Events
 
@@ -116,3 +118,97 @@
 | ---------- | ---------------------- | ---------------------------------------------------------------- |
 | click      | 点击左侧按钮的回调     | `(event: MouseEvent) => void`                                    |
 | openChange | 菜单显示状态改变时调用 | `(open: boolean, info: { source: 'trigger' \| 'menu' }) => void` |
+
+## 语义化 className
+
+通过 `classNames` 属性可以自定义 Dropdown 各部分的 className。
+
+### DropdownClassNames
+
+| 属性名   | 说明                                           | 类型     | 版本 |
+| -------- | ---------------------------------------------- | -------- | ---- |
+| trigger  | 触发器容器 `div`（包裹 default slot）          | `string` | -    |
+| dropdown | 下拉浮层根节点 `div.hmfw-dropdown`             | `string` | -    |
+| arrow    | 箭头 `div.hmfw-dropdown-arrow`（需开启 arrow） | `string` | -    |
+| content  | 浮层内容容器 `div.hmfw-dropdown-content`       | `string` | -    |
+
+### DOM 结构
+
+```html
+<div class="custom-trigger">触发元素</div>
+<!-- trigger -->
+
+<!-- Teleport 到 body -->
+<div class="hmfw-dropdown">
+  <!-- dropdown -->
+  <div class="hmfw-dropdown-arrow" />
+  <!-- arrow，需开启 arrow -->
+  <div class="hmfw-dropdown-content">
+    <!-- content -->
+    <!-- 菜单内容（由 menu prop 或 overlay slot 提供） -->
+  </div>
+</div>
+```
+
+### 使用示例
+
+```vue
+<template>
+  <Dropdown
+    :menu="menu"
+    :arrow="true"
+    :classNames="{
+      trigger: 'my-trigger',
+      dropdown: 'my-dropdown',
+      content: 'my-content',
+      arrow: 'my-arrow',
+    }"
+  >
+    <Button>下拉菜单</Button>
+  </Dropdown>
+</template>
+```
+
+**注意事项：**
+
+- `dropdown`、`content`、`arrow` 通过 `Teleport` 渲染到 body（或 `getPopupContainer` 指定的容器），其样式必须使用**全局样式**（非 scoped）
+- `arrow` 仅在开启 `arrow` 属性时渲染
+- 菜单项（menu/item）由 `menu` prop 传入的 [Menu](/components/menu) 组件控制，请使用 Menu 的语义化 API 定制
+- `classNames.trigger` 与组件的 `class` attr、`openClassName` 会合并应用到触发器容器
+
+## 语义化 style
+
+通过 `styles` 属性可以自定义 Dropdown 各部分的 style。
+
+### DropdownStyles
+
+| 属性名   | 说明                                     | 类型            | 版本 |
+| -------- | ---------------------------------------- | --------------- | ---- |
+| trigger  | 触发器容器 `div`                         | `CSSProperties` | -    |
+| dropdown | 下拉浮层根节点 `div.hmfw-dropdown`       | `CSSProperties` | -    |
+| arrow    | 箭头 `div.hmfw-dropdown-arrow`           | `CSSProperties` | -    |
+| content  | 浮层内容容器 `div.hmfw-dropdown-content` | `CSSProperties` | -    |
+
+### 使用示例
+
+```vue
+<template>
+  <Dropdown
+    :menu="menu"
+    :styles="{
+      dropdown: { borderRadius: '16px' },
+      content: { background: '#667eea', padding: '4px' },
+    }"
+  >
+    <Button>动态样式</Button>
+  </Dropdown>
+</template>
+```
+
+**说明：** `styles.dropdown` 会与 `overlayStyle` 合并；`styles.trigger` 会与组件的 `style` attr 合并。
+
+### 语义化 className 与 style
+
+<DemoBlock title="语义化 className 与 style" :source="DropdownClassNamesSource">
+  <DropdownClassNames />
+</DemoBlock>

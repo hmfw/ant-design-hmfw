@@ -1,4 +1,4 @@
-import type { VNode } from 'vue'
+import type { VNode, CSSProperties } from 'vue'
 import type { MenuProps } from '../menu'
 
 export type DropdownPlacement = 'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight'
@@ -7,6 +7,34 @@ export type DropdownTrigger = 'hover' | 'click' | 'contextMenu'
 
 export interface DropdownArrowOptions {
   pointAtCenter?: boolean
+}
+
+/**
+ * Dropdown 各部分的语义化 className
+ */
+export interface DropdownClassNames {
+  /** 触发器容器 div（包裹 default slot） */
+  trigger?: string
+  /** 下拉浮层根节点 div.hmfw-dropdown */
+  dropdown?: string
+  /** 箭头 div.hmfw-dropdown-arrow（需开启 arrow） */
+  arrow?: string
+  /** 浮层内容容器 div.hmfw-dropdown-content */
+  content?: string
+}
+
+/**
+ * Dropdown 各部分的语义化 style
+ */
+export interface DropdownStyles {
+  /** 触发器容器 div */
+  trigger?: CSSProperties
+  /** 下拉浮层根节点 div.hmfw-dropdown */
+  dropdown?: CSSProperties
+  /** 箭头 div.hmfw-dropdown-arrow */
+  arrow?: CSSProperties
+  /** 浮层内容容器 div.hmfw-dropdown-content */
+  content?: CSSProperties
 }
 
 export interface DropdownProps {
@@ -31,4 +59,8 @@ export interface DropdownProps {
   forceRender?: boolean
   openClassName?: string
   rootClassName?: string
+  /** 语义化 className */
+  classNames?: DropdownClassNames
+  /** 语义化 style */
+  styles?: DropdownStyles
 }

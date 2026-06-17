@@ -98,6 +98,8 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 | addIcon                | 自定义添加按钮图标                                                                | VNode                                    | -          |
 | removeIcon             | 自定义删除按钮图标                                                                | VNode                                    | -          |
 | destroyInactiveTabPane | 被隐藏时是否销毁 DOM 结构                                                         | boolean                                  | false      |
+| classNames             | 语义化 className（[详见下方](#语义化-classname)）                                 | TabsClassNames                           | -          |
+| styles                 | 语义化 style（[详见下方](#语义化-style)）                                         | TabsStyles                               | -          |
 
 ### Tabs 事件
 
@@ -120,3 +122,115 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 | closeIcon              | 自定义关闭图标，在 `type="editable-card"` 时有效   | VNode           | -      |
 | forceRender            | 被隐藏时是否渲染 DOM 结构                          | boolean         | false  |
 | destroyInactiveTabPane | 被隐藏时是否销毁 DOM 结构                          | boolean         | false  |
+
+## 语义化 className
+
+通过 `classNames` 属性可以自定义 Tabs 各部分的 className。
+
+### TabsClassNames
+
+| 属性名    | 说明                                               | 类型     | 版本 |
+| --------- | -------------------------------------------------- | -------- | ---- |
+| root      | 根节点 `div.hmfw-tabs`                             | `string` | -    |
+| nav       | 标签栏容器 `div.hmfw-tabs-nav`                     | `string` | -    |
+| tab       | 单个标签 `div.hmfw-tabs-tab`                       | `string` | -    |
+| tabActive | 激活标签 `div.hmfw-tabs-tab-active`（与 tab 叠加） | `string` | -    |
+| tabIcon   | 标签图标 `span.hmfw-tabs-tab-icon`                 | `string` | -    |
+| inkBar    | 墨条 `div.hmfw-tabs-ink-bar`（仅 line 类型）       | `string` | -    |
+| content   | 内容容器 `div.hmfw-tabs-content`                   | `string` | -    |
+| tabpane   | 内容面板 `div.hmfw-tabs-tabpane`                   | `string` | -    |
+
+### DOM 结构
+
+```html
+<div class="hmfw-tabs">
+  <!-- root -->
+  <div class="hmfw-tabs-nav">
+    <!-- nav -->
+    <div class="hmfw-tabs-nav-wrap">
+      <div class="hmfw-tabs-nav-list">
+        <div class="hmfw-tabs-tab hmfw-tabs-tab-active">
+          <!-- tab + tabActive -->
+          <div class="hmfw-tabs-tab-btn">
+            <span class="hmfw-tabs-tab-icon">图标</span>
+            <!-- tabIcon -->
+            标签
+          </div>
+        </div>
+      </div>
+      <div class="hmfw-tabs-ink-bar" />
+      <!-- inkBar -->
+    </div>
+  </div>
+  <div class="hmfw-tabs-content-holder">
+    <div class="hmfw-tabs-content">
+      <!-- content -->
+      <div class="hmfw-tabs-tabpane">面板内容</div>
+      <!-- tabpane -->
+    </div>
+  </div>
+</div>
+```
+
+### 使用示例
+
+```vue
+<template>
+  <Tabs
+    :items="items"
+    :classNames="{
+      root: 'my-tabs-root',
+      nav: 'my-tabs-nav',
+      tab: 'my-tabs-tab',
+      tabActive: 'my-tabs-tab-active',
+      content: 'my-tabs-content',
+    }"
+  />
+</template>
+```
+
+**注意事项：**
+
+- `tabActive` 与 `tab` 同时应用于激活的标签上（两者叠加）
+- `tabIcon` 仅在 `TabItem` 设置了 `icon` 时渲染
+- `inkBar` 仅在 `type="line"`（默认）时渲染，`card` 类型无墨条
+
+## 语义化 style
+
+通过 `styles` 属性可以自定义 Tabs 各部分的 style。
+
+### TabsStyles
+
+| 属性名    | 说明                                | 类型            | 版本 |
+| --------- | ----------------------------------- | --------------- | ---- |
+| root      | 根节点 `div.hmfw-tabs`              | `CSSProperties` | -    |
+| nav       | 标签栏容器 `div.hmfw-tabs-nav`      | `CSSProperties` | -    |
+| tab       | 单个标签 `div.hmfw-tabs-tab`        | `CSSProperties` | -    |
+| tabActive | 激活标签 `div.hmfw-tabs-tab-active` | `CSSProperties` | -    |
+| tabIcon   | 标签图标 `span.hmfw-tabs-tab-icon`  | `CSSProperties` | -    |
+| inkBar    | 墨条 `div.hmfw-tabs-ink-bar`        | `CSSProperties` | -    |
+| content   | 内容容器 `div.hmfw-tabs-content`    | `CSSProperties` | -    |
+| tabpane   | 内容面板 `div.hmfw-tabs-tabpane`    | `CSSProperties` | -    |
+
+### 使用示例
+
+```vue
+<template>
+  <Tabs
+    :items="items"
+    :styles="{
+      root: { border: '2px solid #1890ff', borderRadius: '12px' },
+      nav: { background: '#667eea' },
+      content: { padding: '16px' },
+    }"
+  />
+</template>
+```
+
+**说明：** `styles.nav` 会与 `tabBarStyle` 合并；`styles.tabActive` 会与 `styles.tab` 在激活标签上合并。
+
+### 语义化 className 与 style
+
+<DemoBlock title="语义化 className 与 style" :source="TabsClassNamesSource">
+  <TabsClassNames />
+</DemoBlock>

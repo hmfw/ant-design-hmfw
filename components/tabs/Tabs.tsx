@@ -32,6 +32,8 @@ export const Tabs = defineComponent({
     addIcon: Object as PropType<VNode>,
     removeIcon: Object as PropType<VNode>,
     destroyInactiveTabPane: Boolean,
+    classNames: Object as PropType<import('./types').TabsClassNames>,
+    styles: Object as PropType<import('./types').TabsStyles>,
   },
   emits: ['update:activeKey', 'change', 'tabClick', 'edit'],
   setup(props, { slots, emit }) {
@@ -174,11 +176,22 @@ export const Tabs = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, `${prefixCls}-${props.type}`, sizeClass, posClass, {
-            [`${prefixCls}-centered`]: props.centered,
-          })}
+          class={cls(
+            prefixCls,
+            `${prefixCls}-${props.type}`,
+            sizeClass,
+            posClass,
+            {
+              [`${prefixCls}-centered`]: props.centered,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
         >
-          <div class={`${prefixCls}-nav`} style={props.tabBarStyle as any}>
+          <div
+            class={cls(`${prefixCls}-nav`, props.classNames?.nav)}
+            style={{ ...(props.tabBarStyle as any), ...props.styles?.nav }}
+          >
             {renderExtraContent()}
             <div class={`${prefixCls}-nav-wrap`}>
               <div
@@ -195,11 +208,20 @@ export const Tabs = defineComponent({
                     <div
                       key={item.key}
                       id={`tab-${item.key}`}
-                      class={cls(`${prefixCls}-tab`, {
-                        [`${prefixCls}-tab-active`]: isActive,
-                        [`${prefixCls}-tab-disabled`]: item.disabled,
-                      })}
-                      style={index < items.length - 1 ? tabBarGutterStyle : undefined}
+                      class={cls(
+                        `${prefixCls}-tab`,
+                        {
+                          [`${prefixCls}-tab-active`]: isActive,
+                          [`${prefixCls}-tab-disabled`]: item.disabled,
+                        },
+                        props.classNames?.tab,
+                        isActive && props.classNames?.tabActive,
+                      )}
+                      style={{
+                        ...(index < items.length - 1 ? tabBarGutterStyle : undefined),
+                        ...props.styles?.tab,
+                        ...(isActive ? props.styles?.tabActive : undefined),
+                      }}
                       role="tab"
                       aria-selected={isActive}
                       aria-controls={`tabpanel-${item.key}`}
@@ -209,7 +231,14 @@ export const Tabs = defineComponent({
                       onKeydown={(e) => handleKeyDown(item.key, e, index)}
                     >
                       <div class={`${prefixCls}-tab-btn`}>
-                        {item.icon && <span class={`${prefixCls}-tab-icon`}>{item.icon}</span>}
+                        {item.icon && (
+                          <span
+                            class={cls(`${prefixCls}-tab-icon`, props.classNames?.tabIcon)}
+                            style={props.styles?.tabIcon}
+                          >
+                            {item.icon}
+                          </span>
+                        )}
                         {item.label}
                         {showClose && (
                           <button
@@ -235,18 +264,28 @@ export const Tabs = defineComponent({
               {props.type === 'line' && (
                 <div
                   ref={inkBarRef}
-                  class={cls(`${prefixCls}-ink-bar`, {
-                    [`${prefixCls}-ink-bar-animated`]: animatedConfig.value.inkBar,
-                  })}
+                  class={cls(
+                    `${prefixCls}-ink-bar`,
+                    {
+                      [`${prefixCls}-ink-bar-animated`]: animatedConfig.value.inkBar,
+                    },
+                    props.classNames?.inkBar,
+                  )}
+                  style={props.styles?.inkBar}
                 />
               )}
             </div>
           </div>
           <div class={`${prefixCls}-content-holder`}>
             <div
-              class={cls(`${prefixCls}-content`, {
-                [`${prefixCls}-content-animated`]: animatedConfig.value.tabPane,
-              })}
+              class={cls(
+                `${prefixCls}-content`,
+                {
+                  [`${prefixCls}-content-animated`]: animatedConfig.value.tabPane,
+                },
+                props.classNames?.content,
+              )}
+              style={props.styles?.content}
             >
               {items.map((item) => {
                 const isActive = item.key === currentKey.value
@@ -257,10 +296,15 @@ export const Tabs = defineComponent({
                   <div
                     key={item.key}
                     id={`tabpanel-${item.key}`}
-                    class={cls(`${prefixCls}-tabpane`, {
-                      [`${prefixCls}-tabpane-active`]: isActive,
-                      [`${prefixCls}-tabpane-hidden`]: !isActive,
-                    })}
+                    class={cls(
+                      `${prefixCls}-tabpane`,
+                      {
+                        [`${prefixCls}-tabpane-active`]: isActive,
+                        [`${prefixCls}-tabpane-hidden`]: !isActive,
+                      },
+                      props.classNames?.tabpane,
+                    )}
+                    style={props.styles?.tabpane}
                     role="tabpanel"
                     aria-labelledby={`tab-${item.key}`}
                     tabindex={isActive ? 0 : -1}

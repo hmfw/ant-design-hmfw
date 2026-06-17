@@ -1,4 +1,4 @@
-import { defineComponent, ref, provide, inject, computed, type PropType } from 'vue'
+import { defineComponent, ref, provide, inject, computed, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 
@@ -20,6 +20,54 @@ export interface FormRule {
 export type NamePath = string | number | (string | number)[]
 export type ValidateStatus = '' | 'success' | 'warning' | 'error' | 'validating'
 
+/**
+ * Form 各部分的语义化 className
+ */
+export interface FormClassNames {
+  /** 根节点 form.hmfw-form */
+  root?: string
+}
+
+/**
+ * Form 各部分的语义化 style
+ */
+export interface FormStyles {
+  /** 根节点 form.hmfw-form */
+  root?: CSSProperties
+}
+
+/**
+ * FormItem 各部分的语义化 className
+ */
+export interface FormItemClassNames {
+  /** 表单项根节点 div.hmfw-form-item */
+  root?: string
+  /** 标签区域 div.hmfw-form-item-label */
+  label?: string
+  /** 控件区域 div.hmfw-form-item-control */
+  control?: string
+  /** 错误/帮助信息 div.hmfw-form-item-explain */
+  feedback?: string
+  /** 额外提示 div.hmfw-form-item-extra */
+  extra?: string
+}
+
+/**
+ * FormItem 各部分的语义化 style
+ */
+export interface FormItemStyles {
+  /** 表单项根节点 div.hmfw-form-item */
+  root?: CSSProperties
+  /** 标签区域 div.hmfw-form-item-label */
+  label?: CSSProperties
+  /** 控件区域 div.hmfw-form-item-control */
+  control?: CSSProperties
+  /** 错误/帮助信息 div.hmfw-form-item-explain */
+  feedback?: CSSProperties
+  /** 额外提示 div.hmfw-form-item-extra */
+  extra?: CSSProperties
+}
+
 export interface FormProps {
   model?: Record<string, unknown>
   rules?: Record<string, FormRule | FormRule[]>
@@ -36,6 +84,10 @@ export interface FormProps {
   requiredMark?: boolean | 'optional'
   /** Whether to preserve field value when field is unmounted (default: false). */
   preserve?: boolean
+  /** 语义化 className */
+  classNames?: FormClassNames
+  /** 语义化 style */
+  styles?: FormStyles
 }
 
 export interface FormItemProps {
@@ -54,6 +106,10 @@ export interface FormItemProps {
   hidden?: boolean
   tooltip?: string
   validateTrigger?: 'blur' | 'change' | ('blur' | 'change')[]
+  /** 语义化 className */
+  classNames?: FormItemClassNames
+  /** 语义化 style */
+  styles?: FormItemStyles
 }
 
 const FORM_CONTEXT_KEY = Symbol('form-context')
@@ -235,6 +291,8 @@ export const Form = defineComponent({
       default: true,
     },
     preserve: { type: Boolean, default: false },
+    classNames: Object as PropType<FormClassNames>,
+    styles: Object as PropType<FormStyles>,
   },
   emits: ['finish', 'finishFailed', 'valuesChange'],
   setup(props, { slots, emit, expose }) {
@@ -403,10 +461,16 @@ export const Form = defineComponent({
 
     return () => (
       <form
-        class={cls(prefixCls, `${prefixCls}-${props.layout}`, {
-          [`${prefixCls}-${props.size}`]: props.size !== 'middle',
-          [`${prefixCls}-hide-required-mark`]: props.requiredMark === false,
-        })}
+        class={cls(
+          prefixCls,
+          `${prefixCls}-${props.layout}`,
+          {
+            [`${prefixCls}-${props.size}`]: props.size !== 'middle',
+            [`${prefixCls}-hide-required-mark`]: props.requiredMark === false,
+          },
+          props.classNames?.root,
+        )}
+        style={props.styles?.root}
         onSubmit={handleSubmit}
       >
         {slots.default?.()}
@@ -442,6 +506,8 @@ export const FormItem = defineComponent({
     hidden: Boolean,
     tooltip: String,
     validateTrigger: [String, Array] as PropType<'blur' | 'change' | ('blur' | 'change')[]>,
+    classNames: Object as PropType<FormItemClassNames>,
+    styles: Object as PropType<FormItemStyles>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('form')
@@ -493,15 +559,23 @@ export const FormItem = defineComponent({
 
       return (
         <div
-          class={cls(`${prefixCls}-item`, {
-            [`${prefixCls}-item-has-error`]: status.value === 'error',
-            [`${prefixCls}-item-has-warning`]: status.value === 'warning',
-            [`${prefixCls}-item-has-success`]: status.value === 'success',
-            [`${prefixCls}-item-required`]: isRequired.value && ctx?.requiredMark !== false,
-          })}
+          class={cls(
+            `${prefixCls}-item`,
+            {
+              [`${prefixCls}-item-has-error`]: status.value === 'error',
+              [`${prefixCls}-item-has-warning`]: status.value === 'warning',
+              [`${prefixCls}-item-has-success`]: status.value === 'success',
+              [`${prefixCls}-item-required`]: isRequired.value && ctx?.requiredMark !== false,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
         >
           {(props.label !== undefined || slots.label) && (
-            <div class={`${prefixCls}-item-label`} style={labelStyle}>
+            <div
+              class={cls(`${prefixCls}-item-label`, props.classNames?.label)}
+              style={{ ...labelStyle, ...props.styles?.label }}
+            >
               <label class={cls({ [`${prefixCls}-item-no-colon`]: !showColon.value })}>
                 {slots.label ? slots.label() : props.label}
                 {props.tooltip && (
@@ -513,20 +587,32 @@ export const FormItem = defineComponent({
               </label>
             </div>
           )}
-          <div class={`${prefixCls}-item-control`} style={wrapperStyle}>
+          <div
+            class={cls(`${prefixCls}-item-control`, props.classNames?.control)}
+            style={{ ...wrapperStyle, ...props.styles?.control }}
+          >
             <div class={`${prefixCls}-item-control-input`}>{slots.default?.()}</div>
             {(error.value || props.help) && (
               <div
-                class={cls(`${prefixCls}-item-explain`, {
-                  [`${prefixCls}-item-explain-error`]: status.value === 'error',
-                  [`${prefixCls}-item-explain-warning`]: status.value === 'warning',
-                  [`${prefixCls}-item-explain-success`]: status.value === 'success',
-                })}
+                class={cls(
+                  `${prefixCls}-item-explain`,
+                  {
+                    [`${prefixCls}-item-explain-error`]: status.value === 'error',
+                    [`${prefixCls}-item-explain-warning`]: status.value === 'warning',
+                    [`${prefixCls}-item-explain-success`]: status.value === 'success',
+                  },
+                  props.classNames?.feedback,
+                )}
+                style={props.styles?.feedback}
               >
                 {error.value ?? props.help}
               </div>
             )}
-            {props.extra && <div class={`${prefixCls}-item-extra`}>{props.extra}</div>}
+            {props.extra && (
+              <div class={cls(`${prefixCls}-item-extra`, props.classNames?.extra)} style={props.styles?.extra}>
+                {props.extra}
+              </div>
+            )}
           </div>
         </div>
       )

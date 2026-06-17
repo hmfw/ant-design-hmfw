@@ -49,6 +49,8 @@ export const Dropdown = defineComponent({
     forceRender: Boolean,
     openClassName: String,
     rootClassName: String,
+    classNames: Object as PropType<import('./types').DropdownClassNames>,
+    styles: Object as PropType<import('./types').DropdownStyles>,
   },
   emits: ['update:open', 'openChange'],
   setup(props, { slots, emit, attrs }) {
@@ -243,14 +245,18 @@ export const Dropdown = defineComponent({
       const shouldDestroy = props.destroyOnHidden ?? props.destroyPopupOnHide ?? false
       const shouldRender = visible.value || !shouldDestroy || props.forceRender
 
-      const triggerClasses = cls(props.openClassName && visible.value ? props.openClassName : null, attrs.class as any)
+      const triggerClasses = cls(
+        props.openClassName && visible.value ? props.openClassName : null,
+        props.classNames?.trigger,
+        attrs.class as any,
+      )
 
       return (
         <>
           <div
             ref={triggerRef}
             class={triggerClasses}
-            style={{ display: 'inline-block', ...(attrs.style as any) }}
+            style={{ display: 'inline-block', ...(attrs.style as any), ...props.styles?.trigger }}
             onMouseenter={handleMouseEnter}
             onMouseleave={handleMouseLeave}
             onClick={handleClick}
@@ -271,18 +277,24 @@ export const Dropdown = defineComponent({
                     [`${prefixCls}-hidden`]: !visible.value,
                     [`${prefixCls}-show-arrow`]: !!props.arrow,
                   },
+                  props.classNames?.dropdown,
                 )}
                 style={{
                   position: 'absolute',
                   top: `${position.value.top}px`,
                   left: `${position.value.left}px`,
                   ...props.overlayStyle,
+                  ...props.styles?.dropdown,
                 }}
                 onMouseenter={handleMouseEnter}
                 onMouseleave={handleMouseLeave}
               >
-                {props.arrow && <div class={`${prefixCls}-arrow`} />}
-                <div class={`${prefixCls}-content`}>{renderOverlay()}</div>
+                {props.arrow && (
+                  <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow} />
+                )}
+                <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
+                  {renderOverlay()}
+                </div>
               </div>
             </Teleport>
           )}
