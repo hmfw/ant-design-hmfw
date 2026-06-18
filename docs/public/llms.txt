@@ -63,6 +63,7 @@ import 'ant-design-hmfw/style.css'
 - [Slider 滑动输入条](https://hmfw.github.io/ant-design-hmfw/components/slider): 滑动型输入器，展示当前值和可选范围。
 - [Space 间距](https://hmfw.github.io/ant-design-hmfw/components/space): 设置组件之间的间距。
 - [Spin 加载中](https://hmfw.github.io/ant-design-hmfw/components/spin): 用于页面和区块的加载中状态。
+- [Statistic 统计数值](https://hmfw.github.io/ant-design-hmfw/components/statistic): 展示统计数值。
 - [Steps 步骤条](https://hmfw.github.io/ant-design-hmfw/components/steps): 引导用户按照流程完成任务的导航条。
 - [Switch 开关](https://hmfw.github.io/ant-design-hmfw/components/switch): 开关选择器。
 - [Table 表格](https://hmfw.github.io/ant-design-hmfw/components/table): 展示行列数据。
