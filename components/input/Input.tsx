@@ -2,7 +2,15 @@ import { defineComponent, ref, computed, watch, type PropType, type VNode } from
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { CloseOutlined, EyeOutlined, SearchOutlined, LoadingOutlined } from '../icon'
-import type { InputSize, InputStatus } from './types'
+import { Icon } from '../icon'
+import type { InputSize, InputStatus, InputAffix } from './types'
+
+// 渲染前后缀：函数（图标组件）走 Icon 组件，其余（字符串 / VNode）直接渲染
+function renderAffix(affix: InputAffix | undefined): VNode | string | null {
+  if (affix == null) return null
+  if (typeof affix === 'function') return <Icon component={affix} />
+  return affix
+}
 
 // ─── Base Input ───────────────────────────────────────────────────────────────
 
@@ -34,8 +42,8 @@ export const Input = defineComponent({
       type: String,
       default: 'text',
     },
-    prefix: [String, Object] as PropType<string | VNode>,
-    suffix: [String, Object] as PropType<string | VNode>,
+    prefix: [String, Object, Function] as PropType<InputAffix>,
+    suffix: [String, Object, Function] as PropType<InputAffix>,
     id: String,
     rootClassName: String,
     classNames: Object as PropType<{
@@ -196,8 +204,8 @@ export const Input = defineComponent({
         )
       })()
 
-      const prefixNode = slots.prefix?.() || (props.prefix && <span>{props.prefix}</span>)
-      const suffixNode = slots.suffix?.() || (props.suffix && <span>{props.suffix}</span>)
+      const prefixNode = slots.prefix?.() || (props.prefix && <span>{renderAffix(props.prefix)}</span>)
+      const suffixNode = slots.suffix?.() || (props.suffix && <span>{renderAffix(props.suffix)}</span>)
 
       return (
         <span
@@ -585,7 +593,7 @@ export const InputSearch = defineComponent({
       type: [Boolean, String],
       default: false,
     },
-    searchIcon: [String, Object] as PropType<string | VNode>,
+    searchIcon: [String, Object, Function] as PropType<InputAffix>,
     rootClassName: String,
   },
   emits: ['update:value', 'change', 'input', 'search', 'pressEnter', 'onPressEnter'],
@@ -647,7 +655,7 @@ export const InputSearch = defineComponent({
       const icon = props.loading ? (
         <LoadingOutlined class="hmfw-icon-loading" />
       ) : (
-        props.searchIcon || <SearchOutlined />
+        renderAffix(props.searchIcon) || <SearchOutlined />
       )
 
       return (

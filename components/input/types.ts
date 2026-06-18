@@ -1,7 +1,11 @@
 import type { VNode } from 'vue'
+import type { IconComponent } from '../icon/types'
 
 export type InputSize = 'large' | 'middle' | 'small'
 export type InputStatus = 'error' | 'warning' | ''
+
+/** 前后缀可接受字符串、VNode 或图标组件 */
+export type InputAffix = string | VNode | IconComponent
 
 export interface InputProps {
   value?: string
@@ -11,8 +15,8 @@ export interface InputProps {
   readOnly?: boolean
   size?: InputSize
   status?: InputStatus
-  prefix?: string | VNode
-  suffix?: string | VNode
+  prefix?: InputAffix
+  suffix?: InputAffix
   allowClear?: boolean | { clearIcon?: VNode; disabled?: boolean }
   maxLength?: number
   showCount?: boolean | { formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string }
@@ -79,6 +83,6 @@ export interface InputSearchProps {
   size?: InputSize
   loading?: boolean
   enterButton?: boolean | string
-  searchIcon?: string | VNode
+  searchIcon?: InputAffix
   rootClassName?: string
 }

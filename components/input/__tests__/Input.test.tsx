@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { Input, InputPassword, TextArea, InputSearch } from '../Input'
+import { SearchOutlined } from '../../icon'
 
 describe('Input', () => {
   it('renders correctly', () => {
@@ -51,6 +52,13 @@ describe('Input', () => {
     const wrapper = mount(Input, { props: { prefix: '@' } })
     expect(wrapper.find('.hmfw-input-affix-wrapper').exists()).toBe(true)
     expect(wrapper.find('.hmfw-input-prefix').text()).toBe('@')
+  })
+
+  it('renders icon component as prefix/suffix', () => {
+    const wrapper = mount(Input, { props: { prefix: SearchOutlined, suffix: SearchOutlined } })
+    // 图标组件应通过 Icon 渲染为 .hmfw-icon，而非直接当作子节点丢失
+    expect(wrapper.find('.hmfw-input-prefix .hmfw-icon svg').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-input-suffix .hmfw-icon svg').exists()).toBe(true)
   })
 
   it('renders clear button when allowClear and has value', async () => {
