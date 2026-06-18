@@ -1195,15 +1195,15 @@
         {
           "section": "Button Props",
           "name": "classNames",
-          "description": "语义化结构 className（细粒度控制图标、loading 等子元素）",
-          "type": "`{ root?: string; icon?: string; loading?: string }`",
+          "description": "语义化结构 class，见下方 [语义化 className](#语义化-classname)",
+          "type": "`ButtonClassNames`",
           "default": "-"
         },
         {
           "section": "Button Props",
           "name": "styles",
-          "description": "语义化结构 style",
-          "type": "`{ root?: CSSProperties; icon?: CSSProperties; loading?: CSSProperties }`",
+          "description": "语义化结构 style，见下方 [语义化 style](#语义化-style)",
+          "type": "`ButtonStyles`",
           "default": "-"
         }
       ],
@@ -1394,6 +1394,20 @@
           "name": "onTabChange",
           "description": "标签切换回调",
           "type": "`(key: string) => void`",
+          "default": "-"
+        },
+        {
+          "section": "Card Props",
+          "name": "classNames",
+          "description": "语义化 className（[详见下方](#语义化-classname)）",
+          "type": "`CardClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Card Props",
+          "name": "styles",
+          "description": "语义化 style（[详见下方](#语义化-style)）",
+          "type": "`CardStyles`",
           "default": "-"
         },
         {
@@ -2030,6 +2044,20 @@
           "description": "在 CheckboxGroup 中时，跳过组控制",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "Checkbox Props",
+          "name": "classNames",
+          "description": "语义化 className（[详见下方](#语义化-classname)）",
+          "type": "`CheckboxClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Checkbox Props",
+          "name": "styles",
+          "description": "语义化 style（[详见下方](#语义化-style)）",
+          "type": "`CheckboxStyles`",
+          "default": "-"
         },
         {
           "section": "CheckboxGroup Props",
@@ -3520,6 +3548,20 @@
           "default": "-"
         },
         {
+          "section": "Dropdown Props",
+          "name": "classNames",
+          "description": "语义化 className（[详见下方](#语义化-classname)）",
+          "type": "`DropdownClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Dropdown Props",
+          "name": "styles",
+          "description": "语义化 style（[详见下方](#语义化-style)）",
+          "type": "`DropdownStyles`",
+          "default": "-"
+        },
+        {
           "section": "Dropdown.Button Props",
           "name": "type",
           "description": "按钮类型",
@@ -4161,6 +4203,20 @@
           "default": "`false`"
         },
         {
+          "section": "Form Props",
+          "name": "classNames",
+          "description": "语义化 className（[详见下方](#语义化-classname)）",
+          "type": "`FormClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Form Props",
+          "name": "styles",
+          "description": "语义化 style（[详见下方](#语义化-style)）",
+          "type": "`FormStyles`",
+          "default": "-"
+        },
+        {
           "section": "FormItem Props",
           "name": "label",
           "description": "label 标签的文本",
@@ -4257,6 +4313,20 @@
           "description": "配合 label 属性，覆盖 Form 的 colon",
           "type": "`boolean`",
           "default": "继承自 Form"
+        },
+        {
+          "section": "FormItem Props",
+          "name": "classNames",
+          "description": "语义化 className（[详见下方](#语义化-classname)）",
+          "type": "`FormItemClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "FormItem Props",
+          "name": "styles",
+          "description": "语义化 style（[详见下方](#语义化-style)）",
+          "type": "`FormItemStyles`",
+          "default": "-"
         },
         {
           "section": "FormRule",
@@ -5027,14 +5097,14 @@
         {
           "section": "Input Props",
           "name": "classNames",
-          "description": "细粒度样式类名",
+          "description": "语义化结构 class，见下方 [语义化 className](#语义化-classname)",
           "type": "`{ affixWrapper?: string; prefix?: string; suffix?: string; input?: string; count?: string }`",
           "default": "-"
         },
         {
           "section": "Input Props",
           "name": "styles",
-          "description": "细粒度样式对象",
+          "description": "语义化结构 style，见下方 [语义化 style](#语义化-style)",
           "type": "`{ affixWrapper?: CSSProperties; prefix?: CSSProperties; suffix?: CSSProperties; input?: CSSProperties; count?: CSSProperties }`",
           "default": "-"
         },
@@ -5090,14 +5160,14 @@
         {
           "section": "TextArea Props",
           "name": "classNames",
-          "description": "细粒度样式类名",
+          "description": "语义化结构 class，见下方 [语义化 className](#语义化-classname)",
           "type": "`{ textarea?: string; count?: string }`",
           "default": "-"
         },
         {
           "section": "TextArea Props",
           "name": "styles",
-          "description": "细粒度样式对象",
+          "description": "语义化结构 style，见下方 [语义化 style](#语义化-style)",
           "type": "`{ textarea?: CSSProperties; count?: CSSProperties }`",
           "default": "-"
         },
@@ -5212,6 +5282,11 @@
           "title": "高级功能",
           "description": "展示细粒度样式控制（classNames / styles）和 TextArea 的 pressEnter 事件。",
           "code": "<template>\n  <div class=\"input-advanced-demo\">\n    <h4>细粒度样式控制（classNames / styles）</h4>\n    <Space direction=\"vertical\" style=\"width: 100%; max-width: 400px\">\n      <Input\n        v-model:value=\"value1\"\n        placeholder=\"自定义样式的 Input\"\n        :class-names=\"{\n          affixWrapper: 'custom-wrapper',\n          input: 'custom-input',\n          prefix: 'custom-prefix',\n          suffix: 'custom-suffix',\n        }\"\n        :styles=\"{\n          affixWrapper: { border: '2px solid #1890ff', borderRadius: '8px' },\n          input: { color: '#1890ff', fontWeight: 'bold' },\n        }\"\n        prefix=\"🔍\"\n        suffix=\"✨\"\n      />\n\n      <Input\n        v-model:value=\"value2\"\n        placeholder=\"带字符计数\"\n        :max-length=\"50\"\n        :show-count=\"true\"\n        :class-names=\"{ count: 'custom-count' }\"\n        :styles=\"{ count: { color: '#52c41a', fontWeight: 'bold' } }\"\n      />\n    </Space>\n\n    <h4 style=\"margin-top: 32px\">TextArea 按键事件</h4>\n    <Space direction=\"vertical\" style=\"width: 100%; max-width: 400px\">\n      <TextArea\n        v-model:value=\"textareaValue\"\n        placeholder=\"按 Enter 键触发事件（可以用 Ctrl+Enter 换行）\"\n        :rows=\"4\"\n        @press-enter=\"handlePressEnter\"\n      />\n      <div v-if=\"pressEnterCount > 0\" style=\"padding: 8px; background: #f0f9ff; border-radius: 4px\">\n        <span\n          >Enter 键被按下了 <strong>{{ pressEnterCount }}</strong> 次</span\n        >\n      </div>\n    </Space>\n\n    <h4 style=\"margin-top: 32px\">TextArea 自定义样式</h4>\n    <TextArea\n      v-model:value=\"styledTextareaValue\"\n      placeholder=\"带样式的 TextArea\"\n      :rows=\"3\"\n      :show-count=\"true\"\n      :max-length=\"200\"\n      :class-names=\"{ textarea: 'custom-textarea', count: 'custom-count' }\"\n      :styles=\"{\n        textarea: { borderColor: '#722ed1', borderRadius: '8px' },\n        count: { color: '#722ed1', fontSize: '14px' },\n      }\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Input, TextArea } from '../../../components/input'\nimport { Space } from '../../../components/space'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst textareaValue = ref('')\nconst styledTextareaValue = ref('')\nconst pressEnterCount = ref(0)\n\nconst handlePressEnter = (e: KeyboardEvent) => {\n  if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {\n    pressEnterCount.value++\n  }\n}\n</script>\n\n<style scoped>\n.input-advanced-demo h4 {\n  margin-bottom: 16px;\n  color: #262626;\n}\n\n.input-advanced-demo :deep(.custom-wrapper) {\n  transition: all 0.3s;\n}\n\n.input-advanced-demo :deep(.custom-wrapper:hover) {\n  box-shadow: 0 0 8px rgba(24, 144, 255, 0.3);\n}\n\n.input-advanced-demo :deep(.custom-input::placeholder) {\n  color: #91caff;\n}\n\n.input-advanced-demo :deep(.custom-prefix),\n.input-advanced-demo :deep(.custom-suffix) {\n  font-size: 16px;\n}\n\n.input-advanced-demo :deep(.custom-count) {\n  font-family: 'Monaco', 'Courier New', monospace;\n}\n\n.input-advanced-demo :deep(.custom-textarea) {\n  font-family: 'Monaco', 'Courier New', monospace;\n  line-height: 1.8;\n}\n</style>"
+        },
+        {
+          "title": "语义化 className 与 style",
+          "description": "通过 `classNames` / `styles` 对前缀、后缀、输入框、字数统计等子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 20px\">\n    <!-- 自定义前缀/后缀样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义前缀和后缀图标样式：</div>\n      <Input\n        v-model:value=\"value1\"\n        placeholder=\"搜索内容\"\n        :prefix=\"SearchOutlined\"\n        :suffix=\"CloseCircleOutlined\"\n        :class-names=\"{\n          prefix: 'custom-prefix',\n          suffix: 'custom-suffix',\n        }\"\n        style=\"width: 300px\"\n      />\n    </div>\n\n    <!-- 自定义输入框本身 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义输入框样式：</div>\n      <Input\n        v-model:value=\"value2\"\n        placeholder=\"特殊样式输入框\"\n        :class-names=\"{ input: 'custom-input' }\"\n        style=\"width: 300px\"\n      />\n    </div>\n\n    <!-- 自定义外层容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义外层容器样式：</div>\n      <Input\n        v-model:value=\"value3\"\n        placeholder=\"渐变边框\"\n        :prefix=\"UserOutlined\"\n        :class-names=\"{ affixWrapper: 'custom-wrapper' }\"\n        style=\"width: 300px\"\n      />\n    </div>\n\n    <!-- 自定义字数统计 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义字数统计样式：</div>\n      <Input\n        v-model:value=\"value4\"\n        placeholder=\"最多 50 字\"\n        :max-length=\"50\"\n        show-count\n        :class-names=\"{ count: 'custom-count' }\"\n        style=\"width: 300px\"\n      />\n    </div>\n\n    <!-- 组合使用 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式（styles）：</div>\n      <Input\n        v-model:value=\"value5\"\n        placeholder=\"内联样式控制\"\n        :prefix=\"SearchOutlined\"\n        :styles=\"{\n          affixWrapper: { borderColor: '#722ed1', borderRadius: '8px' },\n          prefix: { color: '#722ed1', fontSize: '16px' },\n          input: { fontWeight: '500' },\n        }\"\n        style=\"width: 300px\"\n      />\n    </div>\n\n    <!-- TextArea 自定义 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">TextArea 自定义样式：</div>\n      <TextArea\n        v-model:value=\"textarea\"\n        placeholder=\"多行文本输入\"\n        :rows=\"4\"\n        :max-length=\"200\"\n        show-count\n        :class-names=\"{\n          textarea: 'custom-textarea',\n          count: 'custom-textarea-count',\n        }\"\n        style=\"width: 400px\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Input, TextArea, SearchOutlined, UserOutlined, CloseCircleOutlined } from 'ant-design-hmfw'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value3 = ref('')\nconst value4 = ref('')\nconst value5 = ref('')\nconst textarea = ref('')\n</script>\n\n<style scoped>\n:deep(.custom-prefix) {\n  color: #1890ff;\n  font-size: 18px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-prefix:hover) {\n  color: #40a9ff;\n  transform: scale(1.1);\n}\n\n:deep(.custom-suffix) {\n  color: #ff4d4f;\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\n:deep(.custom-suffix:hover) {\n  color: #ff7875;\n}\n\n:deep(.custom-input) {\n  background: linear-gradient(to right, #ffffff, #f5f5ff);\n  font-weight: 500;\n  color: #333;\n}\n\n:deep(.custom-wrapper) {\n  border: 2px solid transparent;\n  border-radius: 8px;\n  background:\n    linear-gradient(white, white) padding-box,\n    linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;\n  transition: all 0.3s;\n}\n\n:deep(.custom-wrapper:hover) {\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.custom-count) {\n  color: #ff4d4f;\n  font-weight: bold;\n  font-size: 13px;\n}\n\n:deep(.custom-textarea) {\n  background: #f0f5ff;\n  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;\n  font-size: 14px;\n  line-height: 1.8;\n  border-radius: 8px;\n}\n\n:deep(.custom-textarea-count) {\n  font-size: 12px;\n  color: #8c8c8c;\n  font-style: italic;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/input"
@@ -6603,14 +6678,14 @@
         {
           "section": "Modal Props",
           "name": "classNames",
-          "description": "细粒度控制各部分的 class",
+          "description": "语义化结构 class，见下方 [语义化 className](#语义化-classname)",
           "type": "`{ header?: string; body?: string; footer?: string; mask?: string; wrapper?: string; content?: string }`",
           "default": "-"
         },
         {
           "section": "Modal Props",
           "name": "styles",
-          "description": "细粒度控制各部分的 style",
+          "description": "语义化结构 style，见下方 [语义化 style](#语义化-style)",
           "type": "`{ header?: CSSProperties; body?: CSSProperties; footer?: CSSProperties; mask?: CSSProperties; wrapper?: CSSProperties; content?: CSSProperties }`",
           "default": "-"
         },
@@ -7574,14 +7649,14 @@
         {
           "section": "Popover Props",
           "name": "classNames",
-          "description": "语义化 DOM 的 className（支持 `title` / `content`），可传函数",
+          "description": "语义化结构 class，见下方 [语义化 className](#语义化-classname)",
           "type": "`{ title?, content? } | (info) => {...}`",
           "default": "-"
         },
         {
           "section": "Popover Props",
           "name": "styles",
-          "description": "语义化 DOM 的内联样式（支持 `title` / `content`），可传函数",
+          "description": "语义化结构 style，见下方 [语义化 style](#语义化-style)",
           "type": "`{ title?, content? } | (info) => {...}`",
           "default": "-"
         }
@@ -7627,6 +7702,11 @@
           "title": "纯展示面板",
           "description": "`Popover._InternalPanelDoNotUseOrYouWillBeFired` 是内部使用的纯展示面板，仅渲染气泡卡片的外观（标题 + 内容 + 箭头），不含触发与定位逻辑，可直接内联到页面中。常规业务请使用 `Popover` 本身。",
           "code": "<template>\n  <div style=\"display: flex; gap: 24px; flex-wrap: wrap\">\n    <Popover._InternalPanelDoNotUseOrYouWillBeFired title=\"标题\" content=\"这是直接内联渲染的气泡卡片面板\" />\n    <Popover._InternalPanelDoNotUseOrYouWillBeFired title=\"仅标题\" placement=\"bottom\" />\n    <Popover._InternalPanelDoNotUseOrYouWillBeFired\n      content=\"无箭头 + 自定义背景色\"\n      :arrow=\"false\"\n      color=\"#1677ff\"\n      :styles=\"{ content: { color: '#fff' } }\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Popover } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "语义化 className 与 style",
+          "description": "通过 `classNames` / `styles` 对标题和内容做细粒度样式控制，支持函数形式动态计算。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 20px\">\n    <!-- 自定义标题样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义标题样式：</div>\n      <Popover title=\"渐变标题\" content=\"这是一段内容，展示自定义标题的效果\" :class-names=\"{ title: 'custom-title' }\">\n        <Button>渐变标题</Button>\n      </Popover>\n    </div>\n\n    <!-- 自定义内容样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义内容样式：</div>\n      <Popover title=\"通知\" content=\"您有 3 条新消息未读\" :class-names=\"{ content: 'custom-content' }\">\n        <Button>查看通知</Button>\n      </Popover>\n    </div>\n\n    <!-- 组合使用 classNames -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">同时自定义标题和内容：</div>\n      <Popover\n        title=\"完整自定义\"\n        content=\"标题和内容都应用了自定义样式\"\n        :class-names=\"{\n          title: 'combined-title',\n          content: 'combined-content',\n        }\"\n      >\n        <Button type=\"primary\">完整示例</Button>\n      </Popover>\n    </div>\n\n    <!-- 使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式（styles）：</div>\n      <Popover\n        title=\"内联样式标题\"\n        content=\"使用 styles 属性控制样式\"\n        :styles=\"{\n          title: {\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            color: 'white',\n            padding: '12px 16px',\n            fontWeight: 'bold',\n            borderRadius: '4px 4px 0 0',\n          },\n          content: {\n            background: '#f0f5ff',\n            padding: '16px',\n            fontSize: '14px',\n          },\n        }\"\n      >\n        <Button>内联样式</Button>\n      </Popover>\n    </div>\n\n    <!-- 函数形式（动态计算） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">函数形式动态计算样式：</div>\n      <Popover\n        :title=\"dynamicTitle\"\n        content=\"根据 props 动态计算样式\"\n        :class-names=\"\n          (info) => ({\n            title: info.props.title ? 'has-title' : 'no-title',\n            content: 'dynamic-content',\n          })\n        \"\n      >\n        <Button>动态样式</Button>\n      </Popover>\n      <Button style=\"margin-left: 8px\" size=\"small\" @click=\"toggleTitle\"> 切换标题 </Button>\n    </div>\n\n    <!-- 无标题场景 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">仅内容（无标题）：</div>\n      <Popover content=\"这是一段没有标题的提示内容\" :class-names=\"{ content: 'content-only' }\">\n        <Button>仅内容</Button>\n      </Popover>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Popover, Button } from 'ant-design-hmfw'\n\nconst dynamicTitle = ref('动态标题')\n\nconst toggleTitle = () => {\n  dynamicTitle.value = dynamicTitle.value ? '' : '动态标题'\n}\n</script>\n\n<style scoped>\n:deep(.custom-title) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  padding: 12px 16px;\n  font-weight: bold;\n  border-radius: 4px 4px 0 0;\n  margin: -12px -16px 8px;\n}\n\n:deep(.custom-content) {\n  background: #f0f5ff;\n  padding: 16px;\n  font-size: 14px;\n  color: #333;\n  line-height: 1.6;\n  border-radius: 4px;\n}\n\n:deep(.combined-title) {\n  color: #722ed1;\n  font-size: 16px;\n  font-weight: 600;\n  border-bottom: 2px solid #722ed1;\n  padding-bottom: 8px;\n  margin-bottom: 12px;\n}\n\n:deep(.combined-content) {\n  color: #1890ff;\n  line-height: 1.8;\n  font-size: 13px;\n}\n\n:deep(.has-title) {\n  background: #e6f7ff;\n  padding: 8px 12px;\n  border-radius: 4px;\n  margin: -8px -12px 8px;\n}\n\n:deep(.no-title) {\n  /* 无标题时不应用样式 */\n}\n\n:deep(.dynamic-content) {\n  font-style: italic;\n  color: #595959;\n}\n\n:deep(.content-only) {\n  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);\n  padding: 16px;\n  font-size: 14px;\n  font-weight: 500;\n  color: #333;\n  border-radius: 8px;\n  box-shadow: 0 2px 8px rgba(253, 203, 110, 0.3);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/popover"
@@ -7782,14 +7862,14 @@
         {
           "section": "Progress Props",
           "name": "classNames",
-          "description": "语义化类名（root/body/rail/track/indicator）",
+          "description": "语义化结构 class，见下方 [语义化 className](#语义化-classname)",
           "type": "`ProgressClassNames`",
           "default": "-"
         },
         {
           "section": "Progress Props",
           "name": "styles",
-          "description": "语义化样式（root/body/rail/track/indicator）",
+          "description": "语义化结构 style，见下方 [语义化 style](#语义化-style)",
           "type": "`ProgressStyles`",
           "default": "-"
         }
@@ -7841,6 +7921,11 @@
           "title": "v6 新特性",
           "description": "`size` 数组形式、`steps` 对象形式、`rounding` 自定义舍入、小圆形（≤20px）自动套 Tooltip 等。",
           "code": "<script setup lang=\"ts\">\nimport { Progress } from 'ant-design-hmfw'\n</script>\n\n<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div>\n      <span style=\"display: inline-block; width: 200px\">size=[200, 12]（数组）</span>\n      <Progress :percent=\"60\" :size=\"[200, 12]\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px\">size={width:300, height:10}</span>\n      <Progress :percent=\"40\" :size=\"{ width: 300, height: 10 }\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px\">size=14（小圆形 + Tooltip）</span>\n      <Progress type=\"circle\" :percent=\"60\" :size=\"14\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px\">steps={count:6, gap:8}</span>\n      <Progress :percent=\"50\" :steps=\"{ count: 6, gap: 8 }\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px\">strokeColor 数组（每段不同色）</span>\n      <Progress :percent=\"60\" :steps=\"5\" :stroke-color=\"['#f5222d', '#fa8c16', '#fadb14', '#52c41a', '#1677ff']\" />\n    </div>\n    <div>\n      <span style=\"display: inline-block; width: 200px\">rounding=Math.ceil</span>\n      <Progress :percent=\"41\" :steps=\"5\" :rounding=\"Math.ceil\" />\n    </div>\n  </div>\n</template>"
+        },
+        {
+          "title": "语义化 className 与 style",
+          "description": "通过 `classNames` / `styles` 对轨道、进度条、指示器等子元素做细粒度样式控制，支持线形、圆形、仪表盘三种类型。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 自定义轨道样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义轨道和进度条：</div>\n      <Progress\n        :percent=\"60\"\n        :class-names=\"{\n          rail: 'custom-rail',\n          track: 'custom-track',\n        }\"\n      />\n    </div>\n\n    <!-- 自定义指示器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义百分比指示器：</div>\n      <Progress :percent=\"75\" :class-names=\"{ indicator: 'custom-indicator' }\" />\n    </div>\n\n    <!-- 自定义根容器和主体 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义容器样式：</div>\n      <Progress\n        :percent=\"80\"\n        :class-names=\"{\n          root: 'custom-root',\n          body: 'custom-body',\n        }\"\n      />\n    </div>\n\n    <!-- 完整自定义 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">完整自定义（组合使用）：</div>\n      <Progress\n        :percent=\"90\"\n        :class-names=\"{\n          root: 'complete-root',\n          rail: 'complete-rail',\n          track: 'complete-track',\n          indicator: 'complete-indicator',\n        }\"\n      />\n    </div>\n\n    <!-- 使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式（styles）：</div>\n      <Progress\n        :percent=\"65\"\n        :styles=\"{\n          rail: { background: '#f0f0f0', height: '12px', borderRadius: '6px' },\n          track: { background: 'linear-gradient(to right, #1890ff, #52c41a)', height: '12px' },\n          indicator: { fontSize: '16px', fontWeight: 'bold', color: '#722ed1' },\n        }\"\n      />\n    </div>\n\n    <!-- 圆形进度条自定义 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">圆形进度条自定义：</div>\n      <div style=\"display: flex; gap: 32px; align-items: center\">\n        <Progress\n          type=\"circle\"\n          :percent=\"70\"\n          :class-names=\"{\n            body: 'circle-body',\n            indicator: 'circle-indicator',\n          }\"\n        />\n\n        <Progress\n          type=\"circle\"\n          :percent=\"85\"\n          :styles=\"{\n            body: { filter: 'drop-shadow(0 4px 12px rgba(24, 144, 255, 0.4))' },\n            indicator: { fontSize: '24px', fontWeight: '600', color: '#1890ff' },\n          }\"\n        />\n      </div>\n    </div>\n\n    <!-- 仪表盘样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">仪表盘进度条：</div>\n      <Progress\n        type=\"dashboard\"\n        :percent=\"80\"\n        :class-names=\"{\n          body: 'dashboard-body',\n          indicator: 'dashboard-indicator',\n        }\"\n      />\n    </div>\n\n    <!-- 动态示例 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">动态进度（点击按钮改变）：</div>\n      <Progress\n        :percent=\"dynamicPercent\"\n        :class-names=\"{\n          track: 'dynamic-track',\n          indicator: 'dynamic-indicator',\n        }\"\n      />\n      <div style=\"margin-top: 12px; display: flex; gap: 8px\">\n        <Button size=\"small\" @click=\"decrease\">-10%</Button>\n        <Button size=\"small\" @click=\"increase\">+10%</Button>\n        <Button size=\"small\" @click=\"reset\">重置</Button>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Progress, Button } from 'ant-design-hmfw'\n\nconst dynamicPercent = ref(50)\n\nconst increase = () => {\n  dynamicPercent.value = Math.min(100, dynamicPercent.value + 10)\n}\n\nconst decrease = () => {\n  dynamicPercent.value = Math.max(0, dynamicPercent.value - 10)\n}\n\nconst reset = () => {\n  dynamicPercent.value = 50\n}\n</script>\n\n<style scoped>\n:deep(.custom-rail) {\n  background: linear-gradient(to right, #f0f0f0, #e0e0e0);\n  height: 10px;\n  border-radius: 5px;\n}\n\n:deep(.custom-track) {\n  background: linear-gradient(to right, #1890ff, #52c41a);\n  height: 10px;\n  border-radius: 5px;\n  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.3);\n}\n\n:deep(.custom-indicator) {\n  font-weight: bold;\n  color: #722ed1;\n  font-size: 16px;\n}\n\n:deep(.custom-root) {\n  background: #fafafa;\n  padding: 12px;\n  border-radius: 8px;\n}\n\n:deep(.custom-body) {\n  opacity: 0.9;\n}\n\n:deep(.complete-root) {\n  background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);\n  padding: 16px;\n  border-radius: 12px;\n  border: 2px solid #667eea30;\n}\n\n:deep(.complete-rail) {\n  background: #e8e8e8;\n  height: 14px;\n  border-radius: 7px;\n}\n\n:deep(.complete-track) {\n  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);\n  height: 14px;\n  border-radius: 7px;\n  position: relative;\n  animation: shimmer 2s infinite;\n}\n\n@keyframes shimmer {\n  0% {\n    filter: brightness(1);\n  }\n  50% {\n    filter: brightness(1.2);\n  }\n  100% {\n    filter: brightness(1);\n  }\n}\n\n:deep(.complete-indicator) {\n  font-size: 18px;\n  font-weight: 700;\n  color: #667eea;\n  text-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.circle-body) {\n  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));\n  transform: scale(1.05);\n}\n\n:deep(.circle-indicator) {\n  font-size: 20px;\n  font-weight: 600;\n  color: #52c41a;\n}\n\n:deep(.dashboard-body) {\n  filter: drop-shadow(0 4px 12px rgba(250, 140, 22, 0.3));\n}\n\n:deep(.dashboard-indicator) {\n  font-size: 24px;\n  font-weight: 700;\n  color: #fa8c16;\n}\n\n:deep(.dynamic-track) {\n  transition: all 0.5s ease;\n  background: linear-gradient(to right, #722ed1, #eb2f96);\n}\n\n:deep(.dynamic-indicator) {\n  transition: all 0.5s ease;\n  font-weight: 600;\n  color: #722ed1;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/progress"
@@ -8029,6 +8114,20 @@
           "name": "value",
           "description": "根据 value 进行比较，判断是否选中",
           "type": "`string | number`",
+          "default": "-"
+        },
+        {
+          "section": "Radio Props",
+          "name": "classNames",
+          "description": "语义化 className（[详见下方](#语义化-classname)）",
+          "type": "`RadioClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Radio Props",
+          "name": "styles",
+          "description": "语义化 style（[详见下方](#语义化-style)）",
+          "type": "`RadioStyles`",
           "default": "-"
         },
         {
@@ -8941,6 +9040,20 @@
           "description": "下拉列表每项高度（启用虚拟滚动时）",
           "type": "`number`",
           "default": "`32`"
+        },
+        {
+          "section": "Select Props",
+          "name": "classNames",
+          "description": "语义化 className（[详见下方](#语义化-classname)）",
+          "type": "`SelectClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "styles",
+          "description": "语义化 style（[详见下方](#语义化-style)）",
+          "type": "`SelectStyles`",
+          "default": "-"
         },
         {
           "section": "SelectOption",
@@ -10368,6 +10481,27 @@
           "default": "-"
         },
         {
+          "section": "Table Props",
+          "name": "classNames",
+          "description": "语义化 className（[详见下方](#语义化-classname)）",
+          "type": "`TableSemanticClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Table Props",
+          "name": "styles",
+          "description": "语义化 style（[详见下方](#语义化-style)）",
+          "type": "`TableSemanticStyles`",
+          "default": "-"
+        },
+        {
+          "section": "Table Props",
+          "name": "rootClassName",
+          "description": "根节点额外类名",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
           "section": "TableColumn",
           "name": "key",
           "description": "列的唯一标识",
@@ -10779,6 +10913,20 @@
           "description": "被隐藏时是否销毁 DOM 结构",
           "type": "boolean",
           "default": "false"
+        },
+        {
+          "section": "Tabs",
+          "name": "classNames",
+          "description": "语义化 className（[详见下方](#语义化-classname)）",
+          "type": "TabsClassNames",
+          "default": "-"
+        },
+        {
+          "section": "Tabs",
+          "name": "styles",
+          "description": "语义化 style（[详见下方](#语义化-style)）",
+          "type": "TabsStyles",
+          "default": "-"
         },
         {
           "section": "TabItem",
@@ -12012,14 +12160,14 @@
         {
           "section": "Transfer Props",
           "name": "classNames",
-          "description": "语义化 class",
+          "description": "语义化结构 class，见下方 [语义化 className](#语义化-classname)",
           "type": "`TransferSemanticClassNames`",
           "default": "-"
         },
         {
           "section": "Transfer Props",
           "name": "styles",
-          "description": "语义化 style",
+          "description": "语义化结构 style，见下方 [语义化 style](#语义化-style)",
           "type": "`TransferSemanticStyles`",
           "default": "-"
         },
@@ -12115,6 +12263,11 @@
           "title": "拖拽排序",
           "description": "设置 `draggable` 后，右侧列表项可通过 HTML5 拖拽调整顺序。",
           "code": "<template>\n  <Transfer\n    v-model:target-keys=\"targetKeys\"\n    :data-source=\"dataSource\"\n    :titles=\"['源', '目标（可拖拽排序）']\"\n    draggable\n    @reorder=\"handleReorder\"\n  />\n  <p style=\"margin-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px\">\n    当前顺序：{{ targetKeys.join(', ') || '（空）' }}\n  </p>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Transfer } from 'ant-design-hmfw'\nimport type { TransferItem, TransferReorderInfo } from 'ant-design-hmfw'\n\nconst dataSource: TransferItem[] = Array.from({ length: 8 }, (_, i) => ({\n  key: String(i),\n  title: `Item ${i + 1}`,\n}))\n\nconst targetKeys = ref<(string | number)[]>(['0', '1', '2', '3'])\n\nfunction handleReorder(info: TransferReorderInfo) {\n  console.log('reorder', info)\n}\n</script>"
+        },
+        {
+          "title": "语义化 className 与 style",
+          "description": "通过 `classNames` / `styles` 对列表、列表项、头部、操作按钮等子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 自定义列表样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义列表容器和项：</div>\n      <Transfer\n        v-model:target-keys=\"targetKeys1\"\n        :data-source=\"basicData\"\n        :class-names=\"{\n          list: 'custom-list',\n          item: 'custom-item',\n        }\"\n        :titles=\"['源列表', '目标列表']\"\n      />\n    </div>\n\n    <!-- 自定义头部和标题 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义头部和标题：</div>\n      <Transfer\n        v-model:target-keys=\"targetKeys2\"\n        :data-source=\"basicData\"\n        :class-names=\"{\n          header: 'custom-header',\n          title: 'custom-title',\n        }\"\n        :titles=\"['可选项', '已选项']\"\n      />\n    </div>\n\n    <!-- 自定义操作按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义操作按钮区：</div>\n      <Transfer\n        v-model:target-keys=\"targetKeys3\"\n        :data-source=\"basicData\"\n        :class-names=\"{\n          actions: 'custom-actions',\n        }\"\n        :titles=\"['左侧', '右侧']\"\n      />\n    </div>\n\n    <!-- 完整自定义 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">完整自定义（组合使用）：</div>\n      <Transfer\n        v-model:target-keys=\"targetKeys4\"\n        :data-source=\"basicData\"\n        :class-names=\"{\n          root: 'complete-root',\n          section: 'complete-section',\n          header: 'complete-header',\n          title: 'complete-title',\n          body: 'complete-body',\n          list: 'complete-list',\n          item: 'complete-item',\n          actions: 'complete-actions',\n        }\"\n        :titles=\"['待选区', '已选区']\"\n      />\n    </div>\n\n    <!-- 使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式（styles）：</div>\n      <Transfer\n        v-model:target-keys=\"targetKeys5\"\n        :data-source=\"basicData\"\n        :styles=\"{\n          section: { border: '2px solid #1890ff', borderRadius: '8px' },\n          header: {\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            color: 'white',\n            padding: '12px 16px',\n          },\n          list: { background: '#fafafa' },\n          item: { padding: '12px 16px', borderRadius: '4px' },\n        }\"\n        :titles=\"['来源', '目标']\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Transfer } from 'ant-design-hmfw'\n\nconst generateData = () => {\n  const data = []\n  for (let i = 1; i <= 10; i++) {\n    data.push({\n      key: `item-${i}`,\n      title: `选项 ${i}`,\n      description: `这是选项 ${i} 的描述`,\n    })\n  }\n  return data\n}\n\nconst basicData = generateData()\n\nconst targetKeys1 = ref(['item-2', 'item-4'])\nconst targetKeys2 = ref(['item-1', 'item-3'])\nconst targetKeys3 = ref(['item-5', 'item-6'])\nconst targetKeys4 = ref(['item-7', 'item-8'])\nconst targetKeys5 = ref(['item-9', 'item-10'])\n</script>\n\n<style scoped>\n:deep(.custom-list) {\n  background: linear-gradient(to bottom, #ffffff, #f5f5f5);\n  border-radius: 4px;\n}\n\n:deep(.custom-item) {\n  padding: 12px;\n  transition: all 0.3s;\n  border-radius: 4px;\n  margin: 4px 8px;\n}\n\n:deep(.custom-item:hover) {\n  background: #e6f7ff;\n  transform: translateX(4px);\n  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);\n}\n\n:deep(.custom-header) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  padding: 12px 16px;\n  border-radius: 8px 8px 0 0;\n}\n\n:deep(.custom-title) {\n  color: white;\n  font-weight: 600;\n  font-size: 15px;\n}\n\n:deep(.custom-actions) {\n  margin: 0 32px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n\n:deep(.custom-actions button) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  color: white;\n  font-weight: 500;\n  transition: all 0.3s;\n}\n\n:deep(.custom-actions button:hover) {\n  transform: scale(1.1);\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.complete-root) {\n  background: #fafafa;\n  padding: 20px;\n  border-radius: 12px;\n}\n\n:deep(.complete-section) {\n  border: 2px solid #1890ff;\n  border-radius: 8px;\n  background: white;\n  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1);\n}\n\n:deep(.complete-header) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  color: white;\n  padding: 14px 16px;\n  border-radius: 6px 6px 0 0;\n}\n\n:deep(.complete-title) {\n  color: white;\n  font-weight: 700;\n  font-size: 16px;\n  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);\n}\n\n:deep(.complete-body) {\n  background: #f5f5f5;\n}\n\n:deep(.complete-list) {\n  background: white;\n  padding: 8px;\n}\n\n:deep(.complete-item) {\n  padding: 14px 16px;\n  border-radius: 6px;\n  margin: 6px 0;\n  border: 1px solid transparent;\n  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n}\n\n:deep(.complete-item:hover) {\n  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);\n  border-color: #1890ff;\n  transform: translateX(6px);\n  box-shadow: 0 4px 8px rgba(24, 144, 255, 0.15);\n}\n\n:deep(.complete-actions) {\n  margin: 0 24px;\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n\n:deep(.complete-actions button) {\n  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);\n  border: none;\n  color: white;\n  font-weight: 600;\n  padding: 8px 16px;\n  border-radius: 6px;\n  box-shadow: 0 2px 4px rgba(82, 196, 26, 0.3);\n  transition: all 0.3s;\n}\n\n:deep(.complete-actions button:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.5);\n}\n\n:deep(.complete-actions button:disabled) {\n  background: #d9d9d9;\n  box-shadow: none;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/transfer"
@@ -12340,14 +12493,14 @@
         {
           "section": "Tree Props",
           "name": "classNames",
-          "description": "语义化 class（`root`/`item`/`itemIcon`/`itemTitle`/`itemSwitcher`）",
+          "description": "语义化结构 class，见下方 [语义化 className](#语义化-classname)",
           "type": "`object`",
           "default": "-"
         },
         {
           "section": "Tree Props",
           "name": "styles",
-          "description": "语义化内联样式（同上 key）",
+          "description": "语义化结构 style，见下方 [语义化 style](#语义化-style)",
           "type": "`object`",
           "default": "-"
         },
@@ -12537,6 +12690,11 @@
           "title": "虚拟滚动",
           "description": "设置 `virtual` 和 `height` 属性支持大数据场景的虚拟滚动。",
           "code": "<template>\n  <div>\n    <h3>虚拟滚动 - 10,000 个节点</h3>\n    <Tree\n      :tree-data=\"treeData\"\n      :default-expanded-keys=\"expandedKeys\"\n      virtual\n      :height=\"400\"\n      :item-height=\"28\"\n      show-line\n    />\n\n    <div style=\"margin-top: 16px; color: #666\">\n      总节点数: {{ treeData.length }} 个根节点，约 {{ totalNodes }} 个节点\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue'\nimport { Tree } from 'ant-design-hmfw'\n\n// 生成大量树节点\nconst generateTreeData = (level: number, parentKey: string, count: number): any[] => {\n  if (level > 3) return []\n\n  return Array.from({ length: count }, (_, i) => {\n    const key = `${parentKey}-${i}`\n    const hasChildren = level < 3\n\n    return {\n      key,\n      title: `Node ${key}`,\n      children: hasChildren ? generateTreeData(level + 1, key, Math.min(10, count)) : undefined,\n    }\n  })\n}\n\nconst treeData = generateTreeData(0, '0', 100)\n\n// 默认展开前几个节点\nconst expandedKeys = ref(['0-0', '0-1', '0-0-0', '0-0-1'])\n\n// 计算总节点数\nconst totalNodes = computed(() => {\n  const count = (nodes: any[]): number => {\n    return nodes.reduce((sum, node) => {\n      return sum + 1 + (node.children ? count(node.children) : 0)\n    }, 0)\n  }\n  return count(treeData)\n})\n</script>\n\n<style scoped>\nh3 {\n  margin-bottom: 16px;\n  font-size: 14px;\n  color: rgba(0, 0, 0, 0.85);\n}\n</style>"
+        },
+        {
+          "title": "语义化 className 与 style",
+          "description": "通过 `classNames` / `styles` 对树节点、图标、标题、展开开关等子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 自定义节点样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义节点项样式：</div>\n      <Tree\n        :tree-data=\"treeData\"\n        :default-expanded-keys=\"['1']\"\n        :class-names=\"{\n          item: 'custom-item',\n        }\"\n      />\n    </div>\n\n    <!-- 自定义图标和标题 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标和标题（需开启 showIcon）：</div>\n      <Tree\n        :tree-data=\"treeData\"\n        :default-expanded-keys=\"['1']\"\n        show-icon\n        :class-names=\"{\n          itemIcon: 'custom-icon',\n          itemTitle: 'custom-title',\n        }\"\n      />\n    </div>\n\n    <!-- 自定义展开/收起开关 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义展开/收起开关：</div>\n      <Tree\n        :tree-data=\"treeData\"\n        :default-expanded-keys=\"['1']\"\n        :class-names=\"{\n          itemSwitcher: 'custom-switcher',\n        }\"\n      />\n    </div>\n\n    <!-- 自定义根容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器样式：</div>\n      <Tree\n        :tree-data=\"treeData\"\n        :default-expanded-keys=\"['1', '2']\"\n        :class-names=\"{\n          root: 'custom-root',\n        }\"\n      />\n    </div>\n\n    <!-- 完整自定义 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">完整自定义（组合使用）：</div>\n      <Tree\n        :tree-data=\"treeData\"\n        :default-expanded-keys=\"['1']\"\n        show-icon\n        checkable\n        :class-names=\"{\n          root: 'complete-root',\n          item: 'complete-item',\n          itemIcon: 'complete-icon',\n          itemTitle: 'complete-title',\n          itemSwitcher: 'complete-switcher',\n        }\"\n      />\n    </div>\n\n    <!-- 使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式（styles）：</div>\n      <Tree\n        :tree-data=\"treeData\"\n        :default-expanded-keys=\"['1']\"\n        show-icon\n        :styles=\"{\n          root: {\n            background: '#fafafa',\n            padding: '16px',\n            borderRadius: '8px',\n          },\n          item: {\n            padding: '8px 12px',\n            borderRadius: '4px',\n          },\n          itemIcon: {\n            color: '#1890ff',\n            fontSize: '18px',\n          },\n          itemTitle: {\n            fontWeight: '500',\n            fontSize: '14px',\n          },\n        }\"\n      />\n    </div>\n\n    <!-- 带搜索的树（高亮节点） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">带搜索高亮：</div>\n      <div style=\"margin-bottom: 8px\">\n        <Input v-model:value=\"searchValue\" placeholder=\"搜索节点\" style=\"width: 200px\" />\n      </div>\n      <Tree\n        :tree-data=\"treeData\"\n        :default-expand-all=\"true\"\n        :filter-tree-node=\"filterTreeNode\"\n        :class-names=\"{\n          item: 'searchable-item',\n          itemTitle: 'searchable-title',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree, Input } from 'ant-design-hmfw'\n\nconst treeData = [\n  {\n    key: '1',\n    title: '父节点 1',\n    children: [\n      {\n        key: '1-1',\n        title: '子节点 1-1',\n        children: [\n          { key: '1-1-1', title: '叶子节点 1-1-1' },\n          { key: '1-1-2', title: '叶子节点 1-1-2' },\n        ],\n      },\n      { key: '1-2', title: '子节点 1-2' },\n    ],\n  },\n  {\n    key: '2',\n    title: '父节点 2',\n    children: [\n      { key: '2-1', title: '子节点 2-1' },\n      { key: '2-2', title: '子节点 2-2' },\n    ],\n  },\n  {\n    key: '3',\n    title: '父节点 3',\n    children: [{ key: '3-1', title: '子节点 3-1' }],\n  },\n]\n\nconst searchValue = ref('')\n\nconst filterTreeNode = (node: any) => {\n  if (!searchValue.value) return false\n  return node.title.toLowerCase().includes(searchValue.value.toLowerCase())\n}\n</script>\n\n<style scoped>\n:deep(.custom-item) {\n  padding: 8px 12px;\n  border-radius: 4px;\n  transition: all 0.3s;\n  margin: 2px 0;\n}\n\n:deep(.custom-item:hover) {\n  background: #e6f7ff;\n  transform: translateX(4px);\n}\n\n:deep(.custom-icon) {\n  color: #1890ff;\n  font-size: 18px;\n  margin-right: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-icon:hover) {\n  color: #40a9ff;\n  transform: scale(1.2);\n}\n\n:deep(.custom-title) {\n  font-weight: 500;\n  color: #333;\n  font-size: 14px;\n}\n\n:deep(.custom-switcher) {\n  color: #722ed1;\n  font-size: 16px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-switcher:hover) {\n  color: #9254de;\n  transform: scale(1.2);\n}\n\n:deep(.custom-root) {\n  background: linear-gradient(to bottom, #ffffff, #f5f5f5);\n  padding: 16px;\n  border-radius: 8px;\n  border: 1px solid #e8e8e8;\n}\n\n:deep(.complete-root) {\n  background: #fafafa;\n  padding: 20px;\n  border-radius: 12px;\n  border: 2px solid #1890ff20;\n}\n\n:deep(.complete-item) {\n  padding: 10px 12px;\n  border-radius: 6px;\n  margin: 4px 0;\n  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n  border: 1px solid transparent;\n}\n\n:deep(.complete-item:hover) {\n  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);\n  border-color: #1890ff;\n  transform: translateX(6px);\n  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);\n}\n\n:deep(.complete-icon) {\n  color: #52c41a;\n  font-size: 18px;\n  margin-right: 8px;\n  filter: drop-shadow(0 2px 4px rgba(82, 196, 26, 0.3));\n}\n\n:deep(.complete-title) {\n  font-weight: 600;\n  color: #262626;\n  font-size: 14px;\n  letter-spacing: 0.3px;\n}\n\n:deep(.complete-switcher) {\n  color: #722ed1;\n  font-size: 16px;\n  transition: all 0.3s;\n}\n\n:deep(.complete-switcher svg) {\n  transition: transform 0.3s;\n}\n\n:deep(.complete-switcher:hover) {\n  color: #9254de;\n}\n\n:deep(.searchable-item) {\n  padding: 8px 12px;\n  border-radius: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.searchable-title) {\n  font-size: 14px;\n}\n\n/* 高亮搜索结果 */\n:deep(.hmfw-tree-treenode-filtered > .hmfw-tree-node-content-wrapper .searchable-title) {\n  background: linear-gradient(135deg, #ffe58f 0%, #ffd666 100%);\n  padding: 2px 6px;\n  border-radius: 3px;\n  font-weight: 600;\n  color: #ad6800;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/tree"
