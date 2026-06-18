@@ -111,7 +111,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Select } from '../../../components'
+import { Select } from 'ant-design-hmfw'
 
 const options = [
   { label: '苹果 🍎', value: 'apple' },

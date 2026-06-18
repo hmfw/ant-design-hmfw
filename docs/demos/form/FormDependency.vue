@@ -49,12 +49,12 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
-import { Form, FormItem } from '../../../components/form'
-import { Input } from '../../../components/input'
-import { Button } from '../../../components/button'
-import { Space } from '../../../components/space'
-import { Select } from '../../../components/select'
-import { Switch } from '../../../components/switch'
+import { Form, FormItem } from 'ant-design-hmfw'
+import { Input } from 'ant-design-hmfw'
+import { Button } from 'ant-design-hmfw'
+import { Space } from 'ant-design-hmfw'
+import { Select } from 'ant-design-hmfw'
+import { Switch } from 'ant-design-hmfw'
 
 const formRef = ref()
 const formState = reactive({

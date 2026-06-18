@@ -81,7 +81,7 @@
   <TreeVirtual />
 </DemoBlock>
 
-### 语义化 className 与 style
+### 细粒度样式控制
 
 通过 `classNames` / `styles` 对树节点、图标、标题、展开开关等子元素做细粒度样式控制。
 
@@ -93,40 +93,40 @@
 
 ### Tree Props
 
-| 参数                   | 说明                                                                | 类型                                                        | 默认值  |
-| ---------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------- | ------- |
-| treeData               | treeNodes 数据                                                      | `TreeDataNode[]`                                            | `[]`    |
-| expandedKeys (v-model) | 展开指定的树节点                                                    | `(string \| number)[]`                                      | -       |
-| defaultExpandedKeys    | 默认展开指定的树节点                                                | `(string \| number)[]`                                      | `[]`    |
-| defaultExpandAll       | 默认展开所有树节点                                                  | `boolean`                                                   | `false` |
-| defaultExpandParent    | 默认展开父节点                                                      | `boolean`                                                   | `true`  |
-| autoExpandParent       | 展开时自动展开父节点                                                | `boolean`                                                   | `false` |
-| selectedKeys (v-model) | 设置选中的树节点                                                    | `(string \| number)[]`                                      | -       |
-| defaultSelectedKeys    | 默认选中的树节点                                                    | `(string \| number)[]`                                      | `[]`    |
-| checkedKeys (v-model)  | 选中复选框的树节点；`checkStrictly` 时为 `{ checked, halfChecked }` | `(string \| number)[] \| { checked, halfChecked }`          | -       |
-| defaultCheckedKeys     | 默认勾选的树节点                                                    | `(string \| number)[]`                                      | `[]`    |
-| checkable              | 节点前添加 Checkbox 复选框                                          | `boolean`                                                   | `false` |
-| checkStrictly          | 父子节点选中状态不再关联                                            | `boolean`                                                   | `false` |
-| multiple               | 支持点选多个节点                                                    | `boolean`                                                   | `false` |
-| selectable             | 是否可选中                                                          | `boolean`                                                   | `true`  |
-| disabled               | 将树禁用                                                            | `boolean`                                                   | `false` |
-| draggable              | 节点可拖拽                                                          | `boolean \| (node) => boolean \| { icon?, nodeDraggable? }` | `false` |
-| allowDrop              | 是否允许拖放到目标节点，返回 `false` 阻止                           | `({ dragNode, dropNode, dropPosition }) => boolean`         | -       |
-| showLine               | 是否展示连接线                                                      | `boolean \| { showLeafIcon }`                               | `false` |
-| showIcon               | 是否展示节点图标                                                    | `boolean`                                                   | `false` |
-| blockNode              | 节点是否占据一行                                                    | `boolean`                                                   | `false` |
-| indent                 | 每级缩进像素                                                        | `number`                                                    | `24`    |
-| filterTreeNode         | 按需高亮节点，返回 `true` 高亮                                      | `(node) => boolean`                                         | -       |
-| icon                   | 自定义节点图标（名称或渲染函数）                                    | `string \| (node, ctx) => VNode`                            | -       |
-| switcherIcon           | 自定义展开/收起图标                                                 | `string \| ({ expanded, isLeaf }) => VNode`                 | -       |
-| titleRender            | 自定义节点标题渲染                                                  | `(node) => VNode`                                           | -       |
-| fieldNames             | 自定义节点 title、key、children 的字段                              | `{ title?, key?, children? }`                               | -       |
-| virtual                | 是否开启虚拟滚动                                                    | `boolean`                                                   | `false` |
-| height                 | 虚拟滚动容器高度（开启 virtual 时必需）                             | `number \| string`                                          | -       |
-| itemHeight             | 虚拟滚动每项高度                                                    | `number`                                                    | `28`    |
-| rootClassName          | 根节点 className                                                    | `string`                                                    | -       |
-| classNames             | 语义化结构 class，见下方 [语义化 className](#语义化-classname)      | `object`                                                    | -       |
-| styles                 | 语义化结构 style，见下方 [语义化 style](#语义化-style)              | `object`                                                    | -       |
+| 参数                   | 说明                                                                             | 类型                                                        | 默认值  |
+| ---------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------- |
+| treeData               | treeNodes 数据                                                                   | `TreeDataNode[]`                                            | `[]`    |
+| expandedKeys (v-model) | 展开指定的树节点                                                                 | `(string \| number)[]`                                      | -       |
+| defaultExpandedKeys    | 默认展开指定的树节点                                                             | `(string \| number)[]`                                      | `[]`    |
+| defaultExpandAll       | 默认展开所有树节点                                                               | `boolean`                                                   | `false` |
+| defaultExpandParent    | 默认展开父节点                                                                   | `boolean`                                                   | `true`  |
+| autoExpandParent       | 展开时自动展开父节点                                                             | `boolean`                                                   | `false` |
+| selectedKeys (v-model) | 设置选中的树节点                                                                 | `(string \| number)[]`                                      | -       |
+| defaultSelectedKeys    | 默认选中的树节点                                                                 | `(string \| number)[]`                                      | `[]`    |
+| checkedKeys (v-model)  | 选中复选框的树节点；`checkStrictly` 时为 `{ checked, halfChecked }`              | `(string \| number)[] \| { checked, halfChecked }`          | -       |
+| defaultCheckedKeys     | 默认勾选的树节点                                                                 | `(string \| number)[]`                                      | `[]`    |
+| checkable              | 节点前添加 Checkbox 复选框                                                       | `boolean`                                                   | `false` |
+| checkStrictly          | 父子节点选中状态不再关联                                                         | `boolean`                                                   | `false` |
+| multiple               | 支持点选多个节点                                                                 | `boolean`                                                   | `false` |
+| selectable             | 是否可选中                                                                       | `boolean`                                                   | `true`  |
+| disabled               | 将树禁用                                                                         | `boolean`                                                   | `false` |
+| draggable              | 节点可拖拽                                                                       | `boolean \| (node) => boolean \| { icon?, nodeDraggable? }` | `false` |
+| allowDrop              | 是否允许拖放到目标节点，返回 `false` 阻止                                        | `({ dragNode, dropNode, dropPosition }) => boolean`         | -       |
+| showLine               | 是否展示连接线                                                                   | `boolean \| { showLeafIcon }`                               | `false` |
+| showIcon               | 是否展示节点图标                                                                 | `boolean`                                                   | `false` |
+| blockNode              | 节点是否占据一行                                                                 | `boolean`                                                   | `false` |
+| indent                 | 每级缩进像素                                                                     | `number`                                                    | `24`    |
+| filterTreeNode         | 按需高亮节点，返回 `true` 高亮                                                   | `(node) => boolean`                                         | -       |
+| icon                   | 自定义节点图标（名称或渲染函数）                                                 | `string \| (node, ctx) => VNode`                            | -       |
+| switcherIcon           | 自定义展开/收起图标                                                              | `string \| ({ expanded, isLeaf }) => VNode`                 | -       |
+| titleRender            | 自定义节点标题渲染                                                               | `(node) => VNode`                                           | -       |
+| fieldNames             | 自定义节点 title、key、children 的字段                                           | `{ title?, key?, children? }`                               | -       |
+| virtual                | 是否开启虚拟滚动                                                                 | `boolean`                                                   | `false` |
+| height                 | 虚拟滚动容器高度（开启 virtual 时必需）                                          | `number \| string`                                          | -       |
+| itemHeight             | 虚拟滚动每项高度                                                                 | `number`                                                    | `28`    |
+| rootClassName          | 根节点 className                                                                 | `string`                                                    | -       |
+| classNames             | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `object`                                                    | -       |
+| styles                 | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `object`                                                    | -       |
 
 ### DirectoryTree Props
 
@@ -172,9 +172,9 @@
 
 ---
 
-## 语义化 className
+## 语义化 className 与 style
 
-通过 `classNames` 属性可以对树形控件的各个子节点应用自定义 className，支持细粒度样式控制。
+通过 `classNames` 和 `styles` 属性可以对树形控件的各个子节点应用自定义样式，支持细粒度控制。
 
 ### 类型定义
 
@@ -186,21 +186,29 @@ interface TreeSemanticClassNames {
   itemTitle?: string // 节点标题
   itemSwitcher?: string // 展开/收起开关
 }
+
+interface TreeSemanticStyles {
+  root?: Record<string, string | number> // 树根容器
+  item?: Record<string, string | number> // 树节点项
+  itemIcon?: Record<string, string | number> // 节点图标
+  itemTitle?: Record<string, string | number> // 节点标题
+  itemSwitcher?: Record<string, string | number> // 展开/收起开关
+}
 ```
 
-### DOM 结构与默认 className
+### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-tree">
-  <!-- ↑ classNames.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
 
   <!-- 树节点（每个节点一个） -->
   <div class="hmfw-tree-treenode">
-    <!-- ↑ classNames.item 应用于此 -->
+    <!-- ↑ classNames.item / styles.item 应用于此 -->
 
     <!-- 展开/收起开关 -->
     <span class="hmfw-tree-switcher">
-      <!-- ↑ classNames.itemSwitcher 应用于此 -->
+      <!-- ↑ classNames.itemSwitcher / styles.itemSwitcher 应用于此 -->
       <svg>展开/收起图标</svg>
     </span>
 
@@ -211,13 +219,13 @@ interface TreeSemanticClassNames {
 
     <!-- 节点图标（showIcon 时） -->
     <span class="hmfw-tree-iconEle">
-      <!-- ↑ classNames.itemIcon 应用于此 -->
+      <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
       <svg>节点图标</svg>
     </span>
 
     <!-- 节点标题 -->
     <span class="hmfw-tree-title">
-      <!-- ↑ classNames.itemTitle 应用于此 -->
+      <!-- ↑ classNames.itemTitle / styles.itemTitle 应用于此 -->
       节点文字
     </span>
   </div>
@@ -227,7 +235,7 @@ interface TreeSemanticClassNames {
 </div>
 ```
 
-### 使用示例
+### 使用 classNames
 
 ```vue
 <template>
@@ -333,25 +341,9 @@ const treeData = [
 </style>
 ```
 
----
+### 使用 styles
 
-## 语义化 style
-
-通过 `styles` 属性可以对树形控件的各个子节点应用内联样式。
-
-### 类型定义
-
-```typescript
-interface TreeSemanticStyles {
-  root?: Record<string, string | number> // 树根容器
-  item?: Record<string, string | number> // 树节点项
-  itemIcon?: Record<string, string | number> // 节点图标
-  itemTitle?: Record<string, string | number> // 节点标题
-  itemSwitcher?: Record<string, string | number> // 展开/收起开关
-}
-```
-
-### 使用示例
+通过 `styles` 属性应用内联样式：
 
 ```vue
 <template>
@@ -434,31 +426,22 @@ interface TreeSemanticStyles {
 - 虚拟滚动模式（`virtual={true}`）下，样式应用方式相同，但需注意性能影响
 - 拖拽过程中的视觉反馈（如拖拽占位符）不受 `classNames` / `styles` 控制，由内置样式决定
 
----
-
 ### 不支持的能力（待后补）
 
 异步加载 `loadData`/`loadedKeys`、`TreeNode` 子组件式 JSX 声明、拖拽插入位置指示线（当前拖放仅支持放入目标节点子级，触发 `drop` 事件，并已内置循环引用边界检查与 `allowDrop` 校验）。
 
-<script setup>
-import TreeBasic from './TreeBasic.vue'
-import TreeBasicSource from './TreeBasic.vue?raw'
-import TreeCheckable from './TreeCheckable.vue'
-import TreeCheckableSource from './TreeCheckable.vue?raw'
-import TreeShowLine from './TreeShowLine.vue'
-import TreeShowLineSource from './TreeShowLine.vue?raw'
-import TreeDirectory from './TreeDirectory.vue'
-import TreeDirectorySource from './TreeDirectory.vue?raw'
-import TreeDraggable from './TreeDraggable.vue'
-import TreeDraggableSource from './TreeDraggable.vue?raw'
-import TreeSearch from './TreeSearch.vue'
-import TreeSearchSource from './TreeSearch.vue?raw'
-import TreeBlockNode from './TreeBlockNode.vue'
-import TreeBlockNodeSource from './TreeBlockNode.vue?raw'
-import TreeFieldNames from './TreeFieldNames.vue'
-import TreeFieldNamesSource from './TreeFieldNames.vue?raw'
-import TreeVirtual from './TreeVirtual.vue'
-import TreeVirtualSource from './TreeVirtual.vue?raw'
-import TreeClassNames from './TreeClassNames.vue'
-import TreeClassNamesSource from './TreeClassNames.vue?raw'
-</script>
+---
+
+## 设计 Token
+
+| Token 名称                     | 说明           | 默认值             |
+| ------------------------------ | -------------- | ------------------ |
+| `--hmfw-color-text`            | 主文本色       | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-text-secondary`  | 次要文本色     | `rgba(0,0,0,0.65)` |
+| `--hmfw-color-text-disabled`   | 禁用文本色     | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-text-quaternary` | 四级文本色     | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-primary`         | 主题色         | `#1677ff`          |
+| `--hmfw-color-primary-bg`      | 主题色背景     | `#e6f4ff`          |
+| `--hmfw-color-primary-border`  | 主题色边框     | `#91caff`          |
+| `--hmfw-color-bg-text-hover`   | 文本悬停背景色 | `rgba(0,0,0,0.06)` |
+| `--hmfw-color-border`          | 边框色         | `#d9d9d9`          |

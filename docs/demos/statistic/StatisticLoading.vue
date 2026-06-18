@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Statistic, Countdown, Space, Button } from '../../../components'
+import { Statistic, Countdown, Space, Button } from 'ant-design-hmfw'
 
 const loading = ref(true)
 const value = ref(112893)

@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Cascader } from '../../../components'
+import { Cascader } from 'ant-design-hmfw'
 
 const options = [
   {

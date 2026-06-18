@@ -73,42 +73,50 @@
   <SelectVirtual />
 </DemoBlock>
 
+### 细粒度样式控制
+
+通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="SelectClassNamesSource">
+  <SelectClassNames />
+</DemoBlock>
+
 ## API
 
 ### Select Props
 
-| 参数                     | 说明                                              | 类型                                                                         | 默认值                                                   |
-| ------------------------ | ------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------- |
-| value(v-model)           | 指定当前选中的条目                                | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | -                                                        |
-| defaultValue             | 指定默认选中的条目                                | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | -                                                        |
-| options                  | 数据化配置选项内容，支持嵌套（OptGroup）          | `SelectOption[]`                                                             | `[]`                                                     |
-| disabled                 | 是否禁用                                          | `boolean`                                                                    | `false`                                                  |
-| placeholder              | 选择框默认文字                                    | `string`                                                                     | -                                                        |
-| allowClear               | 支持清除                                          | `boolean`                                                                    | `false`                                                  |
-| size                     | 选择框大小                                        | `'small' \| 'middle' \| 'large'`                                             | `'middle'`                                               |
-| mode                     | 设置 Select 的模式为多选或标签                    | `'multiple' \| 'tags'`                                                       | -                                                        |
-| showSearch               | 使单选模式可搜索                                  | `boolean`                                                                    | `false`                                                  |
-| maxTagCount              | 最多显示多少个 tag                                | `number`                                                                     | -                                                        |
-| maxCount                 | 最多选择多少个选项（multiple/tags 模式）          | `number`                                                                     | -                                                        |
-| maxTagPlaceholder        | 隐藏 tag 时显示的内容                             | `string \| ((omittedValues) => string)`                                      | -                                                        |
-| status                   | 设置校验状态                                      | `'error' \| 'warning'`                                                       | -                                                        |
-| open                     | 是否展开下拉菜单                                  | `boolean`                                                                    | -                                                        |
-| loading                  | 加载中状态                                        | `boolean`                                                                    | `false`                                                  |
-| labelInValue             | 是否把每个选项的 label 包装到 value 中            | `boolean`                                                                    | `false`                                                  |
-| tokenSeparators          | 自动分词的分隔符（tags 模式）                     | `string[]`                                                                   | -                                                        |
-| filterOption             | 是否根据输入项进行筛选                            | `boolean \| ((input: string, option: SelectOption) => boolean)`              | `true`                                                   |
-| notFoundContent          | 当下拉列表为空时显示的内容                        | `string`                                                                     | -                                                        |
-| dropdownMatchSelectWidth | 下拉菜单和选择器同宽                              | `boolean`                                                                    | `true`                                                   |
-| autoClearSearchValue     | 选中后是否清空搜索框（multiple/tags 模式）        | `boolean`                                                                    | `true`                                                   |
-| optionRender             | 自定义下拉选项渲染                                | `(option: SelectOption, info: { index: number }) => VNode`                   | -                                                        |
-| labelRender              | 自定义选中项渲染                                  | `(props: LabeledValue) => VNode`                                             | -                                                        |
-| tagRender                | 自定义 tag 渲染（multiple/tags 模式）             | `(props: { label, value, closable, onClose }) => VNode`                      | -                                                        |
-| fieldNames               | 自定义字段名                                      | `{ label?: string; value?: string; options?: string }`                       | `{ label: 'label', value: 'value', options: 'options' }` |
-| virtual                  | 启用虚拟滚动（推荐选项数 > 100 时使用）           | `boolean`                                                                    | `false`                                                  |
-| listHeight               | 下拉列表高度（启用虚拟滚动时）                    | `number`                                                                     | `256`                                                    |
-| listItemHeight           | 下拉列表每项高度（启用虚拟滚动时）                | `number`                                                                     | `32`                                                     |
-| classNames               | 语义化 className（[详见下方](#语义化-classname)） | `SelectClassNames`                                                           | -                                                        |
-| styles                   | 语义化 style（[详见下方](#语义化-style)）         | `SelectStyles`                                                               | -                                                        |
+| 参数                     | 说明                                                                | 类型                                                                         | 默认值                                                   |
+| ------------------------ | ------------------------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------- |
+| value(v-model)           | 指定当前选中的条目                                                  | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | -                                                        |
+| defaultValue             | 指定默认选中的条目                                                  | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | -                                                        |
+| options                  | 数据化配置选项内容，支持嵌套（OptGroup）                            | `SelectOption[]`                                                             | `[]`                                                     |
+| disabled                 | 是否禁用                                                            | `boolean`                                                                    | `false`                                                  |
+| placeholder              | 选择框默认文字                                                      | `string`                                                                     | -                                                        |
+| allowClear               | 支持清除                                                            | `boolean`                                                                    | `false`                                                  |
+| size                     | 选择框大小                                                          | `'small' \| 'middle' \| 'large'`                                             | `'middle'`                                               |
+| mode                     | 设置 Select 的模式为多选或标签                                      | `'multiple' \| 'tags'`                                                       | -                                                        |
+| showSearch               | 使单选模式可搜索                                                    | `boolean`                                                                    | `false`                                                  |
+| maxTagCount              | 最多显示多少个 tag                                                  | `number`                                                                     | -                                                        |
+| maxCount                 | 最多选择多少个选项（multiple/tags 模式）                            | `number`                                                                     | -                                                        |
+| maxTagPlaceholder        | 隐藏 tag 时显示的内容                                               | `string \| ((omittedValues) => string)`                                      | -                                                        |
+| status                   | 设置校验状态                                                        | `'error' \| 'warning'`                                                       | -                                                        |
+| open                     | 是否展开下拉菜单                                                    | `boolean`                                                                    | -                                                        |
+| loading                  | 加载中状态                                                          | `boolean`                                                                    | `false`                                                  |
+| labelInValue             | 是否把每个选项的 label 包装到 value 中                              | `boolean`                                                                    | `false`                                                  |
+| tokenSeparators          | 自动分词的分隔符（tags 模式）                                       | `string[]`                                                                   | -                                                        |
+| filterOption             | 是否根据输入项进行筛选                                              | `boolean \| ((input: string, option: SelectOption) => boolean)`              | `true`                                                   |
+| notFoundContent          | 当下拉列表为空时显示的内容                                          | `string`                                                                     | -                                                        |
+| dropdownMatchSelectWidth | 下拉菜单和选择器同宽                                                | `boolean`                                                                    | `true`                                                   |
+| autoClearSearchValue     | 选中后是否清空搜索框（multiple/tags 模式）                          | `boolean`                                                                    | `true`                                                   |
+| optionRender             | 自定义下拉选项渲染                                                  | `(option: SelectOption, info: { index: number }) => VNode`                   | -                                                        |
+| labelRender              | 自定义选中项渲染                                                    | `(props: LabeledValue) => VNode`                                             | -                                                        |
+| tagRender                | 自定义 tag 渲染（multiple/tags 模式）                               | `(props: { label, value, closable, onClose }) => VNode`                      | -                                                        |
+| fieldNames               | 自定义字段名                                                        | `{ label?: string; value?: string; options?: string }`                       | `{ label: 'label', value: 'value', options: 'options' }` |
+| virtual                  | 启用虚拟滚动（推荐选项数 > 100 时使用）                             | `boolean`                                                                    | `false`                                                  |
+| listHeight               | 下拉列表高度（启用虚拟滚动时）                                      | `number`                                                                     | `256`                                                    |
+| listItemHeight           | 下拉列表每项高度（启用虚拟滚动时）                                  | `number`                                                                     | `32`                                                     |
+| classNames               | 语义化 className 与 style（[详见下方](#语义化-classname-与-style)） | `SelectClassNames`                                                           | -                                                        |
+| styles                   | 语义化 className 与 style（[详见下方](#语义化-classname-与-style)） | `SelectStyles`                                                               | -                                                        |
 
 ### SelectOption
 
@@ -149,56 +157,75 @@
 | focus  | 获取焦点 | -    |
 | blur   | 失去焦点 | -    |
 
-## 语义化 className
+## 语义化 className 与 style
 
-通过 `classNames` 属性可以自定义 Select 各部分的 className。
+通过 `classNames` 和 `styles` 属性可以对Select的各个子节点应用自定义样式，支持细粒度控制。
 
-### SelectClassNames
+### 类型定义
 
-| 属性名      | 说明                                                         | 类型     | 版本 |
-| ----------- | ------------------------------------------------------------ | -------- | ---- |
-| root        | 根节点 `div.hmfw-select`                                     | `string` | -    |
-| selector    | 选择器容器 `div.hmfw-select-selector`                        | `string` | -    |
-| item        | 已选项 `span.hmfw-select-selection-item`（多选模式下为标签） | `string` | -    |
-| placeholder | 占位符 `span.hmfw-select-selection-placeholder`              | `string` | -    |
-| arrow       | 后缀箭头容器 `div.hmfw-select-arrow`                         | `string` | -    |
-| clear       | 清除按钮 `span.hmfw-select-clear`                            | `string` | -    |
-| dropdown    | 下拉面板 `div.hmfw-select-dropdown`                          | `string` | -    |
-| option      | 选项 `div.hmfw-select-item-option`                           | `string` | -    |
-| optionLabel | 选项内容 `div.hmfw-select-item-option-content`               | `string` | -    |
-| optionState | 选项选中状态图标 `span.hmfw-select-item-option-state`        | `string` | -    |
+```typescript
+import type { CSSProperties } from 'vue'
 
-### DOM 结构
+interface SelectClassNames {
+  root?: string // 根节点 `div.hmfw-select`
+  selector?: string // 选择器容器 `div.hmfw-select-selector`
+  item?: string // 已选项 `span.hmfw-select-selection-item`（多选模式下为标签）
+  placeholder?: string // 占位符 `span.hmfw-select-selection-placeholder`
+  arrow?: string // 后缀箭头容器 `div.hmfw-select-arrow`
+  clear?: string // 清除按钮 `span.hmfw-select-clear`
+  dropdown?: string // 下拉面板 `div.hmfw-select-dropdown`
+  option?: string // 选项 `div.hmfw-select-item-option`
+  optionLabel?: string // 选项内容 `div.hmfw-select-item-option-content`
+  optionState?: string // 选项选中状态图标 `span.hmfw-select-item-option-state`
+}
+
+interface SelectStyles {
+  root?: CSSProperties // 根节点 `div.hmfw-select`
+  selector?: CSSProperties // 选择器容器 `div.hmfw-select-selector`
+  item?: CSSProperties // 已选项 `span.hmfw-select-selection-item`
+  placeholder?: CSSProperties // 占位符 `span.hmfw-select-selection-placeholder`
+  arrow?: CSSProperties // 后缀箭头容器 `div.hmfw-select-arrow`
+  clear?: CSSProperties // 清除按钮 `span.hmfw-select-clear`
+  dropdown?: CSSProperties // 下拉面板 `div.hmfw-select-dropdown`
+  option?: CSSProperties // 选项 `div.hmfw-select-item-option`
+  optionLabel?: CSSProperties // 选项内容 `div.hmfw-select-item-option-content`
+  optionState?: CSSProperties // 选项选中状态图标 `span.hmfw-select-item-option-state`
+}
+```
+
+### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-select">
-  <!-- root -->
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <div class="hmfw-select-selector">
-    <!-- selector -->
+    <!-- ↑ classNames.selector / styles.selector 应用于此 -->
     <span class="hmfw-select-selection-item">已选项</span>
-    <!-- item -->
+    <!-- ↑ classNames.item / styles.item 应用于此 -->
     <span class="hmfw-select-selection-placeholder">占位符</span>
-    <!-- placeholder -->
+    <!-- ↑ classNames.placeholder / styles.placeholder 应用于此 -->
   </div>
   <div class="hmfw-select-arrow">▾</div>
-  <!-- arrow -->
+  <!-- ↑ classNames.arrow / styles.arrow 应用于此 -->
   <span class="hmfw-select-clear">×</span>
-  <!-- clear -->
+  <!-- ↑ classNames.clear / styles.clear 应用于此 -->
   <!-- Teleport 到 body -->
   <div class="hmfw-select-dropdown">
-    <!-- dropdown -->
+    <!-- ↑ classNames.dropdown / styles.dropdown 应用于此 -->
     <div class="hmfw-select-item-option">
-      <!-- option -->
+      <!-- ↑ classNames.option / styles.option 应用于此 -->
       <div class="hmfw-select-item-option-content">选项</div>
-      <!-- optionLabel -->
+      <!-- ↑ classNames.optionLabel / styles.optionLabel 应用于此 -->
       <span class="hmfw-select-item-option-state">✓</span>
-      <!-- optionState -->
+      <!-- ↑ classNames.optionState / styles.optionState 应用于此 -->
     </div>
   </div>
 </div>
 ```
 
-### 使用示例
+### 使用 classNames
+
+通过 `classNames` 属性应用自定义 CSS 类：
 
 ```vue
 <template>
@@ -212,35 +239,34 @@
     }"
   />
 </template>
+
+<style>
+/* dropdown 通过 Teleport 渲染，必须使用全局样式 */
+.my-select-dropdown {
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+</style>
+
+<style scoped>
+:deep(.my-select-root) {
+  border-color: #722ed1;
+}
+
+:deep(.my-select-selector) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+:deep(.my-select-option) {
+  font-weight: 500;
+}
+</style>
 ```
 
-**注意事项：**
+### 使用 styles
 
-- `dropdown` 通过 `Teleport to="body"` 渲染，因此其样式必须使用**全局样式**（非 scoped），或在 scoped 中使用 `:deep()` 仍无效，需要单独的 `<style>` 块
-- `clear` 仅在 `allowClear` 启用且有选中值时显示
-- `placeholder` 仅在无选中值时显示
-- `item` 在多选模式下对应每个标签
-
-## 语义化 style
-
-通过 `styles` 属性可以自定义 Select 各部分的 style。
-
-### SelectStyles
-
-| 属性名      | 说明                                                  | 类型            | 版本 |
-| ----------- | ----------------------------------------------------- | --------------- | ---- |
-| root        | 根节点 `div.hmfw-select`                              | `CSSProperties` | -    |
-| selector    | 选择器容器 `div.hmfw-select-selector`                 | `CSSProperties` | -    |
-| item        | 已选项 `span.hmfw-select-selection-item`              | `CSSProperties` | -    |
-| placeholder | 占位符 `span.hmfw-select-selection-placeholder`       | `CSSProperties` | -    |
-| arrow       | 后缀箭头容器 `div.hmfw-select-arrow`                  | `CSSProperties` | -    |
-| clear       | 清除按钮 `span.hmfw-select-clear`                     | `CSSProperties` | -    |
-| dropdown    | 下拉面板 `div.hmfw-select-dropdown`                   | `CSSProperties` | -    |
-| option      | 选项 `div.hmfw-select-item-option`                    | `CSSProperties` | -    |
-| optionLabel | 选项内容 `div.hmfw-select-item-option-content`        | `CSSProperties` | -    |
-| optionState | 选项选中状态图标 `span.hmfw-select-item-option-state` | `CSSProperties` | -    |
-
-### 使用示例
+通过 `styles` 属性应用内联样式：
 
 ```vue
 <template>
@@ -255,8 +281,16 @@
 </template>
 ```
 
-### 语义化 className 与 style
+### 注意事项
 
-<DemoBlock title="语义化 className 与 style" :source="SelectClassNamesSource">
-  <SelectClassNames />
-</DemoBlock>
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `dropdown` 通过 `Teleport to="body"` 渲染，因此其样式必须使用**全局样式**（非 scoped），或在 scoped 中使用 `:deep()` 仍无效，需要单独的 `<style>` 块
+- `clear` 仅在 `allowClear` 启用且有选中值时显示
+- `placeholder` 仅在无选中值时显示
+- `item` 在多选模式下对应每个标签
+
+## 设计 Token
+
+| Token 名称             | 说明   | 默认值    |
+| ---------------------- | ------ | --------- |
+| `--hmfw-color-primary` | 主题色 | `#1677ff` |

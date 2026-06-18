@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { Statistic, Space } from '../../../components'
+import { Statistic, Space } from 'ant-design-hmfw'
 </script>
 
 <style scoped>

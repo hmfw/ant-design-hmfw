@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Avatar } from '../../../components'
+import { Avatar } from 'ant-design-hmfw'
 import { UserOutlined } from 'ant-design-hmfw'
 </script>
 

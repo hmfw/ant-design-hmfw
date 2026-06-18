@@ -25,7 +25,8 @@ export default defineConfig({
             s
               .toLowerCase()
               .replace(/\s+/g, '-')
-              .replace(/[^\w-]/g, ''),
+              // 保留 ASCII 字母数字、连字符、下划线，以及中日韩等 Unicode 字母（\p{L} 需 u 标志）
+              .replace(/[^\p{L}\p{N}_-]/gu, ''),
         })
       },
     }),

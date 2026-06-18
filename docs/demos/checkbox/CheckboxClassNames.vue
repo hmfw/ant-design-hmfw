@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { Checkbox } from '../../../components'
+import { Checkbox } from 'ant-design-hmfw'
 </script>
 
 <style scoped>

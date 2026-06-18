@@ -97,34 +97,42 @@
   <TableEditable />
 </DemoBlock>
 
+### 细粒度样式控制
+
+通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="TableClassNamesSource">
+  <TableClassNames />
+</DemoBlock>
+
 ## API
 
 ### Table Props
 
-| 参数          | 说明                                              | 类型                                                          | 默认值      |
-| ------------- | ------------------------------------------------- | ------------------------------------------------------------- | ----------- |
-| dataSource    | 数据数组                                          | `any[]`                                                       | -           |
-| columns       | 表格列的配置描述                                  | `TableColumn[]`                                               | -           |
-| rowKey        | 表格行 key 的取值                                 | `string \| ((record: any) => Key)`                            | `'key'`     |
-| loading       | 页面是否加载中                                    | `boolean`                                                     | `false`     |
-| pagination    | 分页器，设为 false 时不展示                       | `TablePaginationConfig \| false`                              | -           |
-| rowSelection  | 列表项是否可选择                                  | `TableRowSelection`                                           | -           |
-| expandable    | 配置展开属性                                      | `ExpandableConfig`                                            | -           |
-| size          | 表格大小                                          | `'default' \| 'middle' \| 'small'`                            | `'default'` |
-| bordered      | 是否展示外边框和列边框                            | `boolean`                                                     | `false`     |
-| showHeader    | 是否显示表头                                      | `boolean`                                                     | `true`      |
-| sticky        | 设置粘性头部和滚动条                              | `boolean \| { offsetHeader?: number, offsetScroll?: number }` | `false`     |
-| scroll        | 表格是否可滚动                                    | `{ x?: number \| string, y?: number \| string }`              | -           |
-| summary       | 总结栏                                            | `(pageData: any[]) => VNode`                                  | -           |
-| title         | 表格标题                                          | `string \| ((data: any[]) => VNode)`                          | -           |
-| footer        | 表格页脚                                          | `string \| ((data: any[]) => VNode)`                          | -           |
-| locale        | 国际化配置                                        | `{ emptyText?: string }`                                      | -           |
-| onChange      | 分页、排序、筛选变化时触发                        | `(pagination, filters, sorter, extra) => void`                | -           |
-| onRow         | 设置行属性                                        | `(record, index) => object`                                   | -           |
-| onHeaderRow   | 设置表头行属性                                    | `(columns, index) => object`                                  | -           |
-| classNames    | 语义化 className（[详见下方](#语义化-classname)） | `TableSemanticClassNames`                                     | -           |
-| styles        | 语义化 style（[详见下方](#语义化-style)）         | `TableSemanticStyles`                                         | -           |
-| rootClassName | 根节点额外类名                                    | `string`                                                      | -           |
+| 参数          | 说明                                                       | 类型                                                          | 默认值      |
+| ------------- | ---------------------------------------------------------- | ------------------------------------------------------------- | ----------- |
+| dataSource    | 数据数组                                                   | `any[]`                                                       | -           |
+| columns       | 表格列的配置描述                                           | `TableColumn[]`                                               | -           |
+| rowKey        | 表格行 key 的取值                                          | `string \| ((record: any) => Key)`                            | `'key'`     |
+| loading       | 页面是否加载中                                             | `boolean`                                                     | `false`     |
+| pagination    | 分页器，设为 false 时不展示                                | `TablePaginationConfig \| false`                              | -           |
+| rowSelection  | 列表项是否可选择                                           | `TableRowSelection`                                           | -           |
+| expandable    | 配置展开属性                                               | `ExpandableConfig`                                            | -           |
+| size          | 表格大小                                                   | `'default' \| 'middle' \| 'small'`                            | `'default'` |
+| bordered      | 是否展示外边框和列边框                                     | `boolean`                                                     | `false`     |
+| showHeader    | 是否显示表头                                               | `boolean`                                                     | `true`      |
+| sticky        | 设置粘性头部和滚动条                                       | `boolean \| { offsetHeader?: number, offsetScroll?: number }` | `false`     |
+| scroll        | 表格是否可滚动                                             | `{ x?: number \| string, y?: number \| string }`              | -           |
+| summary       | 总结栏                                                     | `(pageData: any[]) => VNode`                                  | -           |
+| title         | 表格标题                                                   | `string \| ((data: any[]) => VNode)`                          | -           |
+| footer        | 表格页脚                                                   | `string \| ((data: any[]) => VNode)`                          | -           |
+| locale        | 国际化配置                                                 | `{ emptyText?: string }`                                      | -           |
+| onChange      | 分页、排序、筛选变化时触发                                 | `(pagination, filters, sorter, extra) => void`                | -           |
+| onRow         | 设置行属性                                                 | `(record, index) => object`                                   | -           |
+| onHeaderRow   | 设置表头行属性                                             | `(columns, index) => object`                                  | -           |
+| classNames    | 语义化 className（[详见下方](#语义化-classname-与-style)） | `TableSemanticClassNames`                                     | -           |
+| styles        | 语义化 style（[详见下方](#语义化-classname-与-style)）     | `TableSemanticStyles`                                         | -           |
+| rootClassName | 根节点额外类名                                             | `string`                                                      | -           |
 
 ### TableColumn
 
@@ -209,56 +217,70 @@ Table 组件完全支持键盘导航和屏幕阅读器：
 - 完整的 ARIA 标签支持
 - 符合 WCAG 2.1 AA 标准
 
-## 语义化 className
+## 语义化 className 与 style
 
-通过 `classNames` 属性可以自定义 Table 各部分的 className。
+通过 `classNames` 和 `styles` 属性可以对Table的各个子节点应用自定义样式，支持细粒度控制。
 
-### TableSemanticClassNames
+### 类型定义
 
-| 属性名     | 说明                                 | 类型     | 版本 |
-| ---------- | ------------------------------------ | -------- | ---- |
-| root       | 根节点 `div.hmfw-table`              | `string` | -    |
-| header     | 表头 `thead.hmfw-table-thead`        | `string` | -    |
-| body       | 表体 `tbody.hmfw-table-tbody`        | `string` | -    |
-| row        | 数据行 `tr.hmfw-table-row`           | `string` | -    |
-| cell       | 数据单元格 `td.hmfw-table-cell`      | `string` | -    |
-| footer     | 表格页脚 `div.hmfw-table-footer`     | `string` | -    |
-| pagination | 分页容器 `div.hmfw-table-pagination` | `string` | -    |
+```typescript
+import type { CSSProperties } from 'vue'
 
-### DOM 结构
+interface TableSemanticClassNames {
+  root?: string // 根节点 div.hmfw-table
+  header?: string // 表头 thead.hmfw-table-thead
+  body?: string // 表体 tbody.hmfw-table-tbody
+  row?: string // 数据行 tr.hmfw-table-row
+  cell?: string // 数据单元格 td.hmfw-table-cell
+  footer?: string // 表格页脚 div.hmfw-table-footer
+  pagination?: string // 分页容器 div.hmfw-table-pagination
+}
+
+interface TableSemanticStyles {
+  root?: CSSProperties
+  header?: CSSProperties
+  body?: CSSProperties
+  row?: CSSProperties
+  cell?: CSSProperties
+  footer?: CSSProperties
+  pagination?: CSSProperties
+}
+```
+
+### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-table">
-  <!-- root -->
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <div class="hmfw-table-title">标题</div>
   <div class="hmfw-table-container">
     <div class="hmfw-table-content">
       <table>
         <thead class="hmfw-table-thead">
-          <!-- header -->
+          <!-- ↑ classNames.header / styles.header 应用于此 -->
           <tr>
             <th class="hmfw-table-cell">列头</th>
           </tr>
         </thead>
         <tbody class="hmfw-table-tbody">
-          <!-- body -->
+          <!-- ↑ classNames.body / styles.body 应用于此 -->
           <tr class="hmfw-table-row">
-            <!-- row -->
+            <!-- ↑ classNames.row / styles.row 应用于此 -->
             <td class="hmfw-table-cell">单元格</td>
-            <!-- cell -->
+            <!-- ↑ classNames.cell / styles.cell 应用于此 -->
           </tr>
         </tbody>
       </table>
     </div>
   </div>
   <div class="hmfw-table-footer">页脚</div>
-  <!-- footer -->
+  <!-- ↑ classNames.footer / styles.footer 应用于此 -->
   <div class="hmfw-table-pagination">分页</div>
-  <!-- pagination -->
+  <!-- ↑ classNames.pagination / styles.pagination 应用于此 -->
 </div>
 ```
 
-### 使用示例
+### 使用 classNames
 
 ```vue
 <template>
@@ -273,33 +295,28 @@ Table 组件完全支持键盘导航和屏幕阅读器：
     }"
   />
 </template>
+
+<style scoped>
+:deep(.my-table) {
+  border-radius: 12px;
+}
+
+:deep(.my-header) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+:deep(.my-row:hover) {
+  background: #f0f5ff;
+}
+
+:deep(.my-cell) {
+  font-size: 14px;
+}
+</style>
 ```
 
-**注意事项：**
-
-- `cell` 同时应用于所有数据单元格（`<td>`），表头单元格（`<th>`）不应用此 className，如需定制表头单元格请通过 `header` 的后代选择器（如 `.my-header th`）
-- `row` 应用于所有数据行，包括虚拟滚动模式下的行
-- `header`/`body` 分别对应 `<thead>`/`<tbody>` 元素
-- `footer` 仅在设置了 `footer` 属性时渲染
-- `pagination` 仅在分页启用且有数据时渲染
-
-## 语义化 style
-
-通过 `styles` 属性可以自定义 Table 各部分的 style。
-
-### TableSemanticStyles
-
-| 属性名     | 说明                                 | 类型            | 版本 |
-| ---------- | ------------------------------------ | --------------- | ---- |
-| root       | 根节点 `div.hmfw-table`              | `CSSProperties` | -    |
-| header     | 表头 `thead.hmfw-table-thead`        | `CSSProperties` | -    |
-| body       | 表体 `tbody.hmfw-table-tbody`        | `CSSProperties` | -    |
-| row        | 数据行 `tr.hmfw-table-row`           | `CSSProperties` | -    |
-| cell       | 数据单元格 `td.hmfw-table-cell`      | `CSSProperties` | -    |
-| footer     | 表格页脚 `div.hmfw-table-footer`     | `CSSProperties` | -    |
-| pagination | 分页容器 `div.hmfw-table-pagination` | `CSSProperties` | -    |
-
-### 使用示例
+### 使用 styles
 
 ```vue
 <template>
@@ -315,10 +332,19 @@ Table 组件完全支持键盘导航和屏幕阅读器：
 </template>
 ```
 
-**说明：** `styles.header` 会与 sticky 模式下的定位样式合并；`styles.cell` 会与列的 `align` 对齐样式合并。
+### 注意事项
 
-### 语义化 className 与 style
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `cell` 同时应用于所有数据单元格（`<td>`），表头单元格（`<th>`）不应用此 className，如需定制表头单元格请通过 `header` 的后代选择器（如 `.my-header th`）
+- `row` 应用于所有数据行，包括虚拟滚动模式下的行
+- `header`/`body` 分别对应 `<thead>`/`<tbody>` 元素
+- `footer` 仅在设置了 `footer` 属性时渲染
+- `pagination` 仅在分页启用且有数据时渲染
+- `styles.header` 会与 sticky 模式下的定位样式合并；`styles.cell` 会与列的 `align` 对齐样式合并
 
-<DemoBlock title="语义化 className 与 style" :source="TableClassNamesSource">
-  <TableClassNames />
-</DemoBlock>
+## 设计 Token
+
+| Token 名称                   | 说明         | 默认值    |
+| ---------------------------- | ------------ | --------- |
+| `--hmfw-color-primary`       | 主题色       | `#1677ff` |
+| `--hmfw-color-primary-hover` | 主题色悬停态 | `#4096ff` |

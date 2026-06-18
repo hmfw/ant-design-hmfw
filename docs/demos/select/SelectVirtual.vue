@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Select } from '../../../components'
+import { Select } from 'ant-design-hmfw'
 
 const value1 = ref<string>()
 const value2 = ref<string>()

@@ -11,5 +11,5 @@
 </template>
 
 <script setup lang="ts">
-import { Button } from '../../../components'
+import { Button } from 'ant-design-hmfw'
 </script>

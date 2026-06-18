@@ -82,7 +82,7 @@
   <ProgressV6 />
 </DemoBlock>
 
-### 语义化 className 与 style
+### 细粒度样式控制
 
 通过 `classNames` / `styles` 对轨道、进度条、指示器等子元素做细粒度样式控制，支持线形、圆形、仪表盘三种类型。
 
@@ -94,30 +94,30 @@
 
 ### Progress Props
 
-| 参数            | 说明                                                           | 类型                                                                                    | 默认值                            |
-| --------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------- |
-| type            | 类型                                                           | `'line' \| 'circle' \| 'dashboard'`                                                     | `'line'`                          |
-| percent         | 百分比                                                         | `number`                                                                                | `0`                               |
-| status          | 状态                                                           | `'success' \| 'exception' \| 'normal' \| 'active'`                                      | -                                 |
-| showInfo        | 是否显示进度数值或状态图标                                     | `boolean`                                                                               | `true`                            |
-| strokeColor     | 进度条色彩，支持字符串 / 数组 / 渐变对象                       | `string \| string[] \| ProgressGradient`                                                | -                                 |
-| railColor       | 未完成分段颜色                                                 | `string`                                                                                | -                                 |
-| trailColor      | (已废弃) 使用 `railColor` 代替                                 | `string`                                                                                | -                                 |
-| strokeWidth     | 进度条线宽度                                                   | `number`                                                                                | `8` (line), 自适应 (circle)       |
-| strokeLinecap   | 进度条端点形状                                                 | `'round' \| 'butt' \| 'square'`                                                         | `'round'`                         |
-| size            | 进度条尺寸                                                     | `'small' \| 'medium' \| 'default' \| number \| [number, number] \| { width?, height? }` | `'medium'`                        |
-| width           | (已废弃) circle/dashboard 画布宽度，使用 `size` 代替           | `number`                                                                                | `120`                             |
-| format          | 内容模板函数，可返回 VNode                                     | `(percent?: number, successPercent?: number) => VNode \| string \| number \| null`      | -                                 |
-| steps           | 步骤进度条；对象形式可指定段间距                               | `number \| { count: number; gap: number }`                                              | -                                 |
-| success         | 成功进度条配置                                                 | `{ percent?: number; strokeColor?: string }`                                            | -                                 |
-| gapDegree       | 圆形进度条缺口角度，dashboard 默认 75                          | `number`                                                                                | `0` (circle), `75` (dashboard)    |
-| gapPlacement    | 仪表盘缺口位置（v6 新 API）                                    | `'top' \| 'bottom' \| 'start' \| 'end'`                                                 | `'bottom'` (dashboard)            |
-| gapPosition     | (已废弃) 使用 `gapPlacement` 代替                              | `'top' \| 'bottom' \| 'left' \| 'right'`                                                | -                                 |
-| percentPosition | 进度文字位置                                                   | `{ align?: 'start' \| 'center' \| 'end'; type?: 'inner' \| 'outer' }`                   | `{ align: 'end', type: 'outer' }` |
-| rounding        | 步骤进度条已激活段数舍入函数                                   | `(step: number) => number`                                                              | `Math.round`                      |
-| rootClassName   | 根元素类名                                                     | `string`                                                                                | -                                 |
-| classNames      | 语义化结构 class，见下方 [语义化 className](#语义化-classname) | `ProgressClassNames`                                                                    | -                                 |
-| styles          | 语义化结构 style，见下方 [语义化 style](#语义化-style)         | `ProgressStyles`                                                                        | -                                 |
+| 参数            | 说明                                                                             | 类型                                                                                    | 默认值                            |
+| --------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------- |
+| type            | 类型                                                                             | `'line' \| 'circle' \| 'dashboard'`                                                     | `'line'`                          |
+| percent         | 百分比                                                                           | `number`                                                                                | `0`                               |
+| status          | 状态                                                                             | `'success' \| 'exception' \| 'normal' \| 'active'`                                      | -                                 |
+| showInfo        | 是否显示进度数值或状态图标                                                       | `boolean`                                                                               | `true`                            |
+| strokeColor     | 进度条色彩，支持字符串 / 数组 / 渐变对象                                         | `string \| string[] \| ProgressGradient`                                                | -                                 |
+| railColor       | 未完成分段颜色                                                                   | `string`                                                                                | -                                 |
+| trailColor      | (已废弃) 使用 `railColor` 代替                                                   | `string`                                                                                | -                                 |
+| strokeWidth     | 进度条线宽度                                                                     | `number`                                                                                | `8` (line), 自适应 (circle)       |
+| strokeLinecap   | 进度条端点形状                                                                   | `'round' \| 'butt' \| 'square'`                                                         | `'round'`                         |
+| size            | 进度条尺寸                                                                       | `'small' \| 'medium' \| 'default' \| number \| [number, number] \| { width?, height? }` | `'medium'`                        |
+| width           | (已废弃) circle/dashboard 画布宽度，使用 `size` 代替                             | `number`                                                                                | `120`                             |
+| format          | 内容模板函数，可返回 VNode                                                       | `(percent?: number, successPercent?: number) => VNode \| string \| number \| null`      | -                                 |
+| steps           | 步骤进度条；对象形式可指定段间距                                                 | `number \| { count: number; gap: number }`                                              | -                                 |
+| success         | 成功进度条配置                                                                   | `{ percent?: number; strokeColor?: string }`                                            | -                                 |
+| gapDegree       | 圆形进度条缺口角度，dashboard 默认 75                                            | `number`                                                                                | `0` (circle), `75` (dashboard)    |
+| gapPlacement    | 仪表盘缺口位置（v6 新 API）                                                      | `'top' \| 'bottom' \| 'start' \| 'end'`                                                 | `'bottom'` (dashboard)            |
+| gapPosition     | (已废弃) 使用 `gapPlacement` 代替                                                | `'top' \| 'bottom' \| 'left' \| 'right'`                                                | -                                 |
+| percentPosition | 进度文字位置                                                                     | `{ align?: 'start' \| 'center' \| 'end'; type?: 'inner' \| 'outer' }`                   | `{ align: 'end', type: 'outer' }` |
+| rounding        | 步骤进度条已激活段数舍入函数                                                     | `(step: number) => number`                                                              | `Math.round`                      |
+| rootClassName   | 根元素类名                                                                       | `string`                                                                                | -                                 |
+| classNames      | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ProgressClassNames`                                                                    | -                                 |
+| styles          | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ProgressStyles`                                                                        | -                                 |
 
 ### ProgressGradient
 
@@ -132,9 +132,9 @@ type ProgressGradient = {
 
 ---
 
-## 语义化 className
+## 语义化 className 与 style
 
-通过 `classNames` 属性可以对进度条的各个子节点应用自定义 className，支持细粒度样式控制。
+通过 `classNames` 和 `styles` 属性可以对进度条的各个子节点应用自定义样式，支持细粒度控制。
 
 ### 类型定义
 
@@ -146,26 +146,36 @@ interface ProgressClassNames {
   track?: string // 已完成轨道
   indicator?: string // 百分比文本
 }
+
+import type { CSSProperties } from 'vue'
+
+interface ProgressStyles {
+  root?: CSSProperties // 进度条根容器
+  body?: CSSProperties // 进度条主体容器
+  rail?: CSSProperties // 背景轨道
+  track?: CSSProperties // 已完成轨道
+  indicator?: CSSProperties // 百分比文本
+}
 ```
 
-### DOM 结构与默认 className
+### DOM 结构与 className 映射
 
 **线形进度条 (type="line")**
 
 ```html
 <div class="hmfw-progress hmfw-progress-line">
-  <!-- ↑ classNames.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <div class="hmfw-progress-body">
-    <!-- ↑ classNames.body 应用于此 -->
+    <!-- ↑ classNames.body / styles.body 应用于此 -->
     <div class="hmfw-progress-rail">
-      <!-- ↑ classNames.rail 应用于此 -->
+      <!-- ↑ classNames.rail / styles.rail 应用于此 -->
       <div class="hmfw-progress-track" style="width: 50%">
-        <!-- ↑ classNames.track 应用于此 -->
+        <!-- ↑ classNames.track / styles.track 应用于此 -->
       </div>
     </div>
   </div>
   <span class="hmfw-progress-indicator">50%</span>
-  <!-- ↑ classNames.indicator 应用于此 -->
+  <!-- ↑ classNames.indicator / styles.indicator 应用于此 -->
 </div>
 ```
 
@@ -173,22 +183,22 @@ interface ProgressClassNames {
 
 ```html
 <div class="hmfw-progress hmfw-progress-circle">
-  <!-- ↑ classNames.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <div class="hmfw-progress-body">
-    <!-- ↑ classNames.body 应用于此 -->
+    <!-- ↑ classNames.body / styles.body 应用于此 -->
     <svg viewBox="-50 -50 100 100">
       <circle class="hmfw-progress-rail" />
-      <!-- ↑ classNames.rail 应用于此 -->
+      <!-- ↑ classNames.rail / styles.rail 应用于此 -->
       <circle class="hmfw-progress-track" />
-      <!-- ↑ classNames.track 应用于此 -->
+      <!-- ↑ classNames.track / styles.track 应用于此 -->
     </svg>
   </div>
   <span class="hmfw-progress-indicator">50%</span>
-  <!-- ↑ classNames.indicator 应用于此 -->
+  <!-- ↑ classNames.indicator / styles.indicator 应用于此 -->
 </div>
 ```
 
-### 使用示例
+### 使用 classNames
 
 ```vue
 <template>
@@ -240,27 +250,7 @@ interface ProgressClassNames {
 </style>
 ```
 
----
-
-## 语义化 style
-
-通过 `styles` 属性可以对进度条的各个子节点应用内联样式。
-
-### 类型定义
-
-```typescript
-import type { CSSProperties } from 'vue'
-
-interface ProgressStyles {
-  root?: CSSProperties // 进度条根容器
-  body?: CSSProperties // 进度条主体容器
-  rail?: CSSProperties // 背景轨道
-  track?: CSSProperties // 已完成轨道
-  indicator?: CSSProperties // 百分比文本
-}
-```
-
-### 使用示例
+### 使用 styles
 
 ```vue
 <template>
@@ -305,6 +295,27 @@ interface ProgressStyles {
 
 ---
 
+## 设计 Token
+
+| Token 名称                    | 说明         | 默认值                                 |
+| ----------------------------- | ------------ | -------------------------------------- |
+| `--hmfw-color-primary`        | 主题色       | `#1677ff`                              |
+| `--hmfw-color-success`        | 成功状态色   | `#52c41a`                              |
+| `--hmfw-color-error`          | 错误状态色   | `#ff4d4f`                              |
+| `--hmfw-color-text`           | 主文本色     | `rgba(0,0,0,0.88)`                     |
+| `--hmfw-color-white`          | 纯白色       | `#ffffff`                              |
+| `--hmfw-color-bg-container`   | 容器背景色   | `#ffffff`                              |
+| `--hmfw-color-fill-secondary` | 次级填充色   | `rgba(0,0,0,0.06)`                     |
+| `--hmfw-font-size-base`       | 基础字号     | `14px`                                 |
+| `--hmfw-font-size-sm`         | 小号字号     | `12px`                                 |
+| `--hmfw-padding-xxs`          | 超超小内边距 | `2px`                                  |
+| `--hmfw-margin-xxs`           | 超超小外边距 | `2px`                                  |
+| `--hmfw-margin-xs`            | 超小外边距   | `4px`                                  |
+| `--hmfw-motion-duration-slow` | 慢速动画时长 | `0.3s`                                 |
+| `--hmfw-motion-ease-in-out`   | 缓入缓出曲线 | `cubic-bezier(0.645, 0.045, 0.355, 1)` |
+
+---
+
 ### 注意事项
 
 - `size` 默认值由 v5 的 `'default'` 改为 v6 的 `'medium'`，二者行为等价；`'default'` 会保留兼容。
@@ -312,26 +323,3 @@ interface ProgressStyles {
 - 圆形 `size <= 20` 时自动添加 `inline-circle` class，并将 indicator 包入 `Tooltip` 显示（小圆形容纳不下文字）。
 - `aria-label` 默认为 `"${percent}%"`，可通过 attr 透传覆盖。
 - RTL 由 `ConfigProvider direction="rtl"` 触发，渐变方向自动反转、根元素加 `rtl` class。
-
-<script setup>
-import ProgressBasic from './ProgressBasic.vue'
-import ProgressBasicSource from './ProgressBasic.vue?raw'
-import ProgressCircle from './ProgressCircle.vue'
-import ProgressCircleSource from './ProgressCircle.vue?raw'
-import ProgressDashboard from './ProgressDashboard.vue'
-import ProgressDashboardSource from './ProgressDashboard.vue?raw'
-import ProgressDynamic from './ProgressDynamic.vue'
-import ProgressDynamicSource from './ProgressDynamic.vue?raw'
-import ProgressSteps from './ProgressSteps.vue'
-import ProgressStepsSource from './ProgressSteps.vue?raw'
-import ProgressGradient from './ProgressGradient.vue'
-import ProgressGradientSource from './ProgressGradient.vue?raw'
-import ProgressCustom from './ProgressCustom.vue'
-import ProgressCustomSource from './ProgressCustom.vue?raw'
-import ProgressGapPlacement from './ProgressGapPlacement.vue'
-import ProgressGapPlacementSource from './ProgressGapPlacement.vue?raw'
-import ProgressV6 from './ProgressV6.vue'
-import ProgressV6Source from './ProgressV6.vue?raw'
-import ProgressClassNames from './ProgressClassNames.vue'
-import ProgressClassNamesSource from './ProgressClassNames.vue?raw'
-</script>

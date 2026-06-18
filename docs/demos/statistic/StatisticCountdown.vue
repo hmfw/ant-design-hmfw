@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Countdown, Space, message } from '../../../components'
+import { Countdown, Space, message } from 'ant-design-hmfw'
 
 const deadline = ref(Date.now() + 1000 * 60 * 60 * 2) // 2小时后
 const deadline2 = ref(Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30 * 30) // 2天半后

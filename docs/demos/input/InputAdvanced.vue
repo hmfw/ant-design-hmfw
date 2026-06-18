@@ -62,8 +62,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Input, TextArea } from '../../../components/input'
-import { Space } from '../../../components/space'
+import { Input, TextArea } from 'ant-design-hmfw'
+import { Space } from 'ant-design-hmfw'
 
 const value1 = ref('')
 const value2 = ref('')

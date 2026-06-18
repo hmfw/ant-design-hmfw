@@ -57,7 +57,7 @@
   <TransferDraggable />
 </DemoBlock>
 
-### 语义化 className 与 style
+### 细粒度样式控制
 
 通过 `classNames` / `styles` 对列表、列表项、头部、操作按钮等子元素做细粒度样式控制。
 
@@ -69,30 +69,30 @@
 
 ### Transfer Props
 
-| 参数                   | 说明                                                           | 类型                                                                           | 默认值     |
-| ---------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------ | ---------- |
-| dataSource             | 数据源                                                         | `TransferItem[]`                                                               | `[]`       |
-| targetKeys (v-model)   | 右侧列表的 key 集合                                            | `TransferKey[]`                                                                | `[]`       |
-| selectedKeys (v-model) | 选中项的 key 集合                                              | `TransferKey[]`                                                                | `[]`       |
-| titles                 | 标题集合                                                       | `(VNode \| string)[]`                                                          | `['', '']` |
-| operations             | 操作按钮文案（已废弃）                                         | `string[]`                                                                     | `[]`       |
-| render                 | 自定义渲染函数                                                 | `(item: TransferItem) => RenderResult`                                         | -          |
-| rowKey                 | 自定义提取 key                                                 | `(record: TransferItem) => TransferKey`                                        | -          |
-| showSearch             | 显示搜索框                                                     | `boolean \| TransferSearchOption`                                              | `false`    |
-| filterOption           | 自定义搜索函数                                                 | `(input: string, item: TransferItem, direction: TransferDirection) => boolean` | -          |
-| footer                 | 列表底部渲染                                                   | `(info: TransferListContext) => VNode \| string \| null`                       | -          |
-| listStyle              | 列表样式                                                       | `CSSProperties \| ((info: { direction: TransferDirection }) => CSSProperties)` | -          |
-| disabled               | 是否禁用                                                       | `boolean`                                                                      | `false`    |
-| showSelectAll          | 是否展示全选勾选框                                             | `boolean`                                                                      | `true`     |
-| selectAllLabels        | 自定义全选文案                                                 | `SelectAllLabel[]`                                                             | -          |
-| oneWay                 | 单向模式                                                       | `boolean`                                                                      | `false`    |
-| draggable              | 是否允许通过拖拽对右侧列表项排序                               | `boolean`                                                                      | `false`    |
-| pagination             | 分页配置                                                       | `boolean \| PaginationType`                                                    | -          |
-| status                 | 校验状态                                                       | `'error' \| 'warning'`                                                         | -          |
-| locale                 | 文案配置                                                       | `Partial<TransferLocale>`                                                      | -          |
-| rootClassName          | 根元素 class                                                   | `string`                                                                       | -          |
-| classNames             | 语义化结构 class，见下方 [语义化 className](#语义化-classname) | `TransferSemanticClassNames`                                                   | -          |
-| styles                 | 语义化结构 style，见下方 [语义化 style](#语义化-style)         | `TransferSemanticStyles`                                                       | -          |
+| 参数                   | 说明                                                                             | 类型                                                                           | 默认值     |
+| ---------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ---------- |
+| dataSource             | 数据源                                                                           | `TransferItem[]`                                                               | `[]`       |
+| targetKeys (v-model)   | 右侧列表的 key 集合                                                              | `TransferKey[]`                                                                | `[]`       |
+| selectedKeys (v-model) | 选中项的 key 集合                                                                | `TransferKey[]`                                                                | `[]`       |
+| titles                 | 标题集合                                                                         | `(VNode \| string)[]`                                                          | `['', '']` |
+| operations             | 操作按钮文案（已废弃）                                                           | `string[]`                                                                     | `[]`       |
+| render                 | 自定义渲染函数                                                                   | `(item: TransferItem) => RenderResult`                                         | -          |
+| rowKey                 | 自定义提取 key                                                                   | `(record: TransferItem) => TransferKey`                                        | -          |
+| showSearch             | 显示搜索框                                                                       | `boolean \| TransferSearchOption`                                              | `false`    |
+| filterOption           | 自定义搜索函数                                                                   | `(input: string, item: TransferItem, direction: TransferDirection) => boolean` | -          |
+| footer                 | 列表底部渲染                                                                     | `(info: TransferListContext) => VNode \| string \| null`                       | -          |
+| listStyle              | 列表样式                                                                         | `CSSProperties \| ((info: { direction: TransferDirection }) => CSSProperties)` | -          |
+| disabled               | 是否禁用                                                                         | `boolean`                                                                      | `false`    |
+| showSelectAll          | 是否展示全选勾选框                                                               | `boolean`                                                                      | `true`     |
+| selectAllLabels        | 自定义全选文案                                                                   | `SelectAllLabel[]`                                                             | -          |
+| oneWay                 | 单向模式                                                                         | `boolean`                                                                      | `false`    |
+| draggable              | 是否允许通过拖拽对右侧列表项排序                                                 | `boolean`                                                                      | `false`    |
+| pagination             | 分页配置                                                                         | `boolean \| PaginationType`                                                    | -          |
+| status                 | 校验状态                                                                         | `'error' \| 'warning'`                                                         | -          |
+| locale                 | 文案配置                                                                         | `Partial<TransferLocale>`                                                      | -          |
+| rootClassName          | 根元素 class                                                                     | `string`                                                                       | -          |
+| classNames             | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticClassNames`                                                   | -          |
+| styles                 | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticStyles`                                                       | -          |
 
 ### Transfer Events
 
@@ -145,24 +145,6 @@ interface TransferLocale {
 }
 ```
 
-### TransferSemanticClassNames
-
-```ts
-interface TransferSemanticClassNames {
-  root?: string
-  section?: string
-  header?: string
-  title?: string
-  body?: string
-  list?: string
-  item?: string
-  itemIcon?: string
-  itemContent?: string
-  footer?: string
-  actions?: string
-}
-```
-
 ### TransferReorderInfo
 
 ```ts
@@ -204,9 +186,9 @@ interface TransferReorderInfo {
 
 ---
 
-## 语义化 className
+## 语义化 className 与 style
 
-通过 `classNames` 属性可以对穿梭框的各个子节点应用自定义 className，支持细粒度样式控制。
+通过 `classNames` 和 `styles` 属性可以对穿梭框的各个子节点应用自定义样式，支持细粒度控制。
 
 ### 类型定义
 
@@ -224,45 +206,59 @@ interface TransferSemanticClassNames {
   footer?: string // 列表底部区域
   actions?: string // 中间操作按钮组
 }
+
+interface TransferSemanticStyles {
+  root?: CSSProperties // 穿梭框根容器
+  section?: CSSProperties // 单侧列表容器
+  header?: CSSProperties // 列表头部区域
+  title?: CSSProperties // 标题文本
+  body?: CSSProperties // 列表主体容器
+  list?: CSSProperties // 列表 <ul>
+  item?: CSSProperties // 列表项 <li>
+  itemIcon?: CSSProperties // 列表项图标
+  itemContent?: CSSProperties // 列表项文本内容
+  footer?: CSSProperties // 列表底部区域
+  actions?: CSSProperties // 中间操作按钮组
+}
 ```
 
-### DOM 结构与默认 className
+### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-transfer">
-  <!-- ↑ classNames.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
 
   <!-- 左侧列表 -->
   <div class="hmfw-transfer-section hmfw-transfer-section-source">
-    <!-- ↑ classNames.section 应用于此 -->
+    <!-- ↑ classNames.section / styles.section 应用于此 -->
     <div class="hmfw-transfer-header">
-      <!-- ↑ classNames.header 应用于此 -->
+      <!-- ↑ classNames.header / styles.header 应用于此 -->
       <span class="hmfw-transfer-title">源列表</span>
-      <!-- ↑ classNames.title 应用于此 -->
+      <!-- ↑ classNames.title / styles.title 应用于此 -->
     </div>
     <div class="hmfw-transfer-body">
-      <!-- ↑ classNames.body 应用于此 -->
+      <!-- ↑ classNames.body / styles.body 应用于此 -->
       <ul class="hmfw-transfer-list">
-        <!-- ↑ classNames.list 应用于此 -->
+        <!-- ↑ classNames.list / styles.list 应用于此 -->
         <li class="hmfw-transfer-item">
-          <!-- ↑ classNames.item 应用于此 -->
+          <!-- ↑ classNames.item / styles.item 应用于此 -->
           <span class="hmfw-transfer-item-icon">
-            <!-- ↑ classNames.itemIcon 应用于此 -->
+            <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
             <input type="checkbox" />
           </span>
           <span class="hmfw-transfer-item-content">选项 1</span>
-          <!-- ↑ classNames.itemContent 应用于此 -->
+          <!-- ↑ classNames.itemContent / styles.itemContent 应用于此 -->
         </li>
       </ul>
     </div>
     <div class="hmfw-transfer-footer">
-      <!-- ↑ classNames.footer 应用于此 -->
+      <!-- ↑ classNames.footer / styles.footer 应用于此 -->
     </div>
   </div>
 
   <!-- 中间操作区 -->
   <div class="hmfw-transfer-actions">
-    <!-- ↑ classNames.actions 应用于此 -->
+    <!-- ↑ classNames.actions / styles.actions 应用于此 -->
     <button>→</button>
     <button>←</button>
   </div>
@@ -272,7 +268,7 @@ interface TransferSemanticClassNames {
 </div>
 ```
 
-### 使用示例
+### 使用 classNames
 
 ```vue
 <template>
@@ -349,33 +345,7 @@ interface TransferSemanticClassNames {
 </style>
 ```
 
----
-
-## 语义化 style
-
-通过 `styles` 属性可以对穿梭框的各个子节点应用内联样式。
-
-### 类型定义
-
-```typescript
-import type { CSSProperties } from 'vue'
-
-interface TransferSemanticStyles {
-  root?: CSSProperties // 穿梭框根容器
-  section?: CSSProperties // 单侧列表容器
-  header?: CSSProperties // 列表头部区域
-  title?: CSSProperties // 标题文本
-  body?: CSSProperties // 列表主体容器
-  list?: CSSProperties // 列表 <ul>
-  item?: CSSProperties // 列表项 <li>
-  itemIcon?: CSSProperties // 列表项图标
-  itemContent?: CSSProperties // 列表项文本内容
-  footer?: CSSProperties // 列表底部区域
-  actions?: CSSProperties // 中间操作按钮组
-}
-```
-
-### 使用示例
+### 使用 styles
 
 ```vue
 <template>
@@ -425,19 +395,16 @@ interface TransferSemanticStyles {
 - `item` / `itemIcon` / `itemContent` 会应用于所有列表项（左右两侧）
 - 对于列表样式（`listStyle` prop），建议优先使用组件提供的 `listStyle` 属性；`styles.list` 适合做细微调整
 
-<script setup>
-import TransferBasic from './TransferBasic.vue'
-import TransferBasicSource from './TransferBasic.vue?raw'
-import TransferSearch from './TransferSearch.vue'
-import TransferSearchSource from './TransferSearch.vue?raw'
-import TransferCustom from './TransferCustom.vue'
-import TransferCustomSource from './TransferCustom.vue?raw'
-import TransferPagination from './TransferPagination.vue'
-import TransferPaginationSource from './TransferPagination.vue?raw'
-import TransferOneWay from './TransferOneWay.vue'
-import TransferOneWaySource from './TransferOneWay.vue?raw'
-import TransferDraggable from './TransferDraggable.vue'
-import TransferDraggableSource from './TransferDraggable.vue?raw'
-import TransferClassNames from './TransferClassNames.vue'
-import TransferClassNamesSource from './TransferClassNames.vue?raw'
-</script>
+## 设计 Token
+
+| Token 名称                           | 说明             | 默认值             |
+| ------------------------------------ | ---------------- | ------------------ |
+| `--hmfw-color-border`                | 边框色           | `#d9d9d9`          |
+| `--hmfw-color-error`                 | 错误状态色       | `#ff4d4f`          |
+| `--hmfw-color-fill-quaternary`       | 四级填充色       | `rgba(0,0,0,0.02)` |
+| `--hmfw-color-primary`               | 主题色           | `#1677ff`          |
+| `--hmfw-color-primary-bg`            | 主题色背景       | `#e6f4ff`          |
+| `--hmfw-color-primary-bg-hover`      | 主题色背景悬停态 | `#bae0ff`          |
+| `--hmfw-color-warning`               | 警告状态色       | `#faad14`          |
+| `--hmfw-color-bg-container`          | 容器背景色       | `#ffffff`          |
+| `--hmfw-color-bg-container-disabled` | 禁用容器背景色   | `rgba(0,0,0,0.04)` |

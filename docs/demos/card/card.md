@@ -65,28 +65,36 @@
   <CardTabs />
 </DemoBlock>
 
+### 细粒度样式控制
+
+通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="CardClassNamesSource">
+  <CardClassNames />
+</DemoBlock>
+
 ## API
 
 ### Card Props
 
-| 参数                | 说明                                                | 类型                                                             | 默认值      |
-| ------------------- | --------------------------------------------------- | ---------------------------------------------------------------- | ----------- |
-| title               | 卡片标题                                            | `string`                                                         | -           |
-| extra               | 卡片右上角的操作区域                                | `string \| slot`                                                 | -           |
-| bordered            | 是否有边框                                          | `boolean`                                                        | `true`      |
-| variant             | 边框变体（优先于 `bordered`）                       | `'borderless' \| 'outlined'`                                     | -           |
-| type                | 卡片类型，可设为 `inner`                            | `'inner'`                                                        | -           |
-| loading             | 当卡片内容还在加载中时，可以用 loading 展示一个占位 | `boolean \| { avatar?: boolean; paragraph?: { rows?: number } }` | `false`     |
-| size                | 卡片的尺寸                                          | `'default' \| 'small'`                                           | `'default'` |
-| hoverable           | 鼠标移过时可浮起                                    | `boolean`                                                        | `false`     |
-| bodyStyle           | 内容区域自定义样式                                  | `CSSProperties`                                                  | -           |
-| headStyle           | 标题区域自定义样式                                  | `CSSProperties`                                                  | -           |
-| tabList             | 标签页列表                                          | `Array<{ key: string; label: string; disabled?: boolean }>`      | -           |
-| activeTabKey        | 当前激活标签的 key                                  | `string`                                                         | -           |
-| defaultActiveTabKey | 默认激活标签的 key                                  | `string`                                                         | -           |
-| onTabChange         | 标签切换回调                                        | `(key: string) => void`                                          | -           |
-| classNames          | 语义化 className（[详见下方](#语义化-classname)）   | `CardClassNames`                                                 | -           |
-| styles              | 语义化 style（[详见下方](#语义化-style)）           | `CardStyles`                                                     | -           |
+| 参数                | 说明                                                       | 类型                                                             | 默认值      |
+| ------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- | ----------- |
+| title               | 卡片标题                                                   | `string`                                                         | -           |
+| extra               | 卡片右上角的操作区域                                       | `string \| slot`                                                 | -           |
+| bordered            | 是否有边框                                                 | `boolean`                                                        | `true`      |
+| variant             | 边框变体（优先于 `bordered`）                              | `'borderless' \| 'outlined'`                                     | -           |
+| type                | 卡片类型，可设为 `inner`                                   | `'inner'`                                                        | -           |
+| loading             | 当卡片内容还在加载中时，可以用 loading 展示一个占位        | `boolean \| { avatar?: boolean; paragraph?: { rows?: number } }` | `false`     |
+| size                | 卡片的尺寸                                                 | `'default' \| 'small'`                                           | `'default'` |
+| hoverable           | 鼠标移过时可浮起                                           | `boolean`                                                        | `false`     |
+| bodyStyle           | 内容区域自定义样式                                         | `CSSProperties`                                                  | -           |
+| headStyle           | 标题区域自定义样式                                         | `CSSProperties`                                                  | -           |
+| tabList             | 标签页列表                                                 | `Array<{ key: string; label: string; disabled?: boolean }>`      | -           |
+| activeTabKey        | 当前激活标签的 key                                         | `string`                                                         | -           |
+| defaultActiveTabKey | 默认激活标签的 key                                         | `string`                                                         | -           |
+| onTabChange         | 标签切换回调                                               | `(key: string) => void`                                          | -           |
+| classNames          | 语义化 className（[详见下方](#语义化-classname-与-style)） | `CardClassNames`                                                 | -           |
+| styles              | 语义化 style（[详见下方](#语义化-classname-与-style)）     | `CardStyles`                                                     | -           |
 
 ### Card Slots
 
@@ -120,46 +128,59 @@
 | description | 描述内容  | `string`         | -      |
 | avatar      | 头像/图标 | `string \| slot` | -      |
 
-## 语义化 className
+## 语义化 className 与 style
 
-通过 `classNames` 属性可以自定义 Card 各部分的 className。
+通过 `classNames` 和 `styles` 属性可以对Card的各个子节点应用自定义样式，支持细粒度控制。
 
-### CardClassNames
+### 类型定义
 
-| 属性名  | 说明                            | 类型     | 版本 |
-| ------- | ------------------------------- | -------- | ---- |
-| root    | 根节点 `div.hmfw-card`          | `string` | -    |
-| head    | 头部容器 `div.hmfw-card-head`   | `string` | -    |
-| title   | 标题 `div.hmfw-card-head-title` | `string` | -    |
-| extra   | 右侧扩展 `div.hmfw-card-extra`  | `string` | -    |
-| body    | 主体内容 `div.hmfw-card-body`   | `string` | -    |
-| actions | 底部操作 `ul.hmfw-card-actions` | `string` | -    |
+```typescript
+import type { CSSProperties } from 'vue'
 
-### DOM 结构
+interface CardClassNames {
+  root?: string // 根节点 div.hmfw-card
+  head?: string // 头部容器 div.hmfw-card-head
+  title?: string // 标题 div.hmfw-card-head-title
+  extra?: string // 右侧扩展 div.hmfw-card-extra
+  body?: string // 主体内容 div.hmfw-card-body
+  actions?: string // 底部操作 ul.hmfw-card-actions
+}
+
+interface CardStyles {
+  root?: CSSProperties // 根节点 div.hmfw-card
+  head?: CSSProperties // 头部容器 div.hmfw-card-head
+  title?: CSSProperties // 标题 div.hmfw-card-head-title
+  extra?: CSSProperties // 右侧扩展 div.hmfw-card-extra
+  body?: CSSProperties // 主体内容 div.hmfw-card-body
+  actions?: CSSProperties // 底部操作 ul.hmfw-card-actions
+}
+```
+
+### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-card">
-  <!-- root -->
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <div class="hmfw-card-cover">封面</div>
   <div class="hmfw-card-head">
-    <!-- head -->
+    <!-- ↑ classNames.head / styles.head 应用于此 -->
     <div class="hmfw-card-head-wrapper">
       <div class="hmfw-card-head-title">标题</div>
-      <!-- title -->
+      <!-- ↑ classNames.title / styles.title 应用于此 -->
       <div class="hmfw-card-extra">扩展</div>
-      <!-- extra -->
+      <!-- ↑ classNames.extra / styles.extra 应用于此 -->
     </div>
   </div>
   <div class="hmfw-card-body">内容</div>
-  <!-- body -->
+  <!-- ↑ classNames.body / styles.body 应用于此 -->
   <ul class="hmfw-card-actions">
     操作组
   </ul>
-  <!-- actions -->
+  <!-- ↑ classNames.actions / styles.actions 应用于此 -->
 </div>
 ```
 
-### 使用示例
+### 使用 classNames
 
 ```vue
 <template>
@@ -176,31 +197,32 @@
     内容
   </Card>
 </template>
+
+<style scoped>
+:deep(.my-card-root) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+:deep(.my-card-head) {
+  background: linear-gradient(to right, #667eea, #764ba2);
+}
+
+:deep(.my-card-title) {
+  color: white;
+  font-weight: bold;
+}
+
+:deep(.my-card-body) {
+  padding: 24px;
+}
+
+:deep(.my-card-actions) {
+  background: #f0f2f5;
+}
+</style>
 ```
 
-**注意事项：**
-
-- `title` 仅在设置了 `title` 属性或 `title` 插槽时渲染
-- `extra` 仅在设置了 `extra` 插槽时渲染
-- `actions` 仅在设置了 `actions` 插槽时渲染
-- `styles.head` 会与 `headStyle` 合并，`styles.body` 会与 `bodyStyle` 合并
-
-## 语义化 style
-
-通过 `styles` 属性可以自定义 Card 各部分的 style。
-
-### CardStyles
-
-| 属性名  | 说明                            | 类型            | 版本 |
-| ------- | ------------------------------- | --------------- | ---- |
-| root    | 根节点 `div.hmfw-card`          | `CSSProperties` | -    |
-| head    | 头部容器 `div.hmfw-card-head`   | `CSSProperties` | -    |
-| title   | 标题 `div.hmfw-card-head-title` | `CSSProperties` | -    |
-| extra   | 右侧扩展 `div.hmfw-card-extra`  | `CSSProperties` | -    |
-| body    | 主体内容 `div.hmfw-card-body`   | `CSSProperties` | -    |
-| actions | 底部操作 `ul.hmfw-card-actions` | `CSSProperties` | -    |
-
-### 使用示例
+### 使用 styles
 
 ```vue
 <template>
@@ -217,28 +239,23 @@
 </template>
 ```
 
-### 语义化 className 与 style
+### 注意事项
 
-<DemoBlock title="语义化 className 与 style" :source="CardClassNamesSource">
-  <CardClassNames />
-</DemoBlock>
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `title` 仅在设置了 `title` 属性或 `title` 插槽时渲染
+- `extra` 仅在设置了 `extra` 插槽时渲染
+- `actions` 仅在设置了 `actions` 插槽时渲染
+- `styles.head` 会与 `headStyle` 合并，`styles.body` 会与 `bodyStyle` 合并
 
-<script setup>
-import CardBasic from './CardBasic.vue'
-import CardCover from './CardCover.vue'
-import CardLoading from './CardLoading.vue'
-import CardLoadingAvatar from './CardLoadingAvatar.vue'
-import CardGrid from './CardGrid.vue'
-import CardInner from './CardInner.vue'
-import CardTabs from './CardTabs.vue'
-import CardClassNames from './CardClassNames.vue'
+## 设计 Token
 
-import CardBasicSource from './CardBasic.vue?raw'
-import CardCoverSource from './CardCover.vue?raw'
-import CardLoadingSource from './CardLoading.vue?raw'
-import CardLoadingAvatarSource from './CardLoadingAvatar.vue?raw'
-import CardGridSource from './CardGrid.vue?raw'
-import CardInnerSource from './CardInner.vue?raw'
-import CardTabsSource from './CardTabs.vue?raw'
-import CardClassNamesSource from './CardClassNames.vue?raw'
-</script>
+| Token 名称                    | 说明       | 默认值             |
+| ----------------------------- | ---------- | ------------------ |
+| `--hmfw-color-border`         | 边框色     | `#d9d9d9`          |
+| `--hmfw-color-fill-alter`     | 替代填充色 | `rgba(0,0,0,0.02)` |
+| `--hmfw-color-primary`        | 主题色     | `#1677ff`          |
+| `--hmfw-color-text`           | 主文本色   | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-text-disabled`  | 禁用文本色 | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-text-secondary` | 次要文本色 | `rgba(0,0,0,0.65)` |
+| `--hmfw-font-size-base`       | 基础字号   | `14px`             |
+| `--hmfw-border-radius-lg`     | 大号圆角   | `8px`              |

@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { Table } from '../../../components'
+import { Table } from 'ant-design-hmfw'
 
 const dataSource = [
   { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },

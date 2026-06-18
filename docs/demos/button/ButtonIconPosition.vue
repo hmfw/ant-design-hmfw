@@ -12,6 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { Button } from '../../../components'
-import { SearchOutlined, DownloadOutlined } from '../../../components/icon/icons'
+import { Button } from 'ant-design-hmfw'
+import { SearchOutlined, DownloadOutlined } from 'ant-design-hmfw'
 </script>

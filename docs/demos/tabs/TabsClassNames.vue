@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { Tabs } from '../../../components'
+import { Tabs } from 'ant-design-hmfw'
 
 const items = [
   { key: '1', label: '标签一', children: '这是标签一的内容面板' },

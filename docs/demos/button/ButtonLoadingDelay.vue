@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button } from '../../../components'
+import { Button } from 'ant-design-hmfw'
 
 const loading = ref(false)
 

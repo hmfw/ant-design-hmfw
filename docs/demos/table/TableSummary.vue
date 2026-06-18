@@ -1,6 +1,6 @@
 <script setup lang="tsx">
-import { Table } from '../../../components'
-import type { TableColumn } from '../../../components'
+import { Table } from 'ant-design-hmfw'
+import type { TableColumn } from 'ant-design-hmfw'
 
 interface DataType {
   key: number

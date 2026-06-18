@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { VirtualList } from '../../../components/_internal/virtual-list'
-import { Button } from '../../../components/button'
+import { Button } from 'ant-design-hmfw'
 
 const listRef = ref()
 

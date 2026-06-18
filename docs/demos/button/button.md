@@ -121,7 +121,7 @@
   <ButtonLoadingDelay />
 </DemoBlock>
 
-### 语义化 className 与 style
+### 细粒度样式控制
 
 通过 `classNames` / `styles` 对 root、icon、loading 等子元素做细粒度样式控制。
 
@@ -133,24 +133,24 @@
 
 ### Button Props
 
-| 参数            | 说明                                                           | 类型                                                     | 默认值      |
-| --------------- | -------------------------------------------------------------- | -------------------------------------------------------- | ----------- |
-| type            | 设置按钮类型                                                   | `'default' \| 'primary' \| 'dashed' \| 'text' \| 'link'` | `'default'` |
-| size            | 设置按钮大小                                                   | `'small' \| 'middle' \| 'large'`                         | `'middle'`  |
-| shape           | 设置按钮形状                                                   | `'default' \| 'circle' \| 'round'`                       | `'default'` |
-| htmlType        | 设置 button 原生的 type 值                                     | `'submit' \| 'button' \| 'reset'`                        | `'button'`  |
-| loading         | 设置按钮载入状态                                               | `boolean \| { delay?: number }`                          | `false`     |
-| disabled        | 设置按钮失效状态                                               | `boolean`                                                | `false`     |
-| danger          | 设置危险按钮                                                   | `boolean`                                                | `false`     |
-| block           | 将按钮宽度调整为其父宽度的选项                                 | `boolean`                                                | `false`     |
-| ghost           | 幽灵属性，使按钮背景透明                                       | `boolean`                                                | `false`     |
-| icon            | 设置按钮的图标组件                                             | `IconComponent`                                          | -           |
-| iconPosition    | 设置图标位置                                                   | `'start' \| 'end'`                                       | `'start'`   |
-| href            | 点击跳转的地址，指定此属性后按钮渲染为 a 标签                  | `string`                                                 | -           |
-| target          | 相当于 a 标签的 target 属性，href 存在时生效                   | `string`                                                 | -           |
-| autoInsertSpace | 是否在两个汉字之间插入空格                                     | `boolean`                                                | `true`      |
-| classNames      | 语义化结构 class，见下方 [语义化 className](#语义化-classname) | `ButtonClassNames`                                       | -           |
-| styles          | 语义化结构 style，见下方 [语义化 style](#语义化-style)         | `ButtonStyles`                                           | -           |
+| 参数            | 说明                                                                             | 类型                                                     | 默认值      |
+| --------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------- | ----------- |
+| type            | 设置按钮类型                                                                     | `'default' \| 'primary' \| 'dashed' \| 'text' \| 'link'` | `'default'` |
+| size            | 设置按钮大小                                                                     | `'small' \| 'middle' \| 'large'`                         | `'middle'`  |
+| shape           | 设置按钮形状                                                                     | `'default' \| 'circle' \| 'round'`                       | `'default'` |
+| htmlType        | 设置 button 原生的 type 值                                                       | `'submit' \| 'button' \| 'reset'`                        | `'button'`  |
+| loading         | 设置按钮载入状态                                                                 | `boolean \| { delay?: number }`                          | `false`     |
+| disabled        | 设置按钮失效状态                                                                 | `boolean`                                                | `false`     |
+| danger          | 设置危险按钮                                                                     | `boolean`                                                | `false`     |
+| block           | 将按钮宽度调整为其父宽度的选项                                                   | `boolean`                                                | `false`     |
+| ghost           | 幽灵属性，使按钮背景透明                                                         | `boolean`                                                | `false`     |
+| icon            | 设置按钮的图标组件                                                               | `IconComponent`                                          | -           |
+| iconPosition    | 设置图标位置                                                                     | `'start' \| 'end'`                                       | `'start'`   |
+| href            | 点击跳转的地址，指定此属性后按钮渲染为 a 标签                                    | `string`                                                 | -           |
+| target          | 相当于 a 标签的 target 属性，href 存在时生效                                     | `string`                                                 | -           |
+| autoInsertSpace | 是否在两个汉字之间插入空格                                                       | `boolean`                                                | `true`      |
+| classNames      | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ButtonClassNames`                                       | -           |
+| styles          | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ButtonStyles`                                           | -           |
 
 ### Button Events
 
@@ -166,50 +166,66 @@
 
 ---
 
-## 语义化 className
+## 语义化 className 与 style
 
-通过 `classNames` 属性可以对按钮的各个子节点应用自定义 className，支持细粒度样式控制。
+通过 `classNames` 和 `styles` 属性可以对按钮的各个子节点应用自定义样式，支持细粒度控制。
 
 ### 类型定义
 
 ```typescript
+import type { CSSProperties } from 'vue'
+
 interface ButtonClassNames {
   root?: string // 按钮根节点（<button> 或 <a>）
   icon?: string // 图标容器
   loading?: string // 加载状态图标容器（与 icon 叠加）
 }
+
+interface ButtonStyles {
+  root?: CSSProperties
+  icon?: CSSProperties
+  loading?: CSSProperties
+}
 ```
 
-### DOM 结构与默认 className
+### DOM 结构与 className 映射
 
 ```html
 <!-- 基础按钮 -->
-<button class="hmfw-button hmfw-button-default">
-  <!-- ↑ classNames.root 应用于此 -->
+<button class="hmfw-button hmfw-button-default hmfw-button-middle">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <span>按钮文字</span>
 </button>
 
 <!-- 带图标按钮 -->
-<button class="hmfw-button hmfw-button-primary">
+<button class="hmfw-button hmfw-button-primary hmfw-button-middle">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <span class="hmfw-button-icon">
-    <!-- ↑ classNames.icon 应用于此 -->
-    <svg>...</svg>
+    <!-- ↑ classNames.icon / styles.icon 应用于此 -->
+    <span class="hmfw-icon">
+      <svg>...</svg>
+    </span>
   </span>
   <span>搜索</span>
 </button>
 
 <!-- 加载状态 -->
-<button class="hmfw-button hmfw-button-primary hmfw-button-loading">
-  <!-- ↑ classNames.root 应用于此 -->
+<button class="hmfw-button hmfw-button-primary hmfw-button-middle hmfw-button-loading">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <span class="hmfw-button-icon hmfw-button-loading-icon">
     <!-- ↑ classNames.icon + classNames.loading 叠加应用 -->
-    <svg class="hmfw-icon-spin">...</svg>
+    <!-- ↑ styles.icon + styles.loading 合并应用 -->
+    <span class="hmfw-icon hmfw-icon-spin">
+      <svg>...</svg>
+    </span>
   </span>
   <span>提交中</span>
 </button>
 ```
 
-### 使用示例
+### 使用 classNames
+
+通过 `classNames` 属性应用自定义 CSS 类：
 
 ```vue
 <template>
@@ -239,30 +255,9 @@ interface ButtonClassNames {
 </style>
 ```
 
-### 注意事项
+### 使用 styles
 
-- 加载状态时，`classNames.loading` 与 `classNames.icon` 会**叠加**应用在同一个 `<span>` 上
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-button-loading`）合并
-
----
-
-## 语义化 style
-
-通过 `styles` 属性可以对按钮的各个子节点应用内联样式。
-
-### 类型定义
-
-```typescript
-import type { CSSProperties } from 'vue'
-
-interface ButtonStyles {
-  root?: CSSProperties // 按钮根节点
-  icon?: CSSProperties // 图标容器
-  loading?: CSSProperties // 加载状态图标容器（与 icon 合并）
-}
-```
-
-### 使用示例
+通过 `styles` 属性应用内联样式：
 
 ```vue
 <template>
@@ -282,10 +277,7 @@ interface ButtonStyles {
     :icon="SearchOutlined"
     icon-position="end"
     :styles="{
-      root: {
-        borderColor: '#722ed1',
-        color: '#722ed1',
-      },
+      root: { borderColor: '#722ed1', color: '#722ed1' },
     }"
   >
     尾部图标
@@ -307,4 +299,37 @@ interface ButtonStyles {
 ### 注意事项
 
 - `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 加载状态时，`styles.loading` 与 `styles.icon` 会**合并**（loading 的样式优先）
+- 加载状态时，`classNames.loading` 与 `classNames.icon` 会**叠加**应用在同一个 `<span>` 上
+- 加载状态时，`styles.loading` 与 `styles.icon` 会**合并**应用，`styles.loading` 优先
+- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-button-loading`）合并
+
+## 设计 Token
+
+Button 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+| Token 名称                    | 说明         | 默认值                                                               |
+| ----------------------------- | ------------ | -------------------------------------------------------------------- |
+| `--hmfw-color-bg-container`   | 容器背景色   | `#ffffff`                                                            |
+| `--hmfw-color-border`         | 边框色       | `#d9d9d9`                                                            |
+| `--hmfw-color-error`          | 错误状态色   | `#ff4d4f`                                                            |
+| `--hmfw-color-error-hover`    | 错误色悬停态 | `#ff7875`                                                            |
+| `--hmfw-color-fill-secondary` | 次级填充色   | `rgba(0,0,0,0.06)`                                                   |
+| `--hmfw-color-fill-tertiary`  | 三级填充色   | `rgba(0,0,0,0.04)`                                                   |
+| `--hmfw-color-link`           | 链接色       | `#1677ff`                                                            |
+| `--hmfw-color-link-active`    | 链接激活色   | `#0958d9`                                                            |
+| `--hmfw-color-link-hover`     | 链接悬停色   | `#4096ff`                                                            |
+| `--hmfw-color-primary`        | 主题色       | `#1677ff`                                                            |
+| `--hmfw-color-primary-active` | 主题色激活态 | `#0958d9`                                                            |
+| `--hmfw-color-primary-hover`  | 主题色悬停态 | `#4096ff`                                                            |
+| `--hmfw-color-text`           | 主文本色     | `rgba(0,0,0,0.88)`                                                   |
+| `--hmfw-color-white`          | 纯白色       | `#ffffff`                                                            |
+| `--hmfw-font-family`          | 字体族       | `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, ...`         |
+| `--hmfw-font-size`            | 标准字号     | `14px`                                                               |
+| `--hmfw-font-size-lg`         | 大号字号     | `16px`                                                               |
+| `--hmfw-font-size-sm`         | 小号字号     | `12px`                                                               |
+| `--hmfw-line-height`          | 标准行高     | `1.5714285714285714`                                                 |
+| `--hmfw-border-radius`        | 基础圆角     | `6px`                                                                |
+| `--hmfw-border-radius-sm`     | 小号圆角     | `4px`                                                                |
+| `--hmfw-box-shadow`           | 基础阴影     | `0 1px 2px 0 rgba(0,0,0,0.03), 0 1px 6px -1px rgba(0,0,0,0.02), ...` |
+| `--hmfw-motion-duration-mid`  | 中速动画时长 | `0.2s`                                                               |
+| `--hmfw-motion-ease-in-out`   | 缓入缓出曲线 | `cubic-bezier(0.645, 0.045, 0.355, 1)`                               |

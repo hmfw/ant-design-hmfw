@@ -41,7 +41,7 @@
   <PopoverPurePanel />
 </DemoBlock>
 
-### 语义化 className 与 style
+### 细粒度样式控制
 
 通过 `classNames` / `styles` 对标题和内容做细粒度样式控制，支持函数形式动态计算。
 
@@ -53,27 +53,27 @@
 
 ### Popover Props
 
-| 参数               | 说明                                                           | 类型                                                                                                                                                             | 默认值    |
-| ------------------ | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| title              | 卡片标题（空值时不渲染浮层）                                   | `string \| number \| VNode \| () => VNode \| slot`                                                                                                               | -         |
-| content            | 卡片内容（与 title 同时为空时不渲染浮层）                      | `string \| number \| VNode \| () => VNode \| slot`                                                                                                               | -         |
-| trigger            | 触发行为                                                       | `'hover' \| 'click' \| 'focus' \| 'contextMenu'`                                                                                                                 | `'hover'` |
-| placement          | 气泡框位置，溢出视口时自动翻转                                 | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight' \| 'left' \| 'leftTop' \| 'leftBottom' \| 'right' \| 'rightTop' \| 'rightBottom'` | `'top'`   |
-| open (v-model)     | 用于手动控制浮层显隐                                           | `boolean`                                                                                                                                                        | -         |
-| defaultOpen        | 默认是否显示（非受控）                                         | `boolean`                                                                                                                                                        | `false`   |
-| color              | 背景颜色                                                       | `string`                                                                                                                                                         | -         |
-| arrow              | 是否显示箭头，可对象配置                                       | `boolean \| { pointAtCenter?: boolean }`                                                                                                                         | `true`    |
-| mouseEnterDelay    | 鼠标移入后延时显示，单位秒                                     | `number`                                                                                                                                                         | `0.1`     |
-| mouseLeaveDelay    | 鼠标移出后延时隐藏，单位秒                                     | `number`                                                                                                                                                         | `0.1`     |
-| disabled           | 禁用 popover                                                   | `boolean`                                                                                                                                                        | `false`   |
-| autoAdjustOverflow | 浮层超出视口时自动翻转方向                                     | `boolean`                                                                                                                                                        | `true`    |
-| zIndex             | 自定义浮层 z-index                                             | `number`                                                                                                                                                         | `1070`    |
-| destroyOnHidden    | 隐藏时销毁浮层 DOM                                             | `boolean`                                                                                                                                                        | `false`   |
-| getPopupContainer  | 自定义浮层挂载容器（默认 `body`）                              | `(triggerNode: HTMLElement) => HTMLElement`                                                                                                                      | -         |
-| overlayStyle       | 卡片样式                                                       | `Record<string, string>`                                                                                                                                         | -         |
-| overlayInnerStyle  | 卡片内层样式                                                   | `Record<string, string>`                                                                                                                                         | -         |
-| classNames         | 语义化结构 class，见下方 [语义化 className](#语义化-classname) | `{ title?, content? } \| (info) => {...}`                                                                                                                        | -         |
-| styles             | 语义化结构 style，见下方 [语义化 style](#语义化-style)         | `{ title?, content? } \| (info) => {...}`                                                                                                                        | -         |
+| 参数               | 说明                                                                             | 类型                                                                                                                                                             | 默认值    |
+| ------------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| title              | 卡片标题（空值时不渲染浮层）                                                     | `string \| number \| VNode \| () => VNode \| slot`                                                                                                               | -         |
+| content            | 卡片内容（与 title 同时为空时不渲染浮层）                                        | `string \| number \| VNode \| () => VNode \| slot`                                                                                                               | -         |
+| trigger            | 触发行为                                                                         | `'hover' \| 'click' \| 'focus' \| 'contextMenu'`                                                                                                                 | `'hover'` |
+| placement          | 气泡框位置，溢出视口时自动翻转                                                   | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight' \| 'left' \| 'leftTop' \| 'leftBottom' \| 'right' \| 'rightTop' \| 'rightBottom'` | `'top'`   |
+| open (v-model)     | 用于手动控制浮层显隐                                                             | `boolean`                                                                                                                                                        | -         |
+| defaultOpen        | 默认是否显示（非受控）                                                           | `boolean`                                                                                                                                                        | `false`   |
+| color              | 背景颜色                                                                         | `string`                                                                                                                                                         | -         |
+| arrow              | 是否显示箭头，可对象配置                                                         | `boolean \| { pointAtCenter?: boolean }`                                                                                                                         | `true`    |
+| mouseEnterDelay    | 鼠标移入后延时显示，单位秒                                                       | `number`                                                                                                                                                         | `0.1`     |
+| mouseLeaveDelay    | 鼠标移出后延时隐藏，单位秒                                                       | `number`                                                                                                                                                         | `0.1`     |
+| disabled           | 禁用 popover                                                                     | `boolean`                                                                                                                                                        | `false`   |
+| autoAdjustOverflow | 浮层超出视口时自动翻转方向                                                       | `boolean`                                                                                                                                                        | `true`    |
+| zIndex             | 自定义浮层 z-index                                                               | `number`                                                                                                                                                         | `1070`    |
+| destroyOnHidden    | 隐藏时销毁浮层 DOM                                                               | `boolean`                                                                                                                                                        | `false`   |
+| getPopupContainer  | 自定义浮层挂载容器（默认 `body`）                                                | `(triggerNode: HTMLElement) => HTMLElement`                                                                                                                      | -         |
+| overlayStyle       | 卡片样式                                                                         | `Record<string, string>`                                                                                                                                         | -         |
+| overlayInnerStyle  | 卡片内层样式                                                                     | `Record<string, string>`                                                                                                                                         | -         |
+| classNames         | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ title?, content? } \| (info) => {...}`                                                                                                                        | -         |
+| styles             | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ title?, content? } \| (info) => {...}`                                                                                                                        | -         |
 
 ### Popover Events
 
@@ -93,9 +93,9 @@
 
 ---
 
-## 语义化 className
+## 语义化 className 与 style
 
-通过 `classNames` 属性可以对气泡卡片的子节点应用自定义 className，支持细粒度样式控制。
+通过 `classNames` 和 `styles` 属性可以对气泡卡片的各个子节点应用自定义样式，支持细粒度控制。
 
 ### 类型定义
 
@@ -107,9 +107,17 @@ interface PopoverClassNames {
 
 // 支持函数形式，动态计算
 type PopoverClassNamesProp = PopoverClassNames | ((info: { props: PopoverProps }) => PopoverClassNames)
+
+interface PopoverStyles {
+  title?: Record<string, string> // 标题区域
+  content?: Record<string, string> // 内容区域
+}
+
+// 支持函数形式，动态计算
+type PopoverStylesProp = PopoverStyles | ((info: { props: PopoverProps }) => PopoverStyles)
 ```
 
-### DOM 结构与默认 className
+### DOM 结构与 className 映射
 
 ```html
 <!-- 浮层容器（Teleport 到 body） -->
@@ -119,13 +127,13 @@ type PopoverClassNamesProp = PopoverClassNames | ((info: { props: PopoverProps }
     <div class="hmfw-popover-inner">
       <!-- 标题区域（当 title 存在时） -->
       <div class="hmfw-popover-title">
-        <!-- ↑ classNames.title 应用于此 -->
+        <!-- ↑ classNames.title / styles.title 应用于此 -->
         标题文字
       </div>
 
       <!-- 内容区域 -->
       <div class="hmfw-popover-inner-content">
-        <!-- ↑ classNames.content 应用于此 -->
+        <!-- ↑ classNames.content / styles.content 应用于此 -->
         内容文字
       </div>
     </div>
@@ -133,7 +141,9 @@ type PopoverClassNamesProp = PopoverClassNames | ((info: { props: PopoverProps }
 </div>
 ```
 
-### 使用示例
+### 使用 classNames
+
+通过 `classNames` 属性应用自定义 CSS 类。
 
 ```vue
 <template>
@@ -220,25 +230,9 @@ const dynamicTitle = ref('动态标题')
 </style>
 ```
 
----
+### 使用 styles
 
-## 语义化 style
-
-通过 `styles` 属性可以对气泡卡片的子节点应用内联样式。
-
-### 类型定义
-
-```typescript
-interface PopoverStyles {
-  title?: Record<string, string> // 标题区域
-  content?: Record<string, string> // 内容区域
-}
-
-// 支持函数形式，动态计算
-type PopoverStylesProp = PopoverStyles | ((info: { props: PopoverProps }) => PopoverStyles)
-```
-
-### 使用示例
+通过 `styles` 属性应用内联样式。
 
 ```vue
 <template>
@@ -323,15 +317,6 @@ type PopoverStylesProp = PopoverStyles | ((info: { props: PopoverProps }) => Pop
 - 浮层整体样式可通过 `overlayStyle` / `overlayInnerStyle` props 控制，`classNames` / `styles` 用于更细粒度的标题/内容控制
 - Popover 浮层通过 Teleport 挂载到 `body`（或自定义容器），所以 scoped 样式需要使用 `:deep()` 穿透
 
-<script setup>
-import PopoverBasic from './PopoverBasic.vue'
-import PopoverBasicSource from './PopoverBasic.vue?raw'
-import PopoverTrigger from './PopoverTrigger.vue'
-import PopoverTriggerSource from './PopoverTrigger.vue?raw'
-import PopoverPlacement from './PopoverPlacement.vue'
-import PopoverPlacementSource from './PopoverPlacement.vue?raw'
-import PopoverPurePanel from './PopoverPurePanel.vue'
-import PopoverPurePanelSource from './PopoverPurePanel.vue?raw'
-import PopoverClassNames from './PopoverClassNames.vue'
-import PopoverClassNamesSource from './PopoverClassNames.vue?raw'
-</script>
+## 设计 Token
+
+Popover 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。

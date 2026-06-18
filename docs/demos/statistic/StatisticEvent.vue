@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Countdown } from '../../../components'
+import { Countdown } from 'ant-design-hmfw'
 
 const shortDeadline = ref(Date.now() + 1000 * 5)
 const deadline = ref(Date.now() + 1000 * 60 * 60)

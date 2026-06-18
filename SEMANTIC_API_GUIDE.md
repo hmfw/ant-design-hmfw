@@ -41,6 +41,32 @@
 2. **文档编写** - 在 md 文件中添加完整的语义化 API 文档
 3. **Demo 创建** - 创建 `*ClassNames.vue` demo 文件并集成
 
+### 与设计 Token、styles 的关系
+
+组件库提供三种由「全局」到「实例」逐级精细的样式定制能力：
+
+| 维度         | 设计 Token                       | 语义化 className                     | 语义化 style                           |
+| ------------ | -------------------------------- | ------------------------------------ | -------------------------------------- |
+| **作用层**   | 主题层（CSS 变量）               | 结构层（CSS 类名）                   | 实例层（内联样式对象）                 |
+| **粒度**     | 全局 / 批量主题切换              | 单组件实例的内部子节点               | 单组件实例的内部子节点                 |
+| **写法**     | `--hmfw-color-primary: #f00`     | `:class-names="{ root: 'my-root' }"` | `:styles="{ root: { color: 'red' } }"` |
+| **影响范围** | 所有使用该 Token 的组件          | 当前组件实例                         | 当前组件实例                           |
+| **优先级**   | 最低（被 className/styles 覆盖） | 中（受 styles 覆盖）                 | 最高                                   |
+| **典型场景** | 主题定制、品牌化、暗色模式       | 大量同类组件统一定制结构样式         | 单个组件的临时/动态样式                |
+
+**选择建议**：
+
+- 想改「整个产品的主色 / 字号 / 圆角等基础设计语言」→ 用**设计 Token**
+- 想改「Button 的 icon 容器、Card 的 head 区域等内部结构」→ 用**语义化 className**
+- 想改「单个 Modal 实例的 body 内边距」（动态、临时）→ 用**语义化 style**
+
+三者**互不排斥，可叠加使用**。叠加时优先级：`styles` > `className` > Design Token > 组件默认样式。
+
+每个组件的文档应同时提供这三类 API 的章节：
+
+- `## 语义化 className 与 style`（本指南覆盖）
+- `## 设计 Token`（独立章节，列出该组件用到的 CSS 变量）
+
 ---
 
 ## 开发标准
@@ -107,9 +133,29 @@ export const Button = defineComponent({
 
 ### 2. 文档编写标准
 
-#### 文档结构
+#### 文档结构（标准模板）
 
-每个组件的 `*.md` 文件应包含以下部分：
+每个组件的 `*.md` 文件遵循统一的标题层级与顺序：
+
+```
+# 组件名（一级）
+## 何时使用
+## 代码演示                    ← 各功能 demo + 「细粒度样式控制」demo（放在区末）
+## API                         ← Props 表格中 classNames/styles 行带锚链接
+## 特性说明（可选）             ← 仅 Transfer、Table 有
+## 语义化 className 与 style    ← 唯一的语义化区块，合并 className 与 style 说明
+## 设计 Token                  ← 列出组件实际使用的 CSS 变量（命名、说明、默认值）
+```
+
+「## 语义化 className 与 style」内部的三级标题顺序固定为：
+
+1. `### 类型定义` — ClassNames 与 Styles 接口并列于同一代码块
+2. `### DOM 结构与 className 映射` — DOM 注释标注 `classNames.X / styles.X 应用于此`
+3. `### 使用 classNames` — 通过自定义 CSS 类的示例（含 `<style scoped>`）
+4. `### 使用 styles` — 通过内联样式对象的示例
+5. `### 注意事项` — 第一条统一为「`classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高」
+
+#### 完整模板
 
 ````markdown
 ## 代码演示
@@ -120,7 +166,11 @@ export const Button = defineComponent({
   <ComponentBasic />
 </DemoBlock>
 
-### 语义化 className 与 style
+<!-- 其它功能 demo... -->
+
+### 细粒度样式控制
+
+通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
 
 <DemoBlock title="语义化 className 与 style" :source="ComponentClassNamesSource">
   <ComponentClassNames />
@@ -130,53 +180,49 @@ export const Button = defineComponent({
 
 ### Component Props
 
-| 参数       | 说明                                                           | 类型                  | 默认值 |
-| ---------- | -------------------------------------------------------------- | --------------------- | ------ |
-| classNames | 语义化结构 class，见下方 [语义化 className](#语义化-classname) | `ComponentClassNames` | -      |
-| styles     | 语义化结构 style，见下方 [语义化 style](#语义化-style)         | `ComponentStyles`     | -      |
+| 参数       | 说明                                                                             | 类型                  | 默认值 |
+| ---------- | -------------------------------------------------------------------------------- | --------------------- | ------ |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ComponentClassNames` | -      |
+| styles     | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ComponentStyles`     | -      |
 
 ---
 
-## 语义化 className
+## 语义化 className 与 style
 
-通过 `classNames` 属性可以对组件的各个子节点应用自定义 className。
+通过 `classNames` 和 `styles` 属性可以对组件的各个子节点应用自定义样式，支持细粒度控制。
 
 ### 类型定义
 
 ```typescript
+import type { CSSProperties } from 'vue'
+
 interface ComponentClassNames {
   root?: string // 根容器
   icon?: string // 图标容器
-  loading?: string // 加载状态
+}
+
+interface ComponentStyles {
+  root?: CSSProperties
+  icon?: CSSProperties
 }
 ```
-````
 
-### DOM 结构与默认 className
+### DOM 结构与 className 映射
 
 ```html
-<button class="hmfw-button">
-  <!-- ↑ classNames.root 应用于此 -->
-
-  <span class="hmfw-button-icon">
-    <!-- ↑ classNames.icon 应用于此 -->
-    <svg>图标</svg>
+<div class="hmfw-component">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <span class="hmfw-component-icon">
+    <!-- ↑ classNames.icon / styles.icon 应用于此 -->
   </span>
-
-  <span>按钮文字</span>
-</button>
+</div>
 ```
 
-### 使用示例
+### 使用 classNames
 
 ```vue
 <template>
-  <Component
-    :class-names="{
-      root: 'my-root',
-      icon: 'my-icon',
-    }"
-  />
+  <Component :class-names="{ root: 'my-root', icon: 'my-icon' }" />
 </template>
 
 <style scoped>
@@ -186,41 +232,17 @@ interface ComponentClassNames {
 
 :deep(.my-icon) {
   color: white;
-  font-size: 18px;
 }
 </style>
 ```
 
-### 注意事项
-
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- （组件特定的注意事项）
-
----
-
-## 语义化 style
-
-通过 `styles` 属性可以对组件的各个子节点应用内联样式。
-
-### 类型定义
-
-```typescript
-import type { CSSProperties } from 'vue'
-
-interface ComponentStyles {
-  root?: CSSProperties
-  icon?: CSSProperties
-  loading?: CSSProperties
-}
-```
-
-### 使用示例
+### 使用 styles
 
 ```vue
 <template>
   <Component
     :styles="{
-      root: { borderRadius: '8px', padding: '12px 24px' },
+      root: { borderRadius: '8px' },
       icon: { fontSize: '18px', color: '#1890ff' },
     }"
   />
@@ -229,17 +251,74 @@ interface ComponentStyles {
 
 ### 注意事项
 
-- 内联样式优先级高于 className
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
 - （组件特定的注意事项）
-
-<script setup>
-import ComponentBasic from './ComponentBasic.vue'
-import ComponentBasicSource from './ComponentBasic.vue?raw'
-import ComponentClassNames from './ComponentClassNames.vue'
-import ComponentClassNamesSource from './ComponentClassNames.vue?raw'
-</script>
-
 ````
+
+#### 重要约束
+
+- **不要写两个独立的「## 语义化 className」和「## 语义化 style」区块**——已废弃，统一合并为一个
+- **代码演示区里的三级标题统一用「细粒度样式控制」**——避免与说明区的二级标题撞名导致锚 ID 加 `-1` 后缀
+- **demo 不需要手写 `<script setup>` 导入**——`autoDemoImports` 插件会扫描同目录下所有 `.vue` 文件自动生成
+- **API 表格的锚链接固定为 `(#语义化-classname-与-style)`**——slugify 算法保留中文（见 `vite.config.ts`）
+
+#### 设计 Token 章节模板
+
+每个组件文档在「## 语义化 className 与 style」**之后**添加「## 设计 Token」章节。
+
+**标准模板**：
+
+```markdown
+## 设计 Token
+
+| Token 名称             | 说明     | 默认值    |
+| ---------------------- | -------- | --------- |
+| `--hmfw-color-primary` | 主题色   | `#1677ff` |
+| `--hmfw-font-size`     | 标准字号 | `14px`    |
+| `--hmfw-border-radius` | 基础圆角 | `6px`     |
+| ...（按类型分组排列）  |          |           |
+```
+
+**生成流程**：
+
+1. **提取组件使用的 Token**
+
+   ```bash
+   grep -rh "var(--hmfw-" components/{component}/style/ | grep -oE "var\(--hmfw-[a-z0-9-]+" | sort -u
+   ```
+
+2. **查找 Token 默认值和说明**
+   - 从 `components/_theme/seed.ts`（基础 Token）和 `components/_theme/map.ts`（派生 Token）查默认值
+   - Token 命名转换规则（`components/_theme/inject.ts` 的 `toKebab` 函数）：
+     - `colorPrimary` → `--hmfw-color-primary`
+     - `borderRadiusSM` → `--hmfw-border-radius-sm`
+     - `paddingXS` → `--hmfw-padding-xs`
+   - 数值单位：除 `lineHeight`/`fontWeight`/`opacity`/`zIndex` 等无单位 key 外，数字值自动加 `px` 后缀
+
+3. **Token 分组排序规则**
+   - 按用途分组，组内按字母序：
+     1. 颜色类（`color-*`）
+     2. 字体类（`font-*`、`line-height-*`）
+     3. 尺寸类（`padding-*`、`margin-*`、`size-*`）
+     4. 边框类（`border-*`）
+     5. 阴影类（`box-shadow-*`）
+     6. 动效类（`motion-*`）
+     7. 层级类（`z-index-*`）
+     8. 其他
+
+4. **特殊情况**：如果组件 CSS 中没有任何 `var(--hmfw-XXX)`（如 Popover、Form），用说明文字代替表格：
+
+   ```markdown
+   ## 设计 Token
+
+   {组件名} 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。
+   ```
+
+**示例参考**：
+
+- 完整示例：`docs/demos/button/button.md`（24 个 Token，分 6 类）
+- 简单示例：`docs/demos/select/select.md`（1 个 Token）
+- 无 Token 示例：`docs/demos/form/form.md`（说明文字）
 
 ### 3. Demo 文件标准
 
@@ -256,9 +335,7 @@ import ComponentClassNamesSource from './ComponentClassNames.vue?raw'
     <!-- 场景 1：基础用法 -->
     <div>
       <div style="margin-bottom: 8px; color: #666">自定义根容器：</div>
-      <Component
-        :class-names="{ root: 'custom-root' }"
-      />
+      <Component :class-names="{ root: 'custom-root' }" />
     </div>
 
     <!-- 场景 2：组合使用 -->
@@ -267,7 +344,7 @@ import ComponentClassNamesSource from './ComponentClassNames.vue?raw'
       <Component
         :class-names="{
           root: 'custom-root',
-          icon: 'custom-icon'
+          icon: 'custom-icon',
         }"
       />
     </div>
@@ -278,7 +355,7 @@ import ComponentClassNamesSource from './ComponentClassNames.vue?raw'
       <Component
         :styles="{
           root: { borderRadius: '8px' },
-          icon: { fontSize: '18px' }
+          icon: { fontSize: '18px' },
         }"
       />
     </div>
@@ -311,7 +388,7 @@ const value = ref('')
   margin-right: 8px;
 }
 </style>
-````
+```
 
 #### Demo 设计原则
 
@@ -333,18 +410,21 @@ const value = ref('')
 
 2. 文档编写
    ├─ 更新 API 表格（添加引用链接）
-   ├─ 添加「语义化 className」模块
-   └─ 添加「语义化 style」模块
+   └─ 添加「语义化 className 与 style」章节（合并格式）
 
 3. Demo 创建
    ├─ 创建 ComponentClassNames.vue
-   ├─ 在 md 中添加 demo 引用
-   └─ 在 script setup 中导入 demo
+   └─ 在 md 中添加「细粒度样式控制」demo
 
-4. 测试验证
+4. 设计 Token 补全
+   ├─ 扫描 components/{component}/style/ 提取 Token
+   ├─ 从 _theme/seed.ts 和 map.ts 查默认值与说明
+   └─ 在 md 中添加「## 设计 Token」章节（按类型分组排序）
+
+5. 测试验证
    ├─ pnpm dev 启动开发服务器
    ├─ 访问组件页面检查 demo
-   └─ 验证样式和交互效果
+   └─ pnpm build:docs 验证构建
 ```
 
 ### 详细步骤
@@ -479,6 +559,10 @@ pnpm dev
 #### 第四批：其他组件
 
 - [ ] 剩余 40+ 个组件
+
+### 关联任务
+
+- [x] **为已完成的 15 个组件补全「## 设计 Token」章节** —— 已于 2026-06-18 完成，共生成 145 个 Token 条目（Popover/Form 暂未直接消费 Token，已加说明文字章节）。每个组件的 Token 表格列出实际使用的 CSS 变量、说明、默认值，按颜色/字体/尺寸/边框/阴影/动效/层级分组排序。
 
 ---
 
@@ -836,6 +920,10 @@ open http://localhost:5173/components/{component}
 
 ## 更新日志
 
+- **2026-06-18** - 完善开发指南：补充「设计 Token 章节模板与生成流程」（Token 提取命令、命名转换规则、分组排序规则、特殊情况处理），确保新会话可独立完成后续组件的完整语义化 API 实现；更新实施流程图，将设计 Token 补全纳入标准流程
+- **2026-06-18** - 为已完成语义化 API 的 15 个组件全部补全「## 设计 Token」章节，与「语义化 className 与 style」配套形成完整的样式定制体系（共 145 个 Token 条目，Popover/Form 暂未直接消费 Token，标注说明文字）
+- **2026-06-18** - 统一全部 demo 的 import 路径为 `from 'ant-design-hmfw'`（消除内部相对路径混用，与用户实际使用方式一致）；补充「设计 Token / 语义化 className / 语义化 style」三者的关系说明
+- **2026-06-18** - 文档结构重构：将「语义化 className」与「语义化 style」两个独立区块合并为单个「语义化 className 与 style」；统一所有组件的标题层级与顺序；代码演示区的三级标题统一为「细粒度样式控制」；修复 markdown-it-anchor 的 slugify 不保留中文的问题
 - **2026-06-17** - 完成 Tabs, Dropdown, Form, Table 共 4 个组件，第一批高频组件全部完成（累计 15/67）
 - **2026-06-17** - 完成 Checkbox, Radio, Card, Select 共 4 个组件（累计 11/67）
 - **2026-06-17** - 完成 Button, Input, Modal, Popover, Progress, Transfer, Tree 共 7 个组件
@@ -853,5 +941,5 @@ open http://localhost:5173/components/{component}
 
 ---
 
-**版本**：v1.0  
-**最后更新**：2026-06-17
+**版本**：v2.1  
+**最后更新**：2026-06-18

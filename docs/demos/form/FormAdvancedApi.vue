@@ -33,10 +33,10 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { Form, FormItem } from '../../../components/form'
-import { Input } from '../../../components/input'
-import { Button } from '../../../components/button'
-import { Space } from '../../../components/space'
+import { Form, FormItem } from 'ant-design-hmfw'
+import { Input } from 'ant-design-hmfw'
+import { Button } from 'ant-design-hmfw'
+import { Space } from 'ant-design-hmfw'
 
 const formRef = ref()
 const formState = reactive({

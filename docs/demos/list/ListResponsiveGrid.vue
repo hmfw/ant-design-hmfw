@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Card } from '../../../components'
+import { List, Card } from 'ant-design-hmfw'
 
 const data = Array.from({ length: 12 }, (_, i) => ({
   id: i + 1,

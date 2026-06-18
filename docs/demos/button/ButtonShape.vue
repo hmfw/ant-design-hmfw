@@ -8,6 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { Button } from '../../../components'
-import { SearchOutlined } from '../../../components/icon/icons'
+import { Button } from 'ant-design-hmfw'
+import { SearchOutlined } from 'ant-design-hmfw'
 </script>

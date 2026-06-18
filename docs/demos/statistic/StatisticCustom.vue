@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Statistic, Space } from '../../../components'
+import { Statistic, Space } from 'ant-design-hmfw'
 
 const customRender = (value: string) => {
   return h('span', { style: { color: '#cf1322', fontWeight: 'bold' } }, [h('span', '💰 '), value, h('span', ' 元')])

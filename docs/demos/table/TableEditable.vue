@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { Table, Input, Button } from '../../../components'
-import type { TableColumn } from '../../../components'
+import { Table, Input, Button } from 'ant-design-hmfw'
+import type { TableColumn } from 'ant-design-hmfw'
 
 interface DataType {
   key: number

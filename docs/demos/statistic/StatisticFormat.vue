@@ -20,5 +20,5 @@
 </template>
 
 <script setup lang="ts">
-import { Statistic } from '../../../components'
+import { Statistic } from 'ant-design-hmfw'
 </script>
