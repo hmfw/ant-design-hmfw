@@ -2,6 +2,26 @@ import type { Plugin } from 'vite'
 import fs from 'node:fs'
 import path from 'node:path'
 
+/**
+ * 删除 markdown 顶层的 <script setup> 块，跳过 ``` 代码围栏内的示例片段。
+ * 通过统计匹配位置之前出现的 ``` 行数判断是否处于围栏内（奇数 = 在围栏内）。
+ */
+function stripTopLevelScriptSetup(src: string): string {
+  const re = /<script setup[^>]*>[\s\S]*?<\/script>\n?/g
+  let result = ''
+  let lastIndex = 0
+  let m: RegExpExecArray | null
+  while ((m = re.exec(src)) !== null) {
+    const fenceCount = (src.slice(0, m.index).match(/^```/gm) || []).length
+    // 仅当不在代码围栏内（围栏标记成对出现）时才删除
+    if (fenceCount % 2 === 0) {
+      result += src.slice(lastIndex, m.index)
+      lastIndex = m.index + m[0].length
+    }
+  }
+  return result + src.slice(lastIndex)
+}
+
 export function autoDemoImports(): Plugin {
   return {
     name: 'auto-demo-imports',
@@ -33,9 +53,12 @@ export function autoDemoImports(): Plugin {
           return `import ${name} from './${f}'\nimport ${name}Source from './${f}?raw'`
         })
         .join('\n')
-      // Strip any author-written <script setup> block (with or without
+      // Strip author-written <script setup> blocks (with or without
       // attributes like lang="ts") so we don't emit a duplicate one.
-      const stripped = code.replace(/<script setup[^>]*>[\s\S]*?<\/script>\n?/, '')
+      // 仅删除顶层的 <script setup>，跳过 ```vue / ```html 等代码围栏内的示例，
+      // 否则示例里的 <script setup> 会被误删、真实的脚本块反而残留，导致出现
+      // 两个 <script setup>，Vue 编译报 "missing end tag"。
+      const stripped = stripTopLevelScriptSetup(code)
       return `<script setup>\n${imports}\n</script>\n\n${stripped}`
     },
   }
