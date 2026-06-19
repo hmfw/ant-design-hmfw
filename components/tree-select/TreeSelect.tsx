@@ -57,6 +57,8 @@ export const TreeSelect = defineComponent({
     maxTagCount: [Number, String] as PropType<number | 'responsive'>,
     maxTagPlaceholder: [String, Function] as PropType<MaxTagPlaceholder>,
     maxTagTextLength: Number,
+    classNames: Object as PropType<import('./types').TreeSelectClassNames>,
+    styles: Object as PropType<import('./types').TreeSelectStyles>,
   },
   emits: [
     'update:value',
@@ -485,7 +487,7 @@ export const TreeSelect = defineComponent({
       return (
         <div
           key={valueKey}
-          class={cls(`${prefixCls}-tree-node`, {
+          class={cls(`${prefixCls}-tree-node`, props.classNames?.treeNode, {
             [`${prefixCls}-tree-node-selected`]: isSelected,
             [`${prefixCls}-tree-node-disabled`]: node.disabled,
           })}
@@ -493,12 +495,14 @@ export const TreeSelect = defineComponent({
             paddingLeft: `${level * 20 + 8}px`,
             height: useVirtual.value ? `${props.itemHeight}px` : undefined,
             minHeight: useVirtual.value ? `${props.itemHeight}px` : undefined,
+            ...props.styles?.treeNode,
           }}
         >
           <span
-            class={cls(`${prefixCls}-tree-switcher`, {
+            class={cls(`${prefixCls}-tree-switcher`, props.classNames?.treeSwitcher, {
               [`${prefixCls}-tree-switcher-noop`]: !hasChildren,
             })}
+            style={props.styles?.treeSwitcher}
             onClick={(e) => {
               e.stopPropagation()
               if (hasChildren && !forceExpand) toggleExpand(valueKey)
@@ -508,11 +512,12 @@ export const TreeSelect = defineComponent({
           </span>
           {props.treeCheckable && (
             <span
-              class={cls(`${prefixCls}-tree-checkbox`, {
+              class={cls(`${prefixCls}-tree-checkbox`, props.classNames?.treeCheckbox, {
                 [`${prefixCls}-tree-checkbox-checked`]: isChecked,
                 [`${prefixCls}-tree-checkbox-indeterminate`]: isHalf,
                 [`${prefixCls}-tree-checkbox-disabled`]: node.disabled || node.disableCheckbox,
               })}
+              style={props.styles?.treeCheckbox}
               onClick={(e) => {
                 e.stopPropagation()
                 selectNode(node)
@@ -521,8 +526,16 @@ export const TreeSelect = defineComponent({
               <span class={`${prefixCls}-tree-checkbox-inner`} />
             </span>
           )}
-          {iconNode !== null && <span class={`${prefixCls}-tree-icon`}>{iconNode}</span>}
-          <span class={`${prefixCls}-tree-node-content`} onClick={() => selectNode(node)}>
+          {iconNode !== null && (
+            <span class={cls(`${prefixCls}-tree-icon`, props.classNames?.treeIcon)} style={props.styles?.treeIcon}>
+              {iconNode}
+            </span>
+          )}
+          <span
+            class={cls(`${prefixCls}-tree-node-content`, props.classNames?.treeNodeContent)}
+            style={props.styles?.treeNodeContent}
+            onClick={() => selectNode(node)}
+          >
             {label}
           </span>
         </div>
@@ -548,18 +561,28 @@ export const TreeSelect = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, `${prefixCls}-${props.size}`, {
+          class={cls(prefixCls, `${prefixCls}-${props.size}`, props.classNames?.root, {
             [`${prefixCls}-open`]: isOpen.value,
             [`${prefixCls}-disabled`]: props.disabled,
             [`${prefixCls}-status-error`]: props.status === 'error',
             [`${prefixCls}-status-warning`]: props.status === 'warning',
           })}
+          style={props.styles?.root}
         >
-          <div ref={selectorRef} class={`${prefixCls}-selector`} onClick={isOpen.value ? closeDropdown : openDropdown}>
+          <div
+            ref={selectorRef}
+            class={cls(`${prefixCls}-selector`, props.classNames?.selector)}
+            style={props.styles?.selector}
+            onClick={isOpen.value ? closeDropdown : openDropdown}
+          >
             {isMultiple.value ? (
               <>
                 {selectedLabels.value.slice(0, visibleTagCount.value).map((label, i) => (
-                  <span key={selectedValues.value[i]} class={`${prefixCls}-selection-item`}>
+                  <span
+                    key={selectedValues.value[i]}
+                    class={cls(`${prefixCls}-selection-item`, props.classNames?.item)}
+                    style={props.styles?.item}
+                  >
                     <span class={`${prefixCls}-selection-item-content`}>{truncateLabel(label)}</span>
                     <span
                       class={`${prefixCls}-selection-item-remove`}
@@ -578,7 +601,8 @@ export const TreeSelect = defineComponent({
                 )}
                 {props.showSearch && (
                   <input
-                    class={`${prefixCls}-selection-search`}
+                    class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
+                    style={props.styles?.search}
                     value={searchText.value}
                     onInput={(e) => {
                       searchText.value = (e.target as HTMLInputElement).value
@@ -588,19 +612,32 @@ export const TreeSelect = defineComponent({
                   />
                 )}
                 {!hasValue && !searchText.value && (
-                  <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder}</span>
+                  <span
+                    class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
+                    style={props.styles?.placeholder}
+                  >
+                    {props.placeholder}
+                  </span>
                 )}
               </>
             ) : (
               <>
                 {hasValue ? (
-                  <span class={`${prefixCls}-selection-item`}>{selectedLabels.value[0]}</span>
+                  <span class={cls(`${prefixCls}-selection-item`, props.classNames?.item)} style={props.styles?.item}>
+                    {selectedLabels.value[0]}
+                  </span>
                 ) : (
-                  <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder}</span>
+                  <span
+                    class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
+                    style={props.styles?.placeholder}
+                  >
+                    {props.placeholder}
+                  </span>
                 )}
                 {props.showSearch && isOpen.value && (
                   <input
-                    class={`${prefixCls}-selection-search`}
+                    class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
+                    style={props.styles?.search}
                     value={searchText.value}
                     onInput={(e) => {
                       searchText.value = (e.target as HTMLInputElement).value
@@ -613,7 +650,7 @@ export const TreeSelect = defineComponent({
             )}
           </div>
 
-          <div class={`${prefixCls}-arrow`}>
+          <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow}>
             <span
               class={cls(`${prefixCls}-arrow-icon`, {
                 [`${prefixCls}-arrow-icon-open`]: isOpen.value,
@@ -624,7 +661,11 @@ export const TreeSelect = defineComponent({
           </div>
 
           {showClear && (
-            <span class={`${prefixCls}-clear`} onClick={clearAll}>
+            <span
+              class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+              style={props.styles?.clear}
+              onClick={clearAll}
+            >
               ×
             </span>
           )}
@@ -633,17 +674,23 @@ export const TreeSelect = defineComponent({
             <Teleport to="body">
               <div
                 ref={dropdownRef}
-                class={`${prefixCls}-dropdown`}
+                class={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
                 style={{
                   position: 'absolute',
                   top: `${dropdownPos.value.top}px`,
                   left: `${dropdownPos.value.left}px`,
                   minWidth: `${dropdownPos.value.width}px`,
                   zIndex: 1050,
+                  ...props.styles?.dropdown,
                 }}
               >
                 {flatNodes.value.length === 0 ? (
-                  <div class={`${prefixCls}-dropdown-empty`}>{props.notFoundContent}</div>
+                  <div
+                    class={cls(`${prefixCls}-dropdown-empty`, props.classNames?.dropdownEmpty)}
+                    style={props.styles?.dropdownEmpty}
+                  >
+                    {props.notFoundContent}
+                  </div>
                 ) : (
                   <div
                     ref={listRef}

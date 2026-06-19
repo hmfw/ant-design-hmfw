@@ -821,6 +821,108 @@ import { Button } from 'ant-design-hmfw'
 
 ---
 
+## Calendar 日历
+
+按照日历形式展示数据的容器。
+
+**何时使用**：当数据是日期或按照日期划分时，例如日程、课表、价格日历等，农历等。目前支持年/月切换。
+
+导入：
+```ts
+import { Calendar } from 'ant-design-hmfw'
+```
+
+### Props
+
+**Calendar Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| value(v-model) | 展示日期 | `string \| Date` | - |
+| defaultValue | 默认展示日期 | `string \| Date` | 当前日期 |
+| mode | 初始模式 | `'month' \| 'year'` | `'month'` |
+| fullscreen | 是否全屏显示 | `boolean` | `true` |
+| disabledDate | 不可选择的日期 | `(date: Date) => boolean` | - |
+| validRange | 设置可以显示的日期范围 | `[Date, Date]` | - |
+| cellRender | 自定义单元格渲染（统一 API） | `(current: Date, info: CellRenderInfo) => VNode` | - |
+| dateCellRender | 自定义日期单元格内容（月视图） | `(current: Date) => VNode` | - |
+| monthCellRender | 自定义月份单元格内容（年视图） | `(current: Date) => VNode` | - |
+| headerRender | 自定义头部内容 | `(config: HeaderConfig) => VNode` | - |
+| range | 是否开启范围选择模式 | `boolean` | `false` |
+| rangeValue | 选中的日期范围（range 模式） | `[Date \| null, Date \| null]` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CalendarClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CalendarStyles` | - |
+
+**CellRenderInfo**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| originNode | 原始渲染节点 | `VNode` |  |
+| today | 当前日期 | `Date` |  |
+| type | 当前视图类型 | `'month' \| 'year'` |  |
+| locale | 语言包 | `any` |  |
+
+**HeaderConfig**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| value | 当前选中的日期 | `Date` |  |
+| type | 当前视图类型 | `'month' \| 'year'` |  |
+| onChange | 日期变化回调 | `(date: Date) => void` |  |
+| onTypeChange | 视图类型变化回调 | `(type: CalendarMode) => void` |  |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| update:value | 日期变化时触发 | `(dateStr: string) => void` |
+| change | 日期变化时触发 | `(dateStr: string, date: Date) => void` |
+| select | 点击选择日期时触发 | `(dateStr: string, date: Date) => void` |
+| panelChange | 日期面板变化（年/月）时触发 | `(date: string \| null, mode: string) => void` |
+| rangeChange | 范围选择变化时触发 | `(range: [string, string]) => void` |
+| update:rangeValue | 范围选择变化时触发 | `(range: [Date, Date]) => void` |
+
+### 示例
+
+基础用法 — 一个通用的日历面板，支持年/月切换。
+
+```vue
+<template>
+  <Calendar v-model:value="value" @select="onSelect" />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Calendar } from 'ant-design-hmfw'
+
+const value = ref<string>()
+
+const onSelect = (dateStr: string) => {
+  console.log('选中日期：', dateStr)
+}
+</script>
+```
+
+卡片模式 — 用于嵌套在空间有限的容器中。
+
+```vue
+<template>
+  <div style="width: 300px; border: 1px solid #d9d9d9; border-radius: 8px">
+    <Calendar :fullscreen="false" v-model:value="value" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Calendar } from 'ant-design-hmfw'
+
+const value = ref<string>()
+</script>
+```
+
+
+---
+
 ## Card 卡片
 
 通用卡片容器。
@@ -1047,6 +1149,8 @@ import { Cascader } from 'ant-design-hmfw'
 | maxTagCount | 最多显示多少个 tag | `number` | - |
 | maxTagPlaceholder | 隐藏 tag 时显示的内容 | `string \| ((omittedValues: string[][]) => string)` | - |
 | maxTagTextLength | 最大显示的 tag 文本长度 | `number` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CascaderClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CascaderStyles` | - |
 
 **CascaderOption**
 
@@ -1658,6 +1762,8 @@ import { DatePicker } from 'ant-design-hmfw'
 | minDate | 最小可选日期 | `string` | - |
 | maxDate | 最大可选日期 | `string` | - |
 | renderExtraFooter | 在面板中添加额外的页脚 | `() => VNode` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DatePickerClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DatePickerStyles` | - |
 
 **PresetItem**
 
@@ -4766,6 +4872,8 @@ import { RangePicker } from 'ant-design-hmfw'
 | disabledDate | 不可选日期 | `(date: Date, info?: { from?: Date, type?: string }) => boolean` | - |
 | status | 校验状态 | `'error' \| 'warning' \| ''` | `''` |
 | open | 受控的弹层显隐 | `boolean` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RangePickerClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RangePickerStyles` | - |
 
 ### Events
 
@@ -6281,6 +6389,8 @@ import { TimePicker } from 'ant-design-hmfw'
 | renderExtraFooter | 在面板底部渲染额外的内容 | `() => VNodeChild` | - |
 | variant | 输入框变体 | `'outlined' \| 'borderless' \| 'filled' \| 'underlined'` | `'outlined'` |
 | placement | 浮层弹出位置 | `'bottomLeft' \| 'bottomRight' \| 'topLeft' \| 'topRight'` | `'bottomLeft'` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TimePickerClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TimePickerStyles` | - |
 
 ### Events
 
@@ -6994,6 +7104,8 @@ import { TreeSelect } from 'ant-design-hmfw'
 | open | 受控展开下拉菜单 | `boolean` | - |
 | defaultOpen | 默认是否展开下拉菜单 | `boolean` | `false` |
 | fieldNames | 自定义字段名 | `{ label?, value?, children? }` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TreeSelectClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TreeSelectStyles` | - |
 
 **TreeSelectNode**
 

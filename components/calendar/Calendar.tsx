@@ -11,6 +11,8 @@ import type {
   MonthCellRender,
   DateRange,
   DateRangeString,
+  CalendarClassNames,
+  CalendarStyles,
 } from './types'
 
 // 日期工具函数
@@ -115,6 +117,9 @@ export const Calendar = defineComponent({
     },
     rangeValue: Array as unknown as PropType<DateRange>,
     defaultRangeValue: Array as unknown as PropType<DateRange>,
+    // 语义化 API
+    classNames: Object as PropType<CalendarClassNames>,
+    styles: Object as PropType<CalendarStyles>,
   },
   emits: ['update:value', 'change', 'select', 'panelChange', 'update:rangeValue', 'rangeChange'],
   setup(props, { emit }) {
@@ -268,7 +273,7 @@ export const Calendar = defineComponent({
     // 默认头部渲染
     const renderDefaultHeader = () => {
       return (
-        <div class={`${prefixCls}-header`}>
+        <div class={cls(`${prefixCls}-header`, props.classNames?.header)} style={props.styles?.header}>
           <div class={`${prefixCls}-header-left`}>
             <Select
               value={viewYear.value}
@@ -309,7 +314,11 @@ export const Calendar = defineComponent({
 
     // 渲染日期单元格内容
     const renderDateCell = (date: Date, _inCurrentMonth: boolean) => {
-      const originNode = h('div', { class: `${prefixCls}-date` }, date.getDate())
+      const originNode = h(
+        'div',
+        { class: cls(`${prefixCls}-date`, props.classNames?.date), style: props.styles?.date },
+        date.getDate(),
+      )
 
       // 优先使用新 API cellRender
       if (props.cellRender) {
@@ -332,7 +341,11 @@ export const Calendar = defineComponent({
     // 渲染月份单元格内容
     const renderMonthCell = (month: number) => {
       const date = new Date(viewYear.value, month, 1)
-      const originNode = h('div', { class: `${prefixCls}-month` }, locale.value.DatePicker.months[month])
+      const originNode = h(
+        'div',
+        { class: cls(`${prefixCls}-month`, props.classNames?.month), style: props.styles?.month },
+        locale.value.DatePicker.months[month],
+      )
 
       // 优先使用新 API cellRender
       if (props.cellRender) {
@@ -354,17 +367,21 @@ export const Calendar = defineComponent({
 
     // 渲染月视图
     const renderMonthView = () => (
-      <div class={`${prefixCls}-panel`}>
+      <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
         {/* 星期头 */}
-        <div class={`${prefixCls}-weekdays`}>
+        <div class={cls(`${prefixCls}-weekdays`, props.classNames?.weekdays)} style={props.styles?.weekdays}>
           {locale.value.DatePicker.weekdays.map((day) => (
-            <div key={day} class={`${prefixCls}-weekday-cell`}>
+            <div
+              key={day}
+              class={cls(`${prefixCls}-weekday-cell`, props.classNames?.weekdayCell)}
+              style={props.styles?.weekdayCell}
+            >
               {day}
             </div>
           ))}
         </div>
         {/* 日期格子 */}
-        <div class={`${prefixCls}-body`}>
+        <div class={cls(`${prefixCls}-body`, props.classNames?.body)} style={props.styles?.body}>
           {calendar.value.map(({ date, inCurrentMonth }, i) => {
             const isToday = isSameDay(date, now)
             const isDisabled = isDateDisabled(date)
@@ -388,7 +405,7 @@ export const Calendar = defineComponent({
             return (
               <div
                 key={i}
-                class={cls(`${prefixCls}-cell`, {
+                class={cls(`${prefixCls}-cell`, props.classNames?.cell, {
                   [`${prefixCls}-cell-in-view`]: inCurrentMonth,
                   [`${prefixCls}-cell-today`]: isToday,
                   [`${prefixCls}-cell-selected`]: isSelected,
@@ -397,9 +414,15 @@ export const Calendar = defineComponent({
                   [`${prefixCls}-cell-range-end`]: isRangeEnd,
                   [`${prefixCls}-cell-in-range`]: isInRangeValue && !isSelected,
                 })}
+                style={props.styles?.cell}
                 onClick={() => !isDisabled && selectDate(date)}
               >
-                <div class={`${prefixCls}-cell-inner`}>{renderDateCell(date, inCurrentMonth)}</div>
+                <div
+                  class={cls(`${prefixCls}-cell-inner`, props.classNames?.cellInner)}
+                  style={props.styles?.cellInner}
+                >
+                  {renderDateCell(date, inCurrentMonth)}
+                </div>
               </div>
             )
           })}
@@ -409,8 +432,8 @@ export const Calendar = defineComponent({
 
     // 渲染年视图
     const renderYearView = () => (
-      <div class={`${prefixCls}-panel`}>
-        <div class={`${prefixCls}-year-panel`}>
+      <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
+        <div class={cls(`${prefixCls}-year-panel`, props.classNames?.yearPanel)} style={props.styles?.yearPanel}>
           {Array.from({ length: 12 }, (_, i) => {
             const date = new Date(viewYear.value, i, 1)
             const isSelected = isSameMonth(date, currentValue.value)
@@ -419,13 +442,19 @@ export const Calendar = defineComponent({
             return (
               <div
                 key={i}
-                class={cls(`${prefixCls}-cell`, `${prefixCls}-month-cell`, {
+                class={cls(`${prefixCls}-cell`, `${prefixCls}-month-cell`, props.classNames?.monthCell, {
                   [`${prefixCls}-cell-selected`]: isSelected,
                   [`${prefixCls}-cell-disabled`]: isDisabled,
                 })}
+                style={props.styles?.monthCell}
                 onClick={() => !isDisabled && selectMonth(i)}
               >
-                <div class={`${prefixCls}-cell-inner`}>{renderMonthCell(i)}</div>
+                <div
+                  class={cls(`${prefixCls}-cell-inner`, props.classNames?.cellInner)}
+                  style={props.styles?.cellInner}
+                >
+                  {renderMonthCell(i)}
+                </div>
               </div>
             )
           })}
@@ -446,13 +475,16 @@ export const Calendar = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, {
+          class={cls(prefixCls, props.classNames?.root, {
             [`${prefixCls}-fullscreen`]: props.fullscreen,
             [`${prefixCls}-mini`]: !props.fullscreen,
           })}
+          style={props.styles?.root}
         >
           {headerContent}
-          <div class={`${prefixCls}-content`}>{innerMode.value === 'month' ? renderMonthView() : renderYearView()}</div>
+          <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
+            {innerMode.value === 'month' ? renderMonthView() : renderYearView()}
+          </div>
         </div>
       )
     }

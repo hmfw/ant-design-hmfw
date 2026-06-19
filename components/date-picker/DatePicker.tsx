@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick, type PropType, Teleport } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
-import type { DatePickerMode, PresetItem, ShowTimeConfig } from './types'
+import type { DatePickerMode, PresetItem, ShowTimeConfig, DatePickerClassNames, DatePickerStyles } from './types'
 
 // --- Date utilities ---
 function pad(n: number) {
@@ -97,6 +97,8 @@ export const DatePicker = defineComponent({
         },
       ) => any
     >,
+    classNames: Object as PropType<DatePickerClassNames>,
+    styles: Object as PropType<DatePickerStyles>,
   },
   emits: ['update:value', 'change', 'openChange', 'panelChange'],
   setup(props, { emit }) {
@@ -381,9 +383,16 @@ export const DatePicker = defineComponent({
     }
 
     const renderDatePanel = () => (
-      <div class={cls(`${prefixCls}-panel`, { [`${prefixCls}-panel-has-time`]: hasShowTime.value })}>
+      <div
+        class={cls(
+          `${prefixCls}-panel`,
+          { [`${prefixCls}-panel-has-time`]: hasShowTime.value },
+          props.classNames?.panel,
+        )}
+        style={props.styles?.panel}
+      >
         {/* Header */}
-        <div class={`${prefixCls}-panel-header`}>
+        <div class={cls(`${prefixCls}-panel-header`, props.classNames?.panelHeader)} style={props.styles?.panelHeader}>
           <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>
             «
           </button>
@@ -418,15 +427,19 @@ export const DatePicker = defineComponent({
           </button>
         </div>
         {/* Weekday row */}
-        <div class={`${prefixCls}-panel-body`}>
-          <div class={`${prefixCls}-weekdays`}>
+        <div class={cls(`${prefixCls}-panel-body`, props.classNames?.panelBody)} style={props.styles?.panelBody}>
+          <div class={cls(`${prefixCls}-weekdays`, props.classNames?.weekdays)} style={props.styles?.weekdays}>
             {locale.value.DatePicker.weekdays.map((d) => (
-              <span key={d} class={`${prefixCls}-weekday`}>
+              <span
+                key={d}
+                class={cls(`${prefixCls}-weekday`, props.classNames?.weekday)}
+                style={props.styles?.weekday}
+              >
                 {d}
               </span>
             ))}
           </div>
-          <div class={`${prefixCls}-days`}>
+          <div class={cls(`${prefixCls}-days`, props.classNames?.days)} style={props.styles?.days}>
             {calendar.value.map(({ date, inCurrentMonth }, i) => {
               const isToday = isSameDay(date, now)
               const isSelected = selectedDate.value ? isSameDay(date, selectedDate.value) : false
@@ -440,12 +453,17 @@ export const DatePicker = defineComponent({
               return (
                 <button
                   key={i}
-                  class={cls(`${prefixCls}-day`, {
-                    [`${prefixCls}-day-other-month`]: !inCurrentMonth,
-                    [`${prefixCls}-day-today`]: isToday,
-                    [`${prefixCls}-day-selected`]: isSelected,
-                    [`${prefixCls}-day-disabled`]: isDisabled,
-                  })}
+                  class={cls(
+                    `${prefixCls}-day`,
+                    {
+                      [`${prefixCls}-day-other-month`]: !inCurrentMonth,
+                      [`${prefixCls}-day-today`]: isToday,
+                      [`${prefixCls}-day-selected`]: isSelected,
+                      [`${prefixCls}-day-disabled`]: isDisabled,
+                    },
+                    props.classNames?.day,
+                  )}
+                  style={props.styles?.day}
                   disabled={isDisabled}
                   onClick={() => selectDate(date)}
                 >
@@ -457,20 +475,29 @@ export const DatePicker = defineComponent({
         </div>
         {/* showTime 时间列 */}
         {hasShowTime.value && (
-          <div class={`${prefixCls}-time-panel`}>
-            <div class={`${prefixCls}-time-content`}>
+          <div class={cls(`${prefixCls}-time-panel`, props.classNames?.timePanel)} style={props.styles?.timePanel}>
+            <div
+              class={cls(`${prefixCls}-time-content`, props.classNames?.timeContent)}
+              style={props.styles?.timeContent}
+            >
               {/* 小时列 */}
               <ul
-                class={`${prefixCls}-time-column`}
+                class={cls(`${prefixCls}-time-column`, props.classNames?.timeColumn)}
+                style={props.styles?.timeColumn}
                 ref={(el) => scrollToActiveTime(el as HTMLElement, innerHour.value)}
               >
                 {hours.value.map((h) => (
                   <li
                     key={h}
                     data-value={h}
-                    class={cls(`${prefixCls}-time-cell`, {
-                      [`${prefixCls}-time-cell-selected`]: innerHour.value === h,
-                    })}
+                    class={cls(
+                      `${prefixCls}-time-cell`,
+                      {
+                        [`${prefixCls}-time-cell-selected`]: innerHour.value === h,
+                      },
+                      props.classNames?.timeCell,
+                    )}
+                    style={props.styles?.timeCell}
                     onClick={() => selectHour(h)}
                   >
                     {pad(h)}
@@ -479,16 +506,22 @@ export const DatePicker = defineComponent({
               </ul>
               {/* 分钟列 */}
               <ul
-                class={`${prefixCls}-time-column`}
+                class={cls(`${prefixCls}-time-column`, props.classNames?.timeColumn)}
+                style={props.styles?.timeColumn}
                 ref={(el) => scrollToActiveTime(el as HTMLElement, innerMinute.value)}
               >
                 {minutes.value.map((m) => (
                   <li
                     key={m}
                     data-value={m}
-                    class={cls(`${prefixCls}-time-cell`, {
-                      [`${prefixCls}-time-cell-selected`]: innerMinute.value === m,
-                    })}
+                    class={cls(
+                      `${prefixCls}-time-cell`,
+                      {
+                        [`${prefixCls}-time-cell-selected`]: innerMinute.value === m,
+                      },
+                      props.classNames?.timeCell,
+                    )}
+                    style={props.styles?.timeCell}
                     onClick={() => selectMinute(m)}
                   >
                     {pad(m)}
@@ -498,16 +531,22 @@ export const DatePicker = defineComponent({
               {/* 秒列 */}
               {showSecondColumn.value && (
                 <ul
-                  class={`${prefixCls}-time-column`}
+                  class={cls(`${prefixCls}-time-column`, props.classNames?.timeColumn)}
+                  style={props.styles?.timeColumn}
                   ref={(el) => scrollToActiveTime(el as HTMLElement, innerSecond.value)}
                 >
                   {seconds.value.map((s) => (
                     <li
                       key={s}
                       data-value={s}
-                      class={cls(`${prefixCls}-time-cell`, {
-                        [`${prefixCls}-time-cell-selected`]: innerSecond.value === s,
-                      })}
+                      class={cls(
+                        `${prefixCls}-time-cell`,
+                        {
+                          [`${prefixCls}-time-cell-selected`]: innerSecond.value === s,
+                        },
+                        props.classNames?.timeCell,
+                      )}
+                      style={props.styles?.timeCell}
                       onClick={() => selectSecond(s)}
                     >
                       {pad(s)}
@@ -520,12 +559,23 @@ export const DatePicker = defineComponent({
         )}
         {/* Footer */}
         {(props.showToday || props.showNow || props.showTime || props.presets?.length || props.renderExtraFooter) && (
-          <div class={`${prefixCls}-panel-footer`}>
-            <div class={`${prefixCls}-panel-footer-extra`}>
+          <div
+            class={cls(`${prefixCls}-panel-footer`, props.classNames?.panelFooter)}
+            style={props.styles?.panelFooter}
+          >
+            <div
+              class={cls(`${prefixCls}-panel-footer-extra`, props.classNames?.panelFooterExtra)}
+              style={props.styles?.panelFooterExtra}
+            >
               {props.presets?.length && (
-                <div class={`${prefixCls}-presets`}>
+                <div class={cls(`${prefixCls}-presets`, props.classNames?.presets)} style={props.styles?.presets}>
                   {props.presets.map((preset, i) => (
-                    <button key={i} class={`${prefixCls}-preset-btn`} onClick={() => applyPreset(preset)}>
+                    <button
+                      key={i}
+                      class={cls(`${prefixCls}-preset-btn`, props.classNames?.presetBtn)}
+                      style={props.styles?.presetBtn}
+                      onClick={() => applyPreset(preset)}
+                    >
                       {preset.label}
                     </button>
                   ))}
@@ -533,14 +583,25 @@ export const DatePicker = defineComponent({
               )}
               {props.renderExtraFooter?.()}
             </div>
-            <div class={`${prefixCls}-panel-footer-actions`}>
+            <div
+              class={cls(`${prefixCls}-panel-footer-actions`, props.classNames?.panelFooterActions)}
+              style={props.styles?.panelFooterActions}
+            >
               {(props.showToday || props.showNow) && (
-                <button class={`${prefixCls}-panel-footer-today`} onClick={() => selectDate(new Date())}>
+                <button
+                  class={cls(`${prefixCls}-panel-footer-today`, props.classNames?.today)}
+                  style={props.styles?.today}
+                  onClick={() => selectDate(new Date())}
+                >
                   {props.showNow ? locale.value.DatePicker.now : locale.value.DatePicker.today}
                 </button>
               )}
               {props.showTime && (
-                <button class={`${prefixCls}-panel-footer-ok`} onClick={confirmDateTime}>
+                <button
+                  class={cls(`${prefixCls}-panel-footer-ok`, props.classNames?.ok)}
+                  style={props.styles?.ok}
+                  onClick={confirmDateTime}
+                >
                   {locale.value.DatePicker.ok}
                 </button>
               )}
@@ -551,8 +612,8 @@ export const DatePicker = defineComponent({
     )
 
     const renderMonthPanel = () => (
-      <div class={`${prefixCls}-panel`}>
-        <div class={`${prefixCls}-panel-header`}>
+      <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
+        <div class={cls(`${prefixCls}-panel-header`, props.classNames?.panelHeader)} style={props.styles?.panelHeader}>
           <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>
             «
           </button>
@@ -571,15 +632,20 @@ export const DatePicker = defineComponent({
             »
           </button>
         </div>
-        <div class={`${prefixCls}-panel-body`}>
-          <div class={`${prefixCls}-months`}>
+        <div class={cls(`${prefixCls}-panel-body`, props.classNames?.panelBody)} style={props.styles?.panelBody}>
+          <div class={cls(`${prefixCls}-months`, props.classNames?.months)} style={props.styles?.months}>
             {locale.value.DatePicker.months.map((m, i) => {
               const d = new Date(viewYear.value, i, 1)
               const isSelected = selectedDate.value ? isSameMonth(d, selectedDate.value) : false
               return (
                 <button
                   key={i}
-                  class={cls(`${prefixCls}-month`, { [`${prefixCls}-month-selected`]: isSelected })}
+                  class={cls(
+                    `${prefixCls}-month`,
+                    { [`${prefixCls}-month-selected`]: isSelected },
+                    props.classNames?.month,
+                  )}
+                  style={props.styles?.month}
                   onClick={() => {
                     viewMonth.value = i
                     if (props.picker === 'month') selectDate(d)
@@ -599,8 +665,8 @@ export const DatePicker = defineComponent({
     )
 
     const renderYearPanel = () => (
-      <div class={`${prefixCls}-panel`}>
-        <div class={`${prefixCls}-panel-header`}>
+      <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
+        <div class={cls(`${prefixCls}-panel-header`, props.classNames?.panelHeader)} style={props.styles?.panelHeader}>
           <button
             class={`${prefixCls}-panel-header-btn`}
             onClick={() => {
@@ -621,14 +687,19 @@ export const DatePicker = defineComponent({
             »
           </button>
         </div>
-        <div class={`${prefixCls}-panel-body`}>
-          <div class={`${prefixCls}-years`}>
+        <div class={cls(`${prefixCls}-panel-body`, props.classNames?.panelBody)} style={props.styles?.panelBody}>
+          <div class={cls(`${prefixCls}-years`, props.classNames?.years)} style={props.styles?.years}>
             {yearRange.value.map((y) => {
               const isSelected = selectedDate.value ? isSameYear(new Date(y, 0, 1), selectedDate.value) : false
               return (
                 <button
                   key={y}
-                  class={cls(`${prefixCls}-year`, { [`${prefixCls}-year-selected`]: isSelected })}
+                  class={cls(
+                    `${prefixCls}-year`,
+                    { [`${prefixCls}-year-selected`]: isSelected },
+                    props.classNames?.year,
+                  )}
+                  style={props.styles?.year}
                   onClick={() => {
                     viewYear.value = y
                     if (props.picker === 'year') selectDate(new Date(y, 0, 1))
@@ -648,8 +719,8 @@ export const DatePicker = defineComponent({
     )
 
     const renderQuarterPanel = () => (
-      <div class={`${prefixCls}-panel`}>
-        <div class={`${prefixCls}-panel-header`}>
+      <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
+        <div class={cls(`${prefixCls}-panel-header`, props.classNames?.panelHeader)} style={props.styles?.panelHeader}>
           <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>
             «
           </button>
@@ -658,8 +729,8 @@ export const DatePicker = defineComponent({
             »
           </button>
         </div>
-        <div class={`${prefixCls}-panel-body`}>
-          <div class={`${prefixCls}-quarters`}>
+        <div class={cls(`${prefixCls}-panel-body`, props.classNames?.panelBody)} style={props.styles?.panelBody}>
+          <div class={cls(`${prefixCls}-quarters`, props.classNames?.quarters)} style={props.styles?.quarters}>
             {[1, 2, 3, 4].map((q) => {
               const d = new Date(viewYear.value, (q - 1) * 3, 1)
               const isSelected = selectedDate.value
@@ -669,9 +740,14 @@ export const DatePicker = defineComponent({
               return (
                 <button
                   key={q}
-                  class={cls(`${prefixCls}-quarter`, {
-                    [`${prefixCls}-quarter-selected`]: isSelected,
-                  })}
+                  class={cls(
+                    `${prefixCls}-quarter`,
+                    {
+                      [`${prefixCls}-quarter-selected`]: isSelected,
+                    },
+                    props.classNames?.quarter,
+                  )}
+                  style={props.styles?.quarter}
                   onClick={() => selectDate(d)}
                 >
                   Q{q}
@@ -687,15 +763,21 @@ export const DatePicker = defineComponent({
       <>
         <div
           ref={triggerRef}
-          class={cls(prefixCls, `${prefixCls}-${props.size}`, {
-            [`${prefixCls}-open`]: isOpen.value,
-            [`${prefixCls}-disabled`]: props.disabled,
-            [`${prefixCls}-status-error`]: props.status === 'error',
-            [`${prefixCls}-status-warning`]: props.status === 'warning',
-          })}
+          class={cls(
+            prefixCls,
+            `${prefixCls}-${props.size}`,
+            {
+              [`${prefixCls}-open`]: isOpen.value,
+              [`${prefixCls}-disabled`]: props.disabled,
+              [`${prefixCls}-status-error`]: props.status === 'error',
+              [`${prefixCls}-status-warning`]: props.status === 'warning',
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
           onClick={openPanel}
         >
-          <span class={`${prefixCls}-input`}>
+          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
             <input
               readonly
               value={displayText.value}
@@ -704,11 +786,17 @@ export const DatePicker = defineComponent({
               class={`${prefixCls}-input-inner`}
             />
             {props.allowClear && displayText.value && !props.disabled && (
-              <span class={`${prefixCls}-clear`} onClick={clearValue}>
+              <span
+                class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+                style={props.styles?.clear}
+                onClick={clearValue}
+              >
                 ✕
               </span>
             )}
-            <span class={`${prefixCls}-suffix`}>📅</span>
+            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              📅
+            </span>
           </span>
         </div>
 
@@ -716,12 +804,13 @@ export const DatePicker = defineComponent({
           <Teleport to="body">
             <div
               ref={panelRef}
-              class={`${prefixCls}-popup`}
+              class={cls(`${prefixCls}-popup`, props.classNames?.popup)}
               style={{
                 position: 'absolute',
                 top: `${panelPos.value.top}px`,
                 left: `${panelPos.value.left}px`,
                 zIndex: 1050,
+                ...props.styles?.popup,
               }}
             >
               {panelMode.value === 'date' && props.picker !== 'quarter' && renderDatePanel()}

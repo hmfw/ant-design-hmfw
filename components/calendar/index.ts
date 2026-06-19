@@ -9,4 +9,6 @@ export type {
   CalendarHeaderConfig,
   CellRenderInfo,
   DateCellRenderInfo,
+  CalendarClassNames,
+  CalendarStyles,
 } from './types'

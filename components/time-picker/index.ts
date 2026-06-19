@@ -1,2 +1,8 @@
 export { TimePicker } from './TimePicker'
-export type { TimePickerProps, TimePickerValue, DisabledTimeConfig } from './types'
+export type {
+  TimePickerProps,
+  TimePickerValue,
+  DisabledTimeConfig,
+  TimePickerClassNames,
+  TimePickerStyles,
+} from './types'

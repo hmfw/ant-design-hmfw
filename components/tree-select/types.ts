@@ -1,4 +1,4 @@
-import type { VNode } from 'vue'
+import type { VNode, CSSProperties } from 'vue'
 
 export interface TreeSelectNode {
   value: string | number
@@ -26,6 +26,74 @@ export type TreeIcon = boolean | VNode | string | ((node: TreeSelectNode) => VNo
 
 /** 选中项超出 maxTagCount 时占位渲染 */
 export type MaxTagPlaceholder = string | ((omittedValues: Array<string | number>) => string)
+
+/**
+ * TreeSelect 各部分的语义化 className
+ */
+export interface TreeSelectClassNames {
+  /** 根节点 div.hmfw-tree-select */
+  root?: string
+  /** 选择器容器 div.hmfw-tree-select-selector */
+  selector?: string
+  /** 已选项 span.hmfw-tree-select-selection-item（多选模式下为标签） */
+  item?: string
+  /** 占位符 span.hmfw-tree-select-selection-placeholder */
+  placeholder?: string
+  /** 搜索输入框 input.hmfw-tree-select-selection-search */
+  search?: string
+  /** 后缀箭头容器 div.hmfw-tree-select-arrow */
+  arrow?: string
+  /** 清除按钮 span.hmfw-tree-select-clear */
+  clear?: string
+  /** 下拉面板 div.hmfw-tree-select-dropdown */
+  dropdown?: string
+  /** 空状态 div.hmfw-tree-select-dropdown-empty */
+  dropdownEmpty?: string
+  /** 树节点 div.hmfw-tree-select-tree-node */
+  treeNode?: string
+  /** 树节点内容 span.hmfw-tree-select-tree-node-content */
+  treeNodeContent?: string
+  /** 展开/收起按钮 span.hmfw-tree-select-tree-switcher */
+  treeSwitcher?: string
+  /** 复选框 span.hmfw-tree-select-tree-checkbox */
+  treeCheckbox?: string
+  /** 节点图标 span.hmfw-tree-select-tree-icon */
+  treeIcon?: string
+}
+
+/**
+ * TreeSelect 各部分的语义化 style
+ */
+export interface TreeSelectStyles {
+  /** 根节点 div.hmfw-tree-select */
+  root?: CSSProperties
+  /** 选择器容器 div.hmfw-tree-select-selector */
+  selector?: CSSProperties
+  /** 已选项 span.hmfw-tree-select-selection-item */
+  item?: CSSProperties
+  /** 占位符 span.hmfw-tree-select-selection-placeholder */
+  placeholder?: CSSProperties
+  /** 搜索输入框 input.hmfw-tree-select-selection-search */
+  search?: CSSProperties
+  /** 后缀箭头容器 div.hmfw-tree-select-arrow */
+  arrow?: CSSProperties
+  /** 清除按钮 span.hmfw-tree-select-clear */
+  clear?: CSSProperties
+  /** 下拉面板 div.hmfw-tree-select-dropdown */
+  dropdown?: CSSProperties
+  /** 空状态 div.hmfw-tree-select-dropdown-empty */
+  dropdownEmpty?: CSSProperties
+  /** 树节点 div.hmfw-tree-select-tree-node */
+  treeNode?: CSSProperties
+  /** 树节点内容 span.hmfw-tree-select-tree-node-content */
+  treeNodeContent?: CSSProperties
+  /** 展开/收起按钮 span.hmfw-tree-select-tree-switcher */
+  treeSwitcher?: CSSProperties
+  /** 复选框 span.hmfw-tree-select-tree-checkbox */
+  treeCheckbox?: CSSProperties
+  /** 节点图标 span.hmfw-tree-select-tree-icon */
+  treeIcon?: CSSProperties
+}
 
 export interface TreeSelectProps {
   value?: TreeSelectValue
@@ -72,4 +140,8 @@ export interface TreeSelectProps {
   maxTagPlaceholder?: MaxTagPlaceholder
   /** 单个标签文本最大长度，超出截断为 ... */
   maxTagTextLength?: number
+  /** 语义化 className */
+  classNames?: TreeSelectClassNames
+  /** 语义化 style */
+  styles?: TreeSelectStyles
 }

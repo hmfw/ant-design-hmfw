@@ -1,2 +1,2 @@
 export { TreeSelect } from './TreeSelect'
-export type { TreeSelectProps, TreeSelectNode } from './types'
+export type { TreeSelectProps, TreeSelectNode, TreeSelectClassNames, TreeSelectStyles } from './types'

@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
-import type { RangeValue, RangePreset } from './types'
+import type { RangeValue, RangePreset, RangePickerClassNames, RangePickerStyles } from './types'
 
 function pad(n: number) {
   return String(n).padStart(2, '0')
@@ -66,6 +66,8 @@ export const RangePicker = defineComponent({
     disabledDate: Function as PropType<(d: Date, info?: { from?: Date; type?: string }) => boolean>,
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
     open: { type: Boolean, default: undefined },
+    classNames: Object as PropType<RangePickerClassNames>,
+    styles: Object as PropType<RangePickerStyles>,
   },
   emits: ['update:value', 'change', 'openChange', 'calendarChange'],
   setup(props, { emit }) {
@@ -255,41 +257,65 @@ export const RangePicker = defineComponent({
     function renderPanel(year: number, month: number, side: 'left' | 'right') {
       const calendar = buildCalendar(year, month)
       return (
-        <div class={`${prefixCls}-panel`}>
-          <div class={`${prefixCls}-panel-header`}>
+        <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
+          <div
+            class={cls(`${prefixCls}-panel-header`, props.classNames?.panelHeader)}
+            style={props.styles?.panelHeader}
+          >
             {side === 'left' && (
-              <button class={`${prefixCls}-panel-header-btn`} onClick={prevMonth}>
+              <button
+                class={cls(`${prefixCls}-panel-header-btn`, props.classNames?.panelHeaderBtn)}
+                style={props.styles?.panelHeaderBtn}
+                onClick={prevMonth}
+              >
                 ‹
               </button>
             )}
             {side === 'right' && (
-              <span class={`${prefixCls}-panel-header-btn`} style="visibility:hidden">
+              <span
+                class={cls(`${prefixCls}-panel-header-btn`, props.classNames?.panelHeaderBtn)}
+                style={{ visibility: 'hidden', ...props.styles?.panelHeaderBtn }}
+              >
                 ‹
               </span>
             )}
-            <span class={`${prefixCls}-panel-header-title`}>
+            <span
+              class={cls(`${prefixCls}-panel-header-title`, props.classNames?.panelHeaderTitle)}
+              style={props.styles?.panelHeaderTitle}
+            >
               {year}年 {locale.value.DatePicker.months[month]}
             </span>
             {side === 'right' && (
-              <button class={`${prefixCls}-panel-header-btn`} onClick={nextMonth}>
+              <button
+                class={cls(`${prefixCls}-panel-header-btn`, props.classNames?.panelHeaderBtn)}
+                style={props.styles?.panelHeaderBtn}
+                onClick={nextMonth}
+              >
                 ›
               </button>
             )}
             {side === 'left' && (
-              <span class={`${prefixCls}-panel-header-btn`} style="visibility:hidden">
+              <span
+                class={cls(`${prefixCls}-panel-header-btn`, props.classNames?.panelHeaderBtn)}
+                style={{ visibility: 'hidden', ...props.styles?.panelHeaderBtn }}
+              >
                 ›
               </span>
             )}
           </div>
-          <div class={`${prefixCls}-panel-body`}>
-            <div class={`${prefixCls}-weekdays`}>
+          <div class={cls(`${prefixCls}-panel-body`, props.classNames?.panelBody)} style={props.styles?.panelBody}>
+            <div class={cls(`${prefixCls}-weekdays`, props.classNames?.weekdays)} style={props.styles?.weekdays}>
               {locale.value.DatePicker.weekdays.map((d) => (
-                <span key={d} class={`${prefixCls}-weekday`}>
+                <span
+                  key={d}
+                  class={cls(`${prefixCls}-weekday`, props.classNames?.weekday)}
+                  style={props.styles?.weekday}
+                >
                   {d}
                 </span>
               ))}
             </div>
-            <div class={`${prefixCls}-days`}>
+            <div class={cls(`${prefixCls}-days`, props.classNames?.days)} style={props.styles?.days}>
               {calendar.map(({ date, inCurrentMonth }, i) => {
                 const isToday = isSameDay(date, now)
                 const isDisabledDay =
@@ -300,18 +326,51 @@ export const RangePicker = defineComponent({
                 const inRange = isInRange(date)
                 const rangeStart = isRangeStart(date)
                 const rangeEnd = isRangeEnd(date)
+
+                // 构建日期单元格的样式
+                let dayStyle = props.styles?.day
+                if (isToday && props.styles?.dayToday) {
+                  dayStyle = { ...dayStyle, ...props.styles.dayToday }
+                }
+                if ((rangeStart || rangeEnd) && props.styles?.daySelected) {
+                  dayStyle = { ...dayStyle, ...props.styles.daySelected }
+                }
+                if (inRange && props.styles?.dayInRange) {
+                  dayStyle = { ...dayStyle, ...props.styles.dayInRange }
+                }
+                if (rangeStart && props.styles?.dayRangeStart) {
+                  dayStyle = { ...dayStyle, ...props.styles.dayRangeStart }
+                }
+                if (rangeEnd && props.styles?.dayRangeEnd) {
+                  dayStyle = { ...dayStyle, ...props.styles.dayRangeEnd }
+                }
+                if (isDisabledDay && props.styles?.dayDisabled) {
+                  dayStyle = { ...dayStyle, ...props.styles.dayDisabled }
+                }
+
                 return (
                   <button
                     key={i}
-                    class={cls(`${prefixCls}-day`, {
-                      [`${prefixCls}-day-other-month`]: !inCurrentMonth,
-                      [`${prefixCls}-day-today`]: isToday,
-                      [`${prefixCls}-day-selected`]: rangeStart || rangeEnd,
-                      [`${prefixCls}-day-disabled`]: isDisabledDay,
-                      [`${prefixCls}-day-in-range`]: inRange,
-                      [`${prefixCls}-day-range-start`]: rangeStart,
-                      [`${prefixCls}-day-range-end`]: rangeEnd,
-                    })}
+                    class={cls(
+                      `${prefixCls}-day`,
+                      {
+                        [`${prefixCls}-day-other-month`]: !inCurrentMonth,
+                        [`${prefixCls}-day-today`]: isToday,
+                        [`${prefixCls}-day-selected`]: rangeStart || rangeEnd,
+                        [`${prefixCls}-day-disabled`]: isDisabledDay,
+                        [`${prefixCls}-day-in-range`]: inRange,
+                        [`${prefixCls}-day-range-start`]: rangeStart,
+                        [`${prefixCls}-day-range-end`]: rangeEnd,
+                      },
+                      props.classNames?.day,
+                      isToday && props.classNames?.dayToday,
+                      (rangeStart || rangeEnd) && props.classNames?.daySelected,
+                      inRange && props.classNames?.dayInRange,
+                      rangeStart && props.classNames?.dayRangeStart,
+                      rangeEnd && props.classNames?.dayRangeEnd,
+                      isDisabledDay && props.classNames?.dayDisabled,
+                    )}
+                    style={dayStyle}
                     disabled={isDisabledDay}
                     onClick={() => selectDate(date)}
                     onMouseenter={() => {
@@ -335,36 +394,56 @@ export const RangePicker = defineComponent({
       <>
         <div
           ref={triggerRef}
-          class={cls(`${prefixCls}`, `${prefixCls}-range`, `${prefixCls}-${props.size}`, {
-            [`${prefixCls}-open`]: isOpen.value,
-            [`${prefixCls}-disabled`]: isDisabled.value,
-            [`${prefixCls}-status-error`]: props.status === 'error',
-            [`${prefixCls}-status-warning`]: props.status === 'warning',
-          })}
+          class={cls(
+            `${prefixCls}`,
+            `${prefixCls}-range`,
+            `${prefixCls}-${props.size}`,
+            {
+              [`${prefixCls}-open`]: isOpen.value,
+              [`${prefixCls}-disabled`]: isDisabled.value,
+              [`${prefixCls}-status-error`]: props.status === 'error',
+              [`${prefixCls}-status-warning`]: props.status === 'warning',
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
           onClick={openPanel}
         >
-          <span class={`${prefixCls}-input`}>
+          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
             <input
               readonly
               value={displayStart.value}
               placeholder={placeholders.value[0]}
               disabled={startDisabled.value}
-              class={`${prefixCls}-input-inner`}
+              class={cls(`${prefixCls}-input-inner`, props.classNames?.startInput)}
+              style={props.styles?.startInput}
             />
-            <span class={`${prefixCls}-range-separator`}>{props.separator}</span>
+            <span
+              class={cls(`${prefixCls}-range-separator`, props.classNames?.separator)}
+              style={props.styles?.separator}
+            >
+              {props.separator}
+            </span>
             <input
               readonly
               value={displayEnd.value}
               placeholder={placeholders.value[1]}
               disabled={endDisabled.value}
-              class={`${prefixCls}-input-inner`}
+              class={cls(`${prefixCls}-input-inner`, props.classNames?.endInput)}
+              style={props.styles?.endInput}
             />
             {props.allowClear && hasValue.value && !isDisabled.value && (
-              <span class={`${prefixCls}-clear`} onClick={clearValue}>
+              <span
+                class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+                style={props.styles?.clear}
+                onClick={clearValue}
+              >
                 ✕
               </span>
             )}
-            <span class={`${prefixCls}-suffix`}>📅</span>
+            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              📅
+            </span>
           </span>
         </div>
 
@@ -372,27 +451,39 @@ export const RangePicker = defineComponent({
           <Teleport to="body">
             <div
               ref={panelRef}
-              class={`${prefixCls}-popup ${prefixCls}-range-popup`}
+              class={cls(`${prefixCls}-popup`, `${prefixCls}-range-popup`, props.classNames?.popup)}
               style={{
                 position: 'absolute',
                 top: `${panelPos.value.top}px`,
                 left: `${panelPos.value.left}px`,
                 zIndex: 1050,
+                ...props.styles?.popup,
               }}
             >
-              <div class={`${prefixCls}-range-wrapper`}>
+              <div
+                class={cls(`${prefixCls}-range-wrapper`, props.classNames?.rangeWrapper)}
+                style={props.styles?.rangeWrapper}
+              >
                 {props.presets && props.presets.length > 0 && (
-                  <div class={`${prefixCls}-presets`}>
+                  <div class={cls(`${prefixCls}-presets`, props.classNames?.presets)} style={props.styles?.presets}>
                     <ul>
                       {props.presets.map((preset) => (
-                        <li key={preset.label} class={`${prefixCls}-preset`} onClick={() => applyPreset(preset)}>
+                        <li
+                          key={preset.label}
+                          class={cls(`${prefixCls}-preset`, props.classNames?.preset)}
+                          style={props.styles?.preset}
+                          onClick={() => applyPreset(preset)}
+                        >
                           {preset.label}
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
-                <div class={`${prefixCls}-range-panels`}>
+                <div
+                  class={cls(`${prefixCls}-range-panels`, props.classNames?.rangePanels)}
+                  style={props.styles?.rangePanels}
+                >
                   {renderPanel(leftYear.value, leftMonth.value, 'left')}
                   {renderPanel(rightYear.value, rightMonth.value, 'right')}
                 </div>

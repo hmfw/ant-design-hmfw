@@ -320,10 +320,17 @@ export type {
 } from './tree'
 
 export { TimePicker } from './time-picker'
-export type { TimePickerProps, TimePickerValue } from './time-picker'
+export type { TimePickerProps, TimePickerValue, TimePickerClassNames, TimePickerStyles } from './time-picker'
 
 export { DatePicker } from './date-picker'
-export type { DatePickerProps, DatePickerMode, DatePickerValue, RangePickerValue } from './date-picker'
+export type {
+  DatePickerProps,
+  DatePickerMode,
+  DatePickerValue,
+  RangePickerValue,
+  DatePickerClassNames,
+  DatePickerStyles,
+} from './date-picker'
 
 export { Upload, UploadDragger } from './upload'
 export type {
@@ -347,7 +354,14 @@ export { AutoComplete } from './auto-complete'
 export type { AutoCompleteProps, AutoCompleteOption, AutoCompleteClassNames, AutoCompleteStyles } from './auto-complete'
 
 export { Cascader } from './cascader'
-export type { CascaderProps, CascaderOption, CascaderValue, CascaderExpandTrigger } from './cascader'
+export type {
+  CascaderProps,
+  CascaderOption,
+  CascaderValue,
+  CascaderExpandTrigger,
+  CascaderClassNames,
+  CascaderStyles,
+} from './cascader'
 
 // App
 export { App, useApp } from './app'
@@ -401,11 +415,17 @@ export type {
 
 // RangePicker
 export { RangePicker } from './range-picker'
-export type { RangePickerProps, RangeValue } from './range-picker'
+export type {
+  RangePickerProps,
+  RangeValue,
+  RangePreset,
+  RangePickerClassNames,
+  RangePickerStyles,
+} from './range-picker'
 
 // TreeSelect
 export { TreeSelect } from './tree-select'
-export type { TreeSelectProps, TreeSelectNode } from './tree-select'
+export type { TreeSelectProps, TreeSelectNode, TreeSelectClassNames, TreeSelectStyles } from './tree-select'
 
 export { Statistic, Countdown } from './statistic'
 export type { StatisticProps, CountdownProps, StatisticClassNames, StatisticStyles } from './statistic'
@@ -421,6 +441,8 @@ export type {
   CalendarHeaderConfig,
   CellRenderInfo as CalendarCellRenderInfo,
   DateCellRenderInfo as CalendarDateCellRenderInfo,
+  CalendarClassNames,
+  CalendarStyles,
 } from './calendar'
 
 // Install function for Vue.use()

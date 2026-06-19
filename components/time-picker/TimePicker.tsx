@@ -12,6 +12,7 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import type { TimePickerClassNames, TimePickerStyles } from './types'
 
 type Placement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 type Variant = 'outlined' | 'borderless' | 'filled' | 'underlined'
@@ -102,6 +103,8 @@ export const TimePicker = defineComponent({
     renderExtraFooter: Function as PropType<() => VNodeChild>,
     variant: { type: String as PropType<Variant>, default: 'outlined' },
     placement: { type: String as PropType<Placement>, default: 'bottomLeft' },
+    classNames: Object as PropType<TimePickerClassNames>,
+    styles: Object as PropType<TimePickerStyles>,
   },
   emits: ['update:value', 'change', 'openChange', 'focus', 'blur'],
   setup(props, { emit, expose }) {
@@ -430,15 +433,22 @@ export const TimePicker = defineComponent({
       <>
         <div
           ref={triggerRef}
-          class={cls(prefixCls, `${prefixCls}-${props.size}`, `${prefixCls}-${props.variant}`, {
-            [`${prefixCls}-open`]: isOpen.value,
-            [`${prefixCls}-disabled`]: props.disabled,
-            [`${prefixCls}-status-error`]: props.status === 'error',
-            [`${prefixCls}-status-warning`]: props.status === 'warning',
-          })}
+          class={cls(
+            prefixCls,
+            `${prefixCls}-${props.size}`,
+            `${prefixCls}-${props.variant}`,
+            {
+              [`${prefixCls}-open`]: isOpen.value,
+              [`${prefixCls}-disabled`]: props.disabled,
+              [`${prefixCls}-status-error`]: props.status === 'error',
+              [`${prefixCls}-status-warning`]: props.status === 'warning',
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
           onClick={open}
         >
-          <span class={`${prefixCls}-input`}>
+          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
             <input
               ref={inputRef}
               readonly
@@ -450,11 +460,17 @@ export const TimePicker = defineComponent({
               onBlur={() => emit('blur')}
             />
             {props.allowClear && displayValue.value && !props.disabled && (
-              <span class={`${prefixCls}-clear`} onClick={clearValue}>
+              <span
+                class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+                style={props.styles?.clear}
+                onClick={clearValue}
+              >
                 ✕
               </span>
             )}
-            <span class={`${prefixCls}-suffix`}>🕐</span>
+            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              🕐
+            </span>
           </span>
         </div>
 
@@ -462,28 +478,41 @@ export const TimePicker = defineComponent({
           <Teleport to="body">
             <div
               ref={panelRef}
-              class={`${prefixCls}-panel-container`}
+              class={cls(`${prefixCls}-panel-container`, props.classNames?.popup)}
               style={{
                 position: 'absolute',
                 top: `${panelPos.value.top}px`,
                 left: `${panelPos.value.left}px`,
                 zIndex: 1050,
+                ...props.styles?.popup,
               }}
             >
-              <div class={`${prefixCls}-panel`}>
-                <div class={`${prefixCls}-panel-inner`}>
+              <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
+                <div
+                  class={cls(`${prefixCls}-panel-inner`, props.classNames?.panelInner)}
+                  style={props.styles?.panelInner}
+                >
                   {/* Hour column */}
-                  <ul class={`${prefixCls}-panel-column`} ref={hourColRef}>
+                  <ul
+                    class={cls(`${prefixCls}-panel-column`, props.classNames?.column)}
+                    style={props.styles?.column}
+                    ref={hourColRef}
+                  >
                     {hours.value.map(({ value: h, disabled }) => (
                       <li
                         key={h}
                         data-value={h}
-                        class={cls(`${prefixCls}-panel-cell`, {
-                          [`${prefixCls}-panel-cell-selected`]: props.use12Hours
-                            ? (currentVal.value.h % 12 || 12) === h
-                            : currentVal.value.h === h,
-                          [`${prefixCls}-panel-cell-disabled`]: disabled,
-                        })}
+                        class={cls(
+                          `${prefixCls}-panel-cell`,
+                          {
+                            [`${prefixCls}-panel-cell-selected`]: props.use12Hours
+                              ? (currentVal.value.h % 12 || 12) === h
+                              : currentVal.value.h === h,
+                            [`${prefixCls}-panel-cell-disabled`]: disabled,
+                          },
+                          props.classNames?.cell,
+                        )}
+                        style={props.styles?.cell}
                         onClick={() => handleHourClick(h, disabled)}
                       >
                         {pad(h)}
@@ -491,15 +520,24 @@ export const TimePicker = defineComponent({
                     ))}
                   </ul>
                   {/* Minute column */}
-                  <ul class={`${prefixCls}-panel-column`} ref={minuteColRef}>
+                  <ul
+                    class={cls(`${prefixCls}-panel-column`, props.classNames?.column)}
+                    style={props.styles?.column}
+                    ref={minuteColRef}
+                  >
                     {minutes.value.map(({ value: m, disabled }) => (
                       <li
                         key={m}
                         data-value={m}
-                        class={cls(`${prefixCls}-panel-cell`, {
-                          [`${prefixCls}-panel-cell-selected`]: currentVal.value.m === m,
-                          [`${prefixCls}-panel-cell-disabled`]: disabled,
-                        })}
+                        class={cls(
+                          `${prefixCls}-panel-cell`,
+                          {
+                            [`${prefixCls}-panel-cell-selected`]: currentVal.value.m === m,
+                            [`${prefixCls}-panel-cell-disabled`]: disabled,
+                          },
+                          props.classNames?.cell,
+                        )}
+                        style={props.styles?.cell}
                         onClick={() => handleMinuteClick(m, disabled)}
                       >
                         {pad(m)}
@@ -508,15 +546,24 @@ export const TimePicker = defineComponent({
                   </ul>
                   {/* Second column */}
                   {showSec.value && (
-                    <ul class={`${prefixCls}-panel-column`} ref={secondColRef}>
+                    <ul
+                      class={cls(`${prefixCls}-panel-column`, props.classNames?.column)}
+                      style={props.styles?.column}
+                      ref={secondColRef}
+                    >
                       {seconds.value.map(({ value: s, disabled }) => (
                         <li
                           key={s}
                           data-value={s}
-                          class={cls(`${prefixCls}-panel-cell`, {
-                            [`${prefixCls}-panel-cell-selected`]: currentVal.value.s === s,
-                            [`${prefixCls}-panel-cell-disabled`]: disabled,
-                          })}
+                          class={cls(
+                            `${prefixCls}-panel-cell`,
+                            {
+                              [`${prefixCls}-panel-cell-selected`]: currentVal.value.s === s,
+                              [`${prefixCls}-panel-cell-disabled`]: disabled,
+                            },
+                            props.classNames?.cell,
+                          )}
+                          style={props.styles?.cell}
                           onClick={() => handleSecondClick(s, disabled)}
                         >
                           {pad(s)}
@@ -526,14 +573,23 @@ export const TimePicker = defineComponent({
                   )}
                   {/* AM/PM column */}
                   {props.use12Hours && (
-                    <ul class={`${prefixCls}-panel-column`} ref={periodColRef}>
+                    <ul
+                      class={cls(`${prefixCls}-panel-column`, props.classNames?.column)}
+                      style={props.styles?.column}
+                      ref={periodColRef}
+                    >
                       {periods.value.map(({ value: period }) => (
                         <li
                           key={period}
                           data-value={period}
-                          class={cls(`${prefixCls}-panel-cell`, {
-                            [`${prefixCls}-panel-cell-selected`]: currentPeriod.value === period,
-                          })}
+                          class={cls(
+                            `${prefixCls}-panel-cell`,
+                            {
+                              [`${prefixCls}-panel-cell-selected`]: currentPeriod.value === period,
+                            },
+                            props.classNames?.cell,
+                          )}
+                          style={props.styles?.cell}
                           onClick={() => handlePeriodClick(period)}
                         >
                           {period}
@@ -542,17 +598,34 @@ export const TimePicker = defineComponent({
                     </ul>
                   )}
                 </div>
-                <div class={`${prefixCls}-panel-footer`}>
-                  <div class={`${prefixCls}-panel-footer-extra`}>{props.renderExtraFooter?.()}</div>
-                  <div class={`${prefixCls}-panel-footer-actions`}>
+                <div class={cls(`${prefixCls}-panel-footer`, props.classNames?.footer)} style={props.styles?.footer}>
+                  <div
+                    class={cls(`${prefixCls}-panel-footer-extra`, props.classNames?.footerExtra)}
+                    style={props.styles?.footerExtra}
+                  >
+                    {props.renderExtraFooter?.()}
+                  </div>
+                  <div
+                    class={cls(`${prefixCls}-panel-footer-actions`, props.classNames?.footerActions)}
+                    style={props.styles?.footerActions}
+                  >
                     {props.showNow && (
-                      <button class={`${prefixCls}-panel-footer-btn`} onClick={handleNow}>
+                      <button
+                        class={cls(`${prefixCls}-panel-footer-btn`, props.classNames?.now)}
+                        style={props.styles?.now}
+                        onClick={handleNow}
+                      >
                         此刻
                       </button>
                     )}
                     {props.needConfirm && (
                       <button
-                        class={`${prefixCls}-panel-footer-btn ${prefixCls}-panel-footer-ok`}
+                        class={cls(
+                          `${prefixCls}-panel-footer-btn`,
+                          `${prefixCls}-panel-footer-ok`,
+                          props.classNames?.ok,
+                        )}
+                        style={props.styles?.ok}
                         onClick={confirmTime}
                       >
                         确定

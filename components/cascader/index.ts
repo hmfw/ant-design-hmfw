@@ -5,6 +5,8 @@ export type {
   CascaderValue,
   CascaderExpandTrigger,
   CascaderShowCheckedStrategy,
+  CascaderClassNames,
+  CascaderStyles,
 } from './types'
 
 // Constants for showCheckedStrategy

@@ -1424,6 +1424,232 @@
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/button"
     },
     {
+      "name": "Calendar",
+      "slug": "calendar",
+      "title": "Calendar 日历",
+      "description": "按照日历形式展示数据的容器。",
+      "whenToUse": "当数据是日期或按照日期划分时，例如日程、课表、价格日历等，农历等。目前支持年/月切换。",
+      "import": "import { Calendar } from 'ant-design-hmfw'",
+      "props": [
+        {
+          "section": "Calendar Props",
+          "name": "value(v-model)",
+          "description": "展示日期",
+          "type": "`string | Date`",
+          "default": "-"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "defaultValue",
+          "description": "默认展示日期",
+          "type": "`string | Date`",
+          "default": "当前日期"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "mode",
+          "description": "初始模式",
+          "type": "`'month' | 'year'`",
+          "default": "`'month'`"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "fullscreen",
+          "description": "是否全屏显示",
+          "type": "`boolean`",
+          "default": "`true`"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "disabledDate",
+          "description": "不可选择的日期",
+          "type": "`(date: Date) => boolean`",
+          "default": "-"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "validRange",
+          "description": "设置可以显示的日期范围",
+          "type": "`[Date, Date]`",
+          "default": "-"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "cellRender",
+          "description": "自定义单元格渲染（统一 API）",
+          "type": "`(current: Date, info: CellRenderInfo) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "dateCellRender",
+          "description": "自定义日期单元格内容（月视图）",
+          "type": "`(current: Date) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "monthCellRender",
+          "description": "自定义月份单元格内容（年视图）",
+          "type": "`(current: Date) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "headerRender",
+          "description": "自定义头部内容",
+          "type": "`(config: HeaderConfig) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "range",
+          "description": "是否开启范围选择模式",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "rangeValue",
+          "description": "选中的日期范围（range 模式）",
+          "type": "`[Date | null, Date | null]`",
+          "default": "-"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CalendarClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Calendar Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CalendarStyles`",
+          "default": "-"
+        },
+        {
+          "section": "CellRenderInfo",
+          "name": "originNode",
+          "description": "原始渲染节点",
+          "type": "`VNode`",
+          "default": ""
+        },
+        {
+          "section": "CellRenderInfo",
+          "name": "today",
+          "description": "当前日期",
+          "type": "`Date`",
+          "default": ""
+        },
+        {
+          "section": "CellRenderInfo",
+          "name": "type",
+          "description": "当前视图类型",
+          "type": "`'month' | 'year'`",
+          "default": ""
+        },
+        {
+          "section": "CellRenderInfo",
+          "name": "locale",
+          "description": "语言包",
+          "type": "`any`",
+          "default": ""
+        },
+        {
+          "section": "HeaderConfig",
+          "name": "value",
+          "description": "当前选中的日期",
+          "type": "`Date`",
+          "default": ""
+        },
+        {
+          "section": "HeaderConfig",
+          "name": "type",
+          "description": "当前视图类型",
+          "type": "`'month' | 'year'`",
+          "default": ""
+        },
+        {
+          "section": "HeaderConfig",
+          "name": "onChange",
+          "description": "日期变化回调",
+          "type": "`(date: Date) => void`",
+          "default": ""
+        },
+        {
+          "section": "HeaderConfig",
+          "name": "onTypeChange",
+          "description": "视图类型变化回调",
+          "type": "`(type: CalendarMode) => void`",
+          "default": ""
+        }
+      ],
+      "events": [
+        {
+          "section": "Calendar Events",
+          "name": "update:value",
+          "description": "日期变化时触发",
+          "params": "`(dateStr: string) => void`"
+        },
+        {
+          "section": "Calendar Events",
+          "name": "change",
+          "description": "日期变化时触发",
+          "params": "`(dateStr: string, date: Date) => void`"
+        },
+        {
+          "section": "Calendar Events",
+          "name": "select",
+          "description": "点击选择日期时触发",
+          "params": "`(dateStr: string, date: Date) => void`"
+        },
+        {
+          "section": "Calendar Events",
+          "name": "panelChange",
+          "description": "日期面板变化（年/月）时触发",
+          "params": "`(date: string | null, mode: string) => void`"
+        },
+        {
+          "section": "Calendar Events",
+          "name": "rangeChange",
+          "description": "范围选择变化时触发",
+          "params": "`(range: [string, string]) => void`"
+        },
+        {
+          "section": "Calendar Events",
+          "name": "update:rangeValue",
+          "description": "范围选择变化时触发",
+          "params": "`(range: [Date, Date]) => void`"
+        }
+      ],
+      "slots": [],
+      "demos": [
+        {
+          "title": "基础用法",
+          "description": "一个通用的日历面板，支持年/月切换。",
+          "code": "<template>\n  <Calendar v-model:value=\"value\" @select=\"onSelect\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Calendar } from 'ant-design-hmfw'\n\nconst value = ref<string>()\n\nconst onSelect = (dateStr: string) => {\n  console.log('选中日期：', dateStr)\n}\n</script>"
+        },
+        {
+          "title": "卡片模式",
+          "description": "用于嵌套在空间有限的容器中。",
+          "code": "<template>\n  <div style=\"width: 300px; border: 1px solid #d9d9d9; border-radius: 8px\">\n    <Calendar :fullscreen=\"false\" v-model:value=\"value\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Calendar } from 'ant-design-hmfw'\n\nconst value = ref<string>()\n</script>"
+        },
+        {
+          "title": "切换模式",
+          "description": "支持在月视图和年视图之间切换。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div>\n      <div style=\"margin-bottom: 8px\">月视图：</div>\n      <Calendar mode=\"month\" :fullscreen=\"false\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px\">年视图：</div>\n      <Calendar mode=\"year\" :fullscreen=\"false\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Calendar } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义头部和面板背景 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">自定义头部和面板背景：</div>\n      <Calendar\n        :fullscreen=\"false\"\n        :class-names=\"{\n          root: 'custom-calendar-root',\n          header: 'custom-header',\n          panel: 'custom-panel',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义日期单元格 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">自定义日期单元格：</div>\n      <Calendar\n        :fullscreen=\"false\"\n        :class-names=\"{\n          cell: 'custom-cell',\n          cellInner: 'custom-cell-inner',\n          date: 'custom-date',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义星期头 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">自定义星期头：</div>\n      <Calendar\n        :fullscreen=\"false\"\n        :class-names=\"{\n          weekdays: 'custom-weekdays',\n          weekdayCell: 'custom-weekday-cell',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：年视图自定义 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">年视图自定义：</div>\n      <Calendar\n        mode=\"year\"\n        :fullscreen=\"false\"\n        :class-names=\"{\n          yearPanel: 'custom-year-panel',\n          monthCell: 'custom-month-cell',\n          month: 'custom-month',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 styles -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">使用内联样式：</div>\n      <Calendar\n        :fullscreen=\"false\"\n        :styles=\"{\n          root: { borderRadius: '12px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' },\n          header: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', padding: '16px', borderRadius: '12px 12px 0 0' },\n          body: { padding: '12px' },\n          cell: { margin: '2px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Calendar } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 场景 1：自定义头部和面板 */\n:deep(.custom-calendar-root) {\n  border: 2px solid #e0e7ff;\n  border-radius: 12px;\n  overflow: hidden;\n}\n\n:deep(.custom-header) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 16px;\n  border-bottom: none;\n}\n\n:deep(.custom-header .hmfw-select-selector) {\n  background: rgba(255, 255, 255, 0.2);\n  border-color: rgba(255, 255, 255, 0.3);\n  color: white;\n}\n\n:deep(.custom-header .hmfw-select-arrow) {\n  color: white;\n}\n\n:deep(.custom-header .hmfw-radio-group) {\n  background: rgba(255, 255, 255, 0.15);\n  border-radius: 6px;\n  padding: 2px;\n}\n\n:deep(.custom-header .hmfw-radio-button-wrapper) {\n  background: transparent;\n  border-color: transparent;\n  color: white;\n}\n\n:deep(.custom-header .hmfw-radio-button-wrapper-checked) {\n  background: white;\n  color: #667eea;\n}\n\n:deep(.custom-panel) {\n  background: linear-gradient(to bottom, #f8faff 0%, #ffffff 100%);\n}\n\n/* 场景 2：自定义日期单元格 */\n:deep(.custom-cell) {\n  border-radius: 8px;\n  margin: 2px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-cell:hover) {\n  transform: scale(1.05);\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.custom-cell.hmfw-calendar-cell-selected .custom-cell-inner) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  border-radius: 6px;\n}\n\n:deep(.custom-cell.hmfw-calendar-cell-today .custom-cell-inner) {\n  border: 2px solid #667eea;\n  border-radius: 6px;\n}\n\n:deep(.custom-cell-inner) {\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-date) {\n  font-weight: 500;\n}\n\n/* 场景 3：自定义星期头 */\n:deep(.custom-weekdays) {\n  background: linear-gradient(to right, #f0f5ff, #e6f0ff);\n  border-radius: 8px;\n  margin-bottom: 8px;\n}\n\n:deep(.custom-weekday-cell) {\n  font-weight: 600;\n  color: #667eea;\n  padding: 12px 0;\n  text-transform: uppercase;\n  font-size: 12px;\n  letter-spacing: 0.5px;\n}\n\n/* 场景 4：年视图自定义 */\n:deep(.custom-year-panel) {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 12px;\n  padding: 16px;\n}\n\n:deep(.custom-month-cell) {\n  border-radius: 12px;\n  transition: all 0.3s;\n  border: 2px solid transparent;\n}\n\n:deep(.custom-month-cell:hover) {\n  border-color: #667eea;\n  transform: translateY(-4px);\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);\n}\n\n:deep(.custom-month-cell.hmfw-calendar-cell-selected) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-color: transparent;\n}\n\n:deep(.custom-month-cell.hmfw-calendar-cell-selected .custom-month) {\n  color: white;\n  font-weight: 600;\n}\n\n:deep(.custom-month) {\n  font-size: 16px;\n  padding: 16px 0;\n  transition: all 0.3s;\n}\n</style>"
+        }
+      ],
+      "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/calendar"
+    },
+    {
       "name": "Card",
       "slug": "card",
       "title": "Card 卡片",
@@ -1994,6 +2220,20 @@
           "default": "-"
         },
         {
+          "section": "Cascader Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CascaderClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Cascader Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CascaderStyles`",
+          "default": "-"
+        },
+        {
           "section": "CascaderOption",
           "name": "value",
           "description": "选项的值",
@@ -2106,6 +2346,11 @@
           "title": "高级功能",
           "description": "展示搜索高亮、showCheckedStrategy 和自定义 displayRender（支持 VNode）。",
           "code": "<template>\n  <div class=\"demo-cascader\">\n    <h3>搜索高亮</h3>\n    <Cascader\n      v-model:value=\"value1\"\n      :options=\"options\"\n      show-search\n      placeholder=\"搜索城市（高亮显示匹配结果）\"\n      style=\"width: 300px\"\n    />\n\n    <h3 style=\"margin-top: 24px\">showCheckedStrategy - SHOW_PARENT</h3>\n    <Cascader\n      v-model:value=\"value2\"\n      :options=\"options\"\n      multiple\n      show-checked-strategy=\"SHOW_PARENT\"\n      placeholder=\"只显示父节点\"\n      style=\"width: 400px\"\n    />\n    <div style=\"margin-top: 8px; color: #666\">当前选择: {{ JSON.stringify(value2) }}</div>\n\n    <h3 style=\"margin-top: 24px\">showCheckedStrategy - SHOW_CHILD</h3>\n    <Cascader\n      v-model:value=\"value3\"\n      :options=\"options\"\n      multiple\n      show-checked-strategy=\"SHOW_CHILD\"\n      placeholder=\"只显示子节点\"\n      style=\"width: 400px\"\n    />\n    <div style=\"margin-top: 8px; color: #666\">当前选择: {{ JSON.stringify(value3) }}</div>\n\n    <h3 style=\"margin-top: 24px\">自定义 displayRender (VNode)</h3>\n    <Cascader\n      v-model:value=\"value4\"\n      :options=\"options\"\n      :display-render=\"customRender\"\n      placeholder=\"自定义渲染\"\n      style=\"width: 300px\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Cascader } from 'ant-design-hmfw'\n\nconst options = [\n  {\n    value: 'zhejiang',\n    label: '浙江',\n    children: [\n      {\n        value: 'hangzhou',\n        label: '杭州',\n        children: [\n          { value: 'xihu', label: '西湖' },\n          { value: 'binjiang', label: '滨江' },\n        ],\n      },\n      { value: 'ningbo', label: '宁波' },\n    ],\n  },\n  {\n    value: 'jiangsu',\n    label: '江苏',\n    children: [\n      { value: 'nanjing', label: '南京' },\n      { value: 'suzhou', label: '苏州' },\n    ],\n  },\n]\n\nconst value1 = ref([])\nconst value2 = ref([['zhejiang'], ['zhejiang', 'hangzhou'], ['zhejiang', 'hangzhou', 'xihu'], ['jiangsu', 'nanjing']])\nconst value3 = ref([['zhejiang'], ['zhejiang', 'hangzhou'], ['zhejiang', 'hangzhou', 'xihu'], ['jiangsu', 'nanjing']])\nconst value4 = ref(['zhejiang', 'hangzhou', 'xihu'])\n\nconst customRender = (labels: string[]) => {\n  return h('span', { style: 'color: #1677ff; font-weight: 600;' }, labels.join(' → '))\n}\n</script>\n\n<style scoped>\n.demo-cascader h3 {\n  font-size: 14px;\n  font-weight: 600;\n  margin-bottom: 8px;\n}\n</style>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义选择器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选择器样式：</div>\n      <Cascader\n        :options=\"cityOptions\"\n        placeholder=\"请选择城市\"\n        :class-names=\"{\n          root: 'custom-cascader-root',\n          selector: 'custom-selector',\n          arrow: 'custom-arrow',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义下拉面板样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义下拉面板与菜单项：</div>\n      <Cascader\n        :options=\"cityOptions\"\n        placeholder=\"请选择城市\"\n        :class-names=\"{\n          dropdown: 'custom-dropdown',\n          menu: 'custom-menu',\n          menuItem: 'custom-menu-item',\n          menuItemContent: 'custom-menu-item-content',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：多选模式自定义标签样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">多选模式自定义标签：</div>\n      <Cascader\n        multiple\n        :options=\"cityOptions\"\n        placeholder=\"请选择多个城市\"\n        :default-value=\"[\n          ['zhejiang', 'hangzhou'],\n          ['jiangsu', 'nanjing'],\n        ]\"\n        :class-names=\"{\n          selectionItem: 'custom-tag',\n          selectionItemContent: 'custom-tag-content',\n          selectionItemRemove: 'custom-tag-remove',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：搜索模式高亮样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">搜索高亮自定义：</div>\n      <Cascader\n        show-search\n        :options=\"cityOptions\"\n        placeholder=\"搜索城市\"\n        :class-names=\"{\n          searchInput: 'custom-search-input',\n          menuItemHighlight: 'custom-highlight',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Cascader\n        :options=\"cityOptions\"\n        placeholder=\"请选择城市\"\n        :styles=\"{\n          root: { borderRadius: '20px', borderColor: '#722ed1' },\n          selector: { padding: '8px 16px' },\n          dropdown: { borderRadius: '12px', boxShadow: '0 6px 16px rgba(0, 0, 0, 0.12)' },\n          menuItem: { padding: '10px 16px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Cascader } from 'ant-design-hmfw'\n\nconst cityOptions = [\n  {\n    value: 'zhejiang',\n    label: '浙江',\n    children: [\n      { value: 'hangzhou', label: '杭州' },\n      { value: 'ningbo', label: '宁波' },\n    ],\n  },\n  {\n    value: 'jiangsu',\n    label: '江苏',\n    children: [\n      { value: 'nanjing', label: '南京' },\n      { value: 'suzhou', label: '苏州' },\n    ],\n  },\n  {\n    value: 'guangdong',\n    label: '广东',\n    children: [\n      { value: 'guangzhou', label: '广州' },\n      { value: 'shenzhen', label: '深圳' },\n    ],\n  },\n]\n</script>\n\n<style scoped>\n:deep(.custom-cascader-root) {\n  border: 2px solid transparent;\n  background: linear-gradient(white, white) padding-box,\n    linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-cascader-root:hover) {\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.custom-selector) {\n  padding: 6px 12px;\n}\n\n:deep(.custom-arrow) {\n  color: #764ba2;\n  transition: transform 0.3s;\n}\n\n:deep(.custom-tag) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  border: none;\n  border-radius: 6px;\n  padding: 4px 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-tag:hover) {\n  transform: translateY(-1px);\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.custom-tag-content) {\n  color: white;\n  font-weight: 500;\n}\n\n:deep(.custom-tag-remove) {\n  color: rgba(255, 255, 255, 0.8);\n  font-size: 12px;\n}\n\n:deep(.custom-tag-remove:hover) {\n  color: white;\n  background: rgba(255, 255, 255, 0.2);\n}\n\n:deep(.custom-search-input) {\n  border: 2px solid #722ed1;\n  border-radius: 6px;\n}\n\n:deep(.custom-search-input:focus) {\n  border-color: #531dab;\n  box-shadow: 0 0 0 2px rgba(114, 46, 209, 0.1);\n}\n\n:deep(.custom-highlight) {\n  color: #d4380d;\n  font-weight: 600;\n  background: #fff2e8;\n  padding: 0 2px;\n  border-radius: 2px;\n}\n</style>\n\n<style>\n/* 弹层通过 Teleport 渲染，必须使用 :global() */\n:global(.custom-dropdown) {\n  border-radius: 12px;\n  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);\n  border: 2px solid #f0f0f0;\n}\n\n:global(.custom-menu) {\n  background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);\n}\n\n:global(.custom-menu-item) {\n  border-radius: 6px;\n  margin: 4px 8px;\n  transition: all 0.3s;\n}\n\n:global(.custom-menu-item:hover) {\n  background: linear-gradient(135deg, #e6f4ff 0%, #f0e6ff 100%);\n  transform: translateX(4px);\n}\n\n:global(.custom-menu-item-content) {\n  font-weight: 500;\n  color: #262626;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/cascader"
@@ -3048,6 +3293,20 @@
           "default": "-"
         },
         {
+          "section": "DatePicker Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`DatePickerClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "DatePicker Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`DatePickerStyles`",
+          "default": "-"
+        },
+        {
           "section": "PresetItem",
           "name": "label",
           "description": "预设项显示文本",
@@ -3119,6 +3378,11 @@
           "title": "限制日期范围",
           "description": "通过 `minDate` 和 `maxDate` 限制可选日期范围。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; width: 300px\">\n    <DatePicker v-model:value=\"date\" :min-date=\"minDate\" :max-date=\"maxDate\" placeholder=\"只能选择本月\" />\n    <p>选中日期：{{ date }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue'\nimport { DatePicker } from 'ant-design-hmfw'\n\nconst date = ref('')\n\nconst minDate = computed(() => {\n  const d = new Date()\n  d.setDate(1)\n  return d.toISOString().split('T')[0]\n})\n\nconst maxDate = computed(() => {\n  const d = new Date()\n  d.setMonth(d.getMonth() + 1, 0)\n  return d.toISOString().split('T')[0]\n})\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义触发器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">渐变触发器：</div>\n      <DatePicker\n        placeholder=\"选择日期\"\n        :class-names=\"{\n          root: 'custom-root',\n          input: 'custom-input',\n          suffix: 'custom-suffix',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义弹层与面板 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义弹层面板：</div>\n      <DatePicker\n        placeholder=\"选择日期\"\n        :class-names=\"{\n          popup: 'custom-popup',\n          panel: 'custom-panel',\n          panelHeader: 'custom-header',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义日期单元格 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义日期单元格：</div>\n      <DatePicker\n        placeholder=\"选择日期\"\n        :class-names=\"{\n          day: 'custom-day',\n          weekday: 'custom-weekday',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：带时间选择的样式定制 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">带时间选择：</div>\n      <DatePicker\n        placeholder=\"选择日期时间\"\n        :show-time=\"true\"\n        :class-names=\"{\n          root: 'custom-datetime-root',\n          timePanel: 'custom-time-panel',\n          timeColumn: 'custom-time-column',\n          timeCell: 'custom-time-cell',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <DatePicker\n        placeholder=\"选择日期\"\n        :styles=\"{\n          root: { borderRadius: '20px', borderColor: '#722ed1' },\n          input: { color: '#722ed1', fontWeight: 500 },\n          popup: { borderRadius: '16px' },\n          panel: { boxShadow: '0 8px 24px rgba(114, 46, 209, 0.15)' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { DatePicker } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);\n  transform: translateY(-2px);\n}\n\n:deep(.custom-input) {\n  color: white;\n}\n\n:deep(.custom-input::placeholder) {\n  color: rgba(255, 255, 255, 0.7);\n}\n\n:deep(.custom-suffix) {\n  color: white;\n  font-size: 16px;\n}\n\n:deep(.custom-datetime-root) {\n  border-color: #52c41a;\n  border-width: 2px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-datetime-root:hover) {\n  border-color: #73d13d;\n  box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.1);\n}\n</style>\n\n<style>\n/* 弹层组件通过 Teleport 渲染到 body，必须使用 :global() */\n:global(.custom-popup) {\n  border-radius: 12px;\n  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.2);\n}\n\n:global(.custom-panel) {\n  background: linear-gradient(180deg, #f0f5ff 0%, #ffffff 100%);\n}\n\n:global(.custom-header) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  border-radius: 12px 12px 0 0;\n  padding: 12px 16px;\n}\n\n:global(.custom-day) {\n  border-radius: 8px;\n  font-weight: 500;\n  transition: all 0.2s;\n}\n\n:global(.custom-day:hover) {\n  transform: scale(1.1);\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);\n}\n\n:global(.custom-weekday) {\n  color: #722ed1;\n  font-weight: 600;\n  font-size: 12px;\n}\n\n:global(.custom-time-panel) {\n  border-left: 2px solid #52c41a;\n}\n\n:global(.custom-time-column) {\n  background: #f6ffed;\n}\n\n:global(.custom-time-cell) {\n  border-radius: 4px;\n  transition: all 0.2s;\n}\n\n:global(.custom-time-cell:hover) {\n  background: linear-gradient(135deg, #95de64 0%, #52c41a 100%);\n  color: white;\n  transform: translateX(4px);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/date-picker"
@@ -6732,7 +6996,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义菜单项样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义菜单项样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['1']\"\n        :items=\"basicItems\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemIcon: 'custom-icon',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义子菜单样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义子菜单样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-open-keys=\"['sub1']\"\n        :default-selected-keys=\"['1']\"\n        :items=\"submenuItems\"\n        :class-names=\"{\n          submenu: 'custom-submenu',\n          submenuTitle: 'custom-submenu-title',\n          submenuArrow: 'custom-arrow',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义分组和分割线 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义分组和分割线：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['1']\"\n        :items=\"groupItems\"\n        :class-names=\"{\n          itemGroup: 'custom-group',\n          itemGroupTitle: 'custom-group-title',\n          divider: 'custom-divider',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['2']\"\n        :items=\"basicItems\"\n        :styles=\"{\n          root: { border: '2px solid #722ed1', borderRadius: '12px' },\n          item: { margin: '8px 12px' },\n          itemSelected: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: '#fff', fontWeight: 'bold' },\n          itemIcon: { fontSize: '16px' },\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 5：水平菜单自定义样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">水平菜单自定义：</div>\n      <Menu\n        mode=\"horizontal\"\n        :default-selected-keys=\"['mail']\"\n        :items=\"horizontalItems\"\n        :class-names=\"{\n          root: 'custom-horizontal',\n          item: 'custom-horizontal-item',\n          itemSelected: 'custom-horizontal-selected',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Menu } from 'ant-design-hmfw'\n\nconst basicItems = [\n  { key: '1', label: '导航一', icon: 'mail' },\n  { key: '2', label: '导航二', icon: 'appstore' },\n  { key: '3', label: '导航三', icon: 'setting' },\n]\n\nconst submenuItems = [\n  { key: '1', label: '选项 1', icon: 'mail' },\n  {\n    key: 'sub1',\n    label: '子菜单',\n    icon: 'appstore',\n    children: [\n      { key: '2', label: '选项 2' },\n      { key: '3', label: '选项 3' },\n    ],\n  },\n  { key: '4', label: '选项 4', icon: 'setting' },\n]\n\nconst groupItems = [\n  {\n    type: 'group',\n    label: '分组 1',\n    children: [\n      { key: '1', label: '选项 1', icon: 'user' },\n      { key: '2', label: '选项 2', icon: 'team' },\n    ],\n  },\n  { type: 'divider' },\n  {\n    type: 'group',\n    label: '分组 2',\n    children: [\n      { key: '3', label: '选项 3', icon: 'file' },\n      { key: '4', label: '选项 4', icon: 'setting' },\n    ],\n  },\n]\n\nconst horizontalItems = [\n  { key: 'mail', label: '邮件', icon: 'mail' },\n  { key: 'app', label: '应用', icon: 'appstore' },\n  { key: 'setting', label: '设置', icon: 'setting' },\n]\n</script>\n\n<style scoped>\n/* 自定义菜单项 */\n:deep(.custom-item) {\n  border-left: 3px solid transparent;\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  border-left-color: #1677ff;\n  transform: translateX(4px);\n}\n\n:deep(.custom-item-selected) {\n  background: linear-gradient(90deg, #e6f4ff 0%, transparent 100%) !important;\n  border-left-color: #1677ff !important;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  color: #1677ff;\n}\n\n/* 自定义子菜单 */\n:deep(.custom-submenu) {\n  margin: 8px 0;\n}\n\n:deep(.custom-submenu-title) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border-radius: 8px;\n  font-weight: 600;\n}\n\n:deep(.custom-submenu-title:hover) {\n  background: linear-gradient(135deg, #d6e4ff 0%, #bae0ff 100%) !important;\n}\n\n:deep(.custom-arrow) {\n  color: #1677ff;\n  font-size: 12px;\n}\n\n/* 自定义分组 */\n:deep(.custom-group) {\n  padding: 8px 0;\n}\n\n:deep(.custom-group-title) {\n  background: linear-gradient(90deg, #1677ff 0%, transparent 100%);\n  color: #fff;\n  font-weight: bold;\n  border-radius: 4px;\n  padding-left: 20px;\n}\n\n:deep(.custom-divider) {\n  background: linear-gradient(90deg, #1677ff 0%, #52c41a 100%);\n  height: 2px;\n  margin: 12px 8px;\n}\n\n/* 自定义水平菜单 */\n:deep(.custom-horizontal) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 8px;\n  border: none;\n  padding: 0 16px;\n}\n\n:deep(.custom-horizontal-item) {\n  color: rgba(255, 255, 255, 0.85);\n  border-bottom: 2px solid transparent;\n  transition: all 0.3s;\n}\n\n:deep(.custom-horizontal-item:hover) {\n  color: #fff;\n  background: rgba(255, 255, 255, 0.1);\n}\n\n:deep(.custom-horizontal-selected) {\n  color: #fff !important;\n  border-bottom-color: #fff !important;\n  background: rgba(255, 255, 255, 0.15);\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义菜单项样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义菜单项样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['1']\"\n        :items=\"basicItems\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemIcon: 'custom-icon',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义子菜单样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义子菜单样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-open-keys=\"['sub1']\"\n        :default-selected-keys=\"['1']\"\n        :items=\"submenuItems\"\n        :class-names=\"{\n          submenu: 'custom-submenu',\n          submenuTitle: 'custom-submenu-title',\n          submenuArrow: 'custom-arrow',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义分组和分割线 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义分组和分割线：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['1']\"\n        :items=\"groupItems\"\n        :class-names=\"{\n          itemGroup: 'custom-group',\n          itemGroupTitle: 'custom-group-title',\n          divider: 'custom-divider',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['2']\"\n        :items=\"basicItems\"\n        :styles=\"{\n          root: { border: '2px solid #722ed1', borderRadius: '12px' },\n          item: { margin: '8px 12px' },\n          itemSelected: {\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            color: '#fff',\n            fontWeight: 'bold',\n          },\n          itemIcon: { fontSize: '16px' },\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 5：水平菜单自定义样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">水平菜单自定义：</div>\n      <Menu\n        mode=\"horizontal\"\n        :default-selected-keys=\"['mail']\"\n        :items=\"horizontalItems\"\n        :class-names=\"{\n          root: 'custom-horizontal',\n          item: 'custom-horizontal-item',\n          itemSelected: 'custom-horizontal-selected',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Menu } from 'ant-design-hmfw'\n\nconst basicItems = [\n  { key: '1', label: '导航一', icon: 'mail' },\n  { key: '2', label: '导航二', icon: 'appstore' },\n  { key: '3', label: '导航三', icon: 'setting' },\n]\n\nconst submenuItems = [\n  { key: '1', label: '选项 1', icon: 'mail' },\n  {\n    key: 'sub1',\n    label: '子菜单',\n    icon: 'appstore',\n    children: [\n      { key: '2', label: '选项 2' },\n      { key: '3', label: '选项 3' },\n    ],\n  },\n  { key: '4', label: '选项 4', icon: 'setting' },\n]\n\nconst groupItems = [\n  {\n    type: 'group',\n    label: '分组 1',\n    children: [\n      { key: '1', label: '选项 1', icon: 'user' },\n      { key: '2', label: '选项 2', icon: 'team' },\n    ],\n  },\n  { type: 'divider' },\n  {\n    type: 'group',\n    label: '分组 2',\n    children: [\n      { key: '3', label: '选项 3', icon: 'file' },\n      { key: '4', label: '选项 4', icon: 'setting' },\n    ],\n  },\n]\n\nconst horizontalItems = [\n  { key: 'mail', label: '邮件', icon: 'mail' },\n  { key: 'app', label: '应用', icon: 'appstore' },\n  { key: 'setting', label: '设置', icon: 'setting' },\n]\n</script>\n\n<style scoped>\n/* 自定义菜单项 */\n:deep(.custom-item) {\n  border-left: 3px solid transparent;\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  border-left-color: #1677ff;\n  transform: translateX(4px);\n}\n\n:deep(.custom-item-selected) {\n  background: linear-gradient(90deg, #e6f4ff 0%, transparent 100%) !important;\n  border-left-color: #1677ff !important;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  color: #1677ff;\n}\n\n/* 自定义子菜单 */\n:deep(.custom-submenu) {\n  margin: 8px 0;\n}\n\n:deep(.custom-submenu-title) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border-radius: 8px;\n  font-weight: 600;\n}\n\n:deep(.custom-submenu-title:hover) {\n  background: linear-gradient(135deg, #d6e4ff 0%, #bae0ff 100%) !important;\n}\n\n:deep(.custom-arrow) {\n  color: #1677ff;\n  font-size: 12px;\n}\n\n/* 自定义分组 */\n:deep(.custom-group) {\n  padding: 8px 0;\n}\n\n:deep(.custom-group-title) {\n  background: linear-gradient(90deg, #1677ff 0%, transparent 100%);\n  color: #fff;\n  font-weight: bold;\n  border-radius: 4px;\n  padding-left: 20px;\n}\n\n:deep(.custom-divider) {\n  background: linear-gradient(90deg, #1677ff 0%, #52c41a 100%);\n  height: 2px;\n  margin: 12px 8px;\n}\n\n/* 自定义水平菜单 */\n:deep(.custom-horizontal) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 8px;\n  border: none;\n  padding: 0 16px;\n}\n\n:deep(.custom-horizontal-item) {\n  color: rgba(255, 255, 255, 0.85);\n  border-bottom: 2px solid transparent;\n  transition: all 0.3s;\n}\n\n:deep(.custom-horizontal-item:hover) {\n  color: #fff;\n  background: rgba(255, 255, 255, 0.1);\n}\n\n:deep(.custom-horizontal-selected) {\n  color: #fff !important;\n  border-bottom-color: #fff !important;\n  background: rgba(255, 255, 255, 0.15);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/menu"
@@ -8885,6 +9149,20 @@
           "description": "受控的弹层显隐",
           "type": "`boolean`",
           "default": "-"
+        },
+        {
+          "section": "RangePicker Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`RangePickerClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "RangePicker Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`RangePickerStyles`",
+          "default": "-"
         }
       ],
       "events": [
@@ -8923,6 +9201,11 @@
           "title": "禁用",
           "description": "`disabled` 传布尔值禁用整个控件，传 `[boolean, boolean]` 可分别禁用起止输入框。",
           "code": "<template>\n  <Space direction=\"vertical\">\n    <RangePicker :disabled=\"[true, false]\" />\n    <RangePicker disabled :value=\"['2024-01-01', '2024-01-31']\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { RangePicker, Space } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义输入框与分隔符 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义输入框与分隔符样式：</div>\n      <RangePicker\n        :class-names=\"{\n          input: 'custom-input',\n          separator: 'custom-separator',\n          suffix: 'custom-suffix',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义弹层与预设范围 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义弹层与预设范围：</div>\n      <RangePicker\n        :presets=\"presets\"\n        :class-names=\"{\n          popup: 'custom-popup',\n          presets: 'custom-presets',\n          preset: 'custom-preset',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义日期单元格 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义日期单元格与范围高亮：</div>\n      <RangePicker\n        :class-names=\"{\n          day: 'custom-day',\n          dayInRange: 'custom-day-in-range',\n          dayRangeStart: 'custom-day-range-start',\n          dayRangeEnd: 'custom-day-range-end',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <RangePicker\n        :styles=\"{\n          root: { borderRadius: '12px' },\n          input: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' },\n          separator: { color: 'white', fontWeight: 'bold' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合定制 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合定制（渐变边框 + 高亮范围）：</div>\n      <RangePicker\n        :presets=\"presets\"\n        :class-names=\"{\n          root: 'combined-root',\n          input: 'combined-input',\n          popup: 'combined-popup',\n          dayInRange: 'combined-day-in-range',\n          dayRangeStart: 'combined-day-range-start',\n          dayRangeEnd: 'combined-day-range-end',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { RangePicker } from 'ant-design-hmfw'\n\nconst presets = [\n  { label: '最近 7 天', value: () => {\n    const end = new Date()\n    const start = new Date()\n    start.setDate(start.getDate() - 6)\n    return [start.toISOString().split('T')[0], end.toISOString().split('T')[0]] as [string, string]\n  }},\n  { label: '最近 30 天', value: () => {\n    const end = new Date()\n    const start = new Date()\n    start.setDate(start.getDate() - 29)\n    return [start.toISOString().split('T')[0], end.toISOString().split('T')[0]] as [string, string]\n  }},\n  { label: '本月', value: () => {\n    const now = new Date()\n    const start = new Date(now.getFullYear(), now.getMonth(), 1)\n    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0)\n    return [start.toISOString().split('T')[0], end.toISOString().split('T')[0]] as [string, string]\n  }},\n]\n</script>\n\n<style>\n/* 场景 1：弹层使用 :global() */\n.custom-popup {\n  border-radius: 12px !important;\n  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3) !important;\n}\n</style>\n\n<style scoped>\n/* 场景 1：输入框与分隔符 */\n:deep(.custom-input) {\n  background: linear-gradient(135deg, #e6f4ff 0%, #f0f5ff 100%);\n  border-color: #1890ff;\n  transition: all 0.3s;\n}\n\n:deep(.custom-input:hover) {\n  border-color: #40a9ff;\n  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);\n}\n\n:deep(.custom-separator) {\n  color: #1890ff;\n  font-weight: bold;\n  font-size: 16px;\n}\n\n:deep(.custom-suffix) {\n  color: #1890ff;\n  transition: transform 0.3s;\n}\n\n:deep(.custom-suffix:hover) {\n  transform: scale(1.2);\n}\n\n/* 场景 2：预设范围（弹层必须用 :global） */\n:deep(.custom-presets) {\n  background: linear-gradient(to bottom, #f0f5ff, #e6f4ff);\n  border-right-color: #1890ff;\n}\n\n:deep(.custom-preset) {\n  font-weight: 500;\n  transition: all 0.3s;\n}\n\n:deep(.custom-preset:hover) {\n  background: #1890ff !important;\n  color: white;\n  transform: translateX(4px);\n}\n\n/* 场景 3：日期单元格 */\n:deep(.custom-day) {\n  font-weight: 500;\n  transition: all 0.3s;\n}\n\n:deep(.custom-day:hover) {\n  transform: scale(1.1);\n  box-shadow: 0 2px 6px rgba(24, 144, 255, 0.3);\n}\n\n:deep(.custom-day-in-range) {\n  background: linear-gradient(135deg, #e6f4ff 0%, #bae0ff 100%) !important;\n}\n\n:deep(.custom-day-range-start) {\n  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%) !important;\n  color: white !important;\n  font-weight: bold;\n}\n\n:deep(.custom-day-range-end) {\n  background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%) !important;\n  color: white !important;\n  font-weight: bold;\n}\n\n/* 场景 5：组合定制 */\n:deep(.combined-root) {\n  border: 2px solid transparent;\n  background-image: linear-gradient(white, white),\n    linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  background-origin: border-box;\n  background-clip: padding-box, border-box;\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.combined-root:hover) {\n  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.combined-input) {\n  font-weight: 500;\n}\n\n:deep(.combined-day-in-range) {\n  background: linear-gradient(135deg, #f0e6ff 0%, #e6d9ff 100%) !important;\n}\n\n:deep(.combined-day-range-start),\n:deep(.combined-day-range-end) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;\n  color: white !important;\n  font-weight: bold;\n  position: relative;\n}\n\n:deep(.combined-day-range-start::after),\n:deep(.combined-day-range-end::after) {\n  content: '';\n  position: absolute;\n  inset: 0;\n  border-radius: inherit;\n  background: rgba(255, 255, 255, 0.2);\n  opacity: 0;\n  transition: opacity 0.3s;\n}\n\n:deep(.combined-day-range-start:hover::after),\n:deep(.combined-day-range-end:hover::after) {\n  opacity: 1;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/range-picker"
@@ -12120,6 +12403,20 @@
           "description": "浮层弹出位置",
           "type": "`'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'`",
           "default": "`'bottomLeft'`"
+        },
+        {
+          "section": "TimePicker Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TimePickerClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "TimePicker Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TimePickerStyles`",
+          "default": "-"
         }
       ],
       "events": [
@@ -12185,6 +12482,11 @@
           "title": "变体",
           "description": "通过 `variant` 设置不同的输入框样式。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <div>\n      <p style=\"margin-bottom: 4px\">Outlined（默认）：</p>\n      <TimePicker v-model:value=\"time1\" variant=\"outlined\" placeholder=\"Outlined\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px\">Filled：</p>\n      <TimePicker v-model:value=\"time2\" variant=\"filled\" placeholder=\"Filled\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px\">Borderless：</p>\n      <TimePicker v-model:value=\"time3\" variant=\"borderless\" placeholder=\"Borderless\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px\">Underlined：</p>\n      <TimePicker v-model:value=\"time4\" variant=\"underlined\" placeholder=\"Underlined\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TimePicker } from 'ant-design-hmfw'\n\nconst time1 = ref('')\nconst time2 = ref('')\nconst time3 = ref('')\nconst time4 = ref('')\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义触发器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义触发器与输入区域：</div>\n      <TimePicker\n        placeholder=\"选择时间\"\n        :class-names=\"{\n          root: 'custom-trigger',\n          input: 'custom-input',\n          suffix: 'custom-suffix',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义弹层与面板 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义弹层与时间列：</div>\n      <TimePicker\n        placeholder=\"选择时间\"\n        :class-names=\"{\n          popup: 'custom-popup',\n          panel: 'custom-panel',\n          column: 'custom-column',\n          cell: 'custom-cell',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义底部按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义底部按钮样式：</div>\n      <TimePicker\n        placeholder=\"选择时间\"\n        :need-confirm=\"true\"\n        :class-names=\"{\n          footer: 'custom-footer',\n          now: 'custom-now-btn',\n          ok: 'custom-ok-btn',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式对象：</div>\n      <TimePicker\n        placeholder=\"选择时间\"\n        :styles=\"{\n          root: { borderRadius: '20px', borderColor: '#722ed1' },\n          input: { color: '#722ed1', fontWeight: 500 },\n          suffix: { color: '#722ed1', fontSize: '18px' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames + styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合 classNames 与 styles：</div>\n      <TimePicker\n        placeholder=\"选择时间\"\n        :need-confirm=\"true\"\n        :class-names=\"{\n          root: 'gradient-trigger',\n          popup: 'gradient-popup',\n          ok: 'gradient-ok',\n        }\"\n        :styles=\"{\n          panel: { borderRadius: '12px' },\n          cell: { fontWeight: 500 },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { TimePicker } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 场景 1：触发器渐变 */\n:deep(.custom-trigger) {\n  border: 2px solid transparent;\n  background: linear-gradient(white, white) padding-box,\n    linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;\n  transition: all 0.3s;\n}\n\n:deep(.custom-trigger:hover) {\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.custom-input) {\n  color: #667eea;\n  font-weight: 500;\n}\n\n:deep(.custom-suffix) {\n  color: #764ba2;\n  font-size: 18px;\n}\n\n/* 场景 5：整体渐变主题 */\n:deep(.gradient-trigger) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  color: white;\n  transition: all 0.3s;\n}\n\n:deep(.gradient-trigger:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.gradient-trigger .hmfw-time-picker-input) {\n  color: white;\n}\n\n:deep(.gradient-trigger .hmfw-time-picker-suffix) {\n  color: white;\n}\n\n:deep(.gradient-ok) {\n  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%) !important;\n  border: none !important;\n  color: white !important;\n  font-weight: 500;\n  transition: all 0.3s;\n}\n\n:deep(.gradient-ok:hover) {\n  transform: scale(1.05);\n  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.4);\n}\n</style>\n\n<style>\n/* 弹层通过 Teleport 渲染到 body，必须使用全局样式（非 scoped） */\n\n/* 场景 2：弹层与面板自定义 */\n.custom-popup {\n  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2) !important;\n}\n\n.custom-panel {\n  border-radius: 12px;\n  background: linear-gradient(to bottom, #f0f5ff 0%, #ffffff 100%);\n}\n\n.custom-column {\n  scrollbar-width: thin;\n  scrollbar-color: #667eea #f0f5ff;\n}\n\n.custom-cell {\n  transition: all 0.3s;\n  border-radius: 4px;\n  margin: 2px 4px;\n}\n\n.custom-cell:hover {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;\n  color: white !important;\n  transform: scale(1.05);\n}\n\n.custom-cell.hmfw-time-picker-panel-cell-selected {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%) !important;\n  color: white !important;\n  font-weight: 600;\n}\n\n/* 场景 3：底部按钮自定义 */\n.custom-footer {\n  background: #f6ffed;\n  border-top: 2px solid #b7eb8f;\n}\n\n.custom-now-btn {\n  color: #52c41a;\n  font-weight: 500;\n  transition: all 0.3s;\n}\n\n.custom-now-btn:hover {\n  background: #d9f7be !important;\n  transform: translateX(2px);\n}\n\n.custom-ok-btn {\n  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%) !important;\n  border: none !important;\n  color: white !important;\n  font-weight: 500;\n  transition: all 0.3s;\n}\n\n.custom-ok-btn:hover {\n  transform: scale(1.05);\n  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.4);\n}\n\n/* 场景 5：渐变弹层 */\n.gradient-popup {\n  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3) !important;\n}\n\n.gradient-popup .hmfw-time-picker-panel {\n  border: 2px solid transparent;\n  background: linear-gradient(white, white) padding-box,\n    linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;\n}\n\n.gradient-popup .hmfw-time-picker-panel-cell:hover {\n  background: rgba(102, 126, 234, 0.1) !important;\n  color: #667eea !important;\n}\n\n.gradient-popup .hmfw-time-picker-panel-cell-selected {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;\n  color: white !important;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/time-picker"
@@ -13698,6 +14000,20 @@
           "default": "-"
         },
         {
+          "section": "TreeSelect Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TreeSelectClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "TreeSelect Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TreeSelectStyles`",
+          "default": "-"
+        },
+        {
           "section": "TreeSelectNode",
           "name": "value",
           "description": "节点值",
@@ -13812,6 +14128,11 @@
           "title": "搜索",
           "description": "",
           "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 300px\">\n    <TreeSelect v-model:value=\"value\" :tree-data=\"treeData\" show-search placeholder=\"搜索节点\" style=\"width: 100%\" />\n    <span>选中：{{ value }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TreeSelect, Space } from 'ant-design-hmfw'\nimport type { TreeSelectNode } from 'ant-design-hmfw'\n\nconst value = ref<string>()\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'parent1',\n    label: '父节点 1',\n    children: [\n      { value: 'child1-1', label: '子节点 1-1' },\n      { value: 'child1-2', label: '子节点 1-2' },\n    ],\n  },\n  {\n    value: 'parent2',\n    label: '父节点 2',\n    children: [\n      { value: 'child2-1', label: '子节点 2-1' },\n      { value: 'child2-2', label: '子节点 2-2' },\n    ],\n  },\n]\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义选择器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选择器容器（渐变背景）：</div>\n      <TreeSelect\n        v-model:value=\"value1\"\n        :tree-data=\"treeData\"\n        placeholder=\"请选择部门\"\n        allow-clear\n        :class-names=\"{\n          root: 'custom-selector-root',\n          selector: 'custom-selector',\n          arrow: 'custom-arrow',\n        }\"\n        style=\"width: 280px\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义下拉面板与树节点 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义下拉面板与树节点样式：</div>\n      <TreeSelect\n        v-model:value=\"value2\"\n        :tree-data=\"treeData\"\n        placeholder=\"选择分类\"\n        tree-default-expand-all\n        :class-names=\"{\n          dropdown: 'custom-dropdown',\n          treeNode: 'custom-tree-node',\n          treeNodeContent: 'custom-tree-node-content',\n        }\"\n        style=\"width: 280px\"\n      />\n    </div>\n\n    <!-- 场景 3：多选模式自定义标签样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">多选模式自定义标签：</div>\n      <TreeSelect\n        v-model:value=\"value3\"\n        :tree-data=\"treeData\"\n        multiple\n        placeholder=\"选择多个部门\"\n        allow-clear\n        :class-names=\"{\n          selector: 'custom-multi-selector',\n          item: 'custom-multi-item',\n        }\"\n        style=\"width: 320px\"\n      />\n    </div>\n\n    <!-- 场景 4：可勾选模式自定义复选框 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">可勾选模式自定义复选框：</div>\n      <TreeSelect\n        v-model:value=\"value4\"\n        :tree-data=\"treeData\"\n        tree-checkable\n        placeholder=\"勾选节点\"\n        show-checked-strategy=\"SHOW_PARENT\"\n        :class-names=\"{\n          treeCheckbox: 'custom-checkbox',\n          treeSwitcher: 'custom-switcher',\n        }\"\n        style=\"width: 280px\"\n      />\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用 styles 内联样式：</div>\n      <TreeSelect\n        v-model:value=\"value5\"\n        :tree-data=\"treeData\"\n        placeholder=\"内联样式示例\"\n        allow-clear\n        :styles=\"{\n          root: { borderRadius: '12px', borderColor: '#52c41a' },\n          selector: { background: 'linear-gradient(to right, #f0f9ff, #e0f2fe)' },\n          dropdown: { borderRadius: '12px', boxShadow: '0 6px 20px rgba(82, 196, 26, 0.2)' },\n          treeNode: { padding: '6px 8px' },\n        }\"\n        style=\"width: 280px\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TreeSelect } from 'ant-design-hmfw'\nimport type { TreeSelectNode } from 'ant-design-hmfw'\n\nconst value1 = ref<string | number>()\nconst value2 = ref<string | number>()\nconst value3 = ref<(string | number)[]>([])\nconst value4 = ref<(string | number)[]>([])\nconst value5 = ref<string | number>()\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'engineering',\n    label: '工程部',\n    children: [\n      { value: 'frontend', label: '前端团队' },\n      { value: 'backend', label: '后端团队' },\n      { value: 'mobile', label: '移动端团队' },\n    ],\n  },\n  {\n    value: 'product',\n    label: '产品部',\n    children: [\n      { value: 'pm', label: '产品经理' },\n      { value: 'design', label: '设计师' },\n    ],\n  },\n  {\n    value: 'marketing',\n    label: '市场部',\n    children: [\n      { value: 'sales', label: '销售团队' },\n      { value: 'promotion', label: '推广团队' },\n    ],\n  },\n]\n</script>\n\n<style scoped>\n/* 场景 1：渐变选择器 */\n:deep(.custom-selector-root) {\n  border-color: #722ed1;\n  transition: all 0.3s;\n}\n\n:deep(.custom-selector-root:hover) {\n  border-color: #9254de;\n  box-shadow: 0 2px 8px rgba(114, 46, 209, 0.2);\n}\n\n:deep(.custom-selector) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n}\n\n:deep(.custom-arrow) {\n  color: white;\n}\n\n/* 场景 2：下拉面板与树节点（使用 :global，因为通过 Teleport 渲染） */\n:global(.custom-dropdown) {\n  border-radius: 12px;\n  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);\n  border: 2px solid #1677ff;\n}\n\n:global(.custom-tree-node) {\n  transition: all 0.3s;\n}\n\n:global(.custom-tree-node:hover) {\n  background: linear-gradient(90deg, #e6f4ff 0%, #bae0ff 100%);\n  transform: translateX(4px);\n}\n\n:global(.custom-tree-node-content) {\n  font-weight: 500;\n  color: #1677ff;\n}\n\n/* 场景 3：多选标签 */\n:deep(.custom-multi-selector) {\n  background: #f0f5ff;\n  border-color: #adc6ff;\n  padding: 4px 8px;\n}\n\n:deep(.custom-multi-item) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  color: white;\n  border: none;\n  border-radius: 10px;\n  padding: 4px 12px;\n  font-size: 13px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-multi-item:hover) {\n  transform: scale(1.05);\n  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);\n}\n\n/* 场景 4：复选框与展开按钮（使用 :global） */\n:global(.custom-checkbox) {\n  border-color: #52c41a;\n  border-width: 2px;\n  border-radius: 4px;\n}\n\n:global(.hmfw-tree-select-tree-checkbox-checked .custom-checkbox) {\n  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);\n  border-color: #52c41a;\n}\n\n:global(.custom-switcher) {\n  color: #1677ff;\n  font-weight: bold;\n}\n\n:global(.custom-switcher:hover) {\n  color: #096dd9;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/tree-select"
@@ -14363,7 +14684,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对选择按钮、拖拽区、文件列表、卡片等子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义选择按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选择按钮样式：</div>\n      <Upload\n        action=\"/api/upload\"\n        :file-list=\"fileList1\"\n        @update:file-list=\"fileList1 = $event\"\n        :class-names=\"{\n          select: 'custom-select',\n          selectIcon: 'custom-select-icon',\n          selectText: 'custom-select-text',\n        }\"\n      >\n        <Button>\n          <UploadOutlined />\n          上传文件\n        </Button>\n      </Upload>\n    </div>\n\n    <!-- 场景 2：自定义拖拽区 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义拖拽区样式：</div>\n      <Upload\n        action=\"/api/upload\"\n        type=\"drag\"\n        :file-list=\"fileList2\"\n        @update:file-list=\"fileList2 = $event\"\n        :class-names=\"{\n          drag: 'custom-drag',\n          dragContainer: 'custom-drag-container',\n        }\"\n      >\n        <p class=\"ant-upload-drag-icon\">\n          <InboxOutlined style=\"font-size: 48px; color: #1890ff\" />\n        </p>\n        <p class=\"ant-upload-text\">点击或拖拽文件到此区域上传</p>\n      </Upload>\n    </div>\n\n    <!-- 场景 3：自定义文件列表项 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义文件列表项样式：</div>\n      <Upload\n        action=\"/api/upload\"\n        :default-file-list=\"defaultFiles\"\n        :class-names=\"{\n          list: 'custom-list',\n          listItem: 'custom-list-item',\n          itemIcon: 'custom-item-icon',\n          itemName: 'custom-item-name',\n        }\"\n      >\n        <Button>\n          <UploadOutlined />\n          上传文件\n        </Button>\n      </Upload>\n    </div>\n\n    <!-- 场景 4：自定义图片卡片 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图片卡片样式：</div>\n      <Upload\n        action=\"/api/upload\"\n        list-type=\"picture-card\"\n        :default-file-list=\"pictureFiles\"\n        :class-names=\"{\n          itemCard: 'custom-card',\n          thumbnail: 'custom-thumbnail',\n          cardActions: 'custom-actions',\n        }\"\n      >\n        <div style=\"display: flex; flex-direction: column; align-items: center\">\n          <PlusOutlined style=\"font-size: 24px; margin-bottom: 8px\" />\n          <div>上传图片</div>\n        </div>\n      </Upload>\n    </div>\n\n    <!-- 场景 5：使用内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式控制：</div>\n      <Upload\n        action=\"/api/upload\"\n        type=\"drag\"\n        :file-list=\"fileList3\"\n        @update:file-list=\"fileList3 = $event\"\n        :styles=\"{\n          drag: { borderColor: '#722ed1', borderWidth: '2px' },\n          dragContainer: { padding: '32px' },\n          progress: { backgroundColor: 'rgba(114, 46, 209, 0.1)' },\n          progressBar: { backgroundColor: '#722ed1' },\n        }\"\n      >\n        <p class=\"ant-upload-drag-icon\">\n          <InboxOutlined style=\"font-size: 48px; color: #722ed1\" />\n        </p>\n        <p class=\"ant-upload-text\" style=\"color: #722ed1\">紫色主题拖拽上传</p>\n      </Upload>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Upload, Button, UploadOutlined, InboxOutlined, PlusOutlined } from 'ant-design-hmfw'\n\nconst fileList1 = ref([])\nconst fileList2 = ref([])\nconst fileList3 = ref([])\n\nconst defaultFiles = [\n  {\n    uid: '-1',\n    name: 'document.pdf',\n    status: 'done' as const,\n    url: 'https://example.com/document.pdf',\n  },\n  {\n    uid: '-2',\n    name: 'readme.txt',\n    status: 'done' as const,\n    url: 'https://example.com/readme.txt',\n  },\n]\n\nconst pictureFiles = [\n  {\n    uid: '-1',\n    name: 'image1.png',\n    status: 'done' as const,\n    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n  },\n  {\n    uid: '-2',\n    name: 'image2.png',\n    status: 'done' as const,\n    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n  },\n]\n</script>\n\n<style scoped>\n/* 自定义选择按钮 */\n:deep(.custom-select) {\n  display: inline-block;\n  transition: all 0.3s;\n}\n\n:deep(.custom-select-icon) {\n  font-size: 18px;\n  color: #1890ff;\n  margin-right: 8px;\n}\n\n:deep(.custom-select-text) {\n  font-weight: 500;\n  color: #1890ff;\n}\n\n/* 自定义拖拽区 */\n:deep(.custom-drag) {\n  border: 2px dashed #1890ff !important;\n  border-radius: 12px;\n  background: linear-gradient(135deg, rgba(24, 144, 255, 0.05) 0%, rgba(9, 109, 217, 0.05) 100%);\n  transition: all 0.3s;\n}\n\n:deep(.custom-drag:hover) {\n  border-color: #40a9ff !important;\n  background: linear-gradient(135deg, rgba(24, 144, 255, 0.1) 0%, rgba(9, 109, 217, 0.1) 100%);\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);\n}\n\n:deep(.custom-drag-container) {\n  padding: 32px;\n}\n\n/* 自定义文件列表 */\n:deep(.custom-list) {\n  margin-top: 16px;\n}\n\n:deep(.custom-list-item) {\n  padding: 12px 16px;\n  margin-bottom: 8px;\n  border-radius: 8px;\n  background: linear-gradient(to right, rgba(82, 196, 26, 0.05), rgba(56, 158, 13, 0.05));\n  border: 1px solid rgba(82, 196, 26, 0.2);\n  transition: all 0.3s;\n}\n\n:deep(.custom-list-item:hover) {\n  background: linear-gradient(to right, rgba(82, 196, 26, 0.1), rgba(56, 158, 13, 0.1));\n  border-color: rgba(82, 196, 26, 0.4);\n  transform: translateX(4px);\n}\n\n:deep(.custom-item-icon) {\n  color: #52c41a;\n  font-size: 18px;\n}\n\n:deep(.custom-item-name) {\n  color: #389e0d;\n  font-weight: 500;\n}\n\n/* 自定义图片卡片 */\n:deep(.custom-card) {\n  border-radius: 12px;\n  border: 2px dashed #faad14;\n  background: linear-gradient(135deg, rgba(250, 173, 20, 0.05) 0%, rgba(250, 219, 20, 0.05) 100%);\n  transition: all 0.3s;\n}\n\n:deep(.custom-card:hover) {\n  border-color: #ffc53d;\n  box-shadow: 0 4px 12px rgba(250, 173, 20, 0.3);\n  transform: translateY(-2px);\n}\n\n:deep(.custom-thumbnail) {\n  border-radius: 8px;\n  overflow: hidden;\n}\n\n:deep(.custom-actions) {\n  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义选择按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选择按钮样式：</div>\n      <Upload\n        action=\"/api/upload\"\n        :file-list=\"fileList1\"\n        :class-names=\"{\n          select: 'custom-select',\n          selectIcon: 'custom-select-icon',\n          selectText: 'custom-select-text',\n        }\"\n        @update:file-list=\"fileList1 = $event\"\n      >\n        <Button>\n          <UploadOutlined />\n          上传文件\n        </Button>\n      </Upload>\n    </div>\n\n    <!-- 场景 2：自定义拖拽区 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义拖拽区样式：</div>\n      <Upload\n        action=\"/api/upload\"\n        type=\"drag\"\n        :file-list=\"fileList2\"\n        :class-names=\"{\n          drag: 'custom-drag',\n          dragContainer: 'custom-drag-container',\n        }\"\n        @update:file-list=\"fileList2 = $event\"\n      >\n        <p class=\"ant-upload-drag-icon\">\n          <InboxOutlined style=\"font-size: 48px; color: #1890ff\" />\n        </p>\n        <p class=\"ant-upload-text\">点击或拖拽文件到此区域上传</p>\n      </Upload>\n    </div>\n\n    <!-- 场景 3：自定义文件列表项 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义文件列表项样式：</div>\n      <Upload\n        action=\"/api/upload\"\n        :default-file-list=\"defaultFiles\"\n        :class-names=\"{\n          list: 'custom-list',\n          listItem: 'custom-list-item',\n          itemIcon: 'custom-item-icon',\n          itemName: 'custom-item-name',\n        }\"\n      >\n        <Button>\n          <UploadOutlined />\n          上传文件\n        </Button>\n      </Upload>\n    </div>\n\n    <!-- 场景 4：自定义图片卡片 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图片卡片样式：</div>\n      <Upload\n        action=\"/api/upload\"\n        list-type=\"picture-card\"\n        :default-file-list=\"pictureFiles\"\n        :class-names=\"{\n          itemCard: 'custom-card',\n          thumbnail: 'custom-thumbnail',\n          cardActions: 'custom-actions',\n        }\"\n      >\n        <div style=\"display: flex; flex-direction: column; align-items: center\">\n          <PlusOutlined style=\"font-size: 24px; margin-bottom: 8px\" />\n          <div>上传图片</div>\n        </div>\n      </Upload>\n    </div>\n\n    <!-- 场景 5：使用内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式控制：</div>\n      <Upload\n        action=\"/api/upload\"\n        type=\"drag\"\n        :file-list=\"fileList3\"\n        :styles=\"{\n          drag: { borderColor: '#722ed1', borderWidth: '2px' },\n          dragContainer: { padding: '32px' },\n          progress: { backgroundColor: 'rgba(114, 46, 209, 0.1)' },\n          progressBar: { backgroundColor: '#722ed1' },\n        }\"\n        @update:file-list=\"fileList3 = $event\"\n      >\n        <p class=\"ant-upload-drag-icon\">\n          <InboxOutlined style=\"font-size: 48px; color: #722ed1\" />\n        </p>\n        <p class=\"ant-upload-text\" style=\"color: #722ed1\">紫色主题拖拽上传</p>\n      </Upload>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Upload, Button, UploadOutlined, InboxOutlined, PlusOutlined } from 'ant-design-hmfw'\n\nconst fileList1 = ref([])\nconst fileList2 = ref([])\nconst fileList3 = ref([])\n\nconst defaultFiles = [\n  {\n    uid: '-1',\n    name: 'document.pdf',\n    status: 'done' as const,\n    url: 'https://example.com/document.pdf',\n  },\n  {\n    uid: '-2',\n    name: 'readme.txt',\n    status: 'done' as const,\n    url: 'https://example.com/readme.txt',\n  },\n]\n\nconst pictureFiles = [\n  {\n    uid: '-1',\n    name: 'image1.png',\n    status: 'done' as const,\n    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n  },\n  {\n    uid: '-2',\n    name: 'image2.png',\n    status: 'done' as const,\n    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n  },\n]\n</script>\n\n<style scoped>\n/* 自定义选择按钮 */\n:deep(.custom-select) {\n  display: inline-block;\n  transition: all 0.3s;\n}\n\n:deep(.custom-select-icon) {\n  font-size: 18px;\n  color: #1890ff;\n  margin-right: 8px;\n}\n\n:deep(.custom-select-text) {\n  font-weight: 500;\n  color: #1890ff;\n}\n\n/* 自定义拖拽区 */\n:deep(.custom-drag) {\n  border: 2px dashed #1890ff !important;\n  border-radius: 12px;\n  background: linear-gradient(135deg, rgba(24, 144, 255, 0.05) 0%, rgba(9, 109, 217, 0.05) 100%);\n  transition: all 0.3s;\n}\n\n:deep(.custom-drag:hover) {\n  border-color: #40a9ff !important;\n  background: linear-gradient(135deg, rgba(24, 144, 255, 0.1) 0%, rgba(9, 109, 217, 0.1) 100%);\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);\n}\n\n:deep(.custom-drag-container) {\n  padding: 32px;\n}\n\n/* 自定义文件列表 */\n:deep(.custom-list) {\n  margin-top: 16px;\n}\n\n:deep(.custom-list-item) {\n  padding: 12px 16px;\n  margin-bottom: 8px;\n  border-radius: 8px;\n  background: linear-gradient(to right, rgba(82, 196, 26, 0.05), rgba(56, 158, 13, 0.05));\n  border: 1px solid rgba(82, 196, 26, 0.2);\n  transition: all 0.3s;\n}\n\n:deep(.custom-list-item:hover) {\n  background: linear-gradient(to right, rgba(82, 196, 26, 0.1), rgba(56, 158, 13, 0.1));\n  border-color: rgba(82, 196, 26, 0.4);\n  transform: translateX(4px);\n}\n\n:deep(.custom-item-icon) {\n  color: #52c41a;\n  font-size: 18px;\n}\n\n:deep(.custom-item-name) {\n  color: #389e0d;\n  font-weight: 500;\n}\n\n/* 自定义图片卡片 */\n:deep(.custom-card) {\n  border-radius: 12px;\n  border: 2px dashed #faad14;\n  background: linear-gradient(135deg, rgba(250, 173, 20, 0.05) 0%, rgba(250, 219, 20, 0.05) 100%);\n  transition: all 0.3s;\n}\n\n:deep(.custom-card:hover) {\n  border-color: #ffc53d;\n  box-shadow: 0 4px 12px rgba(250, 173, 20, 0.3);\n  transform: translateY(-2px);\n}\n\n:deep(.custom-thumbnail) {\n  border-radius: 8px;\n  overflow: hidden;\n}\n\n:deep(.custom-actions) {\n  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/upload"

@@ -1,7 +1,14 @@
 import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { CascaderOption, CascaderValue, CascaderExpandTrigger, CascaderShowCheckedStrategy } from './types'
+import type {
+  CascaderOption,
+  CascaderValue,
+  CascaderExpandTrigger,
+  CascaderShowCheckedStrategy,
+  CascaderClassNames,
+  CascaderStyles,
+} from './types'
 
 export const Cascader = defineComponent({
   name: 'Cascader',
@@ -35,6 +42,8 @@ export const Cascader = defineComponent({
     maxTagCount: Number,
     maxTagPlaceholder: [String, Function] as PropType<string | ((omittedValues: CascaderValue[]) => string)>,
     maxTagTextLength: Number,
+    classNames: Object as PropType<CascaderClassNames>,
+    styles: Object as PropType<CascaderStyles>,
   },
   emits: ['update:value', 'update:open', 'change', 'search', 'focus', 'blur', 'clear'],
   setup(props, { emit, attrs, expose }) {
@@ -148,7 +157,16 @@ export const Cascader = defineComponent({
 
       const nodes: VNode[] = []
       if (before) nodes.push(before as any)
-      nodes.push((<span class={`${prefixCls}-menu-item-highlight`}>{match}</span>) as VNode)
+      nodes.push(
+        (
+          <span
+            class={cls(`${prefixCls}-menu-item-highlight`, props.classNames?.menuItemHighlight)}
+            style={props.styles?.menuItemHighlight}
+          >
+            {match}
+          </span>
+        ) as VNode,
+      )
       if (after) nodes.push(...highlightText(after, keyword))
 
       return nodes
@@ -354,12 +372,13 @@ export const Cascader = defineComponent({
               [`${prefixCls}-status-error`]: props.status === 'error',
               [`${prefixCls}-status-warning`]: props.status === 'warning',
             },
+            props.classNames?.root,
             attrs.class as any,
           )}
-          style={attrs.style as any}
+          style={{ ...props.styles?.root, ...(attrs.style as any) }}
           onClick={open}
         >
-          <span class={`${prefixCls}-selector`}>
+          <span class={cls(`${prefixCls}-selector`, props.classNames?.selector)} style={props.styles?.selector}>
             {props.multiple ? (
               <>
                 {getDisplayedPaths.value.slice(0, props.maxTagCount ?? getDisplayedPaths.value.length).map((path) => {
@@ -375,10 +394,23 @@ export const Cascader = defineComponent({
                     text = text.slice(0, props.maxTagTextLength) + '...'
                   }
                   return (
-                    <span key={path.join('-')} class={`${prefixCls}-selection-item`}>
-                      <span class={`${prefixCls}-selection-item-content`}>{text}</span>
+                    <span
+                      key={path.join('-')}
+                      class={cls(`${prefixCls}-selection-item`, props.classNames?.selectionItem)}
+                      style={props.styles?.selectionItem}
+                    >
+                      <span
+                        class={cls(`${prefixCls}-selection-item-content`, props.classNames?.selectionItemContent)}
+                        style={props.styles?.selectionItemContent}
+                      >
+                        {text}
+                      </span>
                       {!props.disabled && (
-                        <span class={`${prefixCls}-selection-item-remove`} onClick={(e) => handleRemoveTag(path, e)}>
+                        <span
+                          class={cls(`${prefixCls}-selection-item-remove`, props.classNames?.selectionItemRemove)}
+                          style={props.styles?.selectionItemRemove}
+                          onClick={(e) => handleRemoveTag(path, e)}
+                        >
                           ×
                         </span>
                       )}
@@ -386,7 +418,10 @@ export const Cascader = defineComponent({
                   )
                 })}
                 {props.maxTagCount && getDisplayedPaths.value.length > props.maxTagCount && (
-                  <span class={`${prefixCls}-selection-item`}>
+                  <span
+                    class={cls(`${prefixCls}-selection-item`, props.classNames?.selectionItem)}
+                    style={props.styles?.selectionItem}
+                  >
                     {typeof props.maxTagPlaceholder === 'function'
                       ? props.maxTagPlaceholder(getDisplayedPaths.value.slice(props.maxTagCount))
                       : (props.maxTagPlaceholder ?? `+${getDisplayedPaths.value.length - props.maxTagCount}`)}
@@ -395,7 +430,8 @@ export const Cascader = defineComponent({
                 {props.showSearch && isOpen.value && (
                   <input
                     ref={inputRef}
-                    class={`${prefixCls}-search-input`}
+                    class={cls(`${prefixCls}-search-input`, props.classNames?.searchInput)}
+                    style={props.styles?.searchInput}
                     value={searchText.value}
                     placeholder={currentValue.value.length === 0 ? props.placeholder : ''}
                     onInput={(e) => {
@@ -407,7 +443,12 @@ export const Cascader = defineComponent({
                   />
                 )}
                 {currentValue.value.length === 0 && !searchText.value && (
-                  <span class={`${prefixCls}-selection-placeholder`}>{props.placeholder}</span>
+                  <span
+                    class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.selectionPlaceholder)}
+                    style={props.styles?.selectionPlaceholder}
+                  >
+                    {props.placeholder}
+                  </span>
                 )}
               </>
             ) : (
@@ -415,7 +456,8 @@ export const Cascader = defineComponent({
                 {props.showSearch && isOpen.value ? (
                   <input
                     ref={inputRef}
-                    class={`${prefixCls}-search-input`}
+                    class={cls(`${prefixCls}-search-input`, props.classNames?.searchInput)}
+                    style={props.styles?.searchInput}
                     value={searchText.value}
                     placeholder={
                       typeof displayText.value === 'string' ? displayText.value || props.placeholder : props.placeholder
@@ -429,9 +471,14 @@ export const Cascader = defineComponent({
                   />
                 ) : (
                   <span
-                    class={cls(`${prefixCls}-selection-item`, {
-                      [`${prefixCls}-selection-placeholder`]: !displayText.value,
-                    })}
+                    class={cls(
+                      `${prefixCls}-selection-item`,
+                      {
+                        [`${prefixCls}-selection-placeholder`]: !displayText.value,
+                      },
+                      props.classNames?.selectionItem,
+                    )}
+                    style={props.styles?.selectionItem}
                   >
                     {displayText.value || props.placeholder}
                   </span>
@@ -439,13 +486,27 @@ export const Cascader = defineComponent({
               </>
             )}
           </span>
-          <span class={`${prefixCls}-suffix`}>
+          <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
             {props.allowClear && currentValue.value.length > 0 && !props.disabled ? (
-              <span class={`${prefixCls}-clear`} onMousedown={handleClear} onClick={(e) => e.stopPropagation()}>
+              <span
+                class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+                style={props.styles?.clear}
+                onMousedown={handleClear}
+                onClick={(e) => e.stopPropagation()}
+              >
                 ✕
               </span>
             ) : (
-              <span class={cls(`${prefixCls}-arrow`, { [`${prefixCls}-arrow-open`]: isOpen.value })}>▾</span>
+              <span
+                class={cls(
+                  `${prefixCls}-arrow`,
+                  { [`${prefixCls}-arrow-open`]: isOpen.value },
+                  props.classNames?.arrow,
+                )}
+                style={props.styles?.arrow}
+              >
+                ▾
+              </span>
             )}
           </span>
         </div>
@@ -454,24 +515,34 @@ export const Cascader = defineComponent({
           <Teleport to="body">
             <div
               ref={dropdownRef}
-              class={`${prefixCls}-dropdown`}
+              class={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
               style={{
                 position: 'absolute',
                 top: `${dropdownPos.value.top}px`,
                 left: `${dropdownPos.value.left}px`,
                 zIndex: 1050,
+                ...props.styles?.dropdown,
               }}
             >
               {filteredOptions.value ? (
                 /* Search results */
-                <div class={`${prefixCls}-menu ${prefixCls}-menu-search`}>
+                <div
+                  class={cls(`${prefixCls}-menu`, `${prefixCls}-menu-search`, props.classNames?.menu)}
+                  style={props.styles?.menu}
+                >
                   {filteredOptions.value.length === 0 ? (
-                    <div class={`${prefixCls}-menu-item-empty`}>{props.notFoundContent}</div>
+                    <div
+                      class={cls(`${prefixCls}-menu-item-empty`, props.classNames?.menuItemEmpty)}
+                      style={props.styles?.menuItemEmpty}
+                    >
+                      {props.notFoundContent}
+                    </div>
                   ) : (
                     filteredOptions.value.map((item, i) => (
                       <div
                         key={i}
-                        class={`${prefixCls}-menu-item`}
+                        class={cls(`${prefixCls}-menu-item`, props.classNames?.menuItem)}
+                        style={props.styles?.menuItem}
                         onMousedown={(e) => {
                           e.preventDefault()
                           handleSearchSelect(item.values, item.options)
@@ -484,9 +555,13 @@ export const Cascader = defineComponent({
                 </div>
               ) : (
                 /* Normal columns */
-                <div class={`${prefixCls}-menus`}>
+                <div class={cls(`${prefixCls}-menus`, props.classNames?.menus)} style={props.styles?.menus}>
                   {columns.value.map((colOpts, colIndex) => (
-                    <ul key={colIndex} class={`${prefixCls}-menu`}>
+                    <ul
+                      key={colIndex}
+                      class={cls(`${prefixCls}-menu`, props.classNames?.menu)}
+                      style={props.styles?.menu}
+                    >
                       {colOpts.map((opt) => {
                         const val = getValue(opt)
                         const children = getChildren(opt)
@@ -499,23 +574,43 @@ export const Cascader = defineComponent({
                         return (
                           <li
                             key={val}
-                            class={cls(`${prefixCls}-menu-item`, {
-                              [`${prefixCls}-menu-item-active`]: isActive,
-                              [`${prefixCls}-menu-item-selected`]: isSelected,
-                              [`${prefixCls}-menu-item-disabled`]: opt.disabled,
-                              [`${prefixCls}-menu-item-expand`]: hasChildren,
-                            })}
+                            class={cls(
+                              `${prefixCls}-menu-item`,
+                              {
+                                [`${prefixCls}-menu-item-active`]: isActive,
+                                [`${prefixCls}-menu-item-selected`]: isSelected,
+                                [`${prefixCls}-menu-item-disabled`]: opt.disabled,
+                                [`${prefixCls}-menu-item-expand`]: hasChildren,
+                              },
+                              props.classNames?.menuItem,
+                            )}
+                            style={props.styles?.menuItem}
                             onClick={() => handleOptionClick(opt, colIndex)}
                             onMouseenter={() => handleOptionHover(opt, colIndex)}
                           >
                             {props.multiple && (
-                              <span class={`${prefixCls}-menu-item-checkbox`}>
+                              <span
+                                class={cls(`${prefixCls}-menu-item-checkbox`, props.classNames?.menuItemCheckbox)}
+                                style={props.styles?.menuItemCheckbox}
+                              >
                                 {currentValue.value.some((p) => p.length === colIndex + 1 && p[colIndex] === val) &&
                                   '✓'}
                               </span>
                             )}
-                            <span class={`${prefixCls}-menu-item-content`}>{getLabel(opt)}</span>
-                            {hasChildren && <span class={`${prefixCls}-menu-item-expand-icon`}>›</span>}
+                            <span
+                              class={cls(`${prefixCls}-menu-item-content`, props.classNames?.menuItemContent)}
+                              style={props.styles?.menuItemContent}
+                            >
+                              {getLabel(opt)}
+                            </span>
+                            {hasChildren && (
+                              <span
+                                class={cls(`${prefixCls}-menu-item-expand-icon`, props.classNames?.menuItemExpandIcon)}
+                                style={props.styles?.menuItemExpandIcon}
+                              >
+                                ›
+                              </span>
+                            )}
                           </li>
                         )
                       })}
