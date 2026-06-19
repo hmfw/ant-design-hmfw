@@ -1,7 +1,7 @@
 import { defineComponent, computed, Fragment, Comment, Text, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { SpaceSize, SpaceDirection, SpaceAlign } from './types'
+import type { SpaceSize, SpaceDirection, SpaceAlign, SpaceClassNames, SpaceStyles } from './types'
 
 const spaceSize = {
   small: 8,
@@ -65,6 +65,14 @@ export default defineComponent({
       type: [Object, String] as PropType<VNode | string>,
       default: undefined,
     },
+    classNames: {
+      type: Object as PropType<SpaceClassNames>,
+      default: undefined,
+    },
+    styles: {
+      type: Object as PropType<SpaceStyles>,
+      default: undefined,
+    },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('space')
@@ -90,10 +98,15 @@ export default defineComponent({
 
     const classes = computed(() => {
       const align = mergedAlign.value
-      return cls(prefixCls, `${prefixCls}-${mergedDirection.value}`, {
-        [`${prefixCls}-align-${align}`]: !!align,
-        [`${prefixCls}-wrap`]: props.wrap,
-      })
+      return cls(
+        prefixCls,
+        `${prefixCls}-${mergedDirection.value}`,
+        {
+          [`${prefixCls}-align-${align}`]: !!align,
+          [`${prefixCls}-wrap`]: props.wrap,
+        },
+        props.classNames?.root,
+      )
     })
 
     const containerStyle = computed(() => {
@@ -103,7 +116,7 @@ export default defineComponent({
         rowGap: `${verticalSize}px`,
       }
       if (props.wrap) style.flexWrap = 'wrap'
-      return style
+      return { ...style, ...props.styles?.root }
     })
 
     return () => {
@@ -114,7 +127,11 @@ export default defineComponent({
 
       children.forEach((child, index) => {
         items.push(
-          <div key={child.key ?? `item-${index}`} class={`${prefixCls}-item`}>
+          <div
+            key={child.key ?? `item-${index}`}
+            class={cls(`${prefixCls}-item`, props.classNames?.item)}
+            style={props.styles?.item}
+          >
             {child}
           </div>,
         )
@@ -122,7 +139,11 @@ export default defineComponent({
         // 在元素之间插入分隔符
         if (separator && index < children.length - 1) {
           items.push(
-            <span key={`split-${index}`} class={`${prefixCls}-item-split`}>
+            <span
+              key={`split-${index}`}
+              class={cls(`${prefixCls}-item-split`, props.classNames?.split)}
+              style={props.styles?.split}
+            >
               {separator}
             </span>,
           )

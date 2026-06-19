@@ -17,6 +17,7 @@ import { CloseOutlined } from '../icon/icons'
 import { Skeleton } from '../skeleton'
 import type { IconComponent } from '../icon/types'
 import { drawerManager } from './manager'
+import type { DrawerClassNames, DrawerStyles } from './types'
 
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
@@ -130,6 +131,8 @@ export const Drawer = defineComponent({
     footerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     maskStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     contentWrapperStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    classNames: { type: Object as PropType<DrawerClassNames>, default: undefined },
+    styles: { type: Object as PropType<DrawerStyles>, default: undefined },
   },
   emits: ['update:open', 'close', 'afterOpenChange'],
   setup(props, { slots, emit, attrs }) {
@@ -248,20 +251,28 @@ export const Drawer = defineComponent({
       if (!hasTitle && !props.closable && !extraNode) return null
       return (
         <div
-          class={cls(`${prefixCls}-header`, {
-            [`${prefixCls}-header-close-only`]: props.closable && !hasTitle && !extraNode,
-          })}
-          style={props.headerStyle}
+          class={cls(
+            `${prefixCls}-header`,
+            {
+              [`${prefixCls}-header-close-only`]: props.closable && !hasTitle && !extraNode,
+            },
+            props.classNames?.header,
+          )}
+          style={{ ...props.headerStyle, ...props.styles?.header }}
         >
           <div class={`${prefixCls}-header-title`}>
             {renderCloseIcon()}
             {hasTitle && (
-              <div id={ariaId} class={`${prefixCls}-title`}>
+              <div id={ariaId} class={cls(`${prefixCls}-title`, props.classNames?.title)} style={props.styles?.title}>
                 {titleNode}
               </div>
             )}
           </div>
-          {extraNode && <div class={`${prefixCls}-extra`}>{extraNode}</div>}
+          {extraNode && (
+            <div class={cls(`${prefixCls}-extra`, props.classNames?.extra)} style={props.styles?.extra}>
+              {extraNode}
+            </div>
+          )}
         </div>
       )
     }
@@ -270,7 +281,10 @@ export const Drawer = defineComponent({
       const footerNode = slots.footer?.()
       if (!footerNode || (Array.isArray(footerNode) && !footerNode.length)) return null
       return (
-        <div class={`${prefixCls}-footer`} style={props.footerStyle}>
+        <div
+          class={cls(`${prefixCls}-footer`, props.classNames?.footer)}
+          style={{ ...props.footerStyle, ...props.styles?.footer }}
+        >
           {footerNode}
         </div>
       )
@@ -302,19 +316,32 @@ export const Drawer = defineComponent({
                 style={{ ...rootStyle, display: isOpen.value ? '' : 'none' }}
                 onKeydown={handleKeydown}
               >
-                {props.mask && <div class={`${prefixCls}-mask`} style={props.maskStyle} onClick={handleMaskClick} />}
+                {props.mask && (
+                  <div
+                    class={cls(`${prefixCls}-mask`, props.classNames?.mask)}
+                    style={{ ...props.maskStyle, ...props.styles?.mask }}
+                    onClick={handleMaskClick}
+                  />
+                )}
                 <div
                   ref={drawerRef}
-                  class={cls(`${prefixCls}-content-wrapper`, `${prefixCls}-${props.placement}`)}
-                  style={{ ...sizeStyle.value, ...props.contentWrapperStyle }}
+                  class={cls(
+                    `${prefixCls}-content-wrapper`,
+                    `${prefixCls}-${props.placement}`,
+                    props.classNames?.wrapper,
+                  )}
+                  style={{ ...sizeStyle.value, ...props.contentWrapperStyle, ...props.styles?.wrapper }}
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby={hasTitle ? ariaId : undefined}
                   {...attrs}
                 >
-                  <div class={`${prefixCls}-content`}>
+                  <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
                     {renderHeader()}
-                    <div class={`${prefixCls}-body`} style={props.bodyStyle}>
+                    <div
+                      class={cls(`${prefixCls}-body`, props.classNames?.body)}
+                      style={{ ...props.bodyStyle, ...props.styles?.body }}
+                    >
                       {renderBody()}
                     </div>
                     {renderFooter()}

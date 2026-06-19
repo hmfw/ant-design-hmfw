@@ -1,7 +1,14 @@
 import { defineComponent, computed, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { DividerType, DividerOrientation, DividerVariant, DividerSize } from './types'
+import type {
+  DividerType,
+  DividerOrientation,
+  DividerVariant,
+  DividerSize,
+  DividerClassNames,
+  DividerStyles,
+} from './types'
 
 export default defineComponent({
   name: 'Divider',
@@ -34,6 +41,14 @@ export default defineComponent({
       type: String as PropType<DividerSize>,
       default: undefined,
     },
+    classNames: {
+      type: Object as PropType<DividerClassNames>,
+      default: undefined,
+    },
+    styles: {
+      type: Object as PropType<DividerStyles>,
+      default: undefined,
+    },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('divider')
@@ -47,14 +62,19 @@ export default defineComponent({
     })
 
     const classes = computed(() =>
-      cls(prefixCls, `${prefixCls}-${props.type}`, {
-        [`${prefixCls}-with-text`]: hasChildren.value && props.type === 'horizontal',
-        [`${prefixCls}-with-text-${props.orientation}`]: hasChildren.value && props.type === 'horizontal',
-        [`${prefixCls}-${mergedVariant.value}`]: mergedVariant.value !== 'solid',
-        [`${prefixCls}-plain`]: props.plain,
-        [`${prefixCls}-sm`]: props.size === 'small' && props.type === 'horizontal',
-        [`${prefixCls}-md`]: props.size === 'middle' && props.type === 'horizontal',
-      }),
+      cls(
+        prefixCls,
+        `${prefixCls}-${props.type}`,
+        {
+          [`${prefixCls}-with-text`]: hasChildren.value && props.type === 'horizontal',
+          [`${prefixCls}-with-text-${props.orientation}`]: hasChildren.value && props.type === 'horizontal',
+          [`${prefixCls}-${mergedVariant.value}`]: mergedVariant.value !== 'solid',
+          [`${prefixCls}-plain`]: props.plain,
+          [`${prefixCls}-sm`]: props.size === 'small' && props.type === 'horizontal',
+          [`${prefixCls}-md`]: props.size === 'middle' && props.type === 'horizontal',
+        },
+        props.classNames?.root,
+      ),
     )
 
     const innerStyle = computed(() => {
@@ -77,20 +97,23 @@ export default defineComponent({
       const children = slots.default?.()
 
       if (props.type === 'vertical') {
-        return <div class={classes.value} role="separator" />
+        return <div class={classes.value} style={props.styles?.root} role="separator" />
       }
 
       if (hasChildren.value) {
         return (
-          <div class={classes.value} role="separator">
-            <span class={`${prefixCls}-inner-text`} style={innerStyle.value}>
+          <div class={classes.value} style={props.styles?.root} role="separator">
+            <span
+              class={cls(`${prefixCls}-inner-text`, props.classNames?.text)}
+              style={{ ...innerStyle.value, ...props.styles?.text }}
+            >
               {children}
             </span>
           </div>
         )
       }
 
-      return <div class={classes.value} role="separator" />
+      return <div class={classes.value} style={props.styles?.root} role="separator" />
     }
   },
 })

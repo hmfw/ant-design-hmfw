@@ -1806,6 +1806,8 @@ import { Divider } from 'ant-design-hmfw'
 | variant | 分割线样式，优先级高于 `dashed` | `'solid' \| 'dashed' \| 'dotted'` | `'solid'` |
 | plain | 文字是否显示为普通正文样式 | `boolean` | `false` |
 | size | 分割线间距大小（仅水平分割线生效） | `'small' \| 'middle' \| 'large'` | `'large'` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DividerClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DividerStyles` | - |
 
 ### 示例
 
@@ -1893,6 +1895,8 @@ import { Drawer } from 'ant-design-hmfw'
 | headerStyle | 抽屉头部的样式 | `CSSProperties` | - |
 | footerStyle | 抽屉页脚的样式 | `CSSProperties` | - |
 | maskStyle | 遮罩的样式 | `CSSProperties` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DrawerClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DrawerStyles` | - |
 
 ### Events
 
@@ -5408,6 +5412,8 @@ import { Space } from 'ant-design-hmfw'
 | wrap | 是否自动换行，仅水平方向有效 | `boolean` | `false` |
 | separator | 设置分隔符 | `VNode \| string` | - |
 | split | `separator` 的别名（已废弃，请使用 `separator`） | `VNode \| string` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceStyles` | - |
 
 ### 示例
 

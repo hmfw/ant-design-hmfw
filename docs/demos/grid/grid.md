@@ -77,3 +77,11 @@
 | lg     | `≥992px` 响应式栅格    | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
 | xl     | `≥1200px` 响应式栅格   | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
 | xxl    | `≥1600px` 响应式栅格   | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
+
+---
+
+**关于样式定制**：Row 和 Col 是单元素透传组件，可直接使用原生 `class` 和 `style` attribute 进行样式定制，无需语义化 className API。
+
+## 设计 Token
+
+Grid 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。

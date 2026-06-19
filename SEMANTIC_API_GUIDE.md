@@ -508,7 +508,7 @@ pnpm dev
 
 ## 当前进度
 
-### 已完成组件（15/67）
+### 已完成组件（20/67）
 
 | 组件         | 类型定义 Key 数量                                                                                | 文档 | Demo | 状态 |
 | ------------ | ------------------------------------------------------------------------------------------------ | ---- | ---- | ---- |
@@ -527,6 +527,11 @@ pnpm dev
 | **Dropdown** | 4 (trigger, dropdown, arrow, content)                                                            | ✅   | ✅   | 完成 |
 | **Form**     | Form 1 (root) + FormItem 5 (root, label, control, feedback, extra)                               | ✅   | ✅   | 完成 |
 | **Table**    | 7 (root, header, body, row, cell, footer, pagination)                                            | ✅   | ✅   | 完成 |
+| **Drawer**   | 8 (mask, wrapper, content, header, title, extra, body, footer)                                   | ✅   | ✅   | 完成 |
+| **Space**    | 2 (item, split)                                                                                  | ✅   | ✅   | 完成 |
+| **Divider**  | 1 (text)                                                                                         | ✅   | ✅   | 完成 |
+| **Layout**   | —（单元素透传，用原生 class/style）                                                              | ✅   | —    | 完成 |
+| **Grid**     | —（单元素透传，用原生 class/style）                                                              | ✅   | —    | 完成 |
 
 ### 待实现组件（优先级排序）
 
@@ -541,13 +546,13 @@ pnpm dev
 - [x] **Tabs** - 标签页 ✅
 - [x] **Dropdown** - 下拉菜单 ✅
 
-#### 第二批：布局/容器组件
+#### 第二批：布局/容器组件 ✅ 全部完成
 
-- [ ] Layout (Header/Sider/Content/Footer)
-- [ ] Grid (Row/Col)
-- [ ] Space
-- [ ] Divider
-- [ ] Drawer
+- [x] **Layout** (Header/Sider/Content/Footer) - 单元素透传组件，文档说明使用原生 class/style
+- [x] **Grid** (Row/Col) - 单元素透传组件，文档说明使用原生 class/style
+- [x] **Space** - 间距（item/split 2 个 key）✅
+- [x] **Divider** - 分割线（text 1 个 key）✅
+- [x] **Drawer** - 抽屉（mask/wrapper/content/header/title/extra/body/footer 8 个 key）✅
 
 #### 第三批：反馈组件
 
@@ -920,6 +925,7 @@ open http://localhost:5173/components/{component}
 
 ## 更新日志
 
+- **2026-06-18** - 完成第二批：布局/容器组件（5 个，累计 20/67）。Drawer (8 keys) + Space (2 keys) + Divider (1 key) 实现完整语义化 API；Layout 和 Grid 作为单元素透传组件，文档中说明使用原生 class/style 即可
 - **2026-06-18** - 完善开发指南：补充「设计 Token 章节模板与生成流程」（Token 提取命令、命名转换规则、分组排序规则、特殊情况处理），确保新会话可独立完成后续组件的完整语义化 API 实现；更新实施流程图，将设计 Token 补全纳入标准流程
 - **2026-06-18** - 为已完成语义化 API 的 15 个组件全部补全「## 设计 Token」章节，与「语义化 className 与 style」配套形成完整的样式定制体系（共 145 个 Token 条目，Popover/Form 暂未直接消费 Token，标注说明文字）
 - **2026-06-18** - 统一全部 demo 的 import 路径为 `from 'ant-design-hmfw'`（消除内部相对路径混用，与用户实际使用方式一致）；补充「设计 Token / 语义化 className / 语义化 style」三者的关系说明
@@ -941,5 +947,5 @@ open http://localhost:5173/components/{component}
 
 ---
 
-**版本**：v2.1  
+**版本**：v2.2  
 **最后更新**：2026-06-18
