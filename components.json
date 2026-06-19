@@ -107,6 +107,20 @@
           "description": "是否用作顶部公告",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "Alert Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`AlertClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Alert Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`AlertStyles`",
+          "default": "-"
         }
       ],
       "events": [
@@ -149,6 +163,11 @@
           "title": "顶部公告",
           "description": "通过 `banner` 用作顶部公告，默认显示图标且类型为 warning。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 12px\">\n    <Alert banner message=\"顶部公告：banner 模式默认显示图标，类型默认为 warning。\" />\n    <Alert banner type=\"error\" message=\"错误公告\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Alert } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对 root、icon、section、title、description、actions、closeIcon 等子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器 + 关闭按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器与关闭按钮：</div>\n      <Alert\n        type=\"info\"\n        title=\"系统通知\"\n        closable\n        :class-names=\"{ root: 'demo-alert-root', closeIcon: 'demo-alert-close' }\"\n      />\n    </div>\n\n    <!-- 场景 2：带描述，定制图标 / 标题 / 描述 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">定制图标、标题与描述：</div>\n      <Alert\n        type=\"success\"\n        show-icon\n        title=\"部署成功\"\n        description=\"新版本已平滑发布到生产环境，所有节点运行正常。\"\n        :class-names=\"{\n          icon: 'demo-alert-icon',\n          title: 'demo-alert-title',\n          description: 'demo-alert-desc',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：内容区与操作项 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">定制内容区与操作项：</div>\n      <Alert\n        type=\"warning\"\n        show-icon\n        title=\"存储空间不足\"\n        description=\"当前剩余空间已低于 10%，请及时清理。\"\n        :class-names=\"{ section: 'demo-alert-section', actions: 'demo-alert-actions' }\"\n      >\n        <template #action>\n          <Button size=\"small\" type=\"primary\">立即清理</Button>\n        </template>\n      </Alert>\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式（styles）：</div>\n      <Alert\n        type=\"error\"\n        show-icon\n        title=\"请求失败\"\n        description=\"服务暂时不可用，请稍后重试。\"\n        closable\n        :styles=\"{\n          root: { borderRadius: '10px', borderColor: '#ff7875' },\n          title: { fontWeight: 700, color: '#cf1322' },\n          icon: { fontSize: '22px' },\n          closeIcon: { color: '#cf1322' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：className 与 styles 叠加 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">className 与 styles 叠加：</div>\n      <Alert\n        type=\"info\"\n        show-icon\n        title=\"组合定制\"\n        description=\"className 控制结构样式，styles 覆盖关键细节。\"\n        :class-names=\"{ root: 'demo-alert-root', description: 'demo-alert-desc' }\"\n        :styles=\"{ title: { letterSpacing: '1px' } }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Alert, Button } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n:deep(.demo-alert-root) {\n  background: #f0f5ff;\n  border: 1px solid #adc6ff;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n  transition: all 0.3s;\n}\n\n:deep(.demo-alert-root:hover) {\n  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);\n}\n\n:deep(.demo-alert-close) {\n  color: #1677ff;\n  transition: transform 0.3s;\n}\n\n:deep(.demo-alert-close:hover) {\n  transform: rotate(90deg);\n}\n\n:deep(.demo-alert-icon) {\n  transform: scale(1.1);\n  transition: transform 0.3s;\n}\n\n:deep(.demo-alert-title) {\n  background: linear-gradient(135deg, #389e0d, #52c41a);\n  -webkit-background-clip: text;\n  background-clip: text;\n  color: transparent;\n  font-weight: 700;\n}\n\n:deep(.demo-alert-desc) {\n  font-style: italic;\n  color: #595959;\n}\n\n:deep(.demo-alert-section) {\n  padding-left: 4px;\n  border-left: 3px solid #faad14;\n}\n\n:deep(.demo-alert-actions) {\n  display: flex;\n  align-items: center;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/alert"
@@ -6438,6 +6457,20 @@
         },
         {
           "section": "以配置对象调用",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`MessageClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`MessageStyles`",
+          "default": "-"
+        },
+        {
+          "section": "以配置对象调用",
           "name": "pauseOnHover",
           "description": "悬停时是否暂停计时器，默认为全局配置的 `pauseOnHover`",
           "type": "`boolean`",
@@ -6532,6 +6565,11 @@
           "title": "悬停暂停",
           "description": "支持悬停时暂停计时器，移开后继续计时。可通过全局配置或单条消息配置控制。",
           "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n    <Button @click=\"pauseEnabled\"> 悬停暂停（默认） </Button>\n    <Button @click=\"pauseDisabled\"> 悬停不暂停 </Button>\n    <Button @click=\"pauseCustom\"> 单独配置 </Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { message, Button } from 'ant-design-hmfw'\n\nfunction pauseEnabled() {\n  message.config({ pauseOnHover: true })\n  message.info('悬停时暂停计时，移开继续计时', 5)\n}\n\nfunction pauseDisabled() {\n  message.config({ pauseOnHover: false })\n  message.warning('悬停时不暂停计时，5 秒后自动关闭', 5)\n}\n\nfunction pauseCustom() {\n  message.config({ pauseOnHover: true })\n  message.open({\n    content: '这条消息悬停时不暂停',\n    type: 'success',\n    duration: 5,\n    pauseOnHover: false,\n  })\n}\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过调用 options 中的 `classNames` / `styles` 对 wrapper、notice、icon、title 等子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <!-- 场景 1：通过 classNames 定制卡片主体（notice） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义卡片主体（notice）：</div>\n      <Button @click=\"showNotice\"> 渐变卡片提示 </Button>\n    </div>\n\n    <!-- 场景 2：通过 classNames 同时定制图标与文本（icon + title） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标与文本（icon + title）：</div>\n      <Button @click=\"showIconTitle\"> 强调图标与文字 </Button>\n    </div>\n\n    <!-- 场景 3：通过 classNames 定制最外层容器（wrapper），整体右对齐 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义容器对齐（wrapper）：</div>\n      <Button @click=\"showWrapper\"> 右对齐提示 </Button>\n    </div>\n\n    <!-- 场景 4：通过 styles 内联样式做临时定制 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联 styles：</div>\n      <Button @click=\"showStyles\"> 内联样式提示 </Button>\n    </div>\n\n    <!-- 场景 5：classNames 与 styles 组合使用 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">classNames + styles 组合：</div>\n      <Button @click=\"showCombined\"> 组合定制提示 </Button>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { message, Button } from 'ant-design-hmfw'\n\n// 场景 1：定制卡片主体——渐变背景 + 白色文字\nfunction showNotice() {\n  message.success({\n    content: '保存成功',\n    classNames: { notice: 'msg-notice-gradient' },\n  })\n}\n\n// 场景 2：强调图标与文本\nfunction showIconTitle() {\n  message.warning({\n    content: '磁盘空间不足',\n    classNames: {\n      icon: 'msg-icon-pulse',\n      title: 'msg-title-bold',\n    },\n  })\n}\n\n// 场景 3：定制最外层容器，让提示整体靠右\nfunction showWrapper() {\n  message.info({\n    content: '提示靠右显示',\n    classNames: { wrapper: 'msg-wrapper-right' },\n  })\n}\n\n// 场景 4：纯内联样式定制\nfunction showStyles() {\n  message.info({\n    content: '内联样式控制的提示',\n    styles: {\n      notice: { borderRadius: '16px', background: '#f0f5ff' },\n      title: { color: '#1677ff', fontWeight: 600 },\n    },\n  })\n}\n\n// 场景 5：classNames 与 styles 组合，styles 优先级更高\nfunction showCombined() {\n  message.error({\n    content: '组合定制：className 打底，style 覆盖',\n    classNames: { notice: 'msg-notice-gradient' },\n    styles: {\n      notice: { borderRadius: '20px' },\n      icon: { color: '#fff' },\n      title: { color: '#fff' },\n    },\n  })\n}\n</script>\n\n<!--\n  message 通过独立的 Vue 应用挂载在 document.body 上，\n  位于本 demo 组件的 DOM 树之外，scoped 的 :deep() 无法命中，\n  因此这里用 :global() 让自定义 className 生效。\n-->\n<style scoped>\n:global(.msg-notice-gradient) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;\n  color: #fff !important;\n  border: none;\n}\n\n:global(.msg-notice-gradient .hmfw-message-notice-icon),\n:global(.msg-notice-gradient .hmfw-message-notice-title) {\n  color: #fff;\n}\n\n:global(.msg-icon-pulse) {\n  animation: msg-icon-pulse 1s ease-in-out infinite;\n}\n\n@keyframes msg-icon-pulse {\n  0%,\n  100% {\n    transform: scale(1);\n  }\n  50% {\n    transform: scale(1.25);\n  }\n}\n\n:global(.msg-title-bold) {\n  font-weight: 700;\n  letter-spacing: 0.5px;\n}\n\n:global(.msg-wrapper-right) {\n  justify-content: flex-end !important;\n  padding-right: 24px;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/message"
@@ -7032,6 +7070,20 @@
           "default": "`'alert'`"
         },
         {
+          "section": "config 参数",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`NotificationClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "config 参数",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`NotificationStyles`",
+          "default": "-"
+        },
+        {
           "section": "全局配置方法",
           "name": "top",
           "description": "消息从顶部弹出时，距离顶部的位置，单位像素",
@@ -7139,6 +7191,11 @@
           "title": "RTL 模式",
           "description": "通过 `notification.config({ rtl: true })` 开启 RTL（从右到左）布局模式，适用于阿拉伯语、希伯来语等从右到左阅读的语言。RTL 模式会自动调整图标和关闭按钮的位置。",
           "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n    <Button type=\"primary\" @click=\"enableRtl\"> 启用 RTL 模式 </Button>\n    <Button @click=\"disableRtl\"> 禁用 RTL 模式 </Button>\n    <Button @click=\"openNotification\"> 打开通知 </Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { notification, Button } from 'ant-design-hmfw'\n\nfunction enableRtl() {\n  notification.config({\n    rtl: true,\n  })\n\n  notification.success({\n    message: 'RTL 模式已启用',\n    description: '通知现在将以从右到左的布局显示，适用于阿拉伯语等语言。图标和关闭按钮位置已自动调整。',\n    duration: 3,\n  })\n}\n\nfunction disableRtl() {\n  notification.config({\n    rtl: false,\n  })\n\n  notification.info({\n    message: 'RTL 模式已禁用',\n    description: '通知已恢复为默认的从左到右布局。',\n    duration: 3,\n  })\n}\n\nfunction openNotification() {\n  notification.open({\n    message: '测试通知',\n    description: '这是一条测试通知，用于查看当前布局方向的效果。',\n    duration: 3,\n  })\n}\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 调用参数对 notice、icon、message、description、btn、close 等子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <!-- 场景 1：通过 classNames 自定义渐变卡片 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义渐变通知卡片（classNames）：</div>\n      <Button @click=\"openGradient\">渐变通知</Button>\n    </div>\n\n    <!-- 场景 2：突出标题与图标 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">突出标题与图标（classNames）：</div>\n      <Button @click=\"openHighlight\">高亮标题</Button>\n    </div>\n\n    <!-- 场景 3：操作型通知，定制按钮区与关闭按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">操作型通知（classNames）：</div>\n      <Button @click=\"openAction\">带操作按钮</Button>\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式（styles）：</div>\n      <Button @click=\"openInlineStyles\">内联样式</Button>\n    </div>\n\n    <!-- 场景 5：classNames 与 styles 叠加 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">classNames 与 styles 叠加：</div>\n      <Button @click=\"openCombined\">组合定制</Button>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { notification, Button } from 'ant-design-hmfw'\n\n// 场景 1：通过 classNames 应用渐变背景与白色文本\nfunction openGradient() {\n  notification.info({\n    message: '系统更新',\n    description: '新版本已发布，建议尽快升级以获得更好体验。',\n    classNames: {\n      notice: 'demo-gradient-notice',\n      message: 'demo-gradient-message',\n      description: 'demo-gradient-desc',\n      icon: 'demo-gradient-icon',\n      close: 'demo-gradient-close',\n    },\n  })\n}\n\n// 场景 2：突出标题与图标\nfunction openHighlight() {\n  notification.success({\n    message: '保存成功',\n    description: '您的更改已自动保存到云端。',\n    classNames: {\n      message: 'demo-highlight-message',\n      icon: 'demo-highlight-icon',\n    },\n  })\n}\n\n// 场景 3：操作型通知，定制按钮区与关闭按钮\nfunction openAction() {\n  notification.warning({\n    message: '订阅即将到期',\n    description: '您的会员将于 3 天后到期，请及时续费。',\n    btn: h(Button, { type: 'primary' }, () => '立即续费'),\n    classNames: {\n      notice: 'demo-action-notice',\n      btn: 'demo-action-btn',\n      close: 'demo-action-close',\n    },\n  })\n}\n\n// 场景 4：使用 styles 内联样式对象\nfunction openInlineStyles() {\n  notification.error({\n    message: '操作失败',\n    description: '请求超时，请检查网络后重试。',\n    styles: {\n      notice: { borderRadius: '12px', borderLeft: '4px solid #ff4d4f' },\n      message: { fontSize: '17px', color: '#cf1322' },\n      description: { color: '#a8071a' },\n    },\n  })\n}\n\n// 场景 5：classNames 与 styles 同时使用（styles 优先级更高）\nfunction openCombined() {\n  notification.info({\n    message: '组合定制',\n    description: 'classNames 控制结构样式，styles 内联样式优先级更高。',\n    classNames: {\n      notice: 'demo-combined-notice',\n      icon: 'demo-combined-icon',\n    },\n    styles: {\n      message: { color: '#fff', fontSize: '16px' },\n      description: { color: 'rgba(255, 255, 255, 0.85)' },\n    },\n  })\n}\n</script>\n\n<style scoped>\n/* 场景 1：渐变通知卡片 */\n:deep(.demo-gradient-notice) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n}\n\n:deep(.demo-gradient-message) {\n  color: #fff;\n}\n\n:deep(.demo-gradient-desc) {\n  color: rgba(255, 255, 255, 0.85);\n}\n\n:deep(.demo-gradient-icon) {\n  color: #fff;\n}\n\n:deep(.demo-gradient-close) {\n  color: rgba(255, 255, 255, 0.7);\n}\n\n:deep(.demo-gradient-close:hover) {\n  color: #fff;\n}\n\n/* 场景 2：突出标题与图标 */\n:deep(.demo-highlight-message) {\n  font-size: 18px;\n  font-weight: 700;\n  background: linear-gradient(to right, #52c41a, #389e0d);\n  -webkit-background-clip: text;\n  background-clip: text;\n  -webkit-text-fill-color: transparent;\n}\n\n:deep(.demo-highlight-icon) {\n  transform: scale(1.15);\n  transition: transform 0.3s;\n}\n\n/* 场景 3：操作型通知 */\n:deep(.demo-action-notice) {\n  background: #fffbe6;\n  border: 1px solid #ffe58f;\n}\n\n:deep(.demo-action-btn) {\n  display: flex;\n  justify-content: flex-end;\n}\n\n:deep(.demo-action-close:hover) {\n  background-color: rgba(250, 173, 20, 0.15);\n}\n\n/* 场景 5：组合定制 */\n:deep(.demo-combined-notice) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  border: none;\n  box-shadow: 0 4px 16px rgba(9, 109, 217, 0.35);\n}\n\n:deep(.demo-combined-icon) {\n  color: #fff;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/notification"
@@ -9820,6 +9877,20 @@
           "description": "进度百分比；为 `'auto'` 时在 `spinning` 期间自动模拟递增",
           "type": "`number | 'auto'`",
           "default": "-"
+        },
+        {
+          "section": "Spin Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SpinClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Spin Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SpinStyles`",
+          "default": "-"
         }
       ],
       "events": [],
@@ -9849,6 +9920,11 @@
           "title": "进度",
           "description": "通过 `percent` 展示环形进度指示器。传入 `number` 为受控进度，传入 `'auto'` 时在 `spinning` 期间自动模拟递增。",
           "code": "<template>\n  <div style=\"display: flex; gap: 32px; align-items: center\">\n    <Spin :percent=\"percent\" />\n    <Spin :percent=\"percent\" size=\"large\" />\n    <Spin percent=\"auto\" :spinning=\"autoSpinning\" />\n    <Button @click=\"toggleAuto\">\n      {{ autoSpinning ? '停止 auto' : '开始 auto' }}\n    </Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, onMounted, onUnmounted } from 'vue'\nimport { Spin, Button } from 'ant-design-hmfw'\n\n// 受控 percent：手动在 0~100 之间循环递增，演示环形进度指示器。\nconst percent = ref(0)\nconst autoSpinning = ref(true)\nlet timer: ReturnType<typeof setInterval> | undefined\n\nonMounted(() => {\n  timer = setInterval(() => {\n    percent.value = percent.value >= 100 ? 0 : percent.value + 10\n  }, 500)\n})\n\nonUnmounted(() => {\n  if (timer) clearInterval(timer)\n})\n\nfunction toggleAuto() {\n  autoSpinning.value = !autoSpinning.value\n}\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对 root、dot、container、description 等子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义指示符与描述（classNames） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义指示符与描述文案：</div>\n      <Spin\n        tip=\"数据加载中...\"\n        :class-names=\"{\n          dot: 'demo-spin-dot',\n          description: 'demo-spin-desc',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义根容器（classNames.root） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器卡片：</div>\n      <Spin tip=\"正在处理\" :class-names=\"{ root: 'demo-spin-root', description: 'demo-spin-desc' }\" />\n    </div>\n\n    <!-- 场景 3：嵌套加载浮层（classNames.container） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">嵌套加载浮层着色：</div>\n      <Spin spinning :class-names=\"{ container: 'demo-spin-container', dot: 'demo-spin-dot' }\">\n        <div style=\"padding: 24px; background: #f5f5f5; border-radius: 8px\">\n          这是一段被遮罩的内容区域，浮层通过 container 自定义背景。\n        </div>\n      </Spin>\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式控制描述与根节点：</div>\n      <Spin\n        tip=\"上传中\"\n        :styles=\"{\n          root: { padding: '16px', background: '#f6ffed', borderRadius: '8px' },\n          description: { color: '#52c41a', fontWeight: 600 },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Spin } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n:deep(.demo-spin-dot .hmfw-spin-dot-item) {\n  background: #722ed1;\n}\n\n:deep(.demo-spin-desc) {\n  color: #722ed1;\n  font-weight: 600;\n  letter-spacing: 1px;\n}\n\n:deep(.demo-spin-root) {\n  padding: 16px 32px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 8px;\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.demo-spin-root .hmfw-spin-dot-item) {\n  background: #fff;\n}\n\n:deep(.demo-spin-root .demo-spin-desc) {\n  color: #fff;\n}\n\n:deep(.demo-spin-container) {\n  background: rgba(114, 46, 209, 0.12);\n  backdrop-filter: blur(2px);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/spin"
