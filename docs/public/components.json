@@ -679,6 +679,20 @@
           "default": "`4`"
         },
         {
+          "section": "Avatar Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`AvatarClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Avatar Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`AvatarStyles`",
+          "default": "-"
+        },
+        {
           "section": "AvatarGroup Props",
           "name": "maxCount",
           "description": "最多显示的头像数量",
@@ -729,6 +743,11 @@
           "title": "头像组",
           "description": "使用 AvatarGroup 可以展示一组头像。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <AvatarGroup :max-count=\"3\">\n      <Avatar src=\"https://api.dicebear.com/7.x/miniavs/svg?seed=1\" />\n      <Avatar src=\"https://api.dicebear.com/7.x/miniavs/svg?seed=2\" />\n      <Avatar src=\"https://api.dicebear.com/7.x/miniavs/svg?seed=3\" />\n      <Avatar src=\"https://api.dicebear.com/7.x/miniavs/svg?seed=4\" />\n      <Avatar src=\"https://api.dicebear.com/7.x/miniavs/svg?seed=5\" />\n    </AvatarGroup>\n\n    <!-- size/shape 在 Group 上设置后自动下发给子 Avatar -->\n    <AvatarGroup size=\"large\" shape=\"square\">\n      <Avatar style=\"background: #f56a00\"> A </Avatar>\n      <Avatar style=\"background: #1677ff\"> B </Avatar>\n      <Avatar style=\"background: #87d068\"> C </Avatar>\n    </AvatarGroup>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Avatar, AvatarGroup } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器样式：</div>\n      <div style=\"display: flex; gap: 16px; align-items: center\">\n        <Avatar :class-names=\"{ root: 'gradient-avatar' }\">U</Avatar>\n        <Avatar :class-names=\"{ root: 'gradient-avatar' }\" shape=\"square\">U</Avatar>\n        <Avatar src=\"https://i.pravatar.cc/150?img=1\" :class-names=\"{ root: 'gradient-avatar' }\" />\n      </div>\n    </div>\n\n    <!-- 场景 2：自定义图片样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图片样式：</div>\n      <div style=\"display: flex; gap: 16px; align-items: center\">\n        <Avatar src=\"https://i.pravatar.cc/150?img=2\" :class-names=\"{ img: 'custom-img' }\" size={64} />\n        <Avatar src=\"https://i.pravatar.cc/150?img=3\" :class-names=\"{ img: 'custom-img' }\" size={64} shape=\"square\" />\n      </div>\n    </div>\n\n    <!-- 场景 3：自定义文本容器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义文本容器样式：</div>\n      <div style=\"display: flex; gap: 16px; align-items: center\">\n        <Avatar :class-names=\"{ string: 'text-glow' }\" size={64}>A</Avatar>\n        <Avatar :class-names=\"{ string: 'text-glow' }\" size={64}>李</Avatar>\n        <Avatar :class-names=\"{ string: 'text-glow' }\" size={64} shape=\"square\">Vue</Avatar>\n      </div>\n    </div>\n\n    <!-- 场景 4：组合使用 classNames -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用多个 key：</div>\n      <div style=\"display: flex; gap: 16px; align-items: center\">\n        <Avatar\n          :class-names=\"{ root: 'gradient-avatar', string: 'text-glow' }\"\n          size={64}\n        >\n          K\n        </Avatar>\n        <Avatar\n          src=\"https://i.pravatar.cc/150?img=4\"\n          :class-names=\"{ root: 'gradient-avatar', img: 'custom-img' }\"\n          size={64}\n        />\n      </div>\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <div style=\"display: flex; gap: 16px; align-items: center\">\n        <Avatar\n          :styles=\"{\n            root: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', border: '3px solid #fff', boxShadow: '0 4px 12px rgba(102, 126, 234, 0.4)' },\n            string: { color: '#fff', fontWeight: 'bold' }\n          }\"\n          size={64}\n        >\n          JS\n        </Avatar>\n        <Avatar\n          src=\"https://i.pravatar.cc/150?img=5\"\n          :styles=\"{\n            root: { borderRadius: '12px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)' },\n            img: { filter: 'grayscale(50%)' }\n          }\"\n          size={64}\n          shape=\"square\"\n        />\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Avatar } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n:deep(.gradient-avatar) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  border: 2px solid #fff;\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);\n  transition: all 0.3s;\n}\n\n:deep(.gradient-avatar:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);\n}\n\n:deep(.custom-img) {\n  filter: saturate(1.5) contrast(1.1);\n  transition: filter 0.3s;\n}\n\n:deep(.custom-img:hover) {\n  filter: saturate(1.8) contrast(1.2);\n}\n\n:deep(.text-glow) {\n  color: #fff;\n  font-weight: bold;\n  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),\n               0 0 16px rgba(102, 126, 234, 0.6);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/avatar"
@@ -785,6 +804,20 @@
         },
         {
           "section": "BackTop Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`BackTopClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "BackTop Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`BackTopStyles`",
+          "default": "-"
+        },
+        {
+          "section": "BackTop Props",
           "name": "prefixCls",
           "description": "自定义前缀",
           "type": "`string`",
@@ -815,6 +848,11 @@
           "title": "指定容器",
           "description": "在指定容器内滚动时显示回到顶部按钮。",
           "code": "<template>\n  <div>\n    <p style=\"margin-bottom: 20px\">在指定容器内滚动时显示回到顶部按钮。</p>\n    <div\n      ref=\"containerRef\"\n      style=\"\n        height: 400px;\n        overflow-y: auto;\n        border: 1px solid #d9d9d9;\n        border-radius: 4px;\n        padding: 20px;\n        position: relative;\n      \"\n    >\n      <div v-for=\"i in 100\" :key=\"i\" style=\"margin-bottom: 10px\">容器内容行 {{ i }}</div>\n      <BackTop :target=\"getContainer\" :visibility-height=\"100\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BackTop } from 'ant-design-hmfw'\n\nconst containerRef = ref<HTMLElement>()\n\nconst getContainer = () => containerRef.value!\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"position: relative; height: 220px; overflow: auto; border: 1px solid #f0f0f0; border-radius: 8px; padding: 16px\">\n    <div style=\"height: 800px; padding: 8px\">\n      <p style=\"color: #666\">在此容器内向下滚动，即可看到经过语义化定制的回到顶部按钮。</p>\n      <p style=\"color: #999; margin-top: 8px\">下面通过 classNames / styles 对 root、content、icon 三个子节点做细粒度样式控制。</p>\n\n      <!-- 场景 1：自定义根容器 -->\n      <BackTop :target=\"getTarget\" :visibility-height=\"0\" :class-names=\"{ root: 'demo-bt-root' }\" />\n\n      <!-- 场景 2：自定义内容容器 + 图标 -->\n      <BackTop\n        :target=\"getTarget\"\n        :visibility-height=\"0\"\n        :class-names=\"{ content: 'demo-bt-content', icon: 'demo-bt-icon' }\"\n        style=\"right: 100px\"\n      />\n\n      <!-- 场景 3：使用内联 styles -->\n      <BackTop\n        :target=\"getTarget\"\n        :visibility-height=\"0\"\n        :styles=\"{\n          content: { borderRadius: '12px', background: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)' },\n          icon: { color: '#fff' },\n        }\"\n        style=\"right: 180px\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BackTop } from 'ant-design-hmfw'\n\nconst containerRef = ref<HTMLElement>()\n\n// target 指向当前滚动容器，这里返回 demo 外层可滚动元素\nconst getTarget = () => {\n  // 取最近的可滚动祖先（演示用途，返回 document 兜底）\n  return (containerRef.value as HTMLElement) || document.body\n}\n</script>\n\n<style scoped>\n/* 场景 1：渐变根容器 */\n:deep(.demo-bt-root) {\n  transition: all 0.3s;\n}\n\n:deep(.demo-bt-root:hover) {\n  transform: translateY(-2px);\n}\n\n/* 场景 2：自定义内容容器与图标 */\n:deep(.demo-bt-content) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.demo-bt-icon) {\n  color: #fff;\n  transition: transform 0.3s;\n}\n\n:deep(.demo-bt-content:hover .demo-bt-icon) {\n  transform: scale(1.2);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/back-top"
@@ -898,6 +936,20 @@
           "default": "-"
         },
         {
+          "section": "Badge Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`BadgeClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Badge Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`BadgeStyles`",
+          "default": "-"
+        },
+        {
           "section": "Badge.Ribbon Props",
           "name": "text",
           "description": "缎带内容",
@@ -941,6 +993,11 @@
           "title": "缎带",
           "description": "使用 `Badge.Ribbon` 展示缎带样式标记。",
           "code": "<template>\n  <div style=\"display: flex; gap: 32px; flex-wrap: wrap\">\n    <Badge.Ribbon text=\"Hippies\">\n      <div class=\"ribbon-card\">缎带在右侧（默认）</div>\n    </Badge.Ribbon>\n\n    <Badge.Ribbon text=\"Pies\" color=\"green\" placement=\"start\">\n      <div class=\"ribbon-card\">缎带在左侧 + 预设色</div>\n    </Badge.Ribbon>\n\n    <Badge.Ribbon text=\"Custom\" color=\"#2db7f5\">\n      <div class=\"ribbon-card\">自定义颜色</div>\n    </Badge.Ribbon>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Badge } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n.ribbon-card {\n  width: 180px;\n  height: 64px;\n  padding: 12px;\n  background: #f5f5f5;\n  border-radius: 6px;\n}\n</style>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对 root、indicator、dot、text 等子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义数字徽标 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义数字徽标样式：</div>\n      <Badge :count=\"5\" :class-names=\"{ indicator: 'custom-indicator' }\">\n        <div style=\"width: 42px; height: 42px; background: #f0f0f0; border-radius: 4px\"></div>\n      </Badge>\n    </div>\n\n    <!-- 场景 2：自定义状态点 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义状态点样式：</div>\n      <div style=\"display: flex; gap: 16px\">\n        <Badge status=\"success\" text=\"成功\" :class-names=\"{ dot: 'custom-dot-success', text: 'custom-text' }\" />\n        <Badge status=\"processing\" text=\"进行中\" :class-names=\"{ dot: 'custom-dot-processing', text: 'custom-text' }\" />\n        <Badge status=\"error\" text=\"错误\" :class-names=\"{ dot: 'custom-dot-error', text: 'custom-text' }\" />\n      </div>\n    </div>\n\n    <!-- 场景 3：自定义根容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器样式：</div>\n      <Badge :count=\"99\" :class-names=\"{ root: 'custom-root', indicator: 'custom-indicator-large' }\">\n        <div style=\"width: 42px; height: 42px; background: #f0f0f0; border-radius: 4px\"></div>\n      </Badge>\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Badge\n        :count=\"12\"\n        :styles=\"{\n          indicator: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', fontSize: '14px' },\n        }\"\n      >\n        <div style=\"width: 42px; height: 42px; background: #f0f0f0; border-radius: 4px\"></div>\n      </Badge>\n    </div>\n\n    <!-- 场景 5：组合自定义（dot 模式） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义（dot 模式）：</div>\n      <Badge dot :class-names=\"{ indicator: 'custom-dot-badge' }\">\n        <div style=\"width: 42px; height: 42px; background: #f0f0f0; border-radius: 4px\"></div>\n      </Badge>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Badge } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n:deep(.custom-indicator) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);\n  font-weight: bold;\n  transition: all 0.3s;\n}\n\n:deep(.custom-indicator:hover) {\n  transform: scale(1.1);\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);\n}\n\n:deep(.custom-indicator-large) {\n  background: linear-gradient(to right, #52c41a, #389e0d);\n  font-size: 16px;\n  padding: 0 8px;\n  min-width: 28px;\n  height: 28px;\n  line-height: 28px;\n  border-radius: 14px;\n}\n\n:deep(.custom-dot-success) {\n  width: 12px;\n  height: 12px;\n  border-radius: 50%;\n  box-shadow: 0 0 8px rgba(82, 196, 26, 0.6);\n  animation: pulse-success 1.5s ease-in-out infinite;\n}\n\n:deep(.custom-dot-processing) {\n  width: 12px;\n  height: 12px;\n  border-radius: 50%;\n  box-shadow: 0 0 8px rgba(22, 119, 255, 0.6);\n  animation: pulse-processing 1.5s ease-in-out infinite;\n}\n\n:deep(.custom-dot-error) {\n  width: 12px;\n  height: 12px;\n  border-radius: 50%;\n  box-shadow: 0 0 8px rgba(255, 77, 79, 0.6);\n  animation: pulse-error 1.5s ease-in-out infinite;\n}\n\n:deep(.custom-text) {\n  font-weight: 600;\n  font-size: 14px;\n}\n\n:deep(.custom-root) {\n  display: inline-block;\n  padding: 4px;\n  border-radius: 8px;\n  background: #f0f5ff;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  background: #e6f4ff;\n  transform: translateY(-2px);\n}\n\n:deep(.custom-dot-badge) {\n  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);\n  width: 12px;\n  height: 12px;\n  box-shadow: 0 0 12px rgba(255, 107, 107, 0.8);\n  animation: pulse-custom 1.5s ease-in-out infinite;\n}\n\n@keyframes pulse-success {\n  0%, 100% {\n    box-shadow: 0 0 8px rgba(82, 196, 26, 0.6);\n  }\n  50% {\n    box-shadow: 0 0 16px rgba(82, 196, 26, 1);\n  }\n}\n\n@keyframes pulse-processing {\n  0%, 100% {\n    box-shadow: 0 0 8px rgba(22, 119, 255, 0.6);\n  }\n  50% {\n    box-shadow: 0 0 16px rgba(22, 119, 255, 1);\n  }\n}\n\n@keyframes pulse-error {\n  0%, 100% {\n    box-shadow: 0 0 8px rgba(255, 77, 79, 0.6);\n  }\n  50% {\n    box-shadow: 0 0 16px rgba(255, 77, 79, 1);\n  }\n}\n\n@keyframes pulse-custom {\n  0%, 100% {\n    box-shadow: 0 0 12px rgba(255, 107, 107, 0.8);\n    transform: scale(1);\n  }\n  50% {\n    box-shadow: 0 0 20px rgba(255, 107, 107, 1);\n    transform: scale(1.1);\n  }\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/badge"
@@ -3766,6 +3823,20 @@
           "description": "图片高度，数字按 px 处理，亦可传带单位字符串",
           "type": "`number | string`",
           "default": "-"
+        },
+        {
+          "section": "Empty Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`EmptyClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Empty Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`EmptyStyles`",
+          "default": "-"
         }
       ],
       "events": [],
@@ -3800,6 +3871,11 @@
           "title": "暗黑模式",
           "description": "默认插画的配色通过 CSS 变量驱动，会自动跟随系统配色（`prefers-color-scheme: dark`）。也可在祖先元素上设置 `data-theme=\"dark\"`（或 `.hmfw-theme-dark` 类）强制使用暗色插画。",
           "code": "<template>\n  <div>\n    <p style=\"margin-bottom: 12px\">切换主题预览插画配色（暗黑模式下默认插画自动适配深色背景）：</p>\n    <div :data-theme=\"theme\" style=\"margin-bottom: 12px\">\n      <Button @click=\"theme = 'light'\">浅色</Button>\n      <Button @click=\"theme = 'dark'\">暗黑</Button>\n      <span style=\"margin-left: 12px\">当前：{{ theme }}</span>\n    </div>\n    <div\n      :data-theme=\"theme\"\n      :style=\"{\n        padding: '24px',\n        borderRadius: '8px',\n        background: theme === 'dark' ? '#141414' : '#ffffff',\n        color: theme === 'dark' ? 'rgba(255,255,255,0.65)' : 'inherit',\n      }\"\n    >\n      <Empty description=\"暗黑模式下的空状态\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Empty, Button } from 'ant-design-hmfw'\n\n// 通过祖先元素的 data-theme=\"dark\" / data-theme=\"light\" 切换插画配色\n// 也可使用 .hmfw-theme-dark / .hmfw-theme-light 类，或直接跟随系统配色\nconst theme = ref<'light' | 'dark'>('dark')\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器背景与圆角：</div>\n      <Empty :class-names=\"{ root: 'custom-root' }\" description=\"精美卡片样式\" />\n    </div>\n\n    <!-- 场景 2：自定义图片容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图片容器（渐变背景 + 动画）：</div>\n      <Empty :class-names=\"{ image: 'custom-image' }\" description=\"图片增强效果\" />\n    </div>\n\n    <!-- 场景 3：自定义描述文本样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义描述文本样式：</div>\n      <Empty :class-names=\"{ description: 'custom-description' }\" description=\"醒目的提示文字\" />\n    </div>\n\n    <!-- 场景 4：组合使用多个 key -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义多个节点：</div>\n      <Empty\n        :class-names=\"{\n          root: 'custom-combined-root',\n          image: 'custom-combined-image',\n          description: 'custom-combined-description',\n          footer: 'custom-combined-footer',\n        }\"\n        description=\"完整定制体验\"\n      >\n        <template #default>\n          <Button type=\"primary\">立即创建</Button>\n        </template>\n      </Empty>\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Empty\n        :styles=\"{\n          root: { padding: '48px 24px', background: '#f0f5ff', borderRadius: '12px' },\n          image: { height: '120px', opacity: '0.8' },\n          description: { fontSize: '16px', color: '#1677ff', fontWeight: '500' },\n        }\"\n        description=\"内联样式控制\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Empty, Button } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 场景 1：根容器样式 */\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 48px 32px;\n  border-radius: 16px;\n  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);\n  color: white;\n}\n\n:deep(.custom-root .hmfw-empty-description) {\n  color: rgba(255, 255, 255, 0.9);\n}\n\n/* 场景 2：图片容器样式 */\n:deep(.custom-image) {\n  padding: 24px;\n  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);\n  border-radius: 50%;\n  transition: all 0.3s;\n}\n\n:deep(.custom-image:hover) {\n  transform: scale(1.1) rotate(5deg);\n  box-shadow: 0 8px 20px rgba(252, 182, 159, 0.4);\n}\n\n/* 场景 3：描述文本样式 */\n:deep(.custom-description) {\n  font-size: 18px;\n  font-weight: 600;\n  color: #ff4d4f;\n  text-shadow: 0 2px 4px rgba(255, 77, 79, 0.2);\n  animation: pulse 2s ease-in-out infinite;\n}\n\n@keyframes pulse {\n  0%,\n  100% {\n    opacity: 1;\n  }\n  50% {\n    opacity: 0.7;\n  }\n}\n\n/* 场景 4：组合样式 */\n:deep(.custom-combined-root) {\n  background: linear-gradient(to right, #fa709a 0%, #fee140 100%);\n  padding: 56px 40px;\n  border-radius: 20px;\n  box-shadow: 0 8px 24px rgba(250, 112, 154, 0.3);\n}\n\n:deep(.custom-combined-image) {\n  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));\n  transition: transform 0.3s;\n}\n\n:deep(.custom-combined-root:hover .custom-combined-image) {\n  transform: translateY(-8px);\n}\n\n:deep(.custom-combined-description) {\n  color: #fff;\n  font-size: 20px;\n  font-weight: bold;\n  letter-spacing: 1px;\n}\n\n:deep(.custom-combined-footer) {\n  margin-top: 24px;\n}\n\n:deep(.custom-combined-footer .hmfw-button) {\n  background: white;\n  color: #fa709a;\n  border: none;\n  font-weight: 600;\n  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);\n}\n\n:deep(.custom-combined-footer .hmfw-button:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.4);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/empty"
@@ -3972,6 +4048,20 @@
           "description": "是否禁用按钮",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "FloatButton Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`FloatButtonClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "FloatButton Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`FloatButtonStyles`",
+          "default": "-"
         },
         {
           "section": "FloatButton.Group Props",
@@ -4171,6 +4261,11 @@
           "title": "回到顶部",
           "description": "`FloatButton.BackTop` 返回页面顶部的操作按钮。",
           "code": "<template>\n  <div ref=\"containerRef\" class=\"back-top-demo\">\n    <div class=\"back-top-demo__inner\">\n      <p v-for=\"n in 30\" :key=\"n\">向下滚动这块区域，第 {{ n }} 行…</p>\n    </div>\n    <FloatButton.BackTop :target=\"getTarget\" :visibility-height=\"80\" tooltip=\"回到顶部\" :style=\"pos\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { FloatButton } from 'ant-design-hmfw'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst getTarget = () => containerRef.value as HTMLElement\n\nconst pos = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const\n</script>\n\n<style scoped>\n.back-top-demo {\n  position: relative;\n  height: 220px;\n  overflow: auto;\n  border: 1px solid var(--hmfw-color-border, #d9d9d9);\n  border-radius: 8px;\n  padding: 12px 16px;\n}\n.back-top-demo__inner p {\n  margin: 8px 0;\n}\n</style>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根节点样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根节点（渐变背景）：</div>\n      <FloatButton\n        :icon=\"QuestionCircleOutlined\"\n        :class-names=\"{ root: 'custom-root' }\"\n        tooltip=\"帮助\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义图标容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标容器（放大图标）：</div>\n      <FloatButton\n        type=\"primary\"\n        :icon=\"CustomerServiceOutlined\"\n        :class-names=\"{ icon: 'custom-icon' }\"\n        tooltip=\"客服\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义 square 形状的内容区域 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义内容区域（square 形状）：</div>\n      <FloatButton\n        shape=\"square\"\n        :icon=\"CommentOutlined\"\n        content=\"反馈\"\n        :class-names=\"{ body: 'custom-body', content: 'custom-content' }\"\n      />\n    </div>\n\n    <!-- 场景 4：组合使用 classNames -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义（多个 key）：</div>\n      <FloatButton\n        shape=\"square\"\n        :icon=\"EditOutlined\"\n        content=\"编辑\"\n        :class-names=\"{\n          root: 'custom-combined-root',\n          body: 'custom-combined-body',\n          icon: 'custom-combined-icon',\n          content: 'custom-combined-content',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <FloatButton\n        type=\"primary\"\n        shape=\"square\"\n        :icon=\"RocketOutlined\"\n        content=\"启动\"\n        :styles=\"{\n          root: { borderRadius: '12px', boxShadow: '0 4px 16px rgba(22, 119, 255, 0.3)' },\n          body: { padding: '8px' },\n          icon: { fontSize: '20px' },\n          content: { fontWeight: 'bold' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport {\n  FloatButton,\n  QuestionCircleOutlined,\n  CustomerServiceOutlined,\n  CommentOutlined,\n  EditOutlined,\n  RocketOutlined,\n} from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);\n}\n\n:deep(.custom-icon) {\n  font-size: 20px;\n  animation: pulse 2s ease-in-out infinite;\n}\n\n@keyframes pulse {\n  0%,\n  100% {\n    transform: scale(1);\n  }\n  50% {\n    transform: scale(1.1);\n  }\n}\n\n:deep(.custom-body) {\n  background: rgba(255, 255, 255, 0.1);\n  border-radius: 8px;\n}\n\n:deep(.custom-content) {\n  color: #52c41a;\n  font-weight: bold;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);\n}\n\n:deep(.custom-combined-root) {\n  background: linear-gradient(to right, #fa8c16, #faad14);\n  border: 2px solid #fff;\n  box-shadow: 0 4px 12px rgba(250, 140, 22, 0.4);\n}\n\n:deep(.custom-combined-body) {\n  padding: 4px;\n}\n\n:deep(.custom-combined-icon) {\n  color: #fff;\n  font-size: 18px;\n}\n\n:deep(.custom-combined-content) {\n  color: #fff;\n  font-size: 12px;\n  margin-top: 2px;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/float-button"
@@ -8145,6 +8240,20 @@
           "default": "-"
         },
         {
+          "section": "QRCode Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`QRCodeClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "QRCode Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`QRCodeStyles`",
+          "default": "-"
+        },
+        {
           "section": "StatusRenderInfo",
           "name": "status",
           "description": "当前状态",
@@ -8191,6 +8300,11 @@
           "title": "自定义状态渲染",
           "description": "通过 statusRender 自定义状态渲染内容。",
           "code": "<template>\n  <div style=\"display: flex; gap: 16px\">\n    <QRCode\n      value=\"https://ant.design\"\n      status=\"expired\"\n      :status-render=\"customStatusRender\"\n      :on-refresh=\"handleRefresh\"\n    />\n    <QRCode value=\"https://ant.design\" status=\"loading\" :status-render=\"customStatusRender\" />\n    <QRCode value=\"https://ant.design\" status=\"scanned\" :status-render=\"customStatusRender\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { QRCode } from 'ant-design-hmfw'\nimport type { StatusRenderInfo } from 'ant-design-hmfw'\n\nconst customStatusRender = (info: StatusRenderInfo) => {\n  if (info.status === 'expired') {\n    return h('div', { style: { color: '#ff4d4f' } }, [\n      h('div', '❌ 已过期'),\n      info.onRefresh &&\n        h(\n          'button',\n          {\n            onClick: info.onRefresh,\n            style: {\n              marginTop: '8px',\n              padding: '4px 12px',\n              border: '1px solid #ff4d4f',\n              borderRadius: '4px',\n              background: 'transparent',\n              color: '#ff4d4f',\n              cursor: 'pointer',\n            },\n          },\n          '重新生成',\n        ),\n    ])\n  }\n  if (info.status === 'loading') {\n    return h('div', { style: { color: '#1677ff' } }, '⏳ 加载中...')\n  }\n  if (info.status === 'scanned') {\n    return h('div', { style: { color: '#52c41a' } }, '✅ 扫描成功')\n  }\n  return null\n}\n\nconst handleRefresh = () => {\n  console.log('刷新二维码')\n}\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对根容器和状态遮罩做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器（圆角边框）：</div>\n      <QRCode value=\"https://ant.design\" :class-names=\"{ root: 'custom-root' }\" />\n    </div>\n\n    <!-- 场景 2：自定义状态遮罩 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义状态遮罩样式：</div>\n      <QRCode\n        value=\"https://ant.design\"\n        status=\"expired\"\n        :class-names=\"{ cover: 'custom-cover' }\"\n        :on-refresh=\"() => {}\"\n      />\n    </div>\n\n    <!-- 场景 3：组合使用 classNames -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义（根容器 + 遮罩）：</div>\n      <QRCode\n        value=\"https://ant.design\"\n        status=\"loading\"\n        :class-names=\"{\n          root: 'custom-root-combo',\n          cover: 'custom-cover-combo',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <QRCode\n        value=\"https://ant.design\"\n        :styles=\"{\n          root: {\n            borderRadius: '16px',\n            boxShadow: '0 4px 12px rgba(22, 119, 255, 0.3)',\n          },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：动态样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">动态样式（状态切换）：</div>\n      <QRCode\n        value=\"https://ant.design\"\n        :status=\"currentStatus\"\n        :class-names=\"{ root: 'custom-dynamic', cover: 'custom-dynamic-cover' }\"\n        :on-refresh=\"handleRefresh\"\n      />\n      <div style=\"margin-top: 8px\">\n        <button @click=\"currentStatus = 'active'\" style=\"margin-right: 8px\">激活</button>\n        <button @click=\"currentStatus = 'expired'\" style=\"margin-right: 8px\">过期</button>\n        <button @click=\"currentStatus = 'loading'\" style=\"margin-right: 8px\">加载中</button>\n        <button @click=\"currentStatus = 'scanned'\">已扫描</button>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { QRCode } from 'ant-design-hmfw'\nimport type { QRCodeStatus } from 'ant-design-hmfw'\n\nconst currentStatus = ref<QRCodeStatus>('expired')\n\nconst handleRefresh = () => {\n  currentStatus.value = 'loading'\n  setTimeout(() => {\n    currentStatus.value = 'active'\n  }, 1500)\n}\n</script>\n\n<style scoped>\n/* 场景 1：渐变边框 + 圆角 */\n:deep(.custom-root) {\n  border-radius: 12px;\n  border: 3px solid transparent;\n  background: linear-gradient(white, white) padding-box,\n    linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);\n}\n\n/* 场景 2：自定义遮罩 */\n:deep(.custom-cover) {\n  background: linear-gradient(135deg, rgba(255, 77, 79, 0.9) 0%, rgba(255, 120, 117, 0.9) 100%);\n  backdrop-filter: blur(4px);\n}\n\n/* 场景 3：组合样式 */\n:deep(.custom-root-combo) {\n  border-radius: 16px;\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  padding: 8px;\n}\n\n:deep(.custom-cover-combo) {\n  background: rgba(24, 144, 255, 0.15);\n  backdrop-filter: blur(8px);\n}\n\n/* 场景 5：动态样式 */\n:deep(.custom-dynamic) {\n  border-radius: 8px;\n  transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);\n  border: 2px solid #d9d9d9;\n}\n\n:deep(.custom-dynamic:hover) {\n  border-color: #1677ff;\n  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);\n}\n\n:deep(.custom-dynamic-cover) {\n  background: linear-gradient(\n    135deg,\n    rgba(255, 255, 255, 0.95) 0%,\n    rgba(240, 245, 255, 0.95) 100%\n  );\n  backdrop-filter: blur(4px);\n  border-radius: 6px;\n}\n\nbutton {\n  padding: 4px 12px;\n  border: 1px solid #d9d9d9;\n  border-radius: 4px;\n  background: white;\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\nbutton:hover {\n  color: #1677ff;\n  border-color: #1677ff;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/qrcode"
@@ -9924,7 +10038,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对 root、dot、container、description 等子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义指示符与描述（classNames） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义指示符与描述文案：</div>\n      <Spin\n        tip=\"数据加载中...\"\n        :class-names=\"{\n          dot: 'demo-spin-dot',\n          description: 'demo-spin-desc',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义根容器（classNames.root） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器卡片：</div>\n      <Spin\n        tip=\"正在处理\"\n        :class-names=\"{ root: 'demo-spin-root', description: 'demo-spin-desc' }\"\n      />\n    </div>\n\n    <!-- 场景 3：嵌套加载浮层（classNames.container） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">嵌套加载浮层着色：</div>\n      <Spin spinning :class-names=\"{ container: 'demo-spin-container', dot: 'demo-spin-dot' }\">\n        <div style=\"padding: 24px; background: #f5f5f5; border-radius: 8px\">\n          这是一段被遮罩的内容区域，浮层通过 container 自定义背景。\n        </div>\n      </Spin>\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式控制描述与根节点：</div>\n      <Spin\n        tip=\"上传中\"\n        :styles=\"{\n          root: { padding: '16px', background: '#f6ffed', borderRadius: '8px' },\n          description: { color: '#52c41a', fontWeight: 600 },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Spin } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n:deep(.demo-spin-dot .hmfw-spin-dot-item) {\n  background: #722ed1;\n}\n\n:deep(.demo-spin-desc) {\n  color: #722ed1;\n  font-weight: 600;\n  letter-spacing: 1px;\n}\n\n:deep(.demo-spin-root) {\n  padding: 16px 32px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 8px;\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.demo-spin-root .hmfw-spin-dot-item) {\n  background: #fff;\n}\n\n:deep(.demo-spin-root .demo-spin-desc) {\n  color: #fff;\n}\n\n:deep(.demo-spin-container) {\n  background: rgba(114, 46, 209, 0.12);\n  backdrop-filter: blur(2px);\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义指示符与描述（classNames） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义指示符与描述文案：</div>\n      <Spin\n        tip=\"数据加载中...\"\n        :class-names=\"{\n          dot: 'demo-spin-dot',\n          description: 'demo-spin-desc',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义根容器（classNames.root） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器卡片：</div>\n      <Spin tip=\"正在处理\" :class-names=\"{ root: 'demo-spin-root', description: 'demo-spin-desc' }\" />\n    </div>\n\n    <!-- 场景 3：嵌套加载浮层（classNames.container） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">嵌套加载浮层着色：</div>\n      <Spin spinning :class-names=\"{ container: 'demo-spin-container', dot: 'demo-spin-dot' }\">\n        <div style=\"padding: 24px; background: #f5f5f5; border-radius: 8px\">\n          这是一段被遮罩的内容区域，浮层通过 container 自定义背景。\n        </div>\n      </Spin>\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式控制描述与根节点：</div>\n      <Spin\n        tip=\"上传中\"\n        :styles=\"{\n          root: { padding: '16px', background: '#f6ffed', borderRadius: '8px' },\n          description: { color: '#52c41a', fontWeight: 600 },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Spin } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n:deep(.demo-spin-dot .hmfw-spin-dot-item) {\n  background: #722ed1;\n}\n\n:deep(.demo-spin-desc) {\n  color: #722ed1;\n  font-weight: 600;\n  letter-spacing: 1px;\n}\n\n:deep(.demo-spin-root) {\n  padding: 16px 32px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 8px;\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.demo-spin-root .hmfw-spin-dot-item) {\n  background: #fff;\n}\n\n:deep(.demo-spin-root .demo-spin-desc) {\n  color: #fff;\n}\n\n:deep(.demo-spin-container) {\n  background: rgba(114, 46, 209, 0.12);\n  backdrop-filter: blur(2px);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/spin"
@@ -10005,6 +10119,20 @@
           "name": "valueRender",
           "description": "自定义渲染数值",
           "type": "`(value: string) => VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Statistic Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`StatisticClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Statistic Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`StatisticStyles`",
           "default": "-"
         },
         {
@@ -10104,6 +10232,11 @@
           "title": "自定义渲染",
           "description": "",
           "code": "<template>\n  <div class=\"statistic-demo\">\n    <Space :size=\"32\">\n      <Statistic title=\"自定义渲染\" :value=\"112893\" :value-render=\"customRender\" />\n      <Statistic\n        title=\"增长率\"\n        :value=\"9.3\"\n        :precision=\"2\"\n        suffix=\"%\"\n        :value-style=\"{ color: '#3f8600' }\"\n        :prefix=\"h('span', { style: { color: '#3f8600' } }, '↑')\"\n      />\n    </Space>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Statistic, Space } from 'ant-design-hmfw'\n\nconst customRender = (value: string) => {\n  return h('span', { style: { color: '#cf1322', fontWeight: 'bold' } }, [h('span', '💰 '), value, h('span', ' 元')])\n}\n</script>\n\n<style scoped>\n.statistic-demo {\n  padding: 24px;\n  background: #fafafa;\n}\n</style>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器：</div>\n      <Statistic\n        title=\"活跃用户\"\n        :value=\"93185\"\n        :class-names=\"{ root: 'custom-root' }\"\n        prefix=\"👥\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义标题与数值样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义标题与数值：</div>\n      <Statistic\n        title=\"总销售额\"\n        :value=\"1234567.89\"\n        :precision=\"2\"\n        :class-names=\"{\n          title: 'custom-title',\n          value: 'custom-value',\n        }\"\n        prefix=\"¥\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义前缀和后缀样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义前缀和后缀：</div>\n      <Statistic\n        title=\"增长率\"\n        :value=\"28.5\"\n        :precision=\"1\"\n        :class-names=\"{\n          prefix: 'custom-prefix',\n          suffix: 'custom-suffix',\n        }\"\n        prefix=\"📈\"\n        suffix=\"%\"\n      />\n    </div>\n\n    <!-- 场景 4：组合使用 classNames -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义：</div>\n      <Statistic\n        title=\"在线人数\"\n        :value=\"8888\"\n        :class-names=\"{\n          root: 'combined-root',\n          title: 'combined-title',\n          content: 'combined-content',\n          value: 'combined-value',\n        }\"\n        suffix=\"人\"\n      />\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Statistic\n        title=\"转化率\"\n        :value=\"12.8\"\n        :precision=\"1\"\n        :styles=\"{\n          root: {\n            padding: '16px',\n            borderRadius: '8px',\n            background: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)'\n          },\n          title: { fontWeight: 'bold', color: '#8b4513' },\n          value: { fontSize: '28px', color: '#fff' },\n          suffix: { color: '#fff', fontSize: '18px' },\n        }\"\n        suffix=\"%\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Statistic } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 场景 1：渐变背景根容器 */\n:deep(.custom-root) {\n  padding: 20px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 12px;\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-4px);\n  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);\n}\n\n:deep(.custom-root .hmfw-statistic-title) {\n  color: rgba(255, 255, 255, 0.85);\n}\n\n:deep(.custom-root .hmfw-statistic-content) {\n  color: #fff;\n}\n\n/* 场景 2：自定义标题和数值 */\n:deep(.custom-title) {\n  font-size: 16px;\n  font-weight: bold;\n  color: #1890ff;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n\n:deep(.custom-value) {\n  font-size: 32px;\n  font-weight: 700;\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n}\n\n/* 场景 3：自定义前缀和后缀 */\n:deep(.custom-prefix) {\n  font-size: 24px;\n  margin-right: 8px;\n  animation: bounce 2s infinite;\n}\n\n@keyframes bounce {\n  0%, 100% {\n    transform: translateY(0);\n  }\n  50% {\n    transform: translateY(-4px);\n  }\n}\n\n:deep(.custom-suffix) {\n  color: #52c41a;\n  font-weight: bold;\n  font-size: 20px;\n  margin-left: 4px;\n}\n\n/* 场景 4：组合样式 */\n:deep(.combined-root) {\n  padding: 16px 24px;\n  background: linear-gradient(to right, #f0f5ff, #e6f7ff);\n  border: 2px solid #1890ff;\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.combined-root:hover) {\n  border-color: #096dd9;\n  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.3);\n}\n\n:deep(.combined-title) {\n  color: #096dd9;\n  font-weight: 600;\n}\n\n:deep(.combined-content) {\n  margin-top: 8px;\n}\n\n:deep(.combined-value) {\n  font-size: 36px;\n  color: #1890ff;\n  font-weight: bold;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/statistic"

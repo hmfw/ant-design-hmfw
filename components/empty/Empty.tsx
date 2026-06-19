@@ -1,6 +1,7 @@
 import { defineComponent, type PropType } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
+import type { EmptyClassNames, EmptyStyles } from './types'
 
 // 预设图片标识（与 AntD 的 PRESENTED_IMAGE_DEFAULT / PRESENTED_IMAGE_SIMPLE 对应）
 export const PRESENTED_IMAGE_DEFAULT = 'default'
@@ -65,6 +66,8 @@ export const Empty = defineComponent({
       type: [String, Boolean] as PropType<string | false>,
       default: undefined,
     },
+    classNames: Object as PropType<EmptyClassNames>,
+    styles: Object as PropType<EmptyStyles>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('empty')
@@ -88,14 +91,15 @@ export const Empty = defineComponent({
       const h = normalizeSize(props.imageHeight)
       if (w !== undefined) sizeStyle.width = w
       if (h !== undefined) sizeStyle.height = h
-      const mergedImageStyle = { ...sizeStyle, ...props.imageStyle }
+      // 合并图片样式：尺寸便捷入口 < imageStyle < 语义化 styles.image
+      const mergedImageStyle = { ...sizeStyle, ...props.imageStyle, ...props.styles?.image }
 
       let imageNode: unknown = null
       if (showImage) {
         if (slots.image) {
           // 自定义图片插槽
           imageNode = (
-            <div class={`${prefixCls}-image`} style={mergedImageStyle}>
+            <div class={cls(`${prefixCls}-image`, props.classNames?.image)} style={mergedImageStyle}>
               {slots.image()}
             </div>
           )
@@ -106,14 +110,14 @@ export const Empty = defineComponent({
         ) {
           // 字符串 URL
           imageNode = (
-            <div class={`${prefixCls}-image`} style={mergedImageStyle}>
+            <div class={cls(`${prefixCls}-image`, props.classNames?.image)} style={mergedImageStyle}>
               <img src={props.image} alt="empty" draggable={false} />
             </div>
           )
         } else {
           // 预设插画
           imageNode = (
-            <div class={`${prefixCls}-image`} style={mergedImageStyle}>
+            <div class={cls(`${prefixCls}-image`, props.classNames?.image)} style={mergedImageStyle}>
               {isSimple ? <SimpleEmptyImage /> : <DefaultEmptyImage />}
             </div>
           )
@@ -121,15 +125,22 @@ export const Empty = defineComponent({
       }
 
       const descriptionNode = showDescription && (
-        <div class={`${prefixCls}-description`}>
+        <div class={cls(`${prefixCls}-description`, props.classNames?.description)} style={props.styles?.description}>
           {slots.description ? slots.description() : (props.description ?? locale.value.Empty.description)}
         </div>
       )
 
-      const footerNode = slots.default && <div class={`${prefixCls}-footer`}>{slots.default()}</div>
+      const footerNode = slots.default && (
+        <div class={cls(`${prefixCls}-footer`, props.classNames?.footer)} style={props.styles?.footer}>
+          {slots.default()}
+        </div>
+      )
 
       return (
-        <div class={cls(prefixCls, { [`${prefixCls}-normal`]: isSimple })}>
+        <div
+          class={cls(prefixCls, { [`${prefixCls}-normal`]: isSimple }, props.classNames?.root)}
+          style={props.styles?.root}
+        >
           {imageNode}
           {descriptionNode}
           {footerNode}

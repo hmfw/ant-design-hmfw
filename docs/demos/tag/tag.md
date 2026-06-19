@@ -81,3 +81,24 @@
 | 事件名 | 说明                 | 回调参数                     |
 | ------ | -------------------- | ---------------------------- |
 | change | 点击标签时触发的回调 | `(checked: boolean) => void` |
+
+---
+
+Tag 是单元素透传组件，可直接使用原生 class 和 style attribute 进行样式定制。
+
+## 设计 Token
+
+Tag 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+| Token 名称                           | 说明         | 默认值             |
+| ------------------------------------ | ------------ | ------------------ |
+| `--hmfw-color-primary`               | 主题色       | `#1677ff`          |
+| `--hmfw-color-primary-hover`         | 主题色悬停态 | `#4096ff`          |
+| `--hmfw-color-text`                  | 主文本色     | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-text-secondary`        | 次要文本色   | `rgba(0,0,0,0.65)` |
+| `--hmfw-color-text-disabled`         | 禁用文本色   | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-bg-container-disabled` | 禁用背景色   | `rgba(0,0,0,0.04)` |
+| `--hmfw-color-border`                | 边框色       | `#d9d9d9`          |
+| `--hmfw-color-fill-secondary`        | 次级填充色   | `rgba(0,0,0,0.06)` |
+| `--hmfw-color-fill-quaternary`       | 四级填充色   | `rgba(0,0,0,0.02)` |
+| `--hmfw-border-radius`               | 基础圆角     | `6px`              |

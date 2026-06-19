@@ -9,4 +9,12 @@ const Badge = InternalBadge as BadgeType
 Badge.Ribbon = Ribbon
 
 export { Badge, Ribbon }
-export type { BadgeProps, BadgeStatus, BadgeSize, RibbonProps, RibbonPlacement } from './types'
+export type {
+  BadgeProps,
+  BadgeStatus,
+  BadgeSize,
+  BadgeClassNames,
+  BadgeStyles,
+  RibbonProps,
+  RibbonPlacement,
+} from './types'

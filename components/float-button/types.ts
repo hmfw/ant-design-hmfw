@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'vue'
 import type { IconComponent } from '../icon/types'
 
 export type FloatButtonType = 'default' | 'primary'
@@ -13,6 +14,34 @@ export interface FloatButtonBadgeProps {
   overflowCount?: number
   color?: string
   offset?: [number, number]
+}
+
+/**
+ * FloatButton 各部分的语义化 className
+ */
+export interface FloatButtonClassNames {
+  /** 根节点 button.hmfw-float-btn / a.hmfw-float-btn */
+  root?: string
+  /** 主体容器 div.hmfw-float-btn-body */
+  body?: string
+  /** 图标容器 div.hmfw-float-btn-icon */
+  icon?: string
+  /** 文本内容容器 div.hmfw-float-btn-content */
+  content?: string
+}
+
+/**
+ * FloatButton 各部分的语义化 style
+ */
+export interface FloatButtonStyles {
+  /** 根节点 button.hmfw-float-btn / a.hmfw-float-btn */
+  root?: CSSProperties
+  /** 主体容器 div.hmfw-float-btn-body */
+  body?: CSSProperties
+  /** 图标容器 div.hmfw-float-btn-icon */
+  icon?: CSSProperties
+  /** 文本内容容器 div.hmfw-float-btn-content */
+  content?: CSSProperties
 }
 
 export interface FloatButtonProps {
@@ -38,6 +67,10 @@ export interface FloatButtonProps {
   htmlType?: FloatButtonHTMLType
   /** Whether the button is disabled */
   disabled?: boolean
+  /** 语义化 className */
+  classNames?: FloatButtonClassNames
+  /** 语义化 style */
+  styles?: FloatButtonStyles
 }
 
 export interface FloatButtonGroupProps {

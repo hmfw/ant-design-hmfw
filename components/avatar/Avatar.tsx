@@ -1,7 +1,7 @@
 import { defineComponent, computed, ref, onMounted, onUpdated, onBeforeUnmount, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { AvatarSize, AvatarShape } from './types'
+import type { AvatarSize, AvatarShape, AvatarClassNames, AvatarStyles } from './types'
 import { provideAvatarContext, useAvatarContext } from './context'
 
 // 响应式断点定义
@@ -82,6 +82,8 @@ export const Avatar = defineComponent({
       type: Number,
       default: 4,
     },
+    classNames: Object as PropType<AvatarClassNames>,
+    styles: Object as PropType<AvatarStyles>,
   },
   emits: ['error'],
   setup(props, { slots, emit }) {
@@ -137,11 +139,16 @@ export const Avatar = defineComponent({
 
     const classes = computed(() => {
       const size = mergedSize.value
-      return cls(prefixCls, `${prefixCls}-${mergedShape.value}`, {
-        [`${prefixCls}-${size}`]: typeof size === 'string',
-        [`${prefixCls}-image`]: !!props.src && !imgError.value,
-        [`${prefixCls}-icon`]: !!props.icon,
-      })
+      return cls(
+        prefixCls,
+        `${prefixCls}-${mergedShape.value}`,
+        {
+          [`${prefixCls}-${size}`]: typeof size === 'string',
+          [`${prefixCls}-image`]: !!props.src && !imgError.value,
+          [`${prefixCls}-icon`]: !!props.icon,
+        },
+        props.classNames?.root,
+      )
     })
 
     const adjustTextScale = () => {
@@ -167,6 +174,8 @@ export const Avatar = defineComponent({
       if (props.src && !imgError.value) {
         children = (
           <img
+            class={cls(props.classNames?.img)}
+            style={props.styles?.img}
             src={props.src}
             srcset={props.srcSet}
             alt={props.alt}
@@ -187,14 +196,18 @@ export const Avatar = defineComponent({
             ? { transform: `scale(${scale.value}) translateX(-50%)` }
             : { transform: 'translateX(-50%)' }
         children = (
-          <span ref={textRef} class={`${prefixCls}-string`} style={textStyle}>
+          <span
+            ref={textRef}
+            class={cls(`${prefixCls}-string`, props.classNames?.string)}
+            style={{ ...textStyle, ...props.styles?.string }}
+          >
             {slots.default()}
           </span>
         )
       }
 
       return (
-        <span ref={avatarRef} class={classes.value} style={sizeStyle.value}>
+        <span ref={avatarRef} class={classes.value} style={{ ...sizeStyle.value, ...props.styles?.root }}>
           {children}
         </span>
       )

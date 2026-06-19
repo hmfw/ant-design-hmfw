@@ -12,6 +12,7 @@ import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { UpOutlined } from '../icon/icons'
+import type { BackTopClassNames, BackTopStyles } from './types'
 
 // Throttle by requestAnimationFrame
 function throttleByAnimationFrame<T extends (...args: any[]) => void>(fn: T) {
@@ -116,6 +117,8 @@ export const BackTop = defineComponent({
     rootClassName: String,
     style: [String, Object] as PropType<string | CSSProperties>,
     prefixCls: String,
+    classNames: Object as PropType<BackTopClassNames>,
+    styles: Object as PropType<BackTopStyles>,
   },
   emits: ['click'],
   setup(props, { slots, emit }) {
@@ -159,19 +162,31 @@ export const BackTop = defineComponent({
         },
         props.className,
         props.rootClassName,
+        props.classNames?.root,
       ),
     )
 
+    // 合并根节点的内联样式（props.style 支持字符串或对象，与语义化 styles.root 合并）
+    const rootStyle = computed<CSSProperties | string | undefined>(() => {
+      const semanticStyle = props.styles?.root
+      if (!semanticStyle) return props.style
+      if (typeof props.style === 'string') {
+        // 字符串样式无法与对象安全合并，优先保留语义化对象样式
+        return semanticStyle
+      }
+      return { ...props.style, ...semanticStyle }
+    })
+
     const defaultElement = () => (
-      <div class={`${prefixCls}-content`}>
-        <div class={`${prefixCls}-icon`}>
+      <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
+        <div class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon}>
           <Icon component={UpOutlined} />
         </div>
       </div>
     )
 
     return () => (
-      <div ref={containerRef} class={classes.value} style={props.style} onClick={scrollToTop}>
+      <div ref={containerRef} class={classes.value} style={rootStyle.value} onClick={scrollToTop}>
         <Transition name="hmfw-fade">{visible.value && (slots.default?.() || defaultElement())}</Transition>
       </div>
     )

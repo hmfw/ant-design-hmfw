@@ -2,6 +2,7 @@ import { defineComponent, type PropType, type CSSProperties, type VNode } from '
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Skeleton } from '../skeleton'
+import type { StatisticClassNames, StatisticStyles } from './types'
 
 /**
  * 格式化数字，添加千分位分隔符和精度控制
@@ -49,6 +50,8 @@ export const Statistic = defineComponent({
     decimalSeparator: { type: String, default: '.' },
     loading: Boolean,
     valueRender: Function as PropType<(value: string) => VNode>,
+    classNames: Object as PropType<StatisticClassNames>,
+    styles: Object as PropType<StatisticStyles>,
   },
   setup(props) {
     const prefixCls = usePrefixCls('statistic')
@@ -59,11 +62,16 @@ export const Statistic = defineComponent({
       if (props.loading) {
         return (
           <div
-            class={cls(prefixCls, {
+            class={cls(prefixCls, props.classNames?.root, {
               [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
             })}
+            style={props.styles?.root}
           >
-            {props.title && <div class={`${prefixCls}-title`}>{props.title}</div>}
+            {props.title && (
+              <div class={cls(`${prefixCls}-title`, props.classNames?.title)} style={props.styles?.title}>
+                {props.title}
+              </div>
+            )}
             <Skeleton active title={false} paragraph={{ rows: 1, width: '100%' }} />
           </div>
         )
@@ -82,15 +90,33 @@ export const Statistic = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, {
+          class={cls(prefixCls, props.classNames?.root, {
             [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
           })}
+          style={props.styles?.root}
         >
-          {props.title && <div class={`${prefixCls}-title`}>{props.title}</div>}
-          <div class={`${prefixCls}-content`} style={props.valueStyle}>
-            {props.prefix && <span class={`${prefixCls}-content-prefix`}>{props.prefix}</span>}
-            <span class={`${prefixCls}-content-value`}>{renderValue()}</span>
-            {props.suffix && <span class={`${prefixCls}-content-suffix`}>{props.suffix}</span>}
+          {props.title && (
+            <div class={cls(`${prefixCls}-title`, props.classNames?.title)} style={props.styles?.title}>
+              {props.title}
+            </div>
+          )}
+          <div
+            class={cls(`${prefixCls}-content`, props.classNames?.content)}
+            style={{ ...props.valueStyle, ...props.styles?.content }}
+          >
+            {props.prefix && (
+              <span class={cls(`${prefixCls}-content-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
+                {props.prefix}
+              </span>
+            )}
+            <span class={cls(`${prefixCls}-content-value`, props.classNames?.value)} style={props.styles?.value}>
+              {renderValue()}
+            </span>
+            {props.suffix && (
+              <span class={cls(`${prefixCls}-content-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+                {props.suffix}
+              </span>
+            )}
           </div>
         </div>
       )

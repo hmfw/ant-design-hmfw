@@ -153,7 +153,7 @@ export { Steps, ProgressIcon, PanelArrow } from './steps'
 export type { StepItem, StepStatus, StepsProps, IconRenderType, IconRenderInfo } from './steps'
 
 export { Result } from './result'
-export type { ResultStatus } from './result'
+export type { ResultStatus, ResultClassNames, ResultStyles } from './result'
 
 export { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from './skeleton'
 export type { SkeletonAvatarProps, SkeletonTitleProps, SkeletonParagraphProps } from './skeleton'
@@ -316,7 +316,7 @@ export { TreeSelect } from './tree-select'
 export type { TreeSelectProps, TreeSelectNode } from './tree-select'
 
 export { Statistic, Countdown } from './statistic'
-export type { StatisticProps, CountdownProps } from './statistic'
+export type { StatisticProps, CountdownProps, StatisticClassNames, StatisticStyles } from './statistic'
 
 export { Calendar } from './calendar'
 export type {

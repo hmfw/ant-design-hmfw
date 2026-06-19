@@ -2,8 +2,9 @@ import { defineComponent, type PropType, type VNode, type VNodeChild } from 'vue
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, WarningFilled } from '../icon'
+import type { ResultClassNames, ResultStatus, ResultStyles } from './types'
 
-export type ResultStatus = 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500'
+export type { ResultStatus } from './types'
 
 // 对齐 AntD：四种状态各自对应一个 Filled 图标组件
 const iconMap: Record<string, () => VNode> = {
@@ -44,6 +45,8 @@ export const Result = defineComponent({
       type: [String, Object, Array, Function, Boolean] as PropType<VNodeChild | false>,
       default: undefined,
     },
+    classNames: Object as PropType<ResultClassNames>,
+    styles: Object as PropType<ResultStyles>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('result')
@@ -57,36 +60,71 @@ export const Result = defineComponent({
         // 异常状态：始终渲染插画，不受 icon=false 影响（对齐 AntD）
         const Img = exceptionMap[status]
         iconNode = (
-          <div class={cls(`${prefixCls}-icon`, `${prefixCls}-image`)}>
+          <div
+            class={cls(`${prefixCls}-icon`, `${prefixCls}-image`, props.classNames?.icon)}
+            style={props.styles?.icon}
+          >
             <Img />
           </div>
         )
       } else if (slots.icon) {
         // 自定义 icon slot：添加 custom 类，避免默认状态颜色/尺寸覆盖用户样式
-        iconNode = <div class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-custom`)}>{slots.icon()}</div>
+        iconNode = (
+          <div
+            class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-custom`, props.classNames?.icon)}
+            style={props.styles?.icon}
+          >
+            {slots.icon()}
+          </div>
+        )
       } else if (props.icon === false) {
         // 仅普通状态在 icon=false 时隐藏图标
         iconNode = null
       } else if (props.icon !== undefined) {
         // 自定义 icon prop（VNode/字符串等）：添加 custom 类
-        iconNode = <div class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-custom`)}>{props.icon}</div>
+        iconNode = (
+          <div
+            class={cls(`${prefixCls}-icon`, `${prefixCls}-icon-custom`, props.classNames?.icon)}
+            style={props.styles?.icon}
+          >
+            {props.icon}
+          </div>
+        )
       } else {
         const fallback = iconMap[status]?.() ?? null
-        iconNode = <div class={`${prefixCls}-icon`}>{fallback}</div>
+        iconNode = (
+          <div class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon}>
+            {fallback}
+          </div>
+        )
       }
 
       const extraNode = slots.extra?.() ?? props.extra
       const hasExtra = slots.extra || props.extra != null
 
       return (
-        <div class={cls(prefixCls, `${prefixCls}-${status}`)}>
+        <div class={cls(prefixCls, `${prefixCls}-${status}`, props.classNames?.root)} style={props.styles?.root}>
           {iconNode}
-          {(props.title || slots.title) && <div class={`${prefixCls}-title`}>{slots.title?.() ?? props.title}</div>}
-          {(props.subTitle || slots.subTitle) && (
-            <div class={`${prefixCls}-subtitle`}>{slots.subTitle?.() ?? props.subTitle}</div>
+          {(props.title || slots.title) && (
+            <div class={cls(`${prefixCls}-title`, props.classNames?.title)} style={props.styles?.title}>
+              {slots.title?.() ?? props.title}
+            </div>
           )}
-          {hasExtra && <div class={`${prefixCls}-extra`}>{extraNode}</div>}
-          {slots.default && <div class={`${prefixCls}-body`}>{slots.default()}</div>}
+          {(props.subTitle || slots.subTitle) && (
+            <div class={cls(`${prefixCls}-subtitle`, props.classNames?.subtitle)} style={props.styles?.subtitle}>
+              {slots.subTitle?.() ?? props.subTitle}
+            </div>
+          )}
+          {hasExtra && (
+            <div class={cls(`${prefixCls}-extra`, props.classNames?.extra)} style={props.styles?.extra}>
+              {extraNode}
+            </div>
+          )}
+          {slots.default && (
+            <div class={cls(`${prefixCls}-body`, props.classNames?.content)} style={props.styles?.content}>
+              {slots.default()}
+            </div>
+          )}
         </div>
       )
     }

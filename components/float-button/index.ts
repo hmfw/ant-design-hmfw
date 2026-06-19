@@ -10,4 +10,6 @@ export type {
   FloatButtonTrigger,
   FloatButtonGroupPlacement,
   FloatButtonBadgeProps,
+  FloatButtonClassNames,
+  FloatButtonStyles,
 } from './types'

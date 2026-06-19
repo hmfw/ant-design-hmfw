@@ -508,7 +508,7 @@ pnpm dev
 
 ## 当前进度
 
-### 已完成组件（24/67）
+### 已完成组件（34/67）
 
 | 组件             | 类型定义 Key 数量                                                                                | 文档 | Demo | 状态 |
 | ---------------- | ------------------------------------------------------------------------------------------------ | ---- | ---- | ---- |
@@ -536,6 +536,16 @@ pnpm dev
 | **Spin**         | 4 (root, dot, container, description)                                                            | ✅   | ✅   | 完成 |
 | **Message**      | 4 (wrapper, notice, icon, title) — 命令式 call options                                           | ✅   | ✅   | 完成 |
 | **Notification** | 6 (notice, icon, message, description, btn, close) — 命令式 call options                         | ✅   | ✅   | 完成 |
+| **Avatar**       | 3 (root, img, string)                                                                            | ✅   | ✅   | 完成 |
+| **Badge**        | 4 (root, indicator, dot, text)                                                                   | ✅   | ✅   | 完成 |
+| **Empty**        | 4 (root, image, description, footer)                                                             | ✅   | ✅   | 完成 |
+| **Statistic**    | 6 (root, title, content, prefix, value, suffix) — Countdown 共享                                 | ✅   | ✅   | 完成 |
+| **QRCode**       | 2 (root, cover)                                                                                  | ✅   | ✅   | 完成 |
+| **BackTop**      | 3 (root, content, icon)                                                                          | ✅   | ✅   | 完成 |
+| **FloatButton**  | 4 (root, body, icon, content)                                                                    | ✅   | ✅   | 完成 |
+| **Tag**          | —（单元素透传，用原生 class/style）                                                              | ✅   | —    | 完成 |
+| **Watermark**    | —（单元素透传，水印层防篡改不暴露）                                                              | ✅   | —    | 完成 |
+| **Result**       | —（CSS 全硬编码，未实现 classNames API）                                                         | ✅   | —    | 完成 |
 
 ### 待实现组件（优先级排序）
 
@@ -565,9 +575,32 @@ pnpm dev
 - [x] **Alert** - 警告提示（root/icon/section/title/description/actions/closeIcon 7 个 key）✅
 - [x] **Spin** - 加载中（root/dot/container/description 4 个 key）✅
 
-#### 第四批：其他组件
+#### 第四批：其他组件（分波次推进，剩余 33 个）
 
-- [ ] 剩余 40+ 个组件
+**Wave 4A：简单展示组件 ✅ 完成**
+
+- [x] **Avatar** - 头像（root/img/string，3 keys）✅
+- [x] **Badge** - 徽标（root/indicator/dot/text，4 keys）✅
+- [x] **Empty** - 空状态（root/image/description/footer，4 keys）✅
+- [x] **Statistic** - 数值（root/title/content/prefix/value/suffix，6 keys）✅
+- [x] **QRCode** - 二维码（root/cover，2 keys）✅
+- [x] **BackTop** - 回到顶部（root/content/icon，3 keys）✅
+- [x] **FloatButton** - 浮动按钮（root/body/icon/content，4 keys）✅
+- [x] **Tag** - 单元素透传 ✅
+- [x] **Watermark** - 单元素透传（水印层防篡改）✅
+- [x] **Result** - 全硬编码样式 ✅
+
+**Wave 4B：表单控件与轻交互**（10 个，待启动）
+
+- [ ] switch / slider / rate / segmented / input-number / auto-complete / tooltip / popconfirm / breadcrumb / anchor
+
+**Wave 4C：数据展示与容器**（10 个，待启动）
+
+- [ ] list / collapse / descriptions / timeline / steps / pagination / typography / image / carousel / skeleton
+
+**Wave 4D：复杂/弹层组件**（13 个，待启动）
+
+- [ ] menu / cascader / tree-select / date-picker / range-picker / time-picker / color-picker / calendar / upload / tour / app / flex
 
 ### 关联任务
 
@@ -929,6 +962,7 @@ open http://localhost:5173/components/{component}
 
 ## 更新日志
 
+- **2026-06-18** - 启动第四批：Wave 4A 简单展示组件完成（10 个，累计 34/67）。Avatar/Badge/Empty/Statistic/QRCode/BackTop/FloatButton 实现完整语义化 API；Tag/Watermark/Result 标注为单元素透传或硬编码样式。typecheck OK，build:docs 2.37s，219 个相关测试全通过
 - **2026-06-18** - 完成第三批：反馈组件（4 个，累计 24/67）。Alert (7 keys) + Spin (4 keys) 声明式语义化 API；Message (4 keys) + Notification (6 keys) 命令式 API，通过 call options 传入 classNames/styles。111 个相关测试全通过
 - **2026-06-18** - 完成第二批：布局/容器组件（5 个，累计 20/67）。Drawer (8 keys) + Space (2 keys) + Divider (1 key) 实现完整语义化 API；Layout 和 Grid 作为单元素透传组件，文档中说明使用原生 class/style 即可
 - **2026-06-18** - 完善开发指南：补充「设计 Token 章节模板与生成流程」（Token 提取命令、命名转换规则、分组排序规则、特殊情况处理），确保新会话可独立完成后续组件的完整语义化 API 实现；更新实施流程图，将设计 Token 补全纳入标准流程
@@ -952,5 +986,5 @@ open http://localhost:5173/components/{component}
 
 ---
 
-**版本**：v2.3  
+**版本**：v2.4  
 **最后更新**：2026-06-18

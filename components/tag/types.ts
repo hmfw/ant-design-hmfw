@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'vue'
+
 export type TagColor =
   | 'default'
   | 'success'
@@ -17,6 +19,30 @@ export type TagColor =
   | 'purple'
   | string
 
+/**
+ * Tag 各部分的语义化 className
+ */
+export interface TagClassNames {
+  /** 根节点 span.hmfw-tag（href 存在时为 a.hmfw-tag） */
+  root?: string
+  /** 前置图标 .hmfw-tag-icon */
+  icon?: string
+  /** 关闭图标 span.hmfw-tag-close-icon */
+  closeIcon?: string
+}
+
+/**
+ * Tag 各部分的语义化 style
+ */
+export interface TagStyles {
+  /** 根节点 span.hmfw-tag（href 存在时为 a.hmfw-tag） */
+  root?: CSSProperties
+  /** 前置图标 .hmfw-tag-icon */
+  icon?: CSSProperties
+  /** 关闭图标 span.hmfw-tag-close-icon */
+  closeIcon?: CSSProperties
+}
+
 export interface TagProps {
   color?: TagColor
   closable?: boolean
@@ -29,6 +55,10 @@ export interface TagProps {
   target?: string
   /** 禁用状态 */
   disabled?: boolean
+  /** 语义化 className */
+  classNames?: TagClassNames
+  /** 语义化 style */
+  styles?: TagStyles
 }
 
 export interface CheckableTagProps {

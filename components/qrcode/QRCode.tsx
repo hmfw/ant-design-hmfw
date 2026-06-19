@@ -8,7 +8,14 @@ import { cls } from '../_utils'
 import { Spin } from '../spin'
 import { Icon } from '../icon'
 import { LoadingOutlined } from '../icon/icons'
-import type { QRCodeStatus, QRCodeErrorLevel, QRCodeType, StatusRenderInfo } from './types'
+import type {
+  QRCodeStatus,
+  QRCodeErrorLevel,
+  QRCodeType,
+  StatusRenderInfo,
+  QRCodeClassNames,
+  QRCodeStyles,
+} from './types'
 
 // --- Minimal QR encoder ---
 
@@ -296,6 +303,8 @@ export const QRCode = defineComponent({
     statusRender: Function as PropType<(info: StatusRenderInfo) => any>,
     marginSize: Number,
     onRefresh: Function as PropType<() => void>,
+    classNames: Object as PropType<QRCodeClassNames>,
+    styles: Object as PropType<QRCodeStyles>,
   },
   setup(props, { attrs }) {
     const prefixCls = usePrefixCls('qrcode')
@@ -477,9 +486,13 @@ export const QRCode = defineComponent({
         return null
       }
 
-      const rootClasses = cls(prefixCls, {
-        [`${prefixCls}-borderless`]: !props.bordered,
-      })
+      const rootClasses = cls(
+        prefixCls,
+        {
+          [`${prefixCls}-borderless`]: !props.bordered,
+        },
+        props.classNames?.root,
+      )
 
       const canvasAttrs: Record<string, any> = {
         width: props.size,
@@ -501,11 +514,12 @@ export const QRCode = defineComponent({
             width: `${props.size}px`,
             height: `${props.size}px`,
             backgroundColor: props.bgColor,
+            ...props.styles?.root,
           }}
         >
           {props.type === 'canvas' ? <canvas ref={canvasRef} {...canvasAttrs} /> : renderSVG()}
           {props.status !== 'active' && (
-            <div class={`${prefixCls}-cover`}>
+            <div class={cls(`${prefixCls}-cover`, props.classNames?.cover)} style={props.styles?.cover}>
               {(props.statusRender ?? defaultStatusRender)({
                 status: props.status as Exclude<QRCodeStatus, 'active'>,
                 onRefresh: props.onRefresh,

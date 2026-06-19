@@ -1,2 +1,2 @@
 export { Avatar, AvatarGroup } from './Avatar'
-export type { AvatarProps, AvatarGroupProps, AvatarSize, AvatarShape } from './types'
+export type { AvatarProps, AvatarGroupProps, AvatarSize, AvatarShape, AvatarClassNames, AvatarStyles } from './types'

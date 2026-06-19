@@ -1,5 +1,29 @@
 import type { CSSProperties } from 'vue'
 
+/**
+ * BackTop 各部分的语义化 className
+ */
+export interface BackTopClassNames {
+  /** 根节点 div.hmfw-back-top */
+  root?: string
+  /** 默认内容容器 div.hmfw-back-top-content */
+  content?: string
+  /** 图标容器 div.hmfw-back-top-icon */
+  icon?: string
+}
+
+/**
+ * BackTop 各部分的语义化 style
+ */
+export interface BackTopStyles {
+  /** 根节点 div.hmfw-back-top */
+  root?: CSSProperties
+  /** 默认内容容器 div.hmfw-back-top-content */
+  content?: CSSProperties
+  /** 图标容器 div.hmfw-back-top-icon */
+  icon?: CSSProperties
+}
+
 export interface BackTopProps {
   /**
    * 滚动高度达到此参数值才出现 BackTop
@@ -38,4 +62,14 @@ export interface BackTopProps {
    * 自定义前缀
    */
   prefixCls?: string
+
+  /**
+   * 语义化 className
+   */
+  classNames?: BackTopClassNames
+
+  /**
+   * 语义化 style
+   */
+  styles?: BackTopStyles
 }

@@ -2,7 +2,7 @@ import { defineComponent, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { ScrollNumber } from './ScrollNumber'
-import type { BadgeStatus, BadgeSize } from './types'
+import type { BadgeStatus, BadgeSize, BadgeClassNames, BadgeStyles } from './types'
 
 const PRESET_COLORS = [
   'pink',
@@ -41,6 +41,8 @@ export const Badge = defineComponent({
       type: Array as unknown as PropType<[number, number]>,
     },
     title: String,
+    classNames: Object as PropType<BadgeClassNames>,
+    styles: Object as PropType<BadgeStyles>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('badge')
@@ -93,9 +95,13 @@ export const Badge = defineComponent({
               ? { background: props.color }
               : {}
         return (
-          <span class={cls(prefixCls, `${prefixCls}-status`)}>
-            <span class={statusCls} style={dotStyle} />
-            {props.text && <span class={`${prefixCls}-status-text`}>{props.text}</span>}
+          <span class={cls(prefixCls, `${prefixCls}-status`, props.classNames?.root)} style={props.styles?.root}>
+            <span class={cls(statusCls, props.classNames?.dot)} style={{ ...dotStyle, ...props.styles?.dot }} />
+            {props.text && (
+              <span class={cls(`${prefixCls}-status-text`, props.classNames?.text)} style={props.styles?.text}>
+                {props.text}
+              </span>
+            )}
           </span>
         )
       }
@@ -108,17 +114,25 @@ export const Badge = defineComponent({
       })
 
       const sup = !isHidden.value && (
-        <sup class={supCls} style={badgeStyle.value} title={props.title ?? String(props.count ?? '')}>
+        <sup
+          class={cls(supCls, props.classNames?.indicator)}
+          style={{ ...badgeStyle.value, ...props.styles?.indicator }}
+          title={props.title ?? String(props.count ?? '')}
+        >
           {!props.dot && <ScrollNumber count={displayCount.value ?? 0} />}
         </sup>
       )
 
       if (!slots.default) {
-        return <span class={cls(prefixCls, `${prefixCls}-not-a-wrapper`)}>{sup}</span>
+        return (
+          <span class={cls(prefixCls, `${prefixCls}-not-a-wrapper`, props.classNames?.root)} style={props.styles?.root}>
+            {sup}
+          </span>
+        )
       }
 
       return (
-        <span class={cls(prefixCls)}>
+        <span class={cls(prefixCls, props.classNames?.root)} style={props.styles?.root}>
           {slots.default()}
           {sup}
         </span>

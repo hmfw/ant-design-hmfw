@@ -57,6 +57,14 @@
   <FloatButtonBackTopDemo />
 </DemoBlock>
 
+### 细粒度样式控制
+
+通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="FloatButtonClassNamesSource">
+  <FloatButtonClassNames />
+</DemoBlock>
+
 ## API
 
 组件提供了三种使用方式：
@@ -75,19 +83,21 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 
 ### FloatButton Props
 
-| 参数        | 说明                                       | 类型                                                | 默认值             |
-| ----------- | ------------------------------------------ | --------------------------------------------------- | ------------------ |
-| type        | 设置按钮类型                               | `'default' \| 'primary'`                            | `'default'`        |
-| shape       | 设置按钮形状                               | `'circle' \| 'square'`                              | `'circle'`         |
-| icon        | 自定义图标                                 | `IconComponent \| string \| slot`                   | `FileTextOutlined` |
-| content     | 文字及其他内容，仅 `square` 形状展示       | `string \| slot`                                    | -                  |
-| description | 文字及其他内容（已废弃，请使用 `content`） | `string \| slot`                                    | -                  |
-| tooltip     | 气泡提示的内容                             | `string \| TooltipProps \| slot`                    | -                  |
-| badge       | 带徽标数字的悬浮按钮                       | `{ count?, dot?, overflowCount?, color?, offset? }` | -                  |
-| href        | 点击跳转的地址，指定时渲染为 `a` 标签      | `string`                                            | -                  |
-| target      | 相当于 `a` 标签的 `target` 属性            | `string`                                            | -                  |
-| htmlType    | 设置原生 `button` 的 `type`                | `'submit' \| 'reset' \| 'button'`                   | `'button'`         |
-| disabled    | 是否禁用按钮                               | `boolean`                                           | `false`            |
+| 参数        | 说明                                                                             | 类型                                                | 默认值             |
+| ----------- | -------------------------------------------------------------------------------- | --------------------------------------------------- | ------------------ |
+| type        | 设置按钮类型                                                                     | `'default' \| 'primary'`                            | `'default'`        |
+| shape       | 设置按钮形状                                                                     | `'circle' \| 'square'`                              | `'circle'`         |
+| icon        | 自定义图标                                                                       | `IconComponent \| string \| slot`                   | `FileTextOutlined` |
+| content     | 文字及其他内容，仅 `square` 形状展示                                             | `string \| slot`                                    | -                  |
+| description | 文字及其他内容（已废弃，请使用 `content`）                                       | `string \| slot`                                    | -                  |
+| tooltip     | 气泡提示的内容                                                                   | `string \| TooltipProps \| slot`                    | -                  |
+| badge       | 带徽标数字的悬浮按钮                                                             | `{ count?, dot?, overflowCount?, color?, offset? }` | -                  |
+| href        | 点击跳转的地址，指定时渲染为 `a` 标签                                            | `string`                                            | -                  |
+| target      | 相当于 `a` 标签的 `target` 属性                                                  | `string`                                            | -                  |
+| htmlType    | 设置原生 `button` 的 `type`                                                      | `'submit' \| 'reset' \| 'button'`                   | `'button'`         |
+| disabled    | 是否禁用按钮                                                                     | `boolean`                                           | `false`            |
+| classNames  | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `FloatButtonClassNames`                             | -                  |
+| styles      | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `FloatButtonStyles`                                 | -                  |
 
 ### FloatButton Events
 
@@ -137,3 +147,164 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 | 事件名 | 说明             | 回调参数                  |
 | ------ | ---------------- | ------------------------- |
 | click  | 点击按钮时的回调 | `(e: MouseEvent) => void` |
+
+---
+
+## 语义化 className 与 style
+
+通过 `classNames` 和 `styles` 属性可以对组件的各个子节点应用自定义样式，支持细粒度控制。
+
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface FloatButtonClassNames {
+  root?: string // 根节点（button 或 a 标签）
+  body?: string // 主体容器
+  icon?: string // 图标容器
+  content?: string // 文本内容容器（仅 square 形状显示）
+}
+
+interface FloatButtonStyles {
+  root?: CSSProperties
+  body?: CSSProperties
+  icon?: CSSProperties
+  content?: CSSProperties
+}
+```
+
+### DOM 结构与 className 映射
+
+```html
+<!-- circle 形状（仅图标） -->
+<button class="hmfw-float-btn hmfw-float-btn-default hmfw-float-btn-circle">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <div class="hmfw-float-btn-body">
+    <!-- ↑ classNames.body / styles.body 应用于此 -->
+    <div class="hmfw-float-btn-icon">
+      <!-- ↑ classNames.icon / styles.icon 应用于此 -->
+      <span class="hmfw-icon">
+        <svg>...</svg>
+      </span>
+    </div>
+  </div>
+</button>
+
+<!-- square 形状（图标 + 文本） -->
+<button class="hmfw-float-btn hmfw-float-btn-primary hmfw-float-btn-square">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <div class="hmfw-float-btn-body">
+    <!-- ↑ classNames.body / styles.body 应用于此 -->
+    <div class="hmfw-float-btn-icon">
+      <!-- ↑ classNames.icon / styles.icon 应用于此 -->
+      <span class="hmfw-icon">
+        <svg>...</svg>
+      </span>
+    </div>
+    <div class="hmfw-float-btn-content">
+      <!-- ↑ classNames.content / styles.content 应用于此 -->
+      反馈
+    </div>
+  </div>
+</button>
+```
+
+### 使用 classNames
+
+通过 `classNames` 属性应用自定义 CSS 类：
+
+```vue
+<template>
+  <!-- 自定义根节点渐变背景 -->
+  <FloatButton :icon="QuestionCircleOutlined" :class-names="{ root: 'custom-root' }" tooltip="帮助" />
+
+  <!-- 自定义图标和内容区域 -->
+  <FloatButton
+    shape="square"
+    :icon="CommentOutlined"
+    content="反馈"
+    :class-names="{ icon: 'custom-icon', content: 'custom-content' }"
+  />
+</template>
+
+<style scoped>
+:deep(.custom-root) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  transition: all 0.3s;
+}
+
+:deep(.custom-root:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+:deep(.custom-icon) {
+  font-size: 20px;
+  color: #52c41a;
+}
+
+:deep(.custom-content) {
+  font-weight: bold;
+  color: #1677ff;
+}
+</style>
+```
+
+### 使用 styles
+
+通过 `styles` 属性应用内联样式：
+
+```vue
+<template>
+  <!-- 内联样式控制根节点和图标 -->
+  <FloatButton
+    type="primary"
+    :icon="CustomerServiceOutlined"
+    :styles="{
+      root: { borderRadius: '12px' },
+      icon: { fontSize: '20px' },
+    }"
+  />
+
+  <!-- square 形状完整样式定制 -->
+  <FloatButton
+    shape="square"
+    :icon="RocketOutlined"
+    content="启动"
+    :styles="{
+      root: { boxShadow: '0 4px 16px rgba(22, 119, 255, 0.3)' },
+      body: { padding: '8px' },
+      icon: { fontSize: '20px' },
+      content: { fontWeight: 'bold' },
+    }"
+  />
+</template>
+```
+
+### 注意事项
+
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `content` key 仅在 `shape="square"` 时渲染，`circle` 形状不显示文本内容
+- Badge 和 Tooltip 是外部组件，不在 `classNames` / `styles` 控制范围内
+- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-float-btn-disabled`）合并
+
+## 设计 Token
+
+FloatButton 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+| Token 名称                      | 说明         | 默认值                                                                       |
+| ------------------------------- | ------------ | ---------------------------------------------------------------------------- |
+| `--hmfw-color-bg-elevated`      | 浮层背景色   | `#ffffff`                                                                    |
+| `--hmfw-color-border`           | 边框色       | `#d9d9d9`                                                                    |
+| `--hmfw-color-fill-tertiary`    | 三级填充色   | `rgba(0,0,0,0.04)`                                                           |
+| `--hmfw-color-primary`          | 主题色       | `#1677ff`                                                                    |
+| `--hmfw-color-primary-hover`    | 主题色悬停态 | `#4096ff`                                                                    |
+| `--hmfw-color-text`             | 主文本色     | `rgba(0,0,0,0.88)`                                                           |
+| `--hmfw-color-text-light-solid` | 浅色文本色   | `#ffffff`                                                                    |
+| `--hmfw-font-family`            | 字体族       | `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', …` |
+| `--hmfw-font-size-sm`           | 小号字号     | `12px`                                                                       |
+| `--hmfw-border-radius-lg`       | 大号圆角     | `8px`                                                                        |
+| `--hmfw-motion-duration-mid`    | 中速动画时长 | `0.2s`                                                                       |
+| `--hmfw-motion-ease-in-out`     | 缓入缓出曲线 | `cubic-bezier(0.645, 0.045, 0.355, 1)`                                       |

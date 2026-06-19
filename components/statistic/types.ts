@@ -1,5 +1,37 @@
 import type { CSSProperties, VNode } from 'vue'
 
+/** 语义化结构 className */
+export interface StatisticClassNames {
+  /** 根容器 */
+  root?: string
+  /** 标题区域 */
+  title?: string
+  /** 数值内容容器 */
+  content?: string
+  /** 数值前缀 */
+  prefix?: string
+  /** 数值文本 */
+  value?: string
+  /** 数值后缀 */
+  suffix?: string
+}
+
+/** 语义化结构 style */
+export interface StatisticStyles {
+  /** 根容器 */
+  root?: CSSProperties
+  /** 标题区域 */
+  title?: CSSProperties
+  /** 数值内容容器 */
+  content?: CSSProperties
+  /** 数值前缀 */
+  prefix?: CSSProperties
+  /** 数值文本 */
+  value?: CSSProperties
+  /** 数值后缀 */
+  suffix?: CSSProperties
+}
+
 export interface StatisticProps {
   /** 标题 */
   title?: string | VNode
@@ -21,6 +53,10 @@ export interface StatisticProps {
   loading?: boolean
   /** 自定义渲染数值 */
   valueRender?: (value: string) => VNode
+  /** 语义化结构 class */
+  classNames?: StatisticClassNames
+  /** 语义化结构 style */
+  styles?: StatisticStyles
 }
 
 export interface CountdownProps extends Omit<StatisticProps, 'value'> {

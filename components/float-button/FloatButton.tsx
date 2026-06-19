@@ -14,6 +14,8 @@ import type {
   FloatButtonTrigger,
   FloatButtonGroupPlacement,
   FloatButtonBadgeProps,
+  FloatButtonClassNames,
+  FloatButtonStyles,
 } from './types'
 import { FileTextOutlined, VerticalAlignTopOutlined } from './icons'
 
@@ -56,6 +58,8 @@ export const FloatButton = defineComponent({
     target: String,
     htmlType: { type: String as PropType<FloatButtonHTMLType>, default: 'button' },
     disabled: Boolean,
+    classNames: Object as PropType<FloatButtonClassNames>,
+    styles: Object as PropType<FloatButtonStyles>,
   },
   emits: ['click'],
   setup(props, { slots, emit, attrs }) {
@@ -74,10 +78,16 @@ export const FloatButton = defineComponent({
       const mergedIcon = props.icon ?? (showContent ? undefined : FileTextOutlined)
 
       const body = (
-        <div class={`${prefixCls}-body`}>
-          {mergedIcon !== undefined && <div class={`${prefixCls}-icon`}>{renderIcon(mergedIcon, slots.icon)}</div>}
+        <div class={cls(`${prefixCls}-body`, props.classNames?.body)} style={props.styles?.body}>
+          {mergedIcon !== undefined && (
+            <div class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon}>
+              {renderIcon(mergedIcon, slots.icon)}
+            </div>
+          )}
           {showContent && (
-            <div class={`${prefixCls}-content`}>{slots.content?.() ?? slots.description?.() ?? mergedContent}</div>
+            <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
+              {slots.content?.() ?? slots.description?.() ?? mergedContent}
+            </div>
           )}
         </div>
       )
@@ -112,15 +122,24 @@ export const FloatButton = defineComponent({
         badged
       )
 
-      const rootCls = cls(prefixCls, `${prefixCls}-${props.type}`, `${prefixCls}-${props.shape}`, {
-        [`${prefixCls}-disabled`]: props.disabled,
-      })
+      const rootCls = cls(
+        prefixCls,
+        `${prefixCls}-${props.type}`,
+        `${prefixCls}-${props.shape}`,
+        {
+          [`${prefixCls}-disabled`]: props.disabled,
+        },
+        props.classNames?.root,
+      )
+
+      const rootStyle = [attrs.style, props.styles?.root]
 
       if (props.href) {
         return (
           <a
             {...attrs}
             class={rootCls}
+            style={rootStyle}
             href={props.href}
             target={props.target}
             onClick={handleClick}
@@ -132,7 +151,14 @@ export const FloatButton = defineComponent({
       }
 
       return (
-        <button {...attrs} type={props.htmlType} class={rootCls} onClick={handleClick} disabled={props.disabled}>
+        <button
+          {...attrs}
+          type={props.htmlType}
+          class={rootCls}
+          style={rootStyle}
+          onClick={handleClick}
+          disabled={props.disabled}
+        >
           {content}
         </button>
       )

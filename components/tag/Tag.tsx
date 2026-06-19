@@ -1,7 +1,7 @@
 import { defineComponent, computed, ref, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { TagColor } from './types'
+import type { TagColor, TagClassNames, TagStyles } from './types'
 
 const PRESET_COLORS = [
   'magenta',
@@ -39,6 +39,8 @@ export const Tag = defineComponent({
     href: String,
     target: String,
     disabled: Boolean,
+    classNames: Object as PropType<TagClassNames>,
+    styles: Object as PropType<TagStyles>,
   },
   emits: ['close'],
   setup(props, { slots, emit }) {
@@ -48,20 +50,26 @@ export const Tag = defineComponent({
     const isPresetColor = computed(() => (props.color ? PRESET_COLORS.includes(props.color) : false))
 
     const classes = computed(() =>
-      cls(prefixCls, {
-        [`${prefixCls}-${props.color}`]: isPresetColor.value || undefined,
-        [`${prefixCls}-has-color`]: (props.color && !isPresetColor.value) || undefined,
-        [`${prefixCls}-borderless`]: !props.bordered || undefined,
-        [`${prefixCls}-hidden`]: !visible.value || undefined,
-        [`${prefixCls}-disabled`]: props.disabled || undefined,
-      }),
+      cls(
+        prefixCls,
+        {
+          [`${prefixCls}-${props.color}`]: isPresetColor.value || undefined,
+          [`${prefixCls}-has-color`]: (props.color && !isPresetColor.value) || undefined,
+          [`${prefixCls}-borderless`]: !props.bordered || undefined,
+          [`${prefixCls}-hidden`]: !visible.value || undefined,
+          [`${prefixCls}-disabled`]: props.disabled || undefined,
+        },
+        props.classNames?.root,
+      ),
     )
 
     const tagStyle = computed(() => {
+      const base: Record<string, unknown> = {}
       if (props.color && !isPresetColor.value && !props.disabled) {
-        return { backgroundColor: props.color }
+        base.backgroundColor = props.color
       }
-      return {}
+      // 合并语义化 root style（优先级更高）
+      return { ...base, ...props.styles?.root }
     })
 
     const handleClose = (e: MouseEvent) => {
@@ -120,11 +128,14 @@ export const Tag = defineComponent({
           target={props.href ? props.target : undefined}
           aria-disabled={props.disabled || undefined}
         >
-          {props.icon && <IconComp class={`${prefixCls}-icon`} />}
+          {props.icon && (
+            <IconComp class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon} />
+          )}
           {slots.default?.()}
           {showClose && (
             <span
-              class={`${prefixCls}-close-icon`}
+              class={cls(`${prefixCls}-close-icon`, props.classNames?.closeIcon)}
+              style={props.styles?.closeIcon}
               onClick={handleClose}
               onKeydown={handleCloseKeyDown}
               role="button"

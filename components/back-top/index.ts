@@ -1,2 +1,2 @@
 export { BackTop } from './BackTop'
-export type { BackTopProps } from './types'
+export type { BackTopProps, BackTopClassNames, BackTopStyles } from './types'

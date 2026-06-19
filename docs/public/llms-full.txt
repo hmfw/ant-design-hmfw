@@ -434,6 +434,8 @@ import { Avatar, AvatarGroup } from 'ant-design-hmfw'
 | crossOrigin | CORS 属性设置 | `'' \| 'anonymous' \| 'use-credentials'` | - |
 | referrerPolicy | referrer 策略 | `'no-referrer' \| 'no-referrer-when-downgrade' \| 'origin' \| 'origin-when-cross-origin' \| 'same-origin' \| 'strict-origin' \| 'strict-origin-when-cross-origin' \| 'unsafe-url'` | - |
 | gap | 字符类型距离左右两侧边界单位像素 | `number` | `4` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AvatarClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AvatarStyles` | - |
 
 **AvatarGroup Props**
 
@@ -503,6 +505,8 @@ import { BackTop } from 'ant-design-hmfw'
 | className | 自定义类名 | `string` | - |
 | rootClassName | 根节点类名 | `string` | - |
 | style | 自定义样式 | `CSSProperties` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BackTopClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BackTopStyles` | - |
 | prefixCls | 自定义前缀 | `string` | `'hmfw'` |
 
 ### Events
@@ -598,6 +602,8 @@ import { Badge, Ribbon } from 'ant-design-hmfw'
 | size | 徽标大小 | `'default' \| 'small'` | `'default'` |
 | text | 在设置了 status 的前提下有效，设置状态点的文本 | `string` | - |
 | title | 鼠标悬停时的提示文字 | `string` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BadgeClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BadgeStyles` | - |
 
 **Badge.Ribbon Props**
 
@@ -2117,6 +2123,8 @@ import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from 'ant-desi
 | imageStyle | 图片样式（优先级高于 imageWidth/imageHeight） | `CSSProperties` | - |
 | imageWidth | 图片宽度，数字按 px 处理，亦可传带单位字符串 | `number \| string` | - |
 | imageHeight | 图片高度，数字按 px 处理，亦可传带单位字符串 | `number \| string` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `EmptyClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `EmptyStyles` | - |
 
 ### 示例
 
@@ -2250,6 +2258,8 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 | target | 相当于 `a` 标签的 `target` 属性 | `string` | - |
 | htmlType | 设置原生 `button` 的 `type` | `'submit' \| 'reset' \| 'button'` | `'button'` |
 | disabled | 是否禁用按钮 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `FloatButtonClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `FloatButtonStyles` | - |
 
 **FloatButton.Group Props**
 
@@ -4541,6 +4551,8 @@ import { QRCode } from 'ant-design-hmfw'
 | marginSize | SVG 类型二维码的边距 | `number` | - |
 | statusRender | 自定义状态渲染函数 | `(info: StatusRenderInfo) => VNode \| null` | - |
 | onRefresh | 点击刷新的回调 | `() => void` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `QRCodeClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `QRCodeStyles` | - |
 
 **StatusRenderInfo**
 
@@ -5539,6 +5551,8 @@ import { Statistic, Countdown } from 'ant-design-hmfw'
 | decimalSeparator | 小数点分隔符 | `string` | `.` |
 | loading | 加载状态 | `boolean` | `false` |
 | valueRender | 自定义渲染数值 | `(value: string) => VNode` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `StatisticClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `StatisticStyles` | - |
 
 **Countdown Props**
 

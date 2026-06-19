@@ -53,3 +53,7 @@
 | subTitle | 自定义副标题 |
 | extra    | 操作区       |
 | default  | 补充说明内容 |
+
+## 设计 Token
+
+Result 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。
