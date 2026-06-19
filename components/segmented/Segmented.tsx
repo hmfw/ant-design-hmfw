@@ -20,6 +20,8 @@ export const Segmented = defineComponent({
     orientation: String as PropType<'horizontal' | 'vertical'>,
     shape: { type: String as PropType<'default' | 'round'>, default: 'default' },
     name: String,
+    classNames: Object as PropType<import('./types').SegmentedClassNames>,
+    styles: Object as PropType<import('./types').SegmentedStyles>,
   },
   emits: ['update:value', 'change'],
   setup(props, { emit }) {
@@ -162,13 +164,22 @@ export const Segmented = defineComponent({
 
       return (
         <div
-          class={cls(`${prefixCls}-item-label`, {
+          class={cls(`${prefixCls}-item-label`, props.classNames?.itemLabel, {
             // 仅有图标时使用专用类，使其呈正方形并居中
             [`${prefixCls}-item-icon-only`]: hasIcon && !hasLabel,
           })}
+          style={props.styles?.itemLabel}
         >
-          {hasIcon && <span class={`${prefixCls}-item-icon`}>{opt.icon}</span>}
-          {hasLabel && <span class={`${prefixCls}-item-text`}>{opt.label}</span>}
+          {hasIcon && (
+            <span class={cls(`${prefixCls}-item-icon`, props.classNames?.itemIcon)} style={props.styles?.itemIcon}>
+              {opt.icon}
+            </span>
+          )}
+          {hasLabel && (
+            <span class={cls(`${prefixCls}-item-text`, props.classNames?.itemText)} style={props.styles?.itemText}>
+              {opt.label}
+            </span>
+          )}
         </div>
       )
     }
@@ -181,16 +192,29 @@ export const Segmented = defineComponent({
       const itemNode = (
         <label
           key={opt.value}
-          class={cls(`${prefixCls}-item`, opt.className, {
-            [`${prefixCls}-item-selected`]: isSelected,
-            [`${prefixCls}-item-disabled`]: isDisabled,
-          })}
-          style={opt.style}
+          class={cls(
+            `${prefixCls}-item`,
+            opt.className,
+            props.classNames?.item,
+            {
+              [`${prefixCls}-item-selected`]: isSelected,
+              [`${prefixCls}-item-disabled`]: isDisabled,
+            },
+            isSelected && props.classNames?.itemSelected,
+            isDisabled && props.classNames?.itemDisabled,
+          )}
+          style={{
+            ...opt.style,
+            ...props.styles?.item,
+            ...(isSelected ? props.styles?.itemSelected : {}),
+            ...(isDisabled ? props.styles?.itemDisabled : {}),
+          }}
           title={opt.title}
         >
           <input
             type="radio"
-            class={`${prefixCls}-item-input`}
+            class={cls(`${prefixCls}-item-input`, props.classNames?.itemInput)}
+            style={props.styles?.itemInput}
             name={radioName.value}
             value={opt.value}
             checked={isSelected}
@@ -213,17 +237,18 @@ export const Segmented = defineComponent({
 
     return () => (
       <div
-        class={cls(prefixCls, `${prefixCls}-${props.size}`, {
+        class={cls(prefixCls, props.classNames?.root, `${prefixCls}-${props.size}`, {
           [`${prefixCls}-disabled`]: props.disabled,
           [`${prefixCls}-block`]: props.block,
           [`${prefixCls}-vertical`]: isVertical.value,
           [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
           [`${prefixCls}-shape-${props.shape}`]: props.shape === 'round',
         })}
+        style={props.styles?.root}
       >
-        <div ref={groupRef} class={`${prefixCls}-group`}>
+        <div ref={groupRef} class={cls(`${prefixCls}-group`, props.classNames?.group)} style={props.styles?.group}>
           {/* Animated thumb */}
-          <div ref={thumbRef} class={`${prefixCls}-thumb`} />
+          <div ref={thumbRef} class={cls(`${prefixCls}-thumb`, props.classNames?.thumb)} style={props.styles?.thumb} />
           {/* Items */}
           {normalizeOptions.value.map((opt, index) => renderItem(opt, index))}
         </div>

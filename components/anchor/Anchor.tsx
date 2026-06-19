@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, onMounted, onUnmounted, watch, nextTick, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { AnchorLinkItem } from './types'
+import type { AnchorLinkItem, AnchorClassNames, AnchorStyles } from './types'
 import { provideAnchorContext } from './context'
 import { AnchorLink } from './AnchorLink'
 
@@ -17,6 +17,8 @@ export const Anchor = defineComponent({
     replace: Boolean,
     getCurrentAnchor: Function as PropType<(activeLink: string) => string>,
     getContainer: Function as PropType<() => HTMLElement | Window>,
+    classNames: Object as PropType<AnchorClassNames>,
+    styles: Object as PropType<AnchorStyles>,
   },
   emits: ['change', 'click'],
   setup(props, { emit, slots }) {
@@ -207,6 +209,8 @@ export const Anchor = defineComponent({
       onClick: handleClick,
       direction: props.direction,
       replace: props.replace,
+      classNames: props.classNames,
+      styles: props.styles,
     })
 
     onMounted(() => {
@@ -280,31 +284,44 @@ export const Anchor = defineComponent({
     }
 
     const wrapperClass = computed(() =>
-      cls(`${prefixCls}-wrapper`, {
-        [`${prefixCls}-wrapper-horizontal`]: props.direction === 'horizontal',
-      }),
+      cls(
+        `${prefixCls}-wrapper`,
+        {
+          [`${prefixCls}-wrapper-horizontal`]: props.direction === 'horizontal',
+        },
+        props.classNames?.wrapper,
+      ),
     )
 
     const anchorClass = computed(() =>
-      cls(prefixCls, {
-        [`${prefixCls}-fixed`]: !props.affix,
-      }),
+      cls(
+        prefixCls,
+        {
+          [`${prefixCls}-fixed`]: !props.affix,
+        },
+        props.classNames?.root,
+      ),
     )
 
     const inkClass = computed(() =>
-      cls(`${prefixCls}-ink`, {
-        [`${prefixCls}-ink-visible`]: !!activeLink.value,
-      }),
+      cls(
+        `${prefixCls}-ink`,
+        {
+          [`${prefixCls}-ink-visible`]: !!activeLink.value,
+        },
+        props.classNames?.ink,
+      ),
     )
 
     const wrapperStyle = computed(() => ({
       maxHeight: props.offsetTop ? `calc(100vh - ${props.offsetTop}px)` : '100vh',
+      ...props.styles?.wrapper,
     }))
 
     return () => (
       <div ref={wrapperRef} class={wrapperClass.value} style={wrapperStyle.value}>
-        <div class={anchorClass.value}>
-          <span class={inkClass.value} ref={inkRef} />
+        <div class={anchorClass.value} style={props.styles?.root}>
+          <span class={inkClass.value} ref={inkRef} style={props.styles?.ink} />
           {props.items?.length ? renderLinks(props.items) : slots.default?.()}
         </div>
       </div>

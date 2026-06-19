@@ -106,6 +106,8 @@ import { Anchor, AnchorLink } from 'ant-design-hmfw'
 | replace | 是否替换浏览器历史记录 | `boolean` | `false` |
 | getCurrentAnchor | 自定义高亮的锚点 | `(activeLink: string) => string` | - |
 | getContainer | 指定滚动的容器 | `() => HTMLElement \| Window` | `() => window` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AnchorClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AnchorStyles` | - |
 
 **AnchorLinkItem**
 
@@ -326,6 +328,8 @@ import { AutoComplete } from 'ant-design-hmfw'
 | defaultOpen | 默认是否展开下拉菜单 | `boolean` | `false` |
 | open | 是否展开下拉菜单（受控） | `boolean` | - |
 | notFoundContent | 当下拉列表为空时显示的内容 | `string` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AutoCompleteClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AutoCompleteStyles` | - |
 
 **AutoCompleteOption**
 
@@ -679,6 +683,8 @@ import { Breadcrumb } from 'ant-design-hmfw'
 | items | 路由栈信息 | `ItemType[]` | `[]` |
 | separator | 分隔符 | `string \| VNode` | `'/'` |
 | params | 路径参数 | `Record<string, any>` | `{}` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BreadcrumbClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BreadcrumbStyles` | - |
 
 **ItemType**
 
@@ -3346,6 +3352,8 @@ import { InputNumber } from 'ant-design-hmfw'
 | changeOnWheel | 是否允许鼠标滚轮改变数值 | `boolean` | `false` |
 | decimalSeparator | 小数点 | `string` | `'.'` |
 | stringMode | 字符串模式，开启后支持高精度小数 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `InputNumberClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `InputNumberStyles` | - |
 
 **InputNumber Methods**
 
@@ -4300,6 +4308,8 @@ import { Popconfirm } from 'ant-design-hmfw'
 | getPopupContainer | 自定义浮层挂载容器（默认 `body`） | `(triggerNode: HTMLElement) => HTMLElement` | - |
 | overlayStyle | 卡片外层样式 | `Record<string, string>` | - |
 | overlayInnerStyle | 卡片内层样式 | `Record<string, string>` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `PopconfirmClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `PopconfirmStyles` | - |
 
 ### Events
 
@@ -4825,6 +4835,8 @@ import { Rate } from 'ant-design-hmfw'
 | size | 组件尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | keyboard | 是否支持键盘操作 | `boolean` | `true` |
 | autoFocus | 自动获取焦点 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RateClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RateStyles` | - |
 
 **Rate Methods**
 
@@ -4989,6 +5001,8 @@ import { Segmented } from 'ant-design-hmfw'
 | orientation | 方向(优先级高于 vertical) | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | shape | 形状 | `'default' \| 'round'` | `'default'` |
 | name | 为所有 radio input 设置 name 属性 | `string` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SegmentedClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SegmentedStyles` | - |
 
 **SegmentedOption**
 
@@ -5344,6 +5358,8 @@ import { Slider } from 'ant-design-hmfw'
 | dots | 是否只能拖拽到刻度上 | `boolean` | `false` |
 | keyboard | 支持使用键盘操作 handle | `boolean` | `true` |
 | tooltip | Tooltip 相关配置 | `{ open?: boolean; formatter?: (value: number) => string \| null }` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SliderClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SliderStyles` | - |
 
 ### Events
 
@@ -5767,6 +5783,8 @@ import { Switch } from 'ant-design-hmfw'
 | id | 组件的 id | `string` | - |
 | title | 组件的 title 属性 | `string` | - |
 | tabIndex | 组件的 tab index | `number` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SwitchClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SwitchStyles` | - |
 
 ### Events
 
@@ -6412,6 +6430,8 @@ import { Tooltip } from 'ant-design-hmfw'
 | destroyOnHidden | 隐藏时销毁浮层 DOM | `boolean` | `false` |
 | destroyTooltipOnHide | 同 `destroyOnHidden`（旧名，已弃用） | `boolean` | `false` |
 | getPopupContainer | 自定义浮层挂载容器（默认 `body`） | `(triggerNode: HTMLElement) => HTMLElement` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TooltipClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TooltipStyles` | - |
 
 ### Events
 

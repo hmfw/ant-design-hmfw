@@ -23,6 +23,50 @@ export interface SliderTooltipProps {
 }
 
 /**
+ * Slider 各部分的语义化 className
+ */
+export interface SliderClassNames {
+  /** 根节点 div.hmfw-slider */
+  root?: string
+  /** 轨道容器 div.hmfw-slider-rail */
+  rail?: string
+  /** 已选区间填充 div.hmfw-slider-track */
+  track?: string
+  /** 滑块手柄 div.hmfw-slider-handle */
+  handle?: string
+  /** 刻度点 span.hmfw-slider-dot */
+  dot?: string
+  /** 刻度标签容器 div.hmfw-slider-mark */
+  mark?: string
+  /** 单个刻度文本 span.hmfw-slider-mark-text */
+  markText?: string
+  /** 手柄提示框 div.hmfw-slider-tooltip */
+  tooltip?: string
+}
+
+/**
+ * Slider 各部分的语义化 style
+ */
+export interface SliderStyles {
+  /** 根节点 div.hmfw-slider */
+  root?: CSSProperties
+  /** 轨道容器 div.hmfw-slider-rail */
+  rail?: CSSProperties
+  /** 已选区间填充 div.hmfw-slider-track */
+  track?: CSSProperties
+  /** 滑块手柄 div.hmfw-slider-handle */
+  handle?: CSSProperties
+  /** 刻度点 span.hmfw-slider-dot */
+  dot?: CSSProperties
+  /** 刻度标签容器 div.hmfw-slider-mark */
+  mark?: CSSProperties
+  /** 单个刻度文本 span.hmfw-slider-mark-text */
+  markText?: CSSProperties
+  /** 手柄提示框 div.hmfw-slider-tooltip */
+  tooltip?: CSSProperties
+}
+
+/**
  * Slider 组件属性
  */
 export interface SliderProps {
@@ -54,6 +98,10 @@ export interface SliderProps {
   dots?: boolean
   /** 是否启用键盘导航 */
   keyboard?: boolean
+  /** 语义化 className */
+  classNames?: SliderClassNames
+  /** 语义化 style */
+  styles?: SliderStyles
 }
 
 /**

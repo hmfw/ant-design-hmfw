@@ -1,2 +1,8 @@
 export { Popconfirm } from './Popconfirm'
-export type { PopconfirmProps, PopconfirmContent, PopconfirmOkType } from './types'
+export type {
+  PopconfirmProps,
+  PopconfirmContent,
+  PopconfirmOkType,
+  PopconfirmClassNames,
+  PopconfirmStyles,
+} from './types'

@@ -84,7 +84,7 @@ export { Radio, RadioGroup, RadioButton } from './radio'
 export type { RadioProps, RadioGroupProps, RadioValueType, RadioChangeEvent } from './radio'
 
 export { Switch } from './switch'
-export type { SwitchProps, SwitchSize, SwitchClassNames, SwitchStyles } from './switch'
+export type { SwitchProps, SwitchSize } from './switch'
 
 export { Spin } from './spin'
 export type { SpinProps, SpinSize } from './spin'
@@ -93,12 +93,7 @@ export { Progress } from './progress'
 export type { ProgressProps, ProgressType, ProgressStatus } from './progress'
 
 export { Breadcrumb } from './breadcrumb'
-export type {
-  BreadcrumbProps,
-  BreadcrumbItemType as BreadcrumbItem,
-  BreadcrumbClassNames,
-  BreadcrumbStyles,
-} from './breadcrumb'
+export type { BreadcrumbProps, BreadcrumbItemType as BreadcrumbItem } from './breadcrumb'
 
 export { Pagination } from './pagination'
 export type { PaginationProps, PaginationSize } from './pagination'
@@ -125,15 +120,7 @@ export type {
 } from './message'
 
 export { Tooltip } from './tooltip'
-export type {
-  TooltipProps,
-  TooltipPlacement,
-  TooltipTrigger,
-  TooltipArrow,
-  TooltipTitle,
-  TooltipClassNames,
-  TooltipStyles,
-} from './tooltip'
+export type { TooltipProps, TooltipPlacement, TooltipTrigger, TooltipArrow, TooltipTitle } from './tooltip'
 
 export { Alert } from './alert'
 export type { AlertProps, AlertType, AlertVariant } from './alert'
@@ -155,7 +142,6 @@ export { Popover, PopoverPurePanel } from './popover'
 export type { PopoverProps, PopoverContent } from './popover'
 
 export { InputNumber } from './input-number'
-export type { InputNumberClassNames, InputNumberStyles } from './input-number'
 
 export { Collapse, CollapsePanel } from './collapse'
 export type { CollapseItem, CollapsibleType, CollapsePanelProps, ExpandIconProps } from './collapse'
@@ -176,7 +162,6 @@ export { Rate } from './rate'
 export type { RateProps, RateSize, RateCharacterRenderContext, RateClassNames, RateStyles } from './rate'
 
 export { Slider } from './slider'
-export type { SliderProps, SliderMarks, SliderTooltipProps, SliderClassNames, SliderStyles } from './slider'
 
 export { Timeline, TimelineItem } from './timeline'
 export type {
@@ -196,24 +181,10 @@ export { Dropdown } from './dropdown'
 export type { DropdownProps } from './dropdown'
 
 export { Popconfirm } from './popconfirm'
-export type {
-  PopconfirmProps,
-  PopconfirmContent,
-  PopconfirmOkType,
-  PopconfirmClassNames,
-  PopconfirmStyles,
-} from './popconfirm'
+export type { PopconfirmProps, PopconfirmContent, PopconfirmOkType } from './popconfirm'
 
 export { Segmented } from './segmented'
-export type {
-  SegmentedOption,
-  SegmentedValue,
-  SegmentedRawOption,
-  SegmentedOptions,
-  SegmentedProps,
-  SegmentedClassNames,
-  SegmentedStyles,
-} from './segmented'
+export type { SegmentedOption } from './segmented'
 
 export { Table } from './table'
 export type { TableColumn, TableProps } from './table'
@@ -247,7 +218,7 @@ export { QRCode } from './qrcode'
 export type { QRCodeProps, QRCodeStatus, QRCodeErrorLevel, QRCodeType, StatusRenderInfo } from './qrcode'
 
 export { Anchor, AnchorLink } from './anchor'
-export type { AnchorProps, AnchorLinkItem, AnchorClassNames, AnchorStyles } from './anchor'
+export type { AnchorProps, AnchorLinkItem } from './anchor'
 
 export { Tree, DirectoryTree } from './tree'
 export type {
@@ -283,7 +254,7 @@ export { Flex } from './flex'
 export type { FlexProps, FlexAlign, FlexJustify, FlexWrap, FlexGap, FlexDirection } from './flex'
 
 export { AutoComplete } from './auto-complete'
-export type { AutoCompleteProps, AutoCompleteOption, AutoCompleteClassNames, AutoCompleteStyles } from './auto-complete'
+export type { AutoCompleteProps, AutoCompleteOption } from './auto-complete'
 
 export { Cascader } from './cascader'
 export type { CascaderProps, CascaderOption, CascaderValue, CascaderExpandTrigger } from './cascader'

@@ -1,7 +1,7 @@
 import { defineComponent, ref, watch, computed, onMounted, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { SwitchSize, SwitchChangeEventHandler } from './types'
+import type { SwitchSize, SwitchChangeEventHandler, SwitchClassNames, SwitchStyles } from './types'
 
 export const Switch = defineComponent({
   name: 'Switch',
@@ -25,6 +25,8 @@ export const Switch = defineComponent({
     className: String,
     style: [String, Object] as PropType<string | CSSProperties>,
     onChange: Function as PropType<SwitchChangeEventHandler>,
+    classNames: Object as PropType<SwitchClassNames>,
+    styles: Object as PropType<SwitchStyles>,
   },
   emits: ['update:checked', 'change', 'click', 'focus', 'blur'],
   setup(props, { slots, emit }) {
@@ -93,37 +95,56 @@ export const Switch = defineComponent({
       emit('blur', e)
     }
 
-    return () => (
-      <button
-        ref={buttonRef}
-        type="button"
-        role="switch"
-        aria-checked={isChecked.value}
-        id={props.id}
-        title={props.title}
-        tabindex={props.tabIndex}
-        style={props.style}
-        class={cls(
-          prefixCls,
-          {
-            [`${prefixCls}-checked`]: isChecked.value,
-            [`${prefixCls}-disabled`]: isDisabled.value,
-            [`${prefixCls}-loading`]: isLoading.value,
-            [`${prefixCls}-small`]: props.size === 'small',
-          },
-          props.className,
-        )}
-        onClick={handleClick}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        disabled={isDisabled.value}
-      >
-        <span class={`${prefixCls}-handle`}>{isLoading.value && <span class={`${prefixCls}-loading-icon`} />}</span>
-        <span class={`${prefixCls}-inner`}>
-          <span class={`${prefixCls}-inner-checked`}>{slots.checkedChildren?.() ?? props.checkedChildren}</span>
-          <span class={`${prefixCls}-inner-unchecked`}>{slots.unCheckedChildren?.() ?? props.unCheckedChildren}</span>
-        </span>
-      </button>
-    )
+    return () => {
+      const rootStyle = [props.style, props.styles?.root].filter(Boolean)
+
+      return (
+        <button
+          ref={buttonRef}
+          type="button"
+          role="switch"
+          aria-checked={isChecked.value}
+          id={props.id}
+          title={props.title}
+          tabindex={props.tabIndex}
+          style={rootStyle}
+          class={cls(
+            prefixCls,
+            {
+              [`${prefixCls}-checked`]: isChecked.value,
+              [`${prefixCls}-disabled`]: isDisabled.value,
+              [`${prefixCls}-loading`]: isLoading.value,
+              [`${prefixCls}-small`]: props.size === 'small',
+            },
+            props.className,
+            props.classNames?.root,
+          )}
+          onClick={handleClick}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          disabled={isDisabled.value}
+        >
+          <span class={cls(`${prefixCls}-handle`, props.classNames?.handle)} style={props.styles?.handle}>
+            {isLoading.value && (
+              <span
+                class={cls(`${prefixCls}-loading-icon`, props.classNames?.loadingIcon)}
+                style={props.styles?.loadingIcon}
+              />
+            )}
+          </span>
+          <span class={cls(`${prefixCls}-inner`, props.classNames?.inner)} style={props.styles?.inner}>
+            <span class={cls(`${prefixCls}-inner-checked`, props.classNames?.checked)} style={props.styles?.checked}>
+              {slots.checkedChildren?.() ?? props.checkedChildren}
+            </span>
+            <span
+              class={cls(`${prefixCls}-inner-unchecked`, props.classNames?.unchecked)}
+              style={props.styles?.unchecked}
+            >
+              {slots.unCheckedChildren?.() ?? props.unCheckedChildren}
+            </span>
+          </span>
+        </button>
+      )
+    }
   },
 })

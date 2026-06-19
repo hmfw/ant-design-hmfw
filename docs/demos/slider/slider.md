@@ -58,6 +58,14 @@
   <SliderDots />
 </DemoBlock>
 
+### 细粒度样式控制
+
+通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="SliderClassNamesSource">
+  <SliderClassNames />
+</DemoBlock>
+
 ## API
 
 ### Slider Props
@@ -78,6 +86,8 @@
 | dots           | 是否只能拖拽到刻度上                                                                                                                             | `boolean`                                                            | `false` |
 | keyboard       | 支持使用键盘操作 handle                                                                                                                          | `boolean`                                                            | `true`  |
 | tooltip        | Tooltip 相关配置                                                                                                                                 | `{ open?: boolean; formatter?: (value: number) => string \| null }`  | -       |
+| classNames     | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)                                                                 | `SliderClassNames`                                                   | -       |
+| styles         | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)                                                                 | `SliderStyles`                                                       | -       |
 
 ### Slider Events
 
@@ -86,6 +96,203 @@
 | update:value | 当 Slider 的值发生改变时，会触发 change 事件，并把改变后的值作为参数传入 | `(value: number \| [number, number]) => void` |
 | change       | 当 Slider 的值发生改变时触发                                             | `(value: number \| [number, number]) => void` |
 | afterChange  | 与 mouseup 触发时机一致，把当前值作为参数传入                            | `(value: number \| [number, number]) => void` |
+
+---
+
+## 语义化 className 与 style
+
+通过 `classNames` 和 `styles` 属性可以对 Slider 的各个子节点应用自定义样式，支持细粒度控制。
+
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface SliderClassNames {
+  root?: string // 根节点 div.hmfw-slider
+  rail?: string // 轨道容器 div.hmfw-slider-rail
+  track?: string // 已选区间填充 div.hmfw-slider-track
+  handle?: string // 滑块手柄 div.hmfw-slider-handle
+  dot?: string // 刻度点 span.hmfw-slider-dot
+  mark?: string // 刻度标签容器 div.hmfw-slider-mark
+  markText?: string // 单个刻度文本 span.hmfw-slider-mark-text
+  tooltip?: string // 手柄提示框 div.hmfw-slider-tooltip
+}
+
+interface SliderStyles {
+  root?: CSSProperties
+  rail?: CSSProperties
+  track?: CSSProperties
+  handle?: CSSProperties
+  dot?: CSSProperties
+  mark?: CSSProperties
+  markText?: CSSProperties
+  tooltip?: CSSProperties
+}
+```
+
+### DOM 结构与 className 映射
+
+```html
+<div class="hmfw-slider">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
+
+  <div class="hmfw-slider-rail">
+    <!-- ↑ classNames.rail / styles.rail 应用于此（轨道背景） -->
+  </div>
+
+  <div class="hmfw-slider-track">
+    <!-- ↑ classNames.track / styles.track 应用于此（已选区间填充） -->
+  </div>
+
+  <div class="hmfw-slider-handle">
+    <!-- ↑ classNames.handle / styles.handle 应用于此（滑块手柄） -->
+    <div class="hmfw-slider-tooltip">
+      <!-- ↑ classNames.tooltip / styles.tooltip 应用于此（手柄提示框） -->
+    </div>
+  </div>
+
+  <!-- 当设置 marks 时 -->
+  <div class="hmfw-slider-mark">
+    <!-- ↑ classNames.mark / styles.mark 应用于此（刻度标签容器） -->
+    <span class="hmfw-slider-mark-text">
+      <!-- ↑ classNames.markText / styles.markText 应用于此（单个刻度文本） -->
+    </span>
+  </div>
+
+  <!-- 当设置 dots 时 -->
+  <span class="hmfw-slider-dot">
+    <!-- ↑ classNames.dot / styles.dot 应用于此（刻度点） -->
+  </span>
+</div>
+```
+
+### 使用 classNames
+
+通过 `classNames` 属性应用自定义 CSS 类：
+
+```vue
+<template>
+  <!-- 自定义轨道与填充 -->
+  <Slider
+    :default-value="40"
+    :class-names="{
+      rail: 'my-rail',
+      track: 'my-track',
+    }"
+  />
+
+  <!-- 自定义滑块手柄 -->
+  <Slider
+    :default-value="60"
+    :class-names="{
+      handle: 'my-handle',
+    }"
+  />
+
+  <!-- 自定义刻度标记 -->
+  <Slider
+    :default-value="50"
+    :marks="{ 0: '0°C', 50: '50°C', 100: '100°C' }"
+    :class-names="{
+      markText: 'my-mark-text',
+      dot: 'my-dot',
+    }"
+    dots
+  />
+</template>
+
+<style scoped>
+:deep(.my-rail) {
+  background: linear-gradient(to right, #f0f5ff, #d6e4ff);
+  height: 6px;
+}
+
+:deep(.my-track) {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  height: 6px;
+}
+
+:deep(.my-handle) {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+:deep(.my-handle:hover) {
+  transform: scale(1.1);
+}
+
+:deep(.my-mark-text) {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+:deep(.my-dot) {
+  background: #1890ff;
+  border: 2px solid #ffffff;
+}
+</style>
+```
+
+### 使用 styles
+
+通过 `styles` 属性应用内联样式：
+
+```vue
+<template>
+  <!-- 自定义轨道高度与颜色 -->
+  <Slider
+    :default-value="40"
+    :styles="{
+      rail: { background: '#f0f0f0', height: '8px' },
+      track: { background: '#52c41a', height: '8px' },
+    }"
+  />
+
+  <!-- 自定义滑块手柄 -->
+  <Slider
+    :default-value="60"
+    :styles="{
+      handle: {
+        width: '20px',
+        height: '20px',
+        borderColor: '#722ed1',
+        borderWidth: '3px',
+      },
+    }"
+  />
+
+  <!-- 组合使用：范围选择 -->
+  <Slider
+    :default-value="[20, 80]"
+    range
+    :styles="{
+      rail: { background: '#e6f7ff', height: '8px' },
+      track: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', height: '8px' },
+      handle: { borderColor: '#667eea', borderWidth: '3px' },
+    }"
+  />
+</template>
+```
+
+### 注意事项
+
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- 范围选择模式 (`range={true}`) 下会渲染多个 `handle`，`classNames.handle` 和 `styles.handle` 会应用到所有手柄
+- 修改 `rail` 或 `track` 的高度时，需同步调整 `handle` 的 `marginTop`，以保持垂直居中（默认轨道高度 4px，手柄高度 14px，`marginTop: -5px`）
+- `tooltip` 样式仅在 Tooltip 显示时生效（hover/拖拽时或设置 `tooltip.open={true}` 时）
+- 垂直模式下，`rail` 和 `track` 的宽度对应水平模式的高度
+
+## 设计 Token
+
+Slider 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+| Token 名称             | 说明   | 默认值    |
+| ---------------------- | ------ | --------- |
+| `--hmfw-color-primary` | 主题色 | `#1677ff` |
 
 ## 键盘操作
 

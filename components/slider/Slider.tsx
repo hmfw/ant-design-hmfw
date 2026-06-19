@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls, KEYS } from '../_utils'
-import type { SliderMarks, SliderTooltipProps } from './types'
+import type { SliderMarks, SliderTooltipProps, SliderClassNames, SliderStyles } from './types'
 
 export const Slider = defineComponent({
   name: 'Slider',
@@ -20,6 +20,8 @@ export const Slider = defineComponent({
     included: { type: Boolean, default: true },
     dots: Boolean,
     keyboard: { type: Boolean, default: true },
+    classNames: Object as PropType<SliderClassNames>,
+    styles: Object as PropType<SliderStyles>,
   },
   emits: ['update:value', 'change', 'afterChange'],
   setup(props, { emit }) {
@@ -267,14 +269,27 @@ export const Slider = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, {
-            [`${prefixCls}-disabled`]: props.disabled,
-            [`${prefixCls}-vertical`]: props.vertical,
-            [`${prefixCls}-with-marks`]: markEntries.length > 0,
-          })}
+          class={cls(
+            prefixCls,
+            {
+              [`${prefixCls}-disabled`]: props.disabled,
+              [`${prefixCls}-vertical`]: props.vertical,
+              [`${prefixCls}-with-marks`]: markEntries.length > 0,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
         >
-          <div ref={trackRef} class={`${prefixCls}-rail`} onClick={handleTrackClick}>
-            <div class={`${prefixCls}-track`} style={trackStyle} />
+          <div
+            ref={trackRef}
+            class={cls(`${prefixCls}-rail`, props.classNames?.rail)}
+            style={props.styles?.rail}
+            onClick={handleTrackClick}
+          >
+            <div
+              class={cls(`${prefixCls}-track`, props.classNames?.track)}
+              style={{ ...trackStyle, ...props.styles?.track }}
+            />
 
             {/* Dots from marks */}
             {markEntries.map(({ value: mv }) => {
@@ -283,10 +298,14 @@ export const Slider = defineComponent({
               return (
                 <span
                   key={mv}
-                  class={cls(`${prefixCls}-dot`, {
-                    [`${prefixCls}-dot-active`]: props.range ? mv >= startVal && mv <= endVal : mv <= endVal,
-                  })}
-                  style={dotStyle}
+                  class={cls(
+                    `${prefixCls}-dot`,
+                    {
+                      [`${prefixCls}-dot-active`]: props.range ? mv >= startVal && mv <= endVal : mv <= endVal,
+                    },
+                    props.classNames?.dot,
+                  )}
+                  style={{ ...dotStyle, ...props.styles?.dot }}
                 />
               )
             })}
@@ -298,10 +317,14 @@ export const Slider = defineComponent({
               return (
                 <span
                   key={dp}
-                  class={cls(`${prefixCls}-dot`, {
-                    [`${prefixCls}-dot-active`]: props.range ? dp >= startVal && dp <= endVal : dp <= endVal,
-                  })}
-                  style={dotStyle}
+                  class={cls(
+                    `${prefixCls}-dot`,
+                    {
+                      [`${prefixCls}-dot-active`]: props.range ? dp >= startVal && dp <= endVal : dp <= endVal,
+                    },
+                    props.classNames?.dot,
+                  )}
+                  style={{ ...dotStyle, ...props.styles?.dot }}
                 />
               )
             })}
@@ -309,10 +332,18 @@ export const Slider = defineComponent({
             {/* Start handle */}
             {props.range && (
               <div
-                class={cls(`${prefixCls}-handle`, `${prefixCls}-handle-1`, {
-                  [`${prefixCls}-handle-dragging`]: dragging.value === 'start',
-                })}
-                style={props.vertical ? { bottom: `${startPct}%` } : { left: `${startPct}%` }}
+                class={cls(
+                  `${prefixCls}-handle`,
+                  `${prefixCls}-handle-1`,
+                  {
+                    [`${prefixCls}-handle-dragging`]: dragging.value === 'start',
+                  },
+                  props.classNames?.handle,
+                )}
+                style={{
+                  ...(props.vertical ? { bottom: `${startPct}%` } : { left: `${startPct}%` }),
+                  ...props.styles?.handle,
+                }}
                 role="slider"
                 aria-label="最小值"
                 aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
@@ -332,17 +363,28 @@ export const Slider = defineComponent({
                 onKeydown={handleKeyDown('start')}
               >
                 {shouldShowTooltip('start') && formatTooltip(startVal) !== null && (
-                  <div class={`${prefixCls}-tooltip`}>{formatTooltip(startVal)}</div>
+                  <div class={cls(`${prefixCls}-tooltip`, props.classNames?.tooltip)} style={props.styles?.tooltip}>
+                    {formatTooltip(startVal)}
+                  </div>
                 )}
               </div>
             )}
 
             {/* End / single handle */}
             <div
-              class={cls(`${prefixCls}-handle`, props.range ? `${prefixCls}-handle-2` : '', {
-                [`${prefixCls}-handle-dragging`]: dragging.value === 'end' || (!props.range && dragging.value !== null),
-              })}
-              style={props.vertical ? { bottom: `${endPct}%` } : { left: `${endPct}%` }}
+              class={cls(
+                `${prefixCls}-handle`,
+                props.range ? `${prefixCls}-handle-2` : '',
+                {
+                  [`${prefixCls}-handle-dragging`]:
+                    dragging.value === 'end' || (!props.range && dragging.value !== null),
+                },
+                props.classNames?.handle,
+              )}
+              style={{
+                ...(props.vertical ? { bottom: `${endPct}%` } : { left: `${endPct}%` }),
+                ...props.styles?.handle,
+              }}
               role="slider"
               aria-label={props.range ? '最大值' : '滑块'}
               aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
@@ -362,25 +404,34 @@ export const Slider = defineComponent({
               onKeydown={handleKeyDown(props.range ? 'end' : 'start')}
             >
               {shouldShowTooltip('end') && formatTooltip(endVal) !== null && (
-                <div class={`${prefixCls}-tooltip`}>{formatTooltip(endVal)}</div>
+                <div class={cls(`${prefixCls}-tooltip`, props.classNames?.tooltip)} style={props.styles?.tooltip}>
+                  {formatTooltip(endVal)}
+                </div>
               )}
             </div>
           </div>
 
           {/* Mark labels */}
           {markEntries.length > 0 && (
-            <div class={`${prefixCls}-mark`}>
+            <div class={cls(`${prefixCls}-mark`, props.classNames?.mark)} style={props.styles?.mark}>
               {markEntries.map(({ value: mv, label, style: markStyle }) => {
                 const pct = getPercent(mv)
                 const labelStyle = props.vertical ? { bottom: `${pct}%` } : { left: `${pct}%` }
                 const combinedStyle = markStyle ? { ...labelStyle, ...markStyle } : labelStyle
+                const finalStyle = props.styles?.markText
+                  ? { ...combinedStyle, ...props.styles.markText }
+                  : combinedStyle
                 return (
                   <span
                     key={mv}
-                    class={cls(`${prefixCls}-mark-text`, {
-                      [`${prefixCls}-mark-text-active`]: props.range ? mv >= startVal && mv <= endVal : mv <= endVal,
-                    })}
-                    style={combinedStyle}
+                    class={cls(
+                      `${prefixCls}-mark-text`,
+                      {
+                        [`${prefixCls}-mark-text-active`]: props.range ? mv >= startVal && mv <= endVal : mv <= endVal,
+                      },
+                      props.classNames?.markText,
+                    )}
+                    style={finalStyle}
                     onClick={() => handleMarkClick(mv)}
                   >
                     {label}

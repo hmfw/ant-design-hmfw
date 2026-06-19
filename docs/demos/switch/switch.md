@@ -41,23 +41,33 @@
   <SwitchSize />
 </DemoBlock>
 
+### 细粒度样式控制
+
+通过 `classNames` / `styles` 对根容器、手柄、加载图标、内部文字等子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="SwitchClassNamesSource">
+  <SwitchClassNames />
+</DemoBlock>
+
 ## API
 
 ### Switch Props
 
-| 参数              | 说明              | 类型                   | 默认值      |
-| ----------------- | ----------------- | ---------------------- | ----------- |
-| checked(v-model)  | 指定当前是否选中  | `boolean`              | `false`     |
-| defaultChecked    | 初始是否选中      | `boolean`              | `false`     |
-| disabled          | 是否禁用          | `boolean`              | `false`     |
-| loading           | 加载中的开关      | `boolean`              | `false`     |
-| size              | 开关大小          | `'default' \| 'small'` | `'default'` |
-| checkedChildren   | 选中时的内容      | `string \| VNode`      | -           |
-| unCheckedChildren | 非选中时的内容    | `string \| VNode`      | -           |
-| autoFocus         | 组件自动获取焦点  | `boolean`              | `false`     |
-| id                | 组件的 id         | `string`               | -           |
-| title             | 组件的 title 属性 | `string`               | -           |
-| tabIndex          | 组件的 tab index  | `number`               | -           |
+| 参数              | 说明                                                                             | 类型                   | 默认值      |
+| ----------------- | -------------------------------------------------------------------------------- | ---------------------- | ----------- |
+| checked(v-model)  | 指定当前是否选中                                                                 | `boolean`              | `false`     |
+| defaultChecked    | 初始是否选中                                                                     | `boolean`              | `false`     |
+| disabled          | 是否禁用                                                                         | `boolean`              | `false`     |
+| loading           | 加载中的开关                                                                     | `boolean`              | `false`     |
+| size              | 开关大小                                                                         | `'default' \| 'small'` | `'default'` |
+| checkedChildren   | 选中时的内容                                                                     | `string \| VNode`      | -           |
+| unCheckedChildren | 非选中时的内容                                                                   | `string \| VNode`      | -           |
+| autoFocus         | 组件自动获取焦点                                                                 | `boolean`              | `false`     |
+| id                | 组件的 id                                                                        | `string`               | -           |
+| title             | 组件的 title 属性                                                                | `string`               | -           |
+| tabIndex          | 组件的 tab index                                                                 | `number`               | -           |
+| classNames        | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SwitchClassNames`     | -           |
+| styles            | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SwitchStyles`         | -           |
 
 ### Switch Events
 
@@ -75,3 +85,174 @@
 | ----------------- | -------------- |
 | checkedChildren   | 选中时的内容   |
 | unCheckedChildren | 非选中时的内容 |
+
+---
+
+## 语义化 className 与 style
+
+通过 `classNames` 和 `styles` 属性可以对 Switch 的各个子节点应用自定义样式，支持细粒度控制。
+
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface SwitchClassNames {
+  root?: string // 根节点 button.hmfw-switch
+  handle?: string // 滑动手柄 span.hmfw-switch-handle
+  loadingIcon?: string // 加载图标 span.hmfw-switch-loading-icon
+  inner?: string // 内部内容容器 span.hmfw-switch-inner
+  checked?: string // 选中状态的子内容 span.hmfw-switch-inner-checked
+  unchecked?: string // 未选中状态的子内容 span.hmfw-switch-inner-unchecked
+}
+
+interface SwitchStyles {
+  root?: CSSProperties
+  handle?: CSSProperties
+  loadingIcon?: CSSProperties
+  inner?: CSSProperties
+  checked?: CSSProperties
+  unchecked?: CSSProperties
+}
+```
+
+### DOM 结构与 className 映射
+
+```html
+<!-- 基础开关 -->
+<button class="hmfw-switch hmfw-switch-checked">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <span class="hmfw-switch-handle">
+    <!-- ↑ classNames.handle / styles.handle 应用于此 -->
+  </span>
+  <span class="hmfw-switch-inner">
+    <!-- ↑ classNames.inner / styles.inner 应用于此 -->
+    <span class="hmfw-switch-inner-checked">
+      <!-- ↑ classNames.checked / styles.checked 应用于此 -->
+      开
+    </span>
+    <span class="hmfw-switch-inner-unchecked">
+      <!-- ↑ classNames.unchecked / styles.unchecked 应用于此 -->
+      关
+    </span>
+  </span>
+</button>
+
+<!-- 加载状态 -->
+<button class="hmfw-switch hmfw-switch-loading">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <span class="hmfw-switch-handle">
+    <!-- ↑ classNames.handle / styles.handle 应用于此 -->
+    <span class="hmfw-switch-loading-icon">
+      <!-- ↑ classNames.loadingIcon / styles.loadingIcon 应用于此 -->
+    </span>
+  </span>
+</button>
+```
+
+### 使用 classNames
+
+通过 `classNames` 属性应用自定义 CSS 类：
+
+```vue
+<template>
+  <!-- 自定义根容器渐变背景 -->
+  <Switch v-model:checked="checked" :class-names="{ root: 'gradient-switch' }" />
+
+  <!-- 自定义手柄样式 -->
+  <Switch
+    v-model:checked="checked"
+    :class-names="{
+      root: 'custom-root',
+      handle: 'custom-handle',
+    }"
+  />
+
+  <!-- 自定义内部文字样式 -->
+  <Switch
+    v-model:checked="checked"
+    checked-children="开"
+    un-checked-children="关"
+    :class-names="{
+      inner: 'custom-inner',
+      checked: 'custom-checked',
+      unchecked: 'custom-unchecked',
+    }"
+  />
+</template>
+
+<style scoped>
+:deep(.gradient-switch) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: all 0.3s;
+}
+
+:deep(.custom-handle) {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.6);
+}
+
+:deep(.custom-inner) {
+  font-weight: bold;
+}
+
+:deep(.custom-checked) {
+  color: #fffb00;
+}
+</style>
+```
+
+### 使用 styles
+
+通过 `styles` 属性应用内联样式：
+
+```vue
+<template>
+  <!-- 内联样式控制尺寸和颜色 -->
+  <Switch
+    v-model:checked="checked"
+    :styles="{
+      root: { minWidth: '60px', height: '28px' },
+      handle: { width: '24px', height: '24px' },
+    }"
+  />
+
+  <!-- 自定义文字样式 -->
+  <Switch
+    v-model:checked="checked"
+    checked-children="ON"
+    un-checked-children="OFF"
+    :styles="{
+      inner: { fontSize: '13px', fontWeight: 'bold' },
+      checked: { color: '#fffb00' },
+      unchecked: { color: '#ffa940' },
+    }"
+  />
+
+  <!-- 组合使用 -->
+  <Switch
+    v-model:checked="checked"
+    :styles="{
+      root: { borderRadius: '14px' },
+      handle: { boxShadow: '0 2px 8px rgba(0,0,0,0.3)' },
+      inner: { fontSize: '12px' },
+    }"
+  />
+</template>
+```
+
+### 注意事项
+
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-switch-checked`、`.hmfw-switch-loading`）合并
+- `checked` 和 `unchecked` 对应开关内部的两个子内容节点，仅在设置 `checkedChildren` / `unCheckedChildren` 时渲染
+- `loadingIcon` 仅在 `loading` 状态时渲染在 `handle` 内部
+- 自定义 `root` 的尺寸时，可能需要同步调整 `handle` 的位置和尺寸以保持视觉协调
+
+## 设计 Token
+
+Switch 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+| Token 名称             | 说明                                         | 默认值    |
+| ---------------------- | -------------------------------------------- | --------- |
+| `--hmfw-color-primary` | 主题色，用于选中状态的背景色和加载图标边框色 | `#1677ff` |

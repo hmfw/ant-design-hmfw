@@ -33,6 +33,42 @@ export interface BreadcrumbSeparatorType {
 
 export type ItemType = BreadcrumbItemType | BreadcrumbSeparatorType
 
+/**
+ * Breadcrumb 各部分的语义化 className
+ */
+export interface BreadcrumbClassNames {
+  /** 根节点 nav.hmfw-breadcrumb */
+  root?: string
+  /** 列表容器 ol */
+  list?: string
+  /** 面包屑项 li.hmfw-breadcrumb-item */
+  item?: string
+  /** 链接/文本 a.hmfw-breadcrumb-link 或 span.hmfw-breadcrumb-link */
+  link?: string
+  /** 分隔符 li.hmfw-breadcrumb-separator */
+  separator?: string
+  /** 带下拉菜单的链接内容 span.hmfw-breadcrumb-overlay-link */
+  overlayLink?: string
+}
+
+/**
+ * Breadcrumb 各部分的语义化 style
+ */
+export interface BreadcrumbStyles {
+  /** 根节点 nav.hmfw-breadcrumb */
+  root?: CSSProperties
+  /** 列表容器 ol */
+  list?: CSSProperties
+  /** 面包屑项 li.hmfw-breadcrumb-item */
+  item?: CSSProperties
+  /** 链接/文本 a.hmfw-breadcrumb-link 或 span.hmfw-breadcrumb-link */
+  link?: CSSProperties
+  /** 分隔符 li.hmfw-breadcrumb-separator */
+  separator?: CSSProperties
+  /** 带下拉菜单的链接内容 span.hmfw-breadcrumb-overlay-link */
+  overlayLink?: CSSProperties
+}
+
 export interface BreadcrumbProps {
   items?: ItemType[]
   separator?: string | VNode
@@ -50,4 +86,8 @@ export interface BreadcrumbProps {
     items: BreadcrumbItemType[],
     paths: string[],
   ) => VNode
+  /** 语义化 className */
+  classNames?: BreadcrumbClassNames
+  /** 语义化 style */
+  styles?: BreadcrumbStyles
 }

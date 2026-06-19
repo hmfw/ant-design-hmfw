@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, watch, onMounted, type PropType } from 
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Tooltip } from '../tooltip'
-import type { RateSize, RateCharacterRenderContext } from './types'
+import type { RateSize, RateCharacterRenderContext, RateClassNames, RateStyles } from './types'
 import type { TooltipProps } from '../tooltip'
 
 export const Rate = defineComponent({
@@ -22,6 +22,8 @@ export const Rate = defineComponent({
     size: String as PropType<RateSize>,
     keyboard: { type: Boolean, default: true },
     autoFocus: Boolean,
+    classNames: Object as PropType<RateClassNames>,
+    styles: Object as PropType<RateStyles>,
   },
   emits: ['update:value', 'change', 'hoverChange', 'focus', 'blur', 'keydown'],
   setup(props, { slots, emit, expose }) {
@@ -147,11 +149,16 @@ export const Rate = defineComponent({
       const starNode = (
         <li
           key={index}
-          class={cls(`${prefixCls}-star`, {
-            [`${prefixCls}-star-full`]: status === 'full',
-            [`${prefixCls}-star-half`]: status === 'half',
-            [`${prefixCls}-star-zero`]: status === 'zero',
-          })}
+          class={cls(
+            `${prefixCls}-star`,
+            {
+              [`${prefixCls}-star-full`]: status === 'full',
+              [`${prefixCls}-star-half`]: status === 'half',
+              [`${prefixCls}-star-zero`]: status === 'zero',
+            },
+            props.classNames?.star,
+          )}
+          style={props.styles?.star}
           role="radio"
           aria-checked={status !== 'zero'}
           aria-posinset={index + 1}
@@ -159,7 +166,8 @@ export const Rate = defineComponent({
         >
           {props.allowHalf && (
             <div
-              class={`${prefixCls}-star-first`}
+              class={cls(`${prefixCls}-star-first`, props.classNames?.starFirst)}
+              style={props.styles?.starFirst}
               onClick={() => !props.disabled && handleClick(index, true)}
               onMousemove={() => !props.disabled && handleMouseMove(index, true)}
             >
@@ -167,7 +175,8 @@ export const Rate = defineComponent({
             </div>
           )}
           <div
-            class={`${prefixCls}-star-second`}
+            class={cls(`${prefixCls}-star-second`, props.classNames?.starSecond)}
+            style={props.styles?.starSecond}
             onClick={() => !props.disabled && handleClick(index, false)}
             onMousemove={() => !props.disabled && handleMouseMove(index, false)}
           >
@@ -192,12 +201,17 @@ export const Rate = defineComponent({
       return (
         <ul
           ref={containerRef}
-          class={cls(prefixCls, {
-            [`${prefixCls}-disabled`]: props.disabled,
-            [`${prefixCls}-small`]: mergedSize.value === 'small',
-            [`${prefixCls}-large`]: mergedSize.value === 'large',
-            [`${prefixCls}-rtl`]: isRTL.value,
-          })}
+          class={cls(
+            prefixCls,
+            {
+              [`${prefixCls}-disabled`]: props.disabled,
+              [`${prefixCls}-small`]: mergedSize.value === 'small',
+              [`${prefixCls}-large`]: mergedSize.value === 'large',
+              [`${prefixCls}-rtl`]: isRTL.value,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
           onMouseleave={handleMouseLeave}
           onFocus={() => {
             focused.value = true

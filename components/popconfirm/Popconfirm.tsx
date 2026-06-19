@@ -2,9 +2,10 @@ import { defineComponent, ref, computed, h, type PropType, type VNode } from 'vu
 import { Tooltip } from '../tooltip'
 import { Button } from '../button'
 import { usePrefixCls, useLocale } from '../config-provider'
+import { cls } from '../_utils'
 import type { ButtonProps } from '../button/types'
 import type { TooltipPlacement, TooltipTrigger, TooltipArrow } from '../tooltip/types'
-import type { PopconfirmContent, PopconfirmOkType } from './types'
+import type { PopconfirmContent, PopconfirmOkType, PopconfirmClassNames, PopconfirmStyles } from './types'
 
 /**
  * Popconfirm delegates to Tooltip directly (skipping Popover) because we want
@@ -43,6 +44,8 @@ export const Popconfirm = defineComponent({
     getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
     overlayStyle: Object as PropType<Record<string, string>>,
     overlayInnerStyle: Object as PropType<Record<string, string>>,
+    classNames: Object as PropType<PopconfirmClassNames>,
+    styles: Object as PropType<PopconfirmStyles>,
   },
   emits: ['update:open', 'openChange', 'afterOpenChange', 'confirm', 'cancel'],
   setup(props, { slots, emit, attrs }) {
@@ -111,22 +114,45 @@ export const Popconfirm = defineComponent({
       // the outer `-inner` styles (background/padding/shadow) come from
       // Tooltip's wrapper.
       const overlayChildren: VNode[] = [
-        h('div', { class: `${prefixCls}-message` }, [
-          iconNode && h('span', { class: `${prefixCls}-message-icon` }, iconNode as VNode),
-          h('div', { class: `${prefixCls}-message-title` }, titleNode as VNode),
+        h('div', { class: cls(`${prefixCls}-message`, props.classNames?.message), style: props.styles?.message }, [
+          iconNode &&
+            h(
+              'span',
+              { class: cls(`${prefixCls}-message-icon`, props.classNames?.icon), style: props.styles?.icon },
+              iconNode as VNode,
+            ),
+          h(
+            'div',
+            { class: cls(`${prefixCls}-message-title`, props.classNames?.title), style: props.styles?.title },
+            titleNode as VNode,
+          ),
         ]),
       ]
       if (descriptionNode) {
-        overlayChildren.push(h('div', { class: `${prefixCls}-description` }, descriptionNode as VNode))
+        overlayChildren.push(
+          h(
+            'div',
+            { class: cls(`${prefixCls}-description`, props.classNames?.description), style: props.styles?.description },
+            descriptionNode as VNode,
+          ),
+        )
       }
       overlayChildren.push(
-        h('div', { class: `${prefixCls}-buttons` }, [
+        h('div', { class: cls(`${prefixCls}-buttons`, props.classNames?.buttons), style: props.styles?.buttons }, [
           props.showCancel &&
             h(
               Button,
               {
                 size: 'small',
                 ...props.cancelButtonProps,
+                classNames: {
+                  ...props.cancelButtonProps?.classNames,
+                  root: cls(props.cancelButtonProps?.classNames?.root, props.classNames?.cancelBtn),
+                },
+                styles: {
+                  ...props.cancelButtonProps?.styles,
+                  root: { ...props.cancelButtonProps?.styles?.root, ...props.styles?.cancelBtn },
+                },
                 onClick: handleCancel,
               },
               { default: () => cancelLabel },
@@ -138,6 +164,14 @@ export const Popconfirm = defineComponent({
               type: okButtonType,
               danger: isDangerOk,
               ...props.okButtonProps,
+              classNames: {
+                ...props.okButtonProps?.classNames,
+                root: cls(props.okButtonProps?.classNames?.root, props.classNames?.okBtn),
+              },
+              styles: {
+                ...props.okButtonProps?.styles,
+                root: { ...props.okButtonProps?.styles?.root, ...props.styles?.okBtn },
+              },
               onClick: handleConfirm,
             },
             { default: () => okLabel },

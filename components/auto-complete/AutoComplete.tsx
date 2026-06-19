@@ -1,7 +1,18 @@
-import { defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick, type PropType, Teleport } from 'vue'
+import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onUnmounted,
+  nextTick,
+  type PropType,
+  Teleport,
+  type CSSProperties,
+} from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { AutoCompleteOption, AutoCompleteAllowClear } from './types'
+import type { AutoCompleteOption, AutoCompleteAllowClear, AutoCompleteClassNames, AutoCompleteStyles } from './types'
 
 // Map AntD-style size to the Input style suffix convention (-lg / -sm).
 const sizeSuffix = (size: 'small' | 'middle' | 'large'): '' | 'lg' | 'sm' =>
@@ -28,6 +39,8 @@ export const AutoComplete = defineComponent({
     notFoundContent: String,
     defaultOpen: Boolean,
     open: { type: Boolean, default: undefined },
+    classNames: { type: Object as PropType<AutoCompleteClassNames> },
+    styles: { type: Object as PropType<AutoCompleteStyles> },
   },
   emits: ['update:value', 'change', 'select', 'search', 'focus', 'blur', 'clear', 'openChange'],
   setup(props, { slots, emit, attrs, expose }) {
@@ -225,18 +238,29 @@ export const AutoComplete = defineComponent({
       <>
         <div
           ref={triggerRef}
-          class={cls(prefixCls, `${inputPfx}-affix-wrapper`, sfx.value && `${inputPfx}-affix-wrapper-${sfx.value}`, {
-            [`${inputPfx}-affix-wrapper-disabled`]: props.disabled,
-            [`${inputPfx}-affix-wrapper-status-error`]: props.status === 'error',
-            [`${inputPfx}-affix-wrapper-status-warning`]: props.status === 'warning',
-            [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
-          })}
-          style={attrs.style as any}
+          class={cls(
+            prefixCls,
+            `${inputPfx}-affix-wrapper`,
+            sfx.value && `${inputPfx}-affix-wrapper-${sfx.value}`,
+            {
+              [`${inputPfx}-affix-wrapper-disabled`]: props.disabled,
+              [`${inputPfx}-affix-wrapper-status-error`]: props.status === 'error',
+              [`${inputPfx}-affix-wrapper-status-warning`]: props.status === 'warning',
+              [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
+            },
+            props.classNames?.root,
+          )}
+          style={{ ...(attrs.style as any), ...props.styles?.root }}
         >
-          {slots.prefix && <span class={`${inputPfx}-prefix`}>{slots.prefix()}</span>}
+          {slots.prefix && (
+            <span class={cls(`${inputPfx}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
+              {slots.prefix()}
+            </span>
+          )}
           <input
             ref={inputRef}
-            class={cls(inputPfx, sfx.value && `${inputPfx}-${sfx.value}`)}
+            class={cls(inputPfx, sfx.value && `${inputPfx}-${sfx.value}`, props.classNames?.input)}
+            style={props.styles?.input}
             value={inputValue.value}
             disabled={props.disabled}
             placeholder={props.placeholder}
@@ -251,35 +275,49 @@ export const AutoComplete = defineComponent({
             autocomplete="off"
           />
           {!!props.allowClear && inputValue.value && !props.disabled && (
-            <span class={`${inputPfx}-clear-icon`} onMousedown={handleClear}>
+            <span
+              class={cls(`${inputPfx}-clear-icon`, props.classNames?.clear)}
+              style={props.styles?.clear}
+              onMousedown={handleClear}
+            >
               {renderClearIcon()}
             </span>
           )}
-          {slots.suffix && <span class={`${inputPfx}-suffix`}>{slots.suffix()}</span>}
+          {slots.suffix && (
+            <span class={cls(`${inputPfx}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              {slots.suffix()}
+            </span>
+          )}
         </div>
 
         {isOpen.value && hasPanelContent.value && (
           <Teleport to="body">
             <div
               ref={dropdownRef}
-              class={`${prefixCls}-dropdown`}
+              class={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
               style={{
                 position: 'absolute',
                 top: `${dropdownPos.value.top}px`,
                 left: `${dropdownPos.value.left}px`,
                 width: `${dropdownPos.value.width}px`,
                 zIndex: 1050,
+                ...props.styles?.dropdown,
               }}
             >
               {filteredOptions.value.length > 0 ? (
                 filteredOptions.value.map((opt, i) => (
                   <div
                     key={opt.value}
-                    class={cls(`${prefixCls}-dropdown-item`, {
-                      [`${prefixCls}-dropdown-item-active`]: activeIndex.value === i,
-                      [`${prefixCls}-dropdown-item-disabled`]: opt.disabled,
-                      [`${prefixCls}-dropdown-item-selected`]: opt.value === inputValue.value,
-                    })}
+                    class={cls(
+                      `${prefixCls}-dropdown-item`,
+                      {
+                        [`${prefixCls}-dropdown-item-active`]: activeIndex.value === i,
+                        [`${prefixCls}-dropdown-item-disabled`]: opt.disabled,
+                        [`${prefixCls}-dropdown-item-selected`]: opt.value === inputValue.value,
+                      },
+                      props.classNames?.option,
+                    )}
+                    style={props.styles?.option}
                     onMouseenter={() => {
                       if (!opt.disabled) activeIndex.value = i
                     }}
@@ -292,7 +330,9 @@ export const AutoComplete = defineComponent({
                   </div>
                 ))
               ) : (
-                <div class={`${prefixCls}-dropdown-empty`}>{props.notFoundContent}</div>
+                <div class={cls(`${prefixCls}-dropdown-empty`, props.classNames?.empty)} style={props.styles?.empty}>
+                  {props.notFoundContent}
+                </div>
               )}
             </div>
           </Teleport>

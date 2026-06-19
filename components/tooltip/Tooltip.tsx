@@ -12,7 +12,14 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { TooltipPlacement, TooltipTrigger, TooltipArrow, TooltipTitle } from './types'
+import type {
+  TooltipPlacement,
+  TooltipTrigger,
+  TooltipArrow,
+  TooltipTitle,
+  TooltipClassNames,
+  TooltipStyles,
+} from './types'
 
 let tooltipIdCounter = 0
 
@@ -75,6 +82,8 @@ export const Tooltip = defineComponent({
     customPrefixCls: String,
     /** Extra inline style merged onto the popup element (used by wrappers for `overlayStyle`). */
     popupStyle: Object as PropType<Record<string, string>>,
+    classNames: Object as PropType<TooltipClassNames>,
+    styles: Object as PropType<TooltipStyles>,
   },
   emits: ['update:open', 'openChange', 'afterOpenChange'],
   setup(props, { slots, emit }) {
@@ -352,6 +361,8 @@ export const Tooltip = defineComponent({
       if (props.color) tooltipStyle['--tooltip-bg'] = props.color
       // Wrappers (Popover/Popconfirm) merge their `overlayStyle` here.
       if (props.popupStyle) Object.assign(tooltipStyle, props.popupStyle)
+      // 合并用户自定义的 root 样式
+      if (props.styles?.root) Object.assign(tooltipStyle, props.styles.root)
 
       // Don't mount the popup at all when there's no title (AntD parity).
       const shouldRender = hasTitle.value && (visible.value || !mergedDestroyOnHidden.value)
@@ -380,17 +391,26 @@ export const Tooltip = defineComponent({
                 ref={tooltipRef}
                 id={tooltipId}
                 role="tooltip"
-                class={cls(prefixCls.value, `${prefixCls.value}-placement-${actualPlacement.value}`, {
-                  [`${prefixCls.value}-hidden`]: !visible.value,
-                  [`${prefixCls.value}-arrow-point-at-center`]: arrowPointAtCenter.value,
-                })}
+                class={cls(
+                  prefixCls.value,
+                  `${prefixCls.value}-placement-${actualPlacement.value}`,
+                  {
+                    [`${prefixCls.value}-hidden`]: !visible.value,
+                    [`${prefixCls.value}-arrow-point-at-center`]: arrowPointAtCenter.value,
+                  },
+                  props.classNames?.root,
+                )}
                 style={tooltipStyle}
                 onMouseenter={handleMouseEnter}
                 onMouseleave={handleMouseLeave}
               >
-                <div class={`${prefixCls.value}-content`}>
-                  {showArrow.value && <div class={`${prefixCls.value}-arrow`} />}
-                  <div class={`${prefixCls.value}-inner`}>{tooltipContent as VNode | string}</div>
+                <div class={cls(`${prefixCls.value}-content`, props.classNames?.content)} style={props.styles?.content}>
+                  {showArrow.value && (
+                    <div class={cls(`${prefixCls.value}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow} />
+                  )}
+                  <div class={cls(`${prefixCls.value}-inner`, props.classNames?.inner)} style={props.styles?.inner}>
+                    {tooltipContent as VNode | string}
+                  </div>
                 </div>
               </div>
             </Teleport>

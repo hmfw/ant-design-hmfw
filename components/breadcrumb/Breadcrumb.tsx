@@ -53,6 +53,8 @@ export const Breadcrumb = defineComponent({
     itemRender: Function as PropType<
       (item: BreadcrumbItemType, params: Record<string, any>, items: BreadcrumbItemType[], paths: string[]) => VNode
     >,
+    classNames: Object as PropType<import('./types').BreadcrumbClassNames>,
+    styles: Object as PropType<import('./types').BreadcrumbStyles>,
   },
   setup(props) {
     const prefixCls = usePrefixCls('breadcrumb')
@@ -72,15 +74,30 @@ export const Breadcrumb = defineComponent({
       if (menu && menu.items && menu.items.length > 0) {
         const linkContent =
           href !== undefined ? (
-            <a {...passedProps} class={cls(`${prefixCls}-link`, className)} href={href}>
-              <span class={`${prefixCls}-overlay-link`}>
+            <a
+              {...passedProps}
+              class={cls(`${prefixCls}-link`, props.classNames?.link, className)}
+              style={{ ...props.styles?.link, ...item.style }}
+              href={href}
+            >
+              <span
+                class={cls(`${prefixCls}-overlay-link`, props.classNames?.overlayLink)}
+                style={props.styles?.overlayLink}
+              >
                 {children}
                 <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
               </span>
             </a>
           ) : (
-            <span {...passedProps} class={cls(`${prefixCls}-link`, className)}>
-              <span class={`${prefixCls}-overlay-link`}>
+            <span
+              {...passedProps}
+              class={cls(`${prefixCls}-link`, props.classNames?.link, className)}
+              style={{ ...props.styles?.link, ...item.style }}
+            >
+              <span
+                class={cls(`${prefixCls}-overlay-link`, props.classNames?.overlayLink)}
+                style={props.styles?.overlayLink}
+              >
                 {children}
                 <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
               </span>
@@ -96,14 +113,23 @@ export const Breadcrumb = defineComponent({
 
       if (href !== undefined) {
         return (
-          <a {...passedProps} class={cls(`${prefixCls}-link`, className)} href={href}>
+          <a
+            {...passedProps}
+            class={cls(`${prefixCls}-link`, props.classNames?.link, className)}
+            style={{ ...props.styles?.link, ...item.style }}
+            href={href}
+          >
             {children}
           </a>
         )
       }
 
       return (
-        <span {...passedProps} class={cls(`${prefixCls}-link`, className)}>
+        <span
+          {...passedProps}
+          class={cls(`${prefixCls}-link`, props.classNames?.link, className)}
+          style={{ ...props.styles?.link, ...item.style }}
+        >
           {children}
         </span>
       )
@@ -121,7 +147,12 @@ export const Breadcrumb = defineComponent({
         if ('type' in item && item.type === 'separator') {
           const sepItem = item as BreadcrumbSeparatorType
           return (
-            <li key={sepItem.key ?? `separator-${index}`} class={`${prefixCls}-separator`} aria-hidden="true">
+            <li
+              key={sepItem.key ?? `separator-${index}`}
+              class={cls(`${prefixCls}-separator`, props.classNames?.separator)}
+              style={props.styles?.separator}
+              aria-hidden="true"
+            >
               {sepItem.separator === '' ? sepItem.separator : sepItem.separator || props.separator}
             </li>
           )
@@ -160,14 +191,18 @@ export const Breadcrumb = defineComponent({
           <>
             <li
               key={mergedKey}
-              class={cls(`${prefixCls}-item`, className)}
-              style={style}
+              class={cls(`${prefixCls}-item`, props.classNames?.item, className)}
+              style={{ ...props.styles?.item, ...style }}
               aria-current={isLastItem ? 'page' : undefined}
             >
               {link}
             </li>
             {!isLastItem && !nextIsSeparator && (
-              <li class={`${prefixCls}-separator`} aria-hidden="true">
+              <li
+                class={cls(`${prefixCls}-separator`, props.classNames?.separator)}
+                style={props.styles?.separator}
+                aria-hidden="true"
+              >
                 {props.separator}
               </li>
             )}
@@ -176,8 +211,10 @@ export const Breadcrumb = defineComponent({
       })
 
       return (
-        <nav class={prefixCls} aria-label="breadcrumb">
-          <ol>{crumbs}</ol>
+        <nav class={cls(prefixCls, props.classNames?.root)} style={props.styles?.root} aria-label="breadcrumb">
+          <ol class={props.classNames?.list} style={props.styles?.list}>
+            {crumbs}
+          </ol>
         </nav>
       )
     }

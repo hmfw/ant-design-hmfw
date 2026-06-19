@@ -1,2 +1,10 @@
 export { Segmented } from './Segmented'
-export type { SegmentedOption, SegmentedValue, SegmentedRawOption, SegmentedOptions, SegmentedProps } from './types'
+export type {
+  SegmentedOption,
+  SegmentedValue,
+  SegmentedRawOption,
+  SegmentedOptions,
+  SegmentedProps,
+  SegmentedClassNames,
+  SegmentedStyles,
+} from './types'

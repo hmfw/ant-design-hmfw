@@ -1,48 +1,13 @@
-import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
+import { defineComponent, ref, computed, watch } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-
-type InputNumberSize = 'small' | 'middle' | 'large'
-type InputNumberStatus = 'error' | 'warning'
-type InputNumberVariant = 'outlined' | 'filled' | 'borderless' | 'underlined'
-type InputNumberMode = 'input' | 'spinner'
-
-interface ControlsConfig {
-  upIcon?: VNode | string
-  downIcon?: VNode | string
-}
+import { inputNumberProps, type InputNumberProps } from './types'
 
 export const InputNumber = defineComponent({
   name: 'InputNumber',
-  props: {
-    value: Number,
-    defaultValue: Number,
-    min: { type: Number, default: -Infinity },
-    max: { type: Number, default: Infinity },
-    step: { type: Number, default: 1 },
-    precision: Number,
-    formatter: Function as PropType<(value: number, info: { userTyping: boolean; input: string }) => string>,
-    parser: Function as PropType<(value: string) => number>,
-    disabled: Boolean,
-    readOnly: Boolean,
-    size: { type: String as PropType<InputNumberSize>, default: 'middle' },
-    status: String as PropType<InputNumberStatus>,
-    variant: { type: String as PropType<InputNumberVariant>, default: 'outlined' },
-    placeholder: String,
-    controls: { type: [Boolean, Object] as PropType<boolean | ControlsConfig>, default: true },
-    keyboard: { type: Boolean, default: true },
-    stringMode: Boolean,
-    changeOnBlur: { type: Boolean, default: true },
-    changeOnWheel: Boolean,
-    decimalSeparator: String,
-    mode: { type: String as PropType<InputNumberMode>, default: 'input' },
-    addonBefore: String,
-    addonAfter: String,
-    prefix: String,
-    suffix: String,
-  },
+  props: inputNumberProps,
   emits: ['update:value', 'change', 'step', 'pressEnter', 'focus', 'blur'],
-  setup(props, { slots, emit, expose }) {
+  setup(props: InputNumberProps, { slots, emit, expose }) {
     const prefixCls = usePrefixCls('input-number')
 
     const innerValue = ref<number | undefined>(props.defaultValue ?? props.value)
@@ -77,7 +42,7 @@ export const InputNumber = defineComponent({
       },
     )
 
-    const clamp = (v: number) => Math.min(props.max, Math.max(props.min, v))
+    const clamp = (v: number) => Math.min(props.max ?? Infinity, Math.max(props.min ?? -Infinity, v))
 
     const applyPrecision = (v: number) => {
       if (props.precision !== undefined) {
@@ -165,9 +130,10 @@ export const InputNumber = defineComponent({
     const step = (dir: 1 | -1, emitter: 'handler' | 'keydown' | 'wheel' = 'handler') => {
       if (props.disabled || props.readOnly) return
       const cur = currentValue.value ?? 0
-      const next = applyPrecision(clamp(cur + dir * props.step))
+      const stepValue = props.step ?? 1
+      const next = applyPrecision(clamp(cur + dir * stepValue))
       setValue(next)
-      emit('step', next, { offset: dir * props.step, type: dir > 0 ? 'up' : 'down', emitter })
+      emit('step', next, { offset: dir * stepValue, type: dir > 0 ? 'up' : 'down', emitter })
     }
 
     return () => {
@@ -183,20 +149,30 @@ export const InputNumber = defineComponent({
 
       const inputEl = (
         <div
-          class={cls(prefixCls, `${prefixCls}-${props.size}`, `${prefixCls}-${props.variant}`, {
-            [`${prefixCls}-focused`]: focused.value,
-            [`${prefixCls}-disabled`]: props.disabled,
-            [`${prefixCls}-readonly`]: props.readOnly,
-            [`${prefixCls}-status-${props.status}`]: !!props.status,
-            [`${prefixCls}-without-controls`]: !showControls,
-          })}
+          class={cls(
+            prefixCls,
+            `${prefixCls}-${props.size}`,
+            `${prefixCls}-${props.variant}`,
+            {
+              [`${prefixCls}-focused`]: focused.value,
+              [`${prefixCls}-disabled`]: props.disabled,
+              [`${prefixCls}-readonly`]: props.readOnly,
+              [`${prefixCls}-status-${props.status}`]: !!props.status,
+              [`${prefixCls}-without-controls`]: !showControls,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
         >
           {(props.prefix || slots.prefix) && (
-            <span class={`${prefixCls}-prefix`}>{slots.prefix?.() ?? props.prefix}</span>
+            <span class={cls(`${prefixCls}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
+              {slots.prefix?.() ?? props.prefix}
+            </span>
           )}
           <input
             ref={inputRef}
-            class={`${prefixCls}-input`}
+            class={cls(`${prefixCls}-input`, props.classNames?.input)}
+            style={props.styles?.input}
             value={displayValue}
             disabled={props.disabled}
             readonly={props.readOnly}
@@ -208,15 +184,27 @@ export const InputNumber = defineComponent({
             onWheel={handleWheel}
           />
           {(props.suffix || slots.suffix) && (
-            <span class={`${prefixCls}-suffix`}>{slots.suffix?.() ?? props.suffix}</span>
+            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              {slots.suffix?.() ?? props.suffix}
+            </span>
           )}
           {showControls && (
-            <div class={`${prefixCls}-handler-wrap`}>
+            <div
+              class={cls(`${prefixCls}-handler-wrap`, props.classNames?.handlerWrap)}
+              style={props.styles?.handlerWrap}
+            >
               <span
-                class={cls(`${prefixCls}-handler`, `${prefixCls}-handler-up`, {
-                  [`${prefixCls}-handler-up-disabled`]:
-                    props.disabled || (currentValue.value !== undefined && currentValue.value >= props.max),
-                })}
+                class={cls(
+                  `${prefixCls}-handler`,
+                  `${prefixCls}-handler-up`,
+                  {
+                    [`${prefixCls}-handler-up-disabled`]:
+                      props.disabled ||
+                      (currentValue.value !== undefined && props.max !== undefined && currentValue.value >= props.max),
+                  },
+                  props.classNames?.handlerUp,
+                )}
+                style={props.styles?.handlerUp}
                 onMousedown={(e) => {
                   e.preventDefault()
                   step(1)
@@ -225,10 +213,17 @@ export const InputNumber = defineComponent({
                 <span class={`${prefixCls}-handler-up-inner`}>{upIcon}</span>
               </span>
               <span
-                class={cls(`${prefixCls}-handler`, `${prefixCls}-handler-down`, {
-                  [`${prefixCls}-handler-down-disabled`]:
-                    props.disabled || (currentValue.value !== undefined && currentValue.value <= props.min),
-                })}
+                class={cls(
+                  `${prefixCls}-handler`,
+                  `${prefixCls}-handler-down`,
+                  {
+                    [`${prefixCls}-handler-down-disabled`]:
+                      props.disabled ||
+                      (currentValue.value !== undefined && props.min !== undefined && currentValue.value <= props.min),
+                  },
+                  props.classNames?.handlerDown,
+                )}
+                style={props.styles?.handlerDown}
                 onMousedown={(e) => {
                   e.preventDefault()
                   step(-1)
@@ -243,14 +238,30 @@ export const InputNumber = defineComponent({
 
       if (props.addonBefore || props.addonAfter || slots.addonBefore || slots.addonAfter) {
         return (
-          <div class={`${prefixCls}-group-wrapper`}>
-            <div class={`${prefixCls}-wrapper ${prefixCls}-group`}>
+          <div
+            class={cls(`${prefixCls}-group-wrapper`, props.classNames?.groupWrapper)}
+            style={props.styles?.groupWrapper}
+          >
+            <div
+              class={cls(`${prefixCls}-wrapper ${prefixCls}-group`, props.classNames?.wrapper)}
+              style={props.styles?.wrapper}
+            >
               {(props.addonBefore || slots.addonBefore) && (
-                <span class={`${prefixCls}-group-addon`}>{slots.addonBefore?.() ?? props.addonBefore}</span>
+                <span
+                  class={cls(`${prefixCls}-group-addon`, props.classNames?.addonBefore)}
+                  style={props.styles?.addonBefore}
+                >
+                  {slots.addonBefore?.() ?? props.addonBefore}
+                </span>
               )}
               {inputEl}
               {(props.addonAfter || slots.addonAfter) && (
-                <span class={`${prefixCls}-group-addon`}>{slots.addonAfter?.() ?? props.addonAfter}</span>
+                <span
+                  class={cls(`${prefixCls}-group-addon`, props.classNames?.addonAfter)}
+                  style={props.styles?.addonAfter}
+                >
+                  {slots.addonAfter?.() ?? props.addonAfter}
+                </span>
               )}
             </div>
           </div>
