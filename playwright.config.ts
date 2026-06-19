@@ -1,9 +1,9 @@
 import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
-  // 从项目根开始，匹配分散在各组件的 E2E 文件
+  // 从项目根开始，匹配分散在各组件的 E2E 文件，以及 e2e 目录下的跨组件冒烟测试
   testDir: '.',
-  testMatch: 'components/**/*.e2e.spec.ts',
+  testMatch: ['components/**/*.e2e.spec.ts', 'e2e/**/*.spec.ts'],
 
   timeout: 30000,
   expect: { timeout: 10000 },
