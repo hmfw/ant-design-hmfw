@@ -508,54 +508,64 @@ pnpm dev
 
 ## 当前进度
 
-### 已完成组件（44/67）
+### 已完成组件（54/67）
 
-| 组件             | 类型定义 Key 数量                                                                                           | 文档 | Demo | 状态 |
-| ---------------- | ----------------------------------------------------------------------------------------------------------- | ---- | ---- | ---- |
-| **Button**       | 3 (root, icon, loading)                                                                                     | ✅   | ✅   | 完成 |
-| **Input**        | 5 (affixWrapper, prefix, suffix, input, count)                                                              | ✅   | ✅   | 完成 |
-| **Modal**        | 6 (mask, wrapper, content, header, body, footer)                                                            | ✅   | ✅   | 完成 |
-| **Popover**      | 2 (title, content)                                                                                          | ✅   | ✅   | 完成 |
-| **Progress**     | 5 (root, body, rail, track, indicator)                                                                      | ✅   | ✅   | 完成 |
-| **Transfer**     | 11 (root, section, header, title, body, list, item, itemIcon, itemContent, footer, actions)                 | ✅   | ✅   | 完成 |
-| **Tree**         | 5 (root, item, itemIcon, itemTitle, itemSwitcher)                                                           | ✅   | ✅   | 完成 |
-| **Checkbox**     | 5 (root, checkbox, input, inner, label)                                                                     | ✅   | ✅   | 完成 |
-| **Radio**        | 5 (root, radio, input, inner, label)                                                                        | ✅   | ✅   | 完成 |
-| **Card**         | 6 (root, head, title, extra, body, actions)                                                                 | ✅   | ✅   | 完成 |
-| **Select**       | 10 (root, selector, item, placeholder, arrow, clear, dropdown, option, optionLabel, optionState)            | ✅   | ✅   | 完成 |
-| **Tabs**         | 8 (root, nav, tab, tabActive, tabIcon, inkBar, content, tabpane)                                            | ✅   | ✅   | 完成 |
-| **Dropdown**     | 4 (trigger, dropdown, arrow, content)                                                                       | ✅   | ✅   | 完成 |
-| **Form**         | Form 1 (root) + FormItem 5 (root, label, control, feedback, extra)                                          | ✅   | ✅   | 完成 |
-| **Table**        | 7 (root, header, body, row, cell, footer, pagination)                                                       | ✅   | ✅   | 完成 |
-| **Drawer**       | 8 (mask, wrapper, content, header, title, extra, body, footer)                                              | ✅   | ✅   | 完成 |
-| **Space**        | 2 (item, split)                                                                                             | ✅   | ✅   | 完成 |
-| **Divider**      | 1 (text)                                                                                                    | ✅   | ✅   | 完成 |
-| **Layout**       | —（单元素透传，用原生 class/style）                                                                         | ✅   | —    | 完成 |
-| **Grid**         | —（单元素透传，用原生 class/style）                                                                         | ✅   | —    | 完成 |
-| **Alert**        | 7 (root, icon, section, title, description, actions, closeIcon)                                             | ✅   | ✅   | 完成 |
-| **Spin**         | 4 (root, dot, container, description)                                                                       | ✅   | ✅   | 完成 |
-| **Message**      | 4 (wrapper, notice, icon, title) — 命令式 call options                                                      | ✅   | ✅   | 完成 |
-| **Notification** | 6 (notice, icon, message, description, btn, close) — 命令式 call options                                    | ✅   | ✅   | 完成 |
-| **Avatar**       | 3 (root, img, string)                                                                                       | ✅   | ✅   | 完成 |
-| **Badge**        | 4 (root, indicator, dot, text)                                                                              | ✅   | ✅   | 完成 |
-| **Empty**        | 4 (root, image, description, footer)                                                                        | ✅   | ✅   | 完成 |
-| **Statistic**    | 6 (root, title, content, prefix, value, suffix) — Countdown 共享                                            | ✅   | ✅   | 完成 |
-| **QRCode**       | 2 (root, cover)                                                                                             | ✅   | ✅   | 完成 |
-| **BackTop**      | 3 (root, content, icon)                                                                                     | ✅   | ✅   | 完成 |
-| **FloatButton**  | 4 (root, body, icon, content)                                                                               | ✅   | ✅   | 完成 |
-| **Tag**          | —（单元素透传，用原生 class/style）                                                                         | ✅   | —    | 完成 |
-| **Watermark**    | —（单元素透传，水印层防篡改不暴露）                                                                         | ✅   | —    | 完成 |
-| **Result**       | —（CSS 全硬编码，未实现 classNames API）                                                                    | ✅   | —    | 完成 |
-| **Switch**       | 6 (root, handle, loadingIcon, inner, checked, unchecked)                                                    | ✅   | ✅   | 完成 |
-| **Slider**       | 8 (root, rail, track, handle, dot, mark, markText, tooltip)                                                 | ✅   | ✅   | 完成 |
-| **Rate**         | 4 (root, star, starFirst, starSecond)                                                                       | ✅   | ✅   | 完成 |
-| **Segmented**    | 10 (root/group/thumb/item/itemSelected/itemDisabled/itemInput/itemLabel/itemIcon/itemText)                  | ✅   | ✅   | 完成 |
-| **InputNumber**  | 11 (root/input/prefix/suffix/handlerWrap/handlerUp/handlerDown/groupWrapper/wrapper/addonBefore/addonAfter) | ✅   | ✅   | 完成 |
-| **AutoComplete** | 8 (root, prefix, input, clear, suffix, dropdown, option, empty)                                             | ✅   | ✅   | 完成 |
-| **Tooltip**      | 4 (root, content, arrow, inner)                                                                             | ✅   | ✅   | 完成 |
-| **Popconfirm**   | 7 (message, icon, title, description, buttons, cancelBtn, okBtn)                                            | ✅   | ✅   | 完成 |
-| **Breadcrumb**   | 6 (root, list, item, link, separator, overlayLink)                                                          | ✅   | ✅   | 完成 |
-| **Anchor**       | 7 (wrapper, root, ink, link, linkActive, title, titleActive)                                                | ✅   | ✅   | 完成 |
+| 组件             | 类型定义 Key 数量                                                                                                                         | 文档 | Demo | 状态 |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ---- |
+| **Button**       | 3 (root, icon, loading)                                                                                                                   | ✅   | ✅   | 完成 |
+| **Input**        | 5 (affixWrapper, prefix, suffix, input, count)                                                                                            | ✅   | ✅   | 完成 |
+| **Modal**        | 6 (mask, wrapper, content, header, body, footer)                                                                                          | ✅   | ✅   | 完成 |
+| **Popover**      | 2 (title, content)                                                                                                                        | ✅   | ✅   | 完成 |
+| **Progress**     | 5 (root, body, rail, track, indicator)                                                                                                    | ✅   | ✅   | 完成 |
+| **Transfer**     | 11 (root, section, header, title, body, list, item, itemIcon, itemContent, footer, actions)                                               | ✅   | ✅   | 完成 |
+| **Tree**         | 5 (root, item, itemIcon, itemTitle, itemSwitcher)                                                                                         | ✅   | ✅   | 完成 |
+| **Checkbox**     | 5 (root, checkbox, input, inner, label)                                                                                                   | ✅   | ✅   | 完成 |
+| **Radio**        | 5 (root, radio, input, inner, label)                                                                                                      | ✅   | ✅   | 完成 |
+| **Card**         | 6 (root, head, title, extra, body, actions)                                                                                               | ✅   | ✅   | 完成 |
+| **Select**       | 10 (root, selector, item, placeholder, arrow, clear, dropdown, option, optionLabel, optionState)                                          | ✅   | ✅   | 完成 |
+| **Tabs**         | 8 (root, nav, tab, tabActive, tabIcon, inkBar, content, tabpane)                                                                          | ✅   | ✅   | 完成 |
+| **Dropdown**     | 4 (trigger, dropdown, arrow, content)                                                                                                     | ✅   | ✅   | 完成 |
+| **Form**         | Form 1 (root) + FormItem 5 (root, label, control, feedback, extra)                                                                        | ✅   | ✅   | 完成 |
+| **Table**        | 7 (root, header, body, row, cell, footer, pagination)                                                                                     | ✅   | ✅   | 完成 |
+| **Drawer**       | 8 (mask, wrapper, content, header, title, extra, body, footer)                                                                            | ✅   | ✅   | 完成 |
+| **Space**        | 2 (item, split)                                                                                                                           | ✅   | ✅   | 完成 |
+| **Divider**      | 1 (text)                                                                                                                                  | ✅   | ✅   | 完成 |
+| **Layout**       | —（单元素透传，用原生 class/style）                                                                                                       | ✅   | —    | 完成 |
+| **Grid**         | —（单元素透传，用原生 class/style）                                                                                                       | ✅   | —    | 完成 |
+| **Alert**        | 7 (root, icon, section, title, description, actions, closeIcon)                                                                           | ✅   | ✅   | 完成 |
+| **Spin**         | 4 (root, dot, container, description)                                                                                                     | ✅   | ✅   | 完成 |
+| **Message**      | 4 (wrapper, notice, icon, title) — 命令式 call options                                                                                    | ✅   | ✅   | 完成 |
+| **Notification** | 6 (notice, icon, message, description, btn, close) — 命令式 call options                                                                  | ✅   | ✅   | 完成 |
+| **Avatar**       | 3 (root, img, string)                                                                                                                     | ✅   | ✅   | 完成 |
+| **Badge**        | 4 (root, indicator, dot, text)                                                                                                            | ✅   | ✅   | 完成 |
+| **Empty**        | 4 (root, image, description, footer)                                                                                                      | ✅   | ✅   | 完成 |
+| **Statistic**    | 6 (root, title, content, prefix, value, suffix) — Countdown 共享                                                                          | ✅   | ✅   | 完成 |
+| **QRCode**       | 2 (root, cover)                                                                                                                           | ✅   | ✅   | 完成 |
+| **BackTop**      | 3 (root, content, icon)                                                                                                                   | ✅   | ✅   | 完成 |
+| **FloatButton**  | 4 (root, body, icon, content)                                                                                                             | ✅   | ✅   | 完成 |
+| **Tag**          | —（单元素透传，用原生 class/style）                                                                                                       | ✅   | —    | 完成 |
+| **Watermark**    | —（单元素透传，水印层防篡改不暴露）                                                                                                       | ✅   | —    | 完成 |
+| **Result**       | —（CSS 全硬编码，未实现 classNames API）                                                                                                  | ✅   | —    | 完成 |
+| **Switch**       | 6 (root, handle, loadingIcon, inner, checked, unchecked)                                                                                  | ✅   | ✅   | 完成 |
+| **Slider**       | 8 (root, rail, track, handle, dot, mark, markText, tooltip)                                                                               | ✅   | ✅   | 完成 |
+| **Rate**         | 4 (root, star, starFirst, starSecond)                                                                                                     | ✅   | ✅   | 完成 |
+| **Segmented**    | 10 (root/group/thumb/item/itemSelected/itemDisabled/itemInput/itemLabel/itemIcon/itemText)                                                | ✅   | ✅   | 完成 |
+| **InputNumber**  | 11 (root/input/prefix/suffix/handlerWrap/handlerUp/handlerDown/groupWrapper/wrapper/addonBefore/addonAfter)                               | ✅   | ✅   | 完成 |
+| **AutoComplete** | 8 (root, prefix, input, clear, suffix, dropdown, option, empty)                                                                           | ✅   | ✅   | 完成 |
+| **Tooltip**      | 4 (root, content, arrow, inner)                                                                                                           | ✅   | ✅   | 完成 |
+| **Popconfirm**   | 7 (message, icon, title, description, buttons, cancelBtn, okBtn)                                                                          | ✅   | ✅   | 完成 |
+| **Breadcrumb**   | 6 (root, list, item, link, separator, overlayLink)                                                                                        | ✅   | ✅   | 完成 |
+| **Anchor**       | 7 (wrapper, root, ink, link, linkActive, title, titleActive)                                                                              | ✅   | ✅   | 完成 |
+| **List**         | List 6 + ListItem 5 + ListItemMeta 5                                                                                                      | ✅   | ✅   | 完成 |
+| **Collapse**     | 8 (root/item/header/icon/headerText/extra/content/body) — Panel 共享                                                                      | ✅   | ✅   | 完成 |
+| **Descriptions** | 10 (root/header/title/extra/view/row/item/itemContainer/label/content)                                                                    | ✅   | ✅   | 完成 |
+| **Timeline**     | 6 (root/item/label/tail/dot/content)                                                                                                      | ✅   | ✅   | 完成 |
+| **Steps**        | 9 (root/item/container/tail/icon/content/title/subtitle/description)                                                                      | ✅   | ✅   | 完成 |
+| **Pagination**   | 11 (root/total/prev/next/item/itemActive/jumpPrev/jumpNext/options/sizeChanger/quickJumper)                                               | ✅   | ✅   | 完成 |
+| **Typography**   | Text/Title/Paragraph/Link 各 2 keys (root, copy)                                                                                          | ✅   | ✅   | 完成 |
+| **Image**        | 15 (root/img/mask/maskInfo/preview/previewMask/previewWrap/previewImg/operations/operationBtn/closeBtn/switchBtn/count/placeholder/error) | ✅   | ✅   | 完成 |
+| **Carousel**     | 11 (root/list/track/slide/slideActive/arrow/arrowLeft/arrowRight/dots/dot/dotActive)                                                      | ✅   | ✅   | 完成 |
+| **Skeleton**     | Skeleton 7 + Button/Input/Avatar/Image/Node 各自 keys                                                                                     | ✅   | ✅   | 完成 |
 
 ### 待实现组件（优先级排序）
 
@@ -613,9 +623,18 @@ pnpm dev
 - [x] **Breadcrumb** - 面包屑（6 keys）✅
 - [x] **Anchor** - 锚点（7 keys）✅
 
-**Wave 4C：数据展示与容器**（10 个，待启动）
+**Wave 4C：数据展示与容器 ✅ 完成**
 
-- [ ] list / collapse / descriptions / timeline / steps / pagination / typography / image / carousel / skeleton
+- [x] **List** - 列表（List 6 + ListItem 5 + ListItemMeta 5 = 16 keys）✅
+- [x] **Collapse** - 折叠面板（8 keys，Panel 共享）✅
+- [x] **Descriptions** - 描述列表（10 keys）✅
+- [x] **Timeline** - 时间轴（6 keys）✅
+- [x] **Steps** - 步骤条（9 keys）✅
+- [x] **Pagination** - 分页（11 keys）✅
+- [x] **Typography** - 排版（Text/Title/Paragraph/Link 各 2 keys）✅
+- [x] **Image** - 图片（15 keys，含预览弹层）✅
+- [x] **Carousel** - 走马灯（11 keys）✅
+- [x] **Skeleton** - 骨架屏（Skeleton 7 + 5 个子组件）✅
 
 **Wave 4D：复杂/弹层组件**（13 个，待启动）
 
@@ -981,6 +1000,7 @@ open http://localhost:5173/components/{component}
 
 ## 更新日志
 
+- **2026-06-18** - Wave 4C 数据展示与容器完成（10 个，累计 54/67）。List/Collapse/Descriptions/Timeline/Steps/Pagination/Typography/Image/Carousel/Skeleton 全部实现完整语义化 API（含子组件，共 100+ keys）。typecheck OK，build:docs 2.60s，291 个相关测试全通过。无临时文件残留
 - **2026-06-18** - Wave 4B 表单控件与轻交互完成（10 个，累计 44/67）。Switch/Slider/Rate/Segmented/InputNumber/AutoComplete/Tooltip/Popconfirm/Breadcrumb/Anchor 全部实现完整语义化 API（共 71 个 keys）。typecheck OK，build:docs 2.48s，284 个相关测试全通过。本次不用 worktree 隔离，源码直接在主仓改动，省去合并步骤
 - **2026-06-18** - 启动第四批：Wave 4A 简单展示组件完成（10 个，累计 34/67）。Avatar/Badge/Empty/Statistic/QRCode/BackTop/FloatButton 实现完整语义化 API；Tag/Watermark/Result 标注为单元素透传或硬编码样式。typecheck OK，build:docs 2.37s，219 个相关测试全通过
 - **2026-06-18** - 完成第三批：反馈组件（4 个，累计 24/67）。Alert (7 keys) + Spin (4 keys) 声明式语义化 API；Message (4 keys) + Notification (6 keys) 命令式 API，通过 call options 传入 classNames/styles。111 个相关测试全通过
@@ -1006,5 +1026,5 @@ open http://localhost:5173/components/{component}
 
 ---
 
-**版本**：v2.5  
+**版本**：v2.6  
 **最后更新**：2026-06-18

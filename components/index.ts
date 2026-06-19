@@ -47,6 +47,14 @@ export type {
   TypographyType,
   TitleLevel,
   CopyableConfig,
+  TextClassNames,
+  TextStyles,
+  TitleClassNames,
+  TitleStyles,
+  ParagraphClassNames,
+  ParagraphStyles,
+  LinkClassNames,
+  LinkStyles,
 } from './typography'
 
 export { Layout, Header, Footer, Content, Sider } from './layout'
@@ -101,7 +109,7 @@ export type {
 } from './breadcrumb'
 
 export { Pagination } from './pagination'
-export type { PaginationProps, PaginationSize } from './pagination'
+export type { PaginationProps, PaginationSize, PaginationClassNames, PaginationStyles } from './pagination'
 
 export { Tabs } from './tabs'
 export type { TabsProps, TabItem, TabsType, TabsSize, TabsPosition } from './tabs'
@@ -158,19 +166,55 @@ export { InputNumber } from './input-number'
 export type { InputNumberClassNames, InputNumberStyles } from './input-number'
 
 export { Collapse, CollapsePanel } from './collapse'
-export type { CollapseItem, CollapsibleType, CollapsePanelProps, ExpandIconProps } from './collapse'
+export type {
+  CollapseItem,
+  CollapsibleType,
+  CollapsePanelProps,
+  ExpandIconProps,
+  CollapseClassNames,
+  CollapseStyles,
+} from './collapse'
 
 export { Descriptions, DescriptionsItem } from './descriptions'
-export type { DescriptionsProps, DescriptionsItemProps } from './descriptions'
+export type {
+  DescriptionsProps,
+  DescriptionsItemProps,
+  DescriptionsClassNames,
+  DescriptionsStyles,
+} from './descriptions'
 
 export { Steps, ProgressIcon, PanelArrow } from './steps'
-export type { StepItem, StepStatus, StepsProps, IconRenderType, IconRenderInfo } from './steps'
+export type {
+  StepItem,
+  StepStatus,
+  StepsProps,
+  IconRenderType,
+  IconRenderInfo,
+  StepsClassNames,
+  StepsStyles,
+} from './steps'
 
 export { Result } from './result'
 export type { ResultStatus, ResultClassNames, ResultStyles } from './result'
 
 export { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from './skeleton'
-export type { SkeletonAvatarProps, SkeletonTitleProps, SkeletonParagraphProps } from './skeleton'
+export type {
+  SkeletonAvatarProps,
+  SkeletonTitleProps,
+  SkeletonParagraphProps,
+  SkeletonClassNames,
+  SkeletonStyles,
+  SkeletonButtonClassNames,
+  SkeletonButtonStyles,
+  SkeletonInputClassNames,
+  SkeletonInputStyles,
+  SkeletonAvatarClassNames,
+  SkeletonAvatarStyles,
+  SkeletonImageClassNames,
+  SkeletonImageStyles,
+  SkeletonNodeClassNames,
+  SkeletonNodeStyles,
+} from './skeleton'
 
 export { Rate } from './rate'
 export type { RateProps, RateSize, RateCharacterRenderContext, RateClassNames, RateStyles } from './rate'
@@ -187,10 +231,24 @@ export type {
   TimelineVariant,
   TimelineItemPlacement,
   TimelineItemColor,
+  TimelineClassNames,
+  TimelineStyles,
 } from './timeline'
 
 export { List, ListItem, ListItemMeta } from './list'
-export type { ListProps, ListItemProps, ListItemMetaProps, ListGridType, PaginationConfig } from './list'
+export type {
+  ListProps,
+  ListItemProps,
+  ListItemMetaProps,
+  ListGridType,
+  PaginationConfig,
+  ListClassNames,
+  ListStyles,
+  ListItemClassNames,
+  ListItemStyles,
+  ListItemMetaClassNames,
+  ListItemMetaStyles,
+} from './list'
 
 export { Dropdown } from './dropdown'
 export type { DropdownProps } from './dropdown'
@@ -304,11 +362,13 @@ export type {
   ImgInfo as ImageImgInfo,
   MaskType as ImageMaskType,
   ToolbarRenderInfoType as ImageToolbarRenderInfoType,
+  ImageClassNames,
+  ImageStyles,
 } from './image'
 
 // Carousel
 export { Carousel } from './carousel'
-export type { CarouselProps, CarouselEffect, CarouselDotPosition } from './carousel'
+export type { CarouselProps, CarouselEffect, CarouselDotPosition, CarouselClassNames, CarouselStyles } from './carousel'
 
 // Tour
 export { Tour } from './tour'

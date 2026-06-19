@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'vue'
 import type { TooltipProps } from '../tooltip'
 
 export type TypographyType = 'secondary' | 'success' | 'warning' | 'danger'
@@ -34,6 +35,86 @@ export interface EllipsisConfig {
   onEllipsis?: (ellipsis: boolean) => void
 }
 
+/**
+ * Text 组件各部分的语义化 className
+ */
+export interface TextClassNames {
+  /** 根节点 span.hmfw-typography */
+  root?: string
+  /** 复制按钮 button.hmfw-typography-copy */
+  copy?: string
+}
+
+/**
+ * Text 组件各部分的语义化 style
+ */
+export interface TextStyles {
+  /** 根节点 span.hmfw-typography */
+  root?: CSSProperties
+  /** 复制按钮 button.hmfw-typography-copy */
+  copy?: CSSProperties
+}
+
+/**
+ * Title 组件各部分的语义化 className
+ */
+export interface TitleClassNames {
+  /** 根节点 h1-h5.hmfw-typography */
+  root?: string
+  /** 复制按钮 button.hmfw-typography-copy */
+  copy?: string
+}
+
+/**
+ * Title 组件各部分的语义化 style
+ */
+export interface TitleStyles {
+  /** 根节点 h1-h5.hmfw-typography */
+  root?: CSSProperties
+  /** 复制按钮 button.hmfw-typography-copy */
+  copy?: CSSProperties
+}
+
+/**
+ * Paragraph 组件各部分的语义化 className
+ */
+export interface ParagraphClassNames {
+  /** 根节点 p.hmfw-typography */
+  root?: string
+  /** 复制按钮 button.hmfw-typography-copy */
+  copy?: string
+}
+
+/**
+ * Paragraph 组件各部分的语义化 style
+ */
+export interface ParagraphStyles {
+  /** 根节点 p.hmfw-typography */
+  root?: CSSProperties
+  /** 复制按钮 button.hmfw-typography-copy */
+  copy?: CSSProperties
+}
+
+/**
+ * Link 组件各部分的语义化 className
+ */
+export interface LinkClassNames {
+  /** 根节点 a.hmfw-typography-link */
+  root?: string
+  /** 复制按钮 button.hmfw-typography-copy */
+  copy?: string
+}
+
+/**
+ * Link 组件各部分的语义化 style
+ */
+export interface LinkStyles {
+  /** 根节点 a.hmfw-typography-link */
+  root?: CSSProperties
+  /** 复制按钮 button.hmfw-typography-copy */
+  copy?: CSSProperties
+}
+
 export interface BaseTypographyProps {
   type?: TypographyType
   disabled?: boolean
@@ -50,17 +131,35 @@ export interface BaseTypographyProps {
   ellipsis?: boolean | EllipsisConfig
 }
 
-export interface TextProps extends BaseTypographyProps {}
+export interface TextProps extends BaseTypographyProps {
+  /** 语义化 className */
+  classNames?: TextClassNames
+  /** 语义化 style */
+  styles?: TextStyles
+}
 
 export type TitleLevel = 1 | 2 | 3 | 4 | 5
 
 export interface TitleProps extends BaseTypographyProps {
   level?: TitleLevel
+  /** 语义化 className */
+  classNames?: TitleClassNames
+  /** 语义化 style */
+  styles?: TitleStyles
 }
 
-export interface ParagraphProps extends BaseTypographyProps {}
+export interface ParagraphProps extends BaseTypographyProps {
+  /** 语义化 className */
+  classNames?: ParagraphClassNames
+  /** 语义化 style */
+  styles?: ParagraphStyles
+}
 
 export interface LinkProps extends BaseTypographyProps {
   href?: string
   target?: string
+  /** 语义化 className */
+  classNames?: LinkClassNames
+  /** 语义化 style */
+  styles?: LinkStyles
 }

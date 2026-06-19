@@ -3,12 +3,15 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Col } from '../grid'
 import { useListContext } from './context'
+import type { ListItemClassNames, ListItemStyles } from './types'
 
 export const ListItem = defineComponent({
   name: 'ListItem',
   props: {
     extra: Object as PropType<VNode>,
     actions: Array as PropType<VNode[]>,
+    classNames: Object as PropType<ListItemClassNames>,
+    styles: Object as PropType<ListItemStyles>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('list')
@@ -33,30 +36,51 @@ export const ListItem = defineComponent({
 
       // Render actions with separators
       const actionsContent = hasActions ? (
-        <ul class={`${prefixCls}-item-action`} key="actions">
+        <ul
+          class={cls(`${prefixCls}-item-action`, props.classNames?.action)}
+          style={props.styles?.action}
+          key="actions"
+        >
           {(Array.isArray(actions) ? actions : [actions]).map((action, i, arr) => (
             <li key={`action-${i}`}>
               {action}
-              {i !== arr.length - 1 && <em class={`${prefixCls}-item-action-split`} />}
+              {i !== arr.length - 1 && (
+                <em
+                  class={cls(`${prefixCls}-item-action-split`, props.classNames?.actionSplit)}
+                  style={props.styles?.actionSplit}
+                />
+              )}
             </li>
           ))}
         </ul>
       ) : null
 
       const Element = context.grid ? 'div' : 'li'
-      const itemClasses = cls(`${prefixCls}-item`, {
-        [`${prefixCls}-item-no-flex`]: !isFlexMode.value,
-      })
+      const itemClasses = cls(
+        `${prefixCls}-item`,
+        {
+          [`${prefixCls}-item-no-flex`]: !isFlexMode.value,
+        },
+        props.classNames?.item,
+      )
 
       const itemChildren = (
-        <Element class={itemClasses}>
+        <Element class={itemClasses} style={props.styles?.item}>
           {context.itemLayout === 'vertical' && extra ? (
             <>
-              <div class={`${prefixCls}-item-main`} key="content">
+              <div
+                class={cls(`${prefixCls}-item-main`, props.classNames?.main)}
+                style={props.styles?.main}
+                key="content"
+              >
                 {slots.default?.()}
                 {actionsContent}
               </div>
-              <div class={`${prefixCls}-item-extra`} key="extra">
+              <div
+                class={cls(`${prefixCls}-item-extra`, props.classNames?.extra)}
+                style={props.styles?.extra}
+                key="extra"
+              >
                 {extra}
               </div>
             </>
@@ -64,7 +88,11 @@ export const ListItem = defineComponent({
             <>
               {slots.default?.()}
               {actionsContent}
-              {extra && <div class={`${prefixCls}-item-extra`}>{extra}</div>}
+              {extra && (
+                <div class={cls(`${prefixCls}-item-extra`, props.classNames?.extra)} style={props.styles?.extra}>
+                  {extra}
+                </div>
+              )}
             </>
           )}
         </Element>

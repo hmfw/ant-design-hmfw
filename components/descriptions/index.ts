@@ -9,4 +9,4 @@ const Descriptions = InternalDescriptions as DescriptionsType
 Descriptions.Item = DescriptionsItem
 
 export { Descriptions, DescriptionsItem }
-export type { DescriptionsProps, DescriptionsItemProps } from './types'
+export type { DescriptionsProps, DescriptionsItemProps, DescriptionsClassNames, DescriptionsStyles } from './types'

@@ -14,7 +14,20 @@ import { CheckOutlined } from '../icon'
 import { cls } from '../_utils'
 import { useLocale } from '../config-provider'
 import { Tooltip } from '../tooltip'
-import type { TypographyType, CopyableConfig, EllipsisConfig, EllipsisTooltipConfig } from './types'
+import type {
+  TypographyType,
+  CopyableConfig,
+  EllipsisConfig,
+  EllipsisTooltipConfig,
+  TextClassNames,
+  TextStyles,
+  TitleClassNames,
+  TitleStyles,
+  ParagraphClassNames,
+  ParagraphStyles,
+  LinkClassNames,
+  LinkStyles,
+} from './types'
 
 // 内联 Copy 图标（图标系统暂无 CopyOutlined）
 const CopyIcon = () => (
@@ -61,6 +74,8 @@ export interface BaseProps {
   italic?: boolean
   copyable?: boolean | CopyableConfig
   ellipsis?: boolean | EllipsisConfig
+  classNames?: TextClassNames | TitleClassNames | ParagraphClassNames | LinkClassNames
+  styles?: TextStyles | TitleStyles | ParagraphStyles | LinkStyles
 }
 
 /** 解析 ellipsis prop 的行数：true → 1，{ rows } → rows，false → 0 */
@@ -179,9 +194,10 @@ export function useCopyable(prefixCls: string) {
     const button = (
       <button
         type="button"
-        class={cls(`${prefixCls}-copy`, {
+        class={cls(`${prefixCls}-copy`, props.classNames?.copy, {
           [`${prefixCls}-copy-success`]: copied.value,
         })}
+        style={props.styles?.copy}
         aria-label={copied.value ? copiedText : copyText}
         title={copied.value ? copiedText : copyText}
         onClick={onClick}

@@ -1,6 +1,7 @@
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { Tooltip } from '../tooltip'
+import { cls } from '../_utils'
 import {
   baseTypographyProps,
   getTypographyClass,
@@ -12,10 +13,21 @@ import {
   getEllipsisConfig,
   resolveEllipsisTooltipProps,
 } from './Base'
+import type { ParagraphClassNames, ParagraphStyles } from './types'
 
 export default defineComponent({
   name: 'TypographyParagraph',
-  props: baseTypographyProps,
+  props: {
+    ...baseTypographyProps,
+    classNames: {
+      type: Object as PropType<ParagraphClassNames>,
+      default: undefined,
+    },
+    styles: {
+      type: Object as PropType<ParagraphStyles>,
+      default: undefined,
+    },
+  },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('typography')
     const { renderCopy } = useCopyable(prefixCls)
@@ -32,7 +44,11 @@ export default defineComponent({
       const tooltipProps = isEllipsis.value ? resolveEllipsisTooltipProps(ellipsisCfg.tooltip, text) : null
 
       const node = (
-        <p ref={elRef} class={getTypographyClass(prefixCls, props)} style={getEllipsisStyle(props)}>
+        <p
+          ref={elRef}
+          class={cls(getTypographyClass(prefixCls, props), props.classNames?.root)}
+          style={{ ...getEllipsisStyle(props), ...props.styles?.root }}
+        >
           {children}
           {copyNode}
         </p>

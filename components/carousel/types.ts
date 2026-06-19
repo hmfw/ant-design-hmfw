@@ -1,4 +1,4 @@
-import type { VNode } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 
 export type CarouselEffect = 'scrollx' | 'fade'
 
@@ -20,6 +20,62 @@ export interface CarouselRef {
   goTo: (slide: number, dontAnimate?: boolean) => void
   next: () => void
   prev: () => void
+}
+
+/**
+ * Carousel 组件的语义化类名
+ */
+export interface CarouselClassNames {
+  /** 根元素 */
+  root?: string
+  /** 可视区域容器 */
+  list?: string
+  /** 滑动轨道 */
+  track?: string
+  /** 单个幻灯片 */
+  slide?: string
+  /** 当前激活的幻灯片 */
+  slideActive?: string
+  /** 箭头按钮（左右共用） */
+  arrow?: string
+  /** 左箭头 */
+  arrowLeft?: string
+  /** 右箭头 */
+  arrowRight?: string
+  /** 指示器容器 */
+  dots?: string
+  /** 单个指示器 */
+  dot?: string
+  /** 当前激活的指示器 */
+  dotActive?: string
+}
+
+/**
+ * Carousel 组件的语义化样式
+ */
+export interface CarouselStyles {
+  /** 根元素 */
+  root?: CSSProperties
+  /** 可视区域容器 */
+  list?: CSSProperties
+  /** 滑动轨道 */
+  track?: CSSProperties
+  /** 单个幻灯片 */
+  slide?: CSSProperties
+  /** 当前激活的幻灯片 */
+  slideActive?: CSSProperties
+  /** 箭头按钮（左右共用） */
+  arrow?: CSSProperties
+  /** 左箭头 */
+  arrowLeft?: CSSProperties
+  /** 右箭头 */
+  arrowRight?: CSSProperties
+  /** 指示器容器 */
+  dots?: CSSProperties
+  /** 单个指示器 */
+  dot?: CSSProperties
+  /** 当前激活的指示器 */
+  dotActive?: CSSProperties
 }
 
 export interface CarouselProps {
@@ -60,4 +116,8 @@ export interface CarouselProps {
   adaptiveHeight?: boolean
   /** Root class name */
   rootClassName?: string
+  /** 语义化类名 */
+  classNames?: CarouselClassNames
+  /** 语义化样式 */
+  styles?: CarouselStyles
 }

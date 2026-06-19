@@ -379,7 +379,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器和墨水条 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器和墨水条：</div>\n      <Anchor\n        :items=\"items\"\n        :class-names=\"{\n          root: 'custom-root',\n          ink: 'custom-ink',\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义链接项和激活状态 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义链接项和激活状态：</div>\n      <Anchor\n        :items=\"items\"\n        :class-names=\"{\n          link: 'custom-link',\n          linkActive: 'custom-link-active',\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义链接文本样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义链接文本样式：</div>\n      <Anchor\n        :items=\"items\"\n        :class-names=\"{\n          title: 'custom-title',\n          titleActive: 'custom-title-active',\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Anchor\n        :items=\"items\"\n        :styles=\"{\n          root: { background: '#f0f5ff', padding: '12px', borderRadius: '8px' },\n          ink: { width: '4px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },\n          title: { fontSize: '15px', fontWeight: 500 },\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用 classNames 和 styles：</div>\n      <Anchor\n        :items=\"items\"\n        :class-names=\"{\n          root: 'combined-root',\n          link: 'combined-link',\n          titleActive: 'combined-title-active',\n        }\"\n        :styles=\"{\n          ink: { width: '3px' },\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 滚动容器 -->\n    <div ref=\"containerRef\" style=\"height: 200px; overflow: auto; border: 1px solid #d9d9d9; border-radius: 4px; padding: 16px\">\n      <h3 id=\"anchor-demo-1\">锚点 1</h3>\n      <p style=\"height: 100px\">这是第一个锚点的内容区域...</p>\n      <h3 id=\"anchor-demo-2\">锚点 2</h3>\n      <p style=\"height: 100px\">这是第二个锚点的内容区域...</p>\n      <h3 id=\"anchor-demo-3\">锚点 3</h3>\n      <p style=\"height: 100px\">这是第三个锚点的内容区域...</p>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Anchor } from 'ant-design-hmfw'\nimport type { AnchorLinkItem } from 'ant-design-hmfw'\n\nconst containerRef = ref<HTMLElement>()\n\nconst items: AnchorLinkItem[] = [\n  { key: '1', href: '#anchor-demo-1', title: '锚点 1' },\n  { key: '2', href: '#anchor-demo-2', title: '锚点 2' },\n  { key: '3', href: '#anchor-demo-3', title: '锚点 3' },\n]\n\nconst getContainer = () => containerRef.value || window\n</script>\n\n<style scoped>\n/* 场景 1：自定义根容器和墨水条 */\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 16px;\n  border-radius: 8px;\n}\n\n:deep(.custom-root .hmfw-anchor-link-title) {\n  color: white;\n}\n\n:deep(.custom-ink) {\n  background: white;\n  width: 3px;\n  border-radius: 2px;\n  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);\n}\n\n/* 场景 2：自定义链接项和激活状态 */\n:deep(.custom-link) {\n  padding: 8px 12px;\n  margin: 4px 0;\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-link:hover) {\n  background: rgba(22, 119, 255, 0.06);\n  transform: translateX(4px);\n}\n\n:deep(.custom-link-active) {\n  background: linear-gradient(90deg, #e6f4ff 0%, transparent 100%);\n  border-left: 3px solid #1677ff;\n  padding-left: 9px;\n}\n\n/* 场景 3：自定义链接文本样式 */\n:deep(.custom-title) {\n  font-weight: 500;\n  color: #595959;\n  transition: all 0.3s;\n  display: inline-block;\n}\n\n:deep(.custom-title:hover) {\n  color: #1677ff;\n  transform: scale(1.05);\n}\n\n:deep(.custom-title-active) {\n  color: #1677ff;\n  font-weight: 600;\n  text-shadow: 0 0 1px rgba(22, 119, 255, 0.3);\n}\n\n/* 场景 5：组合使用 */\n:deep(.combined-root) {\n  border: 2px solid #f0f0f0;\n  border-radius: 12px;\n  padding: 16px;\n  background: #fafafa;\n  transition: all 0.3s;\n}\n\n:deep(.combined-root:hover) {\n  border-color: #1677ff;\n  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.15);\n}\n\n:deep(.combined-link) {\n  margin: 6px 0;\n  padding: 6px 12px;\n  border-radius: 8px;\n}\n\n:deep(.combined-title-active) {\n  background: linear-gradient(135deg, #1677ff 0%, #52c41a 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n  font-weight: 600;\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器和墨水条 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器和墨水条：</div>\n      <Anchor\n        :items=\"items\"\n        :class-names=\"{\n          root: 'custom-root',\n          ink: 'custom-ink',\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义链接项和激活状态 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义链接项和激活状态：</div>\n      <Anchor\n        :items=\"items\"\n        :class-names=\"{\n          link: 'custom-link',\n          linkActive: 'custom-link-active',\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义链接文本样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义链接文本样式：</div>\n      <Anchor\n        :items=\"items\"\n        :class-names=\"{\n          title: 'custom-title',\n          titleActive: 'custom-title-active',\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Anchor\n        :items=\"items\"\n        :styles=\"{\n          root: { background: '#f0f5ff', padding: '12px', borderRadius: '8px' },\n          ink: { width: '4px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },\n          title: { fontSize: '15px', fontWeight: 500 },\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用 classNames 和 styles：</div>\n      <Anchor\n        :items=\"items\"\n        :class-names=\"{\n          root: 'combined-root',\n          link: 'combined-link',\n          titleActive: 'combined-title-active',\n        }\"\n        :styles=\"{\n          ink: { width: '3px' },\n        }\"\n        :get-container=\"getContainer\"\n      />\n    </div>\n\n    <!-- 滚动容器 -->\n    <div\n      ref=\"containerRef\"\n      style=\"height: 200px; overflow: auto; border: 1px solid #d9d9d9; border-radius: 4px; padding: 16px\"\n    >\n      <h3 id=\"anchor-demo-1\">锚点 1</h3>\n      <p style=\"height: 100px\">这是第一个锚点的内容区域...</p>\n      <h3 id=\"anchor-demo-2\">锚点 2</h3>\n      <p style=\"height: 100px\">这是第二个锚点的内容区域...</p>\n      <h3 id=\"anchor-demo-3\">锚点 3</h3>\n      <p style=\"height: 100px\">这是第三个锚点的内容区域...</p>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Anchor } from 'ant-design-hmfw'\nimport type { AnchorLinkItem } from 'ant-design-hmfw'\n\nconst containerRef = ref<HTMLElement>()\n\nconst items: AnchorLinkItem[] = [\n  { key: '1', href: '#anchor-demo-1', title: '锚点 1' },\n  { key: '2', href: '#anchor-demo-2', title: '锚点 2' },\n  { key: '3', href: '#anchor-demo-3', title: '锚点 3' },\n]\n\nconst getContainer = () => containerRef.value || window\n</script>\n\n<style scoped>\n/* 场景 1：自定义根容器和墨水条 */\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 16px;\n  border-radius: 8px;\n}\n\n:deep(.custom-root .hmfw-anchor-link-title) {\n  color: white;\n}\n\n:deep(.custom-ink) {\n  background: white;\n  width: 3px;\n  border-radius: 2px;\n  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);\n}\n\n/* 场景 2：自定义链接项和激活状态 */\n:deep(.custom-link) {\n  padding: 8px 12px;\n  margin: 4px 0;\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-link:hover) {\n  background: rgba(22, 119, 255, 0.06);\n  transform: translateX(4px);\n}\n\n:deep(.custom-link-active) {\n  background: linear-gradient(90deg, #e6f4ff 0%, transparent 100%);\n  border-left: 3px solid #1677ff;\n  padding-left: 9px;\n}\n\n/* 场景 3：自定义链接文本样式 */\n:deep(.custom-title) {\n  font-weight: 500;\n  color: #595959;\n  transition: all 0.3s;\n  display: inline-block;\n}\n\n:deep(.custom-title:hover) {\n  color: #1677ff;\n  transform: scale(1.05);\n}\n\n:deep(.custom-title-active) {\n  color: #1677ff;\n  font-weight: 600;\n  text-shadow: 0 0 1px rgba(22, 119, 255, 0.3);\n}\n\n/* 场景 5：组合使用 */\n:deep(.combined-root) {\n  border: 2px solid #f0f0f0;\n  border-radius: 12px;\n  padding: 16px;\n  background: #fafafa;\n  transition: all 0.3s;\n}\n\n:deep(.combined-root:hover) {\n  border-color: #1677ff;\n  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.15);\n}\n\n:deep(.combined-link) {\n  margin: 6px 0;\n  padding: 6px 12px;\n  border-radius: 8px;\n}\n\n:deep(.combined-title-active) {\n  background: linear-gradient(135deg, #1677ff 0%, #52c41a 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n  font-weight: 600;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/anchor"
@@ -633,7 +633,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义输入框容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义输入框容器样式：</div>\n      <AutoComplete\n        v-model=\"value1\"\n        :options=\"options1\"\n        placeholder=\"输入内容搜索...\"\n        :class-names=\"{ root: 'custom-root' }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义前后缀与清除按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义前后缀与清除按钮：</div>\n      <AutoComplete\n        v-model=\"value2\"\n        :options=\"options2\"\n        placeholder=\"搜索...\"\n        allow-clear\n        :class-names=\"{\n          prefix: 'custom-prefix',\n          suffix: 'custom-suffix',\n          clear: 'custom-clear',\n        }\"\n      >\n        <template #prefix>\n          <SearchOutlined />\n        </template>\n      </AutoComplete>\n    </div>\n\n    <!-- 场景 3：自定义下拉面板与选项 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义下拉面板与选项：</div>\n      <AutoComplete\n        v-model=\"value3\"\n        :options=\"options3\"\n        placeholder=\"选择水果...\"\n        :class-names=\"{\n          dropdown: 'custom-dropdown',\n          option: 'custom-option',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <AutoComplete\n        v-model=\"value4\"\n        :options=\"options4\"\n        placeholder=\"动态样式...\"\n        allow-clear\n        :styles=\"{\n          root: { borderRadius: '20px', borderColor: '#722ed1' },\n          input: { color: '#722ed1', fontWeight: 'bold' },\n          clear: { color: '#eb2f96' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用 classNames 和 styles：</div>\n      <AutoComplete\n        v-model=\"value5\"\n        :options=\"options5\"\n        placeholder=\"组合样式定制...\"\n        allow-clear\n        :class-names=\"{\n          root: 'custom-combined-root',\n          dropdown: 'custom-combined-dropdown',\n        }\"\n        :styles=\"{\n          input: { fontSize: '16px' },\n        }\"\n      >\n        <template #prefix>\n          <SearchOutlined />\n        </template>\n      </AutoComplete>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { AutoComplete, SearchOutlined } from 'ant-design-hmfw'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value3 = ref('')\nconst value4 = ref('')\nconst value5 = ref('')\n\nconst options1 = [\n  { value: 'Vue 3' },\n  { value: 'React' },\n  { value: 'Angular' },\n  { value: 'Svelte' },\n]\n\nconst options2 = [\n  { value: 'Beijing' },\n  { value: 'Shanghai' },\n  { value: 'Guangzhou' },\n  { value: 'Shenzhen' },\n]\n\nconst options3 = [\n  { value: '🍎 Apple', label: '🍎 Apple' },\n  { value: '🍌 Banana', label: '🍌 Banana' },\n  { value: '🍊 Orange', label: '🍊 Orange' },\n  { value: '🍇 Grape', label: '🍇 Grape' },\n]\n\nconst options4 = [\n  { value: 'Option 1' },\n  { value: 'Option 2' },\n  { value: 'Option 3' },\n]\n\nconst options5 = [\n  { value: 'Design System' },\n  { value: 'Component Library' },\n  { value: 'UI Framework' },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);\n  transform: translateY(-2px);\n}\n\n:deep(.custom-root input) {\n  color: white;\n  font-weight: 500;\n}\n\n:deep(.custom-root input::placeholder) {\n  color: rgba(255, 255, 255, 0.7);\n}\n\n:deep(.custom-prefix) {\n  color: #1890ff;\n  font-size: 18px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-prefix:hover) {\n  color: #40a9ff;\n  transform: scale(1.1);\n}\n\n:deep(.custom-suffix) {\n  color: #52c41a;\n}\n\n:deep(.custom-clear) {\n  color: #ff4d4f;\n  transition: all 0.3s;\n}\n\n:deep(.custom-clear:hover) {\n  color: #ff7875;\n  transform: rotate(90deg);\n}\n\n:global(.custom-dropdown) {\n  background: linear-gradient(to bottom, #f0f5ff 0%, #ffffff 100%);\n  border: 2px solid #1890ff;\n  border-radius: 8px;\n  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.2);\n}\n\n:global(.custom-option) {\n  font-weight: 500;\n  transition: all 0.3s;\n}\n\n:global(.custom-option:hover) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  color: white;\n  transform: translateX(4px);\n}\n\n:deep(.custom-combined-root) {\n  border: 2px solid #52c41a;\n  border-radius: 12px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-combined-root:hover) {\n  border-color: #73d13d;\n  box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);\n}\n\n:global(.custom-combined-dropdown) {\n  background: #f6ffed;\n  border: 2px solid #b7eb8f;\n  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.15);\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义输入框容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义输入框容器样式：</div>\n      <AutoComplete\n        v-model=\"value1\"\n        :options=\"options1\"\n        placeholder=\"输入内容搜索...\"\n        :class-names=\"{ root: 'custom-root' }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义前后缀与清除按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义前后缀与清除按钮：</div>\n      <AutoComplete\n        v-model=\"value2\"\n        :options=\"options2\"\n        placeholder=\"搜索...\"\n        allow-clear\n        :class-names=\"{\n          prefix: 'custom-prefix',\n          suffix: 'custom-suffix',\n          clear: 'custom-clear',\n        }\"\n      >\n        <template #prefix>\n          <SearchOutlined />\n        </template>\n      </AutoComplete>\n    </div>\n\n    <!-- 场景 3：自定义下拉面板与选项 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义下拉面板与选项：</div>\n      <AutoComplete\n        v-model=\"value3\"\n        :options=\"options3\"\n        placeholder=\"选择水果...\"\n        :class-names=\"{\n          dropdown: 'custom-dropdown',\n          option: 'custom-option',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <AutoComplete\n        v-model=\"value4\"\n        :options=\"options4\"\n        placeholder=\"动态样式...\"\n        allow-clear\n        :styles=\"{\n          root: { borderRadius: '20px', borderColor: '#722ed1' },\n          input: { color: '#722ed1', fontWeight: 'bold' },\n          clear: { color: '#eb2f96' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用 classNames 和 styles：</div>\n      <AutoComplete\n        v-model=\"value5\"\n        :options=\"options5\"\n        placeholder=\"组合样式定制...\"\n        allow-clear\n        :class-names=\"{\n          root: 'custom-combined-root',\n          dropdown: 'custom-combined-dropdown',\n        }\"\n        :styles=\"{\n          input: { fontSize: '16px' },\n        }\"\n      >\n        <template #prefix>\n          <SearchOutlined />\n        </template>\n      </AutoComplete>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { AutoComplete, SearchOutlined } from 'ant-design-hmfw'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value3 = ref('')\nconst value4 = ref('')\nconst value5 = ref('')\n\nconst options1 = [{ value: 'Vue 3' }, { value: 'React' }, { value: 'Angular' }, { value: 'Svelte' }]\n\nconst options2 = [{ value: 'Beijing' }, { value: 'Shanghai' }, { value: 'Guangzhou' }, { value: 'Shenzhen' }]\n\nconst options3 = [\n  { value: '🍎 Apple', label: '🍎 Apple' },\n  { value: '🍌 Banana', label: '🍌 Banana' },\n  { value: '🍊 Orange', label: '🍊 Orange' },\n  { value: '🍇 Grape', label: '🍇 Grape' },\n]\n\nconst options4 = [{ value: 'Option 1' }, { value: 'Option 2' }, { value: 'Option 3' }]\n\nconst options5 = [{ value: 'Design System' }, { value: 'Component Library' }, { value: 'UI Framework' }]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);\n  transform: translateY(-2px);\n}\n\n:deep(.custom-root input) {\n  color: white;\n  font-weight: 500;\n}\n\n:deep(.custom-root input::placeholder) {\n  color: rgba(255, 255, 255, 0.7);\n}\n\n:deep(.custom-prefix) {\n  color: #1890ff;\n  font-size: 18px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-prefix:hover) {\n  color: #40a9ff;\n  transform: scale(1.1);\n}\n\n:deep(.custom-suffix) {\n  color: #52c41a;\n}\n\n:deep(.custom-clear) {\n  color: #ff4d4f;\n  transition: all 0.3s;\n}\n\n:deep(.custom-clear:hover) {\n  color: #ff7875;\n  transform: rotate(90deg);\n}\n\n:global(.custom-dropdown) {\n  background: linear-gradient(to bottom, #f0f5ff 0%, #ffffff 100%);\n  border: 2px solid #1890ff;\n  border-radius: 8px;\n  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.2);\n}\n\n:global(.custom-option) {\n  font-weight: 500;\n  transition: all 0.3s;\n}\n\n:global(.custom-option:hover) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  color: white;\n  transform: translateX(4px);\n}\n\n:deep(.custom-combined-root) {\n  border: 2px solid #52c41a;\n  border-radius: 12px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-combined-root:hover) {\n  border-color: #73d13d;\n  box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);\n}\n\n:global(.custom-combined-dropdown) {\n  background: #f6ffed;\n  border: 2px solid #b7eb8f;\n  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.15);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/auto-complete"
@@ -1214,7 +1214,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器和列表 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器和列表样式：</div>\n      <Breadcrumb\n        :items=\"[\n          { title: '首页', href: '#' },\n          { title: '产品中心', href: '#' },\n          { title: '详情' },\n        ]\"\n        :class-names=\"{\n          root: 'custom-root',\n          list: 'custom-list',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义面包屑项和链接 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义面包屑项和链接：</div>\n      <Breadcrumb\n        :items=\"[\n          { title: '首页', href: '#' },\n          { title: '应用列表', href: '#' },\n          { title: '应用详情' },\n        ]\"\n        :class-names=\"{\n          item: 'custom-item',\n          link: 'custom-link',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义分隔符 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义分隔符样式：</div>\n      <Breadcrumb\n        :items=\"[\n          { title: '首页', href: '#' },\n          { title: '文档', href: '#' },\n          { title: '组件', href: '#' },\n          { title: 'Breadcrumb' },\n        ]\"\n        separator=\">\"\n        :class-names=\"{\n          separator: 'custom-separator',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Breadcrumb\n        :items=\"[\n          { title: '首页', href: '#' },\n          { title: '设置', href: '#' },\n          { title: '个人信息' },\n        ]\"\n        :styles=\"{\n          root: { padding: '12px 16px', background: '#f0f5ff', borderRadius: '8px' },\n          link: { color: '#1677ff', fontWeight: 500 },\n          separator: { color: '#d9d9d9', margin: '0 12px' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用（渐变背景 + 自定义间距）：</div>\n      <Breadcrumb\n        :items=\"[\n          { title: '控制台', href: '#' },\n          { title: '项目管理', href: '#' },\n          { title: '项目 A', href: '#' },\n          { title: '详细信息' },\n        ]\"\n        :class-names=\"{\n          root: 'gradient-root',\n          item: 'gradient-item',\n          link: 'gradient-link',\n        }\"\n        :styles=\"{\n          separator: { margin: '0 16px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Breadcrumb } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 场景 1：自定义根容器和列表 */\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 12px 20px;\n  border-radius: 8px;\n}\n\n:deep(.custom-list) {\n  display: flex;\n  align-items: center;\n}\n\n:deep(.custom-root .hmfw-breadcrumb-item .hmfw-breadcrumb-link) {\n  color: rgba(255, 255, 255, 0.85);\n  transition: all 0.3s;\n}\n\n:deep(.custom-root .hmfw-breadcrumb-item .hmfw-breadcrumb-link:hover) {\n  color: #ffffff;\n}\n\n:deep(.custom-root .hmfw-breadcrumb-separator) {\n  color: rgba(255, 255, 255, 0.5);\n}\n\n/* 场景 2：自定义面包屑项和链接 */\n:deep(.custom-item) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  transform: translateX(2px);\n}\n\n:deep(.custom-link) {\n  color: #722ed1;\n  font-weight: 500;\n  padding: 4px 8px;\n  border-radius: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-link:hover) {\n  background: #f9f0ff;\n  color: #531dab;\n}\n\n/* 场景 3：自定义分隔符 */\n:deep(.custom-separator) {\n  color: #1677ff;\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0 12px;\n}\n\n/* 场景 5：组合使用 - 渐变背景 */\n:deep(.gradient-root) {\n  background: linear-gradient(to right, #52c41a, #389e0d);\n  padding: 14px 24px;\n  border-radius: 12px;\n  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);\n  transition: all 0.3s;\n}\n\n:deep(.gradient-root:hover) {\n  box-shadow: 0 6px 16px rgba(82, 196, 26, 0.4);\n  transform: translateY(-2px);\n}\n\n:deep(.gradient-item) {\n  display: flex;\n  align-items: center;\n}\n\n:deep(.gradient-link) {\n  color: rgba(255, 255, 255, 0.95);\n  font-weight: 500;\n  padding: 4px 10px;\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.gradient-link:hover) {\n  background: rgba(255, 255, 255, 0.2);\n  color: #ffffff;\n}\n\n:deep(.gradient-root .hmfw-breadcrumb-separator) {\n  color: rgba(255, 255, 255, 0.6);\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器和列表 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器和列表样式：</div>\n      <Breadcrumb\n        :items=\"[{ title: '首页', href: '#' }, { title: '产品中心', href: '#' }, { title: '详情' }]\"\n        :class-names=\"{\n          root: 'custom-root',\n          list: 'custom-list',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义面包屑项和链接 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义面包屑项和链接：</div>\n      <Breadcrumb\n        :items=\"[{ title: '首页', href: '#' }, { title: '应用列表', href: '#' }, { title: '应用详情' }]\"\n        :class-names=\"{\n          item: 'custom-item',\n          link: 'custom-link',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义分隔符 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义分隔符样式：</div>\n      <Breadcrumb\n        :items=\"[\n          { title: '首页', href: '#' },\n          { title: '文档', href: '#' },\n          { title: '组件', href: '#' },\n          { title: 'Breadcrumb' },\n        ]\"\n        separator=\">\"\n        :class-names=\"{\n          separator: 'custom-separator',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Breadcrumb\n        :items=\"[{ title: '首页', href: '#' }, { title: '设置', href: '#' }, { title: '个人信息' }]\"\n        :styles=\"{\n          root: { padding: '12px 16px', background: '#f0f5ff', borderRadius: '8px' },\n          link: { color: '#1677ff', fontWeight: 500 },\n          separator: { color: '#d9d9d9', margin: '0 12px' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用（渐变背景 + 自定义间距）：</div>\n      <Breadcrumb\n        :items=\"[\n          { title: '控制台', href: '#' },\n          { title: '项目管理', href: '#' },\n          { title: '项目 A', href: '#' },\n          { title: '详细信息' },\n        ]\"\n        :class-names=\"{\n          root: 'gradient-root',\n          item: 'gradient-item',\n          link: 'gradient-link',\n        }\"\n        :styles=\"{\n          separator: { margin: '0 16px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Breadcrumb } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 场景 1：自定义根容器和列表 */\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 12px 20px;\n  border-radius: 8px;\n}\n\n:deep(.custom-list) {\n  display: flex;\n  align-items: center;\n}\n\n:deep(.custom-root .hmfw-breadcrumb-item .hmfw-breadcrumb-link) {\n  color: rgba(255, 255, 255, 0.85);\n  transition: all 0.3s;\n}\n\n:deep(.custom-root .hmfw-breadcrumb-item .hmfw-breadcrumb-link:hover) {\n  color: #ffffff;\n}\n\n:deep(.custom-root .hmfw-breadcrumb-separator) {\n  color: rgba(255, 255, 255, 0.5);\n}\n\n/* 场景 2：自定义面包屑项和链接 */\n:deep(.custom-item) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  transform: translateX(2px);\n}\n\n:deep(.custom-link) {\n  color: #722ed1;\n  font-weight: 500;\n  padding: 4px 8px;\n  border-radius: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-link:hover) {\n  background: #f9f0ff;\n  color: #531dab;\n}\n\n/* 场景 3：自定义分隔符 */\n:deep(.custom-separator) {\n  color: #1677ff;\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0 12px;\n}\n\n/* 场景 5：组合使用 - 渐变背景 */\n:deep(.gradient-root) {\n  background: linear-gradient(to right, #52c41a, #389e0d);\n  padding: 14px 24px;\n  border-radius: 12px;\n  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);\n  transition: all 0.3s;\n}\n\n:deep(.gradient-root:hover) {\n  box-shadow: 0 6px 16px rgba(82, 196, 26, 0.4);\n  transform: translateY(-2px);\n}\n\n:deep(.gradient-item) {\n  display: flex;\n  align-items: center;\n}\n\n:deep(.gradient-link) {\n  color: rgba(255, 255, 255, 0.95);\n  font-weight: 500;\n  padding: 4px 10px;\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.gradient-link:hover) {\n  background: rgba(255, 255, 255, 0.2);\n  color: #ffffff;\n}\n\n:deep(.gradient-root .hmfw-breadcrumb-separator) {\n  color: rgba(255, 255, 255, 0.6);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/breadcrumb"
@@ -1752,6 +1752,20 @@
           "default": "-"
         },
         {
+          "section": "Carousel Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CarouselClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CarouselStyles`",
+          "default": "-"
+        },
+        {
           "section": "Carousel Ref 方法",
           "name": "`(slideNumber: number, dontAnimate?: boolean) => void`",
           "description": "跳转到指定索引",
@@ -1808,6 +1822,11 @@
           "title": "自动播放进度条",
           "description": "设置 `autoplay.dotDuration` 为 `true`，指示点将显示进度条动画。",
           "code": "<template>\n  <Carousel :autoplay=\"{ dotDuration: true }\" :autoplay-speed=\"2000\">\n    <div\n      class=\"carousel-item\"\n      style=\"background: #364d79; color: #fff; height: 160px; line-height: 160px; text-align: center\"\n    >\n      Slide 1\n    </div>\n    <div\n      class=\"carousel-item\"\n      style=\"background: #7dbcea; color: #fff; height: 160px; line-height: 160px; text-align: center\"\n    >\n      Slide 2\n    </div>\n    <div\n      class=\"carousel-item\"\n      style=\"background: #00a0e9; color: #fff; height: 160px; line-height: 160px; text-align: center\"\n    >\n      Slide 3\n    </div>\n    <div\n      class=\"carousel-item\"\n      style=\"background: #1890ff; color: #fff; height: 160px; line-height: 160px; text-align: center\"\n    >\n      Slide 4\n    </div>\n  </Carousel>\n</template>\n\n<script setup lang=\"ts\">\nimport { Carousel } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器圆角与阴影：</div>\n      <Carousel :class-names=\"{ root: 'custom-root' }\">\n        <div class=\"demo-slide\" style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)\">\n          <h3>Slide 1</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)\">\n          <h3>Slide 2</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)\">\n          <h3>Slide 3</h3>\n        </div>\n      </Carousel>\n    </div>\n\n    <!-- 场景 2：自定义指示器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义指示器：圆形 dots 与渐变色：</div>\n      <Carousel :class-names=\"{ dots: 'custom-dots', dot: 'custom-dot', dotActive: 'custom-dot-active' }\">\n        <div class=\"demo-slide\" style=\"background: linear-gradient(to right, #f857a6, #ff5858)\">\n          <h3>Slide 1</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(to right, #a8edea, #fed6e3)\">\n          <h3>Slide 2</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(to right, #ffecd2, #fcb69f)\">\n          <h3>Slide 3</h3>\n        </div>\n      </Carousel>\n    </div>\n\n    <!-- 场景 3：自定义箭头样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义箭头：渐变背景与圆形：</div>\n      <Carousel\n        arrows\n        :class-names=\"{\n          arrow: 'custom-arrow',\n          arrowLeft: 'custom-arrow-left',\n          arrowRight: 'custom-arrow-right',\n        }\"\n      >\n        <div class=\"demo-slide\" style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)\">\n          <h3>Slide 1</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(135deg, #fa709a 0%, #fee140 100%)\">\n          <h3>Slide 2</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(135deg, #30cfd0 0%, #330867 100%)\">\n          <h3>Slide 3</h3>\n        </div>\n      </Carousel>\n    </div>\n\n    <!-- 场景 4：自定义幻灯片与激活状态 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义幻灯片缩放与激活态边框：</div>\n      <Carousel\n        :class-names=\"{\n          list: 'custom-list',\n          slide: 'custom-slide',\n          slideActive: 'custom-slide-active',\n        }\"\n      >\n        <div class=\"demo-slide\" style=\"background: linear-gradient(to right, #6a11cb, #2575fc)\">\n          <h3>Slide 1</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(to right, #ff6a00, #ee0979)\">\n          <h3>Slide 2</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(to right, #00c9ff, #92fe9d)\">\n          <h3>Slide 3</h3>\n        </div>\n      </Carousel>\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用 styles 内联样式控制：</div>\n      <Carousel\n        arrows\n        :styles=\"{\n          root: { borderRadius: '16px', overflow: 'hidden' },\n          dots: { bottom: '20px' },\n          dot: { opacity: 0.8 },\n          arrow: { background: 'rgba(255,255,255,0.9)', color: '#1677ff' },\n        }\"\n      >\n        <div class=\"demo-slide\" style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)\">\n          <h3>Slide 1</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)\">\n          <h3>Slide 2</h3>\n        </div>\n        <div class=\"demo-slide\" style=\"background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)\">\n          <h3>Slide 3</h3>\n        </div>\n      </Carousel>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Carousel } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n.demo-slide {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 200px;\n  color: white;\n  font-size: 24px;\n}\n\n.demo-slide h3 {\n  margin: 0;\n}\n\n/* 场景 1：自定义根容器 */\n:deep(.custom-root) {\n  border-radius: 12px;\n  overflow: hidden;\n  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);\n  transition: box-shadow 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);\n}\n\n/* 场景 2：自定义指示器 */\n:deep(.custom-dots) {\n  gap: 10px;\n  bottom: 16px;\n}\n\n:deep(.custom-dot button) {\n  width: 12px !important;\n  height: 12px !important;\n  border-radius: 50% !important;\n  background: rgba(255, 255, 255, 0.4) !important;\n  transition: all 0.3s !important;\n}\n\n:deep(.custom-dot:hover button) {\n  background: rgba(255, 255, 255, 0.7) !important;\n  transform: scale(1.2);\n}\n\n:deep(.custom-dot-active button) {\n  width: 12px !important;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;\n  transform: scale(1.4);\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.5);\n}\n\n/* 场景 3：自定义箭头 */\n:deep(.custom-arrow) {\n  width: 48px !important;\n  height: 48px !important;\n  border-radius: 50% !important;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;\n  opacity: 0.9 !important;\n  transition: all 0.3s !important;\n  font-size: 24px !important;\n}\n\n:deep(.custom-arrow:hover) {\n  opacity: 1 !important;\n  transform: translateY(-50%) scale(1.1) !important;\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.custom-arrow-left) {\n  left: 16px;\n}\n\n:deep(.custom-arrow-right) {\n  right: 16px;\n}\n\n/* 场景 4：自定义幻灯片 */\n:deep(.custom-list) {\n  padding: 8px;\n}\n\n:deep(.custom-slide) {\n  border-radius: 8px;\n  overflow: hidden;\n  transition: all 0.3s;\n  opacity: 0.7;\n  transform: scale(0.95);\n}\n\n:deep(.custom-slide-active) {\n  opacity: 1;\n  transform: scale(1);\n  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/carousel"
@@ -2497,6 +2516,20 @@
           "default": "-"
         },
         {
+          "section": "Collapse Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CollapseClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Collapse Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CollapseStyles`",
+          "default": "-"
+        },
+        {
           "section": "CollapseItem",
           "name": "key",
           "description": "对应 activeKey",
@@ -2560,6 +2593,20 @@
           "default": "-"
         },
         {
+          "section": "CollapseItem",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CollapseClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "CollapseItem",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CollapseStyles`",
+          "default": "-"
+        },
+        {
           "section": "CollapsePanel Props",
           "name": "key",
           "description": "对应 activeKey",
@@ -2607,6 +2654,20 @@
           "description": "被隐藏时是否渲染 DOM 结构",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "CollapsePanel Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CollapseClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "CollapsePanel Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`CollapseStyles`",
+          "default": "-"
         }
       ],
       "events": [
@@ -2659,6 +2720,11 @@
           "title": "不同尺寸",
           "description": "提供三种尺寸：small、middle（默认）、large。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Collapse :items=\"items\" size=\"small\" />\n    <Collapse :items=\"items\" size=\"middle\" />\n    <Collapse :items=\"items\" size=\"large\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Collapse } from 'ant-design-hmfw'\n\nconst items = [\n  {\n    key: '1',\n    label: '面板标题',\n    children: '这是面板内容',\n  },\n]\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义头部样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义头部渐变背景：</div>\n      <Collapse\n        :default-active-key=\"['1']\"\n        :class-names=\"{\n          header: 'custom-header',\n          icon: 'custom-icon',\n        }\"\n      >\n        <CollapsePanel key=\"1\" header=\"渐变头部面板\">\n          <p>通过 classNames.header 自定义头部背景色，使用渐变效果。</p>\n          <p>通过 classNames.icon 控制图标样式。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n\n    <!-- 场景 2：自定义内容区域 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义内容区域样式：</div>\n      <Collapse\n        :default-active-key=\"['2']\"\n        :class-names=\"{\n          body: 'custom-body',\n          content: 'custom-content',\n        }\"\n      >\n        <CollapsePanel key=\"2\" header=\"自定义内容面板\">\n          <p>通过 classNames.body 控制实际内容容器。</p>\n          <p>通过 classNames.content 控制外层动画容器。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n\n    <!-- 场景 3：高级组合定制 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合多个语义节点：</div>\n      <Collapse\n        :default-active-key=\"['3']\"\n        :class-names=\"{\n          item: 'custom-item',\n          header: 'custom-header-combined',\n          headerText: 'custom-header-text',\n          icon: 'custom-icon-combined',\n          body: 'custom-body-combined',\n        }\"\n      >\n        <CollapsePanel key=\"3\" header=\"完整定制面板\" extra=\"标签\">\n          <p>同时自定义多个语义节点的样式。</p>\n          <p>包括面板项、头部、头部文本、图标和内容。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Collapse\n        :default-active-key=\"['4']\"\n        :styles=\"{\n          header: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', borderRadius: '8px', padding: '12px 16px' },\n          icon: { color: 'white', fontSize: '16px' },\n          body: { backgroundColor: '#f0f5ff', padding: '16px', borderRadius: '0 0 8px 8px' },\n        }\"\n      >\n        <CollapsePanel key=\"4\" header=\"内联样式面板\">\n          <p>通过 styles 属性直接应用内联样式。</p>\n          <p>styles 优先级高于 classNames。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n\n    <!-- 场景 5：悬停效果与动画 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">悬停效果与动画：</div>\n      <Collapse\n        :default-active-key=\"['5']\"\n        :class-names=\"{\n          item: 'hover-item',\n          header: 'hover-header',\n          icon: 'hover-icon',\n        }\"\n      >\n        <CollapsePanel key=\"5\" header=\"悬停效果面板\">\n          <p>通过 CSS 为头部添加悬停动画效果。</p>\n          <p>图标旋转和头部阴影变化。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Collapse, CollapsePanel } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 场景 1：渐变头部 */\n:deep(.custom-header) {\n  background: linear-gradient(to right, #52c41a, #389e0d);\n  color: white;\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-header:hover) {\n  transform: translateX(4px);\n}\n\n:deep(.custom-icon) {\n  color: white;\n  font-size: 16px;\n}\n\n/* 场景 2：内容区域 */\n:deep(.custom-body) {\n  background-color: #f6ffed;\n  border-left: 3px solid #52c41a;\n  padding: 16px;\n}\n\n:deep(.custom-content) {\n  border-radius: 0 0 6px 6px;\n  overflow: hidden;\n}\n\n/* 场景 3：组合定制 */\n:deep(.custom-item) {\n  border: 2px solid #1890ff;\n  border-radius: 8px;\n  margin-bottom: 8px;\n  overflow: hidden;\n}\n\n:deep(.custom-header-combined) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  color: white;\n}\n\n:deep(.custom-header-text) {\n  font-weight: 600;\n  font-size: 16px;\n}\n\n:deep(.custom-icon-combined) {\n  color: #fadb14;\n  font-size: 18px;\n}\n\n:deep(.custom-body-combined) {\n  background: #e6f7ff;\n  padding: 20px;\n}\n\n/* 场景 5：悬停效果 */\n:deep(.hover-item) {\n  transition: all 0.3s;\n  border-radius: 6px;\n}\n\n:deep(.hover-header) {\n  transition: all 0.3s;\n}\n\n:deep(.hover-header:hover) {\n  background-color: #fafafa;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);\n}\n\n:deep(.hover-icon) {\n  transition: transform 0.3s;\n}\n\n:deep(.hover-header:hover .hover-icon) {\n  transform: scale(1.2);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/collapse"
@@ -3117,6 +3183,20 @@
           "default": "-"
         },
         {
+          "section": "Descriptions Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`DescriptionsClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Descriptions Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`DescriptionsStyles`",
+          "default": "-"
+        },
+        {
           "section": "DescriptionsItem",
           "name": "label",
           "description": "内容的描述",
@@ -3189,6 +3269,11 @@
           "title": "Span 填充",
           "description": "使用 `span=\"filled\"` 填充剩余列。",
           "code": "<template>\n  <Descriptions title=\"Span 填充示例\" :column=\"3\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Descriptions } from 'ant-design-hmfw'\n\nconst items = [\n  { label: '产品', children: 'Cloud Database', span: 2 },\n  { label: '计费', children: '预付费' },\n  { label: '时间', children: '18:00:00' },\n  { label: '金额', children: '$80.00', span: 'filled' as const },\n  { label: '折扣', children: '$20.00', span: 'filled' as const },\n  { label: '实付', children: '$60.00' },\n]\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义标题和头部区域 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">\n        自定义标题和头部区域样式：\n      </div>\n      <Descriptions\n        title=\"用户信息\"\n        extra=\"更多操作\"\n        :items=\"basicItems\"\n        :class-names=\"{\n          header: 'custom-header',\n          title: 'custom-title',\n          extra: 'custom-extra',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义标签和内容样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">\n        自定义标签和内容区域样式：\n      </div>\n      <Descriptions\n        title=\"产品信息\"\n        bordered\n        :items=\"productItems\"\n        :class-names=\"{\n          label: 'custom-label',\n          content: 'custom-content',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：垂直布局自定义行样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">\n        垂直布局自定义行样式（hover 效果）：\n      </div>\n      <Descriptions\n        title=\"订单详情\"\n        layout=\"vertical\"\n        bordered\n        :items=\"orderItems\"\n        :class-names=\"{\n          row: 'custom-row',\n          label: 'custom-vertical-label',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">\n        使用 styles 内联样式：\n      </div>\n      <Descriptions\n        title=\"配置信息\"\n        :items=\"configItems\"\n        :styles=\"{\n          root: { border: '2px solid #1890ff', borderRadius: '12px', padding: '16px' },\n          title: { fontSize: '18px', color: '#1890ff', fontWeight: 600 },\n          label: { color: '#8c8c8c', fontWeight: 500 },\n          content: { color: '#262626', fontWeight: 600 },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">\n        组合使用 classNames 和 styles（渐变背景 + 自定义间距）：\n      </div>\n      <Descriptions\n        title=\"高级配置\"\n        extra=\"编辑\"\n        :items=\"advancedItems\"\n        :class-names=\"{\n          root: 'gradient-root',\n          view: 'gradient-view',\n          label: 'gradient-label',\n          content: 'gradient-content',\n        }\"\n        :styles=\"{\n          header: { padding: '16px 20px' },\n          view: { padding: '16px 20px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Descriptions } from 'ant-design-hmfw'\n\nconst basicItems = [\n  { label: '姓名', children: '张三' },\n  { label: '手机号', children: '138-0000-0000' },\n  { label: '邮箱', children: 'zhangsan@example.com' },\n  { label: '住址', children: '浙江省杭州市西湖区某某路 123 号', span: 2 },\n]\n\nconst productItems = [\n  { label: '产品名称', children: 'Ant Design Vue' },\n  { label: '版本号', children: 'v4.0.0' },\n  { label: '许可证', children: 'MIT' },\n  { label: '作者', children: 'Ant Design Team' },\n  { label: '仓库地址', children: 'https://github.com/vueComponent/ant-design-vue', span: 2 },\n]\n\nconst orderItems = [\n  { label: '订单编号', children: 'ORD20230615001' },\n  { label: '下单时间', children: '2023-06-15 14:30:00' },\n  { label: '订单状态', children: '已完成' },\n]\n\nconst configItems = [\n  { label: 'API 地址', children: 'https://api.example.com' },\n  { label: '超时时间', children: '30 秒' },\n  { label: '重试次数', children: '3 次' },\n]\n\nconst advancedItems = [\n  { label: '服务器', children: 'Server-01' },\n  { label: '状态', children: '运行中' },\n  { label: 'CPU 使用率', children: '45%' },\n  { label: '内存使用率', children: '68%' },\n  { label: '磁盘使用率', children: '52%' },\n  { label: '网络流量', children: '125 MB/s' },\n]\n</script>\n\n<style scoped>\n/* 场景 1：自定义标题和头部 */\n:deep(.custom-header) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 16px 20px;\n  border-radius: 8px 8px 0 0;\n}\n\n:deep(.custom-title) {\n  color: white;\n  font-size: 18px;\n  font-weight: 600;\n}\n\n:deep(.custom-extra) {\n  color: rgba(255, 255, 255, 0.85);\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\n:deep(.custom-extra:hover) {\n  color: white;\n  transform: translateX(-2px);\n}\n\n/* 场景 2：自定义标签和内容 */\n:deep(.custom-label) {\n  background: #f0f5ff;\n  color: #1890ff;\n  font-weight: 600;\n  position: relative;\n}\n\n:deep(.custom-label::before) {\n  content: '';\n  position: absolute;\n  left: 0;\n  top: 0;\n  bottom: 0;\n  width: 3px;\n  background: #1890ff;\n}\n\n:deep(.custom-content) {\n  background: #fafafa;\n  font-family: 'Monaco', 'Menlo', monospace;\n  font-size: 13px;\n}\n\n/* 场景 3：垂直布局行样式 */\n:deep(.custom-row) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-row:hover) {\n  background-color: #f0f5ff;\n  transform: translateX(2px);\n}\n\n:deep(.custom-vertical-label) {\n  color: #1890ff;\n  font-weight: 500;\n}\n\n/* 场景 5：渐变背景 */\n:deep(.gradient-root) {\n  background: linear-gradient(135deg, #e0f7fa 0%, #f3e5f5 100%);\n  border-radius: 12px;\n  overflow: hidden;\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);\n}\n\n:deep(.gradient-view) {\n  background: rgba(255, 255, 255, 0.6);\n}\n\n:deep(.gradient-label) {\n  color: #00838f;\n  font-weight: 500;\n}\n\n:deep(.gradient-content) {\n  color: #4a148c;\n  font-weight: 600;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/descriptions"
@@ -5026,6 +5111,20 @@
         },
         {
           "section": "Image Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ImageClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Image Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ImageStyles`",
+          "default": "-"
+        },
+        {
+          "section": "Image Props",
           "name": "onError",
           "description": "加载失败回调",
           "type": "`(e: Event) => void`",
@@ -5213,6 +5312,11 @@
           "title": "自定义工具栏与预览内容",
           "description": "通过 `toolbarRender` 自定义底部工具栏，`imageRender` 自定义预览内容容器。两者的 `info` 都会回传 `transform`、`current`、`total`、`image` 等信息。",
           "code": "<template>\n  <Image\n    src=\"https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp\"\n    width=\"200\"\n    :preview=\"{ toolbarRender, imageRender }\"\n  />\n</template>\n\n<script setup lang=\"tsx\">\nimport { Image, Button } from 'ant-design-hmfw'\nimport type { VNode } from 'vue'\nimport type { ToolbarRenderInfoType, ImageRenderInfoType } from 'ant-design-hmfw'\n\n// 自定义工具栏：保留原始操作栏，并在其下方追加缩放比例与“重置”按钮\nfunction toolbarRender(originalNode: VNode, info: ToolbarRenderInfoType) {\n  return (\n    <div style=\"display:flex;flex-direction:column;align-items:center;gap:8px\">\n      {originalNode}\n      <div style=\"display:flex;gap:12px;color:#fff;font-size:13px;align-items:center\">\n        <span>缩放 {Math.round(info.transform.scale * 100)}%</span>\n        <Button\n          onClick={info.actions.onReset}\n          style=\"padding:2px 10px;border:none;border-radius:4px;background:rgba(255,255,255,.2);color:#fff;cursor:pointer\"\n        >\n          重置\n        </Button>\n      </div>\n    </div>\n  )\n}\n\n// 自定义预览内容：给图片加一个圆角边框包裹\nfunction imageRender(originalNode: VNode, _info: ImageRenderInfoType) {\n  return <div style=\"padding:8px;border-radius:8px;background:rgba(255,255,255,.08)\">{originalNode}</div>\n}\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器与图片 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义根容器与图片样式：</div>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :preview=\"false\"\n        :class-names=\"{\n          root: 'custom-root',\n          img: 'custom-img',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义 hover 遮罩 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义 hover 遮罩与遮罩文本：</div>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :class-names=\"{\n          mask: 'custom-mask',\n          maskInfo: 'custom-mask-info',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义预览弹层 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义预览弹层样式（点击图片预览）：</div>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :class-names=\"{\n          preview: 'custom-preview',\n          previewMask: 'custom-preview-mask',\n          operations: 'custom-operations',\n          operationBtn: 'custom-operation-btn',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：自定义占位与错误状态 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义占位与错误状态：</div>\n      <div style=\"display: flex; gap: 16px\">\n        <Image\n          src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n          width=\"200\"\n          :placeholder=\"true\"\n          :class-names=\"{\n            placeholder: 'custom-placeholder',\n          }\"\n        />\n        <Image\n          src=\"invalid-url\"\n          width=\"200\"\n          :class-names=\"{\n            error: 'custom-error',\n          }\"\n        />\n      </div>\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">使用内联样式对象：</div>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :styles=\"{\n          root: {\n            borderRadius: '16px',\n            overflow: 'hidden',\n            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'\n          },\n          img: {\n            transition: 'transform 0.3s',\n          },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Image } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 场景 1：根容器与图片 */\n:deep(.custom-root) {\n  border: 3px solid transparent;\n  border-radius: 12px;\n  background: linear-gradient(white, white) padding-box,\n              linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;\n  overflow: hidden;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-4px);\n  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.custom-img) {\n  transition: transform 0.5s ease;\n}\n\n:deep(.custom-root:hover .custom-img) {\n  transform: scale(1.05);\n}\n\n/* 场景 2：hover 遮罩 */\n:deep(.custom-mask) {\n  background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%);\n  backdrop-filter: blur(4px);\n}\n\n:deep(.custom-mask-info) {\n  font-size: 16px;\n  font-weight: 600;\n  color: #fff;\n  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);\n}\n\n/* 场景 3：预览弹层（使用 :global() 因为预览挂载到 body） */\n:global(.custom-preview) {\n  background: rgba(0, 0, 0, 0.92);\n}\n\n:global(.custom-preview-mask) {\n  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);\n}\n\n:global(.custom-operations) {\n  background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);\n  backdrop-filter: blur(10px);\n  border-radius: 24px;\n  padding: 8px 16px;\n}\n\n:global(.custom-operation-btn) {\n  color: #fff;\n  transition: all 0.3s;\n}\n\n:global(.custom-operation-btn:hover) {\n  transform: scale(1.2);\n  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));\n}\n\n/* 场景 4：占位与错误 */\n:deep(.custom-placeholder) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f7ff 100%);\n  border: 2px dashed #91d5ff;\n}\n\n:deep(.custom-error) {\n  background: linear-gradient(135deg, #fff2e8 0%, #ffece0 100%);\n  border: 2px dashed #ffbb96;\n}\n\n:deep(.custom-error .hmfw-image-error-icon) {\n  color: #ff7a45;\n  font-size: 32px;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/image"
@@ -5817,7 +5921,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器样式：</div>\n      <InputNumber\n        v-model:value=\"value1\"\n        :min=\"0\"\n        :max=\"100\"\n        :class-names=\"{ root: 'custom-root' }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义输入框和操作按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义输入框与操作按钮：</div>\n      <InputNumber\n        v-model:value=\"value2\"\n        :min=\"0\"\n        :max=\"100\"\n        :class-names=\"{\n          input: 'custom-input',\n          handlerWrap: 'custom-handler-wrap',\n          handlerUp: 'custom-handler-up',\n          handlerDown: 'custom-handler-down',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：带前后缀的自定义样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义前后缀：</div>\n      <InputNumber\n        v-model:value=\"value3\"\n        prefix=\"¥\"\n        suffix=\"元\"\n        :min=\"0\"\n        :max=\"10000\"\n        :class-names=\"{\n          prefix: 'custom-prefix',\n          suffix: 'custom-suffix',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：带 addon 的组合样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义 addon 分组：</div>\n      <InputNumber\n        v-model:value=\"value4\"\n        addon-before=\"价格\"\n        addon-after=\"元\"\n        :min=\"0\"\n        :max=\"10000\"\n        :class-names=\"{\n          groupWrapper: 'custom-group-wrapper',\n          addonBefore: 'custom-addon-before',\n          addonAfter: 'custom-addon-after',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <InputNumber\n        v-model:value=\"value5\"\n        :min=\"0\"\n        :max=\"100\"\n        :styles=\"{\n          root: { borderColor: '#722ed1', borderWidth: '2px' },\n          input: { color: '#722ed1', fontWeight: 'bold' },\n          handlerWrap: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from 'ant-design-hmfw'\n\nconst value1 = ref(50)\nconst value2 = ref(50)\nconst value3 = ref(100)\nconst value4 = ref(1000)\nconst value5 = ref(50)\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.custom-root .hmfw-input-number-input) {\n  color: white;\n  background: transparent;\n}\n\n:deep(.custom-root .hmfw-input-number-handler-wrap) {\n  background: rgba(255, 255, 255, 0.2);\n  border-left: 1px solid rgba(255, 255, 255, 0.3);\n}\n\n:deep(.custom-root .hmfw-input-number-handler) {\n  color: white;\n  border-color: rgba(255, 255, 255, 0.3);\n}\n\n:deep(.custom-root .hmfw-input-number-handler:hover) {\n  background: rgba(255, 255, 255, 0.1);\n}\n\n:deep(.custom-input) {\n  font-family: 'Courier New', monospace;\n  font-size: 16px;\n  font-weight: bold;\n  color: #1890ff;\n  text-align: center;\n}\n\n:deep(.custom-handler-wrap) {\n  background: linear-gradient(180deg, #f0f5ff 0%, #e6f7ff 100%);\n}\n\n:deep(.custom-handler-up) {\n  color: #52c41a;\n  transition: all 0.3s;\n}\n\n:deep(.custom-handler-up:hover) {\n  color: #73d13d;\n  transform: scale(1.2);\n}\n\n:deep(.custom-handler-down) {\n  color: #ff4d4f;\n  transition: all 0.3s;\n}\n\n:deep(.custom-handler-down:hover) {\n  color: #ff7875;\n  transform: scale(1.2);\n}\n\n:deep(.custom-prefix) {\n  color: #52c41a;\n  font-weight: bold;\n  font-size: 16px;\n  background: #f6ffed;\n  padding: 0 8px;\n  margin-right: 4px;\n  border-radius: 4px;\n}\n\n:deep(.custom-suffix) {\n  color: #1890ff;\n  font-weight: bold;\n  font-size: 12px;\n  background: #e6f7ff;\n  padding: 0 8px;\n  margin-left: 4px;\n  border-radius: 4px;\n}\n\n:deep(.custom-group-wrapper) {\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n  border-radius: 6px;\n  overflow: hidden;\n  transition: all 0.3s;\n}\n\n:deep(.custom-group-wrapper:hover) {\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);\n}\n\n:deep(.custom-addon-before) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  color: white;\n  font-weight: bold;\n  border: none;\n}\n\n:deep(.custom-addon-after) {\n  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);\n  color: white;\n  font-weight: bold;\n  border: none;\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器样式：</div>\n      <InputNumber v-model:value=\"value1\" :min=\"0\" :max=\"100\" :class-names=\"{ root: 'custom-root' }\" />\n    </div>\n\n    <!-- 场景 2：自定义输入框和操作按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义输入框与操作按钮：</div>\n      <InputNumber\n        v-model:value=\"value2\"\n        :min=\"0\"\n        :max=\"100\"\n        :class-names=\"{\n          input: 'custom-input',\n          handlerWrap: 'custom-handler-wrap',\n          handlerUp: 'custom-handler-up',\n          handlerDown: 'custom-handler-down',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：带前后缀的自定义样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义前后缀：</div>\n      <InputNumber\n        v-model:value=\"value3\"\n        prefix=\"¥\"\n        suffix=\"元\"\n        :min=\"0\"\n        :max=\"10000\"\n        :class-names=\"{\n          prefix: 'custom-prefix',\n          suffix: 'custom-suffix',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：带 addon 的组合样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义 addon 分组：</div>\n      <InputNumber\n        v-model:value=\"value4\"\n        addon-before=\"价格\"\n        addon-after=\"元\"\n        :min=\"0\"\n        :max=\"10000\"\n        :class-names=\"{\n          groupWrapper: 'custom-group-wrapper',\n          addonBefore: 'custom-addon-before',\n          addonAfter: 'custom-addon-after',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <InputNumber\n        v-model:value=\"value5\"\n        :min=\"0\"\n        :max=\"100\"\n        :styles=\"{\n          root: { borderColor: '#722ed1', borderWidth: '2px' },\n          input: { color: '#722ed1', fontWeight: 'bold' },\n          handlerWrap: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from 'ant-design-hmfw'\n\nconst value1 = ref(50)\nconst value2 = ref(50)\nconst value3 = ref(100)\nconst value4 = ref(1000)\nconst value5 = ref(50)\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);\n}\n\n:deep(.custom-root .hmfw-input-number-input) {\n  color: white;\n  background: transparent;\n}\n\n:deep(.custom-root .hmfw-input-number-handler-wrap) {\n  background: rgba(255, 255, 255, 0.2);\n  border-left: 1px solid rgba(255, 255, 255, 0.3);\n}\n\n:deep(.custom-root .hmfw-input-number-handler) {\n  color: white;\n  border-color: rgba(255, 255, 255, 0.3);\n}\n\n:deep(.custom-root .hmfw-input-number-handler:hover) {\n  background: rgba(255, 255, 255, 0.1);\n}\n\n:deep(.custom-input) {\n  font-family: 'Courier New', monospace;\n  font-size: 16px;\n  font-weight: bold;\n  color: #1890ff;\n  text-align: center;\n}\n\n:deep(.custom-handler-wrap) {\n  background: linear-gradient(180deg, #f0f5ff 0%, #e6f7ff 100%);\n}\n\n:deep(.custom-handler-up) {\n  color: #52c41a;\n  transition: all 0.3s;\n}\n\n:deep(.custom-handler-up:hover) {\n  color: #73d13d;\n  transform: scale(1.2);\n}\n\n:deep(.custom-handler-down) {\n  color: #ff4d4f;\n  transition: all 0.3s;\n}\n\n:deep(.custom-handler-down:hover) {\n  color: #ff7875;\n  transform: scale(1.2);\n}\n\n:deep(.custom-prefix) {\n  color: #52c41a;\n  font-weight: bold;\n  font-size: 16px;\n  background: #f6ffed;\n  padding: 0 8px;\n  margin-right: 4px;\n  border-radius: 4px;\n}\n\n:deep(.custom-suffix) {\n  color: #1890ff;\n  font-weight: bold;\n  font-size: 12px;\n  background: #e6f7ff;\n  padding: 0 8px;\n  margin-left: 4px;\n  border-radius: 4px;\n}\n\n:deep(.custom-group-wrapper) {\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n  border-radius: 6px;\n  overflow: hidden;\n  transition: all 0.3s;\n}\n\n:deep(.custom-group-wrapper:hover) {\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);\n}\n\n:deep(.custom-addon-before) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  color: white;\n  font-weight: bold;\n  border: none;\n}\n\n:deep(.custom-addon-after) {\n  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);\n  color: white;\n  font-weight: bold;\n  border: none;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/input-number"
@@ -6085,6 +6189,20 @@
           "default": "`48`"
         },
         {
+          "section": "List Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ListClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "List Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ListStyles`",
+          "default": "-"
+        },
+        {
           "section": "PaginationConfig",
           "name": "current",
           "description": "当前页数",
@@ -6162,6 +6280,20 @@
           "default": "-"
         },
         {
+          "section": "List.Item Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ListItemClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "List.Item Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ListItemStyles`",
+          "default": "-"
+        },
+        {
           "section": "List.Item.Meta Props",
           "name": "avatar",
           "description": "列表元素的图标",
@@ -6180,6 +6312,20 @@
           "name": "description",
           "description": "列表元素的描述内容",
           "type": "`string | VNode`",
+          "default": "-"
+        },
+        {
+          "section": "List.Item.Meta Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ListItemMetaClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "List.Item.Meta Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ListItemMetaStyles`",
           "default": "-"
         }
       ],
@@ -6230,6 +6376,11 @@
           "title": "无限滚动",
           "description": "通过监听滚动事件实现无限滚动加载更多数据。",
           "code": "<template>\n  <div>\n    <h3>无限滚动示例</h3>\n    <div\n      ref=\"scrollContainer\"\n      style=\"height: 400px; overflow: auto; border: 1px solid #d9d9d9; border-radius: 4px\"\n      @scroll=\"handleScroll\"\n    >\n      <List :data-source=\"displayData\" :loading=\"loading\">\n        <template #renderItem=\"{ item }\">\n          <ListItem>\n            <ListItemMeta\n              :avatar=\"`https://api.dicebear.com/7.x/miniavs/svg?seed=${item.id}`\"\n              :title=\"`${item.name}`\"\n              :description=\"`${item.description}`\"\n            />\n          </ListItem>\n        </template>\n      </List>\n      <div v-if=\"loading\" style=\"text-align: center; padding: 12px\">\n        <Spin />\n      </div>\n      <div v-if=\"noMore\" style=\"text-align: center; padding: 12px; color: #999\">已加载全部数据</div>\n    </div>\n    <div style=\"margin-top: 16px; color: #666\">已加载: {{ displayData.length }} / {{ totalData.length }} 项</div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue'\nimport { List, ListItem, ListItemMeta, Spin } from 'ant-design-hmfw'\n\n// 模拟总数据（1000 项）\nconst totalData = Array.from({ length: 1000 }, (_, i) => ({\n  id: `item-${i}`,\n  name: `Item ${i + 1}`,\n  description: `Description for item ${i + 1} - Lorem ipsum dolor sit amet`,\n}))\n\n// 当前显示的数据\nconst displayData = ref(totalData.slice(0, 20))\nconst loading = ref(false)\nconst scrollContainer = ref<HTMLElement>()\n\nconst noMore = computed(() => displayData.value.length >= totalData.length)\n\n// 模拟异步加载更多数据\nconst loadMore = () => {\n  if (loading.value || noMore.value) return\n\n  loading.value = true\n\n  setTimeout(() => {\n    const currentLength = displayData.value.length\n    const nextBatch = totalData.slice(currentLength, currentLength + 20)\n    displayData.value = [...displayData.value, ...nextBatch]\n    loading.value = false\n  }, 1000)\n}\n\n// 滚动事件处理\nconst handleScroll = (e: Event) => {\n  const target = e.target as HTMLElement\n  const scrollTop = target.scrollTop\n  const scrollHeight = target.scrollHeight\n  const clientHeight = target.clientHeight\n\n  // 当滚动到距离底部 100px 时触发加载\n  if (scrollHeight - scrollTop - clientHeight < 100) {\n    loadMore()\n  }\n}\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义头部和底部样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义头部和底部：</div>\n      <List\n        :data-source=\"data1\"\n        :render-item=\"renderItem1\"\n        header=\"精选文章\"\n        footer=\"查看更多 →\"\n        bordered\n        :class-names=\"{\n          header: 'custom-header',\n          footer: 'custom-footer',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义列表项和操作按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义列表项和操作样式：</div>\n      <List :data-source=\"data2\" :render-item=\"renderItem2\" bordered />\n    </div>\n\n    <!-- 场景 3：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <List\n        :data-source=\"data3\"\n        :render-item=\"renderItem3\"\n        header=\"任务列表\"\n        bordered\n        :styles=\"{\n          root: { borderRadius: '12px', overflow: 'hidden' },\n          header: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', fontWeight: 600 },\n          items: { background: '#fafafa' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：自定义分页器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义分页器：</div>\n      <List\n        :data-source=\"longData\"\n        :render-item=\"renderItem1\"\n        :pagination=\"{ pageSize: 3 }\"\n        :class-names=\"{\n          pagination: 'custom-pagination',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：空状态自定义 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义空状态：</div>\n      <List\n        :data-source=\"[]\"\n        bordered\n        :class-names=\"{\n          empty: 'custom-empty',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { List, Avatar } from 'ant-design-hmfw'\n\nconst data1 = [\n  'Vue 3 组件库开发实战',\n  'TypeScript 类型体操进阶',\n  'Vite 构建工具深度解析',\n]\n\nconst data2 = [\n  { title: '用户体验设计', description: '提升产品的整体用户体验' },\n  { title: '性能优化', description: '前端性能优化最佳实践' },\n  { title: '代码规范', description: '团队协作的代码规范建议' },\n]\n\nconst data3 = [\n  '完成需求文档评审',\n  '实现用户反馈功能',\n  '修复已知 Bug',\n]\n\nconst longData = [\n  '条目 1',\n  '条目 2',\n  '条目 3',\n  '条目 4',\n  '条目 5',\n  '条目 6',\n  '条目 7',\n]\n\nconst renderItem1 = (item: string) => h(List.Item, null, () => item)\n\nconst renderItem2 = (item: { title: string; description: string }) =>\n  h(\n    List.Item,\n    {\n      actions: [h('a', { style: 'color: #1677ff' }, '编辑'), h('a', { style: 'color: #1677ff' }, '删除')],\n      classNames: {\n        item: 'custom-item',\n        action: 'custom-action',\n      },\n    },\n    () =>\n      h(List.Item.Meta, {\n        avatar: h(Avatar, { style: { backgroundColor: '#1677ff' } }, () => item.title[0]),\n        title: item.title,\n        description: item.description,\n        classNames: {\n          title: 'custom-title',\n          description: 'custom-description',\n        },\n      })\n  )\n\nconst renderItem3 = (item: string) => h(List.Item, null, () => item)\n</script>\n\n<style scoped>\n:deep(.custom-header) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  font-weight: 600;\n  font-size: 16px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-header:hover) {\n  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);\n}\n\n:deep(.custom-footer) {\n  background: #f0f5ff;\n  color: #1677ff;\n  text-align: center;\n  font-weight: 500;\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\n:deep(.custom-footer:hover) {\n  background: #e6f0ff;\n  color: #0958d9;\n}\n\n:deep(.custom-item) {\n  transition: all 0.3s;\n  padding: 16px;\n}\n\n:deep(.custom-item:hover) {\n  background: #f0f5ff;\n  transform: translateX(4px);\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);\n}\n\n:deep(.custom-action) {\n  gap: 12px;\n}\n\n:deep(.custom-action a:hover) {\n  color: #0958d9 !important;\n  text-decoration: underline;\n}\n\n:deep(.custom-title) {\n  color: #1677ff;\n  font-weight: 600;\n}\n\n:deep(.custom-description) {\n  font-style: italic;\n  color: #8c8c8c;\n}\n\n:deep(.custom-pagination) {\n  margin-top: 24px;\n  text-align: center;\n}\n\n:deep(.custom-empty) {\n  padding: 48px 0;\n  color: #bfbfbf;\n  font-size: 16px;\n  font-style: italic;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/list"
@@ -7490,6 +7641,20 @@
           "description": "分页器的对齐方式，可选 `start`（左对齐）、`center`（居中）、`end`（右对齐）",
           "type": "`'start' | 'center' | 'end'`",
           "default": "-"
+        },
+        {
+          "section": "Pagination Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`PaginationClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Pagination Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`PaginationStyles`",
+          "default": "-"
         }
       ],
       "events": [
@@ -7549,6 +7714,11 @@
           "title": "对齐方式",
           "description": "通过 `align` 属性设置分页器的对齐方式，支持左对齐（默认）、居中对齐和右对齐。",
           "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 100%\">\n    <div>\n      <h4>左对齐（默认）</h4>\n      <Pagination :total=\"50\" />\n    </div>\n    <div>\n      <h4>居中对齐</h4>\n      <Pagination :total=\"50\" align=\"center\" />\n    </div>\n    <div>\n      <h4>右对齐</h4>\n      <Pagination :total=\"50\" align=\"end\" />\n    </div>\n    <div>\n      <h4>完整功能 + 居中对齐</h4>\n      <Pagination\n        :total=\"500\"\n        show-size-changer\n        show-quick-jumper\n        :show-total=\"(total) => `共 ${total} 条`\"\n        align=\"center\"\n      />\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Pagination, Space } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器和页码项 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器与页码项：</div>\n      <Pagination\n        :total=\"50\"\n        :class-names=\"{\n          root: 'custom-root',\n          item: 'custom-item',\n          itemActive: 'custom-item-active',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义上一页/下一页按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义上一页/下一页按钮：</div>\n      <Pagination\n        :total=\"100\"\n        :class-names=\"{\n          prev: 'custom-prev',\n          next: 'custom-next',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义完整功能 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义完整功能（显示总数、尺寸切换、快速跳转）：</div>\n      <Pagination\n        :total=\"200\"\n        show-size-changer\n        show-quick-jumper\n        :show-total=\"(total) => `共 ${total} 条`\"\n        :class-names=\"{\n          root: 'custom-full-root',\n          total: 'custom-total',\n          sizeChanger: 'custom-size-changer',\n          quickJumper: 'custom-quick-jumper',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：自定义跳转按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义向前/向后跳转按钮：</div>\n      <Pagination\n        :total=\"150\"\n        :class-names=\"{\n          jumpPrev: 'custom-jump',\n          jumpNext: 'custom-jump',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Pagination\n        :total=\"80\"\n        :styles=\"{\n          root: { padding: '16px', background: '#f0f5ff', borderRadius: '8px' },\n          item: { fontWeight: 'bold' },\n          itemActive: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', border: 'none' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Pagination } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 场景 1：自定义根容器和页码项 */\n:deep(.custom-root) {\n  padding: 12px;\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border-radius: 8px;\n}\n\n:deep(.custom-item) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  transform: scale(1.1);\n  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.3);\n}\n\n:deep(.custom-item-active) {\n  background: linear-gradient(135deg, #1677ff 0%, #096dd9 100%) !important;\n  border: none !important;\n  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.4);\n}\n\n/* 场景 2：自定义上一页/下一页 */\n:deep(.custom-prev),\n:deep(.custom-next) {\n  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);\n  border: none;\n  color: white;\n  font-weight: bold;\n  transition: all 0.3s;\n}\n\n:deep(.custom-prev:hover),\n:deep(.custom-next:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.4);\n}\n\n/* 场景 3：自定义完整功能 */\n:deep(.custom-full-root) {\n  padding: 16px;\n  background: #fff7e6;\n  border-radius: 12px;\n  border: 2px dashed #faad14;\n}\n\n:deep(.custom-total) {\n  color: #d46b08;\n  font-weight: bold;\n  font-size: 15px;\n}\n\n:deep(.custom-size-changer) {\n  background: #fffbe6;\n  padding: 4px 8px;\n  border-radius: 6px;\n}\n\n:deep(.custom-quick-jumper) {\n  background: #fffbe6;\n  padding: 4px 8px;\n  border-radius: 6px;\n}\n\n:deep(.custom-quick-jumper input) {\n  border-color: #faad14;\n}\n\n:deep(.custom-quick-jumper input:focus) {\n  border-color: #d48806;\n  box-shadow: 0 0 0 2px rgba(250, 173, 20, 0.2);\n}\n\n/* 场景 4：自定义跳转按钮 */\n:deep(.custom-jump) {\n  color: #722ed1;\n  font-size: 18px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-jump:hover) {\n  color: #531dab;\n  transform: scale(1.2);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/pagination"
@@ -9199,7 +9369,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对 root、group、thumb、item 等子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器和滑块 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器与动画滑块：</div>\n      <Segmented\n        v-model:value=\"value1\"\n        :options=\"['选项一', '选项二', '选项三']\"\n        :class-names=\"{\n          root: 'custom-root',\n          thumb: 'custom-thumb',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义选项样式（选中/禁用状态） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选项与状态样式：</div>\n      <Segmented\n        v-model:value=\"value2\"\n        :options=\"options2\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemDisabled: 'custom-item-disabled',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义图标和文本 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标与文本样式：</div>\n      <Segmented\n        v-model:value=\"value3\"\n        :options=\"options3\"\n        :class-names=\"{\n          itemIcon: 'custom-icon',\n          itemText: 'custom-text',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Segmented\n        v-model:value=\"value4\"\n        :options=\"['Morning', 'Afternoon', 'Evening']\"\n        :styles=\"{\n          root: { borderRadius: '16px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', border: 'none', padding: '4px' },\n          thumb: { borderRadius: '12px', background: '#ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },\n          itemText: { color: '#ffffff', fontWeight: 500 },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用（垂直模式）：</div>\n      <Segmented\n        v-model:value=\"value5\"\n        :options=\"options5\"\n        vertical\n        :class-names=\"{\n          root: 'custom-vertical-root',\n          item: 'custom-vertical-item',\n        }\"\n        :styles=\"{\n          itemIcon: { fontSize: '20px' },\n          itemLabel: { padding: '8px 16px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from 'ant-design-hmfw'\nimport { HomeOutlined, UserOutlined, SettingOutlined } from 'ant-design-hmfw'\n\nconst value1 = ref('选项一')\n\nconst value2 = ref('option1')\nconst options2 = [\n  { value: 'option1', label: '启用选项' },\n  { value: 'option2', label: '另一选项' },\n  { value: 'option3', label: '禁用选项', disabled: true },\n]\n\nconst value3 = ref('list')\nconst options3 = [\n  { value: 'list', label: '列表', icon: h(Icon, { component: HomeOutlined }) },\n  { value: 'grid', label: '网格', icon: h(Icon, { component: UserOutlined }) },\n]\n\nconst value4 = ref('Morning')\n\nconst value5 = ref('home')\nconst options5 = [\n  { value: 'home', icon: h(Icon, { component: HomeOutlined }) },\n  { value: 'user', icon: h(Icon, { component: UserOutlined }) },\n  { value: 'settings', icon: h(Icon, { component: SettingOutlined }) },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border: 2px solid #1677ff;\n  padding: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.2);\n}\n\n:deep(.custom-thumb) {\n  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);\n  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.3);\n}\n\n:deep(.custom-item) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  transform: translateY(-1px);\n}\n\n:deep(.custom-item-selected) {\n  color: #ffffff;\n  font-weight: 600;\n}\n\n:deep(.custom-item-disabled) {\n  opacity: 0.4;\n  text-decoration: line-through;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  filter: drop-shadow(0 0 2px rgba(22, 119, 255, 0.4));\n}\n\n:deep(.custom-text) {\n  font-weight: 500;\n  letter-spacing: 0.5px;\n}\n\n:deep(.custom-vertical-root) {\n  background: #f6ffed;\n  border: 2px solid #52c41a;\n  padding: 4px;\n  border-radius: 12px;\n}\n\n:deep(.custom-vertical-item) {\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-vertical-item:hover) {\n  background: rgba(82, 196, 26, 0.1);\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器和滑块 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器与动画滑块：</div>\n      <Segmented\n        v-model:value=\"value1\"\n        :options=\"['选项一', '选项二', '选项三']\"\n        :class-names=\"{\n          root: 'custom-root',\n          thumb: 'custom-thumb',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义选项样式（选中/禁用状态） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选项与状态样式：</div>\n      <Segmented\n        v-model:value=\"value2\"\n        :options=\"options2\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemDisabled: 'custom-item-disabled',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义图标和文本 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标与文本样式：</div>\n      <Segmented\n        v-model:value=\"value3\"\n        :options=\"options3\"\n        :class-names=\"{\n          itemIcon: 'custom-icon',\n          itemText: 'custom-text',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Segmented\n        v-model:value=\"value4\"\n        :options=\"['Morning', 'Afternoon', 'Evening']\"\n        :styles=\"{\n          root: {\n            borderRadius: '16px',\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            border: 'none',\n            padding: '4px',\n          },\n          thumb: { borderRadius: '12px', background: '#ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },\n          itemText: { color: '#ffffff', fontWeight: 500 },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用（垂直模式）：</div>\n      <Segmented\n        v-model:value=\"value5\"\n        :options=\"options5\"\n        vertical\n        :class-names=\"{\n          root: 'custom-vertical-root',\n          item: 'custom-vertical-item',\n        }\"\n        :styles=\"{\n          itemIcon: { fontSize: '20px' },\n          itemLabel: { padding: '8px 16px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from 'ant-design-hmfw'\nimport { HomeOutlined, UserOutlined, SettingOutlined } from 'ant-design-hmfw'\n\nconst value1 = ref('选项一')\n\nconst value2 = ref('option1')\nconst options2 = [\n  { value: 'option1', label: '启用选项' },\n  { value: 'option2', label: '另一选项' },\n  { value: 'option3', label: '禁用选项', disabled: true },\n]\n\nconst value3 = ref('list')\nconst options3 = [\n  { value: 'list', label: '列表', icon: h(Icon, { component: HomeOutlined }) },\n  { value: 'grid', label: '网格', icon: h(Icon, { component: UserOutlined }) },\n]\n\nconst value4 = ref('Morning')\n\nconst value5 = ref('home')\nconst options5 = [\n  { value: 'home', icon: h(Icon, { component: HomeOutlined }) },\n  { value: 'user', icon: h(Icon, { component: UserOutlined }) },\n  { value: 'settings', icon: h(Icon, { component: SettingOutlined }) },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border: 2px solid #1677ff;\n  padding: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.2);\n}\n\n:deep(.custom-thumb) {\n  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);\n  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.3);\n}\n\n:deep(.custom-item) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  transform: translateY(-1px);\n}\n\n:deep(.custom-item-selected) {\n  color: #ffffff;\n  font-weight: 600;\n}\n\n:deep(.custom-item-disabled) {\n  opacity: 0.4;\n  text-decoration: line-through;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  filter: drop-shadow(0 0 2px rgba(22, 119, 255, 0.4));\n}\n\n:deep(.custom-text) {\n  font-weight: 500;\n  letter-spacing: 0.5px;\n}\n\n:deep(.custom-vertical-root) {\n  background: #f6ffed;\n  border: 2px solid #52c41a;\n  padding: 4px;\n  border-radius: 12px;\n}\n\n:deep(.custom-vertical-item) {\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-vertical-item:hover) {\n  background: rgba(82, 196, 26, 0.1);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/segmented"
@@ -9650,6 +9820,20 @@
           "default": "`false`"
         },
         {
+          "section": "Skeleton Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Skeleton Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonStyles`",
+          "default": "-"
+        },
+        {
           "section": "SkeletonAvatarProps",
           "name": "size",
           "description": "大小",
@@ -9713,6 +9897,20 @@
           "default": "`false`"
         },
         {
+          "section": "Skeleton.Button Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonButtonClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Skeleton.Button Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonButtonStyles`",
+          "default": "-"
+        },
+        {
           "section": "Skeleton.Input Props",
           "name": "active",
           "description": "是否展示动画效果",
@@ -9732,6 +9930,20 @@
           "description": "将输入框宽度调整为其父宽度",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "Skeleton.Input Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonInputClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Skeleton.Input Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonInputStyles`",
+          "default": "-"
         },
         {
           "section": "Skeleton.Avatar Props",
@@ -9755,11 +9967,39 @@
           "default": "`'circle'`"
         },
         {
+          "section": "Skeleton.Avatar Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonAvatarClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Skeleton.Avatar Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonAvatarStyles`",
+          "default": "-"
+        },
+        {
           "section": "Skeleton.Image Props",
           "name": "active",
           "description": "是否展示动画效果",
           "type": "`boolean`",
           "default": "`false`"
+        },
+        {
+          "section": "Skeleton.Image Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonImageClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Skeleton.Image Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonImageStyles`",
+          "default": "-"
         },
         {
           "section": "Skeleton.Node Props",
@@ -9773,6 +10013,20 @@
           "name": "nodeStyle",
           "description": "作用于内部占位节点的内联样式（常用于设定占位尺寸）",
           "type": "`CSSProperties`",
+          "default": "-"
+        },
+        {
+          "section": "Skeleton.Node Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonNodeClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Skeleton.Node Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`SkeletonNodeStyles`",
           "default": "-"
         }
       ],
@@ -9808,6 +10062,11 @@
           "title": "图片/节点骨架",
           "description": "独立的图片和自定义节点骨架。",
           "code": "<template>\n  <div style=\"display: flex; gap: 16px\">\n    <Skeleton.Image active />\n    <Skeleton.Node active>\n      <div\n        style=\"width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; color: #bfbfbf\"\n      >\n        Node\n      </div>\n    </Skeleton.Node>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Skeleton } from 'ant-design-hmfw'\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对主组件及各子组件的元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：主组件基础样式定制 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">主组件：自定义头部与段落样式</div>\n      <Skeleton\n        avatar\n        :paragraph=\"{ rows: 3 }\"\n        active\n        :class-names=\"{\n          root: 'custom-skeleton-root',\n          header: 'custom-header',\n          avatar: 'custom-avatar',\n          section: 'custom-section',\n          title: 'custom-title',\n          paragraph: 'custom-paragraph',\n          row: 'custom-row',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">主组件：使用内联样式</div>\n      <Skeleton\n        avatar\n        :paragraph=\"{ rows: 2 }\"\n        active\n        :styles=\"{\n          root: { padding: '16px', backgroundColor: '#fafafa', borderRadius: '8px' },\n          avatar: { borderRadius: '12px' },\n          title: { height: '20px', backgroundColor: '#1890ff20' },\n          row: { height: '14px', backgroundColor: '#52c41a20' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：SkeletonButton 样式定制 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">SkeletonButton：自定义按钮骨架</div>\n      <div style=\"display: flex; gap: 12px; align-items: center\">\n        <SkeletonButton\n          active\n          size=\"large\"\n          :class-names=\"{\n            root: 'custom-button-root',\n            button: 'custom-button',\n          }\"\n        />\n        <SkeletonButton\n          active\n          shape=\"round\"\n          :styles=\"{\n            button: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },\n          }\"\n        />\n        <SkeletonButton\n          active\n          shape=\"circle\"\n          :class-names=\"{ button: 'custom-button-circle' }\"\n        />\n      </div>\n    </div>\n\n    <!-- 场景 4：SkeletonInput 样式定制 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">SkeletonInput：自定义输入框骨架</div>\n      <div style=\"display: flex; flex-direction: column; gap: 12px\">\n        <SkeletonInput\n          active\n          size=\"large\"\n          block\n          :class-names=\"{ input: 'custom-input' }\"\n        />\n        <SkeletonInput\n          active\n          :styles=\"{\n            input: { backgroundColor: '#ff4d4f20', borderRadius: '6px' },\n          }\"\n        />\n      </div>\n    </div>\n\n    <!-- 场景 5：SkeletonAvatar + SkeletonImage 组合 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">SkeletonAvatar 与 SkeletonImage：组合样式</div>\n      <div style=\"display: flex; gap: 16px; align-items: center\">\n        <SkeletonAvatar\n          active\n          :size=\"64\"\n          :class-names=\"{ avatar: 'custom-large-avatar' }\"\n        />\n        <SkeletonImage\n          active\n          :class-names=\"{\n            image: 'custom-image',\n            svg: 'custom-svg',\n            path: 'custom-path',\n          }\"\n        />\n        <SkeletonAvatar\n          active\n          shape=\"square\"\n          size=\"large\"\n          :styles=\"{\n            avatar: { borderRadius: '16px', background: 'linear-gradient(135deg, #ffd89b 0%, #19547b 100%)' },\n          }\"\n        />\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n/* 主组件样式 */\n:deep(.custom-skeleton-root) {\n  padding: 20px;\n  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);\n  border-radius: 12px;\n  border: 2px solid #667eea30;\n}\n\n:deep(.custom-header) {\n  padding-right: 24px;\n}\n\n:deep(.custom-avatar) {\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);\n  border: 3px solid #ffffff;\n}\n\n:deep(.custom-section) {\n  padding-left: 8px;\n}\n\n:deep(.custom-title) {\n  height: 22px !important;\n  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;\n  border-radius: 8px;\n  opacity: 0.3;\n}\n\n:deep(.custom-paragraph) {\n  margin-top: 16px;\n}\n\n:deep(.custom-row) {\n  height: 18px !important;\n  background: linear-gradient(90deg, #52c41a 0%, #389e0d 100%) !important;\n  border-radius: 6px;\n  opacity: 0.25;\n  transition: opacity 0.3s;\n}\n\n:deep(.custom-row:hover) {\n  opacity: 0.4;\n}\n\n/* SkeletonButton 样式 */\n:deep(.custom-button-root) {\n  display: inline-flex;\n  align-items: center;\n}\n\n:deep(.custom-button) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  border-radius: 8px;\n  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);\n  transition: all 0.3s;\n}\n\n:deep(.custom-button:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);\n}\n\n:deep(.custom-button-circle) {\n  background: linear-gradient(135deg, #ff4d4f 0%, #cf1322 100%);\n  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);\n}\n\n/* SkeletonInput 样式 */\n:deep(.custom-input) {\n  background: linear-gradient(135deg, #52c41a15 0%, #389e0d15 100%);\n  border: 2px solid #52c41a;\n  border-radius: 8px;\n  box-shadow: inset 0 2px 4px rgba(82, 196, 26, 0.1);\n}\n\n/* SkeletonAvatar 样式 */\n:deep(.custom-large-avatar) {\n  background: linear-gradient(135deg, #722ed1 0%, #531dab 100%);\n  box-shadow: 0 4px 16px rgba(114, 46, 209, 0.4);\n  border: 4px solid #ffffff;\n  transition: all 0.3s;\n}\n\n:deep(.custom-large-avatar:hover) {\n  transform: scale(1.05);\n}\n\n/* SkeletonImage 样式 */\n:deep(.custom-image) {\n  background: linear-gradient(135deg, #faad14 0%, #d48806 100%);\n  border-radius: 12px;\n  box-shadow: 0 4px 12px rgba(250, 173, 20, 0.3);\n  padding: 12px;\n}\n\n:deep(.custom-svg) {\n  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));\n}\n\n:deep(.custom-path) {\n  fill: #ffffff;\n  opacity: 0.8;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/skeleton"
@@ -10521,6 +10780,20 @@
           "default": "-"
         },
         {
+          "section": "Steps Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`StepsClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Steps Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`StepsStyles`",
+          "default": "-"
+        },
+        {
           "section": "StepItem",
           "name": "title",
           "description": "标题",
@@ -10631,6 +10904,11 @@
           "title": "内联型步骤条",
           "description": "通过 `type=\"inline\"` 设置内联型步骤条。",
           "code": "<template>\n  <div style=\"padding: 20px\">\n    <Steps :items=\"items\" type=\"inline\" :current=\"1\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from 'ant-design-hmfw'\n\nconst items = [\n  { title: 'Step 1', content: 'First step' },\n  { title: 'Step 2', content: 'Second step' },\n  { title: 'Step 3', content: 'Third step' },\n  { title: 'Step 4', content: 'Fourth step' },\n]\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器背景 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义根容器背景：</div>\n      <Steps\n        :current=\"1\"\n        :items=\"basicItems\"\n        :class-names=\"{ root: 'custom-root' }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义图标和标题样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义图标与标题：</div>\n      <Steps\n        :current=\"1\"\n        :items=\"basicItems\"\n        :class-names=\"{\n          icon: 'custom-icon',\n          title: 'custom-title',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义连接线样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义连接线：</div>\n      <Steps\n        :current=\"1\"\n        :items=\"itemsWithDescription\"\n        :class-names=\"{\n          tail: 'custom-tail',\n          description: 'custom-description',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">使用内联样式：</div>\n      <Steps\n        :current=\"2\"\n        :items=\"basicItems\"\n        :styles=\"{\n          root: { padding: '20px', backgroundColor: '#fafafa', borderRadius: '8px' },\n          icon: { fontSize: '20px' },\n          title: { fontWeight: 600, color: '#1677ff' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：垂直步骤条组合定制 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">垂直步骤条组合定制：</div>\n      <Steps\n        orientation=\"vertical\"\n        :current=\"1\"\n        :items=\"itemsWithDescription\"\n        :class-names=\"{\n          item: 'custom-vertical-item',\n          container: 'custom-container',\n          content: 'custom-content',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from 'ant-design-hmfw'\n\nconst basicItems = [\n  { title: '已完成', content: '这是第一步的描述' },\n  { title: '进行中', content: '这是第二步的描述' },\n  { title: '待处理', content: '这是第三步的描述' },\n]\n\nconst itemsWithDescription = [\n  { title: '注册账号', content: '填写基本信息并验证邮箱' },\n  { title: '完善资料', content: '上传头像并填写个人详情' },\n  { title: '开始使用', content: '探索产品功能' },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(to right, #f0f5ff, #e6f4ff);\n  padding: 16px;\n  border-radius: 8px;\n}\n\n:deep(.custom-icon) {\n  transform: scale(1.2);\n  transition: all 0.3s;\n}\n\n:deep(.custom-icon:hover) {\n  transform: scale(1.3) rotate(360deg);\n  transition: all 0.5s;\n}\n\n:deep(.custom-title) {\n  font-weight: 600;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n}\n\n:deep(.custom-tail) {\n  background: linear-gradient(to bottom, #1677ff 0%, #722ed1 100%) !important;\n  height: 3px !important;\n}\n\n:deep(.custom-description) {\n  color: #722ed1;\n  font-style: italic;\n}\n\n:deep(.custom-vertical-item) {\n  padding: 12px;\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-vertical-item:hover) {\n  background-color: #f0f5ff;\n  transform: translateX(4px);\n}\n\n:deep(.custom-container) {\n  padding-left: 8px;\n}\n\n:deep(.custom-content) {\n  margin-top: 4px;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/steps"
@@ -11938,6 +12216,20 @@
           "default": "-"
         },
         {
+          "section": "Timeline Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TimelineClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Timeline Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TimelineStyles`",
+          "default": "-"
+        },
+        {
           "section": "TimelineItemProps",
           "name": "title",
           "description": "设置标题",
@@ -12066,6 +12358,11 @@
           "title": "水平布局",
           "description": "时间轴可以水平展示。",
           "code": "<template>\n  <Timeline orientation=\"horizontal\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Timeline } from 'ant-design-hmfw'\n\nconst items = [\n  { title: '2015-09', content: '创建服务' },\n  { title: '2015-10', content: '排除异常' },\n  { title: '2015-11', content: '技术测试' },\n  { title: '2015-12', content: '修复完成' },\n]\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器和连接线 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">自定义连接线与节点：</div>\n      <Timeline\n        :items=\"basicItems\"\n        :class-names=\"{\n          root: 'custom-timeline-root',\n          tail: 'custom-tail',\n          dot: 'custom-dot',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义标题和内容区域 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">自定义标题与内容：</div>\n      <Timeline\n        mode=\"alternate\"\n        :items=\"labeledItems\"\n        :class-names=\"{\n          label: 'custom-label',\n          content: 'custom-content',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">使用内联样式：</div>\n      <Timeline\n        :items=\"colorItems\"\n        :styles=\"{\n          root: { padding: '16px', backgroundColor: '#f0f5ff', borderRadius: '8px' },\n          dot: { transform: 'scale(1.2)' },\n          content: { fontSize: '15px', fontWeight: 500 },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：组合自定义所有子元素 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">组合自定义所有子元素：</div>\n      <Timeline\n        mode=\"left\"\n        :items=\"complexItems\"\n        :class-names=\"{\n          root: 'timeline-fancy',\n          item: 'timeline-fancy-item',\n          label: 'timeline-fancy-label',\n          tail: 'timeline-fancy-tail',\n          dot: 'timeline-fancy-dot',\n          content: 'timeline-fancy-content',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：水平布局自定义 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-weight: 500\">水平布局自定义：</div>\n      <Timeline\n        orientation=\"horizontal\"\n        :items=\"horizontalItems\"\n        :class-names=\"{\n          root: 'horizontal-timeline',\n          dot: 'horizontal-dot',\n          content: 'horizontal-content',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Timeline } from 'ant-design-hmfw'\n\nconst basicItems = [\n  { content: '创建服务站点 2024-01-01' },\n  { content: '初步排查网络异常 2024-01-02' },\n  { content: '技术测试完成 2024-01-03', color: 'green' },\n  { content: '网络异常正在修复中 2024-01-04', color: 'red' },\n]\n\nconst labeledItems = [\n  { title: '2024-01-01', content: '创建服务站点' },\n  { title: '2024-01-02', content: '初步排查网络异常' },\n  { title: '2024-01-03', content: '技术测试完成', color: 'green' },\n]\n\nconst colorItems = [\n  { content: 'Create a services site 2024-01-01', color: 'blue' },\n  { content: 'Solve initial network problems 2024-01-02', color: 'blue' },\n  { content: 'Technical testing completed 2024-01-03', color: 'green' },\n]\n\nconst complexItems = [\n  { title: '阶段一', content: '项目启动与需求分析', color: 'blue' },\n  { title: '阶段二', content: '技术方案设计与评审', color: 'blue' },\n  { title: '阶段三', content: '开发与测试进行中', color: 'green' },\n  { title: '阶段四', content: '即将上线部署', color: 'gray' },\n]\n\nconst horizontalItems = [\n  { content: '步骤 1', color: 'green' },\n  { content: '步骤 2', color: 'green' },\n  { content: '步骤 3', color: 'blue' },\n  { content: '步骤 4', color: 'gray' },\n]\n</script>\n\n<style scoped>\n/* 场景 1：自定义连接线与节点 */\n:deep(.custom-timeline-root) {\n  margin-left: 8px;\n}\n\n:deep(.custom-tail) {\n  border-left-width: 3px;\n  border-left-style: dashed;\n  border-left-color: #1890ff;\n}\n\n:deep(.custom-dot) {\n  border-width: 3px;\n  transform: scale(1.2);\n  box-shadow: 0 0 8px rgba(24, 144, 255, 0.4);\n  transition: all 0.3s;\n}\n\n:deep(.custom-dot:hover) {\n  transform: scale(1.4);\n  box-shadow: 0 0 12px rgba(24, 144, 255, 0.6);\n}\n\n/* 场景 2：自定义标题和内容区域 */\n:deep(.custom-label) {\n  font-weight: 600;\n  color: #1890ff;\n  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);\n  padding: 4px 12px;\n  border-radius: 12px;\n  display: inline-block;\n}\n\n:deep(.custom-content) {\n  background-color: #f0f5ff;\n  padding: 12px 16px;\n  border-radius: 8px;\n  border-left: 3px solid #1890ff;\n  transition: all 0.3s;\n}\n\n:deep(.custom-content:hover) {\n  background-color: #d6e4ff;\n  transform: translateX(4px);\n}\n\n/* 场景 4：组合自定义所有子元素 */\n:deep(.timeline-fancy) {\n  background: linear-gradient(to right, #f0f5ff, #fff);\n  padding: 20px;\n  border-radius: 12px;\n  border: 1px solid #d6e4ff;\n}\n\n:deep(.timeline-fancy-item) {\n  margin-bottom: 24px;\n}\n\n:deep(.timeline-fancy-label) {\n  font-weight: 700;\n  color: #fff;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 6px 16px;\n  border-radius: 16px;\n  display: inline-block;\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.timeline-fancy-tail) {\n  border-left-width: 2px;\n  border-left-style: solid;\n  border-image: linear-gradient(to bottom, #667eea, #764ba2) 1;\n}\n\n:deep(.timeline-fancy-dot) {\n  border: 3px solid #667eea;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);\n  transition: all 0.3s;\n}\n\n:deep(.timeline-fancy-dot:hover) {\n  transform: scale(1.3) rotate(90deg);\n  box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.timeline-fancy-content) {\n  background: #fff;\n  padding: 12px 16px;\n  border-radius: 8px;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);\n  transition: all 0.3s;\n}\n\n:deep(.timeline-fancy-content:hover) {\n  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);\n  transform: translateY(-2px);\n}\n\n/* 场景 5：水平布局自定义 */\n:deep(.horizontal-timeline) {\n  padding: 24px;\n  background: linear-gradient(to right, #f6ffed, #d9f7be);\n  border-radius: 12px;\n}\n\n:deep(.horizontal-dot) {\n  border-width: 3px;\n  transform: scale(1.3);\n  box-shadow: 0 0 12px rgba(82, 196, 26, 0.5);\n  transition: all 0.3s;\n}\n\n:deep(.horizontal-dot:hover) {\n  transform: scale(1.5);\n  box-shadow: 0 0 16px rgba(82, 196, 26, 0.7);\n}\n\n:deep(.horizontal-content) {\n  background-color: #fff;\n  padding: 8px 16px;\n  border-radius: 8px;\n  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);\n  font-weight: 500;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/timeline"
@@ -13548,11 +13845,53 @@
           "default": "`false`"
         },
         {
+          "section": "Text Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TextClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Text Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TextStyles`",
+          "default": "-"
+        },
+        {
           "section": "Title Props",
           "name": "level",
           "description": "标题级别",
           "type": "`1 | 2 | 3 | 4 | 5`",
           "default": "`1`"
+        },
+        {
+          "section": "Title Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TitleClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Title Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`TitleStyles`",
+          "default": "-"
+        },
+        {
+          "section": "Paragraph Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ParagraphClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Paragraph Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`ParagraphStyles`",
+          "default": "-"
         },
         {
           "section": "Link Props",
@@ -13566,6 +13905,20 @@
           "name": "target",
           "description": "链接打开方式",
           "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Link Props",
+          "name": "classNames",
+          "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`LinkClassNames`",
+          "default": "-"
+        },
+        {
+          "section": "Link Props",
+          "name": "styles",
+          "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
+          "type": "`LinkStyles`",
           "default": "-"
         },
         {
@@ -13660,6 +14013,11 @@
           "title": "省略 Tooltip 与回调",
           "description": "通过 `ellipsis.tooltip` 在省略时显示完整内容（支持自定义 Tooltip 配置），通过 `ellipsis.onEllipsis` 监听省略状态。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 12px; max-width: 240px\">\n    <Text :ellipsis=\"{ tooltip: true }\"> 这是一段很长的文本，鼠标悬停时会通过 Tooltip 显示完整内容。 </Text>\n    <Text :ellipsis=\"{ tooltip: '自定义 Tooltip 文案' }\"> 显示文字与 Tooltip 内容不同。 </Text>\n    <Paragraph\n      :ellipsis=\"{\n        rows: 2,\n        tooltip: { placement: 'topLeft', color: '#1677ff' },\n        onEllipsis: handleEllipsis,\n      }\"\n    >\n      多行省略时，可以传入完整的 Tooltip 配置（placement、color 等），并通过 onEllipsis 监听省略状态变化。\n    </Paragraph>\n    <div style=\"font-size: 12px; color: #999\">省略状态: {{ ellipsisState }}</div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Text, Paragraph } from 'ant-design-hmfw'\n\nconst ellipsisState = ref<boolean>(false)\nfunction handleEllipsis(v: boolean) {\n  ellipsisState.value = v\n}\n</script>"
+        },
+        {
+          "title": "细粒度样式控制",
+          "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：Text 自定义根节点 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">Text 自定义根节点样式：</div>\n      <Text :class-names=\"{ root: 'custom-text-root' }\">\n        渐变文字效果\n      </Text>\n    </div>\n\n    <!-- 场景 2：Title 自定义复制按钮 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">Title 自定义复制按钮：</div>\n      <Title :level=\"3\" copyable :class-names=\"{ copy: 'custom-copy-btn' }\">\n        可复制的标题\n      </Title>\n    </div>\n\n    <!-- 场景 3：Paragraph 组合样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">Paragraph 组合 classNames：</div>\n      <Paragraph copyable :class-names=\"{ root: 'custom-paragraph', copy: 'custom-paragraph-copy' }\">\n        这是一段带有自定义样式的段落文字，同时复制按钮也应用了自定义样式。点击右侧按钮即可复制全部内容。\n      </Paragraph>\n    </div>\n\n    <!-- 场景 4：Link 使用 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">Link 使用内联样式：</div>\n      <Link\n        href=\"https://github.com\"\n        target=\"_blank\"\n        :styles=\"{\n          root: {\n            fontSize: '16px',\n            fontWeight: 600,\n            textDecoration: 'underline',\n            textDecorationColor: '#52c41a',\n            textDecorationThickness: '2px',\n          },\n        }\"\n      >\n        GitHub 官网\n      </Link>\n    </div>\n\n    <!-- 场景 5：Text 组合 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用 classNames 和 styles：</div>\n      <Text\n        copyable\n        :class-names=\"{ root: 'combined-text' }\"\n        :styles=\"{ copy: { fontSize: '18px', color: '#faad14' } }\"\n      >\n        classNames 控制文字，styles 控制按钮\n      </Text>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Text, Title, Paragraph, Link } from 'ant-design-hmfw'\n</script>\n\n<style scoped>\n:deep(.custom-text-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  background-clip: text;\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  font-size: 20px;\n  font-weight: 600;\n  transition: all 0.3s;\n}\n\n:deep(.custom-text-root:hover) {\n  letter-spacing: 1px;\n}\n\n:deep(.custom-copy-btn) {\n  padding: 4px 8px;\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  color: white !important;\n  border-radius: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-copy-btn:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);\n}\n\n:deep(.custom-paragraph) {\n  padding: 16px;\n  background: linear-gradient(to right, #f0f5ff, #fff);\n  border-left: 4px solid #1677ff;\n  border-radius: 4px;\n  color: rgba(0, 0, 0, 0.75);\n  transition: all 0.3s;\n}\n\n:deep(.custom-paragraph:hover) {\n  background: linear-gradient(to right, #e6f4ff, #fff);\n  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.15);\n}\n\n:deep(.custom-paragraph-copy) {\n  font-size: 16px;\n  color: #52c41a;\n  transition: all 0.3s;\n}\n\n:deep(.custom-paragraph-copy:hover) {\n  transform: scale(1.2);\n}\n\n:deep(.combined-text) {\n  padding: 8px 12px;\n  background: #f6ffed;\n  border: 1px solid #b7eb8f;\n  border-radius: 6px;\n  font-size: 16px;\n  font-weight: 500;\n  color: #389e0d;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/typography"

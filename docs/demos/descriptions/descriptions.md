@@ -64,22 +64,32 @@
   <DescriptionsFilled />
 </DemoBlock>
 
+### 细粒度样式控制
+
+通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="DescriptionsClassNamesSource">
+  <DescriptionsClassNames />
+</DemoBlock>
+
 ## API
 
 ### Descriptions Props
 
-| 参数         | 说明                                          | 类型                                           | 默认值         |
-| ------------ | --------------------------------------------- | ---------------------------------------------- | -------------- |
-| title        | 描述列表的标题                                | `string \| VNode`                              | -              |
-| extra        | 描述列表的操作区域                            | `string \| VNode \| slot`                      | -              |
-| bordered     | 是否展示边框                                  | `boolean`                                      | `false`        |
-| column       | 一行的 DescriptionItems 数量,可以是响应式对象 | `number \| Record<Breakpoint, number>`         | `3`            |
-| size         | 设置列表的大小                                | `'default' \| 'middle' \| 'small' \| 'medium'` | `'default'`    |
-| layout       | 描述布局                                      | `'horizontal' \| 'vertical'`                   | `'horizontal'` |
-| colon        | 配置 Descriptions.Item 的 colon 的默认值      | `boolean`                                      | `true`         |
-| items        | 描述列表的数据项                              | `DescriptionsItem[]`                           | -              |
-| labelStyle   | 自定义标签样式(全局)                          | `CSSProperties`                                | -              |
-| contentStyle | 自定义内容样式(全局)                          | `CSSProperties`                                | -              |
+| 参数         | 说明                                                                             | 类型                                           | 默认值         |
+| ------------ | -------------------------------------------------------------------------------- | ---------------------------------------------- | -------------- |
+| title        | 描述列表的标题                                                                   | `string \| VNode`                              | -              |
+| extra        | 描述列表的操作区域                                                               | `string \| VNode \| slot`                      | -              |
+| bordered     | 是否展示边框                                                                     | `boolean`                                      | `false`        |
+| column       | 一行的 DescriptionItems 数量,可以是响应式对象                                    | `number \| Record<Breakpoint, number>`         | `3`            |
+| size         | 设置列表的大小                                                                   | `'default' \| 'middle' \| 'small' \| 'medium'` | `'default'`    |
+| layout       | 描述布局                                                                         | `'horizontal' \| 'vertical'`                   | `'horizontal'` |
+| colon        | 配置 Descriptions.Item 的 colon 的默认值                                         | `boolean`                                      | `true`         |
+| items        | 描述列表的数据项                                                                 | `DescriptionsItem[]`                           | -              |
+| labelStyle   | 自定义标签样式(全局)                                                             | `CSSProperties`                                | -              |
+| contentStyle | 自定义内容样式(全局)                                                             | `CSSProperties`                                | -              |
+| classNames   | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DescriptionsClassNames`                       | -              |
+| styles       | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DescriptionsStyles`                           | -              |
 
 ### DescriptionsItem
 
@@ -143,3 +153,189 @@ type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 
 - `fn`: 需要防抖的目标函数
 - `delay`: 延迟时间，单位毫秒
+
+---
+
+## 语义化 className 与 style
+
+通过 `classNames` 和 `styles` 属性可以对组件的各个子节点应用自定义样式，支持细粒度控制。
+
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface DescriptionsClassNames {
+  root?: string // 根容器
+  header?: string // 头部容器
+  title?: string // 标题
+  extra?: string // 右侧扩展
+  view?: string // 视图容器
+  row?: string // 表格行
+  item?: string // 项容器（水平无边框布局）
+  itemContainer?: string // 项内部容器（水平无边框布局）
+  label?: string // 标签
+  content?: string // 内容
+}
+
+interface DescriptionsStyles {
+  root?: CSSProperties
+  header?: CSSProperties
+  title?: CSSProperties
+  extra?: CSSProperties
+  view?: CSSProperties
+  row?: CSSProperties
+  item?: CSSProperties
+  itemContainer?: CSSProperties
+  label?: CSSProperties
+  content?: CSSProperties
+}
+```
+
+### DOM 结构与 className 映射
+
+```html
+<div class="hmfw-descriptions">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <div class="hmfw-descriptions-header">
+    <!-- ↑ classNames.header / styles.header 应用于此 -->
+    <div class="hmfw-descriptions-title">
+      <!-- ↑ classNames.title / styles.title 应用于此 -->
+      标题
+    </div>
+    <div class="hmfw-descriptions-extra">
+      <!-- ↑ classNames.extra / styles.extra 应用于此 -->
+      操作区域
+    </div>
+  </div>
+  <div class="hmfw-descriptions-view">
+    <!-- ↑ classNames.view / styles.view 应用于此 -->
+    <table>
+      <tbody>
+        <tr class="hmfw-descriptions-row">
+          <!-- ↑ classNames.row / styles.row 应用于此 -->
+
+          <!-- 垂直布局 / 有边框布局 -->
+          <th class="hmfw-descriptions-item-label">
+            <!-- ↑ classNames.label / styles.label 应用于此 -->
+            标签
+          </th>
+          <td class="hmfw-descriptions-item-content">
+            <!-- ↑ classNames.content / styles.content 应用于此 -->
+            内容
+          </td>
+
+          <!-- 水平无边框布局 -->
+          <td class="hmfw-descriptions-item">
+            <!-- ↑ classNames.item / styles.item 应用于此 -->
+            <div class="hmfw-descriptions-item-container">
+              <!-- ↑ classNames.itemContainer / styles.itemContainer 应用于此 -->
+              <span class="hmfw-descriptions-item-label">
+                <!-- ↑ classNames.label / styles.label 应用于此 -->
+                标签
+              </span>
+              <span class="hmfw-descriptions-item-content">
+                <!-- ↑ classNames.content / styles.content 应用于此 -->
+                内容
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+```
+
+### 使用 classNames
+
+通过 `classNames` 属性应用自定义 CSS 类：
+
+```vue
+<template>
+  <Descriptions
+    title="用户信息"
+    extra="编辑"
+    :items="items"
+    :class-names="{
+      header: 'custom-header',
+      title: 'custom-title',
+      label: 'custom-label',
+      content: 'custom-content',
+    }"
+  />
+</template>
+
+<style scoped>
+:deep(.custom-header) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 16px 20px;
+  border-radius: 8px 8px 0 0;
+}
+
+:deep(.custom-title) {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+:deep(.custom-label) {
+  background: #f0f5ff;
+  color: #1890ff;
+  font-weight: 600;
+}
+
+:deep(.custom-content) {
+  background: #fafafa;
+  font-family: 'Monaco', monospace;
+}
+</style>
+```
+
+### 使用 styles
+
+通过 `styles` 属性应用内联样式：
+
+```vue
+<template>
+  <Descriptions
+    title="配置信息"
+    :items="items"
+    :styles="{
+      root: { border: '2px solid #1890ff', borderRadius: '12px', padding: '16px' },
+      title: { fontSize: '18px', color: '#1890ff', fontWeight: 600 },
+      label: { color: '#8c8c8c', fontWeight: 500 },
+      content: { color: '#262626', fontWeight: 600 },
+    }"
+  />
+</template>
+```
+
+### 注意事项
+
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `item` 和 `itemContainer` 仅在水平无边框布局（`layout="horizontal"` 且 `bordered={false}`）时生效
+- 在垂直布局或有边框布局中，标签和内容分别使用 `<th>` 和 `<td>` 元素
+- `header`、`title` 和 `extra` 仅在设置了 `title` 或 `extra` 属性时渲染
+- `row` 应用于每一个表格行，可用于实现 hover 效果或斑马纹
+- `label` 和 `content` 在所有布局模式下都会应用
+
+## 设计 Token
+
+| Token 名称                    | 说明         | 默认值               |
+| ----------------------------- | ------------ | -------------------- |
+| `--hmfw-color-text`           | 主文本颜色   | `rgba(0,0,0,0.88)`   |
+| `--hmfw-color-text-secondary` | 次要文本颜色 | `rgba(0,0,0,0.65)`   |
+| `--hmfw-color-border`         | 边框颜色     | `#d9d9d9`            |
+| `--hmfw-color-fill-alter`     | 备用填充色   | `rgba(0,0,0,0.02)`   |
+| `--hmfw-font-size-base`       | 标准字号     | `14px`               |
+| `--hmfw-font-size-lg`         | 大字号       | `16px`               |
+| `--hmfw-line-height-base`     | 标准行高     | `1.5714285714285714` |
+| `--hmfw-line-height-lg`       | 大行高       | `1.5`                |
+| `--hmfw-padding-xs`           | 超小内边距   | `8px`                |
+| `--hmfw-padding-sm`           | 小内边距     | `12px`               |
+| `--hmfw-padding`              | 标准内边距   | `16px`               |
+| `--hmfw-padding-lg`           | 大内边距     | `24px`               |
+| `--hmfw-margin`               | 标准外边距   | `16px`               |
+| `--hmfw-margin-xs`            | 超小外边距   | `8px`                |
+| `--hmfw-border-radius-lg`     | 大圆角       | `8px`                |

@@ -4,7 +4,7 @@ import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { LeftOutlined, RightOutlined } from '../icon/icons'
 import { Select } from '../select'
-import type { PaginationSize, ItemRenderFn } from './types'
+import type { PaginationSize, ItemRenderFn, PaginationClassNames, PaginationStyles } from './types'
 
 export const Pagination = defineComponent({
   name: 'Pagination',
@@ -28,6 +28,8 @@ export const Pagination = defineComponent({
     itemRender: Function as PropType<ItemRenderFn>,
     responsive: Boolean,
     align: String as PropType<'start' | 'center' | 'end'>,
+    classNames: Object as PropType<PaginationClassNames>,
+    styles: Object as PropType<PaginationStyles>,
   },
   emits: ['update:current', 'update:pageSize', 'change', 'showSizeChange'],
   setup(props, { emit }) {
@@ -122,7 +124,9 @@ export const Pagination = defineComponent({
                 [`${prefixCls}-disabled`]: !!props.disabled,
               },
               props.align ? `${prefixCls}-${props.align}` : null,
+              props.classNames?.root,
             )}
+            style={props.styles?.root}
             role="navigation"
             aria-label="分页"
           >
@@ -130,7 +134,8 @@ export const Pagination = defineComponent({
               cur - 1,
               'prev',
               <li
-                class={cls(`${prefixCls}-prev`, { [`${prefixCls}-disabled`]: cur <= 1 })}
+                class={cls(`${prefixCls}-prev`, { [`${prefixCls}-disabled`]: cur <= 1 }, props.classNames?.prev)}
+                style={props.styles?.prev}
                 onClick={() => goTo(cur - 1)}
                 aria-label="Previous"
               >
@@ -158,7 +163,8 @@ export const Pagination = defineComponent({
               cur + 1,
               'next',
               <li
-                class={cls(`${prefixCls}-next`, { [`${prefixCls}-disabled`]: cur >= total })}
+                class={cls(`${prefixCls}-next`, { [`${prefixCls}-disabled`]: cur >= total }, props.classNames?.next)}
+                style={props.styles?.next}
                 onClick={() => goTo(cur + 1)}
                 aria-label="Next"
               >
@@ -193,16 +199,23 @@ export const Pagination = defineComponent({
               [`${prefixCls}-disabled`]: !!props.disabled,
             },
             props.align ? `${prefixCls}-${props.align}` : null,
+            props.classNames?.root,
           )}
+          style={props.styles?.root}
           role="navigation"
           aria-label="分页"
         >
-          {props.showTotal && <li class={`${prefixCls}-total-text`}>{props.showTotal(props.total, range.value)}</li>}
+          {props.showTotal && (
+            <li class={cls(`${prefixCls}-total-text`, props.classNames?.total)} style={props.styles?.total}>
+              {props.showTotal(props.total, range.value)}
+            </li>
+          )}
           {renderItem(
             cur - 1,
             'prev',
             <li
-              class={cls(`${prefixCls}-prev`, { [`${prefixCls}-disabled`]: cur <= 1 })}
+              class={cls(`${prefixCls}-prev`, { [`${prefixCls}-disabled`]: cur <= 1 }, props.classNames?.prev)}
+              style={props.styles?.prev}
               onClick={() => goTo(cur - 1)}
               aria-label="Previous"
             >
@@ -219,7 +232,8 @@ export const Pagination = defineComponent({
                 'jump-prev',
                 <li
                   key="jump-prev"
-                  class={`${prefixCls}-jump-prev`}
+                  class={cls(`${prefixCls}-jump-prev`, props.classNames?.jumpPrev)}
+                  style={props.styles?.jumpPrev}
                   onClick={() => goTo(Math.max(1, cur - 5))}
                   aria-label="向前 5 页"
                 >
@@ -239,7 +253,8 @@ export const Pagination = defineComponent({
                 'jump-next',
                 <li
                   key="jump-next"
-                  class={`${prefixCls}-jump-next`}
+                  class={cls(`${prefixCls}-jump-next`, props.classNames?.jumpNext)}
+                  style={props.styles?.jumpNext}
                   onClick={() => goTo(Math.min(total, cur + 5))}
                   aria-label="向后 5 页"
                 >
@@ -257,9 +272,15 @@ export const Pagination = defineComponent({
               'page',
               <li
                 key={p}
-                class={cls(`${prefixCls}-item`, {
-                  [`${prefixCls}-item-active`]: p === cur,
-                })}
+                class={cls(
+                  `${prefixCls}-item`,
+                  {
+                    [`${prefixCls}-item-active`]: p === cur,
+                  },
+                  props.classNames?.item,
+                  p === cur ? props.classNames?.itemActive : undefined,
+                )}
+                style={{ ...props.styles?.item, ...(p === cur ? props.styles?.itemActive : {}) }}
                 onClick={() => goTo(p)}
               >
                 <button
@@ -277,7 +298,8 @@ export const Pagination = defineComponent({
             cur + 1,
             'next',
             <li
-              class={cls(`${prefixCls}-next`, { [`${prefixCls}-disabled`]: cur >= total })}
+              class={cls(`${prefixCls}-next`, { [`${prefixCls}-disabled`]: cur >= total }, props.classNames?.next)}
+              style={props.styles?.next}
               onClick={() => goTo(cur + 1)}
               aria-label="Next"
             >
@@ -287,7 +309,7 @@ export const Pagination = defineComponent({
             </li>,
           )}
           {props.showSizeChanger && (
-            <li class={`${prefixCls}-options`}>
+            <li class={cls(`${prefixCls}-options`, props.classNames?.options)} style={props.styles?.options}>
               <Select
                 value={currentPageSize.value}
                 options={props.pageSizeOptions.map((size) => ({
@@ -297,12 +319,15 @@ export const Pagination = defineComponent({
                 size={props.size === 'small' ? 'small' : 'middle'}
                 disabled={props.disabled}
                 onChange={(val) => changePageSize(val as number)}
-                class={`${prefixCls}-options-size-changer`}
+                class={cls(`${prefixCls}-options-size-changer`, props.classNames?.sizeChanger)}
               />
             </li>
           )}
           {props.showQuickJumper && (
-            <li class={`${prefixCls}-options-quick-jumper`}>
+            <li
+              class={cls(`${prefixCls}-options-quick-jumper`, props.classNames?.quickJumper)}
+              style={props.styles?.quickJumper}
+            >
               跳至
               <input
                 type="text"

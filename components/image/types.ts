@@ -1,4 +1,57 @@
-import type { VNode } from 'vue'
+import type { VNode, CSSProperties } from 'vue'
+
+/** Image 组件语义化 className */
+export interface ImageClassNames {
+  /** 图片根容器 */
+  root?: string
+  /** img 元素 */
+  img?: string
+  /** hover 遮罩层 */
+  mask?: string
+  /** 遮罩内容（预览文本） */
+  maskInfo?: string
+  /** 预览弹层根容器 */
+  preview?: string
+  /** 预览遮罩层 */
+  previewMask?: string
+  /** 预览图片包裹容器 */
+  previewWrap?: string
+  /** 预览图片元素 */
+  previewImg?: string
+  /** 预览操作栏 */
+  operations?: string
+  /** 预览操作按钮 */
+  operationBtn?: string
+  /** 预览关闭按钮 */
+  closeBtn?: string
+  /** 预览切换按钮（左右箭头） */
+  switchBtn?: string
+  /** 预览图片计数 */
+  count?: string
+  /** 加载占位容器 */
+  placeholder?: string
+  /** 错误占位容器 */
+  error?: string
+}
+
+/** Image 组件语义化 style */
+export interface ImageStyles {
+  root?: CSSProperties
+  img?: CSSProperties
+  mask?: CSSProperties
+  maskInfo?: CSSProperties
+  preview?: CSSProperties
+  previewMask?: CSSProperties
+  previewWrap?: CSSProperties
+  previewImg?: CSSProperties
+  operations?: CSSProperties
+  operationBtn?: CSSProperties
+  closeBtn?: CSSProperties
+  switchBtn?: CSSProperties
+  count?: CSSProperties
+  placeholder?: CSSProperties
+  error?: CSSProperties
+}
 
 /** 预览操作 transform 状态 */
 export interface TransformType {
@@ -130,6 +183,10 @@ export interface ImageProps {
   rootClassName?: string
   /** img class */
   class?: string
+  /** 语义化结构 class */
+  classNames?: ImageClassNames
+  /** 语义化结构 style */
+  styles?: ImageStyles
   /** 加载失败回调 */
   onError?: (e: Event) => void
 }

@@ -7,4 +7,6 @@ export type {
   CarouselDotsConfig,
   CarouselAutoplayConfig,
   CarouselRef,
+  CarouselClassNames,
+  CarouselStyles,
 } from './types'

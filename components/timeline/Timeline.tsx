@@ -89,6 +89,8 @@ export const Timeline = defineComponent({
     // Deprecated
     pending: [Boolean, String, Object] as PropType<boolean | string | VNode>,
     pendingDot: [String, Object] as PropType<string | VNode>,
+    classNames: Object as PropType<import('./types').TimelineClassNames>,
+    styles: Object as PropType<import('./types').TimelineStyles>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('timeline')
@@ -120,15 +122,19 @@ export const Timeline = defineComponent({
       // Reverse if needed
       const items = props.reverse ? [...rawItems].reverse() : rawItems
 
-      const rootClass = cls(prefixCls, {
-        [`${prefixCls}-${props.orientation}`]: props.orientation === 'horizontal',
-        [`${prefixCls}-${mergedMode}`]: mergedMode !== 'start',
-        [`${prefixCls}-${props.variant}`]: props.variant !== 'outlined',
-        [`${prefixCls}-pending`]: !!props.pending,
-        [`${prefixCls}-reverse`]: props.reverse,
-      })
+      const rootClass = cls(
+        prefixCls,
+        {
+          [`${prefixCls}-${props.orientation}`]: props.orientation === 'horizontal',
+          [`${prefixCls}-${mergedMode}`]: mergedMode !== 'start',
+          [`${prefixCls}-${props.variant}`]: props.variant !== 'outlined',
+          [`${prefixCls}-pending`]: !!props.pending,
+          [`${prefixCls}-reverse`]: props.reverse,
+        },
+        props.classNames?.root,
+      )
 
-      const rootStyle: Record<string, any> = {}
+      const rootStyle: Record<string, any> = { ...props.styles?.root }
       if (props.titleSpan !== undefined && mergedMode !== 'alternate') {
         if (typeof props.titleSpan === 'number') {
           rootStyle['--hmfw-timeline-title-span'] = `${props.titleSpan}px`
@@ -165,27 +171,38 @@ export const Timeline = defineComponent({
                 [`${prefixCls}-item-loading`]: item.loading,
               },
               item.className,
+              props.classNames?.item,
             )
 
-            const headClass = cls(`${prefixCls}-item-head`, {
-              [`${prefixCls}-item-head-${color}`]: isPresetColor,
-              [`${prefixCls}-item-head-custom`]: hasCustomIcon || !isPresetColor,
-            })
+            const headClass = cls(
+              `${prefixCls}-item-head`,
+              {
+                [`${prefixCls}-item-head-${color}`]: isPresetColor,
+                [`${prefixCls}-item-head-custom`]: hasCustomIcon || !isPresetColor,
+              },
+              props.classNames?.dot,
+            )
 
-            const headStyle: Record<string, any> = { ...item.style }
+            const headStyle: Record<string, any> = { ...item.style, ...props.styles?.dot }
             if (!isPresetColor) {
               headStyle.borderColor = color
               headStyle.color = color
             }
 
             return (
-              <li key={item.key ?? index} class={itemClass}>
-                {title && <div class={`${prefixCls}-item-label`}>{title}</div>}
-                <div class={`${prefixCls}-item-tail`} />
+              <li key={item.key ?? index} class={itemClass} style={props.styles?.item}>
+                {title && (
+                  <div class={cls(`${prefixCls}-item-label`, props.classNames?.label)} style={props.styles?.label}>
+                    {title}
+                  </div>
+                )}
+                <div class={cls(`${prefixCls}-item-tail`, props.classNames?.tail)} style={props.styles?.tail} />
                 <div class={headClass} style={headStyle}>
                   {icon}
                 </div>
-                <div class={`${prefixCls}-item-content`}>{content as any}</div>
+                <div class={cls(`${prefixCls}-item-content`, props.classNames?.content)} style={props.styles?.content}>
+                  {content as any}
+                </div>
               </li>
             )
           })}

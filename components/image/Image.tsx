@@ -35,6 +35,8 @@ import type {
   TransformAction,
   MaskType,
   ImgInfo,
+  ImageClassNames,
+  ImageStyles,
 } from './types'
 
 // ---- body scroll lock (引用计数，与 Modal 同策略) ----
@@ -127,6 +129,8 @@ const ImagePreview = defineComponent({
     current: Number,
     total: Number,
     countRender: Function as PropType<(current: number, total: number) => VNode>,
+    classNames: Object as PropType<ImageClassNames>,
+    styles: Object as PropType<ImageStyles>,
   },
   setup(props) {
     const transform = ref<TransformType>(DEFAULT_TRANSFORM())
@@ -323,32 +327,66 @@ const ImagePreview = defineComponent({
     }
 
     const renderDefaultToolbar = (): VNode => (
-      <div class={`${previewCls}-operations`} onClick={(e: MouseEvent) => e.stopPropagation()}>
-        <button class={`${previewCls}-op-btn`} onClick={flipX} title="左右翻转">
+      <div
+        class={cls(`${previewCls}-operations`, props.classNames?.operations)}
+        style={props.styles?.operations}
+        onClick={(e: MouseEvent) => e.stopPropagation()}
+      >
+        <button
+          class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
+          style={props.styles?.operationBtn}
+          onClick={flipX}
+          title="左右翻转"
+        >
           <Icon component={SwapOutlined} />
         </button>
-        <button class={`${previewCls}-op-btn`} onClick={flipY} title="上下翻转">
+        <button
+          class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
+          style={props.styles?.operationBtn}
+          onClick={flipY}
+          title="上下翻转"
+        >
           <Icon component={SwapOutlined} rotate={90} />
         </button>
-        <button class={`${previewCls}-op-btn`} onClick={rotateLeft} title="向左旋转">
+        <button
+          class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
+          style={props.styles?.operationBtn}
+          onClick={rotateLeft}
+          title="向左旋转"
+        >
           <Icon component={RotateLeftOutlined} />
         </button>
-        <button class={`${previewCls}-op-btn`} onClick={rotateRight} title="向右旋转">
+        <button
+          class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
+          style={props.styles?.operationBtn}
+          onClick={rotateRight}
+          title="向右旋转"
+        >
           <Icon component={RotateRightOutlined} />
         </button>
         <button
-          class={cls(`${previewCls}-op-btn`, {
-            [`${previewCls}-op-btn-disabled`]: transform.value.scale <= minScale.value,
-          })}
+          class={cls(
+            `${previewCls}-op-btn`,
+            {
+              [`${previewCls}-op-btn-disabled`]: transform.value.scale <= minScale.value,
+            },
+            props.classNames?.operationBtn,
+          )}
+          style={props.styles?.operationBtn}
           onClick={zoomOut}
           title="缩小"
         >
           <Icon component={ZoomOutOutlined} />
         </button>
         <button
-          class={cls(`${previewCls}-op-btn`, {
-            [`${previewCls}-op-btn-disabled`]: transform.value.scale >= maxScale.value,
-          })}
+          class={cls(
+            `${previewCls}-op-btn`,
+            {
+              [`${previewCls}-op-btn-disabled`]: transform.value.scale >= maxScale.value,
+            },
+            props.classNames?.operationBtn,
+          )}
+          style={props.styles?.operationBtn}
           onClick={zoomIn}
           title="放大"
         >
@@ -378,8 +416,8 @@ const ImagePreview = defineComponent({
         <img
           src={props.src}
           alt={props.alt}
-          class={`${previewCls}-img`}
-          style={realImgStyle.value}
+          class={cls(`${previewCls}-img`, props.classNames?.previewImg)}
+          style={[realImgStyle.value, props.styles?.previewImg]}
           draggable={false}
           onMousedown={onMouseDownImg}
           onDblclick={onDoubleClick}
@@ -404,24 +442,42 @@ const ImagePreview = defineComponent({
           <Transition name={`${previewCls}-fade`}>
             {props.visible && (
               <div
-                class={`${previewCls}-root`}
-                style={props.config.zIndex != null ? { zIndex: props.config.zIndex } : undefined}
+                class={cls(`${previewCls}-root`, props.classNames?.preview)}
+                style={[
+                  props.config.zIndex != null ? { zIndex: props.config.zIndex } : undefined,
+                  props.styles?.preview,
+                ]}
                 onClick={handleMaskClick}
               >
                 <div
-                  class={cls(`${previewCls}-mask`, {
-                    [`${previewCls}-mask-hidden`]: !maskInfo.value.enabled,
-                  })}
+                  class={cls(
+                    `${previewCls}-mask`,
+                    {
+                      [`${previewCls}-mask-hidden`]: !maskInfo.value.enabled,
+                    },
+                    props.classNames?.previewMask,
+                  )}
+                  style={props.styles?.previewMask}
                 />
-                <button class={`${previewCls}-close`} onClick={props.onClose} title="关闭">
+                <button
+                  class={cls(`${previewCls}-close`, props.classNames?.closeBtn)}
+                  style={props.styles?.closeBtn}
+                  onClick={props.onClose}
+                  title="关闭"
+                >
                   {getCloseIcon()}
                 </button>
-                <div class={`${previewCls}-wrap`} onClick={handleMaskClick} onWheel={handleWheel}>
+                <div
+                  class={cls(`${previewCls}-wrap`, props.classNames?.previewWrap)}
+                  style={props.styles?.previewWrap}
+                  onClick={handleMaskClick}
+                  onWheel={handleWheel}
+                >
                   {renderImage()}
                 </div>
                 {renderToolbar()}
                 {showCount && (
-                  <div class={`${previewCls}-count`}>
+                  <div class={cls(`${previewCls}-count`, props.classNames?.count)} style={props.styles?.count}>
                     {props.countRender
                       ? props.countRender((props.current ?? 0) + 1, props.total!)
                       : `${(props.current ?? 0) + 1} / ${props.total}`}
@@ -429,7 +485,8 @@ const ImagePreview = defineComponent({
                 )}
                 {props.hasPrev && (
                   <button
-                    class={`${previewCls}-switch ${previewCls}-switch-left`}
+                    class={cls(`${previewCls}-switch`, `${previewCls}-switch-left`, props.classNames?.switchBtn)}
+                    style={props.styles?.switchBtn}
                     onClick={(e: MouseEvent) => {
                       e.stopPropagation()
                       props.onPrev?.()
@@ -440,7 +497,8 @@ const ImagePreview = defineComponent({
                 )}
                 {props.hasNext && (
                   <button
-                    class={`${previewCls}-switch ${previewCls}-switch-right`}
+                    class={cls(`${previewCls}-switch`, `${previewCls}-switch-right`, props.classNames?.switchBtn)}
+                    style={props.styles?.switchBtn}
                     onClick={(e: MouseEvent) => {
                       e.stopPropagation()
                       props.onNext?.()
@@ -474,6 +532,8 @@ export const Image = defineComponent({
       default: false,
     },
     rootClassName: String,
+    classNames: Object as PropType<ImageClassNames>,
+    styles: Object as PropType<ImageStyles>,
     onError: Function as PropType<(e: Event) => void>,
   },
   setup(props, { attrs }) {
@@ -558,38 +618,59 @@ export const Image = defineComponent({
     const renderPlaceholder = () => {
       const p = props.placeholder
       if (!p) return null
-      if (p === true) return <div class={`${prefixCls}-placeholder`} />
+      if (p === true)
+        return (
+          <div
+            class={cls(`${prefixCls}-placeholder`, props.classNames?.placeholder)}
+            style={props.styles?.placeholder}
+          />
+        )
       // 自定义 VNode / 函数
-      return <div class={`${prefixCls}-placeholder`}>{renderContent(p as ImageContent)}</div>
+      return (
+        <div class={cls(`${prefixCls}-placeholder`, props.classNames?.placeholder)} style={props.styles?.placeholder}>
+          {renderContent(p as ImageContent)}
+        </div>
+      )
     }
 
     return () => (
       <div
-        class={cls(prefixCls, props.rootClassName, attrs.class as string, {
-          [`${prefixCls}-preview`]: canPreview.value,
-          [`${prefixCls}-error`]: status.value === 'error' && !props.fallback,
-        })}
-        style={[rootStyle.value, attrs.style as any]}
+        class={cls(
+          prefixCls,
+          props.rootClassName,
+          attrs.class as string,
+          {
+            [`${prefixCls}-preview`]: canPreview.value,
+            [`${prefixCls}-error`]: status.value === 'error' && !props.fallback,
+          },
+          props.classNames?.root,
+        )}
+        style={[rootStyle.value, attrs.style as any, props.styles?.root]}
       >
         {status.value === 'loading' && renderPlaceholder()}
         {status.value === 'error' && !props.fallback ? (
-          <div class={`${prefixCls}-error-placeholder`}>
+          <div class={cls(`${prefixCls}-error-placeholder`, props.classNames?.error)} style={props.styles?.error}>
             <span>图片加载失败</span>
           </div>
         ) : (
           <img
             src={displaySrc.value}
             alt={props.alt}
-            class={`${prefixCls}-img`}
+            class={cls(`${prefixCls}-img`, props.classNames?.img)}
+            style={props.styles?.img}
             onLoad={onLoad}
             onError={onError}
             onClick={handleClick}
           />
         )}
         {canPreview.value && status.value === 'loaded' && maskInfo.value?.enabled && (
-          <div class={`${prefixCls}-mask`} onClick={handleClick}>
+          <div
+            class={cls(`${prefixCls}-mask`, props.classNames?.mask)}
+            style={props.styles?.mask}
+            onClick={handleClick}
+          >
             {maskInfo.value.coverNode ?? (
-              <span class={`${prefixCls}-mask-info`}>
+              <span class={cls(`${prefixCls}-mask-info`, props.classNames?.maskInfo)} style={props.styles?.maskInfo}>
                 <Icon component={ZoomInOutlined} /> <span>预览</span>
               </span>
             )}
@@ -603,6 +684,8 @@ export const Image = defineComponent({
             config={previewConfig.value}
             visible={actualVisible.value}
             onClose={() => setOpen(false)}
+            classNames={props.classNames}
+            styles={props.styles}
           />
         )}
       </div>
@@ -696,6 +779,8 @@ export const PreviewGroup = defineComponent({
             onPrev={() => setCurrent(current.value - 1)}
             onNext={() => setCurrent(current.value + 1)}
             onClose={() => setVisible(false)}
+            classNames={undefined}
+            styles={undefined}
           />
         )}
       </>

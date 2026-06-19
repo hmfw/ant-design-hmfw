@@ -7,7 +7,7 @@ import { Pagination } from '../pagination'
 import { Row } from '../grid'
 import { VirtualList } from '../_internal/virtual-list'
 import { provideListContext } from './context'
-import type { ListSize, ListItemLayout, ListGridType, PaginationConfig } from './types'
+import type { ListSize, ListItemLayout, ListGridType, PaginationConfig, ListClassNames, ListStyles } from './types'
 
 export const List = defineComponent({
   name: 'List',
@@ -32,6 +32,8 @@ export const List = defineComponent({
       type: Number,
       default: 48,
     },
+    classNames: Object as PropType<ListClassNames>,
+    styles: Object as PropType<ListStyles>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('list')
@@ -126,7 +128,11 @@ export const List = defineComponent({
           if (props.grid) {
             // Grid 模式暂不支持虚拟滚动
             childrenContent = (
-              <Row class={`${prefixCls}-container`} gutter={props.grid.gutter}>
+              <Row
+                class={cls(`${prefixCls}-container`, props.classNames?.items)}
+                style={props.styles?.items}
+                gutter={props.grid.gutter}
+              >
                 {renderedItems}
               </Row>
             )
@@ -148,17 +154,27 @@ export const List = defineComponent({
           // 常规模式
           if (props.grid) {
             childrenContent = (
-              <Row class={`${prefixCls}-container`} gutter={props.grid.gutter}>
+              <Row
+                class={cls(`${prefixCls}-container`, props.classNames?.items)}
+                style={props.styles?.items}
+                gutter={props.grid.gutter}
+              >
                 {renderedItems}
               </Row>
             )
           } else {
-            childrenContent = <ul class={`${prefixCls}-items`}>{renderedItems}</ul>
+            childrenContent = (
+              <ul class={cls(`${prefixCls}-items`, props.classNames?.items)} style={props.styles?.items}>
+                {renderedItems}
+              </ul>
+            )
           }
         }
       } else if (isEmpty) {
         childrenContent = (
-          <div class={`${prefixCls}-empty-text`}>{props.locale?.emptyText || <Empty description="暂无数据" />}</div>
+          <div class={cls(`${prefixCls}-empty-text`, props.classNames?.empty)} style={props.styles?.empty}>
+            {props.locale?.emptyText || <Empty description="暂无数据" />}
+          </div>
         )
       }
 
@@ -166,7 +182,7 @@ export const List = defineComponent({
       const paginationPosition = paginationConfig.value.position || 'bottom'
       const showPagination = !!props.pagination && items.length > 0
       const paginationNode = showPagination ? (
-        <div class={`${prefixCls}-pagination`}>
+        <div class={cls(`${prefixCls}-pagination`, props.classNames?.pagination)} style={props.styles?.pagination}>
           <Pagination
             current={currentPage.value}
             pageSize={pageSize.value}
@@ -178,29 +194,37 @@ export const List = defineComponent({
 
       const isSomethingAfterLastItem = !!(props.loadMore || showPagination || props.footer || slots.footer)
 
-      const classes = cls(prefixCls, {
-        [`${prefixCls}-sm`]: props.size === 'small',
-        [`${prefixCls}-lg`]: props.size === 'large',
-        [`${prefixCls}-bordered`]: !!props.bordered,
-        [`${prefixCls}-split`]: !!props.split,
-        [`${prefixCls}-loading`]: !!isLoading.value,
-        [`${prefixCls}-grid`]: !!props.grid,
-        [`${prefixCls}-vertical`]: props.itemLayout === 'vertical',
-        [`${prefixCls}-something-after-last-item`]: !!isSomethingAfterLastItem,
-      })
+      const classes = cls(
+        prefixCls,
+        {
+          [`${prefixCls}-sm`]: props.size === 'small',
+          [`${prefixCls}-lg`]: props.size === 'large',
+          [`${prefixCls}-bordered`]: !!props.bordered,
+          [`${prefixCls}-split`]: !!props.split,
+          [`${prefixCls}-loading`]: !!isLoading.value,
+          [`${prefixCls}-grid`]: !!props.grid,
+          [`${prefixCls}-vertical`]: props.itemLayout === 'vertical',
+          [`${prefixCls}-something-after-last-item`]: !!isSomethingAfterLastItem,
+        },
+        props.classNames?.root,
+      )
 
       return (
-        <div class={classes}>
+        <div class={classes} style={props.styles?.root}>
           {(paginationPosition === 'top' || paginationPosition === 'both') && paginationNode}
           {(props.header || slots.header) && (
-            <div class={`${prefixCls}-header`}>{slots.header?.() ?? props.header}</div>
+            <div class={cls(`${prefixCls}-header`, props.classNames?.header)} style={props.styles?.header}>
+              {slots.header?.() ?? props.header}
+            </div>
           )}
           <Spin spinning={isLoading.value}>
             {childrenContent}
             {slots.default?.()}
           </Spin>
           {(props.footer || slots.footer) && (
-            <div class={`${prefixCls}-footer`}>{slots.footer?.() ?? props.footer}</div>
+            <div class={cls(`${prefixCls}-footer`, props.classNames?.footer)} style={props.styles?.footer}>
+              {slots.footer?.() ?? props.footer}
+            </div>
           )}
           {props.loadMore || ((paginationPosition === 'bottom' || paginationPosition === 'both') && paginationNode)}
         </div>

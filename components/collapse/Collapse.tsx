@@ -15,7 +15,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { RightOutlined } from '../icon/icons'
-import type { CollapseItem, CollapsibleType, ExpandIconProps } from './types'
+import type { CollapseItem, CollapsibleType, ExpandIconProps, CollapseClassNames, CollapseStyles } from './types'
 
 // 折叠动画钩子
 const collapseMotion = {
@@ -74,6 +74,8 @@ export const Collapse = defineComponent({
     destroyInactivePanel: Boolean,
     collapsible: String as PropType<CollapsibleType>,
     expandIcon: Function as PropType<(props: ExpandIconProps) => VNode>,
+    classNames: Object as PropType<CollapseClassNames>,
+    styles: Object as PropType<CollapseStyles>,
   },
   emits: ['update:activeKey', 'change'],
   setup(props, { slots, emit }) {
@@ -119,6 +121,8 @@ export const Collapse = defineComponent({
       collapsible: computed(() => props.collapsible),
       destroyInactivePanel: computed(() => props.destroyInactivePanel),
       expandIcon: computed(() => props.expandIcon),
+      classNames: computed(() => props.classNames),
+      styles: computed(() => props.styles),
     })
 
     const renderExpandIcon = (isActive: boolean, panelKey: string) => {
@@ -175,23 +179,23 @@ export const Collapse = defineComponent({
         return (
           <div
             key={key}
-            class={cls(`${prefixCls}-item`, {
+            class={cls(`${prefixCls}-item`, props.classNames?.item, {
               [`${prefixCls}-item-active`]: isOpen,
               [`${prefixCls}-item-disabled`]: isDisabled,
             })}
-            style={options.style}
+            style={{ ...options.style, ...props.styles?.item }}
           >
             <div
-              class={`${prefixCls}-header`}
+              class={cls(`${prefixCls}-header`, props.classNames?.header)}
               onClick={() => canClickHeader && toggle(key)}
               role="button"
               aria-expanded={isOpen}
               aria-disabled={isDisabled}
-              style={{ cursor: canClickHeader ? 'pointer' : 'default' }}
+              style={{ cursor: canClickHeader ? 'pointer' : 'default', ...props.styles?.header }}
             >
               {options.showArrow !== false && (
                 <span
-                  class={cls(`${prefixCls}-expand-icon`, {
+                  class={cls(`${prefixCls}-expand-icon`, props.classNames?.icon, {
                     [`${prefixCls}-expand-icon-active`]: isOpen,
                   })}
                   onClick={(e) => {
@@ -202,13 +206,23 @@ export const Collapse = defineComponent({
                   }}
                   style={{
                     cursor: canClickIcon && effectiveCollapsible === 'icon' ? 'pointer' : 'inherit',
+                    ...props.styles?.icon,
                   }}
                 >
                   {renderExpandIcon(isOpen, key)}
                 </span>
               )}
-              <span class={`${prefixCls}-header-text`}>{label}</span>
-              {options.extra && <span class={`${prefixCls}-extra`}>{options.extra}</span>}
+              <span
+                class={cls(`${prefixCls}-header-text`, props.classNames?.headerText)}
+                style={props.styles?.headerText}
+              >
+                {label}
+              </span>
+              {options.extra && (
+                <span class={cls(`${prefixCls}-extra`, props.classNames?.extra)} style={props.styles?.extra}>
+                  {options.extra}
+                </span>
+              )}
             </div>
             {useTransition ? (
               <Transition
@@ -221,24 +235,33 @@ export const Collapse = defineComponent({
                 onAfterLeave={collapseMotion.onAfterLeave}
               >
                 {shouldRender && isOpen && (
-                  <div class={`${prefixCls}-content`} role="region">
-                    <div class={`${prefixCls}-content-box`}>{children as any}</div>
+                  <div
+                    class={cls(`${prefixCls}-content`, props.classNames?.content)}
+                    role="region"
+                    style={props.styles?.content}
+                  >
+                    <div class={cls(`${prefixCls}-content-box`, props.classNames?.body)} style={props.styles?.body}>
+                      {children as any}
+                    </div>
                   </div>
                 )}
               </Transition>
             ) : (
               shouldRender && (
                 <div
-                  class={cls(`${prefixCls}-content`, {
+                  class={cls(`${prefixCls}-content`, props.classNames?.content, {
                     [`${prefixCls}-content-hidden`]: !isOpen,
                   })}
                   role="region"
                   style={{
                     height: isOpen ? undefined : '0',
                     opacity: isOpen ? undefined : '0',
+                    ...props.styles?.content,
                   }}
                 >
-                  <div class={`${prefixCls}-content-box`}>{children as any}</div>
+                  <div class={cls(`${prefixCls}-content-box`, props.classNames?.body)} style={props.styles?.body}>
+                    {children as any}
+                  </div>
                 </div>
               )
             )}
@@ -248,12 +271,13 @@ export const Collapse = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, {
+          class={cls(prefixCls, props.classNames?.root, {
             [`${prefixCls}-borderless`]: !props.bordered,
             [`${prefixCls}-ghost`]: props.ghost,
             [`${prefixCls}-${props.size}`]: props.size !== 'middle',
             [`${prefixCls}-icon-position-end`]: props.expandIconPosition === 'end',
           })}
+          style={props.styles?.root}
         >
           {items.map((item) =>
             renderPanel(item.key, item.label, item.children, {
@@ -282,6 +306,8 @@ export const CollapsePanel = defineComponent({
     forceRender: Boolean,
     collapsible: String as PropType<CollapsibleType>,
     panelKey: String,
+    classNames: Object as PropType<CollapseClassNames>,
+    styles: Object as PropType<CollapseStyles>,
   },
   setup(props, { slots, attrs }) {
     const context = inject<any>(COLLAPSE_CONTEXT_KEY, null)
@@ -290,18 +316,32 @@ export const CollapsePanel = defineComponent({
       // Standalone mode (not inside Collapse) - just render static
       const prefixCls = usePrefixCls('collapse')
       return () => (
-        <div class={`${prefixCls}-item`}>
-          <div class={`${prefixCls}-header`}>
+        <div class={cls(`${prefixCls}-item`, props.classNames?.item)} style={props.styles?.item}>
+          <div class={cls(`${prefixCls}-header`, props.classNames?.header)} style={props.styles?.header}>
             {props.showArrow && (
-              <span class={`${prefixCls}-expand-icon`}>
+              <span class={cls(`${prefixCls}-expand-icon`, props.classNames?.icon)} style={props.styles?.icon}>
                 <Icon component={RightOutlined} />
               </span>
             )}
-            <span class={`${prefixCls}-header-text`}>{props.header}</span>
-            {props.extra && <span class={`${prefixCls}-extra`}>{props.extra}</span>}
+            <span
+              class={cls(`${prefixCls}-header-text`, props.classNames?.headerText)}
+              style={props.styles?.headerText}
+            >
+              {props.header}
+            </span>
+            {props.extra && (
+              <span class={cls(`${prefixCls}-extra`, props.classNames?.extra)} style={props.styles?.extra}>
+                {props.extra}
+              </span>
+            )}
           </div>
-          <div class={`${prefixCls}-content ${prefixCls}-content-active`}>
-            <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
+          <div
+            class={cls(`${prefixCls}-content ${prefixCls}-content-active`, props.classNames?.content)}
+            style={props.styles?.content}
+          >
+            <div class={cls(`${prefixCls}-content-box`, props.classNames?.body)} style={props.styles?.body}>
+              {slots.default?.()}
+            </div>
           </div>
         </div>
       )
@@ -311,6 +351,16 @@ export const CollapsePanel = defineComponent({
     const key = computed(() => props.panelKey ?? (attrs.key as string) ?? '')
     const isOpen = computed(() => context.activeKeys.value.includes(key.value))
     const prefixCls = context.prefixCls
+
+    // 合并 context 和 props 的 classNames/styles，props 优先
+    const mergedClassNames = computed(() => ({
+      ...context.classNames?.value,
+      ...props.classNames,
+    }))
+    const mergedStyles = computed(() => ({
+      ...context.styles?.value,
+      ...props.styles,
+    }))
 
     const effectiveCollapsible = computed(() => props.collapsible ?? context.collapsible.value)
     const isDisabled = computed(() => props.disabled || effectiveCollapsible.value === 'disabled')
@@ -331,22 +381,23 @@ export const CollapsePanel = defineComponent({
 
     return () => (
       <div
-        class={cls(`${prefixCls}-item`, {
+        class={cls(`${prefixCls}-item`, mergedClassNames.value.item, {
           [`${prefixCls}-item-active`]: isOpen.value,
           [`${prefixCls}-item-disabled`]: isDisabled.value,
         })}
+        style={mergedStyles.value.item}
       >
         <div
-          class={`${prefixCls}-header`}
+          class={cls(`${prefixCls}-header`, mergedClassNames.value.header)}
           onClick={() => canClickHeader.value && context.toggle(key.value)}
           role="button"
           aria-expanded={isOpen.value}
           aria-disabled={isDisabled.value}
-          style={{ cursor: canClickHeader.value ? 'pointer' : 'default' }}
+          style={{ cursor: canClickHeader.value ? 'pointer' : 'default', ...mergedStyles.value.header }}
         >
           {props.showArrow && (
             <span
-              class={cls(`${prefixCls}-expand-icon`, {
+              class={cls(`${prefixCls}-expand-icon`, mergedClassNames.value.icon, {
                 [`${prefixCls}-expand-icon-active`]: isOpen.value,
               })}
               onClick={(e) => {
@@ -357,13 +408,23 @@ export const CollapsePanel = defineComponent({
               }}
               style={{
                 cursor: canClickIcon.value && effectiveCollapsible.value === 'icon' ? 'pointer' : 'inherit',
+                ...mergedStyles.value.icon,
               }}
             >
               {renderExpandIcon()}
             </span>
           )}
-          <span class={`${prefixCls}-header-text`}>{props.header}</span>
-          {props.extra && <span class={`${prefixCls}-extra`}>{props.extra}</span>}
+          <span
+            class={cls(`${prefixCls}-header-text`, mergedClassNames.value.headerText)}
+            style={mergedStyles.value.headerText}
+          >
+            {props.header}
+          </span>
+          {props.extra && (
+            <span class={cls(`${prefixCls}-extra`, mergedClassNames.value.extra)} style={mergedStyles.value.extra}>
+              {props.extra}
+            </span>
+          )}
         </div>
         {useTransition.value ? (
           <Transition
@@ -376,24 +437,36 @@ export const CollapsePanel = defineComponent({
             onAfterLeave={collapseMotion.onAfterLeave}
           >
             {shouldRender.value && isOpen.value && (
-              <div class={`${prefixCls}-content`} role="region">
-                <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
+              <div
+                class={cls(`${prefixCls}-content`, mergedClassNames.value.content)}
+                role="region"
+                style={mergedStyles.value.content}
+              >
+                <div
+                  class={cls(`${prefixCls}-content-box`, mergedClassNames.value.body)}
+                  style={mergedStyles.value.body}
+                >
+                  {slots.default?.()}
+                </div>
               </div>
             )}
           </Transition>
         ) : (
           shouldRender.value && (
             <div
-              class={cls(`${prefixCls}-content`, {
+              class={cls(`${prefixCls}-content`, mergedClassNames.value.content, {
                 [`${prefixCls}-content-hidden`]: !isOpen.value,
               })}
               role="region"
               style={{
                 height: isOpen.value ? undefined : '0',
                 opacity: isOpen.value ? undefined : '0',
+                ...mergedStyles.value.content,
               }}
             >
-              <div class={`${prefixCls}-content-box`}>{slots.default?.()}</div>
+              <div class={cls(`${prefixCls}-content-box`, mergedClassNames.value.body)} style={mergedStyles.value.body}>
+                {slots.default?.()}
+              </div>
             </div>
           )
         )}

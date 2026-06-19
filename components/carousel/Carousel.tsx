@@ -31,6 +31,8 @@ export const Carousel = defineComponent({
     waitForAnimate: { type: Boolean, default: false },
     adaptiveHeight: { type: Boolean, default: false },
     rootClassName: String,
+    classNames: Object,
+    styles: Object,
   },
   emits: ['beforeChange', 'afterChange'],
   setup(props, { slots, emit, expose }) {
@@ -216,7 +218,7 @@ export const Carousel = defineComponent({
 
     return () => {
       if (count.value === 0) {
-        return <div class={cls(prefixCls, props.rootClassName)} />
+        return <div class={cls(prefixCls, props.rootClassName, props.classNames?.root)} style={props.styles?.root} />
       }
 
       const speedInSec = `${props.speed / 1000}s`
@@ -224,69 +226,81 @@ export const Carousel = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, props.rootClassName, {
+          class={cls(prefixCls, props.rootClassName, props.classNames?.root, {
             [`${prefixCls}-vertical`]: isVertical.value,
             [`${prefixCls}-fade`]: isFade.value,
           })}
-          style={dotDurationStyle}
+          style={{ ...dotDurationStyle, ...props.styles?.root }}
           role="region"
           aria-roledescription="carousel"
           aria-label="Carousel"
         >
           <div
             ref={listRef}
-            class={`${prefixCls}-list`}
-            style={
-              props.adaptiveHeight && carouselHeight.value !== undefined
+            class={cls(`${prefixCls}-list`, props.classNames?.list)}
+            style={{
+              ...(props.adaptiveHeight && carouselHeight.value !== undefined
                 ? {
                     height: `${carouselHeight.value}px`,
                     transition: transitioning.value ? `height ${speedInSec} ${props.easing}` : 'none',
                   }
-                : {}
-            }
+                : {}),
+              ...props.styles?.list,
+            }}
           >
             <div
               ref={trackRef}
-              class={`${prefixCls}-track`}
-              style={
-                isFade.value
+              class={cls(`${prefixCls}-track`, props.classNames?.track)}
+              style={{
+                ...(isFade.value
                   ? {}
                   : {
                       transform: isVertical.value
                         ? `translateY(-${current.value * 100}%)`
                         : `translateX(-${current.value * 100}%)`,
                       transition: transitioning.value ? `transform ${speedInSec} ${props.easing}` : 'none',
-                    }
-              }
+                    }),
+                ...props.styles?.track,
+              }}
             >
-              {slides.value.map((slide, i) => (
-                <div
-                  key={i}
-                  class={cls(`${prefixCls}-slide`, {
-                    [`${prefixCls}-slide-active`]: i === current.value,
-                  })}
-                  style={
-                    isFade.value
-                      ? {
-                          opacity: i === current.value ? 1 : 0,
-                          transform: 'translate3d(0, 0, 0)', // GPU 加速
-                          transition: `opacity ${speedInSec} ${props.easing}`,
-                          position: i === current.value ? 'relative' : 'absolute',
-                          inset: i === current.value ? 'auto' : '0',
-                          contentVisibility: i === current.value ? 'auto' : 'auto',
-                        }
-                      : {
-                          contentVisibility: i === current.value ? 'auto' : 'auto',
-                        }
-                  }
-                  role="group"
-                  aria-roledescription="slide"
-                  aria-label={`${i + 1} / ${count.value}`}
-                  aria-hidden={i !== current.value}
-                >
-                  {slide}
-                </div>
-              ))}
+              {slides.value.map((slide, i) => {
+                const isActive = i === current.value
+                return (
+                  <div
+                    key={i}
+                    class={cls(
+                      `${prefixCls}-slide`,
+                      props.classNames?.slide,
+                      {
+                        [`${prefixCls}-slide-active`]: isActive,
+                      },
+                      isActive && props.classNames?.slideActive,
+                    )}
+                    style={{
+                      ...(isFade.value
+                        ? {
+                            opacity: isActive ? 1 : 0,
+                            transform: 'translate3d(0, 0, 0)', // GPU 加速
+                            transition: `opacity ${speedInSec} ${props.easing}`,
+                            position: isActive ? 'relative' : 'absolute',
+                            inset: isActive ? 'auto' : '0',
+                            contentVisibility: isActive ? 'auto' : 'auto',
+                          }
+                        : {
+                            contentVisibility: isActive ? 'auto' : 'auto',
+                          }),
+                      ...props.styles?.slide,
+                      ...(isActive && props.styles?.slideActive),
+                    }}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`${i + 1} / ${count.value}`}
+                    aria-hidden={!isActive}
+                  >
+                    {slide}
+                  </div>
+                )
+              })}
             </div>
           </div>
 
@@ -294,7 +308,13 @@ export const Carousel = defineComponent({
             <>
               {props.prevArrow ?? (
                 <Button
-                  class={cls(`${prefixCls}-arrow`, `${prefixCls}-arrow-left`)}
+                  class={cls(
+                    `${prefixCls}-arrow`,
+                    `${prefixCls}-arrow-left`,
+                    props.classNames?.arrow,
+                    props.classNames?.arrowLeft,
+                  )}
+                  style={{ ...props.styles?.arrow, ...props.styles?.arrowLeft }}
                   type="text"
                   icon={LeftOutlined}
                   onClick={prev}
@@ -304,7 +324,13 @@ export const Carousel = defineComponent({
               )}
               {props.nextArrow ?? (
                 <Button
-                  class={cls(`${prefixCls}-arrow`, `${prefixCls}-arrow-right`)}
+                  class={cls(
+                    `${prefixCls}-arrow`,
+                    `${prefixCls}-arrow-right`,
+                    props.classNames?.arrow,
+                    props.classNames?.arrowRight,
+                  )}
+                  style={{ ...props.styles?.arrow, ...props.styles?.arrowRight }}
                   type="text"
                   icon={RightOutlined}
                   onClick={next}
@@ -317,16 +343,35 @@ export const Carousel = defineComponent({
 
           {enableDots.value && count.value > 1 && (
             <ul
-              class={cls(`${prefixCls}-dots`, `${prefixCls}-dots-${dotPositionClass.value}`, dotsClassName.value, {
-                [`${prefixCls}-dots-progress`]: showDotDuration.value,
-                [`${prefixCls}-dots-disabled`]: props.waitForAnimate && transitioning.value,
-              })}
+              class={cls(
+                `${prefixCls}-dots`,
+                `${prefixCls}-dots-${dotPositionClass.value}`,
+                dotsClassName.value,
+                props.classNames?.dots,
+                {
+                  [`${prefixCls}-dots-progress`]: showDotDuration.value,
+                  [`${prefixCls}-dots-disabled`]: props.waitForAnimate && transitioning.value,
+                },
+              )}
+              style={props.styles?.dots}
             >
-              {slides.value.map((_, i) => (
-                <li key={i} class={cls({ [`${prefixCls}-dot-active`]: i === current.value })} onClick={() => goTo(i)}>
-                  <button aria-label={`Go to slide ${i + 1}`} />
-                </li>
-              ))}
+              {slides.value.map((_, i) => {
+                const isActive = i === current.value
+                return (
+                  <li
+                    key={i}
+                    class={cls(
+                      props.classNames?.dot,
+                      { [`${prefixCls}-dot-active`]: isActive },
+                      isActive && props.classNames?.dotActive,
+                    )}
+                    style={{ ...props.styles?.dot, ...(isActive && props.styles?.dotActive) }}
+                    onClick={() => goTo(i)}
+                  >
+                    <button aria-label={`Go to slide ${i + 1}`} />
+                  </li>
+                )
+              })}
             </ul>
           )}
         </div>

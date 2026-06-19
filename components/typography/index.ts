@@ -14,6 +14,14 @@ export type {
   CopyableConfig,
   EllipsisConfig,
   EllipsisTooltipConfig,
+  TextClassNames,
+  TextStyles,
+  TitleClassNames,
+  TitleStyles,
+  ParagraphClassNames,
+  ParagraphStyles,
+  LinkClassNames,
+  LinkStyles,
 } from './types'
 
 export default {

@@ -93,6 +93,8 @@ export const Descriptions = defineComponent({
     items: Array as PropType<DescriptionsItemProps[]>,
     labelStyle: Object,
     contentStyle: Object,
+    classNames: Object as PropType<import('./types').DescriptionsClassNames>,
+    styles: Object as PropType<import('./types').DescriptionsStyles>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('descriptions')
@@ -225,42 +227,65 @@ export const Descriptions = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, {
-            [`${prefixCls}-${size}`]: size !== 'default',
-            [`${prefixCls}-bordered`]: props.bordered,
-            [`${prefixCls}-rtl`]: direction === 'rtl',
-          })}
+          class={cls(
+            prefixCls,
+            {
+              [`${prefixCls}-${size}`]: size !== 'default',
+              [`${prefixCls}-bordered`]: props.bordered,
+              [`${prefixCls}-rtl`]: direction === 'rtl',
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
         >
           {(props.title || props.extra || slots.title || slots.extra) && (
-            <div class={`${prefixCls}-header`}>
-              {(props.title || slots.title) && <div class={`${prefixCls}-title`}>{slots.title?.() ?? props.title}</div>}
-              {(props.extra || slots.extra) && <div class={`${prefixCls}-extra`}>{slots.extra?.() ?? props.extra}</div>}
+            <div class={cls(`${prefixCls}-header`, props.classNames?.header)} style={props.styles?.header}>
+              {(props.title || slots.title) && (
+                <div class={cls(`${prefixCls}-title`, props.classNames?.title)} style={props.styles?.title}>
+                  {slots.title?.() ?? props.title}
+                </div>
+              )}
+              {(props.extra || slots.extra) && (
+                <div class={cls(`${prefixCls}-extra`, props.classNames?.extra)} style={props.styles?.extra}>
+                  {slots.extra?.() ?? props.extra}
+                </div>
+              )}
             </div>
           )}
-          <div class={`${prefixCls}-view`}>
+          <div class={cls(`${prefixCls}-view`, props.classNames?.view)} style={props.styles?.view}>
             <table>
               <tbody>
                 {rows.value.map((row, rowIdx) => {
                   if (props.layout === 'vertical') {
                     return (
                       <>
-                        <tr key={`label-${rowIdx}`} class={`${prefixCls}-row`}>
+                        <tr
+                          key={`label-${rowIdx}`}
+                          class={cls(`${prefixCls}-row`, props.classNames?.row)}
+                          style={props.styles?.row}
+                        >
                           {row.map((item, i) => (
                             <th
                               key={`label-${item.key ?? i}`}
-                              class={`${prefixCls}-item-label`}
+                              class={cls(`${prefixCls}-item-label`, props.classNames?.label)}
                               colspan={item.computedSpan ?? 1}
+                              style={props.styles?.label}
                             >
                               {renderLabel(item)}
                             </th>
                           ))}
                         </tr>
-                        <tr key={`content-${rowIdx}`} class={`${prefixCls}-row`}>
+                        <tr
+                          key={`content-${rowIdx}`}
+                          class={cls(`${prefixCls}-row`, props.classNames?.row)}
+                          style={props.styles?.row}
+                        >
                           {row.map((item, i) => (
                             <td
                               key={`content-${item.key ?? i}`}
-                              class={`${prefixCls}-item-content`}
+                              class={cls(`${prefixCls}-item-content`, props.classNames?.content)}
                               colspan={item.computedSpan ?? 1}
+                              style={props.styles?.content}
                             >
                               {renderContent(item)}
                             </td>
@@ -272,15 +297,20 @@ export const Descriptions = defineComponent({
 
                   if (props.bordered) {
                     return (
-                      <tr key={rowIdx} class={`${prefixCls}-row`}>
+                      <tr key={rowIdx} class={cls(`${prefixCls}-row`, props.classNames?.row)} style={props.styles?.row}>
                         {row.map((item, i) => [
-                          <th key={`label-${item.key ?? i}`} class={`${prefixCls}-item-label`}>
+                          <th
+                            key={`label-${item.key ?? i}`}
+                            class={cls(`${prefixCls}-item-label`, props.classNames?.label)}
+                            style={props.styles?.label}
+                          >
                             {renderLabel(item)}
                           </th>,
                           <td
                             key={`content-${item.key ?? i}`}
-                            class={`${prefixCls}-item-content`}
+                            class={cls(`${prefixCls}-item-content`, props.classNames?.content)}
                             colspan={(item.computedSpan ?? 1) * 2 - 1}
+                            style={props.styles?.content}
                           >
                             {renderContent(item)}
                           </td>,
@@ -290,20 +320,38 @@ export const Descriptions = defineComponent({
                   }
 
                   return (
-                    <tr key={rowIdx} class={`${prefixCls}-row`}>
+                    <tr key={rowIdx} class={cls(`${prefixCls}-row`, props.classNames?.row)} style={props.styles?.row}>
                       {row.map((item, i) => (
-                        <td key={`item-${item.key ?? i}`} class={`${prefixCls}-item`} colspan={item.computedSpan ?? 1}>
-                          <div class={`${prefixCls}-item-container`}>
+                        <td
+                          key={`item-${item.key ?? i}`}
+                          class={cls(`${prefixCls}-item`, props.classNames?.item)}
+                          colspan={item.computedSpan ?? 1}
+                          style={props.styles?.item}
+                        >
+                          <div
+                            class={cls(`${prefixCls}-item-container`, props.classNames?.itemContainer)}
+                            style={props.styles?.itemContainer}
+                          >
                             {item.label && (
                               <span
-                                class={cls(`${prefixCls}-item-label`, {
-                                  [`${prefixCls}-item-no-colon`]: !props.colon,
-                                })}
+                                class={cls(
+                                  `${prefixCls}-item-label`,
+                                  {
+                                    [`${prefixCls}-item-no-colon`]: !props.colon,
+                                  },
+                                  props.classNames?.label,
+                                )}
+                                style={props.styles?.label}
                               >
                                 {renderLabel(item)}
                               </span>
                             )}
-                            <span class={`${prefixCls}-item-content`}>{renderContent(item)}</span>
+                            <span
+                              class={cls(`${prefixCls}-item-content`, props.classNames?.content)}
+                              style={props.styles?.content}
+                            >
+                              {renderContent(item)}
+                            </span>
                           </div>
                         </td>
                       ))}

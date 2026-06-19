@@ -10,4 +10,6 @@ export type {
   MaskType,
   ToolbarRenderInfoType,
   ImageRenderInfoType,
+  ImageClassNames,
+  ImageStyles,
 } from './types'

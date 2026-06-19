@@ -16,4 +16,6 @@ export type {
   TimelineVariant,
   TimelineItemPlacement,
   TimelineItemColor,
+  TimelineClassNames,
+  TimelineStyles,
 } from './types'

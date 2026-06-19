@@ -24,3 +24,17 @@ Skeleton.Node = SkeletonNode
 
 export { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode }
 export type { SkeletonAvatarProps, SkeletonTitleProps, SkeletonParagraphProps } from './Skeleton'
+export type {
+  SkeletonClassNames,
+  SkeletonStyles,
+  SkeletonButtonClassNames,
+  SkeletonButtonStyles,
+  SkeletonInputClassNames,
+  SkeletonInputStyles,
+  SkeletonAvatarClassNames,
+  SkeletonAvatarStyles,
+  SkeletonImageClassNames,
+  SkeletonImageStyles,
+  SkeletonNodeClassNames,
+  SkeletonNodeStyles,
+} from './types'

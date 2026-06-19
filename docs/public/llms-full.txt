@@ -947,6 +947,8 @@ import { Carousel } from 'ant-design-hmfw'
 | prevArrow | 自定义前进箭头 | `VNode` | - |
 | nextArrow | 自定义后退箭头 | `VNode` | - |
 | rootClassName | 根元素 class | `string` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselStyles` | - |
 
 **Carousel Ref 方法**
 
@@ -1365,6 +1367,8 @@ import { Collapse, CollapsePanel } from 'ant-design-hmfw'
 | expandIcon | 自定义展开图标 | `(props: { isActive?: boolean, panelKey?: string }) => VNode` | - |
 | destroyInactivePanel | 销毁折叠隐藏的面板 | `boolean` | `false` |
 | items | 面板数据 | `CollapseItem[]` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CollapseClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CollapseStyles` | - |
 
 **CollapseItem**
 
@@ -1379,6 +1383,8 @@ import { Collapse, CollapsePanel } from 'ant-design-hmfw'
 | collapsible | 设置可折叠触发区域 | `'header' \| 'icon' \| 'disabled'` | - |
 | forceRender | 被隐藏时是否渲染 DOM 结构 | `boolean` | `false` |
 | style | 自定义面板样式 | `CSSProperties` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CollapseClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CollapseStyles` | - |
 
 **CollapsePanel Props**
 
@@ -1391,6 +1397,8 @@ import { Collapse, CollapsePanel } from 'ant-design-hmfw'
 | extra | 自定义渲染每个面板右上角的内容 | `string \| VNode` | - |
 | collapsible | 设置可折叠触发区域 | `'header' \| 'icon' \| 'disabled'` | - |
 | forceRender | 被隐藏时是否渲染 DOM 结构 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CollapseClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CollapseStyles` | - |
 
 ### Events
 
@@ -1740,6 +1748,8 @@ import { Descriptions, DescriptionsItem } from 'ant-design-hmfw'
 | items | 描述列表的数据项 | `DescriptionsItem[]` | - |
 | labelStyle | 自定义标签样式(全局) | `CSSProperties` | - |
 | contentStyle | 自定义内容样式(全局) | `CSSProperties` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DescriptionsClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DescriptionsStyles` | - |
 
 **DescriptionsItem**
 
@@ -3093,6 +3103,8 @@ import { Image, PreviewGroup } from 'ant-design-hmfw'
 | fallback | 加载失败时的替代图片地址 | `string` | - |
 | placeholder | 加载占位：`true` 显示骨架动画，或自定义 VNode | `boolean \| VNode \| (() => VNode)` | `false` |
 | rootClassName | 根节点 class | `string` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ImageClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ImageStyles` | - |
 | onError | 加载失败回调 | `(e: Event) => void` | - |
 
 **PreviewConfig**
@@ -3537,6 +3549,8 @@ import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
 | virtual | 是否开启虚拟滚动 | `boolean` | `false` |
 | height | 虚拟滚动容器高度（开启 virtual 时必需） | `number \| string` | - |
 | itemHeight | 虚拟滚动每项高度 | `number` | `48` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ListClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ListStyles` | - |
 
 **PaginationConfig**
 
@@ -3558,6 +3572,8 @@ import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | actions | 列表操作组，根据 itemLayout 的不同，位置在卡片底部或者最右侧 | `VNode[]` | - |
 | extra | 额外内容，通常用在 itemLayout 为 vertical 的情况下，展示右侧内容 | `VNode` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ListItemClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ListItemStyles` | - |
 
 **List.Item.Meta Props**
 
@@ -3566,6 +3582,8 @@ import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
 | avatar | 列表元素的图标 | `VNode` | - |
 | title | 列表元素的标题 | `string \| VNode` | - |
 | description | 列表元素的描述内容 | `string \| VNode` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ListItemMetaClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ListItemMetaStyles` | - |
 
 ### 示例
 
@@ -4201,6 +4219,8 @@ import { Pagination } from 'ant-design-hmfw'
 | itemRender | 自定义页码的结构，可以自定义上一页/下一页文本、页码样式等 | `(page: number, type: 'page' \| 'prev' \| 'next' \| 'jump-prev' \| 'jump-next', originalElement: VNode) => VNode` | - |
 | responsive | 当屏幕尺寸小于 576px 时，自动变为 small | `boolean` | `false` |
 | align | 分页器的对齐方式，可选 `start`（左对齐）、`center`（居中）、`end`（右对齐） | `'start' \| 'center' \| 'end'` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `PaginationClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `PaginationStyles` | - |
 
 ### Events
 
@@ -5241,6 +5261,8 @@ import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage,
 | title | 是否显示标题占位图 | `boolean \| SkeletonTitleProps` | `true` |
 | loading | 为 true 时，显示占位图，反之则直接展示子组件 | `boolean` | `true` |
 | round | 为 true 时，段落和标题显示圆角 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonStyles` | - |
 
 **SkeletonAvatarProps**
 
@@ -5270,6 +5292,8 @@ import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage,
 | size | 大小 | `'large' \| 'default' \| 'small'` | `'default'` |
 | shape | 形状 | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
 | block | 将按钮宽度调整为其父宽度 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonButtonClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonButtonStyles` | - |
 
 **Skeleton.Input Props**
 
@@ -5278,6 +5302,8 @@ import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage,
 | active | 是否展示动画效果 | `boolean` | `false` |
 | size | 大小 | `'large' \| 'default' \| 'small'` | `'default'` |
 | block | 将输入框宽度调整为其父宽度 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonInputClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonInputStyles` | - |
 
 **Skeleton.Avatar Props**
 
@@ -5286,12 +5312,16 @@ import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage,
 | active | 是否展示动画效果 | `boolean` | `false` |
 | size | 大小 | `'large' \| 'default' \| 'small' \| number` | `'default'` |
 | shape | 形状 | `'circle' \| 'square'` | `'circle'` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonAvatarClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonAvatarStyles` | - |
 
 **Skeleton.Image Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonImageClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonImageStyles` | - |
 
 **Skeleton.Node Props**
 
@@ -5299,6 +5329,8 @@ import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage,
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | `boolean` | `false` |
 | nodeStyle | 作用于内部占位节点的内联样式（常用于设定占位尺寸） | `CSSProperties` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonNodeClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SkeletonNodeStyles` | - |
 
 ### 示例
 
@@ -5677,6 +5709,8 @@ import { Steps, ProgressIcon, PanelArrow } from 'ant-design-hmfw'
 | ellipsis | 是否省略过长的标题和描述 | `boolean` | `false` |
 | offset | 内联型步骤条的偏移量 | `number` | `0` |
 | iconRender | 自定义图标渲染函数 | `(node, info) => VNode` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `StepsClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `StepsStyles` | - |
 
 **StepItem**
 
@@ -6336,6 +6370,8 @@ import { Timeline, TimelineItem } from 'ant-design-hmfw'
 | titleSpan | 设置标题占比空间（到 dot 中心点距离） | `number \| string` | - |
 | pending | 指定最后一个幽灵节点是否存在或内容（已废弃，建议使用 items 中的 loading） | `boolean \| string \| VNode` | - |
 | pendingDot | 当最后一个幽灵节点存在时，指定其时间图点（已废弃） | `string \| VNode` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TimelineClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TimelineStyles` | - |
 
 **TimelineItemProps**
 
@@ -7079,11 +7115,27 @@ import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'
 | copyable | 是否可复制，对象形式 `{ text?, onCopy?, tooltips?, icon? }` | `boolean \| CopyableConfig` | `false` |
 | ellipsis | 单行省略；对象形式 `{ rows?, tooltip?, onEllipsis? }` 支持多行省略、悬停 Tooltip 与回调 | `boolean \| EllipsisConfig` | `false` |
 
+**Text Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TextClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TextStyles` | - |
+
 **Title Props**
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | level | 标题级别 | `1 \| 2 \| 3 \| 4 \| 5` | `1` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TitleClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TitleStyles` | - |
+
+**Paragraph Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ParagraphClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ParagraphStyles` | - |
 
 **Link Props**
 
@@ -7091,6 +7143,8 @@ import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'
 | --- | --- | --- | --- |
 | href | 链接地址 | `string` | - |
 | target | 链接打开方式 | `string` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `LinkClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `LinkStyles` | - |
 
 **CopyableConfig**
 
