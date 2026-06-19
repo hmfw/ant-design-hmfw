@@ -21,6 +21,7 @@ import 'ant-design-hmfw/style.css'
 - [Badge 徽标数](https://hmfw.github.io/ant-design-hmfw/components/badge): 图标右上角的圆形徽标数字。
 - [Breadcrumb 面包屑](https://hmfw.github.io/ant-design-hmfw/components/breadcrumb): 显示当前页面在系统层级结构中的位置，并能向上返回。
 - [Button 按钮](https://hmfw.github.io/ant-design-hmfw/components/button): 按钮用于开始一个即时操作。
+- [Calendar 日历](https://hmfw.github.io/ant-design-hmfw/components/calendar): 按照日历形式展示数据的容器。
 - [Card 卡片](https://hmfw.github.io/ant-design-hmfw/components/card): 通用卡片容器。
 - [Carousel 走马灯](https://hmfw.github.io/ant-design-hmfw/components/carousel): 旋转播放的幻灯片。
 - [Cascader 级联选择](https://hmfw.github.io/ant-design-hmfw/components/cascader): 级联选择框。
