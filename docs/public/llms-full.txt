@@ -1484,6 +1484,8 @@ import { ColorPicker } from 'ant-design-hmfw'
 | showText | 是否显示颜色文本 | `boolean` | `false` |
 | allowClear | 是否允许清除 | `boolean` | `false` |
 | presets | 预设颜色组 | `Array<{ label: string; colors: string[] }>` | `[]` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ColorPickerClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ColorPickerStyles` | - |
 
 ### Events
 
@@ -3672,6 +3674,8 @@ import { Menu } from 'ant-design-hmfw'
 | selectable | 是否允许选中 | `boolean` | `true` |
 | expandIcon | 自定义展开图标 | `VNode \| ((props: { isOpen: boolean }) => VNode)` | - |
 | triggerSubMenuAction | SubMenu 展开/关闭的触发行为，支持鼠标悬停或点击 | `'hover' \| 'click'` | `'hover'` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MenuClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MenuStyles` | - |
 
 **ItemType**
 
@@ -6556,6 +6560,8 @@ import { Tour } from 'ant-design-hmfw'
 | gap | 引导卡片与目标元素的距离和箭头偏移 | `{ offset?: number \| [number, number]; radius?: number }` | `{ offset: 12, radius: 4 }` |
 | indicatorsRender | 自定义指示器渲染 | `(current: number, total: number) => VNode` | - |
 | closeIcon | 自定义关闭图标，设置为 `false` 时隐藏关闭按钮 | `VNode \| (() => VNode) \| false` | `<CloseOutlined />` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TourClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TourStyles` | - |
 
 **TourStep**
 
@@ -7241,6 +7247,8 @@ import { Upload, UploadDragger } from 'ant-design-hmfw'
 | method | 上传请求 HTTP 方法 | `string` | `'post'` |
 | isImageUrl | 自定义判断是否为图片以决定是否显示缩略图 | `(file: UploadFile) => boolean` | 内置：扩展名 + MIME 检测 |
 | itemRender | 自定义文件项渲染 | `(originNode, file, fileList, actions) => VNode` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `UploadClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `UploadStyles` | - |
 
 **UploadFile**
 

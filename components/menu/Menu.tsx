@@ -33,6 +33,8 @@ export const Menu = defineComponent({
     inlineIndent: { type: Number, default: 24 },
     expandIcon: [Object, Function] as PropType<VNode | ((props: { isOpen: boolean }) => VNode)>,
     triggerSubMenuAction: { type: String as PropType<'hover' | 'click'>, default: 'hover' },
+    classNames: Object as PropType<import('./types').MenuClassNames>,
+    styles: Object as PropType<import('./types').MenuStyles>,
   },
   emits: ['update:selectedKeys', 'update:openKeys', 'select', 'deselect', 'openChange', 'click'],
   setup(props, { emit }) {
@@ -145,9 +147,14 @@ export const Menu = defineComponent({
             return (
               <li
                 key={item.key ?? `divider-${index}`}
-                class={cls(`${prefixCls}-item-divider`, {
-                  [`${prefixCls}-item-divider-dashed`]: item.dashed,
-                })}
+                class={cls(
+                  `${prefixCls}-item-divider`,
+                  {
+                    [`${prefixCls}-item-divider-dashed`]: item.dashed,
+                  },
+                  props.classNames?.divider,
+                )}
+                style={props.styles?.divider}
                 role="separator"
               />
             )
@@ -155,9 +162,23 @@ export const Menu = defineComponent({
 
           if (isGroupType(item)) {
             return (
-              <li key={item.key ?? `group-${index}`} class={`${prefixCls}-item-group`}>
-                <div class={`${prefixCls}-item-group-title`}>{item.label}</div>
-                <ul class={`${prefixCls}-item-group-list`}>{item.children && renderItems(item.children, depth)}</ul>
+              <li
+                key={item.key ?? `group-${index}`}
+                class={cls(`${prefixCls}-item-group`, props.classNames?.itemGroup)}
+                style={props.styles?.itemGroup}
+              >
+                <div
+                  class={cls(`${prefixCls}-item-group-title`, props.classNames?.itemGroupTitle)}
+                  style={props.styles?.itemGroupTitle}
+                >
+                  {item.label}
+                </div>
+                <ul
+                  class={cls(`${prefixCls}-item-group-list`, props.classNames?.itemGroupList)}
+                  style={props.styles?.itemGroupList}
+                >
+                  {item.children && renderItems(item.children, depth)}
+                </ul>
               </li>
             )
           }
@@ -178,9 +199,23 @@ export const Menu = defineComponent({
             const renderIcon = () => {
               if (!item.icon) return null
               if (typeof item.icon === 'function') {
-                return <span class={`${prefixCls}-item-icon`}>{item.icon()}</span>
+                return (
+                  <span
+                    class={cls(`${prefixCls}-item-icon`, props.classNames?.submenuIcon)}
+                    style={props.styles?.submenuIcon}
+                  >
+                    {item.icon()}
+                  </span>
+                )
               }
-              return <span class={`${prefixCls}-item-icon`}>{item.icon}</span>
+              return (
+                <span
+                  class={cls(`${prefixCls}-item-icon`, props.classNames?.submenuIcon)}
+                  style={props.styles?.submenuIcon}
+                >
+                  {item.icon}
+                </span>
+              )
             }
 
             const renderExpandIcon = () => {
@@ -190,22 +225,43 @@ export const Menu = defineComponent({
                 }
                 return props.expandIcon
               }
-              return <span class={cls(`${prefixCls}-submenu-arrow`, { open: isOpen })}>▾</span>
+              return (
+                <span
+                  class={cls(`${prefixCls}-submenu-arrow`, { open: isOpen }, props.classNames?.submenuArrow)}
+                  style={props.styles?.submenuArrow}
+                >
+                  ▾
+                </span>
+              )
             }
 
             if (props.mode === 'inline') {
               return (
                 <li
                   key={item.key}
-                  class={cls(`${prefixCls}-submenu`, `${prefixCls}-submenu-inline`, {
-                    [`${prefixCls}-submenu-open`]: isOpen,
-                    [`${prefixCls}-submenu-selected`]: hasSelectedChild,
-                    [`${prefixCls}-submenu-disabled`]: item.disabled,
-                  })}
+                  class={cls(
+                    `${prefixCls}-submenu`,
+                    `${prefixCls}-submenu-inline`,
+                    {
+                      [`${prefixCls}-submenu-open`]: isOpen,
+                      [`${prefixCls}-submenu-selected`]: hasSelectedChild,
+                      [`${prefixCls}-submenu-disabled`]: item.disabled,
+                    },
+                    props.classNames?.submenu,
+                    isOpen && props.classNames?.submenuOpen,
+                    hasSelectedChild && props.classNames?.submenuSelected,
+                    item.disabled && props.classNames?.submenuDisabled,
+                  )}
+                  style={{
+                    ...props.styles?.submenu,
+                    ...(isOpen && props.styles?.submenuOpen),
+                    ...(hasSelectedChild && props.styles?.submenuSelected),
+                    ...(item.disabled && props.styles?.submenuDisabled),
+                  }}
                 >
                   <div
-                    class={`${prefixCls}-submenu-title`}
-                    style={{ paddingLeft: `${props.inlineIndent * (depth + 1)}px` }}
+                    class={cls(`${prefixCls}-submenu-title`, props.classNames?.submenuTitle)}
+                    style={{ paddingLeft: `${props.inlineIndent * (depth + 1)}px`, ...props.styles?.submenuTitle }}
                     role="button"
                     tabindex={item.disabled ? -1 : 0}
                     aria-expanded={isOpen}
@@ -214,11 +270,19 @@ export const Menu = defineComponent({
                     onClick={() => !item.disabled && handleOpenChange(item.key, !isOpen)}
                   >
                     {renderIcon()}
-                    <span class={`${prefixCls}-title-content`}>{item.label}</span>
+                    <span
+                      class={cls(`${prefixCls}-title-content`, props.classNames?.itemContent)}
+                      style={props.styles?.itemContent}
+                    >
+                      {item.label}
+                    </span>
                     {renderExpandIcon()}
                   </div>
                   {isOpen && (
-                    <ul class={`${prefixCls}-sub ${prefixCls}-inline`}>
+                    <ul
+                      class={cls(`${prefixCls}-sub`, `${prefixCls}-inline`, props.classNames?.sub)}
+                      style={props.styles?.sub}
+                    >
                       {renderItems(item.children || [], depth + 1)}
                     </ul>
                   )}
@@ -231,16 +295,31 @@ export const Menu = defineComponent({
             return (
               <li
                 key={item.key}
-                class={cls(`${prefixCls}-submenu`, `${prefixCls}-submenu-${props.mode}`, {
-                  [`${prefixCls}-submenu-open`]: isOpen,
-                  [`${prefixCls}-submenu-selected`]: hasSelectedChild,
-                  [`${prefixCls}-submenu-disabled`]: item.disabled,
-                })}
+                class={cls(
+                  `${prefixCls}-submenu`,
+                  `${prefixCls}-submenu-${props.mode}`,
+                  {
+                    [`${prefixCls}-submenu-open`]: isOpen,
+                    [`${prefixCls}-submenu-selected`]: hasSelectedChild,
+                    [`${prefixCls}-submenu-disabled`]: item.disabled,
+                  },
+                  props.classNames?.submenu,
+                  isOpen && props.classNames?.submenuOpen,
+                  hasSelectedChild && props.classNames?.submenuSelected,
+                  item.disabled && props.classNames?.submenuDisabled,
+                )}
+                style={{
+                  ...props.styles?.submenu,
+                  ...(isOpen && props.styles?.submenuOpen),
+                  ...(hasSelectedChild && props.styles?.submenuSelected),
+                  ...(item.disabled && props.styles?.submenuDisabled),
+                }}
                 onMouseenter={() => !item.disabled && shouldTriggerOnHover && handleOpenChange(item.key, true)}
                 onMouseleave={() => !item.disabled && shouldTriggerOnHover && handleOpenChange(item.key, false)}
               >
                 <div
-                  class={`${prefixCls}-submenu-title`}
+                  class={cls(`${prefixCls}-submenu-title`, props.classNames?.submenuTitle)}
+                  style={props.styles?.submenuTitle}
                   role="button"
                   tabindex={item.disabled ? -1 : 0}
                   aria-expanded={isOpen}
@@ -249,11 +328,19 @@ export const Menu = defineComponent({
                   onClick={() => !item.disabled && !shouldTriggerOnHover && handleOpenChange(item.key, !isOpen)}
                 >
                   {renderIcon()}
-                  <span class={`${prefixCls}-title-content`}>{item.label}</span>
+                  <span
+                    class={cls(`${prefixCls}-title-content`, props.classNames?.itemContent)}
+                    style={props.styles?.itemContent}
+                  >
+                    {item.label}
+                  </span>
                   {renderExpandIcon()}
                 </div>
                 {isOpen && (
-                  <ul class={`${prefixCls}-sub ${prefixCls}-vertical`}>
+                  <ul
+                    class={cls(`${prefixCls}-sub`, `${prefixCls}-vertical`, props.classNames?.sub)}
+                    style={props.styles?.sub}
+                  >
                     {renderItems(item.children || [], depth + 1)}
                   </ul>
                 )}
@@ -265,20 +352,41 @@ export const Menu = defineComponent({
           const renderItemIcon = () => {
             if (!item.icon) return null
             if (typeof item.icon === 'function') {
-              return <span class={`${prefixCls}-item-icon`}>{item.icon()}</span>
+              return (
+                <span class={cls(`${prefixCls}-item-icon`, props.classNames?.itemIcon)} style={props.styles?.itemIcon}>
+                  {item.icon()}
+                </span>
+              )
             }
-            return <span class={`${prefixCls}-item-icon`}>{item.icon}</span>
+            return (
+              <span class={cls(`${prefixCls}-item-icon`, props.classNames?.itemIcon)} style={props.styles?.itemIcon}>
+                {item.icon}
+              </span>
+            )
           }
 
           return (
             <li
               key={item.key}
-              class={cls(`${prefixCls}-item`, {
-                [`${prefixCls}-item-selected`]: isSelected,
-                [`${prefixCls}-item-disabled`]: item.disabled,
-                [`${prefixCls}-item-danger`]: item.danger,
-              })}
-              style={props.mode === 'inline' ? { paddingLeft: `${props.inlineIndent * (depth + 1)}px` } : {}}
+              class={cls(
+                `${prefixCls}-item`,
+                {
+                  [`${prefixCls}-item-selected`]: isSelected,
+                  [`${prefixCls}-item-disabled`]: item.disabled,
+                  [`${prefixCls}-item-danger`]: item.danger,
+                },
+                props.classNames?.item,
+                isSelected && props.classNames?.itemSelected,
+                item.disabled && props.classNames?.itemDisabled,
+                item.danger && props.classNames?.itemDanger,
+              )}
+              style={{
+                ...(props.mode === 'inline' ? { paddingLeft: `${props.inlineIndent * (depth + 1)}px` } : {}),
+                ...props.styles?.item,
+                ...(isSelected && props.styles?.itemSelected),
+                ...(item.disabled && props.styles?.itemDisabled),
+                ...(item.danger && props.styles?.itemDanger),
+              }}
               role="menuitem"
               tabindex={item.disabled ? -1 : 0}
               aria-disabled={item.disabled || undefined}
@@ -287,7 +395,12 @@ export const Menu = defineComponent({
               onClick={() => !item.disabled && handleSelect(item.key)}
             >
               {renderItemIcon()}
-              <span class={`${prefixCls}-title-content`}>{item.label}</span>
+              <span
+                class={cls(`${prefixCls}-title-content`, props.classNames?.itemContent)}
+                style={props.styles?.itemContent}
+              >
+                {item.label}
+              </span>
             </li>
           )
         })
@@ -295,9 +408,17 @@ export const Menu = defineComponent({
 
     return () => (
       <ul
-        class={cls(prefixCls, `${prefixCls}-root`, `${prefixCls}-${props.mode}`, `${prefixCls}-${props.theme}`, {
-          [`${prefixCls}-inline-collapsed`]: props.inlineCollapsed,
-        })}
+        class={cls(
+          prefixCls,
+          `${prefixCls}-root`,
+          `${prefixCls}-${props.mode}`,
+          `${prefixCls}-${props.theme}`,
+          {
+            [`${prefixCls}-inline-collapsed`]: props.inlineCollapsed,
+          },
+          props.classNames?.root,
+        )}
+        style={props.styles?.root}
         role="menu"
       >
         {renderItems(props.items ?? [])}

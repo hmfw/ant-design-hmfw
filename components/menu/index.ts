@@ -8,4 +8,6 @@ export type {
   MenuMode,
   MenuTheme,
   MenuProps,
+  MenuClassNames,
+  MenuStyles,
 } from './types'

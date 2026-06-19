@@ -39,6 +39,50 @@ export interface ItemRenderActions {
   remove: () => void
 }
 
+export interface UploadClassNames {
+  root?: string // 根容器
+  select?: string // 选择按钮容器
+  selectIcon?: string // 选择按钮图标
+  selectText?: string // 选择按钮文本
+  drag?: string // 拖拽容器
+  dragContainer?: string // 拖拽内部容器
+  list?: string // 文件列表容器
+  listItem?: string // 列表项
+  listItemContainer?: string // 列表项外层容器
+  thumbnail?: string // 缩略图容器
+  itemInfo?: string // 文件信息容器
+  itemIcon?: string // 文件图标
+  itemName?: string // 文件名
+  itemSize?: string // 文件大小
+  itemCard?: string // 卡片模式容器
+  cardActions?: string // 卡片操作区
+  itemAction?: string // 操作按钮
+  progress?: string // 进度条容器
+  progressBar?: string // 进度条
+}
+
+export interface UploadStyles {
+  root?: import('vue').CSSProperties
+  select?: import('vue').CSSProperties
+  selectIcon?: import('vue').CSSProperties
+  selectText?: import('vue').CSSProperties
+  drag?: import('vue').CSSProperties
+  dragContainer?: import('vue').CSSProperties
+  list?: import('vue').CSSProperties
+  listItem?: import('vue').CSSProperties
+  listItemContainer?: import('vue').CSSProperties
+  thumbnail?: import('vue').CSSProperties
+  itemInfo?: import('vue').CSSProperties
+  itemIcon?: import('vue').CSSProperties
+  itemName?: import('vue').CSSProperties
+  itemSize?: import('vue').CSSProperties
+  itemCard?: import('vue').CSSProperties
+  cardActions?: import('vue').CSSProperties
+  itemAction?: import('vue').CSSProperties
+  progress?: import('vue').CSSProperties
+  progressBar?: import('vue').CSSProperties
+}
+
 export interface UploadProps {
   accept?: string
   /** AntD v6: `string | ((file) => string | Promise<string>)`. */
@@ -69,6 +113,8 @@ export interface UploadProps {
   isImageUrl?: (file: UploadFile) => boolean
   /** 自定义文件列表项渲染。 */
   itemRender?: (originNode: VNode, file: UploadFile, fileList: UploadFile[], actions: ItemRenderActions) => VNode
+  classNames?: UploadClassNames
+  styles?: UploadStyles
 }
 
 export interface CustomRequestOptions {

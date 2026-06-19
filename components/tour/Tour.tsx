@@ -132,6 +132,8 @@ export const Tour = defineComponent({
       type: [Object, Function, Boolean] as PropType<TourProps['closeIcon']>,
       default: undefined,
     },
+    classNames: { type: Object as PropType<TourProps['classNames']>, default: undefined },
+    styles: { type: Object as PropType<TourProps['styles']>, default: undefined },
   },
   emits: ['update:open', 'update:current', 'change', 'close', 'finish'],
   setup(props, { emit }) {
@@ -261,154 +263,219 @@ export const Tour = defineComponent({
       const closeIcon = getCloseIcon()
 
       return h(Teleport, { to: 'body' }, [
-        h('div', { class: `${prefixCls}-root`, style: { zIndex: props.zIndex } }, [
-          // Mask layer
-          showMask &&
-            h('div', { class: `${prefixCls}-mask`, style: maskStyle }, [
-              targetRect.value
-                ? h(
-                    'svg',
-                    {
-                      class: `${prefixCls}-mask-svg`,
-                      width: '100%',
-                      height: '100%',
-                    },
-                    [
-                      h('defs', [
-                        h('mask', { id: 'tour-mask' }, [
-                          h('rect', { width: '100%', height: '100%', fill: 'white' }),
-                          h('rect', {
-                            x: targetRect.value.left - 4,
-                            y: targetRect.value.top - 4,
-                            width: targetRect.value.width + 8,
-                            height: targetRect.value.height + 8,
-                            rx: props.gap?.radius ?? 4,
-                            fill: 'black',
-                          }),
-                        ]),
-                      ]),
-                      h('rect', {
-                        width: '100%',
-                        height: '100%',
-                        fill: maskColor,
-                        mask: 'url(#tour-mask)',
-                      }),
-                    ],
-                  )
-                : h('div', { class: `${prefixCls}-mask-fill`, style: { background: maskColor } }),
-            ]),
-
-          // Popover
-          h(
-            'div',
-            {
-              ref: popoverRef,
-              class: cls(
-                `${prefixCls}-popover`,
+        h(
+          'div',
+          {
+            class: cls(`${prefixCls}-root`, props.classNames?.root),
+            style: { zIndex: props.zIndex, ...props.styles?.root },
+          },
+          [
+            // Mask layer
+            showMask &&
+              h(
+                'div',
                 {
-                  [`${prefixCls}-popover-primary`]: isPrimary,
+                  class: cls(`${prefixCls}-mask`, props.classNames?.mask),
+                  style: { ...maskStyle, ...props.styles?.mask },
                 },
-                step.value.className,
-              ),
-              style: {
-                position: 'absolute',
-                top: `${popoverPos.value.top}px`,
-                left: `${popoverPos.value.left}px`,
-                zIndex: props.zIndex + 1,
-                ...step.value.style,
-              },
-            },
-            [
-              h('div', { class: `${prefixCls}-popover-inner` }, [
-                // Close button
-                closeIcon !== null &&
-                  h(
-                    'button',
-                    {
-                      type: 'button',
-                      class: `${prefixCls}-close`,
-                      onClick: close,
-                      'aria-label': 'Close',
-                    },
-                    [closeIcon],
-                  ),
-
-                // Cover
-                step.value.cover &&
-                  h('div', { class: `${prefixCls}-cover` }, [
-                    typeof step.value.cover === 'string'
-                      ? h('img', { src: step.value.cover, alt: '' })
-                      : renderContent(step.value.cover as any),
-                  ]),
-
-                // Title
-                step.value.title && h('div', { class: `${prefixCls}-title` }, [renderContent(step.value.title)]),
-
-                // Description
-                step.value.description &&
-                  h('div', { class: `${prefixCls}-description` }, [renderContent(step.value.description)]),
-
-                // Footer
-                h('div', { class: `${prefixCls}-footer` }, [
-                  // Indicators
-                  total.value > 1 &&
-                    h('div', { class: `${prefixCls}-indicators` }, [
-                      props.indicatorsRender
-                        ? props.indicatorsRender(currentStep.value, total.value)
-                        : props.steps.map((_, i) =>
-                            h('span', {
-                              key: i,
-                              class: cls(`${prefixCls}-indicator`, {
-                                [`${prefixCls}-indicator-active`]: i === currentStep.value,
+                [
+                  targetRect.value
+                    ? h(
+                        'svg',
+                        {
+                          class: `${prefixCls}-mask-svg`,
+                          width: '100%',
+                          height: '100%',
+                        },
+                        [
+                          h('defs', [
+                            h('mask', { id: 'tour-mask' }, [
+                              h('rect', { width: '100%', height: '100%', fill: 'white' }),
+                              h('rect', {
+                                x: targetRect.value.left - 4,
+                                y: targetRect.value.top - 4,
+                                width: targetRect.value.width + 8,
+                                height: targetRect.value.height + 8,
+                                rx: props.gap?.radius ?? 4,
+                                fill: 'black',
                               }),
-                              onClick: () => goTo(i),
-                            }),
-                          ),
-                    ]),
+                            ]),
+                          ]),
+                          h('rect', {
+                            width: '100%',
+                            height: '100%',
+                            fill: maskColor,
+                            mask: 'url(#tour-mask)',
+                          }),
+                        ],
+                      )
+                    : h('div', { class: `${prefixCls}-mask-fill`, style: { background: maskColor } }),
+                ],
+              ),
 
-                  // Buttons
-                  h('div', { class: `${prefixCls}-buttons` }, [
-                    currentStep.value > 0 &&
+            // Popover
+            h(
+              'div',
+              {
+                ref: popoverRef,
+                class: cls(
+                  `${prefixCls}-popover`,
+                  {
+                    [`${prefixCls}-popover-primary`]: isPrimary,
+                  },
+                  step.value.className,
+                  props.classNames?.popover,
+                ),
+                style: {
+                  position: 'absolute',
+                  top: `${popoverPos.value.top}px`,
+                  left: `${popoverPos.value.left}px`,
+                  zIndex: props.zIndex + 1,
+                  ...step.value.style,
+                  ...props.styles?.popover,
+                },
+              },
+              [
+                h(
+                  'div',
+                  {
+                    class: cls(`${prefixCls}-popover-inner`, props.classNames?.popoverInner),
+                    style: props.styles?.popoverInner,
+                  },
+                  [
+                    // Close button
+                    closeIcon !== null &&
                       h(
-                        Button,
+                        'button',
                         {
-                          size: 'small',
-                          type: isPrimary ? 'default' : 'default',
-                          ghost: isPrimary,
-                          class: `${prefixCls}-prev-btn`,
-                          onClick: () => {
-                            step.value?.prevButtonProps?.onClick?.()
-                            prev()
-                          },
-                          ...step.value.prevButtonProps,
+                          type: 'button',
+                          class: cls(`${prefixCls}-close`, props.classNames?.close),
+                          style: props.styles?.close,
+                          onClick: close,
+                          'aria-label': 'Close',
                         },
-                        {
-                          default: () => step.value?.prevButtonProps?.children ?? '上一步',
-                        },
+                        [closeIcon],
                       ),
-                    h(
-                      Button,
-                      {
-                        size: 'small',
-                        type: isPrimary ? 'default' : 'primary',
-                        ghost: isPrimary,
-                        class: `${prefixCls}-next-btn`,
-                        onClick: () => {
-                          step.value?.nextButtonProps?.onClick?.()
-                          next()
+
+                    // Cover
+                    step.value.cover &&
+                      h(
+                        'div',
+                        { class: cls(`${prefixCls}-cover`, props.classNames?.cover), style: props.styles?.cover },
+                        [
+                          typeof step.value.cover === 'string'
+                            ? h('img', { src: step.value.cover, alt: '' })
+                            : renderContent(step.value.cover as any),
+                        ],
+                      ),
+
+                    // Title
+                    step.value.title &&
+                      h(
+                        'div',
+                        { class: cls(`${prefixCls}-title`, props.classNames?.title), style: props.styles?.title },
+                        [renderContent(step.value.title)],
+                      ),
+
+                    // Description
+                    step.value.description &&
+                      h(
+                        'div',
+                        {
+                          class: cls(`${prefixCls}-description`, props.classNames?.description),
+                          style: props.styles?.description,
                         },
-                        ...step.value.nextButtonProps,
-                      },
-                      {
-                        default: () => step.value?.nextButtonProps?.children ?? (isLast ? '完成' : '下一步'),
-                      },
+                        [renderContent(step.value.description)],
+                      ),
+
+                    // Footer
+                    h(
+                      'div',
+                      { class: cls(`${prefixCls}-footer`, props.classNames?.footer), style: props.styles?.footer },
+                      [
+                        // Indicators
+                        total.value > 1 &&
+                          h(
+                            'div',
+                            {
+                              class: cls(`${prefixCls}-indicators`, props.classNames?.indicators),
+                              style: props.styles?.indicators,
+                            },
+                            [
+                              props.indicatorsRender
+                                ? props.indicatorsRender(currentStep.value, total.value)
+                                : props.steps.map((_, i) =>
+                                    h('span', {
+                                      key: i,
+                                      class: cls(
+                                        `${prefixCls}-indicator`,
+                                        {
+                                          [`${prefixCls}-indicator-active`]: i === currentStep.value,
+                                        },
+                                        props.classNames?.indicator,
+                                      ),
+                                      style: props.styles?.indicator,
+                                      onClick: () => goTo(i),
+                                    }),
+                                  ),
+                            ],
+                          ),
+
+                        // Buttons
+                        h(
+                          'div',
+                          {
+                            class: cls(`${prefixCls}-buttons`, props.classNames?.buttons),
+                            style: props.styles?.buttons,
+                          },
+                          [
+                            currentStep.value > 0 &&
+                              h(
+                                Button,
+                                {
+                                  size: 'small',
+                                  type: isPrimary ? 'default' : 'default',
+                                  ghost: isPrimary,
+                                  class: cls(`${prefixCls}-prev-btn`, props.classNames?.prevBtn),
+                                  style: props.styles?.prevBtn,
+                                  onClick: () => {
+                                    step.value?.prevButtonProps?.onClick?.()
+                                    prev()
+                                  },
+                                  ...step.value.prevButtonProps,
+                                },
+                                {
+                                  default: () => step.value?.prevButtonProps?.children ?? '上一步',
+                                },
+                              ),
+                            h(
+                              Button,
+                              {
+                                size: 'small',
+                                type: isPrimary ? 'default' : 'primary',
+                                ghost: isPrimary,
+                                class: cls(`${prefixCls}-next-btn`, props.classNames?.nextBtn),
+                                style: props.styles?.nextBtn,
+                                onClick: () => {
+                                  step.value?.nextButtonProps?.onClick?.()
+                                  next()
+                                },
+                                ...step.value.nextButtonProps,
+                              },
+                              {
+                                default: () => step.value?.nextButtonProps?.children ?? (isLast ? '完成' : '下一步'),
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ]),
-                ]),
-              ]),
-            ],
-          ),
-        ]),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ])
     }
   },

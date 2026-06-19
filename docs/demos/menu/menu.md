@@ -90,25 +90,35 @@ inlineCollapsed 为 true 时，鼠标悬停会自动显示 Tooltip 提示。
   <MenuTrigger />
 </DemoBlock>
 
+### 细粒度样式控制
+
+通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="MenuClassNamesSource">
+  <MenuClassNames />
+</DemoBlock>
+
 ## API
 
 ### Menu Props
 
-| 参数                 | 说明                                                                       | 类型                                               | 默认值       |
-| -------------------- | -------------------------------------------------------------------------- | -------------------------------------------------- | ------------ |
-| items                | 菜单内容                                                                   | `ItemType[]`                                       | `[]`         |
-| mode                 | 菜单类型                                                                   | `'horizontal' \| 'vertical' \| 'inline'`           | `'vertical'` |
-| theme                | 主题颜色                                                                   | `'light' \| 'dark'`                                | `'light'`    |
-| selectedKeys         | 当前选中的菜单项 key 数组                                                  | `string[]`                                         | -            |
-| defaultSelectedKeys  | 初始选中的菜单项 key 数组                                                  | `string[]`                                         | `[]`         |
-| openKeys             | 当前展开的 SubMenu 菜单项 key 数组                                         | `string[]`                                         | -            |
-| defaultOpenKeys      | 初始展开的 SubMenu 菜单项 key 数组                                         | `string[]`                                         | `[]`         |
-| inlineCollapsed      | inline 时菜单是否收起状态，收起时会自动显示 Tooltip                        | `boolean`                                          | `false`      |
-| inlineIndent         | inline 模式的菜单缩进宽度（单位：px），分组内项目会递增 depth 正确计算缩进 | `number`                                           | `24`         |
-| multiple             | 是否允许多选                                                               | `boolean`                                          | `false`      |
-| selectable           | 是否允许选中                                                               | `boolean`                                          | `true`       |
-| expandIcon           | 自定义展开图标                                                             | `VNode \| ((props: { isOpen: boolean }) => VNode)` | -            |
-| triggerSubMenuAction | SubMenu 展开/关闭的触发行为，支持鼠标悬停或点击                            | `'hover' \| 'click'`                               | `'hover'`    |
+| 参数                 | 说明                                                                             | 类型                                               | 默认值       |
+| -------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------- | ------------ |
+| items                | 菜单内容                                                                         | `ItemType[]`                                       | `[]`         |
+| mode                 | 菜单类型                                                                         | `'horizontal' \| 'vertical' \| 'inline'`           | `'vertical'` |
+| theme                | 主题颜色                                                                         | `'light' \| 'dark'`                                | `'light'`    |
+| selectedKeys         | 当前选中的菜单项 key 数组                                                        | `string[]`                                         | -            |
+| defaultSelectedKeys  | 初始选中的菜单项 key 数组                                                        | `string[]`                                         | `[]`         |
+| openKeys             | 当前展开的 SubMenu 菜单项 key 数组                                               | `string[]`                                         | -            |
+| defaultOpenKeys      | 初始展开的 SubMenu 菜单项 key 数组                                               | `string[]`                                         | `[]`         |
+| inlineCollapsed      | inline 时菜单是否收起状态，收起时会自动显示 Tooltip                              | `boolean`                                          | `false`      |
+| inlineIndent         | inline 模式的菜单缩进宽度（单位：px），分组内项目会递增 depth 正确计算缩进       | `number`                                           | `24`         |
+| multiple             | 是否允许多选                                                                     | `boolean`                                          | `false`      |
+| selectable           | 是否允许选中                                                                     | `boolean`                                          | `true`       |
+| expandIcon           | 自定义展开图标                                                                   | `VNode \| ((props: { isOpen: boolean }) => VNode)` | -            |
+| triggerSubMenuAction | SubMenu 展开/关闭的触发行为，支持鼠标悬停或点击                                  | `'hover' \| 'click'`                               | `'hover'`    |
+| classNames           | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MenuClassNames`                                   | -            |
+| styles               | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MenuStyles`                                       | -            |
 
 ### ItemType
 
@@ -162,6 +172,205 @@ inlineCollapsed 为 true 时，鼠标悬停会自动显示 Tooltip 提示。
 | openChange | SubMenu 展开/关闭的回调            | `(openKeys: string[]) => void`                      |
 | click      | 点击菜单项触发的回调               | `({ key: string }) => void`                         |
 
+---
+
+## 语义化 className 与 style
+
+通过 `classNames` 和 `styles` 属性可以对菜单的各个子节点应用自定义样式，支持细粒度控制。
+
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface MenuClassNames {
+  root?: string // 菜单根容器
+  item?: string // 普通菜单项
+  itemSelected?: string // 选中状态的菜单项
+  itemDisabled?: string // 禁用状态的菜单项
+  itemDanger?: string // 危险状态的菜单项
+  itemIcon?: string // 菜单项图标容器
+  itemContent?: string // 菜单项文本内容
+  submenu?: string // 子菜单容器
+  submenuTitle?: string // 子菜单标题
+  submenuOpen?: string // 展开状态的子菜单
+  submenuSelected?: string // 包含选中项的子菜单
+  submenuDisabled?: string // 禁用状态的子菜单
+  submenuIcon?: string // 子菜单图标
+  submenuArrow?: string // 展开箭头
+  sub?: string // 子菜单列表容器
+  itemGroup?: string // 菜单项分组容器
+  itemGroupTitle?: string // 分组标题
+  itemGroupList?: string // 分组列表
+  divider?: string // 分割线
+}
+
+interface MenuStyles {
+  root?: CSSProperties
+  item?: CSSProperties
+  itemSelected?: CSSProperties
+  itemDisabled?: CSSProperties
+  itemDanger?: CSSProperties
+  itemIcon?: CSSProperties
+  itemContent?: CSSProperties
+  submenu?: CSSProperties
+  submenuTitle?: CSSProperties
+  submenuOpen?: CSSProperties
+  submenuSelected?: CSSProperties
+  submenuDisabled?: CSSProperties
+  submenuIcon?: CSSProperties
+  submenuArrow?: CSSProperties
+  sub?: CSSProperties
+  itemGroup?: CSSProperties
+  itemGroupTitle?: CSSProperties
+  itemGroupList?: CSSProperties
+  divider?: CSSProperties
+}
+```
+
+### DOM 结构与 className 映射
+
+```html
+<ul class="hmfw-menu hmfw-menu-inline">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
+
+  <!-- 普通菜单项 -->
+  <li class="hmfw-menu-item hmfw-menu-item-selected">
+    <!-- ↑ classNames.item + classNames.itemSelected / styles.item + styles.itemSelected 应用于此 -->
+    <span class="hmfw-menu-item-icon">
+      <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
+      <svg>...</svg>
+    </span>
+    <span class="hmfw-menu-title-content">
+      <!-- ↑ classNames.itemContent / styles.itemContent 应用于此 -->
+      导航一
+    </span>
+  </li>
+
+  <!-- 子菜单 -->
+  <li class="hmfw-menu-submenu hmfw-menu-submenu-open hmfw-menu-submenu-selected">
+    <!-- ↑ classNames.submenu + classNames.submenuOpen + classNames.submenuSelected 应用于此 -->
+    <div class="hmfw-menu-submenu-title">
+      <!-- ↑ classNames.submenuTitle / styles.submenuTitle 应用于此 -->
+      <span class="hmfw-menu-item-icon">
+        <!-- ↑ classNames.submenuIcon / styles.submenuIcon 应用于此 -->
+        <svg>...</svg>
+      </span>
+      <span>子菜单</span>
+      <span class="hmfw-menu-submenu-arrow">
+        <!-- ↑ classNames.submenuArrow / styles.submenuArrow 应用于此 -->
+        <svg>...</svg>
+      </span>
+    </div>
+    <ul class="hmfw-menu-sub hmfw-menu-inline">
+      <!-- ↑ classNames.sub / styles.sub 应用于此 -->
+      <li class="hmfw-menu-item">选项 1</li>
+      <li class="hmfw-menu-item">选项 2</li>
+    </ul>
+  </li>
+
+  <!-- 菜单分组 -->
+  <li class="hmfw-menu-item-group">
+    <!-- ↑ classNames.itemGroup / styles.itemGroup 应用于此 -->
+    <div class="hmfw-menu-item-group-title">
+      <!-- ↑ classNames.itemGroupTitle / styles.itemGroupTitle 应用于此 -->
+      分组标题
+    </div>
+    <ul class="hmfw-menu-item-group-list">
+      <!-- ↑ classNames.itemGroupList / styles.itemGroupList 应用于此 -->
+      <li class="hmfw-menu-item">分组项 1</li>
+      <li class="hmfw-menu-item">分组项 2</li>
+    </ul>
+  </li>
+
+  <!-- 分割线 -->
+  <li class="hmfw-menu-item-divider">
+    <!-- ↑ classNames.divider / styles.divider 应用于此 -->
+  </li>
+</ul>
+```
+
+### 使用 classNames
+
+通过 `classNames` 属性应用自定义 CSS 类：
+
+```vue
+<template>
+  <Menu
+    mode="inline"
+    :items="items"
+    :class-names="{
+      item: 'my-menu-item',
+      itemSelected: 'my-item-selected',
+      submenuTitle: 'my-submenu-title',
+    }"
+  />
+</template>
+
+<style scoped>
+:deep(.my-menu-item) {
+  border-left: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+:deep(.my-menu-item:hover) {
+  border-left-color: #1677ff;
+  transform: translateX(4px);
+}
+
+:deep(.my-item-selected) {
+  background: linear-gradient(90deg, #e6f4ff 0%, transparent 100%) !important;
+  border-left-color: #1677ff !important;
+}
+
+:deep(.my-submenu-title) {
+  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);
+  border-radius: 8px;
+  font-weight: 600;
+}
+</style>
+```
+
+### 使用 styles
+
+通过 `styles` 属性应用内联样式：
+
+```vue
+<template>
+  <Menu
+    mode="inline"
+    :items="items"
+    :styles="{
+      root: { border: '2px solid #722ed1', borderRadius: '12px' },
+      item: { margin: '8px 12px' },
+      itemSelected: {
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: '#fff',
+        fontWeight: 'bold',
+      },
+      itemIcon: { fontSize: '16px' },
+    }"
+  />
+</template>
+```
+
+### 注意事项
+
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- 状态类（如 `itemSelected`、`itemDisabled`）会与基础类（如 `item`）**叠加**应用
+- 子菜单的弹出层（`mode="vertical"` 或 `mode="horizontal"` 时）挂载到 `body`，需使用 `:global()` 而非 `:deep()` 来应用样式
+- 水平菜单（`mode="horizontal"`）的选中指示器通过 `border-bottom` 实现，可通过 `itemSelected` 自定义
+
+## 设计 Token
+
+Menu 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+| Token 名称             | 说明   | 默认值    |
+| ---------------------- | ------ | --------- |
+| `--hmfw-color-primary` | 主题色 | `#1677ff` |
+
+## Menu Events
+
 <script setup lang="ts">
 import MenuHorizontal from './MenuHorizontal.vue'
 import MenuHorizontalSource from './MenuHorizontal.vue?raw'
@@ -183,4 +392,6 @@ import MenuIndent from './MenuIndent.vue'
 import MenuIndentSource from './MenuIndent.vue?raw'
 import MenuTrigger from './MenuTrigger.vue'
 import MenuTriggerSource from './MenuTrigger.vue?raw'
+import MenuClassNames from './MenuClassNames.vue'
+import MenuClassNamesSource from './MenuClassNames.vue?raw'
 </script>

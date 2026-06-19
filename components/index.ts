@@ -277,7 +277,7 @@ export { Table } from './table'
 export type { TableColumn, TableProps } from './table'
 
 export { Menu } from './menu'
-export type { MenuProps, MenuTheme, MenuMode } from './menu'
+export type { MenuProps, MenuTheme, MenuMode, MenuClassNames, MenuStyles } from './menu'
 
 export { Form, FormItem, useForm } from './form'
 export type { FormProps, FormItemProps, FormRule, NamePath, ValidateStatus } from './form'
@@ -335,6 +335,9 @@ export type {
   ShowUploadListInterface,
   CustomRequestOptions,
   BeforeUploadValue,
+  ItemRenderActions,
+  UploadClassNames,
+  UploadStyles,
 } from './upload'
 
 export { Flex } from './flex'
@@ -372,11 +375,11 @@ export type { CarouselProps, CarouselEffect, CarouselDotPosition, CarouselClassN
 
 // Tour
 export { Tour } from './tour'
-export type { TourProps, TourStep } from './tour'
+export type { TourProps, TourStep, TourClassNames, TourStyles } from './tour'
 
 // ColorPicker
 export { ColorPicker } from './color-picker'
-export type { ColorPickerProps, ColorFormat } from './color-picker'
+export type { ColorPickerProps, ColorFormat, ColorPickerClassNames, ColorPickerStyles } from './color-picker'
 
 // Transfer
 export { Transfer } from './transfer'

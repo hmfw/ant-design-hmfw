@@ -1,2 +1,2 @@
 export { Tour } from './Tour'
-export type { TourProps, TourStep, TourButtonProps, TourPlacement } from './types'
+export type { TourProps, TourStep, TourButtonProps, TourPlacement, TourClassNames, TourStyles } from './types'

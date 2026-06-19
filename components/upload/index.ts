@@ -9,4 +9,6 @@ export type {
   CustomRequestOptions,
   BeforeUploadValue,
   ItemRenderActions,
+  UploadClassNames,
+  UploadStyles,
 } from './types'

@@ -12,7 +12,7 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { hexToHsb, hsbToHex, isValidHex, type HSB } from './color-utils'
-import type { ColorFormat } from './types'
+import type { ColorFormat, ColorPickerClassNames, ColorPickerStyles } from './types'
 
 const DEFAULT_COLOR = '#1677ff'
 
@@ -30,6 +30,8 @@ export const ColorPicker = defineComponent({
       type: Array as PropType<Array<{ label: string; colors: string[] }>>,
       default: () => [],
     },
+    classNames: Object as PropType<ColorPickerClassNames>,
+    styles: Object as PropType<ColorPickerStyles>,
   },
   emits: ['update:value', 'change', 'clear', 'openChange'],
   setup(props, { emit }) {
@@ -188,75 +190,134 @@ export const ColorPicker = defineComponent({
 
     return () => (
       <div
-        class={cls(prefixCls, `${prefixCls}-${props.size}`, {
-          [`${prefixCls}-disabled`]: props.disabled,
-        })}
+        class={cls(
+          prefixCls,
+          `${prefixCls}-${props.size}`,
+          {
+            [`${prefixCls}-disabled`]: props.disabled,
+          },
+          props.classNames?.root,
+        )}
+        style={props.styles?.root}
       >
         <div
           ref={triggerRef}
-          class={cls(`${prefixCls}-trigger`, { [`${prefixCls}-trigger-open`]: open.value })}
+          class={cls(`${prefixCls}-trigger`, { [`${prefixCls}-trigger-open`]: open.value }, props.classNames?.trigger)}
+          style={props.styles?.trigger}
           onClick={toggleOpen}
           role="button"
           aria-haspopup="true"
           aria-expanded={open.value}
         >
-          <div class={`${prefixCls}-color-block`} style={{ background: innerValue.value || 'transparent' }} />
-          {props.showText && <span class={`${prefixCls}-text`}>{innerValue.value || '—'}</span>}
+          <div
+            class={cls(`${prefixCls}-color-block`, props.classNames?.colorBlock)}
+            style={{ background: innerValue.value || 'transparent', ...props.styles?.colorBlock }}
+          />
+          {props.showText && (
+            <span class={cls(`${prefixCls}-text`, props.classNames?.text)} style={props.styles?.text}>
+              {innerValue.value || '—'}
+            </span>
+          )}
         </div>
 
         {open.value && (
           <Teleport to="body">
             <div
               ref={panelRef}
-              class={`${prefixCls}-panel`}
+              class={cls(`${prefixCls}-panel`, props.classNames?.panel)}
               style={{
                 position: 'absolute',
                 top: `${panelPos.value.top}px`,
                 left: `${panelPos.value.left}px`,
                 zIndex: 1050,
+                ...props.styles?.panel,
               }}
             >
               {/* Saturation/Brightness picker */}
-              <div ref={sbRef} class={`${prefixCls}-sb`} style={sbBgStyle.value} onMousedown={onSBMouseDown}>
+              <div
+                ref={sbRef}
+                class={cls(`${prefixCls}-sb`, props.classNames?.saturation)}
+                style={{ ...sbBgStyle.value, ...props.styles?.saturation }}
+                onMousedown={onSBMouseDown}
+              >
                 <div class={`${prefixCls}-sb-white`} />
                 <div class={`${prefixCls}-sb-black`} />
-                <div class={`${prefixCls}-sb-cursor`} style={sbCursorStyle.value} />
+                <div
+                  class={cls(`${prefixCls}-sb-cursor`, props.classNames?.saturationCursor)}
+                  style={{ ...sbCursorStyle.value, ...props.styles?.saturationCursor }}
+                />
               </div>
 
               {/* Hue slider */}
               <div class={`${prefixCls}-sliders`}>
-                <div ref={hueRef} class={`${prefixCls}-hue`} onMousedown={onHueMouseDown}>
-                  <div class={`${prefixCls}-hue-cursor`} style={hueCursorStyle.value} />
+                <div
+                  ref={hueRef}
+                  class={cls(`${prefixCls}-hue`, props.classNames?.hueSlider)}
+                  style={props.styles?.hueSlider}
+                  onMousedown={onHueMouseDown}
+                >
+                  <div
+                    class={cls(`${prefixCls}-hue-cursor`, props.classNames?.hueCursor)}
+                    style={{ ...hueCursorStyle.value, ...props.styles?.hueCursor }}
+                  />
                 </div>
               </div>
 
               {/* Hex input */}
-              <div class={`${prefixCls}-input-container`}>
-                <div class={`${prefixCls}-preview`} style={{ background: innerValue.value }} />
+              <div
+                class={cls(`${prefixCls}-input-container`, props.classNames?.inputContainer)}
+                style={props.styles?.inputContainer}
+              >
+                <div
+                  class={cls(`${prefixCls}-preview`, props.classNames?.preview)}
+                  style={{ background: innerValue.value, ...props.styles?.preview }}
+                />
                 <input
-                  class={`${prefixCls}-hex-input`}
+                  class={cls(`${prefixCls}-hex-input`, props.classNames?.hexInput)}
+                  style={props.styles?.hexInput}
                   value={hexInput.value}
                   onInput={onHexInput}
                   maxlength={7}
                   spellcheck={false}
                 />
-                <span class={`${prefixCls}-format-label`}>HEX</span>
+                <span
+                  class={cls(`${prefixCls}-format-label`, props.classNames?.formatLabel)}
+                  style={props.styles?.formatLabel}
+                >
+                  HEX
+                </span>
               </div>
 
               {/* Presets */}
               {props.presets.length > 0 && (
-                <div class={`${prefixCls}-presets`}>
+                <div class={cls(`${prefixCls}-presets`, props.classNames?.presets)} style={props.styles?.presets}>
                   {props.presets.map((group) => (
-                    <div key={group.label} class={`${prefixCls}-preset-group`}>
-                      <div class={`${prefixCls}-preset-label`}>{group.label}</div>
-                      <div class={`${prefixCls}-preset-colors`}>
+                    <div
+                      key={group.label}
+                      class={cls(`${prefixCls}-preset-group`, props.classNames?.presetGroup)}
+                      style={props.styles?.presetGroup}
+                    >
+                      <div
+                        class={cls(`${prefixCls}-preset-label`, props.classNames?.presetLabel)}
+                        style={props.styles?.presetLabel}
+                      >
+                        {group.label}
+                      </div>
+                      <div
+                        class={cls(`${prefixCls}-preset-colors`, props.classNames?.presetColors)}
+                        style={props.styles?.presetColors}
+                      >
                         {group.colors.map((color) => (
                           <div
                             key={color}
-                            class={cls(`${prefixCls}-preset-color`, {
-                              [`${prefixCls}-preset-color-active`]: color === innerValue.value,
-                            })}
-                            style={{ background: color }}
+                            class={cls(
+                              `${prefixCls}-preset-color`,
+                              {
+                                [`${prefixCls}-preset-color-active`]: color === innerValue.value,
+                              },
+                              props.classNames?.presetColor,
+                            )}
+                            style={{ background: color, ...props.styles?.presetColor }}
                             onClick={() => {
                               innerValue.value = color
                               hexInput.value = color
@@ -273,7 +334,11 @@ export const ColorPicker = defineComponent({
               )}
 
               {props.allowClear && (
-                <div class={`${prefixCls}-clear-btn`} onClick={clearColor}>
+                <div
+                  class={cls(`${prefixCls}-clear-btn`, props.classNames?.clearBtn)}
+                  style={props.styles?.clearBtn}
+                  onClick={clearColor}
+                >
                   清除
                 </div>
               )}

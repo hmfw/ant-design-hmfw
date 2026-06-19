@@ -52,3 +52,15 @@ const { message, notification, modal } = useApp()
 | `modal.error(props)`   | 错误对话框 |
 
 props 与 `Modal` 组件的 props 一致，参见 [Modal API](/components/modal)。
+
+---
+
+App 是单元素透传组件，渲染为 Fragment（插槽内容 + 内部 Modal），可直接使用原生 class 和 style attribute 进行样式定制。
+
+## 设计 Token
+
+App 组件本身无视觉样式，其功能依赖 Modal、Message、Notification 各自的样式系统。如需定制这些子组件的样式，请参考：
+
+- [Modal 设计 Token](/components/modal#设计-token)
+- [Message 设计 Token](/components/message#设计-token)
+- [Notification 设计 Token](/components/notification#设计-token)

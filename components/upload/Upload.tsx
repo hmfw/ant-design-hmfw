@@ -10,6 +10,8 @@ import type {
   CustomRequestOptions,
   BeforeUploadValue,
   ItemRenderActions,
+  UploadClassNames,
+  UploadStyles,
 } from './types'
 
 let uidCounter = 0
@@ -86,6 +88,8 @@ export const Upload = defineComponent({
     onRemove: Function as PropType<UploadProps['onRemove']>,
     isImageUrl: Function as PropType<UploadProps['isImageUrl']>,
     itemRender: Function as PropType<UploadProps['itemRender']>,
+    classNames: Object as PropType<UploadClassNames>,
+    styles: Object as PropType<UploadStyles>,
   },
   emits: ['update:fileList', 'change', 'remove', 'preview', 'download', 'drop'],
   setup(props, { slots, emit }) {
@@ -298,60 +302,118 @@ export const Upload = defineComponent({
       const thumbSrc = file.thumbUrl || file.url
       return (
         <div
-          class={cls(`${prefixCls}-list-item`, {
-            [`${prefixCls}-list-item-${file.status}`]: !!file.status,
-          })}
+          class={cls(
+            `${prefixCls}-list-item`,
+            {
+              [`${prefixCls}-list-item-${file.status}`]: !!file.status,
+            },
+            props.classNames?.listItem,
+          )}
+          style={props.styles?.listItem}
         >
           {(props.listType === 'picture' || isCardType.value) && showThumb && thumbSrc && !isCardType.value && (
-            <div class={`${prefixCls}-list-item-thumbnail`}>
+            <div
+              class={cls(`${prefixCls}-list-item-thumbnail`, props.classNames?.thumbnail)}
+              style={props.styles?.thumbnail}
+            >
               <img src={thumbSrc} alt={file.name} />
             </div>
           )}
           {isCardType.value ? (
-            <div class={`${prefixCls}-list-item-card`}>
+            <div class={cls(`${prefixCls}-list-item-card`, props.classNames?.itemCard)} style={props.styles?.itemCard}>
               {showThumb && thumbSrc ? (
                 <img src={thumbSrc} alt={file.name} />
               ) : (
-                <span class={`${prefixCls}-list-item-icon`}>📄</span>
+                <span
+                  class={cls(`${prefixCls}-list-item-icon`, props.classNames?.itemIcon)}
+                  style={props.styles?.itemIcon}
+                >
+                  📄
+                </span>
               )}
               {file.status === 'uploading' && (
-                <div class={`${prefixCls}-list-item-progress`}>
-                  <div class={`${prefixCls}-list-item-progress-bar`} style={{ width: `${file.percent ?? 0}%` }} />
+                <div
+                  class={cls(`${prefixCls}-list-item-progress`, props.classNames?.progress)}
+                  style={props.styles?.progress}
+                >
+                  <div
+                    class={cls(`${prefixCls}-list-item-progress-bar`, props.classNames?.progressBar)}
+                    style={{ width: `${file.percent ?? 0}%`, ...props.styles?.progressBar }}
+                  />
                 </div>
               )}
-              <div class={`${prefixCls}-list-item-card-actions`}>
+              <div
+                class={cls(`${prefixCls}-list-item-card-actions`, props.classNames?.cardActions)}
+                style={props.styles?.cardActions}
+              >
                 {(file.url || file.thumbUrl) && showPreview.value && (
-                  <button class={`${prefixCls}-list-item-action`} onClick={() => emit('preview', file)}>
+                  <button
+                    class={cls(`${prefixCls}-list-item-action`, props.classNames?.itemAction)}
+                    style={props.styles?.itemAction}
+                    onClick={() => emit('preview', file)}
+                  >
                     👁
                   </button>
                 )}
                 {showDownload.value && file.url && (
-                  <button class={`${prefixCls}-list-item-action`} onClick={() => emit('download', file)}>
+                  <button
+                    class={cls(`${prefixCls}-list-item-action`, props.classNames?.itemAction)}
+                    style={props.styles?.itemAction}
+                    onClick={() => emit('download', file)}
+                  >
                     ⬇
                   </button>
                 )}
                 {showRemove.value && (
-                  <button class={`${prefixCls}-list-item-action`} onClick={() => handleRemove(file)}>
+                  <button
+                    class={cls(`${prefixCls}-list-item-action`, props.classNames?.itemAction)}
+                    style={props.styles?.itemAction}
+                    onClick={() => handleRemove(file)}
+                  >
                     🗑
                   </button>
                 )}
               </div>
             </div>
           ) : (
-            <div class={`${prefixCls}-list-item-info`}>
-              <span class={`${prefixCls}-list-item-icon`}>
+            <div class={cls(`${prefixCls}-list-item-info`, props.classNames?.itemInfo)} style={props.styles?.itemInfo}>
+              <span
+                class={cls(`${prefixCls}-list-item-icon`, props.classNames?.itemIcon)}
+                style={props.styles?.itemIcon}
+              >
                 {file.status === 'error' ? '❌' : file.status === 'done' ? '✅' : '📄'}
               </span>
-              <span class={`${prefixCls}-list-item-name`}>{file.name}</span>
-              <span class={`${prefixCls}-list-item-size`}>{formatSize(file.size)}</span>
+              <span
+                class={cls(`${prefixCls}-list-item-name`, props.classNames?.itemName)}
+                style={props.styles?.itemName}
+              >
+                {file.name}
+              </span>
+              <span
+                class={cls(`${prefixCls}-list-item-size`, props.classNames?.itemSize)}
+                style={props.styles?.itemSize}
+              >
+                {formatSize(file.size)}
+              </span>
               {file.status === 'uploading' && (
-                <div class={`${prefixCls}-list-item-progress`}>
-                  <div class={`${prefixCls}-list-item-progress-bar`} style={{ width: `${file.percent ?? 0}%` }} />
+                <div
+                  class={cls(`${prefixCls}-list-item-progress`, props.classNames?.progress)}
+                  style={props.styles?.progress}
+                >
+                  <div
+                    class={cls(`${prefixCls}-list-item-progress-bar`, props.classNames?.progressBar)}
+                    style={{ width: `${file.percent ?? 0}%`, ...props.styles?.progressBar }}
+                  />
                 </div>
               )}
               {showDownload.value && file.url && (
                 <button
-                  class={`${prefixCls}-list-item-action ${prefixCls}-list-item-download`}
+                  class={cls(
+                    `${prefixCls}-list-item-action`,
+                    `${prefixCls}-list-item-download`,
+                    props.classNames?.itemAction,
+                  )}
+                  style={props.styles?.itemAction}
                   onClick={() => emit('download', file)}
                 >
                   ⬇
@@ -359,7 +421,12 @@ export const Upload = defineComponent({
               )}
               {showRemove.value && (
                 <button
-                  class={`${prefixCls}-list-item-action ${prefixCls}-list-item-remove`}
+                  class={cls(
+                    `${prefixCls}-list-item-action`,
+                    `${prefixCls}-list-item-remove`,
+                    props.classNames?.itemAction,
+                  )}
+                  style={props.styles?.itemAction}
                   onClick={() => handleRemove(file)}
                 >
                   ✕
@@ -376,7 +443,12 @@ export const Upload = defineComponent({
       // TransitionGroup 在 TSX 下的类型不接受 class — 用 as any 绕过
       const TG = TransitionGroup as any
       return (
-        <TG tag="div" class={`${prefixCls}-list ${prefixCls}-list-${props.listType}`} name={`${prefixCls}-animate`}>
+        <TG
+          tag="div"
+          class={cls(`${prefixCls}-list`, `${prefixCls}-list-${props.listType}`, props.classNames?.list)}
+          style={props.styles?.list}
+          name={`${prefixCls}-animate`}
+        >
           {fileList.value.map((file) => {
             const originNode = renderItem(file)
             // itemRender 钩子 —— 用户接管单项渲染但仍可通过 actions 触发内置行为
@@ -387,13 +459,21 @@ export const Upload = defineComponent({
                 remove: () => handleRemove(file),
               }
               return (
-                <div key={file.uid} class={`${prefixCls}-list-item-container`}>
+                <div
+                  key={file.uid}
+                  class={cls(`${prefixCls}-list-item-container`, props.classNames?.listItemContainer)}
+                  style={props.styles?.listItemContainer}
+                >
                   {props.itemRender(originNode, file, fileList.value, actions)}
                 </div>
               )
             }
             return (
-              <div key={file.uid} class={`${prefixCls}-list-item-container`}>
+              <div
+                key={file.uid}
+                class={cls(`${prefixCls}-list-item-container`, props.classNames?.listItemContainer)}
+                style={props.styles?.listItemContainer}
+              >
                 {originNode}
               </div>
             )
@@ -411,9 +491,15 @@ export const Upload = defineComponent({
       if (isCardType.value) {
         return canAddMore.value ? (
           <div
-            class={cls(`${prefixCls}-select`, `${prefixCls}-select-${props.listType}`, {
-              [`${prefixCls}-disabled`]: props.disabled,
-            })}
+            class={cls(
+              `${prefixCls}-select`,
+              `${prefixCls}-select-${props.listType}`,
+              {
+                [`${prefixCls}-disabled`]: props.disabled,
+              },
+              props.classNames?.select,
+            )}
+            style={props.styles?.select}
             onClick={triggerSelect}
             onDragenter={handleDragEnter}
             onDragover={handleDragOver}
@@ -424,8 +510,18 @@ export const Upload = defineComponent({
               slots.default()
             ) : (
               <div class={`${prefixCls}-select-btn`}>
-                <span class={`${prefixCls}-select-icon`}>+</span>
-                <span class={`${prefixCls}-select-text`}>上传</span>
+                <span
+                  class={cls(`${prefixCls}-select-icon`, props.classNames?.selectIcon)}
+                  style={props.styles?.selectIcon}
+                >
+                  +
+                </span>
+                <span
+                  class={cls(`${prefixCls}-select-text`, props.classNames?.selectText)}
+                  style={props.styles?.selectText}
+                >
+                  上传
+                </span>
               </div>
             )}
           </div>
@@ -435,27 +531,42 @@ export const Upload = defineComponent({
       if (isDragType.value) {
         return (
           <div
-            class={cls(`${prefixCls}-drag`, {
-              [`${prefixCls}-drag-uploading`]: fileList.value.some((f) => f.status === 'uploading'),
-              [`${prefixCls}-drag-hover`]: dragging.value,
-              [`${prefixCls}-disabled`]: props.disabled,
-            })}
+            class={cls(
+              `${prefixCls}-drag`,
+              {
+                [`${prefixCls}-drag-uploading`]: fileList.value.some((f) => f.status === 'uploading'),
+                [`${prefixCls}-drag-hover`]: dragging.value,
+                [`${prefixCls}-disabled`]: props.disabled,
+              },
+              props.classNames?.drag,
+            )}
+            style={props.styles?.drag}
             onClick={triggerSelect}
             onDragenter={handleDragEnter}
             onDragover={handleDragOver}
             onDragleave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <div class={`${prefixCls}-drag-container`}>{slots.default?.()}</div>
+            <div
+              class={cls(`${prefixCls}-drag-container`, props.classNames?.dragContainer)}
+              style={props.styles?.dragContainer}
+            >
+              {slots.default?.()}
+            </div>
           </div>
         )
       }
 
       return (
         <div
-          class={cls(`${prefixCls}-select`, {
-            [`${prefixCls}-disabled`]: props.disabled,
-          })}
+          class={cls(
+            `${prefixCls}-select`,
+            {
+              [`${prefixCls}-disabled`]: props.disabled,
+            },
+            props.classNames?.select,
+          )}
+          style={props.styles?.select}
           onClick={triggerSelect}
         >
           {slots.default ? slots.default() : null}
@@ -465,10 +576,15 @@ export const Upload = defineComponent({
 
     return () => (
       <div
-        class={cls(prefixCls, {
-          [`${prefixCls}-picture-card-wrapper`]: props.listType === 'picture-card',
-          [`${prefixCls}-picture-circle-wrapper`]: props.listType === 'picture-circle',
-        })}
+        class={cls(
+          prefixCls,
+          {
+            [`${prefixCls}-picture-card-wrapper`]: props.listType === 'picture-card',
+            [`${prefixCls}-picture-circle-wrapper`]: props.listType === 'picture-circle',
+          },
+          props.classNames?.root,
+        )}
+        style={props.styles?.root}
       >
         <input
           ref={inputRef}
