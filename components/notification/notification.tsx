@@ -203,8 +203,9 @@ const NotificationContainer = defineComponent({
                 notice.type ? `hmfw-notification-notice-${notice.type}` : '',
                 notice.leaving ? 'hmfw-notification-notice-leaving' : '',
                 notice.className,
+                notice.classNames?.notice,
               )}
-              style={notice.style}
+              style={{ ...notice.style, ...notice.styles?.notice }}
               role={notice.role ?? 'alert'}
               onMouseenter={() => this.handleMouseEnter(notice)}
               onMouseleave={() => this.handleMouseLeave(notice)}
@@ -216,20 +217,32 @@ const NotificationContainer = defineComponent({
                     class={cls(
                       'hmfw-notification-notice-icon',
                       notice.type ? `hmfw-notification-notice-icon-${notice.type}` : '',
+                      notice.classNames?.icon,
                     )}
+                    style={notice.styles?.icon}
                   >
                     {iconNode}
                   </div>
                 )}
                 <div class="hmfw-notification-notice-message-wrapper">
                   {notice.message && (
-                    <div class="hmfw-notification-notice-message">{this.renderContent(notice.message)}</div>
+                    <div
+                      class={cls('hmfw-notification-notice-message', notice.classNames?.message)}
+                      style={notice.styles?.message}
+                    >
+                      {this.renderContent(notice.message)}
+                    </div>
                   )}
                   {notice.description && (
-                    <div class="hmfw-notification-notice-description">{this.renderContent(notice.description)}</div>
+                    <div
+                      class={cls('hmfw-notification-notice-description', notice.classNames?.description)}
+                      style={notice.styles?.description}
+                    >
+                      {this.renderContent(notice.description)}
+                    </div>
                   )}
                   {notice.btn && (
-                    <div class="hmfw-notification-notice-btn">
+                    <div class={cls('hmfw-notification-notice-btn', notice.classNames?.btn)} style={notice.styles?.btn}>
                       {typeof notice.btn === 'function' ? notice.btn() : notice.btn}
                     </div>
                   )}
@@ -237,7 +250,8 @@ const NotificationContainer = defineComponent({
               </div>
               <button
                 type="button"
-                class="hmfw-notification-notice-close"
+                class={cls('hmfw-notification-notice-close', notice.classNames?.close)}
+                style={notice.styles?.close}
                 aria-label="Close"
                 onClick={(e) => {
                   e.stopPropagation()

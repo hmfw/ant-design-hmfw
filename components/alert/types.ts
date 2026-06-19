@@ -1,7 +1,29 @@
-import type { VNodeChild } from 'vue'
+import type { CSSProperties, VNodeChild } from 'vue'
 
 export type AlertType = 'success' | 'info' | 'warning' | 'error'
 export type AlertVariant = 'outlined' | 'filled'
+
+/** 语义化结构 className */
+export interface AlertClassNames {
+  root?: string // 警告提示根容器
+  icon?: string // 状态图标容器
+  section?: string // 标题与描述的内容区
+  title?: string // 标题文本
+  description?: string // 辅助描述文本
+  actions?: string // 自定义操作项容器
+  closeIcon?: string // 关闭按钮
+}
+
+/** 语义化结构 style */
+export interface AlertStyles {
+  root?: CSSProperties
+  icon?: CSSProperties
+  section?: CSSProperties
+  title?: CSSProperties
+  description?: CSSProperties
+  actions?: CSSProperties
+  closeIcon?: CSSProperties
+}
 
 /** closable 为对象时的配置（与 AntD v6 对齐） */
 export interface AlertClosableConfig {
@@ -39,4 +61,8 @@ export interface AlertProps {
   action?: VNodeChild
   /** 根元素 role，默认 `alert` */
   role?: string
+  /** 语义化结构 className */
+  classNames?: AlertClassNames
+  /** 语义化结构 style */
+  styles?: AlertStyles
 }

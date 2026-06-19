@@ -35,6 +35,8 @@ import { Alert } from 'ant-design-hmfw'
 | action | 自定义操作项 | `VNode \| slot` | - |
 | role | 根节点 `role` 属性 | `string` | `'alert'` |
 | banner | 是否用作顶部公告 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AlertClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AlertStyles` | - |
 
 ### Events
 
@@ -3778,6 +3780,8 @@ import { message } from 'ant-design-hmfw'
 | key | 当前提示的唯一标识，相同 key 会更新已有提示 | `string \| number` | - |
 | style | 自定义内联样式 | `CSSProperties` | - |
 | className | 自定义 CSS class | `string` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MessageClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MessageStyles` | - |
 | pauseOnHover | 悬停时是否暂停计时器，默认为全局配置的 `pauseOnHover` | `boolean` | `true` |
 | onClick | 点击时触发的回调函数 | `(e: MouseEvent) => void` | - |
 | onClose | 关闭时触发的回调函数 | `() => void` | - |
@@ -4040,6 +4044,8 @@ import { notification } from 'ant-design-hmfw'
 | pauseOnHover | 鼠标悬停时暂停自动关闭 | `boolean` | `true` |
 | showProgress | 显示倒计时进度条 | `boolean` | `false` |
 | role | 可访问性角色属性 | `'alert' \| 'status'` | `'alert'` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `NotificationClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `NotificationStyles` | - |
 
 **全局配置方法**
 
@@ -5472,6 +5478,8 @@ import { Spin } from 'ant-design-hmfw'
 | tip | 当作为包裹元素时，可以自定义描述文案 | `string` | - |
 | delay | 延迟显示加载效果的时间（防止闪烁），单位：毫秒 | `number` | - |
 | percent | 进度百分比；为 `'auto'` 时在 `spinning` 期间自动模拟递增 | `number \| 'auto'` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpinClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpinStyles` | - |
 
 ### 示例
 

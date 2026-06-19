@@ -25,8 +25,10 @@ export type {
   ConfigOptions,
   JointContent,
   MessageApi,
+  MessageClassNames,
   MessageContent,
   MessageInstance,
+  MessageStyles,
   MessageType,
   NoticeType,
   TypeOpen,
@@ -123,7 +125,12 @@ function ensureContainer() {
               return (
                 <div
                   key={item.mergedKey}
-                  class={cls('hmfw-message-notice-wrapper', item.leaving && 'hmfw-message-notice-wrapper-leave')}
+                  class={cls(
+                    'hmfw-message-notice-wrapper',
+                    item.leaving && 'hmfw-message-notice-wrapper-leave',
+                    item.classNames?.wrapper,
+                  )}
+                  style={item.styles?.wrapper}
                   onMouseenter={() => {
                     if (item.pauseOnHover ?? globalConfig.pauseOnHover) clearTimer(item.mergedKey)
                   }}
@@ -132,13 +139,24 @@ function ensureContainer() {
                   }}
                 >
                   <div
-                    class={cls('hmfw-message-notice', item.type && `hmfw-message-notice-${item.type}`, item.className)}
-                    style={item.style}
+                    class={cls(
+                      'hmfw-message-notice',
+                      item.type && `hmfw-message-notice-${item.type}`,
+                      item.className,
+                      item.classNames?.notice,
+                    )}
+                    style={{ ...item.style, ...item.styles?.notice }}
                     onClick={(e: MouseEvent) => item.onClick?.(e)}
                   >
                     <div class="hmfw-message-notice-content">
-                      {iconNode != null && <span class="hmfw-message-notice-icon">{iconNode}</span>}
-                      <span class="hmfw-message-notice-title">{renderContent(item.content)}</span>
+                      {iconNode != null && (
+                        <span class={cls('hmfw-message-notice-icon', item.classNames?.icon)} style={item.styles?.icon}>
+                          {iconNode}
+                        </span>
+                      )}
+                      <span class={cls('hmfw-message-notice-title', item.classNames?.title)} style={item.styles?.title}>
+                        {renderContent(item.content)}
+                      </span>
                     </div>
                   </div>
                 </div>

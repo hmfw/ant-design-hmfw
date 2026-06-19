@@ -508,30 +508,34 @@ pnpm dev
 
 ## 当前进度
 
-### 已完成组件（20/67）
+### 已完成组件（24/67）
 
-| 组件         | 类型定义 Key 数量                                                                                | 文档 | Demo | 状态 |
-| ------------ | ------------------------------------------------------------------------------------------------ | ---- | ---- | ---- |
-| **Button**   | 3 (root, icon, loading)                                                                          | ✅   | ✅   | 完成 |
-| **Input**    | 5 (affixWrapper, prefix, suffix, input, count)                                                   | ✅   | ✅   | 完成 |
-| **Modal**    | 6 (mask, wrapper, content, header, body, footer)                                                 | ✅   | ✅   | 完成 |
-| **Popover**  | 2 (title, content)                                                                               | ✅   | ✅   | 完成 |
-| **Progress** | 5 (root, body, rail, track, indicator)                                                           | ✅   | ✅   | 完成 |
-| **Transfer** | 11 (root, section, header, title, body, list, item, itemIcon, itemContent, footer, actions)      | ✅   | ✅   | 完成 |
-| **Tree**     | 5 (root, item, itemIcon, itemTitle, itemSwitcher)                                                | ✅   | ✅   | 完成 |
-| **Checkbox** | 5 (root, checkbox, input, inner, label)                                                          | ✅   | ✅   | 完成 |
-| **Radio**    | 5 (root, radio, input, inner, label)                                                             | ✅   | ✅   | 完成 |
-| **Card**     | 6 (root, head, title, extra, body, actions)                                                      | ✅   | ✅   | 完成 |
-| **Select**   | 10 (root, selector, item, placeholder, arrow, clear, dropdown, option, optionLabel, optionState) | ✅   | ✅   | 完成 |
-| **Tabs**     | 8 (root, nav, tab, tabActive, tabIcon, inkBar, content, tabpane)                                 | ✅   | ✅   | 完成 |
-| **Dropdown** | 4 (trigger, dropdown, arrow, content)                                                            | ✅   | ✅   | 完成 |
-| **Form**     | Form 1 (root) + FormItem 5 (root, label, control, feedback, extra)                               | ✅   | ✅   | 完成 |
-| **Table**    | 7 (root, header, body, row, cell, footer, pagination)                                            | ✅   | ✅   | 完成 |
-| **Drawer**   | 8 (mask, wrapper, content, header, title, extra, body, footer)                                   | ✅   | ✅   | 完成 |
-| **Space**    | 2 (item, split)                                                                                  | ✅   | ✅   | 完成 |
-| **Divider**  | 1 (text)                                                                                         | ✅   | ✅   | 完成 |
-| **Layout**   | —（单元素透传，用原生 class/style）                                                              | ✅   | —    | 完成 |
-| **Grid**     | —（单元素透传，用原生 class/style）                                                              | ✅   | —    | 完成 |
+| 组件             | 类型定义 Key 数量                                                                                | 文档 | Demo | 状态 |
+| ---------------- | ------------------------------------------------------------------------------------------------ | ---- | ---- | ---- |
+| **Button**       | 3 (root, icon, loading)                                                                          | ✅   | ✅   | 完成 |
+| **Input**        | 5 (affixWrapper, prefix, suffix, input, count)                                                   | ✅   | ✅   | 完成 |
+| **Modal**        | 6 (mask, wrapper, content, header, body, footer)                                                 | ✅   | ✅   | 完成 |
+| **Popover**      | 2 (title, content)                                                                               | ✅   | ✅   | 完成 |
+| **Progress**     | 5 (root, body, rail, track, indicator)                                                           | ✅   | ✅   | 完成 |
+| **Transfer**     | 11 (root, section, header, title, body, list, item, itemIcon, itemContent, footer, actions)      | ✅   | ✅   | 完成 |
+| **Tree**         | 5 (root, item, itemIcon, itemTitle, itemSwitcher)                                                | ✅   | ✅   | 完成 |
+| **Checkbox**     | 5 (root, checkbox, input, inner, label)                                                          | ✅   | ✅   | 完成 |
+| **Radio**        | 5 (root, radio, input, inner, label)                                                             | ✅   | ✅   | 完成 |
+| **Card**         | 6 (root, head, title, extra, body, actions)                                                      | ✅   | ✅   | 完成 |
+| **Select**       | 10 (root, selector, item, placeholder, arrow, clear, dropdown, option, optionLabel, optionState) | ✅   | ✅   | 完成 |
+| **Tabs**         | 8 (root, nav, tab, tabActive, tabIcon, inkBar, content, tabpane)                                 | ✅   | ✅   | 完成 |
+| **Dropdown**     | 4 (trigger, dropdown, arrow, content)                                                            | ✅   | ✅   | 完成 |
+| **Form**         | Form 1 (root) + FormItem 5 (root, label, control, feedback, extra)                               | ✅   | ✅   | 完成 |
+| **Table**        | 7 (root, header, body, row, cell, footer, pagination)                                            | ✅   | ✅   | 完成 |
+| **Drawer**       | 8 (mask, wrapper, content, header, title, extra, body, footer)                                   | ✅   | ✅   | 完成 |
+| **Space**        | 2 (item, split)                                                                                  | ✅   | ✅   | 完成 |
+| **Divider**      | 1 (text)                                                                                         | ✅   | ✅   | 完成 |
+| **Layout**       | —（单元素透传，用原生 class/style）                                                              | ✅   | —    | 完成 |
+| **Grid**         | —（单元素透传，用原生 class/style）                                                              | ✅   | —    | 完成 |
+| **Alert**        | 7 (root, icon, section, title, description, actions, closeIcon)                                  | ✅   | ✅   | 完成 |
+| **Spin**         | 4 (root, dot, container, description)                                                            | ✅   | ✅   | 完成 |
+| **Message**      | 4 (wrapper, notice, icon, title) — 命令式 call options                                           | ✅   | ✅   | 完成 |
+| **Notification** | 6 (notice, icon, message, description, btn, close) — 命令式 call options                         | ✅   | ✅   | 完成 |
 
 ### 待实现组件（优先级排序）
 
@@ -554,12 +558,12 @@ pnpm dev
 - [x] **Divider** - 分割线（text 1 个 key）✅
 - [x] **Drawer** - 抽屉（mask/wrapper/content/header/title/extra/body/footer 8 个 key）✅
 
-#### 第三批：反馈组件
+#### 第三批：反馈组件 ✅ 全部完成
 
-- [ ] Message
-- [ ] Notification
-- [ ] Alert
-- [ ] Spin
+- [x] **Message** - 全局提示（wrapper/notice/icon/title 4 个 key，命令式 call options）✅
+- [x] **Notification** - 通知提醒（notice/icon/message/description/btn/close 6 个 key，命令式 call options）✅
+- [x] **Alert** - 警告提示（root/icon/section/title/description/actions/closeIcon 7 个 key）✅
+- [x] **Spin** - 加载中（root/dot/container/description 4 个 key）✅
 
 #### 第四批：其他组件
 
@@ -925,6 +929,7 @@ open http://localhost:5173/components/{component}
 
 ## 更新日志
 
+- **2026-06-18** - 完成第三批：反馈组件（4 个，累计 24/67）。Alert (7 keys) + Spin (4 keys) 声明式语义化 API；Message (4 keys) + Notification (6 keys) 命令式 API，通过 call options 传入 classNames/styles。111 个相关测试全通过
 - **2026-06-18** - 完成第二批：布局/容器组件（5 个，累计 20/67）。Drawer (8 keys) + Space (2 keys) + Divider (1 key) 实现完整语义化 API；Layout 和 Grid 作为单元素透传组件，文档中说明使用原生 class/style 即可
 - **2026-06-18** - 完善开发指南：补充「设计 Token 章节模板与生成流程」（Token 提取命令、命名转换规则、分组排序规则、特殊情况处理），确保新会话可独立完成后续组件的完整语义化 API 实现；更新实施流程图，将设计 Token 补全纳入标准流程
 - **2026-06-18** - 为已完成语义化 API 的 15 个组件全部补全「## 设计 Token」章节，与「语义化 className 与 style」配套形成完整的样式定制体系（共 145 个 Token 条目，Popover/Form 暂未直接消费 Token，标注说明文字）
@@ -947,5 +952,5 @@ open http://localhost:5173/components/{component}
 
 ---
 
-**版本**：v2.2  
+**版本**：v2.3  
 **最后更新**：2026-06-18

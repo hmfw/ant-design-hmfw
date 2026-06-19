@@ -1,7 +1,7 @@
 import { defineComponent, ref, watch, onBeforeUnmount, onMounted, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { SpinSize } from './types'
+import type { SpinSize, SpinClassNames, SpinStyles } from './types'
 
 // percent='auto' 时模拟递增的参数（与 AntD v6 usePercent 对齐）
 const AUTO_INTERVAL = 200
@@ -35,6 +35,8 @@ export const Spin = defineComponent({
       type: [Number, String] as PropType<number | 'auto'>,
       default: undefined,
     },
+    classNames: Object as PropType<SpinClassNames>,
+    styles: Object as PropType<SpinStyles>,
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('spin')
@@ -187,9 +189,10 @@ export const Spin = defineComponent({
           width: `${sizeVal}px`,
           height: `${sizeVal}px`,
           fontSize: `${sizeVal}px`,
+          ...props.styles?.dot,
         }
         return (
-          <span class={`${prefixCls}-dot`} style={indicatorStyle}>
+          <span class={cls(`${prefixCls}-dot`, props.classNames?.dot)} style={indicatorStyle}>
             {slots.indicator({ percent: mergedPercent.value })}
           </span>
         )
@@ -200,7 +203,10 @@ export const Spin = defineComponent({
       return (
         <>
           <span class={cls(holderCls, { [`${holderCls}-hidden`]: showProgress })}>
-            <span class={cls(`${prefixCls}-dot`, `${prefixCls}-dot-spin`)}>
+            <span
+              class={cls(`${prefixCls}-dot`, `${prefixCls}-dot-spin`, props.classNames?.dot)}
+              style={props.styles?.dot}
+            >
               {[0, 1, 2, 3].map((i) => (
                 <i key={i} class={`${prefixCls}-dot-item`} />
               ))}
@@ -215,16 +221,28 @@ export const Spin = defineComponent({
       const desc = props.description ?? props.tip
       return (
         <span
-          class={cls(prefixCls, {
-            [`${prefixCls}-sm`]: props.size === 'small',
-            [`${prefixCls}-lg`]: props.size === 'large',
-            [`${prefixCls}-spinning`]: active.value,
-          })}
+          class={cls(
+            prefixCls,
+            {
+              [`${prefixCls}-sm`]: props.size === 'small',
+              [`${prefixCls}-lg`]: props.size === 'large',
+              [`${prefixCls}-spinning`]: active.value,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
           aria-live="polite"
           aria-busy={active.value}
         >
           {renderIndicator()}
-          {desc && <div class={`${prefixCls}-description`}>{desc}</div>}
+          {desc && (
+            <div
+              class={cls(`${prefixCls}-description`, props.classNames?.description)}
+              style={props.styles?.description}
+            >
+              {desc}
+            </div>
+          )}
         </span>
       )
     }
@@ -234,9 +252,14 @@ export const Spin = defineComponent({
       if (props.fullscreen) {
         return (
           <div
-            class={cls(`${prefixCls}-fullscreen`, {
-              [`${prefixCls}-fullscreen-show`]: active.value,
-            })}
+            class={cls(
+              `${prefixCls}-fullscreen`,
+              {
+                [`${prefixCls}-fullscreen-show`]: active.value,
+              },
+              props.classNames?.root,
+            )}
+            style={props.styles?.root}
           >
             {renderSpin()}
           </div>
@@ -247,7 +270,11 @@ export const Spin = defineComponent({
 
       return (
         <div class={cls(`${prefixCls}-nested-loading`)}>
-          {active.value && <div class={`${prefixCls}-container`}>{renderSpin()}</div>}
+          {active.value && (
+            <div class={cls(`${prefixCls}-container`, props.classNames?.container)} style={props.styles?.container}>
+              {renderSpin()}
+            </div>
+          )}
           <div class={cls(`${prefixCls}-blur-container`, { [`${prefixCls}-blur`]: active.value })}>
             {slots.default()}
           </div>

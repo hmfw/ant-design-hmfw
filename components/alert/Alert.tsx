@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, type PropType, type VNodeChild } from '
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { CheckCircleFilled, InfoCircleFilled, ExclamationCircleFilled, CloseCircleFilled, CloseOutlined } from '../icon'
-import type { AlertType, AlertVariant, AlertClosable } from './types'
+import type { AlertType, AlertVariant, AlertClosable, AlertClassNames, AlertStyles } from './types'
 
 // 与 AntD v6 对齐：使用 Filled 状态图标
 const iconMap: Record<AlertType, typeof CheckCircleFilled> = {
@@ -49,6 +49,8 @@ export const Alert = defineComponent({
       type: String,
       default: 'alert',
     },
+    classNames: Object as PropType<AlertClassNames>,
+    styles: Object as PropType<AlertStyles>,
   },
   emits: ['close', 'afterClose'],
   setup(props, { slots, emit }) {
@@ -125,24 +127,51 @@ export const Alert = defineComponent({
           role={props.role}
           aria-live={type === 'error' || type === 'warning' ? 'assertive' : 'polite'}
           data-show={!closed.value}
-          class={cls(prefixCls, `${prefixCls}-${type}`, `${prefixCls}-${props.variant}`, {
-            [`${prefixCls}-with-description`]: hasDesc,
-            [`${prefixCls}-banner`]: props.banner,
-            [`${prefixCls}-closing`]: closing.value,
-            [`${prefixCls}-no-icon`]: !isShowIcon.value,
-          })}
+          class={cls(
+            prefixCls,
+            `${prefixCls}-${type}`,
+            `${prefixCls}-${props.variant}`,
+            {
+              [`${prefixCls}-with-description`]: hasDesc,
+              [`${prefixCls}-banner`]: props.banner,
+              [`${prefixCls}-closing`]: closing.value,
+              [`${prefixCls}-no-icon`]: !isShowIcon.value,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
         >
-          {isShowIcon.value && <span class={`${prefixCls}-icon`}>{iconNode}</span>}
-          <div class={`${prefixCls}-section`}>
-            {titleNode != null && titleNode !== '' && <div class={`${prefixCls}-title`}>{titleNode}</div>}
-            {hasDesc && <div class={`${prefixCls}-description`}>{slots.description?.() ?? props.description}</div>}
+          {isShowIcon.value && (
+            <span class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon}>
+              {iconNode}
+            </span>
+          )}
+          <div class={cls(`${prefixCls}-section`, props.classNames?.section)} style={props.styles?.section}>
+            {titleNode != null && titleNode !== '' && (
+              <div class={cls(`${prefixCls}-title`, props.classNames?.title)} style={props.styles?.title}>
+                {titleNode}
+              </div>
+            )}
+            {hasDesc && (
+              <div
+                class={cls(`${prefixCls}-description`, props.classNames?.description)}
+                style={props.styles?.description}
+              >
+                {slots.description?.() ?? props.description}
+              </div>
+            )}
           </div>
-          {actionNode != null && <div class={`${prefixCls}-actions`}>{actionNode}</div>}
+          {actionNode != null && (
+            <div class={cls(`${prefixCls}-actions`, props.classNames?.actions)} style={props.styles?.actions}>
+              {actionNode}
+            </div>
+          )}
           {isClosable.value && (
             <button
               type="button"
               tabindex={0}
-              class={`${prefixCls}-close-icon`}
+              class={cls(`${prefixCls}-close-icon`, props.classNames?.closeIcon)}
+              style={props.styles?.closeIcon}
               aria-label={closeAriaLabel.value}
               onClick={handleClose}
             >

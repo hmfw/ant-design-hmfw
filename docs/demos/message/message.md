@@ -57,6 +57,14 @@
   <MessagePauseOnHover />
 </DemoBlock>
 
+### 细粒度样式控制
+
+通过调用 options 中的 `classNames` / `styles` 对 wrapper、notice、icon、title 等子元素做细粒度样式控制。
+
+<DemoBlock title="语义化 className 与 style" :source="MessageClassNamesSource">
+  <MessageClassNames />
+</DemoBlock>
+
 ## API
 
 组件提供以下静态方法，参数如下：
@@ -94,18 +102,20 @@ message.success('成功', 1).then(() => {
 
 config 对象属性如下：
 
-| 参数         | 说明                                                  | 类型                                                       | 默认值 |
-| ------------ | ----------------------------------------------------- | ---------------------------------------------------------- | ------ |
-| content      | 提示内容                                              | `string \| number \| VNode \| () => VNodeChild`            | -      |
-| duration     | 自动关闭的延时，单位秒。设为 0 时不自动关闭           | `number`                                                   | `3`    |
-| type         | 提示类型                                              | `'info' \| 'success' \| 'error' \| 'warning' \| 'loading'` | -      |
-| icon         | 自定义图标                                            | `VNode \| () => VNodeChild`                                | -      |
-| key          | 当前提示的唯一标识，相同 key 会更新已有提示           | `string \| number`                                         | -      |
-| style        | 自定义内联样式                                        | `CSSProperties`                                            | -      |
-| className    | 自定义 CSS class                                      | `string`                                                   | -      |
-| pauseOnHover | 悬停时是否暂停计时器，默认为全局配置的 `pauseOnHover` | `boolean`                                                  | `true` |
-| onClick      | 点击时触发的回调函数                                  | `(e: MouseEvent) => void`                                  | -      |
-| onClose      | 关闭时触发的回调函数                                  | `() => void`                                               | -      |
+| 参数         | 说明                                                                             | 类型                                                       | 默认值 |
+| ------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------------- | ------ |
+| content      | 提示内容                                                                         | `string \| number \| VNode \| () => VNodeChild`            | -      |
+| duration     | 自动关闭的延时，单位秒。设为 0 时不自动关闭                                      | `number`                                                   | `3`    |
+| type         | 提示类型                                                                         | `'info' \| 'success' \| 'error' \| 'warning' \| 'loading'` | -      |
+| icon         | 自定义图标                                                                       | `VNode \| () => VNodeChild`                                | -      |
+| key          | 当前提示的唯一标识，相同 key 会更新已有提示                                      | `string \| number`                                         | -      |
+| style        | 自定义内联样式                                                                   | `CSSProperties`                                            | -      |
+| className    | 自定义 CSS class                                                                 | `string`                                                   | -      |
+| classNames   | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MessageClassNames`                                        | -      |
+| styles       | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MessageStyles`                                            | -      |
+| pauseOnHover | 悬停时是否暂停计时器，默认为全局配置的 `pauseOnHover`                            | `boolean`                                                  | `true` |
+| onClick      | 点击时触发的回调函数                                                             | `(e: MouseEvent) => void`                                  | -      |
+| onClose      | 关闭时触发的回调函数                                                             | `() => void`                                               | -      |
 
 ### 全局方法
 
@@ -139,3 +149,130 @@ message.config({
 > - 当设置 `top` 时，所有消息从顶部显示
 > - `pauseOnHover` 可在全局配置，也可在单条消息中覆盖
 > - 当前实现未支持 RTL（`rtl`）与 stack 折叠（`stack`）、`bottom` 定位，后续统一补充
+
+## 语义化 className 与 style
+
+Message 为命令式 API，没有模板标签，因此 `classNames` 和 `styles` 通过调用方法时的 **options 配置对象** 传入，对单条提示的各个子节点应用自定义样式，支持细粒度控制。
+
+```ts
+message.info({
+  content: '消息',
+  classNames: { notice: 'my-notice' },
+  styles: { notice: { color: 'red' } },
+})
+```
+
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface MessageClassNames {
+  wrapper?: string // 单条提示的最外层容器（控制进出场动画与定位）
+  notice?: string // 提示卡片主体（背景、圆角、阴影、内边距）
+  icon?: string // 状态图标容器
+  title?: string // 提示文本内容容器
+}
+
+interface MessageStyles {
+  wrapper?: CSSProperties
+  notice?: CSSProperties
+  icon?: CSSProperties
+  title?: CSSProperties
+}
+```
+
+### DOM 结构与 className 映射
+
+```html
+<div class="hmfw-message-notice-wrapper">
+  <!-- ↑ classNames.wrapper / styles.wrapper 应用于此 -->
+  <div class="hmfw-message-notice hmfw-message-notice-success">
+    <!-- ↑ classNames.notice / styles.notice 应用于此 -->
+    <div class="hmfw-message-notice-content">
+      <span class="hmfw-message-notice-icon">
+        <!-- ↑ classNames.icon / styles.icon 应用于此 -->
+        <svg>...</svg>
+      </span>
+      <span class="hmfw-message-notice-title">
+        <!-- ↑ classNames.title / styles.title 应用于此 -->
+        提示内容
+      </span>
+    </div>
+  </div>
+</div>
+```
+
+### 使用 classNames
+
+通过 options 的 `classNames` 字段为各子节点指定自定义 class：
+
+```ts
+message.success({
+  content: '保存成功',
+  classNames: {
+    notice: 'my-notice',
+    icon: 'my-icon',
+    title: 'my-title',
+  },
+})
+```
+
+由于 Message 通过独立的 Vue 应用挂载在 `document.body` 上，位于业务组件的 DOM 树之外，在 SFC 中编写样式时需用 `:global()`（或非 scoped 样式）才能命中：
+
+```vue
+<style scoped>
+:global(.my-notice) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+
+:global(.my-icon) {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+:global(.my-title) {
+  font-weight: 700;
+}
+</style>
+```
+
+### 使用 styles
+
+通过 options 的 `styles` 字段直接传入内联样式对象：
+
+```ts
+message.info({
+  content: '内联样式控制的提示',
+  styles: {
+    notice: { borderRadius: '16px', background: '#f0f5ff' },
+    title: { color: '#1677ff', fontWeight: 600 },
+  },
+})
+```
+
+### 注意事项
+
+- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `classNames` / `styles` 通过 **调用 options** 传入，仅作用于当前这一条提示，不影响其他提示
+- `styles.notice` 会与 options 的 `style`（及 `classNames.notice` 对应的 class）合并，`styles.notice` 优先级最高
+- Message 挂载在 `document.body` 上，位于业务组件 DOM 树之外，scoped 样式的 `:deep()` 无法命中，请改用 `:global()` 或全局样式
+
+## 设计 Token
+
+Message 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+| Token 名称                    | 说明         | 默认值                                                                                            |
+| ----------------------------- | ------------ | ------------------------------------------------------------------------------------------------- |
+| `--hmfw-color-bg-elevated`    | 浮层背景色   | `#ffffff`                                                                                         |
+| `--hmfw-color-error`          | 错误状态色   | `#ff4d4f`                                                                                         |
+| `--hmfw-color-primary`        | 主题色       | `#1677ff`                                                                                         |
+| `--hmfw-color-success`        | 成功状态色   | `#52c41a`                                                                                         |
+| `--hmfw-color-text`           | 主文本色     | `rgba(0,0,0,0.88)`                                                                                |
+| `--hmfw-color-warning`        | 警告状态色   | `#faad14`                                                                                         |
+| `--hmfw-font-size-base`       | 标准字号     | `14px`                                                                                            |
+| `--hmfw-font-size-lg`         | 大号字号     | `16px`                                                                                            |
+| `--hmfw-line-height`          | 标准行高     | `1.5714285714285714`                                                                              |
+| `--hmfw-border-radius-lg`     | 大号圆角     | `8px`                                                                                             |
+| `--hmfw-box-shadow-secondary` | 次级浮层阴影 | `0 6px 16px 0 rgba(0,0,0,0.08), 0 3px 6px -4px rgba(0,0,0,0.12), 0 9px 28px 8px rgba(0,0,0,0.05)` |
+| `--hmfw-z-index-popup`        | 浮层层级     | `1010`                                                                                            |

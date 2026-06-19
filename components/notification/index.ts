@@ -6,4 +6,6 @@ export type {
   ArgsProps,
   ConfigOptions,
   NotificationInstance,
+  NotificationClassNames,
+  NotificationStyles,
 } from './types'

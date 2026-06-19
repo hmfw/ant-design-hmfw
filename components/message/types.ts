@@ -20,12 +20,36 @@ export interface ArgsProps {
   style?: CSSProperties
   /** 自定义 CSS class */
   className?: string
+  /** 语义化结构 class，可对提示内部各子节点应用自定义 class */
+  classNames?: MessageClassNames
+  /** 语义化结构 style，可对提示内部各子节点应用内联样式 */
+  styles?: MessageStyles
   /** 关闭时触发的回调函数 */
   onClose?: () => void
   /** 点击时触发的回调函数 */
   onClick?: (e: MouseEvent) => void
   /** 悬停时是否暂停计时器，默认 true */
   pauseOnHover?: boolean
+}
+
+/** 语义化结构 className，可对提示内部各子节点应用自定义 class */
+export interface MessageClassNames {
+  /** 单条提示的最外层容器（控制进出场动画与定位） */
+  wrapper?: string
+  /** 提示卡片主体（背景、圆角、阴影、内边距） */
+  notice?: string
+  /** 状态图标容器 */
+  icon?: string
+  /** 提示文本内容容器 */
+  title?: string
+}
+
+/** 语义化结构 style，可对提示内部各子节点应用内联样式 */
+export interface MessageStyles {
+  wrapper?: CSSProperties
+  notice?: CSSProperties
+  icon?: CSSProperties
+  title?: CSSProperties
 }
 
 export type JointContent = MessageContent | ArgsProps
