@@ -7,7 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### 准备发布 v1.0.0
+### Changed
+
+- 🔧 修复 `install()` 函数漏注册 33 个组件的问题，全局注册现已支持所有 68 个组件
+- 📦 优化 npm 包体积：排除 UMD sourcemap，包体积从 10.5MB 降至 4.4MB（压缩包 1.1MB）
+- 📝 更新项目数据：68 个组件、1889 个测试用例
+- 🧹 精简项目结构：移除历史开发文档、未使用脚本和视觉测试
+
+### Added
+
+- ✅ 添加冒烟测试，E2E 覆盖所有 68 个组件页面
+- 🎨 完成全部组件的语义化 API（classNames/styles）支持，Wave 4A-4D 共 42 个组件
+- 📚 同步 LLM 文档与组件元数据
+
+### Removed
+
+- 🗑️ 移除视觉回归测试（3 个测试文件，覆盖率仅 4.4%）
+- 🗑️ 移除历史文档：COMPARISON/、IMPLEMENTATION_PLAN.md、BUILD_OPTIMIZATION.md 等
+- 🗑️ 移除未使用脚本：verify-release.js、scripts/examples/
+
+---
 
 ## [0.1.0] - 2026-06-07
 
@@ -15,11 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### 核心功能
 
-- 🎉 实现 66 个高质量组件，涵盖所有常用场景
+- 🎉 实现 68 个高质量组件，涵盖所有常用场景
 - 🎨 完整的主题系统，支持 CSS Variables 动态定制
 - 🌍 国际化支持（中文、英文）
 - 📦 TypeScript 完整类型定义
-- ✅ 1888 个单元测试，覆盖所有组件
+- ✅ 1891 个单元测试，覆盖所有组件
 
 #### 组件列表
 
@@ -129,8 +148,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- 🐛 修复 266 个组件 bug（详见 COMPARISON 目录）
-- 🎯 优化 94 个功能点（详见 ROUND1-4 SUMMARY）
+- 🐛 修复 266 个组件 bug
+- 🎯 优化 94 个功能点
 
 ### Performance
 
