@@ -2,6 +2,10 @@
 
 基于 Ant Design v6 的 Vue3 UI 组件库，使用 TypeScript + TSX 实现。
 
+## 项目状态
+
+**v0.1.0 发布版本** - 68 个组件全部完成，1891 个测试通过，已发布到 npm。
+
 ## 语言偏好
 
 **重要**: 在处理此项目时，请始终使用**中文**进行回复和交流。
@@ -16,39 +20,70 @@
 
 从零开始构建的 Vue3 UI 组件库，参考 Ant Design v6 的设计规范和 API 设计，原生实现，最小化外部依赖。
 
+### 核心特性
+
+- 🎨 **68 个高质量组件** - 涵盖所有常用场景
+- 💪 **完整 TypeScript 支持** - 所有组件提供完整类型定义
+- 🎨 **语义化 API** - 所有组件支持 classNames/styles 精细化样式控制
+- ⚡ **高性能** - Select/Table 支持虚拟滚动
+- 🌍 **国际化** - 内置中英文语言包
+- 🎨 **主题定制** - 基于 CSS Variables 的设计 Token 系统
+
 ## 技术栈
 
 - **框架**: Vue 3.5+
 - **语言**: TypeScript 5.9+
 - **构建**: tsup（基于 esbuild）
 - **测试**: Vitest + @vue/test-utils
-- **E2E**: Playwright CLI（`playwright-cli`）
+- **E2E**: Playwright（36 个自动化测试）
 - **包管理**: pnpm
 
 ## 项目结构
 
 ```
 ant-design-hmfw/
-├── components/          # 组件库核心源码
-├── docs/                # 文档站（同时作为开发调试环境）
-├── scripts/             # 构建脚本（图标生成等）
+├── components/          # 组件库核心源码（68 个组件）
+│   ├── button/
+│   ├── input/
+│   ├── ...
+│   ├── _theme/         # 设计 Token 系统
+│   ├── index.ts        # 统一导出
+│   └── style.css       # 统一样式
+├── docs/                # 文档站（VitePress）
+├── scripts/             # 构建脚本
+│   ├── generate-icons.ts        # 图标生成
+│   ├── generate-llm-manifest.ts # LLM 文档生成
+│   ├── prepublish-check.js      # 发布前检查
+│   └── ...
+├── e2e/                 # E2E 冒烟测试
 ├── dist/                # 构建产物（自动生成）
-├── IMPLEMENTATION_PLAN.md
-├── CLAUDE.md
+├── CLAUDE.md            # AI 开发指令（本文件）
+├── README.md            # 项目说明
+├── CHANGELOG.md         # 版本历史
 └── package.json
 ```
 
 ## 常用命令
 
 ```bash
+# 开发
 pnpm install          # 安装依赖
-pnpm dev              # 启动文档站（访问 http://localhost:5173）
+pnpm dev              # 启动文档站（http://localhost:5173）
+
+# 构建
 pnpm build:lib        # 构建组件库
 pnpm build:docs       # 构建文档站
-pnpm test             # 运行测试
+
+# 测试
+pnpm test             # 运行单元测试
 pnpm test:watch       # 监听模式测试
 pnpm test:coverage    # 测试覆盖率
+pnpm e2e              # 运行 E2E 测试
 pnpm typecheck        # 类型检查
+
+# 发布
+pnpm precheck         # 发布前检查
+pnpm release          # 发布到 npm
 ```
 
 ## 命名规范
@@ -59,65 +94,116 @@ pnpm typecheck        # 类型检查
 - **类型名**: PascalCase + 后缀（`ButtonProps`、`ButtonType`）
 - **CSS 变量**: `--hmfw-{token-name}`（`--hmfw-color-primary`）
 
-## 开发工作流
+## 组件开发规范
 
-### 开发新组件
+### 组件目录结构
 
-```bash
-# 1. 创建组件目录
-mkdir -p components/my-component/{style,__tests__}
-
-# 2. 实现后更新：
-#    components/index.ts   — 添加导出
-#    components/style.css  — 添加 @import
-
-# 3. 在 docs 中添加演示和文档
-#    docs/demos/my-component/MyComponentBasic.vue  — demo 文件
-#    docs/demos/my-component/my-component.md       — 组件文档（路由自动生成）
-#    docs/src/nav/sidebar.ts                       — 添加侧边栏条目
-
-# 4. 更新 IMPLEMENTATION_PLAN.md 状态
+```
+components/button/
+├── Button.tsx           # 组件实现
+├── index.ts             # 导出
+├── style/
+│   └── index.css       # 组件样式
+├── __tests__/
+│   ├── Button.test.tsx # 单元测试
+│   └── Button.e2e.spec.ts # E2E 测试（可选）
+└── types.ts            # 类型定义
 ```
 
-### 运行测试
+### 语义化 API
 
-```bash
-pnpm test
-pnpm test:watch
-pnpm test:coverage
+所有组件都支持 `classNames` 和 `styles` 属性，用于精细化样式控制：
+
+```typescript
+interface SemanticAPI {
+  classNames?: {
+    root?: string
+    // 组件特定的语义化节点
+  }
+  styles?: {
+    root?: CSSProperties
+    // 组件特定的语义化节点
+  }
+}
 ```
 
-### 构建
+示例：
 
-```bash
-pnpm build:lib
+```vue
+<Button :classNames="{ root: 'custom-button', icon: 'custom-icon' }" :styles="{ root: { marginTop: '10px' } }">
+  点击我
+</Button>
 ```
 
-### 启动文档站（开发调试）
+### 添加新组件
+
+1. **创建组件目录**
+
+   ```bash
+   mkdir -p components/my-component/{style,__tests__}
+   ```
+
+2. **实现组件** - 参考现有组件的实现模式
+
+3. **更新导出**
+   - `components/index.ts` - 添加组件导出
+   - `components/style.css` - 添加 `@import './my-component/style/index.css'`
+
+4. **添加文档和演示**
+   - `docs/demos/my-component/MyComponentBasic.vue` - demo 文件
+   - `docs/demos/my-component/my-component.md` - 组件文档
+   - `docs/src/nav/sidebar.ts` - 添加侧边栏条目
+
+5. **编写测试**
+   - 单元测试（必需）
+   - E2E 测试（可选）
+
+## 测试
+
+### 单元测试
 
 ```bash
-pnpm dev
-# 访问 http://localhost:5173
+pnpm test                # 运行所有测试
+pnpm test Button         # 运行特定组件测试
+pnpm test:watch          # 监听模式
+pnpm test:coverage       # 生成覆盖率报告
 ```
 
-### E2E 验证
+### E2E 测试
 
 ```bash
-playwright-cli open http://localhost:5173
-playwright-cli screenshot --filename=/tmp/demo.png
-playwright-cli console error
-playwright-cli close
+pnpm e2e                 # 运行所有 E2E 测试
+pnpm e2e --headed        # 带浏览器界面
+pnpm e2e --debug         # 调试模式
 ```
+
+E2E 测试文件命名：`*.e2e.spec.ts`
 
 ## 设计 Token 系统
 
 位于 `components/_theme/`：
 
-- `seed.ts` — 基础 Token（颜色、字体、间距原始值）
-- `map.ts` — 派生 Token（由 seed 计算）
-- `inject.ts` — 注入为 CSS 变量
+- `seed.ts` - 基础 Token（颜色、字体、间距原始值）
+- `map.ts` - 派生 Token（由 seed 计算）
+- `inject.ts` - 注入为 CSS 变量
 
 **重要**：`inject.ts` 中 `UNITLESS_KEYS` 列表包含不加 `px` 的键（`lineHeight`、`fontWeight`、`opacity`、`zIndex` 等）。
+
+用户可通过 `ConfigProvider` 的 `theme` 属性覆盖：
+
+```vue
+<ConfigProvider :theme="{ colorPrimary: '#00b96b', borderRadius: 8 }">
+  <App />
+</ConfigProvider>
+```
+
+## 发布流程
+
+1. **更新版本号** - 修改 `package.json` 中的 `version`
+2. **更新 CHANGELOG.md** - 记录版本变更
+3. **运行发布检查** - `pnpm precheck`
+4. **发布到 npm** - `pnpm release`
+5. **打标签并推送** - `git tag vX.X.X && git push --tags`
 
 ## 参考资源
 
