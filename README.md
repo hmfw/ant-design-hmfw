@@ -19,7 +19,7 @@
   <p>
     <a href="https://hmfw.github.io/ant-design-hmfw">📖 文档</a> •
     <a href="#-快速开始">🚀 快速开始</a> •
-    <a href="#-组件列表">📦 组件列表</a> •
+    <a href="#-组件">📦 组件</a> •
     <a href="https://github.com/hmfw/ant-design-hmfw/issues">🐛 报告问题</a>
   </p>
 </div>
@@ -28,12 +28,13 @@
 
 ## ✨ 特性
 
-- 🎨 **68 个高质量组件** - 涵盖通用、布局、导航、表单、数据展示等各类场景
-- 💪 **TypeScript 支持** - 完整的类型定义，提供极佳的开发体验
+- 🎨 **68 个高质量组件** - 涵盖通用、布局、导航、表单、数据展示、反馈等全场景
+- 💪 **完整 TypeScript 支持** - 所有组件提供完整类型定义
 - 🎯 **按需引入** - 支持 Tree Shaking，打包体积最小化
 - 🌍 **国际化** - 内置中英文语言包，支持自定义语言
-- 🎨 **主题定制** - 完整的 CSS Variables 设计 Token 系统
-- ⚡ **高性能** - 虚拟滚动支持 10,000+ 数据流畅渲染
+- 🎨 **主题定制** - 基于 CSS Variables 的设计 Token 系统
+- 🎨 **语义化 API** - 所有组件支持 classNames/styles 精细化样式控制
+- ⚡ **高性能** - Select/Table 支持虚拟滚动，流畅处理大数据
 - 📱 **响应式** - 移动端友好的栅格系统和断点设计
 - ✅ **质量保证** - 1889 个单元测试，代码质量有保障
 
@@ -41,21 +42,14 @@
 
 ## 📦 安装
 
-### 使用 npm
-
 ```bash
+# npm
 npm install ant-design-hmfw
-```
 
-### 使用 pnpm (推荐)
-
-```bash
+# pnpm (推荐)
 pnpm add ant-design-hmfw
-```
 
-### 使用 yarn
-
-```bash
+# yarn
 yarn add ant-design-hmfw
 ```
 
@@ -95,7 +89,7 @@ app.mount('#app')
 ```vue
 <template>
   <div>
-    <Button type="primary" @click="handleClick"> 点击我 </Button>
+    <Button type="primary" @click="handleClick">点击我</Button>
     <Input v-model:value="text" placeholder="请输入内容" />
   </div>
 </template>
@@ -136,7 +130,6 @@ const handleClick = () => {
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { Form, FormItem, Input, InputPassword, Button } from 'ant-design-hmfw'
-import 'ant-design-hmfw/style.css'
 
 const formData = reactive({
   username: '',
@@ -158,7 +151,6 @@ const handleSubmit = () => {
 
 <script setup lang="ts">
 import { Table } from 'ant-design-hmfw'
-import 'ant-design-hmfw/style.css'
 
 const columns = [
   { title: '姓名', dataIndex: 'name', key: 'name' },
@@ -184,50 +176,33 @@ const dataSource = [
 
 <script setup lang="ts">
 import { ConfigProvider } from 'ant-design-hmfw'
-import 'ant-design-hmfw/style.css'
 
 const customTheme = {
-  colorPrimary: '#00b96b', // 主色
-  colorSuccess: '#52c41a', // 成功色
-  colorWarning: '#faad14', // 警告色
-  colorError: '#ff4d4f', // 错误色
-  borderRadius: 8, // 圆角
-  fontSize: 14, // 字体大小
+  colorPrimary: '#00b96b',
+  colorSuccess: '#52c41a',
+  colorWarning: '#faad14',
+  colorError: '#ff4d4f',
+  borderRadius: 8,
+  fontSize: 14,
 }
 </script>
 ```
 
 ---
 
-## 📦 组件列表
+## 📦 组件
 
-### 通用组件 (3)
+68 个组件，覆盖所有常用场景：
 
-Button 按钮 • Icon 图标 • Typography 排版
-
-### 布局组件 (5)
-
-Divider 分割线 • Flex 弹性布局 • Grid 栅格 • Layout 布局 • Space 间距
-
-### 导航组件 (7)
-
-Anchor 锚点 • Breadcrumb 面包屑 • Dropdown 下拉菜单 • Menu 导航菜单 • Pagination 分页 • Steps 步骤条 • Tabs 标签页
-
-### 数据录入组件 (18)
-
-AutoComplete • Cascader • Checkbox • ColorPicker • DatePicker • Form • Input • InputNumber • Radio • RangePicker • Rate • Select • Slider • Switch • TimePicker • Transfer • TreeSelect • Upload
-
-### 数据展示组件 (18)
-
-Avatar • Badge • Calendar • Card • Carousel • Collapse • Descriptions • Empty • Image • List • Popover • Progress • QRCode • Segmented • Statistic • Table • Tag • Timeline • Tooltip • Tree • Watermark
-
-### 反馈组件 (11)
-
-Alert • Drawer • Message • Modal • Notification • Popconfirm • Result • Skeleton • Spin • Tour
-
-### 其他组件 (4)
-
-App • BackTop • ConfigProvider • FloatButton
+| 分类         | 数量 | 包含组件                                                                                                                                                                             |
+| ------------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **通用**     | 3    | Button, Icon, Typography                                                                                                                                                             |
+| **布局**     | 5    | Divider, Flex, Grid, Layout, Space                                                                                                                                                   |
+| **导航**     | 7    | Anchor, Breadcrumb, Dropdown, Menu, Pagination, Steps, Tabs                                                                                                                          |
+| **数据录入** | 18   | AutoComplete, Cascader, Checkbox, ColorPicker, DatePicker, Form, Input, InputNumber, Radio, RangePicker, Rate, Select, Slider, Switch, TimePicker, Transfer, TreeSelect, Upload      |
+| **数据展示** | 18   | Avatar, Badge, Calendar, Card, Carousel, Collapse, Descriptions, Empty, Image, List, Popover, Progress, QRCode, Segmented, Statistic, Table, Tag, Timeline, Tooltip, Tree, Watermark |
+| **反馈**     | 11   | Alert, Drawer, Message, Modal, Notification, Popconfirm, Result, Skeleton, Spin, Tour                                                                                                |
+| **其他**     | 4    | App, BackTop, ConfigProvider, FloatButton                                                                                                                                            |
 
 > 📖 查看 [完整文档](https://hmfw.github.io/ant-design-hmfw) 了解每个组件的详细用法和 API
 
@@ -235,128 +210,44 @@ App • BackTop • ConfigProvider • FloatButton
 
 ## 🎨 主题定制
 
-### 支持的 Design Tokens
+支持通过 ConfigProvider 配置主题 Token：
 
 ```typescript
-{
-  // 颜色
-  colorPrimary: '#1677ff',
-  colorSuccess: '#52c41a',
-  colorWarning: '#faad14',
-  colorError: '#ff4d4f',
-  colorInfo: '#1677ff',
-
-  // 字体
-  fontSize: 14,
-  fontSizeBase: 14,
-  fontFamily: '-apple-system, BlinkMacSystemFont, ...',
-
-  // 尺寸
-  borderRadius: 6,
-  controlHeight: 32,
-
-  // 间距
-  padding: 16,
-  margin: 16,
+const theme = {
+  colorPrimary: '#1890ff', // 主色
+  colorSuccess: '#52c41a', // 成功色
+  colorWarning: '#faad14', // 警告色
+  colorError: '#ff4d4f', // 错误色
+  colorInfo: '#1890ff', // 信息色
+  borderRadius: 6, // 圆角
+  fontSize: 14, // 字体大小
+  fontFamily: 'sans-serif', // 字体
 }
-```
-
-### 使用方式
-
-```vue
-<ConfigProvider :theme="{ colorPrimary: '#00b96b' }">
-  <YourApp />
-</ConfigProvider>
 ```
 
 ---
 
 ## 🌍 国际化
 
-```vue
-<template>
-  <ConfigProvider :locale="locale">
-    <Space>
-      <Button @click="locale = zhCN">中文</Button>
-      <Button @click="locale = enUS">English</Button>
-    </Space>
-    <YourApp />
-  </ConfigProvider>
-</template>
+内置中英文语言包：
 
-<script setup lang="ts">
-import { ref } from 'vue'
-import { ConfigProvider, zhCN, enUS } from 'ant-design-hmfw'
+```typescript
+import { createApp } from 'vue'
+import AntDesignHmfw, { zhCN, enUS } from 'ant-design-hmfw'
 
-const locale = ref(zhCN)
-</script>
+const app = createApp(App)
+app.use(AntDesignHmfw, { locale: zhCN }) // 或 enUS
 ```
 
 ---
 
-## 📊 浏览器兼容性
-
-支持现代浏览器和 Node.js 18+
-
-| ![Edge](https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Firefox](https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Chrome](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Safari](https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png) |
-| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Edge ≥ 79                                                                                     | Firefox latest 2                                                                                       | Chrome latest 2                                                                                     | Safari latest 2                                                                                     |
-
----
-
-## 🔧 本地开发
-
-```bash
-# 克隆仓库
-git clone https://github.com/hmfw/ant-design-hmfw.git
-cd ant-design-hmfw
-
-# 安装依赖
-pnpm install
-
-# 启动文档站（开发模式）
-pnpm dev
-
-# 运行测试
-pnpm test
-
-# 构建组件库
-pnpm build:lib
-
-# 类型检查
-pnpm typecheck
-```
-
----
-
-## 📈 项目数据
+## 📊 项目数据
 
 - 🎯 **68 个组件** - 覆盖所有常用场景
 - ✅ **1889 个测试** - 质量有保障
-- 📦 **160 KB** - Gzip 后的体积
+- 📦 **12 KB (3 KB Gzip)** - ESM 构建产物体积
 - 🌟 **79 个图标** - 内置图标库
 - 🎨 **完整类型** - 100% TypeScript
-
----
-
-## 🤝 参与贡献
-
-我们欢迎所有形式的贡献！
-
-### 贡献方式
-
-- 🐛 [报告 Bug](https://github.com/hmfw/ant-design-hmfw/issues/new)
-- 💡 [提出新功能](https://github.com/hmfw/ant-design-hmfw/issues/new)
-- 📝 改进文档
-- 💻 提交代码
-
-### 开发流程
-
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'feat: add some feature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
 
 ---
 
@@ -368,15 +259,9 @@ pnpm typecheck
 
 ## 🔗 相关链接
 
-- [📖 文档](https://hmfw.github.io/ant-design-hmfw)
-- [🎨 Ant Design](https://ant.design/) - 设计规范参考
+- [📖 在线文档](https://hmfw.github.io/ant-design-hmfw)
+- [🎨 Ant Design](https://ant.design/)
 - [⚡ Vue 3](https://vuejs.org/)
 - [📘 TypeScript](https://www.typescriptlang.org/)
 - [🐛 报告问题](https://github.com/hmfw/ant-design-hmfw/issues)
 - [💬 讨论区](https://github.com/hmfw/ant-design-hmfw/discussions)
-
----
-
-<div align="center">
-  <sub>Built with ❤️ using Vue 3 and TypeScript</sub>
-</div>
