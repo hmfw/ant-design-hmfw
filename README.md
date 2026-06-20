@@ -12,8 +12,8 @@
   <p>
     <img src="https://img.shields.io/badge/Vue-3.3+-4FC08D?style=flat-square&logo=vue.js&logoColor=white" alt="Vue 3.3+">
     <img src="https://img.shields.io/badge/TypeScript-5.4+-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 5.4+">
-    <img src="https://img.shields.io/badge/Tests-1888%2F1890-success?style=flat-square" alt="Tests">
-    <img src="https://img.shields.io/badge/Components-66-blue?style=flat-square" alt="66 Components">
+    <img src="https://img.shields.io/badge/Tests-1889%2F1891-success?style=flat-square" alt="Tests">
+    <img src="https://img.shields.io/badge/Components-68-blue?style=flat-square" alt="68 Components">
   </p>
   
   <p>
@@ -28,14 +28,14 @@
 
 ## ✨ 特性
 
-- 🎨 **66 个高质量组件** - 涵盖通用、布局、导航、表单、数据展示等各类场景
+- 🎨 **68 个高质量组件** - 涵盖通用、布局、导航、表单、数据展示等各类场景
 - 💪 **TypeScript 支持** - 完整的类型定义，提供极佳的开发体验
 - 🎯 **按需引入** - 支持 Tree Shaking，打包体积最小化
 - 🌍 **国际化** - 内置中英文语言包，支持自定义语言
 - 🎨 **主题定制** - 完整的 CSS Variables 设计 Token 系统
 - ⚡ **高性能** - 虚拟滚动支持 10,000+ 数据流畅渲染
 - 📱 **响应式** - 移动端友好的栅格系统和断点设计
-- ✅ **质量保证** - 1888 个单元测试，代码质量有保障
+- ✅ **质量保证** - 1889 个单元测试，代码质量有保障
 
 ---
 
@@ -331,8 +331,8 @@ pnpm typecheck
 
 ## 📈 项目数据
 
-- 🎯 **66 个组件** - 覆盖所有常用场景
-- ✅ **1888 个测试** - 质量有保障
+- 🎯 **68 个组件** - 覆盖所有常用场景
+- ✅ **1889 个测试** - 质量有保障
 - 📦 **160 KB** - Gzip 后的体积
 - 🌟 **79 个图标** - 内置图标库
 - 🎨 **完整类型** - 100% TypeScript

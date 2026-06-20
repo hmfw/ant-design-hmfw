@@ -480,6 +480,38 @@ import { RangePicker } from './range-picker'
 import { TreeSelect } from './tree-select'
 import { Statistic, Countdown } from './statistic'
 import { Calendar } from './calendar'
+import { Tooltip } from './tooltip'
+import { Alert } from './alert'
+import { Select } from './select'
+import { Popover } from './popover'
+import { InputNumber } from './input-number'
+import { Collapse, CollapsePanel } from './collapse'
+import { Descriptions, DescriptionsItem } from './descriptions'
+import { Steps } from './steps'
+import { Result } from './result'
+import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from './skeleton'
+import { Rate } from './rate'
+import { Slider } from './slider'
+import { Timeline, TimelineItem } from './timeline'
+import { List, ListItem, ListItemMeta } from './list'
+import { Dropdown } from './dropdown'
+import { Popconfirm } from './popconfirm'
+import { Segmented } from './segmented'
+import { Table } from './table'
+import { Menu } from './menu'
+import { Form, FormItem } from './form'
+import { Watermark } from './watermark'
+import { BackTop } from './back-top'
+import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from './float-button'
+import { QRCode } from './qrcode'
+import { Anchor, AnchorLink } from './anchor'
+import { Tree, DirectoryTree } from './tree'
+import { TimePicker } from './time-picker'
+import { DatePicker } from './date-picker'
+import { Upload, UploadDragger } from './upload'
+import { Flex } from './flex'
+import { AutoComplete } from './auto-complete'
+import { Cascader } from './cascader'
 
 const components = [
   ConfigProvider,
@@ -537,6 +569,54 @@ const components = [
   Statistic,
   Countdown,
   Calendar,
+  Tooltip,
+  Alert,
+  Select,
+  Popover,
+  InputNumber,
+  Collapse,
+  CollapsePanel,
+  Descriptions,
+  DescriptionsItem,
+  Steps,
+  Result,
+  Skeleton,
+  SkeletonButton,
+  SkeletonInput,
+  SkeletonAvatar,
+  SkeletonImage,
+  SkeletonNode,
+  Rate,
+  Slider,
+  Timeline,
+  TimelineItem,
+  List,
+  ListItem,
+  ListItemMeta,
+  Dropdown,
+  Popconfirm,
+  Segmented,
+  Table,
+  Menu,
+  Form,
+  FormItem,
+  Watermark,
+  BackTop,
+  FloatButton,
+  FloatButtonGroup,
+  FloatButtonBackTop,
+  QRCode,
+  Anchor,
+  AnchorLink,
+  Tree,
+  DirectoryTree,
+  TimePicker,
+  DatePicker,
+  Upload,
+  UploadDragger,
+  Flex,
+  AutoComplete,
+  Cascader,
 ]
 
 export function install(app: VueApp): void {

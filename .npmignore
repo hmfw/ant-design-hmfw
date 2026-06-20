@@ -30,12 +30,6 @@ vite.config.ts
 .prettierignore
 
 # 文档和总结
-COMPARISON/
-COMPARISON.md
-IMPLEMENTATION_PLAN.md
-BUILD_OPTIMIZATION.md
-ROADMAP.md
-TESTING.md
 *.SUMMARY.md
 
 # 开发工具
