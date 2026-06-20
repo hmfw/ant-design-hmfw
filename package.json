@@ -87,7 +87,6 @@
     "visual": "playwright test --config playwright.visual.config.ts",
     "size": "node scripts/analyze-bundle.js && node scripts/test-tree-shaking.js",
     "precheck": "node scripts/prepublish-check.js",
-    "verify:release": "node scripts/verify-release.js",
     "prepublishOnly": "pnpm test && pnpm typecheck && pnpm build:lib",
     "release": "pnpm prepublishOnly && npm publish",
     "prepare": "husky"
