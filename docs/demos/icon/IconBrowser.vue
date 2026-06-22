@@ -7,36 +7,81 @@ const searchQuery = ref('')
 const selectedCategory = ref('all')
 const copiedIcon = ref('')
 
+// 图标风格：all 全部 / outlined 线形 / filled 实底
+type IconStyle = 'all' | 'outlined' | 'filled'
+const iconStyle = ref<IconStyle>('all')
+
+const styleOptions: { value: IconStyle; label: string }[] = [
+  { value: 'all', label: '全部' },
+  { value: 'outlined', label: '线形' },
+  { value: 'filled', label: '实底' },
+]
+
 const categories = computed(() => ['all', ...getAllCategories()])
 
-const filteredIcons = computed(() => {
-  let results: IconSearchResult[] = []
+// 按风格过滤图标
+const filterByStyle = (icons: IconSearchResult[]): IconSearchResult[] => {
+  if (iconStyle.value === 'filled') {
+    return icons.filter((i) => i.name.endsWith('-filled'))
+  }
+  if (iconStyle.value === 'outlined') {
+    return icons.filter((i) => !i.name.endsWith('-filled'))
+  }
+  return icons
+}
+
+// 分组图标数据
+const groupedIcons = computed(() => {
+  const groups: Record<string, IconSearchResult[]> = {}
+
+  let icons: IconSearchResult[] = []
 
   if (searchQuery.value.trim()) {
-    // 搜索模式
-    results = searchIcons(searchQuery.value)
-  } else if (selectedCategory.value !== 'all') {
-    // 分类过滤模式
-    results = getIconsByCategory(selectedCategory.value)
-  } else {
-    // 显示所有图标
-    results = getAllIcons()
+    // 搜索模式 - 不分组，直接显示搜索结果
+    return { 'Search Results': filterByStyle(searchIcons(searchQuery.value)) }
   }
 
-  return results
+  if (selectedCategory.value !== 'all') {
+    icons = getIconsByCategory(selectedCategory.value)
+  } else {
+    icons = getAllIcons()
+  }
+
+  // 按风格过滤
+  icons = filterByStyle(icons)
+
+  // 按分类分组
+  icons.forEach((icon) => {
+    if (!groups[icon.category]) {
+      groups[icon.category] = []
+    }
+    groups[icon.category].push(icon)
+  })
+
+  // 按 getAllCategories() 的顺序重新排序分组
+  const orderedGroups: Record<string, IconSearchResult[]> = {}
+  getAllCategories().forEach((category) => {
+    if (groups[category]) {
+      orderedGroups[category] = groups[category]
+    }
+  })
+
+  return orderedGroups
 })
 
-const copyCode = (iconName: string) => {
-  const componentName =
-    iconName
-      .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('') + 'Outlined'
+const totalCount = computed(() => {
+  return Object.values(groupedIcons.value).reduce((sum, icons) => sum + icons.length, 0)
+})
 
-  const code = `import { ${componentName} } from 'ant-design-hmfw'\n\n<Icon :component="${componentName}" />`
+const copyCode = (icon: IconSearchResult) => {
+  const parts = icon.name.split('-')
+  const baseName = parts.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join('')
+  const suffix = icon.name.includes('filled') ? 'Filled' : 'Outlined'
+  const componentName = baseName.replace(/filled$/i, '') + suffix
+  const code = `<Icon :component="${componentName}" />`
 
   navigator.clipboard.writeText(code).then(() => {
-    copiedIcon.value = iconName
+    copiedIcon.value = icon.name
     setTimeout(() => {
       copiedIcon.value = ''
     }, 2000)
@@ -46,235 +91,303 @@ const copyCode = (iconName: string) => {
 
 <template>
   <div class="icon-browser">
-    <!-- 搜索和过滤栏 -->
-    <div class="controls">
-      <div class="search-box">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="搜索图标... (如: home, search, arrow)"
-          class="search-input"
-        />
-        <span class="search-icon">🔍</span>
-      </div>
-
-      <div class="category-filter">
-        <label>分类：</label>
-        <select v-model="selectedCategory" class="category-select">
-          <option v-for="category in categories" :key="category" :value="category">
-            {{ category === 'all' ? '全部' : category }}
-          </option>
-        </select>
-      </div>
+    <!-- 搜索框 -->
+    <div class="search-wrapper">
+      <input v-model="searchQuery" type="text" placeholder="在此搜索图标，点击图标可复制代码" class="search-input" />
     </div>
 
-    <!-- 结果统计 -->
-    <div class="stats">
-      找到 <strong>{{ filteredIcons.length }}</strong> 个图标
-      <span v-if="searchQuery" class="search-term"> 搜索: "{{ searchQuery }}" </span>
-    </div>
-
-    <!-- 图标网格 -->
-    <div class="icon-grid">
-      <div
-        v-for="icon in filteredIcons"
-        :key="icon.name"
-        class="icon-card"
-        :class="{ copied: copiedIcon === icon.name }"
-        @click="copyCode(icon.name)"
+    <!-- 分类标签 -->
+    <div class="category-tabs">
+      <button
+        v-for="category in categories"
+        :key="category"
+        :class="['category-tab', { active: selectedCategory === category }]"
+        @click="selectedCategory = category"
       >
-        <div class="icon-display">
-          <Icon :component="icon.component" :style="{ fontSize: '32px' }" />
-        </div>
-        <div class="icon-name">
-          {{ icon.name }}
-        </div>
-        <div class="icon-category">
-          {{ icon.category }}
-        </div>
-        <div class="icon-keywords">
-          <span v-for="keyword in icon.keywords.slice(0, 3)" :key="keyword" class="keyword-tag">
-            {{ keyword }}
-          </span>
-        </div>
-        <div v-if="copiedIcon === icon.name" class="copied-indicator">✓ 已复制</div>
+        {{ category === 'all' ? '全部图标' : category }}
+      </button>
+    </div>
+
+    <!-- 统计信息 + 风格切换 -->
+    <div v-if="totalCount > 0" class="icon-stats">
+      <span class="stats-text">共 {{ totalCount }} 个图标</span>
+      <div class="style-switch">
+        <button
+          v-for="opt in styleOptions"
+          :key="opt.value"
+          :class="['style-switch__item', { active: iconStyle === opt.value }]"
+          @click="iconStyle = opt.value"
+        >
+          {{ opt.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- 图标分组列表 -->
+    <div v-if="totalCount > 0" class="icon-groups">
+      <div v-for="(icons, groupName) in groupedIcons" :key="groupName" class="icon-group">
+        <h4 class="group-title">{{ groupName }}</h4>
+        <ul class="icon-list">
+          <li
+            v-for="icon in icons"
+            :key="icon.name"
+            :class="['icon-item', { copied: copiedIcon === icon.name }]"
+            @click="copyCode(icon)"
+          >
+            <Icon :component="icon.component" class="icon-svg" />
+            <span class="icon-label">{{ icon.name }}</span>
+            <span v-if="copiedIcon === icon.name" class="copied-badge">
+              <svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor">
+                <path
+                  d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
+                ></path>
+              </svg>
+              Copied!
+            </span>
+          </li>
+        </ul>
       </div>
     </div>
 
     <!-- 空状态 -->
-    <div v-if="filteredIcons.length === 0" class="empty-state">
-      <div class="empty-icon">🔍</div>
-      <div class="empty-text">未找到匹配的图标</div>
-      <div class="empty-hint">尝试其他关键词或选择不同的分类</div>
+    <div v-else class="empty-state">
+      <svg viewBox="64 64 896 896" width="64" height="64" fill="currentColor" opacity="0.3">
+        <path
+          d="M893.6 693.2L730.4 530c-9.4-9.4-24.6-9.4-33.9 0l-63.7 63.7-96.6-96.6L762.9 270.4c1.8-1.9 3.3-4 4.5-6.2l86.8-158.8c2.8-5.1.9-11.5-4.2-14.3-5.1-2.8-11.5-.9-14.3 4.2L749 253.9c-1.2 2.2-2.7 4.3-4.5 6.2L518.2 486.4 282 250.2c-9.4-9.4-24.6-9.4-33.9 0L64.4 433.9c-9.4 9.4-9.4 24.6 0 33.9l464.6 464.6c9.4 9.4 24.6 9.4 33.9 0l330.7-330.8c9.4-9.4 9.4-24.6 0-33.9z"
+        ></path>
+      </svg>
+      <p class="empty-text">未找到相关图标</p>
     </div>
   </div>
 </template>
 
 <style scoped>
 .icon-browser {
-  padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  padding: 0;
 }
 
-.controls {
-  display: flex;
-  gap: 16px;
+/* 搜索框 */
+.search-wrapper {
   margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
-.search-box {
-  position: relative;
-  flex: 1;
-  min-width: 300px;
 }
 
 .search-input {
   width: 100%;
-  padding: 12px 40px 12px 16px;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
+  padding: 12px 16px;
   font-size: 14px;
-  transition: all 0.3s;
+  line-height: 1.5715;
+  color: rgba(0, 0, 0, 0.88);
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.search-input:hover {
+  border-color: #4096ff;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #1890ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+  border-color: #4096ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
 }
 
-.search-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  opacity: 0.5;
+.search-input::placeholder {
+  color: rgba(0, 0, 0, 0.45);
 }
 
-.category-filter {
+/* 分类标签 */
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.category-tab {
+  padding: 4px 15px;
+  font-size: 14px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.88);
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.category-tab:hover {
+  color: #4096ff;
+  border-color: #4096ff;
+}
+
+.category-tab.active {
+  color: #1677ff;
+  background: #e6f4ff;
+  border-color: #91caff;
+}
+
+/* 统计信息 */
+.icon-stats {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.category-select {
-  padding: 8px 12px;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.category-select:hover {
-  border-color: #1890ff;
-}
-
-.stats {
+  justify-content: space-between;
   margin-bottom: 16px;
-  color: #666;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.stats-text {
   font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
 }
 
-.search-term {
-  color: #1890ff;
-  margin-left: 8px;
-}
-
-.icon-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.icon-card {
-  position: relative;
-  padding: 20px;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s;
-  background: #fff;
-}
-
-.icon-card:hover {
-  border-color: #1890ff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-.icon-card.copied {
-  border-color: #52c41a;
-  background: #f6ffed;
-}
-
-.icon-display {
-  margin-bottom: 12px;
-  color: #333;
-}
-
-.icon-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 4px;
-}
-
-.icon-category {
-  font-size: 11px;
-  color: #999;
-  margin-bottom: 8px;
-  text-transform: capitalize;
-}
-
-.icon-keywords {
+/* 图标分组 */
+.icon-groups {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  justify-content: center;
-  min-height: 20px;
+  flex-direction: column;
+  gap: 40px;
 }
 
-.keyword-tag {
-  font-size: 10px;
-  padding: 2px 6px;
-  background: #f0f0f0;
+.icon-group {
+  width: 100%;
+}
+
+.group-title {
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.88);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* 风格切换 */
+.style-switch {
+  display: inline-flex;
+  padding: 2px;
+  background: #f5f5f5;
+  border-radius: 6px;
+}
+
+.style-switch__item {
+  padding: 2px 12px;
+  font-size: 13px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.65);
+  background: transparent;
+  border: none;
   border-radius: 4px;
-  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.copied-indicator {
+.style-switch__item:hover {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.style-switch__item.active {
+  color: #1677ff;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* 图标列表 */
+.icon-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.icon-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.icon-item:hover {
+  background-color: #f5f5f5;
+}
+
+.icon-item.copied {
+  background-color: #e6f4ff;
+}
+
+.icon-svg {
+  font-size: 36px;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 8px;
+}
+
+.icon-label {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
+  text-align: center;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.copied-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
   font-size: 12px;
   color: #52c41a;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 4px;
   font-weight: 500;
 }
 
+/* 空状态 */
 .empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: #999;
-}
-
-.empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .empty-text {
-  font-size: 16px;
-  margin-bottom: 8px;
-  color: #666;
+  margin-top: 16px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
 }
 
-.empty-hint {
-  font-size: 14px;
+/* 响应式 */
+@media (max-width: 768px) {
+  .icon-list {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .icon-svg {
+    font-size: 28px;
+  }
+
+  .category-tabs {
+    gap: 4px;
+  }
+
+  .category-tab {
+    padding: 2px 12px;
+    font-size: 13px;
+  }
 }
 </style>

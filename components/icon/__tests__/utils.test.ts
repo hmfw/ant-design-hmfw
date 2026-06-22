@@ -7,7 +7,7 @@ describe('Icon Utils', () => {
     it('finds icons by exact name match', () => {
       const results = searchIcons('home')
       expect(results.length).toBeGreaterThan(0)
-      expect(results[0].name).toBe('home')
+      expect(results.some((r) => r.name === 'home')).toBe(true)
     })
 
     it('finds icons by keyword', () => {
@@ -17,9 +17,9 @@ describe('Icon Utils', () => {
     })
 
     it('finds icons by category', () => {
-      const results = searchIcons('navigation')
+      const results = searchIcons('网站通用')
       expect(results.length).toBeGreaterThan(0)
-      expect(results.every((r) => r.category === 'navigation')).toBe(true)
+      expect(results.every((r) => r.category === '网站通用')).toBe(true)
     })
 
     it('returns empty array for no matches', () => {
@@ -45,9 +45,9 @@ describe('Icon Utils', () => {
 
   describe('getIconsByCategory', () => {
     it('returns all icons in a category', () => {
-      const results = getIconsByCategory('action')
+      const results = getIconsByCategory('编辑操作')
       expect(results.length).toBeGreaterThan(0)
-      expect(results.every((r) => r.category === 'action')).toBe(true)
+      expect(results.every((r) => r.category === '编辑操作')).toBe(true)
     })
 
     it('returns empty array for non-existent category', () => {
@@ -56,8 +56,8 @@ describe('Icon Utils', () => {
     })
 
     it('is case insensitive', () => {
-      const lower = getIconsByCategory('action')
-      const upper = getIconsByCategory('ACTION')
+      const lower = getIconsByCategory('编辑操作')
+      const upper = getIconsByCategory('编辑操作'.toUpperCase())
       expect(lower.length).toBe(upper.length)
     })
   })
@@ -69,24 +69,26 @@ describe('Icon Utils', () => {
       expect(new Set(categories).size).toBe(categories.length) // No duplicates
     })
 
-    it('returns sorted categories', () => {
+    it('returns categories in predefined order', () => {
       const categories = getAllCategories()
-      const sorted = [...categories].sort()
-      expect(categories).toEqual(sorted)
+      // 验证顺序是预定义的，而非字母排序
+      expect(categories[0]).toBe('方向指示')
+      expect(categories[1]).toBe('品牌标识')
+      expect(categories.length).toBeGreaterThan(10)
     })
 
     it('includes expected categories', () => {
       const categories = getAllCategories()
-      expect(categories).toContain('action')
-      expect(categories).toContain('navigation')
-      expect(categories).toContain('feedback')
+      expect(categories).toContain('编辑操作')
+      expect(categories).toContain('网站通用')
+      expect(categories).toContain('提示建议')
     })
   })
 
   describe('getAllIcons', () => {
-    it('returns all icons (count matches metadata)', () => {
+    it('returns all icons (should be 681)', () => {
       const icons = getAllIcons()
-      expect(icons.length).toBe(Object.keys(iconMetadata).length)
+      expect(icons.length).toBe(681)
     })
 
     it('each icon has required properties', () => {

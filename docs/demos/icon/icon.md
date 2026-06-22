@@ -14,9 +14,7 @@
 
 浏览所有内置图标，支持搜索和分类过滤。点击图标可复制代码。
 
-<DemoBlock title="图标浏览器" :source="IconBrowserSource">
-  <IconBrowser />
-</DemoBlock>
+<IconBrowser />
 
 ### 基础用法
 
