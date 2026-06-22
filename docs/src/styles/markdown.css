@@ -1,7 +1,7 @@
 .md-content {
   line-height: 1.7;
   color: var(--doc-c-text-1);
-  font-size: 15px;
+  font-size: 14px;
   font-family: var(--doc-font-base);
 }
 
@@ -50,13 +50,13 @@
 }
 
 /* ---- Links ---- */
-.md-content a {
+.md-content a:not([class*='hmfw-btn']) {
   color: var(--doc-c-brand);
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.md-content a:hover {
+.md-content a:not([class*='hmfw-btn']):hover {
   color: var(--doc-c-brand-hover);
   text-decoration: underline;
 }
