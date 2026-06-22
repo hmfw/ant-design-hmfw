@@ -28,6 +28,7 @@ export const router = createRouter({
         },
         { path: 'guide/theming', component: () => import('../../guide/theming.md') },
         { path: 'guide/i18n', component: () => import('../../guide/i18n.md') },
+        { path: 'guide/changelog', component: () => import('../../guide/changelog.md') },
         ...componentRoutes,
       ],
     },

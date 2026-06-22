@@ -121,6 +121,7 @@ export const guideSidebar: SidebarGroup[] = [
       { text: '快速上手', link: '/guide/getting-started' },
       { text: '主题定制', link: '/guide/theming' },
       { text: '国际化', link: '/guide/i18n' },
+      { text: '更新日志', link: '/guide/changelog' },
     ],
   },
 ]
