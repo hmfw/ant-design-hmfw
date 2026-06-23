@@ -79,7 +79,7 @@ describe('Select', () => {
       props: { options, mode: 'multiple' },
       attachTo: document.body,
     })
-    expect(wrapper.classes()).toContain('hmfw-select-multiple')
+    expect(wrapper.find('.hmfw-select').classes()).toContain('hmfw-select-multiple')
     await wrapper.find('.hmfw-select-selector').trigger('click')
     await nextTick()
     const items = document.querySelectorAll('.hmfw-select-item-option')
@@ -106,16 +106,16 @@ describe('Select', () => {
 
   it('is disabled', () => {
     const wrapper = mount(Select, { props: { options, disabled: true }, attachTo: document.body })
-    expect(wrapper.classes()).toContain('hmfw-select-disabled')
+    expect(wrapper.find('.hmfw-select').classes()).toContain('hmfw-select-disabled')
     wrapper.unmount()
   })
 
   it('shows size classes', () => {
     const small = mount(Select, { props: { options, size: 'small' }, attachTo: document.body })
-    expect(small.classes()).toContain('hmfw-select-small')
+    expect(small.find('.hmfw-select').classes()).toContain('hmfw-select-small')
     small.unmount()
     const large = mount(Select, { props: { options, size: 'large' }, attachTo: document.body })
-    expect(large.classes()).toContain('hmfw-select-large')
+    expect(large.find('.hmfw-select').classes()).toContain('hmfw-select-large')
     large.unmount()
   })
 

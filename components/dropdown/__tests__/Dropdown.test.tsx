@@ -162,6 +162,77 @@ describe('Dropdown', () => {
     wrapper.unmount()
   })
 
+  it('pointAtCenter aligns arrow tip to trigger center', async () => {
+    // 触发器宽 100、左缘 50 → 中心 100；弹层宽 120；箭头尖端距边缘 20px
+    const triggerRect = { left: 50, right: 150, top: 0, bottom: 30, width: 100, height: 30 }
+    const dropdownRect = { width: 120, height: 80, left: 0, right: 0, top: 0, bottom: 0 }
+
+    const makeWrapper = (arrow: any) =>
+      mount(Dropdown, {
+        props: { menu, open: true, placement: 'bottomLeft', arrow },
+        slots: { default: '<button>Open</button>' },
+        attachTo: document.body,
+      })
+
+    const stub = (el: Element | null, rect: any) => {
+      if (el) (el as HTMLElement).getBoundingClientRect = () => rect as DOMRect
+    }
+
+    // 默认：左缘对齐触发器左缘 → left = 50
+    const w1 = makeWrapper(true)
+    stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
+    stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
+    window.dispatchEvent(new Event('resize'))
+    await nextTick()
+    const left1 = (document.querySelector('.hmfw-dropdown') as HTMLElement).style.left
+    expect(left1).toBe('50px')
+    w1.unmount()
+
+    // pointAtCenter：箭头尖端(距左缘 20px)对齐触发器中心(100) → left = 80
+    const w2 = makeWrapper({ pointAtCenter: true })
+    stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
+    stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
+    window.dispatchEvent(new Event('resize'))
+    await nextTick()
+    const left2 = (document.querySelector('.hmfw-dropdown') as HTMLElement).style.left
+    expect(left2).toBe('80px')
+    w2.unmount()
+  })
+
+  it('flips placement class to top when bottom overflows', async () => {
+    // 触发器贴近视口底部：下方放不下、上方放得下 → 应翻转到 top，placement 类同步
+    const viewportH = window.innerHeight
+    const triggerRect = {
+      left: 50,
+      right: 150,
+      top: viewportH - 40,
+      bottom: viewportH - 10,
+      width: 100,
+      height: 30,
+    }
+    const dropdownRect = { width: 120, height: 200, left: 0, right: 0, top: 0, bottom: 0 }
+
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: true, placement: 'bottomLeft', arrow: true },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+
+    const stub = (el: Element | null, rect: any) => {
+      if (el) (el as HTMLElement).getBoundingClientRect = () => rect as DOMRect
+    }
+    stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
+    stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
+    window.dispatchEvent(new Event('resize'))
+    await nextTick()
+
+    const dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
+    // 翻转后箭头方向类应为 topLeft，而非初始的 bottomLeft
+    expect(dropdown.classList.contains('hmfw-dropdown-placement-topLeft')).toBe(true)
+    expect(dropdown.classList.contains('hmfw-dropdown-placement-bottomLeft')).toBe(false)
+    wrapper.unmount()
+  })
+
   it('supports overlayClassName', async () => {
     const wrapper = mount(Dropdown, {
       props: { menu, open: true, overlayClassName: 'custom-class' },
@@ -314,6 +385,54 @@ describe('DropdownButton', () => {
     })
     const buttons = wrapper.findAll('.hmfw-btn')
     expect(buttons[0].attributes('disabled')).toBeDefined()
+    wrapper.unmount()
+  })
+
+  it('opens on hover by default', async () => {
+    const wrapper = mount(DropdownButton, {
+      props: { menu, mouseEnterDelay: 0 },
+      slots: { default: 'Actions' },
+      attachTo: document.body,
+    })
+
+    // 默认 trigger 为 hover（与基础 Dropdown 一致）
+    const dropdownWrapper = wrapper.findComponent(Dropdown)
+    expect(dropdownWrapper.props('trigger')).toBe('hover')
+
+    // Dropdown 触发区域是 .hmfw-dropdown-button 下的 div（左按钮是 button，不是 div）
+    const triggerDiv = document.querySelector('.hmfw-dropdown-button > div') as HTMLElement
+    expect(triggerDiv).not.toBeNull()
+
+    // 悬停触发区域应该打开下拉菜单
+    await triggerDiv.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    vi.runAllTimers()
+    await nextTick()
+
+    const dropdown = document.querySelector('.hmfw-dropdown')
+    expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
+
+    wrapper.unmount()
+  })
+
+  it('opens on click when trigger is click', async () => {
+    const wrapper = mount(DropdownButton, {
+      props: { menu, trigger: 'click' },
+      slots: { default: 'Actions' },
+      attachTo: document.body,
+    })
+
+    const dropdownWrapper = wrapper.findComponent(Dropdown)
+    expect(dropdownWrapper.props('trigger')).toBe('click')
+
+    // 点击触发区域应该打开下拉菜单
+    const triggerDiv = document.querySelector('.hmfw-dropdown-button > div') as HTMLElement
+    expect(triggerDiv).not.toBeNull()
+    await triggerDiv.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await nextTick()
+
+    const dropdown = document.querySelector('.hmfw-dropdown')
+    expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
+
     wrapper.unmount()
   })
 })

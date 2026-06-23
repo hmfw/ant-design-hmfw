@@ -1,17 +1,8 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onUnmounted,
-  nextTick,
-  type PropType,
-  Teleport,
-  type CSSProperties,
-} from 'vue'
+import { defineComponent, ref, computed, watch, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import { Trigger } from '../_internal/trigger'
+import type { Placement } from '../_internal/trigger'
 import type { AutoCompleteOption, AutoCompleteAllowClear, AutoCompleteClassNames, AutoCompleteStyles } from './types'
 
 // Map AntD-style size to the Input style suffix convention (-lg / -sm).
@@ -50,10 +41,7 @@ export const AutoComplete = defineComponent({
     const innerValue = ref(props.value ?? props.defaultValue ?? '')
     const innerOpen = ref(props.defaultOpen ?? false)
     const activeIndex = ref(-1)
-    const triggerRef = ref<HTMLElement>()
     const inputRef = ref<HTMLInputElement>()
-    const dropdownRef = ref<HTMLElement>()
-    const dropdownPos = ref({ top: 0, left: 0, width: 0 })
 
     const isControlled = computed(() => props.value !== undefined)
     const inputValue = computed(() => (isControlled.value ? props.value! : innerValue.value))
@@ -80,56 +68,28 @@ export const AutoComplete = defineComponent({
       )
     })
 
-    // AntD only renders the popup when there are options to show; an empty
-    // `options` list never displays an empty panel (even with `open` set).
     const hasPanelContent = computed(() => filteredOptions.value.length > 0 || !!props.notFoundContent)
-
-    // index of the first non-disabled option, used by defaultActiveFirstOption
     const firstEnabledIndex = computed(() => filteredOptions.value.findIndex((o) => !o.disabled))
 
     const resetActive = () => {
       activeIndex.value = props.defaultActiveFirstOption ? firstEnabledIndex.value : -1
     }
 
-    // Options often arrive asynchronously (controlled `search` pattern). Keep the
-    // highlighted index valid: clamp out-of-range, and re-highlight the first
-    // option when the list changes while the panel is open.
     watch(
       () => filteredOptions.value,
       (opts) => {
         if (!isOpen.value) return
-        if (activeIndex.value >= opts.length || (activeIndex.value >= 0 && opts[activeIndex.value]?.disabled)) {
-          resetActive()
-        } else if (activeIndex.value === -1) {
-          resetActive()
+        if (activeIndex.value >= opts.length) activeIndex.value = opts.length - 1
+        if (activeIndex.value < 0 && props.defaultActiveFirstOption) {
+          activeIndex.value = firstEnabledIndex.value
         }
       },
     )
 
-    const setOpen = (next: boolean) => {
-      if (innerOpen.value === next) return
-      innerOpen.value = next
-      emit('openChange', next)
-    }
-
-    const updatePos = () => {
-      if (!triggerRef.value) return
-      const rect = triggerRef.value.getBoundingClientRect()
-      dropdownPos.value = {
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX,
-        width: rect.width,
-      }
-    }
-
-    const openDropdown = () => {
-      updatePos()
-      setOpen(true)
-    }
-
-    const closeDropdown = () => {
-      setOpen(false)
-      activeIndex.value = -1
+    const setOpen = (v: boolean) => {
+      if (innerOpen.value === v) return
+      innerOpen.value = v
+      emit('openChange', v)
     }
 
     const setValue = (val: string) => {
@@ -138,92 +98,63 @@ export const AutoComplete = defineComponent({
       emit('change', val)
     }
 
-    const handleInput = (e: Event) => {
-      const val = (e.target as HTMLInputElement).value
-      setValue(val)
-      emit('search', val)
-      openDropdown()
-      resetActive()
-    }
-
     const handleSelect = (opt: AutoCompleteOption) => {
       if (opt.disabled) return
       setValue(opt.value)
       emit('select', opt.value, opt)
-      closeDropdown()
+      setOpen(false)
+    }
+
+    const handleInput = (e: Event) => {
+      const val = (e.target as HTMLInputElement).value
+      setValue(val)
+      emit('search', val)
+      if (!isOpen.value && hasPanelContent.value) setOpen(true)
     }
 
     const handleClear = (e: MouseEvent) => {
-      e.preventDefault()
       e.stopPropagation()
       setValue('')
       emit('clear')
       inputRef.value?.focus()
     }
 
-    const scrollActiveIntoView = () => {
-      nextTick(() => {
-        const node = dropdownRef.value?.querySelector(`.${prefixCls}-dropdown-item-active`)
-        if (node && typeof (node as HTMLElement).scrollIntoView === 'function') {
-          ;(node as HTMLElement).scrollIntoView({ block: 'nearest' })
-        }
-      })
-    }
-
-    // Move active index over non-disabled options only.
-    const moveActive = (offset: number) => {
-      const opts = filteredOptions.value
-      if (!opts.length) return
-      let next = activeIndex.value
-      for (let i = 0; i < opts.length; i++) {
-        next = (next + offset + opts.length) % opts.length
-        if (!opts[next].disabled) break
-      }
-      activeIndex.value = next
-      if (props.backfill && opts[next] && !opts[next].disabled) setValue(opts[next].value)
-      scrollActiveIntoView()
-    }
-
     const handleKeydown = (e: KeyboardEvent) => {
       if (!isOpen.value) {
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault()
-          openDropdown()
-          resetActive()
+          if (hasPanelContent.value) setOpen(true)
         }
         return
       }
       const opts = filteredOptions.value
       if (e.key === 'ArrowDown') {
         e.preventDefault()
-        moveActive(1)
+        let next = activeIndex.value + 1
+        while (next < opts.length && opts[next].disabled) next++
+        if (next < opts.length) {
+          activeIndex.value = next
+          if (props.backfill) setValue(opts[next].value)
+        }
       } else if (e.key === 'ArrowUp') {
         e.preventDefault()
-        moveActive(-1)
+        let prev = activeIndex.value - 1
+        while (prev >= 0 && opts[prev].disabled) prev--
+        if (prev >= 0) {
+          activeIndex.value = prev
+          if (props.backfill) setValue(opts[prev].value)
+        }
       } else if (e.key === 'Enter') {
-        if (activeIndex.value >= 0 && opts[activeIndex.value] && !opts[activeIndex.value].disabled) {
-          e.preventDefault()
+        e.preventDefault()
+        if (activeIndex.value >= 0 && activeIndex.value < opts.length) {
           handleSelect(opts[activeIndex.value])
-        } else {
-          closeDropdown()
         }
       } else if (e.key === 'Escape') {
-        closeDropdown()
+        setOpen(false)
       }
     }
 
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (!triggerRef.value?.contains(e.target as Node) && !dropdownRef.value?.contains(e.target as Node))
-        closeDropdown()
-    }
-
-    onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
-    onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
-
-    expose({
-      focus: () => inputRef.value?.focus(),
-      blur: () => inputRef.value?.blur(),
-    })
+    expose({ focus: () => inputRef.value?.focus(), blur: () => inputRef.value?.blur() })
 
     const renderClearIcon = () => {
       if (typeof props.allowClear === 'object' && props.allowClear.clearIcon) {
@@ -234,110 +165,113 @@ export const AutoComplete = defineComponent({
 
     const sfx = computed(() => sizeSuffix(props.size))
 
-    return () => (
+    const renderPopup = () => (
       <>
-        <div
-          ref={triggerRef}
-          class={cls(
-            prefixCls,
-            `${inputPfx}-affix-wrapper`,
-            sfx.value && `${inputPfx}-affix-wrapper-${sfx.value}`,
-            {
-              [`${inputPfx}-affix-wrapper-disabled`]: props.disabled,
-              [`${inputPfx}-affix-wrapper-status-error`]: props.status === 'error',
-              [`${inputPfx}-affix-wrapper-status-warning`]: props.status === 'warning',
-              [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
-            },
-            props.classNames?.root,
-          )}
-          style={{ ...(attrs.style as any), ...props.styles?.root }}
-        >
-          {slots.prefix && (
-            <span class={cls(`${inputPfx}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
-              {slots.prefix()}
-            </span>
-          )}
-          <input
-            ref={inputRef}
-            class={cls(inputPfx, sfx.value && `${inputPfx}-${sfx.value}`, props.classNames?.input)}
-            style={props.styles?.input}
-            value={inputValue.value}
-            disabled={props.disabled}
-            placeholder={props.placeholder}
-            onInput={handleInput}
-            onFocus={(e) => {
-              openDropdown()
-              resetActive()
-              emit('focus', e)
-            }}
-            onBlur={(e) => emit('blur', e)}
-            onKeydown={handleKeydown}
-            autocomplete="off"
-          />
-          {!!props.allowClear && inputValue.value && !props.disabled && (
-            <span
-              class={cls(`${inputPfx}-clear-icon`, props.classNames?.clear)}
-              style={props.styles?.clear}
-              onMousedown={handleClear}
-            >
-              {renderClearIcon()}
-            </span>
-          )}
-          {slots.suffix && (
-            <span class={cls(`${inputPfx}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-              {slots.suffix()}
-            </span>
-          )}
-        </div>
-
-        {isOpen.value && hasPanelContent.value && (
-          <Teleport to="body">
+        {filteredOptions.value.length > 0 ? (
+          filteredOptions.value.map((opt, i) => (
             <div
-              ref={dropdownRef}
-              class={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
-              style={{
-                position: 'absolute',
-                top: `${dropdownPos.value.top}px`,
-                left: `${dropdownPos.value.left}px`,
-                width: `${dropdownPos.value.width}px`,
-                zIndex: 1050,
-                ...props.styles?.dropdown,
+              key={opt.value}
+              class={cls(
+                `${prefixCls}-dropdown-item`,
+                {
+                  [`${prefixCls}-dropdown-item-active`]: activeIndex.value === i,
+                  [`${prefixCls}-dropdown-item-disabled`]: opt.disabled,
+                  [`${prefixCls}-dropdown-item-selected`]: opt.value === inputValue.value,
+                },
+                props.classNames?.option,
+              )}
+              style={props.styles?.option}
+              onMouseenter={() => {
+                if (!opt.disabled) activeIndex.value = i
+              }}
+              onMousedown={(e: MouseEvent) => {
+                e.preventDefault()
+                handleSelect(opt)
               }}
             >
-              {filteredOptions.value.length > 0 ? (
-                filteredOptions.value.map((opt, i) => (
-                  <div
-                    key={opt.value}
-                    class={cls(
-                      `${prefixCls}-dropdown-item`,
-                      {
-                        [`${prefixCls}-dropdown-item-active`]: activeIndex.value === i,
-                        [`${prefixCls}-dropdown-item-disabled`]: opt.disabled,
-                        [`${prefixCls}-dropdown-item-selected`]: opt.value === inputValue.value,
-                      },
-                      props.classNames?.option,
-                    )}
-                    style={props.styles?.option}
-                    onMouseenter={() => {
-                      if (!opt.disabled) activeIndex.value = i
-                    }}
-                    onMousedown={(e) => {
-                      e.preventDefault()
-                      handleSelect(opt)
-                    }}
-                  >
-                    {opt.label ?? opt.value}
-                  </div>
-                ))
-              ) : (
-                <div class={cls(`${prefixCls}-dropdown-empty`, props.classNames?.empty)} style={props.styles?.empty}>
-                  {props.notFoundContent}
-                </div>
-              )}
+              {opt.label ?? opt.value}
             </div>
-          </Teleport>
+          ))
+        ) : (
+          <div class={cls(`${prefixCls}-dropdown-empty`, props.classNames?.empty)} style={props.styles?.empty}>
+            {props.notFoundContent}
+          </div>
         )}
       </>
+    )
+
+    return () => (
+      <Trigger
+        open={isOpen.value && hasPanelContent.value}
+        trigger="click"
+        placement={'bottomLeft' as Placement}
+        disabled={props.disabled}
+        destroyOnHidden
+        matchWidth
+        popupClass={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
+        popupStyle={props.styles?.dropdown}
+        closeOnOutsideClick={false}
+        closeOnEscape={false}
+        onOpenChange={(v: boolean) => setOpen(v)}
+      >
+        {{
+          default: () => (
+            <div
+              class={cls(
+                prefixCls,
+                `${inputPfx}-affix-wrapper`,
+                sfx.value && `${inputPfx}-affix-wrapper-${sfx.value}`,
+                {
+                  [`${inputPfx}-affix-wrapper-disabled`]: props.disabled,
+                  [`${inputPfx}-affix-wrapper-status-error`]: props.status === 'error',
+                  [`${inputPfx}-affix-wrapper-status-warning`]: props.status === 'warning',
+                  [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
+                },
+                props.classNames?.root,
+              )}
+              style={{ ...(attrs.style as any), ...props.styles?.root }}
+            >
+              {slots.prefix && (
+                <span class={cls(`${inputPfx}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
+                  {slots.prefix()}
+                </span>
+              )}
+              <input
+                ref={inputRef}
+                class={cls(inputPfx, sfx.value && `${inputPfx}-${sfx.value}`, props.classNames?.input)}
+                style={props.styles?.input}
+                value={inputValue.value}
+                disabled={props.disabled}
+                placeholder={props.placeholder}
+                onInput={handleInput}
+                onFocus={(e) => {
+                  if (hasPanelContent.value) setOpen(true)
+                  resetActive()
+                  emit('focus', e)
+                }}
+                onBlur={(e) => emit('blur', e)}
+                onKeydown={handleKeydown}
+                autocomplete="off"
+              />
+              {!!props.allowClear && inputValue.value && !props.disabled && (
+                <span
+                  class={cls(`${inputPfx}-clear-icon`, props.classNames?.clear)}
+                  style={props.styles?.clear}
+                  onMousedown={handleClear}
+                >
+                  {renderClearIcon()}
+                </span>
+              )}
+              {slots.suffix && (
+                <span class={cls(`${inputPfx}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+                  {slots.suffix()}
+                </span>
+              )}
+            </div>
+          ),
+          popup: renderPopup,
+        }}
+      </Trigger>
     )
   },
 })

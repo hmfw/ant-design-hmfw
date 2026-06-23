@@ -30,30 +30,30 @@
   border-block-start: 0;
 }
 
-.hmfw-divider-horizontal.hmfw-divider-with-text::before,
-.hmfw-divider-horizontal.hmfw-divider-with-text::after {
-  position: relative;
-  width: 50%;
-  border-block-start: 1px solid transparent;
-  border-block-start-color: inherit;
-  border-block-end: 0;
-  transform: translateY(50%);
-  content: '';
+.hmfw-divider-rail {
+  border-block-start: 1px solid rgba(5, 5, 5, 0.06);
 }
 
-.hmfw-divider-horizontal.hmfw-divider-with-text-left::before {
+.hmfw-divider-horizontal.hmfw-divider-with-text .hmfw-divider-rail-start,
+.hmfw-divider-horizontal.hmfw-divider-with-text .hmfw-divider-rail-end {
+  width: 50%;
+  border-block-start-color: inherit;
+  border-block-end: 0;
+}
+
+.hmfw-divider-horizontal.hmfw-divider-with-text-left .hmfw-divider-rail-start {
   width: 5%;
 }
 
-.hmfw-divider-horizontal.hmfw-divider-with-text-left::after {
+.hmfw-divider-horizontal.hmfw-divider-with-text-left .hmfw-divider-rail-end {
   width: 95%;
 }
 
-.hmfw-divider-horizontal.hmfw-divider-with-text-right::before {
+.hmfw-divider-horizontal.hmfw-divider-with-text-right .hmfw-divider-rail-start {
   width: 95%;
 }
 
-.hmfw-divider-horizontal.hmfw-divider-with-text-right::after {
+.hmfw-divider-horizontal.hmfw-divider-with-text-right .hmfw-divider-rail-end {
   width: 5%;
 }
 
@@ -68,9 +68,8 @@
   border-width: 1px 0 0;
 }
 
-.hmfw-divider-horizontal.hmfw-divider-with-text.hmfw-divider-dashed::before,
-.hmfw-divider-horizontal.hmfw-divider-with-text.hmfw-divider-dashed::after {
-  border-style: dashed;
+.hmfw-divider-dashed .hmfw-divider-rail {
+  border-block-start: 1px dashed rgba(5, 5, 5, 0.06);
 }
 
 .hmfw-divider-dotted {
@@ -79,9 +78,8 @@
   border-width: 1px 0 0;
 }
 
-.hmfw-divider-horizontal.hmfw-divider-with-text.hmfw-divider-dotted::before,
-.hmfw-divider-horizontal.hmfw-divider-with-text.hmfw-divider-dotted::after {
-  border-style: dotted;
+.hmfw-divider-dotted .hmfw-divider-rail {
+  border-block-start: 1px dotted rgba(5, 5, 5, 0.06);
 }
 
 .hmfw-divider-horizontal.hmfw-divider-sm {

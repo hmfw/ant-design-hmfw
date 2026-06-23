@@ -1,17 +1,9 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  nextTick,
-  Teleport,
-  type PropType,
-} from 'vue'
+import { defineComponent, ref, computed, watch, onMounted, onBeforeUnmount, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { hexToHsb, hsbToHex, isValidHex, type HSB } from './color-utils'
+import { Trigger } from '../_internal/trigger'
+import type { Placement } from '../_internal/trigger'
 import type { ColorFormat, ColorPickerClassNames, ColorPickerStyles } from './types'
 
 const DEFAULT_COLOR = '#1677ff'
@@ -36,10 +28,8 @@ export const ColorPicker = defineComponent({
   emits: ['update:value', 'change', 'clear', 'openChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('color-picker')
-    const triggerRef = ref<HTMLElement | null>(null)
     const panelRef = ref<HTMLElement | null>(null)
     const open = ref(false)
-    const panelPos = ref({ top: 0, left: 0 })
 
     const innerValue = ref(props.value ?? props.defaultValue ?? DEFAULT_COLOR)
     watch(
@@ -121,40 +111,18 @@ export const ColorPicker = defineComponent({
       document.addEventListener('mouseup', onSBMouseUp)
       document.addEventListener('mousemove', onHueMouseMove)
       document.addEventListener('mouseup', onHueMouseUp)
-      document.addEventListener('mousedown', handleOutsideClick)
     })
     onBeforeUnmount(() => {
       document.removeEventListener('mousemove', onSBMouseMove)
       document.removeEventListener('mouseup', onSBMouseUp)
       document.removeEventListener('mousemove', onHueMouseMove)
       document.removeEventListener('mouseup', onHueMouseUp)
-      document.removeEventListener('mousedown', handleOutsideClick)
     })
 
-    function handleOutsideClick(e: MouseEvent) {
-      if (!open.value) return
-      if (triggerRef.value?.contains(e.target as Node) || panelRef.value?.contains(e.target as Node)) return
-      open.value = false
-      emit('openChange', false)
-    }
-
-    async function toggleOpen() {
+    function toggleOpen() {
       if (props.disabled) return
       open.value = !open.value
       emit('openChange', open.value)
-      if (open.value) {
-        await nextTick()
-        updatePanelPos()
-      }
-    }
-
-    function updatePanelPos() {
-      if (!triggerRef.value) return
-      const rect = triggerRef.value.getBoundingClientRect()
-      panelPos.value = {
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX,
-      }
     }
 
     const sbCursorStyle = computed(() => ({
@@ -188,9 +156,128 @@ export const ColorPicker = defineComponent({
       emit('clear')
     }
 
+    const renderPanel = () => (
+      <div ref={panelRef} class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
+        {/* Saturation/Brightness picker */}
+        <div
+          ref={sbRef}
+          class={cls(`${prefixCls}-sb`, props.classNames?.saturation)}
+          style={{ ...sbBgStyle.value, ...props.styles?.saturation }}
+          onMousedown={onSBMouseDown}
+        >
+          <div class={`${prefixCls}-sb-white`} />
+          <div class={`${prefixCls}-sb-black`} />
+          <div
+            class={cls(`${prefixCls}-sb-cursor`, props.classNames?.saturationCursor)}
+            style={{ ...sbCursorStyle.value, ...props.styles?.saturationCursor }}
+          />
+        </div>
+
+        {/* Hue slider */}
+        <div class={`${prefixCls}-sliders`}>
+          <div
+            ref={hueRef}
+            class={cls(`${prefixCls}-hue`, props.classNames?.hueSlider)}
+            style={props.styles?.hueSlider}
+            onMousedown={onHueMouseDown}
+          >
+            <div
+              class={cls(`${prefixCls}-hue-cursor`, props.classNames?.hueCursor)}
+              style={{ ...hueCursorStyle.value, ...props.styles?.hueCursor }}
+            />
+          </div>
+        </div>
+
+        {/* Hex input */}
+        <div
+          class={cls(`${prefixCls}-input-container`, props.classNames?.inputContainer)}
+          style={props.styles?.inputContainer}
+        >
+          <div
+            class={cls(`${prefixCls}-preview`, props.classNames?.preview)}
+            style={{ background: innerValue.value, ...props.styles?.preview }}
+          />
+          <input
+            class={cls(`${prefixCls}-hex-input`, props.classNames?.hexInput)}
+            style={props.styles?.hexInput}
+            value={hexInput.value}
+            onInput={onHexInput}
+            maxlength={7}
+            spellcheck={false}
+          />
+          <span
+            class={cls(`${prefixCls}-format-label`, props.classNames?.formatLabel)}
+            style={props.styles?.formatLabel}
+          >
+            HEX
+          </span>
+        </div>
+
+        {/* Presets */}
+        {props.presets.length > 0 && (
+          <div class={cls(`${prefixCls}-presets`, props.classNames?.presets)} style={props.styles?.presets}>
+            {props.presets.map((group) => (
+              <div
+                key={group.label}
+                class={cls(`${prefixCls}-preset-group`, props.classNames?.presetGroup)}
+                style={props.styles?.presetGroup}
+              >
+                <div
+                  class={cls(`${prefixCls}-preset-label`, props.classNames?.presetLabel)}
+                  style={props.styles?.presetLabel}
+                >
+                  {group.label}
+                </div>
+                <div
+                  class={cls(`${prefixCls}-preset-colors`, props.classNames?.presetColors)}
+                  style={props.styles?.presetColors}
+                >
+                  {group.colors.map((color) => (
+                    <div
+                      key={color}
+                      class={cls(
+                        `${prefixCls}-preset-color`,
+                        {
+                          [`${prefixCls}-preset-color-active`]: color === innerValue.value,
+                        },
+                        props.classNames?.presetColor,
+                      )}
+                      style={{ background: color, ...props.styles?.presetColor }}
+                      onClick={() => {
+                        innerValue.value = color
+                        hexInput.value = color
+                        if (isValidHex(color)) hsb.value = hexToHsb(color)
+                        emit('update:value', color)
+                        emit('change', color)
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {props.allowClear && (
+          <div
+            class={cls(`${prefixCls}-clear-btn`, props.classNames?.clearBtn)}
+            style={props.styles?.clearBtn}
+            onClick={clearColor}
+          >
+            清除
+          </div>
+        )}
+      </div>
+    )
+
     return () => (
-      <div
-        class={cls(
+      <Trigger
+        open={open.value}
+        trigger="click"
+        placement={'bottomLeft' as Placement}
+        disabled={props.disabled}
+        destroyOnHidden
+        triggerClass={cls(
           prefixCls,
           `${prefixCls}-${props.size}`,
           {
@@ -198,154 +285,41 @@ export const ColorPicker = defineComponent({
           },
           props.classNames?.root,
         )}
-        style={props.styles?.root}
+        triggerStyle={props.styles?.root}
+        popupClass={cls(`${prefixCls}-panel`, props.classNames?.panel)}
+        popupStyle={props.styles?.panel}
+        onOpenChange={(v: boolean) => {
+          open.value = v
+          emit('openChange', v)
+        }}
       >
-        <div
-          ref={triggerRef}
-          class={cls(`${prefixCls}-trigger`, { [`${prefixCls}-trigger-open`]: open.value }, props.classNames?.trigger)}
-          style={props.styles?.trigger}
-          onClick={toggleOpen}
-          role="button"
-          aria-haspopup="true"
-          aria-expanded={open.value}
-        >
-          <div
-            class={cls(`${prefixCls}-color-block`, props.classNames?.colorBlock)}
-            style={{ background: innerValue.value || 'transparent', ...props.styles?.colorBlock }}
-          />
-          {props.showText && (
-            <span class={cls(`${prefixCls}-text`, props.classNames?.text)} style={props.styles?.text}>
-              {innerValue.value || '—'}
-            </span>
-          )}
-        </div>
-
-        {open.value && (
-          <Teleport to="body">
+        {{
+          default: () => (
             <div
-              ref={panelRef}
-              class={cls(`${prefixCls}-panel`, props.classNames?.panel)}
-              style={{
-                position: 'absolute',
-                top: `${panelPos.value.top}px`,
-                left: `${panelPos.value.left}px`,
-                zIndex: 1050,
-                ...props.styles?.panel,
-              }}
-            >
-              {/* Saturation/Brightness picker */}
-              <div
-                ref={sbRef}
-                class={cls(`${prefixCls}-sb`, props.classNames?.saturation)}
-                style={{ ...sbBgStyle.value, ...props.styles?.saturation }}
-                onMousedown={onSBMouseDown}
-              >
-                <div class={`${prefixCls}-sb-white`} />
-                <div class={`${prefixCls}-sb-black`} />
-                <div
-                  class={cls(`${prefixCls}-sb-cursor`, props.classNames?.saturationCursor)}
-                  style={{ ...sbCursorStyle.value, ...props.styles?.saturationCursor }}
-                />
-              </div>
-
-              {/* Hue slider */}
-              <div class={`${prefixCls}-sliders`}>
-                <div
-                  ref={hueRef}
-                  class={cls(`${prefixCls}-hue`, props.classNames?.hueSlider)}
-                  style={props.styles?.hueSlider}
-                  onMousedown={onHueMouseDown}
-                >
-                  <div
-                    class={cls(`${prefixCls}-hue-cursor`, props.classNames?.hueCursor)}
-                    style={{ ...hueCursorStyle.value, ...props.styles?.hueCursor }}
-                  />
-                </div>
-              </div>
-
-              {/* Hex input */}
-              <div
-                class={cls(`${prefixCls}-input-container`, props.classNames?.inputContainer)}
-                style={props.styles?.inputContainer}
-              >
-                <div
-                  class={cls(`${prefixCls}-preview`, props.classNames?.preview)}
-                  style={{ background: innerValue.value, ...props.styles?.preview }}
-                />
-                <input
-                  class={cls(`${prefixCls}-hex-input`, props.classNames?.hexInput)}
-                  style={props.styles?.hexInput}
-                  value={hexInput.value}
-                  onInput={onHexInput}
-                  maxlength={7}
-                  spellcheck={false}
-                />
-                <span
-                  class={cls(`${prefixCls}-format-label`, props.classNames?.formatLabel)}
-                  style={props.styles?.formatLabel}
-                >
-                  HEX
-                </span>
-              </div>
-
-              {/* Presets */}
-              {props.presets.length > 0 && (
-                <div class={cls(`${prefixCls}-presets`, props.classNames?.presets)} style={props.styles?.presets}>
-                  {props.presets.map((group) => (
-                    <div
-                      key={group.label}
-                      class={cls(`${prefixCls}-preset-group`, props.classNames?.presetGroup)}
-                      style={props.styles?.presetGroup}
-                    >
-                      <div
-                        class={cls(`${prefixCls}-preset-label`, props.classNames?.presetLabel)}
-                        style={props.styles?.presetLabel}
-                      >
-                        {group.label}
-                      </div>
-                      <div
-                        class={cls(`${prefixCls}-preset-colors`, props.classNames?.presetColors)}
-                        style={props.styles?.presetColors}
-                      >
-                        {group.colors.map((color) => (
-                          <div
-                            key={color}
-                            class={cls(
-                              `${prefixCls}-preset-color`,
-                              {
-                                [`${prefixCls}-preset-color-active`]: color === innerValue.value,
-                              },
-                              props.classNames?.presetColor,
-                            )}
-                            style={{ background: color, ...props.styles?.presetColor }}
-                            onClick={() => {
-                              innerValue.value = color
-                              hexInput.value = color
-                              if (isValidHex(color)) hsb.value = hexToHsb(color)
-                              emit('update:value', color)
-                              emit('change', color)
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              class={cls(
+                `${prefixCls}-trigger`,
+                { [`${prefixCls}-trigger-open`]: open.value },
+                props.classNames?.trigger,
               )}
-
-              {props.allowClear && (
-                <div
-                  class={cls(`${prefixCls}-clear-btn`, props.classNames?.clearBtn)}
-                  style={props.styles?.clearBtn}
-                  onClick={clearColor}
-                >
-                  清除
-                </div>
+              style={props.styles?.trigger}
+              role="button"
+              aria-haspopup="true"
+              aria-expanded={open.value}
+            >
+              <div
+                class={cls(`${prefixCls}-color-block`, props.classNames?.colorBlock)}
+                style={{ background: innerValue.value || 'transparent', ...props.styles?.colorBlock }}
+              />
+              {props.showText && (
+                <span class={cls(`${prefixCls}-text`, props.classNames?.text)} style={props.styles?.text}>
+                  {innerValue.value || '—'}
+                </span>
               )}
             </div>
-          </Teleport>
-        )}
-      </div>
+          ),
+          popup: ({ placement }: { placement: Placement }) => renderPanel(),
+        }}
+      </Trigger>
     )
   },
 })

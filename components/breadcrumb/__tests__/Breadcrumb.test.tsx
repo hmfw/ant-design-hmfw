@@ -310,4 +310,80 @@ describe('Breadcrumb', () => {
     expect(overlayLink.exists()).toBe(true)
     expect(wrapper.findComponent({ name: 'Icon' }).exists()).toBe(true)
   })
+
+  it('supports custom dropdownIcon', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        dropdownIcon: h('span', { class: 'custom-dropdown-icon' }, '▼'),
+        items: [
+          {
+            title: 'Menu',
+            menu: {
+              items: [{ key: '1', label: 'Item 1' }],
+            },
+          },
+        ],
+      },
+    })
+    expect(wrapper.find('.custom-dropdown-icon').exists()).toBe(true)
+    // 自定义图标时不渲染默认 Icon
+    expect(wrapper.findComponent({ name: 'Icon' }).exists()).toBe(false)
+  })
+
+  it('normalizes menu item title alias to label', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          {
+            title: 'Menu',
+            menu: {
+              items: [{ key: '1', title: 'From Title' }],
+            },
+          },
+        ],
+      },
+    })
+    const menu = wrapper.findComponent({ name: 'Dropdown' }).props('menu') as any
+    expect(menu.items[0].label).toBe('From Title')
+  })
+
+  it('concats menu item path into href', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          {
+            title: 'Apps',
+            href: '#/apps',
+            menu: {
+              items: [{ key: '1', label: 'App 1', path: '/1' }],
+            },
+          },
+        ],
+      },
+    })
+    const menu = wrapper.findComponent({ name: 'Dropdown' }).props('menu') as any
+    const label = menu.items[0].label
+    // path 会被包成 <a href="#/apps/1"> 的 VNode
+    expect(label.type).toBe('a')
+    expect(label.props.href).toBe('#/apps/1')
+  })
+
+  it('passes dropdownProps to Dropdown', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          {
+            title: 'Menu',
+            dropdownProps: { trigger: ['click'] },
+            menu: {
+              items: [{ key: '1', label: 'Item 1' }],
+            },
+          },
+        ],
+      },
+    })
+    const dropdown = wrapper.findComponent({ name: 'Dropdown' })
+    expect(dropdown.exists()).toBe(true)
+    expect(dropdown.props('trigger')).toEqual(['click'])
+  })
 })

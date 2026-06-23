@@ -31,7 +31,7 @@ export const DropdownButton = defineComponent({
     menu: Object as PropType<DropdownProps['menu']>,
     trigger: { type: [String, Array] as PropType<DropdownProps['trigger']>, default: 'hover' },
     placement: { type: String as PropType<DropdownProps['placement']>, default: 'bottomRight' },
-    open: Boolean,
+    open: { type: Boolean, default: undefined },
     arrow: [Boolean, Object] as PropType<DropdownProps['arrow']>,
     autoFocus: Boolean,
     overlayClassName: String,
@@ -59,6 +59,7 @@ export const DropdownButton = defineComponent({
           disabled={props.disabled}
           loading={props.loading}
           onClick={handleClick}
+          class={`${prefixCls}-left`}
         >
           {slots.default?.()}
         </Button>
@@ -66,7 +67,7 @@ export const DropdownButton = defineComponent({
 
       const iconNode = props.icon || <Icon component={DownOutlined} />
       const rightButton = (
-        <Button type={props.type} danger={props.danger} disabled={props.disabled}>
+        <Button type={props.type} danger={props.danger} disabled={props.disabled} class={`${prefixCls}-right`}>
           {iconNode}
         </Button>
       )

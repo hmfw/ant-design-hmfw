@@ -1,6 +1,9 @@
 <template>
   <div style="max-width: 240px">
-    <Text ellipsis> 这是一段很长的文本，超出容器宽度时会以省略号结尾，不会换行显示。 </Text>
+    <Text ellipsis>
+      Ant Design 是一套企业级 UI 设计语言和 Vue
+      组件库，主张高效、确定、自然、生长四大设计价值观，致力于提升用户和设计者的体验。
+    </Text>
   </div>
 </template>
 

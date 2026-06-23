@@ -32,9 +32,11 @@ const activeId = ref('')
 function collectAnchors(): Anchor[] {
   const content = document.querySelector('.md-content')
   if (!content) return []
-  const headings = content.querySelectorAll('h2, h3')
+  // 仅收集文档自身的标题，排除 demo 预览区内组件渲染出的 h 标签
+  // （如 Typography.Title 会渲染真实的 <h2>/<h3>，不应进入大纲）
+  const headings = Array.from(content.querySelectorAll('h2, h3')).filter((el) => !el.closest('.demo-block'))
   const seen = new Map<string, number>()
-  return Array.from(headings).map((el) => {
+  return headings.map((el) => {
     let id = el.id || slugify((el as HTMLElement).innerText) || 'section'
     // Guarantee unique ids: collapsed/empty slugs (e.g. CJK-only headings)
     // would otherwise collide and trigger duplicate-key warnings.

@@ -132,9 +132,12 @@ a.hmfw-typography-link,
 
 /* Ellipsis（单行省略） */
 .hmfw-typography-ellipsis {
+  display: inline-block;
+  max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  vertical-align: bottom;
 }
 
 /* Ellipsis（多行省略，由内联 -webkit-line-clamp 指定行数） */

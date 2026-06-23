@@ -132,7 +132,17 @@ function darken(hex: string, amount: number): string {
 
 export function generateMapTokens(seed: SeedTokens): MapTokens {
   const { sizeUnit, sizeStep } = seed
-  const size = (n: number) => sizeUnit * n
+
+  // 间距阶梯，对齐 ant-design：sizeX = sizeUnit * (sizeStep + 偏移)
+  // 偏移阶梯 -3/-2/-1/0/+1/+2/+4/+8，默认 sizeUnit=4、sizeStep=4 时得到 4/8/12/16/20/24/32/48
+  const sizeXXS = sizeUnit * (sizeStep - 3) // 4
+  const sizeXS = sizeUnit * (sizeStep - 2) // 8
+  const sizeSM = sizeUnit * (sizeStep - 1) // 12
+  const sizeBase = sizeUnit * sizeStep // 16
+  const sizeMD = sizeUnit * (sizeStep + 1) // 20
+  const sizeLG = sizeUnit * (sizeStep + 2) // 24
+  const sizeXL = sizeUnit * (sizeStep + 4) // 32
+  const sizeXXL = sizeUnit * (sizeStep + 8) // 48
 
   return {
     ...seed,
@@ -218,21 +228,21 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     controlHeightLG: 40,
     controlHeightXS: 16,
 
-    paddingXXS: size(sizeStep * 0.5),
-    paddingXS: size(sizeStep),
-    paddingSM: size(sizeStep * 2),
-    padding: size(sizeStep * 3),
-    paddingMD: size(sizeStep * 4),
-    paddingLG: size(sizeStep * 6),
-    paddingXL: size(sizeStep * 8),
+    paddingXXS: sizeXXS,
+    paddingXS: sizeXS,
+    paddingSM: sizeSM,
+    padding: sizeBase,
+    paddingMD: sizeMD,
+    paddingLG: sizeLG,
+    paddingXL: sizeXL,
 
-    marginXXS: size(sizeStep * 0.5),
-    marginXS: size(sizeStep),
-    marginSM: size(sizeStep * 2),
-    margin: size(sizeStep * 3),
-    marginMD: size(sizeStep * 4),
-    marginLG: size(sizeStep * 6),
-    marginXL: size(sizeStep * 8),
-    marginXXL: size(sizeStep * 12),
+    marginXXS: sizeXXS,
+    marginXS: sizeXS,
+    marginSM: sizeSM,
+    margin: sizeBase,
+    marginMD: sizeMD,
+    marginLG: sizeLG,
+    marginXL: sizeXL,
+    marginXXL: sizeXXL,
   }
 }

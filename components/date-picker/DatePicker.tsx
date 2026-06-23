@@ -1,6 +1,8 @@
-import { defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick, type PropType, Teleport } from 'vue'
+import { defineComponent, ref, computed, watch, nextTick, type PropType } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
+import { Trigger } from '../_internal/trigger'
+import type { Placement } from '../_internal/trigger'
 import type { DatePickerMode, PresetItem, ShowTimeConfig, DatePickerClassNames, DatePickerStyles } from './types'
 
 // --- Date utilities ---
@@ -145,8 +147,6 @@ export const DatePicker = defineComponent({
       props.picker === 'year' ? 'year' : props.picker === 'month' ? 'month' : 'date',
     )
     const triggerRef = ref<HTMLElement>()
-    const panelRef = ref<HTMLElement>()
-    const panelPos = ref({ top: 0, left: 0 })
 
     const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
@@ -175,15 +175,8 @@ export const DatePicker = defineComponent({
       },
     )
 
-    const updatePos = () => {
-      if (!triggerRef.value) return
-      const rect = triggerRef.value.getBoundingClientRect()
-      panelPos.value = { top: rect.bottom + window.scrollY + 4, left: rect.left + window.scrollX }
-    }
-
     const openPanel = () => {
       if (props.disabled) return
-      updatePos()
       const d = selectedDate.value ?? now
       viewYear.value = d.getFullYear()
       viewMonth.value = d.getMonth()
@@ -202,26 +195,6 @@ export const DatePicker = defineComponent({
       innerOpen.value = false
       emit('openChange', false)
     }
-
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (!triggerRef.value?.contains(e.target as Node) && !panelRef.value?.contains(e.target as Node)) closePanel()
-    }
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen.value) {
-        closePanel()
-        e.preventDefault()
-      }
-    }
-
-    onMounted(() => {
-      document.addEventListener('mousedown', handleOutsideClick)
-      document.addEventListener('keydown', handleKeyDown)
-    })
-    onUnmounted(() => {
-      document.removeEventListener('mousedown', handleOutsideClick)
-      document.removeEventListener('keydown', handleKeyDown)
-    })
 
     const selectDate = (d: Date) => {
       if (props.disabledDate?.(d)) return
@@ -759,68 +732,72 @@ export const DatePicker = defineComponent({
       </div>
     )
 
-    return () => (
+    const renderPopup = () => (
       <>
-        <div
-          ref={triggerRef}
-          class={cls(
-            prefixCls,
-            `${prefixCls}-${props.size}`,
-            {
-              [`${prefixCls}-open`]: isOpen.value,
-              [`${prefixCls}-disabled`]: props.disabled,
-              [`${prefixCls}-status-error`]: props.status === 'error',
-              [`${prefixCls}-status-warning`]: props.status === 'warning',
-            },
-            props.classNames?.root,
-          )}
-          style={props.styles?.root}
-          onClick={openPanel}
-        >
-          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
-            <input
-              readonly
-              value={displayText.value}
-              placeholder={placeholder.value}
-              disabled={props.disabled}
-              class={`${prefixCls}-input-inner`}
-            />
-            {props.allowClear && displayText.value && !props.disabled && (
-              <span
-                class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
-                style={props.styles?.clear}
-                onClick={clearValue}
-              >
-                ✕
-              </span>
-            )}
-            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-              📅
-            </span>
-          </span>
-        </div>
-
-        {isOpen.value && (
-          <Teleport to="body">
-            <div
-              ref={panelRef}
-              class={cls(`${prefixCls}-popup`, props.classNames?.popup)}
-              style={{
-                position: 'absolute',
-                top: `${panelPos.value.top}px`,
-                left: `${panelPos.value.left}px`,
-                zIndex: 1050,
-                ...props.styles?.popup,
-              }}
-            >
-              {panelMode.value === 'date' && props.picker !== 'quarter' && renderDatePanel()}
-              {panelMode.value === 'month' && renderMonthPanel()}
-              {panelMode.value === 'year' && renderYearPanel()}
-              {props.picker === 'quarter' && panelMode.value === 'date' && renderQuarterPanel()}
-            </div>
-          </Teleport>
-        )}
+        {panelMode.value === 'date' && props.picker !== 'quarter' && renderDatePanel()}
+        {panelMode.value === 'month' && renderMonthPanel()}
+        {panelMode.value === 'year' && renderYearPanel()}
+        {props.picker === 'quarter' && panelMode.value === 'date' && renderQuarterPanel()}
       </>
+    )
+
+    return () => (
+      <Trigger
+        open={isOpen.value}
+        trigger="click"
+        placement={'bottomLeft' as Placement}
+        disabled={props.disabled}
+        destroyOnHidden
+        popupClass={cls(`${prefixCls}-popup`, props.classNames?.popup)}
+        popupStyle={props.styles?.popup}
+        onOpenChange={(v: boolean) => {
+          if (v) openPanel()
+          else closePanel()
+        }}
+      >
+        {{
+          default: () => (
+            <div
+              ref={triggerRef}
+              class={cls(
+                prefixCls,
+                `${prefixCls}-${props.size}`,
+                {
+                  [`${prefixCls}-open`]: isOpen.value,
+                  [`${prefixCls}-disabled`]: props.disabled,
+                  [`${prefixCls}-status-error`]: props.status === 'error',
+                  [`${prefixCls}-status-warning`]: props.status === 'warning',
+                },
+                props.classNames?.root,
+              )}
+              style={props.styles?.root}
+            >
+              <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
+                <input
+                  readonly
+                  value={displayText.value}
+                  placeholder={placeholder.value}
+                  disabled={props.disabled}
+                  class={`${prefixCls}-input-inner`}
+                />
+                {props.allowClear && displayText.value && !props.disabled && (
+                  <span
+                    class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+                    style={props.styles?.clear}
+                    onClick={clearValue}
+                  >
+                    ✕
+                  </span>
+                )}
+                <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+                  📅
+                </span>
+              </span>
+            </div>
+          ),
+          popup: ({ placement }: { placement: Placement }) => renderPopup(),
+        }}
+      </Trigger>
     )
   },
 })

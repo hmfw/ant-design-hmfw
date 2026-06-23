@@ -1,18 +1,9 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  nextTick,
-  Teleport,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { defineComponent, computed, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Menu } from '../menu'
+import { Trigger } from '../_internal/trigger'
+import type { Placement } from '../_internal/trigger'
 import type { DropdownProps, DropdownPlacement, DropdownTrigger } from './types'
 
 export const Dropdown = defineComponent({
@@ -55,250 +46,104 @@ export const Dropdown = defineComponent({
   emits: ['update:open', 'openChange'],
   setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('dropdown')
-    const triggerRef = ref<HTMLElement | null>(null)
-    const dropdownRef = ref<HTMLElement | null>(null)
-    const innerOpen = ref(props.defaultOpen ?? false)
-    const position = ref({ top: 0, left: 0 })
-    let enterTimer: ReturnType<typeof setTimeout> | null = null
-    let leaveTimer: ReturnType<typeof setTimeout> | null = null
 
-    const isControlled = computed(() => props.open !== undefined)
-    const visible = computed(() => (isControlled.value ? props.open! : innerOpen.value))
-
-    watch(
-      () => props.open,
-      (v) => {
-        if (v !== undefined) innerOpen.value = v
-      },
+    const pointAtCenter = computed(
+      () => typeof props.arrow === 'object' && props.arrow !== null && props.arrow.pointAtCenter === true,
     )
+    const shouldDestroy = computed(() => props.destroyOnHidden ?? props.destroyPopupOnHide ?? false)
+    // 带箭头时间距更大，与原实现一致
+    const gap = computed(() => (props.arrow ? 12 : 4))
 
-    const triggers = computed(() => {
-      const t = props.trigger
-      return Array.isArray(t) ? t : [t]
-    })
+    // Trigger 内部的 open 状态由它自己维护；菜单点击时需要主动关闭，
+    // 受控模式下通过 update:open 通知父级，非受控模式下回传给 Trigger。
+    let triggerSetOpen: ((v: boolean, source?: 'trigger' | 'popup') => void) | null = null
 
-    const setOpen = (v: boolean, source: 'trigger' | 'menu' = 'trigger') => {
-      if (props.disabled) return
-      innerOpen.value = v
+    const handleOpenChange = (v: boolean, info: { source: string }) => {
       emit('update:open', v)
-      emit('openChange', v, { source })
+      emit('openChange', v, info)
     }
 
-    const updatePosition = () => {
-      if (!triggerRef.value || !dropdownRef.value) return
-      const rect = triggerRef.value.getBoundingClientRect()
-      const dropdownRect = dropdownRef.value.getBoundingClientRect()
-      const scrollX = window.scrollX
-      const scrollY = window.scrollY
-      const p = props.placement
-
-      let top = 0
-      let left = 0
-      const gap = props.arrow ? 12 : 4
-
-      // Vertical positioning
-      if (p.startsWith('bottom')) {
-        top = rect.bottom + scrollY + gap
-      } else {
-        top = rect.top + scrollY - dropdownRect.height - gap
-      }
-
-      // Horizontal positioning
-      if (p.endsWith('Left') || p === 'bottom' || p === 'top') {
-        left = rect.left + scrollX
-      } else if (p.endsWith('Right')) {
-        left = rect.right + scrollX - dropdownRect.width
-      } else {
-        // Center alignment
-        left = rect.left + scrollX + rect.width / 2 - dropdownRect.width / 2
-      }
-
-      // Auto adjust overflow if enabled
-      if (props.autoAdjustOverflow) {
-        const viewportWidth = window.innerWidth
-        const viewportHeight = window.innerHeight
-
-        // Adjust horizontal overflow
-        if (left + dropdownRect.width > viewportWidth + scrollX) {
-          left = viewportWidth + scrollX - dropdownRect.width - 8
-        }
-        if (left < scrollX) {
-          left = scrollX + 8
-        }
-
-        // Adjust vertical overflow
-        if (top + dropdownRect.height > viewportHeight + scrollY) {
-          top = rect.top + scrollY - dropdownRect.height - gap
-        }
-        if (top < scrollY) {
-          top = rect.bottom + scrollY + gap
-        }
-      }
-
-      position.value = { top, left }
-    }
-
-    watch(visible, async (v) => {
-      if (v) {
-        await nextTick()
-        updatePosition()
-      }
-    })
-
-    const handleMouseEnter = () => {
-      if (!triggers.value.includes('hover')) return
-      if (leaveTimer) {
-        clearTimeout(leaveTimer)
-        leaveTimer = null
-      }
-      enterTimer = setTimeout(() => setOpen(true, 'trigger'), props.mouseEnterDelay * 1000)
-    }
-
-    const handleMouseLeave = () => {
-      if (!triggers.value.includes('hover')) return
-      if (enterTimer) {
-        clearTimeout(enterTimer)
-        enterTimer = null
-      }
-      leaveTimer = setTimeout(() => setOpen(false, 'trigger'), props.mouseLeaveDelay * 1000)
-    }
-
-    const handleClick = () => {
-      if (!triggers.value.includes('click')) return
-      setOpen(!visible.value, 'trigger')
-    }
-
-    const handleContextMenu = (e: MouseEvent) => {
-      if (!triggers.value.includes('contextMenu')) return
-      e.preventDefault()
-      setOpen(true, 'trigger')
-    }
-
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (!visible.value) return
-      if (triggerRef.value?.contains(e.target as Node) || dropdownRef.value?.contains(e.target as Node)) return
-      setOpen(false, 'trigger')
-    }
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && visible.value) {
-        setOpen(false, 'trigger')
-        e.preventDefault()
-      }
-    }
-
-    onMounted(() => {
-      document.addEventListener('mousedown', handleOutsideClick)
-      document.addEventListener('keydown', handleKeyDown)
-      window.addEventListener('resize', updatePosition)
-      window.addEventListener('scroll', updatePosition, true)
-    })
-
-    onBeforeUnmount(() => {
-      document.removeEventListener('mousedown', handleOutsideClick)
-      document.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('resize', updatePosition)
-      window.removeEventListener('scroll', updatePosition, true)
-      if (enterTimer) clearTimeout(enterTimer)
-      if (leaveTimer) clearTimeout(leaveTimer)
-    })
-
-    const handleMenuClick = (info: { key: string }) => {
-      // Forward to user-provided menu.onClick first
-      props.menu?.onClick?.(info)
-      // Close dropdown after menu click unless menu is selectable and multiple
-      if (props.menu?.selectable && props.menu?.multiple) {
-        return
-      }
-      setOpen(false, 'menu')
+    const handleMenuClick = (clickInfo: { key: string }) => {
+      props.menu?.onClick?.(clickInfo)
+      // selectable + multiple 时保持打开
+      if (props.menu?.selectable && props.menu?.multiple) return
+      triggerSetOpen?.(false, 'popup')
     }
 
     const renderOverlay = () => {
       if (!props.menu?.items) {
         return slots.overlay?.()
       }
-
       const menuNode = (
         <Menu {...props.menu} mode="vertical" selectable={props.menu.selectable ?? false} onClick={handleMenuClick} />
       )
-
-      // Apply popupRender or dropdownRender
       const renderFn = props.popupRender || props.dropdownRender
-      if (renderFn) {
-        return renderFn(menuNode)
-      }
-
-      return menuNode
-    }
-
-    const getContainer = () => {
-      if (props.getPopupContainer && triggerRef.value) {
-        return props.getPopupContainer(triggerRef.value)
-      }
-      return document.body
+      return renderFn ? renderFn(menuNode) : menuNode
     }
 
     return () => {
-      const child = slots.default?.()[0]
+      const child = slots.default?.()?.[0]
       if (!child) return null
 
-      const shouldDestroy = props.destroyOnHidden ?? props.destroyPopupOnHide ?? false
-      const shouldRender = visible.value || !shouldDestroy || props.forceRender
-
       const triggerClasses = cls(
-        props.openClassName && visible.value ? props.openClassName : null,
+        props.openClassName && props.open ? props.openClassName : null,
         props.classNames?.trigger,
         attrs.class as any,
       )
 
-      return (
+      const popupClass = (placement: Placement) =>
+        cls(
+          prefixCls,
+          props.overlayClassName,
+          props.rootClassName,
+          `${prefixCls}-placement-${placement}`,
+          { [`${prefixCls}-show-arrow`]: !!props.arrow },
+          props.classNames?.dropdown,
+        )
+
+      const renderPopup = () => (
         <>
-          <div
-            ref={triggerRef}
-            class={triggerClasses}
-            style={{ display: 'inline-block', ...(attrs.style as any), ...props.styles?.trigger }}
-            onMouseenter={handleMouseEnter}
-            onMouseleave={handleMouseLeave}
-            onClick={handleClick}
-            onContextmenu={handleContextMenu}
-          >
-            {child}
-          </div>
-          {shouldRender && (
-            <Teleport to={getContainer()}>
-              <div
-                ref={dropdownRef}
-                class={cls(
-                  prefixCls,
-                  props.overlayClassName,
-                  props.rootClassName,
-                  `${prefixCls}-placement-${props.placement}`,
-                  {
-                    [`${prefixCls}-hidden`]: !visible.value,
-                    [`${prefixCls}-show-arrow`]: !!props.arrow,
-                  },
-                  props.classNames?.dropdown,
-                )}
-                style={{
-                  position: 'absolute',
-                  top: `${position.value.top}px`,
-                  left: `${position.value.left}px`,
-                  ...props.overlayStyle,
-                  ...props.styles?.dropdown,
-                }}
-                onMouseenter={handleMouseEnter}
-                onMouseleave={handleMouseLeave}
-              >
-                {props.arrow && (
-                  <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow} />
-                )}
-                <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
-                  {renderOverlay()}
-                </div>
-              </div>
-            </Teleport>
+          {props.arrow && (
+            <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow} />
           )}
+          <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
+            {renderOverlay()}
+          </div>
         </>
+      )
+
+      return (
+        <Trigger
+          open={props.open}
+          defaultOpen={props.defaultOpen}
+          trigger={props.trigger as any}
+          placement={props.placement as Placement}
+          disabled={props.disabled}
+          arrowPointAtCenter={pointAtCenter.value}
+          autoAdjustOverflow={props.autoAdjustOverflow}
+          getPopupContainer={props.getPopupContainer}
+          mouseEnterDelay={props.mouseEnterDelay}
+          mouseLeaveDelay={props.mouseLeaveDelay}
+          destroyOnHidden={shouldDestroy.value}
+          forceRender={props.forceRender}
+          gap={gap.value}
+          triggerDisplay="inline-flex"
+          triggerClass={triggerClasses}
+          triggerStyle={{ ...(attrs.style as any), ...props.styles?.trigger }}
+          popupClass={popupClass}
+          hiddenClass={`${prefixCls}-hidden`}
+          popupStyle={{ ...props.overlayStyle, ...props.styles?.dropdown }}
+          onUpdate:open={(v: boolean) => emit('update:open', v)}
+          onOpenChange={handleOpenChange}
+          ref={(inst: any) => {
+            triggerSetOpen = inst?.setOpen ?? null
+          }}
+        >
+          {{
+            default: () => child,
+            popup: ({ placement }: { placement: Placement }) => renderPopup(),
+          }}
+        </Trigger>
       )
     }
   },

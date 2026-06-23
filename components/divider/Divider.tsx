@@ -103,12 +103,14 @@ export default defineComponent({
       if (hasChildren.value) {
         return (
           <div class={classes.value} style={props.styles?.root} role="separator">
+            <div class={`${prefixCls}-rail ${prefixCls}-rail-start`} />
             <span
               class={cls(`${prefixCls}-inner-text`, props.classNames?.text)}
               style={{ ...innerStyle.value, ...props.styles?.text }}
             >
               {children}
             </span>
+            <div class={`${prefixCls}-rail ${prefixCls}-rail-end`} />
           </div>
         )
       }

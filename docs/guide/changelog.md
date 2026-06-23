@@ -6,6 +6,28 @@
 
 ---
 
+## [0.2.0] - 2026-06-23
+
+### ✨ 新特性
+
+- **统一浮层系统** - 新增内部 `Trigger` 组件与 `computePosition` 定位引擎，支持 12 个弹出方位、溢出自动翻转、箭头对齐等能力，作为所有浮层类组件的共享基座
+- **Breadcrumb 下拉菜单增强**
+  - 新增公开类型 `BreadcrumbMenu`、`BreadcrumbMenuItem`，菜单项支持 `title`（`label` 别名）与 `path`（与当前项 `href` 拼接）
+  - 新增 `dropdownProps`，可透传 `placement`、`trigger` 等属性给底层 Dropdown
+  - 新增 `dropdownIcon`，可自定义下拉展开图标（默认 `DownOutlined`）
+- **新增设计 Token** - `boxShadowPopoverArrow`，用于浮层箭头阴影
+
+### ♻️ 重构
+
+- 10 个浮层组件统一迁移至 `Trigger` 系统，行为更一致、代码更精简：AutoComplete、Cascader、ColorPicker、DatePicker、Dropdown、RangePicker、Select、TimePicker、Tooltip、TreeSelect
+
+### 🧪 质量保障
+
+- 新增 `Trigger` / `computePosition` 与主题 `map` 单元测试
+- 单元测试增至 1925 个（1925 通过 + 2 跳过）
+
+---
+
 ## [0.1.0] - 2026-06-20
 
 ### 首次发布 🎉
@@ -61,4 +83,5 @@ App, BackTop, ConfigProvider, FloatButton
 
 ---
 
+[0.2.0]: https://github.com/hmfw/ant-design-hmfw/releases/tag/v0.2.0
 [0.1.0]: https://github.com/hmfw/ant-design-hmfw/releases/tag/v0.1.0

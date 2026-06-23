@@ -50,13 +50,15 @@
 }
 
 /* ---- Links ---- */
-.md-content a:not([class*='hmfw-btn']) {
+/* 仅作用于纯 markdown 链接，排除所有 hmfw 组件渲染出的 a（按钮、Typography.Link 等），
+   避免覆盖组件自身样式（如 Link 的禁用态） */
+.md-content a:not([class*='hmfw-']) {
   color: var(--doc-c-brand);
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.md-content a:not([class*='hmfw-btn']):hover {
+.md-content a:not([class*='hmfw-']):hover {
   color: var(--doc-c-brand-hover);
   text-decoration: underline;
 }
@@ -113,7 +115,7 @@
   padding-left: 24px;
 }
 
-.md-content li {
+.md-content li:not([class*='hmfw-']) {
   margin: 4px 0;
   line-height: 1.7;
 }
@@ -121,6 +123,11 @@
 .md-content li > ul,
 .md-content li > ol {
   margin: 4px 0 0;
+}
+
+.md-content .demo-block__preview ol {
+  margin: 0;
+  padding: 0;
 }
 
 /* ---- HR ---- */

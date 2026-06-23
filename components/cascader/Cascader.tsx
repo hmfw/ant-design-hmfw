@@ -1,6 +1,9 @@
-import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport, type VNode } from 'vue'
+import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import { DownOutlined } from '../icon'
+import { Trigger } from '../_internal/trigger'
+import type { Placement } from '../_internal/trigger'
 import type {
   CascaderOption,
   CascaderValue,
@@ -76,8 +79,6 @@ export const Cascader = defineComponent({
     const activePath = ref<(string | number)[]>([])
     const searchText = ref('')
     const triggerRef = ref<HTMLElement>()
-    const dropdownRef = ref<HTMLElement>()
-    const dropdownPos = ref({ top: 0, left: 0, width: 0 })
     const inputRef = ref<HTMLInputElement>()
 
     const isControlled = computed(() => props.value !== undefined)
@@ -241,19 +242,8 @@ export const Cascader = defineComponent({
       return flatOptions.value.filter((item) => item.labels.some((l) => l.toLowerCase().includes(q)))
     })
 
-    const updatePos = () => {
-      if (!triggerRef.value) return
-      const rect = triggerRef.value.getBoundingClientRect()
-      dropdownPos.value = {
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX,
-        width: rect.width,
-      }
-    }
-
     const open = () => {
       if (props.disabled) return
-      updatePos()
       // Init activePath from current value to show selected state
       if (!props.multiple && currentValue.value.length > 0) {
         activePath.value = [...currentValue.value[0]]
@@ -267,13 +257,6 @@ export const Cascader = defineComponent({
       searchText.value = ''
       emit('update:open', false)
     }
-
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (!triggerRef.value?.contains(e.target as Node) && !dropdownRef.value?.contains(e.target as Node)) close()
-    }
-
-    onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
-    onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
 
     const emitChange = (paths: CascaderValue[]) => {
       const outValue = props.multiple ? paths : (paths[0] ?? [])
@@ -358,270 +341,275 @@ export const Cascader = defineComponent({
       blur: () => inputRef.value?.blur(),
     })
 
-    return () => (
+    const renderDropdownContent = () => (
       <>
-        <div
-          ref={triggerRef}
-          class={cls(
-            prefixCls,
-            `${prefixCls}-${props.size}`,
-            {
-              [`${prefixCls}-open`]: isOpen.value,
-              [`${prefixCls}-disabled`]: props.disabled,
-              [`${prefixCls}-multiple`]: props.multiple,
-              [`${prefixCls}-status-error`]: props.status === 'error',
-              [`${prefixCls}-status-warning`]: props.status === 'warning',
-            },
-            props.classNames?.root,
-            attrs.class as any,
-          )}
-          style={{ ...props.styles?.root, ...(attrs.style as any) }}
-          onClick={open}
-        >
-          <span class={cls(`${prefixCls}-selector`, props.classNames?.selector)} style={props.styles?.selector}>
-            {props.multiple ? (
-              <>
-                {getDisplayedPaths.value.slice(0, props.maxTagCount ?? getDisplayedPaths.value.length).map((path) => {
-                  const labels = getLabelPath(path, props.options)
-                  const options = getOptionPath(path, props.options)
-                  let text: string | VNode
-                  if (props.displayRender) {
-                    text = props.displayRender(labels, options)
-                  } else {
-                    text = labels.join(' / ')
-                  }
-                  if (typeof text === 'string' && props.maxTagTextLength && text.length > props.maxTagTextLength) {
-                    text = text.slice(0, props.maxTagTextLength) + '...'
-                  }
+        {filteredOptions.value ? (
+          /* Search results */
+          <div
+            class={cls(`${prefixCls}-menu`, `${prefixCls}-menu-search`, props.classNames?.menu)}
+            style={props.styles?.menu}
+          >
+            {filteredOptions.value.length === 0 ? (
+              <div
+                class={cls(`${prefixCls}-menu-item-empty`, props.classNames?.menuItemEmpty)}
+                style={props.styles?.menuItemEmpty}
+              >
+                {props.notFoundContent}
+              </div>
+            ) : (
+              filteredOptions.value.map((item, i) => (
+                <div
+                  key={i}
+                  class={cls(`${prefixCls}-menu-item`, props.classNames?.menuItem)}
+                  style={props.styles?.menuItem}
+                  onMousedown={(e) => {
+                    e.preventDefault()
+                    handleSearchSelect(item.values, item.options)
+                  }}
+                >
+                  {highlightText(item.labels.join(' / '), searchText.value)}
+                </div>
+              ))
+            )}
+          </div>
+        ) : (
+          /* Normal columns */
+          <div class={cls(`${prefixCls}-menus`, props.classNames?.menus)} style={props.styles?.menus}>
+            {columns.value.map((colOpts, colIndex) => (
+              <ul key={colIndex} class={cls(`${prefixCls}-menu`, props.classNames?.menu)} style={props.styles?.menu}>
+                {colOpts.map((opt) => {
+                  const val = getValue(opt)
+                  const children = getChildren(opt)
+                  const hasChildren = !!children?.length && !opt.isLeaf
+                  const isActive = activePath.value[colIndex] === val
+                  const isSelected = props.multiple
+                    ? currentValue.value.some((p) => p[colIndex] === val && p.length > colIndex)
+                    : currentValue.value[0]?.[colIndex] === val
+
                   return (
-                    <span
-                      key={path.join('-')}
-                      class={cls(`${prefixCls}-selection-item`, props.classNames?.selectionItem)}
-                      style={props.styles?.selectionItem}
+                    <li
+                      key={val}
+                      class={cls(
+                        `${prefixCls}-menu-item`,
+                        {
+                          [`${prefixCls}-menu-item-active`]: isActive,
+                          [`${prefixCls}-menu-item-selected`]: isSelected,
+                          [`${prefixCls}-menu-item-disabled`]: opt.disabled,
+                          [`${prefixCls}-menu-item-expand`]: hasChildren,
+                        },
+                        props.classNames?.menuItem,
+                      )}
+                      style={props.styles?.menuItem}
+                      onClick={() => handleOptionClick(opt, colIndex)}
+                      onMouseenter={() => handleOptionHover(opt, colIndex)}
                     >
-                      <span
-                        class={cls(`${prefixCls}-selection-item-content`, props.classNames?.selectionItemContent)}
-                        style={props.styles?.selectionItemContent}
-                      >
-                        {text}
-                      </span>
-                      {!props.disabled && (
+                      {props.multiple && (
                         <span
-                          class={cls(`${prefixCls}-selection-item-remove`, props.classNames?.selectionItemRemove)}
-                          style={props.styles?.selectionItemRemove}
-                          onClick={(e) => handleRemoveTag(path, e)}
+                          class={cls(`${prefixCls}-menu-item-checkbox`, props.classNames?.menuItemCheckbox)}
+                          style={props.styles?.menuItemCheckbox}
                         >
-                          ×
+                          {currentValue.value.some((p) => p.length === colIndex + 1 && p[colIndex] === val) && '✓'}
                         </span>
                       )}
-                    </span>
+                      <span
+                        class={cls(`${prefixCls}-menu-item-content`, props.classNames?.menuItemContent)}
+                        style={props.styles?.menuItemContent}
+                      >
+                        {getLabel(opt)}
+                      </span>
+                      {hasChildren && (
+                        <span
+                          class={cls(`${prefixCls}-menu-item-expand-icon`, props.classNames?.menuItemExpandIcon)}
+                          style={props.styles?.menuItemExpandIcon}
+                        >
+                          ›
+                        </span>
+                      )}
+                    </li>
                   )
                 })}
-                {props.maxTagCount && getDisplayedPaths.value.length > props.maxTagCount && (
-                  <span
-                    class={cls(`${prefixCls}-selection-item`, props.classNames?.selectionItem)}
-                    style={props.styles?.selectionItem}
-                  >
-                    {typeof props.maxTagPlaceholder === 'function'
-                      ? props.maxTagPlaceholder(getDisplayedPaths.value.slice(props.maxTagCount))
-                      : (props.maxTagPlaceholder ?? `+${getDisplayedPaths.value.length - props.maxTagCount}`)}
-                  </span>
-                )}
-                {props.showSearch && isOpen.value && (
-                  <input
-                    ref={inputRef}
-                    class={cls(`${prefixCls}-search-input`, props.classNames?.searchInput)}
-                    style={props.styles?.searchInput}
-                    value={searchText.value}
-                    placeholder={currentValue.value.length === 0 ? props.placeholder : ''}
-                    onInput={(e) => {
-                      searchText.value = (e.target as HTMLInputElement).value
-                      emit('search', searchText.value)
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    autofocus={true}
-                  />
-                )}
-                {currentValue.value.length === 0 && !searchText.value && (
-                  <span
-                    class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.selectionPlaceholder)}
-                    style={props.styles?.selectionPlaceholder}
-                  >
-                    {props.placeholder}
-                  </span>
-                )}
-              </>
-            ) : (
-              <>
-                {props.showSearch && isOpen.value ? (
-                  <input
-                    ref={inputRef}
-                    class={cls(`${prefixCls}-search-input`, props.classNames?.searchInput)}
-                    style={props.styles?.searchInput}
-                    value={searchText.value}
-                    placeholder={
-                      typeof displayText.value === 'string' ? displayText.value || props.placeholder : props.placeholder
-                    }
-                    onInput={(e) => {
-                      searchText.value = (e.target as HTMLInputElement).value
-                      emit('search', searchText.value)
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    autofocus={true}
-                  />
-                ) : (
-                  <span
-                    class={cls(
-                      `${prefixCls}-selection-item`,
-                      {
-                        [`${prefixCls}-selection-placeholder`]: !displayText.value,
-                      },
-                      props.classNames?.selectionItem,
-                    )}
-                    style={props.styles?.selectionItem}
-                  >
-                    {displayText.value || props.placeholder}
-                  </span>
-                )}
-              </>
-            )}
-          </span>
-          <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-            {props.allowClear && currentValue.value.length > 0 && !props.disabled ? (
-              <span
-                class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
-                style={props.styles?.clear}
-                onMousedown={handleClear}
-                onClick={(e) => e.stopPropagation()}
-              >
-                ✕
-              </span>
-            ) : (
-              <span
-                class={cls(
-                  `${prefixCls}-arrow`,
-                  { [`${prefixCls}-arrow-open`]: isOpen.value },
-                  props.classNames?.arrow,
-                )}
-                style={props.styles?.arrow}
-              >
-                ▾
-              </span>
-            )}
-          </span>
-        </div>
-
-        {isOpen.value && (
-          <Teleport to="body">
-            <div
-              ref={dropdownRef}
-              class={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
-              style={{
-                position: 'absolute',
-                top: `${dropdownPos.value.top}px`,
-                left: `${dropdownPos.value.left}px`,
-                zIndex: 1050,
-                ...props.styles?.dropdown,
-              }}
-            >
-              {filteredOptions.value ? (
-                /* Search results */
-                <div
-                  class={cls(`${prefixCls}-menu`, `${prefixCls}-menu-search`, props.classNames?.menu)}
-                  style={props.styles?.menu}
-                >
-                  {filteredOptions.value.length === 0 ? (
-                    <div
-                      class={cls(`${prefixCls}-menu-item-empty`, props.classNames?.menuItemEmpty)}
-                      style={props.styles?.menuItemEmpty}
-                    >
-                      {props.notFoundContent}
-                    </div>
-                  ) : (
-                    filteredOptions.value.map((item, i) => (
-                      <div
-                        key={i}
-                        class={cls(`${prefixCls}-menu-item`, props.classNames?.menuItem)}
-                        style={props.styles?.menuItem}
-                        onMousedown={(e) => {
-                          e.preventDefault()
-                          handleSearchSelect(item.values, item.options)
-                        }}
-                      >
-                        {highlightText(item.labels.join(' / '), searchText.value)}
-                      </div>
-                    ))
-                  )}
-                </div>
-              ) : (
-                /* Normal columns */
-                <div class={cls(`${prefixCls}-menus`, props.classNames?.menus)} style={props.styles?.menus}>
-                  {columns.value.map((colOpts, colIndex) => (
-                    <ul
-                      key={colIndex}
-                      class={cls(`${prefixCls}-menu`, props.classNames?.menu)}
-                      style={props.styles?.menu}
-                    >
-                      {colOpts.map((opt) => {
-                        const val = getValue(opt)
-                        const children = getChildren(opt)
-                        const hasChildren = !!children?.length && !opt.isLeaf
-                        const isActive = activePath.value[colIndex] === val
-                        const isSelected = props.multiple
-                          ? currentValue.value.some((p) => p[colIndex] === val && p.length > colIndex)
-                          : currentValue.value[0]?.[colIndex] === val
-
-                        return (
-                          <li
-                            key={val}
-                            class={cls(
-                              `${prefixCls}-menu-item`,
-                              {
-                                [`${prefixCls}-menu-item-active`]: isActive,
-                                [`${prefixCls}-menu-item-selected`]: isSelected,
-                                [`${prefixCls}-menu-item-disabled`]: opt.disabled,
-                                [`${prefixCls}-menu-item-expand`]: hasChildren,
-                              },
-                              props.classNames?.menuItem,
-                            )}
-                            style={props.styles?.menuItem}
-                            onClick={() => handleOptionClick(opt, colIndex)}
-                            onMouseenter={() => handleOptionHover(opt, colIndex)}
-                          >
-                            {props.multiple && (
-                              <span
-                                class={cls(`${prefixCls}-menu-item-checkbox`, props.classNames?.menuItemCheckbox)}
-                                style={props.styles?.menuItemCheckbox}
-                              >
-                                {currentValue.value.some((p) => p.length === colIndex + 1 && p[colIndex] === val) &&
-                                  '✓'}
-                              </span>
-                            )}
-                            <span
-                              class={cls(`${prefixCls}-menu-item-content`, props.classNames?.menuItemContent)}
-                              style={props.styles?.menuItemContent}
-                            >
-                              {getLabel(opt)}
-                            </span>
-                            {hasChildren && (
-                              <span
-                                class={cls(`${prefixCls}-menu-item-expand-icon`, props.classNames?.menuItemExpandIcon)}
-                                style={props.styles?.menuItemExpandIcon}
-                              >
-                                ›
-                              </span>
-                            )}
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  ))}
-                </div>
-              )}
-            </div>
-          </Teleport>
+              </ul>
+            ))}
+          </div>
         )}
       </>
+    )
+
+    return () => (
+      <Trigger
+        open={isOpen.value}
+        trigger="click"
+        placement={'bottomLeft' as Placement}
+        disabled={props.disabled}
+        destroyOnHidden
+        popupClass={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
+        popupStyle={props.styles?.dropdown}
+        onOpenChange={(v: boolean) => {
+          if (v) open()
+          else close()
+        }}
+      >
+        {{
+          default: () => (
+            <div
+              ref={triggerRef}
+              class={cls(
+                prefixCls,
+                `${prefixCls}-${props.size}`,
+                {
+                  [`${prefixCls}-open`]: isOpen.value,
+                  [`${prefixCls}-disabled`]: props.disabled,
+                  [`${prefixCls}-multiple`]: props.multiple,
+                  [`${prefixCls}-status-error`]: props.status === 'error',
+                  [`${prefixCls}-status-warning`]: props.status === 'warning',
+                },
+                props.classNames?.root,
+                attrs.class as any,
+              )}
+              style={{ ...props.styles?.root, ...(attrs.style as any) }}
+            >
+              <span class={cls(`${prefixCls}-selector`, props.classNames?.selector)} style={props.styles?.selector}>
+                {props.multiple ? (
+                  <>
+                    {getDisplayedPaths.value
+                      .slice(0, props.maxTagCount ?? getDisplayedPaths.value.length)
+                      .map((path) => {
+                        const labels = getLabelPath(path, props.options)
+                        const options = getOptionPath(path, props.options)
+                        let text: string | VNode
+                        if (props.displayRender) {
+                          text = props.displayRender(labels, options)
+                        } else {
+                          text = labels.join(' / ')
+                        }
+                        if (
+                          typeof text === 'string' &&
+                          props.maxTagTextLength &&
+                          text.length > props.maxTagTextLength
+                        ) {
+                          text = text.slice(0, props.maxTagTextLength) + '...'
+                        }
+                        return (
+                          <span
+                            key={path.join('-')}
+                            class={cls(`${prefixCls}-selection-item`, props.classNames?.selectionItem)}
+                            style={props.styles?.selectionItem}
+                          >
+                            <span
+                              class={cls(`${prefixCls}-selection-item-content`, props.classNames?.selectionItemContent)}
+                              style={props.styles?.selectionItemContent}
+                            >
+                              {text}
+                            </span>
+                            {!props.disabled && (
+                              <span
+                                class={cls(`${prefixCls}-selection-item-remove`, props.classNames?.selectionItemRemove)}
+                                style={props.styles?.selectionItemRemove}
+                                onClick={(e) => handleRemoveTag(path, e)}
+                              >
+                                ×
+                              </span>
+                            )}
+                          </span>
+                        )
+                      })}
+                    {props.maxTagCount && getDisplayedPaths.value.length > props.maxTagCount && (
+                      <span
+                        class={cls(`${prefixCls}-selection-item`, props.classNames?.selectionItem)}
+                        style={props.styles?.selectionItem}
+                      >
+                        {typeof props.maxTagPlaceholder === 'function'
+                          ? props.maxTagPlaceholder(getDisplayedPaths.value.slice(props.maxTagCount))
+                          : (props.maxTagPlaceholder ?? `+${getDisplayedPaths.value.length - props.maxTagCount}`)}
+                      </span>
+                    )}
+                    {props.showSearch && isOpen.value && (
+                      <input
+                        ref={inputRef}
+                        class={cls(`${prefixCls}-search-input`, props.classNames?.searchInput)}
+                        style={props.styles?.searchInput}
+                        value={searchText.value}
+                        placeholder={currentValue.value.length === 0 ? props.placeholder : ''}
+                        onInput={(e) => {
+                          searchText.value = (e.target as HTMLInputElement).value
+                          emit('search', searchText.value)
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        autofocus={true}
+                      />
+                    )}
+                    {currentValue.value.length === 0 && !searchText.value && (
+                      <span
+                        class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.selectionPlaceholder)}
+                        style={props.styles?.selectionPlaceholder}
+                      >
+                        {props.placeholder}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {props.showSearch && isOpen.value ? (
+                      <input
+                        ref={inputRef}
+                        class={cls(`${prefixCls}-search-input`, props.classNames?.searchInput)}
+                        style={props.styles?.searchInput}
+                        value={searchText.value}
+                        placeholder={
+                          typeof displayText.value === 'string'
+                            ? displayText.value || props.placeholder
+                            : props.placeholder
+                        }
+                        onInput={(e) => {
+                          searchText.value = (e.target as HTMLInputElement).value
+                          emit('search', searchText.value)
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        autofocus={true}
+                      />
+                    ) : (
+                      <span
+                        class={cls(
+                          `${prefixCls}-selection-item`,
+                          {
+                            [`${prefixCls}-selection-placeholder`]: !displayText.value,
+                          },
+                          props.classNames?.selectionItem,
+                        )}
+                        style={props.styles?.selectionItem}
+                      >
+                        {displayText.value || props.placeholder}
+                      </span>
+                    )}
+                  </>
+                )}
+              </span>
+              <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+                {props.allowClear && currentValue.value.length > 0 && !props.disabled ? (
+                  <span
+                    class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+                    style={props.styles?.clear}
+                    onMousedown={handleClear}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    ✕
+                  </span>
+                ) : (
+                  <DownOutlined
+                    class={cls(
+                      `${prefixCls}-arrow`,
+                      { [`${prefixCls}-arrow-open`]: isOpen.value },
+                      props.classNames?.arrow,
+                    )}
+                    style={props.styles?.arrow}
+                  />
+                )}
+              </span>
+            </div>
+          ),
+          popup: ({ placement }: { placement: Placement }) => renderDropdownContent(),
+        }}
+      </Trigger>
     )
   },
 })

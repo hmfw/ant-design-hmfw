@@ -1,7 +1,8 @@
-import { defineComponent, type PropType, type VNode } from 'vue'
+import { defineComponent, h, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { ItemType, BreadcrumbItemType, BreadcrumbSeparatorType } from './types'
+import type { ItemType, BreadcrumbItemType, BreadcrumbSeparatorType, BreadcrumbMenu } from './types'
+import type { MenuProps } from '../menu'
 import { Dropdown } from '../dropdown'
 import { Icon, DownOutlined } from '../icon'
 
@@ -38,6 +39,31 @@ const pickAttrs = (item: any) => {
   return attrs
 }
 
+/**
+ * 归一化面包屑下拉菜单：
+ * - `title` 作为 `label` 的别名
+ * - `path` 与当前项 href 拼接成 `<a>` 链接
+ * - 缺省 key 时用索引兜底
+ */
+const normalizeMenu = (menu: BreadcrumbMenu, href?: string): MenuProps => {
+  const { items, ...restMenu } = menu
+  return {
+    ...restMenu,
+    items: items?.map(({ key, title, label, path, ...itemProps }, index) => {
+      let mergedLabel: string | VNode | undefined = label ?? title
+      if (path) {
+        mergedLabel = h('a', { href: `${href ?? ''}${path}` }, mergedLabel)
+      }
+      return {
+        ...itemProps,
+        key: String(key ?? index),
+        // Menu 运行时直接渲染 label，VNode 合法；类型上以 any 透传
+        label: mergedLabel as any,
+      }
+    }),
+  } as MenuProps
+}
+
 export const Breadcrumb = defineComponent({
   name: 'Breadcrumb',
   props: {
@@ -50,6 +76,7 @@ export const Breadcrumb = defineComponent({
       type: Object as PropType<Record<string, any>>,
       default: () => ({}),
     },
+    dropdownIcon: Object as PropType<VNode>,
     itemRender: Function as PropType<
       (item: BreadcrumbItemType, params: Record<string, any>, items: BreadcrumbItemType[], paths: string[]) => VNode
     >,
@@ -64,14 +91,17 @@ export const Breadcrumb = defineComponent({
         return null
       }
 
-      const { className, onClick, menu, ...restItem } = item
+      const { className, onClick, menu, dropdownProps, ...restItem } = item
       const passedProps = {
         ...pickAttrs(restItem),
         onClick,
       }
 
+      const dropdownIcon = props.dropdownIcon ?? <Icon component={DownOutlined} />
+
       // 如果有下拉菜单，包裹在 Dropdown 中
       if (menu && menu.items && menu.items.length > 0) {
+        const mergedMenu = normalizeMenu(menu, href)
         const linkContent =
           href !== undefined ? (
             <a
@@ -85,7 +115,7 @@ export const Breadcrumb = defineComponent({
                 style={props.styles?.overlayLink}
               >
                 {children}
-                <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
+                {dropdownIcon}
               </span>
             </a>
           ) : (
@@ -99,13 +129,13 @@ export const Breadcrumb = defineComponent({
                 style={props.styles?.overlayLink}
               >
                 {children}
-                <Icon component={DownOutlined} style="margin-left: 4px; font-size: 10px;" />
+                {dropdownIcon}
               </span>
             </span>
           )
 
         return (
-          <Dropdown menu={menu} trigger={['hover']}>
+          <Dropdown menu={mergedMenu} trigger={['hover']} {...dropdownProps}>
             {linkContent}
           </Dropdown>
         )

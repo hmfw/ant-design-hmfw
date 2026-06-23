@@ -9,28 +9,23 @@
 
 ## 最新版本
 
-### [0.1.0] - 2026-06-20
+### [0.2.0] - 2026-06-23
 
-#### 首次发布 🎉
+#### ✨ 新特性
 
-基于 Ant Design v6 的 Vue3 组件库，首个 npm 发布版本。
+- **统一浮层系统** - 新增内部 `Trigger` 组件与 `computePosition` 定位引擎，支持 12 个弹出方位、溢出自动翻转、箭头对齐，作为所有浮层类组件的共享基座
+- **Breadcrumb 下拉菜单增强** - 新增公开类型 `BreadcrumbMenu`、`BreadcrumbMenuItem`，支持 `title`/`path`、`dropdownProps` 透传与自定义 `dropdownIcon`
+- **新增设计 Token** - `boxShadowPopoverArrow`，用于浮层箭头阴影
 
-**核心特性**：
+#### ♻️ 重构
 
-- 🎨 68 个高质量组件
-- 💪 完整 TypeScript 支持
-- 🎯 按需引入（支持 Tree Shaking）
-- 🌍 国际化（中英文语言包）
-- 🎨 主题定制（CSS Variables）
-- 🎨 语义化 API（classNames/styles）
-- ⚡ 高性能（虚拟滚动）
+- 10 个浮层组件统一迁移至 `Trigger` 系统：AutoComplete、Cascader、ColorPicker、DatePicker、Dropdown、RangePicker、Select、TimePicker、Tooltip、TreeSelect
 
-**质量保障**：
+#### 🧪 质量保障
 
-- ✅ 1891 个单元测试
-- ✅ 36 个 E2E 测试
-- ✅ 完整文档站点
+- 单元测试增至 1925 个（1925 通过 + 2 跳过）
 
 查看完整变更详情：[docs/guide/changelog.md](./docs/guide/changelog.md)
 
+[0.2.0]: https://github.com/hmfw/ant-design-hmfw/releases/tag/v0.2.0
 [0.1.0]: https://github.com/hmfw/ant-design-hmfw/releases/tag/v0.1.0

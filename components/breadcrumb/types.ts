@@ -1,5 +1,32 @@
 import type { VNode, CSSProperties } from 'vue'
 import type { MenuProps } from '../menu'
+import type { DropdownProps } from '../dropdown'
+
+/**
+ * 面包屑下拉菜单项
+ *
+ * 在 MenuProps 基础上扩展 `path`/`title`：
+ * - `title` 作为 `label` 的别名
+ * - `path` 会与当前项的 `href` 拼接成链接（`${href}${path}`）
+ */
+export interface BreadcrumbMenuItem {
+  key?: string | number
+  label?: string | VNode
+  /** `label` 的别名 */
+  title?: string | VNode
+  /** 直接指定链接 */
+  href?: string
+  /** 与当前项 href 拼接：`${href}${path}` */
+  path?: string
+  [key: string]: any
+}
+
+/**
+ * 面包屑下拉菜单配置
+ */
+export interface BreadcrumbMenu extends Omit<MenuProps, 'items'> {
+  items?: BreadcrumbMenuItem[]
+}
 
 export interface BreadcrumbItemType {
   key?: string | number
@@ -18,7 +45,11 @@ export interface BreadcrumbItemType {
   /**
    * 下拉菜单配置
    */
-  menu?: MenuProps
+  menu?: BreadcrumbMenu
+  /**
+   * 透传给 Dropdown 的属性（如 placement、trigger 等）
+   */
+  dropdownProps?: DropdownProps
   /** Custom data attributes */
   [key: `data-${string}`]: any
   /** ARIA attributes */
@@ -73,6 +104,8 @@ export interface BreadcrumbProps {
   items?: ItemType[]
   separator?: string | VNode
   params?: Record<string, any>
+  /** 自定义下拉菜单的展开图标，默认 DownOutlined */
+  dropdownIcon?: VNode
   /**
    * 自定义渲染面包屑项
    * @param item 当前项

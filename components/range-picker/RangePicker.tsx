@@ -1,6 +1,8 @@
-import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, Teleport } from 'vue'
+import { defineComponent, ref, computed, watch, type PropType } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
+import { Trigger } from '../_internal/trigger'
+import type { Placement } from '../_internal/trigger'
 import type { RangeValue, RangePreset, RangePickerClassNames, RangePickerStyles } from './types'
 
 function pad(n: number) {
@@ -114,9 +116,7 @@ export const RangePicker = defineComponent({
     const rightYear = computed(() => (leftMonth.value === 11 ? leftYear.value + 1 : leftYear.value))
     const rightMonth = computed(() => (leftMonth.value === 11 ? 0 : leftMonth.value + 1))
 
-    const triggerRef = ref<HTMLElement>()
     const panelRef = ref<HTMLElement>()
-    const panelPos = ref({ top: 0, left: 0 })
 
     // Whole-picker disabled state (boolean form only).
     const isDisabled = computed(() => typeof props.disabled === 'boolean' && props.disabled)
@@ -128,12 +128,6 @@ export const RangePicker = defineComponent({
 
     const hasValue = computed(() => !!(startDate.value || endDate.value))
 
-    const updatePos = () => {
-      if (!triggerRef.value) return
-      const rect = triggerRef.value.getBoundingClientRect()
-      panelPos.value = { top: rect.bottom + window.scrollY + 4, left: rect.left + window.scrollX }
-    }
-
     const setOpen = (next: boolean) => {
       if (props.open === undefined) innerOpen.value = next
       emit('openChange', next)
@@ -141,7 +135,6 @@ export const RangePicker = defineComponent({
 
     const openPanel = () => {
       if (isDisabled.value || isOpen.value) return
-      updatePos()
       const d = startDate.value ?? now
       leftYear.value = d.getFullYear()
       leftMonth.value = d.getMonth()
@@ -154,26 +147,6 @@ export const RangePicker = defineComponent({
       hoverDate.value = null
       setOpen(false)
     }
-
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (!triggerRef.value?.contains(e.target as Node) && !panelRef.value?.contains(e.target as Node)) closePanel()
-    }
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen.value) {
-        closePanel()
-        e.preventDefault()
-      }
-    }
-
-    onMounted(() => {
-      document.addEventListener('mousedown', handleOutsideClick)
-      document.addEventListener('keydown', handleKeyDown)
-    })
-    onUnmounted(() => {
-      document.removeEventListener('mousedown', handleOutsideClick)
-      document.removeEventListener('keydown', handleKeyDown)
-    })
 
     const toStr = (d: Date | null) => (d ? formatDate(d, props.format) : null)
 
@@ -390,108 +363,112 @@ export const RangePicker = defineComponent({
       )
     }
 
-    return () => (
-      <>
+    const renderPopup = () => (
+      <div
+        ref={panelRef}
+        class={cls(`${prefixCls}-popup`, `${prefixCls}-range-popup`, props.classNames?.popup)}
+        style={props.styles?.popup}
+      >
         <div
-          ref={triggerRef}
-          class={cls(
-            `${prefixCls}`,
-            `${prefixCls}-range`,
-            `${prefixCls}-${props.size}`,
-            {
-              [`${prefixCls}-open`]: isOpen.value,
-              [`${prefixCls}-disabled`]: isDisabled.value,
-              [`${prefixCls}-status-error`]: props.status === 'error',
-              [`${prefixCls}-status-warning`]: props.status === 'warning',
-            },
-            props.classNames?.root,
-          )}
-          style={props.styles?.root}
-          onClick={openPanel}
+          class={cls(`${prefixCls}-range-wrapper`, props.classNames?.rangeWrapper)}
+          style={props.styles?.rangeWrapper}
         >
-          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
-            <input
-              readonly
-              value={displayStart.value}
-              placeholder={placeholders.value[0]}
-              disabled={startDisabled.value}
-              class={cls(`${prefixCls}-input-inner`, props.classNames?.startInput)}
-              style={props.styles?.startInput}
-            />
-            <span
-              class={cls(`${prefixCls}-range-separator`, props.classNames?.separator)}
-              style={props.styles?.separator}
-            >
-              {props.separator}
-            </span>
-            <input
-              readonly
-              value={displayEnd.value}
-              placeholder={placeholders.value[1]}
-              disabled={endDisabled.value}
-              class={cls(`${prefixCls}-input-inner`, props.classNames?.endInput)}
-              style={props.styles?.endInput}
-            />
-            {props.allowClear && hasValue.value && !isDisabled.value && (
-              <span
-                class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
-                style={props.styles?.clear}
-                onClick={clearValue}
-              >
-                ✕
-              </span>
-            )}
-            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-              📅
-            </span>
-          </span>
-        </div>
-
-        {isOpen.value && (
-          <Teleport to="body">
-            <div
-              ref={panelRef}
-              class={cls(`${prefixCls}-popup`, `${prefixCls}-range-popup`, props.classNames?.popup)}
-              style={{
-                position: 'absolute',
-                top: `${panelPos.value.top}px`,
-                left: `${panelPos.value.left}px`,
-                zIndex: 1050,
-                ...props.styles?.popup,
-              }}
-            >
-              <div
-                class={cls(`${prefixCls}-range-wrapper`, props.classNames?.rangeWrapper)}
-                style={props.styles?.rangeWrapper}
-              >
-                {props.presets && props.presets.length > 0 && (
-                  <div class={cls(`${prefixCls}-presets`, props.classNames?.presets)} style={props.styles?.presets}>
-                    <ul>
-                      {props.presets.map((preset) => (
-                        <li
-                          key={preset.label}
-                          class={cls(`${prefixCls}-preset`, props.classNames?.preset)}
-                          style={props.styles?.preset}
-                          onClick={() => applyPreset(preset)}
-                        >
-                          {preset.label}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                <div
-                  class={cls(`${prefixCls}-range-panels`, props.classNames?.rangePanels)}
-                  style={props.styles?.rangePanels}
-                >
-                  {renderPanel(leftYear.value, leftMonth.value, 'left')}
-                  {renderPanel(rightYear.value, rightMonth.value, 'right')}
-                </div>
-              </div>
+          {props.presets && props.presets.length > 0 && (
+            <div class={cls(`${prefixCls}-presets`, props.classNames?.presets)} style={props.styles?.presets}>
+              <ul>
+                {props.presets.map((preset) => (
+                  <li
+                    key={preset.label}
+                    class={cls(`${prefixCls}-preset`, props.classNames?.preset)}
+                    style={props.styles?.preset}
+                    onClick={() => applyPreset(preset)}
+                  >
+                    {preset.label}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </Teleport>
+          )}
+          <div
+            class={cls(`${prefixCls}-range-panels`, props.classNames?.rangePanels)}
+            style={props.styles?.rangePanels}
+          >
+            {renderPanel(leftYear.value, leftMonth.value, 'left')}
+            {renderPanel(rightYear.value, rightMonth.value, 'right')}
+          </div>
+        </div>
+      </div>
+    )
+
+    return () => (
+      <Trigger
+        open={isOpen.value}
+        trigger="click"
+        placement={'bottomLeft' as Placement}
+        disabled={isDisabled.value}
+        destroyOnHidden
+        triggerClass={cls(
+          `${prefixCls}`,
+          `${prefixCls}-range`,
+          `${prefixCls}-${props.size}`,
+          {
+            [`${prefixCls}-open`]: isOpen.value,
+            [`${prefixCls}-disabled`]: isDisabled.value,
+            [`${prefixCls}-status-error`]: props.status === 'error',
+            [`${prefixCls}-status-warning`]: props.status === 'warning',
+          },
+          props.classNames?.root,
         )}
-      </>
+        triggerStyle={props.styles?.root}
+        popupClass={cls(`${prefixCls}-popup`, `${prefixCls}-range-popup`, props.classNames?.popup)}
+        popupStyle={props.styles?.popup}
+        onOpenChange={(v: boolean) => {
+          if (v) openPanel()
+          else closePanel()
+        }}
+      >
+        {{
+          default: () => (
+            <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
+              <input
+                readonly
+                value={displayStart.value}
+                placeholder={placeholders.value[0]}
+                disabled={startDisabled.value}
+                class={cls(`${prefixCls}-input-inner`, props.classNames?.startInput)}
+                style={props.styles?.startInput}
+              />
+              <span
+                class={cls(`${prefixCls}-range-separator`, props.classNames?.separator)}
+                style={props.styles?.separator}
+              >
+                {props.separator}
+              </span>
+              <input
+                readonly
+                value={displayEnd.value}
+                placeholder={placeholders.value[1]}
+                disabled={endDisabled.value}
+                class={cls(`${prefixCls}-input-inner`, props.classNames?.endInput)}
+                style={props.styles?.endInput}
+              />
+              {props.allowClear && hasValue.value && !isDisabled.value && (
+                <span
+                  class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+                  style={props.styles?.clear}
+                  onClick={clearValue}
+                >
+                  ✕
+                </span>
+              )}
+              <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+                📅
+              </span>
+            </span>
+          ),
+          popup: ({ placement }: { placement: Placement }) => renderPopup(),
+        }}
+      </Trigger>
     )
   },
 })

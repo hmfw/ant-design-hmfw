@@ -517,7 +517,7 @@ export const Tree = defineComponent({
         if (custom) return custom
       }
       if (!hasChildren) return null
-      return isExpanded ? '▾' : '▸'
+      return isExpanded ? <Icons.CaretDownFilled /> : <Icons.CaretRightFilled />
     }
 
     // 渲染单个树节点

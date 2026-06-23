@@ -1,17 +1,9 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  nextTick,
-  Teleport,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { defineComponent, ref, computed, watch, nextTick, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import { CaretRightFilled, CaretDownFilled, DownOutlined } from '../icon'
+import { Trigger } from '../_internal/trigger'
+import type { Placement } from '../_internal/trigger'
 import type { TreeSelectNode, ShowCheckedStrategy, TreeSelectValue, TreeIcon, MaxTagPlaceholder } from './types'
 
 type Key = string | number
@@ -74,10 +66,8 @@ export const TreeSelect = defineComponent({
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tree-select')
     const selectorRef = ref<HTMLElement | null>(null)
-    const dropdownRef = ref<HTMLElement | null>(null)
     const listRef = ref<HTMLElement | null>(null)
     const innerOpen = ref(!!props.defaultOpen)
-    const dropdownPos = ref({ top: 0, left: 0, width: 0 })
     const searchText = ref('')
     const scrollTop = ref(0)
 
@@ -330,21 +320,12 @@ export const TreeSelect = defineComponent({
     }
 
     // ===================== Dropdown =====================
-    async function openDropdown() {
+    function openDropdown() {
       if (props.disabled) return
       innerOpen.value = true
       emit('update:open', true)
       emit('dropdownVisibleChange', true)
       emit('openChange', true)
-      await nextTick()
-      if (selectorRef.value) {
-        const rect = selectorRef.value.getBoundingClientRect()
-        dropdownPos.value = {
-          top: rect.bottom + window.scrollY + 4,
-          left: rect.left + window.scrollX,
-          width: rect.width,
-        }
-      }
     }
 
     function closeDropdown() {
@@ -467,15 +448,6 @@ export const TreeSelect = defineComponent({
       emit('clear')
     }
 
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (!isOpen.value) return
-      if (selectorRef.value?.contains(e.target as Node) || dropdownRef.value?.contains(e.target as Node)) return
-      closeDropdown()
-    }
-
-    onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
-    onBeforeUnmount(() => document.removeEventListener('mousedown', handleOutsideClick))
-
     // ===================== Render helpers =====================
     const renderTreeNode = (flat: FlatNode, checkedSet: Set<Key>, halfSet: Set<Key>): VNode => {
       const { node, level, hasChildren, valueKey, label, forceExpand } = flat
@@ -508,7 +480,7 @@ export const TreeSelect = defineComponent({
               if (hasChildren && !forceExpand) toggleExpand(valueKey)
             }}
           >
-            {hasChildren && !forceExpand ? (isExpanded ? '▾' : '▸') : null}
+            {hasChildren && !forceExpand ? isExpanded ? <CaretDownFilled /> : <CaretRightFilled /> : null}
           </span>
           {props.treeCheckable && (
             <span
@@ -542,6 +514,60 @@ export const TreeSelect = defineComponent({
       )
     }
 
+    // ===================== Dropdown Content =====================
+    const renderDropdownContent = (checkedSet: Set<Key>, halfSet: Set<Key>) => {
+      if (flatNodes.value.length === 0) {
+        return (
+          <div
+            class={cls(`${prefixCls}-dropdown-empty`, props.classNames?.dropdownEmpty)}
+            style={props.styles?.dropdownEmpty}
+          >
+            {props.notFoundContent}
+          </div>
+        )
+      }
+
+      return (
+        <div
+          ref={listRef}
+          class={`${prefixCls}-dropdown-list`}
+          style={{
+            maxHeight: `${props.listHeight}px`,
+            overflowY: 'auto',
+            position: 'relative',
+          }}
+          onScroll={handleListScroll}
+        >
+          {useVirtual.value ? (
+            <div
+              class={`${prefixCls}-dropdown-list-holder`}
+              style={{
+                height: `${flatNodes.value.length * props.itemHeight}px`,
+                position: 'relative',
+              }}
+            >
+              <div
+                class={`${prefixCls}-dropdown-list-inner`}
+                style={{
+                  transform: `translateY(${visibleRange.value.offset}px)`,
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                }}
+              >
+                {flatNodes.value
+                  .slice(visibleRange.value.start, visibleRange.value.end)
+                  .map((flat) => renderTreeNode(flat, checkedSet, halfSet))}
+              </div>
+            </div>
+          ) : (
+            flatNodes.value.map((flat) => renderTreeNode(flat, checkedSet, halfSet))
+          )}
+        </div>
+      )
+    }
+
     // ===================== Render =====================
     return () => {
       const hasValue = selectedValues.value.length > 0
@@ -560,180 +586,135 @@ export const TreeSelect = defineComponent({
       }
 
       return (
-        <div
-          class={cls(prefixCls, `${prefixCls}-${props.size}`, props.classNames?.root, {
+        <Trigger
+          open={isOpen.value}
+          trigger="click"
+          placement={'bottomLeft' as Placement}
+          disabled={props.disabled}
+          destroyOnHidden
+          matchWidth
+          triggerClass={cls(prefixCls, `${prefixCls}-${props.size}`, props.classNames?.root, {
             [`${prefixCls}-open`]: isOpen.value,
             [`${prefixCls}-disabled`]: props.disabled,
             [`${prefixCls}-status-error`]: props.status === 'error',
             [`${prefixCls}-status-warning`]: props.status === 'warning',
           })}
-          style={props.styles?.root}
+          triggerStyle={props.styles?.root}
+          popupClass={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
+          popupStyle={props.styles?.dropdown}
+          onOpenChange={(v: boolean) => {
+            if (v) openDropdown()
+            else closeDropdown()
+          }}
         >
-          <div
-            ref={selectorRef}
-            class={cls(`${prefixCls}-selector`, props.classNames?.selector)}
-            style={props.styles?.selector}
-            onClick={isOpen.value ? closeDropdown : openDropdown}
-          >
-            {isMultiple.value ? (
+          {{
+            default: () => (
               <>
-                {selectedLabels.value.slice(0, visibleTagCount.value).map((label, i) => (
-                  <span
-                    key={selectedValues.value[i]}
-                    class={cls(`${prefixCls}-selection-item`, props.classNames?.item)}
-                    style={props.styles?.item}
-                  >
-                    <span class={`${prefixCls}-selection-item-content`}>{truncateLabel(label)}</span>
-                    <span
-                      class={`${prefixCls}-selection-item-remove`}
-                      onClick={(e) => removeTag(selectedValues.value[i], e)}
-                    >
-                      ×
-                    </span>
-                  </span>
-                ))}
-                {selectedValues.value.length > visibleTagCount.value && (
-                  <span class={cls(`${prefixCls}-selection-item`, `${prefixCls}-selection-overflow`)}>
-                    <span class={`${prefixCls}-selection-item-content`}>
-                      {renderMaxTagPlaceholder(selectedValues.value.slice(visibleTagCount.value))}
-                    </span>
-                  </span>
-                )}
-                {props.showSearch && (
-                  <input
-                    class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
-                    style={props.styles?.search}
-                    value={searchText.value}
-                    onInput={(e) => {
-                      searchText.value = (e.target as HTMLInputElement).value
-                      emit('search', searchText.value)
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                )}
-                {!hasValue && !searchText.value && (
-                  <span
-                    class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
-                    style={props.styles?.placeholder}
-                  >
-                    {props.placeholder}
-                  </span>
-                )}
-              </>
-            ) : (
-              <>
-                {hasValue ? (
-                  <span class={cls(`${prefixCls}-selection-item`, props.classNames?.item)} style={props.styles?.item}>
-                    {selectedLabels.value[0]}
-                  </span>
-                ) : (
-                  <span
-                    class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
-                    style={props.styles?.placeholder}
-                  >
-                    {props.placeholder}
-                  </span>
-                )}
-                {props.showSearch && isOpen.value && (
-                  <input
-                    class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
-                    style={props.styles?.search}
-                    value={searchText.value}
-                    onInput={(e) => {
-                      searchText.value = (e.target as HTMLInputElement).value
-                      emit('search', searchText.value)
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                )}
-              </>
-            )}
-          </div>
-
-          <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow}>
-            <span
-              class={cls(`${prefixCls}-arrow-icon`, {
-                [`${prefixCls}-arrow-icon-open`]: isOpen.value,
-              })}
-            >
-              ▾
-            </span>
-          </div>
-
-          {showClear && (
-            <span
-              class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
-              style={props.styles?.clear}
-              onClick={clearAll}
-            >
-              ×
-            </span>
-          )}
-
-          {isOpen.value && (
-            <Teleport to="body">
-              <div
-                ref={dropdownRef}
-                class={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
-                style={{
-                  position: 'absolute',
-                  top: `${dropdownPos.value.top}px`,
-                  left: `${dropdownPos.value.left}px`,
-                  minWidth: `${dropdownPos.value.width}px`,
-                  zIndex: 1050,
-                  ...props.styles?.dropdown,
-                }}
-              >
-                {flatNodes.value.length === 0 ? (
-                  <div
-                    class={cls(`${prefixCls}-dropdown-empty`, props.classNames?.dropdownEmpty)}
-                    style={props.styles?.dropdownEmpty}
-                  >
-                    {props.notFoundContent}
-                  </div>
-                ) : (
-                  <div
-                    ref={listRef}
-                    class={`${prefixCls}-dropdown-list`}
-                    style={{
-                      maxHeight: `${props.listHeight}px`,
-                      overflowY: 'auto',
-                      position: 'relative',
-                    }}
-                    onScroll={handleListScroll}
-                  >
-                    {useVirtual.value ? (
-                      <div
-                        class={`${prefixCls}-dropdown-list-holder`}
-                        style={{
-                          height: `${flatNodes.value.length * props.itemHeight}px`,
-                          position: 'relative',
-                        }}
-                      >
-                        <div
-                          class={`${prefixCls}-dropdown-list-inner`}
-                          style={{
-                            transform: `translateY(${visibleRange.value.offset}px)`,
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                          }}
+                <div
+                  ref={selectorRef}
+                  class={cls(`${prefixCls}-selector`, props.classNames?.selector)}
+                  style={props.styles?.selector}
+                >
+                  {isMultiple.value ? (
+                    <>
+                      {selectedLabels.value.slice(0, visibleTagCount.value).map((label, i) => (
+                        <span
+                          key={selectedValues.value[i]}
+                          class={cls(`${prefixCls}-selection-item`, props.classNames?.item)}
+                          style={props.styles?.item}
                         >
-                          {flatNodes.value
-                            .slice(visibleRange.value.start, visibleRange.value.end)
-                            .map((flat) => renderTreeNode(flat, checkedSet, halfSet))}
-                        </div>
-                      </div>
-                    ) : (
-                      flatNodes.value.map((flat) => renderTreeNode(flat, checkedSet, halfSet))
-                    )}
-                  </div>
+                          <span class={`${prefixCls}-selection-item-content`}>{truncateLabel(label)}</span>
+                          <span
+                            class={`${prefixCls}-selection-item-remove`}
+                            onClick={(e) => removeTag(selectedValues.value[i], e)}
+                          >
+                            ×
+                          </span>
+                        </span>
+                      ))}
+                      {selectedValues.value.length > visibleTagCount.value && (
+                        <span class={cls(`${prefixCls}-selection-item`, `${prefixCls}-selection-overflow`)}>
+                          <span class={`${prefixCls}-selection-item-content`}>
+                            {renderMaxTagPlaceholder(selectedValues.value.slice(visibleTagCount.value))}
+                          </span>
+                        </span>
+                      )}
+                      {props.showSearch && (
+                        <input
+                          class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
+                          style={props.styles?.search}
+                          value={searchText.value}
+                          onInput={(e) => {
+                            searchText.value = (e.target as HTMLInputElement).value
+                            emit('search', searchText.value)
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      )}
+                      {!hasValue && !searchText.value && (
+                        <span
+                          class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
+                          style={props.styles?.placeholder}
+                        >
+                          {props.placeholder}
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {hasValue ? (
+                        <span
+                          class={cls(`${prefixCls}-selection-item`, props.classNames?.item)}
+                          style={props.styles?.item}
+                        >
+                          {selectedLabels.value[0]}
+                        </span>
+                      ) : (
+                        <span
+                          class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
+                          style={props.styles?.placeholder}
+                        >
+                          {props.placeholder}
+                        </span>
+                      )}
+                      {props.showSearch && isOpen.value && (
+                        <input
+                          class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
+                          style={props.styles?.search}
+                          value={searchText.value}
+                          onInput={(e) => {
+                            searchText.value = (e.target as HTMLInputElement).value
+                            emit('search', searchText.value)
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+
+                <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow}>
+                  <DownOutlined
+                    class={cls(`${prefixCls}-arrow-icon`, {
+                      [`${prefixCls}-arrow-icon-open`]: isOpen.value,
+                    })}
+                  />
+                </div>
+
+                {showClear && (
+                  <span
+                    class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
+                    style={props.styles?.clear}
+                    onClick={clearAll}
+                  >
+                    ×
+                  </span>
                 )}
-              </div>
-            </Teleport>
-          )}
-        </div>
+              </>
+            ),
+            popup: ({ placement }: { placement: Placement }) => renderDropdownContent(checkedSet, halfSet),
+          }}
+        </Trigger>
       )
     }
   },

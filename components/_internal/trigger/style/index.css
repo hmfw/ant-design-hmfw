@@ -1,0 +1,8 @@
+/* Trigger 内部原语：弹层隐藏态。
+   用 visibility/opacity 而非 display:none，保留尺寸以便 getBoundingClientRect 仍可测量，
+   从而在显示前正确计算位置与翻转。 */
+.hmfw-trigger-popup-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}

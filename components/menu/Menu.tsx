@@ -1,6 +1,7 @@
 import { defineComponent, ref, computed, watch, provide, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import { DownOutlined, RightOutlined } from '../icon'
 import type { ItemType, MenuMode, MenuTheme } from './types'
 
 const MENU_CONTEXT_KEY = Symbol('menu-context')
@@ -225,13 +226,13 @@ export const Menu = defineComponent({
                 }
                 return props.expandIcon
               }
+              // inline 模式使用 DownOutlined，horizontal/vertical 模式使用 RightOutlined
+              const IconComponent = props.mode === 'inline' ? DownOutlined : RightOutlined
               return (
-                <span
+                <IconComponent
                   class={cls(`${prefixCls}-submenu-arrow`, { open: isOpen }, props.classNames?.submenuArrow)}
                   style={props.styles?.submenuArrow}
-                >
-                  ▾
-                </span>
+                />
               )
             }
 
