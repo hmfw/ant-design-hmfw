@@ -17,8 +17,15 @@ import { cls } from '../_utils'
 import { Button } from '../button'
 import { Icon } from '../icon'
 import { CloseOutlined } from '../icon/icons'
-import type { TourStep, TourProps } from './types'
+import type { TourStep, TourProps, TourButtonProps } from './types'
 import type { TooltipPlacement } from '../tooltip/types'
+
+/** 剥离 children/onClick 后再透传给 Button，避免只读 children 属性透传到 DOM 触发告警 */
+function omitButtonProps(buttonProps?: TourButtonProps) {
+  if (!buttonProps) return undefined
+  const { children, onClick, ...rest } = buttonProps
+  return rest
+}
 
 function getTargetEl(target: TourStep['target']): HTMLElement | null {
   if (!target) return null
@@ -442,7 +449,9 @@ export const Tour = defineComponent({
                                     step.value?.prevButtonProps?.onClick?.()
                                     prev()
                                   },
-                                  ...step.value.prevButtonProps,
+                                  // 排除 children/onClick：前者由插槽渲染，后者已包裹处理，
+                                  // 透传到 DOM <button> 会触发 Vue 设置只读 children 属性的告警
+                                  ...omitButtonProps(step.value.prevButtonProps),
                                 },
                                 {
                                   default: () => step.value?.prevButtonProps?.children ?? '上一步',
@@ -460,7 +469,7 @@ export const Tour = defineComponent({
                                   step.value?.nextButtonProps?.onClick?.()
                                   next()
                                 },
-                                ...step.value.nextButtonProps,
+                                ...omitButtonProps(step.value.nextButtonProps),
                               },
                               {
                                 default: () => step.value?.nextButtonProps?.children ?? (isLast ? '完成' : '下一步'),

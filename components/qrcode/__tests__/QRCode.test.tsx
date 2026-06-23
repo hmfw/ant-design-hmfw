@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { h } from 'vue'
 import { QRCode } from '../QRCode'
 
@@ -10,8 +10,12 @@ describe('QRCode', () => {
   })
 
   it('returns null when value is empty', () => {
+    // 空 value 时组件会 console.warn 提示，spy 捕获以验证告警并避免泄漏到 stderr
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const wrapper = mount(QRCode, { props: { value: '' } })
     expect(wrapper.html()).toBe('')
+    expect(warnSpy).toHaveBeenCalledWith('[hmfw: QRCode] need to receive `value` props')
+    warnSpy.mockRestore()
   })
 
   it('applies bordered class by default', () => {

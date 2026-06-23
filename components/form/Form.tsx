@@ -186,7 +186,7 @@ async function runRules(value: unknown, rules: FormRule[]): Promise<string | nul
 
 /** Composable matching ant-design-vue conventions; AntD React's `Form.useForm` is a different model. */
 export function useForm() {
-  const ctx = inject<FormContext>(FORM_CONTEXT_KEY)
+  const ctx = inject<FormContext | undefined>(FORM_CONTEXT_KEY, undefined)
   return {
     validate: async (nameList?: string[]) => {
       if (!ctx) return true
@@ -511,7 +511,8 @@ export const FormItem = defineComponent({
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('form')
-    const ctx = inject<FormContext>(FORM_CONTEXT_KEY)
+    // 提供默认值 undefined，允许 FormItem 脱离 Form 独立使用而不触发注入告警
+    const ctx = inject<FormContext | undefined>(FORM_CONTEXT_KEY, undefined)
 
     const fieldName = computed(() => namePathKey(props.name))
 
