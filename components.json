@@ -1,6 +1,6 @@
 {
   "name": "ant-design-hmfw",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add ant-design-hmfw",
@@ -14365,7 +14365,7 @@
         {
           "title": "段落",
           "description": "段落组件以 `<p>` 渲染。",
-          "code": "<template>\n  <Space direction=\"vertical\" :size=\"16\">\n    <Paragraph> 这是一段普通的段落文本。Ant Design 是一套企业级 UI 设计语言和 React 组件库。 </Paragraph>\n\n    <Paragraph copyable> 这段文本可以复制。点击右侧图标复制内容。 </Paragraph>\n\n    <Paragraph :ellipsis=\"{ rows: 2 }\">\n      这是一段很长的文本,会被省略显示。当文本超过指定行数时,会自动显示省略号。\n      这是一段很长的文本,会被省略显示。当文本超过指定行数时,会自动显示省略号。\n      这是一段很长的文本,会被省略显示。当文本超过指定行数时,会自动显示省略号。\n    </Paragraph>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Paragraph, Space } from 'ant-design-hmfw'\n</script>"
+          "code": "<template>\n  <Space direction=\"vertical\" :size=\"16\">\n    <Paragraph> 这是一段普通的段落文本。Ant Design 是一套企业级 UI 设计语言和 Vue 组件库。 </Paragraph>\n\n    <Paragraph copyable> 这段文本可以复制。点击右侧图标复制内容。 </Paragraph>\n\n    <Paragraph :ellipsis=\"{ rows: 2 }\">\n      Ant Design 是一套致力于提升「用户」和「设计者」使用体验的企业级 UI\n      设计语言。它源自蚂蚁集团中后台产品的交互语言和视觉风格，秉承高效、确定、自然、生长的设计价值观，沉淀出一套完整的设计原则与组件规范。我们相信，好的设计不仅要美观，更要在真实业务场景中经得起推敲，帮助设计者与开发者高效协作、降低沟通成本，最终交付确定、流畅且令人愉悦的产品体验。当段落内容超过指定行数时，会自动以省略号结尾，超出部分将被隐藏。\n    </Paragraph>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Paragraph, Space } from 'ant-design-hmfw'\n</script>"
         },
         {
           "title": "链接",
@@ -14380,12 +14380,12 @@
         {
           "title": "省略",
           "description": "通过 `ellipsis` 设置单行省略。",
-          "code": "<template>\n  <div style=\"max-width: 240px\">\n    <Text ellipsis> 这是一段很长的文本，超出容器宽度时会以省略号结尾，不会换行显示。 </Text>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Text } from 'ant-design-hmfw'\n</script>"
+          "code": "<template>\n  <div style=\"max-width: 240px\">\n    <Text ellipsis>\n      Ant Design 是一套企业级 UI 设计语言和 Vue\n      组件库，主张高效、确定、自然、生长四大设计价值观，致力于提升用户和设计者的体验。\n    </Text>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Text } from 'ant-design-hmfw'\n</script>"
         },
         {
           "title": "省略 Tooltip 与回调",
           "description": "通过 `ellipsis.tooltip` 在省略时显示完整内容（支持自定义 Tooltip 配置），通过 `ellipsis.onEllipsis` 监听省略状态。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 12px; max-width: 240px\">\n    <Text :ellipsis=\"{ tooltip: true }\"> 这是一段很长的文本，鼠标悬停时会通过 Tooltip 显示完整内容。 </Text>\n    <Text :ellipsis=\"{ tooltip: '自定义 Tooltip 文案' }\"> 显示文字与 Tooltip 内容不同。 </Text>\n    <Paragraph\n      :ellipsis=\"{\n        rows: 2,\n        tooltip: { placement: 'topLeft', color: '#1677ff' },\n        onEllipsis: handleEllipsis,\n      }\"\n    >\n      多行省略时，可以传入完整的 Tooltip 配置（placement、color 等），并通过 onEllipsis 监听省略状态变化。\n    </Paragraph>\n    <div style=\"font-size: 12px; color: #999\">省略状态: {{ ellipsisState }}</div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Text, Paragraph } from 'ant-design-hmfw'\n\nconst ellipsisState = ref<boolean>(false)\nfunction handleEllipsis(v: boolean) {\n  ellipsisState.value = v\n}\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 12px; max-width: 240px\">\n    <Text :ellipsis=\"{ tooltip: true }\">\n      这是一段超出容器宽度的长文本，鼠标悬停时会通过 Tooltip 显示完整内容，方便用户查看被省略的部分。\n    </Text>\n    <Text :ellipsis=\"{ tooltip: '自定义 Tooltip 文案' }\">\n      显示的文字会被省略，但悬停时 Tooltip 展示的内容与之不同。\n    </Text>\n    <Paragraph\n      :ellipsis=\"{\n        rows: 2,\n        tooltip: { placement: 'topLeft', color: '#1677ff' },\n        onEllipsis: handleEllipsis,\n      }\"\n    >\n      多行省略时，可以传入完整的 Tooltip 配置（placement、color 等），并通过 onEllipsis\n      监听省略状态的变化，从而在文本被截断时做出相应的交互处理。\n    </Paragraph>\n    <div style=\"font-size: 12px; color: #999\">省略状态: {{ ellipsisState }}</div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Text, Paragraph } from 'ant-design-hmfw'\n\nconst ellipsisState = ref<boolean>(false)\nfunction handleEllipsis(v: boolean) {\n  ellipsisState.value = v\n}\n</script>"
         },
         {
           "title": "细粒度样式控制",
