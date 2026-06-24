@@ -2,7 +2,6 @@ import { defineComponent, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
-import { Icon } from '../icon'
 import { DownOutlined } from '@hmfw/icons'
 import { Dropdown } from './Dropdown'
 import type { DropdownProps } from './types'
@@ -65,7 +64,7 @@ export const DropdownButton = defineComponent({
         </Button>
       )
 
-      const iconNode = props.icon || <Icon component={DownOutlined} />
+      const iconNode = props.icon || <DownOutlined class="hmfw-icon" />
       const rightButton = (
         <Button type={props.type} danger={props.danger} disabled={props.disabled} class={`${prefixCls}-right`}>
           {iconNode}

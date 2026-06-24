@@ -1,7 +1,6 @@
 import { defineComponent, computed, ref, isVNode, type PropType, type VNode } from 'vue'
 import { Modal } from './Modal'
 import { Button } from '../button'
-import { Icon } from '../icon'
 import { InfoCircleFilled, CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled } from '@hmfw/icons'
 import { useLocale } from '../config-provider'
 import { cls } from '../_utils'
@@ -125,7 +124,12 @@ export const ConfirmDialog = defineComponent({
             >
               {iconComp && (
                 <span class={`${confirmPrefixCls}-icon`}>
-                  {isVNode(iconComp) ? iconComp : <Icon component={iconComp as IconComponent} />}
+                  {isVNode(iconComp)
+                    ? iconComp
+                    : (() => {
+                        const C = iconComp as IconComponent
+                        return <C class="hmfw-icon" />
+                      })()}
                 </span>
               )}
               <div class={`${confirmPrefixCls}-paragraph`}>

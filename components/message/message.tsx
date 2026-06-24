@@ -1,6 +1,5 @@
 import { createApp, ref, isVNode, type App, type VNodeChild } from 'vue'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import {
   CheckCircleFilled,
   CloseCircleFilled,
@@ -73,7 +72,10 @@ function renderContent(node: MessageContent | undefined): VNodeChild {
 
 function getIconNode(type?: NoticeType, icon?: MessageContent): VNodeChild {
   if (icon != null) return renderContent(icon)
-  if (type) return <Icon component={TYPE_ICONS[type]} spin={type === 'loading'} />
+  if (type) {
+    const IconComp = TYPE_ICONS[type]
+    return <IconComp class={cls('hmfw-icon', type === 'loading' && 'hmfw-icon-spin')} />
+  }
   return null
 }
 

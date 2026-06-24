@@ -1,6 +1,5 @@
 import { createApp, defineComponent, ref, computed, h, isVNode, type VNode } from 'vue'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import {
   CheckCircleFilled,
   CloseCircleFilled,
@@ -17,10 +16,10 @@ interface NoticeItem extends ArgsProps {
 
 // Icon map for each notification type
 const TypeIcon: Record<NotificationType, VNode> = {
-  success: h(Icon, { component: CheckCircleFilled }),
-  info: h(Icon, { component: InfoCircleFilled }),
-  warning: h(Icon, { component: ExclamationCircleFilled }),
-  error: h(Icon, { component: CloseCircleFilled }),
+  success: h(CheckCircleFilled, { class: 'hmfw-icon' }),
+  info: h(InfoCircleFilled, { class: 'hmfw-icon' }),
+  warning: h(ExclamationCircleFilled, { class: 'hmfw-icon' }),
+  error: h(CloseCircleFilled, { class: 'hmfw-icon' }),
 }
 
 const NotificationContainer = defineComponent({
@@ -193,7 +192,7 @@ const NotificationContainer = defineComponent({
             ? typeof notice.closeIcon === 'function'
               ? notice.closeIcon()
               : notice.closeIcon
-            : h(Icon, { component: CloseOutlined })
+            : h(CloseOutlined, { class: 'hmfw-icon' })
 
           return (
             <div

@@ -16,7 +16,6 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls, KEYS } from '../_utils'
-import { Icon } from '../icon'
 import {
   CloseOutlined,
   LeftOutlined,
@@ -285,7 +284,7 @@ const ImagePreview = defineComponent({
       const ci = props.config.closeIcon
       if (ci === false) return null
       if (ci) return renderContent(ci)
-      return <Icon component={CloseOutlined} />
+      return <CloseOutlined class="hmfw-icon" />
     }
 
     const realImgStyle = computed(() => {
@@ -338,7 +337,7 @@ const ImagePreview = defineComponent({
           onClick={flipX}
           title="左右翻转"
         >
-          <Icon component={SwapOutlined} />
+          <SwapOutlined class="hmfw-icon" />
         </button>
         <button
           class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
@@ -346,7 +345,7 @@ const ImagePreview = defineComponent({
           onClick={flipY}
           title="上下翻转"
         >
-          <Icon component={SwapOutlined} rotate={90} />
+          <SwapOutlined class="hmfw-icon" style="transform:rotate(90deg)" />
         </button>
         <button
           class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
@@ -354,7 +353,7 @@ const ImagePreview = defineComponent({
           onClick={rotateLeft}
           title="向左旋转"
         >
-          <Icon component={RotateLeftOutlined} />
+          <RotateLeftOutlined class="hmfw-icon" />
         </button>
         <button
           class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
@@ -362,7 +361,7 @@ const ImagePreview = defineComponent({
           onClick={rotateRight}
           title="向右旋转"
         >
-          <Icon component={RotateRightOutlined} />
+          <RotateRightOutlined class="hmfw-icon" />
         </button>
         <button
           class={cls(
@@ -376,7 +375,7 @@ const ImagePreview = defineComponent({
           onClick={zoomOut}
           title="缩小"
         >
-          <Icon component={ZoomOutOutlined} />
+          <ZoomOutOutlined class="hmfw-icon" />
         </button>
         <button
           class={cls(
@@ -390,7 +389,7 @@ const ImagePreview = defineComponent({
           onClick={zoomIn}
           title="放大"
         >
-          <Icon component={ZoomInOutlined} />
+          <ZoomInOutlined class="hmfw-icon" />
         </button>
       </div>
     )
@@ -492,7 +491,7 @@ const ImagePreview = defineComponent({
                       props.onPrev?.()
                     }}
                   >
-                    <Icon component={LeftOutlined} />
+                    <LeftOutlined class="hmfw-icon" />
                   </button>
                 )}
                 {props.hasNext && (
@@ -504,7 +503,7 @@ const ImagePreview = defineComponent({
                       props.onNext?.()
                     }}
                   >
-                    <Icon component={RightOutlined} />
+                    <RightOutlined class="hmfw-icon" />
                   </button>
                 )}
               </div>
@@ -671,7 +670,7 @@ export const Image = defineComponent({
           >
             {maskInfo.value.coverNode ?? (
               <span class={cls(`${prefixCls}-mask-info`, props.classNames?.maskInfo)} style={props.styles?.maskInfo}>
-                <Icon component={ZoomInOutlined} /> <span>预览</span>
+                <ZoomInOutlined class="hmfw-icon" /> <span>预览</span>
               </span>
             )}
           </div>

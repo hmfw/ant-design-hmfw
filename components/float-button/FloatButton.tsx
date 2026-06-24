@@ -1,7 +1,6 @@
 import { defineComponent, ref, computed, onMounted, onBeforeUnmount, Transition, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { CloseOutlined, PlusOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import { Tooltip } from '../tooltip'
@@ -28,7 +27,8 @@ function renderIcon(icon: IconLike | undefined, fallbackSlot?: () => VNode[] | u
   if (slotNode && slotNode.length) return slotNode
   if (!icon) return undefined
   if (typeof icon === 'string') return icon
-  return <Icon component={icon} />
+  const IconComp = icon as IconComponent
+  return <IconComp class="hmfw-icon" />
 }
 
 /** Normalize tooltip prop: string → { title: string }, object → pass through. */

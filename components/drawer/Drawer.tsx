@@ -12,7 +12,6 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
 import type { IconComponent } from '@hmfw/icons'
@@ -236,9 +235,10 @@ export const Drawer = defineComponent({
 
     const renderCloseIcon = () => {
       if (!props.closable) return null
+      const CloseIconComp = props.closeIcon ?? CloseOutlined
       return (
         <button type="button" class={`${prefixCls}-close`} onClick={(e: MouseEvent) => close(e)} aria-label="Close">
-          <Icon component={props.closeIcon ?? CloseOutlined} />
+          <CloseIconComp class="hmfw-icon" />
         </button>
       )
     }

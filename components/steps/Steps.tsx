@@ -1,7 +1,6 @@
 import { defineComponent, computed, type PropType, type VNode, h } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { CheckOutlined, CloseOutlined } from '@hmfw/icons'
 import type { StepItem, StepStatus, IconRenderInfo } from './types'
 import { ProgressIcon } from './ProgressIcon'
@@ -93,10 +92,10 @@ export const Steps = defineComponent({
       } else {
         switch (status) {
           case 'finish':
-            iconContent = h(Icon, { component: CheckOutlined, class: `${itemIconCls}-finish` })
+            iconContent = h(CheckOutlined, { class: cls('hmfw-icon', `${itemIconCls}-finish`) })
             break
           case 'error':
-            iconContent = h(Icon, { component: CloseOutlined, class: `${itemIconCls}-error` })
+            iconContent = h(CloseOutlined, { class: cls('hmfw-icon', `${itemIconCls}-error`) })
             break
           default: {
             const numContent = h('span', { class: `${itemIconCls}-number` }, index + props.initial + 1)

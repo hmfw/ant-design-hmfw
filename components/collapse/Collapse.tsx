@@ -13,7 +13,6 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { RightOutlined } from '@hmfw/icons'
 import type { CollapseItem, CollapsibleType, ExpandIconProps, CollapseClassNames, CollapseStyles } from './types'
 
@@ -129,7 +128,7 @@ export const Collapse = defineComponent({
       if (props.expandIcon) {
         return props.expandIcon({ isActive, panelKey })
       }
-      return <Icon component={RightOutlined} style={{ transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)' }} />
+      return <RightOutlined class="hmfw-icon" style={{ transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)' }} />
     }
 
     return () => {
@@ -320,7 +319,7 @@ export const CollapsePanel = defineComponent({
           <div class={cls(`${prefixCls}-header`, props.classNames?.header)} style={props.styles?.header}>
             {props.showArrow && (
               <span class={cls(`${prefixCls}-expand-icon`, props.classNames?.icon)} style={props.styles?.icon}>
-                <Icon component={RightOutlined} />
+                <RightOutlined class="hmfw-icon" />
               </span>
             )}
             <span
@@ -376,7 +375,7 @@ export const CollapsePanel = defineComponent({
       if (context.expandIcon.value) {
         return context.expandIcon.value({ isActive: isOpen.value, panelKey: key.value })
       }
-      return <Icon component={RightOutlined} style={{ transform: isOpen.value ? 'rotate(90deg)' : 'rotate(0deg)' }} />
+      return <RightOutlined class="hmfw-icon" style={{ transform: isOpen.value ? 'rotate(90deg)' : 'rotate(0deg)' }} />
     }
 
     return () => (

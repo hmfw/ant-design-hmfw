@@ -10,7 +10,6 @@ import {
 } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { UpOutlined } from '@hmfw/icons'
 import type { BackTopClassNames, BackTopStyles } from './types'
 
@@ -180,7 +179,7 @@ export const BackTop = defineComponent({
     const defaultElement = () => (
       <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
         <div class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon}>
-          <Icon component={UpOutlined} />
+          <UpOutlined class="hmfw-icon" />
         </div>
       </div>
     )

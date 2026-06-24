@@ -3,7 +3,8 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Checkbox } from '../checkbox'
 import { VirtualList } from '../_internal/virtual-list'
-import * as Icons from '../icon'
+import * as Icons from '@hmfw/icons'
+import { CaretDownFilled, CaretRightFilled } from '@hmfw/icons'
 import type {
   TreeDataNode,
   TreeExpandedKeys,
@@ -517,7 +518,7 @@ export const Tree = defineComponent({
         if (custom) return custom
       }
       if (!hasChildren) return null
-      return isExpanded ? <Icons.CaretDownFilled /> : <Icons.CaretRightFilled />
+      return isExpanded ? <CaretDownFilled class="hmfw-icon" /> : <CaretRightFilled class="hmfw-icon" />
     }
 
     // 渲染单个树节点

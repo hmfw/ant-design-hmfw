@@ -15,7 +15,6 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
-import { Icon } from '../icon'
 import { CloseOutlined } from '@hmfw/icons'
 import type { TourStep, TourProps, TourButtonProps } from './types'
 import type { TooltipPlacement } from '../tooltip/types'
@@ -250,7 +249,7 @@ export const Tour = defineComponent({
     const getCloseIcon = () => {
       if (props.closeIcon === false) return null
       if (props.closeIcon === undefined) {
-        return h(Icon, { component: CloseOutlined })
+        return h(CloseOutlined, { class: 'hmfw-icon' })
       }
       if (typeof props.closeIcon === 'function') {
         return props.closeIcon()

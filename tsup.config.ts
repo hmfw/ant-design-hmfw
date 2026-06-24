@@ -3,10 +3,7 @@ import { readFileSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
 
 export default defineConfig([
-  // ESM 构建 —— transpile-only（bundle: false），每个源文件 1:1 编译，
-  // 保留相对 import 与目录结构（参考 antd es/ 布局）：dist/button/index.js、
-  // dist/config-provider/... 各自独立，无 _chunks、无 hash，tree-shaking 更彻底。
-  // 纯 ESM 包：不输出 CJS（现代 bundler / Node ESM / 浏览器原生 import 均走 .js）。
+  // ESM 构建 —— transpile-only（bundle: false）
   {
     entry: [
       'components/**/*.{ts,tsx}',
@@ -50,14 +47,14 @@ export default defineConfig([
       console.log(`✅ ESM build completed! 内联 ${parts.length} 个组件样式 → dist/style.css`)
     },
   },
-  // UMD 构建 (用于 CDN 和 <script> 标签)
+  // UMD 构建 — @hmfw/icons 不打进，需要额外加载 hmfw-icons.umd.js
   {
     entry: {
       'ant-design-hmfw.umd': 'components/index.ts',
     },
     format: ['iife'],
     globalName: 'AntDesignHmfw',
-    external: ['vue'],
+    external: ['vue', '@hmfw/icons'],
     outDir: 'dist',
     outExtension: () => ({ js: '.js' }),
     minify: true,
@@ -69,12 +66,17 @@ export default defineConfig([
         'import.meta.env.DEV': 'false',
         'import.meta.env.PROD': 'true',
       }
+      options.external = ['vue', '@hmfw/icons']
+      // banner 注入全局 require，esbuild IIFE 的 require polyfill 会找到它
+      // hmfw-icons.umd.js 挂在 globalThis.HmfwIcons，require shim 将其映射为模块
+      // esbuild IIFE 对 external 包走 require polyfill（typeof require !== "undefined" ? require : throw）
+      // 注入全局 require shim 桥接已加载的 HmfwIcons，使 @hmfw/icons → HmfwIcons
       options.banner = {
-        js: '/* ant-design-hmfw (UMD) | MIT License | https://github.com/hmfw/ant-design-hmfw */',
+        js: `/* ant-design-hmfw (UMD) | MIT License */\n/* 依赖: vue (全局 Vue), @hmfw/icons (全局 HmfwIcons — 先加载 hmfw-icons.umd.global.js) */\nvar HmfwIcons=typeof globalThis!=='undefined'?globalThis.HmfwIcons:typeof window!=='undefined'?window.HmfwIcons:{};if(typeof require==='undefined'){var require=function(e){if(e==='@hmfw/icons')return HmfwIcons;throw new Error('Module not found: '+e);};}`,
       }
     },
     onSuccess: async () => {
-      console.log('✅ UMD build completed successfully!')
+      console.log('✅ UMD build completed!')
     },
   },
 ])

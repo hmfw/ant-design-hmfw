@@ -1,7 +1,6 @@
 import { defineComponent, type PropType, type VNode, Fragment, Comment } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { LoadingOutlined } from '@hmfw/icons'
 import type { TimelineItemProps, TimelineMode, TimelineOrientation, TimelineVariant } from './types'
 
@@ -156,7 +155,7 @@ export const Timeline = defineComponent({
 
             // Handle loading state
             if (item.loading && !icon) {
-              icon = <Icon component={LoadingOutlined} spin />
+              icon = <LoadingOutlined class="hmfw-icon hmfw-icon-spin" />
             }
 
             const color = item.color ?? 'blue'

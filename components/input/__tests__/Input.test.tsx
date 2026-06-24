@@ -56,9 +56,9 @@ describe('Input', () => {
 
   it('renders icon component as prefix/suffix', () => {
     const wrapper = mount(Input, { props: { prefix: SearchOutlined, suffix: SearchOutlined } })
-    // 图标组件应通过 Icon 渲染为 .hmfw-icon，而非直接当作子节点丢失
-    expect(wrapper.find('.hmfw-input-prefix .hmfw-icon svg').exists()).toBe(true)
-    expect(wrapper.find('.hmfw-input-suffix .hmfw-icon svg').exists()).toBe(true)
+    // 图标组件直接渲染为 svg.hmfw-icon
+    expect(wrapper.find('.hmfw-input-prefix .hmfw-icon').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-input-suffix .hmfw-icon').exists()).toBe(true)
   })
 
   it('renders clear button when allowClear and has value', async () => {

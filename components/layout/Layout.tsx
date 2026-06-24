@@ -12,7 +12,6 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { LeftOutlined, RightOutlined, MinusOutlined } from '@hmfw/icons'
 import type { LayoutBreakpoint, CollapseType } from './types'
 
@@ -205,16 +204,16 @@ export const Sider = defineComponent({
             )}
             style={props.zeroWidthTriggerStyle}
           >
-            {props.trigger !== undefined ? props.trigger : <Icon component={MinusOutlined} />}
+            {props.trigger !== undefined ? props.trigger : <MinusOutlined class="hmfw-icon" />}
           </span>
         ) : null
 
       // Default trigger icons
       const defaultTrigger = () => {
         if (isCollapsed.value) {
-          return props.reverseArrow ? <Icon component={LeftOutlined} /> : <Icon component={RightOutlined} />
+          return props.reverseArrow ? <LeftOutlined class="hmfw-icon" /> : <RightOutlined class="hmfw-icon" />
         }
-        return props.reverseArrow ? <Icon component={RightOutlined} /> : <Icon component={LeftOutlined} />
+        return props.reverseArrow ? <RightOutlined class="hmfw-icon" /> : <LeftOutlined class="hmfw-icon" />
       }
 
       // Regular trigger (bottom bar)

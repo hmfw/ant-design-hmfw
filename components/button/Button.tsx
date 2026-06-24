@@ -1,7 +1,6 @@
 import { defineComponent, computed, ref, onMounted, onBeforeUnmount, watch, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { LoadingOutlined } from '@hmfw/icons'
 import type {
   ButtonType,
@@ -203,13 +202,14 @@ export default defineComponent({
             )}
             style={{ ...(props.styles?.icon || {}), ...(props.styles?.loading || {}) }}
           >
-            <Icon component={LoadingOutlined} spin />
+            <LoadingOutlined class="hmfw-icon hmfw-icon-spin" />
           </span>
         )
       } else if (props.icon) {
+        const IconComp = props.icon
         iconNode = (
           <span class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon}>
-            <Icon component={props.icon} />
+            <IconComp class="hmfw-icon" />
           </span>
         )
       }

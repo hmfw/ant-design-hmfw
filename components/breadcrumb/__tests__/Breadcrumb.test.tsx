@@ -308,7 +308,7 @@ describe('Breadcrumb', () => {
     })
     const overlayLink = wrapper.find('.hmfw-breadcrumb-overlay-link')
     expect(overlayLink.exists()).toBe(true)
-    expect(wrapper.findComponent({ name: 'Icon' }).exists()).toBe(true)
+    expect(wrapper.find('.hmfw-icon').exists()).toBe(true)
   })
 
   it('supports custom dropdownIcon', () => {

@@ -1,7 +1,6 @@
 import { defineComponent, ref, watch, computed, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { LeftOutlined, RightOutlined } from '@hmfw/icons'
 import { Select } from '../select'
 import type { PaginationSize, ItemRenderFn, PaginationClassNames, PaginationStyles } from './types'
@@ -140,7 +139,7 @@ export const Pagination = defineComponent({
                 aria-label="Previous"
               >
                 <button type="button" disabled={cur <= 1 || props.disabled} tabindex={-1}>
-                  <Icon component={LeftOutlined} />
+                  <LeftOutlined class="hmfw-icon" />
                 </button>
               </li>,
             )}
@@ -169,7 +168,7 @@ export const Pagination = defineComponent({
                 aria-label="Next"
               >
                 <button type="button" disabled={cur >= total || props.disabled} tabindex={-1}>
-                  <Icon component={RightOutlined} />
+                  <RightOutlined class="hmfw-icon" />
                 </button>
               </li>,
             )}
@@ -220,7 +219,7 @@ export const Pagination = defineComponent({
               aria-label="Previous"
             >
               <button type="button" disabled={cur <= 1 || props.disabled} tabindex={-1}>
-                <Icon component={LeftOutlined} />
+                <LeftOutlined class="hmfw-icon" />
               </button>
             </li>,
           )}
@@ -304,7 +303,7 @@ export const Pagination = defineComponent({
               aria-label="Next"
             >
               <button type="button" disabled={cur >= total || props.disabled} tabindex={-1}>
-                <Icon component={RightOutlined} />
+                <RightOutlined class="hmfw-icon" />
               </button>
             </li>,
           )}

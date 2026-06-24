@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, watch, nextTick, type PropType, h } fro
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { VirtualList } from '../_internal/virtual-list'
-import { Icon, DownOutlined, LoadingOutlined } from '../icon'
+import { DownOutlined, LoadingOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import type { SelectSize, SelectMode, SelectStatus, SelectOption, LabeledValue, SelectValue } from './types'
@@ -707,7 +707,7 @@ export const Select = defineComponent({
 
                 <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow}>
                   {props.loading
-                    ? h(Icon, { component: LoadingOutlined, spin: true, class: `${prefixCls}-loading-icon` })
+                    ? h(LoadingOutlined, { class: cls('hmfw-icon', 'hmfw-icon-spin', `${prefixCls}-loading-icon`) })
                     : h(DownOutlined, {
                         class: cls(`${prefixCls}-suffix`, { [`${prefixCls}-suffix-open`]: isOpen.value }),
                       })}

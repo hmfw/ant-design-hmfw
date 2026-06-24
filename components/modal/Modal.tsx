@@ -12,7 +12,6 @@ import {
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
-import { Icon } from '../icon'
 import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
 import type { ButtonProps } from '../button/types'
@@ -259,7 +258,10 @@ export const Modal = defineComponent({
             {props.closable && (
               <button class={`${prefixCls}-close`} onClick={(e: MouseEvent) => close(e)} aria-label="Close">
                 <span class={`${prefixCls}-close-x`}>
-                  <Icon component={closeIconComp ?? CloseOutlined} />
+                  {(() => {
+                    const C = closeIconComp ?? CloseOutlined
+                    return <C class="hmfw-icon" />
+                  })()}
                 </span>
               </button>
             )}

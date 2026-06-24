@@ -4,7 +4,6 @@ let circleGradientSeed = 0
 import { useConfig, usePrefixCls } from '../config-provider'
 import { Tooltip } from '../tooltip'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { CheckCircleFilled, CloseCircleFilled, CheckOutlined, CloseOutlined } from '@hmfw/icons'
 import type {
   ProgressType,
@@ -127,9 +126,9 @@ export const Progress = defineComponent({
         const fmt = props.format ?? ((p?: number) => `${p}%`)
         textNode = fmt(validProgress(props.percent), validProgress(successPercent)) as any
       } else if (computedStatus.value === 'exception') {
-        textNode = isLineType.value ? <Icon component={CloseCircleFilled} /> : <Icon component={CloseOutlined} />
+        textNode = isLineType.value ? <CloseCircleFilled class="hmfw-icon" /> : <CloseOutlined class="hmfw-icon" />
       } else if (computedStatus.value === 'success') {
-        textNode = isLineType.value ? <Icon component={CheckCircleFilled} /> : <Icon component={CheckOutlined} />
+        textNode = isLineType.value ? <CheckCircleFilled class="hmfw-icon" /> : <CheckOutlined class="hmfw-icon" />
       }
 
       const indicatorClass = cls(

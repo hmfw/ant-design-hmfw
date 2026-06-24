@@ -5,7 +5,6 @@ import { Input } from '../input'
 import { Empty } from '../empty'
 import { Dropdown } from '../dropdown'
 import { Pagination } from '../pagination'
-import { Icon } from '../icon'
 import { DownOutlined, DeleteOutlined, SearchOutlined } from '@hmfw/icons'
 import type {
   TransferItem,
@@ -324,7 +323,7 @@ export const TransferList = defineComponent({
           menu={{ items: dropdownItems.value as any }}
         >
           <span class={`${lp}-header-dropdown-trigger`}>
-            <Icon component={DownOutlined} />
+            <DownOutlined class="hmfw-icon" />
           </span>
         </Dropdown>
       )
@@ -338,7 +337,7 @@ export const TransferList = defineComponent({
             placeholder={searchOptions.value.placeholder || props.searchPlaceholder}
             disabled={props.disabled}
             allowClear
-            prefix={<Icon component={SearchOutlined} />}
+            prefix={<SearchOutlined class="hmfw-icon" />}
             onInput={(e: Event) => handleFilter((e.target as HTMLInputElement).value)}
             onClear={() => handleFilter('')}
           />
@@ -392,7 +391,7 @@ export const TransferList = defineComponent({
                 aria-label={props.removeCurrent}
                 onClick={() => !mergedDisabled && emit('itemRemove', [key])}
               >
-                <Icon component={DeleteOutlined} />
+                <DeleteOutlined class="hmfw-icon" />
               </button>
             </li>
           )

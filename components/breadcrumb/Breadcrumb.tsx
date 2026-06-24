@@ -4,7 +4,7 @@ import { cls } from '../_utils'
 import type { ItemType, BreadcrumbItemType, BreadcrumbSeparatorType, BreadcrumbMenu } from './types'
 import type { MenuProps } from '../menu'
 import { Dropdown } from '../dropdown'
-import { Icon, DownOutlined } from '../icon'
+import { DownOutlined } from '@hmfw/icons'
 
 const getPath = (params: Record<string, any>, path?: string) => {
   if (path === undefined) {
@@ -97,7 +97,7 @@ export const Breadcrumb = defineComponent({
         onClick,
       }
 
-      const dropdownIcon = props.dropdownIcon ?? <Icon component={DownOutlined} />
+      const dropdownIcon = props.dropdownIcon ?? <DownOutlined class="hmfw-icon" />
 
       // 如果有下拉菜单，包裹在 Dropdown 中
       if (menu && menu.items && menu.items.length > 0) {

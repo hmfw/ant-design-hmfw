@@ -16,10 +16,9 @@ export type { SeedTokens, MapTokens } from './_theme'
 export { cls, isClient, getScrollParent, getOffset, contains, on, once, KEYS } from './_utils'
 
 // Components
-export { Icon } from './icon'
-export type { IconProps, IconComponent } from './icon'
 // 图标组件、元数据、搜索 API 通过 './icon' 从 @hmfw/icons 重导出
 export * from './icon'
+export type { IconComponent } from './icon'
 
 export { Button } from './button'
 export type { ButtonProps, ButtonType, ButtonSize, ButtonHTMLType, ButtonShape, LoadingConfig } from './button'
@@ -442,7 +441,6 @@ export type {
 
 // Install function for Vue.use()
 import { ConfigProvider } from './config-provider'
-import { Icon } from './icon'
 import { Button } from './button'
 import { Space } from './space'
 import { Divider } from './divider'
@@ -511,7 +509,6 @@ import { Cascader } from './cascader'
 const components = [
   ConfigProvider,
   AppComponent,
-  Icon,
   Button,
   Space,
   Divider,

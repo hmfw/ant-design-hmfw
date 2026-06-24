@@ -6,7 +6,6 @@ import { defineComponent, ref, onMounted, watch, computed, type PropType, h as c
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Spin } from '../spin'
-import { Icon } from '../icon'
 import { LoadingOutlined } from '@hmfw/icons'
 import type {
   QRCodeStatus,
@@ -464,7 +463,7 @@ export const QRCode = defineComponent({
             <p class={`${prefixCls}-expired`}>二维码过期</p>
             {info.onRefresh && (
               <button type="button" class={`${prefixCls}-refresh`} onClick={info.onRefresh}>
-                <Icon component={LoadingOutlined} style={{ marginRight: '4px' }} />
+                <LoadingOutlined class="hmfw-icon" style={{ marginRight: '4px' }} />
                 点击刷新
               </button>
             )}

@@ -1,7 +1,6 @@
 import { defineComponent, ref, watch, computed, onMounted, nextTick, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { Icon } from '../icon'
 import { PlusOutlined, CloseOutlined } from '@hmfw/icons'
 import type { TabsType, TabsSize, TabsPosition, TabItem, TabBarExtraContent, AnimatedConfig } from './types'
 
@@ -248,7 +247,7 @@ export const Tabs = defineComponent({
                             tabindex={-1}
                             onClick={(e) => handleRemove(item.key, e)}
                           >
-                            {item.closeIcon || props.removeIcon || <Icon component={CloseOutlined} />}
+                            {item.closeIcon || props.removeIcon || <CloseOutlined class="hmfw-icon" />}
                           </button>
                         )}
                       </div>
@@ -257,7 +256,7 @@ export const Tabs = defineComponent({
                 })}
                 {isEditable && !props.hideAdd && (
                   <button type="button" class={`${prefixCls}-nav-add`} aria-label="add" onClick={handleAdd}>
-                    {props.addIcon || <Icon component={PlusOutlined} />}
+                    {props.addIcon || <PlusOutlined class="hmfw-icon" />}
                   </button>
                 )}
               </div>
