@@ -158,14 +158,9 @@
   color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
 }
 
-/* Dropdown */
+/* Dropdown（bg/radius/shadow 由 hmfw-trigger-popup 统一提供） */
 .hmfw-cascader-dropdown {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.08),
-    0 3px 6px rgba(0, 0, 0, 0.12);
-  border: 1px solid var(--hmfw-color-border, #f0f0f0);
+  border: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
   overflow: hidden;
 }
 
@@ -199,11 +194,12 @@
   align-items: center;
   justify-content: space-between;
   padding: 5px 12px;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size, 14px);
   color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background var(--hmfw-motion-duration-fast, 0.15s);
   white-space: nowrap;
+  min-height: var(--hmfw-control-height, 32px);
 }
 
 .hmfw-cascader-menu-item-checkbox {
@@ -221,16 +217,12 @@
 
 .hmfw-cascader-menu-item:hover,
 .hmfw-cascader-menu-item-active {
-  background: var(--hmfw-color-bg-text-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-control-item-bg-hover, rgba(0, 0, 0, 0.04));
 }
 
 .hmfw-cascader-menu-item-selected {
   font-weight: 600;
   color: var(--hmfw-color-primary, #1677ff);
-}
-
-.hmfw-cascader-menu-item-active.hmfw-cascader-menu-item-selected,
-.hmfw-cascader-menu-item-selected:hover {
   background: var(--hmfw-color-primary-bg, #e6f4ff);
 }
 

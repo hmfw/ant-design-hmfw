@@ -244,7 +244,7 @@ describe('Tooltip', () => {
     })
     await nextTick()
     const popup = document.querySelector('.hmfw-tooltip')
-    expect(popup?.classList.contains('hmfw-tooltip-arrow-point-at-center')).toBe(true)
+    expect(popup?.classList.contains('hmfw-trigger-arrow-point-at-center')).toBe(true)
     wrapper.unmount()
   })
 

@@ -6,6 +6,54 @@
 
 ---
 
+## [0.3.0] - 2026-06-24
+
+### ♻️ 重构 — Trigger 浮层系统样式统一
+
+本次重构将 11 个使用 Trigger 的组件中重复的弹出层样式集中到 Trigger 系统内管理，消除 ~400 行冗余 CSS，并统一了命名与 API 格式。
+
+#### 箭头样式统一（P0）
+
+- 将 Tooltip / Dropdown / Popover / Popconfirm 四组件中重复的箭头 CSS（~350 行）提取到 `_internal/trigger/style/index.css`
+- 新增 `hmfw-trigger-arrow` 通用箭头类，通过 `--hmfw-arrow-bg` CSS 变量控制颜色
+- 新增 `hmfw-trigger-placement-*` 和 `hmfw-trigger-arrow-point-at-center` 自动方位类
+- Tooltip 箭头 DOM 结构调整：从 `-content` 内部移至 popup wrapper 直接子元素
+
+#### 弹出层容器基础样式统一（P1）
+
+- 新增 `hmfw-trigger-popup` 基础类，所有使用 Trigger 的组件自动继承 `background` / `border-radius` / `box-shadow`
+- 7 个平铺型组件（Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker、ColorPicker）无需再各自定义容器样式
+- 4 个分层型组件（Tooltip、Popover、Popconfirm、Dropdown）自动覆盖为透明，视觉由内层元素承载
+
+#### 阴影统一（P2）
+
+- 三种不同 box-shadow 实现（3 层 / 2 层 / drop-shadow）统一为 `--hmfw-box-shadow-secondary` CSS 变量
+- Cascader、AutoComplete 阴影由 2 层修正为 3 层
+- DatePicker、TimePicker 由 `filter: drop-shadow()` 改为标准 `box-shadow`
+
+#### 条目样式统一（P3）
+
+- Select / Cascader / TreeSelect / AutoComplete 的选项条目样式统一使用 CSS 变量
+- 引入 `--hmfw-control-item-bg-hover`、`--hmfw-color-primary-bg`、`--hmfw-control-height` 等变量
+
+#### FloatButtonGroup 迁移至 Trigger
+
+- FloatButtonGroup 手动实现的弹出层逻辑（外部点击关闭、受控/非受控状态、hover/click 触发）替换为 Trigger 统一管理
+- 删除 ~30 行重复的事件处理代码
+
+#### 命名与 API 清理
+
+- **TimePicker**：`hmfw-time-picker-panel-container` → `hmfw-time-picker-popup`（与 DatePicker 对齐）
+- **Tooltip / Dropdown**：`popupClass` 函数简化为字符串，移除冗余的 placement class（Trigger 已自动添加 `hmfw-trigger-placement-*`）
+
+### 📦 影响范围
+
+- **27 个文件变更**：+417 / −519 行
+- **1881 单元测试通过** + **252 E2E 冒烟测试通过**
+- 所有组件的公开 API（props、events、slots）保持不变
+
+---
+
 ## [0.2.0] - 2026-06-23
 
 ### ✨ 新特性

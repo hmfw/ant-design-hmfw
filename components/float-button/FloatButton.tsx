@@ -3,6 +3,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
 import { CloseOutlined, PlusOutlined } from '../icon/icons'
+import { Trigger } from '../_internal/trigger'
 import { Tooltip } from '../tooltip'
 import type { TooltipProps } from '../tooltip/types'
 import { Badge } from '../badge'
@@ -188,49 +189,18 @@ export const FloatButtonGroup = defineComponent({
   emits: ['update:open', 'openChange', 'click'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('float-btn')
-    const innerOpen = ref(props.defaultOpen)
     const groupRef = ref<HTMLDivElement | null>(null)
+    const innerOpen = ref(props.defaultOpen)
 
     const isControlled = computed(() => props.open !== undefined)
     const isOpen = computed(() => (isControlled.value ? props.open! : innerOpen.value))
 
-    const setOpen = (next: boolean) => {
-      if (next === isOpen.value) return
+    const handleOpenChange = (next: boolean) => {
       if (!isControlled.value) innerOpen.value = next
       emit('update:open', next)
       emit('openChange', next)
       props.onOpenChange?.(next)
     }
-
-    const handleTriggerClick = (e: MouseEvent) => {
-      if (props.trigger === 'click') setOpen(!isOpen.value)
-      emit('click', e)
-    }
-    const handleMouseEnter = () => {
-      if (props.trigger === 'hover') setOpen(true)
-    }
-    const handleMouseLeave = () => {
-      if (props.trigger === 'hover') setOpen(false)
-    }
-
-    // Close on outside click when trigger='click'
-    const handleDocumentClick = (e: MouseEvent) => {
-      if (props.trigger === 'click' && isOpen.value && groupRef.value && !groupRef.value.contains(e.target as Node)) {
-        setOpen(false)
-      }
-    }
-
-    onMounted(() => {
-      if (props.trigger === 'click') {
-        document.addEventListener('click', handleDocumentClick, { capture: true })
-      }
-    })
-
-    onBeforeUnmount(() => {
-      if (props.trigger === 'click') {
-        document.removeEventListener('click', handleDocumentClick, { capture: true })
-      }
-    })
 
     return () => {
       const hasTrigger = !!props.trigger
@@ -257,20 +227,42 @@ export const FloatButtonGroup = defineComponent({
       const triggerIcon = isOpen.value ? (props.closeIcon ?? CloseOutlined) : (props.icon ?? PlusOutlined)
 
       return (
-        <div class={groupCls} ref={groupRef} onMouseenter={handleMouseEnter} onMouseleave={handleMouseLeave}>
-          <Transition name={`${prefixCls}-group-wrap`}>
-            {isOpen.value && <div class={`${prefixCls}-group-wrap`}>{slots.default?.()}</div>}
-          </Transition>
-          <FloatButton
-            type={props.type}
-            shape={props.shape}
-            icon={triggerIcon}
-            tooltip={props.tooltip}
-            badge={props.badge}
-            content={props.description}
-            onClick={handleTriggerClick}
-          />
-        </div>
+        <Trigger
+          open={isControlled.value ? props.open : undefined}
+          defaultOpen={props.defaultOpen}
+          trigger={props.trigger as any}
+          closeOnOutsideClick
+          closeOnEscape
+          mouseEnterDelay={0}
+          mouseLeaveDelay={0}
+          triggerDisplay="block"
+          popupStyle={{ display: 'none' }}
+          onUpdate:open={handleOpenChange}
+          onOpenChange={handleOpenChange}
+        >
+          {{
+            default: () => (
+              <div class={groupCls} ref={groupRef}>
+                <Transition name={`${prefixCls}-group-wrap`}>
+                  {isOpen.value && (
+                    <div class={`${prefixCls}-group-wrap`} onClick={(e: MouseEvent) => e.stopPropagation()}>
+                      {slots.default?.()}
+                    </div>
+                  )}
+                </Transition>
+                <FloatButton
+                  type={props.type}
+                  shape={props.shape}
+                  icon={triggerIcon}
+                  tooltip={props.tooltip}
+                  badge={props.badge}
+                  content={props.description}
+                  onClick={(e: MouseEvent) => emit('click', e)}
+                />
+              </div>
+            ),
+          }}
+        </Trigger>
       )
     }
   },

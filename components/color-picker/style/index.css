@@ -69,14 +69,8 @@
   padding: 6px 10px;
 }
 
-/* Panel */
+/* Panel（bg/radius/shadow 由 hmfw-trigger-popup 统一提供） */
 .hmfw-color-picker-panel {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
   padding: 12px;
   width: 234px;
   user-select: none;

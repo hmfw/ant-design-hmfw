@@ -117,16 +117,17 @@
 }
 
 /* Panel */
-.hmfw-time-picker-panel-container {
-  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.08)) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.12));
+.hmfw-time-picker-popup {
+  /* 仅作为 Trigger 弹出包装层，视觉样式由 panel 承载 */
 }
 
 .hmfw-time-picker-panel {
-  background: #fff;
-  border-radius: 8px;
+  /* bg/radius/shadow 由 hmfw-trigger-popup（popup wrapper）统一提供，
+     此处继承 wrapper 的 border-radius 以确保 overflow 裁剪和 border 跟随圆角 */
+  border-radius: inherit;
   overflow: hidden;
   min-width: 200px;
-  border: 1px solid var(--hmfw-color-border, #f0f0f0);
+  border: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
 }
 
 .hmfw-time-picker-panel-inner {

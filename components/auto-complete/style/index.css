@@ -4,12 +4,8 @@
 }
 
 .hmfw-auto-complete-dropdown {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.08),
-    0 3px 6px rgba(0, 0, 0, 0.12);
-  border: 1px solid var(--hmfw-color-border, #f0f0f0);
+  /* bg/radius/shadow 由 hmfw-trigger-popup 统一提供 */
+  border: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
   overflow: hidden;
   max-height: 256px;
   overflow-y: auto;
@@ -17,16 +13,18 @@
 
 .hmfw-auto-complete-dropdown-item {
   padding: 5px 12px;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size, 14px);
   color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
   cursor: pointer;
-  transition: background 0.15s;
-  line-height: 22px;
+  transition: background var(--hmfw-motion-duration-fast, 0.15s);
+  min-height: var(--hmfw-control-height, 32px);
+  display: flex;
+  align-items: center;
 }
 
 .hmfw-auto-complete-dropdown-item:hover,
 .hmfw-auto-complete-dropdown-item-active {
-  background: var(--hmfw-color-bg-text-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-control-item-bg-hover, rgba(0, 0, 0, 0.04));
 }
 
 .hmfw-auto-complete-dropdown-item-selected {
@@ -51,7 +49,7 @@
 
 .hmfw-auto-complete-dropdown-empty {
   padding: 16px 12px;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size, 14px);
   color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
   text-align: center;
 }

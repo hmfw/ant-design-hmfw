@@ -83,15 +83,7 @@ export const Tooltip = defineComponent({
 
     const visible = computed(() => props.open)
 
-    const popupClass = (placement: Placement) =>
-      cls(
-        prefixCls.value,
-        `${prefixCls.value}-placement-${placement}`,
-        {
-          [`${prefixCls.value}-arrow-point-at-center`]: arrowPointAtCenter.value,
-        },
-        props.classNames?.root,
-      )
+    const popupClass = computed(() => cls(prefixCls.value, props.classNames?.root))
 
     const renderTooltipContent = () => {
       const rawTitle = props.title ?? props.overlay
@@ -104,20 +96,25 @@ export const Tooltip = defineComponent({
 
     const renderPopup = () => {
       return (
-        <div
-          id={tooltipId}
-          role="tooltip"
-          class={cls(`${prefixCls.value}-content`, props.classNames?.content)}
-          style={props.styles?.content}
-          aria-hidden={!visible.value}
-        >
+        <>
           {showArrow.value && (
-            <div class={cls(`${prefixCls.value}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow} />
+            <div
+              class={cls('hmfw-trigger-arrow', `${prefixCls.value}-arrow`, props.classNames?.arrow)}
+              style={props.styles?.arrow}
+            />
           )}
-          <div class={cls(`${prefixCls.value}-inner`, props.classNames?.inner)} style={props.styles?.inner}>
-            {renderTooltipContent()}
+          <div
+            id={tooltipId}
+            role="tooltip"
+            class={cls(`${prefixCls.value}-content`, props.classNames?.content)}
+            style={props.styles?.content}
+            aria-hidden={!visible.value}
+          >
+            <div class={cls(`${prefixCls.value}-inner`, props.classNames?.inner)} style={props.styles?.inner}>
+              {renderTooltipContent()}
+            </div>
           </div>
-        </div>
+        </>
       )
     }
 
@@ -154,7 +151,7 @@ export const Tooltip = defineComponent({
           zIndex={props.zIndex ?? 1070}
           observePopupResize
           fresh={props.fresh}
-          popupClass={popupClass}
+          popupClass={popupClass.value}
           popupStyle={popupStyleMerged}
           hiddenClass={`${prefixCls.value}-hidden`}
           onUpdate:open={(v: boolean) => emit('update:open', v)}

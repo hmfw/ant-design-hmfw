@@ -180,12 +180,21 @@ describe('FloatButtonGroup', () => {
     const wrapper = mount(FloatButtonGroup, {
       props: { trigger: 'hover' },
       slots: { default: '<span class="child">1</span>' },
+      attachTo: document.body,
     })
     expect(wrapper.find('.hmfw-float-btn-group-wrap').exists()).toBe(false)
-    await wrapper.find('.hmfw-float-btn-group').trigger('mouseenter')
+    // mouseenter 不冒泡，需触发在 Trigger 创建的 wrapper div 上（FloatButtonGroup 根元素）
+    const triggerEl = wrapper.find('.hmfw-float-btn-group').element.parentElement!
+    triggerEl.dispatchEvent(new MouseEvent('mouseenter', { bubbles: false }))
+    await wrapper.vm.$nextTick()
+    // 等待 Trigger 的 setTimeout(setOpen, 0) 宏任务
+    await new Promise((r) => setTimeout(r, 10))
     expect(wrapper.find('.hmfw-float-btn-group-wrap').exists()).toBe(true)
-    await wrapper.find('.hmfw-float-btn-group').trigger('mouseleave')
+    triggerEl.dispatchEvent(new MouseEvent('mouseleave', { bubbles: false }))
+    await wrapper.vm.$nextTick()
+    await new Promise((r) => setTimeout(r, 10))
     expect(wrapper.find('.hmfw-float-btn-group-wrap').exists()).toBe(false)
+    wrapper.unmount()
   })
 
   it('emits openChange and update:open', async () => {
@@ -229,8 +238,8 @@ describe('FloatButtonGroup', () => {
       attachTo: document.body,
     })
     expect(wrapper.find('.hmfw-float-btn-group-wrap').exists()).toBe(true)
-    // Simulate outside click
-    document.body.click()
+    // Trigger 使用 mousedown 监听外部点击
+    document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.hmfw-float-btn-group-wrap').exists()).toBe(false)
     wrapper.unmount()

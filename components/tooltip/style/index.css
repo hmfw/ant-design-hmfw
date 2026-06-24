@@ -1,3 +1,7 @@
+/* Tooltip 组件样式。
+   箭头定位规则由 _internal/trigger/style/index.css 统一提供，
+   此处仅定义 Tooltip 专属外观（颜色、尺寸、内容样式）。 */
+
 .hmfw-tooltip {
   position: absolute;
   z-index: 1070;
@@ -7,6 +11,12 @@
   line-height: 1.5714;
   pointer-events: none;
   transition: opacity 0.2s;
+  /* 箭头背景色（暗色 tooltip） */
+  --hmfw-arrow-bg: var(--tooltip-bg, rgba(0, 0, 0, 0.85));
+  /* 覆盖 hmfw-trigger-popup 的基础样式，视觉容器是 -inner */
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .hmfw-tooltip-hidden {
@@ -34,120 +44,6 @@
   pointer-events: auto;
 }
 
+/* 组件专属箭头类（空壳，供用户通过 classNames.arrow / styles.arrow 自定义） */
 .hmfw-tooltip-arrow {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.hmfw-tooltip-arrow::before {
-  position: absolute;
-  bottom: 0;
-  inset-inline-start: 0;
-  width: 16px;
-  height: 8px;
-  background-color: var(--tooltip-bg, rgba(0, 0, 0, 0.85));
-  clip-path: path(
-    'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
-  );
-  content: '';
-}
-
-/* Arrow positioning per placement */
-.hmfw-tooltip-placement-top .hmfw-tooltip-arrow,
-.hmfw-tooltip-placement-topLeft .hmfw-tooltip-arrow,
-.hmfw-tooltip-placement-topRight .hmfw-tooltip-arrow {
-  bottom: -8px;
-  transform: rotate(180deg);
-}
-
-.hmfw-tooltip-placement-top .hmfw-tooltip-arrow {
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-}
-.hmfw-tooltip-placement-topLeft .hmfw-tooltip-arrow {
-  left: 12px;
-}
-.hmfw-tooltip-placement-topRight .hmfw-tooltip-arrow {
-  right: 12px;
-}
-
-.hmfw-tooltip-placement-bottom .hmfw-tooltip-arrow,
-.hmfw-tooltip-placement-bottomLeft .hmfw-tooltip-arrow,
-.hmfw-tooltip-placement-bottomRight .hmfw-tooltip-arrow {
-  top: -8px;
-}
-
-.hmfw-tooltip-placement-bottom .hmfw-tooltip-arrow {
-  left: 50%;
-  transform: translateX(-50%);
-}
-.hmfw-tooltip-placement-bottomLeft .hmfw-tooltip-arrow {
-  left: 12px;
-}
-.hmfw-tooltip-placement-bottomRight .hmfw-tooltip-arrow {
-  right: 12px;
-}
-
-.hmfw-tooltip-placement-left .hmfw-tooltip-arrow,
-.hmfw-tooltip-placement-leftTop .hmfw-tooltip-arrow,
-.hmfw-tooltip-placement-leftBottom .hmfw-tooltip-arrow {
-  right: -8px;
-  transform: rotate(90deg);
-}
-
-.hmfw-tooltip-placement-left .hmfw-tooltip-arrow {
-  top: 50%;
-  transform: translateY(-50%) rotate(90deg);
-}
-.hmfw-tooltip-placement-leftTop .hmfw-tooltip-arrow {
-  top: 8px;
-}
-.hmfw-tooltip-placement-leftBottom .hmfw-tooltip-arrow {
-  bottom: 8px;
-}
-
-.hmfw-tooltip-placement-right .hmfw-tooltip-arrow,
-.hmfw-tooltip-placement-rightTop .hmfw-tooltip-arrow,
-.hmfw-tooltip-placement-rightBottom .hmfw-tooltip-arrow {
-  left: -8px;
-  transform: rotate(-90deg);
-}
-
-.hmfw-tooltip-placement-right .hmfw-tooltip-arrow {
-  top: 50%;
-  transform: translateY(-50%) rotate(-90deg);
-}
-.hmfw-tooltip-placement-rightTop .hmfw-tooltip-arrow {
-  top: 8px;
-}
-.hmfw-tooltip-placement-rightBottom .hmfw-tooltip-arrow {
-  bottom: 8px;
-}
-
-/* Arrow point at center — 箭头指向触发元素中心 */
-.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-topLeft .hmfw-tooltip-arrow,
-.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-topRight .hmfw-tooltip-arrow {
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-}
-
-.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-bottomLeft .hmfw-tooltip-arrow,
-.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-bottomRight .hmfw-tooltip-arrow {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-leftTop .hmfw-tooltip-arrow,
-.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-leftBottom .hmfw-tooltip-arrow {
-  top: 50%;
-  transform: translateY(-50%) rotate(90deg);
-}
-
-.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-rightTop .hmfw-tooltip-arrow,
-.hmfw-tooltip-arrow-point-at-center.hmfw-tooltip-placement-rightBottom .hmfw-tooltip-arrow {
-  top: 50%;
-  transform: translateY(-50%) rotate(-90deg);
 }

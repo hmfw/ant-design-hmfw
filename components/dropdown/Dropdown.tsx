@@ -91,20 +91,15 @@ export const Dropdown = defineComponent({
         attrs.class as any,
       )
 
-      const popupClass = (placement: Placement) =>
-        cls(
-          prefixCls,
-          props.overlayClassName,
-          props.rootClassName,
-          `${prefixCls}-placement-${placement}`,
-          { [`${prefixCls}-show-arrow`]: !!props.arrow },
-          props.classNames?.dropdown,
-        )
+      const popupClass = cls(prefixCls, props.overlayClassName, props.rootClassName, props.classNames?.dropdown)
 
       const renderPopup = () => (
         <>
           {props.arrow && (
-            <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow} />
+            <div
+              class={cls('hmfw-trigger-arrow', `${prefixCls}-arrow`, props.classNames?.arrow)}
+              style={props.styles?.arrow}
+            />
           )}
           <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
             {renderOverlay()}
@@ -141,7 +136,7 @@ export const Dropdown = defineComponent({
         >
           {{
             default: () => child,
-            popup: ({ placement }: { placement: Placement }) => renderPopup(),
+            popup: () => renderPopup(),
           }}
         </Trigger>
       )

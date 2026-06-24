@@ -153,14 +153,8 @@
   display: none;
 }
 
-/* Dropdown */
+/* Dropdown（bg/radius/shadow 由 hmfw-trigger-popup 统一提供） */
 .hmfw-tree-select-dropdown {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
   padding: 4px 0;
 }
 
@@ -178,7 +172,7 @@
 
 .hmfw-tree-select-dropdown-empty {
   padding: 10px 12px;
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
   text-align: center;
 }
 
@@ -205,24 +199,24 @@
   align-items: center;
   padding: 5px 8px 5px 0;
   cursor: pointer;
-  transition: background 0.2s;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
-  min-height: 32px;
+  transition: background var(--hmfw-motion-duration-mid, 0.2s);
+  font-size: var(--hmfw-font-size, 14px);
+  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  min-height: var(--hmfw-control-height, 32px);
 }
 
 .hmfw-tree-select-tree-node:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--hmfw-control-item-bg-hover, rgba(0, 0, 0, 0.04));
 }
 
 .hmfw-tree-select-tree-node-selected {
-  background: #e6f4ff;
+  background: var(--hmfw-color-primary-bg, #e6f4ff);
   color: var(--hmfw-color-primary, #1677ff);
   font-weight: 500;
 }
 
 .hmfw-tree-select-tree-node-disabled {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
   cursor: not-allowed;
 }
 

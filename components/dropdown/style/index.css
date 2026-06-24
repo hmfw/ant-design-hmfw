@@ -1,7 +1,17 @@
+/* Dropdown 组件样式。
+   箭头定位规则由 _internal/trigger/style/index.css 统一提供，
+   此处仅定义 Dropdown 专属外观（箭头投影、内容层、菜单项）。 */
+
 .hmfw-dropdown {
   position: absolute;
   z-index: var(--hmfw-z-index-popup, 1050);
   transition: opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+  /* 箭头背景色（白色菜单） */
+  --hmfw-arrow-bg: var(--hmfw-color-bg-elevated, #fff);
+  /* 覆盖 hmfw-trigger-popup 的基础样式，视觉容器是 -content */
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .hmfw-dropdown-hidden {
@@ -24,38 +34,8 @@
   padding: var(--hmfw-padding-xxs, 4px) 0;
 }
 
-/* Arrow styles —— 复刻 Ant Design：盒子 overflow:hidden，::before 用 clip-path 裁出带圆角的三角，::after 投影 */
-.hmfw-dropdown-show-arrow .hmfw-dropdown-arrow {
-  position: absolute;
-  z-index: 1; /* 抬到内容层之上，避免菜单阴影盖住箭头 */
-  display: block;
-  width: 16px;
-  height: 16px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.hmfw-dropdown-show-arrow .hmfw-dropdown-arrow::before {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 16px;
-  height: 8px;
-  background: var(--hmfw-color-bg-elevated, #fff);
-  /* polygon 兜底 + path 出圆角，sizePopupArrow=16 / borderRadiusXS=2 / borderRadiusOuter=4 */
-  clip-path: polygon(
-    1.6568542494923806px 100%,
-    50% 1.6568542494923806px,
-    14.34314575050762px 100%,
-    1.6568542494923806px 100%
-  );
-  clip-path: path(
-    'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
-  );
-  content: '';
-}
-
-.hmfw-dropdown-show-arrow .hmfw-dropdown-arrow::after {
+/* 组件专属箭头：附加投影（::after） */
+.hmfw-dropdown-arrow::after {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -71,42 +51,7 @@
   content: '';
 }
 
-/* 上方弹出：箭头在内容底部，指向下方（旋转 180°） */
-.hmfw-dropdown-placement-top .hmfw-dropdown-arrow,
-.hmfw-dropdown-placement-topLeft .hmfw-dropdown-arrow,
-.hmfw-dropdown-placement-topRight .hmfw-dropdown-arrow {
-  bottom: 0;
-  transform: translateY(100%) rotate(180deg);
-}
-
-/* 下方弹出：箭头在内容顶部，指向上方 */
-.hmfw-dropdown-placement-bottom .hmfw-dropdown-arrow,
-.hmfw-dropdown-placement-bottomLeft .hmfw-dropdown-arrow,
-.hmfw-dropdown-placement-bottomRight .hmfw-dropdown-arrow {
-  top: 0;
-  transform: translateY(-100%);
-}
-
-.hmfw-dropdown-placement-topLeft .hmfw-dropdown-arrow,
-.hmfw-dropdown-placement-bottomLeft .hmfw-dropdown-arrow {
-  left: 12px;
-}
-
-.hmfw-dropdown-placement-topRight .hmfw-dropdown-arrow,
-.hmfw-dropdown-placement-bottomRight .hmfw-dropdown-arrow {
-  right: 12px;
-}
-
-.hmfw-dropdown-placement-top .hmfw-dropdown-arrow {
-  left: 50%;
-  transform: translateX(-50%) translateY(100%) rotate(180deg);
-}
-
-.hmfw-dropdown-placement-bottom .hmfw-dropdown-arrow {
-  left: 50%;
-  transform: translateX(-50%) translateY(-100%);
-}
-
+/* 菜单项 */
 .hmfw-dropdown-menu {
   list-style: none;
   margin: 0;

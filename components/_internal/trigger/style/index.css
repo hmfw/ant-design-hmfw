@@ -6,3 +6,146 @@
   opacity: 0;
   pointer-events: none;
 }
+
+/* ====== 弹出层容器基础样式 ======
+   所有使用 Trigger 的组件自动继承此类（添加到 popup wrapper 上）。
+   统一 background / border-radius / box-shadow，各组件无需重复定义。
+   带箭头的浮层组件（Tooltip/Popover/Popconfirm/Dropdown）需在自身根类上
+   重置为 transparent 等，因为它们的视觉容器是内层元素（-inner / -content）。
+   不带箭头的选择器/面板类组件可直接使用，仅需补充 border / padding 等差异。 */
+
+.hmfw-trigger-popup {
+  background: var(--hmfw-color-bg-elevated, #fff);
+  border-radius: var(--hmfw-border-radius-lg, 8px);
+  box-shadow: var(
+    --hmfw-box-shadow-secondary,
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05)
+  );
+}
+
+/* ====== 共享箭头样式 ======
+   各组件通过 CSS 变量 --hmfw-arrow-bg 控制箭头颜色，
+   通过在箭头元素上添加 hmfw-trigger-arrow 类使用。
+
+   用法：
+   - 箭头元素必须是 popup wrapper 的直接子元素
+   - 设置 --hmfw-arrow-bg 控制箭头颜色（默认 #fff）
+   - 箭头元素需添加 hmfw-trigger-arrow 类
+*/
+
+.hmfw-trigger-arrow {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hmfw-trigger-arrow::before {
+  position: absolute;
+  bottom: 0;
+  inset-inline-start: 0;
+  width: 16px;
+  height: 8px;
+  background-color: var(--hmfw-arrow-bg, #fff);
+  clip-path: path(
+    'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
+  );
+  content: '';
+}
+
+/* 12 方位定位规则 */
+
+/* 上方弹出：箭头在底部，指向下方（旋转 180°） */
+.hmfw-trigger-placement-top .hmfw-trigger-arrow,
+.hmfw-trigger-placement-topLeft .hmfw-trigger-arrow,
+.hmfw-trigger-placement-topRight .hmfw-trigger-arrow {
+  bottom: 0;
+  transform: translateY(100%) rotate(180deg);
+}
+
+/* 下方弹出：箭头在顶部，指向上方 */
+.hmfw-trigger-placement-bottom .hmfw-trigger-arrow,
+.hmfw-trigger-placement-bottomLeft .hmfw-trigger-arrow,
+.hmfw-trigger-placement-bottomRight .hmfw-trigger-arrow {
+  top: 0;
+  transform: translateY(-100%);
+}
+
+/* 左侧弹出 */
+.hmfw-trigger-placement-left .hmfw-trigger-arrow,
+.hmfw-trigger-placement-leftTop .hmfw-trigger-arrow,
+.hmfw-trigger-placement-leftBottom .hmfw-trigger-arrow {
+  right: 0;
+  transform: translateX(100%) rotate(90deg);
+}
+
+/* 右侧弹出 */
+.hmfw-trigger-placement-right .hmfw-trigger-arrow,
+.hmfw-trigger-placement-rightTop .hmfw-trigger-arrow,
+.hmfw-trigger-placement-rightBottom .hmfw-trigger-arrow {
+  left: 0;
+  transform: translateX(-100%) rotate(-90deg);
+}
+
+/* 方位偏移：Left 变体箭头靠左，Right 变体箭头靠右 */
+.hmfw-trigger-placement-topLeft .hmfw-trigger-arrow,
+.hmfw-trigger-placement-bottomLeft .hmfw-trigger-arrow {
+  left: 12px;
+}
+.hmfw-trigger-placement-topRight .hmfw-trigger-arrow,
+.hmfw-trigger-placement-bottomRight .hmfw-trigger-arrow {
+  right: 12px;
+}
+.hmfw-trigger-placement-leftTop .hmfw-trigger-arrow,
+.hmfw-trigger-placement-rightTop .hmfw-trigger-arrow {
+  top: 8px;
+}
+.hmfw-trigger-placement-leftBottom .hmfw-trigger-arrow,
+.hmfw-trigger-placement-rightBottom .hmfw-trigger-arrow {
+  bottom: 8px;
+}
+
+/* 居中方位 */
+.hmfw-trigger-placement-top .hmfw-trigger-arrow {
+  left: 50%;
+  transform: translateX(-50%) translateY(100%) rotate(180deg);
+}
+.hmfw-trigger-placement-bottom .hmfw-trigger-arrow {
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+}
+.hmfw-trigger-placement-left .hmfw-trigger-arrow {
+  top: 50%;
+  transform: translateY(-50%) translateX(100%) rotate(90deg);
+}
+.hmfw-trigger-placement-right .hmfw-trigger-arrow {
+  top: 50%;
+  transform: translateY(-50%) translateX(-100%) rotate(-90deg);
+}
+
+/* arrowPointAtCenter：Left/Right 变体箭头也居中 */
+.hmfw-trigger-arrow-point-at-center.hmfw-trigger-placement-topLeft .hmfw-trigger-arrow,
+.hmfw-trigger-arrow-point-at-center.hmfw-trigger-placement-topRight .hmfw-trigger-arrow {
+  left: 50%;
+  transform: translateX(-50%) translateY(100%) rotate(180deg);
+}
+.hmfw-trigger-arrow-point-at-center.hmfw-trigger-placement-bottomLeft .hmfw-trigger-arrow,
+.hmfw-trigger-arrow-point-at-center.hmfw-trigger-placement-bottomRight .hmfw-trigger-arrow {
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+}
+.hmfw-trigger-arrow-point-at-center.hmfw-trigger-placement-leftTop .hmfw-trigger-arrow,
+.hmfw-trigger-arrow-point-at-center.hmfw-trigger-placement-leftBottom .hmfw-trigger-arrow {
+  top: 50%;
+  transform: translateY(-50%) translateX(100%) rotate(90deg);
+}
+.hmfw-trigger-arrow-point-at-center.hmfw-trigger-placement-rightTop .hmfw-trigger-arrow,
+.hmfw-trigger-arrow-point-at-center.hmfw-trigger-placement-rightBottom .hmfw-trigger-arrow {
+  top: 50%;
+  transform: translateY(-50%) translateX(-100%) rotate(-90deg);
+}

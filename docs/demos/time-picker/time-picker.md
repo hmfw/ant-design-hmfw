@@ -180,7 +180,7 @@ interface TimePickerStyles {
 </div>
 
 <!-- 弹层部分（Teleport 到 body） -->
-<div class="hmfw-time-picker-panel-container">
+<div class="hmfw-time-picker-popup">
   <!-- ↑ classNames.popup / styles.popup 应用于此 -->
   <div class="hmfw-time-picker-panel">
     <!-- ↑ classNames.panel / styles.panel 应用于此 -->

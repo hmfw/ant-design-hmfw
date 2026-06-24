@@ -398,11 +398,7 @@ export const TimePicker = defineComponent({
     })
 
     const renderPanel = () => (
-      <div
-        ref={panelRef}
-        class={cls(`${prefixCls}-panel-container`, props.classNames?.popup)}
-        style={props.styles?.popup}
-      >
+      <div ref={panelRef} class={cls(`${prefixCls}-popup`, props.classNames?.popup)} style={props.styles?.popup}>
         <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
           <div class={cls(`${prefixCls}-panel-inner`, props.classNames?.panelInner)} style={props.styles?.panelInner}>
             {/* Hour column */}
@@ -566,7 +562,7 @@ export const TimePicker = defineComponent({
           props.classNames?.root,
         )}
         triggerStyle={props.styles?.root}
-        popupClass={cls(`${prefixCls}-panel-container`, props.classNames?.popup)}
+        popupClass={cls(`${prefixCls}-popup`, props.classNames?.popup)}
         popupStyle={props.styles?.popup}
         onOpenChange={(v: boolean) => {
           if (v) open()

@@ -20,7 +20,7 @@ export interface TimePickerClassNames {
   clear?: string
   /** 后缀图标 span.hmfw-time-picker-suffix */
   suffix?: string
-  /** 弹层容器 div.hmfw-time-picker-panel-container */
+  /** 弹层容器 div.hmfw-time-picker-popup */
   popup?: string
   /** 面板 div.hmfw-time-picker-panel */
   panel?: string
@@ -54,7 +54,7 @@ export interface TimePickerStyles {
   clear?: CSSProperties
   /** 后缀图标 span.hmfw-time-picker-suffix */
   suffix?: CSSProperties
-  /** 弹层容器 div.hmfw-time-picker-panel-container */
+  /** 弹层容器 div.hmfw-time-picker-popup */
   popup?: CSSProperties
   /** 面板 div.hmfw-time-picker-panel */
   panel?: CSSProperties

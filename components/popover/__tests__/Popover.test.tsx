@@ -402,7 +402,7 @@ describe('Popover', () => {
     })
     await nextTick()
     const popup = document.querySelector('.hmfw-popover')
-    expect(popup?.classList.contains('hmfw-popover-arrow-point-at-center')).toBe(true)
+    expect(popup?.classList.contains('hmfw-trigger-arrow-point-at-center')).toBe(true)
     wrapper.unmount()
   })
 

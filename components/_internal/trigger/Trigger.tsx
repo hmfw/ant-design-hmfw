@@ -276,8 +276,13 @@ export const Trigger = defineComponent({
               <div
                 ref={popupRef}
                 class={cls(
+                  'hmfw-trigger-popup',
                   typeof props.popupClass === 'function' ? props.popupClass(actualPlacement.value) : props.popupClass,
-                  { [props.hiddenClass]: !visible.value },
+                  `hmfw-trigger-placement-${actualPlacement.value}`,
+                  {
+                    'hmfw-trigger-arrow-point-at-center': props.arrowPointAtCenter,
+                    [props.hiddenClass]: !visible.value,
+                  },
                 )}
                 style={popupStyle}
                 onMouseenter={handleMouseEnter}

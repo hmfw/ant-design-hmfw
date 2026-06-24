@@ -228,8 +228,8 @@ describe('Dropdown', () => {
 
     const dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
     // 翻转后箭头方向类应为 topLeft，而非初始的 bottomLeft
-    expect(dropdown.classList.contains('hmfw-dropdown-placement-topLeft')).toBe(true)
-    expect(dropdown.classList.contains('hmfw-dropdown-placement-bottomLeft')).toBe(false)
+    expect(dropdown.classList.contains('hmfw-trigger-placement-topLeft')).toBe(true)
+    expect(dropdown.classList.contains('hmfw-trigger-placement-bottomLeft')).toBe(false)
     wrapper.unmount()
   })
 

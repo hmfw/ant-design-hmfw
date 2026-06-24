@@ -1,8 +1,18 @@
+/* Popconfirm 组件样式。
+   箭头定位规则由 _internal/trigger/style/index.css 统一提供，
+   此处仅定义 Popconfirm 专属外观（消息布局、按钮区）。 */
+
 .hmfw-popconfirm {
   position: absolute;
   z-index: 1070;
   max-width: 300px;
   pointer-events: none;
+  /* 箭头背景色（白色浮层） */
+  --hmfw-arrow-bg: #fff;
+  /* 覆盖 hmfw-trigger-popup 的基础样式，视觉容器是 -inner */
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .hmfw-popconfirm-hidden {
@@ -14,12 +24,14 @@
 }
 
 .hmfw-popconfirm-inner {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow:
+  background: var(--hmfw-color-bg-elevated, #fff);
+  border-radius: var(--hmfw-border-radius-lg, 8px);
+  box-shadow: var(
+    --hmfw-box-shadow-secondary,
     0 6px 16px 0 rgba(0, 0, 0, 0.08),
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    0 9px 28px 8px rgba(0, 0, 0, 0.05)
+  );
   pointer-events: auto;
   padding: 12px 16px;
   min-width: 180px;
@@ -58,60 +70,6 @@
   gap: 8px;
 }
 
-/* Arrow (reuse popover arrow styles) */
+/* 组件专属箭头类（空壳，供用户通过 classNames.arrow / styles.arrow 自定义） */
 .hmfw-popconfirm-arrow {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.hmfw-popconfirm-arrow::before {
-  position: absolute;
-  bottom: 0;
-  inset-inline-start: 0;
-  width: 16px;
-  height: 8px;
-  background-color: #fff;
-  clip-path: path(
-    'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
-  );
-  content: '';
-  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08);
-}
-
-.hmfw-popconfirm-placement-top .hmfw-popconfirm-arrow,
-.hmfw-popconfirm-placement-topLeft .hmfw-popconfirm-arrow,
-.hmfw-popconfirm-placement-topRight .hmfw-popconfirm-arrow {
-  bottom: -8px;
-  transform: rotate(180deg);
-}
-
-.hmfw-popconfirm-placement-top .hmfw-popconfirm-arrow {
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-}
-.hmfw-popconfirm-placement-topLeft .hmfw-popconfirm-arrow {
-  left: 12px;
-}
-.hmfw-popconfirm-placement-topRight .hmfw-popconfirm-arrow {
-  right: 12px;
-}
-
-.hmfw-popconfirm-placement-bottom .hmfw-popconfirm-arrow,
-.hmfw-popconfirm-placement-bottomLeft .hmfw-popconfirm-arrow,
-.hmfw-popconfirm-placement-bottomRight .hmfw-popconfirm-arrow {
-  top: -8px;
-}
-
-.hmfw-popconfirm-placement-bottom .hmfw-popconfirm-arrow {
-  left: 50%;
-  transform: translateX(-50%);
-}
-.hmfw-popconfirm-placement-bottomLeft .hmfw-popconfirm-arrow {
-  left: 12px;
-}
-.hmfw-popconfirm-placement-bottomRight .hmfw-popconfirm-arrow {
-  right: 12px;
 }

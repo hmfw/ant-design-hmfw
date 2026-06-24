@@ -1,6 +1,6 @@
 {
   "name": "ant-design-hmfw",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "keywords": [
     "vue3",
@@ -81,7 +81,8 @@
     "prebuild:docs": "pnpm gen:llm",
     "e2e": "playwright test",
     "size": "node scripts/analyze-bundle.js && node scripts/test-tree-shaking.js",
-    "precheck": "node scripts/prepublish-check.js",
+    "sync-changelog": "cp docs/guide/changelog.md CHANGELOG.md",
+    "precheck": "pnpm sync-changelog && node scripts/prepublish-check.js",
     "prepublishOnly": "pnpm test && pnpm typecheck && pnpm build:lib",
     "release": "pnpm prepublishOnly && npm publish",
     "prepare": "husky"
