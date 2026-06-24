@@ -17,7 +17,11 @@ test.describe('Select', () => {
   })
 
   test('下拉菜单出现在触发器正下方', async ({ page }) => {
+    // 使用更高的视口并滚动到顶部，确保下拉菜单有足够空间出现在触发器下方
+    await page.setViewportSize({ width: 1280, height: 1024 })
     const trigger = page.locator('.hmfw-select-selector').first()
+    await trigger.evaluate((el) => el.scrollIntoView({ block: 'start', behavior: 'instant' }))
+    await page.waitForTimeout(100) // 等待滚动完成
     await trigger.click()
     const triggerBox = await trigger.boundingBox()
     const dropdown = page.locator('.hmfw-select-dropdown')

@@ -12,15 +12,19 @@ test.describe('ColorPicker', () => {
   test('点击触发器打开浮层面板', async ({ page }) => {
     const trigger = page.locator('.hmfw-color-picker-trigger').first()
     await trigger.click()
-    await expect(page.locator('.hmfw-color-picker-panel')).toBeVisible()
+    await expect(page.locator('.hmfw-color-picker-panel').first()).toBeVisible()
     // 触发器进入打开态
     await expect(trigger).toHaveClass(/hmfw-color-picker-trigger-open/)
   })
 
   test('面板出现在触发器附近正下方', async ({ page }) => {
+    // 使用更高的视口并滚动到顶部，确保弹层有足够空间出现在下方
+    await page.setViewportSize({ width: 1280, height: 1024 })
     const trigger = page.locator('.hmfw-color-picker-trigger').first()
+    await trigger.evaluate((el) => el.scrollIntoView({ block: 'start', behavior: 'instant' }))
+    await page.waitForTimeout(100)
     await trigger.click()
-    const panel = page.locator('.hmfw-color-picker-panel')
+    const panel = page.locator('.hmfw-color-picker-panel').first()
     await expect(panel).toBeVisible()
 
     const triggerBox = await trigger.boundingBox()
@@ -35,9 +39,9 @@ test.describe('ColorPicker', () => {
   test('点击页面空白处关闭面板', async ({ page }) => {
     const trigger = page.locator('.hmfw-color-picker-trigger').first()
     await trigger.click()
-    await expect(page.locator('.hmfw-color-picker-panel')).toBeVisible()
+    await expect(page.locator('.hmfw-color-picker-panel').first()).toBeVisible()
     await page.locator('body').click({ position: { x: 5, y: 5 } })
-    await expect(page.locator('.hmfw-color-picker-panel')).not.toBeVisible()
+    await expect(page.locator('.hmfw-color-picker-panel').first()).not.toBeVisible()
   })
 
   test('HEX 输入框输入颜色值后触发器文本更新', async ({ page }) => {

@@ -10,28 +10,33 @@ test.describe('Tooltip', () => {
     await goto(page, 'tooltip')
   })
 
+  // 可见的 Tooltip 选择器（过滤 display:none 的隐藏工具提示）
+  const getVisibleTooltip = (page: any) =>
+    page.locator('.hmfw-tooltip:not(.hmfw-tooltip-hidden)').filter({ hasText: '这是提示文字' }).first()
+
   test('hover 触发 Tooltip 显示', async ({ page }) => {
-    // hover 触发按钮（"鼠标移入" 这个 button 在 Tooltip 包裹内）
     const trigger = page.getByRole('button', { name: '鼠标移入' }).first()
     await trigger.hover()
-    // 等待 tooltip 出现 — Tooltip 渲染在 body 下，通过 role="tooltip" 定位
-    const tooltip = page.getByRole('tooltip').filter({ hasText: '这是提示文字' }).first()
-    await expect(tooltip).toBeVisible({ timeout: 3000 })
+    await page.waitForTimeout(500) // 等待 mouseEnterDelay + Vue 响应性
+    await expect(getVisibleTooltip(page)).toBeVisible()
   })
 
   test('Tooltip 有 role="tooltip"', async ({ page }) => {
     const trigger = page.getByRole('button', { name: '鼠标移入' }).first()
     await trigger.hover()
-    const tooltip = page.getByRole('tooltip').filter({ hasText: '这是提示文字' }).first()
-    await expect(tooltip).toBeVisible({ timeout: 3000 })
-    await expect(tooltip).toHaveAttribute('role', 'tooltip')
+    await page.waitForTimeout(500)
+    const tooltip = getVisibleTooltip(page)
+    await expect(tooltip).toBeVisible()
+    // role="tooltip" 在内部的 .hmfw-tooltip-content 元素上
+    await expect(tooltip.locator('.hmfw-tooltip-content')).toHaveAttribute('role', 'tooltip')
   })
 
   test('鼠标离开后 Tooltip 消失', async ({ page }) => {
     const trigger = page.getByRole('button', { name: '鼠标移入' }).first()
     await trigger.hover()
-    const tooltip = page.getByRole('tooltip').filter({ hasText: '这是提示文字' }).first()
-    await expect(tooltip).toBeVisible({ timeout: 3000 })
+    await page.waitForTimeout(500)
+    const tooltip = getVisibleTooltip(page)
+    await expect(tooltip).toBeVisible()
 
     // 鼠标移到页面左上角
     await page.mouse.move(0, 0)

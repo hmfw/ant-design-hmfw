@@ -124,7 +124,7 @@ async function main() {
       writeFileSync(outputFile, formatted, 'utf8')
 
       componentNames.push(componentName)
-      console.log(`  ✓ ${componentName}`)
+      // console.log(`  ✓ ${componentName}`)
     } catch (error) {
       console.error(`  ✗ ${name}: ${error}`)
     }
@@ -140,7 +140,7 @@ ${componentNames.map((name) => `export { ${name} } from './${name}'`).join('\n')
   const formattedIndex = await prettier.format(indexContent, { ...prettierConfig, parser: 'typescript' })
   writeFileSync(INDEX_FILE, formattedIndex, 'utf8')
 
-  console.log(`\n✅ Generated ${componentNames.length} icon files in ${OUTPUT_DIR}`)
+  // console.log(`\n✅ Generated ${componentNames.length} icon files in ${OUTPUT_DIR}`)
   console.log(`✅ Generated ${INDEX_FILE}`)
 }
 

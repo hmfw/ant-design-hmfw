@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
+import { nextTick } from 'vue'
 import { Radio, RadioGroup, RadioButton } from '../Radio'
 
 describe('Radio', () => {
@@ -185,26 +186,20 @@ describe('RadioGroup', () => {
     expect(inputs[1].element.disabled).toBe(true)
   })
 
-  it.skip('supports defaultValue', async () => {
-    // TODO: Fix provide/inject timing issue in test environment
-    // Manual testing shows this works correctly
+  it('supports defaultValue', () => {
     const wrapper = mount(RadioGroup, {
       props: { options: ['A', 'B', 'C'], defaultValue: 'B' },
     })
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
     const radios = wrapper.findAll('.hmfw-radio')
     expect(radios[1].classes()).toContain('hmfw-radio-checked')
   })
 
-  it.skip('works in uncontrolled mode', async () => {
-    // TODO: Fix provide/inject timing issue in test environment
-    // Manual testing shows this works correctly
+  it('works in uncontrolled mode', async () => {
     const wrapper = mount(RadioGroup, {
       props: { options: ['A', 'B'] },
     })
     await wrapper.findAll('input')[1].trigger('change')
-    await wrapper.vm.$nextTick()
+    await nextTick()
     const radios = wrapper.findAll('.hmfw-radio')
     expect(radios[1].classes()).toContain('hmfw-radio-checked')
   })

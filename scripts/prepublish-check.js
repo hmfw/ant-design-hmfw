@@ -103,14 +103,14 @@ try {
   hasErrors = true
 }
 
-// 运行测试
-console.log('\n3️⃣  运行测试...\n')
+// 运行单元测试
+console.log('\n3️⃣  运行单元测试...\n')
 
 try {
   execSync('pnpm test', { stdio: 'pipe', cwd: rootDir })
-  console.log('   ✅ 所有测试通过')
+  console.log('   ✅ 所有单元测试通过')
 } catch (error) {
-  console.log('   ❌ 测试失败！')
+  console.log('   ❌ 单元测试失败！')
   hasErrors = true
 }
 
@@ -125,8 +125,19 @@ try {
   hasErrors = true
 }
 
+// 运行 E2E 测试
+console.log('\n5️⃣  运行 E2E 测试...\n')
+
+try {
+  execSync('pnpm e2e', { stdio: 'inherit', cwd: rootDir })
+  console.log('   ✅ 所有 E2E 测试通过')
+} catch (error) {
+  console.log('   ❌ E2E 测试失败！')
+  hasErrors = true
+}
+
 // 检查构建产物
-console.log('\n5️⃣  检查构建产物大小...\n')
+console.log('\n6️⃣  检查构建产物大小...\n')
 
 const distFiles = ['dist/index.js', 'dist/ant-design-hmfw.umd.js', 'dist/style.css']
 
@@ -142,7 +153,7 @@ distFiles.forEach((file) => {
 })
 
 // 检查 Git 状态
-console.log('\n6️⃣  检查 Git 状态...\n')
+console.log('\n7️⃣  检查 Git 状态...\n')
 
 try {
   const gitStatus = execSync('git status --porcelain', { encoding: 'utf-8', cwd: rootDir })

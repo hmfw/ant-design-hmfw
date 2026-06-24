@@ -6,7 +6,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts'],
     include: ['components/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     // Playwright 用例（功能 E2E、视觉回归）不走 vitest，避免加载 @playwright/test 报错
     exclude: ['**/*.e2e.spec.ts', '**/*.visual.spec.ts'],

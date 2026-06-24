@@ -173,8 +173,8 @@ export const RadioButton = defineComponent({
 export const RadioGroup = defineComponent({
   name: 'RadioGroup',
   props: {
-    value: [String, Number, Boolean] as PropType<RadioValueType>,
-    defaultValue: [String, Number, Boolean] as PropType<RadioValueType>,
+    value: { type: [String, Number, Boolean] as PropType<RadioValueType>, default: undefined },
+    defaultValue: { type: [String, Number, Boolean] as PropType<RadioValueType>, default: undefined },
     disabled: Boolean,
     buttonStyle: { type: String as PropType<'outline' | 'solid'>, default: 'outline' },
     optionType: { type: String as PropType<'default' | 'button'>, default: 'default' },

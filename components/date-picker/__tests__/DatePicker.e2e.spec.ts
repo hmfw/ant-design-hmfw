@@ -18,7 +18,11 @@ test.describe('DatePicker', () => {
   })
 
   test('日历面板出现在输入框下方', async ({ page }) => {
+    // 使用更高的视口并滚动到顶部，确保面板有足够空间出现在输入框下方
+    await page.setViewportSize({ width: 1280, height: 1024 })
     const input = page.locator('.hmfw-date-picker input, .hmfw-date-picker .hmfw-date-picker-input input').first()
+    await input.evaluate((el) => el.scrollIntoView({ block: 'start', behavior: 'instant' }))
+    await page.waitForTimeout(100)
     await input.click()
     const panel = page.locator('.hmfw-date-picker-panel')
     const inputBox = await input.boundingBox()
