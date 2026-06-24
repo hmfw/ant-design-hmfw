@@ -51,8 +51,6 @@ ant-design-hmfw/
 │   └── style.css       # 统一样式
 ├── docs/                # 文档站（VitePress）
 ├── scripts/             # 构建脚本
-│   ├── generate-icons.ts            # 图标组件生成
-│   ├── generate-icon-metadata.ts    # 图标元数据生成
 │   ├── generate-llm-manifest.ts     # LLM 文档生成
 │   ├── prepublish-check.js          # 发布前检查
 │   └── ...
@@ -81,10 +79,6 @@ pnpm test:watch       # 监听模式测试
 pnpm test:coverage    # 测试覆盖率
 pnpm e2e              # 运行 E2E 测试
 pnpm typecheck        # 类型检查
-
-# 图标
-pnpm gen:icons            # 从 SVG 生成图标组件
-pnpm gen:icon-metadata    # 生成图标元数据（分类、关键词）
 
 # 发布
 pnpm precheck         # 发布前检查
@@ -186,47 +180,29 @@ E2E 测试文件命名：`*.e2e.spec.ts`
 
 ## 图标系统
 
-项目包含 **681 个高质量图标**（从 Ant Design v6 同步），支持自动化生成和元数据管理。
+图标系统已独立为 npm 包 [`@hmfw/icons`](https://www.npmjs.com/package/@hmfw/icons)，包含 **681 个高质量图标**（从 Ant Design v6 同步）。
+
+主包通过 `components/icon/index.ts` 重导出所有图标，**API 保持不变**。
 
 ### 图标文件结构
 
 ```
 components/icon/
-├── svg/                # 源 SVG 文件（681 个）
-├── icons/              # 生成的图标组件（自动生成）
-│   ├── HomeOutlined.ts
-│   ├── HomeFilled.ts
-│   └── ...
-├── metadata.ts         # 图标元数据（自动生成）
-├── utils.ts            # 搜索和分类工具
-└── Icon.tsx            # 图标包装组件
+├── Icon.tsx            # 图标包装组件（依赖 ConfigProvider 前缀）
+├── index.ts            # 从 @hmfw/icons 重导出
+├── types.ts            # IconProps 类型
+└── style/index.css     # 图标样式（.hmfw-icon）
 ```
 
-### 图标生成流程
+### 使用方式
 
-1. **添加 SVG 文件** - 将 SVG 文件放入 `components/icon/svg/`
-   - 文件名使用 kebab-case（如 `home.svg`、`home-filled.svg`）
-   - Outlined 图标不带后缀，Filled 图标以 `-filled` 结尾
+```typescript
+// 从主包（兼容旧用法）
+import { SearchOutlined, Icon, searchIcons } from 'ant-design-hmfw'
 
-2. **生成图标组件** - 运行 `pnpm gen:icons`
-   - 自动解析 SVG 的 `viewBox` 和 `path`
-   - 生成 Vue 函数式组件（`HomeOutlined`、`HomeFilled`）
-   - 生成统一导出文件 `icons/index.ts`
-
-3. **生成元数据** - 运行 `pnpm gen:icon-metadata`
-   - 基于文件名智能推导分类（feedback、action、navigation 等）
-   - 自动生成搜索关键词和同义词
-   - 输出到 `metadata.ts`（2700+ 行）
-
-4. **构建时自动执行** - `pnpm build:lib` 会自动运行上述两个脚本
-
-### 图标元数据
-
-`metadata.ts` 为每个图标提供：
-
-- **category**: 所属分类（15 个中文分类：方向指示、品牌标识、提示建议、编辑格式、数据图表、网络通讯、文件文档、网站通用、编辑操作、商业财产、时间日期、多媒体、地图交通、办公应用、标记）
-- **keywords**: 搜索关键词（包含中英文同义词，如 `home` → `['home', 'house', 'homepage', '首页', '主页']`）
-- **tags**: 特殊标记（如 `loading` 标记为 `animation`）
+// 或直接从图标包
+import { SearchOutlined } from '@hmfw/icons'
+```
 
 ### 图标搜索 API
 
@@ -246,15 +222,13 @@ const categories = getAllCategories() // ['办公应用', '品牌标识', ...]
 const allIcons = getAllIcons() // 681 个
 ```
 
-### 修改图标元数据规则
+### 添加/修改图标
 
-编辑 `scripts/generate-icon-metadata.ts`：
+在 [`hmfw/ant-design-icons`](https://github.com/hmfw/ant-design-icons) 仓库中：
 
-- **调整分类规则** - 修改 `categoryRules` 对象
-- **添加同义词** - 修改 `synonyms` 对象
-- **自定义分类逻辑** - 修改 `inferCategory` 函数
-
-修改后运行 `pnpm gen:icon-metadata` 重新生成。
+1. 将 SVG 文件放入 `svg/`，运行 `pnpm gen:icons && pnpm gen:icon-metadata`
+2. 发布新版本：`npm publish`
+3. 在主包中升级依赖：`pnpm update @hmfw/icons`
 
 ## 设计 Token 系统
 

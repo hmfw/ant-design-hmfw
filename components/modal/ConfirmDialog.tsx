@@ -2,10 +2,10 @@ import { defineComponent, computed, ref, isVNode, type PropType, type VNode } fr
 import { Modal } from './Modal'
 import { Button } from '../button'
 import { Icon } from '../icon'
-import { InfoCircleFilled, CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled } from '../icon/icons'
+import { InfoCircleFilled, CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled } from '@hmfw/icons'
 import { useLocale } from '../config-provider'
 import { cls } from '../_utils'
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 import type { ModalFuncProps, ModalContent } from './types'
 
 const ICON_MAP: Record<string, IconComponent> = {

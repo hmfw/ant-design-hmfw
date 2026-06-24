@@ -18,13 +18,8 @@ export { cls, isClient, getScrollParent, getOffset, contains, on, once, KEYS } f
 // Components
 export { Icon } from './icon'
 export type { IconProps, IconComponent } from './icon'
-export * from './icon/icons'
-
-// Icon metadata and utilities
-export { iconMetadata } from './icon/metadata'
-export type { IconMetadata } from './icon/metadata'
-export { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from './icon/utils'
-export type { IconSearchResult } from './icon/utils'
+// 图标组件、元数据、搜索 API 通过 './icon' 从 @hmfw/icons 重导出
+export * from './icon'
 
 export { Button } from './button'
 export type { ButtonProps, ButtonType, ButtonSize, ButtonHTMLType, ButtonShape, LoadingConfig } from './button'

@@ -13,10 +13,10 @@ import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
 import { Icon } from '../icon'
-import { CloseOutlined } from '../icon/icons'
+import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
 import type { ButtonProps } from '../button/types'
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 import type { ModalContent, ModalWidth, LegacyButtonType, GetContainer, ModalClassNames, ModalStyles } from './types'
 
 const FOCUSABLE =

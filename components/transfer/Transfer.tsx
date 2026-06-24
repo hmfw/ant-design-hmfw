@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, watch, type PropType, type VNode, type 
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
-import { LeftOutlined, RightOutlined } from '../icon/icons'
+import { LeftOutlined, RightOutlined } from '@hmfw/icons'
 import { TransferList } from './TransferList'
 import type {
   TransferItem,

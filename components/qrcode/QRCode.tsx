@@ -7,7 +7,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Spin } from '../spin'
 import { Icon } from '../icon'
-import { LoadingOutlined } from '../icon/icons'
+import { LoadingOutlined } from '@hmfw/icons'
 import type {
   QRCodeStatus,
   QRCodeErrorLevel,

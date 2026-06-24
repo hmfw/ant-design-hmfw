@@ -14,7 +14,7 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { RightOutlined } from '../icon/icons'
+import { RightOutlined } from '@hmfw/icons'
 import type { CollapseItem, CollapsibleType, ExpandIconProps, CollapseClassNames, CollapseStyles } from './types'
 
 // 折叠动画钩子

@@ -26,7 +26,7 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
   SwapOutlined,
-} from '../icon/icons'
+} from '@hmfw/icons'
 import type {
   ImageProps,
   PreviewConfig,

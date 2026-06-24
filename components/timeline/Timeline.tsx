@@ -2,7 +2,7 @@ import { defineComponent, type PropType, type VNode, Fragment, Comment } from 'v
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { LoadingOutlined } from '../icon/icons'
+import { LoadingOutlined } from '@hmfw/icons'
 import type { TimelineItemProps, TimelineMode, TimelineOrientation, TimelineVariant } from './types'
 
 // Helper to normalize mode (left/right → start/end)

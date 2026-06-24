@@ -5,7 +5,7 @@ import { useConfig, usePrefixCls } from '../config-provider'
 import { Tooltip } from '../tooltip'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { CheckCircleFilled, CloseCircleFilled, CheckOutlined, CloseOutlined } from '../icon/icons'
+import { CheckCircleFilled, CloseCircleFilled, CheckOutlined, CloseOutlined } from '@hmfw/icons'
 import type {
   ProgressType,
   ProgressStatus,

@@ -2,7 +2,7 @@ import { defineComponent, ref, watch, computed, type PropType, type VNode } from
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { LeftOutlined, RightOutlined } from '../icon/icons'
+import { LeftOutlined, RightOutlined } from '@hmfw/icons'
 import { Select } from '../select'
 import type { PaginationSize, ItemRenderFn, PaginationClassNames, PaginationStyles } from './types'
 

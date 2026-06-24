@@ -2,12 +2,12 @@ import { defineComponent, ref, computed, onMounted, onBeforeUnmount, Transition,
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { CloseOutlined, PlusOutlined } from '../icon/icons'
+import { CloseOutlined, PlusOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import { Tooltip } from '../tooltip'
 import type { TooltipProps } from '../tooltip/types'
 import { Badge } from '../badge'
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 import type {
   FloatButtonType,
   FloatButtonShape,

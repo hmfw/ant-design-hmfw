@@ -11,7 +11,7 @@ import {
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { UpOutlined } from '../icon/icons'
+import { UpOutlined } from '@hmfw/icons'
 import type { BackTopClassNames, BackTopStyles } from './types'
 
 // Throttle by requestAnimationFrame

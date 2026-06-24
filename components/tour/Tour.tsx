@@ -16,7 +16,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
 import { Icon } from '../icon'
-import { CloseOutlined } from '../icon/icons'
+import { CloseOutlined } from '@hmfw/icons'
 import type { TourStep, TourProps, TourButtonProps } from './types'
 import type { TooltipPlacement } from '../tooltip/types'
 

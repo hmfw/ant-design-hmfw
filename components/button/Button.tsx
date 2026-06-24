@@ -2,7 +2,7 @@ import { defineComponent, computed, ref, onMounted, onBeforeUnmount, watch, type
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { LoadingOutlined } from '../icon/icons'
+import { LoadingOutlined } from '@hmfw/icons'
 import type {
   ButtonType,
   ButtonSize,
@@ -12,7 +12,7 @@ import type {
   ButtonClassNames,
   ButtonStyles,
 } from './types'
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 
 // 判断是否恰好为两个中文字符
 const isTwoCNChar = (str: string): boolean => {

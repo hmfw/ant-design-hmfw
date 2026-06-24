@@ -1,4 +1,4 @@
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 import type { CSSProperties } from 'vue'
 
 export type ButtonType = 'default' | 'primary' | 'dashed' | 'text' | 'link'

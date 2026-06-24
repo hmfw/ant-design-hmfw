@@ -7,7 +7,7 @@ import {
   ExclamationCircleFilled,
   InfoCircleFilled,
   CloseOutlined,
-} from '../icon/icons'
+} from '@hmfw/icons'
 import type { ArgsProps, ConfigOptions, NotificationPlacement, NotificationType, NotificationContent } from './types'
 
 interface NoticeItem extends ArgsProps {

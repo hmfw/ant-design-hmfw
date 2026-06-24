@@ -2,7 +2,7 @@ import { defineComponent, ref, watch, computed, onMounted, nextTick, type PropTy
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { PlusOutlined, CloseOutlined } from '../icon/icons'
+import { PlusOutlined, CloseOutlined } from '@hmfw/icons'
 import type { TabsType, TabsSize, TabsPosition, TabItem, TabBarExtraContent, AnimatedConfig } from './types'
 
 export const Tabs = defineComponent({

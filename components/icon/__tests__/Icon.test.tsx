@@ -64,7 +64,7 @@ import {
   MinusCircleOutlined,
   QuestionCircleOutlined,
   ExclamationCircleOutlined,
-} from '../icons'
+} from '@hmfw/icons'
 
 describe('Icon', () => {
   it('renders the provided component', () => {

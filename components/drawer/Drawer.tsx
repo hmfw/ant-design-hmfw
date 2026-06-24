@@ -13,9 +13,9 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { CloseOutlined } from '../icon/icons'
+import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 import { drawerManager } from './manager'
 import type { DrawerClassNames, DrawerStyles } from './types'
 

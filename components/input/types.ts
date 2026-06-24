@@ -1,5 +1,5 @@
 import type { VNode } from 'vue'
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 
 export type InputSize = 'large' | 'middle' | 'small'
 export type InputStatus = 'error' | 'warning' | ''

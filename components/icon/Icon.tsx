@@ -1,7 +1,7 @@
 import { defineComponent, computed, type PropType, type CSSProperties } from 'vue'
 import { cls } from '../_utils/cls'
 import { usePrefixCls } from '../config-provider/context'
-import type { IconComponent } from './types'
+import type { IconComponent } from '@hmfw/icons'
 
 export default defineComponent({
   name: 'Icon',

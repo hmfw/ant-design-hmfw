@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '../FloatButton'
 import FloatButtonDefault from '../FloatButton'
-import { SettingOutlined } from '../../icon/icons'
+import { SettingOutlined } from '@hmfw/icons'
 
 describe('FloatButton', () => {
   it('renders button with default html type', () => {

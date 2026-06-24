@@ -6,6 +6,27 @@
 
 ---
 
+## [0.4.0] - 2026-06-24
+
+### ♻️ 重构 — 图标系统独立为 @hmfw/icons
+
+将内置的 681 个 SVG 图标拆分到独立 npm 包 [`@hmfw/icons`](https://www.npmjs.com/package/@hmfw/icons)。
+
+#### 主要变更
+
+- **图标独立发布** — 681 个图标组件、元数据系统（15 个分类）、搜索 API（`searchIcons`/`getIconsByCategory` 等）移至独立包 `@hmfw/icons@1.0.1`
+- **Icon 包装器保留** — `Icon` 组件继续在主包，依赖 `ConfigProvider` 前缀（`usePrefixCls`）
+- **API 向后兼容** — `import { Icon, SearchOutlined, searchIcons } from 'ant-design-hmfw'` 保持不变，通过 barrel 重导出
+- **新增依赖** — `@hmfw/icons: ^1.0.1`
+
+#### 删除
+
+- `components/icon/svg/`、`icons/`、`metadata.ts`、`utils.ts`
+- `scripts/generate-icons.ts`、`generate-icon-metadata.ts`
+- `pnpm gen:icons`、`gen:icon-metadata` 命令
+
+---
+
 ## [0.3.0] - 2026-06-24
 
 ### ♻️ 重构 — Trigger 浮层系统样式统一

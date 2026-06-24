@@ -13,7 +13,7 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Icon } from '../icon'
-import { LeftOutlined, RightOutlined, MinusOutlined } from '../icon/icons'
+import { LeftOutlined, RightOutlined, MinusOutlined } from '@hmfw/icons'
 import type { LayoutBreakpoint, CollapseType } from './types'
 
 const LAYOUT_SIDER_KEY = Symbol('layout-sider')

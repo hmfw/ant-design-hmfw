@@ -1,6 +1,6 @@
 import type { CSSProperties, VNode } from 'vue'
 import type { ButtonProps, ButtonType } from '../button/types'
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 
 export type ModalWidth = number | string
 

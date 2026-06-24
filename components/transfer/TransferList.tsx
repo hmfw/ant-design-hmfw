@@ -6,7 +6,7 @@ import { Empty } from '../empty'
 import { Dropdown } from '../dropdown'
 import { Pagination } from '../pagination'
 import { Icon } from '../icon'
-import { DownOutlined, DeleteOutlined, SearchOutlined } from '../icon/icons'
+import { DownOutlined, DeleteOutlined, SearchOutlined } from '@hmfw/icons'
 import type {
   TransferItem,
   TransferKey,

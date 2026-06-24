@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'vue'
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 
 export type FloatButtonType = 'default' | 'primary'
 export type FloatButtonShape = 'circle' | 'square'

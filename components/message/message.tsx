@@ -7,8 +7,8 @@ import {
   ExclamationCircleFilled,
   InfoCircleFilled,
   LoadingOutlined,
-} from '../icon/icons'
-import type { IconComponent } from '../icon/types'
+} from '@hmfw/icons'
+import type { IconComponent } from '@hmfw/icons'
 import type {
   ArgsProps,
   ConfigOptions,

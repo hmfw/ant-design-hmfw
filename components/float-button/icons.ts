@@ -1,5 +1,5 @@
 import { h } from 'vue'
-import type { IconComponent } from '../icon/types'
+import type { IconComponent } from '@hmfw/icons'
 
 // Local icon definitions used by FloatButton to match Ant Design v6 defaults.
 // These are not (yet) part of the shared icon set generated in icon/icons.ts,
