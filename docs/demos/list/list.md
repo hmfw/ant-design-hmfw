@@ -312,7 +312,7 @@ interface ListItemMetaStyles {
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Avatar } from 'ant-design-hmfw'
+import { List, Avatar } from '@hmfw/ant-design'
 
 const data = [{ id: 1, title: '标题', description: '描述' }]
 
@@ -399,7 +399,7 @@ const renderItemWithActions = (item: any) =>
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Avatar } from 'ant-design-hmfw'
+import { List, Avatar } from '@hmfw/ant-design'
 
 const renderItemWithStyles = (item: any) =>
   h(

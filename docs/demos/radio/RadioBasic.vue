@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Radio } from 'ant-design-hmfw'
+import { Radio } from '@hmfw/ant-design'
 
 const checked = ref(false)
 const checked2 = ref(false)

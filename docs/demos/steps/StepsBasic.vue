@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Steps, Button, Space } from 'ant-design-hmfw'
+import { Steps, Button, Space } from '@hmfw/ant-design'
 
 const current = ref(0)
 

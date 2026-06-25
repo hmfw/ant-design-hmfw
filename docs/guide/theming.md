@@ -20,7 +20,7 @@ Token 分为三层：
 </template>
 
 <script setup lang="ts">
-import { ConfigProvider, Button } from 'ant-design-hmfw'
+import { ConfigProvider, Button } from '@hmfw/ant-design'
 
 const theme = {
   token: {

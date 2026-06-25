@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AutoComplete } from 'ant-design-hmfw'
+import { AutoComplete } from '@hmfw/ant-design'
 
 const value = ref('')
 const options = ref([{ value: 'Vue' }, { value: 'React' }, { value: 'Angular' }, { value: 'Svelte' }])

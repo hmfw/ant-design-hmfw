@@ -11,5 +11,5 @@
 </template>
 
 <script setup lang="ts">
-import { Text, Space } from 'ant-design-hmfw'
+import { Text, Space } from '@hmfw/ant-design'
 </script>

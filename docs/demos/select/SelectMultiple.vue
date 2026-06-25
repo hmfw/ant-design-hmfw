@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Select } from 'ant-design-hmfw'
+import { Select } from '@hmfw/ant-design'
 
 const selected = ref<string[]>([])
 const selected2 = ref<string[]>([])

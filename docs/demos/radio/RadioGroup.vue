@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RadioGroup } from 'ant-design-hmfw'
+import { RadioGroup } from '@hmfw/ant-design'
 
 const value1 = ref('a')
 const value2 = ref('b')

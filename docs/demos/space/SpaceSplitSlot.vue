@@ -25,5 +25,5 @@
 </template>
 
 <script setup lang="ts">
-import { Space, Divider } from 'ant-design-hmfw'
+import { Space, Divider } from '@hmfw/ant-design'
 </script>

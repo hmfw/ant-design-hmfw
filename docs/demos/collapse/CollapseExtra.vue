@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Collapse } from 'ant-design-hmfw'
+import { Collapse } from '@hmfw/ant-design'
 
 const items = [
   {

@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import { ConfigProvider } from 'ant-design-hmfw'
+import { ConfigProvider } from '@hmfw/ant-design'
 </script>

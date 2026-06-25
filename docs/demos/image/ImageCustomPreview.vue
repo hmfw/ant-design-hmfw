@@ -24,5 +24,5 @@
 </template>
 
 <script setup lang="ts">
-import { Image, Space } from 'ant-design-hmfw'
+import { Image, Space } from '@hmfw/ant-design'
 </script>

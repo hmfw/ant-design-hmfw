@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List } from 'ant-design-hmfw'
+import { List } from '@hmfw/ant-design'
 
 const data = Array.from({ length: 10 }, (_, i) => `Item ${i + 1}`)
 

@@ -7,5 +7,5 @@
 </template>
 
 <script setup lang="ts">
-import { Paragraph, Text } from 'ant-design-hmfw'
+import { Paragraph, Text } from '@hmfw/ant-design'
 </script>

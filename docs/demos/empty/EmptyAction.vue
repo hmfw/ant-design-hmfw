@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { Empty, Button } from 'ant-design-hmfw'
+import { Empty, Button } from '@hmfw/ant-design'
 
 function onCreate() {
   console.log('创建')

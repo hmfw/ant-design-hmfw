@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { Slider } from 'ant-design-hmfw'
+import { Slider } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

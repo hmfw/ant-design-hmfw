@@ -16,7 +16,7 @@
 
 - **图标独立发布** — 681 个图标组件、元数据系统（15 个分类）、搜索 API（`searchIcons`/`getIconsByCategory` 等）移至独立包 `@hmfw/icons@1.0.1`
 - **Icon 包装器保留** — `Icon` 组件继续在主包，依赖 `ConfigProvider` 前缀（`usePrefixCls`）
-- **API 向后兼容** — `import { Icon, SearchOutlined, searchIcons } from 'ant-design-hmfw'` 保持不变，通过 barrel 重导出
+- **API 向后兼容** — `import { Icon, SearchOutlined, searchIcons } from '@hmfw/ant-design'` 保持不变，通过 barrel 重导出
 - **新增依赖** — `@hmfw/icons: ^1.0.1`
 
 #### 删除

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { Breadcrumb, Space } from 'ant-design-hmfw'
+import { Breadcrumb, Space } from '@hmfw/ant-design'
 
 const items = [{ title: '首页', href: '/' }, { title: '一级菜单', href: '/level1' }, { title: '二级菜单' }]
 </script>

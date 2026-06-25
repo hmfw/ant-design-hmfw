@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RadioGroup, Radio, RadioButton } from 'ant-design-hmfw'
+import { RadioGroup, Radio, RadioButton } from '@hmfw/ant-design'
 
 const selectedOption = ref('a')
 const paymentMethod = ref(false)

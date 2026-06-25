@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Menu } from 'ant-design-hmfw'
+import { Menu } from '@hmfw/ant-design'
 
 const selectedKeys = ref(['1'])
 

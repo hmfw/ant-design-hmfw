@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Popconfirm, Button } from 'ant-design-hmfw'
+import { Popconfirm, Button } from '@hmfw/ant-design'
 
 const visible = ref(false)
 const disabled = ref(false)

@@ -26,5 +26,5 @@
 </template>
 
 <script setup lang="ts">
-import { Pagination, Space } from 'ant-design-hmfw'
+import { Pagination, Space } from '@hmfw/ant-design'
 </script>

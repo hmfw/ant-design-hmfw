@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { Result, Button } from 'ant-design-hmfw'
+import { Result, Button } from '@hmfw/ant-design'
 
 function onGoOrder() {
   console.log('查看订单')

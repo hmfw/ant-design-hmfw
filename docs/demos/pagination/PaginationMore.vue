@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Pagination, Space } from 'ant-design-hmfw'
+import { Pagination, Space } from '@hmfw/ant-design'
 
 const current = ref(1)
 const pageSize = ref(10)

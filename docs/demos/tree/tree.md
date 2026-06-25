@@ -281,7 +281,7 @@ interface TreeSemanticStyles {
 </template>
 
 <script setup lang="ts">
-import { Tree } from 'ant-design-hmfw'
+import { Tree } from '@hmfw/ant-design'
 
 const treeData = [
   {

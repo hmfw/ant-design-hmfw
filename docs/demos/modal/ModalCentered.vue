@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Modal, Button } from 'ant-design-hmfw'
+import { Modal, Button } from '@hmfw/ant-design'
 
 const open = ref(false)
 </script>

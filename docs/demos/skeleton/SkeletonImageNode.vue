@@ -12,5 +12,5 @@
 </template>
 
 <script setup lang="ts">
-import { Skeleton } from 'ant-design-hmfw'
+import { Skeleton } from '@hmfw/ant-design'
 </script>

@@ -10,5 +10,5 @@
 </template>
 
 <script setup lang="ts">
-import { Watermark } from 'ant-design-hmfw'
+import { Watermark } from '@hmfw/ant-design'
 </script>

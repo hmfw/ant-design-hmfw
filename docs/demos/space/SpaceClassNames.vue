@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { Space, Button } from 'ant-design-hmfw'
+import { Space, Button } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

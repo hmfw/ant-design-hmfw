@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Badge, Button } from 'ant-design-hmfw'
+import { Badge, Button } from '@hmfw/ant-design'
 
 const count = ref(5)
 

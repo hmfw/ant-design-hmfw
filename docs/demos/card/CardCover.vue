@@ -12,5 +12,5 @@
 </template>
 
 <script setup lang="ts">
-import { Card, CardMeta } from 'ant-design-hmfw'
+import { Card, CardMeta } from '@hmfw/ant-design'
 </script>

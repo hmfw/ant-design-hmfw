@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { Image } from 'ant-design-hmfw'
+import { Image } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

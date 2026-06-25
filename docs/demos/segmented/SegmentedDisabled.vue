@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('Daily')
 const options = [

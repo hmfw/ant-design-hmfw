@@ -86,7 +86,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Popover, Button } from 'ant-design-hmfw'
+import { Popover, Button } from '@hmfw/ant-design'
 
 const dynamicTitle = ref('动态标题')
 

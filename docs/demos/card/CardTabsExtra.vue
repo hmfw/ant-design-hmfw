@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Card } from 'ant-design-hmfw'
+import { Card } from '@hmfw/ant-design'
 
 const tabList = [
   { key: 'article', label: '文章' },

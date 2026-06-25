@@ -18,5 +18,5 @@
 </template>
 
 <script setup lang="ts">
-import { Statistic } from 'ant-design-hmfw'
+import { Statistic } from '@hmfw/ant-design'
 </script>

@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CheckboxGroup, Checkbox } from 'ant-design-hmfw'
+import { CheckboxGroup, Checkbox } from '@hmfw/ant-design'
 
 const groupValue = ref<string[]>(['a'])
 const independentC = ref(false)

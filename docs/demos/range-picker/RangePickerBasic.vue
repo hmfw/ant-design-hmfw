@@ -7,8 +7,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RangePicker, Space } from 'ant-design-hmfw'
-import type { RangeValue } from 'ant-design-hmfw'
+import { RangePicker, Space } from '@hmfw/ant-design'
+import type { RangeValue } from '@hmfw/ant-design'
 
 const range = ref<RangeValue>([null, null])
 </script>

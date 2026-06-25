@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Calendar } from 'ant-design-hmfw'
+import { Calendar } from '@hmfw/ant-design'
 
 const value = ref<string>()
 

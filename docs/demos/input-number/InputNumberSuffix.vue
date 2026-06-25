@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { InputNumber } from 'ant-design-hmfw'
+import { InputNumber } from '@hmfw/ant-design'
 
 const value1 = ref<number>(100)
 const value2 = ref<number>(200)

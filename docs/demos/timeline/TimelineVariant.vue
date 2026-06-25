@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { Timeline } from 'ant-design-hmfw'
+import { Timeline } from '@hmfw/ant-design'
 
 const items = [
   { content: '成功事件', color: 'green' },

@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Popconfirm, Button } from 'ant-design-hmfw'
+import { Popconfirm, Button } from '@hmfw/ant-design'
 
 const loading1 = ref(false)
 const loading2 = ref(false)

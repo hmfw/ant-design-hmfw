@@ -9,5 +9,5 @@
 </template>
 
 <script setup lang="ts">
-import { Title, Space } from 'ant-design-hmfw'
+import { Title, Space } from '@hmfw/ant-design'
 </script>

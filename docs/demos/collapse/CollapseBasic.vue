@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Collapse, CollapsePanel } from 'ant-design-hmfw'
+import { Collapse, CollapsePanel } from '@hmfw/ant-design'
 
 const activeKey = ref(['1'])
 </script>

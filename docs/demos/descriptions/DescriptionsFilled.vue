@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Descriptions } from 'ant-design-hmfw'
+import { Descriptions } from '@hmfw/ant-design'
 
 const items = [
   { label: '产品', children: 'Cloud Database', span: 2 },

@@ -43,5 +43,5 @@ import {
   HomeOutlined,
   UserOutlined,
   SettingOutlined,
-} from 'ant-design-hmfw'
+} from '@hmfw/ant-design'
 </script>

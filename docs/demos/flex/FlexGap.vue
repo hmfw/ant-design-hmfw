@@ -28,5 +28,5 @@
 </template>
 
 <script setup lang="ts">
-import { Flex, Space } from 'ant-design-hmfw'
+import { Flex, Space } from '@hmfw/ant-design'
 </script>

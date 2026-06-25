@@ -8,5 +8,5 @@
 </template>
 
 <script setup lang="ts">
-import { Empty } from 'ant-design-hmfw'
+import { Empty } from '@hmfw/ant-design'
 </script>

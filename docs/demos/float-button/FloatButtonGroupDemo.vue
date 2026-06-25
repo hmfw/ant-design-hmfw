@@ -9,8 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import { FloatButton, FloatButtonGroup } from 'ant-design-hmfw'
-import { EditOutlined, DeleteOutlined, SearchOutlined } from 'ant-design-hmfw'
+import { FloatButton, FloatButtonGroup } from '@hmfw/ant-design'
+import { EditOutlined, DeleteOutlined, SearchOutlined } from '@hmfw/ant-design'
 
 const pos = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const
 </script>

@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Steps } from 'ant-design-hmfw'
+import { Steps } from '@hmfw/ant-design'
 
 const items = [{ title: '第一步' }, { title: '第二步' }, { title: '第三步' }]
 </script>

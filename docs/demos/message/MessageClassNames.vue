@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { message, Button } from 'ant-design-hmfw'
+import { message, Button } from '@hmfw/ant-design'
 
 // 场景 1：定制卡片主体——渐变背景 + 白色文字
 function showNotice() {

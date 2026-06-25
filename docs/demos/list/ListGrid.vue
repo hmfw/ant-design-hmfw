@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Card } from 'ant-design-hmfw'
+import { List, Card } from '@hmfw/ant-design'
 
 const data = ['Content 1', 'Content 2', 'Content 3', 'Content 4', 'Content 5', 'Content 6', 'Content 7', 'Content 8']
 

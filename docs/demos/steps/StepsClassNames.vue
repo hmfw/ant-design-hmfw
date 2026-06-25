@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { Steps } from 'ant-design-hmfw'
+import { Steps } from '@hmfw/ant-design'
 
 const basicItems = [
   { title: '已完成', content: '这是第一步的描述' },

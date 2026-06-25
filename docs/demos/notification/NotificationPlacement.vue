@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import { notification, Button } from 'ant-design-hmfw'
-import type { NotificationPlacement } from 'ant-design-hmfw'
+import { notification, Button } from '@hmfw/ant-design'
+import type { NotificationPlacement } from '@hmfw/ant-design'
 
 function open(placement: NotificationPlacement) {
   notification.info({

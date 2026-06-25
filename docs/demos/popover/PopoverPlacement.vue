@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { Popover, Button } from 'ant-design-hmfw'
+import { Popover, Button } from '@hmfw/ant-design'
 
 const placements = [
   'topLeft',

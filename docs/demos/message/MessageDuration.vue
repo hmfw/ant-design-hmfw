@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { message, Button } from 'ant-design-hmfw'
+import { message, Button } from '@hmfw/ant-design'
 
 function showLong() {
   message.success('这条消息将显示 10 秒', 10)

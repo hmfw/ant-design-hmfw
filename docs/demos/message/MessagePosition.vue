@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { message, Button } from 'ant-design-hmfw'
+import { message, Button } from '@hmfw/ant-design'
 
 function showTop() {
   message.config({ top: 8 })

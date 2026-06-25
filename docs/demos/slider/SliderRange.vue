@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Slider } from 'ant-design-hmfw'
+import { Slider } from '@hmfw/ant-design'
 
 const rangeValue = ref<[number, number]>([20, 70])
 const rangeValue2 = ref<[number, number]>([20, 60])

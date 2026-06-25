@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { notification, Button } from 'ant-design-hmfw'
+import { notification, Button } from '@hmfw/ant-design'
 
 // 场景 1：通过 classNames 应用渐变背景与白色文本
 function openGradient() {

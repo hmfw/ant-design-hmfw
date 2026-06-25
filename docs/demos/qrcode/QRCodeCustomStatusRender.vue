@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { QRCode } from 'ant-design-hmfw'
-import type { StatusRenderInfo } from 'ant-design-hmfw'
+import { QRCode } from '@hmfw/ant-design'
+import type { StatusRenderInfo } from '@hmfw/ant-design'
 
 const customStatusRender = (info: StatusRenderInfo) => {
   if (info.status === 'expired') {

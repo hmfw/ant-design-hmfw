@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { Alert, Button } from 'ant-design-hmfw'
+import { Alert, Button } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Tabs } from 'ant-design-hmfw'
+import { Tabs } from '@hmfw/ant-design'
 
 const items = [
   { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },

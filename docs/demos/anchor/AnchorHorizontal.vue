@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { Anchor } from 'ant-design-hmfw'
+import { Anchor } from '@hmfw/ant-design'
 
 const items = [
   { href: '#h-part-1', title: '第一部分' },

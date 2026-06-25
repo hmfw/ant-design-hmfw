@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { defineComponent, h } from 'vue'
-import { App, useApp, Button, Space } from 'ant-design-hmfw'
+import { App, useApp, Button, Space } from '@hmfw/ant-design'
 
 // useApp() 在 App 子组件内调用，获取 message/notification/modal 实例
 const AppActions = defineComponent({

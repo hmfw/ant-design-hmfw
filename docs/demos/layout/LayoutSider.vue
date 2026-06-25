@@ -12,5 +12,5 @@
 </template>
 
 <script setup lang="ts">
-import { Layout, Header, Content, Footer, Sider } from 'ant-design-hmfw'
+import { Layout, Header, Content, Footer, Sider } from '@hmfw/ant-design'
 </script>

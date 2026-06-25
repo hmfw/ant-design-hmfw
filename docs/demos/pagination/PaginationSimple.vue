@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Pagination } from 'ant-design-hmfw'
+import { Pagination } from '@hmfw/ant-design'
 
 const current = ref(1)
 </script>

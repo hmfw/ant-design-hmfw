@@ -9,8 +9,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tour, Button, Space } from 'ant-design-hmfw'
-import type { TourStep } from 'ant-design-hmfw'
+import { Tour, Button, Space } from '@hmfw/ant-design'
+import type { TourStep } from '@hmfw/ant-design'
 
 const open = ref(false)
 

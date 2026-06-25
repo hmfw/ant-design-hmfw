@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Card } from 'ant-design-hmfw'
+import { Card } from '@hmfw/ant-design'
 
 const tabList = [
   { key: 'tab1', label: '选项卡一' },

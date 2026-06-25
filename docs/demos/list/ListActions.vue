@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List } from 'ant-design-hmfw'
+import { List } from '@hmfw/ant-design'
 
 const data = [{ title: '列表项 1' }, { title: '列表项 2' }, { title: '列表项 3' }]
 

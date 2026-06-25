@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { notification, Button } from 'ant-design-hmfw'
+import { notification, Button } from '@hmfw/ant-design'
 
 function enableRtl() {
   notification.config({

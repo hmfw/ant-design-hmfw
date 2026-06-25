@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Transfer } from 'ant-design-hmfw'
-import type { TransferItem, TransferReorderInfo } from 'ant-design-hmfw'
+import { Transfer } from '@hmfw/ant-design'
+import type { TransferItem, TransferReorderInfo } from '@hmfw/ant-design'
 
 const dataSource: TransferItem[] = Array.from({ length: 8 }, (_, i) => ({
   key: String(i),

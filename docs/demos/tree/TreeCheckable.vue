@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tree } from 'ant-design-hmfw'
+import { Tree } from '@hmfw/ant-design'
 
 const expandedKeys = ref(['0-0'])
 const checkedKeys = ref<string[]>([])

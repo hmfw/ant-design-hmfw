@@ -9,5 +9,5 @@
 </template>
 
 <script setup lang="ts">
-import { SkeletonButton, SkeletonInput } from 'ant-design-hmfw'
+import { SkeletonButton, SkeletonInput } from '@hmfw/ant-design'
 </script>

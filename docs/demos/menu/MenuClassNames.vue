@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { Menu } from 'ant-design-hmfw'
+import { Menu } from '@hmfw/ant-design'
 
 const basicItems = [
   { key: '1', label: '导航一', icon: 'mail' },

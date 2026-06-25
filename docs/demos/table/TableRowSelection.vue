@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Table } from 'ant-design-hmfw'
+import { Table } from '@hmfw/ant-design'
 
 const selectedKeys = ref<string[]>([])
 

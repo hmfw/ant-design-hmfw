@@ -246,7 +246,7 @@ interface SegmentedStyles {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('选项一')
 const options = [
@@ -390,7 +390,7 @@ const SegmentedBasicSource = \`<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('Daily')
 const options = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']
@@ -402,7 +402,7 @@ const SegmentedBlockSource = \`<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('Map')
 const options = ['Map', 'Transit', 'Satellite']
@@ -414,7 +414,7 @@ const SegmentedDisabledSource = \`<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('Daily')
 const options = [
@@ -434,7 +434,7 @@ const SegmentedSizeSource = \`<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('Daily')
 const options = ['Daily', 'Weekly', 'Monthly']
@@ -446,8 +446,8 @@ const SegmentedVerticalSource = \`<template>
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from 'ant-design-hmfw'
-import { HomeOutlined, UserOutlined, SettingOutlined } from 'ant-design-hmfw'
+import { Segmented, Icon } from '@hmfw/ant-design'
+import { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/ant-design'
 
 const value = ref('home')
 const options = [
@@ -463,7 +463,7 @@ const SegmentedShapeSource = \`<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('Daily')
 const options = ['Daily', 'Weekly', 'Monthly']
@@ -475,8 +475,8 @@ const SegmentedWithIconSource = \`<template>
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from 'ant-design-hmfw'
-import { HomeOutlined, UserOutlined, SettingOutlined } from 'ant-design-hmfw'
+import { Segmented, Icon } from '@hmfw/ant-design'
+import { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/ant-design'
 
 const value = ref('home')
 const options = [
@@ -496,8 +496,8 @@ const SegmentedIconLabelSource = \`<template>
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from 'ant-design-hmfw'
-import { PictureOutlined, BarsOutlined } from 'ant-design-hmfw'
+import { Segmented, Icon } from '@hmfw/ant-design'
+import { PictureOutlined, BarsOutlined } from '@hmfw/ant-design'
 
 const value = ref('list')
 const options = [
@@ -512,7 +512,7 @@ const SegmentedCustomStyleSource = \`<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('apple')
 const options = [

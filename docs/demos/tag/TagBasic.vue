@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { Tag } from 'ant-design-hmfw'
+import { Tag } from '@hmfw/ant-design'
 
 function onClose() {
   console.log('关闭标签')

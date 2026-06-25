@@ -99,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage } from 'ant-design-hmfw'
+import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

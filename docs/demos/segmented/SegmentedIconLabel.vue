@@ -8,8 +8,8 @@
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from 'ant-design-hmfw'
-import { PictureOutlined, BarsOutlined } from 'ant-design-hmfw'
+import { Segmented, Icon } from '@hmfw/ant-design'
+import { PictureOutlined, BarsOutlined } from '@hmfw/ant-design'
 
 const value = ref('list')
 // 图标 + 文本同时存在的布局

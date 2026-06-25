@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { Menu } from 'ant-design-hmfw'
-import type { ItemType } from 'ant-design-hmfw'
+import { Menu } from '@hmfw/ant-design'
+import type { ItemType } from '@hmfw/ant-design'
 
 const items: ItemType[] = [
   { key: '1', label: '普通选项' },

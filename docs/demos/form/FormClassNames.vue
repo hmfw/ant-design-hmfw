@@ -91,7 +91,7 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { Form, FormItem, Input } from 'ant-design-hmfw'
+import { Form, FormItem, Input } from '@hmfw/ant-design'
 
 const state = reactive({
   username: '',

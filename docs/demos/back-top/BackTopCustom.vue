@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { BackTop } from 'ant-design-hmfw'
+import { BackTop } from '@hmfw/ant-design'
 
 function onBackTop() {
   console.log('回到顶部')

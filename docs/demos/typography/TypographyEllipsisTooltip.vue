@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Text, Paragraph } from 'ant-design-hmfw'
+import { Text, Paragraph } from '@hmfw/ant-design'
 
 const ellipsisState = ref<boolean>(false)
 function handleEllipsis(v: boolean) {

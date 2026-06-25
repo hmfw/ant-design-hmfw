@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Steps } from 'ant-design-hmfw'
+import { Steps } from '@hmfw/ant-design'
 
 const items = [
   { title: '已完成', description: '2024-01-01' },

@@ -7,8 +7,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TreeSelect, Space } from 'ant-design-hmfw'
-import type { TreeSelectNode } from 'ant-design-hmfw'
+import { TreeSelect, Space } from '@hmfw/ant-design'
+import type { TreeSelectNode } from '@hmfw/ant-design'
 
 const value = ref<string>()
 

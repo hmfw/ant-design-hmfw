@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AutoComplete } from 'ant-design-hmfw'
+import { AutoComplete } from '@hmfw/ant-design'
 
 const email = ref('')
 const emailOptions = ref<Array<{ value: string }>>([])

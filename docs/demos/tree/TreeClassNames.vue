@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tree, Input } from 'ant-design-hmfw'
+import { Tree, Input } from '@hmfw/ant-design'
 
 const treeData = [
   {

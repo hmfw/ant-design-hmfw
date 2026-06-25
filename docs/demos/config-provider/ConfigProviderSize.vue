@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ConfigProvider, Button } from 'ant-design-hmfw'
+import { ConfigProvider, Button } from '@hmfw/ant-design'
 
 const size = ref<'small' | 'middle' | 'large'>('middle')
 

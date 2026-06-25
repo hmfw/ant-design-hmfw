@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CheckboxGroup, Checkbox } from 'ant-design-hmfw'
+import { CheckboxGroup, Checkbox } from '@hmfw/ant-design'
 
 const checked1 = ref(false)
 const checked2 = ref(true)

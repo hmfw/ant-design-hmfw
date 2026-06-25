@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { Result, Button } from 'ant-design-hmfw'
+import { Result, Button } from '@hmfw/ant-design'
 
 function onRetry() {
   console.log('重试')

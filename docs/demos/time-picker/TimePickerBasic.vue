@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TimePicker } from 'ant-design-hmfw'
+import { TimePicker } from '@hmfw/ant-design'
 
 const time = ref('')
 const time2 = ref('10:30:00')

@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { Collapse, CollapsePanel } from 'ant-design-hmfw'
+import { Collapse, CollapsePanel } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

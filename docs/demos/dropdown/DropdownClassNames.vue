@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { Dropdown, Button } from 'ant-design-hmfw'
+import { Dropdown, Button } from '@hmfw/ant-design'
 
 const menu = {
   items: [

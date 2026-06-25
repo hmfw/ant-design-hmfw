@@ -6,5 +6,5 @@
 </template>
 
 <script setup lang="ts">
-import { Icon, Space, LoadingOutlined, SettingOutlined } from 'ant-design-hmfw'
+import { Icon, Space, LoadingOutlined, SettingOutlined } from '@hmfw/ant-design'
 </script>

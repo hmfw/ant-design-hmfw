@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { Calendar } from 'ant-design-hmfw'
+import { Calendar } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Card } from 'ant-design-hmfw'
+import { Card } from '@hmfw/ant-design'
 
 const loading = ref(true)
 </script>

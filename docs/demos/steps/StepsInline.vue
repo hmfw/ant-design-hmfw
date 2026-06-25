@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { Steps } from 'ant-design-hmfw'
+import { Steps } from '@hmfw/ant-design'
 
 const items = [
   { title: 'Step 1', content: 'First step' },

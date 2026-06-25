@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { TimePicker } from 'ant-design-hmfw'
+import { TimePicker } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

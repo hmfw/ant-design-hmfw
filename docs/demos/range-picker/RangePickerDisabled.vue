@@ -6,5 +6,5 @@
 </template>
 
 <script setup lang="ts">
-import { RangePicker, Space } from 'ant-design-hmfw'
+import { RangePicker, Space } from '@hmfw/ant-design'
 </script>

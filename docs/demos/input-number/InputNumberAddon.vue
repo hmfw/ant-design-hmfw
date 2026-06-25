@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { InputNumber } from 'ant-design-hmfw'
+import { InputNumber } from '@hmfw/ant-design'
 
 const price = ref<number | null>(null)
 const percent = ref<number | null>(null)

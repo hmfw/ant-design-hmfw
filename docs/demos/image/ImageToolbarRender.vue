@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="tsx">
-import { Image, Button } from 'ant-design-hmfw'
+import { Image, Button } from '@hmfw/ant-design'
 import type { VNode } from 'vue'
-import type { ToolbarRenderInfoType, ImageRenderInfoType } from 'ant-design-hmfw'
+import type { ToolbarRenderInfoType, ImageRenderInfoType } from '@hmfw/ant-design'
 
 // 自定义工具栏：保留原始操作栏，并在其下方追加缩放比例与“重置”按钮
 function toolbarRender(originalNode: VNode, info: ToolbarRenderInfoType) {

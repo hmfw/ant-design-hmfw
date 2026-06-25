@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { Avatar } from 'ant-design-hmfw'
+import { Avatar } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

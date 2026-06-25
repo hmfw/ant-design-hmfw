@@ -65,8 +65,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { QRCode } from 'ant-design-hmfw'
-import type { QRCodeStatus } from 'ant-design-hmfw'
+import { QRCode } from '@hmfw/ant-design'
+import type { QRCodeStatus } from '@hmfw/ant-design'
 
 const currentStatus = ref<QRCodeStatus>('expired')
 

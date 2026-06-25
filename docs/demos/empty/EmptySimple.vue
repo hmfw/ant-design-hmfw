@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import { Empty, PRESENTED_IMAGE_SIMPLE } from 'ant-design-hmfw'
+import { Empty, PRESENTED_IMAGE_SIMPLE } from '@hmfw/ant-design'
 </script>

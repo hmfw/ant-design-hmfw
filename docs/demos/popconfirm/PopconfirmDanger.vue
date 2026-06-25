@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { Popconfirm, Button } from 'ant-design-hmfw'
+import { Popconfirm, Button } from '@hmfw/ant-design'
 
 function onConfirm() {
   console.log('已确认操作')

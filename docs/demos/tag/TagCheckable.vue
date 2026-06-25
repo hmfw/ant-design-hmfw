@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CheckableTag } from 'ant-design-hmfw'
+import { CheckableTag } from '@hmfw/ant-design'
 
 const tags = ['Movies', 'Books', 'Music', 'Sports']
 const selectedTags = ref<string[]>(['Books'])

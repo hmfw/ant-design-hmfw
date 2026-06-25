@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Avatar } from 'ant-design-hmfw'
+import { List, Avatar } from '@hmfw/ant-design'
 
 const data1 = ['Vue 3 组件库开发实战', 'TypeScript 类型体操进阶', 'Vite 构建工具深度解析']
 

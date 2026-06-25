@@ -35,8 +35,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Layout, Header, Content, Sider } from 'ant-design-hmfw'
-import { Button } from 'ant-design-hmfw'
+import { Layout, Header, Content, Sider } from '@hmfw/ant-design'
+import { Button } from '@hmfw/ant-design'
 
 const theme = ref<'light' | 'dark'>('dark')
 

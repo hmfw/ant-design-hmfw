@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { h, ref } from 'vue'
-import { Statistic, Countdown } from 'ant-design-hmfw'
+import { Statistic, Countdown } from '@hmfw/ant-design'
 
 const deadline = ref(Date.now() + 1000 * 60 * 60 * 24)
 

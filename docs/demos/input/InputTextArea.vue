@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TextArea } from 'ant-design-hmfw'
+import { TextArea } from '@hmfw/ant-design'
 
 const text1 = ref('')
 const text2 = ref('')

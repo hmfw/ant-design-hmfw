@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { Modal, Button } from 'ant-design-hmfw'
+import { Modal, Button } from '@hmfw/ant-design'
 
 function confirm() {
   Modal.confirm({

@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Spin, Button } from 'ant-design-hmfw'
+import { Spin, Button } from '@hmfw/ant-design'
 
 const loading = ref(true)
 </script>

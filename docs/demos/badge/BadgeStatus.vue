@@ -9,5 +9,5 @@
 </template>
 
 <script setup lang="ts">
-import { Badge } from 'ant-design-hmfw'
+import { Badge } from '@hmfw/ant-design'
 </script>

@@ -11,5 +11,5 @@
 </template>
 
 <script setup lang="ts">
-import { Carousel } from 'ant-design-hmfw'
+import { Carousel } from '@hmfw/ant-design'
 </script>

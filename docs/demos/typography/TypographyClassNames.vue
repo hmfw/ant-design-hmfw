@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'
+import { Text, Title, Paragraph, Link } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

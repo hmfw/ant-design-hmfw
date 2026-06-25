@@ -9,8 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import { FloatButton } from 'ant-design-hmfw'
-import { SettingOutlined } from 'ant-design-hmfw'
+import { FloatButton } from '@hmfw/ant-design'
+import { SettingOutlined } from '@hmfw/ant-design'
 
 // Render inline within the demo box instead of fixed to the viewport
 const s = { position: 'static' } as const

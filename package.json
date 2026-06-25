@@ -1,5 +1,5 @@
 {
-  "name": "ant-design-hmfw",
+  "name": "@hmfw/ant-design",
   "version": "0.4.1",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "keywords": [
@@ -31,8 +31,8 @@
   "type": "module",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "unpkg": "./dist/ant-design-hmfw.umd.js",
-  "jsdelivr": "./dist/ant-design-hmfw.umd.js",
+  "unpkg": "./dist/ant-design.umd.js",
+  "jsdelivr": "./dist/ant-design.umd.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

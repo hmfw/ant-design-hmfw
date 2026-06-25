@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Menu, Button } from 'ant-design-hmfw'
+import { Menu, Button } from '@hmfw/ant-design'
 
 const collapsed = ref(false)
 const selectedKeys = ref(['1'])

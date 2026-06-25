@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { Dropdown, Button, Space } from 'ant-design-hmfw'
+import { Dropdown, Button, Space } from '@hmfw/ant-design'
 
 const menu = {
   items: [

@@ -4,8 +4,8 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Tabs, Icon } from 'ant-design-hmfw'
-import { AppleOutlined, AndroidOutlined } from 'ant-design-hmfw'
+import { Tabs, Icon } from '@hmfw/ant-design'
+import { AppleOutlined, AndroidOutlined } from '@hmfw/ant-design'
 
 const items = [
   {

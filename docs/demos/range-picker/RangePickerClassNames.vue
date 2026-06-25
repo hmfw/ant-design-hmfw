@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { RangePicker } from 'ant-design-hmfw'
+import { RangePicker } from '@hmfw/ant-design'
 
 const presets = [
   {

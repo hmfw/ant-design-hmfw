@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ConfigProvider, Button, zhCN, enUS } from 'ant-design-hmfw'
+import { ConfigProvider, Button, zhCN, enUS } from '@hmfw/ant-design'
 
 const locale = ref(zhCN)
 </script>

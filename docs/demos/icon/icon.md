@@ -155,7 +155,7 @@ import {
   // 品牌
   AndroidOutlined,
   AppleOutlined,
-} from 'ant-design-hmfw'
+} from '@hmfw/ant-design'
 ```
 
 ### 自定义图标
@@ -165,7 +165,7 @@ import {
 实现 `IconComponent` 类型（`FunctionalComponent<SVGAttributes>`）即可传入任意 SVG 图标：
 
 ```tsx
-import type { IconComponent } from 'ant-design-hmfw'
+import type { IconComponent } from '@hmfw/ant-design'
 
 const MyIcon: IconComponent = () => (
   <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">

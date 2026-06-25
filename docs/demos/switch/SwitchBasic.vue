@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Switch } from 'ant-design-hmfw'
+import { Switch } from '@hmfw/ant-design'
 
 const checked = ref(false)
 const checked2 = ref(true)

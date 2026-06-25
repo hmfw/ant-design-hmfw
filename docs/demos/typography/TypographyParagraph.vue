@@ -12,5 +12,5 @@
 </template>
 
 <script setup lang="ts">
-import { Paragraph, Space } from 'ant-design-hmfw'
+import { Paragraph, Space } from '@hmfw/ant-design'
 </script>

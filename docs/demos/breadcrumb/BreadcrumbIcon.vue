@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Breadcrumb, Icon, HomeOutlined, UserOutlined } from 'ant-design-hmfw'
+import { Breadcrumb, Icon, HomeOutlined, UserOutlined } from '@hmfw/ant-design'
 
 const items = [
   {

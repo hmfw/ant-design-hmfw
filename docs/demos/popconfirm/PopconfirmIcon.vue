@@ -21,5 +21,5 @@
 </template>
 
 <script setup lang="ts">
-import { Popconfirm, Button } from 'ant-design-hmfw'
+import { Popconfirm, Button } from '@hmfw/ant-design'
 </script>

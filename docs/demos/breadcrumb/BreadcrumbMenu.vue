@@ -6,8 +6,8 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Breadcrumb, Icon } from 'ant-design-hmfw'
-import type { BreadcrumbItem as BreadcrumbItemType } from 'ant-design-hmfw'
+import { Breadcrumb, Icon } from '@hmfw/ant-design'
+import type { BreadcrumbItem as BreadcrumbItemType } from '@hmfw/ant-design'
 
 const items: BreadcrumbItemType[] = [
   {

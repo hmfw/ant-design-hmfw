@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Avatar } from 'ant-design-hmfw'
+import { List, Avatar } from '@hmfw/ant-design'
 
 const data = [
   {

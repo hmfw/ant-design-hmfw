@@ -30,7 +30,7 @@
 在 `<App>` 的子组件内调用，返回 `AppConfig` 对象。
 
 ```ts
-import { useApp } from 'ant-design-hmfw'
+import { useApp } from '@hmfw/ant-design'
 
 const { message, notification, modal } = useApp()
 ```

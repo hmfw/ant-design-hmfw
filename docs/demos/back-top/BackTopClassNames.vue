@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { BackTop } from 'ant-design-hmfw'
+import { BackTop } from '@hmfw/ant-design'
 
 const containerRef = ref<HTMLElement>()
 

@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Timeline } from 'ant-design-hmfw'
+import { Timeline } from '@hmfw/ant-design'
 
 const items = [
   { content: '创建服务现场 2015-09-01' },

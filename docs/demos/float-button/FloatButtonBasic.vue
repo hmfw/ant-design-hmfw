@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { FloatButton } from 'ant-design-hmfw'
+import { FloatButton } from '@hmfw/ant-design'
 
 const demoStyle = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const
 

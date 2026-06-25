@@ -90,8 +90,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TreeSelect } from 'ant-design-hmfw'
-import type { TreeSelectNode } from 'ant-design-hmfw'
+import { TreeSelect } from '@hmfw/ant-design'
+import type { TreeSelectNode } from '@hmfw/ant-design'
 
 const value1 = ref<string | number>()
 const value2 = ref<string | number>()

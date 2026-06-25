@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DatePicker } from 'ant-design-hmfw'
+import { DatePicker } from '@hmfw/ant-design'
 
 const date = ref('')
 

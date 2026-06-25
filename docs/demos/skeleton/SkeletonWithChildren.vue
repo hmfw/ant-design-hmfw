@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Skeleton, Button } from 'ant-design-hmfw'
+import { Skeleton, Button } from '@hmfw/ant-design'
 
 const loading = ref(true)
 </script>

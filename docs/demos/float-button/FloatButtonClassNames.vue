@@ -71,7 +71,7 @@ import {
   CommentOutlined,
   EditOutlined,
   RocketOutlined,
-} from 'ant-design-hmfw'
+} from '@hmfw/ant-design'
 </script>
 
 <style scoped>

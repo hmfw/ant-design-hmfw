@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List } from 'ant-design-hmfw'
+import { List } from '@hmfw/ant-design'
 
 const data = [
   'Racing car sprays burning fuel into crowd.',

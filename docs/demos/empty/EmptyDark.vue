@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Empty, Button } from 'ant-design-hmfw'
+import { Empty, Button } from '@hmfw/ant-design'
 
 // 通过祖先元素的 data-theme="dark" / data-theme="light" 切换插画配色
 // 也可使用 .hmfw-theme-dark / .hmfw-theme-light 类，或直接跟随系统配色

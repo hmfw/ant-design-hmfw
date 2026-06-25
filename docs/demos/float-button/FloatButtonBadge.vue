@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import { FloatButton } from 'ant-design-hmfw'
-import { InfoCircleOutlined } from 'ant-design-hmfw'
+import { FloatButton } from '@hmfw/ant-design'
+import { InfoCircleOutlined } from '@hmfw/ant-design'
 
 const s = { position: 'static' } as const
 </script>

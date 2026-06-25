@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Modal, Button } from 'ant-design-hmfw'
+import { Modal, Button } from '@hmfw/ant-design'
 
 function showCustomIcon() {
   Modal.info({

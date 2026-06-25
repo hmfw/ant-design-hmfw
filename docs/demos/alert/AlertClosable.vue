@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { Alert } from 'ant-design-hmfw'
+import { Alert } from '@hmfw/ant-design'
 
 function onClose() {
   console.log('关闭警告')

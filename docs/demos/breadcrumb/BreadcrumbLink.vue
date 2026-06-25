@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Breadcrumb } from 'ant-design-hmfw'
+import { Breadcrumb } from '@hmfw/ant-design'
 
 const items = [{ title: '首页', href: '/' }, { title: '应用列表', href: '/apps' }, { title: '某应用' }]
 </script>

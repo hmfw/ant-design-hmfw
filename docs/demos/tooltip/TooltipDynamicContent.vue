@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Tooltip, Button } from 'ant-design-hmfw'
+import { Tooltip, Button } from '@hmfw/ant-design'
 
 const open = ref(false)
 const isLongContent = ref(false)

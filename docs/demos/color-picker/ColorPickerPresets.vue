@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ColorPicker } from 'ant-design-hmfw'
+import { ColorPicker } from '@hmfw/ant-design'
 
 const color = ref('#1677ff')
 

@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tabs } from 'ant-design-hmfw'
+import { Tabs } from '@hmfw/ant-design'
 
 const activeKey = ref('1')
 const items = ref([

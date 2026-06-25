@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Rate } from 'ant-design-hmfw'
+import { Rate } from '@hmfw/ant-design'
 
 const value = ref(0)
 const tooltips = ['极差', '差', '一般', '好', '极好']

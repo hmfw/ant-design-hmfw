@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { Form, FormItem, Input, InputNumber, Button } from 'ant-design-hmfw'
+import { Form, FormItem, Input, InputNumber, Button } from '@hmfw/ant-design'
 
 const formRef = ref()
 

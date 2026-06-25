@@ -230,7 +230,7 @@ interface TourStyles {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, Tour } from 'ant-design-hmfw'
+import { Button, Tour } from '@hmfw/ant-design'
 
 const open = ref(false)
 const steps = [
@@ -301,7 +301,7 @@ const steps = [
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, Tour } from 'ant-design-hmfw'
+import { Button, Tour } from '@hmfw/ant-design'
 
 const open = ref(false)
 const steps = [

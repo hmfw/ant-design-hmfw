@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { router } from './router'
 import App from './App.vue'
-import { ConfigProvider } from 'ant-design-hmfw'
+import { ConfigProvider } from '@hmfw/ant-design'
 import DemoBlock from './components/DemoBlock.vue'
 
 import '../../components/style.css'

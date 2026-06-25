@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tabs } from 'ant-design-hmfw'
-import type { TabsPosition } from 'ant-design-hmfw'
+import { Tabs } from '@hmfw/ant-design'
+import type { TabsPosition } from '@hmfw/ant-design'
 
 const tabPosition = ref<TabsPosition>('top')
 

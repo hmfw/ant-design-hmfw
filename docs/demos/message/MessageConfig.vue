@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { message, Button } from 'ant-design-hmfw'
+import { message, Button } from '@hmfw/ant-design'
 
 function setConfig() {
   // 全局配置：最多同时显示 3 条，距顶部 100px

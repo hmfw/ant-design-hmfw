@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { InputSearch } from 'ant-design-hmfw'
+import { InputSearch } from '@hmfw/ant-design'
 
 const keyword = ref('')
 const keyword2 = ref('')

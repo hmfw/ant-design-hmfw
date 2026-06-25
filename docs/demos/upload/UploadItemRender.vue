@@ -6,8 +6,8 @@
 
 <script setup lang="tsx">
 import { ref } from 'vue'
-import { Upload, Button } from 'ant-design-hmfw'
-import type { UploadFile, ItemRenderActions } from 'ant-design-hmfw'
+import { Upload, Button } from '@hmfw/ant-design'
+import type { UploadFile, ItemRenderActions } from '@hmfw/ant-design'
 
 const fileList = ref<UploadFile[]>([
   {

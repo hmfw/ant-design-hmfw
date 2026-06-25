@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { InputPassword } from 'ant-design-hmfw'
+import { InputPassword } from '@hmfw/ant-design'
 
 const password = ref('')
 const password2 = ref('')

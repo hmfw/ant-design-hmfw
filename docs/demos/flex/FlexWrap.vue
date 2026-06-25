@@ -7,5 +7,5 @@
 </template>
 
 <script setup lang="ts">
-import { Flex } from 'ant-design-hmfw'
+import { Flex } from '@hmfw/ant-design'
 </script>

@@ -20,5 +20,5 @@
 </template>
 
 <script setup lang="ts">
-import { Row, Col, Space } from 'ant-design-hmfw'
+import { Row, Col, Space } from '@hmfw/ant-design'
 </script>

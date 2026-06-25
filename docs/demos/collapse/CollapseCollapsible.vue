@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { Collapse } from 'ant-design-hmfw'
+import { Collapse } from '@hmfw/ant-design'
 
 const text = '这个面板可以通过点击文本或图标来折叠'
 

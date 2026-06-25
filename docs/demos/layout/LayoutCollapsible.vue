@@ -26,8 +26,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Layout, Header, Content, Sider } from 'ant-design-hmfw'
-import type { CollapseType } from 'ant-design-hmfw'
+import { Layout, Header, Content, Sider } from '@hmfw/ant-design'
+import type { CollapseType } from '@hmfw/ant-design'
 
 const collapsed = ref(false)
 const collapseType = ref<CollapseType>('clickTrigger')

@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   root: path.resolve(__dirname, 'docs'),
-  base: process.env.NODE_ENV === 'production' ? '/ant-design-hmfw/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/ant-design/' : '/',
   plugins: [
     autoDemoImports(),
     Markdown({
@@ -35,7 +35,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      'ant-design-hmfw': path.resolve(__dirname, 'components/index.ts'),
+      '@hmfw/ant-design': path.resolve(__dirname, 'components/index.ts'),
     },
   },
   build: {

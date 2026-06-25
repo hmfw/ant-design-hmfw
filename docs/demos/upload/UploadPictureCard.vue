@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Upload } from 'ant-design-hmfw'
-import type { UploadFile } from 'ant-design-hmfw'
+import { Upload } from '@hmfw/ant-design'
+import type { UploadFile } from '@hmfw/ant-design'
 
 const fileList = ref<UploadFile[]>([
   {

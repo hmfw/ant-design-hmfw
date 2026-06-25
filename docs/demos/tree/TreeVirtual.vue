@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Tree } from 'ant-design-hmfw'
+import { Tree } from '@hmfw/ant-design'
 
 // 生成大量树节点
 const generateTreeData = (level: number, parentKey: string, count: number): any[] => {

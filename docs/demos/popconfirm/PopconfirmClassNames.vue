@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { Button, Popconfirm } from 'ant-design-hmfw'
+import { Button, Popconfirm } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

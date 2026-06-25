@@ -28,5 +28,5 @@
 </template>
 
 <script setup lang="ts">
-import { Progress } from 'ant-design-hmfw'
+import { Progress } from '@hmfw/ant-design'
 </script>

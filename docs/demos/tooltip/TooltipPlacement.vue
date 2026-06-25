@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { Tooltip, Button } from 'ant-design-hmfw'
+import { Tooltip, Button } from '@hmfw/ant-design'
 
 const placements = [
   'topLeft',

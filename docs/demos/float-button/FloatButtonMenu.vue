@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { FloatButton, FloatButtonGroup } from 'ant-design-hmfw'
-import { SettingOutlined, EditOutlined, SearchOutlined, DeleteOutlined } from 'ant-design-hmfw'
+import { FloatButton, FloatButtonGroup } from '@hmfw/ant-design'
+import { SettingOutlined, EditOutlined, SearchOutlined, DeleteOutlined } from '@hmfw/ant-design'
 
 const left = { position: 'absolute', insetInlineEnd: '120px', insetBlockEnd: '24px' } as const
 const right = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const

@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Rate } from 'ant-design-hmfw'
+import { Rate } from '@hmfw/ant-design'
 
 const value = ref(3)
 const value2 = ref(2.5)

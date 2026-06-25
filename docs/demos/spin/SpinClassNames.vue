@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { Spin } from 'ant-design-hmfw'
+import { Spin } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

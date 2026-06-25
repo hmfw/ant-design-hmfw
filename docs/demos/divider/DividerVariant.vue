@@ -11,5 +11,5 @@
 </template>
 
 <script setup lang="ts">
-import { Divider } from 'ant-design-hmfw'
+import { Divider } from '@hmfw/ant-design'
 </script>

@@ -12,5 +12,5 @@
 </template>
 
 <script setup lang="ts">
-import { Popover } from 'ant-design-hmfw'
+import { Popover } from '@hmfw/ant-design'
 </script>

@@ -87,7 +87,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AutoComplete, SearchOutlined } from 'ant-design-hmfw'
+import { AutoComplete, SearchOutlined } from '@hmfw/ant-design'
 
 const value1 = ref('')
 const value2 = ref('')

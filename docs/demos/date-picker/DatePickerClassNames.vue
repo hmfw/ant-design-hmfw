@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { DatePicker } from 'ant-design-hmfw'
+import { DatePicker } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

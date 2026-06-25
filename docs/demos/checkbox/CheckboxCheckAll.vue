@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Checkbox, CheckboxGroup } from 'ant-design-hmfw'
+import { Checkbox, CheckboxGroup } from '@hmfw/ant-design'
 
 const options = [
   { label: '选项 A', value: 'A' },

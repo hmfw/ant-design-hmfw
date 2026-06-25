@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { Breadcrumb } from 'ant-design-hmfw'
+import { Breadcrumb } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

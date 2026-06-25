@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import { RangePicker } from 'ant-design-hmfw'
-import type { RangeValue } from 'ant-design-hmfw'
+import { RangePicker } from '@hmfw/ant-design'
+import type { RangeValue } from '@hmfw/ant-design'
 
 type RangePreset = { label: string; value: RangeValue | (() => RangeValue) }
 

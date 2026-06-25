@@ -134,7 +134,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Drawer, Button } from 'ant-design-hmfw'
+import { Drawer, Button } from '@hmfw/ant-design'
 
 const open1 = ref(false)
 const open2 = ref(false)

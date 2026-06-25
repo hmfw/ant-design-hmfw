@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { Timeline } from 'ant-design-hmfw'
+import { Timeline } from '@hmfw/ant-design'
 
 const basicItems = [
   { content: '创建服务站点 2024-01-01' },

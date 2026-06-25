@@ -87,8 +87,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Anchor } from 'ant-design-hmfw'
-import type { AnchorLinkItem } from 'ant-design-hmfw'
+import { Anchor } from '@hmfw/ant-design'
+import type { AnchorLinkItem } from '@hmfw/ant-design'
 
 const containerRef = ref<HTMLElement>()
 

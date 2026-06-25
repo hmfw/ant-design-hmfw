@@ -85,7 +85,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Transfer } from 'ant-design-hmfw'
+import { Transfer } from '@hmfw/ant-design'
 
 const generateData = () => {
   const data = []

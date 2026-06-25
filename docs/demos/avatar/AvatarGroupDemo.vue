@@ -18,5 +18,5 @@
 </template>
 
 <script setup lang="ts">
-import { Avatar, AvatarGroup } from 'ant-design-hmfw'
+import { Avatar, AvatarGroup } from '@hmfw/ant-design'
 </script>

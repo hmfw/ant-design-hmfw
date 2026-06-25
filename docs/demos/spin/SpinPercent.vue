@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { Spin, Button } from 'ant-design-hmfw'
+import { Spin, Button } from '@hmfw/ant-design'
 
 // 受控 percent：手动在 0~100 之间循环递增，演示环形进度指示器。
 const percent = ref(0)

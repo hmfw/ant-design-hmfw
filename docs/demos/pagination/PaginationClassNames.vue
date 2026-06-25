@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { Pagination } from 'ant-design-hmfw'
+import { Pagination } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

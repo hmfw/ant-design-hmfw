@@ -7,5 +7,5 @@
 </template>
 
 <script setup lang="ts">
-import { Link } from 'ant-design-hmfw'
+import { Link } from '@hmfw/ant-design'
 </script>

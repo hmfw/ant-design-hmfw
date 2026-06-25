@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { Cascader } from 'ant-design-hmfw'
+import { Cascader } from '@hmfw/ant-design'
 
 const cityOptions = [
   {

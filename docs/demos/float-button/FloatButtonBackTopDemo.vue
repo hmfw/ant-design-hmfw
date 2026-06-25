@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FloatButton } from 'ant-design-hmfw'
+import { FloatButton } from '@hmfw/ant-design'
 
 const containerRef = ref<HTMLElement | null>(null)
 const getTarget = () => containerRef.value as HTMLElement

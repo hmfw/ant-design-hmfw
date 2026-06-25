@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Icon, searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from 'ant-design-hmfw'
-import type { IconSearchResult } from 'ant-design-hmfw'
+import { Icon, searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '@hmfw/ant-design'
+import type { IconSearchResult } from '@hmfw/ant-design'
 
 const searchQuery = ref('')
 const selectedCategory = ref('all')

@@ -70,7 +70,7 @@
 组件提供了三种使用方式：
 
 ```ts
-import { FloatButton } from 'ant-design-hmfw'
+import { FloatButton } from '@hmfw/ant-design'
 
 // 复合写法
 <FloatButton />
@@ -78,7 +78,7 @@ import { FloatButton } from 'ant-design-hmfw'
 <FloatButton.BackTop />
 
 // 或具名导入
-import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hmfw'
+import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '@hmfw/ant-design'
 ```
 
 ### FloatButton Props

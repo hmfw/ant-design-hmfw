@@ -101,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { Card } from 'ant-design-hmfw'
+import { Card } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

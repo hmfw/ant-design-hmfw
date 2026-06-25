@@ -3,16 +3,16 @@
 ## 安装
 
 ```bash
-npm install ant-design-hmfw
+npm install @hmfw/ant-design
 # 或
-pnpm add ant-design-hmfw
+pnpm add @hmfw/ant-design
 ```
 
 ## 完整引入
 
 ```ts
 import { createApp } from 'vue'
-import AntDesignHmfw from 'ant-design-hmfw'
+import AntDesignHmfw from '@hmfw/ant-design'
 import 'ant-design-hmfw/style.css'
 import App from './App.vue'
 
@@ -22,7 +22,7 @@ createApp(App).use(AntDesignHmfw).mount('#app')
 ## 按需引入
 
 ```ts
-import { Button, Input } from 'ant-design-hmfw'
+import { Button, Input } from '@hmfw/ant-design'
 import 'ant-design-hmfw/style.css'
 ```
 
@@ -36,7 +36,7 @@ import 'ant-design-hmfw/style.css'
 </template>
 
 <script setup lang="ts">
-import { ConfigProvider } from 'ant-design-hmfw'
+import { ConfigProvider } from '@hmfw/ant-design'
 import zhCN from 'ant-design-hmfw/locale/zh-CN'
 </script>
 ```

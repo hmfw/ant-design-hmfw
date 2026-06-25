@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { Descriptions } from 'ant-design-hmfw'
+import { Descriptions } from '@hmfw/ant-design'
 
 const basicItems = [
   { label: '姓名', children: '张三' },

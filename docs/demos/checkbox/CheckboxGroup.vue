@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CheckboxGroup } from 'ant-design-hmfw'
+import { CheckboxGroup } from '@hmfw/ant-design'
 
 const selectedFruits = ref<string[]>(['apple'])
 const selectedColors = ref<string[]>([])

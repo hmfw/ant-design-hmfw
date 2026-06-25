@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Breadcrumb } from 'ant-design-hmfw'
+import { Breadcrumb } from '@hmfw/ant-design'
 
 const clicked = ref('无')
 

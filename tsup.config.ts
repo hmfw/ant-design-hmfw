@@ -24,7 +24,7 @@ export default defineConfig([
       options.jsx = 'automatic'
       options.jsxImportSource = 'vue'
       options.banner = {
-        js: '/* ant-design-hmfw | MIT License | https://github.com/hmfw/ant-design-hmfw */',
+        js: '/* @hmfw/ant-design | MIT License | https://github.com/hmfw/ant-design-hmfw */',
       }
     },
     onSuccess: async () => {
@@ -42,7 +42,7 @@ export default defineConfig([
           console.warn(`⚠️  样式文件缺失，已跳过: ${match[1]}`)
         }
       }
-      const banner = `/*!\n * ant-design-hmfw v${pkg.version}\n * MIT License\n * https://github.com/hmfw/ant-design-hmfw\n */\n`
+      const banner = `/*!\n * @hmfw/ant-design v${pkg.version}\n * MIT License\n * https://github.com/hmfw/ant-design-hmfw\n */\n`
       writeFileSync(resolve(__dirname, 'dist/style.css'), banner + parts.join('\n'))
       console.log(`✅ ESM build completed! 内联 ${parts.length} 个组件样式 → dist/style.css`)
     },
@@ -50,7 +50,7 @@ export default defineConfig([
   // UMD 构建 — @hmfw/icons 不打进，需要额外加载 hmfw-icons.umd.js
   {
     entry: {
-      'ant-design-hmfw.umd': 'components/index.ts',
+      'ant-design.umd': 'components/index.ts',
     },
     format: ['iife'],
     globalName: 'AntDesignHmfw',
@@ -72,7 +72,7 @@ export default defineConfig([
       // esbuild IIFE 对 external 包走 require polyfill（typeof require !== "undefined" ? require : throw）
       // 注入全局 require shim 桥接已加载的 HmfwIcons，使 @hmfw/icons → HmfwIcons
       options.banner = {
-        js: `/* ant-design-hmfw (UMD) | MIT License */\n/* 依赖: vue (全局 Vue), @hmfw/icons (全局 HmfwIcons — 先加载 hmfw-icons.umd.global.js) */\nvar HmfwIcons=typeof globalThis!=='undefined'?globalThis.HmfwIcons:typeof window!=='undefined'?window.HmfwIcons:{};if(typeof require==='undefined'){var require=function(e){if(e==='@hmfw/icons')return HmfwIcons;throw new Error('Module not found: '+e);};}`,
+        js: `/* @hmfw/ant-design (UMD) | MIT License */\n/* 依赖: vue (全局 Vue), @hmfw/icons (全局 HmfwIcons — 先加载 hmfw-icons.umd.global.js) */\nvar HmfwIcons=typeof globalThis!=='undefined'?globalThis.HmfwIcons:typeof window!=='undefined'?window.HmfwIcons:{};if(typeof require==='undefined'){var require=function(e){if(e==='@hmfw/icons')return HmfwIcons;throw new Error('Module not found: '+e);};}`,
       }
     },
     onSuccess: async () => {

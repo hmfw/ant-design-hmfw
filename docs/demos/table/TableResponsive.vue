@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Table } from 'ant-design-hmfw'
+import { Table } from '@hmfw/ant-design'
 
 const columns = [
   {

@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Slider } from 'ant-design-hmfw'
+import { Slider } from '@hmfw/ant-design'
 
 const value1 = ref(30)
 const value2 = ref(50)

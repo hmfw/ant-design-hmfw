@@ -24,8 +24,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Space, Button } from 'ant-design-hmfw'
-import type { SpaceAlign } from 'ant-design-hmfw'
+import { Space, Button } from '@hmfw/ant-design'
+import type { SpaceAlign } from '@hmfw/ant-design'
 
 const align = ref<SpaceAlign>('start')
 </script>

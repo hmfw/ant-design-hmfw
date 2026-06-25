@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Anchor } from 'ant-design-hmfw'
+import { Anchor } from '@hmfw/ant-design'
 
 const items = [
   { href: '#section-a', title: '章节 A' },

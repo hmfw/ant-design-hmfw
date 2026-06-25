@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { Tree } from 'ant-design-hmfw'
+import { Tree } from '@hmfw/ant-design'
 
 // 默认字段格式
 const defaultTreeData = [
