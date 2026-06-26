@@ -22,16 +22,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { Menu, Button } from '@hmfw/ant-design'
+import { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/icons'
 
 const collapsed = ref(false)
 const selectedKeys = ref(['1'])
 
 const items = [
-  { key: '1', label: '导航一', icon: 'home' },
-  { key: '2', label: '导航二', icon: 'user' },
-  { key: '3', label: '导航三', icon: 'setting' },
+  { key: '1', label: '导航一', icon: h(HomeOutlined) },
+  { key: '2', label: '导航二', icon: h(UserOutlined) },
+  { key: '3', label: '导航三', icon: h(SettingOutlined) },
 ]
 
 const onSelect = ({ key }: { key: string }) => {

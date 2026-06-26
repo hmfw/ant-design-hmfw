@@ -88,26 +88,28 @@
 </template>
 
 <script setup lang="ts">
+import { h } from 'vue'
 import { Menu } from '@hmfw/ant-design'
+import { MailOutlined, AppstoreOutlined, SettingOutlined, UserOutlined, TeamOutlined, FileOutlined } from '@hmfw/icons'
 
 const basicItems = [
-  { key: '1', label: '导航一', icon: 'mail' },
-  { key: '2', label: '导航二', icon: 'appstore' },
-  { key: '3', label: '导航三', icon: 'setting' },
+  { key: '1', label: '导航一', icon: h(MailOutlined) },
+  { key: '2', label: '导航二', icon: h(AppstoreOutlined) },
+  { key: '3', label: '导航三', icon: h(SettingOutlined) },
 ]
 
 const submenuItems = [
-  { key: '1', label: '选项 1', icon: 'mail' },
+  { key: '1', label: '选项 1', icon: h(MailOutlined) },
   {
     key: 'sub1',
     label: '子菜单',
-    icon: 'appstore',
+    icon: h(AppstoreOutlined),
     children: [
       { key: '2', label: '选项 2' },
       { key: '3', label: '选项 3' },
     ],
   },
-  { key: '4', label: '选项 4', icon: 'setting' },
+  { key: '4', label: '选项 4', icon: h(SettingOutlined) },
 ]
 
 const groupItems = [
@@ -115,8 +117,8 @@ const groupItems = [
     type: 'group',
     label: '分组 1',
     children: [
-      { key: '1', label: '选项 1', icon: 'user' },
-      { key: '2', label: '选项 2', icon: 'team' },
+      { key: '1', label: '选项 1', icon: h(UserOutlined) },
+      { key: '2', label: '选项 2', icon: h(TeamOutlined) },
     ],
   },
   { type: 'divider' },
@@ -124,16 +126,16 @@ const groupItems = [
     type: 'group',
     label: '分组 2',
     children: [
-      { key: '3', label: '选项 3', icon: 'file' },
-      { key: '4', label: '选项 4', icon: 'setting' },
+      { key: '3', label: '选项 3', icon: h(FileOutlined) },
+      { key: '4', label: '选项 4', icon: h(SettingOutlined) },
     ],
   },
 ]
 
 const horizontalItems = [
-  { key: 'mail', label: '邮件', icon: 'mail' },
-  { key: 'app', label: '应用', icon: 'appstore' },
-  { key: 'setting', label: '设置', icon: 'setting' },
+  { key: 'mail', label: '邮件', icon: h(MailOutlined) },
+  { key: 'app', label: '应用', icon: h(AppstoreOutlined) },
+  { key: 'setting', label: '设置', icon: h(SettingOutlined) },
 ]
 </script>
 

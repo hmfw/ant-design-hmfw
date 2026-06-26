@@ -18,15 +18,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { Menu } from '@hmfw/ant-design'
+import { AppstoreOutlined, SettingOutlined } from '@hmfw/icons'
 
 const selectedKeys = ref(['1'])
 const triggerAction = ref<'hover' | 'click'>('hover')
 
 const items = [
-  { key: '1', label: '导航一' },
-  { key: '2', label: '导航二' },
+  { key: '1', label: '导航一', icon: h(AppstoreOutlined) },
+  { key: '2', label: '导航二', icon: h(SettingOutlined) },
   {
     key: 'sub',
     label: '子菜单',

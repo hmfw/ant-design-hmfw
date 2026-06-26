@@ -1,26 +1,94 @@
+/* ========================================
+   Menu 组件样式 — hmfw-menu
+   支持 Design Token 覆盖
+   ======================================== */
+
+/* ---- Design Token (CSS Variables) ---- */
+.hmfw-menu {
+  /* 基础 */
+  --hmfw-menu-item-height: 40px;
+  --hmfw-menu-item-border-radius: 6px;
+  --hmfw-menu-item-margin-block: 4px;
+  --hmfw-menu-item-margin-inline: 8px;
+  --hmfw-menu-item-padding-inline: 16px;
+  --hmfw-menu-item-icon-size: 14px;
+  --hmfw-menu-item-icon-margin-end: 8px;
+
+  /* 颜色 */
+  --hmfw-menu-item-color: rgba(0, 0, 0, 0.88);
+  --hmfw-menu-item-hover-bg: rgba(0, 0, 0, 0.04);
+  --hmfw-menu-item-hover-color: rgba(0, 0, 0, 0.88);
+  --hmfw-menu-item-active-bg: #e6f4ff;
+  --hmfw-menu-item-selected-color: var(--hmfw-color-primary, #1677ff);
+  --hmfw-menu-item-selected-bg: #e6f4ff;
+  --hmfw-menu-item-disabled-color: rgba(0, 0, 0, 0.25);
+
+  /* 分割线 */
+  --hmfw-menu-divider-color: rgba(5, 5, 5, 0.06);
+
+  /* 分组标题 */
+  --hmfw-menu-group-title-color: rgba(0, 0, 0, 0.45);
+  --hmfw-menu-group-title-font-size: 12px;
+
+  /* 子菜单弹出层 */
+  --hmfw-menu-popup-bg: #fff;
+  --hmfw-menu-popup-border-radius: 8px;
+  --hmfw-menu-popup-shadow:
+    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  --hmfw-menu-popup-min-width: 160px;
+  --hmfw-menu-popup-z-index: 1050;
+
+  /* 折叠 */
+  --hmfw-menu-collapsed-width: 80px;
+  --hmfw-menu-collapsed-icon-size: 16px;
+
+  /* 指示条（inline 模式选中指示器） */
+  --hmfw-menu-active-bar-width: 3px;
+
+  /* 水平菜单 */
+  --hmfw-menu-horizontal-line-height: 46px;
+
+  /* 过渡 */
+  --hmfw-menu-transition-duration: 0.2s;
+  --hmfw-menu-transition-timing: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/* ---- Reset ---- */
 .hmfw-menu {
   list-style: none;
   margin: 0;
   padding: 0;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--hmfw-menu-item-color);
   outline: none;
   box-shadow: none;
+  transition: width var(--hmfw-menu-transition-duration) cubic-bezier(0.2, 0, 0, 1) 0s;
 }
 
-/* Vertical */
+.hmfw-menu:focus-visible {
+  outline: 2px solid var(--hmfw-color-primary, #1677ff);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+
+/* ---- Vertical / Inline Container ---- */
 .hmfw-menu-vertical,
 .hmfw-menu-inline {
   width: 256px;
   border-right: 1px solid rgba(5, 5, 5, 0.06);
 }
 
-/* Horizontal */
+.hmfw-menu-root.hmfw-menu-vertical,
+.hmfw-menu-root.hmfw-menu-inline {
+  box-shadow: none;
+}
+
+/* ---- Horizontal ---- */
 .hmfw-menu-horizontal {
   display: flex;
   flex-direction: row;
   border-bottom: 1px solid rgba(5, 5, 5, 0.06);
-  line-height: 46px;
+  line-height: var(--hmfw-menu-horizontal-line-height);
   width: 100%;
 }
 
@@ -28,61 +96,130 @@
 .hmfw-menu-horizontal > .hmfw-menu-submenu {
   display: inline-flex;
   align-items: center;
+  flex: none;
+}
+
+.hmfw-menu-horizontal > .hmfw-menu-item,
+.hmfw-menu-horizontal > .hmfw-menu-submenu > .hmfw-menu-submenu-title {
   padding: 0 20px;
+  height: 100%;
+}
+
+/* 水平菜单选中指示条（底部边框） */
+.hmfw-menu-horizontal > .hmfw-menu-item::after,
+.hmfw-menu-horizontal > .hmfw-menu-submenu > .hmfw-menu-submenu-title::after {
+  position: absolute;
+  inset-inline: 20px;
+  bottom: 0;
   border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  transition: border-color var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing);
+  content: '';
+}
+
+.hmfw-menu-horizontal > .hmfw-menu-item:hover::after,
+.hmfw-menu-horizontal > .hmfw-menu-submenu:hover > .hmfw-menu-submenu-title::after,
+.hmfw-menu-horizontal > .hmfw-menu-submenu-open > .hmfw-menu-submenu-title::after {
+  border-bottom-color: var(--hmfw-menu-item-selected-color);
+}
+
+.hmfw-menu-horizontal > .hmfw-menu-item-selected::after,
+.hmfw-menu-horizontal > .hmfw-menu-submenu-selected > .hmfw-menu-submenu-title::after {
+  border-bottom-color: var(--hmfw-menu-item-selected-color);
 }
 
 .hmfw-menu-horizontal > .hmfw-menu-item-selected,
-.hmfw-menu-horizontal > .hmfw-menu-submenu-selected {
-  border-bottom-color: var(--hmfw-color-primary, #1677ff);
-  color: var(--hmfw-color-primary, #1677ff);
+.hmfw-menu-horizontal > .hmfw-menu-submenu-selected > .hmfw-menu-submenu-title {
+  color: var(--hmfw-menu-item-selected-color);
 }
 
-/* Item */
-.hmfw-menu-item {
+/* ---- Common Item / Submenu Title ---- */
+.hmfw-menu-item,
+.hmfw-menu-submenu-title {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 16px;
-  height: 40px;
-  line-height: 40px;
+  gap: var(--hmfw-menu-item-icon-margin-end);
+  height: var(--hmfw-menu-item-height);
+  line-height: var(--hmfw-menu-item-height);
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    border-color var(--hmfw-menu-transition-duration),
+    background-color var(--hmfw-menu-transition-duration),
+    color var(--hmfw-menu-transition-duration),
+    padding var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  border-radius: 6px;
-  margin: 4px 8px;
+  border-radius: var(--hmfw-menu-item-border-radius);
+  margin: var(--hmfw-menu-item-margin-block) var(--hmfw-menu-item-margin-inline);
+  padding: 0 var(--hmfw-menu-item-padding-inline);
+  color: var(--hmfw-menu-item-color);
 }
 
-.hmfw-menu-item:hover {
-  background: rgba(0, 0, 0, 0.04);
-  color: rgba(0, 0, 0, 0.88);
+/* ---- Item Hover / Active ---- */
+.hmfw-menu-item:not(.hmfw-menu-item-selected):not(.hmfw-menu-item-disabled):hover {
+  background: var(--hmfw-menu-item-hover-bg);
+  color: var(--hmfw-menu-item-hover-color);
 }
 
+.hmfw-menu-item:not(.hmfw-menu-item-selected):not(.hmfw-menu-item-disabled):active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.hmfw-menu-submenu-title:hover {
+  background: var(--hmfw-menu-item-hover-bg);
+}
+
+.hmfw-menu-submenu-title:active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* ---- Item Selected ---- */
 .hmfw-menu-item-selected {
-  background: #e6f4ff;
-  color: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-menu-item-selected-bg);
+  color: var(--hmfw-menu-item-selected-color);
   font-weight: 600;
 }
 
-.hmfw-menu-item-disabled {
-  cursor: not-allowed;
-  color: rgba(0, 0, 0, 0.25);
+/* ---- Inline 模式选中指示条（右侧竖条） ---- */
+.hmfw-menu-inline .hmfw-menu-item::after {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  border-inline-end: var(--hmfw-menu-active-bar-width) solid var(--hmfw-menu-item-selected-color);
+  transform: scaleY(0.0001);
+  opacity: 0;
+  transition:
+    transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1),
+    opacity 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  content: '';
 }
 
-.hmfw-menu-item-disabled:hover {
-  background: transparent;
+.hmfw-menu-inline .hmfw-menu-item-selected::after {
+  transform: scaleY(1);
+  opacity: 1;
 }
 
+/* ---- Item Disabled ---- */
+.hmfw-menu-item-disabled,
+.hmfw-menu-submenu-disabled > .hmfw-menu-submenu-title {
+  cursor: not-allowed !important;
+  color: var(--hmfw-menu-item-disabled-color) !important;
+}
+
+.hmfw-menu-item-disabled:hover,
+.hmfw-menu-submenu-disabled > .hmfw-menu-submenu-title:hover {
+  background: transparent !important;
+}
+
+/* ---- Item Danger ---- */
 .hmfw-menu-item-danger {
   color: #ff4d4f;
 }
 
-.hmfw-menu-item-danger:hover {
+.hmfw-menu-item-danger:not(.hmfw-menu-item-selected):hover {
   background: #fff2f0;
+  color: #ff7875;
 }
 
 .hmfw-menu-item-danger.hmfw-menu-item-selected {
@@ -90,103 +227,153 @@
   color: #ff4d4f;
 }
 
-/* Icon */
-.hmfw-menu-item-icon {
-  font-size: 14px;
-  flex-shrink: 0;
+.hmfw-menu-item-danger.hmfw-menu-item-selected::after {
+  border-inline-end-color: #ff4d4f;
 }
 
-/* Submenu */
+/* ---- Icon ---- */
+.hmfw-menu-item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--hmfw-menu-item-icon-size);
+  font-size: var(--hmfw-menu-item-icon-size);
+  flex-shrink: 0;
+  transition:
+    font-size var(--hmfw-menu-transition-duration),
+    margin var(--hmfw-menu-transition-duration);
+}
+
+.hmfw-menu-item-icon + .hmfw-menu-title-content {
+  margin-inline-start: var(--hmfw-menu-item-icon-margin-end);
+}
+
+/* ---- Title Content ---- */
+.hmfw-menu-title-content {
+  flex: auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    opacity var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing),
+    width var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing),
+    color var(--hmfw-menu-transition-duration);
+}
+
+.hmfw-menu-title-content-with-extra {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* ---- Item Extra (快捷键等) ---- */
+.hmfw-menu-item-extra {
+  flex: none;
+  margin-inline-start: auto;
+  padding-inline-start: 16px;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+}
+
+/* ---- Submenu ---- */
 .hmfw-menu-submenu {
   position: relative;
 }
 
-.hmfw-menu-submenu-disabled > .hmfw-menu-submenu-title {
-  cursor: not-allowed;
-  color: rgba(0, 0, 0, 0.25);
+.hmfw-menu-submenu-inline {
+  transition:
+    border-color var(--hmfw-menu-transition-duration),
+    background-color var(--hmfw-menu-transition-duration),
+    padding var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing);
 }
 
-.hmfw-menu-submenu-disabled > .hmfw-menu-submenu-title:hover {
-  background: transparent;
-}
-
-.hmfw-menu-submenu-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 16px;
-  height: 40px;
-  line-height: 40px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-radius: 6px;
-  margin: 4px 8px;
-}
-
-.hmfw-menu-submenu-title:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
+/* 子菜单标题选中色（包含选中子项时） */
 .hmfw-menu-submenu-selected > .hmfw-menu-submenu-title {
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-menu-item-selected-color);
 }
 
+/* ---- Submenu Arrow ---- */
 .hmfw-menu-submenu-arrow {
   margin-left: auto;
   font-size: 10px;
   color: rgba(0, 0, 0, 0.45);
-  transition: transform 0.3s;
+  transition: transform 0.3s var(--hmfw-menu-transition-timing);
+  flex-shrink: 0;
 }
 
-.hmfw-menu-submenu-arrow.open {
+/* inline 模式：DownOutlined 向下 */
+.hmfw-menu-submenu-inline .hmfw-menu-submenu-arrow {
+  transform: rotate(0deg);
+}
+
+.hmfw-menu-submenu-inline .hmfw-menu-submenu-arrow.open {
   transform: rotate(180deg);
 }
 
-/* Sub menu */
+/* vertical/horizontal 模式：RightOutlined 向右 */
+.hmfw-menu-submenu-vertical .hmfw-menu-submenu-arrow,
+.hmfw-menu-submenu-horizontal .hmfw-menu-submenu-arrow {
+  transform: rotate(0deg);
+}
+
+/* ---- Sub Menu (Popup) ---- */
 .hmfw-menu-sub {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.hmfw-menu-sub.hmfw-menu-vertical {
+/* vertical/horizontal 弹出子菜单 */
+.hmfw-menu-sub.hmfw-menu-vertical,
+.hmfw-menu-sub.hmfw-menu-horizontal {
   position: absolute;
   left: 100%;
   top: 0;
-  min-width: 160px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  min-width: var(--hmfw-menu-popup-min-width);
+  background: var(--hmfw-menu-popup-bg);
+  border-radius: var(--hmfw-menu-popup-border-radius);
+  box-shadow: var(--hmfw-menu-popup-shadow);
   padding: 4px 0;
-  z-index: 1050;
+  z-index: var(--hmfw-menu-popup-z-index);
 }
 
-.hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-item {
+.hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-item,
+.hmfw-menu-sub.hmfw-menu-horizontal .hmfw-menu-item,
+.hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-submenu-title,
+.hmfw-menu-sub.hmfw-menu-horizontal .hmfw-menu-submenu-title {
   margin: 0;
   border-radius: 0;
-  padding: 0 16px;
 }
 
-/* Divider */
+/* ---- Inline Sub Menu ---- */
+.hmfw-menu-sub.hmfw-menu-inline {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* ---- Divider ---- */
 .hmfw-menu-item-divider {
   height: 1px;
-  background: rgba(5, 5, 5, 0.06);
+  background: var(--hmfw-menu-divider-color);
   margin: 4px 0;
+  overflow: hidden;
+  line-height: 0;
 }
 
 .hmfw-menu-item-divider-dashed {
   background: transparent;
-  border-top: 1px dashed rgba(5, 5, 5, 0.06);
+  border-top: 1px dashed var(--hmfw-menu-divider-color);
 }
 
-/* Group */
+/* ---- Item Group ---- */
 .hmfw-menu-item-group-title {
   padding: 8px 16px 4px;
-  color: rgba(0, 0, 0, 0.45);
-  font-size: 12px;
+  color: var(--hmfw-menu-group-title-color);
+  font-size: var(--hmfw-menu-group-title-font-size);
+  transition: all var(--hmfw-menu-transition-duration);
 }
 
 .hmfw-menu-item-group-list {
@@ -195,48 +382,196 @@
   padding: 0;
 }
 
-/* Dark theme */
+/* ---- Inline 子菜单内分组 ---- */
+.hmfw-menu-sub.hmfw-menu-inline .hmfw-menu-item-group-title {
+  padding-inline-start: 32px;
+}
+
+/* ========================================
+   Dark Theme
+   ======================================== */
 .hmfw-menu-dark {
+  --hmfw-menu-item-color: rgba(255, 255, 255, 0.65);
+  --hmfw-menu-item-hover-bg: rgba(255, 255, 255, 0.08);
+  --hmfw-menu-item-hover-color: #fff;
+  --hmfw-menu-item-active-bg: rgba(255, 255, 255, 0.12);
+  --hmfw-menu-item-selected-bg: var(--hmfw-color-primary, #1677ff);
+  --hmfw-menu-item-selected-color: #fff;
+  --hmfw-menu-item-disabled-color: rgba(255, 255, 255, 0.25);
+  --hmfw-menu-divider-color: rgba(255, 255, 255, 0.12);
+  --hmfw-menu-group-title-color: rgba(255, 255, 255, 0.45);
+  --hmfw-menu-popup-bg: #001529;
+
   background: #001529;
   color: rgba(255, 255, 255, 0.65);
   border-right-color: #001529;
 }
 
-.hmfw-menu-dark .hmfw-menu-item {
-  color: rgba(255, 255, 255, 0.65);
+.hmfw-menu-dark .hmfw-menu-item-danger {
+  color: #ff4d4f;
 }
 
-.hmfw-menu-dark .hmfw-menu-item:hover {
-  background: rgba(255, 255, 255, 0.08);
+.hmfw-menu-dark .hmfw-menu-item-danger:not(.hmfw-menu-item-selected):hover {
+  background: rgba(255, 77, 79, 0.15);
+  color: #ff7875;
+}
+
+.hmfw-menu-dark .hmfw-menu-item-danger.hmfw-menu-item-selected {
+  background: #ff4d4f;
   color: #fff;
 }
 
-.hmfw-menu-dark .hmfw-menu-item-selected {
-  background: var(--hmfw-color-primary, #1677ff);
-  color: #fff;
+.hmfw-menu-dark .hmfw-menu-sub.hmfw-menu-inline {
+  background: #000c17;
 }
 
-.hmfw-menu-dark .hmfw-menu-submenu-title {
-  color: rgba(255, 255, 255, 0.65);
+.hmfw-menu-dark.hmfw-menu-horizontal {
+  border-bottom: 0;
 }
 
-.hmfw-menu-dark .hmfw-menu-submenu-title:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+/* ---- Dark 模式聚焦样式 ---- */
+.hmfw-menu-dark:focus-visible {
+  outline-color: rgba(255, 255, 255, 0.65);
 }
 
-/* Inline collapsed */
+/* ========================================
+   Inline Collapsed
+   ======================================== */
 .hmfw-menu-inline-collapsed {
-  width: 80px;
+  width: var(--hmfw-menu-collapsed-width);
 }
 
 .hmfw-menu-inline-collapsed .hmfw-menu-item,
 .hmfw-menu-inline-collapsed .hmfw-menu-submenu-title {
-  padding: 0;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  padding: 0 !important;
+  text-overflow: clip;
 }
 
-.hmfw-menu-inline-collapsed .hmfw-menu-title-content,
+.hmfw-menu-inline-collapsed .hmfw-menu-title-content {
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
 .hmfw-menu-inline-collapsed .hmfw-menu-submenu-arrow {
+  opacity: 0;
+}
+
+.hmfw-menu-inline-collapsed .hmfw-menu-item-icon {
+  margin: 0;
+  font-size: var(--hmfw-menu-collapsed-icon-size);
+}
+
+.hmfw-menu-inline-collapsed .hmfw-menu-item-icon + .hmfw-menu-title-content {
+  display: inline-block;
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-inline-start: 0;
+}
+
+/* 折叠态无图标的项：显示首字符 */
+.hmfw-menu-inline-collapsed .hmfw-menu-inline-collapsed-noicon {
+  font-size: 16px;
+  text-align: center;
+}
+
+/* ---- Collapsed Tooltip ---- */
+.hmfw-menu-inline-collapsed-tooltip {
+  pointer-events: none;
+}
+
+.hmfw-menu-inline-collapsed-tooltip .hmfw-menu-item-icon {
   display: none;
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+/* ---- Inline Collapse (子菜单展开/折叠) ---- */
+.hmfw-menu-collapse-enter-active,
+.hmfw-menu-collapse-leave-active {
+  overflow: hidden;
+  transition:
+    height 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+    opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.hmfw-menu-collapse-enter-from,
+.hmfw-menu-collapse-leave-to {
+  height: 0 !important;
+  opacity: 0;
+}
+
+/* ---- Popup Zoom (vertical/horizontal 子菜单弹出) ---- */
+.hmfw-menu-popup-zoom-enter-active {
+  transition:
+    opacity 0.2s cubic-bezier(0.215, 0.61, 0.355, 1),
+    transform 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.hmfw-menu-popup-zoom-leave-active {
+  transition:
+    opacity 0.15s cubic-bezier(0.55, 0.055, 0.675, 0.19),
+    transform 0.15s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.hmfw-menu-popup-zoom-enter-from {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.hmfw-menu-popup-zoom-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* ---- Overflow (水平菜单溢出指示器) ---- */
+.hmfw-menu-overflow {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.hmfw-menu-overflow > .hmfw-menu-item,
+.hmfw-menu-overflow > .hmfw-menu-submenu {
+  flex: none;
+}
+
+.hmfw-menu-overflowed-submenu {
+  position: relative;
+}
+
+.hmfw-menu-overflowed-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* ---- 子菜单弹出位置 ---- */
+/* 向下弹出（horizontal 模式用） */
+.hmfw-menu-sub.hmfw-menu-horizontal {
+  left: 0;
+  top: 100%;
+}
+
+/* ========================================
+   Focus & Accessibility
+   ======================================== */
+.hmfw-menu-item:focus-visible,
+.hmfw-menu-submenu-title:focus-visible {
+  outline: 2px solid var(--hmfw-color-primary, #1677ff);
+  outline-offset: -2px;
+  border-radius: var(--hmfw-menu-item-border-radius);
+}
+
+.hmfw-menu-dark .hmfw-menu-item:focus-visible,
+.hmfw-menu-dark .hmfw-menu-submenu-title:focus-visible {
+  outline-color: rgba(255, 255, 255, 0.65);
 }

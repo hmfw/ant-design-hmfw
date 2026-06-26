@@ -15,11 +15,12 @@ import { cls } from '../_utils'
 import { LeftOutlined, RightOutlined, MinusOutlined } from '@hmfw/icons'
 import type { LayoutBreakpoint, CollapseType } from './types'
 
-const LAYOUT_SIDER_KEY = Symbol('layout-sider')
+export const LAYOUT_SIDER_KEY = Symbol('layout-sider')
 
-interface LayoutSiderContext {
+export interface LayoutSiderContext {
   addSider: () => void
   removeSider: () => void
+  siderCollapsed: boolean
 }
 
 // Layout
@@ -35,6 +36,7 @@ export const Layout = defineComponent({
     provide<LayoutSiderContext>(LAYOUT_SIDER_KEY, {
       addSider: () => siderCount.value++,
       removeSider: () => siderCount.value--,
+      siderCollapsed: false, // Layout 本身不控制折叠，由 Sider 覆盖
     })
 
     const classes = computed(() => {
@@ -122,14 +124,23 @@ export const Sider = defineComponent({
     const prefixCls = usePrefixCls('layout')
     const siderPrefixCls = `${prefixCls}-sider`
 
-    const context = inject<LayoutSiderContext | null>(LAYOUT_SIDER_KEY, null)
-    onMounted(() => context?.addSider())
-    onUnmounted(() => context?.removeSider())
+    const parentContext = inject<LayoutSiderContext | null>(LAYOUT_SIDER_KEY, null)
+    onMounted(() => parentContext?.addSider())
+    onUnmounted(() => parentContext?.removeSider())
 
     const internalCollapsed = ref(props.defaultCollapsed ?? false)
     const below = ref(false)
 
     const isCollapsed = computed(() => (props.collapsed !== undefined ? props.collapsed : internalCollapsed.value))
+
+    // 为子组件（如 Menu）提供 siderCollapsed 上下文
+    provide<LayoutSiderContext>(LAYOUT_SIDER_KEY, {
+      addSider: () => {},
+      removeSider: () => {},
+      get siderCollapsed() {
+        return isCollapsed.value
+      },
+    })
 
     const handleSetCollapsed = (value: boolean, type: CollapseType) => {
       if (props.collapsed === undefined) {

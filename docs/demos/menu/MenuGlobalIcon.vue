@@ -7,30 +7,31 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { Menu } from '@hmfw/ant-design'
+import { FileOutlined, CopyOutlined, SettingOutlined, FolderOutlined } from '@hmfw/icons'
 
 const selectedKeys = ref(['1'])
 
-// 使用 VNode 作为全局图标
+// 使用 VNode 作为图标
 const items = [
   {
     key: '1',
     label: '导航一',
-    icon: h('span', { style: { color: '#1890ff' } }, '📄'),
+    icon: h(FileOutlined, { style: { color: '#1890ff' } }),
   },
   {
     key: '2',
     label: '导航二',
-    icon: h('span', { style: { color: '#52c41a' } }, '📋'),
+    icon: h(CopyOutlined, { style: { color: '#52c41a' } }),
   },
   {
     key: '3',
     label: '导航三',
-    icon: h('span', { style: { color: '#fa8c16' } }, '⚙️'),
+    icon: h(SettingOutlined, { style: { color: '#fa8c16' } }),
   },
   {
     key: 'sub',
     label: '子菜单',
-    icon: h('span', '📁'),
+    icon: h(FolderOutlined),
     children: [
       { key: 'sub-1', label: '子项 1' },
       { key: 'sub-2', label: '子项 2' },

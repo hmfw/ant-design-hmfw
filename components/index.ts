@@ -270,7 +270,7 @@ export type {
 export { Table } from './table'
 export type { TableColumn, TableProps } from './table'
 
-export { Menu } from './menu'
+export { Menu, MenuItem, SubMenu, MenuDivider, MenuItemGroup } from './menu'
 export type { MenuProps, MenuTheme, MenuMode, MenuClassNames, MenuStyles } from './menu'
 
 export { Form, FormItem, useForm } from './form'

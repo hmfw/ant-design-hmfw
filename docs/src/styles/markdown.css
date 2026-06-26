@@ -109,8 +109,8 @@
 }
 
 /* ---- Lists ---- */
-.md-content ul,
-.md-content ol {
+.md-content ul:not([class*='hmfw-']),
+.md-content ol:not([class*='hmfw-']) {
   margin: 0 0 16px;
   padding-left: 24px;
 }

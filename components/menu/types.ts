@@ -7,6 +7,8 @@ export interface MenuItemType {
   disabled?: boolean
   danger?: boolean
   title?: string
+  /** 附加信息，如快捷键提示（⌘P），显示在菜单项右侧 */
+  extra?: VNode | string
   [key: `data-${string}`]: unknown
 }
 
@@ -21,6 +23,8 @@ export interface SubMenuType {
   popupOffset?: [number, number]
   theme?: 'light' | 'dark'
   children?: ItemType[]
+  /** 自定义弹出菜单渲染 */
+  popupRender?: (menu: VNode) => VNode
 }
 
 export interface MenuItemGroupType {
@@ -143,7 +147,20 @@ export interface MenuProps {
   selectable?: boolean
   expandIcon?: VNode | ((props: { isOpen: boolean }) => VNode)
   triggerSubMenuAction?: 'hover' | 'click'
+  /** 子菜单打开延迟（秒），仅在 triggerSubMenuAction="hover" 时生效 */
+  subMenuOpenDelay?: number
+  /** 子菜单关闭延迟（秒），仅在 triggerSubMenuAction="hover" 时生效 */
+  subMenuCloseDelay?: number
+  /** 折叠时的 Tooltip 配置，设为 false 禁用 */
+  tooltip?: false | { placement?: string; classNames?: Record<string, string> }
+  /** 水平菜单溢出时的指示图标 */
+  overflowedIndicator?: VNode
+  /** 溢出弹出层的 className */
+  overflowedIndicatorPopupClassName?: string
   onClick?: (info: { key: string }) => void
+  onSelect?: (info: { key: string; selectedKeys: string[] }) => void
+  onDeselect?: (info: { key: string; selectedKeys: string[] }) => void
+  onOpenChange?: (openKeys: string[]) => void
   /** 语义化 className */
   classNames?: MenuClassNames
   /** 语义化 style */

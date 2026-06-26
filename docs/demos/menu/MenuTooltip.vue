@@ -24,33 +24,34 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { Menu, Button } from '@hmfw/ant-design'
+import { HomeOutlined, UserOutlined, SettingOutlined, FolderOutlined } from '@hmfw/icons'
 
 const collapsed = ref(false)
 const selectedKeys = ref(['1'])
 
-// 收起时会自动显示 Tooltip
+// 收起时鼠标悬停会自动显示 Tooltip
 const items = [
   {
     key: '1',
     label: '导航一',
-    icon: h('span', '🏠'),
+    icon: h(HomeOutlined),
     title: '这是导航一的提示',
   },
   {
     key: '2',
     label: '导航二',
-    icon: h('span', '👤'),
+    icon: h(UserOutlined),
     title: '这是导航二的提示',
   },
   {
     key: '3',
     label: '导航三',
-    icon: h('span', '⚙️'),
+    icon: h(SettingOutlined),
   },
   {
     key: 'sub',
     label: '子菜单',
-    icon: h('span', '📁'),
+    icon: h(FolderOutlined),
     children: [
       { key: 'sub-1', label: '子项 1' },
       { key: 'sub-2', label: '子项 2' },
