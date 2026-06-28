@@ -389,12 +389,17 @@ describe('Menu', () => {
 
   // ===== Trigger SubMenu Action =====
   it('opens submenu on hover when triggerSubMenuAction is hover', async () => {
+    vi.useFakeTimers()
     const wrapper = mount(Menu, {
       props: { items, mode: 'vertical', triggerSubMenuAction: 'hover' },
     })
-    const submenu = wrapper.find('.hmfw-menu-submenu')
-    await submenu.trigger('mouseenter')
+    // Trigger 的 mouseenter handler 在其外层 wrapper div 上（非 submenu-title 本身）
+    const triggerWrapper = wrapper.find('.hmfw-menu-submenu > div')
+    await triggerWrapper.trigger('mouseenter')
+    vi.runAllTimers()
+    await Promise.resolve()
     expect(wrapper.emitted('openChange')).toBeTruthy()
+    vi.useRealTimers()
   })
 
   it('opens submenu on click when triggerSubMenuAction is click', async () => {

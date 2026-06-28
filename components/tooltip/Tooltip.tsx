@@ -55,6 +55,8 @@ export const Tooltip = defineComponent({
     fresh: [Boolean, Number] as PropType<boolean | number>,
     /** Override the default `hmfw-tooltip` prefix (used by Popover/Popconfirm wrappers). */
     customPrefixCls: String,
+    /** 触发器外层 wrapper 的 display，默认 inline-block。用于不破坏宿主布局（如菜单项可设为 `contents`）。 */
+    triggerDisplay: String,
     /** Extra inline style merged onto the popup element (used by wrappers for `overlayStyle`). */
     popupStyle: Object as PropType<Record<string, string>>,
     classNames: Object as PropType<TooltipClassNames>,
@@ -151,6 +153,7 @@ export const Tooltip = defineComponent({
           zIndex={props.zIndex ?? 1070}
           observePopupResize
           fresh={props.fresh}
+          triggerDisplay={props.triggerDisplay}
           popupClass={popupClass.value}
           popupStyle={popupStyleMerged}
           hiddenClass={`${prefixCls.value}-hidden`}

@@ -1,4 +1,5 @@
 import type { VNode, CSSProperties } from 'vue'
+import type { TooltipPlacement } from '../tooltip'
 
 export interface MenuItemType {
   key: string
@@ -152,7 +153,7 @@ export interface MenuProps {
   /** 子菜单关闭延迟（秒），仅在 triggerSubMenuAction="hover" 时生效 */
   subMenuCloseDelay?: number
   /** 折叠时的 Tooltip 配置，设为 false 禁用 */
-  tooltip?: false | { placement?: string; classNames?: Record<string, string> }
+  tooltip?: false | { placement?: TooltipPlacement; classNames?: Record<string, string> }
   /** 水平菜单溢出时的指示图标 */
   overflowedIndicator?: VNode
   /** 溢出弹出层的 className */

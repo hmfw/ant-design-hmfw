@@ -10,17 +10,28 @@ import {
   Transition,
   type PropType,
   type VNode,
+  type CSSProperties,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls, KEYS } from '../_utils'
 import { Tooltip } from '../tooltip'
-import { DownOutlined, RightOutlined } from '../icon'
+import type { TooltipPlacement } from '../tooltip'
+import { Trigger } from '../_internal/trigger'
+
 import { LAYOUT_SIDER_KEY, type LayoutSiderContext } from '../layout'
 import { MenuItem } from './MenuItem'
 import { SubMenu as SubMenuComp } from './SubMenu'
 import { MenuDivider } from './MenuDivider'
 import { MenuItemGroup } from './MenuItemGroup'
-import type { ItemType, MenuMode, MenuTheme } from './types'
+import type {
+  ItemType,
+  MenuMode,
+  MenuTheme,
+  MenuItemType,
+  SubMenuType,
+  MenuItemGroupType,
+  MenuDividerType,
+} from './types'
 
 const MENU_CONTEXT_KEY = Symbol('menu-context')
 
@@ -52,11 +63,13 @@ export const Menu = defineComponent({
     multiple: Boolean,
     selectable: { type: Boolean, default: true },
     inlineIndent: { type: Number, default: 24 },
-    expandIcon: [Object, Function] as PropType<VNode | ((props: { isOpen: boolean }) => VNode)>,
+    expandIcon: [Object, Function] as PropType<VNode | ((props: { isOpen: boolean }) => VNode) | null | false>,
     triggerSubMenuAction: { type: String as PropType<'hover' | 'click'>, default: 'hover' },
     subMenuOpenDelay: { type: Number, default: 0 },
     subMenuCloseDelay: { type: Number, default: 0.1 },
-    tooltip: [Object, Boolean] as PropType<false | { placement?: string; classNames?: Record<string, string> }>,
+    tooltip: [Object, Boolean] as PropType<
+      false | { placement?: TooltipPlacement; classNames?: Record<string, string> }
+    >,
     overflowedIndicator: Object as PropType<VNode>,
     overflowedIndicatorPopupClassName: String,
     classNames: Object as PropType<import('./types').MenuClassNames>,
@@ -508,40 +521,25 @@ export const Menu = defineComponent({
     } as MenuContext)
 
     // ====================== Type Guards ======================
-    const isItemType = (item: ItemType): item is { key: string; label?: string; children?: ItemType[] } => {
+    const isItemType = (item: ItemType): item is MenuItemType | SubMenuType => {
       return item !== null && typeof item === 'object' && 'key' in item && !('type' in item)
     }
 
-    const isGroupType = (
-      item: ItemType,
-    ): item is { type: 'group'; key?: string; label?: string; children?: ItemType[] } => {
+    const isGroupType = (item: ItemType): item is MenuItemGroupType => {
       return item !== null && typeof item === 'object' && 'type' in item && item.type === 'group'
     }
 
-    const isDividerType = (item: ItemType): item is { type: 'divider'; key?: string; dashed?: boolean } => {
+    const isDividerType = (item: ItemType): item is MenuDividerType => {
       return item !== null && typeof item === 'object' && 'type' in item && item.type === 'divider'
     }
 
     // 判断是否是 SubMenuType（有 children）
-    const isSubMenuType = (
-      item: ItemType,
-    ): item is {
-      key: string
-      label?: string
-      children?: ItemType[]
-      icon?: VNode | (() => VNode)
-      disabled?: boolean
-      danger?: boolean
-    } => {
+    const isSubMenuType = (item: ItemType): item is SubMenuType => {
       return isItemType(item) && 'children' in item && Array.isArray(item.children) && item.children.length > 0
     }
 
     // ====================== Icon Rendering ======================
-    const renderItemIcon = (
-      item: { icon?: VNode | (() => VNode) },
-      className?: string,
-      style?: Record<string, unknown>,
-    ) => {
+    const renderItemIcon = (item: { icon?: VNode | (() => VNode) }, className?: string, style?: CSSProperties) => {
       if (!item.icon) return null
       const iconContent = typeof item.icon === 'function' ? item.icon() : item.icon
       return (
@@ -561,10 +559,9 @@ export const Menu = defineComponent({
         }
         return props.expandIcon
       }
-      const IconComponent = props.mode === 'inline' ? DownOutlined : RightOutlined
       return (
-        <IconComponent
-          class={cls(`${prefixCls}-submenu-arrow`, { open: isOpen }, props.classNames?.submenuArrow)}
+        <span
+          class={cls(`${prefixCls}-submenu-arrow`, props.classNames?.submenuArrow)}
           style={props.styles?.submenuArrow}
         />
       )
@@ -621,17 +618,21 @@ export const Menu = defineComponent({
           // --- SubMenu ---
           if (isSubMenuType(item)) {
             const isOpen = currentOpen.value.includes(item.key)
-            const hasSelectedChild = (item.children || []).some((c) => {
-              if (c && typeof c === 'object' && 'key' in c) {
-                return currentSelected.value.includes(c.key || '')
-              }
-              return false
-            })
+            const hasSelectedDescendant = (children: ItemType[]): boolean =>
+              children.some((c) => {
+                if (!c || typeof c !== 'object') return false
+                if ('key' in c && currentSelected.value.includes((c as any).key || '')) return true
+                if ('children' in c && Array.isArray((c as any).children)) {
+                  return hasSelectedDescendant((c as any).children)
+                }
+                return false
+              })
+            const hasSelectedChild = hasSelectedDescendant(item.children || [])
 
             // 获取子菜单的弹出类名（支持 per-submenu popupClassName）
             const subPopupClassName = (item as any).popupClassName || ''
 
-            if (props.mode === 'inline') {
+            if (props.mode === 'inline' && !mergedInlineCollapsed.value) {
               // ====== Inline SubMenu ======
               const inlineSubContent = (
                 <li
@@ -680,31 +681,47 @@ export const Menu = defineComponent({
                     </span>
                     {renderExpandIcon(isOpen)}
                   </div>
-                  {isOpen && (
-                    <ul
-                      class={cls(`${prefixCls}-sub`, `${prefixCls}-inline`, props.classNames?.sub)}
-                      style={props.styles?.sub}
-                    >
-                      {renderItems(item.children || [], depth + 1, false)}
-                    </ul>
-                  )}
+                  <Transition
+                    name={`${prefixCls}-collapse`}
+                    onBeforeEnter={(el) => {
+                      const e = el as HTMLElement
+                      e.style.height = '0'
+                      e.style.opacity = '0'
+                    }}
+                    onEnter={(el) => {
+                      const e = el as HTMLElement
+                      void e.offsetHeight
+                      e.style.height = `${e.scrollHeight}px`
+                      e.style.opacity = '1'
+                    }}
+                    onAfterEnter={(el) => {
+                      const e = el as HTMLElement
+                      e.style.height = ''
+                      e.style.opacity = ''
+                    }}
+                    onBeforeLeave={(el) => {
+                      const e = el as HTMLElement
+                      e.style.height = `${e.offsetHeight}px`
+                      e.style.opacity = '1'
+                    }}
+                    onLeave={(el) => {
+                      const e = el as HTMLElement
+                      void e.offsetHeight
+                      e.style.height = '0'
+                      e.style.opacity = '0'
+                    }}
+                  >
+                    {isOpen && (
+                      <ul
+                        class={cls(`${prefixCls}-sub`, `${prefixCls}-inline`, props.classNames?.sub)}
+                        style={props.styles?.sub}
+                      >
+                        {renderItems(item.children || [], depth + 1, false)}
+                      </ul>
+                    )}
+                  </Transition>
                 </li>
               )
-
-              // 折叠态第一级子菜单：包裹 Tooltip
-              if (mergedInlineCollapsed.value && isFirstLevel && depth === 0) {
-                return (
-                  <Tooltip
-                    key={item.key}
-                    title={item.title ?? item.label ?? ''}
-                    placement="right"
-                    mouseEnterDelay={0.5}
-                    {...(typeof props.tooltip === 'object' ? props.tooltip : {})}
-                  >
-                    {inlineSubContent}
-                  </Tooltip>
-                )
-              }
 
               return inlineSubContent
             }
@@ -740,64 +757,69 @@ export const Menu = defineComponent({
                 }}
                 data-menu-key={item.key}
                 data-menu-label={item.label}
-                onMouseenter={() => {
-                  if (!item.disabled && shouldTriggerOnHover) {
-                    clearDelayTimer(item.key)
-                    handleOpenImmediate(item.key, true)
-                  }
-                }}
-                onMouseleave={() => {
-                  if (!item.disabled && shouldTriggerOnHover) {
-                    handleOpenChange(item.key, false)
-                  }
-                }}
               >
-                <div
-                  class={cls(`${prefixCls}-submenu-title`, props.classNames?.submenuTitle)}
-                  style={props.styles?.submenuTitle}
-                  role="button"
-                  tabindex={item.disabled ? -1 : -1}
-                  aria-expanded={isOpen}
-                  aria-haspopup="true"
-                  aria-disabled={item.disabled || undefined}
-                  data-menu-key={item.key}
-                  data-menu-label={item.label}
-                  onClick={() => {
-                    if (!item.disabled && !shouldTriggerOnHover) {
-                      handleOpenChange(item.key, !isOpen)
-                    }
-                  }}
+                <Trigger
+                  open={isOpen}
+                  trigger={shouldTriggerOnHover ? 'hover' : 'click'}
+                  placement={props.mode === 'horizontal' ? 'bottomLeft' : 'rightTop'}
+                  mouseEnterDelay={props.subMenuOpenDelay}
+                  mouseLeaveDelay={props.subMenuCloseDelay}
+                  autoAdjustOverflow
+                  closeOnOutsideClick={false}
+                  closeOnEscape={false}
+                  triggerDisplay="block"
+                  disabled={item.disabled}
+                  zIndex={1050}
+                  popupClass={prefixCls}
+                  popupStyle={popupOffset ? { left: `${popupOffset[0]}px`, top: `${popupOffset[1]}px` } : undefined}
+                  onOpenChange={(v: boolean) => handleOpenChange(item.key, v)}
                 >
-                  {renderItemIcon(item, props.classNames?.submenuIcon, props.styles?.submenuIcon)}
-                  <span
-                    class={cls(`${prefixCls}-title-content`, props.classNames?.itemContent)}
-                    style={props.styles?.itemContent}
-                  >
-                    {item.label}
-                  </span>
-                  {renderExpandIcon(isOpen)}
-                </div>
-                <Transition name={`${prefixCls}-popup-zoom`}>
-                  {isOpen && (
-                    <ul
-                      class={cls(
-                        `${prefixCls}-sub`,
-                        `${prefixCls}-${props.mode}`,
-                        `${prefixCls}-${(item as any).theme || props.theme}`,
-                        subPopupClassName,
-                        props.classNames?.sub,
-                      )}
-                      style={{
-                        ...props.styles?.sub,
-                        ...(popupOffset ? { left: `${popupOffset[0]}px`, top: `${popupOffset[1]}px` } : {}),
-                      }}
-                    >
-                      {typeof (item as any).popupRender === 'function'
-                        ? (item as any).popupRender(renderItems(item.children || [], depth + 1, false))
-                        : renderItems(item.children || [], depth + 1, false)}
-                    </ul>
-                  )}
-                </Transition>
+                  {{
+                    default: () => (
+                      <div
+                        class={cls(`${prefixCls}-submenu-title`, props.classNames?.submenuTitle)}
+                        style={props.styles?.submenuTitle}
+                        role="button"
+                        tabindex={item.disabled ? -1 : -1}
+                        aria-expanded={isOpen}
+                        aria-haspopup="true"
+                        aria-disabled={item.disabled || undefined}
+                        data-menu-key={item.key}
+                        data-menu-label={item.label}
+                        onClick={() => {
+                          if (!item.disabled && !shouldTriggerOnHover) {
+                            handleOpenChange(item.key, !isOpen)
+                          }
+                        }}
+                      >
+                        {renderItemIcon(item, props.classNames?.submenuIcon, props.styles?.submenuIcon)}
+                        <span
+                          class={cls(`${prefixCls}-title-content`, props.classNames?.itemContent)}
+                          style={props.styles?.itemContent}
+                        >
+                          {item.label}
+                        </span>
+                        {renderExpandIcon(isOpen)}
+                      </div>
+                    ),
+                    popup: () => (
+                      <ul
+                        class={cls(
+                          `${prefixCls}-sub`,
+                          `${prefixCls}-vertical`,
+                          `${prefixCls}-${(item as any).theme || props.theme}`,
+                          subPopupClassName,
+                          props.classNames?.sub,
+                        )}
+                        style={props.styles?.sub}
+                      >
+                        {typeof (item as any).popupRender === 'function'
+                          ? (item as any).popupRender(renderItems(item.children || [], depth + 1, false))
+                          : renderItems(item.children || [], depth + 1, false)}
+                      </ul>
+                    ),
+                  }}
+                </Trigger>
               </li>
             )
 
@@ -824,7 +846,8 @@ export const Menu = defineComponent({
                 item.danger && props.classNames?.itemDanger,
               )}
               style={{
-                ...(props.mode === 'inline' || (props.mode === 'vertical' && !isFirstLevel)
+                ...(!mergedInlineCollapsed.value &&
+                (props.mode === 'inline' || (props.mode === 'vertical' && !isFirstLevel))
                   ? { paddingLeft: `${props.inlineIndent * (depth + 1)}px` }
                   : {}),
                 ...props.styles?.item,
@@ -866,6 +889,7 @@ export const Menu = defineComponent({
                 title={item.title ?? item.label ?? ''}
                 placement="right"
                 mouseEnterDelay={0.5}
+                triggerDisplay="contents"
                 {...(typeof props.tooltip === 'object' ? props.tooltip : {})}
               >
                 {menuItemContent}

@@ -14,7 +14,7 @@ export const SubMenu = defineComponent({
     icon: Object as PropType<VNode | (() => VNode)>,
     disabled: Boolean,
     popupClassName: String,
-    popupOffset: Array as PropType<[number, number]>,
+    popupOffset: Array as unknown as PropType<[number, number]>,
     theme: String as PropType<'light' | 'dark'>,
   },
   setup() {

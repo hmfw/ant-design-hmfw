@@ -7,16 +7,16 @@
 .hmfw-menu {
   /* 基础 */
   --hmfw-menu-item-height: 40px;
-  --hmfw-menu-item-border-radius: 6px;
+  --hmfw-menu-item-border-radius: 8px;
   --hmfw-menu-item-margin-block: 4px;
-  --hmfw-menu-item-margin-inline: 8px;
+  --hmfw-menu-item-margin-inline: 4px;
   --hmfw-menu-item-padding-inline: 16px;
   --hmfw-menu-item-icon-size: 14px;
-  --hmfw-menu-item-icon-margin-end: 8px;
+  --hmfw-menu-item-icon-margin-end: 10px;
 
   /* 颜色 */
   --hmfw-menu-item-color: rgba(0, 0, 0, 0.88);
-  --hmfw-menu-item-hover-bg: rgba(0, 0, 0, 0.04);
+  --hmfw-menu-item-hover-bg: rgba(0, 0, 0, 0.06);
   --hmfw-menu-item-hover-color: rgba(0, 0, 0, 0.88);
   --hmfw-menu-item-active-bg: #e6f4ff;
   --hmfw-menu-item-selected-color: var(--hmfw-color-primary, #1677ff);
@@ -42,8 +42,8 @@
   --hmfw-menu-collapsed-width: 80px;
   --hmfw-menu-collapsed-icon-size: 16px;
 
-  /* 指示条（inline 模式选中指示器） */
-  --hmfw-menu-active-bar-width: 3px;
+  /* 指示条（inline 模式选中指示器，antd v6 默认为 0） */
+  --hmfw-menu-active-bar-width: 0;
 
   /* 水平菜单 */
   --hmfw-menu-horizontal-line-height: 46px;
@@ -94,22 +94,22 @@
 
 .hmfw-menu-horizontal > .hmfw-menu-item,
 .hmfw-menu-horizontal > .hmfw-menu-submenu {
+  position: relative;
   display: inline-flex;
   align-items: center;
   flex: none;
 }
 
 .hmfw-menu-horizontal > .hmfw-menu-item,
-.hmfw-menu-horizontal > .hmfw-menu-submenu > .hmfw-menu-submenu-title {
-  padding: 0 20px;
-  height: 100%;
+.hmfw-menu-horizontal > .hmfw-menu-submenu .hmfw-menu-submenu-title {
+  padding: 0 16px;
 }
 
-/* 水平菜单选中指示条（底部边框） */
+/* 水平菜单选中指示条（底部边框）— 统一放在 <li> 上，基准一致 */
 .hmfw-menu-horizontal > .hmfw-menu-item::after,
-.hmfw-menu-horizontal > .hmfw-menu-submenu > .hmfw-menu-submenu-title::after {
+.hmfw-menu-horizontal > .hmfw-menu-submenu::after {
   position: absolute;
-  inset-inline: 20px;
+  inset-inline: 0;
   bottom: 0;
   border-bottom: 2px solid transparent;
   transition: border-color var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing);
@@ -117,19 +117,25 @@
 }
 
 .hmfw-menu-horizontal > .hmfw-menu-item:hover::after,
-.hmfw-menu-horizontal > .hmfw-menu-submenu:hover > .hmfw-menu-submenu-title::after,
-.hmfw-menu-horizontal > .hmfw-menu-submenu-open > .hmfw-menu-submenu-title::after {
+.hmfw-menu-horizontal > .hmfw-menu-submenu:hover::after,
+.hmfw-menu-horizontal > .hmfw-menu-submenu-open::after {
   border-bottom-color: var(--hmfw-menu-item-selected-color);
 }
 
 .hmfw-menu-horizontal > .hmfw-menu-item-selected::after,
-.hmfw-menu-horizontal > .hmfw-menu-submenu-selected > .hmfw-menu-submenu-title::after {
+.hmfw-menu-horizontal > .hmfw-menu-submenu-selected::after {
   border-bottom-color: var(--hmfw-menu-item-selected-color);
 }
 
 .hmfw-menu-horizontal > .hmfw-menu-item-selected,
-.hmfw-menu-horizontal > .hmfw-menu-submenu-selected > .hmfw-menu-submenu-title {
+.hmfw-menu-horizontal > .hmfw-menu-submenu-selected .hmfw-menu-submenu-title {
   color: var(--hmfw-menu-item-selected-color);
+}
+
+/* 水平模式选中项不需要背景色，仅底部指示条 */
+.hmfw-menu-horizontal > .hmfw-menu-item-selected,
+.hmfw-menu-horizontal > .hmfw-menu-item-selected:hover {
+  background: transparent;
 }
 
 /* ---- Common Item / Submenu Title ---- */
@@ -163,22 +169,22 @@
 }
 
 .hmfw-menu-item:not(.hmfw-menu-item-selected):not(.hmfw-menu-item-disabled):active {
-  background: rgba(0, 0, 0, 0.06);
+  background: var(--hmfw-menu-item-active-bg);
 }
 
-.hmfw-menu-submenu-title:hover {
+.hmfw-menu-submenu-title:not(.hmfw-menu-submenu-disabled):hover {
   background: var(--hmfw-menu-item-hover-bg);
+  color: var(--hmfw-menu-item-hover-color);
 }
 
-.hmfw-menu-submenu-title:active {
-  background: rgba(0, 0, 0, 0.06);
+.hmfw-menu-submenu-title:not(.hmfw-menu-submenu-disabled):active {
+  background: var(--hmfw-menu-item-active-bg);
 }
 
 /* ---- Item Selected ---- */
 .hmfw-menu-item-selected {
   background: var(--hmfw-menu-item-selected-bg);
   color: var(--hmfw-menu-item-selected-color);
-  font-weight: 600;
 }
 
 /* ---- Inline 模式选中指示条（右侧竖条） ---- */
@@ -202,13 +208,13 @@
 
 /* ---- Item Disabled ---- */
 .hmfw-menu-item-disabled,
-.hmfw-menu-submenu-disabled > .hmfw-menu-submenu-title {
+.hmfw-menu-submenu-disabled .hmfw-menu-submenu-title {
   cursor: not-allowed !important;
   color: var(--hmfw-menu-item-disabled-color) !important;
 }
 
 .hmfw-menu-item-disabled:hover,
-.hmfw-menu-submenu-disabled > .hmfw-menu-submenu-title:hover {
+.hmfw-menu-submenu-disabled .hmfw-menu-submenu-title:hover {
   background: transparent !important;
 }
 
@@ -219,7 +225,7 @@
 
 .hmfw-menu-item-danger:not(.hmfw-menu-item-selected):hover {
   background: #fff2f0;
-  color: #ff7875;
+  color: #ff4d4f;
 }
 
 .hmfw-menu-item-danger.hmfw-menu-item-selected {
@@ -244,13 +250,8 @@
     margin var(--hmfw-menu-transition-duration);
 }
 
-.hmfw-menu-item-icon + .hmfw-menu-title-content {
-  margin-inline-start: var(--hmfw-menu-item-icon-margin-end);
-}
-
 /* ---- Title Content ---- */
 .hmfw-menu-title-content {
-  flex: auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -288,32 +289,82 @@
 }
 
 /* 子菜单标题选中色（包含选中子项时） */
-.hmfw-menu-submenu-selected > .hmfw-menu-submenu-title {
+.hmfw-menu-submenu-selected .hmfw-menu-submenu-title {
   color: var(--hmfw-menu-item-selected-color);
 }
 
-/* ---- Submenu Arrow ---- */
+/* ---- Submenu Arrow (CSS 伪元素，与 antd v6 实现一致) ---- */
+
+/* submenu-title 右侧预留箭头空间：menuArrowSize(10) + margin(16) + marginXS(8) = 34px */
+.hmfw-menu-submenu-title {
+  padding-inline-end: 34px;
+}
+
+/* horizontal 模式覆盖，使用相同 padding */
+.hmfw-menu-horizontal > .hmfw-menu-submenu .hmfw-menu-submenu-title {
+  padding-inline-end: 16px;
+}
+
 .hmfw-menu-submenu-arrow {
-  margin-left: auto;
-  font-size: 10px;
-  color: rgba(0, 0, 0, 0.45);
-  transition: transform 0.3s var(--hmfw-menu-transition-timing);
-  flex-shrink: 0;
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 16px;
+  width: 10px;
+  color: currentcolor;
+  transform: translateY(-50%);
+  transition:
+    transform var(--hmfw-menu-transition-duration),
+    opacity var(--hmfw-menu-transition-duration);
 }
 
-/* inline 模式：DownOutlined 向下 */
-.hmfw-menu-submenu-inline .hmfw-menu-submenu-arrow {
-  transform: rotate(0deg);
+.hmfw-menu-submenu-arrow::before,
+.hmfw-menu-submenu-arrow::after {
+  position: absolute;
+  width: 6px;
+  height: 1.5px;
+  background-color: currentcolor;
+  border-radius: 2px;
+  transition:
+    background-color var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing),
+    transform var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing),
+    top var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing);
+  content: '';
 }
 
-.hmfw-menu-submenu-inline .hmfw-menu-submenu-arrow.open {
-  transform: rotate(180deg);
+/* 默认箭头朝右 → (vertical/popup 模式) */
+.hmfw-menu-submenu-arrow::before {
+  transform: rotate(45deg) translateY(-2.5px);
 }
 
-/* vertical/horizontal 模式：RightOutlined 向右 */
-.hmfw-menu-submenu-vertical .hmfw-menu-submenu-arrow,
-.hmfw-menu-submenu-horizontal .hmfw-menu-submenu-arrow {
-  transform: rotate(0deg);
+.hmfw-menu-submenu-arrow::after {
+  transform: rotate(-45deg) translateY(2.5px);
+}
+
+/* inline 模式默认箭头朝下 ↓ */
+.hmfw-menu-submenu-inline .hmfw-menu-submenu-arrow::before {
+  transform: rotate(-45deg) translateX(2.5px);
+}
+
+.hmfw-menu-submenu-inline .hmfw-menu-submenu-arrow::after {
+  transform: rotate(45deg) translateX(-2.5px);
+}
+
+/* inline 展开时箭头朝上 ↑ */
+.hmfw-menu-submenu-inline.hmfw-menu-submenu-open > .hmfw-menu-submenu-title > .hmfw-menu-submenu-arrow {
+  transform: translateY(calc(-50% - 2px));
+}
+
+.hmfw-menu-submenu-inline.hmfw-menu-submenu-open > .hmfw-menu-submenu-title > .hmfw-menu-submenu-arrow::before {
+  transform: rotate(45deg) translateX(2.5px);
+}
+
+.hmfw-menu-submenu-inline.hmfw-menu-submenu-open > .hmfw-menu-submenu-title > .hmfw-menu-submenu-arrow::after {
+  transform: rotate(-45deg) translateX(-2.5px);
+}
+
+/* horizontal 模式隐藏箭头 */
+.hmfw-menu-horizontal .hmfw-menu-submenu-arrow {
+  display: none;
 }
 
 /* ---- Sub Menu (Popup) ---- */
@@ -323,30 +374,24 @@
   padding: 0;
 }
 
-/* vertical/horizontal 弹出子菜单 */
-.hmfw-menu-sub.hmfw-menu-vertical,
-.hmfw-menu-sub.hmfw-menu-horizontal {
-  position: absolute;
-  left: 100%;
-  top: 0;
+/* vertical 弹出子菜单（视觉样式；定位由 Trigger 接管） */
+.hmfw-menu-sub.hmfw-menu-vertical {
   min-width: var(--hmfw-menu-popup-min-width);
   background: var(--hmfw-menu-popup-bg);
   border-radius: var(--hmfw-menu-popup-border-radius);
   box-shadow: var(--hmfw-menu-popup-shadow);
   padding: 4px 0;
-  z-index: var(--hmfw-menu-popup-z-index);
 }
 
 .hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-item,
-.hmfw-menu-sub.hmfw-menu-horizontal .hmfw-menu-item,
-.hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-submenu-title,
-.hmfw-menu-sub.hmfw-menu-horizontal .hmfw-menu-submenu-title {
+.hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-submenu-title {
   margin: 0;
   border-radius: 0;
 }
 
 /* ---- Inline Sub Menu ---- */
 .hmfw-menu-sub.hmfw-menu-inline {
+  overflow: hidden; /* 建立 BFC，防止子项 margin 折叠导致高度计算不一致 */
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -392,9 +437,9 @@
    ======================================== */
 .hmfw-menu-dark {
   --hmfw-menu-item-color: rgba(255, 255, 255, 0.65);
-  --hmfw-menu-item-hover-bg: rgba(255, 255, 255, 0.08);
+  --hmfw-menu-item-hover-bg: transparent;
   --hmfw-menu-item-hover-color: #fff;
-  --hmfw-menu-item-active-bg: rgba(255, 255, 255, 0.12);
+  --hmfw-menu-item-active-bg: transparent;
   --hmfw-menu-item-selected-bg: var(--hmfw-color-primary, #1677ff);
   --hmfw-menu-item-selected-color: #fff;
   --hmfw-menu-item-disabled-color: rgba(255, 255, 255, 0.25);
@@ -495,7 +540,6 @@
 /* ---- Inline Collapse (子菜单展开/折叠) ---- */
 .hmfw-menu-collapse-enter-active,
 .hmfw-menu-collapse-leave-active {
-  overflow: hidden;
   transition:
     height 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
     opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -555,11 +599,6 @@
 }
 
 /* ---- 子菜单弹出位置 ---- */
-/* 向下弹出（horizontal 模式用） */
-.hmfw-menu-sub.hmfw-menu-horizontal {
-  left: 0;
-  top: 100%;
-}
 
 /* ========================================
    Focus & Accessibility
