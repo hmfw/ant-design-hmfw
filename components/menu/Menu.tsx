@@ -765,8 +765,8 @@ export const Menu = defineComponent({
                   mouseEnterDelay={props.subMenuOpenDelay}
                   mouseLeaveDelay={props.subMenuCloseDelay}
                   autoAdjustOverflow
-                  closeOnOutsideClick={false}
-                  closeOnEscape={false}
+                  closeOnOutsideClick={!shouldTriggerOnHover}
+                  closeOnEscape
                   triggerDisplay="block"
                   disabled={item.disabled}
                   zIndex={1050}
@@ -786,8 +786,12 @@ export const Menu = defineComponent({
                         aria-disabled={item.disabled || undefined}
                         data-menu-key={item.key}
                         data-menu-label={item.label}
-                        onClick={() => {
-                          if (!item.disabled && !shouldTriggerOnHover) {
+                        onClick={(e: MouseEvent) => {
+                          if (item.disabled) return
+                          // 仅在 click 模式或键盘触发（detail === 0）时响应
+                          // 阻止冒泡避免 Trigger wrapper 重复 toggle
+                          if (!shouldTriggerOnHover || e.detail === 0) {
+                            e.stopPropagation()
                             handleOpenChange(item.key, !isOpen)
                           }
                         }}

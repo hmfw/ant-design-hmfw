@@ -6,6 +6,17 @@
 
 ---
 
+## [0.4.2] - 2026-06-29
+
+### 🐛 修复 — Menu 组件
+
+- **Tooltip 位置**：修复折叠态一级菜单项 Tooltip 定位到左上角的问题。`Trigger` 组件在 `triggerDisplay="contents"` 时回退使用子元素计算位置
+- **子菜单 click 触发**：修复 `triggerSubMenuAction="click"` 时点击无响应的问题。移除标题 div 与 Trigger wrapper 间的双击冲突，`e.stopPropagation()` + `e.detail` 保持键盘无障碍
+- **点击外部关闭**：修复 click 模式下点击其他位置弹框不关闭的问题。`closeOnOutsideClick` 根据触发模式动态设置
+- **Hover 间距**：修复 `.hmfw-menu-item` 与 `.hmfw-menu-submenu-title` 的 margin 不折叠导致间距不一致的问题（4px vs 8px）。将 `margin-block` 统一到 `<li>` 级别
+
+---
+
 ## [0.4.0] - 2026-06-24
 
 ### ♻️ 重构 — 图标系统独立为 @hmfw/icons

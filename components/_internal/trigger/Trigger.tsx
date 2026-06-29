@@ -111,7 +111,13 @@ export const Trigger = defineComponent({
 
     const updatePosition = () => {
       if (!triggerRef.value || !popupRef.value) return
-      const triggerRect = triggerRef.value.getBoundingClientRect()
+      // 当 triggerDisplay 为 contents 时，wrapper 自身不生成盒模型，
+      // getBoundingClientRect 返回全零值，需回退到第一个子元素计算位置
+      let triggerEl: HTMLElement = triggerRef.value
+      if (props.triggerDisplay === 'contents' && triggerRef.value.firstElementChild) {
+        triggerEl = triggerRef.value.firstElementChild as HTMLElement
+      }
+      const triggerRect = triggerEl.getBoundingClientRect()
       const popupRect = popupRef.value.getBoundingClientRect()
       const r = computePosition(triggerRect, popupRect, props.placement, {
         gap: props.gap,

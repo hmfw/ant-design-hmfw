@@ -153,13 +153,24 @@
     background-color var(--hmfw-menu-transition-duration),
     color var(--hmfw-menu-transition-duration),
     padding var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing);
-  overflow: hidden;
+  /* overflow: hidden; */
   white-space: nowrap;
   text-overflow: ellipsis;
   border-radius: var(--hmfw-menu-item-border-radius);
-  margin: var(--hmfw-menu-item-margin-block) var(--hmfw-menu-item-margin-inline);
   padding: 0 var(--hmfw-menu-item-padding-inline);
   color: var(--hmfw-menu-item-color);
+}
+
+/* 一级菜单项与子菜单容器：统一由 <li> 承载间距，确保 margin 折叠一致 */
+.hmfw-menu-item,
+.hmfw-menu-submenu {
+  margin: var(--hmfw-menu-item-margin-block) var(--hmfw-menu-item-margin-inline);
+}
+
+/* 子菜单标题：仅保留水平方向缩进，纵向间距由父级 <li> 控制 */
+.hmfw-menu-submenu-title {
+  margin-block: 0;
+  margin-inline: var(--hmfw-menu-item-margin-inline);
 }
 
 /* ---- Item Hover / Active ---- */
