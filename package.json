@@ -78,7 +78,7 @@
     "prebuild:docs": "pnpm gen:llm",
     "e2e": "playwright test",
     "size": "node scripts/analyze-bundle.js && node scripts/test-tree-shaking.js",
-    "sync-changelog": "cp docs/guide/changelog.md CHANGELOG.md",
+    "sync-changelog": "cp CHANGELOG.md docs/guide/changelog.md",
     "precheck": "pnpm sync-changelog && node scripts/prepublish-check.js",
     "prepublishOnly": "pnpm test && pnpm typecheck && pnpm build:lib",
     "release": "pnpm prepublishOnly && npm publish",

@@ -15,6 +15,17 @@
 - **点击外部关闭**：修复 click 模式下点击其他位置弹框不关闭的问题。`closeOnOutsideClick` 根据触发模式动态设置
 - **Hover 间距**：修复 `.hmfw-menu-item` 与 `.hmfw-menu-submenu-title` 的 margin 不折叠导致间距不一致的问题（4px vs 8px）。将 `margin-block` 统一到 `<li>` 级别
 
+### 📦 包含（自 0.4.1 起未发布的变更）
+
+- **重构**：包名迁移 `ant-design-hmfw` → `@hmfw/ant-design`
+- **Menu 全面优化**：新增键盘导航（方向键/Enter/Home/End/字母搜索）、Tooltip 集成（折叠态）、动画系统（collapse 过渡 / popup zoom）、水平菜单溢出处理（ResizeObserver + 省略号下拉）、Design Token 体系（20+ CSS 变量）、暗色主题完善、Sider 联动、subMenuOpenDelay/subMenuCloseDelay 延迟控制
+
+---
+
+## [0.4.1] - 2026-06-24
+
+版本号升级，内容同 0.4.0。
+
 ---
 
 ## [0.4.0] - 2026-06-24
