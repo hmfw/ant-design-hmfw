@@ -1,6 +1,6 @@
 {
   "name": "ant-design-hmfw",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add ant-design-hmfw",
@@ -2655,7 +2655,7 @@
         {
           "title": "全选",
           "description": "在实现全选效果时，你可能会用到 `indeterminate` 属性。",
-          "code": "<template>\n  <div>\n    <div style=\"border-bottom: 1px solid #e8e8e8; padding-bottom: 8px; margin-bottom: 8px\">\n      <Checkbox v-model:checked=\"checkAll\" :indeterminate=\"indeterminate\" @change=\"handleCheckAllChange\">\n        全选\n      </Checkbox>\n    </div>\n    <CheckboxGroup v-model:value=\"checkedList\" :options=\"options\" @change=\"handleGroupChange\" />\n    <p style=\"margin-top: 8px\">已选：{{ checkedList }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Checkbox, CheckboxGroup } from '@hmfw/ant-design'\n\nconst options = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n  { label: '选项 D', value: 'D' },\n]\n\nconst checkedList = ref<string[]>(['A', 'B'])\nconst checkAll = ref(false)\nconst indeterminate = ref(true)\n\nconst handleCheckAllChange = (checked: boolean) => {\n  checkedList.value = checked ? options.map((o) => o.value) : []\n  indeterminate.value = false\n}\n\nconst handleGroupChange = (list: string[]) => {\n  indeterminate.value = !!list.length && list.length < options.length\n  checkAll.value = list.length === options.length\n}\n</script>"
+          "code": "<template>\n  <div>\n    <div style=\"border-bottom: 1px solid #e8e8e8; padding-bottom: 8px; margin-bottom: 8px\">\n      <Checkbox v-model:checked=\"checkAll\" :indeterminate=\"indeterminate\" @change=\"handleCheckAllChange\">\n        全选\n      </Checkbox>\n    </div>\n    <CheckboxGroup v-model:value=\"checkedList\" :options=\"options\" @change=\"handleGroupChange\" />\n    <p style=\"margin-top: 8px\">已选：{{ checkedList }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Checkbox, CheckboxGroup } from '@hmfw/ant-design'\nimport type { CheckboxChangeEvent } from '@hmfw/ant-design'\n\nconst options = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n  { label: '选项 D', value: 'D' },\n]\n\nconst checkedList = ref<string[]>(['A', 'B'])\nconst checkAll = ref(false)\nconst indeterminate = ref(true)\n\nconst handleCheckAllChange = (e: CheckboxChangeEvent) => {\n  checkedList.value = e.target.checked ? options.map((o) => o.value) : []\n  indeterminate.value = false\n}\n\nconst handleGroupChange = (list: string[]) => {\n  indeterminate.value = !!list.length && list.length < options.length\n  checkAll.value = list.length === options.length\n}\n</script>"
         },
         {
           "title": "skipGroup 属性",
