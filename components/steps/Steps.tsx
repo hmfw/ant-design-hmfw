@@ -3,8 +3,6 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { CheckOutlined, CloseOutlined } from '@hmfw/icons'
 import type { StepItem, StepStatus, IconRenderInfo } from './types'
-import { ProgressIcon } from './ProgressIcon'
-import { PanelArrow } from './PanelArrow'
 
 export const Steps = defineComponent({
   name: 'Steps',
@@ -17,7 +15,7 @@ export const Steps = defineComponent({
     size: { type: String as PropType<'default' | 'small'>, default: 'default' },
     status: { type: String as PropType<StepStatus>, default: 'process' },
     type: {
-      type: String as PropType<'default' | 'navigation' | 'inline' | 'panel' | 'dot'>,
+      type: String as PropType<'default' | 'inline' | 'dot'>,
       default: 'default',
     },
     labelPlacement: { type: String as PropType<'horizontal' | 'vertical'> },
@@ -26,7 +24,6 @@ export const Steps = defineComponent({
       type: [Boolean, Function] as PropType<boolean | ((iconDot: VNode, info: IconRenderInfo) => VNode)>,
     },
     variant: { type: String as PropType<'filled' | 'outlined'>, default: 'filled' },
-    percent: Number,
     responsive: { type: Boolean, default: true },
     ellipsis: Boolean,
     offset: { type: Number, default: 0 },
@@ -55,9 +52,6 @@ export const Steps = defineComponent({
     // Merge orientation
     const mergedOrientation = computed(() => {
       const nextOrientation = props.orientation || props.direction
-      if (mergedType.value === 'panel') {
-        return 'horizontal'
-      }
       return nextOrientation === 'vertical' ? 'vertical' : 'horizontal'
     })
 
@@ -66,14 +60,8 @@ export const Steps = defineComponent({
       if (isDot.value || mergedOrientation.value === 'vertical') {
         return mergedOrientation.value === 'vertical' ? 'horizontal' : 'vertical'
       }
-      if (props.type === 'navigation') {
-        return 'horizontal'
-      }
       return props.titlePlacement || props.labelPlacement || 'horizontal'
     })
-
-    // Merge percent (inline type doesn't show percent)
-    const mergedPercent = computed(() => (isInline.value ? undefined : props.percent))
 
     const getStepStatus = (index: number, item: StepItem): StepStatus => {
       if (item.status) return item.status
@@ -98,13 +86,7 @@ export const Steps = defineComponent({
             iconContent = h(CloseOutlined, { class: cls('hmfw-icon', `${itemIconCls}-error`) })
             break
           default: {
-            const numContent = h('span', { class: `${itemIconCls}-number` }, index + props.initial + 1)
-
-            if (status === 'process' && mergedPercent.value !== undefined) {
-              iconContent = h(ProgressIcon, { prefixCls, percent: mergedPercent.value }, { default: () => numContent })
-            } else {
-              iconContent = numContent
-            }
+            iconContent = h('span', { class: `${itemIconCls}-number` }, index + props.initial + 1)
           }
         }
       }
@@ -155,10 +137,7 @@ export const Steps = defineComponent({
               [`${prefixCls}-${props.size}`]: props.size !== 'default',
               [`${prefixCls}-label-${mergedTitlePlacement.value}`]: mergedTitlePlacement.value !== 'horizontal',
               [`${prefixCls}-dot`]: isDot.value,
-              [`${prefixCls}-navigation`]: props.type === 'navigation',
               [`${prefixCls}-inline`]: isInline.value,
-              [`${prefixCls}-panel`]: mergedType.value === 'panel',
-              [`${prefixCls}-with-progress`]: mergedPercent.value !== undefined,
               [`${prefixCls}-ellipsis`]: props.ellipsis,
             },
             props.classNames?.root,
@@ -191,40 +170,37 @@ export const Steps = defineComponent({
                 aria-disabled={item.disabled || undefined}
                 onClick={(e) => isClickable && handleStepClick(index, item, e)}
               >
-                <div
-                  class={cls(`${prefixCls}-item-container`, props.classNames?.container)}
-                  style={props.styles?.container}
-                >
-                  <div class={cls(`${prefixCls}-item-tail`, props.classNames?.tail)} style={props.styles?.tail} />
+                <div class={cls(`${prefixCls}-item-header`, props.classNames?.header)} style={props.styles?.header}>
                   <div class={cls(`${prefixCls}-item-icon`, props.classNames?.icon)} style={props.styles?.icon}>
                     {icon}
                   </div>
-                  <div
-                    class={cls(`${prefixCls}-item-content`, props.classNames?.content)}
-                    style={props.styles?.content}
-                  >
-                    <div class={cls(`${prefixCls}-item-title`, props.classNames?.title)} style={props.styles?.title}>
-                      {item.title}
-                      {item.subTitle && (
-                        <span
-                          class={cls(`${prefixCls}-item-subtitle`, props.classNames?.subtitle)}
-                          style={props.styles?.subtitle}
-                        >
-                          {item.subTitle}
-                        </span>
-                      )}
-                    </div>
-                    {content && (
-                      <div
-                        class={cls(`${prefixCls}-item-description`, props.classNames?.description)}
-                        style={props.styles?.description}
+                  <div class={cls(`${prefixCls}-item-title`, props.classNames?.title)} style={props.styles?.title}>
+                    {item.title}
+                    {item.subTitle && (
+                      <span
+                        class={cls(`${prefixCls}-item-subtitle`, props.classNames?.subtitle)}
+                        style={props.styles?.subtitle}
                       >
-                        {content}
-                      </div>
+                        {item.subTitle}
+                      </span>
                     )}
                   </div>
+                  <div class={cls(`${prefixCls}-item-tail`, props.classNames?.tail)} style={props.styles?.tail} />
                 </div>
-                {mergedType.value === 'panel' && <PanelArrow prefixCls={prefixCls} />}
+                <div class={cls(`${prefixCls}-item-content`, props.classNames?.content)} style={props.styles?.content}>
+                  <div
+                    class={cls(`${prefixCls}-item-icon`, `${prefixCls}-item-icon-placeholder`, props.classNames?.icon)}
+                    style={props.styles?.icon}
+                  />
+                  {content && (
+                    <div
+                      class={cls(`${prefixCls}-item-description`, props.classNames?.description)}
+                      style={props.styles?.description}
+                    >
+                      {content}
+                    </div>
+                  )}
+                </div>
               </div>
             )
           })}

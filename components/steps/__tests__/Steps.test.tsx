@@ -26,7 +26,8 @@ describe('Steps', () => {
 
   it('shows finish icon for completed steps', () => {
     const wrapper = mount(Steps, { props: { items, current: 2 } })
-    const icons = wrapper.findAll('.hmfw-steps-item-icon')
+    // 使用 header > icon 精确选择真实图标，排除 content 区的空占位符 icon
+    const icons = wrapper.findAll('.hmfw-steps-item-header > .hmfw-steps-item-icon')
     expect(icons[0].find('.hmfw-icon')).toBeTruthy()
     expect(icons[1].find('.hmfw-icon')).toBeTruthy()
   })
@@ -95,16 +96,6 @@ describe('Steps', () => {
     expect(wrapper.classes()).toContain('hmfw-steps-dot')
   })
 
-  it('applies navigation type', () => {
-    const wrapper = mount(Steps, { props: { items, type: 'navigation' } })
-    expect(wrapper.classes()).toContain('hmfw-steps-navigation')
-  })
-
-  it('applies panel type', () => {
-    const wrapper = mount(Steps, { props: { items, type: 'panel' } })
-    expect(wrapper.classes()).toContain('hmfw-steps-panel')
-  })
-
   it('applies inline type', () => {
     const wrapper = mount(Steps, { props: { items, type: 'inline' } })
     expect(wrapper.classes()).toContain('hmfw-steps-inline')
@@ -118,12 +109,6 @@ describe('Steps', () => {
   it('applies filled variant by default', () => {
     const wrapper = mount(Steps, { props: { items } })
     expect(wrapper.classes()).toContain('hmfw-steps-filled')
-  })
-
-  it('shows progress icon when percent is provided', () => {
-    const wrapper = mount(Steps, { props: { items, current: 1, percent: 50 } })
-    expect(wrapper.classes()).toContain('hmfw-steps-with-progress')
-    expect(wrapper.find('.hmfw-steps-item-progress-icon-svg').exists()).toBe(true)
   })
 
   it('applies ellipsis', () => {
@@ -150,17 +135,6 @@ describe('Steps', () => {
     const subtitleItems: StepItem[] = [{ title: 'Step 1', subTitle: 'Sub 1' }]
     const wrapper = mount(Steps, { props: { items: subtitleItems } })
     expect(wrapper.find('.hmfw-steps-item-subtitle').text()).toBe('Sub 1')
-  })
-
-  it('panel type forces horizontal orientation', () => {
-    const wrapper = mount(Steps, { props: { items, type: 'panel', direction: 'vertical' } })
-    expect(wrapper.classes()).toContain('hmfw-steps-horizontal')
-    expect(wrapper.classes()).not.toContain('hmfw-steps-vertical')
-  })
-
-  it('renders panel arrow for panel type', () => {
-    const wrapper = mount(Steps, { props: { items, type: 'panel' } })
-    expect(wrapper.find('.hmfw-steps-panel-arrow').exists()).toBe(true)
   })
 
   it('supports titlePlacement', () => {

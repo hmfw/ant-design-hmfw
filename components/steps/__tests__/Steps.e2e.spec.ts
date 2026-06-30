@@ -31,17 +31,4 @@ test.describe('Steps 步骤条', () => {
     await expect(items.nth(0)).toHaveClass(/hmfw-steps-item-finish/)
     await expect(items.nth(1)).toHaveClass(/hmfw-steps-item-process/)
   })
-
-  test('导航类型点击步骤项触发切换', async ({ page }) => {
-    // StepsNavigation：type=navigation，current=1，可点击切换
-    const navSteps = page.locator('.hmfw-steps-navigation').first()
-    await expect(navSteps).toBeVisible()
-
-    const items = navSteps.locator('.hmfw-steps-item')
-    await expect(items.nth(1)).toHaveClass(/hmfw-steps-item-process/)
-
-    // 点击第一步切换为进行中
-    await items.nth(0).click()
-    await expect(items.nth(0)).toHaveClass(/hmfw-steps-item-process/)
-  })
 })

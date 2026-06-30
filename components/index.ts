@@ -177,7 +177,7 @@ export type {
   DescriptionsStyles,
 } from './descriptions'
 
-export { Steps, ProgressIcon, PanelArrow } from './steps'
+export { Steps } from './steps'
 export type {
   StepItem,
   StepStatus,

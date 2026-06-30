@@ -30,7 +30,9 @@ export interface StepsClassNames {
   root?: string
   /** 步骤项 div.hmfw-steps-item */
   item?: string
-  /** 步骤项容器 div.hmfw-steps-item-container */
+  /** 步骤项 header div.hmfw-steps-item-header */
+  header?: string
+  /** 步骤项容器 div.hmfw-steps-item-container（已废弃，请使用 header） */
   container?: string
   /** 步骤连接线 div.hmfw-steps-item-tail */
   tail?: string
@@ -54,7 +56,9 @@ export interface StepsStyles {
   root?: CSSProperties
   /** 步骤项 div.hmfw-steps-item */
   item?: CSSProperties
-  /** 步骤项容器 div.hmfw-steps-item-container */
+  /** 步骤项 header div.hmfw-steps-item-header */
+  header?: CSSProperties
+  /** 步骤项容器 div.hmfw-steps-item-container（已废弃，请使用 header） */
   container?: CSSProperties
   /** 步骤连接线 div.hmfw-steps-item-tail */
   tail?: CSSProperties
@@ -79,14 +83,13 @@ export interface StepsProps {
   orientation?: 'horizontal' | 'vertical'
   size?: 'default' | 'small'
   status?: StepStatus
-  type?: 'default' | 'navigation' | 'inline' | 'panel' | 'dot'
+  type?: 'default' | 'inline' | 'dot'
   /** @deprecated Please use `titlePlacement` instead */
   labelPlacement?: 'horizontal' | 'vertical'
   titlePlacement?: 'horizontal' | 'vertical'
   /** @deprecated Please use `type="dot"` instead */
   progressDot?: boolean | ((iconDot: VNode, info: IconRenderInfo) => VNode)
   variant?: 'filled' | 'outlined'
-  percent?: number
   responsive?: boolean
   ellipsis?: boolean
   offset?: number

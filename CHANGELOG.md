@@ -6,6 +6,23 @@
 
 ---
 
+## [0.5.0] - 2026-06-30
+
+### ♻️ 重构 — Steps 组件
+
+- **DOM 结构重构**：`container` 拆分为 `header`（icon + title + tail）和 `content`（空 icon 占位符 + description），与 antd v6 对齐
+- **Tail 连接线**：移除 `::after` 伪元素，改为真实 DOM 元素直接绘制
+- **新增 Steps 专属 Design Token**：`--hmfw-steps-gap`、`--hmfw-steps-icon-size`、`--hmfw-steps-dot-size`、`--hmfw-steps-tail-width`、`--hmfw-steps-tail-min-width`
+
+### ⚠️ 移除
+
+- 移除 `type="panel"` 及 `PanelArrow` 组件
+- 移除 `type="navigation"` 及相关样式
+- 移除 `percent` prop 及 `ProgressIcon` 组件
+- 移除相关 demo 文件
+
+---
+
 ## [0.4.2] - 2026-06-29
 
 ### 🐛 修复 — Menu 组件
