@@ -2,12 +2,7 @@
   <div>
     <div style="margin-bottom: 16px">
       <span style="margin-right: 8px">对齐方式：</span>
-      <select v-model="align" style="width: 120px">
-        <option value="start">start</option>
-        <option value="center">center</option>
-        <option value="end">end</option>
-        <option value="baseline">baseline</option>
-      </select>
+      <Select v-model:value="align" :options="alignOptions" style="width: 120px" />
     </div>
 
     <!-- 垂直模式下的对齐演示 -->
@@ -24,8 +19,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Space, Button } from '@hmfw/ant-design'
+import { Space, Button, Select } from '@hmfw/ant-design'
 import type { SpaceAlign } from '@hmfw/ant-design'
 
 const align = ref<SpaceAlign>('start')
+
+const alignOptions = [
+  { value: 'start', label: 'start' },
+  { value: 'center', label: 'center' },
+  { value: 'end', label: 'end' },
+  { value: 'baseline', label: 'baseline' },
+]
 </script>

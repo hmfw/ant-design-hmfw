@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Tabs } from '@hmfw/ant-design'
+import { Button, Tabs } from '@hmfw/ant-design'
 
 const items = [
   { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },
@@ -12,5 +12,5 @@ const items = [
   { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },
 ]
 
-const extra = h('button', { style: 'margin-left: 16px' }, 'Extra Action')
+const extra = h(Button, { style: 'margin-left: 16px' }, () => 'Extra Action')
 </script>

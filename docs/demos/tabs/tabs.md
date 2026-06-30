@@ -170,6 +170,7 @@ interface TabsStyles {
   <!-- ↑ classNames.root / styles.root 应用于此 -->
   <div class="hmfw-tabs-nav">
     <!-- ↑ classNames.nav / styles.nav 应用于此 -->
+    <div class="hmfw-tabs-extra-content-left">左侧附加内容（可选）</div>
     <div class="hmfw-tabs-nav-wrap">
       <div class="hmfw-tabs-nav-list">
         <div class="hmfw-tabs-tab hmfw-tabs-tab-active">
@@ -184,6 +185,7 @@ interface TabsStyles {
       <div class="hmfw-tabs-ink-bar" />
       <!-- ↑ classNames.inkBar / styles.inkBar 应用于此 -->
     </div>
+    <div class="hmfw-tabs-extra-content">右侧附加内容（可选）</div>
   </div>
   <div class="hmfw-tabs-content-holder">
     <div class="hmfw-tabs-content">

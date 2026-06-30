@@ -1,4 +1,15 @@
-import { defineComponent, ref, watch, computed, onMounted, nextTick, type PropType, type VNode } from 'vue'
+import {
+  defineComponent,
+  ref,
+  watch,
+  computed,
+  onMounted,
+  onUnmounted,
+  nextTick,
+  isVNode,
+  type PropType,
+  type VNode,
+} from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { PlusOutlined, CloseOutlined } from '@hmfw/icons'
@@ -72,7 +83,9 @@ export const Tabs = defineComponent({
         inkBarRef.value.style.left = props.tabPosition === 'left' ? 'auto' : '0'
         inkBarRef.value.style.right = props.tabPosition === 'left' ? '0' : 'auto'
       } else {
-        inkBarRef.value.style.left = `${activeTab.offsetLeft}px`
+        // 计算 activeTab 相对于 nav-wrap 的偏移（考虑 centered 模式下 nav-list 的偏移）
+        const navListOffsetLeft = navListRef.value.offsetLeft
+        inkBarRef.value.style.left = `${navListOffsetLeft + activeTab.offsetLeft}px`
         inkBarRef.value.style.width = `${activeTab.offsetWidth}px`
         inkBarRef.value.style.height = '2px'
         inkBarRef.value.style.top = 'auto'
@@ -86,6 +99,12 @@ export const Tabs = defineComponent({
 
     onMounted(() => {
       updateInkBar()
+      // 监听窗口大小变化以重新计算 ink-bar 位置（centered 模式下很重要）
+      window.addEventListener('resize', updateInkBar)
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', updateInkBar)
     })
 
     const handleTabClick = (key: string, event: MouseEvent) => {
@@ -158,19 +177,26 @@ export const Tabs = defineComponent({
           : {}
 
       const renderExtraContent = () => {
-        if (!props.tabBarExtraContent) return null
+        if (!props.tabBarExtraContent) return { left: null, right: null }
 
-        if (typeof props.tabBarExtraContent === 'object' && 'left' in props.tabBarExtraContent) {
+        // 判断是否为 { left, right } 对象形式（排除 VNode）
+        if (
+          !isVNode(props.tabBarExtraContent) &&
+          typeof props.tabBarExtraContent === 'object' &&
+          ('left' in props.tabBarExtraContent || 'right' in props.tabBarExtraContent)
+        ) {
           const extra = props.tabBarExtraContent as TabBarExtraContent
-          return (
-            <>
-              {extra.left && <div class={`${prefixCls}-extra-content-left`}>{extra.left}</div>}
-              {extra.right && <div class={`${prefixCls}-extra-content-right`}>{extra.right}</div>}
-            </>
-          )
+          return {
+            left: extra.left ? <div class={`${prefixCls}-extra-content-left`}>{extra.left}</div> : null,
+            right: extra.right ? <div class={`${prefixCls}-extra-content-right`}>{extra.right}</div> : null,
+          }
         }
 
-        return <div class={`${prefixCls}-extra-content`}>{props.tabBarExtraContent}</div>
+        // 单个 VNode，默认靠右
+        return {
+          left: null,
+          right: <div class={`${prefixCls}-extra-content`}>{props.tabBarExtraContent}</div>,
+        }
       }
 
       return (
@@ -191,7 +217,7 @@ export const Tabs = defineComponent({
             class={cls(`${prefixCls}-nav`, props.classNames?.nav)}
             style={{ ...(props.tabBarStyle as any), ...props.styles?.nav }}
           >
-            {renderExtraContent()}
+            {renderExtraContent().left}
             <div class={`${prefixCls}-nav-wrap`}>
               <div
                 ref={navListRef}
@@ -274,6 +300,7 @@ export const Tabs = defineComponent({
                 />
               )}
             </div>
+            {renderExtraContent().right}
           </div>
           <div class={`${prefixCls}-content-holder`}>
             <div

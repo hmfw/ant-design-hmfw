@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '@hmfw/ant-design'
+import { searchIcons, getIconsByCategory, getAllCategories, getAllIcons, Input } from '@hmfw/ant-design'
 import type { IconSearchResult } from '@hmfw/ant-design'
 
 const searchQuery = ref('')
@@ -93,7 +93,7 @@ const copyCode = (icon: IconSearchResult) => {
   <div class="icon-browser">
     <!-- 搜索框 -->
     <div class="search-wrapper">
-      <input v-model="searchQuery" type="text" placeholder="在此搜索图标，点击图标可复制代码" class="search-input" />
+      <Input v-model:value="searchQuery" placeholder="在此搜索图标，点击图标可复制代码" class="search-input" />
     </div>
 
     <!-- 分类标签 -->

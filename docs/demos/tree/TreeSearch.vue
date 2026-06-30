@@ -1,15 +1,11 @@
 <template>
-  <input
-    v-model="searchValue"
-    placeholder="输入关键字高亮匹配节点"
-    style="margin-bottom: 8px; padding: 4px 8px; width: 240px"
-  />
+  <Input v-model:value="searchValue" placeholder="输入关键字高亮匹配节点" style="margin-bottom: 8px; width: 240px" />
   <Tree :tree-data="treeData" :default-expand-all="true" :filter-tree-node="filterNode" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tree } from '@hmfw/ant-design'
+import { Tree, Input } from '@hmfw/ant-design'
 
 const searchValue = ref('')
 

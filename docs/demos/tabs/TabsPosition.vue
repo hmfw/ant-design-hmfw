@@ -1,13 +1,8 @@
 <template>
   <div>
     <div style="margin-bottom: 16px">
-      <span>Tab Position: </span>
-      <select v-model="tabPosition">
-        <option value="top">top</option>
-        <option value="bottom">bottom</option>
-        <option value="left">left</option>
-        <option value="right">right</option>
-      </select>
+      <span style="margin-right: 8px">Tab Position: </span>
+      <Select v-model:value="tabPosition" :options="positionOptions" style="width: 120px" />
     </div>
     <Tabs :items="items" :tab-position="tabPosition" />
   </div>
@@ -15,10 +10,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tabs } from '@hmfw/ant-design'
+import { Tabs, Select } from '@hmfw/ant-design'
 import type { TabsPosition } from '@hmfw/ant-design'
 
 const tabPosition = ref<TabsPosition>('top')
+
+const positionOptions = [
+  { value: 'top', label: 'top' },
+  { value: 'bottom', label: 'bottom' },
+  { value: 'left', label: 'left' },
+  { value: 'right', label: 'right' },
+]
 
 const items = [
   { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },

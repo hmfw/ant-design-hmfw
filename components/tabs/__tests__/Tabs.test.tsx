@@ -116,6 +116,7 @@ describe('Tabs', () => {
     const extra = h('button', { class: 'extra-btn' }, 'Extra')
     const wrapper = mount(Tabs, { props: { items, tabBarExtraContent: extra } })
     expect(wrapper.find('.extra-btn').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-tabs-extra-content').exists()).toBe(true)
   })
 
   it('renders tabBarExtraContent with left and right', () => {
@@ -126,6 +127,28 @@ describe('Tabs', () => {
     const wrapper = mount(Tabs, { props: { items, tabBarExtraContent: extra } })
     expect(wrapper.find('.left-extra').exists()).toBe(true)
     expect(wrapper.find('.right-extra').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-tabs-extra-content-left').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-tabs-extra-content-right').exists()).toBe(true)
+  })
+
+  it('renders tabBarExtraContent with only left', () => {
+    const extra = {
+      left: h('span', { class: 'only-left' }, 'Only Left'),
+    }
+    const wrapper = mount(Tabs, { props: { items, tabBarExtraContent: extra } })
+    expect(wrapper.find('.only-left').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-tabs-extra-content-left').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-tabs-extra-content-right').exists()).toBe(false)
+  })
+
+  it('renders tabBarExtraContent with only right', () => {
+    const extra = {
+      right: h('span', { class: 'only-right' }, 'Only Right'),
+    }
+    const wrapper = mount(Tabs, { props: { items, tabBarExtraContent: extra } })
+    expect(wrapper.find('.only-right').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-tabs-extra-content-right').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-tabs-extra-content-left').exists()).toBe(false)
   })
 
   it('applies tabBarGutter style', () => {
@@ -196,5 +219,21 @@ describe('Tabs', () => {
     const wrapper = mount(Tabs, { props: { items, animated: { inkBar: true, tabPane: true } } })
     expect(wrapper.find('.hmfw-tabs-ink-bar-animated').exists()).toBe(true)
     expect(wrapper.find('.hmfw-tabs-content-animated').exists()).toBe(true)
+  })
+
+  it('positions ink bar correctly in centered mode', async () => {
+    const wrapper = mount(Tabs, { props: { items, centered: true } })
+    await nextTick()
+
+    const inkBar = wrapper.find('.hmfw-tabs-ink-bar')
+    const activeTab = wrapper.find('.hmfw-tabs-tab-active')
+    const navList = wrapper.find('.hmfw-tabs-nav-list')
+
+    expect(inkBar.exists()).toBe(true)
+
+    // ink-bar 应该存在并且有 left 样式属性
+    const inkBarStyle = inkBar.attributes('style')
+    expect(inkBarStyle).toContain('left:')
+    expect(inkBarStyle).toContain('width:')
   })
 })

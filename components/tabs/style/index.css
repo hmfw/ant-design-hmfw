@@ -265,8 +265,14 @@
 
 .hmfw-tabs-left .hmfw-tabs-tab,
 .hmfw-tabs-right .hmfw-tabs-tab {
+  padding: 8px 24px;
   margin-right: 0;
-  margin-bottom: 16px;
+  margin-bottom: 0;
+}
+
+.hmfw-tabs-left .hmfw-tabs-tab + .hmfw-tabs-tab,
+.hmfw-tabs-right .hmfw-tabs-tab + .hmfw-tabs-tab {
+  margin-top: 16px;
 }
 
 .hmfw-tabs-bottom {

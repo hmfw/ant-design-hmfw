@@ -6,6 +6,26 @@
 
 ---
 
+## [0.5.1] - 2026-06-30
+
+### 🐛 修复 — Tabs 组件
+
+- **Centered 模式 ink-bar 位置**：修复 `centered` 模式下选中指示条位置偏移的问题，正确计算 `nav-list` 相对偏移
+- **垂直方向样式**：为 `tabPosition="left/right"` 添加正确的 `padding: 8px 24px` 和 `margin-top: 16px` 间距
+- **tabBarExtraContent 实现**：
+  - 使用 `isVNode()` 正确区分 VNode 和 `{ left, right }` 对象
+  - 修复 DOM 结构：`left` 在 `nav-wrap` 之前，`right` 在 `nav-wrap` 之后
+  - 单个 VNode 默认靠右显示
+- **响应式更新**：添加窗口大小变化监听，自动重新计算 ink-bar 位置
+
+### ✨ 改进 — Demo 质量
+
+- 将所有 demo 中的原生 HTML 表单元素（`<select>`、`<input>`）替换为 Ant Design 组件
+- 修复 `h(Button)` 使用方式，children 传入函数避免 Vue 警告
+- 涉及 7 个 demo 文件：Tabs、Menu、Space、Tree、ConfigProvider、Icon
+
+---
+
 ## [0.5.0] - 2026-06-30
 
 ### ♻️ 重构 — Steps 组件

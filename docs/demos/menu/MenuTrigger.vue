@@ -2,10 +2,7 @@
   <div>
     <div style="margin-bottom: 16px">
       <label style="margin-right: 8px">触发方式:</label>
-      <select v-model="triggerAction" style="padding: 4px 8px">
-        <option value="hover">hover</option>
-        <option value="click">click</option>
-      </select>
+      <Select v-model:value="triggerAction" :options="triggerOptions" style="width: 100px" />
     </div>
     <Menu
       mode="horizontal"
@@ -19,11 +16,16 @@
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Menu } from '@hmfw/ant-design'
+import { Menu, Select } from '@hmfw/ant-design'
 import { AppstoreOutlined, SettingOutlined } from '@hmfw/icons'
 
 const selectedKeys = ref(['1'])
 const triggerAction = ref<'hover' | 'click'>('hover')
+
+const triggerOptions = [
+  { value: 'hover', label: 'hover' },
+  { value: 'click', label: 'click' },
+]
 
 const items = [
   { key: '1', label: '导航一', icon: h(AppstoreOutlined) },
