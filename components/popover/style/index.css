@@ -10,7 +10,7 @@
   width: max-content;
   max-width: 100vw;
   font-size: 14px;
-  line-height: 1.5714;
+  line-height: var(--hmfw-line-height);
   pointer-events: none;
   /* 箭头背景色（白色浮层） */
   --hmfw-arrow-bg: var(--tooltip-bg, #fff);

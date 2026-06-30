@@ -210,8 +210,6 @@ export const AutoComplete = defineComponent({
         matchWidth
         popupClass={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
         popupStyle={props.styles?.dropdown}
-        closeOnOutsideClick={false}
-        closeOnEscape={false}
         onOpenChange={(v: boolean) => setOpen(v)}
       >
         {{

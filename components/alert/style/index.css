@@ -5,7 +5,7 @@
   padding: 8px 12px;
   border-radius: 6px;
   font-size: 14px;
-  line-height: 1.5714;
+  line-height: var(--hmfw-line-height);
   word-wrap: break-word;
   border: 1px solid transparent;
   transition: opacity 0.3s;
@@ -140,7 +140,7 @@
   display: none;
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
-  line-height: 1.5714;
+  line-height: var(--hmfw-line-height);
 }
 
 .hmfw-alert-with-description .hmfw-alert-description {

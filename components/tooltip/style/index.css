@@ -8,7 +8,7 @@
   display: block;
   max-width: 250px;
   font-size: 14px;
-  line-height: 1.5714;
+  line-height: var(--hmfw-line-height);
   pointer-events: none;
   transition: opacity 0.2s;
   /* 箭头背景色（暗色 tooltip） */

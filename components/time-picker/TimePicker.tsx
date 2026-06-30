@@ -3,6 +3,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
+import { ClockCircleOutlined, CloseCircleFilled } from '@hmfw/icons'
 import type { TimePickerClassNames, TimePickerStyles } from './types'
 
 type Variant = 'outlined' | 'borderless' | 'filled' | 'underlined'
@@ -588,11 +589,11 @@ export const TimePicker = defineComponent({
                   style={props.styles?.clear}
                   onClick={clearValue}
                 >
-                  ✕
+                  <CloseCircleFilled />
                 </span>
               )}
               <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-                🕐
+                <ClockCircleOutlined />
               </span>
             </span>
           ),

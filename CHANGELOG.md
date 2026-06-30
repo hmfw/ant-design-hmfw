@@ -6,6 +6,27 @@
 
 ---
 
+## [0.5.2] - 2026-06-30
+
+### 🐛 修复 — 主题 Token CSS 变量
+
+- **新增静态默认变量**：新增 `components/_theme/style/index.css`，将 `generateMapTokens(defaultSeedTokens)` 产物静态化为 `:root`，并在 `components/style.css` 顶部引入。未挂载 `ConfigProvider` 时组件 CSS 中的 `var(--hmfw-*)` 也能获得正确默认值
+- **统一 line-height**：将散落在各组件中的硬编码 `line-height: 1.5714` / `1.5715` / `1.5714285714285714` 统一替换为 `var(--hmfw-line-height)`，去除冗余 fallback
+- **修复 Descriptions 行高错误**：`var(--hmfw-line-height-lg, 1.5714)` 的 fallback 与真实 token 值（1.5）不一致，改用无 fallback 的 `var(--hmfw-line-height-lg)`；`--hmfw-line-height-base` 统一为 `--hmfw-line-height`
+
+### ✨ 改进 — Picker 组件
+
+- **图标替换**：DatePicker、RangePicker、TimePicker 的后缀与清除图标由 emoji（📅🕐✕）替换为 `@hmfw/icons` 组件（`CalendarOutlined`、`ClockCircleOutlined`、`CloseCircleFilled`）
+- **清除图标交互**：有值时 hover 显示清除图标并完整遮挡后缀图标，清除图标字号与后缀对齐（14px）避免边缘露出
+- **输入框对齐**：`input-inner` 清零默认 `margin`/`padding`，行高改用 `var(--hmfw-line-height)`，修复文字基线偏移
+
+### 🐛 修复 — 其他
+
+- **AutoComplete**：移除多余的 `closeOnOutsideClick={false}`、`closeOnEscape={false}` 传参
+- **Checkbox demo**：`handleCheckAllChange` 参数类型修正为 `CheckboxChangeEvent`，从 `e.target.checked` 取值
+
+---
+
 ## [0.5.1] - 2026-06-30
 
 ### 🐛 修复 — Tabs 组件

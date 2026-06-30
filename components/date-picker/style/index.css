@@ -1,6 +1,7 @@
 .hmfw-date-picker {
   display: inline-flex;
   align-items: center;
+  position: relative;
   width: 200px;
   padding: 4px 11px;
   border: 1px solid var(--hmfw-color-border, #d9d9d9);
@@ -48,10 +49,13 @@
 
 .hmfw-date-picker-input-inner {
   flex: 1;
+  margin: 0;
+  padding: 0;
   border: none;
   outline: none;
   background: transparent;
   font-size: inherit;
+  line-height: var(--hmfw-line-height);
   color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
   cursor: pointer;
   min-width: 0;
@@ -61,15 +65,47 @@
   color: var(--hmfw-color-text-placeholder, rgba(0, 0, 0, 0.25));
 }
 
-.hmfw-date-picker-clear {
-  color: var(--hmfw-color-text-placeholder, rgba(0, 0, 0, 0.25));
-  font-size: 12px;
-  cursor: pointer;
-}
-
 .hmfw-date-picker-suffix {
+  display: inline-flex;
+  align-items: center;
   color: var(--hmfw-color-text-placeholder, rgba(0, 0, 0, 0.25));
   font-size: 14px;
+  transition: opacity 0.2s;
+}
+
+/* clear 叠加在 suffix 同位置，picker hover 时显示并遮挡 suffix。
+   字号需与 suffix 一致（14px），否则两个 SVG 宽度不同，右对齐时会露出 suffix 边缘 */
+.hmfw-date-picker-clear {
+  position: absolute;
+  right: 11px;
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  color: var(--hmfw-color-text-placeholder, rgba(0, 0, 0, 0.25));
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    color 0.2s,
+    opacity 0.2s;
+}
+
+.hmfw-date-picker-clear:hover {
+  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+}
+
+.hmfw-date-picker:hover .hmfw-date-picker-clear {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hmfw-date-picker-disabled .hmfw-date-picker-clear {
+  display: none;
+}
+
+.hmfw-date-picker-small .hmfw-date-picker-clear {
+  right: 7px;
 }
 
 /* Panel popup */

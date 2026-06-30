@@ -19,14 +19,14 @@
   color: rgba(0, 0, 0, 0.88);
   font-size: 24px;
   font-weight: 600;
-  line-height: 1.5714;
+  line-height: var(--hmfw-line-height);
   margin-bottom: 8px;
 }
 
 .hmfw-result-subtitle {
   color: rgba(0, 0, 0, 0.45);
   font-size: 14px;
-  line-height: 1.5714;
+  line-height: var(--hmfw-line-height);
   margin-bottom: 24px;
 }
 

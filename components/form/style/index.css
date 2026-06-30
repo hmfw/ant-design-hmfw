@@ -76,7 +76,7 @@
   font-size: 14px;
   min-height: 24px;
   padding-top: 2px;
-  line-height: 1.5714;
+  line-height: var(--hmfw-line-height);
   transition: color 0.3s;
 }
 
@@ -117,7 +117,7 @@
   color: rgba(0, 0, 0, 0.45);
   min-height: 24px;
   padding-top: 2px;
-  line-height: 1.5714;
+  line-height: var(--hmfw-line-height);
 }
 
 /* Colon */

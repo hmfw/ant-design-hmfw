@@ -13,6 +13,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Checkbox, CheckboxGroup } from '@hmfw/ant-design'
+import type { CheckboxChangeEvent } from '@hmfw/ant-design'
 
 const options = [
   { label: '选项 A', value: 'A' },
@@ -25,8 +26,8 @@ const checkedList = ref<string[]>(['A', 'B'])
 const checkAll = ref(false)
 const indeterminate = ref(true)
 
-const handleCheckAllChange = (checked: boolean) => {
-  checkedList.value = checked ? options.map((o) => o.value) : []
+const handleCheckAllChange = (e: CheckboxChangeEvent) => {
+  checkedList.value = e.target.checked ? options.map((o) => o.value) : []
   indeterminate.value = false
 }
 

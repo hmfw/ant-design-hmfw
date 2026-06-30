@@ -1,0 +1,122 @@
+/**
+ * 静态默认 CSS 变量
+ *
+ * ConfigProvider 在 onMounted 时会动态注入一份同名 :root（或 scoped）变量，
+ * 优先级高于此处。本文件的作用是：当用户未挂 ConfigProvider 时，组件 CSS
+ * 中的 `var(--hmfw-*)` 仍能得到正确默认值——避免再为每个 var() 写 fallback。
+ *
+ * 由 generateMapTokens(defaultSeedTokens) + tokensToCssVars 生成，
+ * 改 token 时同步更新此处。
+ */
+:root {
+  --hmfw-color-primary: #1677ff;
+  --hmfw-color-success: #52c41a;
+  --hmfw-color-warning: #faad14;
+  --hmfw-color-error: #ff4d4f;
+  --hmfw-color-info: #1677ff;
+  --hmfw-color-text-base: #000000;
+  --hmfw-color-bg-base: #ffffff;
+  --hmfw-font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --hmfw-font-size-base: 14px;
+  --hmfw-line-height-base: 1.5714285714285714;
+  --hmfw-border-radius: 6px;
+  --hmfw-border-radius-sm: 4px;
+  --hmfw-border-radius-lg: 8px;
+  --hmfw-size-unit: 4px;
+  --hmfw-size-step: 4px;
+  --hmfw-motion-duration-fast: 0.1s;
+  --hmfw-motion-duration-mid: 0.2s;
+  --hmfw-motion-duration-slow: 0.3s;
+  --hmfw-motion-ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --hmfw-motion-ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --hmfw-box-shadow:
+    0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  --hmfw-box-shadow-secondary:
+    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  --hmfw-box-shadow-popover-arrow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+  --hmfw-color-text: rgba(0, 0, 0, 0.88);
+  --hmfw-color-text-secondary: rgba(0, 0, 0, 0.65);
+  --hmfw-color-text-tertiary: rgba(0, 0, 0, 0.45);
+  --hmfw-color-text-quaternary: rgba(0, 0, 0, 0.25);
+  --hmfw-color-text-disabled: rgba(0, 0, 0, 0.25);
+  --hmfw-color-text-placeholder: rgba(0, 0, 0, 0.25);
+  --hmfw-color-text-heading: rgba(0, 0, 0, 0.88);
+  --hmfw-color-text-label: rgba(0, 0, 0, 0.65);
+  --hmfw-color-text-description: rgba(0, 0, 0, 0.45);
+  --hmfw-color-bg-container: #ffffff;
+  --hmfw-color-bg-elevated: #ffffff;
+  --hmfw-color-bg-layout: #f5f5f5;
+  --hmfw-color-bg-spotlight: rgba(0, 0, 0, 0.85);
+  --hmfw-color-bg-mask: rgba(0, 0, 0, 0.45);
+  --hmfw-color-border: #d9d9d9;
+  --hmfw-color-border-secondary: #f0f0f0;
+  --hmfw-color-fill: rgba(0, 0, 0, 0.15);
+  --hmfw-color-fill-secondary: rgba(0, 0, 0, 0.06);
+  --hmfw-color-fill-tertiary: rgba(0, 0, 0, 0.04);
+  --hmfw-color-fill-quaternary: rgba(0, 0, 0, 0.02);
+  --hmfw-color-primary-hover: #4592ff;
+  --hmfw-color-primary-active: #146be5;
+  --hmfw-color-primary-bg: #e8f1ff;
+  --hmfw-color-primary-bg-hover: #d0e4ff;
+  --hmfw-color-primary-border: #a2c9ff;
+  --hmfw-color-primary-border-hover: #73adff;
+  --hmfw-color-primary-text: #1677ff;
+  --hmfw-color-primary-text-hover: #4592ff;
+  --hmfw-color-primary-text-active: #146be5;
+  --hmfw-color-success-bg: #eef9e8;
+  --hmfw-color-success-border: #a9e28d;
+  --hmfw-color-success-text: #52c41a;
+  --hmfw-color-warning-bg: #fff7e8;
+  --hmfw-color-warning-border: #fdd68a;
+  --hmfw-color-warning-text: #faad14;
+  --hmfw-color-error-bg: #ffeded;
+  --hmfw-color-error-border: #ffa6a7;
+  --hmfw-color-error-text: #ff4d4f;
+  --hmfw-color-error-hover: #ff7172;
+  --hmfw-color-error-active: #e54547;
+  --hmfw-color-white: #ffffff;
+  --hmfw-color-link: #1677ff;
+  --hmfw-color-link-hover: #4592ff;
+  --hmfw-color-link-active: #146be5;
+  --hmfw-color-bg-container-disabled: rgba(0, 0, 0, 0.04);
+  --hmfw-color-bg-header: #001529;
+  --hmfw-color-bg-text-hover: rgba(0, 0, 0, 0.06);
+  --hmfw-color-text-light-solid: #ffffff;
+  --hmfw-font-size: 14px;
+  --hmfw-line-height: 1.5714285714285714;
+  --hmfw-font-size-sm: 12px;
+  --hmfw-font-size-lg: 16px;
+  --hmfw-font-size-xl: 18px;
+  --hmfw-font-size-heading1: 38px;
+  --hmfw-font-size-heading2: 30px;
+  --hmfw-font-size-heading3: 24px;
+  --hmfw-font-size-heading4: 20px;
+  --hmfw-font-size-heading5: 16px;
+  --hmfw-line-height-sm: 1.6666666666666667;
+  --hmfw-line-height-lg: 1.5;
+  --hmfw-line-height-heading1: 1.2105263157894737;
+  --hmfw-line-height-heading2: 1.2666666666666666;
+  --hmfw-line-height-heading3: 1.3333333333333333;
+  --hmfw-line-height-heading4: 1.4;
+  --hmfw-line-height-heading5: 1.5;
+  --hmfw-control-height: 32px;
+  --hmfw-control-height-sm: 24px;
+  --hmfw-control-height-lg: 40px;
+  --hmfw-control-height-xs: 16px;
+  --hmfw-padding-xxs: 4px;
+  --hmfw-padding-xs: 8px;
+  --hmfw-padding-sm: 12px;
+  --hmfw-padding: 16px;
+  --hmfw-padding-md: 20px;
+  --hmfw-padding-lg: 24px;
+  --hmfw-padding-xl: 32px;
+  --hmfw-margin-xxs: 4px;
+  --hmfw-margin-xs: 8px;
+  --hmfw-margin-sm: 12px;
+  --hmfw-margin: 16px;
+  --hmfw-margin-md: 20px;
+  --hmfw-margin-lg: 24px;
+  --hmfw-margin-xl: 32px;
+  --hmfw-margin-xxl: 48px;
+}

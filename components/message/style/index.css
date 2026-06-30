@@ -40,7 +40,7 @@
     0 9px 28px 8px rgba(0, 0, 0, 0.05)
   );
   font-size: var(--hmfw-font-size-base, 14px);
-  line-height: var(--hmfw-line-height, 1.5714285714285714);
+  line-height: var(--hmfw-line-height);
   color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
   pointer-events: all;
 }

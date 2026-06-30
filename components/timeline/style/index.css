@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   font-size: var(--hmfw-font-size-base, 14px);
-  line-height: 1.5714;
+  line-height: var(--hmfw-line-height);
   color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
 }
 

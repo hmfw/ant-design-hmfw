@@ -3,6 +3,7 @@ import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
+import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
 import type { RangeValue, RangePreset, RangePickerClassNames, RangePickerStyles } from './types'
 
 function pad(n: number) {
@@ -458,11 +459,11 @@ export const RangePicker = defineComponent({
                   style={props.styles?.clear}
                   onClick={clearValue}
                 >
-                  ✕
+                  <CloseCircleFilled />
                 </span>
               )}
               <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-                📅
+                <CalendarOutlined />
               </span>
             </span>
           ),
