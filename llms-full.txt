@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.4.0。安装 `pnpm add ant-design-hmfw`，样式 `import 'ant-design-hmfw/style.css'`。
+版本 0.5.0。安装 `pnpm add ant-design-hmfw`，样式 `import 'ant-design-hmfw/style.css'`。
 
 
 ---
@@ -60,7 +60,7 @@ import { Alert } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Alert } from 'ant-design-hmfw'
+import { Alert } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -75,7 +75,7 @@ import { Alert } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Alert } from 'ant-design-hmfw'
+import { Alert } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -163,7 +163,7 @@ import { Anchor, AnchorLink } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Anchor } from 'ant-design-hmfw'
+import { Anchor } from '@hmfw/ant-design'
 
 const items = [
   { href: '#part-1', title: '第一部分' },
@@ -217,7 +217,7 @@ const items = [
 </template>
 
 <script setup lang="ts">
-import { Anchor } from 'ant-design-hmfw'
+import { Anchor } from '@hmfw/ant-design'
 
 const AnchorLink = Anchor.Link
 </script>
@@ -256,7 +256,7 @@ import { App, useApp } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { defineComponent, h } from 'vue'
-import { App, useApp, Button, Space } from 'ant-design-hmfw'
+import { App, useApp, Button, Space } from '@hmfw/ant-design'
 
 // useApp() 在 App 子组件内调用，获取 message/notification/modal 实例
 const AppActions = defineComponent({
@@ -365,7 +365,7 @@ import { AutoComplete } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AutoComplete } from 'ant-design-hmfw'
+import { AutoComplete } from '@hmfw/ant-design'
 
 const value = ref('')
 const options = ref([{ value: 'Vue' }, { value: 'React' }, { value: 'Angular' }, { value: 'Svelte' }])
@@ -390,7 +390,7 @@ const handleSearch = (searchText: string) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AutoComplete } from 'ant-design-hmfw'
+import { AutoComplete } from '@hmfw/ant-design'
 
 const value = ref('')
 const options = ref([
@@ -464,7 +464,7 @@ import { Avatar, AvatarGroup } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Avatar } from 'ant-design-hmfw'
+import { Avatar } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -481,7 +481,7 @@ import { Avatar } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Avatar } from 'ant-design-hmfw'
+import { Avatar } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -534,7 +534,7 @@ import { BackTop } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { BackTop } from 'ant-design-hmfw'
+import { BackTop } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -570,7 +570,7 @@ import { BackTop } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { BackTop } from 'ant-design-hmfw'
+import { BackTop } from '@hmfw/ant-design'
 
 function onBackTop() {
   console.log('回到顶部')
@@ -640,7 +640,7 @@ import { Badge, Ribbon } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Badge } from 'ant-design-hmfw'
+import { Badge } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -658,7 +658,7 @@ import { Badge } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Badge } from 'ant-design-hmfw'
+import { Badge } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -713,7 +713,7 @@ import { Breadcrumb } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Breadcrumb } from 'ant-design-hmfw'
+import { Breadcrumb } from '@hmfw/ant-design'
 
 const items = [{ title: '首页' }, { title: '应用列表' }, { title: '某应用' }]
 </script>
@@ -727,7 +727,7 @@ const items = [{ title: '首页' }, { title: '应用列表' }, { title: '某应�
 </template>
 
 <script setup lang="ts">
-import { Breadcrumb } from 'ant-design-hmfw'
+import { Breadcrumb } from '@hmfw/ant-design'
 
 const items = [{ title: '首页', href: '/' }, { title: '应用列表', href: '/apps' }, { title: '某应用' }]
 </script>
@@ -798,7 +798,7 @@ import { Button } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Button } from 'ant-design-hmfw'
+import { Button } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -814,7 +814,7 @@ import { Button } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Button } from 'ant-design-hmfw'
+import { Button } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -893,7 +893,7 @@ import { Calendar } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Calendar } from 'ant-design-hmfw'
+import { Calendar } from '@hmfw/ant-design'
 
 const value = ref<string>()
 
@@ -914,7 +914,7 @@ const onSelect = (dateStr: string) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Calendar } from 'ant-design-hmfw'
+import { Calendar } from '@hmfw/ant-design'
 
 const value = ref<string>()
 </script>
@@ -990,7 +990,7 @@ import { Card, CardGrid, CardMeta } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Card } from 'ant-design-hmfw'
+import { Card } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -1011,7 +1011,7 @@ import { Card } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Card, CardMeta } from 'ant-design-hmfw'
+import { Card, CardMeta } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -1085,7 +1085,7 @@ import { Carousel } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Carousel } from 'ant-design-hmfw'
+import { Carousel } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -1105,7 +1105,7 @@ import { Carousel } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Carousel } from 'ant-design-hmfw'
+import { Carousel } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -1190,7 +1190,7 @@ import { Cascader } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Cascader } from 'ant-design-hmfw'
+import { Cascader } from '@hmfw/ant-design'
 
 const value = ref<string[]>([])
 
@@ -1250,7 +1250,7 @@ Hover 展开 — 通过 `expandTrigger` 设置为 `hover` 时，鼠标移入即�
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Cascader } from 'ant-design-hmfw'
+import { Cascader } from '@hmfw/ant-design'
 
 const value = ref<string[]>([])
 
@@ -1391,7 +1391,7 @@ import { Checkbox, CheckboxGroup } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Checkbox } from 'ant-design-hmfw'
+import { Checkbox } from '@hmfw/ant-design'
 
 const checked1 = ref(false)
 const checked2 = ref(false)
@@ -1422,7 +1422,7 @@ CheckboxGroup — 方便的从数组生成 Checkbox 组。
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CheckboxGroup } from 'ant-design-hmfw'
+import { CheckboxGroup } from '@hmfw/ant-design'
 
 const selectedFruits = ref<string[]>(['apple'])
 const selectedColors = ref<string[]>([])
@@ -1532,7 +1532,7 @@ import { Collapse, CollapsePanel } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Collapse, CollapsePanel } from 'ant-design-hmfw'
+import { Collapse, CollapsePanel } from '@hmfw/ant-design'
 
 const activeKey = ref(['1'])
 </script>
@@ -1557,7 +1557,7 @@ const activeKey = ref(['1'])
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Collapse, CollapsePanel } from 'ant-design-hmfw'
+import { Collapse, CollapsePanel } from '@hmfw/ant-design'
 
 const activeKey = ref(['1'])
 </script>
@@ -1613,7 +1613,7 @@ import { ColorPicker } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ColorPicker, Space } from 'ant-design-hmfw'
+import { ColorPicker, Space } from '@hmfw/ant-design'
 
 const color = ref('#1677ff')
 </script>
@@ -1628,7 +1628,7 @@ const color = ref('#1677ff')
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ColorPicker } from 'ant-design-hmfw'
+import { ColorPicker } from '@hmfw/ant-design'
 
 const color = ref('#1677ff')
 
@@ -1691,7 +1691,7 @@ import { ConfigProvider, useConfig, usePrefixCls, useLocale } from 'ant-design-h
 </template>
 
 <script setup lang="ts">
-import { ConfigProvider, Button } from 'ant-design-hmfw'
+import { ConfigProvider, Button } from '@hmfw/ant-design'
 
 const theme = {
   token: {
@@ -1717,7 +1717,7 @@ const theme = {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ConfigProvider, Button, zhCN, enUS } from 'ant-design-hmfw'
+import { ConfigProvider, Button, zhCN, enUS } from '@hmfw/ant-design'
 
 const locale = ref(zhCN)
 </script>
@@ -1795,7 +1795,7 @@ import { DatePicker } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DatePicker } from 'ant-design-hmfw'
+import { DatePicker } from '@hmfw/ant-design'
 
 const date = ref<string>('')
 
@@ -1819,7 +1819,7 @@ const handleChange = (value: string) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DatePicker } from 'ant-design-hmfw'
+import { DatePicker } from '@hmfw/ant-design'
 
 const date = ref('')
 const month = ref('')
@@ -1879,7 +1879,7 @@ import { Descriptions, DescriptionsItem } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Descriptions } from 'ant-design-hmfw'
+import { Descriptions } from '@hmfw/ant-design'
 
 const items = [
   { label: '用户名', children: 'Zhou Maomao' },
@@ -1899,7 +1899,7 @@ const items = [
 </template>
 
 <script setup lang="ts">
-import { Descriptions } from 'ant-design-hmfw'
+import { Descriptions } from '@hmfw/ant-design'
 
 const items = [
   { label: '产品', children: 'Cloud Database' },
@@ -1957,7 +1957,7 @@ import { Divider } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Divider } from 'ant-design-hmfw'
+import { Divider } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -1979,7 +1979,7 @@ import { Divider } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Divider } from 'ant-design-hmfw'
+import { Divider } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -2063,7 +2063,7 @@ import { Drawer } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Drawer, Button } from 'ant-design-hmfw'
+import { Drawer, Button } from '@hmfw/ant-design'
 
 const open = ref(false)
 </script>
@@ -2086,7 +2086,7 @@ const open = ref(false)
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Drawer, Button } from 'ant-design-hmfw'
+import { Drawer, Button } from '@hmfw/ant-design'
 
 const open = ref(false)
 const placement = ref<'top' | 'right' | 'bottom' | 'left'>('right')
@@ -2176,13 +2176,13 @@ import { Dropdown } from 'ant-design-hmfw'
   <Dropdown :menu="menu">
     <Button>
       下拉菜单
-      <Icon type="down" />
+      <DownOutlined class="hmfw-icon" />
     </Button>
   </Dropdown>
 </template>
 
 <script setup lang="ts">
-import { Dropdown, Button, Icon } from 'ant-design-hmfw'
+import { Dropdown, Button, DownOutlined } from '@hmfw/ant-design'
 
 const menu = {
   items: [
@@ -2212,7 +2212,7 @@ const menu = {
 </template>
 
 <script setup lang="ts">
-import { Dropdown, Button, Space } from 'ant-design-hmfw'
+import { Dropdown, Button, Space } from '@hmfw/ant-design'
 
 const menu = {
   items: [
@@ -2260,7 +2260,7 @@ import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from 'ant-desi
 </template>
 
 <script setup lang="ts">
-import { Empty } from 'ant-design-hmfw'
+import { Empty } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -2272,7 +2272,7 @@ import { Empty } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Empty } from 'ant-design-hmfw'
+import { Empty } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -2333,7 +2333,7 @@ import { Flex } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Flex, Space } from 'ant-design-hmfw'
+import { Flex, Space } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -2349,7 +2349,7 @@ import { Flex, Space } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Flex } from 'ant-design-hmfw'
+import { Flex } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -2436,7 +2436,7 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hm
 </template>
 
 <script setup lang="ts">
-import { FloatButton } from 'ant-design-hmfw'
+import { FloatButton } from '@hmfw/ant-design'
 
 const demoStyle = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const
 
@@ -2468,8 +2468,8 @@ function onClick() {
 </template>
 
 <script setup lang="ts">
-import { FloatButton } from 'ant-design-hmfw'
-import { SettingOutlined } from 'ant-design-hmfw'
+import { FloatButton } from '@hmfw/ant-design'
+import { SettingOutlined } from '@hmfw/ant-design'
 
 // Render inline within the demo box instead of fixed to the viewport
 const s = { position: 'static' } as const
@@ -2610,7 +2610,7 @@ import { Form, FormItem, useForm } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { Form, FormItem, Input, InputPassword, Button } from 'ant-design-hmfw'
+import { Form, FormItem, Input, InputPassword, Button } from '@hmfw/ant-design'
 
 const formState = reactive({
   username: '',
@@ -2658,7 +2658,7 @@ const handleReset = () => {
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { Form, FormItem, Input, InputNumber, Button } from 'ant-design-hmfw'
+import { Form, FormItem, Input, InputNumber, Button } from '@hmfw/ant-design'
 
 const formRef = ref()
 
@@ -2784,7 +2784,7 @@ import { Row, Col } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Row, Col, Space } from 'ant-design-hmfw'
+import { Row, Col, Space } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -2818,7 +2818,7 @@ import { Row, Col, Space } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Row, Col, Space } from 'ant-design-hmfw'
+import { Row, Col, Space } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -2853,30 +2853,29 @@ import { Icon } from 'ant-design-hmfw'
 ```vue
 <template>
   <Space :size="16" wrap>
-    <Icon :component="SearchOutlined" />
-    <Icon :component="CloseOutlined" />
-    <Icon :component="CheckOutlined" />
-    <Icon :component="WarningOutlined" />
-    <Icon :component="InfoCircleOutlined" />
-    <Icon :component="LoadingOutlined" />
-    <Icon :component="UpOutlined" />
-    <Icon :component="DownOutlined" />
-    <Icon :component="LeftOutlined" />
-    <Icon :component="RightOutlined" />
-    <Icon :component="PlusOutlined" />
-    <Icon :component="MinusOutlined" />
-    <Icon :component="EditOutlined" />
-    <Icon :component="DeleteOutlined" />
-    <Icon :component="EyeOutlined" />
-    <Icon :component="HomeOutlined" />
-    <Icon :component="UserOutlined" />
-    <Icon :component="SettingOutlined" />
+    <SearchOutlined class="hmfw-icon" />
+    <CloseOutlined class="hmfw-icon" />
+    <CheckOutlined class="hmfw-icon" />
+    <WarningOutlined class="hmfw-icon" />
+    <InfoCircleOutlined class="hmfw-icon" />
+    <LoadingOutlined class="hmfw-icon" />
+    <UpOutlined class="hmfw-icon" />
+    <DownOutlined class="hmfw-icon" />
+    <LeftOutlined class="hmfw-icon" />
+    <RightOutlined class="hmfw-icon" />
+    <PlusOutlined class="hmfw-icon" />
+    <MinusOutlined class="hmfw-icon" />
+    <EditOutlined class="hmfw-icon" />
+    <DeleteOutlined class="hmfw-icon" />
+    <EyeOutlined class="hmfw-icon" />
+    <HomeOutlined class="hmfw-icon" />
+    <UserOutlined class="hmfw-icon" />
+    <SettingOutlined class="hmfw-icon" />
   </Space>
 </template>
 
 <script setup lang="ts">
 import {
-  Icon,
   Space,
   SearchOutlined,
   CloseOutlined,
@@ -2896,7 +2895,7 @@ import {
   HomeOutlined,
   UserOutlined,
   SettingOutlined,
-} from 'ant-design-hmfw'
+} from '@hmfw/ant-design'
 </script>
 ```
 
@@ -2905,16 +2904,16 @@ import {
 ```vue
 <template>
   <Space :size="16" align="center">
-    <Icon :component="HomeOutlined" style="font-size: 12px" />
-    <Icon :component="HomeOutlined" style="font-size: 16px" />
-    <Icon :component="HomeOutlined" style="font-size: 24px" />
-    <Icon :component="HomeOutlined" style="font-size: 32px" />
-    <Icon :component="HomeOutlined" style="font-size: 48px" />
+    <HomeOutlined class="hmfw-icon" style="font-size: 12px" />
+    <HomeOutlined class="hmfw-icon" style="font-size: 16px" />
+    <HomeOutlined class="hmfw-icon" style="font-size: 24px" />
+    <HomeOutlined class="hmfw-icon" style="font-size: 32px" />
+    <HomeOutlined class="hmfw-icon" style="font-size: 48px" />
   </Space>
 </template>
 
 <script setup lang="ts">
-import { Icon, Space, HomeOutlined } from 'ant-design-hmfw'
+import { Space, HomeOutlined } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -3007,7 +3006,7 @@ import { Image, PreviewGroup } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Image, Space } from 'ant-design-hmfw'
+import { Image, Space } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -3031,7 +3030,7 @@ import { Image, Space } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Image, PreviewGroup, Space } from 'ant-design-hmfw'
+import { Image, PreviewGroup, Space } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -3132,7 +3131,7 @@ import { Input, InputPassword, TextArea, InputSearch } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Input } from 'ant-design-hmfw'
+import { Input } from '@hmfw/ant-design'
 
 const value = ref('')
 </script>
@@ -3152,7 +3151,7 @@ const value = ref('')
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Input } from 'ant-design-hmfw'
+import { Input } from '@hmfw/ant-design'
 
 const value1 = ref('')
 const value2 = ref('')
@@ -3242,7 +3241,7 @@ import { InputNumber } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { InputNumber } from 'ant-design-hmfw'
+import { InputNumber } from '@hmfw/ant-design'
 
 const value = ref<number | null>(null)
 </script>
@@ -3267,7 +3266,7 @@ const value = ref<number | null>(null)
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { InputNumber } from 'ant-design-hmfw'
+import { InputNumber } from '@hmfw/ant-design'
 
 const value1 = ref<number>(5)
 const value2 = ref<number>(0.5)
@@ -3330,7 +3329,7 @@ import { Layout, Header, Footer, Content, Sider } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Layout, Header, Content, Footer } from 'ant-design-hmfw'
+import { Layout, Header, Content, Footer } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -3351,7 +3350,7 @@ import { Layout, Header, Content, Footer } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Layout, Header, Content, Footer, Sider } from 'ant-design-hmfw'
+import { Layout, Header, Content, Footer, Sider } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -3437,7 +3436,7 @@ import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List } from 'ant-design-hmfw'
+import { List } from '@hmfw/ant-design'
 
 const data = [
   'Racing car sprays burning fuel into crowd.',
@@ -3459,7 +3458,7 @@ const renderItem = (item: string) => h(List.Item, null, () => item)
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List } from 'ant-design-hmfw'
+import { List } from '@hmfw/ant-design'
 
 const data = [{ title: '列表项 1' }, { title: '列表项 2' }, { title: '列表项 3' }]
 
@@ -3491,7 +3490,7 @@ const renderItem = (item: any) =>
 
 导入：
 ```ts
-import { Menu } from 'ant-design-hmfw'
+import { Menu, MenuItem, SubMenu, MenuDivider, MenuItemGroup } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -3559,18 +3558,19 @@ import { Menu } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Menu } from 'ant-design-hmfw'
+import { ref, h } from 'vue'
+import { Menu } from '@hmfw/ant-design'
+import { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/icons'
 
 const selectedKeys = ref(['home'])
 
 const items = [
-  { key: 'home', label: '首页', icon: 'home' },
-  { key: 'user', label: '用户管理', icon: 'user' },
+  { key: 'home', label: '首页', icon: h(HomeOutlined) },
+  { key: 'user', label: '用户管理', icon: h(UserOutlined) },
   {
     key: 'setting',
     label: '系统设置',
-    icon: 'setting',
+    icon: h(SettingOutlined),
     children: [
       { key: 'setting-1', label: '基础设置' },
       { key: 'setting-2', label: '高级设置' },
@@ -3594,8 +3594,9 @@ const onSelect = ({ key }: { key: string }) => {
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Menu } from 'ant-design-hmfw'
+import { ref, h } from 'vue'
+import { Menu } from '@hmfw/ant-design'
+import { MailOutlined, SettingOutlined, UserOutlined } from '@hmfw/icons'
 
 const selectedKeys = ref(['1'])
 
@@ -3603,7 +3604,7 @@ const items = [
   {
     key: 'sub1',
     label: '导航一',
-    icon: 'home',
+    icon: h(MailOutlined),
     children: [
       { key: '1', label: '选项一' },
       { key: '2', label: '选项二' },
@@ -3613,13 +3614,13 @@ const items = [
   {
     key: 'sub2',
     label: '导航二',
-    icon: 'setting',
+    icon: h(SettingOutlined),
     children: [
       { key: '5', label: '选项五' },
       { key: '6', label: '选项六' },
     ],
   },
-  { key: '9', label: '导航三', icon: 'user' },
+  { key: '9', label: '导航三', icon: h(UserOutlined) },
 ]
 
 const onSelect = ({ key }: { key: string }) => {
@@ -3692,7 +3693,7 @@ import { message } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { message, Button } from 'ant-design-hmfw'
+import { message, Button } from '@hmfw/ant-design'
 
 function showSuccess() {
   message.success('操作成功！')
@@ -3728,7 +3729,7 @@ function showLoading() {
 </template>
 
 <script setup lang="ts">
-import { message, Button } from 'ant-design-hmfw'
+import { message, Button } from '@hmfw/ant-design'
 
 function showLong() {
   message.success('这条消息将显示 10 秒', 10)
@@ -3841,7 +3842,7 @@ import { Modal } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Modal, Button } from 'ant-design-hmfw'
+import { Modal, Button } from '@hmfw/ant-design'
 
 const open = ref(false)
 
@@ -3873,7 +3874,7 @@ function handleCancel() {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Modal, Button } from 'ant-design-hmfw'
+import { Modal, Button } from '@hmfw/ant-design'
 
 const open = ref(false)
 const confirmLoading = ref(false)
@@ -3956,7 +3957,7 @@ import { notification } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { notification, Button } from 'ant-design-hmfw'
+import { notification, Button } from '@hmfw/ant-design'
 
 function openSuccess() {
   notification.success({
@@ -4001,7 +4002,7 @@ function openInfo() {
 </template>
 
 <script setup lang="ts">
-import { notification, Button } from 'ant-design-hmfw'
+import { notification, Button } from '@hmfw/ant-design'
 
 function openWithDuration() {
   notification.success({
@@ -4088,7 +4089,7 @@ import { Pagination } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Pagination, Space } from 'ant-design-hmfw'
+import { Pagination, Space } from '@hmfw/ant-design'
 
 const current = ref(1)
 </script>
@@ -4115,7 +4116,7 @@ const current = ref(1)
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Pagination, Space } from 'ant-design-hmfw'
+import { Pagination, Space } from '@hmfw/ant-design'
 
 const current = ref(1)
 const pageSize = ref(10)
@@ -4196,7 +4197,7 @@ import { Popconfirm } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Popconfirm, Button } from 'ant-design-hmfw'
+import { Popconfirm, Button } from '@hmfw/ant-design'
 
 function onConfirm() {
   console.log('已确认删除')
@@ -4224,7 +4225,7 @@ function onCancel() {
 </template>
 
 <script setup lang="ts">
-import { Popconfirm, Button } from 'ant-design-hmfw'
+import { Popconfirm, Button } from '@hmfw/ant-design'
 
 function onConfirm() {
   console.log('已提交')
@@ -4290,7 +4291,7 @@ import { Popover, PopoverPurePanel } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Popover, Button } from 'ant-design-hmfw'
+import { Popover, Button } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -4312,7 +4313,7 @@ import { Popover, Button } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Popover, Button } from 'ant-design-hmfw'
+import { Popover, Button } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -4373,7 +4374,7 @@ import { Progress } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Progress } from 'ant-design-hmfw'
+import { Progress } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -4389,7 +4390,7 @@ import { Progress } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Progress } from 'ant-design-hmfw'
+import { Progress } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -4444,7 +4445,7 @@ import { QRCode } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { QRCode } from 'ant-design-hmfw'
+import { QRCode } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -4459,7 +4460,7 @@ import { QRCode } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { QRCode } from 'ant-design-hmfw'
+import { QRCode } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -4532,7 +4533,7 @@ import { Radio, RadioGroup, RadioButton } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Radio } from 'ant-design-hmfw'
+import { Radio } from '@hmfw/ant-design'
 
 const checked = ref(false)
 const checked2 = ref(false)
@@ -4559,7 +4560,7 @@ RadioGroup — 一组互斥的 Radio 配合使用。
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RadioGroup } from 'ant-design-hmfw'
+import { RadioGroup } from '@hmfw/ant-design'
 
 const value1 = ref('a')
 const value2 = ref('b')
@@ -4630,8 +4631,8 @@ import { RangePicker } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RangePicker, Space } from 'ant-design-hmfw'
-import type { RangeValue } from 'ant-design-hmfw'
+import { RangePicker, Space } from '@hmfw/ant-design'
+import type { RangeValue } from '@hmfw/ant-design'
 
 const range = ref<RangeValue>([null, null])
 </script>
@@ -4645,8 +4646,8 @@ const range = ref<RangeValue>([null, null])
 </template>
 
 <script setup lang="ts">
-import { RangePicker } from 'ant-design-hmfw'
-import type { RangeValue } from 'ant-design-hmfw'
+import { RangePicker } from '@hmfw/ant-design'
+import type { RangeValue } from '@hmfw/ant-design'
 
 type RangePreset = { label: string; value: RangeValue | (() => RangeValue) }
 
@@ -4736,7 +4737,7 @@ import { Rate } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Rate } from 'ant-design-hmfw'
+import { Rate } from '@hmfw/ant-design'
 
 const value = ref(3)
 const value2 = ref(2.5)
@@ -4756,7 +4757,7 @@ const value2 = ref(2.5)
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Rate } from 'ant-design-hmfw'
+import { Rate } from '@hmfw/ant-design'
 
 const value = ref(2.5)
 const value2 = ref(3.5)
@@ -4806,7 +4807,7 @@ import { Result } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Result, Button } from 'ant-design-hmfw'
+import { Result, Button } from '@hmfw/ant-design'
 
 function onGoOrder() {
   console.log('查看订单')
@@ -4830,7 +4831,7 @@ function onBuyAgain() {
 </template>
 
 <script setup lang="ts">
-import { Result, Button } from 'ant-design-hmfw'
+import { Result, Button } from '@hmfw/ant-design'
 
 function onRetry() {
   console.log('重试')
@@ -4901,7 +4902,7 @@ import { Segmented } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('Daily')
 const options = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']
@@ -4917,7 +4918,7 @@ Block 模式 — block 属性使其适合父元素宽度。
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 
 const value = ref('Map')
 const options = ['Map', 'Transit', 'Satellite']
@@ -5027,7 +5028,7 @@ import { Select } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Select } from 'ant-design-hmfw'
+import { Select } from '@hmfw/ant-design'
 
 const value = ref<string>('')
 const value2 = ref<string>('')
@@ -5067,7 +5068,7 @@ const options = [
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Select } from 'ant-design-hmfw'
+import { Select } from '@hmfw/ant-design'
 
 const selected = ref<string[]>([])
 const selected2 = ref<string[]>([])
@@ -5187,7 +5188,7 @@ import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage,
 </template>
 
 <script setup lang="ts">
-import { Skeleton } from 'ant-design-hmfw'
+import { Skeleton } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -5199,7 +5200,7 @@ import { Skeleton } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Skeleton } from 'ant-design-hmfw'
+import { Skeleton } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -5266,7 +5267,7 @@ import { Slider } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Slider } from 'ant-design-hmfw'
+import { Slider } from '@hmfw/ant-design'
 
 const value1 = ref(30)
 const value2 = ref(50)
@@ -5291,7 +5292,7 @@ const value2 = ref(50)
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Slider } from 'ant-design-hmfw'
+import { Slider } from '@hmfw/ant-design'
 
 const rangeValue = ref<[number, number]>([20, 70])
 const rangeValue2 = ref<[number, number]>([20, 60])
@@ -5340,7 +5341,7 @@ import { Space } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Space, Button } from 'ant-design-hmfw'
+import { Space, Button } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -5356,7 +5357,7 @@ import { Space, Button } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Space, Button } from 'ant-design-hmfw'
+import { Space, Button } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -5396,7 +5397,7 @@ import { Spin } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Spin } from 'ant-design-hmfw'
+import { Spin } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -5412,7 +5413,7 @@ import { Spin } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Spin } from 'ant-design-hmfw'
+import { Spin } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -5483,7 +5484,7 @@ import { Statistic, Countdown } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Statistic, Space } from 'ant-design-hmfw'
+import { Statistic, Space } from '@hmfw/ant-design'
 </script>
 
 <style scoped>
@@ -5508,7 +5509,7 @@ import { Statistic, Space } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Statistic, Space } from 'ant-design-hmfw'
+import { Statistic, Space } from '@hmfw/ant-design'
 </script>
 
 <style scoped>
@@ -5528,7 +5529,7 @@ import { Statistic, Space } from 'ant-design-hmfw'
 
 导入：
 ```ts
-import { Steps, ProgressIcon, PanelArrow } from 'ant-design-hmfw'
+import { Steps } from 'ant-design-hmfw'
 ```
 
 ### Props
@@ -5544,12 +5545,11 @@ import { Steps, ProgressIcon, PanelArrow } from 'ant-design-hmfw'
 | orientation | 指定步骤条方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | size | 指定大小 | `'default' \| 'small'` | `'default'` |
 | status | 指定当前步骤的状态 | `'wait' \| 'process' \| 'finish' \| 'error'` | `'process'` |
-| type | 步骤条类型 | `'default' \| 'navigation' \| 'inline' \| 'panel' \| 'dot'` | `'default'` |
+| type | 步骤条类型 | `'default' \| 'inline' \| 'dot'` | `'default'` |
 | progressDot | 点状步骤条（已废弃，请使用 type="dot"） | `boolean \| function` | `false` |
 | labelPlacement | 指定标签放置位置（已废弃，请使用 titlePlacement） | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | titlePlacement | 指定标签放置位置 | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | variant | 步骤条样式变体 | `'filled' \| 'outlined'` | `'filled'` |
-| percent | 当前步骤的进度百分比（0-100） | `number` | - |
 | responsive | 是否响应式 | `boolean` | `true` |
 | ellipsis | 是否省略过长的标题和描述 | `boolean` | `false` |
 | offset | 内联型步骤条的偏移量 | `number` | `0` |
@@ -5594,7 +5594,7 @@ import { Steps, ProgressIcon, PanelArrow } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Steps, Button, Space } from 'ant-design-hmfw'
+import { Steps, Button, Space } from '@hmfw/ant-design'
 
 const current = ref(0)
 
@@ -5614,7 +5614,7 @@ const items = [
 </template>
 
 <script setup lang="ts">
-import { Steps } from 'ant-design-hmfw'
+import { Steps } from '@hmfw/ant-design'
 
 const items = [
   {
@@ -5702,7 +5702,7 @@ import { Switch } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Switch } from 'ant-design-hmfw'
+import { Switch } from '@hmfw/ant-design'
 
 const checked = ref(false)
 const checked2 = ref(true)
@@ -5722,7 +5722,7 @@ const checked2 = ref(true)
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Switch } from 'ant-design-hmfw'
+import { Switch } from '@hmfw/ant-design'
 
 const checked1 = ref(true)
 const checked2 = ref(false)
@@ -5835,7 +5835,7 @@ import { Table } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Table } from 'ant-design-hmfw'
+import { Table } from '@hmfw/ant-design'
 
 const dataSource = [
   { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },
@@ -5858,7 +5858,7 @@ const columns = [
 </template>
 
 <script setup lang="ts">
-import { Table } from 'ant-design-hmfw'
+import { Table } from '@hmfw/ant-design'
 
 const dataSource = [
   { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },
@@ -5949,7 +5949,7 @@ import { Tabs } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Tabs } from 'ant-design-hmfw'
+import { Tabs } from '@hmfw/ant-design'
 
 const items = [
   { key: '1', label: 'Tab 1', children: 'Content of Tab Pane 1' },
@@ -5972,20 +5972,20 @@ const onChange = (key: string) => {
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Tabs, Icon } from 'ant-design-hmfw'
-import { AppleOutlined, AndroidOutlined } from 'ant-design-hmfw'
+import { Tabs } from '@hmfw/ant-design'
+import { AppleOutlined, AndroidOutlined } from '@hmfw/ant-design'
 
 const items = [
   {
     key: '1',
     label: 'Tab 1',
-    icon: h(Icon, { component: AppleOutlined }),
+    icon: h(AppleOutlined, { class: 'hmfw-icon' }),
     children: 'Content of Tab 1',
   },
   {
     key: '2',
     label: 'Tab 2',
-    icon: h(Icon, { component: AndroidOutlined }),
+    icon: h(AndroidOutlined, { class: 'hmfw-icon' }),
     children: 'Content of Tab 2',
   },
 ]
@@ -6049,7 +6049,7 @@ import { Tag, CheckableTag } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Tag } from 'ant-design-hmfw'
+import { Tag } from '@hmfw/ant-design'
 
 function onClose() {
   console.log('关闭标签')
@@ -6077,7 +6077,7 @@ function onClose() {
 </template>
 
 <script setup lang="ts">
-import { Tag } from 'ant-design-hmfw'
+import { Tag } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -6150,7 +6150,7 @@ import { TimePicker } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TimePicker } from 'ant-design-hmfw'
+import { TimePicker } from '@hmfw/ant-design'
 
 const time = ref('')
 const time2 = ref('10:30:00')
@@ -6183,7 +6183,7 @@ const handleChange = (value: string) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TimePicker } from 'ant-design-hmfw'
+import { TimePicker } from '@hmfw/ant-design'
 
 const time1 = ref('')
 const time2 = ref('')
@@ -6248,7 +6248,7 @@ import { Timeline, TimelineItem } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Timeline } from 'ant-design-hmfw'
+import { Timeline } from '@hmfw/ant-design'
 
 const items = [
   { content: '创建服务现场 2015-09-01' },
@@ -6267,7 +6267,7 @@ const items = [
 </template>
 
 <script setup lang="ts">
-import { Timeline } from 'ant-design-hmfw'
+import { Timeline } from '@hmfw/ant-design'
 
 const items = [
   { content: '创建服务现场 2015-09-01' },
@@ -6336,7 +6336,7 @@ import { Tooltip } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Tooltip, Button } from 'ant-design-hmfw'
+import { Tooltip, Button } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -6354,7 +6354,7 @@ import { Tooltip, Button } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Tooltip, Button } from 'ant-design-hmfw'
+import { Tooltip, Button } from '@hmfw/ant-design'
 
 const placements = [
   'topLeft',
@@ -6455,8 +6455,8 @@ import { Tour } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tour, Button, Space } from 'ant-design-hmfw'
-import type { TourStep } from 'ant-design-hmfw'
+import { Tour, Button, Space } from '@hmfw/ant-design'
+import type { TourStep } from '@hmfw/ant-design'
 
 const open = ref(false)
 
@@ -6493,8 +6493,8 @@ const steps: TourStep[] = [
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tour, Button, Space } from 'ant-design-hmfw'
-import type { TourStep } from 'ant-design-hmfw'
+import { Tour, Button, Space } from '@hmfw/ant-design'
+import type { TourStep } from '@hmfw/ant-design'
 
 const defaultOpen = ref(false)
 const primaryOpen = ref(false)
@@ -6602,8 +6602,8 @@ import { Transfer } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Transfer } from 'ant-design-hmfw'
-import type { TransferItem } from 'ant-design-hmfw'
+import { Transfer } from '@hmfw/ant-design'
+import type { TransferItem } from '@hmfw/ant-design'
 
 const dataSource: TransferItem[] = Array.from({ length: 10 }, (_, i) => ({
   key: String(i),
@@ -6625,8 +6625,8 @@ const targetKeys = ref(['1', '3', '5'])
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Transfer } from 'ant-design-hmfw'
-import type { TransferItem } from 'ant-design-hmfw'
+import { Transfer } from '@hmfw/ant-design'
+import type { TransferItem } from '@hmfw/ant-design'
 
 const dataSource: TransferItem[] = Array.from({ length: 20 }, (_, i) => ({
   key: String(i),
@@ -6737,7 +6737,7 @@ import { Tree, DirectoryTree } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tree } from 'ant-design-hmfw'
+import { Tree } from '@hmfw/ant-design'
 
 const expandedKeys = ref(['0-0', '0-0-0'])
 const selectedKeys = ref<string[]>([])
@@ -6776,7 +6776,7 @@ const treeData = [
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tree } from 'ant-design-hmfw'
+import { Tree } from '@hmfw/ant-design'
 
 const expandedKeys = ref(['0-0'])
 const checkedKeys = ref<string[]>([])
@@ -6878,8 +6878,8 @@ import { TreeSelect } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TreeSelect, Space } from 'ant-design-hmfw'
-import type { TreeSelectNode } from 'ant-design-hmfw'
+import { TreeSelect, Space } from '@hmfw/ant-design'
+import type { TreeSelectNode } from '@hmfw/ant-design'
 
 const value = ref<string>()
 
@@ -6913,8 +6913,8 @@ const treeData: TreeSelectNode[] = [
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TreeSelect, Space } from 'ant-design-hmfw'
-import type { TreeSelectNode } from 'ant-design-hmfw'
+import { TreeSelect, Space } from '@hmfw/ant-design'
+import type { TreeSelectNode } from '@hmfw/ant-design'
 
 const value = ref<(string | number)[]>([])
 
@@ -7030,7 +7030,7 @@ import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Title, Space } from 'ant-design-hmfw'
+import { Title, Space } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -7049,7 +7049,7 @@ import { Title, Space } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Text, Space } from 'ant-design-hmfw'
+import { Text, Space } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -7142,8 +7142,8 @@ import { Upload, UploadDragger } from 'ant-design-hmfw'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Upload, Button } from 'ant-design-hmfw'
-import type { UploadFile } from 'ant-design-hmfw'
+import { Upload, Button } from '@hmfw/ant-design'
+import type { UploadFile } from '@hmfw/ant-design'
 
 const fileList = ref<UploadFile[]>([])
 
@@ -7178,8 +7178,8 @@ const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Upload } from 'ant-design-hmfw'
-import type { UploadFile } from 'ant-design-hmfw'
+import { Upload } from '@hmfw/ant-design'
+import type { UploadFile } from '@hmfw/ant-design'
 
 const fileList = ref<UploadFile[]>([
   {
@@ -7254,7 +7254,7 @@ import { Watermark } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Watermark } from 'ant-design-hmfw'
+import { Watermark } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -7268,7 +7268,7 @@ import { Watermark } from 'ant-design-hmfw'
 </template>
 
 <script setup lang="ts">
-import { Watermark } from 'ant-design-hmfw'
+import { Watermark } from '@hmfw/ant-design'
 </script>
 ```
 
