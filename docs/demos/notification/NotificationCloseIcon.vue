@@ -8,20 +8,20 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { notification, Button, Icon, CloseCircleFilled, CheckCircleFilled } from '@hmfw/ant-design'
+import { notification, Button, CloseCircleFilled, CheckCircleFilled } from '@hmfw/ant-design'
 
 function openWithCustomIcon() {
   notification.info({
     message: '自定义关闭图标',
     description: '此通知使用了自定义的关闭图标（实心圆形关闭图标）。',
-    closeIcon: () => h(Icon, { component: CloseCircleFilled }),
+    closeIcon: () => h(CloseCircleFilled, { class: 'hmfw-icon' }),
     duration: 0,
   })
 }
 
 function setGlobalCloseIcon() {
   notification.config({
-    closeIcon: () => h(Icon, { component: CheckCircleFilled }),
+    closeIcon: () => h(CheckCircleFilled, { class: 'hmfw-icon' }),
   })
 
   notification.success({

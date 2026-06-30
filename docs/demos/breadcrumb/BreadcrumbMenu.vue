@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Breadcrumb, Icon } from '@hmfw/ant-design'
+import { Breadcrumb, AppstoreOutlined } from '@hmfw/ant-design'
 import type { BreadcrumbItem as BreadcrumbItemType } from '@hmfw/ant-design'
 
 const items: BreadcrumbItemType[] = [
@@ -22,17 +22,17 @@ const items: BreadcrumbItemType[] = [
         {
           key: 'app1',
           label: '应用一',
-          icon: h(Icon, { type: 'appstore' }),
+          icon: h(AppstoreOutlined, { class: 'hmfw-icon' }),
         },
         {
           key: 'app2',
           label: '应用二',
-          icon: h(Icon, { type: 'appstore' }),
+          icon: h(AppstoreOutlined, { class: 'hmfw-icon' }),
         },
         {
           key: 'app3',
           label: '应用三',
-          icon: h(Icon, { type: 'appstore' }),
+          icon: h(AppstoreOutlined, { class: 'hmfw-icon' }),
         },
       ],
       onClick: (info) => {

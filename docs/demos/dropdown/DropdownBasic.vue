@@ -2,13 +2,13 @@
   <Dropdown :menu="menu">
     <Button>
       下拉菜单
-      <Icon type="down" />
+      <DownOutlined class="hmfw-icon" />
     </Button>
   </Dropdown>
 </template>
 
 <script setup lang="ts">
-import { Dropdown, Button, Icon } from '@hmfw/ant-design'
+import { Dropdown, Button, DownOutlined } from '@hmfw/ant-design'
 
 const menu = {
   items: [

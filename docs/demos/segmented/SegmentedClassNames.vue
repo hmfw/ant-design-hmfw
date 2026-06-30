@@ -81,7 +81,7 @@
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from '@hmfw/ant-design'
+import { Segmented } from '@hmfw/ant-design'
 import { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/ant-design'
 
 const value1 = ref('选项一')
@@ -95,17 +95,17 @@ const options2 = [
 
 const value3 = ref('list')
 const options3 = [
-  { value: 'list', label: '列表', icon: h(Icon, { component: HomeOutlined }) },
-  { value: 'grid', label: '网格', icon: h(Icon, { component: UserOutlined }) },
+  { value: 'list', label: '列表', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },
+  { value: 'grid', label: '网格', icon: h(UserOutlined, { class: 'hmfw-icon' }) },
 ]
 
 const value4 = ref('Morning')
 
 const value5 = ref('home')
 const options5 = [
-  { value: 'home', icon: h(Icon, { component: HomeOutlined }) },
-  { value: 'user', icon: h(Icon, { component: UserOutlined }) },
-  { value: 'settings', icon: h(Icon, { component: SettingOutlined }) },
+  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },
+  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }) },
+  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }) },
 ]
 </script>
 

@@ -175,7 +175,7 @@ const MyIcon: IconComponent = () => (
 ```
 
 ```vue
-<Icon :component="MyIcon" />
+<MyIcon class="hmfw-icon" />
 ```
 
 #### 方案二：脚本批量生成

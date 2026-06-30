@@ -2,10 +2,10 @@
   <div style="display: flex; flex-direction: column; gap: 16px">
     <Switch v-model:checked="checked1">
       <template #checkedChildren>
-        <Icon :component="CheckOutlined" />
+        <CheckOutlined class="hmfw-icon" />
       </template>
       <template #unCheckedChildren>
-        <Icon :component="CloseOutlined" />
+        <CloseOutlined class="hmfw-icon" />
       </template>
     </Switch>
     <Switch v-model:checked="checked2" checked-children="✓" un-checked-children="✗" />
@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Switch, Icon, CheckOutlined, CloseOutlined } from '@hmfw/ant-design'
+import { Switch, CheckOutlined, CloseOutlined } from '@hmfw/ant-design'
 
 const checked1 = ref(true)
 const checked2 = ref(false)

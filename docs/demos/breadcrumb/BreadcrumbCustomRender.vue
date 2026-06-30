@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Breadcrumb, Icon } from '@hmfw/ant-design'
+import { Breadcrumb, HomeOutlined, AppstoreOutlined, FileOutlined } from '@hmfw/ant-design'
 import type { BreadcrumbItem as BreadcrumbItemType } from '@hmfw/ant-design'
 
 const items: BreadcrumbItemType[] = [
@@ -27,6 +27,11 @@ const items: BreadcrumbItemType[] = [
   { title: '产品', path: 'products' },
   { title: '详情' },
 ]
+
+const iconMap: Record<string, any> = {
+  首页: HomeOutlined,
+  产品: AppstoreOutlined,
+}
 
 // 自定义渲染 - 添加图标
 const itemRenderWithIcon = (
@@ -36,10 +41,10 @@ const itemRenderWithIcon = (
   paths: string[],
 ) => {
   const isLast = items.indexOf(item) === items.length - 1
-  const iconType = item.title === '首页' ? 'home' : item.title === '产品' ? 'appstore' : 'file'
+  const iconComp = iconMap[item.title as string] || FileOutlined
 
   const content = h('span', { style: 'display: flex; align-items: center; gap: 4px;' }, [
-    h(Icon, { type: iconType, style: 'font-size: 14px;' }),
+    h(iconComp, { class: 'hmfw-icon', style: 'font-size: 14px;' }),
     h('span', item.title as string),
   ])
 

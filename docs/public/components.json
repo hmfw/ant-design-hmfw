@@ -1,12 +1,12 @@
 {
   "name": "ant-design-hmfw",
-  "version": "0.1.0",
-  "description": "A Vue3 UI component library based on Ant Design v6, featuring 66 high-quality components with TypeScript support",
+  "version": "0.5.0",
+  "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
-  "install": "pnpm add @hmfw/ant-design",
+  "install": "pnpm add ant-design-hmfw",
   "usage": {
-    "global": "import AntDesignHmfw from '@hmfw/ant-design'\nimport 'ant-design-hmfw/style.css'\napp.use(AntDesignHmfw)",
-    "onDemand": "import { Button } from '@hmfw/ant-design'\nimport 'ant-design-hmfw/style.css'"
+    "global": "import AntDesignHmfw from 'ant-design-hmfw'\nimport 'ant-design-hmfw/style.css'\napp.use(AntDesignHmfw)",
+    "onDemand": "import { Button } from 'ant-design-hmfw'\nimport 'ant-design-hmfw/style.css'"
   },
   "components": [
     {
@@ -15,7 +15,7 @@
       "title": "Alert 警告提示",
       "description": "警告提示，展现需要关注的信息。",
       "whenToUse": "",
-      "import": "import { Alert } from '@hmfw/ant-design'",
+      "import": "import { Alert } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Alert Props",
@@ -178,7 +178,7 @@
       "title": "Anchor 锚点",
       "description": "用于跳转到页面指定位置。",
       "whenToUse": "",
-      "import": "import { Anchor, AnchorLink } from '@hmfw/ant-design'",
+      "import": "import { Anchor, AnchorLink } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Anchor Props",
@@ -390,7 +390,7 @@
       "title": "App 全局化配置",
       "description": "应用级别的全局上下文，提供 `useApp()` 组合式 API，使子组件可以通过 hooks 调用 `message`、`notification`、`modal`，而无需手动挂载实例。",
       "whenToUse": "",
-      "import": "import { App, useApp } from '@hmfw/ant-design'",
+      "import": "import { App, useApp } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "App Props",
@@ -417,7 +417,7 @@
       "title": "AutoComplete 自动完成",
       "description": "输入框自动完成功能。",
       "whenToUse": "需要自动完成时。",
-      "import": "import { AutoComplete } from '@hmfw/ant-design'",
+      "import": "import { AutoComplete } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "AutoComplete Props",
@@ -644,7 +644,7 @@
       "title": "Avatar 头像",
       "description": "用来代表用户或事物，支持图片、图标或字符展示。",
       "whenToUse": "",
-      "import": "import { Avatar, AvatarGroup } from '@hmfw/ant-design'",
+      "import": "import { Avatar, AvatarGroup } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Avatar Props",
@@ -796,7 +796,7 @@
       "title": "BackTop 回到顶部",
       "description": "返回页面顶部的操作按钮。",
       "whenToUse": "",
-      "import": "import { BackTop } from '@hmfw/ant-design'",
+      "import": "import { BackTop } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "BackTop Props",
@@ -901,7 +901,7 @@
       "title": "Badge 徽标数",
       "description": "图标右上角的圆形徽标数字。",
       "whenToUse": "",
-      "import": "import { Badge, Ribbon } from '@hmfw/ant-design'",
+      "import": "import { Badge, Ribbon } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Badge Props",
@@ -1046,7 +1046,7 @@
       "title": "Breadcrumb 面包屑",
       "description": "显示当前页面在系统层级结构中的位置，并能向上返回。",
       "whenToUse": "",
-      "import": "import { Breadcrumb } from '@hmfw/ant-design'",
+      "import": "import { Breadcrumb } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Breadcrumb Props",
@@ -1189,7 +1189,7 @@
         {
           "title": "带图标",
           "description": "可以在 `title` 中使用图标。",
-          "code": "<template>\n  <Breadcrumb :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Breadcrumb, Icon, HomeOutlined, UserOutlined } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    title: h(Icon, { component: HomeOutlined }),\n    href: '/',\n  },\n  {\n    title: h('span', {}, [\n      h(Icon, { component: UserOutlined }),\n      h('span', { style: { marginLeft: '4px' } }, '用户列表'),\n    ]),\n    href: '/users',\n  },\n  {\n    title: '用户详情',\n  },\n]\n</script>"
+          "code": "<template>\n  <Breadcrumb :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Breadcrumb, HomeOutlined, UserOutlined } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    title: h(HomeOutlined, { class: 'hmfw-icon' }),\n    href: '/',\n  },\n  {\n    title: h('span', {}, [\n      h(UserOutlined, { class: 'hmfw-icon' }),\n      h('span', { style: { marginLeft: '4px' } }, '用户列表'),\n    ]),\n    href: '/users',\n  },\n  {\n    title: '用户详情',\n  },\n]\n</script>"
         },
         {
           "title": "带点击事件",
@@ -1225,7 +1225,7 @@
       "title": "Button 按钮",
       "description": "按钮用于开始一个即时操作。",
       "whenToUse": "标记了一个（或封装一组）操作命令，响应用户点击行为，触发相应的业务逻辑。",
-      "import": "import { Button } from '@hmfw/ant-design'",
+      "import": "import { Button } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Button Props",
@@ -1429,7 +1429,7 @@
       "title": "Calendar 日历",
       "description": "按照日历形式展示数据的容器。",
       "whenToUse": "当数据是日期或按照日期划分时，例如日程、课表、价格日历等，农历等。目前支持年/月切换。",
-      "import": "import { Calendar } from '@hmfw/ant-design'",
+      "import": "import { Calendar } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Calendar Props",
@@ -1655,7 +1655,7 @@
       "title": "Card 卡片",
       "description": "通用卡片容器。",
       "whenToUse": "",
-      "import": "import { Card, CardGrid, CardMeta } from '@hmfw/ant-design'",
+      "import": "import { Card, CardGrid, CardMeta } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Card Props",
@@ -1863,7 +1863,7 @@
       "title": "Carousel 走马灯",
       "description": "旋转播放的幻灯片。",
       "whenToUse": "",
-      "import": "import { Carousel } from '@hmfw/ant-design'",
+      "import": "import { Carousel } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Carousel Props",
@@ -2063,7 +2063,7 @@
       "title": "Cascader 级联选择",
       "description": "级联选择框。",
       "whenToUse": "",
-      "import": "import { Cascader } from '@hmfw/ant-design'",
+      "import": "import { Cascader } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Cascader Props",
@@ -2361,7 +2361,7 @@
       "title": "Checkbox 多选框",
       "description": "多选框。",
       "whenToUse": "",
-      "import": "import { Checkbox, CheckboxGroup } from '@hmfw/ant-design'",
+      "import": "import { Checkbox, CheckboxGroup } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Checkbox Props",
@@ -2681,7 +2681,7 @@
       "title": "Collapse 折叠面板",
       "description": "可以折叠/展开的内容区域。",
       "whenToUse": "",
-      "import": "import { Collapse, CollapsePanel } from '@hmfw/ant-design'",
+      "import": "import { Collapse, CollapsePanel } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Collapse Props",
@@ -2954,7 +2954,7 @@
         {
           "title": "自定义展开图标",
           "description": "通过 `expandIcon` 可以自定义展开图标。",
-          "code": "<template>\n  <Collapse :default-active-key=\"['1']\" :expand-icon=\"customExpandIcon\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Collapse, Icon, DownOutlined } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    key: '1',\n    label: '自定义展开图标 1',\n    children: '这是面板内容 1',\n  },\n  {\n    key: '2',\n    label: '自定义展开图标 2',\n    children: '这是面板内容 2',\n  },\n  {\n    key: '3',\n    label: '自定义展开图标 3',\n    children: '这是面板内容 3',\n  },\n]\n\nconst customExpandIcon = ({ isActive }: { isActive?: boolean }) => {\n  return h(Icon, {\n    component: DownOutlined,\n    style: {\n      transform: isActive ? 'rotate(0deg)' : 'rotate(-90deg)',\n      transition: 'transform 0.3s',\n    },\n  })\n}\n</script>"
+          "code": "<template>\n  <Collapse :default-active-key=\"['1']\" :expand-icon=\"customExpandIcon\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Collapse, DownOutlined } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    key: '1',\n    label: '自定义展开图标 1',\n    children: '这是面板内容 1',\n  },\n  {\n    key: '2',\n    label: '自定义展开图标 2',\n    children: '这是面板内容 2',\n  },\n  {\n    key: '3',\n    label: '自定义展开图标 3',\n    children: '这是面板内容 3',\n  },\n]\n\nconst customExpandIcon = ({ isActive }: { isActive?: boolean }) => {\n  return h(DownOutlined, {\n    class: 'hmfw-icon',\n    style: {\n      transform: isActive ? 'rotate(0deg)' : 'rotate(-90deg)',\n      transition: 'transform 0.3s',\n    },\n  })\n}\n</script>"
         },
         {
           "title": "额外内容",
@@ -2980,7 +2980,7 @@
       "title": "ColorPicker 颜色选择器",
       "description": "提供颜色选取的组件。",
       "whenToUse": "",
-      "import": "import { ColorPicker } from '@hmfw/ant-design'",
+      "import": "import { ColorPicker } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "ColorPicker Props",
@@ -3092,7 +3092,7 @@
       "title": "ConfigProvider 全局配置",
       "description": "为组件提供统一的全局化配置。",
       "whenToUse": "",
-      "import": "import { ConfigProvider, useConfig, usePrefixCls, useLocale } from '@hmfw/ant-design'",
+      "import": "import { ConfigProvider, useConfig, usePrefixCls, useLocale } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "ConfigProvider Props",
@@ -3157,7 +3157,7 @@
       "title": "DatePicker 日期选择框",
       "description": "输入或选择日期的控件。",
       "whenToUse": "当用户需要输入一个日期，可以点击标准输入框，弹出日期面板进行选择。",
-      "import": "import { DatePicker } from '@hmfw/ant-design'",
+      "import": "import { DatePicker } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "DatePicker Props",
@@ -3393,7 +3393,7 @@
       "title": "Descriptions 描述列表",
       "description": "成组展示多个只读字段。",
       "whenToUse": "",
-      "import": "import { Descriptions, DescriptionsItem } from '@hmfw/ant-design'",
+      "import": "import { Descriptions, DescriptionsItem } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Descriptions Props",
@@ -3567,7 +3567,7 @@
       "title": "Divider 分割线",
       "description": "区隔内容的分割线。",
       "whenToUse": "",
-      "import": "import { Divider } from '@hmfw/ant-design'",
+      "import": "import { Divider } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Divider Props",
@@ -3675,7 +3675,7 @@
       "title": "Drawer 抽屉",
       "description": "屏幕边缘滑出的浮层面板。",
       "whenToUse": "",
-      "import": "import { Drawer } from '@hmfw/ant-design'",
+      "import": "import { Drawer } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Drawer Props",
@@ -3947,7 +3947,7 @@
       "title": "Dropdown 下拉菜单",
       "description": "向下弹出的列表。",
       "whenToUse": "",
-      "import": "import { Dropdown } from '@hmfw/ant-design'",
+      "import": "import { Dropdown } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Dropdown Props",
@@ -4171,7 +4171,7 @@
         {
           "title": "基础用法",
           "description": "最简单的下拉菜单。",
-          "code": "<template>\n  <Dropdown :menu=\"menu\">\n    <Button>\n      下拉菜单\n      <Icon type=\"down\" />\n    </Button>\n  </Dropdown>\n</template>\n\n<script setup lang=\"ts\">\nimport { Dropdown, Button, Icon } from '@hmfw/ant-design'\n\nconst menu = {\n  items: [\n    { key: '1', label: '菜单项一' },\n    { key: '2', label: '菜单项二' },\n    { key: '3', label: '菜单项三' },\n  ],\n  onClick: ({ key }: { key: string }) => {\n    console.log('点击了:', key)\n  },\n}\n</script>"
+          "code": "<template>\n  <Dropdown :menu=\"menu\">\n    <Button>\n      下拉菜单\n      <DownOutlined class=\"hmfw-icon\" />\n    </Button>\n  </Dropdown>\n</template>\n\n<script setup lang=\"ts\">\nimport { Dropdown, Button, DownOutlined } from '@hmfw/ant-design'\n\nconst menu = {\n  items: [\n    { key: '1', label: '菜单项一' },\n    { key: '2', label: '菜单项二' },\n    { key: '3', label: '菜单项三' },\n  ],\n  onClick: ({ key }: { key: string }) => {\n    console.log('点击了:', key)\n  },\n}\n</script>"
         },
         {
           "title": "触发方式",
@@ -4212,7 +4212,7 @@
       "title": "Empty 空状态",
       "description": "空状态时的展示占位图。",
       "whenToUse": "",
-      "import": "import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from '@hmfw/ant-design'",
+      "import": "import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Empty Props",
@@ -4311,7 +4311,7 @@
       "title": "Flex 弹性布局",
       "description": "弹性布局。",
       "whenToUse": "",
-      "import": "import { Flex } from '@hmfw/ant-design'",
+      "import": "import { Flex } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Flex Props",
@@ -4395,7 +4395,7 @@
       "title": "FloatButton 悬浮按钮",
       "description": "悬浮于页面上方的按钮。",
       "whenToUse": "",
-      "import": "import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '@hmfw/ant-design'",
+      "import": "import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "FloatButton Props",
@@ -4701,7 +4701,7 @@
       "title": "Form 表单",
       "description": "高性能表单控件，自带数据域管理。包含数据录入、校验以及对应样式。",
       "whenToUse": "",
-      "import": "import { Form, FormItem, useForm } from '@hmfw/ant-design'",
+      "import": "import { Form, FormItem, useForm } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Form Props",
@@ -5107,7 +5107,7 @@
       "title": "Grid 栅格",
       "description": "24 栅格系统。",
       "whenToUse": "",
-      "import": "import { Row, Col } from '@hmfw/ant-design'",
+      "import": "import { Row, Col } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Row Props",
@@ -5259,7 +5259,7 @@
       "title": "Icon 图标",
       "description": "语义化的矢量图形，用于展示常用的操作和状态。",
       "whenToUse": "",
-      "import": "import { Icon } from '@hmfw/ant-design'",
+      "import": "import { Icon } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Icon Props",
@@ -5301,29 +5301,24 @@
       "slots": [],
       "demos": [
         {
-          "title": "图标浏览器",
-          "description": "浏览所有内置图标，支持搜索和分类过滤。点击图标可复制代码。",
-          "code": "<script setup lang=\"ts\">\nimport { ref, computed } from 'vue'\nimport { Icon, searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '@hmfw/ant-design'\nimport type { IconSearchResult } from '@hmfw/ant-design'\n\nconst searchQuery = ref('')\nconst selectedCategory = ref('all')\nconst copiedIcon = ref('')\n\nconst categories = computed(() => ['all', ...getAllCategories()])\n\nconst filteredIcons = computed(() => {\n  let results: IconSearchResult[] = []\n\n  if (searchQuery.value.trim()) {\n    // 搜索模式\n    results = searchIcons(searchQuery.value)\n  } else if (selectedCategory.value !== 'all') {\n    // 分类过滤模式\n    results = getIconsByCategory(selectedCategory.value)\n  } else {\n    // 显示所有图标\n    results = getAllIcons()\n  }\n\n  return results\n})\n\nconst copyCode = (iconName: string) => {\n  const componentName =\n    iconName\n      .split('-')\n      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))\n      .join('') + 'Outlined'\n\n  const code = `import { ${componentName} } from '@hmfw/ant-design'\\n\\n<Icon :component=\"${componentName}\" />`\n\n  navigator.clipboard.writeText(code).then(() => {\n    copiedIcon.value = iconName\n    setTimeout(() => {\n      copiedIcon.value = ''\n    }, 2000)\n  })\n}\n</script>\n\n<template>\n  <div class=\"icon-browser\">\n    <!-- 搜索和过滤栏 -->\n    <div class=\"controls\">\n      <div class=\"search-box\">\n        <input\n          v-model=\"searchQuery\"\n          type=\"text\"\n          placeholder=\"搜索图标... (如: home, search, arrow)\"\n          class=\"search-input\"\n        />\n        <span class=\"search-icon\">🔍</span>\n      </div>\n\n      <div class=\"category-filter\">\n        <label>分类：</label>\n        <select v-model=\"selectedCategory\" class=\"category-select\">\n          <option v-for=\"category in categories\" :key=\"category\" :value=\"category\">\n            {{ category === 'all' ? '全部' : category }}\n          </option>\n        </select>\n      </div>\n    </div>\n\n    <!-- 结果统计 -->\n    <div class=\"stats\">\n      找到 <strong>{{ filteredIcons.length }}</strong> 个图标\n      <span v-if=\"searchQuery\" class=\"search-term\"> 搜索: \"{{ searchQuery }}\" </span>\n    </div>\n\n    <!-- 图标网格 -->\n    <div class=\"icon-grid\">\n      <div\n        v-for=\"icon in filteredIcons\"\n        :key=\"icon.name\"\n        class=\"icon-card\"\n        :class=\"{ copied: copiedIcon === icon.name }\"\n        @click=\"copyCode(icon.name)\"\n      >\n        <div class=\"icon-display\">\n          <Icon :component=\"icon.component\" :style=\"{ fontSize: '32px' }\" />\n        </div>\n        <div class=\"icon-name\">\n          {{ icon.name }}\n        </div>\n        <div class=\"icon-category\">\n          {{ icon.category }}\n        </div>\n        <div class=\"icon-keywords\">\n          <span v-for=\"keyword in icon.keywords.slice(0, 3)\" :key=\"keyword\" class=\"keyword-tag\">\n            {{ keyword }}\n          </span>\n        </div>\n        <div v-if=\"copiedIcon === icon.name\" class=\"copied-indicator\">✓ 已复制</div>\n      </div>\n    </div>\n\n    <!-- 空状态 -->\n    <div v-if=\"filteredIcons.length === 0\" class=\"empty-state\">\n      <div class=\"empty-icon\">🔍</div>\n      <div class=\"empty-text\">未找到匹配的图标</div>\n      <div class=\"empty-hint\">尝试其他关键词或选择不同的分类</div>\n    </div>\n  </div>\n</template>\n\n<style scoped>\n.icon-browser {\n  padding: 24px;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n\n.controls {\n  display: flex;\n  gap: 16px;\n  margin-bottom: 24px;\n  flex-wrap: wrap;\n}\n\n.search-box {\n  position: relative;\n  flex: 1;\n  min-width: 300px;\n}\n\n.search-input {\n  width: 100%;\n  padding: 12px 40px 12px 16px;\n  border: 1px solid #d9d9d9;\n  border-radius: 8px;\n  font-size: 14px;\n  transition: all 0.3s;\n}\n\n.search-input:focus {\n  outline: none;\n  border-color: #1890ff;\n  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);\n}\n\n.search-icon {\n  position: absolute;\n  right: 12px;\n  top: 50%;\n  transform: translateY(-50%);\n  font-size: 18px;\n  opacity: 0.5;\n}\n\n.category-filter {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n\n.category-select {\n  padding: 8px 12px;\n  border: 1px solid #d9d9d9;\n  border-radius: 8px;\n  font-size: 14px;\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\n.category-select:hover {\n  border-color: #1890ff;\n}\n\n.stats {\n  margin-bottom: 16px;\n  color: #666;\n  font-size: 14px;\n}\n\n.search-term {\n  color: #1890ff;\n  margin-left: 8px;\n}\n\n.icon-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));\n  gap: 16px;\n  margin-bottom: 24px;\n}\n\n.icon-card {\n  position: relative;\n  padding: 20px;\n  border: 1px solid #e8e8e8;\n  border-radius: 8px;\n  text-align: center;\n  cursor: pointer;\n  transition: all 0.3s;\n  background: #fff;\n}\n\n.icon-card:hover {\n  border-color: #1890ff;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n  transform: translateY(-2px);\n}\n\n.icon-card.copied {\n  border-color: #52c41a;\n  background: #f6ffed;\n}\n\n.icon-display {\n  margin-bottom: 12px;\n  color: #333;\n}\n\n.icon-name {\n  font-size: 13px;\n  font-weight: 500;\n  color: #333;\n  margin-bottom: 4px;\n}\n\n.icon-category {\n  font-size: 11px;\n  color: #999;\n  margin-bottom: 8px;\n  text-transform: capitalize;\n}\n\n.icon-keywords {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  justify-content: center;\n  min-height: 20px;\n}\n\n.keyword-tag {\n  font-size: 10px;\n  padding: 2px 6px;\n  background: #f0f0f0;\n  border-radius: 4px;\n  color: #666;\n}\n\n.copied-indicator {\n  position: absolute;\n  top: 8px;\n  right: 8px;\n  font-size: 12px;\n  color: #52c41a;\n  font-weight: 500;\n}\n\n.empty-state {\n  text-align: center;\n  padding: 60px 20px;\n  color: #999;\n}\n\n.empty-icon {\n  font-size: 48px;\n  margin-bottom: 16px;\n}\n\n.empty-text {\n  font-size: 16px;\n  margin-bottom: 8px;\n  color: #666;\n}\n\n.empty-hint {\n  font-size: 14px;\n}\n</style>"
-        },
-        {
           "title": "基础用法",
           "description": "展示内置的图标类型。",
-          "code": "<template>\n  <Space :size=\"16\" wrap>\n    <Icon :component=\"SearchOutlined\" />\n    <Icon :component=\"CloseOutlined\" />\n    <Icon :component=\"CheckOutlined\" />\n    <Icon :component=\"WarningOutlined\" />\n    <Icon :component=\"InfoCircleOutlined\" />\n    <Icon :component=\"LoadingOutlined\" />\n    <Icon :component=\"UpOutlined\" />\n    <Icon :component=\"DownOutlined\" />\n    <Icon :component=\"LeftOutlined\" />\n    <Icon :component=\"RightOutlined\" />\n    <Icon :component=\"PlusOutlined\" />\n    <Icon :component=\"MinusOutlined\" />\n    <Icon :component=\"EditOutlined\" />\n    <Icon :component=\"DeleteOutlined\" />\n    <Icon :component=\"EyeOutlined\" />\n    <Icon :component=\"HomeOutlined\" />\n    <Icon :component=\"UserOutlined\" />\n    <Icon :component=\"SettingOutlined\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport {\n  Icon,\n  Space,\n  SearchOutlined,\n  CloseOutlined,\n  CheckOutlined,\n  WarningOutlined,\n  InfoCircleOutlined,\n  LoadingOutlined,\n  UpOutlined,\n  DownOutlined,\n  LeftOutlined,\n  RightOutlined,\n  PlusOutlined,\n  MinusOutlined,\n  EditOutlined,\n  DeleteOutlined,\n  EyeOutlined,\n  HomeOutlined,\n  UserOutlined,\n  SettingOutlined,\n} from '@hmfw/ant-design'\n</script>"
+          "code": "<template>\n  <Space :size=\"16\" wrap>\n    <SearchOutlined class=\"hmfw-icon\" />\n    <CloseOutlined class=\"hmfw-icon\" />\n    <CheckOutlined class=\"hmfw-icon\" />\n    <WarningOutlined class=\"hmfw-icon\" />\n    <InfoCircleOutlined class=\"hmfw-icon\" />\n    <LoadingOutlined class=\"hmfw-icon\" />\n    <UpOutlined class=\"hmfw-icon\" />\n    <DownOutlined class=\"hmfw-icon\" />\n    <LeftOutlined class=\"hmfw-icon\" />\n    <RightOutlined class=\"hmfw-icon\" />\n    <PlusOutlined class=\"hmfw-icon\" />\n    <MinusOutlined class=\"hmfw-icon\" />\n    <EditOutlined class=\"hmfw-icon\" />\n    <DeleteOutlined class=\"hmfw-icon\" />\n    <EyeOutlined class=\"hmfw-icon\" />\n    <HomeOutlined class=\"hmfw-icon\" />\n    <UserOutlined class=\"hmfw-icon\" />\n    <SettingOutlined class=\"hmfw-icon\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport {\n  Space,\n  SearchOutlined,\n  CloseOutlined,\n  CheckOutlined,\n  WarningOutlined,\n  InfoCircleOutlined,\n  LoadingOutlined,\n  UpOutlined,\n  DownOutlined,\n  LeftOutlined,\n  RightOutlined,\n  PlusOutlined,\n  MinusOutlined,\n  EditOutlined,\n  DeleteOutlined,\n  EyeOutlined,\n  HomeOutlined,\n  UserOutlined,\n  SettingOutlined,\n} from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "图标尺寸",
           "description": "通过 `style=\"font-size: Npx\"` 控制图标大小（图标使用 `1em` 跟随字体大小）。",
-          "code": "<template>\n  <Space :size=\"16\" align=\"center\">\n    <Icon :component=\"HomeOutlined\" style=\"font-size: 12px\" />\n    <Icon :component=\"HomeOutlined\" style=\"font-size: 16px\" />\n    <Icon :component=\"HomeOutlined\" style=\"font-size: 24px\" />\n    <Icon :component=\"HomeOutlined\" style=\"font-size: 32px\" />\n    <Icon :component=\"HomeOutlined\" style=\"font-size: 48px\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Icon, Space, HomeOutlined } from '@hmfw/ant-design'\n</script>"
+          "code": "<template>\n  <Space :size=\"16\" align=\"center\">\n    <HomeOutlined class=\"hmfw-icon\" style=\"font-size: 12px\" />\n    <HomeOutlined class=\"hmfw-icon\" style=\"font-size: 16px\" />\n    <HomeOutlined class=\"hmfw-icon\" style=\"font-size: 24px\" />\n    <HomeOutlined class=\"hmfw-icon\" style=\"font-size: 32px\" />\n    <HomeOutlined class=\"hmfw-icon\" style=\"font-size: 48px\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Space, HomeOutlined } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "图标颜色",
           "description": "通过 `style=\"color: #xxx\"` 控制图标颜色（图标使用 `currentColor` 继承文字颜色）。",
-          "code": "<template>\n  <Space :size=\"16\">\n    <Icon :component=\"UserOutlined\" style=\"font-size: 24px; color: #1677ff\" />\n    <Icon :component=\"UserOutlined\" style=\"font-size: 24px; color: #52c41a\" />\n    <Icon :component=\"UserOutlined\" style=\"font-size: 24px; color: #faad14\" />\n    <Icon :component=\"UserOutlined\" style=\"font-size: 24px; color: #ff4d4f\" />\n    <Icon :component=\"UserOutlined\" style=\"font-size: 24px; color: #722ed1\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Icon, Space, UserOutlined } from '@hmfw/ant-design'\n</script>"
+          "code": "<template>\n  <Space :size=\"16\">\n    <UserOutlined class=\"hmfw-icon\" style=\"font-size: 24px; color: #1677ff\" />\n    <UserOutlined class=\"hmfw-icon\" style=\"font-size: 24px; color: #52c41a\" />\n    <UserOutlined class=\"hmfw-icon\" style=\"font-size: 24px; color: #faad14\" />\n    <UserOutlined class=\"hmfw-icon\" style=\"font-size: 24px; color: #ff4d4f\" />\n    <UserOutlined class=\"hmfw-icon\" style=\"font-size: 24px; color: #722ed1\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Space, UserOutlined } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "旋转动画",
           "description": "通过 `spin` 属性让图标旋转。",
-          "code": "<template>\n  <Space :size=\"16\">\n    <Icon :component=\"LoadingOutlined\" style=\"font-size: 24px\" spin />\n    <Icon :component=\"SettingOutlined\" style=\"font-size: 24px\" spin />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Icon, Space, LoadingOutlined, SettingOutlined } from '@hmfw/ant-design'\n</script>"
+          "code": "<template>\n  <Space :size=\"16\">\n    <LoadingOutlined class=\"hmfw-icon-spin\" style=\"font-size: 24px\" />\n    <SettingOutlined class=\"hmfw-icon-spin\" style=\"font-size: 24px\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Space, LoadingOutlined, SettingOutlined } from '@hmfw/ant-design'\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/icon"
@@ -5334,7 +5329,7 @@
       "title": "Image 图片",
       "description": "可预览的图片。",
       "whenToUse": "",
-      "import": "import { Image, PreviewGroup } from '@hmfw/ant-design'",
+      "import": "import { Image, PreviewGroup } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Image Props",
@@ -5610,7 +5605,7 @@
       "title": "Input 输入框",
       "description": "通过鼠标或键盘输入内容，是最基础的表单域的包装。",
       "whenToUse": "",
-      "import": "import { Input, InputPassword, TextArea, InputSearch } from '@hmfw/ant-design'",
+      "import": "import { Input, InputPassword, TextArea, InputSearch } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Input Props",
@@ -5913,7 +5908,7 @@
       "title": "InputNumber 数字输入框",
       "description": "通过鼠标或键盘，输入范围内的数值。",
       "whenToUse": "当需要获取标准数值时。",
-      "import": "import { InputNumber } from '@hmfw/ant-design'",
+      "import": "import { InputNumber } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "InputNumber Props",
@@ -6215,7 +6210,7 @@
       "title": "Layout 布局",
       "description": "协助进行页面级整体布局。",
       "whenToUse": "",
-      "import": "import { Layout, Header, Footer, Content, Sider } from '@hmfw/ant-design'",
+      "import": "import { Layout, Header, Footer, Content, Sider } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Layout Props",
@@ -6350,7 +6345,7 @@
       "title": "List 列表",
       "description": "通用列表。",
       "whenToUse": "",
-      "import": "import { List, ListItem, ListItemMeta } from '@hmfw/ant-design'",
+      "import": "import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "List Props",
@@ -6674,7 +6669,7 @@
       "title": "Menu 导航菜单",
       "description": "为页面和功能提供导航的菜单列表。",
       "whenToUse": "",
-      "import": "import { Menu } from '@hmfw/ant-design'",
+      "import": "import { Menu, MenuItem, SubMenu, MenuDivider, MenuItemGroup } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Menu Props",
@@ -6946,22 +6941,22 @@
         {
           "title": "顶部导航",
           "description": "水平的顶部导航菜单。",
-          "code": "<template>\n  <Menu mode=\"horizontal\" :items=\"items\" :selected-keys=\"selectedKeys\" @select=\"onSelect\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\n\nconst selectedKeys = ref(['home'])\n\nconst items = [\n  { key: 'home', label: '首页', icon: 'home' },\n  { key: 'user', label: '用户管理', icon: 'user' },\n  {\n    key: 'setting',\n    label: '系统设置',\n    icon: 'setting',\n    children: [\n      { key: 'setting-1', label: '基础设置' },\n      { key: 'setting-2', label: '高级设置' },\n    ],\n  },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
+          "code": "<template>\n  <Menu mode=\"horizontal\" :items=\"items\" :selected-keys=\"selectedKeys\" @select=\"onSelect\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['home'])\n\nconst items = [\n  { key: 'home', label: '首页', icon: h(HomeOutlined) },\n  { key: 'user', label: '用户管理', icon: h(UserOutlined) },\n  {\n    key: 'setting',\n    label: '系统设置',\n    icon: h(SettingOutlined),\n    children: [\n      { key: 'setting-1', label: '基础设置' },\n      { key: 'setting-2', label: '高级设置' },\n    ],\n  },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
         },
         {
           "title": "内嵌菜单",
           "description": "垂直菜单，子菜单内嵌在菜单区域。",
-          "code": "<template>\n  <div style=\"width: 256px; border-right: 1px solid #f0f0f0\">\n    <Menu mode=\"inline\" :items=\"items\" :selected-keys=\"selectedKeys\" :default-open-keys=\"['sub1']\" @select=\"onSelect\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\n\nconst selectedKeys = ref(['1'])\n\nconst items = [\n  {\n    key: 'sub1',\n    label: '导航一',\n    icon: 'home',\n    children: [\n      { key: '1', label: '选项一' },\n      { key: '2', label: '选项二' },\n      { key: '3', label: '选项三' },\n    ],\n  },\n  {\n    key: 'sub2',\n    label: '导航二',\n    icon: 'setting',\n    children: [\n      { key: '5', label: '选项五' },\n      { key: '6', label: '选项六' },\n    ],\n  },\n  { key: '9', label: '导航三', icon: 'user' },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
+          "code": "<template>\n  <div style=\"width: 256px; border-right: 1px solid #f0f0f0\">\n    <Menu mode=\"inline\" :items=\"items\" :selected-keys=\"selectedKeys\" :default-open-keys=\"['sub1']\" @select=\"onSelect\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { MailOutlined, SettingOutlined, UserOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['1'])\n\nconst items = [\n  {\n    key: 'sub1',\n    label: '导航一',\n    icon: h(MailOutlined),\n    children: [\n      { key: '1', label: '选项一' },\n      { key: '2', label: '选项二' },\n      { key: '3', label: '选项三' },\n    ],\n  },\n  {\n    key: 'sub2',\n    label: '导航二',\n    icon: h(SettingOutlined),\n    children: [\n      { key: '5', label: '选项五' },\n      { key: '6', label: '选项六' },\n    ],\n  },\n  { key: '9', label: '导航三', icon: h(UserOutlined) },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
         },
         {
           "title": "折叠菜单",
           "description": "内嵌菜单可以被折叠。",
-          "code": "<template>\n  <div>\n    <Button type=\"primary\" style=\"margin-bottom: 16px\" @click=\"collapsed = !collapsed\">\n      {{ collapsed ? '展开' : '折叠' }}\n    </Button>\n    <div\n      :style=\"{\n        width: collapsed ? '80px' : '256px',\n        borderRight: '1px solid #f0f0f0',\n        transition: 'width 0.2s',\n      }\"\n    >\n      <Menu\n        mode=\"inline\"\n        :items=\"items\"\n        :selected-keys=\"selectedKeys\"\n        :inline-collapsed=\"collapsed\"\n        @select=\"onSelect\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Menu, Button } from '@hmfw/ant-design'\n\nconst collapsed = ref(false)\nconst selectedKeys = ref(['1'])\n\nconst items = [\n  { key: '1', label: '导航一', icon: 'home' },\n  { key: '2', label: '导航二', icon: 'user' },\n  { key: '3', label: '导航三', icon: 'setting' },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
+          "code": "<template>\n  <div>\n    <Button type=\"primary\" style=\"margin-bottom: 16px\" @click=\"collapsed = !collapsed\">\n      {{ collapsed ? '展开' : '折叠' }}\n    </Button>\n    <div\n      :style=\"{\n        width: collapsed ? '80px' : '256px',\n        borderRight: '1px solid #f0f0f0',\n        transition: 'width 0.2s',\n      }\"\n    >\n      <Menu\n        mode=\"inline\"\n        :items=\"items\"\n        :selected-keys=\"selectedKeys\"\n        :inline-collapsed=\"collapsed\"\n        @select=\"onSelect\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu, Button } from '@hmfw/ant-design'\nimport { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/icons'\n\nconst collapsed = ref(false)\nconst selectedKeys = ref(['1'])\n\nconst items = [\n  { key: '1', label: '导航一', icon: h(HomeOutlined) },\n  { key: '2', label: '导航二', icon: h(UserOutlined) },\n  { key: '3', label: '导航三', icon: h(SettingOutlined) },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
         },
         {
           "title": "危险选项",
           "description": "危险操作使用 danger 属性标记。",
-          "code": "<template>\n  <div style=\"width: 256px\">\n    <Menu mode=\"inline\" :items=\"items\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Menu } from '@hmfw/ant-design'\nimport type { ItemType } from '@hmfw/ant-design'\n\nconst items: ItemType[] = [\n  { key: '1', label: '普通选项' },\n  { key: '2', label: '编辑', icon: '✏️' },\n  { type: 'divider' },\n  { key: '3', label: '删除', danger: true, icon: '🗑️' },\n]\n</script>"
+          "code": "<template>\n  <div style=\"width: 256px\">\n    <Menu mode=\"inline\" :items=\"items\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport type { ItemType } from '@hmfw/ant-design'\nimport { EditOutlined, DeleteOutlined } from '@hmfw/icons'\n\nconst items: ItemType[] = [\n  { key: '1', label: '普通选项' },\n  { key: '2', label: '编辑', icon: h(EditOutlined) },\n  { type: 'divider' },\n  { key: '3', label: '删除', danger: true, icon: h(DeleteOutlined) },\n]\n</script>"
         },
         {
           "title": "分组菜单",
@@ -6976,12 +6971,12 @@
         {
           "title": "全局图标配置",
           "description": "为菜单项配置图标，支持 VNode 和函数两种形式。",
-          "code": "<template>\n  <div style=\"width: 256px\">\n    <Menu mode=\"inline\" :items=\"items\" :selected-keys=\"selectedKeys\" @select=\"onSelect\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\n\nconst selectedKeys = ref(['1'])\n\n// 使用 VNode 作为全局图标\nconst items = [\n  {\n    key: '1',\n    label: '导航一',\n    icon: h('span', { style: { color: '#1890ff' } }, '📄'),\n  },\n  {\n    key: '2',\n    label: '导航二',\n    icon: h('span', { style: { color: '#52c41a' } }, '📋'),\n  },\n  {\n    key: '3',\n    label: '导航三',\n    icon: h('span', { style: { color: '#fa8c16' } }, '⚙️'),\n  },\n  {\n    key: 'sub',\n    label: '子菜单',\n    icon: h('span', '📁'),\n    children: [\n      { key: 'sub-1', label: '子项 1' },\n      { key: 'sub-2', label: '子项 2' },\n    ],\n  },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
+          "code": "<template>\n  <div style=\"width: 256px\">\n    <Menu mode=\"inline\" :items=\"items\" :selected-keys=\"selectedKeys\" @select=\"onSelect\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { FileOutlined, CopyOutlined, SettingOutlined, FolderOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['1'])\n\n// 使用 VNode 作为图标\nconst items = [\n  {\n    key: '1',\n    label: '导航一',\n    icon: h(FileOutlined, { style: { color: '#1890ff' } }),\n  },\n  {\n    key: '2',\n    label: '导航二',\n    icon: h(CopyOutlined, { style: { color: '#52c41a' } }),\n  },\n  {\n    key: '3',\n    label: '导航三',\n    icon: h(SettingOutlined, { style: { color: '#fa8c16' } }),\n  },\n  {\n    key: 'sub',\n    label: '子菜单',\n    icon: h(FolderOutlined),\n    children: [\n      { key: 'sub-1', label: '子项 1' },\n      { key: 'sub-2', label: '子项 2' },\n    ],\n  },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
         },
         {
           "title": "收起状态提示",
           "description": "inlineCollapsed 为 true 时，鼠标悬停会自动显示 Tooltip 提示。",
-          "code": "<template>\n  <div>\n    <Button type=\"primary\" style=\"margin-bottom: 16px\" @click=\"collapsed = !collapsed\">\n      {{ collapsed ? '展开' : '折叠' }}\n    </Button>\n    <div\n      :style=\"{\n        width: collapsed ? '80px' : '256px',\n        borderRight: '1px solid #f0f0f0',\n        transition: 'width 0.2s',\n      }\"\n    >\n      <Menu\n        mode=\"inline\"\n        :items=\"items\"\n        :selected-keys=\"selectedKeys\"\n        :inline-collapsed=\"collapsed\"\n        @select=\"onSelect\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu, Button } from '@hmfw/ant-design'\n\nconst collapsed = ref(false)\nconst selectedKeys = ref(['1'])\n\n// 收起时会自动显示 Tooltip\nconst items = [\n  {\n    key: '1',\n    label: '导航一',\n    icon: h('span', '🏠'),\n    title: '这是导航一的提示',\n  },\n  {\n    key: '2',\n    label: '导航二',\n    icon: h('span', '👤'),\n    title: '这是导航二的提示',\n  },\n  {\n    key: '3',\n    label: '导航三',\n    icon: h('span', '⚙️'),\n  },\n  {\n    key: 'sub',\n    label: '子菜单',\n    icon: h('span', '📁'),\n    children: [\n      { key: 'sub-1', label: '子项 1' },\n      { key: 'sub-2', label: '子项 2' },\n    ],\n  },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
+          "code": "<template>\n  <div>\n    <Button type=\"primary\" style=\"margin-bottom: 16px\" @click=\"collapsed = !collapsed\">\n      {{ collapsed ? '展开' : '折叠' }}\n    </Button>\n    <div\n      :style=\"{\n        width: collapsed ? '80px' : '256px',\n        borderRight: '1px solid #f0f0f0',\n        transition: 'width 0.2s',\n      }\"\n    >\n      <Menu\n        mode=\"inline\"\n        :items=\"items\"\n        :selected-keys=\"selectedKeys\"\n        :inline-collapsed=\"collapsed\"\n        @select=\"onSelect\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu, Button } from '@hmfw/ant-design'\nimport { HomeOutlined, UserOutlined, SettingOutlined, FolderOutlined } from '@hmfw/icons'\n\nconst collapsed = ref(false)\nconst selectedKeys = ref(['1'])\n\n// 收起时鼠标悬停会自动显示 Tooltip\nconst items = [\n  {\n    key: '1',\n    label: '导航一',\n    icon: h(HomeOutlined),\n    title: '这是导航一的提示',\n  },\n  {\n    key: '2',\n    label: '导航二',\n    icon: h(UserOutlined),\n    title: '这是导航二的提示',\n  },\n  {\n    key: '3',\n    label: '导航三',\n    icon: h(SettingOutlined),\n  },\n  {\n    key: 'sub',\n    label: '子菜单',\n    icon: h(FolderOutlined),\n    children: [\n      { key: 'sub-1', label: '子项 1' },\n      { key: 'sub-2', label: '子项 2' },\n    ],\n  },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
         },
         {
           "title": "自定义缩进",
@@ -6991,12 +6986,12 @@
         {
           "title": "子菜单触发方式",
           "description": "使用 triggerSubMenuAction 属性控制子菜单的展开方式（hover 或 click）。",
-          "code": "<template>\n  <div>\n    <div style=\"margin-bottom: 16px\">\n      <label style=\"margin-right: 8px\">触发方式:</label>\n      <select v-model=\"triggerAction\" style=\"padding: 4px 8px\">\n        <option value=\"hover\">hover</option>\n        <option value=\"click\">click</option>\n      </select>\n    </div>\n    <Menu\n      mode=\"horizontal\"\n      :items=\"items\"\n      :selected-keys=\"selectedKeys\"\n      :trigger-sub-menu-action=\"triggerAction\"\n      @select=\"onSelect\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\n\nconst selectedKeys = ref(['1'])\nconst triggerAction = ref<'hover' | 'click'>('hover')\n\nconst items = [\n  { key: '1', label: '导航一' },\n  { key: '2', label: '导航二' },\n  {\n    key: 'sub',\n    label: '子菜单',\n    children: [\n      { key: 'sub-1', label: '子项 1' },\n      { key: 'sub-2', label: '子项 2' },\n      { key: 'sub-3', label: '子项 3' },\n    ],\n  },\n  { key: '4', label: '导航四' },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
+          "code": "<template>\n  <div>\n    <div style=\"margin-bottom: 16px\">\n      <label style=\"margin-right: 8px\">触发方式:</label>\n      <select v-model=\"triggerAction\" style=\"padding: 4px 8px\">\n        <option value=\"hover\">hover</option>\n        <option value=\"click\">click</option>\n      </select>\n    </div>\n    <Menu\n      mode=\"horizontal\"\n      :items=\"items\"\n      :selected-keys=\"selectedKeys\"\n      :trigger-sub-menu-action=\"triggerAction\"\n      @select=\"onSelect\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { AppstoreOutlined, SettingOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['1'])\nconst triggerAction = ref<'hover' | 'click'>('hover')\n\nconst items = [\n  { key: '1', label: '导航一', icon: h(AppstoreOutlined) },\n  { key: '2', label: '导航二', icon: h(SettingOutlined) },\n  {\n    key: 'sub',\n    label: '子菜单',\n    children: [\n      { key: 'sub-1', label: '子项 1' },\n      { key: 'sub-2', label: '子项 2' },\n      { key: 'sub-3', label: '子项 3' },\n    ],\n  },\n  { key: '4', label: '导航四' },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
         },
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义菜单项样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义菜单项样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['1']\"\n        :items=\"basicItems\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemIcon: 'custom-icon',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义子菜单样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义子菜单样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-open-keys=\"['sub1']\"\n        :default-selected-keys=\"['1']\"\n        :items=\"submenuItems\"\n        :class-names=\"{\n          submenu: 'custom-submenu',\n          submenuTitle: 'custom-submenu-title',\n          submenuArrow: 'custom-arrow',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义分组和分割线 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义分组和分割线：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['1']\"\n        :items=\"groupItems\"\n        :class-names=\"{\n          itemGroup: 'custom-group',\n          itemGroupTitle: 'custom-group-title',\n          divider: 'custom-divider',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['2']\"\n        :items=\"basicItems\"\n        :styles=\"{\n          root: { border: '2px solid #722ed1', borderRadius: '12px' },\n          item: { margin: '8px 12px' },\n          itemSelected: {\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            color: '#fff',\n            fontWeight: 'bold',\n          },\n          itemIcon: { fontSize: '16px' },\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 5：水平菜单自定义样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">水平菜单自定义：</div>\n      <Menu\n        mode=\"horizontal\"\n        :default-selected-keys=\"['mail']\"\n        :items=\"horizontalItems\"\n        :class-names=\"{\n          root: 'custom-horizontal',\n          item: 'custom-horizontal-item',\n          itemSelected: 'custom-horizontal-selected',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Menu } from '@hmfw/ant-design'\n\nconst basicItems = [\n  { key: '1', label: '导航一', icon: 'mail' },\n  { key: '2', label: '导航二', icon: 'appstore' },\n  { key: '3', label: '导航三', icon: 'setting' },\n]\n\nconst submenuItems = [\n  { key: '1', label: '选项 1', icon: 'mail' },\n  {\n    key: 'sub1',\n    label: '子菜单',\n    icon: 'appstore',\n    children: [\n      { key: '2', label: '选项 2' },\n      { key: '3', label: '选项 3' },\n    ],\n  },\n  { key: '4', label: '选项 4', icon: 'setting' },\n]\n\nconst groupItems = [\n  {\n    type: 'group',\n    label: '分组 1',\n    children: [\n      { key: '1', label: '选项 1', icon: 'user' },\n      { key: '2', label: '选项 2', icon: 'team' },\n    ],\n  },\n  { type: 'divider' },\n  {\n    type: 'group',\n    label: '分组 2',\n    children: [\n      { key: '3', label: '选项 3', icon: 'file' },\n      { key: '4', label: '选项 4', icon: 'setting' },\n    ],\n  },\n]\n\nconst horizontalItems = [\n  { key: 'mail', label: '邮件', icon: 'mail' },\n  { key: 'app', label: '应用', icon: 'appstore' },\n  { key: 'setting', label: '设置', icon: 'setting' },\n]\n</script>\n\n<style scoped>\n/* 自定义菜单项 */\n:deep(.custom-item) {\n  border-left: 3px solid transparent;\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  border-left-color: #1677ff;\n  transform: translateX(4px);\n}\n\n:deep(.custom-item-selected) {\n  background: linear-gradient(90deg, #e6f4ff 0%, transparent 100%) !important;\n  border-left-color: #1677ff !important;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  color: #1677ff;\n}\n\n/* 自定义子菜单 */\n:deep(.custom-submenu) {\n  margin: 8px 0;\n}\n\n:deep(.custom-submenu-title) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border-radius: 8px;\n  font-weight: 600;\n}\n\n:deep(.custom-submenu-title:hover) {\n  background: linear-gradient(135deg, #d6e4ff 0%, #bae0ff 100%) !important;\n}\n\n:deep(.custom-arrow) {\n  color: #1677ff;\n  font-size: 12px;\n}\n\n/* 自定义分组 */\n:deep(.custom-group) {\n  padding: 8px 0;\n}\n\n:deep(.custom-group-title) {\n  background: linear-gradient(90deg, #1677ff 0%, transparent 100%);\n  color: #fff;\n  font-weight: bold;\n  border-radius: 4px;\n  padding-left: 20px;\n}\n\n:deep(.custom-divider) {\n  background: linear-gradient(90deg, #1677ff 0%, #52c41a 100%);\n  height: 2px;\n  margin: 12px 8px;\n}\n\n/* 自定义水平菜单 */\n:deep(.custom-horizontal) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 8px;\n  border: none;\n  padding: 0 16px;\n}\n\n:deep(.custom-horizontal-item) {\n  color: rgba(255, 255, 255, 0.85);\n  border-bottom: 2px solid transparent;\n  transition: all 0.3s;\n}\n\n:deep(.custom-horizontal-item:hover) {\n  color: #fff;\n  background: rgba(255, 255, 255, 0.1);\n}\n\n:deep(.custom-horizontal-selected) {\n  color: #fff !important;\n  border-bottom-color: #fff !important;\n  background: rgba(255, 255, 255, 0.15);\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义菜单项样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义菜单项样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['1']\"\n        :items=\"basicItems\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemIcon: 'custom-icon',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义子菜单样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义子菜单样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-open-keys=\"['sub1']\"\n        :default-selected-keys=\"['1']\"\n        :items=\"submenuItems\"\n        :class-names=\"{\n          submenu: 'custom-submenu',\n          submenuTitle: 'custom-submenu-title',\n          submenuArrow: 'custom-arrow',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义分组和分割线 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义分组和分割线：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['1']\"\n        :items=\"groupItems\"\n        :class-names=\"{\n          itemGroup: 'custom-group',\n          itemGroupTitle: 'custom-group-title',\n          divider: 'custom-divider',\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Menu\n        mode=\"inline\"\n        :default-selected-keys=\"['2']\"\n        :items=\"basicItems\"\n        :styles=\"{\n          root: { border: '2px solid #722ed1', borderRadius: '12px' },\n          item: { margin: '8px 12px' },\n          itemSelected: {\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            color: '#fff',\n            fontWeight: 'bold',\n          },\n          itemIcon: { fontSize: '16px' },\n        }\"\n        style=\"width: 256px\"\n      />\n    </div>\n\n    <!-- 场景 5：水平菜单自定义样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">水平菜单自定义：</div>\n      <Menu\n        mode=\"horizontal\"\n        :default-selected-keys=\"['mail']\"\n        :items=\"horizontalItems\"\n        :class-names=\"{\n          root: 'custom-horizontal',\n          item: 'custom-horizontal-item',\n          itemSelected: 'custom-horizontal-selected',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { MailOutlined, AppstoreOutlined, SettingOutlined, UserOutlined, TeamOutlined, FileOutlined } from '@hmfw/icons'\n\nconst basicItems = [\n  { key: '1', label: '导航一', icon: h(MailOutlined) },\n  { key: '2', label: '导航二', icon: h(AppstoreOutlined) },\n  { key: '3', label: '导航三', icon: h(SettingOutlined) },\n]\n\nconst submenuItems = [\n  { key: '1', label: '选项 1', icon: h(MailOutlined) },\n  {\n    key: 'sub1',\n    label: '子菜单',\n    icon: h(AppstoreOutlined),\n    children: [\n      { key: '2', label: '选项 2' },\n      { key: '3', label: '选项 3' },\n    ],\n  },\n  { key: '4', label: '选项 4', icon: h(SettingOutlined) },\n]\n\nconst groupItems = [\n  {\n    type: 'group',\n    label: '分组 1',\n    children: [\n      { key: '1', label: '选项 1', icon: h(UserOutlined) },\n      { key: '2', label: '选项 2', icon: h(TeamOutlined) },\n    ],\n  },\n  { type: 'divider' },\n  {\n    type: 'group',\n    label: '分组 2',\n    children: [\n      { key: '3', label: '选项 3', icon: h(FileOutlined) },\n      { key: '4', label: '选项 4', icon: h(SettingOutlined) },\n    ],\n  },\n]\n\nconst horizontalItems = [\n  { key: 'mail', label: '邮件', icon: h(MailOutlined) },\n  { key: 'app', label: '应用', icon: h(AppstoreOutlined) },\n  { key: 'setting', label: '设置', icon: h(SettingOutlined) },\n]\n</script>\n\n<style scoped>\n/* 自定义菜单项 */\n:deep(.custom-item) {\n  border-left: 3px solid transparent;\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  border-left-color: #1677ff;\n  transform: translateX(4px);\n}\n\n:deep(.custom-item-selected) {\n  background: linear-gradient(90deg, #e6f4ff 0%, transparent 100%) !important;\n  border-left-color: #1677ff !important;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  color: #1677ff;\n}\n\n/* 自定义子菜单 */\n:deep(.custom-submenu) {\n  margin: 8px 0;\n}\n\n:deep(.custom-submenu-title) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border-radius: 8px;\n  font-weight: 600;\n}\n\n:deep(.custom-submenu-title:hover) {\n  background: linear-gradient(135deg, #d6e4ff 0%, #bae0ff 100%) !important;\n}\n\n:deep(.custom-arrow) {\n  color: #1677ff;\n  font-size: 12px;\n}\n\n/* 自定义分组 */\n:deep(.custom-group) {\n  padding: 8px 0;\n}\n\n:deep(.custom-group-title) {\n  background: linear-gradient(90deg, #1677ff 0%, transparent 100%);\n  color: #fff;\n  font-weight: bold;\n  border-radius: 4px;\n  padding-left: 20px;\n}\n\n:deep(.custom-divider) {\n  background: linear-gradient(90deg, #1677ff 0%, #52c41a 100%);\n  height: 2px;\n  margin: 12px 8px;\n}\n\n/* 自定义水平菜单 */\n:deep(.custom-horizontal) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 8px;\n  border: none;\n  padding: 0 16px;\n}\n\n:deep(.custom-horizontal-item) {\n  color: rgba(255, 255, 255, 0.85);\n  border-bottom: 2px solid transparent;\n  transition: all 0.3s;\n}\n\n:deep(.custom-horizontal-item:hover) {\n  color: #fff;\n  background: rgba(255, 255, 255, 0.1);\n}\n\n:deep(.custom-horizontal-selected) {\n  color: #fff !important;\n  border-bottom-color: #fff !important;\n  background: rgba(255, 255, 255, 0.15);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/menu"
@@ -7007,7 +7002,7 @@
       "title": "Message 全局提示",
       "description": "全局展示操作反馈信息。",
       "whenToUse": "",
-      "import": "import { message } from '@hmfw/ant-design'",
+      "import": "import { message } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "",
@@ -7204,7 +7199,7 @@
       "title": "Modal 对话框",
       "description": "模态对话框。",
       "whenToUse": "",
-      "import": "import { Modal } from '@hmfw/ant-design'",
+      "import": "import { Modal } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Modal Props",
@@ -7586,7 +7581,7 @@
       "title": "Notification 通知提醒框",
       "description": "全局展示通知提醒信息。",
       "whenToUse": "",
-      "import": "import { notification } from '@hmfw/ant-design'",
+      "import": "import { notification } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "config 参数",
@@ -7809,7 +7804,7 @@
         {
           "title": "自定义关闭图标",
           "description": "可以通过 `closeIcon` 属性自定义单个通知的关闭图标，也可以通过 `notification.config({ closeIcon })` 设置全局关闭图标。单个通知的 `closeIcon` 会覆盖全局配置。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n    <Button type=\"primary\" @click=\"openWithCustomIcon\"> 自定义关闭图标 </Button>\n    <Button @click=\"setGlobalCloseIcon\"> 设置全局关闭图标 </Button>\n    <Button @click=\"resetGlobalCloseIcon\"> 重置全局配置 </Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { notification, Button, Icon, CloseCircleFilled, CheckCircleFilled } from '@hmfw/ant-design'\n\nfunction openWithCustomIcon() {\n  notification.info({\n    message: '自定义关闭图标',\n    description: '此通知使用了自定义的关闭图标（实心圆形关闭图标）。',\n    closeIcon: () => h(Icon, { component: CloseCircleFilled }),\n    duration: 0,\n  })\n}\n\nfunction setGlobalCloseIcon() {\n  notification.config({\n    closeIcon: () => h(Icon, { component: CheckCircleFilled }),\n  })\n\n  notification.success({\n    message: '全局关闭图标已设置',\n    description: '所有新通知都将使用对勾图标作为关闭按钮，除非单独指定。',\n    duration: 3,\n  })\n}\n\nfunction resetGlobalCloseIcon() {\n  notification.config({\n    closeIcon: undefined,\n  })\n\n  notification.info({\n    message: '已重置为默认图标',\n    description: '关闭图标已恢复为默认样式。',\n    duration: 3,\n  })\n}\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n    <Button type=\"primary\" @click=\"openWithCustomIcon\"> 自定义关闭图标 </Button>\n    <Button @click=\"setGlobalCloseIcon\"> 设置全局关闭图标 </Button>\n    <Button @click=\"resetGlobalCloseIcon\"> 重置全局配置 </Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { notification, Button, CloseCircleFilled, CheckCircleFilled } from '@hmfw/ant-design'\n\nfunction openWithCustomIcon() {\n  notification.info({\n    message: '自定义关闭图标',\n    description: '此通知使用了自定义的关闭图标（实心圆形关闭图标）。',\n    closeIcon: () => h(CloseCircleFilled, { class: 'hmfw-icon' }),\n    duration: 0,\n  })\n}\n\nfunction setGlobalCloseIcon() {\n  notification.config({\n    closeIcon: () => h(CheckCircleFilled, { class: 'hmfw-icon' }),\n  })\n\n  notification.success({\n    message: '全局关闭图标已设置',\n    description: '所有新通知都将使用对勾图标作为关闭按钮，除非单独指定。',\n    duration: 3,\n  })\n}\n\nfunction resetGlobalCloseIcon() {\n  notification.config({\n    closeIcon: undefined,\n  })\n\n  notification.info({\n    message: '已重置为默认图标',\n    description: '关闭图标已恢复为默认样式。',\n    duration: 3,\n  })\n}\n</script>"
         },
         {
           "title": "RTL 模式",
@@ -7830,7 +7825,7 @@
       "title": "Pagination 分页",
       "description": "采用分页的形式分隔长列表，每次只加载一个页面。",
       "whenToUse": "",
-      "import": "import { Pagination } from '@hmfw/ant-design'",
+      "import": "import { Pagination } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Pagination Props",
@@ -8031,7 +8026,7 @@
       "title": "Popconfirm 气泡确认框",
       "description": "点击元素，弹出气泡式的确认框。",
       "whenToUse": "",
-      "import": "import { Popconfirm } from '@hmfw/ant-design'",
+      "import": "import { Popconfirm } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Popconfirm Props",
@@ -8302,7 +8297,7 @@
       "title": "Popover 气泡卡片",
       "description": "点击/鼠标移入元素，弹出气泡式的卡片浮层。",
       "whenToUse": "",
-      "import": "import { Popover, PopoverPurePanel } from '@hmfw/ant-design'",
+      "import": "import { Popover, PopoverPurePanel } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Popover Props",
@@ -8494,7 +8489,7 @@
       "title": "Progress 进度条",
       "description": "展示操作的当前进度。",
       "whenToUse": "",
-      "import": "import { Progress } from '@hmfw/ant-design'",
+      "import": "import { Progress } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Progress Props",
@@ -8713,7 +8708,7 @@
       "title": "QRCode 二维码",
       "description": "生成二维码。",
       "whenToUse": "",
-      "import": "import { QRCode } from '@hmfw/ant-design'",
+      "import": "import { QRCode } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "QRCode Props",
@@ -8882,7 +8877,7 @@
       "title": "Radio 单选框",
       "description": "单选框。",
       "whenToUse": "",
-      "import": "import { Radio, RadioGroup, RadioButton } from '@hmfw/ant-design'",
+      "import": "import { Radio, RadioGroup, RadioButton } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Radio Props",
@@ -9050,7 +9045,7 @@
       "title": "RangePicker 日期范围选择框",
       "description": "日期范围选择器。",
       "whenToUse": "",
-      "import": "import { RangePicker } from '@hmfw/ant-design'",
+      "import": "import { RangePicker } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "RangePicker Props",
@@ -9216,7 +9211,7 @@
       "title": "Rate 评分",
       "description": "评分组件。",
       "whenToUse": "",
-      "import": "import { Rate } from '@hmfw/ant-design'",
+      "import": "import { Rate } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Rate Props",
@@ -9418,7 +9413,7 @@
       "title": "Result 结果",
       "description": "用于反馈一系列操作任务的处理结果。",
       "whenToUse": "",
-      "import": "import { Result } from '@hmfw/ant-design'",
+      "import": "import { Result } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Result Props",
@@ -9483,7 +9478,7 @@
       "title": "Segmented 分段控制器",
       "description": "分段控制器。",
       "whenToUse": "",
-      "import": "import { Segmented } from '@hmfw/ant-design'",
+      "import": "import { Segmented } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Segmented Props",
@@ -9660,27 +9655,27 @@
         {
           "title": "三种尺寸",
           "description": "提供 large、middle、small 三种尺寸。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Segmented v-model:value=\"value1\" :options=\"options1\" />\n    <Segmented v-model:value=\"value2\" :options=\"options2\" />\n    <Segmented v-model:value=\"value3\" :options=\"options3\" size=\"large\" />\n    <Segmented v-model:value=\"value4\" :options=\"options4\" size=\"small\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from '@hmfw/ant-design'\nimport { UserOutlined, SettingOutlined, HomeOutlined } from '@hmfw/ant-design'\n\nconst value1 = ref('Daily')\nconst options1 = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']\n\nconst value2 = ref('list')\nconst options2 = [\n  { label: 'List', value: 'list', icon: h(Icon, { component: UserOutlined }) },\n  { label: 'Grid', value: 'grid', icon: h(Icon, { component: SettingOutlined }) },\n]\n\nconst value3 = ref('home')\nconst options3 = [\n  { value: 'home', icon: h(Icon, { component: HomeOutlined }), tooltip: 'Home' },\n  { value: 'user', icon: h(Icon, { component: UserOutlined }), tooltip: 'User' },\n  { value: 'settings', icon: h(Icon, { component: SettingOutlined }), tooltip: 'Settings' },\n]\n\nconst value4 = ref('a')\nconst options4 = [\n  { label: 'Option A', value: 'a' },\n  { label: 'Option B', value: 'b' },\n  { label: 'Option C', value: 'c' },\n]\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Segmented v-model:value=\"value1\" :options=\"options1\" />\n    <Segmented v-model:value=\"value2\" :options=\"options2\" />\n    <Segmented v-model:value=\"value3\" :options=\"options3\" size=\"large\" />\n    <Segmented v-model:value=\"value4\" :options=\"options4\" size=\"small\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\nimport { UserOutlined, SettingOutlined, HomeOutlined } from '@hmfw/ant-design'\n\nconst value1 = ref('Daily')\nconst options1 = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']\n\nconst value2 = ref('list')\nconst options2 = [\n  { label: 'List', value: 'list', icon: h(UserOutlined, { class: 'hmfw-icon' }) },\n  { label: 'Grid', value: 'grid', icon: h(SettingOutlined, { class: 'hmfw-icon' }) },\n]\n\nconst value3 = ref('home')\nconst options3 = [\n  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }), tooltip: 'Home' },\n  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }), tooltip: 'User' },\n  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }), tooltip: 'Settings' },\n]\n\nconst value4 = ref('a')\nconst options4 = [\n  { label: 'Option A', value: 'a' },\n  { label: 'Option B', value: 'b' },\n  { label: 'Option C', value: 'c' },\n]\n</script>"
         },
         {
           "title": "垂直方向",
           "description": "垂直布局的分段控制器。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 16px\">\n    <Segmented v-model:value=\"value\" :options=\"options\" vertical />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from '@hmfw/ant-design'\nimport { UserOutlined, SettingOutlined, HomeOutlined } from '@hmfw/ant-design'\n\nconst value = ref('home')\nconst options = [\n  { value: 'home', icon: h(Icon, { component: HomeOutlined }) },\n  { value: 'user', icon: h(Icon, { component: UserOutlined }) },\n  { value: 'settings', icon: h(Icon, { component: SettingOutlined }) },\n]\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; gap: 16px\">\n    <Segmented v-model:value=\"value\" :options=\"options\" vertical />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\nimport { UserOutlined, SettingOutlined, HomeOutlined } from '@hmfw/ant-design'\n\nconst value = ref('home')\nconst options = [\n  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },\n  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }) },\n  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }) },\n]\n</script>"
         },
         {
           "title": "圆角形状",
           "description": "胶囊型的分段控制器。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Segmented v-model:value=\"value1\" :options=\"options1\" shape=\"round\" />\n    <Segmented v-model:value=\"value2\" :options=\"options2\" shape=\"round\" size=\"large\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from '@hmfw/ant-design'\nimport { UserOutlined, SettingOutlined } from '@hmfw/ant-design'\n\nconst value1 = ref('light')\nconst options1 = [\n  { label: 'Light', value: 'light', icon: h(Icon, { component: UserOutlined }) },\n  { label: 'Dark', value: 'dark', icon: h(Icon, { component: SettingOutlined }) },\n]\n\nconst value2 = ref('Daily')\nconst options2 = ['Daily', 'Weekly', 'Monthly']\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Segmented v-model:value=\"value1\" :options=\"options1\" shape=\"round\" />\n    <Segmented v-model:value=\"value2\" :options=\"options2\" shape=\"round\" size=\"large\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\nimport { UserOutlined, SettingOutlined } from '@hmfw/ant-design'\n\nconst value1 = ref('light')\nconst options1 = [\n  { label: 'Light', value: 'light', icon: h(UserOutlined, { class: 'hmfw-icon' }) },\n  { label: 'Dark', value: 'dark', icon: h(SettingOutlined, { class: 'hmfw-icon' }) },\n]\n\nconst value2 = ref('Daily')\nconst options2 = ['Daily', 'Weekly', 'Monthly']\n</script>"
         },
         {
           "title": "带图标",
           "description": "在选项中使用图标。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Segmented v-model:value=\"value\" :options=\"options\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from '@hmfw/ant-design'\nimport { UserOutlined, SettingOutlined, HomeOutlined } from '@hmfw/ant-design'\n\nconst value = ref('home')\nconst options = [\n  { value: 'home', icon: h(Icon, { component: HomeOutlined }), tooltip: 'Home Page' },\n  { value: 'user', icon: h(Icon, { component: UserOutlined }), tooltip: 'User Profile' },\n  { value: 'settings', icon: h(Icon, { component: SettingOutlined }), tooltip: 'Settings' },\n]\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Segmented v-model:value=\"value\" :options=\"options\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\nimport { UserOutlined, SettingOutlined, HomeOutlined } from '@hmfw/ant-design'\n\nconst value = ref('home')\nconst options = [\n  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }), tooltip: 'Home Page' },\n  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }), tooltip: 'User Profile' },\n  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }), tooltip: 'Settings' },\n]\n</script>"
         },
         {
           "title": "图标 + 文本",
           "description": "图标与文本同时存在时自动优化布局，间距统一。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Segmented v-model:value=\"value\" :options=\"options\" />\n    <Segmented v-model:value=\"value\" :options=\"options\" size=\"large\" />\n    <Segmented v-model:value=\"value\" :options=\"options\" size=\"small\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from '@hmfw/ant-design'\nimport { PictureOutlined, BarsOutlined } from '@hmfw/ant-design'\n\nconst value = ref('list')\n// 图标 + 文本同时存在的布局\nconst options = [\n  { value: 'list', label: '列表', icon: h(Icon, { component: BarsOutlined }) },\n  { value: 'grid', label: '网格', icon: h(Icon, { component: PictureOutlined }) },\n]\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Segmented v-model:value=\"value\" :options=\"options\" />\n    <Segmented v-model:value=\"value\" :options=\"options\" size=\"large\" />\n    <Segmented v-model:value=\"value\" :options=\"options\" size=\"small\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\nimport { PictureOutlined, BarsOutlined } from '@hmfw/ant-design'\n\nconst value = ref('list')\n// 图标 + 文本同时存在的布局\nconst options = [\n  { value: 'list', label: '列表', icon: h(BarsOutlined, { class: 'hmfw-icon' }) },\n  { value: 'grid', label: '网格', icon: h(PictureOutlined, { class: 'hmfw-icon' }) },\n]\n</script>"
         },
         {
           "title": "自定义选项样式",
@@ -9690,7 +9685,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对 root、group、thumb、item 等子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器和滑块 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器与动画滑块：</div>\n      <Segmented\n        v-model:value=\"value1\"\n        :options=\"['选项一', '选项二', '选项三']\"\n        :class-names=\"{\n          root: 'custom-root',\n          thumb: 'custom-thumb',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义选项样式（选中/禁用状态） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选项与状态样式：</div>\n      <Segmented\n        v-model:value=\"value2\"\n        :options=\"options2\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemDisabled: 'custom-item-disabled',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义图标和文本 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标与文本样式：</div>\n      <Segmented\n        v-model:value=\"value3\"\n        :options=\"options3\"\n        :class-names=\"{\n          itemIcon: 'custom-icon',\n          itemText: 'custom-text',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Segmented\n        v-model:value=\"value4\"\n        :options=\"['Morning', 'Afternoon', 'Evening']\"\n        :styles=\"{\n          root: {\n            borderRadius: '16px',\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            border: 'none',\n            padding: '4px',\n          },\n          thumb: { borderRadius: '12px', background: '#ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },\n          itemText: { color: '#ffffff', fontWeight: 500 },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用（垂直模式）：</div>\n      <Segmented\n        v-model:value=\"value5\"\n        :options=\"options5\"\n        vertical\n        :class-names=\"{\n          root: 'custom-vertical-root',\n          item: 'custom-vertical-item',\n        }\"\n        :styles=\"{\n          itemIcon: { fontSize: '20px' },\n          itemLabel: { padding: '8px 16px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented, Icon } from '@hmfw/ant-design'\nimport { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/ant-design'\n\nconst value1 = ref('选项一')\n\nconst value2 = ref('option1')\nconst options2 = [\n  { value: 'option1', label: '启用选项' },\n  { value: 'option2', label: '另一选项' },\n  { value: 'option3', label: '禁用选项', disabled: true },\n]\n\nconst value3 = ref('list')\nconst options3 = [\n  { value: 'list', label: '列表', icon: h(Icon, { component: HomeOutlined }) },\n  { value: 'grid', label: '网格', icon: h(Icon, { component: UserOutlined }) },\n]\n\nconst value4 = ref('Morning')\n\nconst value5 = ref('home')\nconst options5 = [\n  { value: 'home', icon: h(Icon, { component: HomeOutlined }) },\n  { value: 'user', icon: h(Icon, { component: UserOutlined }) },\n  { value: 'settings', icon: h(Icon, { component: SettingOutlined }) },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border: 2px solid #1677ff;\n  padding: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.2);\n}\n\n:deep(.custom-thumb) {\n  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);\n  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.3);\n}\n\n:deep(.custom-item) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  transform: translateY(-1px);\n}\n\n:deep(.custom-item-selected) {\n  color: #ffffff;\n  font-weight: 600;\n}\n\n:deep(.custom-item-disabled) {\n  opacity: 0.4;\n  text-decoration: line-through;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  filter: drop-shadow(0 0 2px rgba(22, 119, 255, 0.4));\n}\n\n:deep(.custom-text) {\n  font-weight: 500;\n  letter-spacing: 0.5px;\n}\n\n:deep(.custom-vertical-root) {\n  background: #f6ffed;\n  border: 2px solid #52c41a;\n  padding: 4px;\n  border-radius: 12px;\n}\n\n:deep(.custom-vertical-item) {\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-vertical-item:hover) {\n  background: rgba(82, 196, 26, 0.1);\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器和滑块 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器与动画滑块：</div>\n      <Segmented\n        v-model:value=\"value1\"\n        :options=\"['选项一', '选项二', '选项三']\"\n        :class-names=\"{\n          root: 'custom-root',\n          thumb: 'custom-thumb',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义选项样式（选中/禁用状态） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选项与状态样式：</div>\n      <Segmented\n        v-model:value=\"value2\"\n        :options=\"options2\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemDisabled: 'custom-item-disabled',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义图标和文本 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标与文本样式：</div>\n      <Segmented\n        v-model:value=\"value3\"\n        :options=\"options3\"\n        :class-names=\"{\n          itemIcon: 'custom-icon',\n          itemText: 'custom-text',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Segmented\n        v-model:value=\"value4\"\n        :options=\"['Morning', 'Afternoon', 'Evening']\"\n        :styles=\"{\n          root: {\n            borderRadius: '16px',\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            border: 'none',\n            padding: '4px',\n          },\n          thumb: { borderRadius: '12px', background: '#ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },\n          itemText: { color: '#ffffff', fontWeight: 500 },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用（垂直模式）：</div>\n      <Segmented\n        v-model:value=\"value5\"\n        :options=\"options5\"\n        vertical\n        :class-names=\"{\n          root: 'custom-vertical-root',\n          item: 'custom-vertical-item',\n        }\"\n        :styles=\"{\n          itemIcon: { fontSize: '20px' },\n          itemLabel: { padding: '8px 16px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\nimport { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/ant-design'\n\nconst value1 = ref('选项一')\n\nconst value2 = ref('option1')\nconst options2 = [\n  { value: 'option1', label: '启用选项' },\n  { value: 'option2', label: '另一选项' },\n  { value: 'option3', label: '禁用选项', disabled: true },\n]\n\nconst value3 = ref('list')\nconst options3 = [\n  { value: 'list', label: '列表', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },\n  { value: 'grid', label: '网格', icon: h(UserOutlined, { class: 'hmfw-icon' }) },\n]\n\nconst value4 = ref('Morning')\n\nconst value5 = ref('home')\nconst options5 = [\n  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },\n  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }) },\n  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }) },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border: 2px solid #1677ff;\n  padding: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.2);\n}\n\n:deep(.custom-thumb) {\n  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);\n  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.3);\n}\n\n:deep(.custom-item) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  transform: translateY(-1px);\n}\n\n:deep(.custom-item-selected) {\n  color: #ffffff;\n  font-weight: 600;\n}\n\n:deep(.custom-item-disabled) {\n  opacity: 0.4;\n  text-decoration: line-through;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  filter: drop-shadow(0 0 2px rgba(22, 119, 255, 0.4));\n}\n\n:deep(.custom-text) {\n  font-weight: 500;\n  letter-spacing: 0.5px;\n}\n\n:deep(.custom-vertical-root) {\n  background: #f6ffed;\n  border: 2px solid #52c41a;\n  padding: 4px;\n  border-radius: 12px;\n}\n\n:deep(.custom-vertical-item) {\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-vertical-item:hover) {\n  background: rgba(82, 196, 26, 0.1);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/segmented"
@@ -9701,7 +9696,7 @@
       "title": "Select 选择器",
       "description": "下拉选择器。",
       "whenToUse": "",
-      "import": "import { Select } from '@hmfw/ant-design'",
+      "import": "import { Select } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Select Props",
@@ -10096,7 +10091,7 @@
       "title": "Skeleton 骨架屏",
       "description": "在需要等待加载内容的位置提供一个占位图形组合。",
       "whenToUse": "",
-      "import": "import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from '@hmfw/ant-design'",
+      "import": "import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Skeleton Props",
@@ -10398,7 +10393,7 @@
       "title": "Slider 滑动输入条",
       "description": "滑动型输入器，展示当前值和可选范围。",
       "whenToUse": "",
-      "import": "import { Slider } from '@hmfw/ant-design'",
+      "import": "import { Slider } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Slider Props",
@@ -10579,7 +10574,7 @@
       "title": "Space 间距",
       "description": "设置组件之间的间距。",
       "whenToUse": "",
-      "import": "import { Space } from '@hmfw/ant-design'",
+      "import": "import { Space } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Space Props",
@@ -10687,7 +10682,7 @@
       "title": "Spin 加载中",
       "description": "用于页面和区块的加载中状态。",
       "whenToUse": "",
-      "import": "import { Spin } from '@hmfw/ant-design'",
+      "import": "import { Spin } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Spin Props",
@@ -10781,7 +10776,7 @@
       "title": "Statistic 统计数值",
       "description": "展示统计数值。",
       "whenToUse": "",
-      "import": "import { Statistic, Countdown } from '@hmfw/ant-design'",
+      "import": "import { Statistic, Countdown } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Statistic Props",
@@ -10979,7 +10974,7 @@
       "title": "Steps 步骤条",
       "description": "引导用户按照流程完成任务的导航条。",
       "whenToUse": "",
-      "import": "import { Steps, ProgressIcon, PanelArrow } from '@hmfw/ant-design'",
+      "import": "import { Steps } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Steps Props",
@@ -11034,7 +11029,7 @@
           "section": "Steps Props",
           "name": "type",
           "description": "步骤条类型",
-          "type": "`'default' | 'navigation' | 'inline' | 'panel' | 'dot'`",
+          "type": "`'default' | 'inline' | 'dot'`",
           "default": "`'default'`"
         },
         {
@@ -11064,13 +11059,6 @@
           "description": "步骤条样式变体",
           "type": "`'filled' | 'outlined'`",
           "default": "`'filled'`"
-        },
-        {
-          "section": "Steps Props",
-          "name": "percent",
-          "description": "当前步骤的进度百分比（0-100）",
-          "type": "`number`",
-          "default": "-"
         },
         {
           "section": "Steps Props",
@@ -11207,21 +11195,6 @@
           "code": "<template>\n  <Steps size=\"small\" :current=\"1\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst items = [{ title: '第一步' }, { title: '第二步' }, { title: '第三步' }]\n</script>"
         },
         {
-          "title": "导航型步骤条",
-          "description": "通过 `type=\"navigation\"` 设置导航型步骤条。",
-          "code": "<template>\n  <div style=\"padding: 20px\">\n    <Steps :items=\"items\" type=\"navigation\" :current=\"current\" @change=\"onChange\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Steps } from '@hmfw/ant-design'\n\nconst current = ref(1)\n\nconst items = [\n  { title: 'Step 1', content: 'First step' },\n  { title: 'Step 2', content: 'Second step' },\n  { title: 'Step 3', content: 'Third step' },\n]\n\nconst onChange = (value: number) => {\n  current.value = value\n}\n</script>"
-        },
-        {
-          "title": "面板型步骤条",
-          "description": "通过 `type=\"panel\"` 设置面板型步骤条。",
-          "code": "<template>\n  <div style=\"padding: 20px\">\n    <Steps :items=\"items\" type=\"panel\" :current=\"current\" @change=\"onChange\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Steps } from '@hmfw/ant-design'\n\nconst current = ref(1)\n\nconst items = [\n  { title: 'Step 1', content: 'First step description' },\n  { title: 'Step 2', content: 'Second step description' },\n  { title: 'Step 3', content: 'Third step description' },\n]\n\nconst onChange = (value: number) => {\n  current.value = value\n}\n</script>"
-        },
-        {
-          "title": "进度百分比",
-          "description": "通过 `percent` 属性显示当前步骤的进度百分比。",
-          "code": "<template>\n  <div style=\"padding: 20px\">\n    <Steps :items=\"items\" :current=\"1\" :percent=\"60\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst items = [\n  { title: 'Finished', content: 'This is a description' },\n  { title: 'In Progress', content: 'This is a description' },\n  { title: 'Waiting', content: 'This is a description' },\n]\n</script>"
-        },
-        {
           "title": "内联型步骤条",
           "description": "通过 `type=\"inline\"` 设置内联型步骤条。",
           "code": "<template>\n  <div style=\"padding: 20px\">\n    <Steps :items=\"items\" type=\"inline\" :current=\"1\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst items = [\n  { title: 'Step 1', content: 'First step' },\n  { title: 'Step 2', content: 'Second step' },\n  { title: 'Step 3', content: 'Third step' },\n  { title: 'Step 4', content: 'Fourth step' },\n]\n</script>"
@@ -11240,7 +11213,7 @@
       "title": "Switch 开关",
       "description": "开关选择器。",
       "whenToUse": "",
-      "import": "import { Switch } from '@hmfw/ant-design'",
+      "import": "import { Switch } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Switch Props",
@@ -11411,7 +11384,7 @@
       "title": "Table 表格",
       "description": "展示行列数据。",
       "whenToUse": "",
-      "import": "import { Table } from '@hmfw/ant-design'",
+      "import": "import { Table } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Table Props",
@@ -11878,7 +11851,7 @@
       "title": "Tabs 标签页",
       "description": "选项卡切换组件。",
       "whenToUse": "提供平级的区域将大块内容进行收纳和展现，保持界面整洁。",
-      "import": "import { Tabs } from '@hmfw/ant-design'",
+      "import": "import { Tabs } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Tabs",
@@ -12093,7 +12066,7 @@
         {
           "title": "图标",
           "description": "有图标的标签。",
-          "code": "<template>\n  <Tabs :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Tabs, Icon } from '@hmfw/ant-design'\nimport { AppleOutlined, AndroidOutlined } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    key: '1',\n    label: 'Tab 1',\n    icon: h(Icon, { component: AppleOutlined }),\n    children: 'Content of Tab 1',\n  },\n  {\n    key: '2',\n    label: 'Tab 2',\n    icon: h(Icon, { component: AndroidOutlined }),\n    children: 'Content of Tab 2',\n  },\n]\n</script>"
+          "code": "<template>\n  <Tabs :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Tabs } from '@hmfw/ant-design'\nimport { AppleOutlined, AndroidOutlined } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    key: '1',\n    label: 'Tab 1',\n    icon: h(AppleOutlined, { class: 'hmfw-icon' }),\n    children: 'Content of Tab 1',\n  },\n  {\n    key: '2',\n    label: 'Tab 2',\n    icon: h(AndroidOutlined, { class: 'hmfw-icon' }),\n    children: 'Content of Tab 2',\n  },\n]\n</script>"
         },
         {
           "title": "居中",
@@ -12139,7 +12112,7 @@
       "title": "Tag 标签",
       "description": "进行标记和分类的小标签。",
       "whenToUse": "",
-      "import": "import { Tag, CheckableTag } from '@hmfw/ant-design'",
+      "import": "import { Tag, CheckableTag } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Tag Props",
@@ -12255,7 +12228,7 @@
       "title": "TimePicker 时间选择框",
       "description": "输入或选择时间的控件。",
       "whenToUse": "当用户需要输入一个时间，可以点击标准输入框，弹出时间面板进行选择。",
-      "import": "import { TimePicker } from '@hmfw/ant-design'",
+      "import": "import { TimePicker } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "TimePicker Props",
@@ -12497,7 +12470,7 @@
       "title": "Timeline 时间轴",
       "description": "垂直展示的时间流信息。",
       "whenToUse": "",
-      "import": "import { Timeline, TimelineItem } from '@hmfw/ant-design'",
+      "import": "import { Timeline, TimelineItem } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Timeline Props",
@@ -12713,7 +12686,7 @@
       "title": "Tooltip 文字提示",
       "description": "简单的文字提示气泡框。",
       "whenToUse": "",
-      "import": "import { Tooltip } from '@hmfw/ant-design'",
+      "import": "import { Tooltip } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Tooltip Props",
@@ -12915,7 +12888,7 @@
       "title": "Tour 漫游引导",
       "description": "用于分步引导用户了解产品功能的组件。",
       "whenToUse": "",
-      "import": "import { Tour } from '@hmfw/ant-design'",
+      "import": "import { Tour } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Tour Props",
@@ -13167,7 +13140,7 @@
       "title": "Transfer 穿梭框",
       "description": "双栏穿梭选择框，用于将元素从一列移入另一列。",
       "whenToUse": "",
-      "import": "import { Transfer } from '@hmfw/ant-design'",
+      "import": "import { Transfer } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Transfer Props",
@@ -13430,7 +13403,7 @@
       "title": "Tree 树形控件",
       "description": "多层次的结构列表。",
       "whenToUse": "",
-      "import": "import { Tree, DirectoryTree } from '@hmfw/ant-design'",
+      "import": "import { Tree, DirectoryTree } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Tree Props",
@@ -13857,7 +13830,7 @@
       "title": "TreeSelect 树形选择",
       "description": "树形选择控件，类似 Select 的选择控件，可选择的数据结构是一个树形结构。",
       "whenToUse": "",
-      "import": "import { TreeSelect } from '@hmfw/ant-design'",
+      "import": "import { TreeSelect } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "TreeSelect Props",
@@ -14143,7 +14116,7 @@
       "title": "Typography 排版",
       "description": "文本的基本格式。",
       "whenToUse": "",
-      "import": "import { Text, Title, Paragraph, Link } from '@hmfw/ant-design'",
+      "import": "import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "通用 Props（Text / Title / Paragraph / Link 共享）",
@@ -14370,7 +14343,7 @@
         {
           "title": "段落",
           "description": "段落组件以 `<p>` 渲染。",
-          "code": "<template>\n  <Space direction=\"vertical\" :size=\"16\">\n    <Paragraph> 这是一段普通的段落文本。Ant Design 是一套企业级 UI 设计语言和 React 组件库。 </Paragraph>\n\n    <Paragraph copyable> 这段文本可以复制。点击右侧图标复制内容。 </Paragraph>\n\n    <Paragraph :ellipsis=\"{ rows: 2 }\">\n      这是一段很长的文本,会被省略显示。当文本超过指定行数时,会自动显示省略号。\n      这是一段很长的文本,会被省略显示。当文本超过指定行数时,会自动显示省略号。\n      这是一段很长的文本,会被省略显示。当文本超过指定行数时,会自动显示省略号。\n    </Paragraph>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Paragraph, Space } from '@hmfw/ant-design'\n</script>"
+          "code": "<template>\n  <Space direction=\"vertical\" :size=\"16\">\n    <Paragraph> 这是一段普通的段落文本。Ant Design 是一套企业级 UI 设计语言和 Vue 组件库。 </Paragraph>\n\n    <Paragraph copyable> 这段文本可以复制。点击右侧图标复制内容。 </Paragraph>\n\n    <Paragraph :ellipsis=\"{ rows: 2 }\">\n      Ant Design 是一套致力于提升「用户」和「设计者」使用体验的企业级 UI\n      设计语言。它源自蚂蚁集团中后台产品的交互语言和视觉风格，秉承高效、确定、自然、生长的设计价值观，沉淀出一套完整的设计原则与组件规范。我们相信，好的设计不仅要美观，更要在真实业务场景中经得起推敲，帮助设计者与开发者高效协作、降低沟通成本，最终交付确定、流畅且令人愉悦的产品体验。当段落内容超过指定行数时，会自动以省略号结尾，超出部分将被隐藏。\n    </Paragraph>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Paragraph, Space } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "链接",
@@ -14385,12 +14358,12 @@
         {
           "title": "省略",
           "description": "通过 `ellipsis` 设置单行省略。",
-          "code": "<template>\n  <div style=\"max-width: 240px\">\n    <Text ellipsis> 这是一段很长的文本，超出容器宽度时会以省略号结尾，不会换行显示。 </Text>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Text } from '@hmfw/ant-design'\n</script>"
+          "code": "<template>\n  <div style=\"max-width: 240px\">\n    <Text ellipsis>\n      Ant Design 是一套企业级 UI 设计语言和 Vue\n      组件库，主张高效、确定、自然、生长四大设计价值观，致力于提升用户和设计者的体验。\n    </Text>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Text } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "省略 Tooltip 与回调",
           "description": "通过 `ellipsis.tooltip` 在省略时显示完整内容（支持自定义 Tooltip 配置），通过 `ellipsis.onEllipsis` 监听省略状态。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 12px; max-width: 240px\">\n    <Text :ellipsis=\"{ tooltip: true }\"> 这是一段很长的文本，鼠标悬停时会通过 Tooltip 显示完整内容。 </Text>\n    <Text :ellipsis=\"{ tooltip: '自定义 Tooltip 文案' }\"> 显示文字与 Tooltip 内容不同。 </Text>\n    <Paragraph\n      :ellipsis=\"{\n        rows: 2,\n        tooltip: { placement: 'topLeft', color: '#1677ff' },\n        onEllipsis: handleEllipsis,\n      }\"\n    >\n      多行省略时，可以传入完整的 Tooltip 配置（placement、color 等），并通过 onEllipsis 监听省略状态变化。\n    </Paragraph>\n    <div style=\"font-size: 12px; color: #999\">省略状态: {{ ellipsisState }}</div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Text, Paragraph } from '@hmfw/ant-design'\n\nconst ellipsisState = ref<boolean>(false)\nfunction handleEllipsis(v: boolean) {\n  ellipsisState.value = v\n}\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 12px; max-width: 240px\">\n    <Text :ellipsis=\"{ tooltip: true }\">\n      这是一段超出容器宽度的长文本，鼠标悬停时会通过 Tooltip 显示完整内容，方便用户查看被省略的部分。\n    </Text>\n    <Text :ellipsis=\"{ tooltip: '自定义 Tooltip 文案' }\">\n      显示的文字会被省略，但悬停时 Tooltip 展示的内容与之不同。\n    </Text>\n    <Paragraph\n      :ellipsis=\"{\n        rows: 2,\n        tooltip: { placement: 'topLeft', color: '#1677ff' },\n        onEllipsis: handleEllipsis,\n      }\"\n    >\n      多行省略时，可以传入完整的 Tooltip 配置（placement、color 等），并通过 onEllipsis\n      监听省略状态的变化，从而在文本被截断时做出相应的交互处理。\n    </Paragraph>\n    <div style=\"font-size: 12px; color: #999\">省略状态: {{ ellipsisState }}</div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Text, Paragraph } from '@hmfw/ant-design'\n\nconst ellipsisState = ref<boolean>(false)\nfunction handleEllipsis(v: boolean) {\n  ellipsisState.value = v\n}\n</script>"
         },
         {
           "title": "细粒度样式控制",
@@ -14406,7 +14379,7 @@
       "title": "Upload 上传",
       "description": "文件选择上传和拖拽上传控件。",
       "whenToUse": "上传是将信息（网页、文字、图片、视频等）通过网页或者上传工具发布到远程服务器上的过程。",
-      "import": "import { Upload, UploadDragger } from '@hmfw/ant-design'",
+      "import": "import { Upload, UploadDragger } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Upload Props",
@@ -14695,7 +14668,7 @@
       "title": "Watermark 水印",
       "description": "给页面的某个区域加上水印。",
       "whenToUse": "",
-      "import": "import { Watermark } from '@hmfw/ant-design'",
+      "import": "import { Watermark } from 'ant-design-hmfw'",
       "props": [
         {
           "section": "Watermark Props",

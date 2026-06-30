@@ -4,20 +4,20 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Tabs, Icon } from '@hmfw/ant-design'
+import { Tabs } from '@hmfw/ant-design'
 import { AppleOutlined, AndroidOutlined } from '@hmfw/ant-design'
 
 const items = [
   {
     key: '1',
     label: 'Tab 1',
-    icon: h(Icon, { component: AppleOutlined }),
+    icon: h(AppleOutlined, { class: 'hmfw-icon' }),
     children: 'Content of Tab 1',
   },
   {
     key: '2',
     label: 'Tab 2',
-    icon: h(Icon, { component: AndroidOutlined }),
+    icon: h(AndroidOutlined, { class: 'hmfw-icon' }),
     children: 'Content of Tab 2',
   },
 ]

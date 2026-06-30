@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Collapse, Icon, DownOutlined } from '@hmfw/ant-design'
+import { Collapse, DownOutlined } from '@hmfw/ant-design'
 
 const items = [
   {
@@ -25,8 +25,8 @@ const items = [
 ]
 
 const customExpandIcon = ({ isActive }: { isActive?: boolean }) => {
-  return h(Icon, {
-    component: DownOutlined,
+  return h(DownOutlined, {
+    class: 'hmfw-icon',
     style: {
       transform: isActive ? 'rotate(0deg)' : 'rotate(-90deg)',
       transition: 'transform 0.3s',

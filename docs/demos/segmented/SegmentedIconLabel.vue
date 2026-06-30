@@ -8,13 +8,13 @@
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from '@hmfw/ant-design'
+import { Segmented } from '@hmfw/ant-design'
 import { PictureOutlined, BarsOutlined } from '@hmfw/ant-design'
 
 const value = ref('list')
 // 图标 + 文本同时存在的布局
 const options = [
-  { value: 'list', label: '列表', icon: h(Icon, { component: BarsOutlined }) },
-  { value: 'grid', label: '网格', icon: h(Icon, { component: PictureOutlined }) },
+  { value: 'list', label: '列表', icon: h(BarsOutlined, { class: 'hmfw-icon' }) },
+  { value: 'grid', label: '网格', icon: h(PictureOutlined, { class: 'hmfw-icon' }) },
 ]
 </script>

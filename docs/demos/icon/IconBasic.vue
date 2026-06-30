@@ -1,29 +1,28 @@
 <template>
   <Space :size="16" wrap>
-    <Icon :component="SearchOutlined" />
-    <Icon :component="CloseOutlined" />
-    <Icon :component="CheckOutlined" />
-    <Icon :component="WarningOutlined" />
-    <Icon :component="InfoCircleOutlined" />
-    <Icon :component="LoadingOutlined" />
-    <Icon :component="UpOutlined" />
-    <Icon :component="DownOutlined" />
-    <Icon :component="LeftOutlined" />
-    <Icon :component="RightOutlined" />
-    <Icon :component="PlusOutlined" />
-    <Icon :component="MinusOutlined" />
-    <Icon :component="EditOutlined" />
-    <Icon :component="DeleteOutlined" />
-    <Icon :component="EyeOutlined" />
-    <Icon :component="HomeOutlined" />
-    <Icon :component="UserOutlined" />
-    <Icon :component="SettingOutlined" />
+    <SearchOutlined class="hmfw-icon" />
+    <CloseOutlined class="hmfw-icon" />
+    <CheckOutlined class="hmfw-icon" />
+    <WarningOutlined class="hmfw-icon" />
+    <InfoCircleOutlined class="hmfw-icon" />
+    <LoadingOutlined class="hmfw-icon" />
+    <UpOutlined class="hmfw-icon" />
+    <DownOutlined class="hmfw-icon" />
+    <LeftOutlined class="hmfw-icon" />
+    <RightOutlined class="hmfw-icon" />
+    <PlusOutlined class="hmfw-icon" />
+    <MinusOutlined class="hmfw-icon" />
+    <EditOutlined class="hmfw-icon" />
+    <DeleteOutlined class="hmfw-icon" />
+    <EyeOutlined class="hmfw-icon" />
+    <HomeOutlined class="hmfw-icon" />
+    <UserOutlined class="hmfw-icon" />
+    <SettingOutlined class="hmfw-icon" />
   </Space>
 </template>
 
 <script setup lang="ts">
 import {
-  Icon,
   Space,
   SearchOutlined,
   CloseOutlined,

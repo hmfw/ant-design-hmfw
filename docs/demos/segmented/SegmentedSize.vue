@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from '@hmfw/ant-design'
+import { Segmented } from '@hmfw/ant-design'
 import { UserOutlined, SettingOutlined, HomeOutlined } from '@hmfw/ant-design'
 
 const value1 = ref('Daily')
@@ -17,15 +17,15 @@ const options1 = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']
 
 const value2 = ref('list')
 const options2 = [
-  { label: 'List', value: 'list', icon: h(Icon, { component: UserOutlined }) },
-  { label: 'Grid', value: 'grid', icon: h(Icon, { component: SettingOutlined }) },
+  { label: 'List', value: 'list', icon: h(UserOutlined, { class: 'hmfw-icon' }) },
+  { label: 'Grid', value: 'grid', icon: h(SettingOutlined, { class: 'hmfw-icon' }) },
 ]
 
 const value3 = ref('home')
 const options3 = [
-  { value: 'home', icon: h(Icon, { component: HomeOutlined }), tooltip: 'Home' },
-  { value: 'user', icon: h(Icon, { component: UserOutlined }), tooltip: 'User' },
-  { value: 'settings', icon: h(Icon, { component: SettingOutlined }), tooltip: 'Settings' },
+  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }), tooltip: 'Home' },
+  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }), tooltip: 'User' },
+  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }), tooltip: 'Settings' },
 ]
 
 const value4 = ref('a')

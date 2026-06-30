@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Icon, searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '@hmfw/ant-design'
+import { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '@hmfw/ant-design'
 import type { IconSearchResult } from '@hmfw/ant-design'
 
 const searchQuery = ref('')
@@ -78,7 +78,7 @@ const copyCode = (icon: IconSearchResult) => {
   const baseName = parts.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join('')
   const suffix = icon.name.includes('filled') ? 'Filled' : 'Outlined'
   const componentName = baseName.replace(/filled$/i, '') + suffix
-  const code = `<Icon :component="${componentName}" />`
+  const code = `<${componentName} class="hmfw-icon" />`
 
   navigator.clipboard.writeText(code).then(() => {
     copiedIcon.value = icon.name
@@ -134,7 +134,7 @@ const copyCode = (icon: IconSearchResult) => {
             :class="['icon-item', { copied: copiedIcon === icon.name }]"
             @click="copyCode(icon)"
           >
-            <Icon :component="icon.component" class="icon-svg" />
+            <component :is="icon.component" class="hmfw-icon icon-svg" />
             <span class="icon-label">{{ icon.name }}</span>
             <span v-if="copiedIcon === icon.name" class="copied-badge">
               <svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor">

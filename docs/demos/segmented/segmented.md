@@ -446,14 +446,14 @@ const SegmentedVerticalSource = \`<template>
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from '@hmfw/ant-design'
+import { Segmented } from '@hmfw/ant-design'
 import { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/ant-design'
 
 const value = ref('home')
 const options = [
-  { value: 'home', icon: h(Icon, { component: HomeOutlined }) },
-  { value: 'user', icon: h(Icon, { component: UserOutlined }) },
-  { value: 'settings', icon: h(Icon, { component: SettingOutlined }) },
+  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },
+  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }) },
+  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }) },
 ]
 <\/script>\`
 
@@ -475,14 +475,14 @@ const SegmentedWithIconSource = \`<template>
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from '@hmfw/ant-design'
+import { Segmented } from '@hmfw/ant-design'
 import { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/ant-design'
 
 const value = ref('home')
 const options = [
-  { value: 'home', icon: h(Icon, { component: HomeOutlined }), tooltip: 'Home Page' },
-  { value: 'user', icon: h(Icon, { component: UserOutlined }), tooltip: 'User Profile' },
-  { value: 'settings', icon: h(Icon, { component: SettingOutlined }), tooltip: 'Settings' },
+  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }), tooltip: 'Home Page' },
+  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }), tooltip: 'User Profile' },
+  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }), tooltip: 'Settings' },
 ]
 <\/script>\`
 
@@ -496,13 +496,13 @@ const SegmentedIconLabelSource = \`<template>
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { Segmented, Icon } from '@hmfw/ant-design'
+import { Segmented } from '@hmfw/ant-design'
 import { PictureOutlined, BarsOutlined } from '@hmfw/ant-design'
 
 const value = ref('list')
 const options = [
-  { value: 'list', label: '列表', icon: h(Icon, { component: BarsOutlined }) },
-  { value: 'grid', label: '网格', icon: h(Icon, { component: PictureOutlined }) },
+  { value: 'list', label: '列表', icon: h(BarsOutlined, { class: 'hmfw-icon' }) },
+  { value: 'grid', label: '网格', icon: h(PictureOutlined, { class: 'hmfw-icon' }) },
 ]
 <\/script>\`
 
