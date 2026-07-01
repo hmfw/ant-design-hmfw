@@ -356,6 +356,31 @@ export const DatePicker = defineComponent({
       })
     }
 
+    // 渲染时间列（复用逻辑，避免重复代码）
+    const renderTimeColumn = (values: number[], selectedValue: number, onSelect: (v: number) => void) => (
+      <ul
+        class={cls(`${prefixCls}-time-column`, props.classNames?.timeColumn)}
+        style={props.styles?.timeColumn}
+        ref={(el) => scrollToActiveTime(el as HTMLElement, selectedValue)}
+      >
+        {values.map((v) => (
+          <li
+            key={v}
+            data-value={v}
+            class={cls(
+              `${prefixCls}-time-cell`,
+              { [`${prefixCls}-time-cell-selected`]: selectedValue === v },
+              props.classNames?.timeCell,
+            )}
+            style={props.styles?.timeCell}
+            onClick={() => onSelect(v)}
+          >
+            {pad(v)}
+          </li>
+        ))}
+      </ul>
+    )
+
     const renderDatePanel = () => (
       <div
         class={cls(
@@ -365,172 +390,110 @@ export const DatePicker = defineComponent({
         )}
         style={props.styles?.panel}
       >
-        {/* Header */}
-        <div class={cls(`${prefixCls}-panel-header`, props.classNames?.panelHeader)} style={props.styles?.panelHeader}>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>
-            «
-          </button>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={prevMonth}>
-            ‹
-          </button>
-          <span class={`${prefixCls}-panel-header-title`}>
-            <button
-              class={`${prefixCls}-panel-header-title-btn`}
-              onClick={() => {
-                panelMode.value = 'year'
-                emit('panelChange', null, 'year')
-              }}
-            >
-              {viewYear.value}年
-            </button>
-            <button
-              class={`${prefixCls}-panel-header-title-btn`}
-              onClick={() => {
-                panelMode.value = 'month'
-                emit('panelChange', null, 'month')
-              }}
-            >
-              {locale.value.DatePicker.months[viewMonth.value]}
-            </button>
-          </span>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={nextMonth}>
-            ›
-          </button>
-          <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>
-            »
-          </button>
-        </div>
-        {/* Weekday row */}
-        <div class={cls(`${prefixCls}-panel-body`, props.classNames?.panelBody)} style={props.styles?.panelBody}>
-          <div class={cls(`${prefixCls}-weekdays`, props.classNames?.weekdays)} style={props.styles?.weekdays}>
-            {locale.value.DatePicker.weekdays.map((d) => (
-              <span
-                key={d}
-                class={cls(`${prefixCls}-weekday`, props.classNames?.weekday)}
-                style={props.styles?.weekday}
-              >
-                {d}
-              </span>
-            ))}
-          </div>
-          <div class={cls(`${prefixCls}-days`, props.classNames?.days)} style={props.styles?.days}>
-            {calendar.value.map(({ date, inCurrentMonth }, i) => {
-              const isToday = isSameDay(date, now)
-              const isSelected = selectedDate.value ? isSameDay(date, selectedDate.value) : false
-              const isDisabled = props.disabledDate?.(date) ?? false
-
-              const originNode = <span>{date.getDate()}</span>
-              const cellContent = props.cellRender
-                ? props.cellRender(date, { originNode, today: now, type: 'date' })
-                : originNode
-
-              return (
-                <button
-                  key={i}
-                  class={cls(
-                    `${prefixCls}-day`,
-                    {
-                      [`${prefixCls}-day-other-month`]: !inCurrentMonth,
-                      [`${prefixCls}-day-today`]: isToday,
-                      [`${prefixCls}-day-selected`]: isSelected,
-                      [`${prefixCls}-day-disabled`]: isDisabled,
-                    },
-                    props.classNames?.day,
-                  )}
-                  style={props.styles?.day}
-                  disabled={isDisabled}
-                  onClick={() => selectDate(date)}
-                >
-                  {cellContent}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-        {/* showTime 时间列 */}
-        {hasShowTime.value && (
-          <div class={cls(`${prefixCls}-time-panel`, props.classNames?.timePanel)} style={props.styles?.timePanel}>
+        {/* 日期面板 + 时间面板并排布局 */}
+        <div class={`${prefixCls}-panel-layout`}>
+          {/* 日期面板（头部 + 主体） */}
+          <div class={`${prefixCls}-date-panel`}>
+            {/* Header */}
             <div
-              class={cls(`${prefixCls}-time-content`, props.classNames?.timeContent)}
-              style={props.styles?.timeContent}
+              class={cls(`${prefixCls}-panel-header`, props.classNames?.panelHeader)}
+              style={props.styles?.panelHeader}
             >
-              {/* 小时列 */}
-              <ul
-                class={cls(`${prefixCls}-time-column`, props.classNames?.timeColumn)}
-                style={props.styles?.timeColumn}
-                ref={(el) => scrollToActiveTime(el as HTMLElement, innerHour.value)}
-              >
-                {hours.value.map((h) => (
-                  <li
-                    key={h}
-                    data-value={h}
-                    class={cls(
-                      `${prefixCls}-time-cell`,
-                      {
-                        [`${prefixCls}-time-cell-selected`]: innerHour.value === h,
-                      },
-                      props.classNames?.timeCell,
-                    )}
-                    style={props.styles?.timeCell}
-                    onClick={() => selectHour(h)}
-                  >
-                    {pad(h)}
-                  </li>
-                ))}
-              </ul>
-              {/* 分钟列 */}
-              <ul
-                class={cls(`${prefixCls}-time-column`, props.classNames?.timeColumn)}
-                style={props.styles?.timeColumn}
-                ref={(el) => scrollToActiveTime(el as HTMLElement, innerMinute.value)}
-              >
-                {minutes.value.map((m) => (
-                  <li
-                    key={m}
-                    data-value={m}
-                    class={cls(
-                      `${prefixCls}-time-cell`,
-                      {
-                        [`${prefixCls}-time-cell-selected`]: innerMinute.value === m,
-                      },
-                      props.classNames?.timeCell,
-                    )}
-                    style={props.styles?.timeCell}
-                    onClick={() => selectMinute(m)}
-                  >
-                    {pad(m)}
-                  </li>
-                ))}
-              </ul>
-              {/* 秒列 */}
-              {showSecondColumn.value && (
-                <ul
-                  class={cls(`${prefixCls}-time-column`, props.classNames?.timeColumn)}
-                  style={props.styles?.timeColumn}
-                  ref={(el) => scrollToActiveTime(el as HTMLElement, innerSecond.value)}
+              <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>
+                «
+              </button>
+              <button class={`${prefixCls}-panel-header-btn`} onClick={prevMonth}>
+                ‹
+              </button>
+              <span class={`${prefixCls}-panel-header-title`}>
+                <button
+                  class={`${prefixCls}-panel-header-title-btn`}
+                  onClick={() => {
+                    panelMode.value = 'year'
+                    emit('panelChange', null, 'year')
+                  }}
                 >
-                  {seconds.value.map((s) => (
-                    <li
-                      key={s}
-                      data-value={s}
+                  {viewYear.value}年
+                </button>
+                <button
+                  class={`${prefixCls}-panel-header-title-btn`}
+                  onClick={() => {
+                    panelMode.value = 'month'
+                    emit('panelChange', null, 'month')
+                  }}
+                >
+                  {locale.value.DatePicker.months[viewMonth.value]}
+                </button>
+              </span>
+              <button class={`${prefixCls}-panel-header-btn`} onClick={nextMonth}>
+                ›
+              </button>
+              <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>
+                »
+              </button>
+            </div>
+            {/* Weekday row */}
+            <div class={cls(`${prefixCls}-panel-body`, props.classNames?.panelBody)} style={props.styles?.panelBody}>
+              <div class={cls(`${prefixCls}-weekdays`, props.classNames?.weekdays)} style={props.styles?.weekdays}>
+                {locale.value.DatePicker.weekdays.map((d) => (
+                  <span
+                    key={d}
+                    class={cls(`${prefixCls}-weekday`, props.classNames?.weekday)}
+                    style={props.styles?.weekday}
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
+              <div class={cls(`${prefixCls}-days`, props.classNames?.days)} style={props.styles?.days}>
+                {calendar.value.map(({ date, inCurrentMonth }, i) => {
+                  const isToday = isSameDay(date, now)
+                  const isSelected = selectedDate.value ? isSameDay(date, selectedDate.value) : false
+                  const isDisabled = props.disabledDate?.(date) ?? false
+
+                  const originNode = <span>{date.getDate()}</span>
+                  const cellContent = props.cellRender
+                    ? props.cellRender(date, { originNode, today: now, type: 'date' })
+                    : originNode
+
+                  return (
+                    <button
+                      key={i}
                       class={cls(
-                        `${prefixCls}-time-cell`,
+                        `${prefixCls}-day`,
                         {
-                          [`${prefixCls}-time-cell-selected`]: innerSecond.value === s,
+                          [`${prefixCls}-day-other-month`]: !inCurrentMonth,
+                          [`${prefixCls}-day-today`]: isToday,
+                          [`${prefixCls}-day-selected`]: isSelected,
+                          [`${prefixCls}-day-disabled`]: isDisabled,
                         },
-                        props.classNames?.timeCell,
+                        props.classNames?.day,
                       )}
-                      style={props.styles?.timeCell}
-                      onClick={() => selectSecond(s)}
+                      style={props.styles?.day}
+                      disabled={isDisabled}
+                      onClick={() => selectDate(date)}
                     >
-                      {pad(s)}
-                    </li>
-                  ))}
-                </ul>
-              )}
+                      {cellContent}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           </div>
-        )}
+          {/* showTime 时间列 */}
+          {hasShowTime.value && (
+            <div class={cls(`${prefixCls}-time-panel`, props.classNames?.timePanel)} style={props.styles?.timePanel}>
+              <div
+                class={cls(`${prefixCls}-time-content`, props.classNames?.timeContent)}
+                style={props.styles?.timeContent}
+              >
+                {renderTimeColumn(hours.value, innerHour.value, selectHour)}
+                {renderTimeColumn(minutes.value, innerMinute.value, selectMinute)}
+                {showSecondColumn.value && renderTimeColumn(seconds.value, innerSecond.value, selectSecond)}
+              </div>
+            </div>
+          )}
+        </div>
         {/* Footer */}
         {(props.showToday || props.showNow || props.showTime || props.presets?.length || props.renderExtraFooter) && (
           <div
@@ -796,7 +759,7 @@ export const DatePicker = defineComponent({
               </span>
             </div>
           ),
-          popup: ({ placement }: { placement: Placement }) => renderPopup(),
+          popup: ({ placement: _placement }: { placement: Placement }) => renderPopup(),
         }}
       </Trigger>
     )

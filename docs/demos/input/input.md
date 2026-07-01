@@ -105,11 +105,49 @@
 | 参数       | 说明                                                                             | 类型                                                   | 默认值  |
 | ---------- | -------------------------------------------------------------------------------- | ------------------------------------------------------ | ------- |
 | rows       | 输入框行数                                                                       | `number`                                               | `4`     |
-| autoSize   | 自适应内容高度，可设置为 true \| false 或对象                                    | `boolean \| { minRows?: number; maxRows?: number }`    | `false` |
+| autoSize   | 自适应内容高度，可设置为 true \| false 或对象：`{ minRows, maxRows }`            | `boolean \| { minRows?: number; maxRows?: number }`    | `false` |
 | allowClear | 可以点击清除图标删除内容                                                         | `boolean \| { clearIcon?: VNode; disabled?: boolean }` | `false` |
 | showCount  | 是否展示字数，支持自定义格式化                                                   | `boolean \| { formatter: (info) => VNode \| string }`  | `false` |
+| count      | 高级计数配置，支持自定义计数策略和格式，见下方说明                               | `CountConfig`                                          | -       |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ textarea?: string; count?: string }`                | -       |
 | styles     | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ textarea?: CSSProperties; count?: CSSProperties }`  | -       |
+
+**CountConfig 类型：**
+
+```typescript
+interface CountConfig {
+  // 是否显示计数
+  show?: boolean | ((args: { value: string; count: number; maxLength?: number }) => VNode | string)
+  // 最大值限制（超出会自动截断并显示红色）
+  max?: number
+  // 自定义计数策略（默认为字符数）
+  strategy?: (text: string) => number
+  // 自定义显示格式
+  showFormatter?: (args: { value: string; count: number; maxLength?: number }) => VNode | string
+}
+```
+
+**count 使用示例：**
+
+```vue
+<!-- 按字节数计数（中文算2字符） -->
+<TextArea
+  :count="{
+    show: true,
+    max: 20,
+    strategy: (txt) => txt.split('').reduce((len, char) => len + (char.charCodeAt(0) > 255 ? 2 : 1), 0),
+  }"
+/>
+
+<!-- 自定义显示格式 -->
+<TextArea
+  :count="{
+    show: true,
+    max: 100,
+    showFormatter: ({ count, maxLength }) => `已输入 ${count}/${maxLength} 字`,
+  }"
+/>
+```
 
 ### InputSearch Props
 

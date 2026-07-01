@@ -155,7 +155,6 @@
 }
 
 .hmfw-input-show-count-suffix {
-  margin-left: 4px;
   color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
   font-size: 12px;
   white-space: nowrap;
@@ -171,14 +170,28 @@
 .hmfw-input-textarea-show-count {
   position: relative;
   display: inline-block;
-  width: 100%;
+  line-height: var(--hmfw-line-height);
 }
 
-.hmfw-input-textarea-show-count .hmfw-input-show-count-suffix {
+.hmfw-input-textarea-show-count .hmfw-input-show-count-suffix,
+.hmfw-input-textarea-show-count .hmfw-input-data-count {
   position: absolute;
-  bottom: 4px;
-  right: 8px;
+  bottom: -18px;
+  right: 0;
   pointer-events: none;
+}
+
+.hmfw-input-textarea-show-count .hmfw-input-clear-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+/* 超出范围时的样式 */
+.hmfw-input-out-of-range .hmfw-input-data-count {
+  color: var(--hmfw-color-error, #ff4d4f);
 }
 
 /* Search */

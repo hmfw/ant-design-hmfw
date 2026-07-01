@@ -1,8 +1,9 @@
-import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
+import { defineComponent, ref, computed, watch, nextTick, onMounted, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
-import { CloseOutlined, EyeOutlined, SearchOutlined, LoadingOutlined } from '../icon'
+import { CloseOutlined, EyeOutlined, EyeInvisibleOutlined, SearchOutlined, LoadingOutlined } from '../icon'
 import type { InputSize, InputStatus, InputAffix } from './types'
+import { calculateAutoSizeStyle } from './calculateNodeHeight'
 
 // 渲染前后缀：函数（图标组件）走 Icon 组件，其余（字符串 / VNode）直接渲染
 function renderAffix(affix: InputAffix | undefined): VNode | string | null {
@@ -342,8 +343,7 @@ export const InputPassword = defineComponent({
 
     const defaultIconRender = (vis: boolean) => {
       if (vis) return <EyeOutlined />
-      // Temporary: use simple text until EyeInvisibleOutlined is added
-      return <span style={{ fontSize: '14px' }}>👁‍🗨</span>
+      return <EyeInvisibleOutlined />
     }
 
     return () => {
@@ -406,6 +406,12 @@ export const TextArea = defineComponent({
           formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string
         }
     >,
+    count: Object as PropType<{
+      show?: boolean | ((args: { value: string; count: number; maxLength?: number }) => VNode | string)
+      max?: number
+      strategy?: (text: string) => number
+      exceedFormatter?: (value: string, config: { max: number }) => string
+    }>,
     status: {
       type: String as PropType<InputStatus>,
       default: '',
@@ -454,45 +460,97 @@ export const TextArea = defineComponent({
       resizableTextArea: textareaRef,
     })
 
-    // Auto-resize logic
-    const computedRows = ref(props.rows)
+    // Auto-resize logic (参考 Ant Design v6 实现)
+    const textareaStyle = ref<Record<string, any>>({})
+
     const updateAutoSize = () => {
       if (!props.autoSize || !textareaRef.value) return
-      const minRows = typeof props.autoSize === 'object' ? props.autoSize.minRows : props.rows
-      const maxRows = typeof props.autoSize === 'object' ? props.autoSize.maxRows : undefined
 
-      textareaRef.value.style.height = 'auto'
-      const scrollHeight = textareaRef.value.scrollHeight
-      const lineHeight = parseInt(getComputedStyle(textareaRef.value).lineHeight || '22', 10)
-      const rows = Math.ceil(scrollHeight / lineHeight)
+      const minRows = typeof props.autoSize === 'object' ? (props.autoSize.minRows ?? null) : null
+      const maxRows = typeof props.autoSize === 'object' ? (props.autoSize.maxRows ?? null) : null
 
-      if (minRows && rows < minRows) {
-        computedRows.value = minRows
-      } else if (maxRows && rows > maxRows) {
-        computedRows.value = maxRows
-      } else {
-        computedRows.value = rows
-      }
+      nextTick(() => {
+        if (!textareaRef.value) return
+        const style = calculateAutoSizeStyle(textareaRef.value, false, minRows, maxRows)
+        textareaStyle.value = style
+      })
     }
 
     watch(() => innerValue.value, updateAutoSize)
-    watch(() => props.autoSize, updateAutoSize)
+    watch(() => props.autoSize, updateAutoSize, { deep: true })
+
+    // 组件挂载后初始化高度
+    onMounted(() => {
+      if (props.autoSize) {
+        updateAutoSize()
+      }
+    })
+
+    // 计数配置（对齐 Ant Design v6）
+    const countConfig = computed(() => {
+      const config = {
+        show: !!props.showCount,
+        max: props.maxLength,
+        strategy: (text: string) => text.length,
+        showFormatter: undefined as
+          | ((args: { value: string; count: number; maxLength?: number }) => VNode | string)
+          | undefined,
+      }
+
+      if (props.count) {
+        config.max = props.count.max ?? config.max
+        config.strategy = props.count.strategy ?? config.strategy
+        if (typeof props.count.show === 'function') {
+          config.showFormatter = props.count.show
+        } else if (props.count.show !== undefined) {
+          config.show = !!props.count.show
+        }
+      }
+
+      if (typeof props.showCount === 'object' && props.showCount?.formatter) {
+        config.showFormatter = props.showCount.formatter
+      }
+
+      return config
+    })
+
+    const valueLength = computed(() => countConfig.value.strategy(innerValue.value))
+    const isOutOfRange = computed(() => {
+      const max = countConfig.value.max
+      return !!max && valueLength.value > max
+    })
 
     const textareaCls = computed(() =>
       cls(prefixCls, `${prefixCls}-textarea`, {
         [`${prefixCls}-disabled`]: props.disabled,
         [`${prefixCls}-status-error`]: props.status === 'error',
         [`${prefixCls}-status-warning`]: props.status === 'warning',
+        [`${prefixCls}-out-of-range`]: isOutOfRange.value,
       }),
     )
 
     const handleInput = (e: Event) => {
       const val = (e.target as HTMLTextAreaElement).value
-      innerValue.value = val
-      emit('update:value', val)
+
+      // 超出限制时截断（如果配置了 max）
+      let finalValue = val
+      if (countConfig.value.max && countConfig.value.strategy(val) > countConfig.value.max) {
+        // 简单截断策略：逐字符减少直到满足条件
+        let temp = val
+        while (temp.length > 0 && countConfig.value.strategy(temp) > countConfig.value.max) {
+          temp = temp.slice(0, -1)
+        }
+        finalValue = temp
+        // 更新 textarea 值
+        if (textareaRef.value) {
+          textareaRef.value.value = finalValue
+        }
+      }
+
+      innerValue.value = finalValue
+      emit('update:value', finalValue)
       emit('input', e)
       emit('change', e)
-      updateAutoSize()
     }
 
     const handleKeydown = (e: KeyboardEvent) => {
@@ -515,22 +573,27 @@ export const TextArea = defineComponent({
       emit('update:value', '')
       emit('clear')
       textareaRef.value?.focus()
-      updateAutoSize()
     }
 
-    const hasWrapper = computed(() => props.showCount || (props.allowClear && !allowClearConfig.value.disabled))
+    const hasWrapper = computed(() => countConfig.value.show || (props.allowClear && !allowClearConfig.value.disabled))
 
     return () => {
+      // 合并样式：autoSize 计算的样式 + 用户自定义样式
+      const mergedTextareaStyle = {
+        ...textareaStyle.value,
+        ...props.styles?.textarea,
+      }
+
       const textarea = (
         <textarea
           ref={textareaRef}
           class={cls(textareaCls.value, props.classNames?.textarea)}
-          style={props.styles?.textarea}
+          style={mergedTextareaStyle}
           value={innerValue.value}
           placeholder={props.placeholder}
           disabled={props.disabled}
           readonly={props.readOnly}
-          rows={props.autoSize ? computedRows.value : props.rows}
+          rows={props.autoSize ? undefined : props.rows}
           maxlength={props.maxLength}
           onInput={handleInput}
           onKeydown={handleKeydown}
@@ -548,20 +611,33 @@ export const TextArea = defineComponent({
         </span>
       )
 
+      // TextArea 的 countNode
       const countNode = (() => {
-        if (!props.showCount) return null
-        const count = innerValue.value.length
-        const max = props.maxLength
-        if (typeof props.showCount === 'object' && props.showCount.formatter) {
+        if (!countConfig.value.show) return null
+
+        const count = valueLength.value
+        const max = countConfig.value.max
+
+        // 使用自定义 formatter
+        if (countConfig.value.showFormatter) {
           return (
-            <span class={cls(`${prefixCls}-show-count-suffix`, props.classNames?.count)} style={props.styles?.count}>
-              {props.showCount.formatter({ value: innerValue.value, count, maxLength: max })}
+            <span
+              class={cls(`${prefixCls}-show-count-suffix`, `${prefixCls}-data-count`, props.classNames?.count)}
+              style={props.styles?.count}
+            >
+              {countConfig.value.showFormatter({ value: innerValue.value, count, maxLength: max })}
             </span>
           )
         }
+
+        // 默认格式
+        const hasMaxLength = Number(max) > 0
         return (
-          <span class={cls(`${prefixCls}-show-count-suffix`, props.classNames?.count)} style={props.styles?.count}>
-            {max ? `${count} / ${max}` : `${count}`}
+          <span
+            class={cls(`${prefixCls}-show-count-suffix`, `${prefixCls}-data-count`, props.classNames?.count)}
+            style={props.styles?.count}
+          >
+            {hasMaxLength ? `${count} / ${max}` : `${count}`}
           </span>
         )
       })()

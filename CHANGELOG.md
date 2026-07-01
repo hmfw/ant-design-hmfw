@@ -20,6 +20,25 @@
 - **清除图标交互**：有值时 hover 显示清除图标并完整遮挡后缀图标，清除图标字号与后缀对齐（14px）避免边缘露出
 - **输入框对齐**：`input-inner` 清零默认 `margin`/`padding`，行高改用 `var(--hmfw-line-height)`，修复文字基线偏移
 
+### ✨ 改进 — Input 组件
+
+- **TextArea 自动高度优化**：新增 `calculateNodeHeight.ts` 工具函数（参考 Ant Design v6 实现），使用隐藏 textarea 精确计算内容高度，支持 `minRows`/`maxRows` 配置，修复自动高度计算不准确的问题
+- **新增 count 属性**：对齐 Ant Design v6 API，支持 `count.show`、`count.max`、`count.strategy`、`count.exceedFormatter` 配置，提供更灵活的字符计数控制
+- **超出限制自动截断**：当配置 `count.max` 时，输入超出限制会自动截断，避免用户输入超长内容
+- **InputPassword 图标替换**：隐藏密码图标从 emoji（👁‍🗨）替换为 `EyeInvisibleOutlined` 组件，视觉统一
+- **计数显示改进**：新增 `.hmfw-input-data-count` 类名，优化计数节点样式和结构
+
+### ✨ 改进 — DatePicker 组件
+
+- **时间列渲染重构**：提取 `renderTimeColumn` 函数复用时间列渲染逻辑，消除小时/分钟/秒列的重复代码（~60 行）
+- **面板布局优化**：`showTime` 时日期面板与时间面板并排显示（flex 布局），替代原来的垂直堆叠，提升空间利用率
+- **日期单元格尺寸固定**：日历格子由响应式 `grid-template-columns: repeat(7, 1fr)` 改为固定 `36px`，消除宽度不一致问题
+- **样式细节调整**：
+  - 星期标题字号 12px → 14px，增加高度和居中对齐
+  - 年份/月份标题按钮字重 500 → 700，强化层级
+  - 月份/年份/季度选择面板新增固定宽度 252px
+  - 移除面板 `min-width: 280px`，由内容自适应
+
 ### 🐛 修复 — 其他
 
 - **AutoComplete**：移除多余的 `closeOnOutsideClick={false}`、`closeOnEscape={false}` 传参
