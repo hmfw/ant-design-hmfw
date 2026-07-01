@@ -5,7 +5,6 @@ export type {
   InputNumberStyles,
   InputNumberSize,
   InputNumberStatus,
-  InputNumberVariant,
   InputNumberMode,
   ControlsConfig,
 } from './types'

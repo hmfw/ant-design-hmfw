@@ -2,7 +2,6 @@ import type { CSSProperties, PropType, VNode } from 'vue'
 
 export type InputNumberSize = 'small' | 'middle' | 'large'
 export type InputNumberStatus = 'error' | 'warning'
-export type InputNumberVariant = 'outlined' | 'filled' | 'borderless' | 'underlined'
 export type InputNumberMode = 'input' | 'spinner'
 
 export interface ControlsConfig {
@@ -28,14 +27,6 @@ export interface InputNumberClassNames {
   handlerUp?: string
   /** 减少按钮 span.hmfw-input-number-handler-down */
   handlerDown?: string
-  /** 外层分组容器 div.hmfw-input-number-group-wrapper */
-  groupWrapper?: string
-  /** 内层包装 div.hmfw-input-number-wrapper */
-  wrapper?: string
-  /** 前置标签 span.hmfw-input-number-group-addon（addonBefore） */
-  addonBefore?: string
-  /** 后置标签 span.hmfw-input-number-group-addon（addonAfter） */
-  addonAfter?: string
 }
 
 /**
@@ -56,14 +47,6 @@ export interface InputNumberStyles {
   handlerUp?: CSSProperties
   /** 减少按钮 span.hmfw-input-number-handler-down */
   handlerDown?: CSSProperties
-  /** 外层分组容器 div.hmfw-input-number-group-wrapper */
-  groupWrapper?: CSSProperties
-  /** 内层包装 div.hmfw-input-number-wrapper */
-  wrapper?: CSSProperties
-  /** 前置标签 span.hmfw-input-number-group-addon（addonBefore） */
-  addonBefore?: CSSProperties
-  /** 后置标签 span.hmfw-input-number-group-addon（addonAfter） */
-  addonAfter?: CSSProperties
 }
 
 export interface InputNumberProps {
@@ -79,7 +62,6 @@ export interface InputNumberProps {
   readOnly?: boolean
   size?: InputNumberSize
   status?: InputNumberStatus
-  variant?: InputNumberVariant
   placeholder?: string
   controls?: boolean | ControlsConfig
   keyboard?: boolean
@@ -88,8 +70,6 @@ export interface InputNumberProps {
   changeOnWheel?: boolean
   decimalSeparator?: string
   mode?: InputNumberMode
-  addonBefore?: string
-  addonAfter?: string
   prefix?: string
   suffix?: string
   /** 语义化 className */
@@ -111,7 +91,6 @@ export const inputNumberProps = {
   readOnly: Boolean,
   size: { type: String as PropType<InputNumberSize>, default: 'middle' },
   status: String as PropType<InputNumberStatus>,
-  variant: { type: String as PropType<InputNumberVariant>, default: 'outlined' },
   placeholder: String,
   controls: { type: [Boolean, Object] as PropType<boolean | ControlsConfig>, default: true },
   keyboard: { type: Boolean, default: true },
@@ -120,8 +99,6 @@ export const inputNumberProps = {
   changeOnWheel: Boolean,
   decimalSeparator: String,
   mode: { type: String as PropType<InputNumberMode>, default: 'input' },
-  addonBefore: String,
-  addonAfter: String,
   prefix: String,
   suffix: String,
   classNames: Object as PropType<InputNumberClassNames>,

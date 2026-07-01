@@ -24,28 +24,12 @@
   <InputNumberMinMax />
 </DemoBlock>
 
-### 前后缀
-
-带有前缀或后缀的数字输入框。
-
-<DemoBlock title="前后缀" :source="InputNumberAddonSource">
-  <InputNumberAddon />
-</DemoBlock>
-
 ### 前缀和后缀
 
 使用 `prefix` 和 `suffix` 添加前缀和后缀。
 
 <DemoBlock title="前缀和后缀" :source="InputNumberSuffixSource">
   <InputNumberSuffix />
-</DemoBlock>
-
-### 变体
-
-支持 `outlined`、`filled`、`borderless`、`underlined` 四种变体。
-
-<DemoBlock title="变体" :source="InputNumberVariantSource">
-  <InputNumberVariant />
 </DemoBlock>
 
 ### 显示模式
@@ -76,35 +60,32 @@
 
 ### InputNumber Props
 
-| 参数             | 说明                                                                             | 类型                                                                      | 默认值       |
-| ---------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------ |
-| value(v-model)   | 当前值                                                                           | `number \| null`                                                          | -            |
-| defaultValue     | 初始值                                                                           | `number`                                                                  | -            |
-| min              | 最小值                                                                           | `number`                                                                  | `-Infinity`  |
-| max              | 最大值                                                                           | `number`                                                                  | `Infinity`   |
-| step             | 每次改变步数，可以为小数                                                         | `number`                                                                  | `1`          |
-| precision        | 数值精度                                                                         | `number`                                                                  | -            |
-| disabled         | 禁用                                                                             | `boolean`                                                                 | `false`      |
-| readOnly         | 只读                                                                             | `boolean`                                                                 | `false`      |
-| size             | 输入框大小                                                                       | `'small' \| 'middle' \| 'large'`                                          | `'middle'`   |
-| status           | 设置校验状态                                                                     | `'error' \| 'warning'`                                                    | -            |
-| variant          | 变体                                                                             | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'`                  | `'outlined'` |
-| mode             | 显示模式                                                                         | `'input' \| 'spinner'`                                                    | `'input'`    |
-| prefix           | 带有前缀图标的 input                                                             | `string \| VNode`                                                         | -            |
-| suffix           | 带有后缀图标的 input                                                             | `string \| VNode`                                                         | -            |
-| addonBefore      | 带标签的 input，设置前置标签                                                     | `string \| VNode`                                                         | -            |
-| addonAfter       | 带标签的 input，设置后置标签                                                     | `string \| VNode`                                                         | -            |
-| controls         | 是否显示增减按钮，或自定义图标                                                   | `boolean \| { upIcon?: VNode \| string; downIcon?: VNode \| string }`     | `true`       |
-| keyboard         | 是否启用键盘快捷行为                                                             | `boolean`                                                                 | `true`       |
-| placeholder      | 占位符                                                                           | `string`                                                                  | -            |
-| formatter        | 指定输入框展示值的格式                                                           | `(value: number, info: { userTyping: boolean; input: string }) => string` | -            |
-| parser           | 指定从 formatter 里转换回数字的方式                                              | `(value: string) => number`                                               | -            |
-| changeOnBlur     | 是否在失焦时触发 change                                                          | `boolean`                                                                 | `true`       |
-| changeOnWheel    | 是否允许鼠标滚轮改变数值                                                         | `boolean`                                                                 | `false`      |
-| decimalSeparator | 小数点                                                                           | `string`                                                                  | `'.'`        |
-| stringMode       | 字符串模式，开启后支持高精度小数                                                 | `boolean`                                                                 | `false`      |
-| classNames       | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `InputNumberClassNames`                                                   | -            |
-| styles           | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `InputNumberStyles`                                                       | -            |
+| 参数             | 说明                                                                             | 类型                                                                      | 默认值      |
+| ---------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ----------- |
+| value(v-model)   | 当前值                                                                           | `number \| null`                                                          | -           |
+| defaultValue     | 初始值                                                                           | `number`                                                                  | -           |
+| min              | 最小值                                                                           | `number`                                                                  | `-Infinity` |
+| max              | 最大值                                                                           | `number`                                                                  | `Infinity`  |
+| step             | 每次改变步数，可以为小数                                                         | `number`                                                                  | `1`         |
+| precision        | 数值精度                                                                         | `number`                                                                  | -           |
+| disabled         | 禁用                                                                             | `boolean`                                                                 | `false`     |
+| readOnly         | 只读                                                                             | `boolean`                                                                 | `false`     |
+| size             | 输入框大小                                                                       | `'small' \| 'middle' \| 'large'`                                          | `'middle'`  |
+| status           | 设置校验状态                                                                     | `'error' \| 'warning'`                                                    | -           |
+| mode             | 显示模式                                                                         | `'input' \| 'spinner'`                                                    | `'input'`   |
+| prefix           | 前缀图标或文本                                                                   | `string \| VNode`                                                         | -           |
+| suffix           | 后缀图标或文本                                                                   | `string \| VNode`                                                         | -           |
+| controls         | 是否显示增减按钮，或自定义图标                                                   | `boolean \| { upIcon?: VNode \| string; downIcon?: VNode \| string }`     | `true`      |
+| keyboard         | 是否启用键盘快捷行为                                                             | `boolean`                                                                 | `true`      |
+| placeholder      | 占位符                                                                           | `string`                                                                  | -           |
+| formatter        | 指定输入框展示值的格式                                                           | `(value: number, info: { userTyping: boolean; input: string }) => string` | -           |
+| parser           | 指定从 formatter 里转换回数字的方式                                              | `(value: string) => number`                                               | -           |
+| changeOnBlur     | 是否在失焦时触发 change                                                          | `boolean`                                                                 | `true`      |
+| changeOnWheel    | 是否允许鼠标滚轮改变数值                                                         | `boolean`                                                                 | `false`     |
+| decimalSeparator | 小数点                                                                           | `string`                                                                  | `'.'`       |
+| stringMode       | 字符串模式，开启后支持高精度小数                                                 | `boolean`                                                                 | `false`     |
+| classNames       | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `InputNumberClassNames`                                                   | -           |
+| styles           | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `InputNumberStyles`                                                       | -           |
 
 ### InputNumber Events
 
@@ -144,10 +125,6 @@ interface InputNumberClassNames {
   handlerWrap?: string // 操作按钮容器 div.hmfw-input-number-handler-wrap
   handlerUp?: string // 增加按钮 span.hmfw-input-number-handler-up
   handlerDown?: string // 减少按钮 span.hmfw-input-number-handler-down
-  groupWrapper?: string // 外层分组容器 div.hmfw-input-number-group-wrapper
-  wrapper?: string // 内层包装 div.hmfw-input-number-wrapper
-  addonBefore?: string // 前置标签 span.hmfw-input-number-group-addon
-  addonAfter?: string // 后置标签 span.hmfw-input-number-group-addon
 }
 
 interface InputNumberStyles {
@@ -158,10 +135,6 @@ interface InputNumberStyles {
   handlerWrap?: CSSProperties
   handlerUp?: CSSProperties
   handlerDown?: CSSProperties
-  groupWrapper?: CSSProperties
-  wrapper?: CSSProperties
-  addonBefore?: CSSProperties
-  addonAfter?: CSSProperties
 }
 ```
 
@@ -192,26 +165,6 @@ interface InputNumberStyles {
       <span class="hmfw-icon">...</span>
     </span>
   </div>
-</div>
-
-<!-- 带 addon 结构 -->
-<div class="hmfw-input-number-group-wrapper">
-  <!-- ↑ classNames.groupWrapper / styles.groupWrapper 应用于此 -->
-  <span class="hmfw-input-number-group-addon">
-    <!-- ↑ classNames.addonBefore / styles.addonBefore 应用于此 -->
-    前置标签
-  </span>
-  <div class="hmfw-input-number-wrapper">
-    <!-- ↑ classNames.wrapper / styles.wrapper 应用于此 -->
-    <div class="hmfw-input-number">
-      <!-- ↑ classNames.root / styles.root 应用于此 -->
-      ...
-    </div>
-  </div>
-  <span class="hmfw-input-number-group-addon">
-    <!-- ↑ classNames.addonAfter / styles.addonAfter 应用于此 -->
-    后置标签
-  </span>
 </div>
 ```
 
@@ -308,18 +261,6 @@ interface InputNumberStyles {
       handlerDown: { color: '#ff4d4f' },
     }"
   />
-
-  <!-- 自定义 addon 分组 -->
-  <InputNumber
-    v-model:value="value"
-    addon-before="价格"
-    addon-after="元"
-    :styles="{
-      groupWrapper: { boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' },
-      addonBefore: { background: '#1890ff', color: 'white' },
-      addonAfter: { background: '#52c41a', color: 'white' },
-    }"
-  />
 </template>
 ```
 
@@ -327,7 +268,6 @@ interface InputNumberStyles {
 
 - `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
 - `classNames.root` 会与组件内置的状态类名（如 `.hmfw-input-number-disabled`、`.hmfw-input-number-focused`）合并
-- 带 addon 时，外层容器为 `groupWrapper`，内层包装为 `wrapper`，InputNumber 主体为 `root`
 - `handlerUp` 和 `handlerDown` 分别对应增加和减少按钮，可单独定制样式
 - `prefix` 和 `suffix` 仅在对应 props 有值时渲染
 

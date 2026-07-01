@@ -129,10 +129,16 @@ export const InputNumber = defineComponent({
 
     const step = (dir: 1 | -1, emitter: 'handler' | 'keydown' | 'wheel' = 'handler') => {
       if (props.disabled || props.readOnly) return
-      const cur = currentValue.value ?? 0
+      // 聚焦时以当前输入框内已键入的值为基准，避免使用未提交的旧值
+      const base = focused.value ? parseInput(inputStr.value) : currentValue.value
+      const cur = base ?? 0
       const stepValue = props.step ?? 1
       const next = applyPrecision(clamp(cur + dir * stepValue))
       setValue(next)
+      // 聚焦时同步显示值，否则输入框仍显示旧的 inputStr
+      if (focused.value) {
+        inputStr.value = formatDisplay(next)
+      }
       emit('step', next, { offset: dir * stepValue, type: dir > 0 ? 'up' : 'down', emitter })
     }
 
@@ -147,12 +153,105 @@ export const InputNumber = defineComponent({
       const upIcon = controlsConfig.upIcon ?? (isSpinner ? '+' : '▲')
       const downIcon = controlsConfig.downIcon ?? (isSpinner ? '−' : '▼')
 
+      const upDisabled =
+        props.disabled ||
+        (currentValue.value !== undefined && props.max !== undefined && currentValue.value >= props.max)
+      const downDisabled =
+        props.disabled ||
+        (currentValue.value !== undefined && props.min !== undefined && currentValue.value <= props.min)
+
+      const inputNode = (
+        <input
+          ref={inputRef}
+          class={cls(`${prefixCls}-input`, props.classNames?.input)}
+          style={props.styles?.input}
+          value={displayValue}
+          disabled={props.disabled}
+          readonly={props.readOnly}
+          placeholder={props.placeholder}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onInput={handleInput}
+          onKeydown={handleKeydown}
+          onWheel={handleWheel}
+        />
+      )
+
+      // Spinner 模式：横向三段式（左减 / 中值 / 右加）
+      if (isSpinner) {
+        const inputEl = (
+          <div
+            class={cls(
+              prefixCls,
+              `${prefixCls}-spinner`,
+              `${prefixCls}-${props.size}`,
+              {
+                [`${prefixCls}-focused`]: focused.value,
+                [`${prefixCls}-disabled`]: props.disabled,
+                [`${prefixCls}-readonly`]: props.readOnly,
+                [`${prefixCls}-status-${props.status}`]: !!props.status,
+                [`${prefixCls}-without-controls`]: !showControls,
+              },
+              props.classNames?.root,
+            )}
+            style={props.styles?.root}
+          >
+            {showControls && (
+              <span
+                class={cls(
+                  `${prefixCls}-handler`,
+                  `${prefixCls}-handler-down`,
+                  { [`${prefixCls}-handler-down-disabled`]: downDisabled },
+                  props.classNames?.handlerDown,
+                )}
+                style={props.styles?.handlerDown}
+                onMousedown={(e) => {
+                  e.preventDefault()
+                  step(-1)
+                }}
+              >
+                <span class={`${prefixCls}-handler-down-inner`}>{downIcon}</span>
+              </span>
+            )}
+            {(props.prefix || slots.prefix) && (
+              <span class={cls(`${prefixCls}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
+                {slots.prefix?.() ?? props.prefix}
+              </span>
+            )}
+            {inputNode}
+            {(props.suffix || slots.suffix) && (
+              <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+                {slots.suffix?.() ?? props.suffix}
+              </span>
+            )}
+            {showControls && (
+              <span
+                class={cls(
+                  `${prefixCls}-handler`,
+                  `${prefixCls}-handler-up`,
+                  { [`${prefixCls}-handler-up-disabled`]: upDisabled },
+                  props.classNames?.handlerUp,
+                )}
+                style={props.styles?.handlerUp}
+                onMousedown={(e) => {
+                  e.preventDefault()
+                  step(1)
+                }}
+              >
+                <span class={`${prefixCls}-handler-up-inner`}>{upIcon}</span>
+              </span>
+            )}
+          </div>
+        )
+        return inputEl
+      }
+
+      // 标准 input 模式
       const inputEl = (
         <div
           class={cls(
             prefixCls,
             `${prefixCls}-${props.size}`,
-            `${prefixCls}-${props.variant}`,
             {
               [`${prefixCls}-focused`]: focused.value,
               [`${prefixCls}-disabled`]: props.disabled,
@@ -169,20 +268,7 @@ export const InputNumber = defineComponent({
               {slots.prefix?.() ?? props.prefix}
             </span>
           )}
-          <input
-            ref={inputRef}
-            class={cls(`${prefixCls}-input`, props.classNames?.input)}
-            style={props.styles?.input}
-            value={displayValue}
-            disabled={props.disabled}
-            readonly={props.readOnly}
-            placeholder={props.placeholder}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onInput={handleInput}
-            onKeydown={handleKeydown}
-            onWheel={handleWheel}
-          />
+          {inputNode}
           {(props.suffix || slots.suffix) && (
             <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
               {slots.suffix?.() ?? props.suffix}
@@ -197,11 +283,7 @@ export const InputNumber = defineComponent({
                 class={cls(
                   `${prefixCls}-handler`,
                   `${prefixCls}-handler-up`,
-                  {
-                    [`${prefixCls}-handler-up-disabled`]:
-                      props.disabled ||
-                      (currentValue.value !== undefined && props.max !== undefined && currentValue.value >= props.max),
-                  },
+                  { [`${prefixCls}-handler-up-disabled`]: upDisabled },
                   props.classNames?.handlerUp,
                 )}
                 style={props.styles?.handlerUp}
@@ -216,11 +298,7 @@ export const InputNumber = defineComponent({
                 class={cls(
                   `${prefixCls}-handler`,
                   `${prefixCls}-handler-down`,
-                  {
-                    [`${prefixCls}-handler-down-disabled`]:
-                      props.disabled ||
-                      (currentValue.value !== undefined && props.min !== undefined && currentValue.value <= props.min),
-                  },
+                  { [`${prefixCls}-handler-down-disabled`]: downDisabled },
                   props.classNames?.handlerDown,
                 )}
                 style={props.styles?.handlerDown}
@@ -235,38 +313,6 @@ export const InputNumber = defineComponent({
           )}
         </div>
       )
-
-      if (props.addonBefore || props.addonAfter || slots.addonBefore || slots.addonAfter) {
-        return (
-          <div
-            class={cls(`${prefixCls}-group-wrapper`, props.classNames?.groupWrapper)}
-            style={props.styles?.groupWrapper}
-          >
-            <div
-              class={cls(`${prefixCls}-wrapper ${prefixCls}-group`, props.classNames?.wrapper)}
-              style={props.styles?.wrapper}
-            >
-              {(props.addonBefore || slots.addonBefore) && (
-                <span
-                  class={cls(`${prefixCls}-group-addon`, props.classNames?.addonBefore)}
-                  style={props.styles?.addonBefore}
-                >
-                  {slots.addonBefore?.() ?? props.addonBefore}
-                </span>
-              )}
-              {inputEl}
-              {(props.addonAfter || slots.addonAfter) && (
-                <span
-                  class={cls(`${prefixCls}-group-addon`, props.classNames?.addonAfter)}
-                  style={props.styles?.addonAfter}
-                >
-                  {slots.addonAfter?.() ?? props.addonAfter}
-                </span>
-              )}
-            </div>
-          </div>
-        )
-      }
 
       return inputEl
     }

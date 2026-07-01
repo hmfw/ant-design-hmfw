@@ -55,6 +55,25 @@ describe('InputNumber', () => {
     expect(wrapper.emitted('change')?.[0]).toEqual([4])
   })
 
+  it('steps and updates display value while focused', async () => {
+    const wrapper = mount(InputNumber, { props: { defaultValue: 5 } })
+    const input = wrapper.find('input')
+    await input.trigger('focus')
+    await wrapper.find('.hmfw-input-number-handler-up').trigger('mousedown')
+    expect(wrapper.emitted('change')?.[0]).toEqual([6])
+    expect((input.element as HTMLInputElement).value).toBe('6')
+  })
+
+  it('steps from the currently typed value while focused', async () => {
+    const wrapper = mount(InputNumber, { props: { defaultValue: 5 } })
+    const input = wrapper.find('input')
+    await input.trigger('focus')
+    await input.setValue('10')
+    await wrapper.find('.hmfw-input-number-handler-up').trigger('mousedown')
+    expect(wrapper.emitted('change')?.[0]).toEqual([11])
+    expect((input.element as HTMLInputElement).value).toBe('11')
+  })
+
   it('respects min/max', async () => {
     const wrapper = mount(InputNumber, { props: { defaultValue: 10, max: 10 } })
     await wrapper.find('.hmfw-input-number-handler-up').trigger('mousedown')
@@ -76,13 +95,6 @@ describe('InputNumber', () => {
     expect(wrapper.find('.hmfw-input-number-suffix').text()).toBe('RMB')
   })
 
-  it('renders addon before and after', () => {
-    const wrapper = mount(InputNumber, { props: { addonBefore: 'http://', addonAfter: '.com' } })
-    const addons = wrapper.findAll('.hmfw-input-number-group-addon')
-    expect(addons[0].text()).toBe('http://')
-    expect(addons[1].text()).toBe('.com')
-  })
-
   it('emits focus and blur', async () => {
     const wrapper = mount(InputNumber, { props: { defaultValue: 5 } })
     await wrapper.find('input').trigger('focus')
@@ -91,11 +103,10 @@ describe('InputNumber', () => {
     expect(wrapper.emitted('blur')).toBeTruthy()
   })
 
-  it('applies variant class', () => {
-    const filled = mount(InputNumber, { props: { variant: 'filled' } })
-    expect(filled.classes()).toContain('hmfw-input-number-filled')
-    const borderless = mount(InputNumber, { props: { variant: 'borderless' } })
-    expect(borderless.classes()).toContain('hmfw-input-number-borderless')
+  it('reserves space for suffix when controls are shown', () => {
+    const wrapper = mount(InputNumber, { props: { suffix: '元' } })
+    expect(wrapper.classes()).not.toContain('hmfw-input-number-without-controls')
+    expect(wrapper.find('.hmfw-input-number-suffix').exists()).toBe(true)
   })
 
   it('formatter receives correct info object', async () => {
