@@ -9,14 +9,6 @@
     <div class="demo-block__toolbar">
       <span v-if="title" class="demo-block__title">{{ title }}</span>
       <div class="demo-block__actions">
-        <div class="demo-block__lang-tabs">
-          <button class="demo-block__lang-btn" :class="{ active: lang === 'ts' }" @click="lang = 'ts'">
-            TypeScript
-          </button>
-          <button class="demo-block__lang-btn" :class="{ active: lang === 'js' }" @click="lang = 'js'">
-            JavaScript
-          </button>
-        </div>
         <button class="demo-block__icon-btn" :title="copied ? '已复制' : '复制代码'" @click="copyCode">
           <svg
             v-if="!copied"
@@ -48,24 +40,24 @@
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </button>
-        <button class="demo-block__toggle-btn" @click="expanded = !expanded">
-          <span>{{ expanded ? '收起代码' : '查看代码' }}</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            :style="{
-              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 0.2s',
-            }"
-          >
-            <polyline points="6 9 12 15 18 9" />
+        <button class="demo-block__icon-btn" :title="expanded ? '收起代码' : '查看代码'" @click="expanded = !expanded">
+          <!-- 未展开时显示 <> -->
+          <svg v-if="!expanded" viewBox="0 0 1024 1024" width="1em" height="1em" fill="currentColor">
+            <title>展开代码</title>
+            <path
+              d="M1018.645 531.298c8.635-18.61 4.601-41.42-11.442-55.864l-205.108-184.68c-19.7-17.739-50.05-16.148-67.789 3.552-17.738 19.7-16.148 50.051 3.553 67.79l166.28 149.718-167.28 150.62c-19.7 17.738-21.291 48.088-3.553 67.789 17.739 19.7 48.089 21.291 67.79 3.553l205.107-184.68a47.805 47.805 0 0 0 12.442-17.798zM119.947 511.39l166.28-149.719c19.7-17.738 21.29-48.088 3.552-67.789-17.738-19.7-48.088-21.291-67.789-3.553L16.882 475.01C.84 489.456-3.194 512.264 5.44 530.874a47.805 47.805 0 0 0 12.442 17.798l205.108 184.68c19.7 17.739 50.05 16.148 67.79-3.552 17.738-19.7 16.147-50.051-3.553-67.79l-167.28-150.62z"
+              fill-rule="evenodd"
+              opacity="0.78"
+            />
+          </svg>
+          <!-- 已展开时显示 </> -->
+          <svg v-else viewBox="0 0 1024 1024" width="1em" height="1em" fill="currentColor">
+            <title>收起代码</title>
+            <path
+              d="M1018.645 531.298c8.635-18.61 4.601-41.42-11.442-55.864l-205.108-184.68c-19.7-17.739-50.05-16.148-67.789 3.552-17.738 19.7-16.148 50.051 3.553 67.79l166.28 149.718-167.28 150.62c-19.7 17.738-21.291 48.088-3.553 67.789 17.739 19.7 48.089 21.291 67.79 3.553l205.107-184.68a47.805 47.805 0 0 0 12.442-17.798zM119.947 511.39l166.28-149.719c19.7-17.738 21.29-48.088 3.552-67.789-17.738-19.7-48.088-21.291-67.789-3.553L16.882 475.01C.84 489.456-3.194 512.264 5.44 530.874a47.805 47.805 0 0 0 12.442 17.798l205.108 184.68c19.7 17.739 50.05 16.148 67.79-3.552 17.738-19.7 16.147-50.051-3.553-67.79l-167.28-150.62zm529.545-377.146c24.911 9.066 37.755 36.61 28.688 61.522L436.03 861.068c-9.067 24.911-36.611 37.755-61.522 28.688-24.911-9.066-37.755-36.61-28.688-61.522l242.15-665.302c9.067-24.911 36.611-37.755 61.522-28.688z"
+              fill-rule="evenodd"
+              opacity="0.78"
+            />
           </svg>
         </button>
       </div>
@@ -73,13 +65,21 @@
 
     <!-- 代码区 -->
     <div v-show="expanded" class="demo-block__code">
-      <pre class="demo-block__pre"><code>{{ displaySource }}</code></pre>
+      <pre class="demo-block__pre"><code class="language-typescript" v-html="highlightedCode"></code></pre>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import Prism from 'prismjs'
+
+// 按完整依赖链导入
+import 'prismjs/components/prism-markup' // HTML/XML (JSX 的基础)
+import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-jsx' // tsx 依赖 jsx
+import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-tsx'
 
 const props = defineProps<{
   source: string
@@ -87,27 +87,22 @@ const props = defineProps<{
   description?: string
 }>()
 
-const lang = ref<'ts' | 'js'>('ts')
 const expanded = ref(false)
 const copied = ref(false)
 
-function tsToJs(src: string): string {
-  return src
-    .replace(/<script setup lang="ts">/g, '<script setup>')
-    .replace(/^import type .+\n/gm, '')
-    .replace(/<[A-Z][a-zA-Z]*(?:\[\])?>/g, '')
-    .replace(/: (?:string|number|boolean|void|any|never|unknown|null|undefined)(?:\[\])?(?=[,)\s=])/g, '')
-    .replace(/(\w+): [A-Z][a-zA-Z<>[\]|&, ]+(?=[,)])/g, '$1')
-    .replace(/ as [A-Z][a-zA-Z<>[\]]+/g, '')
-    .replace(/^interface [\s\S]+?\n}\n/gm, '')
-    .replace(/^type .+ = .+\n/gm, '')
-    .replace(/\n{3,}/g, '\n\n')
-}
-
-const displaySource = computed(() => (lang.value === 'ts' ? props.source : tsToJs(props.source)))
+const highlightedCode = computed(() => {
+  try {
+    // 检测是否包含 JSX/TSX 语法
+    const hasTsx = /<[A-Z]/.test(props.source) || /<\/[A-Z]/.test(props.source)
+    const language = hasTsx ? 'tsx' : 'typescript'
+    return Prism.highlight(props.source, Prism.languages[language], language)
+  } catch {
+    return props.source
+  }
+})
 
 async function copyCode() {
-  await navigator.clipboard.writeText(displaySource.value)
+  await navigator.clipboard.writeText(props.source)
   copied.value = true
   setTimeout(() => {
     copied.value = false
@@ -156,36 +151,6 @@ async function copyCode() {
   gap: 8px;
 }
 
-.demo-block__lang-tabs {
-  display: flex;
-  border: 1px solid rgba(5, 5, 5, 0.12);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.demo-block__lang-btn {
-  padding: 2px 10px;
-  font-size: 12px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: var(--vp-c-text-2, var(--doc-c-text-2));
-  transition:
-    background 0.15s,
-    color 0.15s;
-  line-height: 20px;
-}
-
-.demo-block__lang-btn.active {
-  background: #1677ff;
-  color: #fff;
-}
-
-.demo-block__lang-btn:not(.active):hover {
-  background: rgba(22, 119, 255, 0.06);
-  color: #1677ff;
-}
-
 .demo-block__icon-btn {
   display: flex;
   align-items: center;
@@ -205,31 +170,6 @@ async function copyCode() {
 .demo-block__icon-btn:hover {
   background: rgba(22, 119, 255, 0.06);
   color: #1677ff;
-}
-
-.demo-block__toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 10px;
-  font-size: 12px;
-  background: transparent;
-  border: 1px solid rgba(5, 5, 5, 0.12);
-  border-radius: 4px;
-  cursor: pointer;
-  color: var(--vp-c-text-2, var(--doc-c-text-2));
-  transition:
-    background 0.15s,
-    color 0.15s,
-    border-color 0.15s;
-  line-height: 20px;
-  white-space: nowrap;
-}
-
-.demo-block__toggle-btn:hover {
-  background: rgba(22, 119, 255, 0.06);
-  color: #1677ff;
-  border-color: #1677ff;
 }
 
 .demo-block__code {
