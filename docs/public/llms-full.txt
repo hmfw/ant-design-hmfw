@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.5.0。安装 `pnpm add ant-design-hmfw`，样式 `import 'ant-design-hmfw/style.css'`。
+版本 0.5.2。安装 `pnpm add ant-design-hmfw`，样式 `import 'ant-design-hmfw/style.css'`。
 
 
 ---
@@ -3082,9 +3082,10 @@ import { Input, InputPassword, TextArea, InputSearch } from 'ant-design-hmfw'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | rows | 输入框行数 | `number` | `4` |
-| autoSize | 自适应内容高度，可设置为 true \| false 或对象 | `boolean \| { minRows?: number; maxRows?: number }` | `false` |
+| autoSize | 自适应内容高度，可设置为 true \| false 或对象：`{ minRows, maxRows }` | `boolean \| { minRows?: number; maxRows?: number }` | `false` |
 | allowClear | 可以点击清除图标删除内容 | `boolean \| { clearIcon?: VNode; disabled?: boolean }` | `false` |
 | showCount | 是否展示字数，支持自定义格式化 | `boolean \| { formatter: (info) => VNode \| string }` | `false` |
+| count | 高级计数配置，支持自定义计数策略和格式，见下方说明 | `CountConfig` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ textarea?: string; count?: string }` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ textarea?: CSSProperties; count?: CSSProperties }` | - |
 
@@ -3189,12 +3190,9 @@ import { InputNumber } from 'ant-design-hmfw'
 | readOnly | 只读 | `boolean` | `false` |
 | size | 输入框大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | status | 设置校验状态 | `'error' \| 'warning'` | - |
-| variant | 变体 | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
 | mode | 显示模式 | `'input' \| 'spinner'` | `'input'` |
-| prefix | 带有前缀图标的 input | `string \| VNode` | - |
-| suffix | 带有后缀图标的 input | `string \| VNode` | - |
-| addonBefore | 带标签的 input，设置前置标签 | `string \| VNode` | - |
-| addonAfter | 带标签的 input，设置后置标签 | `string \| VNode` | - |
+| prefix | 前缀图标或文本 | `string \| VNode` | - |
+| suffix | 后缀图标或文本 | `string \| VNode` | - |
 | controls | 是否显示增减按钮，或自定义图标 | `boolean \| { upIcon?: VNode \| string; downIcon?: VNode \| string }` | `true` |
 | keyboard | 是否启用键盘快捷行为 | `boolean` | `true` |
 | placeholder | 占位符 | `string` | - |

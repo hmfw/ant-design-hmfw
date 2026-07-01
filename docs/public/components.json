@@ -1,6 +1,6 @@
 {
   "name": "ant-design-hmfw",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add ant-design-hmfw",
@@ -2655,7 +2655,7 @@
         {
           "title": "全选",
           "description": "在实现全选效果时，你可能会用到 `indeterminate` 属性。",
-          "code": "<template>\n  <div>\n    <div style=\"border-bottom: 1px solid #e8e8e8; padding-bottom: 8px; margin-bottom: 8px\">\n      <Checkbox v-model:checked=\"checkAll\" :indeterminate=\"indeterminate\" @change=\"handleCheckAllChange\">\n        全选\n      </Checkbox>\n    </div>\n    <CheckboxGroup v-model:value=\"checkedList\" :options=\"options\" @change=\"handleGroupChange\" />\n    <p style=\"margin-top: 8px\">已选：{{ checkedList }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Checkbox, CheckboxGroup } from '@hmfw/ant-design'\n\nconst options = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n  { label: '选项 D', value: 'D' },\n]\n\nconst checkedList = ref<string[]>(['A', 'B'])\nconst checkAll = ref(false)\nconst indeterminate = ref(true)\n\nconst handleCheckAllChange = (checked: boolean) => {\n  checkedList.value = checked ? options.map((o) => o.value) : []\n  indeterminate.value = false\n}\n\nconst handleGroupChange = (list: string[]) => {\n  indeterminate.value = !!list.length && list.length < options.length\n  checkAll.value = list.length === options.length\n}\n</script>"
+          "code": "<template>\n  <div>\n    <div style=\"border-bottom: 1px solid #e8e8e8; padding-bottom: 8px; margin-bottom: 8px\">\n      <Checkbox v-model:checked=\"checkAll\" :indeterminate=\"indeterminate\" @change=\"handleCheckAllChange\">\n        全选\n      </Checkbox>\n    </div>\n    <CheckboxGroup v-model:value=\"checkedList\" :options=\"options\" @change=\"handleGroupChange\" />\n    <p style=\"margin-top: 8px\">已选：{{ checkedList }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Checkbox, CheckboxGroup } from '@hmfw/ant-design'\nimport type { CheckboxChangeEvent } from '@hmfw/ant-design'\n\nconst options = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n  { label: '选项 D', value: 'D' },\n]\n\nconst checkedList = ref<string[]>(['A', 'B'])\nconst checkAll = ref(false)\nconst indeterminate = ref(true)\n\nconst handleCheckAllChange = (e: CheckboxChangeEvent) => {\n  checkedList.value = e.target.checked ? options.map((o) => o.value) : []\n  indeterminate.value = false\n}\n\nconst handleGroupChange = (list: string[]) => {\n  indeterminate.value = !!list.length && list.length < options.length\n  checkAll.value = list.length === options.length\n}\n</script>"
         },
         {
           "title": "skipGroup 属性",
@@ -3146,7 +3146,7 @@
         {
           "title": "全局尺寸",
           "description": "通过 componentSize 属性统一配置组件尺寸。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 12px; margin-bottom: 16px\">\n    <Button @click=\"size = 'small'\">小</Button>\n    <Button @click=\"size = 'middle'\">中</Button>\n    <Button @click=\"size = 'large'\">大</Button>\n  </div>\n  <ConfigProvider :component-size=\"size\">\n    <div style=\"display: flex; flex-direction: column; gap: 12px\">\n      <input :style=\"inputStyle\" placeholder=\"输入框\" />\n      <Button :style=\"btnStyle\">按钮</Button>\n    </div>\n  </ConfigProvider>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue'\nimport { ConfigProvider, Button } from '@hmfw/ant-design'\n\nconst size = ref<'small' | 'middle' | 'large'>('middle')\n\nconst heightMap = { small: '24px', middle: '32px', large: '40px' }\n\nconst inputStyle = computed(() => ({\n  height: heightMap[size.value],\n  padding: '0 8px',\n  border: '1px solid #d9d9d9',\n  borderRadius: '6px',\n}))\n\nconst btnStyle = computed(() => ({\n  height: heightMap[size.value],\n  padding: '0 16px',\n  border: '1px solid #d9d9d9',\n  borderRadius: '6px',\n  cursor: 'pointer',\n}))\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; gap: 12px; margin-bottom: 16px\">\n    <Button @click=\"size = 'small'\">小</Button>\n    <Button @click=\"size = 'middle'\">中</Button>\n    <Button @click=\"size = 'large'\">大</Button>\n  </div>\n  <ConfigProvider :component-size=\"size\">\n    <div style=\"display: flex; flex-direction: column; gap: 12px\">\n      <Input placeholder=\"输入框\" />\n      <Button>按钮</Button>\n    </div>\n  </ConfigProvider>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ConfigProvider, Button, Input } from '@hmfw/ant-design'\n\nconst size = ref<'small' | 'middle' | 'large'>('middle')\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/config-provider"
@@ -5750,7 +5750,7 @@
         {
           "section": "TextArea Props",
           "name": "autoSize",
-          "description": "自适应内容高度，可设置为 true | false 或对象",
+          "description": "自适应内容高度，可设置为 true | false 或对象：`{ minRows, maxRows }`",
           "type": "`boolean | { minRows?: number; maxRows?: number }`",
           "default": "`false`"
         },
@@ -5767,6 +5767,13 @@
           "description": "是否展示字数，支持自定义格式化",
           "type": "`boolean | { formatter: (info) => VNode | string }`",
           "default": "`false`"
+        },
+        {
+          "section": "TextArea Props",
+          "name": "count",
+          "description": "高级计数配置，支持自定义计数策略和格式，见下方说明",
+          "type": "`CountConfig`",
+          "default": "-"
         },
         {
           "section": "TextArea Props",
@@ -5882,7 +5889,7 @@
         {
           "title": "文本域",
           "description": "用于多行输入。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <TextArea v-model:value=\"text1\" placeholder=\"固定行数\" :rows=\"4\" />\n    <TextArea v-model:value=\"text2\" placeholder=\"自适应高度\" :auto-size=\"{ minRows: 2, maxRows: 6 }\" />\n    <TextArea v-model:value=\"text3\" placeholder=\"显示字数\" :maxlength=\"100\" :show-count=\"true\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TextArea } from '@hmfw/ant-design'\n\nconst text1 = ref('')\nconst text2 = ref('')\nconst text3 = ref('')\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 600px\">\n    <!-- 基础用法 -->\n    <TextArea v-model:value=\"text1\" placeholder=\"基础文本域，固定 4 行\" :rows=\"4\" />\n\n    <!-- 自适应高度 -->\n    <TextArea v-model:value=\"text2\" placeholder=\"自适应高度（内容变化时自动调整）\" auto-size />\n\n    <!-- 限制行数范围 -->\n    <TextArea\n      v-model:value=\"text3\"\n      placeholder=\"限制高度：最少 2 行，最多 6 行\"\n      :auto-size=\"{ minRows: 2, maxRows: 6 }\"\n    />\n\n    <!-- 显示字符计数 -->\n    <TextArea v-model:value=\"text4\" placeholder=\"显示字符计数\" :maxlength=\"100\" show-count />\n\n    <!-- 自定义计数策略：按字节数（中文算2个字符） -->\n    <TextArea\n      v-model:value=\"text5\"\n      placeholder=\"按字节计数（中文算2字符，最多20字节）\"\n      :count=\"{\n        show: true,\n        max: 20,\n        strategy: (txt) => {\n          return txt.split('').reduce((len, char) => {\n            return len + (char.charCodeAt(0) > 255 ? 2 : 1)\n          }, 0)\n        },\n      }\"\n    />\n\n    <!-- 自定义显示格式 -->\n    <TextArea\n      v-model:value=\"text6\"\n      placeholder=\"自定义计数显示格式\"\n      :count=\"{\n        show: true,\n        max: 50,\n        showFormatter: ({ count, maxLength }) => `已输入 ${count} / ${maxLength} 字符`,\n      }\"\n    />\n\n    <!-- 组合功能：自适应高度 + 计数 + 清除按钮 -->\n    <TextArea\n      v-model:value=\"text7\"\n      placeholder=\"组合功能：自适应高度 + 字符计数 + 清除按钮\"\n      auto-size\n      show-count\n      allow-clear\n      :maxlength=\"200\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TextArea } from '@hmfw/ant-design'\n\nconst text1 = ref('')\nconst text2 = ref('')\nconst text3 = ref('第一行\\n第二行\\n第三行')\nconst text4 = ref('')\nconst text5 = ref('测试')\nconst text6 = ref('')\nconst text7 = ref('')\n</script>"
         },
         {
           "title": "搜索框",
@@ -5982,13 +5989,6 @@
         },
         {
           "section": "InputNumber Props",
-          "name": "variant",
-          "description": "变体",
-          "type": "`'outlined' | 'filled' | 'borderless' | 'underlined'`",
-          "default": "`'outlined'`"
-        },
-        {
-          "section": "InputNumber Props",
           "name": "mode",
           "description": "显示模式",
           "type": "`'input' | 'spinner'`",
@@ -5997,28 +5997,14 @@
         {
           "section": "InputNumber Props",
           "name": "prefix",
-          "description": "带有前缀图标的 input",
+          "description": "前缀图标或文本",
           "type": "`string | VNode`",
           "default": "-"
         },
         {
           "section": "InputNumber Props",
           "name": "suffix",
-          "description": "带有后缀图标的 input",
-          "type": "`string | VNode`",
-          "default": "-"
-        },
-        {
-          "section": "InputNumber Props",
-          "name": "addonBefore",
-          "description": "带标签的 input，设置前置标签",
-          "type": "`string | VNode`",
-          "default": "-"
-        },
-        {
-          "section": "InputNumber Props",
-          "name": "addonAfter",
-          "description": "带标签的 input，设置后置标签",
+          "description": "后缀图标或文本",
           "type": "`string | VNode`",
           "default": "-"
         },
@@ -6172,19 +6158,9 @@
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <div>\n      <p style=\"margin-bottom: 4px\">范围 1-10，步长 1：</p>\n      <InputNumber v-model:value=\"value1\" :min=\"1\" :max=\"10\" :step=\"1\" style=\"width: 100%\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px\">范围 0-1，步长 0.1，精度 1：</p>\n      <InputNumber v-model:value=\"value2\" :min=\"0\" :max=\"1\" :step=\"0.1\" :precision=\"1\" style=\"width: 100%\" />\n    </div>\n    <p>value1: {{ value1 }}，value2: {{ value2 }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from '@hmfw/ant-design'\n\nconst value1 = ref<number>(5)\nconst value2 = ref<number>(0.5)\n</script>"
         },
         {
-          "title": "前后缀",
-          "description": "带有前缀或后缀的数字输入框。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <InputNumber\n      v-model:value=\"price\"\n      :min=\"0\"\n      prefix=\"¥\"\n      addon-after=\"元\"\n      placeholder=\"请输入价格\"\n      style=\"width: 100%\"\n    />\n    <InputNumber\n      v-model:value=\"percent\"\n      :min=\"0\"\n      :max=\"100\"\n      addon-after=\"%\"\n      placeholder=\"请输入百分比\"\n      style=\"width: 100%\"\n    />\n    <InputNumber\n      v-model:value=\"weight\"\n      :min=\"0\"\n      addon-before=\"重量\"\n      addon-after=\"kg\"\n      placeholder=\"请输入重量\"\n      style=\"width: 100%\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from '@hmfw/ant-design'\n\nconst price = ref<number | null>(null)\nconst percent = ref<number | null>(null)\nconst weight = ref<number | null>(null)\n</script>"
-        },
-        {
           "title": "前缀和后缀",
           "description": "使用 `prefix` 和 `suffix` 添加前缀和后缀。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <div>\n      <p style=\"margin-bottom: 4px\">带前缀：</p>\n      <InputNumber v-model:value=\"value1\" prefix=\"¥\" style=\"width: 100%\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px\">带后缀：</p>\n      <InputNumber v-model:value=\"value2\" suffix=\"RMB\" style=\"width: 100%\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px\">前缀 + 后缀：</p>\n      <InputNumber v-model:value=\"value3\" prefix=\"¥\" suffix=\"元\" style=\"width: 100%\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from '@hmfw/ant-design'\n\nconst value1 = ref<number>(100)\nconst value2 = ref<number>(200)\nconst value3 = ref<number>(300)\n</script>"
-        },
-        {
-          "title": "变体",
-          "description": "支持 `outlined`、`filled`、`borderless`、`underlined` 四种变体。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <InputNumber v-model:value=\"value\" placeholder=\"Outlined (默认)\" style=\"width: 100%\" />\n    <InputNumber v-model:value=\"value\" variant=\"filled\" placeholder=\"Filled\" style=\"width: 100%\" />\n    <InputNumber v-model:value=\"value\" variant=\"borderless\" placeholder=\"Borderless\" style=\"width: 100%\" />\n    <InputNumber v-model:value=\"value\" variant=\"underlined\" placeholder=\"Underlined\" style=\"width: 100%\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from '@hmfw/ant-design'\n\nconst value = ref<number>(100)\n</script>"
         },
         {
           "title": "显示模式",
@@ -6986,7 +6962,7 @@
         {
           "title": "子菜单触发方式",
           "description": "使用 triggerSubMenuAction 属性控制子菜单的展开方式（hover 或 click）。",
-          "code": "<template>\n  <div>\n    <div style=\"margin-bottom: 16px\">\n      <label style=\"margin-right: 8px\">触发方式:</label>\n      <select v-model=\"triggerAction\" style=\"padding: 4px 8px\">\n        <option value=\"hover\">hover</option>\n        <option value=\"click\">click</option>\n      </select>\n    </div>\n    <Menu\n      mode=\"horizontal\"\n      :items=\"items\"\n      :selected-keys=\"selectedKeys\"\n      :trigger-sub-menu-action=\"triggerAction\"\n      @select=\"onSelect\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { AppstoreOutlined, SettingOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['1'])\nconst triggerAction = ref<'hover' | 'click'>('hover')\n\nconst items = [\n  { key: '1', label: '导航一', icon: h(AppstoreOutlined) },\n  { key: '2', label: '导航二', icon: h(SettingOutlined) },\n  {\n    key: 'sub',\n    label: '子菜单',\n    children: [\n      { key: 'sub-1', label: '子项 1' },\n      { key: 'sub-2', label: '子项 2' },\n      { key: 'sub-3', label: '子项 3' },\n    ],\n  },\n  { key: '4', label: '导航四' },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
+          "code": "<template>\n  <div>\n    <div style=\"margin-bottom: 16px\">\n      <label style=\"margin-right: 8px\">触发方式:</label>\n      <Select v-model:value=\"triggerAction\" :options=\"triggerOptions\" style=\"width: 100px\" />\n    </div>\n    <Menu\n      mode=\"horizontal\"\n      :items=\"items\"\n      :selected-keys=\"selectedKeys\"\n      :trigger-sub-menu-action=\"triggerAction\"\n      @select=\"onSelect\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu, Select } from '@hmfw/ant-design'\nimport { AppstoreOutlined, SettingOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['1'])\nconst triggerAction = ref<'hover' | 'click'>('hover')\n\nconst triggerOptions = [\n  { value: 'hover', label: 'hover' },\n  { value: 'click', label: 'click' },\n]\n\nconst items = [\n  { key: '1', label: '导航一', icon: h(AppstoreOutlined) },\n  { key: '2', label: '导航二', icon: h(SettingOutlined) },\n  {\n    key: 'sub',\n    label: '子菜单',\n    children: [\n      { key: 'sub-1', label: '子项 1' },\n      { key: 'sub-2', label: '子项 2' },\n      { key: 'sub-3', label: '子项 3' },\n    ],\n  },\n  { key: '4', label: '导航四' },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
         },
         {
           "title": "细粒度样式控制",
@@ -12081,7 +12057,7 @@
         {
           "title": "位置",
           "description": "有四个位置，tabPosition=top|bottom|left|right。",
-          "code": "<template>\n  <div>\n    <div style=\"margin-bottom: 16px\">\n      <span>Tab Position: </span>\n      <select v-model=\"tabPosition\">\n        <option value=\"top\">top</option>\n        <option value=\"bottom\">bottom</option>\n        <option value=\"left\">left</option>\n        <option value=\"right\">right</option>\n      </select>\n    </div>\n    <Tabs :items=\"items\" :tab-position=\"tabPosition\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tabs } from '@hmfw/ant-design'\nimport type { TabsPosition } from '@hmfw/ant-design'\n\nconst tabPosition = ref<TabsPosition>('top')\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n</script>"
+          "code": "<template>\n  <div>\n    <div style=\"margin-bottom: 16px\">\n      <span style=\"margin-right: 8px\">Tab Position: </span>\n      <Select v-model:value=\"tabPosition\" :options=\"positionOptions\" style=\"width: 120px\" />\n    </div>\n    <Tabs :items=\"items\" :tab-position=\"tabPosition\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tabs, Select } from '@hmfw/ant-design'\nimport type { TabsPosition } from '@hmfw/ant-design'\n\nconst tabPosition = ref<TabsPosition>('top')\n\nconst positionOptions = [\n  { value: 'top', label: 'top' },\n  { value: 'bottom', label: 'bottom' },\n  { value: 'left', label: 'left' },\n  { value: 'right', label: 'right' },\n]\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n</script>"
         },
         {
           "title": "卡片式页签",
@@ -12096,7 +12072,7 @@
         {
           "title": "附加内容",
           "description": "可以在页签右边添加附加操作。",
-          "code": "<template>\n  <Tabs :items=\"items\" :tab-bar-extra-content=\"extra\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n\nconst extra = h('button', { style: 'margin-left: 16px' }, 'Extra Action')\n</script>"
+          "code": "<template>\n  <Tabs :items=\"items\" :tab-bar-extra-content=\"extra\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Button, Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n\nconst extra = h(Button, { style: 'margin-left: 16px' }, () => 'Extra Action')\n</script>"
         },
         {
           "title": "细粒度样式控制",
@@ -13799,7 +13775,7 @@
         {
           "title": "搜索高亮",
           "description": "配合 `filterTreeNode` 对命中的节点做高亮处理。",
-          "code": "<template>\n  <input\n    v-model=\"searchValue\"\n    placeholder=\"输入关键字高亮匹配节点\"\n    style=\"margin-bottom: 8px; padding: 4px 8px; width: 240px\"\n  />\n  <Tree :tree-data=\"treeData\" :default-expand-all=\"true\" :filter-tree-node=\"filterNode\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree } from '@hmfw/ant-design'\n\nconst searchValue = ref('')\n\nconst treeData = [\n  {\n    title: '父节点 1',\n    key: '0-0',\n    children: [\n      { title: '子节点 apple', key: '0-0-0' },\n      { title: '子节点 banana', key: '0-0-1' },\n    ],\n  },\n  {\n    title: '父节点 2',\n    key: '0-1',\n    children: [{ title: '子节点 cherry', key: '0-1-0' }],\n  },\n]\n\nconst filterNode = (node: any) => {\n  if (!searchValue.value) return false\n  return String(node.title).toLowerCase().includes(searchValue.value.toLowerCase())\n}\n</script>"
+          "code": "<template>\n  <Input v-model:value=\"searchValue\" placeholder=\"输入关键字高亮匹配节点\" style=\"margin-bottom: 8px; width: 240px\" />\n  <Tree :tree-data=\"treeData\" :default-expand-all=\"true\" :filter-tree-node=\"filterNode\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree, Input } from '@hmfw/ant-design'\n\nconst searchValue = ref('')\n\nconst treeData = [\n  {\n    title: '父节点 1',\n    key: '0-0',\n    children: [\n      { title: '子节点 apple', key: '0-0-0' },\n      { title: '子节点 banana', key: '0-0-1' },\n    ],\n  },\n  {\n    title: '父节点 2',\n    key: '0-1',\n    children: [{ title: '子节点 cherry', key: '0-1-0' }],\n  },\n]\n\nconst filterNode = (node: any) => {\n  if (!searchValue.value) return false\n  return String(node.title).toLowerCase().includes(searchValue.value.toLowerCase())\n}\n</script>"
         },
         {
           "title": "块级节点",
