@@ -117,8 +117,16 @@
 .hmfw-radio-group {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 8px;
   font-size: 0;
+}
+
+/* Default radio 之间有间距 */
+.hmfw-radio-group .hmfw-radio-wrapper {
+  margin-inline-end: 8px;
+}
+
+.hmfw-radio-group .hmfw-radio-wrapper:last-child {
+  margin-inline-end: 0;
 }
 
 .hmfw-radio-group-block {
@@ -159,8 +167,19 @@
   border-end-end-radius: var(--hmfw-border-radius, 6px);
 }
 
-.hmfw-radio-button-wrapper:not(:first-child) {
-  margin-inline-start: -1px;
+.hmfw-radio-button-wrapper:not(:first-child)::before {
+  position: absolute;
+  inset-block-start: -1px;
+  inset-inline-start: -1px;
+  display: block;
+  box-sizing: content-box;
+  width: 1px;
+  height: 100%;
+  padding-block: 1px;
+  padding-inline: 0;
+  background-color: var(--hmfw-color-border, #d9d9d9);
+  transition: background-color 0.2s;
+  content: '';
 }
 
 .hmfw-radio-button-wrapper:hover {
@@ -195,9 +214,30 @@
   border-color: var(--hmfw-color-primary, #1677ff);
 }
 
+.hmfw-radio-group-outline .hmfw-radio-button-wrapper-checked:not(.hmfw-radio-button-wrapper-disabled)::before {
+  background-color: var(--hmfw-color-primary, #1677ff);
+}
+
+.hmfw-radio-group-outline .hmfw-radio-button-wrapper-checked:not(.hmfw-radio-button-wrapper-disabled):first-child {
+  border-color: var(--hmfw-color-primary, #1677ff);
+}
+
 .hmfw-radio-group-outline .hmfw-radio-button-wrapper-checked:not(.hmfw-radio-button-wrapper-disabled):hover {
   color: var(--hmfw-color-primary-hover, #4096ff);
   border-color: var(--hmfw-color-primary-hover, #4096ff);
+}
+
+.hmfw-radio-group-outline .hmfw-radio-button-wrapper-checked:not(.hmfw-radio-button-wrapper-disabled):hover::before {
+  background-color: var(--hmfw-color-primary-hover, #4096ff);
+}
+
+.hmfw-radio-group-outline .hmfw-radio-button-wrapper-checked:not(.hmfw-radio-button-wrapper-disabled):active {
+  color: var(--hmfw-color-primary-active, #0958d9);
+  border-color: var(--hmfw-color-primary-active, #0958d9);
+}
+
+.hmfw-radio-group-outline .hmfw-radio-button-wrapper-checked:not(.hmfw-radio-button-wrapper-disabled):active::before {
+  background-color: var(--hmfw-color-primary-active, #0958d9);
 }
 
 /* Checked state - solid style */
