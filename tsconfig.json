@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "ant-design-hmfw": ["components/index.ts"]
+      "ant-design-hmfw": ["components/index.ts"],
+      "@hmfw/ant-design": ["components/index.ts"]
     },
     "types": ["vite/client", "node"],
     "noUnusedLocals": false,
