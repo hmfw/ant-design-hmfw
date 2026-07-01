@@ -64,7 +64,7 @@
       "extends": ["plugin:vue/recommended", "prettier"],
       "rules": {
         "vue/multi-word-component-names": "off",
-        "vue/no-v-html": "warn",
+        "vue/no-v-html": ["error", { "ignorePattern": "^highlighted" }],
         "vue/require-default-prop": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "no-console": "off"

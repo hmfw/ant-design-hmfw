@@ -7,6 +7,7 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { autoDemoImports } from './docs/plugins/auto-demo-imports'
+import markdownItVueSFC from './docs/plugins/markdown-it-vue-sfc'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -19,6 +20,7 @@ export default defineConfig({
       markdownItOptions: { html: true, linkify: true },
       markdownItSetup(md) {
         md.use(MarkdownItPrism)
+        md.use(markdownItVueSFC) // 处理 ```vue 代码块
         md.use(MarkdownItAnchor, {
           permalink: false,
           slugify: (s: string) =>

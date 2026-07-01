@@ -76,6 +76,7 @@ import Prism from 'prismjs'
 
 // 按完整依赖链导入
 import 'prismjs/components/prism-markup' // HTML/XML (JSX 的基础)
+import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/components/prism-jsx' // tsx 依赖 jsx
 import 'prismjs/components/prism-typescript'
@@ -92,7 +93,15 @@ const copied = ref(false)
 
 const highlightedCode = computed(() => {
   try {
-    // 检测是否包含 JSX/TSX 语法
+    // 检测是否是 Vue SFC 文件
+    const isVueSFC = /<template[\s>]/.test(props.source) || /<script[\s>]/.test(props.source)
+
+    if (isVueSFC) {
+      // 拆分处理 Vue SFC 的三个部分
+      return highlightVueSFC(props.source)
+    }
+
+    // 非 SFC 文件：检测是否包含 JSX/TSX 语法
     const hasTsx = /<[A-Z]/.test(props.source) || /<\/[A-Z]/.test(props.source)
     const language = hasTsx ? 'tsx' : 'typescript'
     return Prism.highlight(props.source, Prism.languages[language], language)
@@ -100,6 +109,76 @@ const highlightedCode = computed(() => {
     return props.source
   }
 })
+
+/**
+ * 高亮 Vue SFC 文件
+ * 拆分 <template>、<script>、<style> 三个部分分别处理
+ */
+function highlightVueSFC(source: string): string {
+  const sections: { tag: string; content: string; attrs: string; start: number; end: number }[] = []
+
+  // 匹配三种标签
+  const tagRegex = /<(template|script|style)([^>]*)>([\s\S]*?)<\/\1>/g
+  let match: RegExpExecArray | null
+
+  while ((match = tagRegex.exec(source)) !== null) {
+    sections.push({
+      tag: match[1],
+      attrs: match[2],
+      content: match[3],
+      start: match.index,
+      end: match.index + match[0].length,
+    })
+  }
+
+  // 按位置排序
+  sections.sort((a, b) => a.start - b.start)
+
+  let result = ''
+  let lastEnd = 0
+
+  for (const section of sections) {
+    // 添加标签之间的内容（通常是空白）
+    if (section.start > lastEnd) {
+      result += source.slice(lastEnd, section.start)
+    }
+
+    // 高亮开始标签
+    const openTag = `<${section.tag}${section.attrs}>`
+    result += Prism.highlight(openTag, Prism.languages.markup, 'markup')
+
+    // 根据标签类型高亮内容
+    let highlightedContent: string
+    if (section.tag === 'template') {
+      highlightedContent = Prism.highlight(section.content, Prism.languages.markup, 'markup')
+    } else if (section.tag === 'script') {
+      // 检测 script 标签的 lang 属性
+      const isTs = /lang=["']ts["']/.test(section.attrs) || /lang=["']typescript["']/.test(section.attrs)
+      const isTsx = /lang=["']tsx["']/.test(section.attrs)
+      const lang = isTsx ? 'tsx' : isTs ? 'typescript' : 'javascript'
+      highlightedContent = Prism.highlight(section.content, Prism.languages[lang], lang)
+    } else if (section.tag === 'style') {
+      highlightedContent = Prism.highlight(section.content, Prism.languages.css, 'css')
+    } else {
+      highlightedContent = section.content
+    }
+
+    result += highlightedContent
+
+    // 高亮结束标签
+    const closeTag = `</${section.tag}>`
+    result += Prism.highlight(closeTag, Prism.languages.markup, 'markup')
+
+    lastEnd = section.end
+  }
+
+  // 添加剩余内容
+  if (lastEnd < source.length) {
+    result += source.slice(lastEnd)
+  }
+
+  return result
+}
 
 async function copyCode() {
   await navigator.clipboard.writeText(props.source)
