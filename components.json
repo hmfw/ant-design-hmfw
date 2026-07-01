@@ -5750,7 +5750,7 @@
         {
           "section": "TextArea Props",
           "name": "autoSize",
-          "description": "自适应内容高度，可设置为 true | false 或对象",
+          "description": "自适应内容高度，可设置为 true | false 或对象：`{ minRows, maxRows }`",
           "type": "`boolean | { minRows?: number; maxRows?: number }`",
           "default": "`false`"
         },
@@ -5767,6 +5767,13 @@
           "description": "是否展示字数，支持自定义格式化",
           "type": "`boolean | { formatter: (info) => VNode | string }`",
           "default": "`false`"
+        },
+        {
+          "section": "TextArea Props",
+          "name": "count",
+          "description": "高级计数配置，支持自定义计数策略和格式，见下方说明",
+          "type": "`CountConfig`",
+          "default": "-"
         },
         {
           "section": "TextArea Props",
@@ -5882,7 +5889,7 @@
         {
           "title": "文本域",
           "description": "用于多行输入。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <TextArea v-model:value=\"text1\" placeholder=\"固定行数\" :rows=\"4\" />\n    <TextArea v-model:value=\"text2\" placeholder=\"自适应高度\" :auto-size=\"{ minRows: 2, maxRows: 6 }\" />\n    <TextArea v-model:value=\"text3\" placeholder=\"显示字数\" :maxlength=\"100\" :show-count=\"true\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TextArea } from '@hmfw/ant-design'\n\nconst text1 = ref('')\nconst text2 = ref('')\nconst text3 = ref('')\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 600px\">\n    <!-- 基础用法 -->\n    <TextArea v-model:value=\"text1\" placeholder=\"基础文本域，固定 4 行\" :rows=\"4\" />\n\n    <!-- 自适应高度 -->\n    <TextArea v-model:value=\"text2\" placeholder=\"自适应高度（内容变化时自动调整）\" auto-size />\n\n    <!-- 限制行数范围 -->\n    <TextArea\n      v-model:value=\"text3\"\n      placeholder=\"限制高度：最少 2 行，最多 6 行\"\n      :auto-size=\"{ minRows: 2, maxRows: 6 }\"\n    />\n\n    <!-- 显示字符计数 -->\n    <TextArea v-model:value=\"text4\" placeholder=\"显示字符计数\" :maxlength=\"100\" show-count />\n\n    <!-- 自定义计数策略：按字节数（中文算2个字符） -->\n    <TextArea\n      v-model:value=\"text5\"\n      placeholder=\"按字节计数（中文算2字符，最多20字节）\"\n      :count=\"{\n        show: true,\n        max: 20,\n        strategy: (txt) => {\n          return txt.split('').reduce((len, char) => {\n            return len + (char.charCodeAt(0) > 255 ? 2 : 1)\n          }, 0)\n        },\n      }\"\n    />\n\n    <!-- 自定义显示格式 -->\n    <TextArea\n      v-model:value=\"text6\"\n      placeholder=\"自定义计数显示格式\"\n      :count=\"{\n        show: true,\n        max: 50,\n        showFormatter: ({ count, maxLength }) => `已输入 ${count} / ${maxLength} 字符`,\n      }\"\n    />\n\n    <!-- 组合功能：自适应高度 + 计数 + 清除按钮 -->\n    <TextArea\n      v-model:value=\"text7\"\n      placeholder=\"组合功能：自适应高度 + 字符计数 + 清除按钮\"\n      auto-size\n      show-count\n      allow-clear\n      :maxlength=\"200\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TextArea } from '@hmfw/ant-design'\n\nconst text1 = ref('')\nconst text2 = ref('')\nconst text3 = ref('第一行\\n第二行\\n第三行')\nconst text4 = ref('')\nconst text5 = ref('测试')\nconst text6 = ref('')\nconst text7 = ref('')\n</script>"
         },
         {
           "title": "搜索框",
@@ -5982,13 +5989,6 @@
         },
         {
           "section": "InputNumber Props",
-          "name": "variant",
-          "description": "变体",
-          "type": "`'outlined' | 'filled' | 'borderless' | 'underlined'`",
-          "default": "`'outlined'`"
-        },
-        {
-          "section": "InputNumber Props",
           "name": "mode",
           "description": "显示模式",
           "type": "`'input' | 'spinner'`",
@@ -5997,28 +5997,14 @@
         {
           "section": "InputNumber Props",
           "name": "prefix",
-          "description": "带有前缀图标的 input",
+          "description": "前缀图标或文本",
           "type": "`string | VNode`",
           "default": "-"
         },
         {
           "section": "InputNumber Props",
           "name": "suffix",
-          "description": "带有后缀图标的 input",
-          "type": "`string | VNode`",
-          "default": "-"
-        },
-        {
-          "section": "InputNumber Props",
-          "name": "addonBefore",
-          "description": "带标签的 input，设置前置标签",
-          "type": "`string | VNode`",
-          "default": "-"
-        },
-        {
-          "section": "InputNumber Props",
-          "name": "addonAfter",
-          "description": "带标签的 input，设置后置标签",
+          "description": "后缀图标或文本",
           "type": "`string | VNode`",
           "default": "-"
         },
@@ -6172,19 +6158,9 @@
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <div>\n      <p style=\"margin-bottom: 4px\">范围 1-10，步长 1：</p>\n      <InputNumber v-model:value=\"value1\" :min=\"1\" :max=\"10\" :step=\"1\" style=\"width: 100%\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px\">范围 0-1，步长 0.1，精度 1：</p>\n      <InputNumber v-model:value=\"value2\" :min=\"0\" :max=\"1\" :step=\"0.1\" :precision=\"1\" style=\"width: 100%\" />\n    </div>\n    <p>value1: {{ value1 }}，value2: {{ value2 }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from '@hmfw/ant-design'\n\nconst value1 = ref<number>(5)\nconst value2 = ref<number>(0.5)\n</script>"
         },
         {
-          "title": "前后缀",
-          "description": "带有前缀或后缀的数字输入框。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <InputNumber\n      v-model:value=\"price\"\n      :min=\"0\"\n      prefix=\"¥\"\n      addon-after=\"元\"\n      placeholder=\"请输入价格\"\n      style=\"width: 100%\"\n    />\n    <InputNumber\n      v-model:value=\"percent\"\n      :min=\"0\"\n      :max=\"100\"\n      addon-after=\"%\"\n      placeholder=\"请输入百分比\"\n      style=\"width: 100%\"\n    />\n    <InputNumber\n      v-model:value=\"weight\"\n      :min=\"0\"\n      addon-before=\"重量\"\n      addon-after=\"kg\"\n      placeholder=\"请输入重量\"\n      style=\"width: 100%\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from '@hmfw/ant-design'\n\nconst price = ref<number | null>(null)\nconst percent = ref<number | null>(null)\nconst weight = ref<number | null>(null)\n</script>"
-        },
-        {
           "title": "前缀和后缀",
           "description": "使用 `prefix` 和 `suffix` 添加前缀和后缀。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <div>\n      <p style=\"margin-bottom: 4px\">带前缀：</p>\n      <InputNumber v-model:value=\"value1\" prefix=\"¥\" style=\"width: 100%\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px\">带后缀：</p>\n      <InputNumber v-model:value=\"value2\" suffix=\"RMB\" style=\"width: 100%\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 4px\">前缀 + 后缀：</p>\n      <InputNumber v-model:value=\"value3\" prefix=\"¥\" suffix=\"元\" style=\"width: 100%\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from '@hmfw/ant-design'\n\nconst value1 = ref<number>(100)\nconst value2 = ref<number>(200)\nconst value3 = ref<number>(300)\n</script>"
-        },
-        {
-          "title": "变体",
-          "description": "支持 `outlined`、`filled`、`borderless`、`underlined` 四种变体。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <InputNumber v-model:value=\"value\" placeholder=\"Outlined (默认)\" style=\"width: 100%\" />\n    <InputNumber v-model:value=\"value\" variant=\"filled\" placeholder=\"Filled\" style=\"width: 100%\" />\n    <InputNumber v-model:value=\"value\" variant=\"borderless\" placeholder=\"Borderless\" style=\"width: 100%\" />\n    <InputNumber v-model:value=\"value\" variant=\"underlined\" placeholder=\"Underlined\" style=\"width: 100%\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { InputNumber } from '@hmfw/ant-design'\n\nconst value = ref<number>(100)\n</script>"
         },
         {
           "title": "显示模式",
