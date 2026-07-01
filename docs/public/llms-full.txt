@@ -1,8 +1,8 @@
-# ant-design-hmfw
+# @hmfw/ant-design
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.5.2。安装 `pnpm add ant-design-hmfw`，样式 `import 'ant-design-hmfw/style.css'`。
+版本 0.5.2。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -13,7 +13,7 @@
 
 导入：
 ```ts
-import { Alert } from 'ant-design-hmfw'
+import { Alert } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -88,7 +88,7 @@ import { Alert } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Anchor, AnchorLink } from 'ant-design-hmfw'
+import { Anchor, AnchorLink } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -232,7 +232,7 @@ const AnchorLink = Anchor.Link
 
 导入：
 ```ts
-import { App, useApp } from 'ant-design-hmfw'
+import { App, useApp } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -305,7 +305,7 @@ const AppActions = defineComponent({
 
 导入：
 ```ts
-import { AutoComplete } from 'ant-design-hmfw'
+import { AutoComplete } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -419,7 +419,7 @@ const handleSearch = (searchText: string) => {
 
 导入：
 ```ts
-import { Avatar, AvatarGroup } from 'ant-design-hmfw'
+import { Avatar, AvatarGroup } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -494,7 +494,7 @@ import { Avatar } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { BackTop } from 'ant-design-hmfw'
+import { BackTop } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -587,7 +587,7 @@ function onBackTop() {
 
 导入：
 ```ts
-import { Badge, Ribbon } from 'ant-design-hmfw'
+import { Badge, Ribbon } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -671,7 +671,7 @@ import { Badge } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Breadcrumb } from 'ant-design-hmfw'
+import { Breadcrumb } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -744,7 +744,7 @@ const items = [{ title: '首页', href: '/' }, { title: '应用列表', href: '/
 
 导入：
 ```ts
-import { Button } from 'ant-design-hmfw'
+import { Button } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -829,7 +829,7 @@ import { Button } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Calendar } from 'ant-design-hmfw'
+import { Calendar } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -929,7 +929,7 @@ const value = ref<string>()
 
 导入：
 ```ts
-import { Card, CardGrid, CardMeta } from 'ant-design-hmfw'
+import { Card, CardGrid, CardMeta } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1024,7 +1024,7 @@ import { Card, CardMeta } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Carousel } from 'ant-design-hmfw'
+import { Carousel } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1118,7 +1118,7 @@ import { Carousel } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Cascader } from 'ant-design-hmfw'
+import { Cascader } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1304,7 +1304,7 @@ const options = [
 
 导入：
 ```ts
-import { Checkbox, CheckboxGroup } from 'ant-design-hmfw'
+import { Checkbox, CheckboxGroup } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1451,7 +1451,7 @@ const colorOptions = [
 
 导入：
 ```ts
-import { Collapse, CollapsePanel } from 'ant-design-hmfw'
+import { Collapse, CollapsePanel } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1572,7 +1572,7 @@ const activeKey = ref(['1'])
 
 导入：
 ```ts
-import { ColorPicker } from 'ant-design-hmfw'
+import { ColorPicker } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1650,7 +1650,7 @@ const presets = [
 
 导入：
 ```ts
-import { ConfigProvider, useConfig, usePrefixCls, useLocale } from 'ant-design-hmfw'
+import { ConfigProvider, useConfig, usePrefixCls, useLocale } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1734,7 +1734,7 @@ const locale = ref(zhCN)
 
 导入：
 ```ts
-import { DatePicker } from 'ant-design-hmfw'
+import { DatePicker } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1837,7 +1837,7 @@ const year = ref('')
 
 导入：
 ```ts
-import { Descriptions, DescriptionsItem } from 'ant-design-hmfw'
+import { Descriptions, DescriptionsItem } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1922,7 +1922,7 @@ const items = [
 
 导入：
 ```ts
-import { Divider } from 'ant-design-hmfw'
+import { Divider } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -1992,7 +1992,7 @@ import { Divider } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Drawer } from 'ant-design-hmfw'
+import { Drawer } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -2116,7 +2116,7 @@ function show(dir: 'top' | 'right' | 'bottom' | 'left') {
 
 导入：
 ```ts
-import { Dropdown } from 'ant-design-hmfw'
+import { Dropdown } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -2233,7 +2233,7 @@ const menu = {
 
 导入：
 ```ts
-import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from 'ant-design-hmfw'
+import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -2285,7 +2285,7 @@ import { Empty } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Flex } from 'ant-design-hmfw'
+import { Flex } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -2362,7 +2362,7 @@ import { Flex } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hmfw'
+import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -2494,7 +2494,7 @@ const s = { position: 'static' } as const
 
 导入：
 ```ts
-import { Form, FormItem, useForm } from 'ant-design-hmfw'
+import { Form, FormItem, useForm } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -2510,7 +2510,7 @@ import { Form, FormItem, useForm } from 'ant-design-hmfw'
 | wrapperCol | 输入控件布局样式 | `{ span?: number; offset?: number }` | - |
 | labelAlign | label 文本对齐方式 | `'left' \| 'right'` | `'right'` |
 | colon | 是否显示 label 后面的冒号（仅 horizontal 布局有效） | `boolean` | `true` |
-| disabled | 设置表单组件禁用，仅对 ant-design-hmfw 组件有效 | `boolean` | `false` |
+| disabled | 设置表单组件禁用，仅对 @hmfw/ant-design 组件有效 | `boolean` | `false` |
 | size | 设置字段组件的尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | validateTrigger | 统一设置字段触发验证的时机 | `'blur' \| 'change' \| ('blur' \| 'change')[]` | `'change'` |
 | requiredMark | 必选样式：`true` 显示星号，`false` 不显示，`'optional'` 反向标注「可选」 | `boolean \| 'optional'` | `true` |
@@ -2704,7 +2704,7 @@ const handleClear = () => {
 
 导入：
 ```ts
-import { Row, Col } from 'ant-design-hmfw'
+import { Row, Col } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -2831,7 +2831,7 @@ import { Row, Col, Space } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Icon } from 'ant-design-hmfw'
+import { Icon } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -2926,7 +2926,7 @@ import { Space, HomeOutlined } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Image, PreviewGroup } from 'ant-design-hmfw'
+import { Image, PreviewGroup } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -3043,7 +3043,7 @@ import { Image, PreviewGroup, Space } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Input, InputPassword, TextArea, InputSearch } from 'ant-design-hmfw'
+import { Input, InputPassword, TextArea, InputSearch } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -3171,7 +3171,7 @@ const value4 = ref('')
 
 导入：
 ```ts
-import { InputNumber } from 'ant-design-hmfw'
+import { InputNumber } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -3280,7 +3280,7 @@ const value2 = ref<number>(0.5)
 
 导入：
 ```ts
-import { Layout, Header, Footer, Content, Sider } from 'ant-design-hmfw'
+import { Layout, Header, Footer, Content, Sider } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -3322,7 +3322,7 @@ import { Layout, Header, Footer, Content, Sider } from 'ant-design-hmfw'
   <Layout style="min-height: 200px">
     <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px"> Header </Header>
     <Content style="padding: 24px; background: #fff"> Content </Content>
-    <Footer style="text-align: center; background: #f5f5f5"> Footer ©2024 Created by ant-design-hmfw </Footer>
+    <Footer style="text-align: center; background: #f5f5f5"> Footer ©2026 Created by hmfw </Footer>
   </Layout>
 </template>
 
@@ -3361,7 +3361,7 @@ import { Layout, Header, Content, Footer, Sider } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'
+import { List, ListItem, ListItemMeta } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -3488,7 +3488,7 @@ const renderItem = (item: any) =>
 
 导入：
 ```ts
-import { Menu, MenuItem, SubMenu, MenuDivider, MenuItemGroup } from 'ant-design-hmfw'
+import { Menu, MenuItem, SubMenu, MenuDivider, MenuItemGroup } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -3636,7 +3636,7 @@ const onSelect = ({ key }: { key: string }) => {
 
 导入：
 ```ts
-import { message } from 'ant-design-hmfw'
+import { message } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -3756,7 +3756,7 @@ function showWithCallback() {
 
 导入：
 ```ts
-import { Modal } from 'ant-design-hmfw'
+import { Modal } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -3898,7 +3898,7 @@ function handleOk() {
 
 导入：
 ```ts
-import { notification } from 'ant-design-hmfw'
+import { notification } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4036,7 +4036,7 @@ function openNeverClose() {
 
 导入：
 ```ts
-import { Pagination } from 'ant-design-hmfw'
+import { Pagination } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4138,7 +4138,7 @@ const onShowSizeChange = (cur: number, size: number) => {
 
 导入：
 ```ts
-import { Popconfirm } from 'ant-design-hmfw'
+import { Popconfirm } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4240,7 +4240,7 @@ function onConfirm() {
 
 导入：
 ```ts
-import { Popover, PopoverPurePanel } from 'ant-design-hmfw'
+import { Popover, PopoverPurePanel } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4324,7 +4324,7 @@ import { Popover, Button } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Progress } from 'ant-design-hmfw'
+import { Progress } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4401,7 +4401,7 @@ import { Progress } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { QRCode } from 'ant-design-hmfw'
+import { QRCode } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4471,7 +4471,7 @@ import { QRCode } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Radio, RadioGroup, RadioButton } from 'ant-design-hmfw'
+import { Radio, RadioGroup, RadioButton } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4581,7 +4581,7 @@ const options = [
 
 导入：
 ```ts
-import { RangePicker } from 'ant-design-hmfw'
+import { RangePicker } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4679,7 +4679,7 @@ function onChange(value: RangeValue) {
 
 导入：
 ```ts
-import { Rate } from 'ant-design-hmfw'
+import { Rate } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4771,7 +4771,7 @@ const value2 = ref(3.5)
 
 导入：
 ```ts
-import { Result } from 'ant-design-hmfw'
+import { Result } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4846,7 +4846,7 @@ function onRetry() {
 
 导入：
 ```ts
-import { Segmented } from 'ant-design-hmfw'
+import { Segmented } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -4932,7 +4932,7 @@ const options = ['Map', 'Transit', 'Satellite']
 
 导入：
 ```ts
-import { Select } from 'ant-design-hmfw'
+import { Select } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5090,7 +5090,7 @@ const options = [
 
 导入：
 ```ts
-import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from 'ant-design-hmfw'
+import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5211,7 +5211,7 @@ import { Skeleton } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Slider } from 'ant-design-hmfw'
+import { Slider } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5306,7 +5306,7 @@ const rangeValue2 = ref<[number, number]>([20, 60])
 
 导入：
 ```ts
-import { Space } from 'ant-design-hmfw'
+import { Space } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5368,7 +5368,7 @@ import { Space, Button } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Spin } from 'ant-design-hmfw'
+import { Spin } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5424,7 +5424,7 @@ import { Spin } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Statistic, Countdown } from 'ant-design-hmfw'
+import { Statistic, Countdown } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5527,7 +5527,7 @@ import { Statistic, Space } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Steps } from 'ant-design-hmfw'
+import { Steps } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5640,7 +5640,7 @@ const items = [
 
 导入：
 ```ts
-import { Switch } from 'ant-design-hmfw'
+import { Switch } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5737,7 +5737,7 @@ const checked3 = ref(true)
 
 导入：
 ```ts
-import { Table } from 'ant-design-hmfw'
+import { Table } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5888,7 +5888,7 @@ const columns = [
 
 导入：
 ```ts
-import { Tabs } from 'ant-design-hmfw'
+import { Tabs } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -5999,7 +5999,7 @@ const items = [
 
 导入：
 ```ts
-import { Tag, CheckableTag } from 'ant-design-hmfw'
+import { Tag, CheckableTag } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -6090,7 +6090,7 @@ import { Tag } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { TimePicker } from 'ant-design-hmfw'
+import { TimePicker } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -6198,7 +6198,7 @@ const time3 = ref('')
 
 导入：
 ```ts
-import { Timeline, TimelineItem } from 'ant-design-hmfw'
+import { Timeline, TimelineItem } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -6285,7 +6285,7 @@ const items = [
 
 导入：
 ```ts
-import { Tooltip } from 'ant-design-hmfw'
+import { Tooltip } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -6380,7 +6380,7 @@ const placements = [
 
 导入：
 ```ts
-import { Tour } from 'ant-design-hmfw'
+import { Tour } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -6538,7 +6538,7 @@ function openPrimary() {
 
 导入：
 ```ts
-import { Transfer } from 'ant-design-hmfw'
+import { Transfer } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -6646,7 +6646,7 @@ const targetKeys = ref<string[]>(['1', '3', '5'])
 
 导入：
 ```ts
-import { Tree, DirectoryTree } from 'ant-design-hmfw'
+import { Tree, DirectoryTree } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -6806,7 +6806,7 @@ const treeData = [
 
 导入：
 ```ts
-import { TreeSelect } from 'ant-design-hmfw'
+import { TreeSelect } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -6943,7 +6943,7 @@ const treeData: TreeSelectNode[] = [
 
 导入：
 ```ts
-import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'
+import { Text, Title, Paragraph, Link } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -7062,7 +7062,7 @@ import { Text, Space } from '@hmfw/ant-design'
 
 导入：
 ```ts
-import { Upload, UploadDragger } from 'ant-design-hmfw'
+import { Upload, UploadDragger } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -7207,7 +7207,7 @@ const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
 
 导入：
 ```ts
-import { Watermark } from 'ant-design-hmfw'
+import { Watermark } from '@hmfw/ant-design'
 ```
 
 ### Props

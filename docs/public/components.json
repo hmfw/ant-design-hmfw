@@ -1,12 +1,12 @@
 {
-  "name": "ant-design-hmfw",
+  "name": "@hmfw/ant-design",
   "version": "0.5.2",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
-  "install": "pnpm add ant-design-hmfw",
+  "install": "pnpm add @hmfw/ant-design",
   "usage": {
-    "global": "import AntDesignHmfw from 'ant-design-hmfw'\nimport 'ant-design-hmfw/style.css'\napp.use(AntDesignHmfw)",
-    "onDemand": "import { Button } from 'ant-design-hmfw'\nimport 'ant-design-hmfw/style.css'"
+    "global": "import AntDesignHmfw from '@hmfw/ant-design'\nimport '@hmfw/ant-design/style.css'\napp.use(AntDesignHmfw)",
+    "onDemand": "import { Button } from '@hmfw/ant-design'\nimport '@hmfw/ant-design/style.css'"
   },
   "components": [
     {
@@ -15,7 +15,7 @@
       "title": "Alert 警告提示",
       "description": "警告提示，展现需要关注的信息。",
       "whenToUse": "",
-      "import": "import { Alert } from 'ant-design-hmfw'",
+      "import": "import { Alert } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Alert Props",
@@ -178,7 +178,7 @@
       "title": "Anchor 锚点",
       "description": "用于跳转到页面指定位置。",
       "whenToUse": "",
-      "import": "import { Anchor, AnchorLink } from 'ant-design-hmfw'",
+      "import": "import { Anchor, AnchorLink } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Anchor Props",
@@ -390,7 +390,7 @@
       "title": "App 全局化配置",
       "description": "应用级别的全局上下文，提供 `useApp()` 组合式 API，使子组件可以通过 hooks 调用 `message`、`notification`、`modal`，而无需手动挂载实例。",
       "whenToUse": "",
-      "import": "import { App, useApp } from 'ant-design-hmfw'",
+      "import": "import { App, useApp } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "App Props",
@@ -417,7 +417,7 @@
       "title": "AutoComplete 自动完成",
       "description": "输入框自动完成功能。",
       "whenToUse": "需要自动完成时。",
-      "import": "import { AutoComplete } from 'ant-design-hmfw'",
+      "import": "import { AutoComplete } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "AutoComplete Props",
@@ -644,7 +644,7 @@
       "title": "Avatar 头像",
       "description": "用来代表用户或事物，支持图片、图标或字符展示。",
       "whenToUse": "",
-      "import": "import { Avatar, AvatarGroup } from 'ant-design-hmfw'",
+      "import": "import { Avatar, AvatarGroup } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Avatar Props",
@@ -796,7 +796,7 @@
       "title": "BackTop 回到顶部",
       "description": "返回页面顶部的操作按钮。",
       "whenToUse": "",
-      "import": "import { BackTop } from 'ant-design-hmfw'",
+      "import": "import { BackTop } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "BackTop Props",
@@ -901,7 +901,7 @@
       "title": "Badge 徽标数",
       "description": "图标右上角的圆形徽标数字。",
       "whenToUse": "",
-      "import": "import { Badge, Ribbon } from 'ant-design-hmfw'",
+      "import": "import { Badge, Ribbon } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Badge Props",
@@ -1046,7 +1046,7 @@
       "title": "Breadcrumb 面包屑",
       "description": "显示当前页面在系统层级结构中的位置，并能向上返回。",
       "whenToUse": "",
-      "import": "import { Breadcrumb } from 'ant-design-hmfw'",
+      "import": "import { Breadcrumb } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Breadcrumb Props",
@@ -1225,7 +1225,7 @@
       "title": "Button 按钮",
       "description": "按钮用于开始一个即时操作。",
       "whenToUse": "标记了一个（或封装一组）操作命令，响应用户点击行为，触发相应的业务逻辑。",
-      "import": "import { Button } from 'ant-design-hmfw'",
+      "import": "import { Button } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Button Props",
@@ -1429,7 +1429,7 @@
       "title": "Calendar 日历",
       "description": "按照日历形式展示数据的容器。",
       "whenToUse": "当数据是日期或按照日期划分时，例如日程、课表、价格日历等，农历等。目前支持年/月切换。",
-      "import": "import { Calendar } from 'ant-design-hmfw'",
+      "import": "import { Calendar } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Calendar Props",
@@ -1655,7 +1655,7 @@
       "title": "Card 卡片",
       "description": "通用卡片容器。",
       "whenToUse": "",
-      "import": "import { Card, CardGrid, CardMeta } from 'ant-design-hmfw'",
+      "import": "import { Card, CardGrid, CardMeta } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Card Props",
@@ -1863,7 +1863,7 @@
       "title": "Carousel 走马灯",
       "description": "旋转播放的幻灯片。",
       "whenToUse": "",
-      "import": "import { Carousel } from 'ant-design-hmfw'",
+      "import": "import { Carousel } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Carousel Props",
@@ -2063,7 +2063,7 @@
       "title": "Cascader 级联选择",
       "description": "级联选择框。",
       "whenToUse": "",
-      "import": "import { Cascader } from 'ant-design-hmfw'",
+      "import": "import { Cascader } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Cascader Props",
@@ -2361,7 +2361,7 @@
       "title": "Checkbox 多选框",
       "description": "多选框。",
       "whenToUse": "",
-      "import": "import { Checkbox, CheckboxGroup } from 'ant-design-hmfw'",
+      "import": "import { Checkbox, CheckboxGroup } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Checkbox Props",
@@ -2681,7 +2681,7 @@
       "title": "Collapse 折叠面板",
       "description": "可以折叠/展开的内容区域。",
       "whenToUse": "",
-      "import": "import { Collapse, CollapsePanel } from 'ant-design-hmfw'",
+      "import": "import { Collapse, CollapsePanel } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Collapse Props",
@@ -2980,7 +2980,7 @@
       "title": "ColorPicker 颜色选择器",
       "description": "提供颜色选取的组件。",
       "whenToUse": "",
-      "import": "import { ColorPicker } from 'ant-design-hmfw'",
+      "import": "import { ColorPicker } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "ColorPicker Props",
@@ -3092,7 +3092,7 @@
       "title": "ConfigProvider 全局配置",
       "description": "为组件提供统一的全局化配置。",
       "whenToUse": "",
-      "import": "import { ConfigProvider, useConfig, usePrefixCls, useLocale } from 'ant-design-hmfw'",
+      "import": "import { ConfigProvider, useConfig, usePrefixCls, useLocale } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "ConfigProvider Props",
@@ -3157,7 +3157,7 @@
       "title": "DatePicker 日期选择框",
       "description": "输入或选择日期的控件。",
       "whenToUse": "当用户需要输入一个日期，可以点击标准输入框，弹出日期面板进行选择。",
-      "import": "import { DatePicker } from 'ant-design-hmfw'",
+      "import": "import { DatePicker } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "DatePicker Props",
@@ -3393,7 +3393,7 @@
       "title": "Descriptions 描述列表",
       "description": "成组展示多个只读字段。",
       "whenToUse": "",
-      "import": "import { Descriptions, DescriptionsItem } from 'ant-design-hmfw'",
+      "import": "import { Descriptions, DescriptionsItem } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Descriptions Props",
@@ -3567,7 +3567,7 @@
       "title": "Divider 分割线",
       "description": "区隔内容的分割线。",
       "whenToUse": "",
-      "import": "import { Divider } from 'ant-design-hmfw'",
+      "import": "import { Divider } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Divider Props",
@@ -3675,7 +3675,7 @@
       "title": "Drawer 抽屉",
       "description": "屏幕边缘滑出的浮层面板。",
       "whenToUse": "",
-      "import": "import { Drawer } from 'ant-design-hmfw'",
+      "import": "import { Drawer } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Drawer Props",
@@ -3947,7 +3947,7 @@
       "title": "Dropdown 下拉菜单",
       "description": "向下弹出的列表。",
       "whenToUse": "",
-      "import": "import { Dropdown } from 'ant-design-hmfw'",
+      "import": "import { Dropdown } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Dropdown Props",
@@ -4212,7 +4212,7 @@
       "title": "Empty 空状态",
       "description": "空状态时的展示占位图。",
       "whenToUse": "",
-      "import": "import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from 'ant-design-hmfw'",
+      "import": "import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Empty Props",
@@ -4311,7 +4311,7 @@
       "title": "Flex 弹性布局",
       "description": "弹性布局。",
       "whenToUse": "",
-      "import": "import { Flex } from 'ant-design-hmfw'",
+      "import": "import { Flex } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Flex Props",
@@ -4395,7 +4395,7 @@
       "title": "FloatButton 悬浮按钮",
       "description": "悬浮于页面上方的按钮。",
       "whenToUse": "",
-      "import": "import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from 'ant-design-hmfw'",
+      "import": "import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "FloatButton Props",
@@ -4701,7 +4701,7 @@
       "title": "Form 表单",
       "description": "高性能表单控件，自带数据域管理。包含数据录入、校验以及对应样式。",
       "whenToUse": "",
-      "import": "import { Form, FormItem, useForm } from 'ant-design-hmfw'",
+      "import": "import { Form, FormItem, useForm } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Form Props",
@@ -4755,7 +4755,7 @@
         {
           "section": "Form Props",
           "name": "disabled",
-          "description": "设置表单组件禁用，仅对 ant-design-hmfw 组件有效",
+          "description": "设置表单组件禁用，仅对 @hmfw/ant-design 组件有效",
           "type": "`boolean`",
           "default": "`false`"
         },
@@ -5107,7 +5107,7 @@
       "title": "Grid 栅格",
       "description": "24 栅格系统。",
       "whenToUse": "",
-      "import": "import { Row, Col } from 'ant-design-hmfw'",
+      "import": "import { Row, Col } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Row Props",
@@ -5259,7 +5259,7 @@
       "title": "Icon 图标",
       "description": "语义化的矢量图形，用于展示常用的操作和状态。",
       "whenToUse": "",
-      "import": "import { Icon } from 'ant-design-hmfw'",
+      "import": "import { Icon } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Icon Props",
@@ -5329,7 +5329,7 @@
       "title": "Image 图片",
       "description": "可预览的图片。",
       "whenToUse": "",
-      "import": "import { Image, PreviewGroup } from 'ant-design-hmfw'",
+      "import": "import { Image, PreviewGroup } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Image Props",
@@ -5605,7 +5605,7 @@
       "title": "Input 输入框",
       "description": "通过鼠标或键盘输入内容，是最基础的表单域的包装。",
       "whenToUse": "",
-      "import": "import { Input, InputPassword, TextArea, InputSearch } from 'ant-design-hmfw'",
+      "import": "import { Input, InputPassword, TextArea, InputSearch } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Input Props",
@@ -5915,7 +5915,7 @@
       "title": "InputNumber 数字输入框",
       "description": "通过鼠标或键盘，输入范围内的数值。",
       "whenToUse": "当需要获取标准数值时。",
-      "import": "import { InputNumber } from 'ant-design-hmfw'",
+      "import": "import { InputNumber } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "InputNumber Props",
@@ -6186,7 +6186,7 @@
       "title": "Layout 布局",
       "description": "协助进行页面级整体布局。",
       "whenToUse": "",
-      "import": "import { Layout, Header, Footer, Content, Sider } from 'ant-design-hmfw'",
+      "import": "import { Layout, Header, Footer, Content, Sider } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Layout Props",
@@ -6285,7 +6285,7 @@
         {
           "title": "基础布局（上中下）",
           "description": "最基本的上中下布局。",
-          "code": "<template>\n  <Layout style=\"min-height: 200px\">\n    <Header style=\"background: #001529; color: #fff; padding: 0 24px; line-height: 64px\"> Header </Header>\n    <Content style=\"padding: 24px; background: #fff\"> Content </Content>\n    <Footer style=\"text-align: center; background: #f5f5f5\"> Footer ©2024 Created by ant-design-hmfw </Footer>\n  </Layout>\n</template>\n\n<script setup lang=\"ts\">\nimport { Layout, Header, Content, Footer } from '@hmfw/ant-design'\n</script>"
+          "code": "<template>\n  <Layout style=\"min-height: 200px\">\n    <Header style=\"background: #001529; color: #fff; padding: 0 24px; line-height: 64px\"> Header </Header>\n    <Content style=\"padding: 24px; background: #fff\"> Content </Content>\n    <Footer style=\"text-align: center; background: #f5f5f5\"> Footer ©2026 Created by hmfw </Footer>\n  </Layout>\n</template>\n\n<script setup lang=\"ts\">\nimport { Layout, Header, Content, Footer } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "带侧边栏",
@@ -6321,7 +6321,7 @@
       "title": "List 列表",
       "description": "通用列表。",
       "whenToUse": "",
-      "import": "import { List, ListItem, ListItemMeta } from 'ant-design-hmfw'",
+      "import": "import { List, ListItem, ListItemMeta } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "List Props",
@@ -6645,7 +6645,7 @@
       "title": "Menu 导航菜单",
       "description": "为页面和功能提供导航的菜单列表。",
       "whenToUse": "",
-      "import": "import { Menu, MenuItem, SubMenu, MenuDivider, MenuItemGroup } from 'ant-design-hmfw'",
+      "import": "import { Menu, MenuItem, SubMenu, MenuDivider, MenuItemGroup } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Menu Props",
@@ -6978,7 +6978,7 @@
       "title": "Message 全局提示",
       "description": "全局展示操作反馈信息。",
       "whenToUse": "",
-      "import": "import { message } from 'ant-design-hmfw'",
+      "import": "import { message } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "",
@@ -7175,7 +7175,7 @@
       "title": "Modal 对话框",
       "description": "模态对话框。",
       "whenToUse": "",
-      "import": "import { Modal } from 'ant-design-hmfw'",
+      "import": "import { Modal } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Modal Props",
@@ -7557,7 +7557,7 @@
       "title": "Notification 通知提醒框",
       "description": "全局展示通知提醒信息。",
       "whenToUse": "",
-      "import": "import { notification } from 'ant-design-hmfw'",
+      "import": "import { notification } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "config 参数",
@@ -7801,7 +7801,7 @@
       "title": "Pagination 分页",
       "description": "采用分页的形式分隔长列表，每次只加载一个页面。",
       "whenToUse": "",
-      "import": "import { Pagination } from 'ant-design-hmfw'",
+      "import": "import { Pagination } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Pagination Props",
@@ -8002,7 +8002,7 @@
       "title": "Popconfirm 气泡确认框",
       "description": "点击元素，弹出气泡式的确认框。",
       "whenToUse": "",
-      "import": "import { Popconfirm } from 'ant-design-hmfw'",
+      "import": "import { Popconfirm } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Popconfirm Props",
@@ -8273,7 +8273,7 @@
       "title": "Popover 气泡卡片",
       "description": "点击/鼠标移入元素，弹出气泡式的卡片浮层。",
       "whenToUse": "",
-      "import": "import { Popover, PopoverPurePanel } from 'ant-design-hmfw'",
+      "import": "import { Popover, PopoverPurePanel } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Popover Props",
@@ -8465,7 +8465,7 @@
       "title": "Progress 进度条",
       "description": "展示操作的当前进度。",
       "whenToUse": "",
-      "import": "import { Progress } from 'ant-design-hmfw'",
+      "import": "import { Progress } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Progress Props",
@@ -8684,7 +8684,7 @@
       "title": "QRCode 二维码",
       "description": "生成二维码。",
       "whenToUse": "",
-      "import": "import { QRCode } from 'ant-design-hmfw'",
+      "import": "import { QRCode } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "QRCode Props",
@@ -8853,7 +8853,7 @@
       "title": "Radio 单选框",
       "description": "单选框。",
       "whenToUse": "",
-      "import": "import { Radio, RadioGroup, RadioButton } from 'ant-design-hmfw'",
+      "import": "import { Radio, RadioGroup, RadioButton } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Radio Props",
@@ -9021,7 +9021,7 @@
       "title": "RangePicker 日期范围选择框",
       "description": "日期范围选择器。",
       "whenToUse": "",
-      "import": "import { RangePicker } from 'ant-design-hmfw'",
+      "import": "import { RangePicker } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "RangePicker Props",
@@ -9187,7 +9187,7 @@
       "title": "Rate 评分",
       "description": "评分组件。",
       "whenToUse": "",
-      "import": "import { Rate } from 'ant-design-hmfw'",
+      "import": "import { Rate } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Rate Props",
@@ -9389,7 +9389,7 @@
       "title": "Result 结果",
       "description": "用于反馈一系列操作任务的处理结果。",
       "whenToUse": "",
-      "import": "import { Result } from 'ant-design-hmfw'",
+      "import": "import { Result } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Result Props",
@@ -9454,7 +9454,7 @@
       "title": "Segmented 分段控制器",
       "description": "分段控制器。",
       "whenToUse": "",
-      "import": "import { Segmented } from 'ant-design-hmfw'",
+      "import": "import { Segmented } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Segmented Props",
@@ -9672,7 +9672,7 @@
       "title": "Select 选择器",
       "description": "下拉选择器。",
       "whenToUse": "",
-      "import": "import { Select } from 'ant-design-hmfw'",
+      "import": "import { Select } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Select Props",
@@ -10067,7 +10067,7 @@
       "title": "Skeleton 骨架屏",
       "description": "在需要等待加载内容的位置提供一个占位图形组合。",
       "whenToUse": "",
-      "import": "import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from 'ant-design-hmfw'",
+      "import": "import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Skeleton Props",
@@ -10369,7 +10369,7 @@
       "title": "Slider 滑动输入条",
       "description": "滑动型输入器，展示当前值和可选范围。",
       "whenToUse": "",
-      "import": "import { Slider } from 'ant-design-hmfw'",
+      "import": "import { Slider } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Slider Props",
@@ -10550,7 +10550,7 @@
       "title": "Space 间距",
       "description": "设置组件之间的间距。",
       "whenToUse": "",
-      "import": "import { Space } from 'ant-design-hmfw'",
+      "import": "import { Space } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Space Props",
@@ -10658,7 +10658,7 @@
       "title": "Spin 加载中",
       "description": "用于页面和区块的加载中状态。",
       "whenToUse": "",
-      "import": "import { Spin } from 'ant-design-hmfw'",
+      "import": "import { Spin } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Spin Props",
@@ -10752,7 +10752,7 @@
       "title": "Statistic 统计数值",
       "description": "展示统计数值。",
       "whenToUse": "",
-      "import": "import { Statistic, Countdown } from 'ant-design-hmfw'",
+      "import": "import { Statistic, Countdown } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Statistic Props",
@@ -10950,7 +10950,7 @@
       "title": "Steps 步骤条",
       "description": "引导用户按照流程完成任务的导航条。",
       "whenToUse": "",
-      "import": "import { Steps } from 'ant-design-hmfw'",
+      "import": "import { Steps } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Steps Props",
@@ -11189,7 +11189,7 @@
       "title": "Switch 开关",
       "description": "开关选择器。",
       "whenToUse": "",
-      "import": "import { Switch } from 'ant-design-hmfw'",
+      "import": "import { Switch } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Switch Props",
@@ -11360,7 +11360,7 @@
       "title": "Table 表格",
       "description": "展示行列数据。",
       "whenToUse": "",
-      "import": "import { Table } from 'ant-design-hmfw'",
+      "import": "import { Table } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Table Props",
@@ -11827,7 +11827,7 @@
       "title": "Tabs 标签页",
       "description": "选项卡切换组件。",
       "whenToUse": "提供平级的区域将大块内容进行收纳和展现，保持界面整洁。",
-      "import": "import { Tabs } from 'ant-design-hmfw'",
+      "import": "import { Tabs } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Tabs",
@@ -12088,7 +12088,7 @@
       "title": "Tag 标签",
       "description": "进行标记和分类的小标签。",
       "whenToUse": "",
-      "import": "import { Tag, CheckableTag } from 'ant-design-hmfw'",
+      "import": "import { Tag, CheckableTag } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Tag Props",
@@ -12204,7 +12204,7 @@
       "title": "TimePicker 时间选择框",
       "description": "输入或选择时间的控件。",
       "whenToUse": "当用户需要输入一个时间，可以点击标准输入框，弹出时间面板进行选择。",
-      "import": "import { TimePicker } from 'ant-design-hmfw'",
+      "import": "import { TimePicker } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "TimePicker Props",
@@ -12446,7 +12446,7 @@
       "title": "Timeline 时间轴",
       "description": "垂直展示的时间流信息。",
       "whenToUse": "",
-      "import": "import { Timeline, TimelineItem } from 'ant-design-hmfw'",
+      "import": "import { Timeline, TimelineItem } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Timeline Props",
@@ -12662,7 +12662,7 @@
       "title": "Tooltip 文字提示",
       "description": "简单的文字提示气泡框。",
       "whenToUse": "",
-      "import": "import { Tooltip } from 'ant-design-hmfw'",
+      "import": "import { Tooltip } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Tooltip Props",
@@ -12864,7 +12864,7 @@
       "title": "Tour 漫游引导",
       "description": "用于分步引导用户了解产品功能的组件。",
       "whenToUse": "",
-      "import": "import { Tour } from 'ant-design-hmfw'",
+      "import": "import { Tour } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Tour Props",
@@ -13116,7 +13116,7 @@
       "title": "Transfer 穿梭框",
       "description": "双栏穿梭选择框，用于将元素从一列移入另一列。",
       "whenToUse": "",
-      "import": "import { Transfer } from 'ant-design-hmfw'",
+      "import": "import { Transfer } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Transfer Props",
@@ -13379,7 +13379,7 @@
       "title": "Tree 树形控件",
       "description": "多层次的结构列表。",
       "whenToUse": "",
-      "import": "import { Tree, DirectoryTree } from 'ant-design-hmfw'",
+      "import": "import { Tree, DirectoryTree } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Tree Props",
@@ -13806,7 +13806,7 @@
       "title": "TreeSelect 树形选择",
       "description": "树形选择控件，类似 Select 的选择控件，可选择的数据结构是一个树形结构。",
       "whenToUse": "",
-      "import": "import { TreeSelect } from 'ant-design-hmfw'",
+      "import": "import { TreeSelect } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "TreeSelect Props",
@@ -14092,7 +14092,7 @@
       "title": "Typography 排版",
       "description": "文本的基本格式。",
       "whenToUse": "",
-      "import": "import { Text, Title, Paragraph, Link } from 'ant-design-hmfw'",
+      "import": "import { Text, Title, Paragraph, Link } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "通用 Props（Text / Title / Paragraph / Link 共享）",
@@ -14355,7 +14355,7 @@
       "title": "Upload 上传",
       "description": "文件选择上传和拖拽上传控件。",
       "whenToUse": "上传是将信息（网页、文字、图片、视频等）通过网页或者上传工具发布到远程服务器上的过程。",
-      "import": "import { Upload, UploadDragger } from 'ant-design-hmfw'",
+      "import": "import { Upload, UploadDragger } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Upload Props",
@@ -14644,7 +14644,7 @@
       "title": "Watermark 水印",
       "description": "给页面的某个区域加上水印。",
       "whenToUse": "",
-      "import": "import { Watermark } from 'ant-design-hmfw'",
+      "import": "import { Watermark } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Watermark Props",

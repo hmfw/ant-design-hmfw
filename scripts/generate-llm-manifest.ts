@@ -8,7 +8,7 @@ const ROOT = join(__dirname, '..')
 const DEMOS_DIR = join(ROOT, 'docs/demos')
 const OUT_DIR = join(ROOT, 'docs/public')
 const SITE = 'https://hmfw.github.io/ant-design-hmfw'
-const PKG_NAME = 'ant-design-hmfw'
+const PKG_NAME = '@hmfw/ant-design'
 
 // ---------- helpers ----------
 

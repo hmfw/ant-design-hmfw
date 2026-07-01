@@ -13,7 +13,7 @@ pnpm add @hmfw/ant-design
 ```ts
 import { createApp } from 'vue'
 import AntDesignHmfw from '@hmfw/ant-design'
-import 'ant-design-hmfw/style.css'
+import '@hmfw/ant-design/style.css'
 import App from './App.vue'
 
 createApp(App).use(AntDesignHmfw).mount('#app')
@@ -23,7 +23,7 @@ createApp(App).use(AntDesignHmfw).mount('#app')
 
 ```ts
 import { Button, Input } from '@hmfw/ant-design'
-import 'ant-design-hmfw/style.css'
+import '@hmfw/ant-design/style.css'
 ```
 
 ## 使用 ConfigProvider
@@ -37,6 +37,6 @@ import 'ant-design-hmfw/style.css'
 
 <script setup lang="ts">
 import { ConfigProvider } from '@hmfw/ant-design'
-import zhCN from 'ant-design-hmfw/locale/zh-CN'
+import zhCN from '@hmfw/ant-design/locale/zh-CN'
 </script>
 ```

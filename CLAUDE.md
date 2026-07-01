@@ -1,4 +1,4 @@
-# ant-design-hmfw
+# @hmfw/ant-design
 
 基于 Ant Design v6 的 Vue3 UI 组件库，使用 TypeScript + TSX 实现。
 
@@ -136,7 +136,7 @@ E2E 测试文件命名：`*.e2e.spec.ts`
 
 ```typescript
 // 从主包
-import { SearchOutlined, Icon, searchIcons } from 'ant-design-hmfw'
+import { SearchOutlined, Icon, searchIcons } from '@hmfw/ant-design'
 
 // 或直接从图标包
 import { SearchOutlined } from '@hmfw/icons'
@@ -145,7 +145,7 @@ import { SearchOutlined } from '@hmfw/icons'
 ### 图标搜索 API
 
 ```typescript
-import { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from 'ant-design-hmfw'
+import { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '@hmfw/ant-design'
 
 const results = searchIcons('home') // 支持中英文
 const editIcons = getIconsByCategory('编辑操作') // 按分类获取

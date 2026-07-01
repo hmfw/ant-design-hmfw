@@ -2,7 +2,7 @@
   <div class="home">
     <NavBar />
     <div class="home__hero">
-      <h1 class="home__name">ant-design-hmfw</h1>
+      <h1 class="home__name">@hmfw/ant-design</h1>
       <p class="home__text">Vue3 UI 组件库</p>
       <p class="home__tagline">基于 Ant Design v6 设计规范，使用 TypeScript + TSX 原生实现</p>
       <div class="home__actions">
@@ -25,7 +25,7 @@
     </div>
     <footer class="home__footer">
       <p>Released under the MIT License.</p>
-      <p>Copyright © 2026 ant-design-hmfw</p>
+      <p>Copyright © 2026 hmfw</p>
     </footer>
   </div>
 </template>

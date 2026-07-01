@@ -139,7 +139,7 @@ try {
 // 检查构建产物
 console.log('\n6️⃣  检查构建产物大小...\n')
 
-const distFiles = ['dist/index.js', 'dist/ant-design-hmfw.umd.js', 'dist/style.css']
+const distFiles = ['dist/index.js', 'dist/ant-design.umd.js', 'dist/style.css']
 
 distFiles.forEach((file) => {
   const fullPath = resolve(rootDir, file)

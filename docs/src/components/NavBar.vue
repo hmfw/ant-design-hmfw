@@ -2,7 +2,7 @@
   <header class="navbar">
     <RouterLink to="/" class="navbar__brand">
       <img src="/logo.svg" alt="logo" class="navbar__brand-logo" />
-      <span>ant-design-hmfw</span>
+      <span>@hmfw/ant-design</span>
     </RouterLink>
     <nav class="navbar__nav">
       <RouterLink

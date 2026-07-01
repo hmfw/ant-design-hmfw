@@ -1,6 +1,6 @@
 # 主题定制
 
-ant-design-hmfw 基于 CSS Variables 实现主题定制，通过 `ConfigProvider` 传入自定义 Token 即可覆盖默认样式。
+@hmfw/ant-design 基于 CSS Variables 实现主题定制，通过 `ConfigProvider` 传入自定义 Token 即可覆盖默认样式。
 
 ## 设计 Token 系统
 

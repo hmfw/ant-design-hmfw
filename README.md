@@ -1,21 +1,21 @@
 <div align="center">
-  <h1>ant-design-hmfw</h1>
+  <h1>@hmfw/ant-design</h1>
   <p>基于 Ant Design v6 的 Vue3 UI 组件库</p>
-  
+
   <p>
-    <a href="https://www.npmjs.com/package/ant-design-hmfw"><img src="https://img.shields.io/npm/v/ant-design-hmfw.svg?style=flat-square" alt="npm version"></a>
-    <a href="https://www.npmjs.com/package/ant-design-hmfw"><img src="https://img.shields.io/npm/dm/ant-design-hmfw.svg?style=flat-square" alt="npm downloads"></a>
-    <a href="https://github.com/hmfw/ant-design-hmfw/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/ant-design-hmfw.svg?style=flat-square" alt="license"></a>
+    <a href="https://www.npmjs.com/package/@hmfw/ant-design"><img src="https://img.shields.io/npm/v/@hmfw/ant-design.svg?style=flat-square" alt="npm version"></a>
+    <a href="https://www.npmjs.com/package/@hmfw/ant-design"><img src="https://img.shields.io/npm/dm/@hmfw/ant-design.svg?style=flat-square" alt="npm downloads"></a>
+    <a href="https://github.com/hmfw/ant-design-hmfw/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@hmfw/ant-design.svg?style=flat-square" alt="license"></a>
     <a href="https://github.com/hmfw/ant-design-hmfw"><img src="https://img.shields.io/github/stars/hmfw/ant-design-hmfw?style=flat-square" alt="GitHub stars"></a>
   </p>
-  
+
   <p>
     <img src="https://img.shields.io/badge/Vue-3.5+-4FC08D?style=flat-square&logo=vue.js&logoColor=white" alt="Vue 3.5+">
     <img src="https://img.shields.io/badge/TypeScript-5.9+-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 5.9+">
     <img src="https://img.shields.io/badge/Tests-1828%20passed-success?style=flat-square" alt="Tests">
     <img src="https://img.shields.io/badge/Components-68-blue?style=flat-square" alt="68 Components">
   </p>
-  
+
   <p>
     <a href="https://hmfw.github.io/ant-design-hmfw">📖 文档</a> •
     <a href="#-快速开始">🚀 快速开始</a> •
@@ -44,13 +44,13 @@
 
 ```bash
 # npm
-npm install ant-design-hmfw
+npm install @hmfw/ant-design
 
 # pnpm (推荐)
-pnpm add ant-design-hmfw
+pnpm add @hmfw/ant-design
 
 # yarn
-yarn add ant-design-hmfw
+yarn add @hmfw/ant-design
 ```
 
 ### CDN
@@ -59,9 +59,9 @@ yarn add ant-design-hmfw
 <!-- 引入 Vue 3 -->
 <script src="https://unpkg.com/vue@3"></script>
 
-<!-- 引入 ant-design-hmfw -->
-<link rel="stylesheet" href="https://unpkg.com/ant-design-hmfw/dist/style.css" />
-<script src="https://unpkg.com/ant-design-hmfw"></script>
+<!-- 引入 @hmfw/ant-design -->
+<link rel="stylesheet" href="https://unpkg.com/@hmfw/ant-design/dist/style.css" />
+<script src="https://unpkg.com/@hmfw/ant-design/dist/ant-design.umd.js"></script>
 ```
 
 ---
@@ -73,8 +73,8 @@ yarn add ant-design-hmfw
 ```typescript
 // main.ts
 import { createApp } from 'vue'
-import AntDesignHmfw from 'ant-design-hmfw'
-import 'ant-design-hmfw/style.css'
+import AntDesignHmfw from '@hmfw/ant-design'
+import '@hmfw/ant-design/style.css'
 import App from './App.vue'
 
 const app = createApp(App)
@@ -96,8 +96,8 @@ app.mount('#app')
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, Input } from 'ant-design-hmfw'
-import 'ant-design-hmfw/style.css'
+import { Button, Input } from '@hmfw/ant-design'
+import '@hmfw/ant-design/style.css'
 
 const text = ref('')
 const handleClick = () => {
@@ -129,7 +129,7 @@ const handleClick = () => {
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { Form, FormItem, Input, InputPassword, Button } from 'ant-design-hmfw'
+import { Form, FormItem, Input, InputPassword, Button } from '@hmfw/ant-design'
 
 const formData = reactive({
   username: '',
@@ -150,7 +150,7 @@ const handleSubmit = () => {
 </template>
 
 <script setup lang="ts">
-import { Table } from 'ant-design-hmfw'
+import { Table } from '@hmfw/ant-design'
 
 const columns = [
   { title: '姓名', dataIndex: 'name', key: 'name' },
@@ -175,7 +175,7 @@ const dataSource = [
 </template>
 
 <script setup lang="ts">
-import { ConfigProvider } from 'ant-design-hmfw'
+import { ConfigProvider } from '@hmfw/ant-design'
 
 const customTheme = {
   colorPrimary: '#00b96b',
@@ -233,7 +233,7 @@ const theme = {
 
 ```typescript
 import { createApp } from 'vue'
-import AntDesignHmfw, { zhCN, enUS } from 'ant-design-hmfw'
+import AntDesignHmfw, { zhCN, enUS } from '@hmfw/ant-design'
 
 const app = createApp(App)
 app.use(AntDesignHmfw, { locale: zhCN }) // 或 enUS
@@ -253,7 +253,7 @@ app.use(AntDesignHmfw, { locale: zhCN }) // 或 enUS
 
 ## 📄 许可证
 
-[MIT](./LICENSE) © 2026 ant-design-hmfw
+[MIT](./LICENSE) © 2026 hmfw
 
 ---
 

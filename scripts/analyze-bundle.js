@@ -21,7 +21,7 @@ const gzipKB = (buf) => gzipSync(buf).length
 
 // 关键产物阈值（Gzip KB）—— 超过即失败
 const BUDGETS = [
-  { name: 'UMD (CDN)', file: 'ant-design-hmfw.umd.js', gzipLimit: 500 },
+  { name: 'UMD (CDN)', file: 'ant-design.umd.js', gzipLimit: 500 },
   { name: 'ESM 入口', file: 'index.js', gzipLimit: 200 },
   { name: '样式', file: 'style.css', gzipLimit: 60 },
 ]
