@@ -10,9 +10,9 @@
   </p>
   
   <p>
-    <img src="https://img.shields.io/badge/Vue-3.3+-4FC08D?style=flat-square&logo=vue.js&logoColor=white" alt="Vue 3.3+">
-    <img src="https://img.shields.io/badge/TypeScript-5.4+-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 5.4+">
-    <img src="https://img.shields.io/badge/Tests-1889%2F1891-success?style=flat-square" alt="Tests">
+    <img src="https://img.shields.io/badge/Vue-3.5+-4FC08D?style=flat-square&logo=vue.js&logoColor=white" alt="Vue 3.5+">
+    <img src="https://img.shields.io/badge/TypeScript-5.9+-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 5.9+">
+    <img src="https://img.shields.io/badge/Tests-1891%20passed-success?style=flat-square" alt="Tests">
     <img src="https://img.shields.io/badge/Components-68-blue?style=flat-square" alt="68 Components">
   </p>
   
@@ -244,9 +244,9 @@ app.use(AntDesignHmfw, { locale: zhCN }) // 或 enUS
 ## 📊 项目数据
 
 - 🎯 **68 个组件** - 覆盖所有常用场景
-- ✅ **1889 个测试** - 质量有保障
+- ✅ **1891 个测试** - 质量有保障
 - 📦 **12 KB (3 KB Gzip)** - ESM 构建产物体积
-- 🌟 **79 个图标** - 内置图标库
+- 🌟 **681 个图标** - 独立图标库 [@hmfw/icons](https://www.npmjs.com/package/@hmfw/icons)
 - 🎨 **完整类型** - 100% TypeScript
 
 ---
