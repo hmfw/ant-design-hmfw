@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.5.2。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.6.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -2182,7 +2182,8 @@ import { Dropdown } from '@hmfw/ant-design'
 </template>
 
 <script setup lang="ts">
-import { Dropdown, Button, DownOutlined } from '@hmfw/ant-design'
+import { DownOutlined } from '@hmfw/icons'
+import { Dropdown, Button } from '@hmfw/ant-design'
 
 const menu = {
   items: [
@@ -2469,7 +2470,7 @@ function onClick() {
 
 <script setup lang="ts">
 import { FloatButton } from '@hmfw/ant-design'
-import { SettingOutlined } from '@hmfw/ant-design'
+import { SettingOutlined } from '@hmfw/icons'
 
 // Render inline within the demo box instead of fixed to the viewport
 const s = { position: 'static' } as const
@@ -2875,8 +2876,8 @@ import { Icon } from '@hmfw/ant-design'
 </template>
 
 <script setup lang="ts">
+import { Space } from '@hmfw/ant-design'
 import {
-  Space,
   SearchOutlined,
   CloseOutlined,
   CheckOutlined,
@@ -2895,7 +2896,7 @@ import {
   HomeOutlined,
   UserOutlined,
   SettingOutlined,
-} from '@hmfw/ant-design'
+} from '@hmfw/icons'
 </script>
 ```
 
@@ -2913,7 +2914,8 @@ import {
 </template>
 
 <script setup lang="ts">
-import { Space, HomeOutlined } from '@hmfw/ant-design'
+import { HomeOutlined } from '@hmfw/icons'
+import { Space } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -5971,7 +5973,7 @@ const onChange = (key: string) => {
 <script setup lang="ts">
 import { h } from 'vue'
 import { Tabs } from '@hmfw/ant-design'
-import { AppleOutlined, AndroidOutlined } from '@hmfw/ant-design'
+import { AppleOutlined, AndroidOutlined } from '@hmfw/icons'
 
 const items = [
   {
