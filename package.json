@@ -113,6 +113,7 @@
     "@vitejs/plugin-vue-jsx": "^4.2.0",
     "@vitest/coverage-v8": "^1.4.0",
     "@vue/test-utils": "^2.4.0",
+    "esbuild": "^0.28.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-vue": "^10.9.2",
