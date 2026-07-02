@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, nextTick, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { CaretRightFilled, CaretDownFilled, DownOutlined } from '../icon'
+import { CaretRightFilled, CaretDownFilled, DownOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import type { TreeSelectNode, ShowCheckedStrategy, TreeSelectValue, TreeIcon, MaxTagPlaceholder } from './types'

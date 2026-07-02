@@ -11,33 +11,62 @@ import 'prismjs/components/prism-tsx'
  * 高亮 Vue SFC 代码
  * 拆分 <template>、<script>、<style> 三个部分分别处理
  */
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
 function highlightVueSFC(code: string): string {
   const sections: { tag: string; content: string; attrs: string; start: number; end: number }[] = []
 
-  // 匹配三种标签
-  const tagRegex = /<(template|script|style)([^>]*)>([\s\S]*?)<\/\1>/g
+  // 逐个扫描 template/script/style 的开闭标签，用深度计数匹配对应的结束标签。
+  // 这样能正确处理嵌套（如 <template> 内的具名插槽 <template #footer>），
+  // 避免非贪婪正则把外层 <template> 误配到内层 </template> 上，
+  // 从而漏掉真正的外层结束标签、导致其原样泄漏到页面里。
+  const tokenRegex = /<(\/?)(template|script|style)((?:"[^"]*"|'[^']*'|[^'">])*)>/g
   let match: RegExpExecArray | null
+  let depth = 0
+  let curTag = ''
+  let openStart = 0
+  let openAttrs = ''
+  let contentStart = 0
 
-  while ((match = tagRegex.exec(code)) !== null) {
-    sections.push({
-      tag: match[1],
-      attrs: match[2],
-      content: match[3],
-      start: match.index,
-      end: match.index + match[0].length,
-    })
+  while ((match = tokenRegex.exec(code)) !== null) {
+    const isClose = match[1] === '/'
+    const tag = match[2]
+
+    if (depth === 0) {
+      if (!isClose) {
+        curTag = tag
+        openStart = match.index
+        openAttrs = match[3]
+        contentStart = match.index + match[0].length
+        depth = 1
+      }
+    } else if (tag === curTag) {
+      if (isClose) {
+        depth--
+        if (depth === 0) {
+          sections.push({
+            tag: curTag,
+            attrs: openAttrs,
+            content: code.slice(contentStart, match.index),
+            start: openStart,
+            end: match.index + match[0].length,
+          })
+        }
+      } else {
+        depth++
+      }
+    }
   }
-
-  // 按位置排序
-  sections.sort((a, b) => a.start - b.start)
 
   let result = ''
   let lastEnd = 0
 
   for (const section of sections) {
-    // 添加标签之间的内容（通常是空白）
+    // 添加标签之间的内容（通常是空白）——必须转义，避免原始 HTML 泄漏
     if (section.start > lastEnd) {
-      result += code.slice(lastEnd, section.start)
+      result += escapeHtml(code.slice(lastEnd, section.start))
     }
 
     // 高亮开始标签
@@ -69,9 +98,9 @@ function highlightVueSFC(code: string): string {
     lastEnd = section.end
   }
 
-  // 添加剩余内容
+  // 添加剩余内容（同样需要转义）
   if (lastEnd < code.length) {
-    result += code.slice(lastEnd)
+    result += escapeHtml(code.slice(lastEnd))
   }
 
   return result

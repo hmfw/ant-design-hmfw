@@ -2182,7 +2182,8 @@ import { Dropdown } from '@hmfw/ant-design'
 </template>
 
 <script setup lang="ts">
-import { Dropdown, Button, DownOutlined } from '@hmfw/ant-design'
+import { DownOutlined } from '@hmfw/icons'
+import { Dropdown, Button } from '@hmfw/ant-design'
 
 const menu = {
   items: [
@@ -2469,7 +2470,7 @@ function onClick() {
 
 <script setup lang="ts">
 import { FloatButton } from '@hmfw/ant-design'
-import { SettingOutlined } from '@hmfw/ant-design'
+import { SettingOutlined } from '@hmfw/icons'
 
 // Render inline within the demo box instead of fixed to the viewport
 const s = { position: 'static' } as const
@@ -2913,7 +2914,8 @@ import {
 </template>
 
 <script setup lang="ts">
-import { Space, HomeOutlined } from '@hmfw/ant-design'
+import { HomeOutlined } from '@hmfw/icons'
+import { Space } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -5971,7 +5973,7 @@ const onChange = (key: string) => {
 <script setup lang="ts">
 import { h } from 'vue'
 import { Tabs } from '@hmfw/ant-design'
-import { AppleOutlined, AndroidOutlined } from '@hmfw/ant-design'
+import { AppleOutlined, AndroidOutlined } from '@hmfw/icons'
 
 const items = [
   {

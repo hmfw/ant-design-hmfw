@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { Segmented } from '@hmfw/ant-design'
-import { UserOutlined, SettingOutlined } from '@hmfw/ant-design'
+import { UserOutlined, SettingOutlined } from '@hmfw/icons'
 
 const value1 = ref('light')
 const options1 = [

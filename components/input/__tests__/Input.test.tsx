@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { Input, InputPassword, TextArea, InputSearch } from '../Input'
-import { SearchOutlined } from '../../icon'
+import { SearchOutlined } from '@hmfw/icons'
 
 describe('Input', () => {
   it('renders correctly', () => {

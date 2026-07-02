@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { DownOutlined } from '../icon'
+import { DownOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import type {

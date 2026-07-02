@@ -10,7 +10,7 @@ import {
   type VNode,
   type CSSProperties,
 } from 'vue'
-import { CheckOutlined, CopyOutlined } from '../icon'
+import { CheckOutlined, CopyOutlined } from '@hmfw/icons'
 import { cls } from '../_utils'
 import { useLocale } from '../config-provider'
 import { Tooltip } from '../tooltip'

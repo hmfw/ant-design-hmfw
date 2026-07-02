@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { FloatButton, FloatButtonGroup } from '@hmfw/ant-design'
-import { SettingOutlined, EditOutlined, SearchOutlined, DeleteOutlined } from '@hmfw/ant-design'
+import { SettingOutlined, EditOutlined, SearchOutlined, DeleteOutlined } from '@hmfw/icons'
 
 const left = { position: 'absolute', insetInlineEnd: '120px', insetBlockEnd: '24px' } as const
 const right = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const

@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { FloatButton } from '@hmfw/ant-design'
-import { InfoCircleOutlined } from '@hmfw/ant-design'
+import { InfoCircleOutlined } from '@hmfw/icons'
 
 const s = { position: 'static' } as const
 </script>

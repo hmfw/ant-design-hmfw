@@ -8,7 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { Dropdown, Button, DownOutlined } from '@hmfw/ant-design'
+import { DownOutlined } from '@hmfw/icons'
+import { Dropdown, Button } from '@hmfw/ant-design'
 
 const menu = {
   items: [

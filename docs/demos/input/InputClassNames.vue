@@ -89,7 +89,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Input, TextArea, SearchOutlined, UserOutlined, CloseCircleOutlined } from '@hmfw/ant-design'
+import { SearchOutlined, UserOutlined, CloseCircleOutlined } from '@hmfw/icons'
+import { Input, TextArea } from '@hmfw/ant-design'
 
 const value1 = ref('')
 const value2 = ref('')

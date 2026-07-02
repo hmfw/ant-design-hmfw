@@ -1,7 +1,13 @@
 import { defineComponent, ref, computed, type PropType, type VNodeChild } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import { CheckCircleFilled, InfoCircleFilled, ExclamationCircleFilled, CloseCircleFilled, CloseOutlined } from '../icon'
+import {
+  CheckCircleFilled,
+  InfoCircleFilled,
+  ExclamationCircleFilled,
+  CloseCircleFilled,
+  CloseOutlined,
+} from '@hmfw/icons'
 import type { AlertType, AlertVariant, AlertClosable, AlertClassNames, AlertStyles } from './types'
 
 // 与 AntD v6 对齐：使用 Filled 状态图标

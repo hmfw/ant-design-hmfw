@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, next
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
-import { LeftOutlined, RightOutlined } from '../icon'
+import { LeftOutlined, RightOutlined } from '@hmfw/icons'
 import type { CarouselDotPlacement, CarouselRef } from './types'
 
 export const Carousel = defineComponent({

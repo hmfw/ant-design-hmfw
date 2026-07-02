@@ -64,14 +64,14 @@
 </template>
 
 <script setup lang="ts">
+import { FloatButton } from '@hmfw/ant-design'
 import {
-  FloatButton,
   QuestionCircleOutlined,
   CustomerServiceOutlined,
   CommentOutlined,
   EditOutlined,
   RocketOutlined,
-} from '@hmfw/ant-design'
+} from '@hmfw/icons'
 </script>
 
 <style scoped>

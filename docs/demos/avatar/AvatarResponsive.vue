@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Avatar } from '@hmfw/ant-design'
-import { UserOutlined } from '@hmfw/ant-design'
+import { UserOutlined } from '@hmfw/icons'
 </script>
 
 <template>

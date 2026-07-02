@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, nextTick, onMounted, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
-import { CloseOutlined, EyeOutlined, EyeInvisibleOutlined, SearchOutlined, LoadingOutlined } from '../icon'
+import { CloseOutlined, EyeOutlined, EyeInvisibleOutlined, SearchOutlined, LoadingOutlined } from '@hmfw/icons'
 import type { InputSize, InputStatus, InputAffix } from './types'
 import { calculateAutoSizeStyle } from './calculateNodeHeight'
 
@@ -493,8 +493,7 @@ export const TextArea = defineComponent({
         max: props.maxLength,
         strategy: (text: string) => text.length,
         showFormatter: undefined as
-          | ((args: { value: string; count: number; maxLength?: number }) => VNode | string)
-          | undefined,
+          ((args: { value: string; count: number; maxLength?: number }) => VNode | string) | undefined,
       }
 
       if (props.count) {

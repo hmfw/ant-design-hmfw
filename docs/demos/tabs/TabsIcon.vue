@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { h } from 'vue'
 import { Tabs } from '@hmfw/ant-design'
-import { AppleOutlined, AndroidOutlined } from '@hmfw/ant-design'
+import { AppleOutlined, AndroidOutlined } from '@hmfw/icons'
 
 const items = [
   {

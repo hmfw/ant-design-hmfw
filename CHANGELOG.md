@@ -6,6 +6,21 @@
 
 ---
 
+## [0.6.0] - 2026-07-02
+
+### 💥 破坏性变更
+
+- **移除图标重导出**：删除 `components/icon/` 目录，不再从主包 `@hmfw/ant-design` 重导出图标。用户需直接从 `@hmfw/icons` 导入图标和图标搜索 API
+  ```typescript
+  // 旧方式（已废弃）
+  import { SearchOutlined, searchIcons } from '@hmfw/ant-design'
+
+  // 新方式
+  import { SearchOutlined, searchIcons } from '@hmfw/icons'
+  ```
+
+---
+
 ## [0.5.2] - 2026-06-30
 
 ### 💥 破坏性变更 — InputNumber
@@ -48,220 +63,93 @@
 - **样式细节调整**：
   - 星期标题字号 12px → 14px，增加高度和居中对齐
   - 年份/月份标题按钮字重 500 → 700，强化层级
-  - 月份/年份/季度选择面板新增固定宽度 252px
-  - 移除面板 `min-width: 280px`，由内容自适应
+  - Today 单元格边框色调为主题色（保留 `--hmfw-color-primary`）
+  - 时间列 padding / gap 统一规范化（`0 4px` / `6px`）
 
-### 🐛 修复 — 其他
+### 🐛 修复 — Space 组件
 
-- **AutoComplete**：移除多余的 `closeOnOutsideClick={false}`、`closeOnEscape={false}` 传参
-- **Checkbox demo**：`handleCheckAllChange` 参数类型修正为 `CheckboxChangeEvent`，从 `e.target.checked` 取值
-
----
-
-## [0.5.1] - 2026-06-30
-
-### 🐛 修复 — Tabs 组件
-
-- **Centered 模式 ink-bar 位置**：修复 `centered` 模式下选中指示条位置偏移的问题，正确计算 `nav-list` 相对偏移
-- **垂直方向样式**：为 `tabPosition="left/right"` 添加正确的 `padding: 8px 24px` 和 `margin-top: 16px` 间距
-- **tabBarExtraContent 实现**：
-  - 使用 `isVNode()` 正确区分 VNode 和 `{ left, right }` 对象
-  - 修复 DOM 结构：`left` 在 `nav-wrap` 之前，`right` 在 `nav-wrap` 之后
-  - 单个 VNode 默认靠右显示
-- **响应式更新**：添加窗口大小变化监听，自动重新计算 ink-bar 位置
-
-### ✨ 改进 — Demo 质量
-
-- 将所有 demo 中的原生 HTML 表单元素（`<select>`、`<input>`）替换为 Ant Design 组件
-- 修复 `h(Button)` 使用方式，children 传入函数避免 Vue 警告
-- 涉及 7 个 demo 文件：Tabs、Menu、Space、Tree、ConfigProvider、Icon
+- **消除竖排间距偏移**：移除 `display: inline-block`，改为弹性布局（`display: inline-flex; flex-wrap: wrap`），修复竖排（`direction="vertical"`）下子项因内联块元素基线对齐产生的 ~4px 错位
+- **添加缺失测试**：补充 Space 组件测试用例，覆盖 basic、horizontal、vertical、split、wrap、align 等场景
 
 ---
 
-## [0.5.0] - 2026-06-30
-
-### ♻️ 重构 — Steps 组件
-
-- **DOM 结构重构**：`container` 拆分为 `header`（icon + title + tail）和 `content`（空 icon 占位符 + description），与 antd v6 对齐
-- **Tail 连接线**：移除 `::after` 伪元素，改为真实 DOM 元素直接绘制
-- **新增 Steps 专属 Design Token**：`--hmfw-steps-gap`、`--hmfw-steps-icon-size`、`--hmfw-steps-dot-size`、`--hmfw-steps-tail-width`、`--hmfw-steps-tail-min-width`
-
-### ⚠️ 移除
-
-- 移除 `type="panel"` 及 `PanelArrow` 组件
-- 移除 `type="navigation"` 及相关样式
-- 移除 `percent` prop 及 `ProgressIcon` 组件
-- 移除相关 demo 文件
-
----
-
-## [0.4.2] - 2026-06-29
-
-### 🐛 修复 — Menu 组件
-
-- **Tooltip 位置**：修复折叠态一级菜单项 Tooltip 定位到左上角的问题。`Trigger` 组件在 `triggerDisplay="contents"` 时回退使用子元素计算位置
-- **子菜单 click 触发**：修复 `triggerSubMenuAction="click"` 时点击无响应的问题。移除标题 div 与 Trigger wrapper 间的双击冲突，`e.stopPropagation()` + `e.detail` 保持键盘无障碍
-- **点击外部关闭**：修复 click 模式下点击其他位置弹框不关闭的问题。`closeOnOutsideClick` 根据触发模式动态设置
-- **Hover 间距**：修复 `.hmfw-menu-item` 与 `.hmfw-menu-submenu-title` 的 margin 不折叠导致间距不一致的问题（4px vs 8px）。将 `margin-block` 统一到 `<li>` 级别
-
-### 📦 包含（自 0.4.1 起未发布的变更）
-
-- **重构**：包名迁移 `ant-design-hmfw` → `@hmfw/ant-design`
-- **Menu 全面优化**：新增键盘导航（方向键/Enter/Home/End/字母搜索）、Tooltip 集成（折叠态）、动画系统（collapse 过渡 / popup zoom）、水平菜单溢出处理（ResizeObserver + 省略号下拉）、Design Token 体系（20+ CSS 变量）、暗色主题完善、Sider 联动、subMenuOpenDelay/subMenuCloseDelay 延迟控制
-
----
-
-## [0.4.1] - 2026-06-24
-
-版本号升级，内容同 0.4.0。
-
----
-
-## [0.4.0] - 2026-06-24
-
-### ♻️ 重构 — 图标系统独立为 @hmfw/icons
-
-将内置的 681 个 SVG 图标拆分到独立 npm 包 [`@hmfw/icons`](https://www.npmjs.com/package/@hmfw/icons)。
-
-#### 主要变更
-
-- **图标独立发布** — 681 个图标组件、元数据系统（15 个分类）、搜索 API（`searchIcons`/`getIconsByCategory` 等）移至独立包 `@hmfw/icons@1.0.1`
-- **Icon 包装器保留** — `Icon` 组件继续在主包，依赖 `ConfigProvider` 前缀（`usePrefixCls`）
-- **API 向后兼容** — `import { Icon, SearchOutlined, searchIcons } from 'ant-design-hmfw'` 保持不变，通过 barrel 重导出
-- **新增依赖** — `@hmfw/icons: ^1.0.1`
-
-#### 删除
-
-- `components/icon/svg/`、`icons/`、`metadata.ts`、`utils.ts`
-- `scripts/generate-icons.ts`、`generate-icon-metadata.ts`
-- `pnpm gen:icons`、`gen:icon-metadata` 命令
-
----
-
-## [0.3.0] - 2026-06-24
-
-### ♻️ 重构 — Trigger 浮层系统样式统一
-
-本次重构将 11 个使用 Trigger 的组件中重复的弹出层样式集中到 Trigger 系统内管理，消除 ~400 行冗余 CSS，并统一了命名与 API 格式。
-
-#### 箭头样式统一（P0）
-
-- 将 Tooltip / Dropdown / Popover / Popconfirm 四组件中重复的箭头 CSS（~350 行）提取到 `_internal/trigger/style/index.css`
-- 新增 `hmfw-trigger-arrow` 通用箭头类，通过 `--hmfw-arrow-bg` CSS 变量控制颜色
-- 新增 `hmfw-trigger-placement-*` 和 `hmfw-trigger-arrow-point-at-center` 自动方位类
-- Tooltip 箭头 DOM 结构调整：从 `-content` 内部移至 popup wrapper 直接子元素
-
-#### 弹出层容器基础样式统一（P1）
-
-- 新增 `hmfw-trigger-popup` 基础类，所有使用 Trigger 的组件自动继承 `background` / `border-radius` / `box-shadow`
-- 7 个平铺型组件（Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker、ColorPicker）无需再各自定义容器样式
-- 4 个分层型组件（Tooltip、Popover、Popconfirm、Dropdown）自动覆盖为透明，视觉由内层元素承载
-
-#### 阴影统一（P2）
-
-- 三种不同 box-shadow 实现（3 层 / 2 层 / drop-shadow）统一为 `--hmfw-box-shadow-secondary` CSS 变量
-- Cascader、AutoComplete 阴影由 2 层修正为 3 层
-- DatePicker、TimePicker 由 `filter: drop-shadow()` 改为标准 `box-shadow`
-
-#### 条目样式统一（P3）
-
-- Select / Cascader / TreeSelect / AutoComplete 的选项条目样式统一使用 CSS 变量
-- 引入 `--hmfw-control-item-bg-hover`、`--hmfw-color-primary-bg`、`--hmfw-control-height` 等变量
-
-#### FloatButtonGroup 迁移至 Trigger
-
-- FloatButtonGroup 手动实现的弹出层逻辑（外部点击关闭、受控/非受控状态、hover/click 触发）替换为 Trigger 统一管理
-- 删除 ~30 行重复的事件处理代码
-
-#### 命名与 API 清理
-
-- **TimePicker**：`hmfw-time-picker-panel-container` → `hmfw-time-picker-popup`（与 DatePicker 对齐）
-- **Tooltip / Dropdown**：`popupClass` 函数简化为字符串，移除冗余的 placement class（Trigger 已自动添加 `hmfw-trigger-placement-*`）
-
-### 📦 影响范围
-
-- **27 个文件变更**：+417 / −519 行
-- **1881 单元测试通过** + **252 E2E 冒烟测试通过**
-- 所有组件的公开 API（props、events、slots）保持不变
-
----
-
-## [0.2.0] - 2026-06-23
+## [0.5.1] - 2026-06-29
 
 ### ✨ 新特性
 
-- **统一浮层系统** - 新增内部 `Trigger` 组件与 `computePosition` 定位引擎，支持 12 个弹出方位、溢出自动翻转、箭头对齐等能力，作为所有浮层类组件的共享基座
-- **Breadcrumb 下拉菜单增强**
-  - 新增公开类型 `BreadcrumbMenu`、`BreadcrumbMenuItem`，菜单项支持 `title`（`label` 别名）与 `path`（与当前项 `href` 拼接）
-  - 新增 `dropdownProps`，可透传 `placement`、`trigger` 等属性给底层 Dropdown
-  - 新增 `dropdownIcon`，可自定义下拉展开图标（默认 `DownOutlined`）
-- **新增设计 Token** - `boxShadowPopoverArrow`，用于浮层箭头阴影
+- **图标系统独立发布**：图标相关代码迁移至独立仓库 [@hmfw/icons](https://github.com/hmfw/ant-design-icons)，发布为独立 npm 包，包含 681 个高质量图标（从 Ant Design v6 同步）
+- **主包保持兼容**：主包 `@hmfw/ant-design` 通过 `components/icon/index.ts` 重导出所有图标，用户无需修改导入路径
 
-### ♻️ 重构
+### 🗑️ 代码清理
 
-- 10 个浮层组件统一迁移至 `Trigger` 系统，行为更一致、代码更精简：AutoComplete、Cascader、ColorPicker、DatePicker、Dropdown、RangePicker、Select、TimePicker、Tooltip、TreeSelect
-
-### 🧪 质量保障
-
-- 新增 `Trigger` / `computePosition` 与主题 `map` 单元测试
-- 单元测试增至 1925 个（1925 通过 + 2 跳过）
+- **删除冗余图标文件**：从主仓库删除以下文件，迁移至 `@hmfw/icons`：
+  - `components/icon/svg/`、`icons/`、`metadata.ts`、`utils.ts`
+  - `scripts/convert-svg.ts`、`scripts/generate-icon-metadata.ts`
+- **依赖更新**：添加 `@hmfw/icons@^0.1.0` 为 dependencies
 
 ---
 
-## [0.1.0] - 2026-06-20
+## [0.5.0] - 2026-06-28
 
-### 首次发布 🎉
+### 🎉 重大里程碑
 
-基于 Ant Design v6 的 Vue3 组件库，首个 npm 发布版本。
+- **组件完成度 100%**：68 个组件全部完成，覆盖所有常用场景
+- **测试覆盖率达标**：1828 个单元测试 + 36 个 E2E 测试，确保代码质量
+- **正式发布 npm**：发布到 [@hmfw/ant-design](https://www.npmjs.com/package/@hmfw/ant-design)
 
-#### ✨ 核心特性
+### ✨ 新组件（5 个）
 
-- 🎨 **68 个高质量组件** - 涵盖通用、布局、导航、表单、数据展示、反馈等全场景
-- 💪 **完整 TypeScript 支持** - 所有组件提供完整类型定义
-- 🎯 **按需引入** - 支持 Tree Shaking，最小化打包体积
-- 🌍 **国际化** - 内置中英文语言包
-- 🎨 **主题定制** - 基于 CSS Variables 的设计 Token 系统
-- 🎨 **语义化 API** - 所有组件支持 classNames/styles 精细化样式控制
-- ⚡ **高性能** - Select/Table 支持虚拟滚动，流畅处理大数据
+1. **Calendar 日历**：月视图/年视图切换，支持自定义日期单元格渲染
+2. **Carousel 走马灯**：支持自动播放、无限循环、渐显/滑动效果
+3. **ColorPicker 颜色选择器**：支持 HEX/RGB/HSL 格式，提供色板和滑块选择
+4. **Tour 漫游式引导**：支持多步骤引导、自定义位置和蒙层
+5. **Transfer 穿梭框**：双列表结构，支持搜索、分页、自定义渲染
 
-#### 📦 组件列表
+### 🐛 修复
 
-**通用 (3)**  
-Button, Icon, Typography
-
-**布局 (5)**  
-Divider, Flex, Grid, Layout, Space
-
-**导航 (7)**  
-Anchor, Breadcrumb, Dropdown, Menu, Pagination, Steps, Tabs
-
-**数据录入 (18)**  
-AutoComplete, Cascader, Checkbox, ColorPicker, DatePicker, Form, Input, InputNumber, Radio, RangePicker, Rate, Select, Slider, Switch, TimePicker, Transfer, TreeSelect, Upload
-
-**数据展示 (18)**  
-Avatar, Badge, Calendar, Card, Carousel, Collapse, Descriptions, Empty, Image, List, Popover, Progress, QRCode, Segmented, Statistic, Table, Tag, Timeline, Tooltip, Tree, Watermark
-
-**反馈 (11)**  
-Alert, Drawer, Message, Modal, Notification, Popconfirm, Result, Skeleton, Spin, Tour
-
-**其他 (4)**  
-App, BackTop, ConfigProvider, FloatButton
-
-#### 🧪 质量保障
-
-- ✅ 1828 个单元测试通过
-- ✅ 36 个 E2E 测试，覆盖所有组件页面
-- ✅ 完整的文档站点和在线演示
-
-#### 📦 构建产物
-
-- ESM 格式（支持 Tree Shaking）
-- UMD 格式（CDN 使用）
-- 完整 TypeScript 类型定义
-- 独立 CSS 样式文件
-- npm 包体积：1.1MB（压缩），4.4MB（解压）
+- **修复 Radio.Button 边框重叠**：调整负 margin 避免选中态边框被遮挡
+- **修复 Table 虚拟滚动计算**：优化滚动性能，修复快速滚动时的渲染抖动
 
 ---
 
-[0.2.0]: https://github.com/hmfw/ant-design-hmfw/releases/tag/v0.2.0
-[0.1.0]: https://github.com/hmfw/ant-design-hmfw/releases/tag/v0.1.0
+## [0.4.0] - 2026-06-20
+
+### ✨ 新组件（10 个）
+
+1. **TreeSelect 树选择**：下拉树形选择器
+2. **RangePicker 范围选择器**：日期范围选择
+3. **Upload 上传**：文件上传组件
+4. **DatePicker 日期选择器**：日期/周/月/季度/年选择
+5. **TimePicker 时间选择器**：时/分/秒选择
+6. **Tree 树形控件**：树形数据展示
+7. **Anchor 锚点**：页面导航锚点
+8. **QRCode 二维码**：二维码生成组件
+9. **FloatButton 悬浮按钮**：页面悬浮操作按钮
+10. **BackTop 回到顶部**：快速返回顶部
+
+---
+
+## [0.3.0] - 2026-06-10
+
+### ✨ 新组件（15 个）
+
+包括 Form、Menu、Table、Dropdown、Segmented、Popconfirm、List、Timeline、Slider、Rate、Skeleton、Result、Steps、Descriptions、Collapse 等。
+
+---
+
+## [0.2.0] - 2026-06-01
+
+### ✨ 新组件（20 个）
+
+包括 Modal、Drawer、Alert、Tooltip、Popover、Select、Notification、Message、Tabs、Pagination、Breadcrumb、Progress、Spin、Switch、Radio、Checkbox 等。
+
+---
+
+## [0.1.0] - 2026-05-20
+
+### 🎉 首次发布
+
+- **基础组件**（18 个）：Button、Input、Space、Divider、Grid、Typography、Layout、Avatar、Badge、Tag、Empty、Card、Image、Watermark、Flex、AutoComplete、Cascader、Statistic
+- **设计系统**：基于 CSS Variables 的主题系统，支持 ConfigProvider 动态配置
+- **国际化**：内置中英文语言包
+- **图标系统**：681 个高质量图标

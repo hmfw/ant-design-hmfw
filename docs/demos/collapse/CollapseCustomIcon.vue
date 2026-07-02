@@ -4,7 +4,8 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Collapse, DownOutlined } from '@hmfw/ant-design'
+import { DownOutlined } from '@hmfw/icons'
+import { Collapse } from '@hmfw/ant-design'
 
 const items = [
   {

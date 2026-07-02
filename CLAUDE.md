@@ -130,22 +130,19 @@ E2E 测试文件命名：`*.e2e.spec.ts`
 
 ## 图标系统
 
-图标系统已独立为 npm 包 [`@hmfw/icons`](https://www.npmjs.com/package/@hmfw/icons)，包含 **681 个高质量图标**（从 Ant Design v6 同步）。主包通过 `components/icon/index.ts` 重导出所有图标。
+图标系统已独立为 npm 包 [`@hmfw/icons`](https://www.npmjs.com/package/@hmfw/icons)，包含 **681 个高质量图标**（从 Ant Design v6 同步）。
 
 ### 使用方式
 
 ```typescript
-// 从主包
-import { SearchOutlined, Icon, searchIcons } from '@hmfw/ant-design'
-
-// 或直接从图标包
+// 直接从图标包导入
 import { SearchOutlined } from '@hmfw/icons'
 ```
 
 ### 图标搜索 API
 
 ```typescript
-import { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '@hmfw/ant-design'
+import { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '@hmfw/icons'
 
 const results = searchIcons('home') // 支持中英文
 const editIcons = getIconsByCategory('编辑操作') // 按分类获取

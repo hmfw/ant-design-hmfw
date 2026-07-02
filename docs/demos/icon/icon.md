@@ -8,6 +8,18 @@
 - 需要展示状态图标时
 - 需要展示品牌图标时
 
+## 安装
+
+图标已独立为 npm 包，需要单独安装：
+
+```bash
+npm install @hmfw/icons
+# 或
+pnpm add @hmfw/icons
+# 或
+yarn add @hmfw/icons
+```
+
 ## 代码演示
 
 ### 图标浏览器
@@ -155,7 +167,27 @@ import {
   // 品牌
   AndroidOutlined,
   AppleOutlined,
-} from '@hmfw/ant-design'
+} from '@hmfw/icons'
+```
+
+### 图标搜索 API
+
+`@hmfw/icons` 提供了强大的图标搜索和分类功能：
+
+```ts
+import { searchIcons, getIconsByCategory, getAllCategories, getAllIcons } from '@hmfw/icons'
+
+// 搜索图标（支持中英文）
+const results = searchIcons('home')
+
+// 按分类获取图标
+const editIcons = getIconsByCategory('编辑操作')
+
+// 获取所有分类
+const categories = getAllCategories()
+
+// 获取所有图标
+const allIcons = getAllIcons()
 ```
 
 ### 自定义图标
@@ -165,7 +197,7 @@ import {
 实现 `IconComponent` 类型（`FunctionalComponent<SVGAttributes>`）即可传入任意 SVG 图标：
 
 ```tsx
-import type { IconComponent } from '@hmfw/ant-design'
+import type { IconComponent } from '@hmfw/icons'
 
 const MyIcon: IconComponent = () => (
   <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">

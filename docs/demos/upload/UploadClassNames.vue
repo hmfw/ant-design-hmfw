@@ -106,7 +106,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Upload, Button, UploadOutlined, InboxOutlined, PlusOutlined } from '@hmfw/ant-design'
+import { UploadOutlined, InboxOutlined, PlusOutlined } from '@hmfw/icons'
+import { Upload, Button } from '@hmfw/ant-design'
 
 const fileList1 = ref([])
 const fileList2 = ref([])

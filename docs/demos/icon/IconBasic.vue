@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
+import { Space } from '@hmfw/ant-design'
 import {
-  Space,
   SearchOutlined,
   CloseOutlined,
   CheckOutlined,
@@ -42,5 +42,5 @@ import {
   HomeOutlined,
   UserOutlined,
   SettingOutlined,
-} from '@hmfw/ant-design'
+} from '@hmfw/icons'
 </script>

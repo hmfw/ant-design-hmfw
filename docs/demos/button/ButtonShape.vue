@@ -9,5 +9,5 @@
 
 <script setup lang="ts">
 import { Button } from '@hmfw/ant-design'
-import { SearchOutlined } from '@hmfw/ant-design'
+import { SearchOutlined } from '@hmfw/icons'
 </script>

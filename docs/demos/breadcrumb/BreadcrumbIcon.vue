@@ -4,7 +4,8 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Breadcrumb, HomeOutlined, UserOutlined } from '@hmfw/ant-design'
+import { HomeOutlined, UserOutlined } from '@hmfw/icons'
+import { Breadcrumb } from '@hmfw/ant-design'
 
 const items = [
   {

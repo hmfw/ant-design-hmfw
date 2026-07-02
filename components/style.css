@@ -1,7 +1,6 @@
 /* Import component styles */
 @import './_theme/style/index.css';
 @import './_internal/trigger/style/index.css';
-@import './icon/style/index.css';
 @import './button/style/index.css';
 @import './space/style/index.css';
 @import './divider/style/index.css';

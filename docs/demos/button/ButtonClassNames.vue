@@ -18,7 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { Button, SearchOutlined } from '@hmfw/ant-design'
+import { SearchOutlined } from '@hmfw/icons'
+import { Button } from '@hmfw/ant-design'
 </script>
 
 <style scoped>

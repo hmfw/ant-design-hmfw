@@ -9,5 +9,6 @@
 </template>
 
 <script setup lang="ts">
-import { Space, HomeOutlined } from '@hmfw/ant-design'
+import { HomeOutlined } from '@hmfw/icons'
+import { Space } from '@hmfw/ant-design'
 </script>

@@ -1,6 +1,6 @@
 import { defineComponent, type PropType } from 'vue'
 import { Tree } from './Tree'
-import { FolderOutlined, FolderOpenOutlined, FileOutlined } from '../icon'
+import { FolderOutlined, FolderOpenOutlined, FileOutlined } from '@hmfw/icons'
 import type { TreeDataNode, ExpandAction } from './types'
 
 /**

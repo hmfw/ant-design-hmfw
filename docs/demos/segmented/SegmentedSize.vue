@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { Segmented } from '@hmfw/ant-design'
-import { UserOutlined, SettingOutlined, HomeOutlined } from '@hmfw/ant-design'
+import { UserOutlined, SettingOutlined, HomeOutlined } from '@hmfw/icons'
 
 const value1 = ref('Daily')
 const options1 = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']

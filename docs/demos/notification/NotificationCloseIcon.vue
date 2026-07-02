@@ -8,7 +8,8 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { notification, Button, CloseCircleFilled, CheckCircleFilled } from '@hmfw/ant-design'
+import { CloseCircleFilled, CheckCircleFilled } from '@hmfw/icons'
+import { notification, Button } from '@hmfw/ant-design'
 
 function openWithCustomIcon() {
   notification.info({

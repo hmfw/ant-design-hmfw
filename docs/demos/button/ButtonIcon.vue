@@ -8,5 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { Button, SearchOutlined, CheckOutlined, CloseOutlined } from '@hmfw/ant-design'
+import { SearchOutlined, CheckOutlined, CloseOutlined } from '@hmfw/icons'
+import { Button } from '@hmfw/ant-design'
 </script>
