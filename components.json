@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -11329,12 +11329,12 @@
         {
           "title": "基础用法",
           "description": "最简单的用法。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div style=\"display: flex; align-items: center; gap: 8px\">\n      <Switch v-model:checked=\"checked\" />\n      <span>{{ checked ? '开启' : '关闭' }}</span>\n    </div>\n    <div style=\"display: flex; align-items: center; gap: 8px\">\n      <Switch v-model:checked=\"checked2\" disabled />\n      <span>禁用状态</span>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Switch } from '@hmfw/ant-design'\n\nconst checked = ref(false)\nconst checked2 = ref(true)\n</script>"
+          "code": "<template>\n  <Space direction=\"vertical\" size=\"middle\">\n    <div style=\"display: flex; align-items: center; gap: 8px\">\n      <Switch v-model:checked=\"checked\" />\n      <span>{{ checked ? '开启' : '关闭' }}</span>\n    </div>\n    <div style=\"display: flex; align-items: center; gap: 8px\">\n      <Switch v-model:checked=\"checked2\" disabled />\n      <span>禁用状态</span>\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Space, Switch } from '@hmfw/ant-design'\n\nconst checked = ref(false)\nconst checked2 = ref(true)\n</script>"
         },
         {
           "title": "文字和图标",
           "description": "带有文字和图标的开关。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Switch v-model:checked=\"checked1\" checked-children=\"开\" un-checked-children=\"关\" />\n    <Switch v-model:checked=\"checked2\" checked-children=\"✓\" un-checked-children=\"✗\" />\n    <Switch v-model:checked=\"checked3\" checked-children=\"ON\" un-checked-children=\"OFF\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Switch } from '@hmfw/ant-design'\n\nconst checked1 = ref(true)\nconst checked2 = ref(false)\nconst checked3 = ref(true)\n</script>"
+          "code": "<template>\n  <Space direction=\"vertical\" size=\"middle\">\n    <Switch v-model:checked=\"checked1\" checked-children=\"开启\" un-checked-children=\"关闭\" />\n    <Switch v-model:checked=\"checked2\" checked-children=\"✓\" un-checked-children=\"✗\" />\n    <Switch v-model:checked=\"checked3\" checked-children=\"ON\" un-checked-children=\"OFF\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Space, Switch } from '@hmfw/ant-design'\n\nconst checked1 = ref(true)\nconst checked2 = ref(false)\nconst checked3 = ref(true)\n</script>"
         },
         {
           "title": "加载中",
@@ -11344,7 +11344,7 @@
         {
           "title": "不同尺寸",
           "description": "`size=\"small\"` 表示小号开关。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div style=\"display: flex; align-items: center; gap: 16px\">\n      <Switch v-model:checked=\"checked1\" />\n      <span>默认大小</span>\n    </div>\n    <div style=\"display: flex; align-items: center; gap: 16px\">\n      <Switch v-model:checked=\"checked2\" size=\"small\" />\n      <span>小号开关</span>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Switch } from '@hmfw/ant-design'\n\nconst checked1 = ref(true)\nconst checked2 = ref(true)\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div style=\"display: flex; align-items: center; gap: 16px\">\n      <Switch v-model:checked=\"checked1\" />\n      <span>默认大小</span>\n    </div>\n    <div style=\"display: flex; align-items: center; gap: 16px\">\n      <Switch v-model:checked=\"checked2\" size=\"small\" />\n      <Switch v-model:checked=\"checked2\" size=\"small\" checked-children=\"on\" un-checked-children=\"off\" />\n      <span>小号开关</span>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Switch } from '@hmfw/ant-design'\n\nconst checked1 = ref(true)\nconst checked2 = ref(true)\n</script>"
         },
         {
           "title": "细粒度样式控制",
