@@ -22,7 +22,7 @@
 
 ### 图片卡片
 
-使用 `list-type="picture-card"` 展示图片卡片样式。
+使用 `list-type="picture-card"` 展示图片卡片样式。点击预览图标可查看大图。
 
 <DemoBlock title="图片卡片" :source="UploadPictureCardSource">
   <UploadPictureCard />
@@ -116,7 +116,8 @@
 | update:fileList | 文件列表变化时的回调                                            | `(fileList: UploadFile[]) => void`                                                          |
 | change          | 上传文件改变时的状态。进度变化时 `event` 字段携带 `{ percent }` | `(info: { file: UploadFile; fileList: UploadFile[]; event?: { percent: number } }) => void` |
 | remove          | 点击移除文件后触发（被 `onRemove` 拦截 false 时不触发）         | `(file: UploadFile) => void`                                                                |
-| preview         | 点击文件链接或预览图标时的回调                                  | `(file: UploadFile) => void`                                                                |
+| preview         | 点击预览图标时触发。对于图片文件，会自动打开内置预览弹窗        | `(file: UploadFile) => void`                                                                |
+| download        | 点击下载图标时触发（需配置 `showUploadList.showDownloadIcon`）  | `(file: UploadFile) => void`                                                                |
 | drop            | 文件拖拽到上传区域释放时触发                                    | `(event: DragEvent) => void`                                                                |
 
 ### Upload Slots
@@ -124,6 +125,23 @@
 | 插槽名  | 说明                             |
 | ------- | -------------------------------- |
 | default | 触发上传的控件，通常为按钮或图标 |
+
+### 图片预览
+
+Upload 组件内置了图片预览功能，当点击图片卡片的预览图标（👁）时：
+
+1. **自动判断**：通过 `isImageUrl` 函数判断文件是否为图片
+2. **触发事件**：先触发 `@preview` 事件，允许用户自定义行为
+3. **内置预览**：对于图片文件，自动打开预览弹窗，支持缩放、旋转等操作
+4. **非图片文件**：只触发 `@preview` 事件，不打开预览弹窗
+
+**自定义预览行为**：如果需要自定义预览逻辑（如跳转到详情页），可以监听 `@preview` 事件。内置预览不会影响自定义逻辑的执行。
+
+```vue
+<Upload list-type="picture-card" @preview="handlePreview">
+  <!-- 仍会触发内置图片预览 -->
+</Upload>
+```
 
 ## Upload.Dragger
 

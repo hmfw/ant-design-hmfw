@@ -76,6 +76,45 @@ describe('Transfer', () => {
     expect(wrapper.emitted('selectChange')).toBeFalsy()
   })
 
+  it('selects item on checkbox click', async () => {
+    const wrapper = mount(Transfer, { props: { dataSource } })
+    const firstItem = wrapper.findAll('.hmfw-transfer-list-content-item')[0]
+    const checkbox = firstItem.find('.hmfw-checkbox')
+    await checkbox.trigger('click')
+    expect(wrapper.emitted('selectChange')).toBeTruthy()
+    const selectChangeEvents = wrapper.emitted('selectChange') as any[]
+    // 验证最后一次事件包含 key '1'
+    const lastEvent = selectChangeEvents[selectChangeEvents.length - 1]
+    expect(lastEvent[0]).toContain('1') // key '1' is selected
+  })
+
+  it('deselects item on checkbox click when already selected', async () => {
+    const wrapper = mount(Transfer, { props: { dataSource, defaultSelectedKeys: ['1'] } })
+    const firstItem = wrapper.findAll('.hmfw-transfer-list-content-item')[0]
+    const checkbox = firstItem.find('.hmfw-checkbox')
+    await checkbox.trigger('click')
+    const selectChangeEvents = wrapper.emitted('selectChange') as any[]
+    // 验证最后一次事件不包含 key '1'
+    const lastEvent = selectChangeEvents[selectChangeEvents.length - 1]
+    expect(lastEvent[0]).not.toContain('1') // key '1' is deselected
+  })
+
+  it('checkbox and item text both trigger selection', async () => {
+    const wrapper = mount(Transfer, { props: { dataSource } })
+    const firstItem = wrapper.findAll('.hmfw-transfer-list-content-item')[0]
+
+    // 点击 checkbox 能触发选中
+    const checkbox = firstItem.find('.hmfw-checkbox')
+    await checkbox.trigger('click')
+    expect(wrapper.emitted('selectChange')).toBeTruthy()
+
+    // 点击列表项也能触发选中
+    const wrapper2 = mount(Transfer, { props: { dataSource } })
+    const secondItem = wrapper2.findAll('.hmfw-transfer-list-content-item')[1]
+    await secondItem.trigger('click')
+    expect(wrapper2.emitted('selectChange')).toBeTruthy()
+  })
+
   it('renders Input component when showSearch=true', () => {
     const wrapper = mount(Transfer, { props: { dataSource, showSearch: true } })
     const inputs = wrapper.findAll('.hmfw-input')

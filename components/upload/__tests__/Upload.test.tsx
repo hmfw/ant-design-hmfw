@@ -355,6 +355,161 @@ describe('Upload', () => {
     })
   })
 
+  // ============ Preview ============
+  describe('Preview', () => {
+    it('renders hidden Image component for preview', () => {
+      const wrapper = mount(Upload)
+      const image = wrapper.findComponent({ name: 'Image' })
+      expect(image.exists()).toBe(true)
+      expect(image.attributes('style')).toContain('display: none')
+    })
+
+    it('clicking preview button emits preview event', async () => {
+      const fileList = [
+        {
+          uid: '1',
+          name: 'image.png',
+          status: 'done' as const,
+          url: 'https://example.com/image.png',
+        },
+      ]
+      const wrapper = mount(Upload, {
+        props: { fileList, listType: 'picture-card' },
+      })
+      const previewBtn = wrapper.find('.hmfw-upload-list-item-card-actions button')
+      await previewBtn.trigger('click')
+      expect(wrapper.emitted('preview')).toBeTruthy()
+      expect(wrapper.emitted('preview')?.[0][0]).toEqual(fileList[0])
+    })
+
+    it('opens Image preview for image files', async () => {
+      const fileList = [
+        {
+          uid: '1',
+          name: 'image.png',
+          status: 'done' as const,
+          url: 'https://example.com/image.png',
+        },
+      ]
+      const wrapper = mount(Upload, {
+        props: { fileList, listType: 'picture-card' },
+      })
+      const previewBtn = wrapper.find('.hmfw-upload-list-item-card-actions button')
+      await previewBtn.trigger('click')
+      await nextTick()
+
+      const image = wrapper.findComponent({ name: 'Image' })
+      expect(image.props('preview')).toMatchObject({
+        open: true,
+        src: 'https://example.com/image.png',
+      })
+    })
+
+    it('uses thumbUrl if url is not present', async () => {
+      const fileList = [
+        {
+          uid: '1',
+          name: 'image.png',
+          status: 'done' as const,
+          thumbUrl: 'https://example.com/thumb.png',
+        },
+      ]
+      const wrapper = mount(Upload, {
+        props: { fileList, listType: 'picture-card' },
+      })
+      const previewBtn = wrapper.find('.hmfw-upload-list-item-card-actions button')
+      await previewBtn.trigger('click')
+      await nextTick()
+
+      const image = wrapper.findComponent({ name: 'Image' })
+      expect(image.props('preview')).toMatchObject({
+        open: true,
+        src: 'https://example.com/thumb.png',
+      })
+    })
+
+    it('does not open preview for non-image files', async () => {
+      const fileList = [
+        {
+          uid: '1',
+          name: 'document.pdf',
+          status: 'done' as const,
+          url: 'https://example.com/document.pdf',
+        },
+      ]
+      const wrapper = mount(Upload, {
+        props: { fileList, listType: 'picture-card' },
+      })
+      const previewBtn = wrapper.find('.hmfw-upload-list-item-card-actions button')
+      await previewBtn.trigger('click')
+      await nextTick()
+
+      const image = wrapper.findComponent({ name: 'Image' })
+      // 对于非图片文件，只触发事件，不打开预览
+      expect(image.props('preview')).toMatchObject({
+        open: false,
+      })
+      expect(wrapper.emitted('preview')).toBeTruthy()
+    })
+
+    it('closes preview when Image onOpenChange is called', async () => {
+      const fileList = [
+        {
+          uid: '1',
+          name: 'image.png',
+          status: 'done' as const,
+          url: 'https://example.com/image.png',
+        },
+      ]
+      const wrapper = mount(Upload, {
+        props: { fileList, listType: 'picture-card' },
+      })
+
+      // 打开预览
+      const previewBtn = wrapper.find('.hmfw-upload-list-item-card-actions button')
+      await previewBtn.trigger('click')
+      await nextTick()
+
+      let image = wrapper.findComponent({ name: 'Image' })
+      expect(image.props('preview')).toMatchObject({ open: true })
+
+      // 模拟关闭预览
+      const onOpenChange = (image.props('preview') as any).onOpenChange
+      onOpenChange(false)
+      await nextTick()
+
+      image = wrapper.findComponent({ name: 'Image' })
+      expect(image.props('preview')).toMatchObject({ open: false })
+    })
+
+    it('respects custom isImageUrl prop', async () => {
+      const customCheck = vi.fn().mockReturnValue(false)
+      const fileList = [
+        {
+          uid: '1',
+          name: 'image.png',
+          status: 'done' as const,
+          url: 'https://example.com/image.png',
+        },
+      ]
+      const wrapper = mount(Upload, {
+        props: {
+          fileList,
+          listType: 'picture-card',
+          isImageUrl: customCheck,
+        },
+      })
+
+      const previewBtn = wrapper.find('.hmfw-upload-list-item-card-actions button')
+      await previewBtn.trigger('click')
+      await nextTick()
+
+      const image = wrapper.findComponent({ name: 'Image' })
+      // 自定义判断返回 false，不应打开预览
+      expect(image.props('preview')).toMatchObject({ open: false })
+    })
+  })
+
   // ============ download ============
   it('renders download button when showDownloadIcon=true and url present', () => {
     const wrapper = mount(Upload, {

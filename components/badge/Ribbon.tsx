@@ -40,9 +40,11 @@ export const Ribbon = defineComponent({
       }),
     )
 
-    const colorStyle = computed(() => (props.color && !isPresetColor.value ? { background: props.color } : {}))
+    const colorStyle = computed(() =>
+      props.color && !isPresetColor.value ? { background: props.color, color: props.color } : {},
+    )
 
-    const cornerColorStyle = computed(() => (props.color && !isPresetColor.value ? { color: props.color } : {}))
+    const cornerColorStyle = computed(() => ({}))
 
     return () => (
       <div class={`${prefixCls}-wrapper`}>

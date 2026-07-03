@@ -1,6 +1,8 @@
 import { defineComponent, ref, computed, TransitionGroup, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
+import { Image } from '../image'
+import { EyeOutlined, DownloadOutlined, DeleteOutlined } from '@hmfw/icons'
 import type {
   UploadProps,
   UploadFile,
@@ -99,6 +101,11 @@ export const Upload = defineComponent({
     /** Track drag-enter depth so child elements don't toggle hover off. */
     const dragDepth = ref(0)
     const dragging = computed(() => dragDepth.value > 0)
+
+    /** 图片预览状态 */
+    const previewOpen = ref(false)
+    const previewImage = ref<string>('')
+    const previewTitle = ref<string>('')
 
     const fileList = computed(() => props.fileList ?? innerFileList.value)
 
@@ -268,6 +275,21 @@ export const Upload = defineComponent({
       emit('change', { file: { ...file, status: 'removed' }, fileList: next })
     }
 
+    const handlePreview = (file: UploadFile) => {
+      // 先触发 preview 事件，兼容用户自定义行为
+      emit('preview', file)
+
+      // 如果是图片文件，打开内置预览
+      if (checkImageUrl(file)) {
+        const url = file.url || file.thumbUrl
+        if (url) {
+          previewImage.value = url
+          previewTitle.value = file.name
+          previewOpen.value = true
+        }
+      }
+    }
+
     const triggerSelect = () => {
       if (!props.disabled && props.openFileDialogOnClick) inputRef.value?.click()
     }
@@ -350,9 +372,9 @@ export const Upload = defineComponent({
                   <button
                     class={cls(`${prefixCls}-list-item-action`, props.classNames?.itemAction)}
                     style={props.styles?.itemAction}
-                    onClick={() => emit('preview', file)}
+                    onClick={() => handlePreview(file)}
                   >
-                    👁
+                    <EyeOutlined />
                   </button>
                 )}
                 {showDownload.value && file.url && (
@@ -361,7 +383,7 @@ export const Upload = defineComponent({
                     style={props.styles?.itemAction}
                     onClick={() => emit('download', file)}
                   >
-                    ⬇
+                    <DownloadOutlined />
                   </button>
                 )}
                 {showRemove.value && (
@@ -370,7 +392,7 @@ export const Upload = defineComponent({
                     style={props.styles?.itemAction}
                     onClick={() => handleRemove(file)}
                   >
-                    🗑
+                    <DeleteOutlined />
                   </button>
                 )}
               </div>
@@ -455,7 +477,7 @@ export const Upload = defineComponent({
             if (props.itemRender) {
               const actions: ItemRenderActions = {
                 download: () => emit('download', file),
-                preview: () => emit('preview', file),
+                preview: () => handlePreview(file),
                 remove: () => handleRemove(file),
               }
               return (
@@ -607,6 +629,17 @@ export const Upload = defineComponent({
             {renderFileList()}
           </>
         )}
+        {/* 图片预览 */}
+        <Image
+          style={{ display: 'none' }}
+          preview={{
+            open: previewOpen.value,
+            onOpenChange: (open) => {
+              previewOpen.value = open
+            },
+            src: previewImage.value,
+          }}
+        />
       </div>
     )
   },

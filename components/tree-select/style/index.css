@@ -1,7 +1,6 @@
 .hmfw-tree-select {
   position: relative;
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
   width: 100%;
   cursor: pointer;
   font-size: 14px;
@@ -112,9 +111,13 @@
   right: 11px;
   top: 50%;
   transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
   color: rgba(0, 0, 0, 0.25);
   font-size: 12px;
+  line-height: 1;
 }
 
 .hmfw-tree-select-arrow-icon {
@@ -145,11 +148,11 @@
   transition: color 0.2s;
 }
 
-.hmfw-tree-select:hover .hmfw-tree-select-clear {
+.hmfw-tree-select:has(.hmfw-tree-select-clear):hover .hmfw-tree-select-clear {
   display: inline-flex;
 }
 
-.hmfw-tree-select:hover .hmfw-tree-select-arrow {
+.hmfw-tree-select:has(.hmfw-tree-select-clear):hover .hmfw-tree-select-arrow {
   display: none;
 }
 

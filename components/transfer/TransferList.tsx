@@ -412,6 +412,12 @@ export const TransferList = defineComponent({
               style={ss('itemIcon')}
               checked={checked}
               disabled={mergedDisabled}
+              onChange={(e: any) => {
+                if (!mergedDisabled) {
+                  e.nativeEvent?.stopPropagation()
+                  emit('itemSelect', key, !checked)
+                }
+              }}
             />
             {labelNode}
           </li>
