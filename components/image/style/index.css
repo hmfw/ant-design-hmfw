@@ -1,13 +1,13 @@
 .hmfw-image {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
 }
 
 .hmfw-image-img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
 }
 
 .hmfw-image-preview .hmfw-image-img {
@@ -67,7 +67,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1;
   min-width: 96px;
   min-height: 96px;
   background: var(--hmfw-color-fill-quaternary, rgba(0, 0, 0, 0.02));
