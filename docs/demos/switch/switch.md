@@ -253,6 +253,29 @@ interface SwitchStyles {
 
 Switch 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
 
-| Token 名称             | 说明                                         | 默认值    |
-| ---------------------- | -------------------------------------------- | --------- |
-| `--hmfw-color-primary` | 主题色，用于选中状态的背景色和加载图标边框色 | `#1677ff` |
+### 全局 Token
+
+| Token 名称                   | 说明                                         | 默认值    |
+| ---------------------------- | -------------------------------------------- | --------- |
+| `--hmfw-color-primary`       | 主题色，用于选中状态的背景色和加载图标边框色 | `#1677ff` |
+| `--hmfw-motion-duration-mid` | 背景、内容切换的过渡动画时长                 | `0.2s`    |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-switch` 上，可直接覆盖以定制单个组件的尺寸与样式。
+
+| Token 名称                          | 说明                         | 默认值                             |
+| ----------------------------------- | ---------------------------- | ---------------------------------- |
+| `--hmfw-switch-handle-bg`           | 手柄背景色                   | `#fff`                             |
+| `--hmfw-switch-handle-shadow`       | 手柄阴影                     | `0 2px 4px 0 rgba(0, 35, 11, 0.2)` |
+| `--hmfw-switch-handle-size`         | 默认尺寸手柄大小             | `18px`                             |
+| `--hmfw-switch-handle-size-sm`      | 小尺寸手柄大小               | `12px`                             |
+| `--hmfw-switch-inner-max-margin`    | 默认尺寸内容区较宽一侧内边距 | `24px`                             |
+| `--hmfw-switch-inner-max-margin-sm` | 小尺寸内容区较宽一侧内边距   | `18px`                             |
+| `--hmfw-switch-inner-min-margin`    | 默认尺寸内容区较窄一侧内边距 | `9px`                              |
+| `--hmfw-switch-inner-min-margin-sm` | 小尺寸内容区较窄一侧内边距   | `6px`                              |
+| `--hmfw-switch-track-height`        | 默认尺寸轨道高度             | `22px`                             |
+| `--hmfw-switch-track-height-sm`     | 小尺寸轨道高度               | `16px`                             |
+| `--hmfw-switch-track-min-width`     | 默认尺寸轨道最小宽度         | `44px`                             |
+| `--hmfw-switch-track-min-width-sm`  | 小尺寸轨道最小宽度           | `28px`                             |
+| `--hmfw-switch-track-padding`       | 轨道内边距（手柄与边缘间距） | `2px`                              |

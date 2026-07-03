@@ -1,44 +1,52 @@
 .hmfw-rate {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--hmfw-margin-xs, 8px);
-  list-style: none;
+  --hmfw-rate-star-color: #fadb14; /* Rate 专用：星星颜色，对应 Ant Design 的 yellow */
+  --hmfw-rate-star-bg: var(--hmfw-color-fill-content, rgba(0, 0, 0, 0.06)); /* Rate 专用：星星背景色 */
+  --hmfw-rate-star-size: calc(var(--hmfw-control-height, 32px) * 0.625); /* Rate 专用：星星尺寸 */
+  --hmfw-rate-star-size-sm: calc(var(--hmfw-control-height-sm, 24px) * 0.625); /* Rate 专用：小星星尺寸 */
+  --hmfw-rate-star-size-lg: calc(var(--hmfw-control-height-lg, 40px) * 0.625); /* Rate 专用：大星星尺寸 */
+  --hmfw-rate-star-hover-scale: 1.1; /* Rate 专用：悬浮缩放比例 */
+
+  display: inline-block;
   margin: 0;
   padding: 0;
+  list-style: none;
   outline: none;
-  font-size: calc(var(--hmfw-control-height, 32px) * 0.625);
+  font-size: var(--hmfw-rate-star-size);
   line-height: 1;
-  cursor: pointer;
-  color: var(--hmfw-color-warning, #faad14);
+  color: var(--hmfw-rate-star-color);
 }
 
 .hmfw-rate-small {
-  font-size: calc(var(--hmfw-control-height-sm, 24px) * 0.625);
+  font-size: var(--hmfw-rate-star-size-sm);
 }
 
 .hmfw-rate-large {
-  font-size: calc(var(--hmfw-control-height-lg, 40px) * 0.625);
+  font-size: var(--hmfw-rate-star-size-lg);
 }
 
 .hmfw-rate-disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+  cursor: default;
 }
 
 .hmfw-rate-star {
   position: relative;
   display: inline-block;
-  color: var(--hmfw-color-fill-secondary, #f0f0f0);
+  color: inherit;
   cursor: pointer;
-  transition: transform var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+}
+
+.hmfw-rate-star:not(:last-child) {
+  margin-inline-end: var(--hmfw-margin-xs, 8px);
 }
 
 .hmfw-rate-star > div {
-  transition: all var(--hmfw-motion-duration-mid, 0.2s);
+  transition:
+    all var(--hmfw-motion-duration-mid, 0.2s),
+    outline 0s;
 }
 
 .hmfw-rate-star > div:hover {
-  transform: scale(1.1);
+  transform: scale(var(--hmfw-rate-star-hover-scale));
 }
 
 .hmfw-rate-star > div:focus {
@@ -46,30 +54,21 @@
 }
 
 .hmfw-rate-star > div:focus-visible {
-  outline: 1px dashed var(--hmfw-color-warning, #faad14);
-  transform: scale(1.1);
+  outline: 1px dashed var(--hmfw-rate-star-color);
+  transform: scale(var(--hmfw-rate-star-hover-scale));
+}
+
+.hmfw-rate-disabled .hmfw-rate-star {
+  cursor: default;
 }
 
 .hmfw-rate-disabled .hmfw-rate-star > div:hover {
-  transform: none;
-}
-
-.hmfw-rate-star-full .hmfw-rate-star-second {
-  color: inherit;
-}
-
-.hmfw-rate-star-half .hmfw-rate-star-first,
-.hmfw-rate-star-half .hmfw-rate-star-second {
-  opacity: 1;
-}
-
-.hmfw-rate-star-half .hmfw-rate-star-first {
-  color: inherit;
+  transform: scale(1);
 }
 
 .hmfw-rate-star-first,
 .hmfw-rate-star-second {
-  color: var(--hmfw-color-fill-secondary, #f0f0f0);
+  color: var(--hmfw-rate-star-bg);
   transition: all var(--hmfw-motion-duration-mid, 0.2s);
   user-select: none;
 }
@@ -77,7 +76,7 @@
 .hmfw-rate-star-first {
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   width: 50%;
   height: 100%;
   overflow: hidden;
@@ -88,12 +87,17 @@
   display: block;
 }
 
-/* RTL：半星位置反转到右侧 */
-.hmfw-rate-rtl {
-  direction: rtl;
+.hmfw-rate-star-half .hmfw-rate-star-first,
+.hmfw-rate-star-half .hmfw-rate-star-second {
+  opacity: 1;
 }
 
-.hmfw-rate-rtl .hmfw-rate-star-first {
-  left: auto;
-  right: 0;
+.hmfw-rate-star-half .hmfw-rate-star-first,
+.hmfw-rate-star-full .hmfw-rate-star-second {
+  color: inherit;
+}
+
+/* RTL 支持 */
+.hmfw-rate-rtl {
+  direction: rtl;
 }

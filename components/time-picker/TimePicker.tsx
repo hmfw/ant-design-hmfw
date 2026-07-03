@@ -135,15 +135,16 @@ export const TimePicker = defineComponent({
       return formatTime(innerH.value, innerM.value, innerS.value, props.format)
     })
 
-    // 当前显示的值（needConfirm=true 时使用 staged，否则使用 inner）
+    // 当前显示的值（面板内部显示的值）
     const currentVal = computed(() => {
+      // needConfirm=true 时，面板内始终显示临时态（staged）
+      if (props.needConfirm) {
+        return { h: stagedH.value, m: stagedM.value, s: stagedS.value }
+      }
+      // needConfirm=false 时，使用已确认的值
       if (props.value !== undefined) {
         const p = parseTime(props.value)
         return { h: p.h, m: p.m, s: p.s }
-      }
-      // needConfirm=true 时显示临时态
-      if (props.needConfirm) {
-        return { h: stagedH.value, m: stagedM.value, s: stagedS.value }
       }
       return { h: innerH.value, m: innerM.value, s: innerS.value }
     })
@@ -193,6 +194,7 @@ export const TimePicker = defineComponent({
         stagedM.value = innerM.value
         stagedS.value = innerS.value
       }
+      lastScrolledValue.value = {}
       innerOpen.value = false
       emit('openChange', false)
     }
@@ -283,65 +285,72 @@ export const TimePicker = defineComponent({
 
     const showSec = computed(() => hasSeconds(props.format))
 
-    // 性能优化：使用 transform 替代 scrollIntoView，带缓存和节流
-    let scrollRafId = 0
+    // 性能优化：使用 scrollTop 实现容器内滚动，避免影响页面滚动
+    const scrollRafIds = ref<Record<string, number>>({})
     const lastScrolledValue = ref<Record<string, number | string>>({})
 
     const scrollColumnToValue = (
       colRef: HTMLElement | undefined,
       value: number | string,
       cacheKey: 'h' | 'm' | 's' | 'p',
+      immediate = false, // 是否立即滚动（无动画）
     ) => {
       if (!colRef) return
-      // 缓存优化：值未变化时跳过
-      if (lastScrolledValue.value[cacheKey] === value) return
+      // immediate=true 跳过缓存，避免面板打开时的缓存命中导致不滚动
+      if (!immediate && lastScrolledValue.value[cacheKey] === value) return
       lastScrolledValue.value[cacheKey] = value
 
-      // requestAnimationFrame 节流
-      if (scrollRafId) cancelAnimationFrame(scrollRafId)
-      scrollRafId = requestAnimationFrame(() => {
+      const doScroll = () => {
         const item = colRef.querySelector(`[data-value="${value}"]`) as HTMLElement
-        if (item && typeof item.scrollIntoView === 'function') {
-          // 使用 scrollIntoView 兼容 jsdom（测试环境不支持 scrollTo）
-          item.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+        if (item) {
+          // 将选中项滚动到容器顶部
+          const targetScrollTop = item.offsetTop
+
+          // 使用 scrollTo 实现平滑滚动，仅在容器内滚动，不影响页面
+          // 降级处理：JSDOM 环境不支持 scrollTo，使用 scrollTop
+          if (immediate) {
+            // 立即滚动，无动画，直接设置 scrollTop
+            colRef.scrollTop = targetScrollTop
+          } else if (typeof colRef.scrollTo === 'function') {
+            colRef.scrollTo({
+              top: targetScrollTop,
+              behavior: 'smooth',
+            })
+          } else {
+            colRef.scrollTop = targetScrollTop
+          }
         }
-      })
+      }
+
+      if (immediate) {
+        // 立即模式：同步执行，不使用 RAF
+        doScroll()
+      } else {
+        // 平滑模式：使用 RAF 节流（每列独立的 RAF ID）
+        if (scrollRafIds.value[cacheKey]) {
+          cancelAnimationFrame(scrollRafIds.value[cacheKey])
+        }
+        scrollRafIds.value[cacheKey] = requestAnimationFrame(() => {
+          doScroll()
+          delete scrollRafIds.value[cacheKey]
+        })
+      }
     }
 
-    // 面板打开时滚动到当前值
-    watch(isOpen, (open) => {
-      if (open) {
-        nextTick(() => {
-          const h = props.use12Hours ? currentVal.value.h % 12 || 12 : currentVal.value.h
-          scrollColumnToValue(hourColRef.value, h, 'h')
-          scrollColumnToValue(minuteColRef.value, currentVal.value.m, 'm')
-          if (showSec.value) {
-            scrollColumnToValue(secondColRef.value, currentVal.value.s, 's')
-          }
-          if (props.use12Hours) {
-            scrollColumnToValue(periodColRef.value, currentPeriod.value, 'p')
-          }
-        })
-      } else {
-        // 关闭时清空缓存
-        lastScrolledValue.value = {}
-      }
-    })
-
-    // 值变化时滚动（仅在面板打开时）
+    // 值变化时滚动（仅在面板打开时，带平滑动画）
     watch(
       () => [currentVal.value.h, currentVal.value.m, currentVal.value.s, currentPeriod.value],
       () => {
         if (isOpen.value) {
           nextTick(() => {
             const h = props.use12Hours ? currentVal.value.h % 12 || 12 : currentVal.value.h
-            scrollColumnToValue(hourColRef.value, h, 'h')
-            scrollColumnToValue(minuteColRef.value, currentVal.value.m, 'm')
+            scrollColumnToValue(hourColRef.value, h, 'h', false)
+            scrollColumnToValue(minuteColRef.value, currentVal.value.m, 'm', false)
             if (showSec.value) {
-              scrollColumnToValue(secondColRef.value, currentVal.value.s, 's')
+              scrollColumnToValue(secondColRef.value, currentVal.value.s, 's', false)
             }
             if (props.use12Hours) {
-              scrollColumnToValue(periodColRef.value, currentPeriod.value, 'p')
+              scrollColumnToValue(periodColRef.value, currentPeriod.value, 'p', false)
             }
           })
         }
@@ -398,115 +407,97 @@ export const TimePicker = defineComponent({
       blur: () => inputRef.value?.blur(),
     })
 
+    const renderColumn = <T extends number | string>(config: {
+      items: { value: T; disabled: boolean }[]
+      colRef: typeof hourColRef | typeof minuteColRef | typeof secondColRef | typeof periodColRef
+      isSelected: (value: T) => boolean
+      onClick: (value: T, disabled: boolean) => void
+      formatValue?: (value: T) => string
+      selectedValue: T // 当前选中值，用于计算初始滚动位置
+    }) => {
+      const {
+        items,
+        colRef,
+        isSelected,
+        onClick,
+        formatValue = (v) => (typeof v === 'number' ? pad(v) : String(v)),
+        selectedValue,
+      } = config
+      return (
+        <ul
+          class={cls(`${prefixCls}-panel-column`, props.classNames?.column)}
+          style={props.styles?.column}
+          ref={(el) => {
+            const element = el as HTMLElement
+            const isFirstMount = !colRef.value && element
+            colRef.value = element
+            // 只在首次挂载时设置初始滚动位置
+            if (isFirstMount && isOpen.value) {
+              nextTick(() => {
+                const selectedItem = element.querySelector(`[data-value="${selectedValue}"]`) as HTMLElement
+                if (selectedItem) {
+                  element.scrollTop = selectedItem.offsetTop
+                }
+              })
+            }
+          }}
+        >
+          {items.map(({ value, disabled }) => (
+            <li
+              key={value}
+              data-value={value}
+              class={cls(
+                `${prefixCls}-panel-cell`,
+                {
+                  [`${prefixCls}-panel-cell-selected`]: isSelected(value),
+                  [`${prefixCls}-panel-cell-disabled`]: disabled,
+                },
+                props.classNames?.cell,
+              )}
+              style={props.styles?.cell}
+              onClick={() => onClick(value, disabled)}
+            >
+              {formatValue(value)}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
     const renderPanel = () => (
       <div ref={panelRef} class={cls(`${prefixCls}-popup`, props.classNames?.popup)} style={props.styles?.popup}>
         <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
           <div class={cls(`${prefixCls}-panel-inner`, props.classNames?.panelInner)} style={props.styles?.panelInner}>
-            {/* Hour column */}
-            <ul
-              class={cls(`${prefixCls}-panel-column`, props.classNames?.column)}
-              style={props.styles?.column}
-              ref={hourColRef}
-            >
-              {hours.value.map(({ value: h, disabled }) => (
-                <li
-                  key={h}
-                  data-value={h}
-                  class={cls(
-                    `${prefixCls}-panel-cell`,
-                    {
-                      [`${prefixCls}-panel-cell-selected`]: props.use12Hours
-                        ? (currentVal.value.h % 12 || 12) === h
-                        : currentVal.value.h === h,
-                      [`${prefixCls}-panel-cell-disabled`]: disabled,
-                    },
-                    props.classNames?.cell,
-                  )}
-                  style={props.styles?.cell}
-                  onClick={() => handleHourClick(h, disabled)}
-                >
-                  {pad(h)}
-                </li>
-              ))}
-            </ul>
-            {/* Minute column */}
-            <ul
-              class={cls(`${prefixCls}-panel-column`, props.classNames?.column)}
-              style={props.styles?.column}
-              ref={minuteColRef}
-            >
-              {minutes.value.map(({ value: m, disabled }) => (
-                <li
-                  key={m}
-                  data-value={m}
-                  class={cls(
-                    `${prefixCls}-panel-cell`,
-                    {
-                      [`${prefixCls}-panel-cell-selected`]: currentVal.value.m === m,
-                      [`${prefixCls}-panel-cell-disabled`]: disabled,
-                    },
-                    props.classNames?.cell,
-                  )}
-                  style={props.styles?.cell}
-                  onClick={() => handleMinuteClick(m, disabled)}
-                >
-                  {pad(m)}
-                </li>
-              ))}
-            </ul>
-            {/* Second column */}
-            {showSec.value && (
-              <ul
-                class={cls(`${prefixCls}-panel-column`, props.classNames?.column)}
-                style={props.styles?.column}
-                ref={secondColRef}
-              >
-                {seconds.value.map(({ value: s, disabled }) => (
-                  <li
-                    key={s}
-                    data-value={s}
-                    class={cls(
-                      `${prefixCls}-panel-cell`,
-                      {
-                        [`${prefixCls}-panel-cell-selected`]: currentVal.value.s === s,
-                        [`${prefixCls}-panel-cell-disabled`]: disabled,
-                      },
-                      props.classNames?.cell,
-                    )}
-                    style={props.styles?.cell}
-                    onClick={() => handleSecondClick(s, disabled)}
-                  >
-                    {pad(s)}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {/* AM/PM column */}
-            {props.use12Hours && (
-              <ul
-                class={cls(`${prefixCls}-panel-column`, props.classNames?.column)}
-                style={props.styles?.column}
-                ref={periodColRef}
-              >
-                {periods.value.map(({ value: period }) => (
-                  <li
-                    key={period}
-                    data-value={period}
-                    class={cls(
-                      `${prefixCls}-panel-cell`,
-                      {
-                        [`${prefixCls}-panel-cell-selected`]: currentPeriod.value === period,
-                      },
-                      props.classNames?.cell,
-                    )}
-                    style={props.styles?.cell}
-                    onClick={() => handlePeriodClick(period)}
-                  >
-                    {period}
-                  </li>
-                ))}
-              </ul>
-            )}
+            {renderColumn({
+              items: hours.value,
+              colRef: hourColRef,
+              isSelected: (h) => (props.use12Hours ? (currentVal.value.h % 12 || 12) === h : currentVal.value.h === h),
+              onClick: handleHourClick,
+              selectedValue: props.use12Hours ? currentVal.value.h % 12 || 12 : currentVal.value.h,
+            })}
+            {renderColumn({
+              items: minutes.value,
+              colRef: minuteColRef,
+              isSelected: (m) => currentVal.value.m === m,
+              onClick: handleMinuteClick,
+              selectedValue: currentVal.value.m,
+            })}
+            {showSec.value &&
+              renderColumn({
+                items: seconds.value,
+                colRef: secondColRef,
+                isSelected: (s) => currentVal.value.s === s,
+                onClick: handleSecondClick,
+                selectedValue: currentVal.value.s,
+              })}
+            {props.use12Hours &&
+              renderColumn({
+                items: periods.value,
+                colRef: periodColRef,
+                isSelected: (period) => currentPeriod.value === period,
+                onClick: handlePeriodClick,
+                selectedValue: currentPeriod.value,
+              })}
           </div>
           <div class={cls(`${prefixCls}-panel-footer`, props.classNames?.footer)} style={props.styles?.footer}>
             <div
@@ -597,7 +588,7 @@ export const TimePicker = defineComponent({
               </span>
             </span>
           ),
-          popup: ({ placement }: { placement: Placement }) => renderPanel(),
+          popup: ({ placement: _placement }: { placement: Placement }) => renderPanel(),
         }}
       </Trigger>
     )

@@ -30,8 +30,10 @@ export const Rate = defineComponent({
     const prefixCls = usePrefixCls('rate')
     const config = useConfig()
     const containerRef = ref<HTMLUListElement>()
+    const starRefs = ref<(HTMLElement | null)[]>([])
     const innerValue = ref(props.defaultValue ?? props.value ?? 0)
     const hoverValue = ref<number | null>(null)
+    const cleanedValue = ref<number | null>(null)
     const focused = ref(false)
 
     const isControlled = computed(() => props.value !== undefined)
@@ -60,33 +62,80 @@ export const Rate = defineComponent({
       blur: () => containerRef.value?.blur(),
     })
 
+    // 获取星星元素的引用
+    const setStarRef = (index: number) => (el: any) => {
+      if (el) {
+        starRefs.value[index] = el
+      }
+    }
+
+    // 根据鼠标位置精确计算星星值（支持半星）
+    const getStarValue = (index: number, pageX: number): number => {
+      const reverse = isRTL.value
+      let starValue = index + 1
+
+      if (props.allowHalf) {
+        const starEle = starRefs.value[index]
+        if (starEle) {
+          const rect = starEle.getBoundingClientRect()
+          const leftDis = rect.left + window.scrollX
+          const width = starEle.clientWidth
+          const offsetX = pageX - leftDis
+
+          if (reverse && offsetX > width / 2) {
+            starValue -= 0.5
+          } else if (!reverse && offsetX < width / 2) {
+            starValue -= 0.5
+          }
+        }
+      }
+
+      return starValue
+    }
+
     const setValue = (v: number) => {
       if (props.disabled) return
-      let next = v
-      if (props.allowClear && v === currentValue.value) next = 0
-      innerValue.value = next
-      emit('update:value', next)
-      emit('change', next)
+      innerValue.value = v
+      emit('update:value', v)
+      emit('change', v)
     }
 
-    const getStarValue = (index: number, isHalf: boolean) => {
-      return isHalf ? index + 0.5 : index + 1
+    const handleClick = (event: MouseEvent, index: number) => {
+      if (props.disabled) return
+
+      const newValue = getStarValue(index, event.pageX)
+      let isReset = false
+
+      if (props.allowClear) {
+        isReset = newValue === currentValue.value
+      }
+
+      // 清除 hover 状态
+      hoverValue.value = null
+      emit('hoverChange', undefined)
+
+      // 设置新值或重置
+      setValue(isReset ? 0 : newValue)
+      cleanedValue.value = isReset ? newValue : null
     }
 
-    const handleClick = (index: number, isHalf: boolean) => {
-      setValue(getStarValue(index, isHalf))
-    }
+    const handleMouseMove = (event: MouseEvent, index: number) => {
+      if (props.disabled) return
 
-    const handleMouseMove = (index: number, isHalf: boolean) => {
-      const v = getStarValue(index, isHalf)
-      if (hoverValue.value !== v) {
-        hoverValue.value = v
-        emit('hoverChange', v)
+      const v = getStarValue(index, event.pageX)
+      if (v !== cleanedValue.value) {
+        if (hoverValue.value !== v) {
+          hoverValue.value = v
+          emit('hoverChange', v)
+        }
+        cleanedValue.value = null
       }
     }
 
     const handleMouseLeave = () => {
+      if (props.disabled) return
       hoverValue.value = null
+      cleanedValue.value = null
       emit('hoverChange', undefined)
     }
 
@@ -96,9 +145,18 @@ export const Rate = defineComponent({
       const val = displayValue.value
       const full = index + 1
       const half = index + 0.5
-      if (val >= full) return 'full'
-      if (props.allowHalf && val >= half) return 'half'
-      return 'zero'
+
+      // 焦点状态：value=0 时第一颗星获得焦点，或当前值对应的星获得焦点
+      const isFocused = focused.value && (val === 0 ? index === 0 : full === val)
+
+      let status: 'full' | 'half' | 'zero' = 'zero'
+      if (val >= full) {
+        status = 'full'
+      } else if (props.allowHalf && val >= half) {
+        status = 'half'
+      }
+
+      return { status, isFocused }
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -108,26 +166,35 @@ export const Rate = defineComponent({
       const { key } = e
       const val = currentValue.value
       const step = props.allowHalf ? 0.5 : 1
-      // RTL 下左右方向键语义反转
-      const increaseKeys = isRTL.value ? ['ArrowLeft', 'ArrowUp'] : ['ArrowRight', 'ArrowUp']
-      const decreaseKeys = isRTL.value ? ['ArrowRight', 'ArrowDown'] : ['ArrowLeft', 'ArrowDown']
+      const reverse = isRTL.value
 
-      if (increaseKeys.includes(key)) {
+      let shouldPrevent = false
+      let nextValue = val
+
+      // RTL 下左右方向键语义反转
+      if (key === 'ArrowRight' && !reverse && val < props.count) {
+        nextValue = val + step
+        shouldPrevent = true
+      } else if (key === 'ArrowLeft' && !reverse && val > 0) {
+        nextValue = val - step
+        shouldPrevent = true
+      } else if (key === 'ArrowRight' && reverse && val > 0) {
+        nextValue = val - step
+        shouldPrevent = true
+      } else if (key === 'ArrowLeft' && reverse && val < props.count) {
+        nextValue = val + step
+        shouldPrevent = true
+      } else if (key === 'ArrowUp' && val < props.count) {
+        nextValue = val + step
+        shouldPrevent = true
+      } else if (key === 'ArrowDown' && val > 0) {
+        nextValue = val - step
+        shouldPrevent = true
+      }
+
+      if (shouldPrevent && nextValue !== val) {
         e.preventDefault()
-        const next = Math.min(val + step, props.count)
-        if (next !== val) setValue(next)
-      } else if (decreaseKeys.includes(key)) {
-        e.preventDefault()
-        const next = Math.max(val - step, 0)
-        if (next !== val) setValue(next)
-      } else if (key === 'Home') {
-        // ARIA APG slider 风格：跳到最小值 0
-        e.preventDefault()
-        if (val !== 0) setValue(0)
-      } else if (key === 'End') {
-        // ARIA APG slider 风格：跳到最大值 count
-        e.preventDefault()
-        if (val !== props.count) setValue(props.count)
+        setValue(nextValue)
       }
     }
 
@@ -143,11 +210,14 @@ export const Rate = defineComponent({
     }
 
     const renderStar = (index: number) => {
-      const status = getStarStatus(index)
+      const { status, isFocused } = getStarStatus(index)
       const tooltipItem = props.tooltips?.[index]
+      const starValue = index + 1
+      const isActive = status === 'half' || status === 'full'
 
       const starNode = (
         <li
+          ref={setStarRef(index)}
           key={index}
           class={cls(
             `${prefixCls}-star`,
@@ -155,32 +225,28 @@ export const Rate = defineComponent({
               [`${prefixCls}-star-full`]: status === 'full',
               [`${prefixCls}-star-half`]: status === 'half',
               [`${prefixCls}-star-zero`]: status === 'zero',
+              [`${prefixCls}-star-active`]: isActive,
+              [`${prefixCls}-star-focused`]: isFocused,
             },
             props.classNames?.star,
           )}
           style={props.styles?.star}
-          role="radio"
-          aria-checked={status !== 'zero'}
-          aria-posinset={index + 1}
-          aria-setsize={props.count}
         >
-          {props.allowHalf && (
-            <div
-              class={cls(`${prefixCls}-star-first`, props.classNames?.starFirst)}
-              style={props.styles?.starFirst}
-              onClick={() => !props.disabled && handleClick(index, true)}
-              onMousemove={() => !props.disabled && handleMouseMove(index, true)}
-            >
+          <div
+            onClick={(e) => handleClick(e as any, index)}
+            onMousemove={(e) => handleMouseMove(e as any, index)}
+            role="radio"
+            aria-checked={displayValue.value > index ? 'true' : 'false'}
+            aria-posinset={index + 1}
+            aria-setsize={props.count}
+            tabindex={props.disabled ? -1 : 0}
+          >
+            <div class={cls(`${prefixCls}-star-first`, props.classNames?.starFirst)} style={props.styles?.starFirst}>
               {renderCharacter(index, true)}
             </div>
-          )}
-          <div
-            class={cls(`${prefixCls}-star-second`, props.classNames?.starSecond)}
-            style={props.styles?.starSecond}
-            onClick={() => !props.disabled && handleClick(index, false)}
-            onMousemove={() => !props.disabled && handleMouseMove(index, false)}
-          >
-            {renderCharacter(index, false)}
+            <div class={cls(`${prefixCls}-star-second`, props.classNames?.starSecond)} style={props.styles?.starSecond}>
+              {renderCharacter(index, false)}
+            </div>
           </div>
         </li>
       )

@@ -124,15 +124,10 @@ export const Switch = defineComponent({
           onBlur={handleBlur}
           disabled={isDisabled.value}
         >
-          <span class={cls(`${prefixCls}-handle`, props.classNames?.handle)} style={props.styles?.handle}>
-            {isLoading.value && (
-              <span
-                class={cls(`${prefixCls}-loading-icon`, props.classNames?.loadingIcon)}
-                style={props.styles?.loadingIcon}
-              />
-            )}
+          <span class={cls(`${prefixCls}-handle`, props.classNames?.indicator)} style={props.styles?.indicator}>
+            {isLoading.value && <span class={`${prefixCls}-loading-icon`} />}
           </span>
-          <span class={cls(`${prefixCls}-inner`, props.classNames?.inner)} style={props.styles?.inner}>
+          <span class={cls(`${prefixCls}-inner`, props.classNames?.content)} style={props.styles?.content}>
             <span class={cls(`${prefixCls}-inner-checked`, props.classNames?.checked)} style={props.styles?.checked}>
               {slots.checkedChildren?.() ?? props.checkedChildren}
             </span>

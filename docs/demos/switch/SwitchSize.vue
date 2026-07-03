@@ -6,6 +6,7 @@
     </div>
     <div style="display: flex; align-items: center; gap: 16px">
       <Switch v-model:checked="checked2" size="small" />
+      <Switch v-model:checked="checked2" size="small" checked-children="on" un-checked-children="off" />
       <span>小号开关</span>
     </div>
   </div>

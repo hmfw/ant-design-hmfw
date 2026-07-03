@@ -28,6 +28,8 @@ export interface MapTokens extends SeedTokens {
   colorFillSecondary: string
   colorFillTertiary: string
   colorFillQuaternary: string
+  colorFillContent: string
+  colorFillContentHover: string
 
   // Color primary variants
   colorPrimaryHover: string
@@ -170,6 +172,8 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     colorFillSecondary: 'rgba(0,0,0,0.06)',
     colorFillTertiary: 'rgba(0,0,0,0.04)',
     colorFillQuaternary: 'rgba(0,0,0,0.02)',
+    colorFillContent: 'rgba(0,0,0,0.06)', // = colorFillSecondary
+    colorFillContentHover: 'rgba(0,0,0,0.15)', // = colorFill
 
     colorPrimaryHover: lighten(seed.colorPrimary, 0.2),
     colorPrimaryActive: darken(seed.colorPrimary, 0.1),

@@ -297,16 +297,56 @@ interface RateStyles {
 
 Rate 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
 
-| Token 名称                    | 说明           | 默认值                                 |
-| ----------------------------- | -------------- | -------------------------------------- |
-| `--hmfw-color-fill-secondary` | 次级填充色     | `rgba(0,0,0,0.06)`                     |
-| `--hmfw-color-warning`        | 警告色（星星） | `#faad14`                              |
-| `--hmfw-control-height`       | 标准控件高度   | `32px`                                 |
-| `--hmfw-control-height-lg`    | 大号控件高度   | `40px`                                 |
-| `--hmfw-control-height-sm`    | 小号控件高度   | `24px`                                 |
-| `--hmfw-margin-xs`            | 超小间距       | `4px`                                  |
-| `--hmfw-motion-duration-mid`  | 中速动画时长   | `0.2s`                                 |
-| `--hmfw-motion-ease-in-out`   | 缓入缓出曲线   | `cubic-bezier(0.645, 0.045, 0.355, 1)` |
+### 组件专有 Token
+
+Rate 组件提供以下专有 CSS 变量，可直接覆盖以定制样式：
+
+| Token 名称                     | 说明             | 默认值                           |
+| ------------------------------ | ---------------- | -------------------------------- |
+| `--hmfw-rate-star-color`       | 星星激活颜色     | `#fadb14`                        |
+| `--hmfw-rate-star-bg`          | 星星背景色       | `rgba(0, 0, 0, 0.06)`            |
+| `--hmfw-rate-star-size`        | 星星尺寸（默认） | `20px` (controlHeight × 0.625)   |
+| `--hmfw-rate-star-size-sm`     | 星星尺寸（小）   | `15px` (controlHeightSM × 0.625) |
+| `--hmfw-rate-star-size-lg`     | 星星尺寸（大）   | `25px` (controlHeightLG × 0.625) |
+| `--hmfw-rate-star-hover-scale` | 悬浮时缩放比例   | `1.1`                            |
+
+**使用示例**：
+
+```vue
+<template>
+  <!-- 通过内联样式覆盖 -->
+  <Rate
+    :value="3"
+    :style="{
+      '--hmfw-rate-star-color': '#ff6b00',
+      '--hmfw-rate-star-size': '24px',
+    }"
+  />
+
+  <!-- 通过 CSS 类覆盖 -->
+  <Rate :value="3" class="custom-rate" />
+</template>
+
+<style>
+.custom-rate {
+  --hmfw-rate-star-color: #52c41a;
+  --hmfw-rate-star-hover-scale: 1.2;
+}
+</style>
+```
+
+### 全局 Token
+
+Rate 组件还依赖以下全局 Design Token：
+
+| Token 名称                   | 说明         | 默认值             |
+| ---------------------------- | ------------ | ------------------ |
+| `--hmfw-color-fill-content`  | 填充内容色   | `rgba(0,0,0,0.06)` |
+| `--hmfw-control-height`      | 标准控件高度 | `32px`             |
+| `--hmfw-control-height-lg`   | 大号控件高度 | `40px`             |
+| `--hmfw-control-height-sm`   | 小号控件高度 | `24px`             |
+| `--hmfw-margin-xs`           | 超小间距     | `8px`              |
+| `--hmfw-motion-duration-mid` | 中速动画时长 | `0.2s`             |
 
 <script setup>
 import RateBasic from './RateBasic.vue'

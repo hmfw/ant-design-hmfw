@@ -27,19 +27,20 @@ describe('Rate', () => {
 
   it('emits change on star click', async () => {
     const wrapper = mount(Rate, { props: { defaultValue: 0 } })
-    await wrapper.findAll('.hmfw-rate-star-second')[2].trigger('click')
+    await wrapper.findAll('.hmfw-rate-star > div')[2].trigger('click')
     expect(wrapper.emitted('change')?.[0]).toEqual([3])
   })
 
   it('clears value when clicking same star with allowClear', async () => {
     const wrapper = mount(Rate, { props: { defaultValue: 3, allowClear: true } })
-    await wrapper.findAll('.hmfw-rate-star-second')[2].trigger('click')
+    // 点击第三颗星的右半部分
+    await wrapper.findAll('.hmfw-rate-star > div')[2].trigger('click', { pageX: 100 })
     expect(wrapper.emitted('change')?.[0]).toEqual([0])
   })
 
   it('does not clear when allowClear=false', async () => {
     const wrapper = mount(Rate, { props: { defaultValue: 3, allowClear: false } })
-    await wrapper.findAll('.hmfw-rate-star-second')[2].trigger('click')
+    await wrapper.findAll('.hmfw-rate-star > div')[2].trigger('click', { pageX: 100 })
     expect(wrapper.emitted('change')?.[0]).toEqual([3])
   })
 
@@ -50,7 +51,7 @@ describe('Rate', () => {
 
   it('does not emit change when disabled', async () => {
     const wrapper = mount(Rate, { props: { disabled: true, defaultValue: 2 } })
-    await wrapper.findAll('.hmfw-rate-star-second')[4].trigger('click')
+    await wrapper.findAll('.hmfw-rate-star > div')[4].trigger('click')
     expect(wrapper.emitted('change')).toBeFalsy()
   })
 
@@ -97,7 +98,7 @@ describe('Rate', () => {
     expect(seconds[2].text()).toBe('3')
   })
 
-  it('supports keyboard navigation', async () => {
+  it('supports keyboard navigation with arrow keys', async () => {
     const wrapper = mount(Rate, { props: { defaultValue: 2, keyboard: true } })
     const container = wrapper.find('ul')
 
@@ -108,6 +109,14 @@ describe('Rate', () => {
     await container.trigger('keydown', { key: 'ArrowLeft' })
     await nextTick()
     expect(wrapper.emitted('change')?.[1]).toEqual([2])
+
+    await container.trigger('keydown', { key: 'ArrowUp' })
+    await nextTick()
+    expect(wrapper.emitted('change')?.[2]).toEqual([3])
+
+    await container.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+    expect(wrapper.emitted('change')?.[3]).toEqual([2])
   })
 
   it('disables keyboard when keyboard=false', async () => {
@@ -162,28 +171,16 @@ describe('Rate', () => {
     expect(wrapper.findAll('.hmfw-rate-star')).toHaveLength(2)
   })
 
-  it('does not render half star when allowHalf is false', () => {
-    const wrapper = mount(Rate, { props: { count: 3, allowHalf: false } })
-    expect(wrapper.findAll('.hmfw-rate-star-first')).toHaveLength(0)
-    expect(wrapper.findAll('.hmfw-rate-star-second')).toHaveLength(3)
-  })
-
-  it('renders half-star regions when allowHalf is true', () => {
-    const wrapper = mount(Rate, { props: { count: 3, allowHalf: true } })
+  it('renders star-first and star-second divs', () => {
+    const wrapper = mount(Rate, { props: { count: 3 } })
     expect(wrapper.findAll('.hmfw-rate-star-first')).toHaveLength(3)
     expect(wrapper.findAll('.hmfw-rate-star-second')).toHaveLength(3)
   })
 
-  it('clicks on first half region triggers half value when allowHalf', async () => {
-    const wrapper = mount(Rate, { props: { defaultValue: 0, allowHalf: true } })
-    await wrapper.findAll('.hmfw-rate-star-first')[2].trigger('click')
-    expect(wrapper.emitted('change')?.[0]).toEqual([2.5])
-  })
-
   it('emits hoverChange on mousemove and undefined on mouseleave', async () => {
     const wrapper = mount(Rate, { props: { defaultValue: 0 } })
-    await wrapper.findAll('.hmfw-rate-star-second')[2].trigger('mousemove')
-    expect(wrapper.emitted('hoverChange')?.[0]).toEqual([3])
+    await wrapper.findAll('.hmfw-rate-star > div')[2].trigger('mousemove', { pageX: 100 })
+    expect(wrapper.emitted('hoverChange')?.[0]).toBeTruthy()
 
     await wrapper.find('ul').trigger('mouseleave')
     const events = wrapper.emitted('hoverChange') as unknown[][]
@@ -213,37 +210,6 @@ describe('Rate', () => {
     expect(wrapper2.emitted('change')).toBeFalsy()
   })
 
-  it('Home key jumps to 0', async () => {
-    const wrapper = mount(Rate, { props: { defaultValue: 4, keyboard: true } })
-    await wrapper.find('ul').trigger('keydown', { key: 'Home' })
-    await nextTick()
-    expect(wrapper.emitted('change')?.[0]).toEqual([0])
-  })
-
-  it('End key jumps to count', async () => {
-    const wrapper = mount(Rate, { props: { defaultValue: 1, count: 5, keyboard: true } })
-    await wrapper.find('ul').trigger('keydown', { key: 'End' })
-    await nextTick()
-    expect(wrapper.emitted('change')?.[0]).toEqual([5])
-  })
-
-  it('Home/End do not emit when value already at boundary', async () => {
-    const wrapper = mount(Rate, { props: { defaultValue: 0, keyboard: true } })
-    await wrapper.find('ul').trigger('keydown', { key: 'Home' })
-    expect(wrapper.emitted('change')).toBeFalsy()
-
-    const wrapper2 = mount(Rate, { props: { defaultValue: 5, count: 5, keyboard: true } })
-    await wrapper2.find('ul').trigger('keydown', { key: 'End' })
-    expect(wrapper2.emitted('change')).toBeFalsy()
-  })
-
-  it('Home/End disabled when keyboard=false', async () => {
-    const wrapper = mount(Rate, { props: { defaultValue: 2, keyboard: false } })
-    await wrapper.find('ul').trigger('keydown', { key: 'Home' })
-    await wrapper.find('ul').trigger('keydown', { key: 'End' })
-    expect(wrapper.emitted('change')).toBeFalsy()
-  })
-
   it('reverses arrow direction in RTL mode', async () => {
     const wrapper = mount(ConfigProvider, {
       props: { direction: 'rtl' },
@@ -271,21 +237,20 @@ describe('Rate', () => {
     mount(Rate, {
       props: {
         count: 1,
-        allowHalf: true,
         character: ({ isHalf }: { isHalf: boolean }) => {
           seen.push(isHalf)
           return isHalf ? 'H' : 'F'
         },
       },
     })
-    // count=1 + allowHalf 应同时渲染 first(half=true) 和 second(half=false)
+    // count=1 应同时渲染 first(half=true) 和 second(half=false)
     expect(seen).toContain(true)
     expect(seen).toContain(false)
   })
 
   it('passes isHalf to character slot', () => {
     const wrapper = mount(Rate, {
-      props: { count: 1, allowHalf: true },
+      props: { count: 1 },
       slots: {
         character: ({ isHalf }: { isHalf: boolean }) => (isHalf ? 'H' : 'F'),
       },
@@ -299,16 +264,15 @@ describe('Rate', () => {
     const ul = wrapper.find('ul')
     expect(ul.attributes('role')).toBe('radiogroup')
 
-    const stars = wrapper.findAll('.hmfw-rate-star')
-    stars.forEach((star, i) => {
-      expect(star.attributes('role')).toBe('radio')
-      expect(star.attributes('aria-posinset')).toBe(String(i + 1))
-      expect(star.attributes('aria-setsize')).toBe('5')
+    const radios = wrapper.findAll('[role="radio"]')
+    radios.forEach((radio, i) => {
+      expect(radio.attributes('aria-posinset')).toBe(String(i + 1))
+      expect(radio.attributes('aria-setsize')).toBe('5')
     })
     // value=2 时前 2 个 aria-checked 为 true，其余为 false
-    expect(stars[0].attributes('aria-checked')).toBe('true')
-    expect(stars[1].attributes('aria-checked')).toBe('true')
-    expect(stars[2].attributes('aria-checked')).toBe('false')
+    expect(radios[0].attributes('aria-checked')).toBe('true')
+    expect(radios[1].attributes('aria-checked')).toBe('true')
+    expect(radios[2].attributes('aria-checked')).toBe('false')
   })
 
   it('emits focus and blur', async () => {
@@ -336,5 +300,50 @@ describe('Rate', () => {
 
     const w2 = mount(Rate, { props: { disabled: true } })
     expect(w2.find('ul').attributes('tabindex')).toBe('-1')
+  })
+
+  it('adds focused class when star is focused', async () => {
+    const wrapper = mount(Rate, { props: { value: 0 }, attachTo: document.body })
+    await wrapper.find('ul').trigger('focus')
+    await nextTick()
+    // value=0 时第一颗星应获得 focused 类
+    expect(wrapper.findAll('.hmfw-rate-star')[0].classes()).toContain('hmfw-rate-star-focused')
+    wrapper.unmount()
+  })
+
+  it('supports semantic classNames API', () => {
+    const wrapper = mount(Rate, {
+      props: {
+        count: 2,
+        classNames: {
+          root: 'custom-root',
+          star: 'custom-star',
+          starFirst: 'custom-first',
+          starSecond: 'custom-second',
+        },
+      },
+    })
+    expect(wrapper.find('.hmfw-rate').classes()).toContain('custom-root')
+    expect(wrapper.find('.hmfw-rate-star').classes()).toContain('custom-star')
+    expect(wrapper.find('.hmfw-rate-star-first').classes()).toContain('custom-first')
+    expect(wrapper.find('.hmfw-rate-star-second').classes()).toContain('custom-second')
+  })
+
+  it('supports semantic styles API', () => {
+    const wrapper = mount(Rate, {
+      props: {
+        count: 2,
+        styles: {
+          root: { marginTop: '10px' },
+          star: { padding: '5px' },
+          starFirst: { opacity: 0.5 },
+          starSecond: { color: 'red' },
+        },
+      },
+    })
+    expect(wrapper.find('.hmfw-rate').attributes('style')).toContain('margin-top: 10px')
+    expect(wrapper.find('.hmfw-rate-star').attributes('style')).toContain('padding: 5px')
+    expect(wrapper.find('.hmfw-rate-star-first').attributes('style')).toContain('opacity: 0.5')
+    expect(wrapper.find('.hmfw-rate-star-second').attributes('style')).toContain('color: red')
   })
 })

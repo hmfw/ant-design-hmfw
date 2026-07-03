@@ -1,30 +1,41 @@
 .hmfw-switch {
+  --hmfw-switch-handle-bg: #fff;
+  --hmfw-switch-handle-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
+  --hmfw-switch-handle-size: 18px;
+  --hmfw-switch-handle-size-sm: 12px;
+  --hmfw-switch-inner-max-margin: 24px;
+  --hmfw-switch-inner-max-margin-sm: 18px;
+  --hmfw-switch-inner-min-margin: 9px;
+  --hmfw-switch-inner-min-margin-sm: 6px;
+  --hmfw-switch-track-height: 22px;
+  --hmfw-switch-track-height-sm: 16px;
+  --hmfw-switch-track-min-width: 44px;
+  --hmfw-switch-track-min-width-sm: 28px;
+  --hmfw-switch-track-padding: 2px;
+
   position: relative;
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
   box-sizing: border-box;
-  min-width: 44px;
-  height: 22px;
+  min-width: var(--hmfw-switch-track-min-width);
+  height: var(--hmfw-switch-track-height);
   padding: 0;
   background: rgba(0, 0, 0, 0.25);
   border: 0;
   border-radius: 100px;
   cursor: pointer;
   transition:
-    background 0.2s,
-    opacity 0.2s;
+    background var(--hmfw-motion-duration-mid),
+    opacity var(--hmfw-motion-duration-mid);
   vertical-align: middle;
-  /* overflow:hidden 确保 inner 长文本被胶囊裁掉，handle 仍通过定位显示 */
-  overflow: hidden;
 }
 
 .hmfw-switch:focus-visible {
-  outline: 2px solid var(--hmfw-color-primary, #1677ff);
+  outline: 2px solid var(--hmfw-color-primary);
   outline-offset: 1px;
 }
 
 .hmfw-switch-checked {
-  background: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary);
 }
 
 .hmfw-switch-disabled {
@@ -47,113 +58,183 @@
 
 .hmfw-switch-handle {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 35, 11, 0.2);
-  transition:
-    left 0.2s,
-    width 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  top: var(--hmfw-switch-track-padding);
+  left: var(--hmfw-switch-track-padding);
+  width: var(--hmfw-switch-handle-size);
+  height: var(--hmfw-switch-handle-size);
+  transition: all var(--hmfw-motion-duration-mid) ease-in-out;
+}
+
+.hmfw-switch-handle::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--hmfw-switch-handle-bg);
+  border-radius: var(--hmfw-switch-handle-size);
+  box-shadow: var(--hmfw-switch-handle-shadow);
+  transition: all var(--hmfw-motion-duration-mid) ease-in-out;
+  content: '';
 }
 
 .hmfw-switch-checked .hmfw-switch-handle {
-  left: calc(100% - 20px);
+  left: calc(100% - var(--hmfw-switch-handle-size) - var(--hmfw-switch-track-padding));
 }
 
-/* inner 容器：双轨道布局，用 margin 切换显示 checked / unchecked 内容
-   max-width 通过 hmfw-switch 的 overflow:hidden 限制，避免长文本撑破组件 */
+/* 按压时手柄拉伸效果 - 通过伪元素的 right/left 实现 */
+.hmfw-switch:not(.hmfw-switch-disabled):active .hmfw-switch-handle::before {
+  right: -30%;
+  left: 0;
+}
+
+.hmfw-switch:not(.hmfw-switch-disabled):active.hmfw-switch-checked .hmfw-switch-handle::before {
+  right: 0;
+  left: -30%;
+}
+
+/* inner 容器：包裹内容，宽度由内容撑开 */
 .hmfw-switch-inner {
   display: block;
   overflow: hidden;
-  margin-inline: 24px 6px;
-  font-size: 12px;
-  color: #fff;
-  transition: margin-inline 0.2s;
-  pointer-events: none;
-}
-
-.hmfw-switch-checked .hmfw-switch-inner {
-  margin-inline: 6px 24px;
+  height: 100%;
+  border-radius: 100px;
+  padding-inline-start: var(--hmfw-switch-inner-max-margin);
+  padding-inline-end: var(--hmfw-switch-inner-min-margin);
+  transition:
+    padding-inline-start var(--hmfw-motion-duration-mid) ease-in-out,
+    padding-inline-end var(--hmfw-motion-duration-mid) ease-in-out;
 }
 
 .hmfw-switch-inner-checked,
 .hmfw-switch-inner-unchecked {
   display: block;
-  /* 长文本省略号兜底 */
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: margin-top 0.2s;
+  color: #fff;
+  font-size: 12px;
+  pointer-events: none;
+
+  line-height: var(--hmfw-switch-track-height);
+  transition:
+    margin-inline-start var(--hmfw-motion-duration-mid) ease-in-out,
+    margin-inline-end var(--hmfw-motion-duration-mid) ease-in-out;
 }
 
-/* 默认显示 unchecked 文案 */
+/* checked 状态文字左对齐 */
 .hmfw-switch-inner-checked {
-  margin-top: -22px;
-  text-align: left;
+  margin-inline-start: calc(
+    -100% + var(--hmfw-switch-handle-size) + 2 * var(--hmfw-switch-track-padding) - 2 *
+      var(--hmfw-switch-inner-max-margin)
+  );
+  margin-inline-end: calc(
+    100% - (var(--hmfw-switch-handle-size) + 2 * var(--hmfw-switch-track-padding)) + 2 *
+      var(--hmfw-switch-inner-max-margin)
+  );
 }
 .hmfw-switch-inner-unchecked {
-  margin-top: 0;
-  text-align: right;
+  margin-top: calc(-1 * var(--hmfw-switch-track-height));
+  margin-inline-start: 0;
+  margin-inline-end: 0;
 }
 
-/* checked 状态翻转显示 */
-.hmfw-switch-checked .hmfw-switch-inner-checked {
-  margin-top: 0;
+.hmfw-switch-checked .hmfw-switch-inner {
+  padding-inline-start: var(--hmfw-switch-inner-min-margin);
+  padding-inline-end: var(--hmfw-switch-inner-max-margin);
 }
+
+.hmfw-switch-checked .hmfw-switch-inner-checked {
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+}
+
 .hmfw-switch-checked .hmfw-switch-inner-unchecked {
-  margin-top: -22px;
+  margin-inline-start: calc(
+    100% - (var(--hmfw-switch-handle-size) + 2 * var(--hmfw-switch-track-padding)) + 2 *
+      var(--hmfw-switch-inner-max-margin)
+  );
+  margin-inline-end: calc(
+    -100% + var(--hmfw-switch-handle-size) + 2 * var(--hmfw-switch-track-padding) - 2 *
+      var(--hmfw-switch-inner-max-margin)
+  );
 }
 
 /* Small */
 .hmfw-switch-small {
-  min-width: 28px;
-  height: 16px;
+  min-width: var(--hmfw-switch-track-min-width-sm);
+  height: var(--hmfw-switch-track-height-sm);
 }
 
 .hmfw-switch-small .hmfw-switch-handle {
-  width: 12px;
-  height: 12px;
+  width: var(--hmfw-switch-handle-size-sm);
+  height: var(--hmfw-switch-handle-size-sm);
+}
+
+.hmfw-switch-small .hmfw-switch-handle::before {
+  border-radius: calc(var(--hmfw-switch-handle-size-sm) / 2);
 }
 
 .hmfw-switch-small.hmfw-switch-checked .hmfw-switch-handle {
-  left: calc(100% - 14px);
+  left: calc(100% - var(--hmfw-switch-handle-size-sm) - var(--hmfw-switch-track-padding));
 }
 
 .hmfw-switch-small .hmfw-switch-inner {
-  margin-inline: 18px 4px;
-  font-size: 12px;
+  padding-inline-start: var(--hmfw-switch-inner-max-margin-sm);
+  padding-inline-end: var(--hmfw-switch-inner-min-margin-sm);
+  line-height: var(--hmfw-switch-track-height-sm);
 }
+
 .hmfw-switch-small.hmfw-switch-checked .hmfw-switch-inner {
-  margin-inline: 4px 18px;
+  padding-inline-start: var(--hmfw-switch-inner-min-margin-sm);
+  padding-inline-end: var(--hmfw-switch-inner-max-margin-sm);
+}
+
+.hmfw-switch-small .hmfw-switch-inner-checked,
+.hmfw-switch-small .hmfw-switch-inner-unchecked {
+  line-height: var(--hmfw-switch-track-height-sm);
 }
 
 .hmfw-switch-small .hmfw-switch-inner-checked {
-  margin-top: -16px;
+  margin-inline-start: calc(
+    -100% + var(--hmfw-switch-handle-size-sm) + 2 * var(--hmfw-switch-track-padding) - 2 *
+      var(--hmfw-switch-inner-max-margin-sm)
+  );
+  margin-inline-end: calc(
+    100% - (var(--hmfw-switch-handle-size-sm) + 2 * var(--hmfw-switch-track-padding)) + 2 *
+      var(--hmfw-switch-inner-max-margin-sm)
+  );
 }
+
+.hmfw-switch-small .hmfw-switch-inner-unchecked {
+  margin-top: calc(-1 * var(--hmfw-switch-track-height-sm));
+}
+
 .hmfw-switch-small.hmfw-switch-checked .hmfw-switch-inner-checked {
-  margin-top: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
 }
+
 .hmfw-switch-small.hmfw-switch-checked .hmfw-switch-inner-unchecked {
-  margin-top: -16px;
+  margin-inline-start: calc(
+    100% - (var(--hmfw-switch-handle-size-sm) + 2 * var(--hmfw-switch-track-padding)) + 2 *
+      var(--hmfw-switch-inner-max-margin-sm)
+  );
+  margin-inline-end: calc(
+    -100% + var(--hmfw-switch-handle-size-sm) + 2 * var(--hmfw-switch-track-padding) - 2 *
+      var(--hmfw-switch-inner-max-margin-sm)
+  );
 }
 
 /* Loading 旋转圈 */
 .hmfw-switch-loading-icon {
+  position: relative;
   display: inline-block;
   width: 10px;
   height: 10px;
   border: 2px solid rgba(0, 0, 0, 0.2);
-  border-top-color: var(--hmfw-color-primary, #1677ff);
+  border-top-color: var(--hmfw-color-primary);
   border-radius: 50%;
   animation: hmfw-switch-spin 0.6s linear infinite;
   box-sizing: border-box;
+  z-index: 1;
 }
 
 /* 小尺寸 handle 12px 内放 8px 图标更协调 */

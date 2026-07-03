@@ -10,16 +10,15 @@ export type SwitchChangeEventHandler = (checked: boolean, event: MouseEvent) => 
 
 /**
  * Switch 各部分的语义化 className
+ * 对齐 Ant Design v6 的语义化命名
  */
 export interface SwitchClassNames {
   /** 根节点 button.hmfw-switch */
   root?: string
-  /** 滑动手柄 span.hmfw-switch-handle */
-  handle?: string
-  /** 加载图标 span.hmfw-switch-loading-icon */
-  loadingIcon?: string
-  /** 内部内容容器 span.hmfw-switch-inner */
-  inner?: string
+  /** 内容容器 span.hmfw-switch-inner */
+  content?: string
+  /** 指示器/手柄 span.hmfw-switch-handle */
+  indicator?: string
   /** 选中状态的子内容 span.hmfw-switch-inner-checked */
   checked?: string
   /** 未选中状态的子内容 span.hmfw-switch-inner-unchecked */
@@ -28,16 +27,15 @@ export interface SwitchClassNames {
 
 /**
  * Switch 各部分的语义化 style
+ * 对齐 Ant Design v6 的语义化命名
  */
 export interface SwitchStyles {
   /** 根节点 button.hmfw-switch */
   root?: CSSProperties
-  /** 滑动手柄 span.hmfw-switch-handle */
-  handle?: CSSProperties
-  /** 加载图标 span.hmfw-switch-loading-icon */
-  loadingIcon?: CSSProperties
-  /** 内部内容容器 span.hmfw-switch-inner */
-  inner?: CSSProperties
+  /** 内容容器 span.hmfw-switch-inner */
+  content?: CSSProperties
+  /** 指示器/手柄 span.hmfw-switch-handle */
+  indicator?: CSSProperties
   /** 选中状态的子内容 span.hmfw-switch-inner-checked */
   checked?: CSSProperties
   /** 未选中状态的子内容 span.hmfw-switch-inner-unchecked */

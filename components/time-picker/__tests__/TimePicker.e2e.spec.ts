@@ -43,4 +43,30 @@ test.describe('TimePicker 时间选择框', () => {
     await picker.locator('.hmfw-time-picker-input-inner').click({ force: true })
     await expect(picker).not.toHaveClass(/hmfw-time-picker-open/)
   })
+
+  test('时间列可以用鼠标滚轮自由滚动', async ({ page }) => {
+    const picker = page.locator('.hmfw-time-picker').first()
+    await picker.locator('.hmfw-time-picker-input-inner').click()
+
+    const panel = page.locator('.hmfw-time-picker-panel').first()
+    await expect(panel).toBeVisible()
+
+    // 获取第一列（小时列）
+    const hourColumn = panel.locator('.hmfw-time-picker-panel-column').first()
+
+    // 获取初始滚动位置
+    const initialScroll = await hourColumn.evaluate((el) => el.scrollTop)
+
+    // 将鼠标移到列上并向下滚动
+    const box = await hourColumn.boundingBox()
+    if (!box) throw new Error('无法获取列的位置')
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+    await page.waitForTimeout(200)
+    await page.mouse.wheel(0, 200)
+    await page.waitForTimeout(500)
+
+    // 验证滚动后位置变化
+    const afterScroll = await hourColumn.evaluate((el) => el.scrollTop)
+    expect(afterScroll).toBeGreaterThan(initialScroll)
+  })
 })

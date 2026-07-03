@@ -157,11 +157,6 @@
   background: transparent;
 }
 
-/* Panel */
-.hmfw-time-picker-popup {
-  /* 仅作为 Trigger 弹出包装层，视觉样式由 panel 承载 */
-}
-
 .hmfw-time-picker-panel {
   /* bg/radius/shadow 由 hmfw-trigger-popup（popup wrapper）统一提供，
      此处继承 wrapper 的 border-radius 以确保 overflow 裁剪和 border 跟随圆角 */
@@ -184,9 +179,7 @@
   overflow-y: auto;
   border-right: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
   scrollbar-width: none;
-  scroll-behavior: smooth;
-  /* 性能优化 */
-  contain: layout style paint;
+  contain: layout style;
   will-change: scroll-position;
 }
 
@@ -258,10 +251,6 @@
   border: none;
   cursor: pointer;
   color: var(--hmfw-color-primary, #1677ff);
-}
-
-.hmfw-time-picker-panel-footer-btn:hover {
-  color: var(--hmfw-color-primary-hover, #4096ff);
 }
 
 .hmfw-time-picker-panel-footer-ok {
