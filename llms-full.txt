@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.6.1。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.6.2。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -7115,7 +7115,8 @@ import { Upload, UploadDragger } from '@hmfw/ant-design'
 | update:fileList | 文件列表变化时的回调 | `(fileList: UploadFile[]) => void` |
 | change | 上传文件改变时的状态。进度变化时 `event` 字段携带 `{ percent }` | `(info: { file: UploadFile; fileList: UploadFile[]; event?: { percent: number } }) => void` |
 | remove | 点击移除文件后触发（被 `onRemove` 拦截 false 时不触发） | `(file: UploadFile) => void` |
-| preview | 点击文件链接或预览图标时的回调 | `(file: UploadFile) => void` |
+| preview | 点击预览图标时触发。对于图片文件，会自动打开内置预览弹窗 | `(file: UploadFile) => void` |
+| download | 点击下载图标时触发（需配置 `showUploadList.showDownloadIcon`） | `(file: UploadFile) => void` |
 | drop | 文件拖拽到上传区域释放时触发 | `(event: DragEvent) => void` |
 
 ### Slots
@@ -7158,7 +7159,7 @@ const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
 </script>
 ```
 
-图片卡片 — 使用 `list-type="picture-card"` 展示图片卡片样式。
+图片卡片 — 使用 `list-type="picture-card"` 展示图片卡片样式。点击预览图标可查看大图。
 
 ```vue
 <template>
@@ -7167,7 +7168,6 @@ const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
     action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
     list-type="picture-card"
     :max-count="8"
-    @preview="handlePreview"
     @change="handleChange"
   >
     <div v-if="fileList.length < 8">
@@ -7189,10 +7189,6 @@ const fileList = ref<UploadFile[]>([
     url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
   },
 ])
-
-const handlePreview = (file: UploadFile) => {
-  console.log('预览：', file.url || file.thumbUrl)
-}
 
 const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
   fileList.value = info.fileList

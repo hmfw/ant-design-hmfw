@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -14583,7 +14583,13 @@
         {
           "section": "Upload Events",
           "name": "preview",
-          "description": "点击文件链接或预览图标时的回调",
+          "description": "点击预览图标时触发。对于图片文件，会自动打开内置预览弹窗",
+          "params": "`(file: UploadFile) => void`"
+        },
+        {
+          "section": "Upload Events",
+          "name": "download",
+          "description": "点击下载图标时触发（需配置 `showUploadList.showDownloadIcon`）",
           "params": "`(file: UploadFile) => void`"
         },
         {
@@ -14607,8 +14613,8 @@
         },
         {
           "title": "图片卡片",
-          "description": "使用 `list-type=\"picture-card\"` 展示图片卡片样式。",
-          "code": "<template>\n  <Upload\n    v-model:file-list=\"fileList\"\n    action=\"https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188\"\n    list-type=\"picture-card\"\n    :max-count=\"8\"\n    @preview=\"handlePreview\"\n    @change=\"handleChange\"\n  >\n    <div v-if=\"fileList.length < 8\">\n      <div>+ 上传</div>\n    </div>\n  </Upload>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Upload } from '@hmfw/ant-design'\nimport type { UploadFile } from '@hmfw/ant-design'\n\nconst fileList = ref<UploadFile[]>([\n  {\n    uid: '-1',\n    name: 'image.png',\n    status: 'done',\n    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n  },\n])\n\nconst handlePreview = (file: UploadFile) => {\n  console.log('预览：', file.url || file.thumbUrl)\n}\n\nconst handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {\n  fileList.value = info.fileList\n}\n</script>"
+          "description": "使用 `list-type=\"picture-card\"` 展示图片卡片样式。点击预览图标可查看大图。",
+          "code": "<template>\n  <Upload\n    v-model:file-list=\"fileList\"\n    action=\"https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188\"\n    list-type=\"picture-card\"\n    :max-count=\"8\"\n    @change=\"handleChange\"\n  >\n    <div v-if=\"fileList.length < 8\">\n      <div>+ 上传</div>\n    </div>\n  </Upload>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Upload } from '@hmfw/ant-design'\nimport type { UploadFile } from '@hmfw/ant-design'\n\nconst fileList = ref<UploadFile[]>([\n  {\n    uid: '-1',\n    name: 'image.png',\n    status: 'done',\n    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n  },\n])\n\nconst handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {\n  fileList.value = info.fileList\n}\n</script>"
         },
         {
           "title": "拖拽上传",
