@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { Table } from '../Table'
 
 const columns = [
@@ -139,6 +139,12 @@ describe('Table', () => {
     const wrapper = mount(Table, { props: { columns: fixedCols, dataSource } })
     expect(wrapper.find('.hmfw-table-cell-fix-left').exists()).toBe(true)
     expect(wrapper.find('.hmfw-table-cell-fix-right').exists()).toBe(true)
+
+    // 固定列的 class 需同时作用于表头 th 与表体 td，否则表头不会固定
+    expect(wrapper.find('thead th.hmfw-table-cell-fix-left').exists()).toBe(true)
+    expect(wrapper.find('thead th.hmfw-table-cell-fix-right').exists()).toBe(true)
+    expect(wrapper.find('tbody td.hmfw-table-cell-fix-left').exists()).toBe(true)
+    expect(wrapper.find('tbody td.hmfw-table-cell-fix-right').exists()).toBe(true)
   })
 
   it('renders filter trigger when column has filters', () => {
@@ -154,6 +160,83 @@ describe('Table', () => {
     ]
     const wrapper = mount(Table, { props: { columns: filterCols, dataSource } })
     expect(wrapper.find('.hmfw-table-filter-trigger').exists()).toBe(true)
+    // 验证图标是 SVG 而不是 emoji
+    expect(wrapper.find('.hmfw-table-filter-trigger svg').exists()).toBe(true)
+  })
+
+  it('opens filter dropdown on trigger click and filters data on confirm', async () => {
+    const filterCols = [
+      {
+        key: 'name',
+        dataIndex: 'name',
+        title: 'Name',
+        filters: [
+          { text: 'Alice', value: 'Alice' },
+          { text: 'Bob', value: 'Bob' },
+        ],
+        onFilter: (value: any, record: any) => record.name === value,
+      },
+      ...columns.slice(1),
+    ]
+    const onChange = vi.fn()
+    const wrapper = mount(Table, {
+      props: { columns: filterCols, dataSource, onChange },
+      attachTo: document.body,
+    })
+
+    // 初始显示全部 3 行
+    expect(wrapper.findAll('tbody tr').length).toBe(3)
+
+    // 点击筛选触发器（span 上有 stopPropagation，须由受控状态自行开启）
+    await wrapper.find('.hmfw-table-filter-trigger').trigger('click')
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+
+    // 弹层经 Teleport 渲染到 body，且始终存在于 DOM 中（关闭时加 hmfw-dropdown-hidden）
+    // 取最后一个（本次新开）的弹层容器
+    const popups = document.querySelectorAll('.hmfw-trigger-popup')
+    const popup = popups[popups.length - 1]
+    expect(popup).toBeTruthy()
+
+    // 关键断言：点击后弹层必须为可见态。
+    // 若回归到「span 上纯 stopPropagation 阻断 Trigger 打开」的写法，
+    // 弹层会保持 hmfw-dropdown-hidden，此断言失败。
+    expect(popup.classList.contains('hmfw-dropdown-hidden')).toBe(false)
+
+    const dropdown = popup.querySelector('.hmfw-table-dropdown') as HTMLElement
+    expect(dropdown).toBeTruthy()
+
+    // 勾选第一个筛选项 Alice
+    const firstCheckbox = dropdown.querySelector(
+      '.hmfw-table-dropdown-menu-item input[type="checkbox"]',
+    ) as HTMLInputElement
+    expect(firstCheckbox).toBeTruthy()
+    firstCheckbox.click()
+    await wrapper.vm.$nextTick()
+
+    // 点击「确定」
+    const confirmBtn = Array.from(dropdown.querySelectorAll('.hmfw-table-dropdown-btns .hmfw-btn')).find((btn) =>
+      btn.textContent?.includes('确定'),
+    ) as HTMLElement
+    expect(confirmBtn).toBeTruthy()
+    confirmBtn.click()
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+
+    // 数据被过滤为仅 Alice 一行
+    const rows = wrapper.findAll('tbody tr')
+    expect(rows.length).toBe(1)
+    expect(rows[0].text()).toContain('Alice')
+
+    // 筛选图标处于激活状态
+    expect(wrapper.find('.hmfw-table-filter-trigger').classes()).toContain('active')
+
+    // onChange 以 filter action 触发
+    expect(onChange).toHaveBeenCalled()
+    const extra = onChange.mock.calls.at(-1)![3]
+    expect(extra.action).toBe('filter')
+
+    wrapper.unmount()
   })
 
   it('renders expanded row content when expandable configured', () => {
@@ -184,9 +267,17 @@ describe('Table', () => {
       },
     })
     expect(wrapper.find('.hmfw-table-expanded-row').exists()).toBe(false)
-    await wrapper.find('.hmfw-table-expand-icon').trigger('click')
+
+    // 展开图标应为 SVG 图标而非 emoji 字符
+    const expandIcon = wrapper.find('.hmfw-table-expand-icon')
+    expect(expandIcon.find('svg').exists()).toBe(true)
+    expect(expandIcon.text()).not.toMatch(/[▶▼]/)
+
+    await expandIcon.trigger('click')
     expect(wrapper.find('.hmfw-table-expanded-row').exists()).toBe(true)
     expect(onExpand).toHaveBeenCalledWith(true, dataSource[0])
+    // 展开后仍为 SVG 图标
+    expect(wrapper.find('.hmfw-table-expand-icon svg').exists()).toBe(true)
   })
 
   it('calls rowSelection onChange with selected keys and info', async () => {

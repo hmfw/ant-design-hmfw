@@ -1,14 +1,16 @@
 <template>
-  <Button @click="confirm"> 删除项目 </Button>
-  <Button @click="info"> 提示信息 </Button>
-  <Button @click="success"> 成功 </Button>
-  <Button @click="error"> 错误 </Button>
-  <Button @click="warning"> 警告 </Button>
-  <Button @click="asyncConfirm"> 异步确认 </Button>
+  <Space>
+    <Button @click="confirm"> 删除项目 </Button>
+    <Button @click="info"> 提示信息 </Button>
+    <Button @click="success"> 成功 </Button>
+    <Button @click="error"> 错误 </Button>
+    <Button @click="warning"> 警告 </Button>
+    <Button @click="asyncConfirm"> 异步确认 </Button>
+  </Space>
 </template>
 
 <script setup lang="ts">
-import { Modal, Button } from '@hmfw/ant-design'
+import { Modal, Button, Space } from '@hmfw/ant-design'
 
 function confirm() {
   Modal.confirm({

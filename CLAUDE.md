@@ -49,6 +49,8 @@ ant-design-hmfw/
 # 开发
 pnpm install          # 安装依赖
 pnpm dev              # 启动文档站（http://localhost:5173）
+# 注意：默认文档站服务已启动。启动前请先判断服务是否已在运行
+#      （检查 http://localhost:5173 或对应端口），已启动则无需重复启动。
 
 # 构建
 pnpm build:lib        # 构建组件库
@@ -65,6 +67,13 @@ pnpm typecheck        # 类型检查
 pnpm precheck         # 发布前检查
 pnpm release          # 发布到 npm
 ```
+
+## 服务启动约定
+
+**重要**：默认文档站服务（`pnpm dev`）已处于启动状态。
+
+- 需要访问文档站时，先判断服务是否已在运行（检查 `http://localhost:5173` 或相应端口是否可访问），已启动则直接使用，**不要重复启动**。
+- 仅当确认服务未运行时，才执行 `pnpm dev` 启动。
 
 ## 命名规范
 

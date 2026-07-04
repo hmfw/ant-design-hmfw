@@ -1,11 +1,13 @@
 <template>
-  <Button @click="showCustomIcon"> 使用自定义 VNode 图标 </Button>
-  <Button @click="showNoIcon"> 隐藏图标 </Button>
+  <Space>
+    <Button @click="showCustomIcon"> 使用自定义 VNode 图标 </Button>
+    <Button @click="showNoIcon"> 隐藏图标 </Button>
+  </Space>
 </template>
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Modal, Button } from '@hmfw/ant-design'
+import { Modal, Button, Space } from '@hmfw/ant-design'
 
 function showCustomIcon() {
   Modal.info({

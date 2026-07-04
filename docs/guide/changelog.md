@@ -6,7 +6,79 @@
 
 ---
 
-## [Unreleased]
+## [0.6.3] - 2026-07-04
+
+### 🐛 修复
+
+- **Image**: 修复 `width`/`height` 属性对纯数字字符串不生效的问题，统一处理数字和字符串类型
+- **Image**: 修复 fallback 图片加载失败后的死循环问题，增加 fallback 失败标记
+- **Table**: 修复筛选下拉框确认后未自动关闭的问题，使用受控状态管理
+- **Table**: 修复筛选图标点击冒泡导致触发排序的问题
+
+### ✨ 改进
+
+- **Table**: 使用 @hmfw/icons 替换 emoji 图标（FilterOutlined、PlusOutlined、MinusOutlined），显示更清晰
+- **FilterDropdown**: 优化 Checkbox onChange 参数传递，统一为 event 对象
+
+### 🧪 测试
+
+- **Table**: 新增 FilterDropdown 单元测试，覆盖筛选、确认、重置等核心场景
+
+---
+
+## [0.6.2] - 2026-07-03
+
+### 🐛 修复
+
+- **Upload**: 使用 @hmfw/icons 替换 emoji 图标（EyeOutlined、DownloadOutlined、DeleteOutlined），图标显示更清晰
+- **Upload**: 新增内置图片预览功能，点击预览按钮自动打开 Image 预览弹窗
+- **Badge/Ribbon**: 修复自定义颜色样式计算逻辑
+- **Transfer**: 修复 checkbox 点击事件冒泡问题，防止触发列表项选中
+
+### ✨ 改进
+
+- **Upload**: 新增 154 个单元测试用例，覆盖文件上传、删除、预览、拖拽等核心场景
+- **Transfer**: 新增 39 个单元测试用例，提升组件稳定性
+
+### 🎨 样式
+
+- **Badge**: 优化 Ribbon 组件自定义颜色渲染
+- **TreeSelect**: 调整下拉框最大高度样式
+- **Upload**: 优化操作按钮图标样式
+
+---
+
+## [0.6.1] - 2026-07-03
+
+### ✨ 改进 — Rate 组件
+
+- **精确半星计算**：根据鼠标位置精确计算半星值，`allowHalf` 模式下点击星星左半部分显示半星，右半部分显示全星，支持 RTL 模式
+- **allowClear 逻辑优化**：修复清除逻辑，点击当前值的星星时重置为 0，再次 hover 时恢复正常交互
+- **键盘导航增强**：完善方向键控制，支持 RTL 模式下左右键语义反转，修复步进值计算
+- **焦点状态改进**：value=0 时第一颗星获得焦点，否则当前值对应的星获得焦点，视觉反馈更清晰
+- **Hover 交互优化**：修复 hover 状态与 cleanedValue 的冲突，确保清除后再次 hover 时状态正确
+
+### ✨ 改进 — Switch 组件
+
+- **语义化 API 对齐**：重命名 `classNames`/`styles` 字段以对齐 Ant Design v6
+  - `handle` → `indicator`（指示器/手柄）
+  - `inner` → `content`（内容容器）
+  - 移除 `loadingIcon`（加载图标不再暴露独立语义化接口）
+- **新增标签属性**：新增 `checkedLabel` 和 `unCheckedLabel` 属性，支持在开关旁显示文本标签
+- **样式优化**：手柄过渡动画更流畅，内容区布局更规范
+
+### ✨ 改进 — TimePicker 组件
+
+- **代码重构**：简化时间列渲染逻辑，提升代码可维护性
+- **E2E 测试补充**：新增自动化测试用例，覆盖基础交互、时间选择、禁用状态等场景
+
+### 🎨 设计 Token
+
+- **新增填充色 Token**：`colorFillContent`（rgba(0,0,0,0.06)）和 `colorFillContentHover`（rgba(0,0,0,0.15)），用于组件内容区填充色
+
+---
+
+## [0.6.0] - 2026-07-02
 
 ### 💥 破坏性变更
 

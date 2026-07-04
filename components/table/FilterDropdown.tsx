@@ -44,7 +44,7 @@ export const FilterDropdown = defineComponent({
         const checked = selectedKeys.value.includes(filter.value as Key)
         return (
           <div key={String(filter.value)} class={`${props.prefixCls}-dropdown-menu-item`}>
-            <Checkbox checked={checked} onChange={(newChecked) => handleCheckChange(filter.value as Key, newChecked)}>
+            <Checkbox checked={checked} onChange={(e) => handleCheckChange(filter.value as Key, e.target.checked)}>
               {filter.text}
             </Checkbox>
           </div>

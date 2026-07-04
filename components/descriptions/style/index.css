@@ -53,10 +53,10 @@
   border-bottom: none;
 }
 
-.hmfw-descriptions-row:last-child > th,
+/* .hmfw-descriptions-row:last-child > th,
 .hmfw-descriptions-row:last-child > td {
   padding-bottom: 0;
-}
+} */
 
 .hmfw-descriptions-item-label {
   color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.65));

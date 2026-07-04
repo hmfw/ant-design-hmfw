@@ -8,6 +8,7 @@ import { Checkbox } from '../checkbox'
 import { Radio } from '../radio'
 import { Dropdown } from '../dropdown'
 import { FilterDropdown } from './FilterDropdown'
+import { FilterOutlined, PlusOutlined, MinusOutlined } from '@hmfw/icons'
 import type {
   TableColumn,
   TableRowSelection,
@@ -131,6 +132,7 @@ export const Table = defineComponent({
     const sortStates = ref<Array<{ key: string; order: 'ascend' | 'descend' | null; column: TableColumn }>>([])
     // Filter state
     const filterState = ref<Record<string, (string | number)[]>>({})
+    const filterDropdownOpen = ref<Record<string, boolean>>({})
     // Pagination state
     const currentPage = ref(1)
     const pageSize = ref(10)
@@ -371,6 +373,7 @@ export const Table = defineComponent({
     // Filter handlers
     const handleFilterConfirm = (columnKey: string, selectedKeys: Key[]) => {
       filterState.value[columnKey] = selectedKeys as (string | number)[]
+      filterDropdownOpen.value[columnKey] = false // 关闭 Dropdown
 
       const extra: TableCurrentDataSource = {
         currentDataSource: filteredData.value,
@@ -593,7 +596,23 @@ export const Table = defineComponent({
                               {hasFilter && (
                                 <Dropdown
                                   trigger={['click']}
+                                  open={filterDropdownOpen.value[key]}
+                                  onUpdate:open={(v) => (filterDropdownOpen.value[key] = v)}
                                   v-slots={{
+                                    default: () => (
+                                      <span
+                                        class={cls(`${prefixCls}-filter-trigger`, {
+                                          active: isFiltered,
+                                        })}
+                                        onClick={(e) => {
+                                          // 阻止冒泡到表头触发排序；由受控状态自行切换开关
+                                          e.stopPropagation()
+                                          filterDropdownOpen.value[key] = !filterDropdownOpen.value[key]
+                                        }}
+                                      >
+                                        <FilterOutlined />
+                                      </span>
+                                    ),
                                     overlay: () => (
                                       <FilterDropdown
                                         prefixCls={prefixCls}
@@ -605,16 +624,7 @@ export const Table = defineComponent({
                                       />
                                     ),
                                   }}
-                                >
-                                  <span
-                                    class={cls(`${prefixCls}-filter-trigger`, {
-                                      active: isFiltered,
-                                    })}
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    🔽
-                                  </span>
-                                </Dropdown>
+                                />
                               )}
                             </div>
                           </th>
@@ -676,7 +686,7 @@ export const Table = defineComponent({
                                   aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
                                   aria-expanded={isExpanded}
                                 >
-                                  {isExpanded ? '▼' : '▶'}
+                                  {isExpanded ? <MinusOutlined /> : <PlusOutlined />}
                                 </button>
                               </td>
                             )}
@@ -784,7 +794,7 @@ export const Table = defineComponent({
                                 aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
                                 aria-expanded={isExpanded}
                               >
-                                {isExpanded ? '▼' : '▶'}
+                                {isExpanded ? <MinusOutlined /> : <PlusOutlined />}
                               </button>
                             </td>
                           )}

@@ -6,7 +6,7 @@
       <div style="display: flex; gap: 16px; align-items: center">
         <Avatar :class-names="{ root: 'gradient-avatar' }">U</Avatar>
         <Avatar :class-names="{ root: 'gradient-avatar' }" shape="square">U</Avatar>
-        <Avatar src="https://i.pravatar.cc/150?img=1" :class-names="{ root: 'gradient-avatar' }" />
+        <Avatar src="https://api.dicebear.com/7.x/avataaars/svg?seed=1" :class-names="{ root: 'gradient-avatar' }" />
       </div>
     </div>
 
@@ -14,8 +14,17 @@
     <div>
       <div style="margin-bottom: 8px; color: #666">自定义图片样式：</div>
       <div style="display: flex; gap: 16px; align-items: center">
-        <Avatar src="https://i.pravatar.cc/150?img=2" :class-names="{ img: 'custom-img' }" size="{64}" />
-        <Avatar src="https://i.pravatar.cc/150?img=3" :class-names="{ img: 'custom-img' }" size="{64}" shape="square" />
+        <Avatar
+          src="https://api.dicebear.com/7.x/avataaars/svg?seed=2"
+          :class-names="{ img: 'custom-img' }"
+          size="{64}"
+        />
+        <Avatar
+          src="https://api.dicebear.com/7.x/avataaars/svg?seed=3"
+          :class-names="{ img: 'custom-img' }"
+          size="{64}"
+          shape="square"
+        />
       </div>
     </div>
 
@@ -35,7 +44,7 @@
       <div style="display: flex; gap: 16px; align-items: center">
         <Avatar :class-names="{ root: 'gradient-avatar', string: 'text-glow' }" size="{64}"> K </Avatar>
         <Avatar
-          src="https://i.pravatar.cc/150?img=4"
+          src="https://api.dicebear.com/7.x/avataaars/svg?seed=4"
           :class-names="{ root: 'gradient-avatar', img: 'custom-img' }"
           size="{64}"
         />
@@ -60,7 +69,7 @@
           JS
         </Avatar>
         <Avatar
-          src="https://i.pravatar.cc/150?img=5"
+          src="https://api.dicebear.com/7.x/avataaars/svg?seed=5"
           :styles="{
             root: { borderRadius: '12px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)' },
             img: { filter: 'grayscale(50%)' },

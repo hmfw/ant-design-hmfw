@@ -31,6 +31,13 @@ describe('Image', () => {
     expect(root.attributes('style')).toContain('50vh')
   })
 
+  it('applies numeric string width and height with px unit', () => {
+    const wrapper = mount(Image, { props: { src: 'test.jpg', width: '200', height: '150' } })
+    const root = wrapper.find('.hmfw-image')
+    expect(root.attributes('style')).toContain('200px')
+    expect(root.attributes('style')).toContain('150px')
+  })
+
   it('shows error placeholder when image fails to load and no fallback', async () => {
     const wrapper = mount(Image, { props: { src: 'bad.jpg' } })
     await wrapper.find('img').trigger('error')
@@ -41,6 +48,17 @@ describe('Image', () => {
     const wrapper = mount(Image, { props: { src: 'bad.jpg', fallback: 'fallback.jpg' } })
     await wrapper.find('img').trigger('error')
     expect(wrapper.find('img').attributes('src')).toBe('fallback.jpg')
+  })
+
+  it('shows error placeholder when both src and fallback fail', async () => {
+    const wrapper = mount(Image, { props: { src: 'bad.jpg', fallback: 'bad-fallback.jpg' } })
+    // 第一次错误：src 失败，切换到 fallback
+    await wrapper.find('img').trigger('error')
+    expect(wrapper.find('img').attributes('src')).toBe('bad-fallback.jpg')
+    // 第二次错误：fallback 也失败，显示错误占位符
+    await wrapper.find('img').trigger('error')
+    expect(wrapper.find('.hmfw-image-error-placeholder').exists()).toBe(true)
+    expect(wrapper.find('img').exists()).toBe(false)
   })
 
   it('shows placeholder when placeholder prop is true', () => {

@@ -540,11 +540,16 @@ export const Image = defineComponent({
     const status = ref<'loading' | 'loaded' | 'error'>('loading')
     const selfVisible = ref(false)
     const groupCtx = inject(PREVIEW_GROUP_KEY, null)
+    // 标记是否已经尝试过 fallback（避免 fallback 失败后死循环）
+    const isShowingFallback = ref(false)
+    const fallbackFailed = ref(false)
 
     watch(
       () => props.src,
       () => {
         status.value = 'loading'
+        isShowingFallback.value = false
+        fallbackFailed.value = false
       },
     )
 
@@ -554,6 +559,13 @@ export const Image = defineComponent({
     const onError = (e: Event) => {
       status.value = 'error'
       props.onError?.(e)
+      // 如果当前显示的是 fallback，标记 fallback 也失败了
+      if (isShowingFallback.value) {
+        fallbackFailed.value = true
+      } else if (props.fallback) {
+        // 否则，如果有 fallback，切换到 fallback
+        isShowingFallback.value = true
+      }
     }
 
     // 解析 preview 配置（group 优先取 group 的）
@@ -603,12 +615,24 @@ export const Image = defineComponent({
       onBeforeUnmount(unregister)
     }
 
-    const rootStyle = computed(() => ({
-      width: typeof props.width === 'number' ? `${props.width}px` : props.width,
-      height: typeof props.height === 'number' ? `${props.height}px` : props.height,
-    }))
+    const rootStyle = computed(() => {
+      const normalizeSize = (size: number | string | undefined) => {
+        if (size === undefined) return undefined
+        // 纯数字字符串或数字都加 px
+        if (typeof size === 'number') return `${size}px`
+        if (/^\d+$/.test(size)) return `${size}px`
+        return size
+      }
+      return {
+        width: normalizeSize(props.width),
+        height: normalizeSize(props.height),
+      }
+    })
 
-    const displaySrc = computed(() => (status.value === 'error' && props.fallback ? props.fallback : props.src))
+    const displaySrc = computed(() => {
+      // 如果标记了显示 fallback，则显示 fallback，否则显示 src
+      return isShowingFallback.value && props.fallback ? props.fallback : props.src
+    })
 
     const previewSrc = computed(() => previewConfig.value?.src ?? props.src ?? '')
 
@@ -640,14 +664,14 @@ export const Image = defineComponent({
           attrs.class as string,
           {
             [`${prefixCls}-preview`]: canPreview.value,
-            [`${prefixCls}-error`]: status.value === 'error' && !props.fallback,
+            [`${prefixCls}-error`]: status.value === 'error' && (!props.fallback || fallbackFailed.value),
           },
           props.classNames?.root,
         )}
         style={[rootStyle.value, attrs.style as any, props.styles?.root]}
       >
         {status.value === 'loading' && renderPlaceholder()}
-        {status.value === 'error' && !props.fallback ? (
+        {status.value === 'error' && (!props.fallback || fallbackFailed.value) ? (
           <div class={cls(`${prefixCls}-error-placeholder`, props.classNames?.error)} style={props.styles?.error}>
             <span>图片加载失败</span>
           </div>
