@@ -1,0 +1,27 @@
+import{b as s,i as t,o as p}from"./index-D5KOSvVL.js";const o={class:"markdown-body"},u={__name:"i18n",setup(e,{expose:a}){return a({frontmatter:{}}),(l,n)=>(p(),s("div",o,[...n[0]||(n[0]=[t(`<h1 id="国际化" tabindex="-1">国际化</h1><p>@hmfw/ant-design 内置中文（<code>zhCN</code>）和英文（<code>enUS</code>）两种语言包，通过 <code>ConfigProvider</code> 的 <code>locale</code> 属性切换。</p><h2 id="使用语言包" tabindex="-1">使用语言包</h2><pre class="language-vue"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ConfigProvider</span> <span class="token attr-name">:locale</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>locale<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>App</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ConfigProvider</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">setup</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>ts<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> ref <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&#39;vue&#39;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> ConfigProvider<span class="token punctuation">,</span> zhCN<span class="token punctuation">,</span> enUS <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&#39;@hmfw/ant-design&#39;</span>
+
+<span class="token keyword">const</span> locale <span class="token operator">=</span> <span class="token function">ref</span><span class="token punctuation">(</span>zhCN<span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> <span class="token function-variable function">toggleLocale</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  locale<span class="token punctuation">.</span>value <span class="token operator">=</span> locale<span class="token punctuation">.</span>value <span class="token operator">===</span> zhCN <span class="token operator">?</span> enUS <span class="token operator">:</span> zhCN
+<span class="token punctuation">}</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre><h2 id="内置语言包" tabindex="-1">内置语言包</h2><table><thead><tr><th>语言包</th><th>语言</th><th>导入路径</th></tr></thead><tbody><tr><td><code>zhCN</code></td><td>简体中文</td><td><code>import { zhCN } from &#39;@hmfw/ant-design&#39;</code></td></tr><tr><td><code>enUS</code></td><td>English</td><td><code>import { enUS } from &#39;@hmfw/ant-design&#39;</code></td></tr></tbody></table><h2 id="语言包内容" tabindex="-1">语言包内容</h2><p>语言包包含以下组件的文案：</p><ul><li><strong>Pagination</strong>：上一页、下一页、跳转等</li><li><strong>DatePicker / TimePicker</strong>：确定、今天、此刻等</li><li><strong>Modal</strong>：确定、取消等</li><li><strong>Popconfirm</strong>：确定、取消等</li><li><strong>Table</strong>：筛选、重置等</li><li><strong>Upload</strong>：上传文件等</li><li><strong>Empty</strong>：暂无数据等</li></ul><h2 id="自定义语言包" tabindex="-1">自定义语言包</h2><p>可以基于内置语言包扩展或完全自定义：</p><pre class="language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> zhCN <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&#39;@hmfw/ant-design&#39;</span>
+
+<span class="token keyword">const</span> myLocale <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token operator">...</span>zhCN<span class="token punctuation">,</span>
+  Pagination<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>zhCN<span class="token punctuation">.</span>Pagination<span class="token punctuation">,</span>
+    prev_page<span class="token operator">:</span> <span class="token string">&#39;上一页&#39;</span><span class="token punctuation">,</span>
+    next_page<span class="token operator">:</span> <span class="token string">&#39;下一页&#39;</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre>`,12)])]))}};export{u as default};
