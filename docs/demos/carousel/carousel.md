@@ -41,6 +41,30 @@
   <CarouselProgress />
 </DemoBlock>
 
+### 多项显示
+
+设置 `slidesToShow` 一次显示多个 slides，`slidesToScroll` 控制每次滚动的数量。
+
+<DemoBlock title="多项显示" :source="CarouselMultipleSource">
+  <CarouselMultiple />
+</DemoBlock>
+
+### 居中模式
+
+设置 `centerMode` 为 `true`，当前激活的 slide 将居中显示，两侧露出部分其他 slides。
+
+<DemoBlock title="居中模式" :source="CarouselCenterSource">
+  <CarouselCenter />
+</DemoBlock>
+
+### 无限循环
+
+设置 `infinite` 为 `true` 开启无限循环。使用克隆节点策略实现无缝循环（参考 Swiper loop 模块）。
+
+<DemoBlock title="无限循环" :source="CarouselInfiniteSource">
+  <CarouselInfinite />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
@@ -70,6 +94,11 @@
 | waitForAnimate | 切换时是否等待动画完成                                                           | `boolean`                                | `false`     | v0.2.0              |
 | prevArrow      | 自定义前进箭头                                                                   | `VNode`                                  | -           | v0.2.0              |
 | nextArrow      | 自定义后退箭头                                                                   | `VNode`                                  | -           | v0.2.0              |
+| adaptiveHeight | 根据当前 slide 自动调整高度                                                      | `boolean`                                | `false`     | v0.7.0              |
+| slidesToShow   | 一次显示几个 slides                                                              | `number`                                 | `1`         | v0.7.0              |
+| slidesToScroll | 一次滚动几个 slides                                                              | `number`                                 | `1`         | v0.7.0              |
+| centerMode     | 居中模式：当前 slide 居中，两侧露出部分 slide                                    | `boolean`                                | `false`     | v0.7.0              |
+| centerPadding  | 居中模式下两侧的 padding（可以是 px 或 %）                                       | `string`                                 | `'50px'`    | v0.7.0              |
 | rootClassName  | 根元素 class                                                                     | `string`                                 | -           | v0.2.0              |
 | classNames     | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselClassNames`                     | -           | -                   |
 | styles         | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselStyles`                         | -           | -                   |
@@ -85,11 +114,14 @@
 
 通过 `ref` 可调用组件方法：
 
-| 方法名 | 说明           | 参数                                                   |
-| ------ | -------------- | ------------------------------------------------------ |
-| goTo   | 跳转到指定索引 | `(slideNumber: number, dontAnimate?: boolean) => void` |
-| next   | 切换到下一张   | `() => void`                                           |
-| prev   | 切换到上一张   | `() => void`                                           |
+| 方法名   | 说明             | 参数                                                   |
+| -------- | ---------------- | ------------------------------------------------------ |
+| goTo     | 跳转到指定 slide | `(slideNumber: number, dontAnimate?: boolean) => void` |
+| next     | 切换到下一张     | `() => void`                                           |
+| prev     | 切换到上一张     | `() => void`                                           |
+| goToPage | 跳转到指定页     | `(pageNumber: number, dontAnimate?: boolean) => void`  |
+| nextPage | 切换到下一页     | `() => void`                                           |
+| prevPage | 切换到上一页     | `() => void`                                           |
 
 ## 可访问性
 
@@ -101,8 +133,17 @@
 ## 注意
 
 - 当前实现为轻量级原生版本，不依赖 react-slick
-- 不支持高级特性：拖拽滑动、响应式断点、多列轮播、居中模式、懒加载等
-- 需要这些高级能力时，建议直接集成第三方轮播库
+- 不支持高级特性：拖拽滑动、响应式断点、懒加载等
+- **多项显示**（`slidesToShow > 1`）时会自动禁用 fade 效果
+- **居中模式**（`centerMode`）需要设置合适的 `centerPadding` 以获得最佳视觉效果
+- **无限循环**（`infinite`）实现原理：
+  - 采用 **Swiper loop 模块**的克隆节点策略
+  - 渲染 3 组 slides：`[原数组] + [原数组] + [原数组]`
+  - 初始定位在中间组，动画滚动到克隆区域后瞬间重置
+  - **循环方向**：next 按钮始终往左滑，prev 按钮始终往右滑，无论是否跨越边界
+  - **Dots 数量**：多项显示时，dots 数量 = 可滚动的页面数，而非 slides 总数
+    - 例如：6 个 slides，`slidesToShow=3`，`slidesToScroll=1` → 4 个 dots（页面：1-2-3, 2-3-4, 3-4-5, 4-5-6）
+- 需要高级能力时，建议直接集成第三方轮播库
 
 ---
 

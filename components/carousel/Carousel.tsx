@@ -30,6 +30,10 @@ export const Carousel = defineComponent({
     nextArrow: Object,
     waitForAnimate: { type: Boolean, default: false },
     adaptiveHeight: { type: Boolean, default: false },
+    slidesToShow: { type: Number, default: 1 },
+    slidesToScroll: { type: Number, default: 1 },
+    centerMode: { type: Boolean, default: false },
+    centerPadding: { type: String, default: '50px' },
     rootClassName: String,
     classNames: Object,
     styles: Object,
@@ -55,6 +59,46 @@ export const Carousel = defineComponent({
 
     const count = computed(() => slides.value.length)
 
+    // 用于 infinite 模式的实际渲染 slides（包含克隆）
+    const renderSlides = computed(() => {
+      if (!props.infinite || count.value === 0 || isFade.value) {
+        // 非 infinite 或 fade 模式时不需要克隆
+        return slides.value
+      }
+
+      // infinite 模式：克隆整个数组以支持无缝循环
+      // 渲染顺序：[1,2,3...n] + [1,2,3...n] + [1,2,3...n]
+      // 总共 3 组，初始定位在中间组
+      const clonedStart = slides.value.slice(0)
+      const clonedEnd = slides.value.slice(0)
+
+      return [...clonedStart, ...slides.value, ...clonedEnd]
+    })
+
+    // 实际的 slide 索引（infinite 模式下需要偏移）
+    const realIndex = computed(() => {
+      if (!props.infinite || isFade.value) {
+        return current.value
+      }
+      // infinite 模式下，偏移量是 count（因为前面克隆了整个数组）
+      return current.value + count.value
+    })
+
+    // 每个 slide 的宽度百分比
+    const slideWidthPercent = computed(() => 100 / props.slidesToShow)
+
+    // 总页数
+    const pageCount = computed(() => {
+      if (count.value === 0) return 0
+      const maxStartIndex = Math.max(0, count.value - props.slidesToShow)
+      return Math.floor(maxStartIndex / props.slidesToScroll) + 1
+    })
+
+    // 当前页索引
+    const currentPage = computed(() => {
+      return Math.floor(current.value / props.slidesToScroll)
+    })
+
     // Merge dotPosition/dotPlacement (dotPlacement takes priority, map left/right to start/end)
     const mergedDotPlacement = computed(() => {
       const placement = props.dotPlacement ?? props.dotPosition ?? 'bottom'
@@ -71,6 +115,8 @@ export const Carousel = defineComponent({
 
     // Determine final effect (fade prop takes priority)
     const finalEffect = computed(() => {
+      // 多项显示时强制使用 scrollx
+      if (props.slidesToShow > 1) return 'scrollx'
       if (props.fade) return 'fade'
       return props.effect
     })
@@ -117,18 +163,35 @@ export const Carousel = defineComponent({
       if (!dontAnimate && props.waitForAnimate && transitioning.value) return
 
       let next = index
-      if (props.infinite) {
-        next = ((index % count.value) + count.value) % count.value
+
+      if (!props.infinite) {
+        // 非 infinite 模式：限制在有效范围内
+        const maxIndex = Math.max(0, count.value - props.slidesToShow)
+        next = Math.max(0, Math.min(index, maxIndex))
+      } else if (!isFade.value) {
+        // infinite 模式（单项或多项）：不限制 next，让它可以超出范围
+        // 动画到克隆区域后，在 setTimeout 中瞬间重置
       } else {
-        next = Math.max(0, Math.min(index, count.value - 1))
+        // infinite + fade 模式：提前取模（因为 fade 没有克隆节点）
+        next = ((index % count.value) + count.value) % count.value
       }
+
       if (next === current.value) return
 
       emit('beforeChange', current.value, next)
 
       if (dontAnimate) {
-        current.value = next
-        emit('afterChange', next)
+        // 不使用动画时，直接取模
+        if (props.infinite && !isFade.value) {
+          // infinite 模式（有克隆节点）：需要取模
+          current.value = ((next % count.value) + count.value) % count.value
+        } else if (props.infinite && isFade.value) {
+          // fade 模式：也需要取模
+          current.value = ((next % count.value) + count.value) % count.value
+        } else {
+          current.value = next
+        }
+        emit('afterChange', current.value)
       } else {
         // 清除旧的定时器
         if (transitionEndTimer) {
@@ -142,19 +205,50 @@ export const Carousel = defineComponent({
 
         // 使用定时器触发 afterChange 事件
         transitionEndTimer = setTimeout(() => {
+          // infinite 模式下，处理循环跳转
+          if (props.infinite && !isFade.value) {
+            // 使用取模实现循环
+            const newIndex = ((next % count.value) + count.value) % count.value
+            if (newIndex !== next) {
+              // 先禁用过渡
+              transitioning.value = false
+              // 使用 nextTick 确保 DOM 更新后再重置位置
+              nextTick(() => {
+                current.value = newIndex
+                emit('afterChange', current.value)
+              })
+              transitionEndTimer = null
+              return
+            }
+          }
+
+          // 没有循环重置的情况（或 fade 模式）
+          if (props.infinite && isFade.value) {
+            // fade 模式使用取模但不需要 nextTick
+            current.value = ((next % count.value) + count.value) % count.value
+          }
+
           transitioning.value = false
-          emit('afterChange', next)
+          emit('afterChange', current.value)
           transitionEndTimer = null
         }, props.speed)
       }
     }
 
-    const prev = () => goTo(current.value - 1)
-    const next = () => goTo(current.value + 1)
+    function goToPage(pageIndex: number, dontAnimate = false) {
+      const slideIndex = pageIndex * props.slidesToScroll
+      goTo(slideIndex, dontAnimate)
+    }
+
+    const prev = () => goTo(current.value - props.slidesToScroll)
+    const next = () => goTo(current.value + props.slidesToScroll)
+
+    const prevPage = () => goToPage(currentPage.value - 1)
+    const nextPage = () => goToPage(currentPage.value + 1)
 
     function startAutoplay() {
-      if (!isAutoplay.value || count.value <= 1) return
-      timer = setInterval(() => goTo(current.value + 1), props.autoplaySpeed)
+      if (!isAutoplay.value || count.value <= props.slidesToShow) return
+      timer = setInterval(() => goTo(current.value + props.slidesToScroll), props.autoplaySpeed)
     }
 
     function stopAutoplay() {
@@ -205,6 +299,9 @@ export const Carousel = defineComponent({
       goTo,
       next,
       prev,
+      goToPage,
+      nextPage,
+      prevPage,
     } as CarouselRef)
 
     // Map dotPlacement to CSS position class
@@ -239,6 +336,7 @@ export const Carousel = defineComponent({
             ref={listRef}
             class={cls(`${prefixCls}-list`, props.classNames?.list)}
             style={{
+              ...(props.centerMode ? { padding: `0 ${props.centerPadding}` } : {}),
               ...(props.adaptiveHeight && carouselHeight.value !== undefined
                 ? {
                     height: `${carouselHeight.value}px`,
@@ -256,18 +354,29 @@ export const Carousel = defineComponent({
                   ? {}
                   : {
                       transform: isVertical.value
-                        ? `translateY(-${current.value * 100}%)`
-                        : `translateX(-${current.value * 100}%)`,
+                        ? `translateY(-${realIndex.value * slideWidthPercent.value}%)`
+                        : `translateX(-${realIndex.value * slideWidthPercent.value}%)`,
                       transition: transitioning.value ? `transform ${speedInSec} ${props.easing}` : 'none',
                     }),
                 ...props.styles?.track,
               }}
             >
-              {slides.value.map((slide, i) => {
-                const isActive = i === current.value
+              {renderSlides.value.map((slide, i) => {
+                // 计算真实的 slide 索引（去掉克隆的偏移）
+                let slideIndex = i
+                const isCloneMode = props.infinite && !isFade.value
+
+                if (isCloneMode) {
+                  // 克隆了整个数组，所以偏移量是 count
+                  slideIndex = i - count.value
+                  // 使用取模映射到原始索引
+                  slideIndex = ((slideIndex % count.value) + count.value) % count.value
+                }
+
+                const isActive = slideIndex === current.value
                 return (
                   <div
-                    key={i}
+                    key={isCloneMode ? `slide-${slideIndex}-${i}` : i}
                     class={cls(
                       `${prefixCls}-slide`,
                       props.classNames?.slide,
@@ -287,6 +396,8 @@ export const Carousel = defineComponent({
                             contentVisibility: isActive ? 'auto' : 'auto',
                           }
                         : {
+                            flex: `0 0 ${slideWidthPercent.value}%`,
+                            width: `${slideWidthPercent.value}%`,
                             contentVisibility: isActive ? 'auto' : 'auto',
                           }),
                       ...props.styles?.slide,
@@ -294,7 +405,7 @@ export const Carousel = defineComponent({
                     }}
                     role="group"
                     aria-roledescription="slide"
-                    aria-label={`${i + 1} / ${count.value}`}
+                    aria-label={`${slideIndex + 1} / ${count.value}`}
                     aria-hidden={!isActive}
                   >
                     {slide}
@@ -304,7 +415,7 @@ export const Carousel = defineComponent({
             </div>
           </div>
 
-          {props.arrows && count.value > 1 && (
+          {props.arrows && count.value > props.slidesToShow && (
             <>
               {props.prevArrow ?? (
                 <Button
@@ -317,9 +428,9 @@ export const Carousel = defineComponent({
                   style={{ ...props.styles?.arrow, ...props.styles?.arrowLeft }}
                   type="text"
                   icon={LeftOutlined}
-                  onClick={prev}
+                  onClick={prevPage}
                   disabled={props.waitForAnimate && transitioning.value}
-                  aria-label="Previous slide"
+                  aria-label="Previous page"
                 />
               )}
               {props.nextArrow ?? (
@@ -333,15 +444,15 @@ export const Carousel = defineComponent({
                   style={{ ...props.styles?.arrow, ...props.styles?.arrowRight }}
                   type="text"
                   icon={RightOutlined}
-                  onClick={next}
+                  onClick={nextPage}
                   disabled={props.waitForAnimate && transitioning.value}
-                  aria-label="Next slide"
+                  aria-label="Next page"
                 />
               )}
             </>
           )}
 
-          {enableDots.value && count.value > 1 && (
+          {enableDots.value && pageCount.value > 1 && (
             <ul
               class={cls(
                 `${prefixCls}-dots`,
@@ -355,20 +466,20 @@ export const Carousel = defineComponent({
               )}
               style={props.styles?.dots}
             >
-              {slides.value.map((_, i) => {
-                const isActive = i === current.value
+              {Array.from({ length: pageCount.value }).map((_, pageIndex) => {
+                const isActive = pageIndex === currentPage.value
                 return (
                   <li
-                    key={i}
+                    key={pageIndex}
                     class={cls(
                       props.classNames?.dot,
                       { [`${prefixCls}-dot-active`]: isActive },
                       isActive && props.classNames?.dotActive,
                     )}
                     style={{ ...props.styles?.dot, ...(isActive && props.styles?.dotActive) }}
-                    onClick={() => goTo(i)}
+                    onClick={() => goToPage(pageIndex)}
                   >
-                    <button aria-label={`Go to slide ${i + 1}`} />
+                    <button aria-label={`Go to page ${pageIndex + 1}`} />
                   </li>
                 )
               })}

@@ -20,6 +20,9 @@ export interface CarouselRef {
   goTo: (slide: number, dontAnimate?: boolean) => void
   next: () => void
   prev: () => void
+  goToPage: (page: number, dontAnimate?: boolean) => void
+  nextPage: () => void
+  prevPage: () => void
 }
 
 /**
@@ -114,6 +117,14 @@ export interface CarouselProps {
   waitForAnimate?: boolean
   /** Adjust the height of the carousel for the current slide */
   adaptiveHeight?: boolean
+  /** Number of slides to show at once */
+  slidesToShow?: number
+  /** Number of slides to scroll at once */
+  slidesToScroll?: number
+  /** Center mode: center current slide with partial prev/next slides visible */
+  centerMode?: boolean
+  /** Side padding when in center mode (px or %) */
+  centerPadding?: string
   /** Root class name */
   rootClassName?: string
   /** 语义化类名 */
