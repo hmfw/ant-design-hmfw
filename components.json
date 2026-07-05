@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -1972,6 +1972,41 @@
         },
         {
           "section": "Carousel Props",
+          "name": "adaptiveHeight",
+          "description": "根据当前 slide 自动调整高度",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "slidesToShow",
+          "description": "一次显示几个 slides",
+          "type": "`number`",
+          "default": "`1`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "slidesToScroll",
+          "description": "一次滚动几个 slides",
+          "type": "`number`",
+          "default": "`1`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "centerMode",
+          "description": "居中模式：当前 slide 居中，两侧露出部分 slide",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Carousel Props",
+          "name": "centerPadding",
+          "description": "居中模式下两侧的 padding（可以是 px 或 %）",
+          "type": "`string`",
+          "default": "`'50px'`"
+        },
+        {
+          "section": "Carousel Props",
           "name": "rootClassName",
           "description": "根元素 class",
           "type": "`string`",
@@ -1994,7 +2029,7 @@
         {
           "section": "Carousel Ref 方法",
           "name": "`(slideNumber: number, dontAnimate?: boolean) => void`",
-          "description": "跳转到指定索引",
+          "description": "跳转到指定 slide",
           "type": "",
           "default": ""
         },
@@ -2009,6 +2044,27 @@
           "section": "Carousel Ref 方法",
           "name": "`() => void`",
           "description": "切换到上一张",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Carousel Ref 方法",
+          "name": "`(pageNumber: number, dontAnimate?: boolean) => void`",
+          "description": "跳转到指定页",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Carousel Ref 方法",
+          "name": "`() => void`",
+          "description": "切换到下一页",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "Carousel Ref 方法",
+          "name": "`() => void`",
+          "description": "切换到上一页",
           "type": "",
           "default": ""
         }
@@ -2048,6 +2104,21 @@
           "title": "自动播放进度条",
           "description": "设置 `autoplay.dotDuration` 为 `true`，指示点将显示进度条动画。",
           "code": "<template>\n  <Carousel :autoplay=\"{ dotDuration: true }\" :autoplay-speed=\"2000\">\n    <div\n      class=\"carousel-item\"\n      style=\"background: #364d79; color: #fff; height: 160px; line-height: 160px; text-align: center\"\n    >\n      Slide 1\n    </div>\n    <div\n      class=\"carousel-item\"\n      style=\"background: #7dbcea; color: #fff; height: 160px; line-height: 160px; text-align: center\"\n    >\n      Slide 2\n    </div>\n    <div\n      class=\"carousel-item\"\n      style=\"background: #00a0e9; color: #fff; height: 160px; line-height: 160px; text-align: center\"\n    >\n      Slide 3\n    </div>\n    <div\n      class=\"carousel-item\"\n      style=\"background: #1890ff; color: #fff; height: 160px; line-height: 160px; text-align: center\"\n    >\n      Slide 4\n    </div>\n  </Carousel>\n</template>\n\n<script setup lang=\"ts\">\nimport { Carousel } from '@hmfw/ant-design'\n</script>"
+        },
+        {
+          "title": "多项显示",
+          "description": "设置 `slidesToShow` 一次显示多个 slides，`slidesToScroll` 控制每次滚动的数量。",
+          "code": "<template>\n  <div class=\"carousel-multiple-demo\">\n    <h4>一次显示 3 个（slidesToShow: 3）</h4>\n    <Carousel :slides-to-show=\"3\" arrows>\n      <div v-for=\"i in 9\" :key=\"i\" class=\"slide-item\">\n        <div class=\"slide-content\">{{ i }}</div>\n      </div>\n    </Carousel>\n\n    <h4 style=\"margin-top: 32px\">一次显示 3 个，每次滚动 3 个</h4>\n    <Carousel :slides-to-show=\"3\" :slides-to-scroll=\"3\" arrows>\n      <div v-for=\"i in 9\" :key=\"i\" class=\"slide-item\">\n        <div class=\"slide-content\">{{ i }}</div>\n      </div>\n    </Carousel>\n\n    <h4 style=\"margin-top: 32px\">一次显示 4 个，每次滚动 2 个</h4>\n    <Carousel :slides-to-show=\"4\" :slides-to-scroll=\"2\" arrows>\n      <div v-for=\"i in 12\" :key=\"i\" class=\"slide-item\">\n        <div class=\"slide-content\">{{ i }}</div>\n      </div>\n    </Carousel>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Carousel } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n.carousel-multiple-demo h4 {\n  margin-bottom: 16px;\n  color: rgba(0, 0, 0, 0.88);\n}\n\n.slide-item {\n  padding: 0 8px;\n}\n\n.slide-content {\n  height: 160px;\n  line-height: 160px;\n  text-align: center;\n  background: #364d79;\n  color: #fff;\n  font-size: 24px;\n  font-weight: 500;\n  border-radius: 4px;\n}\n</style>"
+        },
+        {
+          "title": "居中模式",
+          "description": "设置 `centerMode` 为 `true`，当前激活的 slide 将居中显示，两侧露出部分其他 slides。",
+          "code": "<template>\n  <div class=\"carousel-center-demo\">\n    <h4>居中模式（centerMode）</h4>\n    <Carousel :slides-to-show=\"3\" :center-mode=\"true\" center-padding=\"10%\" arrows>\n      <div v-for=\"i in 7\" :key=\"i\" class=\"slide-item\">\n        <div class=\"slide-content\">{{ i }}</div>\n      </div>\n    </Carousel>\n\n    <h4 style=\"margin-top: 32px\">居中模式 - 自定义 padding</h4>\n    <Carousel :slides-to-show=\"1\" :center-mode=\"true\" center-padding=\"15%\" arrows>\n      <div v-for=\"i in 5\" :key=\"i\" class=\"slide-item\">\n        <div class=\"slide-content large\">Slide {{ i }}</div>\n      </div>\n    </Carousel>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Carousel } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n.carousel-center-demo h4 {\n  margin-bottom: 16px;\n  color: rgba(0, 0, 0, 0.88);\n}\n\n.slide-item {\n  padding: 0 8px;\n}\n\n.slide-content {\n  height: 160px;\n  line-height: 160px;\n  text-align: center;\n  background: #364d79;\n  color: #fff;\n  font-size: 24px;\n  font-weight: 500;\n  border-radius: 4px;\n  transition: all 0.3s;\n}\n\n.slide-content.large {\n  height: 200px;\n  line-height: 200px;\n  font-size: 32px;\n}\n\n:deep(.hmfw-carousel-slide-active) .slide-content {\n  background: #1677ff;\n  transform: scale(1.05);\n}\n</style>"
+        },
+        {
+          "title": "无限循环",
+          "description": "设置 `infinite` 为 `true` 开启无限循环。使用克隆节点策略实现无缝循环（参考 Swiper loop 模块）。",
+          "code": "<template>\n  <div class=\"carousel-infinite-demo\">\n    <h4>无限循环 - 单项显示（原有行为）</h4>\n    <Carousel infinite arrows>\n      <div v-for=\"i in 5\" :key=\"i\" class=\"slide-item\">\n        <div class=\"slide-content\">{{ i }}</div>\n      </div>\n    </Carousel>\n\n    <h4 style=\"margin-top: 32px\">无限循环 - 多项显示（无缝循环）</h4>\n    <p style=\"color: #666; margin-bottom: 16px; font-size: 14px\">使用克隆节点实现无缝循环，参考 Swiper 的实现方式</p>\n    <Carousel :slides-to-show=\"3\" :infinite=\"true\" arrows>\n      <div v-for=\"i in 6\" :key=\"i\" class=\"slide-item\">\n        <div class=\"slide-content\">Slide {{ i }}</div>\n      </div>\n    </Carousel>\n\n    <h4 style=\"margin-top: 32px\">无限循环 - 自动播放</h4>\n    <Carousel :slides-to-show=\"4\" :infinite=\"true\" :autoplay=\"true\" :autoplay-speed=\"2000\" arrows>\n      <div v-for=\"i in 8\" :key=\"i\" class=\"slide-item\">\n        <div class=\"slide-content small\">{{ i }}</div>\n      </div>\n    </Carousel>\n\n    <h4 style=\"margin-top: 32px\">无限循环 - 居中模式</h4>\n    <Carousel :slides-to-show=\"3\" :infinite=\"true\" :center-mode=\"true\" center-padding=\"15%\" arrows>\n      <div v-for=\"i in 7\" :key=\"i\" class=\"slide-item\">\n        <div class=\"slide-content\">{{ i }}</div>\n      </div>\n    </Carousel>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Carousel } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n.carousel-infinite-demo h4 {\n  margin-bottom: 8px;\n  color: rgba(0, 0, 0, 0.88);\n}\n\n.slide-item {\n  padding: 0 8px;\n}\n\n.slide-content {\n  height: 160px;\n  line-height: 160px;\n  text-align: center;\n  background: #364d79;\n  color: #fff;\n  font-size: 32px;\n  font-weight: 500;\n  border-radius: 4px;\n  transition: all 0.3s;\n}\n\n.slide-content.small {\n  height: 120px;\n  line-height: 120px;\n  font-size: 24px;\n}\n\n:deep(.hmfw-carousel-slide-active) .slide-content {\n  background: #1677ff;\n}\n</style>"
         },
         {
           "title": "细粒度样式控制",

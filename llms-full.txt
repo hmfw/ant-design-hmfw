@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.6.3。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.6.4。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -1048,6 +1048,11 @@ import { Carousel } from '@hmfw/ant-design'
 | waitForAnimate | 切换时是否等待动画完成 | `boolean` | `false` |
 | prevArrow | 自定义前进箭头 | `VNode` | - |
 | nextArrow | 自定义后退箭头 | `VNode` | - |
+| adaptiveHeight | 根据当前 slide 自动调整高度 | `boolean` | `false` |
+| slidesToShow | 一次显示几个 slides | `number` | `1` |
+| slidesToScroll | 一次滚动几个 slides | `number` | `1` |
+| centerMode | 居中模式：当前 slide 居中，两侧露出部分 slide | `boolean` | `false` |
+| centerPadding | 居中模式下两侧的 padding（可以是 px 或 %） | `string` | `'50px'` |
 | rootClassName | 根元素 class | `string` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselStyles` | - |
@@ -1056,9 +1061,12 @@ import { Carousel } from '@hmfw/ant-design'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `(slideNumber: number, dontAnimate?: boolean) => void` | 跳转到指定索引 |  |  |
+| `(slideNumber: number, dontAnimate?: boolean) => void` | 跳转到指定 slide |  |  |
 | `() => void` | 切换到下一张 |  |  |
 | `() => void` | 切换到上一张 |  |  |
+| `(pageNumber: number, dontAnimate?: boolean) => void` | 跳转到指定页 |  |  |
+| `() => void` | 切换到下一页 |  |  |
+| `() => void` | 切换到上一页 |  |  |
 
 ### Events
 
