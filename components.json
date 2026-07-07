@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -1414,6 +1414,11 @@
           "title": "延迟加载",
           "description": "通过设置 `loading` 为对象并指定 `delay` 属性，可以延迟显示加载状态。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div style=\"display: flex; gap: 8px\">\n      <Button type=\"primary\" :loading=\"{ delay: 500 }\" @click=\"handleClick\"> Click me (500ms delay) </Button>\n      <Button type=\"primary\" :loading=\"loading\" @click=\"toggleLoading\">\n        {{ loading ? 'Loading...' : 'Click to load' }}\n      </Button>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Button } from '@hmfw/ant-design'\n\nconst loading = ref(false)\n\nconst handleClick = () => {\n  console.log('Button clicked')\n}\n\nconst toggleLoading = () => {\n  loading.value = !loading.value\n}\n</script>"
+        },
+        {
+          "title": "两个汉字间距",
+          "description": "按钮内只有两个汉字时，默认会自动在两个汉字之间插入一个空格，使其更美观。可以通过设置 `autoInsertSpace` 为 `false` 来禁用此行为。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div>\n      <h4 style=\"margin: 0 0 8px 0; font-size: 14px; color: rgba(0, 0, 0, 0.65)\">自动插入空格（默认开启）</h4>\n      <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n        <Button type=\"primary\">按钮</Button>\n        <Button>确认</Button>\n        <Button type=\"dashed\">取消</Button>\n        <Button type=\"text\">删除</Button>\n      </div>\n    </div>\n\n    <div>\n      <h4 style=\"margin: 0 0 8px 0; font-size: 14px; color: rgba(0, 0, 0, 0.65)\">\n        禁用自动插入空格（<code>:auto-insert-space=\"false\"</code>）\n      </h4>\n      <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n        <Button type=\"primary\" :auto-insert-space=\"false\">按钮</Button>\n        <Button :auto-insert-space=\"false\">确认</Button>\n        <Button type=\"dashed\" :auto-insert-space=\"false\">取消</Button>\n        <Button type=\"text\" :auto-insert-space=\"false\">删除</Button>\n      </div>\n    </div>\n\n    <div>\n      <h4 style=\"margin: 0 0 8px 0; font-size: 14px; color: rgba(0, 0, 0, 0.65)\">非两个汉字（不插入空格）</h4>\n      <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n        <Button type=\"primary\">确认按钮</Button>\n        <Button>一</Button>\n        <Button type=\"dashed\">OK</Button>\n        <Button type=\"text\">删除操作</Button>\n      </div>\n    </div>\n\n    <div>\n      <h4 style=\"margin: 0 0 8px 0; font-size: 14px; color: rgba(0, 0, 0, 0.65)\">带图标时不插入空格</h4>\n      <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n        <Button type=\"primary\" :icon=\"SearchOutlined\">搜索</Button>\n        <Button :icon=\"CheckOutlined\">确认</Button>\n        <Button type=\"dashed\" :icon=\"CloseOutlined\">关闭</Button>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { SearchOutlined, CheckOutlined, CloseOutlined } from '@hmfw/icons'\nimport { Button } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "细粒度样式控制",
