@@ -289,4 +289,200 @@ describe('Button', () => {
     expect(wrapper.classes()).toContain('hmfw-btn-primary')
     wrapper.unmount()
   })
+
+  // ===== autoInsertSpace 功能测试 =====
+  it('inserts space between two Chinese characters by default', async () => {
+    const wrapper = mount(Button, {
+      props: { autoInsertSpace: true },
+      slots: { default: '按钮' },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick() // 等待 watchEffect
+    expect(wrapper.classes()).toContain('hmfw-btn-two-chinese-chars')
+    expect(wrapper.find('.hmfw-btn-two-chinese-chars-content').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('does not insert space when autoInsertSpace is false', async () => {
+    const wrapper = mount(Button, {
+      props: { autoInsertSpace: false },
+      slots: { default: '按钮' },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.classes()).not.toContain('hmfw-btn-two-chinese-chars')
+    expect(wrapper.find('.hmfw-btn-two-chinese-chars-content').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('does not insert space for non-two-character text', async () => {
+    const wrapper = mount(Button, {
+      props: { autoInsertSpace: true },
+      slots: { default: '确认按钮' },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.classes()).not.toContain('hmfw-btn-two-chinese-chars')
+    wrapper.unmount()
+  })
+
+  it('does not insert space for single character', async () => {
+    const wrapper = mount(Button, {
+      props: { autoInsertSpace: true },
+      slots: { default: '确' },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.classes()).not.toContain('hmfw-btn-two-chinese-chars')
+    wrapper.unmount()
+  })
+
+  it('does not insert space when button has icon', async () => {
+    const wrapper = mount(Button, {
+      props: {
+        autoInsertSpace: true,
+        icon: () => <span>icon</span>,
+      },
+      slots: { default: '按钮' },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.classes()).not.toContain('hmfw-btn-two-chinese-chars')
+    wrapper.unmount()
+  })
+
+  it('does not insert space when button is loading', async () => {
+    const wrapper = mount(Button, {
+      props: {
+        autoInsertSpace: true,
+        loading: true,
+      },
+      slots: { default: '按钮' },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.classes()).not.toContain('hmfw-btn-two-chinese-chars')
+    wrapper.unmount()
+  })
+
+  // ===== ARIA 属性测试 =====
+  it('sets aria-busy when loading', () => {
+    const wrapper = mount(Button, {
+      props: { loading: true },
+      slots: { default: 'Button' },
+    })
+    expect(wrapper.attributes('aria-busy')).toBe('true')
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
+  })
+
+  it('sets aria-disabled for disabled button', () => {
+    const wrapper = mount(Button, {
+      props: { disabled: true },
+      slots: { default: 'Button' },
+    })
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
+  })
+
+  it('sets aria-disabled and role=button for disabled link', () => {
+    const wrapper = mount(Button, {
+      props: { href: 'https://example.com', disabled: true },
+      slots: { default: 'Link' },
+    })
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
+    expect(wrapper.attributes('tabindex')).toBe('-1')
+    expect(wrapper.attributes('role')).toBe('button')
+  })
+
+  it('sets role=button for link button', () => {
+    const wrapper = mount(Button, {
+      props: { href: 'https://example.com' },
+      slots: { default: 'Link' },
+    })
+    expect(wrapper.attributes('role')).toBe('button')
+  })
+
+  it('does not set tabindex for enabled link button', () => {
+    const wrapper = mount(Button, {
+      props: { href: 'https://example.com' },
+      slots: { default: 'Link' },
+    })
+    expect(wrapper.attributes('tabindex')).toBeUndefined()
+  })
+
+  // ===== loading 延迟取消测试 =====
+  it('cancels loading delay when loading becomes false before delay', async () => {
+    const wrapper = mount(Button, {
+      props: { loading: { delay: 500 } },
+      slots: { default: 'Button' },
+    })
+
+    expect(wrapper.classes()).not.toContain('hmfw-btn-loading')
+
+    // 在延迟前取消 loading
+    await wrapper.setProps({ loading: false })
+    vi.advanceTimersByTime(500)
+    await wrapper.vm.$nextTick()
+
+    // 应该仍然没有 loading 类
+    expect(wrapper.classes()).not.toContain('hmfw-btn-loading')
+  })
+
+  it('clears loading delay timer on unmount', () => {
+    const wrapper = mount(Button, {
+      props: { loading: { delay: 500 } },
+      slots: { default: 'Button' },
+    })
+
+    expect(wrapper.classes()).not.toContain('hmfw-btn-loading')
+
+    // 在延迟完成前卸载
+    wrapper.unmount()
+
+    // 推进时间，不应该抛出错误
+    expect(() => {
+      vi.advanceTimersByTime(500)
+    }).not.toThrow()
+  })
+
+  // ===== styles 合并测试 =====
+  it('merges styles.icon and styles.loading when loading', () => {
+    const wrapper = mount(Button, {
+      props: {
+        loading: true,
+        styles: {
+          icon: { fontSize: '16px' },
+          loading: { color: 'red' },
+        },
+      },
+      slots: { default: 'Button' },
+    })
+    const loadingEl = wrapper.find('.hmfw-btn-loading-icon')
+    expect(loadingEl.exists()).toBe(true)
+    const style = loadingEl.attributes('style')
+    expect(style).toContain('font-size')
+    expect(style).toContain('color')
+  })
+
+  it('applies both classNames.icon and classNames.loading when loading', () => {
+    const wrapper = mount(Button, {
+      props: {
+        loading: true,
+        classNames: {
+          icon: 'custom-icon',
+          loading: 'custom-loading',
+        },
+      },
+      slots: { default: 'Button' },
+    })
+    const loadingEl = wrapper.find('.hmfw-btn-loading-icon')
+    expect(loadingEl.exists()).toBe(true)
+    expect(loadingEl.classes()).toContain('custom-icon')
+    expect(loadingEl.classes()).toContain('custom-loading')
+  })
 })

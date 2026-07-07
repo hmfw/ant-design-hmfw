@@ -121,6 +121,14 @@
   <ButtonLoadingDelay />
 </DemoBlock>
 
+### 两个汉字间距
+
+按钮内只有两个汉字时，默认会自动在两个汉字之间插入一个空格，使其更美观。可以通过设置 `autoInsertSpace` 为 `false` 来禁用此行为。
+
+<DemoBlock title="两个汉字间距" :source="ButtonAutoInsertSpaceSource">
+  <ButtonAutoInsertSpace />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对 root、icon、loading 等子元素做细粒度样式控制。

@@ -3,7 +3,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--hmfw-margin-xs, 8px);
   font-weight: 400;
   white-space: nowrap;
   text-align: center;
