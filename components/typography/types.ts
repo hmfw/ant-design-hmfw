@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import type { TooltipProps } from '../tooltip'
 
 export type TypographyType = 'secondary' | 'success' | 'warning' | 'danger'
@@ -11,7 +11,7 @@ export interface CopyableConfig {
   /** 复制按钮的 tooltip 文案 [复制前, 复制后]，默认从 locale 取 */
   tooltips?: false | [string, string]
   /** 复制按钮的图标 [复制前, 复制后] */
-  icon?: [any, any]
+  icon?: [VNode, VNode]
 }
 
 /**
@@ -21,10 +21,7 @@ export interface CopyableConfig {
  * - 对象形式可传入完整的 Tooltip props（如 placement、color 等）
  */
 export type EllipsisTooltipConfig =
-  | boolean
-  | string
-  | number
-  | ({ title?: TooltipProps['title'] } & Omit<TooltipProps, 'title'>)
+  boolean | string | number | ({ title?: TooltipProps['title'] } & Omit<TooltipProps, 'title'>)
 
 export interface EllipsisConfig {
   /** 最多显示的行数，超出省略 */
@@ -129,6 +126,10 @@ export interface BaseTypographyProps {
   copyable?: boolean | CopyableConfig
   /** 省略：true 单行省略，或 { rows, tooltip, onEllipsis } 完整配置 */
   ellipsis?: boolean | EllipsisConfig
+  /** 各组件可窄化为自身 ClassNames 类型 */
+  classNames?: { root?: string; copy?: string }
+  /** 各组件可窄化为自身 Styles 类型 */
+  styles?: { root?: CSSProperties; copy?: CSSProperties }
 }
 
 export interface TextProps extends BaseTypographyProps {

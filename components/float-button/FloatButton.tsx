@@ -14,10 +14,6 @@ import type {
   FloatButtonStyles,
 } from './types'
 import { type IconLike, renderIcon, normalizeTooltip } from './shared'
-// 复合子组件在渲染时依赖 FloatButton，构成循环引用；ESM live binding 保证运行期正确
-// （compound 静态属性在文件末尾挂载，彼时两个子组件已初始化完成）。
-import { FloatButtonGroup } from './FloatButtonGroup'
-import { FloatButtonBackTop } from './FloatButtonBackTop'
 
 // ---------------------------------------------------------------------------
 // FloatButton
@@ -153,15 +149,3 @@ export const FloatButton = defineComponent({
     }
   },
 })
-
-// ---------------------------------------------------------------------------
-// Compound API: FloatButton.Group / FloatButton.BackTop (Ant Design v6)
-// ---------------------------------------------------------------------------
-type FloatButtonCompound = typeof FloatButton & {
-  Group: typeof FloatButtonGroup
-  BackTop: typeof FloatButtonBackTop
-}
-;(FloatButton as FloatButtonCompound).Group = FloatButtonGroup
-;(FloatButton as FloatButtonCompound).BackTop = FloatButtonBackTop
-
-export default FloatButton as FloatButtonCompound

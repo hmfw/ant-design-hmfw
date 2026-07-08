@@ -1,9 +1,7 @@
-import Text from './Text'
-import Title from './Title'
-import Paragraph from './Paragraph'
-import Link from './Link'
-
-export { Text, Title, Paragraph, Link }
+export { default as Text } from './Text'
+export { default as Title } from './Title'
+export { default as Paragraph } from './Paragraph'
+export { default as Link } from './Link'
 export type {
   TextProps,
   TitleProps,
@@ -23,10 +21,3 @@ export type {
   LinkClassNames,
   LinkStyles,
 } from './types'
-
-export default {
-  Text,
-  Title,
-  Paragraph,
-  Link,
-}

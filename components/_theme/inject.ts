@@ -24,6 +24,7 @@ function toKebab(key: string): string {
     .replace(/LG/g, '-lg')
     .replace(/MD/g, '-md')
     .replace(/([A-Z])/g, (m) => `-${m.toLowerCase()}`)
+    .replace(/([a-z])(\d)/g, '$1-$2')
     .replace(/--+/g, '-')
     .replace(/^-/, '')
 }

@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { FloatButton } from '../FloatButton'
 import { FloatButtonGroup } from '../FloatButtonGroup'
 import { FloatButtonBackTop } from '../FloatButtonBackTop'
-import FloatButtonDefault from '../FloatButton'
+import { FloatButton as FloatButtonCompound } from '../index'
 import { SettingOutlined } from '@hmfw/icons'
 
 describe('FloatButton', () => {
@@ -117,8 +117,8 @@ describe('FloatButton', () => {
 
 describe('FloatButton compound statics', () => {
   it('exposes Group and BackTop', () => {
-    expect(FloatButtonDefault.Group).toBe(FloatButtonGroup)
-    expect(FloatButtonDefault.BackTop).toBe(FloatButtonBackTop)
+    expect(FloatButtonCompound.Group).toBe(FloatButtonGroup)
+    expect(FloatButtonCompound.BackTop).toBe(FloatButtonBackTop)
   })
 })
 

@@ -6,6 +6,30 @@
 
 ---
 
+## [0.6.7] - 2026-07-08
+
+### ✨ 优化
+
+- **Typography**: 全面提升代码质量、测试覆盖率和可定制性
+  - CSS 颜色、字号、行高、过渡时间全面接入 Design Token（`--hmfw-color-*`、`--hmfw-font-size-heading-*` 等），支持 ConfigProvider 主题覆盖
+  - 修复 `ellipsis` 关闭时未重置截断状态的问题：`setup()` 在 disabled 时也会通过 `nextTick(measure)` 触发 `onEllipsis(false)`
+  - 类型安全：`CopyableConfig.icon` 类型由 `[any, any]` 收敛为 `[VNode, VNode]`
+  - 合并 `BaseProps` / `BaseTypographyProps` 重复类型定义，统一到 `types.ts`
+  - 修复 `useEllipsisDetect` watch 中重复触发 `measure()` 的问题
+  - `resolveEllipsisTooltipProps` 返回值类型从 `Record<string, unknown>` 收紧为 `Partial<TooltipProps>`
+  - 移除 `index.ts` 中未使用的 `export default` 死代码
+  - 单元测试从 40 个扩充至 58 个（+18），覆盖率提升至 **98.74% statements / 100% functions / 90.17% branches**
+  - 新增 7 个 E2E 测试覆盖 ResizeObserver 路径（ellipsis 检测、tooltip 渲染、动态切换、行数变化）
+  - 新增「动态省略切换」Demo
+- **FloatButton**: compound 模式从 `FloatButton.tsx` 迁移至 `index.ts`，对齐 Badge/Card/Menu 等组件的统一模式，消除循环依赖
+- **Theme**: `toKebab` 新增 `([a-z])(\d) → $1-$2` 规则，数字作为独立语义段分隔（`fontSizeHeading1` → `--hmfw-font-size-heading-1`），同步更新 `_theme/style/index.css`、`back-top/style/index.css`
+
+### 📝 文档
+
+- **Typography**: 更新 API 文档（`CopyableConfig.icon` 类型、Design Token 说明）
+
+---
+
 ## [0.6.6] - 2026-07-08
 
 ### ✨ 优化

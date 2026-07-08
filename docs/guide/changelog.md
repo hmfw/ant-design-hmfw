@@ -6,6 +6,111 @@
 
 ---
 
+## [0.6.7] - 2026-07-08
+
+### ✨ 优化
+
+- **Typography**: 全面提升代码质量、测试覆盖率和可定制性
+  - CSS 颜色、字号、行高、过渡时间全面接入 Design Token（`--hmfw-color-*`、`--hmfw-font-size-heading-*` 等），支持 ConfigProvider 主题覆盖
+  - 修复 `ellipsis` 关闭时未重置截断状态的问题：`setup()` 在 disabled 时也会通过 `nextTick(measure)` 触发 `onEllipsis(false)`
+  - 类型安全：`CopyableConfig.icon` 类型由 `[any, any]` 收敛为 `[VNode, VNode]`
+  - 合并 `BaseProps` / `BaseTypographyProps` 重复类型定义，统一到 `types.ts`
+  - 修复 `useEllipsisDetect` watch 中重复触发 `measure()` 的问题
+  - `resolveEllipsisTooltipProps` 返回值类型从 `Record<string, unknown>` 收紧为 `Partial<TooltipProps>`
+  - 移除 `index.ts` 中未使用的 `export default` 死代码
+  - 单元测试从 40 个扩充至 58 个（+18），覆盖率提升至 **98.74% statements / 100% functions / 90.17% branches**
+  - 新增 7 个 E2E 测试覆盖 ResizeObserver 路径（ellipsis 检测、tooltip 渲染、动态切换、行数变化）
+  - 新增「动态省略切换」Demo
+- **FloatButton**: compound 模式从 `FloatButton.tsx` 迁移至 `index.ts`，对齐 Badge/Card/Menu 等组件的统一模式，消除循环依赖
+- **Theme**: `toKebab` 新增 `([a-z])(\d) → $1-$2` 规则，数字作为独立语义段分隔（`fontSizeHeading1` → `--hmfw-font-size-heading-1`），同步更新 `_theme/style/index.css`、`back-top/style/index.css`
+
+### 📝 文档
+
+- **Typography**: 更新 API 文档（`CopyableConfig.icon` 类型、Design Token 说明）
+
+---
+
+## [0.6.6] - 2026-07-08
+
+### ✨ 优化
+
+- **FloatButton**: 重构组件结构，提升可维护性
+  - 拆分子组件：`FloatButtonGroup`、`FloatButtonBackTop` 独立为单独文件
+  - 提取共享逻辑：`shared.ts`（`renderIcon`、`normalizeTooltip`、`IconLike` 类型）
+  - 类型收敛：`tooltip` 由 `Record<string, any>` 收敛为 `string | TooltipProps`
+  - 移除内部 `icons.ts`，统一使用 `@hmfw/icons`
+- **Button**: 中文字符正则改用 Unicode 码点区间，提升可读性
+- **AutoComplete**: 清理未使用的 `CSSProperties` 导入
+
+### 💥 破坏性变更
+
+- **FloatButton**: 移除已废弃的 `description` 属性，统一使用 `content`
+
+### 📝 文档
+
+- **FloatButton**: 新增 Demo（禁用态、链接、Tooltip、受控分组、自定义回到顶部）
+
+---
+
+## [0.6.5] - 2026-07-07
+
+### ✨ 优化
+
+- **Button**: 全面代码优化，提升代码质量到卓越级
+  - 类型安全：消除 `any` 类型，使用 `VNode | null` 和 HTML 属性类型别名
+  - 性能优化：重构 `watch` 为 `computed` + `watchEffect`，避免过度触发
+  - 代码重构：提取 `renderIcon()` 函数，简化两个中文字符判断逻辑
+  - Props 组织：抽取到文件顶部，使用 `satisfies` 确保类型一致性
+  - 属性抽取：使用完整属性对象 + 展开运算符，提升 JSX 可读性
+  - 样式优化：使用 CSS 变量 `--hmfw-margin-xs` 替代硬编码
+  - 正则优化：扩展中文字符范围到扩展 A 区（㐀-䶿）
+  - 无障碍改进：完善 ARIA 属性（`role="button"`, `aria-busy`, `tabindex`）
+  - 代码行数优化 14%（277 → 238 行）
+
+### 🧪 测试
+
+- **Button**: 新增 15 个测试用例，覆盖率从 82.5% 提升到 99%
+  - autoInsertSpace 功能测试（6个）：两个汉字间距、图标/loading 状态排除
+  - ARIA 无障碍测试（5个）：aria-busy、aria-disabled、role、tabindex
+  - loading 延迟测试（2个）：延迟取消、定时器清理
+  - 样式合并测试（2个）：classNames/styles 叠加逻辑
+  - 测试用例总数：28 → 43 个（+53.6%），全部通过
+
+### 📝 文档
+
+- **Button**: 新增"两个汉字间距"章节和 Demo
+  - 演示自动插入空格（默认开启）
+  - 演示禁用自动插入空格
+  - 演示非两个汉字、带图标等边界情况
+  - 完善 API 文档中 `autoInsertSpace` 属性说明
+
+---
+
+## [0.6.4] - 2026-07-05
+
+### 🐛 修复
+
+- **Carousel**: 修复 infinite 模式下单项显示循环方向错误的问题
+  - 问题：从最后一个 slide 到第一个 slide 时往右滑（应该往左）
+  - 原因：提前取模导致跳过克隆节点动画
+  - 修复：统一单项和多项使用克隆节点策略，符合 Swiper loop 标准行为
+
+### 📝 文档
+
+- **Carousel**: 新增 `adaptiveHeight` 属性文档
+- **Carousel**: 重写"注意事项"部分，详细说明无限循环实现原理
+  - 克隆节点策略（Swiper loop 模块）
+  - 循环方向规则（next 往左，prev 往右）
+  - Dots 数量计算规则（多项显示时为页面数而非 slide 数）
+- **Carousel**: 调整示例顺序，将"细粒度样式控制"移到最后
+
+### 🧪 测试
+
+- **Carousel**: 修复 `wraps around with infinite=true` 测试，添加额外的 nextTick 等待循环重置
+- **Carousel**: 所有 40 个测试通过，整体测试套件 1855 个测试全部通过
+
+---
+
 ## [0.6.3] - 2026-07-04
 
 ### 🐛 修复

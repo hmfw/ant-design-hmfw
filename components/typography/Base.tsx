@@ -14,19 +14,13 @@ import { CheckOutlined, CopyOutlined } from '@hmfw/icons'
 import { cls } from '../_utils'
 import { useLocale } from '../config-provider'
 import { Tooltip } from '../tooltip'
+import type { TooltipProps } from '../tooltip/types'
 import type {
   TypographyType,
   CopyableConfig,
   EllipsisConfig,
   EllipsisTooltipConfig,
-  TextClassNames,
-  TextStyles,
-  TitleClassNames,
-  TitleStyles,
-  ParagraphClassNames,
-  ParagraphStyles,
-  LinkClassNames,
-  LinkStyles,
+  BaseTypographyProps,
 } from './types'
 
 // 共享装饰类 props（Text/Title/Paragraph/Link 通用）
@@ -55,22 +49,6 @@ export const baseTypographyProps = {
   },
 }
 
-export interface BaseProps {
-  type?: TypographyType
-  disabled?: boolean
-  mark?: boolean
-  code?: boolean
-  keyboard?: boolean
-  underline?: boolean
-  delete?: boolean
-  strong?: boolean
-  italic?: boolean
-  copyable?: boolean | CopyableConfig
-  ellipsis?: boolean | EllipsisConfig
-  classNames?: TextClassNames | TitleClassNames | ParagraphClassNames | LinkClassNames
-  styles?: TextStyles | TitleStyles | ParagraphStyles | LinkStyles
-}
-
 /** 解析 ellipsis prop 的行数：true → 1，{ rows } → rows，false → 0 */
 function getEllipsisRows(ellipsis: boolean | EllipsisConfig | undefined): number {
   if (!ellipsis) return 0
@@ -85,7 +63,7 @@ export function getEllipsisConfig(ellipsis: boolean | EllipsisConfig | undefined
 }
 
 // 计算根元素 class
-export function getTypographyClass(prefixCls: string, props: BaseProps, extra?: string): string {
+export function getTypographyClass(prefixCls: string, props: BaseTypographyProps, extra?: string): string {
   const rows = getEllipsisRows(props.ellipsis)
   return cls(prefixCls, extra, {
     [`${prefixCls}-${props.type}`]: !!props.type,
@@ -96,7 +74,7 @@ export function getTypographyClass(prefixCls: string, props: BaseProps, extra?: 
 }
 
 /** 多行省略需要内联设置 -webkit-line-clamp，返回 style 对象或 undefined */
-export function getEllipsisStyle(props: BaseProps): CSSProperties | undefined {
+export function getEllipsisStyle(props: BaseTypographyProps): CSSProperties | undefined {
   const rows = getEllipsisRows(props.ellipsis)
   if (rows > 1) {
     return { '-webkit-line-clamp': String(rows) } as CSSProperties
@@ -105,7 +83,7 @@ export function getEllipsisStyle(props: BaseProps): CSSProperties | undefined {
 }
 
 // 依次包裹文本装饰标签
-export function wrapDecorations(props: BaseProps, children: any): any {
+export function wrapDecorations(props: BaseTypographyProps, children: any): any {
   let node = children
   if (props.code) node = <code>{node}</code>
   if (props.mark) node = <mark>{node}</mark>
@@ -154,7 +132,7 @@ export function useCopyable(prefixCls: string) {
   const locale = useLocale()
   let timer: ReturnType<typeof setTimeout> | undefined
 
-  const renderCopy = (props: BaseProps, getText: () => string) => {
+  const renderCopy = (props: BaseTypographyProps, getText: () => string) => {
     if (!props.copyable) return null
     const config: CopyableConfig = typeof props.copyable === 'object' ? props.copyable : {}
 
@@ -219,7 +197,7 @@ export function useCopyable(prefixCls: string) {
  * - 多行省略：比较 scrollHeight 与 clientHeight
  * - 监听 ResizeObserver（容器/内容尺寸变化）
  */
-export function useEllipsisDetect(el: Ref<HTMLElement | null>, props: BaseProps) {
+export function useEllipsisDetect(el: Ref<HTMLElement | null>, props: BaseTypographyProps) {
   const isEllipsis = ref(false)
 
   const enabled = computed(() => !!props.ellipsis)
@@ -257,7 +235,11 @@ export function useEllipsisDetect(el: Ref<HTMLElement | null>, props: BaseProps)
 
   const setup = () => {
     teardown()
-    if (!enabled.value) return
+    if (!enabled.value) {
+      // ellipsis 被关闭，需重置截断状态
+      nextTick(measure)
+      return
+    }
     const node = el.value
     if (!node) return
     if (typeof ResizeObserver !== 'undefined') {
@@ -277,12 +259,11 @@ export function useEllipsisDetect(el: Ref<HTMLElement | null>, props: BaseProps)
   onMounted(() => setup())
   onBeforeUnmount(() => teardown())
 
-  // 当 ellipsis / rows 变化时，重新设置观察器
+  // 当 ellipsis / rows 变化时，重新设置观察器（setup 内已调用 nextTick(measure)）
   watch(
     () => [enabled.value, rows.value],
     () => {
       setup()
-      nextTick(measure)
     },
   )
 
@@ -299,7 +280,7 @@ export function useEllipsisDetect(el: Ref<HTMLElement | null>, props: BaseProps)
 export function resolveEllipsisTooltipProps(
   tooltip: EllipsisTooltipConfig | undefined,
   fallbackText: string,
-): Record<string, unknown> | null {
+): Partial<TooltipProps> | null {
   if (tooltip === false || tooltip === undefined) return null
   if (tooltip === true) return { title: fallbackText }
   if (typeof tooltip === 'string' || typeof tooltip === 'number') {
@@ -308,5 +289,6 @@ export function resolveEllipsisTooltipProps(
   if (typeof tooltip === 'object') {
     return { title: fallbackText, ...tooltip }
   }
+  // 所有类型已由上方分支处理（boolean / string / number / object），不会到达此处
   return null
 }

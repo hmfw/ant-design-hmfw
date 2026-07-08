@@ -82,6 +82,14 @@
   <TypographyClassNames />
 </DemoBlock>
 
+### 动态省略切换
+
+动态切换 `ellipsis` 的开启/关闭以及行数，验证 ResizeObserver 在 prop 变化时正确重建。
+
+<DemoBlock title="动态省略切换" :source="TypographyEllipsisDynamicSource">
+  <TypographyEllipsisDynamic />
+</DemoBlock>
+
 ## API
 
 ### 通用 Props（Text / Title / Paragraph / Link 共享）
