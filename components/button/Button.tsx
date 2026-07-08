@@ -32,7 +32,7 @@ type LinkAttrs = AnchorHTMLAttributes & { ref: Ref<HTMLElement | null> }
 
 // 判断是否恰好为两个中文字符（包含基本汉字和扩展A区）
 const isTwoCNChar = (str: string): boolean => {
-  return /^[一-鿿㐀-䶿]{2}$/.test(str)
+  return /^[\u4E00-\u9FFF\u3400-\u4DBF]{2}$/.test(str)
 }
 
 // Props 定义（使用 satisfies 确保与 ButtonProps 类型一致）

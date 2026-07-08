@@ -25,6 +25,36 @@
   transition: all var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
 }
 
+/* Reset anchor styles when rendered as <a> tag */
+a.hmfw-float-btn {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Badge wrapper should not block parent's box-shadow */
+.hmfw-float-btn > .hmfw-badge {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+/* Tooltip wrapper inherits full size to maintain centering
+   Make them transparent to not block parent's box-shadow */
+.hmfw-float-btn > div:not(.hmfw-float-btn-body):not(.hmfw-badge) {
+  display: block !important;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Restore pointer events for child elements */
+.hmfw-float-btn > div:not(.hmfw-float-btn-body):not(.hmfw-badge) > * {
+  pointer-events: auto;
+}
+
 .hmfw-float-btn-circle {
   border-radius: 50%;
 }
@@ -199,6 +229,7 @@
   display: block;
   width: 100%;
   height: 100%;
+  border-radius: inherit;
 }
 .hmfw-float-btn .hmfw-badge .hmfw-badge-count,
 .hmfw-float-btn .hmfw-badge .hmfw-badge-dot {

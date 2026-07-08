@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, watch, type PropType, type CSSProperties } from 'vue'
+import { defineComponent, ref, computed, watch, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Trigger } from '../_internal/trigger'

@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
-import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '../FloatButton'
+import { describe, it, expect, vi } from 'vitest'
+import { FloatButton } from '../FloatButton'
+import { FloatButtonGroup } from '../FloatButtonGroup'
+import { FloatButtonBackTop } from '../FloatButtonBackTop'
 import FloatButtonDefault from '../FloatButton'
 import { SettingOutlined } from '@hmfw/icons'
 
@@ -49,20 +51,6 @@ describe('FloatButton', () => {
       props: { shape: 'square', content: 'Back' },
     })
     expect(wrapper.find('.hmfw-float-btn-content').text()).toBe('Back')
-  })
-
-  it('renders deprecated description prop', () => {
-    const wrapper = mount(FloatButton, {
-      props: { shape: 'square', description: 'Back' },
-    })
-    expect(wrapper.find('.hmfw-float-btn-content').text()).toBe('Back')
-  })
-
-  it('content prop takes precedence over description', () => {
-    const wrapper = mount(FloatButton, {
-      props: { shape: 'square', content: 'New', description: 'Old' },
-    })
-    expect(wrapper.find('.hmfw-float-btn-content').text()).toBe('New')
   })
 
   it('respects custom html type', () => {

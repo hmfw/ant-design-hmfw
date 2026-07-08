@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'vue'
 import type { IconComponent } from '@hmfw/icons'
+import type { TooltipProps } from '../tooltip/types'
 
 export type FloatButtonType = 'default' | 'primary'
 export type FloatButtonShape = 'circle' | 'square'
@@ -51,12 +52,10 @@ export interface FloatButtonProps {
   shape?: FloatButtonShape
   /** Custom icon */
   icon?: IconComponent | string
-  /** @deprecated Use `content` instead. */
-  description?: string
-  /** Text and other content (only shown for square shape) */
+  /** Text and other content (recommended for square shape; circle has narrow space) */
   content?: string
   /** The text shown in the tooltip on hover (string or full TooltipProps) */
-  tooltip?: string | Record<string, any>
+  tooltip?: string | TooltipProps
   /** Attach a Badge to the button */
   badge?: FloatButtonBadgeProps
   /** The jump address of the hyperlink — renders as <a> */
@@ -91,11 +90,11 @@ export interface FloatButtonGroupProps {
   /** Custom trigger icon shown when the menu is closed */
   icon?: IconComponent | string
   /** Tooltip of the trigger button (string or full TooltipProps) */
-  tooltip?: string | Record<string, any>
+  tooltip?: string | TooltipProps
   /** Badge of the trigger button */
   badge?: FloatButtonBadgeProps
-  /** Description of the trigger button (square shape) */
-  description?: string
+  /** Content of the trigger button (square shape) */
+  content?: string
 }
 
 export interface FloatButtonBackTopProps {
@@ -112,9 +111,7 @@ export interface FloatButtonBackTopProps {
   /** Set the button shape */
   shape?: FloatButtonShape
   /** Tooltip content (string or full TooltipProps) */
-  tooltip?: string | Record<string, any>
-  /** @deprecated Use `content` instead. */
-  description?: string
+  tooltip?: string | TooltipProps
   /** Text and other content (square shape) */
   content?: string
 }

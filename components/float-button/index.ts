@@ -1,4 +1,6 @@
-export { FloatButton, FloatButtonGroup, FloatButtonBackTop } from './FloatButton'
+export { FloatButton } from './FloatButton'
+export { FloatButtonGroup } from './FloatButtonGroup'
+export { FloatButtonBackTop } from './FloatButtonBackTop'
 export { default } from './FloatButton'
 export type {
   FloatButtonProps,

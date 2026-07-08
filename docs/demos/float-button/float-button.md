@@ -33,6 +33,30 @@
   <FloatButtonBadge />
 </DemoBlock>
 
+### 禁用状态
+
+通过 `disabled` 禁用按钮，禁用的锚点按钮不会触发跳转。
+
+<DemoBlock title="禁用状态" :source="FloatButtonDisabledSource">
+  <FloatButtonDisabled />
+</DemoBlock>
+
+### 链接跳转
+
+设置 `href` 后按钮渲染为 `<a>` 标签，支持 `target` 属性。
+
+<DemoBlock title="链接跳转" :source="FloatButtonLinkSource">
+  <FloatButtonLink />
+</DemoBlock>
+
+### 气泡提示
+
+`tooltip` 支持字符串或 `TooltipProps` 对象，可自定义位置、颜色等。
+
+<DemoBlock title="气泡提示" :source="FloatButtonTooltipSource">
+  <FloatButtonTooltip />
+</DemoBlock>
+
 ### 浮动按钮组
 
 使用 `FloatButtonGroup` 可以将多个悬浮按钮组合在一起。设置 `trigger` 后会折叠为可展开的菜单。
@@ -49,12 +73,28 @@
   <FloatButtonMenu />
 </DemoBlock>
 
+### 受控的菜单
+
+通过 `v-model:open` 受控展开状态，触发按钮可配置 `closeIcon`、`tooltip`、`badge` 等。
+
+<DemoBlock title="受控的菜单" :source="FloatButtonGroupControlledSource">
+  <FloatButtonGroupControlled />
+</DemoBlock>
+
 ### 回到顶部
 
 `FloatButton.BackTop` 返回页面顶部的操作按钮。
 
 <DemoBlock title="回到顶部" :source="FloatButtonBackTopDemoSource">
   <FloatButtonBackTopDemo />
+</DemoBlock>
+
+### 自定义 BackTop
+
+可自定义 `icon`、`type`、`shape`、`content`、`tooltip` 等样式。
+
+<DemoBlock title="自定义 BackTop" :source="FloatButtonBackTopCustomSource">
+  <FloatButtonBackTopCustom />
 </DemoBlock>
 
 ### 细粒度样式控制
@@ -83,21 +123,20 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '@hmfw/ant-des
 
 ### FloatButton Props
 
-| 参数        | 说明                                                                             | 类型                                                | 默认值             |
-| ----------- | -------------------------------------------------------------------------------- | --------------------------------------------------- | ------------------ |
-| type        | 设置按钮类型                                                                     | `'default' \| 'primary'`                            | `'default'`        |
-| shape       | 设置按钮形状                                                                     | `'circle' \| 'square'`                              | `'circle'`         |
-| icon        | 自定义图标                                                                       | `IconComponent \| string \| slot`                   | `FileTextOutlined` |
-| content     | 文字及其他内容，仅 `square` 形状展示                                             | `string \| slot`                                    | -                  |
-| description | 文字及其他内容（已废弃，请使用 `content`）                                       | `string \| slot`                                    | -                  |
-| tooltip     | 气泡提示的内容                                                                   | `string \| TooltipProps \| slot`                    | -                  |
-| badge       | 带徽标数字的悬浮按钮                                                             | `{ count?, dot?, overflowCount?, color?, offset? }` | -                  |
-| href        | 点击跳转的地址，指定时渲染为 `a` 标签                                            | `string`                                            | -                  |
-| target      | 相当于 `a` 标签的 `target` 属性                                                  | `string`                                            | -                  |
-| htmlType    | 设置原生 `button` 的 `type`                                                      | `'submit' \| 'reset' \| 'button'`                   | `'button'`         |
-| disabled    | 是否禁用按钮                                                                     | `boolean`                                           | `false`            |
-| classNames  | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `FloatButtonClassNames`                             | -                  |
-| styles      | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `FloatButtonStyles`                                 | -                  |
+| 参数       | 说明                                                                             | 类型                                                | 默认值             |
+| ---------- | -------------------------------------------------------------------------------- | --------------------------------------------------- | ------------------ |
+| type       | 设置按钮类型                                                                     | `'default' \| 'primary'`                            | `'default'`        |
+| shape      | 设置按钮形状                                                                     | `'circle' \| 'square'`                              | `'circle'`         |
+| icon       | 自定义图标                                                                       | `IconComponent \| string \| slot`                   | `FileTextOutlined` |
+| content    | 文字及其他内容（推荐用于 `square` 形状；`circle` 空间窄）                        | `string \| slot`                                    | -                  |
+| tooltip    | 气泡提示的内容                                                                   | `string \| TooltipProps \| slot`                    | -                  |
+| badge      | 带徽标数字的悬浮按钮                                                             | `{ count?, dot?, overflowCount?, color?, offset? }` | -                  |
+| href       | 点击跳转的地址，指定时渲染为 `a` 标签                                            | `string`                                            | -                  |
+| target     | 相当于 `a` 标签的 `target` 属性                                                  | `string`                                            | -                  |
+| htmlType   | 设置原生 `button` 的 `type`                                                      | `'submit' \| 'reset' \| 'button'`                   | `'button'`         |
+| disabled   | 是否禁用按钮                                                                     | `boolean`                                           | `false`            |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `FloatButtonClassNames`                             | -                  |
+| styles     | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `FloatButtonStyles`                                 | -                  |
 
 ### FloatButton Events
 
@@ -119,7 +158,7 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '@hmfw/ant-des
 | closeIcon   | 展开时触发按钮的图标                   | `IconComponent \| string`                | `CloseOutlined` |
 | tooltip     | 触发按钮的气泡提示                     | `string \| TooltipProps`                 | -               |
 | badge       | 触发按钮的徽标                         | `FloatButtonBadgeProps`                  | -               |
-| description | 触发按钮的描述（square 形状）          | `string`                                 | -               |
+| content     | 触发按钮的内容（square 形状）          | `string`                                 | -               |
 
 ### FloatButton.Group Events
 
@@ -130,17 +169,16 @@ import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from '@hmfw/ant-des
 
 ### FloatButton.BackTop Props
 
-| 参数             | 说明                                       | 类型                                      | 默认值                     |
-| ---------------- | ------------------------------------------ | ----------------------------------------- | -------------------------- |
-| visibilityHeight | 滚动高度达到此参数值才出现                 | `number`                                  | `400`                      |
-| target           | 设置需要监听其滚动事件的元素               | `() => HTMLElement \| Window \| Document` | `() => window`             |
-| duration         | 回到顶部所需时间（ms）                     | `number`                                  | `450`                      |
-| icon             | 自定义图标                                 | `IconComponent \| string`                 | `VerticalAlignTopOutlined` |
-| type             | 设置按钮类型                               | `'default' \| 'primary'`                  | `'default'`                |
-| shape            | 设置按钮形状                               | `'circle' \| 'square'`                    | `'circle'`                 |
-| tooltip          | 气泡提示的内容                             | `string \| TooltipProps`                  | -                          |
-| content          | 文字及其他内容（square 形状）              | `string`                                  | -                          |
-| description      | 文字及其他内容（已废弃，请使用 `content`） | `string`                                  | -                          |
+| 参数             | 说明                          | 类型                                      | 默认值                     |
+| ---------------- | ----------------------------- | ----------------------------------------- | -------------------------- |
+| visibilityHeight | 滚动高度达到此参数值才出现    | `number`                                  | `400`                      |
+| target           | 设置需要监听其滚动事件的元素  | `() => HTMLElement \| Window \| Document` | `() => window`             |
+| duration         | 回到顶部所需时间（ms）        | `number`                                  | `450`                      |
+| icon             | 自定义图标                    | `IconComponent \| string`                 | `VerticalAlignTopOutlined` |
+| type             | 设置按钮类型                  | `'default' \| 'primary'`                  | `'default'`                |
+| shape            | 设置按钮形状                  | `'circle' \| 'square'`                    | `'circle'`                 |
+| tooltip          | 气泡提示的内容                | `string \| TooltipProps`                  | -                          |
+| content          | 文字及其他内容（square 形状） | `string`                                  | -                          |
 
 ### FloatButton.BackTop Events
 
