@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -4497,14 +4497,7 @@
         {
           "section": "FloatButton Props",
           "name": "content",
-          "description": "文字及其他内容，仅 `square` 形状展示",
-          "type": "`string | slot`",
-          "default": "-"
-        },
-        {
-          "section": "FloatButton Props",
-          "name": "description",
-          "description": "文字及其他内容（已废弃，请使用 `content`）",
+          "description": "文字及其他内容（推荐用于 `square` 形状；`circle` 空间窄）",
           "type": "`string | slot`",
           "default": "-"
         },
@@ -4636,8 +4629,8 @@
         },
         {
           "section": "FloatButton.Group Props",
-          "name": "description",
-          "description": "触发按钮的描述（square 形状）",
+          "name": "content",
+          "description": "触发按钮的内容（square 形状）",
           "type": "`string`",
           "default": "-"
         },
@@ -4696,13 +4689,6 @@
           "description": "文字及其他内容（square 形状）",
           "type": "`string`",
           "default": "-"
-        },
-        {
-          "section": "FloatButton.BackTop Props",
-          "name": "description",
-          "description": "文字及其他内容（已废弃，请使用 `content`）",
-          "type": "`string`",
-          "default": "-"
         }
       ],
       "events": [
@@ -4741,12 +4727,27 @@
         {
           "title": "不同类型",
           "description": "提供 `default` 和 `primary` 两种类型，以及 `circle` 和 `square` 两种形状。",
-          "code": "<template>\n  <div class=\"float-btn-showcase\">\n    <FloatButton :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton type=\"primary\" :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton shape=\"square\" :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton type=\"primary\" shape=\"square\" :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton type=\"primary\" shape=\"square\" description=\"文档\" :style=\"s\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton } from '@hmfw/ant-design'\nimport { SettingOutlined } from '@hmfw/icons'\n\n// Render inline within the demo box instead of fixed to the viewport\nconst s = { position: 'static' } as const\n</script>\n\n<style scoped>\n.float-btn-showcase {\n  display: flex;\n  align-items: flex-start;\n  gap: 24px;\n  padding: 8px 0;\n}\n</style>"
+          "code": "<template>\n  <Space :size=\"24\">\n    <FloatButton :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton type=\"primary\" :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton shape=\"square\" :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton type=\"primary\" shape=\"square\" :icon=\"SettingOutlined\" :style=\"s\" />\n    <FloatButton type=\"primary\" shape=\"square\" content=\"文档\" :style=\"s\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton, Space } from '@hmfw/ant-design'\nimport { SettingOutlined } from '@hmfw/icons'\n\n// Render inline within the demo box instead of fixed to the viewport\nconst s = { position: 'static' } as const\n</script>"
         },
         {
           "title": "徽标数字",
           "description": "带徽标的悬浮按钮，徽标基于 Badge 组件实现。",
-          "code": "<template>\n  <div class=\"float-btn-showcase\">\n    <FloatButton :badge=\"{ count: 5 }\" :icon=\"InfoCircleOutlined\" :style=\"s\" />\n    <FloatButton :badge=\"{ count: 128, overflowCount: 99 }\" :icon=\"InfoCircleOutlined\" :style=\"s\" />\n    <FloatButton :badge=\"{ dot: true }\" :icon=\"InfoCircleOutlined\" :style=\"s\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton } from '@hmfw/ant-design'\nimport { InfoCircleOutlined } from '@hmfw/icons'\n\nconst s = { position: 'static' } as const\n</script>\n\n<style scoped>\n.float-btn-showcase {\n  display: flex;\n  align-items: center;\n  gap: 32px;\n  padding: 8px 0;\n}\n</style>"
+          "code": "<template>\n  <Space :size=\"32\" align=\"center\">\n    <FloatButton :badge=\"{ count: 5 }\" :icon=\"InfoCircleOutlined\" :style=\"s\" />\n    <FloatButton :badge=\"{ count: 128, overflowCount: 99 }\" :icon=\"InfoCircleOutlined\" :style=\"s\" />\n    <FloatButton :badge=\"{ dot: true }\" :icon=\"InfoCircleOutlined\" :style=\"s\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton, Space } from '@hmfw/ant-design'\nimport { InfoCircleOutlined } from '@hmfw/icons'\n\nconst s = { position: 'static' } as const\n</script>"
+        },
+        {
+          "title": "禁用状态",
+          "description": "通过 `disabled` 禁用按钮，禁用的锚点按钮不会触发跳转。",
+          "code": "<template>\n  <Space :size=\"24\">\n    <FloatButton :icon=\"EditOutlined\" disabled tooltip=\"禁用态\" :style=\"s\" />\n    <FloatButton type=\"primary\" :icon=\"DeleteOutlined\" disabled :style=\"s\" />\n    <FloatButton\n      href=\"https://example.com\"\n      target=\"_blank\"\n      disabled\n      :icon=\"LinkOutlined\"\n      tooltip=\"禁用的链接（不跳转）\"\n      :style=\"s\"\n    />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton, Space } from '@hmfw/ant-design'\nimport { EditOutlined, DeleteOutlined, LinkOutlined } from '@hmfw/icons'\n\nconst s = { position: 'static' } as const\n</script>"
+        },
+        {
+          "title": "链接跳转",
+          "description": "设置 `href` 后按钮渲染为 `<a>` 标签，支持 `target` 属性。",
+          "code": "<template>\n  <Space :size=\"24\">\n    <FloatButton\n      href=\"https://github.com/ant-design/ant-design\"\n      target=\"_blank\"\n      :icon=\"GithubOutlined\"\n      tooltip=\"访问 GitHub\"\n      :style=\"s\"\n    />\n    <FloatButton href=\"https://ant.design\" target=\"_blank\" type=\"primary\" shape=\"square\" content=\"官网\" :style=\"s\" />\n    <FloatButton href=\"#float-button\" :icon=\"LinkOutlined\" tooltip=\"锚点跳转\" :style=\"s\" />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton, Space } from '@hmfw/ant-design'\nimport { GithubOutlined, LinkOutlined } from '@hmfw/icons'\n\nconst s = { position: 'static' } as const\n</script>"
+        },
+        {
+          "title": "气泡提示",
+          "description": "`tooltip` 支持字符串或 `TooltipProps` 对象，可自定义位置、颜色等。",
+          "code": "<template>\n  <Space :size=\"24\">\n    <FloatButton :icon=\"QuestionCircleOutlined\" tooltip=\"字符串提示\" :style=\"s\" />\n    <FloatButton :icon=\"InfoCircleOutlined\" :tooltip=\"{ title: '自定义位置', placement: 'top' }\" :style=\"s\" />\n    <FloatButton\n      type=\"primary\"\n      :icon=\"BulbOutlined\"\n      :tooltip=\"{ title: '带颜色的提示', color: '#108ee9' }\"\n      :style=\"s\"\n    />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton, Space } from '@hmfw/ant-design'\nimport { QuestionCircleOutlined, InfoCircleOutlined, BulbOutlined } from '@hmfw/icons'\n\nconst s = { position: 'static' } as const\n</script>"
         },
         {
           "title": "浮动按钮组",
@@ -4759,14 +4760,24 @@
           "code": "<template>\n  <div class=\"float-btn-demo\">\n    <FloatButtonGroup trigger=\"click\" type=\"primary\" :icon=\"SettingOutlined\" :style=\"left\">\n      <FloatButton :icon=\"EditOutlined\" tooltip=\"编辑\" />\n      <FloatButton :icon=\"SearchOutlined\" tooltip=\"搜索\" />\n    </FloatButtonGroup>\n\n    <FloatButtonGroup trigger=\"hover\" :style=\"right\">\n      <FloatButton :icon=\"EditOutlined\" tooltip=\"编辑\" />\n      <FloatButton :icon=\"DeleteOutlined\" tooltip=\"删除\" />\n    </FloatButtonGroup>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton, FloatButtonGroup } from '@hmfw/ant-design'\nimport { SettingOutlined, EditOutlined, SearchOutlined, DeleteOutlined } from '@hmfw/icons'\n\nconst left = { position: 'absolute', insetInlineEnd: '120px', insetBlockEnd: '24px' } as const\nconst right = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const\n</script>\n\n<style scoped>\n.float-btn-demo {\n  position: relative;\n  height: 240px;\n  overflow: hidden;\n}\n</style>"
         },
         {
+          "title": "受控的菜单",
+          "description": "通过 `v-model:open` 受控展开状态，触发按钮可配置 `closeIcon`、`tooltip`、`badge` 等。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div>\n      <label style=\"margin-right: 8px\">受控展开状态：</label>\n      <Button @click.stop=\"handleOpen\"> {{ open ? '关闭' : '打开' }} (当前: {{ open }}) </Button>\n    </div>\n    <div class=\"float-btn-demo\">\n      <FloatButtonGroup\n        v-model:open=\"open\"\n        trigger=\"click\"\n        type=\"primary\"\n        :icon=\"SettingOutlined\"\n        close-icon=\"✕\"\n        tooltip=\"设置菜单\"\n        :badge=\"{ count: 3 }\"\n        :style=\"pos\"\n      >\n        <FloatButton :icon=\"EditOutlined\" tooltip=\"编辑\" />\n        <FloatButton :icon=\"DeleteOutlined\" tooltip=\"删除\" />\n        <FloatButton :icon=\"SearchOutlined\" tooltip=\"搜索\" />\n      </FloatButtonGroup>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Button, FloatButton, FloatButtonGroup } from '@hmfw/ant-design'\nimport { SettingOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@hmfw/icons'\n\nconst open = ref(false)\nconst pos = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const\n\nconst handleOpen = () => {\n  open.value = !open.value\n}\n</script>\n\n<style scoped>\n.float-btn-demo {\n  position: relative;\n  height: 300px;\n  border: 1px dashed #d9d9d9;\n  border-radius: 8px;\n  background: #fafafa;\n}\n</style>"
+        },
+        {
           "title": "回到顶部",
           "description": "`FloatButton.BackTop` 返回页面顶部的操作按钮。",
           "code": "<template>\n  <div ref=\"containerRef\" class=\"back-top-demo\">\n    <div class=\"back-top-demo__inner\">\n      <p v-for=\"n in 30\" :key=\"n\">向下滚动这块区域，第 {{ n }} 行…</p>\n    </div>\n    <FloatButton.BackTop :target=\"getTarget\" :visibility-height=\"80\" tooltip=\"回到顶部\" :style=\"pos\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { FloatButton } from '@hmfw/ant-design'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst getTarget = () => containerRef.value as HTMLElement\n\nconst pos = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const\n</script>\n\n<style scoped>\n.back-top-demo {\n  position: relative;\n  height: 220px;\n  overflow: auto;\n  border: 1px solid var(--hmfw-color-border, #d9d9d9);\n  border-radius: 8px;\n  padding: 12px 16px;\n}\n.back-top-demo__inner p {\n  margin: 8px 0;\n}\n</style>"
         },
         {
+          "title": "自定义 BackTop",
+          "description": "可自定义 `icon`、`type`、`shape`、`content`、`tooltip` 等样式。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 24px\">\n    <!-- 场景 1：默认样式 -->\n    <div ref=\"container1\" class=\"back-top-demo\">\n      <div class=\"back-top-demo__inner\">\n        <p v-for=\"n in 20\" :key=\"n\">默认样式，第 {{ n }} 行…</p>\n      </div>\n      <FloatButton.BackTop :target=\"() => container1\" :visibility-height=\"50\" :style=\"pos\" />\n    </div>\n\n    <!-- 场景 2：自定义图标和形状 -->\n    <div ref=\"container2\" class=\"back-top-demo\">\n      <div class=\"back-top-demo__inner\">\n        <p v-for=\"n in 20\" :key=\"n\">自定义图标，第 {{ n }} 行…</p>\n      </div>\n      <FloatButton.BackTop\n        :target=\"() => container2\"\n        :visibility-height=\"50\"\n        type=\"primary\"\n        shape=\"square\"\n        icon=\"⬆\"\n        tooltip=\"快速返回顶部\"\n        :style=\"pos\"\n      />\n    </div>\n\n    <!-- 场景 3：带文本内容 -->\n    <div ref=\"container3\" class=\"back-top-demo\">\n      <div class=\"back-top-demo__inner\">\n        <p v-for=\"n in 20\" :key=\"n\">带文本，第 {{ n }} 行…</p>\n      </div>\n      <FloatButton.BackTop\n        :target=\"() => container3\"\n        :visibility-height=\"50\"\n        type=\"primary\"\n        shape=\"square\"\n        content=\"TOP\"\n        tooltip=\"回到顶部\"\n        :style=\"pos\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { FloatButton } from '@hmfw/ant-design'\n\nconst container1 = ref<HTMLElement | null>(null)\nconst container2 = ref<HTMLElement | null>(null)\nconst container3 = ref<HTMLElement | null>(null)\nconst pos = { position: 'absolute', insetInlineEnd: '12px', insetBlockEnd: '12px' } as const\n</script>\n\n<style scoped>\n.back-top-demo {\n  position: relative;\n  width: 200px;\n  height: 300px;\n  overflow: auto;\n  border: 1px solid #e8e8e8;\n  border-radius: 8px;\n  background: #fff;\n}\n.back-top-demo__inner {\n  padding: 16px;\n}\n.back-top-demo__inner p {\n  margin: 8px 0;\n  color: #666;\n}\n</style>"
+        },
+        {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根节点样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根节点（渐变背景）：</div>\n      <FloatButton :icon=\"QuestionCircleOutlined\" :class-names=\"{ root: 'custom-root' }\" tooltip=\"帮助\" />\n    </div>\n\n    <!-- 场景 2：自定义图标容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标容器（放大图标）：</div>\n      <FloatButton\n        type=\"primary\"\n        :icon=\"CustomerServiceOutlined\"\n        :class-names=\"{ icon: 'custom-icon' }\"\n        tooltip=\"客服\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义 square 形状的内容区域 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义内容区域（square 形状）：</div>\n      <FloatButton\n        shape=\"square\"\n        :icon=\"CommentOutlined\"\n        content=\"反馈\"\n        :class-names=\"{ body: 'custom-body', content: 'custom-content' }\"\n      />\n    </div>\n\n    <!-- 场景 4：组合使用 classNames -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义（多个 key）：</div>\n      <FloatButton\n        shape=\"square\"\n        :icon=\"EditOutlined\"\n        content=\"编辑\"\n        :class-names=\"{\n          root: 'custom-combined-root',\n          body: 'custom-combined-body',\n          icon: 'custom-combined-icon',\n          content: 'custom-combined-content',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <FloatButton\n        type=\"primary\"\n        shape=\"square\"\n        :icon=\"RocketOutlined\"\n        content=\"启动\"\n        :styles=\"{\n          root: { borderRadius: '12px', boxShadow: '0 4px 16px rgba(22, 119, 255, 0.3)' },\n          body: { padding: '8px' },\n          icon: { fontSize: '20px' },\n          content: { fontWeight: 'bold' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton } from '@hmfw/ant-design'\nimport {\n  QuestionCircleOutlined,\n  CustomerServiceOutlined,\n  CommentOutlined,\n  EditOutlined,\n  RocketOutlined,\n} from '@hmfw/icons'\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);\n}\n\n:deep(.custom-icon) {\n  font-size: 20px;\n  animation: pulse 2s ease-in-out infinite;\n}\n\n@keyframes pulse {\n  0%,\n  100% {\n    transform: scale(1);\n  }\n  50% {\n    transform: scale(1.1);\n  }\n}\n\n:deep(.custom-body) {\n  background: rgba(255, 255, 255, 0.1);\n  border-radius: 8px;\n}\n\n:deep(.custom-content) {\n  color: #52c41a;\n  font-weight: bold;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);\n}\n\n:deep(.custom-combined-root) {\n  background: linear-gradient(to right, #fa8c16, #faad14);\n  border: 2px solid #fff;\n  box-shadow: 0 4px 12px rgba(250, 140, 22, 0.4);\n}\n\n:deep(.custom-combined-body) {\n  padding: 4px;\n}\n\n:deep(.custom-combined-icon) {\n  color: #fff;\n  font-size: 18px;\n}\n\n:deep(.custom-combined-content) {\n  color: #fff;\n  font-size: 12px;\n  margin-top: 2px;\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根节点样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根节点（渐变背景）：</div>\n      <div class=\"demo-box\">\n        <FloatButton\n          :icon=\"QuestionCircleOutlined\"\n          :class-names=\"{ root: 'custom-root' }\"\n          tooltip=\"帮助\"\n          :style=\"demoStyle\"\n        />\n      </div>\n    </div>\n\n    <!-- 场景 2：自定义图标容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标容器（放大图标）：</div>\n      <div class=\"demo-box\">\n        <FloatButton\n          type=\"primary\"\n          :icon=\"CustomerServiceOutlined\"\n          :class-names=\"{ icon: 'custom-icon' }\"\n          tooltip=\"客服\"\n          :style=\"demoStyle\"\n        />\n      </div>\n    </div>\n\n    <!-- 场景 3：自定义 square 形状的内容区域 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义内容区域（square 形状）：</div>\n      <div class=\"demo-box\">\n        <FloatButton\n          shape=\"square\"\n          :icon=\"CommentOutlined\"\n          content=\"反馈\"\n          :class-names=\"{ body: 'custom-body', content: 'custom-content' }\"\n          :style=\"demoStyle\"\n        />\n      </div>\n    </div>\n\n    <!-- 场景 4：组合使用 classNames -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义（多个 key）：</div>\n      <div class=\"demo-box\">\n        <FloatButton\n          shape=\"square\"\n          :icon=\"EditOutlined\"\n          content=\"编辑\"\n          :class-names=\"{\n            root: 'custom-combined-root',\n            body: 'custom-combined-body',\n            icon: 'custom-combined-icon',\n            content: 'custom-combined-content',\n          }\"\n          :style=\"demoStyle\"\n        />\n      </div>\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <div class=\"demo-box\">\n        <FloatButton\n          type=\"primary\"\n          shape=\"square\"\n          :icon=\"RocketOutlined\"\n          content=\"启动\"\n          :styles=\"{\n            root: { borderRadius: '12px', boxShadow: '0 4px 16px rgba(22, 119, 255, 0.3)' },\n            body: { padding: '8px' },\n            icon: { fontSize: '20px' },\n            content: { fontWeight: 'bold' },\n          }\"\n          :style=\"demoStyle\"\n        />\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { FloatButton } from '@hmfw/ant-design'\nimport {\n  QuestionCircleOutlined,\n  CustomerServiceOutlined,\n  CommentOutlined,\n  EditOutlined,\n  RocketOutlined,\n} from '@hmfw/icons'\n\n// 在 demo 容器内展示而非固定定位\nconst demoStyle = { position: 'absolute', insetInlineEnd: '24px', insetBlockEnd: '24px' } as const\n</script>\n\n<style scoped>\n.demo-box {\n  position: relative;\n  height: 120px;\n  border: 1px dashed #d9d9d9;\n  border-radius: 8px;\n  background: #fafafa;\n}\n\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border: none;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);\n}\n\n:deep(.custom-icon) {\n  font-size: 20px;\n  animation: pulse 2s ease-in-out infinite;\n}\n\n@keyframes pulse {\n  0%,\n  100% {\n    transform: scale(1);\n  }\n  50% {\n    transform: scale(1.1);\n  }\n}\n\n:deep(.custom-body) {\n  background: rgba(255, 255, 255, 0.1);\n  border-radius: 8px;\n}\n\n:deep(.custom-content) {\n  color: #52c41a;\n  font-weight: bold;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);\n}\n\n:deep(.custom-combined-root) {\n  background: linear-gradient(to right, #fa8c16, #faad14);\n  border: 2px solid #fff;\n  box-shadow: 0 4px 12px rgba(250, 140, 22, 0.4);\n}\n\n:deep(.custom-combined-body) {\n  padding: 4px;\n}\n\n:deep(.custom-combined-icon) {\n  color: #fff;\n  font-size: 18px;\n}\n\n:deep(.custom-combined-content) {\n  color: #fff;\n  font-size: 12px;\n  margin-top: 2px;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/float-button"
