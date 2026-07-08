@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.6.7。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.6.8。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -3301,7 +3301,7 @@ import { Layout, Header, Footer, Content, Sider } from '@hmfw/ant-design'
 | collapsedWidth | 收缩宽度，设置为 0 会出现特殊 trigger | `number \| string` | `80` |
 | breakpoint | 触发响应式布局的断点 | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| 'xxxl'` | - |
 | theme | 主题颜色 | `'light' \| 'dark'` | `'dark'` |
-| trigger | 自定义 trigger，设为 null 时隐藏 trigger | `VNode \| null` | - |
+| trigger | 自定义 trigger，设为 null 时隐藏 trigger。**注意：`trigger` 为 VNode prop 而非 slot**，需通过 `h()` 或 JSX 传入 | `VNode \| null` | - |
 | reverseArrow | 翻转折叠提示箭头的方向 | `boolean` | `false` |
 | zeroWidthTriggerStyle | 指定当 collapsedWidth 为 0 时出现的特殊 trigger 的样式 | `CSSProperties` | - |
 
@@ -3319,9 +3319,9 @@ import { Layout, Header, Footer, Content, Sider } from '@hmfw/ant-design'
 ```vue
 <template>
   <Layout style="min-height: 200px">
-    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px"> Header </Header>
-    <Content style="padding: 24px; background: #fff"> Content </Content>
-    <Footer style="text-align: center; background: #f5f5f5"> Footer ©2026 Created by hmfw </Footer>
+    <Header> Header </Header>
+    <Content style="margin: 24px 16px 0; padding: 24px; background: #fff; min-height: 200px"> Content </Content>
+    <Footer style="text-align: center"> Footer ©2026 Created by hmfw </Footer>
   </Layout>
 </template>
 
@@ -3335,14 +3335,14 @@ import { Layout, Header, Content, Footer } from '@hmfw/ant-design'
 ```vue
 <template>
   <Layout style="min-height: 300px">
-    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px"> Header </Header>
+    <Header style="background: #1677ff"> Header </Header>
     <Layout>
-      <Sider :width="200" style="background: #fff; border-right: 1px solid #f0f0f0">
+      <Sider :width="200">
         <div style="padding: 16px">Sider</div>
       </Sider>
-      <Content style="padding: 24px; background: #f5f5f5"> Content </Content>
+      <Content style="margin: 24px 16px; padding: 24px; background: #fff"> Content </Content>
     </Layout>
-    <Footer style="text-align: center; background: #f5f5f5"> Footer ©2024 </Footer>
+    <Footer style="text-align: center"> Footer ©2024 </Footer>
   </Layout>
 </template>
 
