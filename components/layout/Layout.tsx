@@ -40,7 +40,7 @@ export const Layout = defineComponent({
     })
 
     const classes = computed(() => {
-      const hasSider = props.hasSider !== undefined ? props.hasSider : siderCount.value > 0
+      const hasSider = props.hasSider || siderCount.value > 0
       return cls(prefixCls, {
         [`${prefixCls}-has-sider`]: hasSider,
       })

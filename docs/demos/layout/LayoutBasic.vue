@@ -1,8 +1,8 @@
 <template>
   <Layout style="min-height: 200px">
-    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px"> Header </Header>
-    <Content style="padding: 24px; background: #fff"> Content </Content>
-    <Footer style="text-align: center; background: #f5f5f5"> Footer ©2026 Created by hmfw </Footer>
+    <Header> Header </Header>
+    <Content style="margin: 24px 16px 0; padding: 24px; background: #fff; min-height: 200px"> Content </Content>
+    <Footer style="text-align: center"> Footer ©2026 Created by hmfw </Footer>
   </Layout>
 </template>
 

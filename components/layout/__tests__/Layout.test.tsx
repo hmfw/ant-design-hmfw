@@ -298,5 +298,126 @@ describe('Sider', () => {
         expect(matchMediaMock).toHaveBeenCalledWith(`screen and (max-width: ${expectedWidths[index]})`)
       })
     })
+
+    // ==================== 扩展场景 ====================
+
+    it('does not toggle internally when collapsed is controlled', async () => {
+      const wrapper = mount(Sider, {
+        props: { collapsed: false, collapsible: true },
+      })
+      await wrapper.find('.hmfw-layout-sider-trigger').trigger('click')
+      // 受控模式下 collapsed 由父组件控制，内部不应改变
+      expect(wrapper.emitted('update:collapsed')?.[0]).toEqual([true])
+      expect(wrapper.classes()).not.toContain('hmfw-layout-sider-collapsed')
+    })
+
+    it('reverseArrow renders correct icons when expanded', () => {
+      const wrapper = mount(Sider, {
+        props: { collapsible: true, reverseArrow: true, defaultCollapsed: false },
+      })
+      // 展开且 reverseArrow → collapse 按钮应显示 RightOutlined（指向右侧表示"将要收起到右边"）
+      expect(wrapper.find('.hmfw-layout-sider-trigger').exists()).toBe(true)
+    })
+
+    it('reverseArrow renders correct icons when collapsed', () => {
+      const wrapper = mount(Sider, {
+        props: { collapsible: true, reverseArrow: true, defaultCollapsed: true },
+      })
+      // 折叠且 reverseArrow → 展开按钮应显示 LeftOutlined
+      expect(wrapper.find('.hmfw-layout-sider-trigger').exists()).toBe(true)
+    })
+
+    it('width accepts string values like percentage', () => {
+      const wrapper = mount(Sider, { props: { width: '25%' } })
+      expect(wrapper.attributes('style')).toContain('25%')
+    })
+
+    it('collapsedWidth accepts string values', () => {
+      const wrapper = mount(Sider, {
+        props: { collapsed: true, collapsedWidth: '10%' },
+      })
+      expect(wrapper.attributes('style')).toContain('10%')
+    })
+
+    it('adds below class when responsive breakpoint is active', async () => {
+      const wrapper = mount(Sider, { props: { breakpoint: 'md' } })
+      // 模拟断点匹配
+      listeners.forEach((handler) => handler({ matches: true }))
+      await flushPromises()
+      expect(wrapper.classes()).toContain('hmfw-layout-sider-below')
+    })
+
+    it('removes below class when breakpoint no longer matches', async () => {
+      const wrapper = mount(Sider, { props: { breakpoint: 'md' } })
+      // 先匹配
+      listeners.forEach((handler) => handler({ matches: true }))
+      await flushPromises()
+      expect(wrapper.classes()).toContain('hmfw-layout-sider-below')
+      // 再不匹配
+      listeners.forEach((handler) => handler({ matches: false }))
+      await flushPromises()
+      expect(wrapper.classes()).not.toContain('hmfw-layout-sider-below')
+    })
   })
+})
+
+// ==================== 子组件扩展测试 ====================
+
+it('Layout auto-detects hasSider when prop is set', () => {
+  const wrapper = mount(Layout, {
+    props: { hasSider: true },
+  })
+  expect(wrapper.classes()).toContain('hmfw-layout-has-sider')
+})
+
+it('Layout does not have has-sider class when hasSider is false', () => {
+  const wrapper = mount(Layout, {
+    props: { hasSider: false },
+  })
+  expect(wrapper.classes()).not.toContain('hmfw-layout-has-sider')
+})
+
+it('Header renders slot content', () => {
+  const wrapper = mount(Header, {
+    slots: { default: '<span class="logo">Logo</span>' },
+  })
+  expect(wrapper.find('.logo').text()).toBe('Logo')
+})
+
+it('Footer renders slot content', () => {
+  const wrapper = mount(Footer, {
+    slots: { default: '<span class="copyright">© 2024</span>' },
+  })
+  expect(wrapper.find('.copyright').text()).toBe('© 2024')
+})
+
+it('Content renders slot content', () => {
+  const wrapper = mount(Content, {
+    slots: { default: '<div class="article">Hello</div>' },
+  })
+  expect(wrapper.find('.article').text()).toBe('Hello')
+})
+
+it('inner Layout auto-detects Sider via provide/inject', async () => {
+  const wrapper = mount({
+    render() {
+      return (
+        <Layout>
+          <Header>Header</Header>
+          <Layout>
+            <Sider width={200}>Sider</Sider>
+            <Content>Content</Content>
+          </Layout>
+          <Footer>Footer</Footer>
+        </Layout>
+      )
+    },
+  })
+
+  await wrapper.vm.$nextTick()
+
+  const sections = wrapper.findAll('section')
+  expect(sections).toHaveLength(2)
+  // 内层 Layout 应该自动检测到 Sider 并获得 has-sider 类
+  expect(sections[1].classes()).toContain('hmfw-layout-has-sider')
 })

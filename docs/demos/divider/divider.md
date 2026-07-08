@@ -25,6 +25,14 @@
   <DividerWithText />
 </DemoBlock>
 
+### 带边距的文字分割线
+
+通过 `orientationMargin` 配合 `orientation="left" | "right"` 控制文字与分割线边框的距离。
+
+<DemoBlock title="带边距的文字分割线" :source="DividerOrientationMarginSource">
+  <DividerOrientationMargin />
+</DemoBlock>
+
 ### 垂直分割线
 
 使用 `type="vertical"` 设置为行内的垂直分割线。
@@ -169,4 +177,24 @@ interface DividerStyles {
 
 ## 设计 Token
 
-Divider 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。
+Divider 组件消费以下 Design Token，可通过 `ConfigProvider` 的 `theme` 属性全局覆盖：
+
+| Token                         | 默认值             | 用途                      |
+| ----------------------------- | ------------------ | ------------------------- |
+| `--hmfw-color-text`           | `rgba(0,0,0,0.88)` | 分割线文字颜色            |
+| `--hmfw-color-fill-secondary` | `rgba(0,0,0,0.06)` | 分割线边框颜色            |
+| `--hmfw-font-size`            | `14px`             | 基础文字大小              |
+| `--hmfw-font-size-lg`         | `16px`             | 带文字分割线的文字大小    |
+| `--hmfw-font-family`          | 系统字体栈         | 字体                      |
+| `--hmfw-line-height`          | `1.5714`           | 行高                      |
+| `--hmfw-margin-lg`            | `24px`             | 默认水平分割线间距        |
+| `--hmfw-margin`               | `16px`             | 中间距 / 带文字分割线间距 |
+| `--hmfw-margin-xs`            | `8px`              | 小间距 / 垂直分割线间距   |
+
+自定义示例：
+
+```vue
+<ConfigProvider :theme="{ colorFillSecondary: 'rgba(0,0,0,0.15)', marginLG: 32 }">
+  <Divider>分割线</Divider>
+</ConfigProvider>
+```

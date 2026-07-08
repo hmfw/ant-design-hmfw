@@ -1,12 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 16px">
-      <Button
-        style="padding: 8px 16px; cursor: pointer; border: 1px solid #d9d9d9; border-radius: 4px; background: #fff"
-        @click="toggleTheme"
-      >
-        切换主题 (当前: {{ theme === 'dark' ? '暗色' : '亮色' }})
-      </Button>
+      <Button @click="toggleTheme"> 切换主题 (当前: {{ theme === 'dark' ? '暗色' : '亮色' }}) </Button>
     </div>
     <Layout style="min-height: 400px">
       <Sider :theme="theme" collapsible>
@@ -18,9 +13,7 @@
         </div>
       </Sider>
       <Layout>
-        <Header
-          style="background: #fff; padding: 0 24px; line-height: 64px; box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08)"
-        >
+        <Header style="background: #fff; padding: 0 24px; box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08)">
           <h2 style="margin: 0; color: #000">主题切换演示</h2>
         </Header>
         <Content style="margin: 24px 16px; padding: 24px; background: #fff">

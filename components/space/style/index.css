@@ -29,12 +29,3 @@
 .hmfw-space-wrap {
   flex-wrap: wrap;
 }
-
-.hmfw-space-item {
-  display: inline-flex;
-}
-
-.hmfw-space-item-split {
-  display: inline-flex;
-  align-items: center;
-}

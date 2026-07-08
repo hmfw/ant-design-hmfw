@@ -26,6 +26,14 @@
   <FlexVertical />
 </DemoBlock>
 
+### 交叉轴对齐
+
+通过 `align` 属性控制子元素在交叉轴上的对齐方式。
+
+<DemoBlock title="交叉轴对齐" :source="FlexAlignSource">
+  <FlexAlign />
+</DemoBlock>
+
 ### 间距设置
 
 通过 `gap` 属性设置元素间距，支持预设值和数字。
@@ -40,6 +48,14 @@
 
 <DemoBlock title="自动换行" :source="FlexWrapSource">
   <FlexWrap />
+</DemoBlock>
+
+### 自定义元素标签
+
+通过 `component` 属性设置渲染的 HTML 标签，支持语义化 HTML。
+
+<DemoBlock title="自定义元素标签" :source="FlexComponentSource">
+  <FlexComponent />
 </DemoBlock>
 
 ## API
@@ -68,4 +84,18 @@ Flex 是单元素透传组件，可直接使用原生 class 和 style attribute 
 
 ## 设计 Token
 
-Flex 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。
+Flex 组件通过以下 Design Token 控制 gap 预设间距，可通过 `ConfigProvider` 的 `theme` 属性全局覆盖：
+
+| Token               | 默认值 | gap 预设       | 用途   |
+| ------------------- | ------ | -------------- | ------ |
+| `--hmfw-padding-xs` | `8px`  | `gap="small"`  | 小间距 |
+| `--hmfw-padding`    | `16px` | `gap="middle"` | 中间距 |
+| `--hmfw-padding-lg` | `24px` | `gap="large"`  | 大间距 |
+
+自定义示例：
+
+```vue
+<ConfigProvider :theme="{ paddingXS: 12, padding: 20, paddingLG: 32 }">
+  <Flex gap="middle">...</Flex>
+</ConfigProvider>
+```

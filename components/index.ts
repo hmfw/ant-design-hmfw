@@ -48,7 +48,7 @@ export type {
 } from './typography'
 
 export { Layout, Header, Footer, Content, Sider } from './layout'
-export type { LayoutProps, SiderProps, LayoutBreakpoint } from './layout'
+export type { LayoutProps, SiderProps, LayoutBreakpoint, CollapseType } from './layout'
 
 export { Avatar, AvatarGroup } from './avatar'
 export type { AvatarProps, AvatarGroupProps, AvatarSize, AvatarShape } from './avatar'

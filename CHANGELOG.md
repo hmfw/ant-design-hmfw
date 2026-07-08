@@ -6,7 +6,25 @@
 
 ---
 
-## [0.6.7] - 2026-07-08
+## [0.6.8] - 2026-07-08
+
+### 🐛 修复
+
+- **Layout**: 修复 Sider 与 Content 上下排列而非左右排列的问题。根因是 Vue 3 的 Boolean prop 自动转换机制：`hasSider` 未显式传递时 Vue 默认转为 `false`（而非 `undefined`），导致 `props.hasSider !== undefined` 判断永远为 true，`siderCount` 自动检测逻辑失效。改为 `props.hasSider || siderCount.value > 0`
+- **Layout**: 修复 `CollapseType` 类型未从主入口导出的问题，Demo 文件 `LayoutCollapsible.vue` 不再报 TS 2724 错误
+
+### ✨ 优化
+
+- **Flex**: `gap` 预设值从硬编码像素值迁移至 Design Token CSS 变量（`--hmfw-padding-xs` / `--hmfw-padding` / `--hmfw-padding-lg`），支持 ConfigProvider 主题覆盖
+- **Grid (Col)**: 响应式断点的 `offset`/`order`/`pull`/`push` 支持值为 `0` 的情况，允许显式重置上级断点设置，与 ant-design v6 行为对齐
+- **Grid (style)**: 栅格样式从手写 24 列 × 6 断点 × 5 方向硬编码迁移为 CSS 变量化方案，大幅减少样式体积
+- **Divider**: 重构代码结构，提取 `isHorizontalWithText` computed 复用，优化 `textStyle` 计算逻辑，增加详细注释
+- **Divider/Layout/Space (style)**: 样式微调，接入 Design Token
+
+### 📝 文档
+
+- 新增 `DividerOrientationMargin`、`FlexAlign`、`FlexComponent`、`GridAlign`、`GridOrder`、`LayoutReverseArrow` Demo
+- 更新 Divider、Flex、Grid、Layout 组件文档与 Demo
 
 ### ✨ 优化
 

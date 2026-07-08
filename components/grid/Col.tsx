@@ -116,16 +116,17 @@ export default defineComponent({
           if (sizeProps.span !== undefined) {
             classNames.push(`${prefixCls}-${size}-${sizeProps.span}`)
           }
-          if (sizeProps.offset !== undefined && sizeProps.offset !== 0) {
+          // 响应式 0 值允许重置上级断点的 offset/order/pull/push（与 antd v6 行为一致）
+          if (sizeProps.offset !== undefined) {
             classNames.push(`${prefixCls}-${size}-offset-${sizeProps.offset}`)
           }
-          if (sizeProps.order !== undefined && sizeProps.order !== 0) {
+          if (sizeProps.order !== undefined) {
             classNames.push(`${prefixCls}-${size}-order-${sizeProps.order}`)
           }
-          if (sizeProps.pull !== undefined && sizeProps.pull !== 0) {
+          if (sizeProps.pull !== undefined) {
             classNames.push(`${prefixCls}-${size}-pull-${sizeProps.pull}`)
           }
-          if (sizeProps.push !== undefined && sizeProps.push !== 0) {
+          if (sizeProps.push !== undefined) {
             classNames.push(`${prefixCls}-${size}-push-${sizeProps.push}`)
           }
         }

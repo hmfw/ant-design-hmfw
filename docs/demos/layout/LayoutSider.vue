@@ -1,13 +1,13 @@
 <template>
   <Layout style="min-height: 300px">
-    <Header style="background: #001529; color: #fff; padding: 0 24px; line-height: 64px"> Header </Header>
+    <Header style="background: #1677ff"> Header </Header>
     <Layout>
-      <Sider :width="200" style="background: #fff; border-right: 1px solid #f0f0f0">
+      <Sider :width="200">
         <div style="padding: 16px">Sider</div>
       </Sider>
-      <Content style="padding: 24px; background: #f5f5f5"> Content </Content>
+      <Content style="margin: 24px 16px; padding: 24px; background: #fff"> Content </Content>
     </Layout>
-    <Footer style="text-align: center; background: #f5f5f5"> Footer ©2024 </Footer>
+    <Footer style="text-align: center"> Footer ©2024 </Footer>
   </Layout>
 </template>
 

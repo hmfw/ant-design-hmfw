@@ -194,5 +194,91 @@ describe('Grid', () => {
       const style = col.attributes('style')
       expect(style).toContain('min-width: 0')
     })
+
+    // ==================== 扩展场景 ====================
+
+    it('handles flex=none as string pass-through', () => {
+      const wrapper = mount(Col, {
+        props: { flex: 'none' },
+      })
+      // 浏览器将 flex: none 标准化为 flex: 0 0 auto（CSS 规范中等价）
+      expect(wrapper.attributes('style')).toContain('flex: 0 0 auto')
+    })
+
+    it('responsive offset=0 allows reset at breakpoint', () => {
+      const wrapper = mount(Col, {
+        props: {
+          xs: { span: 24, offset: 4 },
+          sm: { span: 12, offset: 0 },
+        },
+      })
+      expect(wrapper.classes()).toContain('hmfw-col-xs-offset-4')
+      expect(wrapper.classes()).toContain('hmfw-col-sm-offset-0')
+    })
+
+    it('responsive order=0 allows reset at breakpoint', () => {
+      const wrapper = mount(Col, {
+        props: {
+          xs: { span: 24, order: 2 },
+          sm: { span: 12, order: 0 },
+        },
+      })
+      expect(wrapper.classes()).toContain('hmfw-col-xs-order-2')
+      expect(wrapper.classes()).toContain('hmfw-col-sm-order-0')
+    })
+
+    it('responsive pull=0 allows reset at breakpoint', () => {
+      const wrapper = mount(Col, {
+        props: {
+          xs: { span: 24, pull: 2 },
+          sm: { span: 12, pull: 0 },
+        },
+      })
+      expect(wrapper.classes()).toContain('hmfw-col-xs-pull-2')
+      expect(wrapper.classes()).toContain('hmfw-col-sm-pull-0')
+    })
+
+    it('responsive push=0 allows reset at breakpoint', () => {
+      const wrapper = mount(Col, {
+        props: {
+          xs: { span: 24, push: 2 },
+          sm: { span: 12, push: 0 },
+        },
+      })
+      expect(wrapper.classes()).toContain('hmfw-col-xs-push-2')
+      expect(wrapper.classes()).toContain('hmfw-col-sm-push-0')
+    })
+
+    it('Col standalone without Row context renders correctly', () => {
+      const wrapper = mount(Col, {
+        props: { span: 12 },
+      })
+      expect(wrapper.exists()).toBe(true)
+      expect(wrapper.classes()).toContain('hmfw-col-12')
+    })
+  })
+
+  describe('Row responsive', () => {
+    it('accepts responsive object align', () => {
+      const wrapper = mount(Row, {
+        props: { align: { xs: 'top', sm: 'middle' } },
+      })
+      // responsive object should not crash; rendered class depends on screen
+      expect(wrapper.classes()).toContain('hmfw-row')
+    })
+
+    it('accepts responsive object justify', () => {
+      const wrapper = mount(Row, {
+        props: { justify: { xs: 'start', sm: 'center' } },
+      })
+      expect(wrapper.classes()).toContain('hmfw-row')
+    })
+
+    it('accepts responsive object gutter', () => {
+      const wrapper = mount(Row, {
+        props: { gutter: { xs: 8, sm: 16 } },
+      })
+      expect(wrapper.classes()).toContain('hmfw-row')
+    })
   })
 })

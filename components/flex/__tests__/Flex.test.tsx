@@ -40,17 +40,17 @@ describe('Flex', () => {
 
   it('string gap preset small', () => {
     const wrapper = mount(Flex, { props: { gap: 'small' } })
-    expect(wrapper.attributes('style')).toContain('gap: 8px')
+    expect(wrapper.attributes('style')).toContain('gap: var(--hmfw-padding-xs)')
   })
 
   it('string gap preset middle', () => {
     const wrapper = mount(Flex, { props: { gap: 'middle' } })
-    expect(wrapper.attributes('style')).toContain('gap: 16px')
+    expect(wrapper.attributes('style')).toContain('gap: var(--hmfw-padding)')
   })
 
   it('string gap preset large', () => {
     const wrapper = mount(Flex, { props: { gap: 'large' } })
-    expect(wrapper.attributes('style')).toContain('gap: 24px')
+    expect(wrapper.attributes('style')).toContain('gap: var(--hmfw-padding-lg)')
   })
 
   it('wrap=true', () => {
@@ -76,5 +76,44 @@ describe('Flex', () => {
   it('renders slot content', () => {
     const wrapper = mount(Flex, { slots: { default: '<span>child</span>' } })
     expect(wrapper.find('span').text()).toBe('child')
+  })
+
+  // ==================== 边界与扩展场景 ====================
+
+  it('wrap string value wrap-reverse', () => {
+    const wrapper = mount(Flex, { props: { wrap: 'wrap-reverse' } })
+    expect(wrapper.attributes('style')).toContain('flex-wrap: wrap-reverse')
+  })
+
+  it('gap custom string value', () => {
+    const wrapper = mount(Flex, { props: { gap: '1rem' } })
+    expect(wrapper.attributes('style')).toContain('gap: 1rem')
+  })
+
+  it('flex as number', () => {
+    const wrapper = mount(Flex, { props: { flex: 1 } })
+    expect(wrapper.attributes('style')).toContain('flex: 1')
+  })
+
+  it('align baseline', () => {
+    const wrapper = mount(Flex, { props: { align: 'baseline' } })
+    expect(wrapper.attributes('style')).toContain('align-items: baseline')
+  })
+
+  it('align stretch', () => {
+    const wrapper = mount(Flex, { props: { align: 'stretch' } })
+    expect(wrapper.attributes('style')).toContain('align-items: stretch')
+  })
+
+  it('renders empty without error', () => {
+    const wrapper = mount(Flex)
+    expect(wrapper.exists()).toBe(true)
+    expect(wrapper.text()).toBe('')
+  })
+
+  it('wrap not passed defaults to nowrap (boolean false default)', () => {
+    const wrapper = mount(Flex)
+    // Vue Boolean prop 未传时默认为 false → flexWrap: 'nowrap'（CSS 默认值）
+    expect(wrapper.attributes('style')).toContain('flex-wrap: nowrap')
   })
 })

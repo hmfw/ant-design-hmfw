@@ -26,12 +26,28 @@
   <GridGutter />
 </DemoBlock>
 
+### 对齐方式
+
+通过 Row 的 `align` 和 `justify` 属性控制子元素的对齐方式。
+
+<DemoBlock title="对齐方式" :source="GridAlignSource">
+  <GridAlign />
+</DemoBlock>
+
 ### 偏移
 
 通过 `offset` 属性设置列偏移量。
 
 <DemoBlock title="偏移" :source="GridOffsetSource">
   <GridOffset />
+</DemoBlock>
+
+### 栅格排序
+
+通过 `order`、`push`、`pull` 属性调整栅格顺序。
+
+<DemoBlock title="栅格排序" :source="GridOrderSource">
+  <GridOrder />
 </DemoBlock>
 
 ### 响应式布局

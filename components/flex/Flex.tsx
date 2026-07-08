@@ -3,10 +3,16 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { FlexAlign, FlexJustify, FlexWrap, FlexGap } from './types'
 
+/**
+ * gap 预设值映射到 Design Token，对应 ant-design v6 的 flexGapSM/flexGap/flexGapLG
+ * - small  → --hmfw-padding-xs (8px)
+ * - middle → --hmfw-padding    (16px)
+ * - large  → --hmfw-padding-lg (24px)
+ */
 const GAP_MAP: Record<string, string> = {
-  small: '8px',
-  middle: '16px',
-  large: '24px',
+  small: 'var(--hmfw-padding-xs)',
+  middle: 'var(--hmfw-padding)',
+  large: 'var(--hmfw-padding-lg)',
 }
 
 function resolveGap(gap: FlexGap | undefined): string | undefined {

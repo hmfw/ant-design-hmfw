@@ -25,8 +25,6 @@
 .markdown-body > h2 {
   font-size: 22px;
   margin: 48px 0 16px;
-  padding-top: 24px;
-  border-top: 1px solid var(--doc-c-divider);
 }
 
 .markdown-body > h2:first-of-type {
