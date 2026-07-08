@@ -58,7 +58,7 @@ export const DropdownButton = defineComponent({
           disabled={props.disabled}
           loading={props.loading}
           onClick={handleClick}
-          class={`${prefixCls}-left`}
+          classNames={{ root: `${prefixCls}-left` }}
         >
           {slots.default?.()}
         </Button>
@@ -66,7 +66,12 @@ export const DropdownButton = defineComponent({
 
       const iconNode = props.icon || <DownOutlined class="hmfw-icon" />
       const rightButton = (
-        <Button type={props.type} danger={props.danger} disabled={props.disabled} class={`${prefixCls}-right`}>
+        <Button
+          type={props.type}
+          danger={props.danger}
+          disabled={props.disabled}
+          classNames={{ root: `${prefixCls}-right` }}
+        >
           {iconNode}
         </Button>
       )
