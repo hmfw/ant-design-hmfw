@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.6.8。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.6.9。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -99,8 +99,7 @@ import { Anchor, AnchorLink } from '@hmfw/ant-design'
 | --- | --- | --- | --- |
 | items | 数据化配置选项内容 | `AnchorLinkItem[]` | `[]` |
 | affix | 固定模式 | `boolean` | `true` |
-| offsetTop | 距离窗口顶部达到指定偏移量后触发 | `number` | `0` |
-| targetOffset | 滚动偏移量，影响锚点高亮判断 | `number` | `offsetTop` |
+| offsetTop | 距离窗口顶部达到指定偏移量后触发，影响滚动定位、高亮判定和 wrapper 高度 | `number` | `0` |
 | direction | 锚点方向 | `'vertical' \| 'horizontal'` | `'vertical'` |
 | bounds | 锚点区域边界 | `number` | `5` |
 | replace | 是否替换浏览器历史记录 | `boolean` | `false` |
@@ -153,9 +152,23 @@ import { Anchor, AnchorLink } from '@hmfw/ant-design'
         <h3>第二部分</h3>
         <p>这是第二部分的内容。</p>
       </div>
-      <div id="part-3" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px">
+      <div id="part-3" style="height: 100px; background: #fff7e6; padding: 16px; margin-bottom: 16px">
         <h3>第三部分</h3>
         <p>这是第三部分的内容。</p>
+      </div>
+      <div
+        id="part-3-1"
+        style="height: 100px; background: #fff2e8; padding: 16px; margin-bottom: 8px; margin-left: 16px"
+      >
+        <h4>第三部分-1</h4>
+        <p>第三部分的第一个子章节。</p>
+      </div>
+      <div
+        id="part-3-2"
+        style="height: 100px; background: #fff2e8; padding: 16px; margin-bottom: 16px; margin-left: 16px"
+      >
+        <h4>第三部分-2</h4>
+        <p>第三部分的第二个子章节。</p>
       </div>
     </div>
     <Anchor :items="items" :offset-top="64" style="width: 160px" />
@@ -200,9 +213,17 @@ const items = [
         <h3>Static Anchor</h3>
         <p>Do not change hash when scrolling.</p>
       </div>
-      <div id="API" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px">
+      <div id="API" style="background: #fff7e6; padding: 16px; margin-bottom: 16px">
         <h3>API</h3>
         <p>API documentation.</p>
+        <div id="Anchor-Props" style="background: #fff2e8; padding: 12px; margin: 8px 0 8px 16px; border-radius: 4px">
+          <h4>Anchor Props</h4>
+          <p>Anchor 组件的属性配置。</p>
+        </div>
+        <div id="Link-Props" style="background: #fff2e8; padding: 12px; margin: 8px 0 8px 16px; border-radius: 4px">
+          <h4>Link Props</h4>
+          <p>Anchor.Link 组件的属性配置。</p>
+        </div>
       </div>
     </div>
     <Anchor :offset-top="64" style="width: 200px">
