@@ -6,6 +6,31 @@
 
 ---
 
+## [0.6.11] - 2026-07-09
+
+### 🐛 修复
+
+- **Trigger**: 修复 `handleFocusOut` 焦点移入弹层时错误关闭的严重 Bug，弹层内可聚焦元素（下拉菜单项、输入框等）现在可正常获得焦点
+- **Anchor**: 消除 jsdom 中 `<a href>` 异步 navigation 引发的 stderr 噪音，改用 `vi.useFakeTimers()` 阻止
+
+### ✨ 优化
+
+- **Trigger**: 新增全局事件管理器 `eventManager.ts`，N 个实例共享一组 `document`/`window` 监听器，消除 N 倍回调开销
+- **Trigger**: Props 定义从混用简写/完整写法统一为全完整 `{ type, default }` 格式，与 Button/Breadcrumb 保持一致
+- **Trigger**: `attrs.class` / `attrs.style` 的 `as any` 替换为精确类型断言 `as string | undefined` / `as Record<string, any> | undefined`
+- **Trigger**: 代码组织重排为 9 层清晰结构（响应式状态 → Props 同步 → 核心方法 → 副作用 Watch → 事件处理 → 生命周期 → 工具方法 → 暴露 API → 渲染）
+- **Trigger**: render 函数中 class/style/events 逻辑提取为 `popupCls`/`triggerCls`/`triggerSty`/`triggerEvents`/`popupEvents` 变量
+- **Trigger**: `child` 重命名为 `children`，语义更准确
+- **Trigger**: `TriggerProps` 接口与运行时 props 完全同步，新增 9 个缺失字段
+- **Trigger**: `observePopupResize` prop 动态变更时 ResizeObserver 状态同步
+- **Trigger**: `updatePosition` 增加可见性守卫，防止隐藏态计算出错
+
+### 🧪 测试
+
+- **Trigger**: 单元测试从 13 项扩充至 55 项，覆盖全部 22 项未测 Props 与行为（contextMenu、多 trigger、focusOut relatedTarget、matchWidth、triggerDisplay contents、ResizeObserver 等）
+- **Trigger**: 新增 12 项 E2E 测试，覆盖真实浏览器视口定位、autoAdjustOverflow 翻转、焦点管理、matchWidth、hover 触发、多实例等场景
+- **Anchor**: 新增 6 项 E2E 测试，覆盖真实滚动联动、active link 切换、ink bar 渲染等场景
+
 ## [0.6.10] - 2026-07-09
 
 ### 🐛 修复

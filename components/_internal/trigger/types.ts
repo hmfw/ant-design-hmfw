@@ -61,6 +61,8 @@ export interface TriggerProps {
   trigger?: TriggerAction | TriggerAction[]
   placement?: Placement
   autoAdjustOverflow?: boolean
+  /** 箭头尖端对齐触发器中心（Dropdown 的 arrow.pointAtCenter）。 */
+  arrowPointAtCenter?: boolean
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
   mouseEnterDelay?: number
   mouseLeaveDelay?: number
@@ -73,8 +75,20 @@ export interface TriggerProps {
   zIndex?: number
   closeOnEscape?: boolean
   closeOnOutsideClick?: boolean
-  popupClass?: string
+  /** 监听弹层内容尺寸变化并自动重新定位（Tooltip 的 ResizeObserver）。 */
+  observePopupResize?: boolean
+  /** 变化时强制重新定位（Tooltip 的 fresh）。 */
+  fresh?: boolean | number
+  /** 触发器外层 wrapper 的 display，默认 inline-block。 */
+  triggerDisplay?: string
+  /** 弹层 wrapper 的 class，支持字符串或接收实际方位返回字符串的函数。 */
+  popupClass?: string | ((placement: Placement) => string)
+  /** 隐藏态 class，默认 hmfw-trigger-popup-hidden。 */
+  hiddenClass?: string
+  /** 触发器外层 wrapper 的 class。 */
+  triggerClass?: string
   popupStyle?: CSSProperties
+  triggerStyle?: CSSProperties
 }
 
 /** popup 插槽回传的上下文。 */

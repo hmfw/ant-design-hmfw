@@ -11,7 +11,8 @@ import {
 } from 'vue'
 import { cls } from '../../_utils'
 import { computePosition } from './computePosition'
-import type { Placement, TriggerAction } from './types'
+import { subscribeGlobal } from './eventManager'
+import type { Placement, TriggerAction, TriggerProps } from './types'
 
 /**
  * 通用弹层触发器原语（内部组件，不对外导出）。
@@ -24,52 +25,54 @@ import type { Placement, TriggerAction } from './types'
  *  - default：触发器元素
  *  - popup({ placement })：弹层内容，回传翻转后实际方位供箭头方向使用
  */
+const triggerProps = {
+  open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: false },
+  trigger: { type: [String, Array] as PropType<TriggerAction | TriggerAction[]>, default: 'hover' },
+  placement: { type: String as PropType<Placement>, default: 'bottomLeft' },
+  autoAdjustOverflow: { type: Boolean, default: true },
+  /** 箭头尖端对齐触发器中心（Dropdown 的 arrow.pointAtCenter）。 */
+  arrowPointAtCenter: { type: Boolean, default: false },
+  getPopupContainer: { type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>, default: undefined },
+  mouseEnterDelay: { type: Number, default: 0.1 },
+  mouseLeaveDelay: { type: Number, default: 0.1 },
+  disabled: { type: Boolean, default: false },
+  destroyOnHidden: { type: Boolean, default: false },
+  forceRender: { type: Boolean, default: false },
+  /** 弹层宽度与触发器宽度一致（Select 的 dropdownMatchSelectWidth）。 */
+  matchWidth: { type: Boolean, default: false },
+  gap: { type: Number, default: 4 },
+  zIndex: { type: Number, default: 1050 },
+  closeOnEscape: { type: Boolean, default: true },
+  closeOnOutsideClick: { type: Boolean, default: true },
+  /** 监听弹层内容尺寸变化并自动重新定位（Tooltip 的 ResizeObserver）。 */
+  observePopupResize: { type: Boolean, default: false },
+  /** 变化时强制重新定位（Tooltip 的 fresh）。 */
+  fresh: { type: [Boolean, Number] as PropType<boolean | number>, default: undefined },
+  /** 触发器外层 wrapper 的 display，默认 inline-block。 */
+  triggerDisplay: { type: String, default: 'inline-block' },
+  /**
+   * 弹层 wrapper 的 class。可为字符串，或接收实际方位返回字符串的函数
+   * （宿主据此拼出 placement 类，使 wrapper 自身即组件根节点，避免双层嵌套）。
+   */
+  popupClass: { type: [String, Function] as PropType<string | ((placement: Placement) => string)>, default: undefined },
+  /** 隐藏态 class，默认 hmfw-trigger-popup-hidden；宿主可换成自己的（如 hmfw-dropdown-hidden）。 */
+  hiddenClass: { type: String, default: 'hmfw-trigger-popup-hidden' },
+  popupStyle: { type: Object as PropType<Record<string, any>>, default: undefined },
+  /** 触发器外层 wrapper 的 class。 */
+  triggerClass: { type: String, default: undefined },
+  triggerStyle: { type: Object as PropType<Record<string, any>>, default: undefined },
+} satisfies Record<keyof TriggerProps, any>
+
 export const Trigger = defineComponent({
   name: 'Trigger',
   inheritAttrs: false,
-  props: {
-    open: { type: Boolean, default: undefined },
-    defaultOpen: Boolean,
-    trigger: {
-      type: [String, Array] as PropType<TriggerAction | TriggerAction[]>,
-      default: 'hover',
-    },
-    placement: { type: String as PropType<Placement>, default: 'bottomLeft' },
-    autoAdjustOverflow: { type: Boolean, default: true },
-    /** 箭头尖端对齐触发器中心（Dropdown 的 arrow.pointAtCenter）。 */
-    arrowPointAtCenter: Boolean,
-    getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
-    mouseEnterDelay: { type: Number, default: 0.1 },
-    mouseLeaveDelay: { type: Number, default: 0.1 },
-    disabled: Boolean,
-    destroyOnHidden: Boolean,
-    forceRender: Boolean,
-    /** 弹层宽度与触发器宽度一致。 */
-    matchWidth: Boolean,
-    gap: { type: Number, default: 4 },
-    zIndex: { type: Number, default: 1050 },
-    closeOnEscape: { type: Boolean, default: true },
-    closeOnOutsideClick: { type: Boolean, default: true },
-    /** 监听弹层内容尺寸变化并自动重新定位（Tooltip 的 ResizeObserver）。 */
-    observePopupResize: Boolean,
-    /** 变化时强制重新定位（Tooltip 的 fresh）。 */
-    fresh: [Boolean, Number] as PropType<boolean | number>,
-    /** 触发器外层 wrapper 的 display，默认 inline-block。 */
-    triggerDisplay: { type: String, default: 'inline-block' },
-    /**
-     * 弹层 wrapper 的 class。可为字符串，或接收实际方位返回字符串的函数
-     * （宿主据此拼出 placement 类，使 wrapper 自身即组件根节点，避免双层嵌套）。
-     */
-    popupClass: [String, Function] as PropType<string | ((placement: Placement) => string)>,
-    /** 隐藏态 class，默认 hmfw-trigger-popup-hidden；宿主可换成自己的（如 hmfw-dropdown-hidden）。 */
-    hiddenClass: { type: String, default: 'hmfw-trigger-popup-hidden' },
-    popupStyle: Object as PropType<Record<string, any>>,
-    /** 触发器外层 wrapper 的 class。 */
-    triggerClass: String,
-    triggerStyle: Object as PropType<Record<string, any>>,
-  },
+  props: triggerProps,
   emits: ['update:open', 'openChange', 'afterOpenChange'],
   setup(props, { slots, emit, attrs, expose }) {
+    // ================================================================
+    // 1. 响应式状态
+    // ================================================================
     const triggerRef = ref<HTMLElement | null>(null)
     const popupRef = ref<HTMLElement | null>(null)
     const innerOpen = ref(props.defaultOpen ?? false)
@@ -79,10 +82,18 @@ export const Trigger = defineComponent({
     let enterTimer: ReturnType<typeof setTimeout> | null = null
     let leaveTimer: ReturnType<typeof setTimeout> | null = null
     let resizeObserver: ResizeObserver | null = null
+    const unsubs: (() => void)[] = []
 
     const isControlled = computed(() => props.open !== undefined)
     const visible = computed(() => (isControlled.value ? props.open! : innerOpen.value))
+    const triggers = computed(() => {
+      const t = props.trigger
+      return Array.isArray(t) ? t : [t]
+    })
 
+    // ================================================================
+    // 2. Props → 内部状态同步
+    // ================================================================
     watch(
       () => props.open,
       (v) => {
@@ -96,21 +107,22 @@ export const Trigger = defineComponent({
       },
     )
 
-    const triggers = computed(() => {
-      const t = props.trigger
-      return Array.isArray(t) ? t : [t]
-    })
-
+    // ================================================================
+    // 3. 核心方法
+    // ================================================================
     const setOpen = (v: boolean, source: 'trigger' | 'popup' = 'trigger') => {
       if (props.disabled) return
       if (!isControlled.value) innerOpen.value = v
       emit('update:open', v)
       emit('openChange', v, { source })
+      // afterOpenChange 在下一个宏任务触发，此时 DOM 已更新但 CSS 过渡未完成。
+      // 若宿主组件有入场/出场动画，应自行监听 transitionend/animationend 确定动画结束时机。
       setTimeout(() => emit('afterOpenChange', v), 0)
     }
 
     const updatePosition = () => {
-      if (!triggerRef.value || !popupRef.value) return
+      // 弹层不可见时 getBoundingClientRect 返回零值，跳过以避免错误坐标
+      if (!visible.value || !triggerRef.value || !popupRef.value) return
       // 当 triggerDisplay 为 contents 时，wrapper 自身不生成盒模型，
       // getBoundingClientRect 返回全零值，需回退到第一个子元素计算位置
       let triggerEl: HTMLElement = triggerRef.value
@@ -129,16 +141,17 @@ export const Trigger = defineComponent({
       if (props.matchWidth) popupWidth.value = triggerRect.width
     }
 
+    // ================================================================
+    // 4. 副作用 Watch
+    // ================================================================
     watch(visible, async (v) => {
       if (v) {
         await nextTick()
         updatePosition()
-        // 开启时启动 ResizeObserver 监听弹层内容尺寸变化
         if (props.observePopupResize && resizeObserver && popupRef.value) {
           resizeObserver.observe(popupRef.value)
         }
       } else {
-        // 隐藏时断开监听
         if (resizeObserver) resizeObserver.disconnect()
       }
     })
@@ -151,6 +164,22 @@ export const Trigger = defineComponent({
       },
     )
 
+    // observePopupResize 动态变更时同步 ResizeObserver 状态
+    watch(
+      () => props.observePopupResize,
+      (v) => {
+        if (!resizeObserver) return
+        if (v && visible.value && popupRef.value) {
+          resizeObserver.observe(popupRef.value)
+        } else if (!v) {
+          resizeObserver.disconnect()
+        }
+      },
+    )
+
+    // ================================================================
+    // 5. 事件处理
+    // ================================================================
     const onScrollOrResize = () => {
       if (visible.value) updatePosition()
     }
@@ -183,8 +212,11 @@ export const Trigger = defineComponent({
       setOpen(true)
     }
 
-    const handleFocusOut = () => {
+    // 焦点离开触发器时关闭弹层，但焦点移入弹层内容不关闭，
+    // 否则弹层内的可聚焦元素（下拉菜单项、输入框等）无法获得焦点。
+    const handleFocusOut = (e: FocusEvent) => {
       if (!triggers.value.includes('focus')) return
+      if (popupRef.value?.contains(e.relatedTarget as Node)) return
       setOpen(false)
     }
 
@@ -207,13 +239,17 @@ export const Trigger = defineComponent({
       }
     }
 
+    // ================================================================
+    // 6. 生命周期
+    // ================================================================
     onMounted(() => {
-      document.addEventListener('mousedown', handleOutsideClick)
-      document.addEventListener('keydown', handleKeyDown)
-      window.addEventListener('resize', onScrollOrResize)
-      window.addEventListener('scroll', onScrollOrResize, true)
+      // 通过全局事件管理器订阅，避免 N 个实例重复注册 DOM 事件
+      unsubs.push(subscribeGlobal(document, 'mousedown', handleOutsideClick))
+      unsubs.push(subscribeGlobal(document, 'keydown', handleKeyDown))
+      unsubs.push(subscribeGlobal(window, 'resize', onScrollOrResize))
+      // scroll 使用 capture 阶段以捕获所有可滚动祖先的滚动事件
+      unsubs.push(subscribeGlobal(window, 'scroll', onScrollOrResize, { capture: true }))
 
-      // 创建 ResizeObserver（监听在 visible watch 中按需启动）
       if (props.observePopupResize && typeof ResizeObserver !== 'undefined') {
         resizeObserver = new ResizeObserver(() => {
           if (visible.value) {
@@ -224,15 +260,15 @@ export const Trigger = defineComponent({
     })
 
     onBeforeUnmount(() => {
-      document.removeEventListener('mousedown', handleOutsideClick)
-      document.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('resize', onScrollOrResize)
-      window.removeEventListener('scroll', onScrollOrResize, true)
+      unsubs.forEach((fn) => fn())
       if (enterTimer) clearTimeout(enterTimer)
       if (leaveTimer) clearTimeout(leaveTimer)
       if (resizeObserver) resizeObserver.disconnect()
     })
 
+    // ================================================================
+    // 7. 工具方法
+    // ================================================================
     const getContainer = (): HTMLElement | 'body' => {
       if (props.getPopupContainer && triggerRef.value) {
         return props.getPopupContainer(triggerRef.value)
@@ -240,7 +276,9 @@ export const Trigger = defineComponent({
       return 'body'
     }
 
-    // 暴露给宿主组件：手动重新定位、读取实际方位、关闭。
+    // ================================================================
+    // 8. 暴露 API
+    // ================================================================
     expose({
       updatePosition,
       actualPlacement,
@@ -248,11 +286,13 @@ export const Trigger = defineComponent({
     })
 
     return () => {
-      const child = slots.default?.()
-      if (!child || (Array.isArray(child) && child.length === 0)) return null
+      const children = slots.default?.()
+      if (!children || (Array.isArray(children) && children.length === 0)) return null
 
       const shouldRender = visible.value || !props.destroyOnHidden || props.forceRender
 
+      // 注意：props.popupStyle 在最后展开，可覆盖 position/top/left 等内部定位属性。
+      // 消费者应避免覆盖这些关键属性，仅在确有需求时使用（如需固定定位替代绝对定位）。
       const popupStyle: Record<string, any> = {
         position: 'absolute',
         top: `${position.value.top}px`,
@@ -262,38 +302,48 @@ export const Trigger = defineComponent({
         ...props.popupStyle,
       }
 
+      // 弹层 class 计算：包含宿主传入的 popupClass（支持函数形式接收当前方位）、
+      // placement 方位类、arrowPointAtCenter 标记类、以及 visible 切换的隐藏类。
+      const popupCls = cls(
+        'hmfw-trigger-popup',
+        typeof props.popupClass === 'function' ? props.popupClass(actualPlacement.value) : props.popupClass,
+        `hmfw-trigger-placement-${actualPlacement.value}`,
+        {
+          'hmfw-trigger-arrow-point-at-center': props.arrowPointAtCenter,
+          [props.hiddenClass]: !visible.value,
+        },
+      )
+
+      const triggerCls = cls(props.triggerClass, attrs.class as string | undefined)
+      const triggerSty = {
+        display: props.triggerDisplay,
+        ...(attrs.style as Record<string, any> | undefined),
+        ...props.triggerStyle,
+      }
+
+      const triggerEvents = {
+        onMouseenter: handleMouseEnter,
+        onMouseleave: handleMouseLeave,
+        onClick: handleClick,
+        onFocusin: handleFocusIn,
+        onFocusout: handleFocusOut,
+        onContextmenu: handleContextMenu,
+      }
+
+      // 弹层上绑定 hover 事件：鼠标从触发器移入弹层时取消 leave timer，防止误关闭
+      const popupEvents = {
+        onMouseenter: handleMouseEnter,
+        onMouseleave: handleMouseLeave,
+      }
+
       return (
         <>
-          <div
-            ref={triggerRef}
-            class={cls(props.triggerClass, attrs.class as any)}
-            style={{ display: props.triggerDisplay, ...(attrs.style as any), ...props.triggerStyle }}
-            onMouseenter={handleMouseEnter}
-            onMouseleave={handleMouseLeave}
-            onClick={handleClick}
-            onFocusin={handleFocusIn}
-            onFocusout={handleFocusOut}
-            onContextmenu={handleContextMenu}
-          >
-            {child}
+          <div ref={triggerRef} class={triggerCls} style={triggerSty} {...triggerEvents}>
+            {children}
           </div>
           {shouldRender && (
             <Teleport to={getContainer()}>
-              <div
-                ref={popupRef}
-                class={cls(
-                  'hmfw-trigger-popup',
-                  typeof props.popupClass === 'function' ? props.popupClass(actualPlacement.value) : props.popupClass,
-                  `hmfw-trigger-placement-${actualPlacement.value}`,
-                  {
-                    'hmfw-trigger-arrow-point-at-center': props.arrowPointAtCenter,
-                    [props.hiddenClass]: !visible.value,
-                  },
-                )}
-                style={popupStyle}
-                onMouseenter={handleMouseEnter}
-                onMouseleave={handleMouseLeave}
-              >
+              <div ref={popupRef} class={popupCls} style={popupStyle} {...popupEvents}>
                 {slots.popup?.({ placement: actualPlacement.value })}
               </div>
             </Teleport>

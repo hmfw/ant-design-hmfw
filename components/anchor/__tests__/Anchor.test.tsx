@@ -12,6 +12,8 @@ const items = [
 
 describe('Anchor', () => {
   beforeEach(() => {
+    // 使用 fake timers 阻止 jsdom 内部 <a href> 的异步 navigation 调用抛 stderr 错误
+    vi.useFakeTimers()
     // Mock scrollY
     Object.defineProperty(window, 'scrollY', {
       writable: true,
@@ -20,6 +22,7 @@ describe('Anchor', () => {
   })
 
   afterEach(() => {
+    vi.useRealTimers()
     vi.restoreAllMocks()
   })
 
