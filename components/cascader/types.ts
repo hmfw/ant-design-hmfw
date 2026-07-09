@@ -128,4 +128,15 @@ export interface CascaderProps {
   classNames?: CascaderClassNames
   /** 自定义样式 */
   styles?: CascaderStyles
+
+  // ----------------------------------------------------------------
+  // 虚拟滚动
+  // ----------------------------------------------------------------
+
+  /** 是否启用虚拟滚动（默认 false，大数据量时开启以提升性能） */
+  virtual?: boolean
+  /** 下拉菜单容器高度（px），默认 256 */
+  listHeight?: number
+  /** 菜单项高度（px），默认 32 */
+  listItemHeight?: number
 }

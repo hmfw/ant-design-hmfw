@@ -9,6 +9,7 @@ import { Radio } from '../radio'
 import { Dropdown } from '../dropdown'
 import { FilterDropdown } from './FilterDropdown'
 import { FilterOutlined, PlusOutlined, MinusOutlined } from '@hmfw/icons'
+import { useVirtualScroll } from '../_internal/virtual-list'
 import type {
   TableColumn,
   TableRowSelection,
@@ -73,29 +74,24 @@ export const Table = defineComponent({
     const prefixCls = usePrefixCls('table')
     const locale = useLocale()
 
-    // Virtual scroll state
-    const tbodyRef = ref<HTMLElement>()
-    const scrollTop = ref(0)
-    const rowHeightCache = ref<Map<Key, number>>(new Map())
-    const DEFAULT_ROW_HEIGHT = 54 // 默认行高
+    // 行高映射（与 CSS padding 保持一致：default=54, middle=46, small=38）
+    const ROW_HEIGHT_MAP: Record<string, number> = { default: 54, middle: 46, small: 38 }
+    const virtualItemHeight = computed(() => ROW_HEIGHT_MAP[props.size] ?? 54)
 
-    // 判断是否启用虚拟滚动
+    // 判断是否启用虚拟滚动（scroll.y 存在且数据量 > 20）
     const virtualEnabled = computed(() => {
       return !!(props.scroll?.y && props.dataSource && props.dataSource.length > 20)
     })
 
-    // 容器高度
+    // 容器可见高度
     const containerHeight = computed(() => {
-      if (!props.scroll?.y) return 0
+      if (!props.scroll?.y) return 400
       if (typeof props.scroll.y === 'number') return props.scroll.y
       return parseInt(props.scroll.y) || 400
     })
 
-    // 获取行高度（固定高度或动态测量）
-    const getRowHeight = (record: any, index: number): number => {
-      const key = getRowKey(record, index)
-      return rowHeightCache.value.get(key) || DEFAULT_ROW_HEIGHT
-    }
+    // tbodyRef 作为滚动容器引用，由 useVirtualScroll 管理滚动事件
+    const tbodyRef = ref<HTMLElement>()
 
     // Responsive breakpoint detection
     const currentBreakpoint = ref<string>('xxl')
@@ -223,59 +219,23 @@ export const Table = defineComponent({
       return sortedData.value.slice(start, start + ps)
     })
 
-    // 虚拟滚动相关计算
-
-    const visibleStartIndex = computed(() => {
-      if (!virtualEnabled.value) return 0
-      let heightSum = 0
-      let index = 0
-      const buffer = 5
-
-      for (; index < pagedData.value.length; index++) {
-        if (heightSum >= scrollTop.value) {
-          return Math.max(0, index - buffer)
-        }
-        heightSum += getRowHeight(pagedData.value[index], index)
-      }
-      return 0
+    // ----------------------------------------------------------------
+    // 虚拟滚动计算（使用共享 composable，O(1) 算法）
+    // ----------------------------------------------------------------
+    const {
+      startIndex,
+      endIndex,
+      visibleData: virtualVisibleData,
+      offsetY,
+      totalHeight,
+      handleScroll: onTableScroll,
+    } = useVirtualScroll({
+      containerRef: tbodyRef,
+      data: computed(() => pagedData.value),
+      itemHeight: virtualItemHeight,
+      containerHeight,
+      buffer: 5,
     })
-
-    const visibleEndIndex = computed(() => {
-      if (!virtualEnabled.value) return pagedData.value.length
-      let heightSum = 0
-      let index = 0
-      const buffer = 5
-      const targetHeight = scrollTop.value + containerHeight.value
-
-      for (let i = 0; i < pagedData.value.length; i++) {
-        heightSum += getRowHeight(pagedData.value[i], i)
-        if (heightSum >= targetHeight) {
-          index = i
-          break
-        }
-      }
-      return Math.min(pagedData.value.length, index + buffer + 1)
-    })
-
-    const visibleData = computed(() => {
-      if (!virtualEnabled.value) return pagedData.value
-      return pagedData.value.slice(visibleStartIndex.value, visibleEndIndex.value)
-    })
-
-    const offsetY = computed(() => {
-      if (!virtualEnabled.value) return 0
-      let offset = 0
-      for (let i = 0; i < visibleStartIndex.value; i++) {
-        offset += getRowHeight(pagedData.value[i], i)
-      }
-      return offset
-    })
-
-    const handleScroll = (e: Event) => {
-      if (!virtualEnabled.value) return
-      const target = e.target as HTMLElement
-      scrollTop.value = target.scrollTop
-    }
 
     const handleSort = (col: TableColumn, event?: MouseEvent) => {
       if (!col.sorter) return
@@ -483,7 +443,7 @@ export const Table = defineComponent({
                     }
                   : {}),
               }}
-              onScroll={handleScroll}
+              onScroll={onTableScroll}
               role="presentation"
             >
               <table
@@ -644,116 +604,120 @@ export const Table = defineComponent({
                         <Empty description={props.locale?.emptyText ?? locale.value.Table.emptyText} />
                       </td>
                     </tr>
-                  ) : virtualEnabled.value ? (
+                  ) : (
                     <>
-                      {/* 虚拟滚动：占位元素 */}
-                      {offsetY.value > 0 && (
+                      {/* 虚拟滚动：上部 spacer（撑开已滚动过的高度） */}
+                      {virtualEnabled.value && offsetY.value > 0 && (
                         <tr style={{ height: `${offsetY.value}px` }} aria-hidden="true">
                           <td colspan={colSpan}></td>
                         </tr>
                       )}
-                      {/* 渲染可见行 */}
-                      {visibleData.value.flatMap((record, visibleIndex) => {
-                        const rowIndex = visibleStartIndex.value + visibleIndex
-                        const rowKey = getRowKey(record, rowIndex)
-                        const isSelected = selectedKeys.value.includes(rowKey)
-                        const isExpanded = expandedKeys.value.includes(rowKey)
 
-                        const rows = [
-                          <tr
-                            key={rowKey}
-                            role="row"
-                            aria-selected={showSelection ? isSelected : undefined}
-                            aria-expanded={hasExpandable ? isExpanded : undefined}
-                            class={cls(
-                              `${prefixCls}-row`,
-                              {
-                                [`${prefixCls}-row-selected`]: isSelected,
-                              },
-                              props.classNames?.row,
-                            )}
-                            style={props.styles?.row}
-                            {...(props.onRow?.(record, rowIndex) ?? {})}
-                          >
-                            {hasExpandable && (
-                              <td class={`${prefixCls}-cell ${prefixCls}-expand-icon-cell`} role="cell">
-                                <button
-                                  type="button"
-                                  class={cls(`${prefixCls}-expand-icon`, {
-                                    [`${prefixCls}-expand-icon-expanded`]: isExpanded,
-                                  })}
-                                  onClick={() => handleExpand(!isExpanded, record)}
-                                  aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
-                                  aria-expanded={isExpanded}
-                                >
-                                  {isExpanded ? <MinusOutlined /> : <PlusOutlined />}
-                                </button>
-                              </td>
-                            )}
-                            {showSelection && (
-                              <td class={`${prefixCls}-cell ${prefixCls}-selection-column`} role="cell">
-                                {isRadio ? (
-                                  <Radio
-                                    checked={isSelected}
-                                    onChange={(checked) => handleRowSelect(rowKey, record, checked)}
-                                  />
-                                ) : (
-                                  <Checkbox
-                                    checked={isSelected}
-                                    onChange={(checked) => handleRowSelect(rowKey, record, checked)}
-                                    {...(props.rowSelection?.getCheckboxProps?.(record) ?? {})}
-                                  />
-                                )}
-                              </td>
-                            )}
-                            {responsiveColumns.value.map((col) => {
-                              const colKey = col.key ?? col.dataIndex ?? ''
-                              const value = getCellValue(record, col)
-                              const content = col.render ? col.render(value, record, rowIndex) : value
-                              const fixedLeft = col.fixed === 'left'
-                              const fixedRight = col.fixed === 'right'
-                              return (
-                                <td
-                                  key={colKey}
-                                  role="cell"
-                                  class={cls(
-                                    `${prefixCls}-cell`,
-                                    {
-                                      [`${prefixCls}-cell-ellipsis`]: col.ellipsis,
-                                      [`${prefixCls}-cell-fix-left`]: fixedLeft,
-                                      [`${prefixCls}-cell-fix-right`]: fixedRight,
-                                    },
-                                    props.classNames?.cell,
-                                  )}
-                                  style={{ textAlign: col.align ?? 'left', ...props.styles?.cell }}
-                                >
-                                  {content}
+                      {/* 统一的数据行渲染（虚拟 / 非虚拟共用） */}
+                      {(virtualEnabled.value ? virtualVisibleData.value : pagedData.value).flatMap(
+                        (record: any, visibleIndex: number) => {
+                          const rowIndex = virtualEnabled.value ? startIndex.value + visibleIndex : visibleIndex
+                          const rowKey = getRowKey(record, rowIndex)
+                          const isSelected = selectedKeys.value.includes(rowKey)
+                          const isExpanded = expandedKeys.value.includes(rowKey)
+
+                          const rows = [
+                            <tr
+                              key={rowKey}
+                              role="row"
+                              aria-selected={showSelection ? isSelected : undefined}
+                              aria-expanded={hasExpandable ? isExpanded : undefined}
+                              class={cls(
+                                `${prefixCls}-row`,
+                                {
+                                  [`${prefixCls}-row-selected`]: isSelected,
+                                },
+                                props.classNames?.row,
+                              )}
+                              style={props.styles?.row}
+                              {...(props.onRow?.(record, rowIndex) ?? {})}
+                            >
+                              {hasExpandable && (
+                                <td class={`${prefixCls}-cell ${prefixCls}-expand-icon-cell`} role="cell">
+                                  <button
+                                    type="button"
+                                    class={cls(`${prefixCls}-expand-icon`, {
+                                      [`${prefixCls}-expand-icon-expanded`]: isExpanded,
+                                    })}
+                                    onClick={() => handleExpand(!isExpanded, record)}
+                                    aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
+                                    aria-expanded={isExpanded}
+                                  >
+                                    {isExpanded ? <MinusOutlined /> : <PlusOutlined />}
+                                  </button>
                                 </td>
-                              )
-                            })}
-                          </tr>,
-                        ]
-
-                        // Add expanded row if applicable
-                        if (hasExpandable && isExpanded && props.expandable?.expandedRowRender) {
-                          rows.push(
-                            <tr key={`${rowKey}-expanded`} class={`${prefixCls}-expanded-row`} role="row">
-                              <td colspan={colSpan} class={`${prefixCls}-cell`} role="cell">
-                                {props.expandable.expandedRowRender(record, rowIndex, 0, isExpanded)}
-                              </td>
+                              )}
+                              {showSelection && (
+                                <td class={`${prefixCls}-cell ${prefixCls}-selection-column`} role="cell">
+                                  {isRadio ? (
+                                    <Radio
+                                      checked={isSelected}
+                                      onChange={(checked) => handleRowSelect(rowKey, record, checked)}
+                                    />
+                                  ) : (
+                                    <Checkbox
+                                      checked={isSelected}
+                                      onChange={(checked) => handleRowSelect(rowKey, record, checked)}
+                                      {...(props.rowSelection?.getCheckboxProps?.(record) ?? {})}
+                                    />
+                                  )}
+                                </td>
+                              )}
+                              {responsiveColumns.value.map((col) => {
+                                const colKey = col.key ?? col.dataIndex ?? ''
+                                const value = getCellValue(record, col)
+                                const content = col.render ? col.render(value, record, rowIndex) : value
+                                const fixedLeft = col.fixed === 'left'
+                                const fixedRight = col.fixed === 'right'
+                                return (
+                                  <td
+                                    key={colKey}
+                                    role="cell"
+                                    class={cls(
+                                      `${prefixCls}-cell`,
+                                      {
+                                        [`${prefixCls}-cell-ellipsis`]: col.ellipsis,
+                                        [`${prefixCls}-cell-fix-left`]: fixedLeft,
+                                        [`${prefixCls}-cell-fix-right`]: fixedRight,
+                                      },
+                                      props.classNames?.cell,
+                                    )}
+                                    style={{ textAlign: col.align ?? 'left', ...props.styles?.cell }}
+                                  >
+                                    {content}
+                                  </td>
+                                )
+                              })}
                             </tr>,
-                          )
-                        }
+                          ]
 
-                        return rows
-                      })}
-                      {/* 底部占位元素 */}
-                      {visibleEndIndex.value < pagedData.value.length &&
-                        (() => {
-                          let remainingHeight = 0
-                          for (let i = visibleEndIndex.value; i < pagedData.value.length; i++) {
-                            remainingHeight += getRowHeight(pagedData.value[i], i)
+                          // Add expanded row if applicable
+                          if (hasExpandable && isExpanded && props.expandable?.expandedRowRender) {
+                            rows.push(
+                              <tr key={`${rowKey}-expanded`} class={`${prefixCls}-expanded-row`} role="row">
+                                <td colspan={colSpan} class={`${prefixCls}-cell`} role="cell">
+                                  {props.expandable.expandedRowRender(record, rowIndex, 0, isExpanded)}
+                                </td>
+                              </tr>,
+                            )
                           }
+
+                          return rows
+                        },
+                      )}
+
+                      {/* 虚拟滚动：下部 spacer（撑开剩余未渲染的高度） */}
+                      {virtualEnabled.value &&
+                        (() => {
+                          const remainingHeight =
+                            totalHeight.value -
+                            offsetY.value -
+                            virtualVisibleData.value.length * virtualItemHeight.value
                           return remainingHeight > 0 ? (
                             <tr style={{ height: `${remainingHeight}px` }} aria-hidden="true">
                               <td colspan={colSpan}></td>
@@ -761,100 +725,6 @@ export const Table = defineComponent({
                           ) : null
                         })()}
                     </>
-                  ) : (
-                    pagedData.value.flatMap((record, rowIndex) => {
-                      const rowKey = getRowKey(record, rowIndex)
-                      const isSelected = selectedKeys.value.includes(rowKey)
-                      const isExpanded = expandedKeys.value.includes(rowKey)
-
-                      const rows = [
-                        <tr
-                          key={rowKey}
-                          role="row"
-                          aria-selected={showSelection ? isSelected : undefined}
-                          aria-expanded={hasExpandable ? isExpanded : undefined}
-                          class={cls(
-                            `${prefixCls}-row`,
-                            {
-                              [`${prefixCls}-row-selected`]: isSelected,
-                            },
-                            props.classNames?.row,
-                          )}
-                          style={props.styles?.row}
-                          {...(props.onRow?.(record, rowIndex) ?? {})}
-                        >
-                          {hasExpandable && (
-                            <td class={`${prefixCls}-cell ${prefixCls}-expand-icon-cell`} role="cell">
-                              <button
-                                type="button"
-                                class={cls(`${prefixCls}-expand-icon`, {
-                                  [`${prefixCls}-expand-icon-expanded`]: isExpanded,
-                                })}
-                                onClick={() => handleExpand(!isExpanded, record)}
-                                aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
-                                aria-expanded={isExpanded}
-                              >
-                                {isExpanded ? <MinusOutlined /> : <PlusOutlined />}
-                              </button>
-                            </td>
-                          )}
-                          {showSelection && (
-                            <td class={`${prefixCls}-cell ${prefixCls}-selection-column`} role="cell">
-                              {isRadio ? (
-                                <Radio
-                                  checked={isSelected}
-                                  onChange={(checked) => handleRowSelect(rowKey, record, checked)}
-                                />
-                              ) : (
-                                <Checkbox
-                                  checked={isSelected}
-                                  onChange={(checked) => handleRowSelect(rowKey, record, checked)}
-                                  {...(props.rowSelection?.getCheckboxProps?.(record) ?? {})}
-                                />
-                              )}
-                            </td>
-                          )}
-                          {responsiveColumns.value.map((col) => {
-                            const colKey = col.key ?? col.dataIndex ?? ''
-                            const value = getCellValue(record, col)
-                            const content = col.render ? col.render(value, record, rowIndex) : value
-                            const fixedLeft = col.fixed === 'left'
-                            const fixedRight = col.fixed === 'right'
-                            return (
-                              <td
-                                key={colKey}
-                                role="cell"
-                                class={cls(
-                                  `${prefixCls}-cell`,
-                                  {
-                                    [`${prefixCls}-cell-ellipsis`]: col.ellipsis,
-                                    [`${prefixCls}-cell-fix-left`]: fixedLeft,
-                                    [`${prefixCls}-cell-fix-right`]: fixedRight,
-                                  },
-                                  props.classNames?.cell,
-                                )}
-                                style={{ textAlign: col.align ?? 'left', ...props.styles?.cell }}
-                              >
-                                {content}
-                              </td>
-                            )
-                          })}
-                        </tr>,
-                      ]
-
-                      // Add expanded row if applicable
-                      if (hasExpandable && isExpanded && props.expandable?.expandedRowRender) {
-                        rows.push(
-                          <tr key={`${rowKey}-expanded`} class={`${prefixCls}-expanded-row`} role="row">
-                            <td colspan={colSpan} class={`${prefixCls}-cell`} role="cell">
-                              {props.expandable.expandedRowRender(record, rowIndex, 0, isExpanded)}
-                            </td>
-                          </tr>,
-                        )
-                      }
-
-                      return rows
-                    })
                   )}
                 </tbody>
                 {props.summary && !isEmpty && (

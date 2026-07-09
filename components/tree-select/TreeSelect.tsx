@@ -1,9 +1,10 @@
-import { defineComponent, ref, computed, watch, nextTick, type PropType, type VNode } from 'vue'
+import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { CaretRightFilled, CaretDownFilled, DownOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
+import { VirtualList } from '../_internal/virtual-list'
 import type { TreeSelectNode, ShowCheckedStrategy, TreeSelectValue, TreeIcon, MaxTagPlaceholder } from './types'
 
 type Key = string | number
@@ -66,10 +67,8 @@ export const TreeSelect = defineComponent({
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tree-select')
     const selectorRef = ref<HTMLElement | null>(null)
-    const listRef = ref<HTMLElement | null>(null)
     const innerOpen = ref(!!props.defaultOpen)
     const searchText = ref('')
-    const scrollTop = ref(0)
 
     const labelField = computed(() => props.fieldNames?.label ?? 'label')
     const valueField = computed(() => props.fieldNames?.value ?? 'value')
@@ -262,23 +261,6 @@ export const TreeSelect = defineComponent({
     const useVirtual = computed(
       () => props.virtual && props.itemHeight > 0 && flatNodes.value.length * props.itemHeight > props.listHeight,
     )
-    const visibleRange = computed(() => {
-      if (!useVirtual.value) return { start: 0, end: flatNodes.value.length, offset: 0 }
-      const total = flatNodes.value.length
-      const buffer = 5
-      const start = Math.max(0, Math.floor(scrollTop.value / props.itemHeight) - buffer)
-      const visibleCount = Math.ceil(props.listHeight / props.itemHeight) + buffer * 2
-      const end = Math.min(total, start + visibleCount)
-      return { start, end, offset: start * props.itemHeight }
-    })
-    const handleListScroll = (e: Event) => {
-      scrollTop.value = (e.target as HTMLElement).scrollTop
-    }
-    // 切换搜索/数据/展开时复位滚动
-    watch([searchText, () => props.treeData, expandedKeys], () => {
-      scrollTop.value = 0
-      if (listRef.value) listRef.value.scrollTop = 0
-    })
 
     // ===================== Tag display helpers =====================
     const truncateLabel = (label: string) => {
@@ -528,39 +510,16 @@ export const TreeSelect = defineComponent({
       }
 
       return (
-        <div
-          ref={listRef}
-          class={`${prefixCls}-dropdown-list`}
-          style={{
-            maxHeight: `${props.listHeight}px`,
-            overflowY: 'auto',
-            position: 'relative',
-          }}
-          onScroll={handleListScroll}
-        >
+        <div class={`${prefixCls}-dropdown-list`}>
           {useVirtual.value ? (
-            <div
-              class={`${prefixCls}-dropdown-list-holder`}
-              style={{
-                height: `${flatNodes.value.length * props.itemHeight}px`,
-                position: 'relative',
-              }}
-            >
-              <div
-                class={`${prefixCls}-dropdown-list-inner`}
-                style={{
-                  transform: `translateY(${visibleRange.value.offset}px)`,
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                }}
-              >
-                {flatNodes.value
-                  .slice(visibleRange.value.start, visibleRange.value.end)
-                  .map((flat) => renderTreeNode(flat, checkedSet, halfSet))}
-              </div>
-            </div>
+            <VirtualList
+              data={flatNodes.value}
+              height={props.listHeight}
+              itemHeight={props.itemHeight}
+              buffer={5}
+              renderItem={(flat: FlatNode, _index: number) => renderTreeNode(flat, checkedSet, halfSet)}
+              itemKey={(flat: FlatNode) => flat.valueKey}
+            />
           ) : (
             flatNodes.value.map((flat) => renderTreeNode(flat, checkedSet, halfSet))
           )}

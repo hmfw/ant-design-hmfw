@@ -325,4 +325,110 @@ describe('Cascader', () => {
       wrapper.unmount()
     })
   })
+
+  // ----------------------------------------------------------------
+  // 虚拟滚动测试
+  // ----------------------------------------------------------------
+  describe('虚拟滚动', () => {
+    // 生成大量级联选项用于虚拟滚动测试
+    const largeOptions = Array.from({ length: 30 }, (_, i) => ({
+      value: `province-${i}`,
+      label: `省 ${i}`,
+      children: Array.from({ length: 20 }, (_, j) => ({
+        value: `city-${i}-${j}`,
+        label: `市 ${i}-${j}`,
+        children: Array.from({ length: 10 }, (_, k) => ({
+          value: `district-${i}-${j}-${k}`,
+          label: `区 ${i}-${j}-${k}`,
+        })),
+      })),
+    }))
+
+    it('搜索模式下 virtual=true 时渲染 VirtualList', async () => {
+      const wrapper = mount(Cascader, {
+        props: { options: largeOptions, showSearch: true, virtual: true },
+        attachTo: document.body,
+      })
+      await wrapper.find('.hmfw-cascader').trigger('click')
+      await nextTick()
+
+      const input = wrapper.find('.hmfw-cascader-search-input')
+      await input.setValue('区')
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
+      // 搜索模式下应有 VirtualList 容器
+      const vl = document.querySelector('.hmfw-cascader-dropdown .hmfw-virtual-list')
+      expect(vl).toBeTruthy()
+      wrapper.unmount()
+    })
+
+    it('搜索模式下 virtual=false 时不渲染 VirtualList', async () => {
+      const wrapper = mount(Cascader, {
+        props: { options: largeOptions, showSearch: true, virtual: false },
+        attachTo: document.body,
+      })
+      await wrapper.find('.hmfw-cascader').trigger('click')
+      await nextTick()
+
+      const input = wrapper.find('.hmfw-cascader-search-input')
+      await input.setValue('区')
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
+      const vl = document.querySelector('.hmfw-cascader-dropdown .hmfw-virtual-list')
+      expect(vl).toBeFalsy()
+      wrapper.unmount()
+    })
+
+    it('搜索模式虚拟滚动仅渲染可见项', async () => {
+      const wrapper = mount(Cascader, {
+        props: { options: largeOptions, showSearch: true, virtual: true, listHeight: 200 },
+        attachTo: document.body,
+      })
+      await wrapper.find('.hmfw-cascader').trigger('click')
+      await nextTick()
+
+      const input = wrapper.find('.hmfw-cascader-search-input')
+      await input.setValue('区')
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
+      // VirtualList 渲染的 DOM 节点应远小于总数
+      const items = document.querySelectorAll('.hmfw-cascader-dropdown .hmfw-virtual-list-item')
+      expect(items.length).toBeLessThan(100) // 远小于全部 leaf 节点数
+      expect(items.length).toBeGreaterThan(0)
+      wrapper.unmount()
+    })
+
+    it('列模式下 virtual=true 且选项 >10 时渲染 VirtualList', async () => {
+      // 顶层 30 个省份 > 10，应触发 VirtualList
+      const wrapper = mount(Cascader, {
+        props: { options: largeOptions, virtual: true, listHeight: 300 },
+        attachTo: document.body,
+      })
+      await wrapper.find('.hmfw-cascader').trigger('click')
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
+      const vl = document.querySelector('.hmfw-cascader-dropdown .hmfw-virtual-list')
+      expect(vl).toBeTruthy()
+      wrapper.unmount()
+    })
+
+    it('列模式下选项少时不启用 VirtualList', async () => {
+      const wrapper = mount(Cascader, {
+        props: { options: options.slice(0, 1), virtual: true, listHeight: 300 },
+        attachTo: document.body,
+      })
+      await wrapper.find('.hmfw-cascader').trigger('click')
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
+      // 第一层只有 1 个选项 (< 10)，不应使用 VirtualList
+      const vl = document.querySelector('.hmfw-cascader-dropdown .hmfw-virtual-list')
+      expect(vl).toBeFalsy()
+      wrapper.unmount()
+    })
+  })
 })

@@ -3,6 +3,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
+import { VirtualList } from '../_internal/virtual-list'
 import type { AutoCompleteOption, AutoCompleteAllowClear, AutoCompleteClassNames, AutoCompleteStyles } from './types'
 
 // Map AntD-style size to the Input style suffix convention (-lg / -sm).
@@ -32,6 +33,11 @@ export const AutoComplete = defineComponent({
     open: { type: Boolean, default: undefined },
     classNames: { type: Object as PropType<AutoCompleteClassNames> },
     styles: { type: Object as PropType<AutoCompleteStyles> },
+
+    // 虚拟滚动
+    virtual: { type: Boolean, default: false },
+    listHeight: { type: Number, default: 256 },
+    listItemHeight: { type: Number, default: 32 },
   },
   emits: ['update:value', 'change', 'select', 'search', 'focus', 'blur', 'clear', 'openChange'],
   setup(props, { slots, emit, attrs, expose }) {
@@ -168,30 +174,62 @@ export const AutoComplete = defineComponent({
     const renderPopup = () => (
       <>
         {filteredOptions.value.length > 0 ? (
-          filteredOptions.value.map((opt, i) => (
-            <div
-              key={opt.value}
-              class={cls(
-                `${prefixCls}-dropdown-item`,
-                {
-                  [`${prefixCls}-dropdown-item-active`]: activeIndex.value === i,
-                  [`${prefixCls}-dropdown-item-disabled`]: opt.disabled,
-                  [`${prefixCls}-dropdown-item-selected`]: opt.value === inputValue.value,
-                },
-                props.classNames?.option,
+          props.virtual ? (
+            <VirtualList
+              data={filteredOptions.value}
+              height={Math.min(props.listHeight, filteredOptions.value.length * props.listItemHeight)}
+              itemHeight={props.listItemHeight}
+              renderItem={(opt: AutoCompleteOption, index: number) => (
+                <div
+                  class={cls(
+                    `${prefixCls}-dropdown-item`,
+                    {
+                      [`${prefixCls}-dropdown-item-active`]: activeIndex.value === index,
+                      [`${prefixCls}-dropdown-item-disabled`]: opt.disabled,
+                      [`${prefixCls}-dropdown-item-selected`]: opt.value === inputValue.value,
+                    },
+                    props.classNames?.option,
+                  )}
+                  style={props.styles?.option}
+                  onMouseenter={() => {
+                    if (!opt.disabled) activeIndex.value = index
+                  }}
+                  onMousedown={(e: MouseEvent) => {
+                    e.preventDefault()
+                    handleSelect(opt)
+                  }}
+                >
+                  {opt.label ?? opt.value}
+                </div>
               )}
-              style={props.styles?.option}
-              onMouseenter={() => {
-                if (!opt.disabled) activeIndex.value = i
-              }}
-              onMousedown={(e: MouseEvent) => {
-                e.preventDefault()
-                handleSelect(opt)
-              }}
-            >
-              {opt.label ?? opt.value}
-            </div>
-          ))
+              itemKey={(opt: AutoCompleteOption) => opt.value}
+            />
+          ) : (
+            filteredOptions.value.map((opt, i) => (
+              <div
+                key={opt.value}
+                class={cls(
+                  `${prefixCls}-dropdown-item`,
+                  {
+                    [`${prefixCls}-dropdown-item-active`]: activeIndex.value === i,
+                    [`${prefixCls}-dropdown-item-disabled`]: opt.disabled,
+                    [`${prefixCls}-dropdown-item-selected`]: opt.value === inputValue.value,
+                  },
+                  props.classNames?.option,
+                )}
+                style={props.styles?.option}
+                onMouseenter={() => {
+                  if (!opt.disabled) activeIndex.value = i
+                }}
+                onMousedown={(e: MouseEvent) => {
+                  e.preventDefault()
+                  handleSelect(opt)
+                }}
+              >
+                {opt.label ?? opt.value}
+              </div>
+            ))
+          )
         ) : (
           <div class={cls(`${prefixCls}-dropdown-empty`, props.classNames?.empty)} style={props.styles?.empty}>
             {props.notFoundContent}

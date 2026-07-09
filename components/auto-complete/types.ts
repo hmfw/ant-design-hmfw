@@ -72,4 +72,15 @@ export interface AutoCompleteProps {
   classNames?: AutoCompleteClassNames
   /** 语义化 style */
   styles?: AutoCompleteStyles
+
+  // ----------------------------------------------------------------
+  // 虚拟滚动
+  // ----------------------------------------------------------------
+
+  /** 是否启用虚拟滚动（默认 false，大数据量时开启） */
+  virtual?: boolean
+  /** 下拉列表容器高度（px），默认 256 */
+  listHeight?: number
+  /** 下拉列表项高度（px），默认 32 */
+  listItemHeight?: number
 }

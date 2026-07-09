@@ -6,6 +6,41 @@
 
 ---
 
+## [0.7.0] - 2026-07-09
+
+### 🚀 新组件
+
+- **Mentions**: 新增 `@` 提及组件，支持多前缀触发、搜索过滤、键盘导航、虚拟滚动下拉列表
+
+### 🔧 重构
+
+- **VirtualList**: 提取 `useVirtualScroll` composable，将核心虚拟滚动算法（O(1) 可见范围计算、缓冲区管理、数据变化自动重置）从组件中解耦为可复用逻辑
+- **Table**: 自定义 O(n) 虚拟滚动统一到 `useVirtualScroll` composable，消除 ~200 行重复的虚拟/非虚拟渲染代码，移除 `rowHeightCache` 死代码
+- **TreeSelect**: 自实现虚拟滚动（`scrollTop` + `visibleRange` + spacer div）统一到 VirtualList 组件，裁撤 ~30 行手动计算逻辑
+
+### ✨ 虚拟滚动接入
+
+- **Cascader**: 搜索模式 + 列模式（选项 >10 时）双重 VirtualList 接入，支持大数据量级联选择
+- **Transfer**: VirtualList 接入穿梭框两侧列表，与 `pagination` 互斥，与 `draggable` 不兼容时自动降级
+- **AutoComplete**: `virtual` prop 控制 VirtualList 下拉渲染，与 Select 保持一致的接入模式
+
+### 🧪 测试
+
+- **VirtualList**: 单元测试 25 → 25（composable 提取后 API 不变）
+- **Table**: 新增 6 项虚拟滚动单元测试 + 2 项 E2E 测试（31 total）
+- **Mentions**: 17 项测试（含键盘导航、搜索过滤、虚拟滚动）
+- **Cascader**: 新增 5 项虚拟滚动测试（34 total）
+- **Transfer**: 新增 6 项虚拟滚动测试（46 total）
+- **AutoComplete**: 新增 4 项虚拟滚动测试（32 total）
+- **TreeSelect**: 更新 4 项虚拟滚动测试适配新 DOM 结构（34 total）
+
+### 📊 统计
+
+- 已接入 VirtualList 的组件：**9 个**（VirtualList · Select · Tree · List · Table · Mentions · Cascader · Transfer · AutoComplete · TreeSelect）
+- 全量单测：**2072 passed**（72 files），类型检查通过
+
+---
+
 ## [0.6.11] - 2026-07-09
 
 ### 🐛 修复

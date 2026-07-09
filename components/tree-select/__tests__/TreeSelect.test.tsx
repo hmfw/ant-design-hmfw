@@ -255,6 +255,9 @@ describe('TreeSelect', () => {
       Array.from({ length: n }, (_, i) => ({ value: `n-${i}`, label: `节点 ${i}` }))
 
     it('启用虚拟滚动时只渲染窗口内节点', async () => {
+      // 清理之前测试可能的残留 DOM
+      document.querySelectorAll('.hmfw-tree-select-dropdown').forEach((el) => el.remove())
+
       const data = buildLargeData(500)
       const wrapper = mount(TreeSelect, {
         props: { treeData: data, virtual: true, listHeight: 256, itemHeight: 28 },
@@ -262,16 +265,20 @@ describe('TreeSelect', () => {
       })
       await wrapper.find('.hmfw-tree-select-selector').trigger('click')
       await wrapper.vm.$nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
       const nodes = document.querySelectorAll('.hmfw-tree-select-tree-node')
       // 数据 500 条 * 28px = 14000px，远超 256px 应启用虚拟滚动
       expect(nodes.length).toBeLessThan(500)
       expect(nodes.length).toBeGreaterThan(0)
-      // 应包含 holder 容器
-      expect(document.querySelector('.hmfw-tree-select-dropdown-list-holder')).not.toBeNull()
+      // 应包含 VirtualList 容器（不再是旧的 holder 结构）
+      expect(document.querySelector('.hmfw-virtual-list')).not.toBeNull()
       wrapper.unmount()
     })
 
     it('virtual=false 时全量渲染', async () => {
+      document.querySelectorAll('.hmfw-tree-select-dropdown').forEach((el) => el.remove())
+
       const data = buildLargeData(100)
       const wrapper = mount(TreeSelect, {
         props: { treeData: data, virtual: false, listHeight: 256, itemHeight: 28 },
@@ -279,13 +286,17 @@ describe('TreeSelect', () => {
       })
       await wrapper.find('.hmfw-tree-select-selector').trigger('click')
       await wrapper.vm.$nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
       const nodes = document.querySelectorAll('.hmfw-tree-select-tree-node')
       expect(nodes.length).toBe(100)
-      expect(document.querySelector('.hmfw-tree-select-dropdown-list-holder')).toBeNull()
+      expect(document.querySelector('.hmfw-tree-select-dropdown .hmfw-virtual-list')).toBeNull()
       wrapper.unmount()
     })
 
     it('数据量未超出 listHeight 时不启用虚拟滚动', async () => {
+      document.querySelectorAll('.hmfw-tree-select-dropdown').forEach((el) => el.remove())
+
       const data = buildLargeData(5)
       const wrapper = mount(TreeSelect, {
         props: { treeData: data, virtual: true, listHeight: 256, itemHeight: 28 },
@@ -293,14 +304,18 @@ describe('TreeSelect', () => {
       })
       await wrapper.find('.hmfw-tree-select-selector').trigger('click')
       await wrapper.vm.$nextTick()
-      // 5 * 28 = 140 < 256，全量渲染
-      expect(document.querySelector('.hmfw-tree-select-dropdown-list-holder')).toBeNull()
+      await new Promise((r) => setTimeout(r, 50))
+
+      // 5 * 28 = 140 < 256，全量渲染，无 VirtualList
+      expect(document.querySelector('.hmfw-tree-select-dropdown .hmfw-virtual-list')).toBeNull()
       const nodes = document.querySelectorAll('.hmfw-tree-select-tree-node')
       expect(nodes.length).toBe(5)
       wrapper.unmount()
     })
 
     it('滚动后渲染区间发生变化', async () => {
+      document.querySelectorAll('.hmfw-tree-select-dropdown').forEach((el) => el.remove())
+
       const data = buildLargeData(500)
       const wrapper = mount(TreeSelect, {
         props: { treeData: data, virtual: true, listHeight: 256, itemHeight: 28 },
@@ -308,11 +323,18 @@ describe('TreeSelect', () => {
       })
       await wrapper.find('.hmfw-tree-select-selector').trigger('click')
       await wrapper.vm.$nextTick()
-      const list = document.querySelector<HTMLElement>('.hmfw-tree-select-dropdown-list')!
+      await new Promise((r) => setTimeout(r, 50))
+
+      // VirtualList 渲染的节点中查找树节点
       const firstBefore = document.querySelector<HTMLElement>('.hmfw-tree-select-tree-node')?.textContent
+
+      // 滚动 VirtualList 容器
+      const list = document.querySelector<HTMLElement>('.hmfw-virtual-list')!
       list.scrollTop = 1000
       list.dispatchEvent(new Event('scroll'))
       await wrapper.vm.$nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
       const firstAfter = document.querySelector<HTMLElement>('.hmfw-tree-select-tree-node')?.textContent
       expect(firstAfter).not.toBe(firstBefore)
       wrapper.unmount()

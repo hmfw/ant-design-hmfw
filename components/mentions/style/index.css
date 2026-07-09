@@ -1,0 +1,75 @@
+.hmfw-mentions {
+  position: relative;
+  display: inline-block;
+}
+
+/* textarea 样式嵌入在 input-affix-wrapper 内部 */
+.hmfw-mentions textarea.hmfw-mentions {
+  outline: none;
+  border: none;
+  box-shadow: none;
+  resize: none;
+  width: 100%;
+  padding: 0;
+  line-height: 1.5715;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+}
+
+.hmfw-mentions textarea.hmfw-mentions:disabled {
+  color: rgba(0, 0, 0, 0.25);
+  cursor: not-allowed;
+}
+
+.hmfw-mentions textarea.hmfw-mentions::placeholder {
+  color: rgba(0, 0, 0, 0.25);
+}
+
+/* 下拉 */
+.hmfw-mentions-dropdown {
+  min-width: 120px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow:
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  padding: 4px 0;
+}
+
+.hmfw-mentions-dropdown-item {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 5px 12px;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.hmfw-mentions-dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.hmfw-mentions-dropdown-item-active {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.hmfw-mentions-dropdown-item-disabled {
+  color: rgba(0, 0, 0, 0.25);
+  cursor: not-allowed;
+}
+
+.hmfw-mentions-dropdown-item-disabled:hover {
+  background: transparent;
+}
+
+.hmfw-mentions-dropdown-empty {
+  padding: 8px 12px;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  text-align: center;
+}

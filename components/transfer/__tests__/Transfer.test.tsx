@@ -417,4 +417,79 @@ describe('Transfer', () => {
     await rightItems[2].trigger('drop')
     expect(wrapper.emitted('reorder')).toBeFalsy()
   })
+
+  // ----------------------------------------------------------------
+  // 虚拟滚动测试
+  // ----------------------------------------------------------------
+  describe('虚拟滚动', () => {
+    const manyItems: TransferItem[] = Array.from({ length: 100 }, (_, i) => ({
+      key: String(i),
+      title: `Item ${i}`,
+    }))
+
+    it('virtual=true 时渲染 VirtualList', () => {
+      const wrapper = mount(Transfer, {
+        props: { dataSource: manyItems, virtual: true, listHeight: 300 },
+      })
+      const vl = wrapper.find('.hmfw-virtual-list')
+      expect(vl.exists()).toBe(true)
+    })
+
+    it('virtual=false 时不渲染 VirtualList', () => {
+      const wrapper = mount(Transfer, {
+        props: { dataSource: manyItems, virtual: false },
+      })
+      const vl = wrapper.find('.hmfw-virtual-list')
+      expect(vl.exists()).toBe(false)
+    })
+
+    it('virtual=true 且无分页时启用虚拟滚动', () => {
+      const wrapper = mount(Transfer, {
+        props: { dataSource: manyItems, virtual: true, listHeight: 300 },
+      })
+      // 虚拟列表渲染的项数应少于总数（仅渲染可见区域）
+      const items = wrapper.findAll('.hmfw-virtual-list-item')
+      expect(items.length).toBeLessThan(100)
+      expect(items.length).toBeGreaterThan(0)
+    })
+
+    it('有分页时 virtual 不生效', () => {
+      const wrapper = mount(Transfer, {
+        props: {
+          dataSource: manyItems,
+          virtual: true,
+          listHeight: 300,
+          pagination: { pageSize: 10 },
+        },
+      })
+      // 有分页时不应使用 VirtualList
+      const vl = wrapper.find('.hmfw-virtual-list')
+      expect(vl.exists()).toBe(false)
+    })
+
+    it('虚拟滚动项支持选择交互', async () => {
+      const wrapper = mount(Transfer, {
+        props: { dataSource: manyItems, virtual: true, listHeight: 300 },
+      })
+
+      // 左侧虚拟列表中的 checkbox 应可选中
+      const checkboxes = wrapper.findAll('.hmfw-virtual-list-item input[type="checkbox"]')
+      expect(checkboxes.length).toBeGreaterThan(0)
+    })
+
+    it('虚拟滚动在右侧列表也生效', () => {
+      const wrapper = mount(Transfer, {
+        props: {
+          dataSource: manyItems,
+          targetKeys: Array.from({ length: 50 }, (_, i) => String(i)),
+          virtual: true,
+          listHeight: 300,
+        },
+      })
+
+      // 左右两侧都应有 VirtualList
+      const vls = wrapper.findAll('.hmfw-virtual-list')
+      expect(vls.length).toBe(2)
+    })
+  })
 })

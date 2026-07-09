@@ -54,6 +54,11 @@ export const Transfer = defineComponent({
     rootClassName: String,
     classNames: { type: Object as PropType<TransferSemanticClassNames>, default: () => ({}) },
     styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
+
+    // 虚拟滚动
+    virtual: { type: Boolean, default: false },
+    listHeight: { type: Number, default: 400 },
+    listItemHeight: { type: Number, default: 40 },
   },
   emits: ['update:targetKeys', 'change', 'update:selectedKeys', 'selectChange', 'search', 'scroll', 'reorder'],
   setup(props, { emit }) {
@@ -259,6 +264,9 @@ export const Transfer = defineComponent({
         listStyle: handleListStyle(direction),
         classNames: props.classNames,
         styles: props.styles,
+        virtual: props.virtual,
+        listHeight: props.listHeight,
+        listItemHeight: props.listItemHeight,
         // locale
         searchPlaceholder: lc.searchPlaceholder,
         notFoundContent: props.locale.notFoundContent ?? lc.notFoundContent,

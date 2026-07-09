@@ -1,170 +1,154 @@
 import { defineComponent, ref, computed, type PropType } from 'vue'
-import type { VirtualListInstance } from './types'
+import type { VirtualListInstance, VirtualListProps } from './types'
+import { useVirtualScroll } from './useVirtualScroll'
 
-export const VirtualList = defineComponent({
-  name: 'VirtualList',
-  props: {
-    data: {
-      type: Array as PropType<any[]>,
-      required: true,
-    },
-    itemHeight: {
-      type: Number,
-      default: 32,
-    },
-    height: {
-      type: [Number, String],
-      required: true,
-    },
-    buffer: {
-      type: Number,
-      default: 5,
-    },
-    renderItem: {
-      type: Function as PropType<(item: any, index: number) => any>,
-      required: true,
-    },
-    itemKey: {
-      type: [String, Function] as PropType<string | ((item: any, index: number) => string | number)>,
-      default: 'key',
-    },
+/**
+ * 虚拟列表组件 — 固定高度模式。
+ *
+ * 仅渲染可视区域 + 缓冲区的数据项，通过 translateY 定位可见区域，
+ * 适用于大量数据的列表（Select、Tree、List 等组件内部使用）。
+ */
+const virtualListProps = {
+  /** 数据源 */
+  data: { type: Array as PropType<any[]>, required: true },
+  /** 每项高度（固定高度模式） */
+  itemHeight: { type: Number, default: 32 },
+  /** 容器高度，支持 number（px）或 CSS 字符串 */
+  height: { type: [Number, String], required: true },
+  /** 缓冲区大小（上下各预渲染的额外项数） */
+  buffer: { type: Number, default: 5 },
+  /** 渲染每一项的渲染函数 */
+  renderItem: { type: Function as PropType<(item: any, index: number) => any>, required: true },
+  /** 每项的唯一标识 key，支持字符串属性名或自定义函数 */
+  itemKey: {
+    type: [String, Function] as PropType<string | ((item: any, index: number) => string | number)>,
+    default: 'key',
   },
+  /** 滚动事件回调 */
+  onScroll: { type: Function as PropType<(scrollTop: number) => void>, default: undefined },
+} satisfies Record<keyof VirtualListProps, any>
+
+export const VirtualList = defineComponent<VirtualListProps>({
+  name: 'VirtualList',
+  props: virtualListProps,
   setup(props, { expose }) {
     const containerRef = ref<HTMLElement>()
-    const scrollTop = ref(0)
 
-    // 计算容器高度
+    // itemHeight / buffer 在接口上为可选（带 ?），但运行时由 Vue 注入默认值；
+    // 此处提至局部常量并通过非空断言收窄类型，避免在每个使用点重复处理 undefined
+    const itemHeight = props.itemHeight!
+    const buffer = props.buffer!
+
+    /** 将容器高度转换为像素值，用于计算可见范围 */
     const containerHeight = computed(() => {
       if (typeof props.height === 'number') {
         return props.height
       }
-      return parseInt(props.height) || 300
+      const parsed = parseInt(props.height)
+      return isNaN(parsed) ? 300 : parsed
     })
 
-    // 总内容高度
-    const totalHeight = computed(() => props.data.length * props.itemHeight)
-
-    // 开始索引（包含缓冲区）
-    const startIndex = computed(() => {
-      const index = Math.floor(scrollTop.value / props.itemHeight)
-      return Math.max(0, index - props.buffer)
+    // ----------------------------------------------------------------
+    // 虚拟滚动计算（composable）
+    // ----------------------------------------------------------------
+    const {
+      startIndex,
+      visibleData,
+      offsetY,
+      totalHeight,
+      handleScroll: onContainerScroll,
+      scrollToIndex,
+      scrollToTop,
+      scrollToBottom,
+    } = useVirtualScroll({
+      containerRef,
+      data: computed(() => props.data),
+      itemHeight: computed(() => itemHeight),
+      containerHeight,
+      buffer,
+      onScroll: props.onScroll,
     })
 
-    // 结束索引（包含缓冲区）
-    const endIndex = computed(() => {
-      const index = Math.ceil((scrollTop.value + containerHeight.value) / props.itemHeight)
-      return Math.min(props.data.length, index + props.buffer)
-    })
+    // ----------------------------------------------------------------
+    // 样式对象（提取内联 style，保持 render 函数简洁）
+    // ----------------------------------------------------------------
 
-    // 可见项
-    const visibleData = computed(() => {
-      return props.data.slice(startIndex.value, endIndex.value)
-    })
+    /** 外层容器样式 */
+    const containerStyle = computed(() => ({
+      height: typeof props.height === 'number' ? `${props.height}px` : props.height,
+      overflow: 'auto' as const,
+      position: 'relative' as const,
+    }))
 
-    // 偏移量
-    const offsetY = computed(() => startIndex.value * props.itemHeight)
+    /** 占位容器样式，撑开总高度 */
+    const holderStyle = computed(() => ({
+      height: `${totalHeight.value}px`,
+      position: 'relative' as const,
+    }))
 
-    // 处理滚动事件
-    const handleScroll = (e: Event) => {
-      const target = e.target as HTMLElement
-      scrollTop.value = target.scrollTop
-    }
+    /** 可见项容器样式，通过 translateY 定位 */
+    const itemsStyle = computed(() => ({
+      transform: `translateY(${offsetY.value}px)`,
+      position: 'absolute' as const,
+      left: 0,
+      right: 0,
+      top: 0,
+    }))
 
-    // 获取 item key
+    /** 单项样式 */
+    const itemStyle = computed(() => ({
+      height: `${itemHeight}px`,
+      overflow: 'hidden' as const,
+    }))
+
+    // ----------------------------------------------------------------
+
+    /** 获取 item 的唯一 key */
     const getKey = (item: any, index: number): string | number => {
-      if (typeof props.itemKey === 'function') {
-        return props.itemKey(item, index)
+      const key = props.itemKey
+      if (typeof key === 'function') {
+        return key(item, index)
       }
-      if (typeof props.itemKey === 'string' && item && typeof item === 'object') {
-        return item[props.itemKey] ?? index
+      if (typeof key === 'string') {
+        if (item && typeof item === 'object') {
+          return item[key] ?? index
+        }
+        // item 为非对象时无法通过属性名取值，降级使用 index 作为 key
       }
       return index
     }
 
-    // 滚动到指定索引
-    const scrollToIndex = (index: number, align: 'top' | 'center' | 'bottom' = 'top') => {
-      if (!containerRef.value) return
-
-      const targetIndex = Math.max(0, Math.min(index, props.data.length - 1))
-      let targetScrollTop = targetIndex * props.itemHeight
-
-      if (align === 'center') {
-        targetScrollTop -= containerHeight.value / 2 - props.itemHeight / 2
-      } else if (align === 'bottom') {
-        targetScrollTop -= containerHeight.value - props.itemHeight
-      }
-
-      containerRef.value.scrollTop = Math.max(0, targetScrollTop)
-    }
-
-    const scrollToTop = () => {
-      if (containerRef.value) {
-        containerRef.value.scrollTop = 0
-      }
-    }
-
-    const scrollToBottom = () => {
-      if (containerRef.value) {
-        containerRef.value.scrollTop = totalHeight.value
-      }
-    }
-
-    // 暴露方法
-    expose({
+    // ----------------------------------------------------------------
+    // 暴露给父组件
+    // ----------------------------------------------------------------
+    const instance: VirtualListInstance = {
       scrollToIndex,
       scrollToTop,
       scrollToBottom,
-    } as VirtualListInstance)
+    }
+    expose(instance)
 
-    return () => (
-      <div
-        ref={containerRef}
-        class="hmfw-virtual-list"
-        style={{
-          height: typeof props.height === 'number' ? `${props.height}px` : props.height,
-          overflow: 'auto',
-          position: 'relative',
-        }}
-        onScroll={handleScroll}
-      >
-        {/* 占位容器，撑开总高度 */}
-        <div
-          class="hmfw-virtual-list-holder"
-          style={{
-            height: `${totalHeight.value}px`,
-            position: 'relative',
-          }}
-        >
-          {/* 可见项容器 */}
-          <div
-            class="hmfw-virtual-list-items"
-            style={{
-              transform: `translateY(${offsetY.value}px)`,
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: 0,
-            }}
-          >
-            {visibleData.value.map((item, i) => {
-              const actualIndex = startIndex.value + i
-              const key = getKey(item, actualIndex)
-              return (
-                <div
-                  key={key}
-                  class="hmfw-virtual-list-item"
-                  style={{
-                    height: `${props.itemHeight}px`,
-                    overflow: 'hidden',
-                  }}
-                >
-                  {props.renderItem(item, actualIndex)}
-                </div>
-              )
-            })}
+    return () => {
+      const itemNodes = visibleData.value.map((item, i) => {
+        const actualIndex = startIndex.value + i
+        return (
+          <div key={getKey(item, actualIndex)} class="hmfw-virtual-list-item" style={itemStyle.value}>
+            {props.renderItem(item, actualIndex)}
+          </div>
+        )
+      })
+
+      return (
+        <div ref={containerRef} class="hmfw-virtual-list" style={containerStyle.value} onScroll={onContainerScroll}>
+          {/* 占位容器，撑开总高度使滚动条行为正确 */}
+          <div class="hmfw-virtual-list-holder" style={holderStyle.value}>
+            {/* 可见项容器，通过 translateY 定位到正确位置 */}
+            <div class="hmfw-virtual-list-items" style={itemsStyle.value}>
+              {itemNodes}
+            </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    }
   },
 })

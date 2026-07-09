@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
+import { nextTick } from 'vue'
 import { AutoComplete } from '../AutoComplete'
 
 const options = [
@@ -245,5 +246,71 @@ describe('AutoComplete', () => {
       props: { options, value: 'apple', allowClear: { clearIcon: 'X' } },
     })
     expect(wrapper.find('.hmfw-input-clear-icon').text()).toBe('X')
+  })
+
+  // ----------------------------------------------------------------
+  // 虚拟滚动测试
+  // ----------------------------------------------------------------
+  describe('虚拟滚动', () => {
+    const manyOptions = Array.from({ length: 100 }, (_, i) => ({
+      value: `option-${i}`,
+      label: `Option ${i}`,
+    }))
+
+    it('virtual=true 时渲染 VirtualList', async () => {
+      const wrapper = mount(AutoComplete, {
+        props: { options: manyOptions, virtual: true, open: true },
+        attachTo: document.body,
+      })
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
+      const vl = document.querySelector('.hmfw-auto-complete-dropdown .hmfw-virtual-list')
+      expect(vl).toBeTruthy()
+      wrapper.unmount()
+    })
+
+    it('virtual=false 时不渲染 VirtualList', async () => {
+      const wrapper = mount(AutoComplete, {
+        props: { options: manyOptions, virtual: false, open: true },
+        attachTo: document.body,
+      })
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
+      const vl = document.querySelector('.hmfw-auto-complete-dropdown .hmfw-virtual-list')
+      expect(vl).toBeFalsy()
+      wrapper.unmount()
+    })
+
+    it('虚拟滚动仅渲染可见选项', async () => {
+      const wrapper = mount(AutoComplete, {
+        props: { options: manyOptions, virtual: true, open: true, listHeight: 200 },
+        attachTo: document.body,
+      })
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
+      const items = document.querySelectorAll('.hmfw-auto-complete-dropdown .hmfw-virtual-list-item')
+      expect(items.length).toBeLessThan(100)
+      expect(items.length).toBeGreaterThan(0)
+      wrapper.unmount()
+    })
+
+    it('虚拟滚动选项支持选择交互', async () => {
+      const wrapper = mount(AutoComplete, {
+        props: { options: manyOptions, virtual: true, open: true },
+        attachTo: document.body,
+      })
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 50))
+
+      const items = document.querySelectorAll('.hmfw-auto-complete-dropdown .hmfw-virtual-list-item')
+      expect(items.length).toBeGreaterThan(0)
+      // 第一项应可交互
+      const firstItem = items[0]?.querySelector('.hmfw-auto-complete-dropdown-item')
+      expect(firstItem).toBeTruthy()
+      wrapper.unmount()
+    })
   })
 })

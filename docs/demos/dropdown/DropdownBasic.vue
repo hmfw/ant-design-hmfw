@@ -1,9 +1,6 @@
 <template>
   <Dropdown :menu="menu">
-    <Button>
-      下拉菜单
-      <DownOutlined class="hmfw-icon" />
-    </Button>
+    <Button :icon="DownOutlined" icon-position="end"> 下拉菜单 </Button>
   </Dropdown>
 </template>
 

@@ -4,6 +4,7 @@ import { cls } from '../_utils'
 import { DownOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
+import { VirtualList } from '../_internal/virtual-list'
 import type {
   CascaderOption,
   CascaderValue,
@@ -47,6 +48,11 @@ export const Cascader = defineComponent({
     maxTagTextLength: Number,
     classNames: Object as PropType<CascaderClassNames>,
     styles: Object as PropType<CascaderStyles>,
+
+    // 虚拟滚动
+    virtual: { type: Boolean, default: false },
+    listHeight: { type: Number, default: 256 },
+    listItemHeight: { type: Number, default: 32 },
   },
   emits: ['update:value', 'update:open', 'change', 'search', 'focus', 'blur', 'clear'],
   setup(props, { emit, attrs, expose }) {
@@ -356,6 +362,26 @@ export const Cascader = defineComponent({
               >
                 {props.notFoundContent}
               </div>
+            ) : props.virtual ? (
+              <VirtualList
+                data={filteredOptions.value}
+                height={Math.min(props.listHeight, filteredOptions.value.length * props.listItemHeight)}
+                itemHeight={props.listItemHeight}
+                renderItem={(item: (typeof filteredOptions.value)[number], index: number) => (
+                  <div
+                    key={index}
+                    class={cls(`${prefixCls}-menu-item`, props.classNames?.menuItem)}
+                    style={props.styles?.menuItem}
+                    onMousedown={(e: MouseEvent) => {
+                      e.preventDefault()
+                      handleSearchSelect(item.values, item.options)
+                    }}
+                  >
+                    {highlightText(item.labels.join(' / '), searchText.value)}
+                  </div>
+                )}
+                itemKey={(item: (typeof filteredOptions.value)[number], index: number) => String(index)}
+              />
             ) : (
               filteredOptions.value.map((item, i) => (
                 <div
@@ -375,61 +401,79 @@ export const Cascader = defineComponent({
         ) : (
           /* Normal columns */
           <div class={cls(`${prefixCls}-menus`, props.classNames?.menus)} style={props.styles?.menus}>
-            {columns.value.map((colOpts, colIndex) => (
-              <ul key={colIndex} class={cls(`${prefixCls}-menu`, props.classNames?.menu)} style={props.styles?.menu}>
-                {colOpts.map((opt) => {
-                  const val = getValue(opt)
-                  const children = getChildren(opt)
-                  const hasChildren = !!children?.length && !opt.isLeaf
-                  const isActive = activePath.value[colIndex] === val
-                  const isSelected = props.multiple
-                    ? currentValue.value.some((p) => p[colIndex] === val && p.length > colIndex)
-                    : currentValue.value[0]?.[colIndex] === val
+            {columns.value.map((colOpts, colIndex) => {
+              const renderColumnItem = (opt: CascaderOption) => {
+                const val = getValue(opt)
+                const children = getChildren(opt)
+                const hasChildren = !!children?.length && !opt.isLeaf
+                const isActive = activePath.value[colIndex] === val
+                const isSelected = props.multiple
+                  ? currentValue.value.some((p) => p[colIndex] === val && p.length > colIndex)
+                  : currentValue.value[0]?.[colIndex] === val
 
-                  return (
-                    <li
-                      key={val}
-                      class={cls(
-                        `${prefixCls}-menu-item`,
-                        {
-                          [`${prefixCls}-menu-item-active`]: isActive,
-                          [`${prefixCls}-menu-item-selected`]: isSelected,
-                          [`${prefixCls}-menu-item-disabled`]: opt.disabled,
-                          [`${prefixCls}-menu-item-expand`]: hasChildren,
-                        },
-                        props.classNames?.menuItem,
-                      )}
-                      style={props.styles?.menuItem}
-                      onClick={() => handleOptionClick(opt, colIndex)}
-                      onMouseenter={() => handleOptionHover(opt, colIndex)}
-                    >
-                      {props.multiple && (
-                        <span
-                          class={cls(`${prefixCls}-menu-item-checkbox`, props.classNames?.menuItemCheckbox)}
-                          style={props.styles?.menuItemCheckbox}
-                        >
-                          {currentValue.value.some((p) => p.length === colIndex + 1 && p[colIndex] === val) && '✓'}
-                        </span>
-                      )}
+                return (
+                  <li
+                    key={val}
+                    class={cls(
+                      `${prefixCls}-menu-item`,
+                      {
+                        [`${prefixCls}-menu-item-active`]: isActive,
+                        [`${prefixCls}-menu-item-selected`]: isSelected,
+                        [`${prefixCls}-menu-item-disabled`]: opt.disabled,
+                        [`${prefixCls}-menu-item-expand`]: hasChildren,
+                      },
+                      props.classNames?.menuItem,
+                    )}
+                    style={props.styles?.menuItem}
+                    onClick={() => handleOptionClick(opt, colIndex)}
+                    onMouseenter={() => handleOptionHover(opt, colIndex)}
+                  >
+                    {props.multiple && (
                       <span
-                        class={cls(`${prefixCls}-menu-item-content`, props.classNames?.menuItemContent)}
-                        style={props.styles?.menuItemContent}
+                        class={cls(`${prefixCls}-menu-item-checkbox`, props.classNames?.menuItemCheckbox)}
+                        style={props.styles?.menuItemCheckbox}
                       >
-                        {getLabel(opt)}
+                        {currentValue.value.some((p) => p.length === colIndex + 1 && p[colIndex] === val) && '✓'}
                       </span>
-                      {hasChildren && (
-                        <span
-                          class={cls(`${prefixCls}-menu-item-expand-icon`, props.classNames?.menuItemExpandIcon)}
-                          style={props.styles?.menuItemExpandIcon}
-                        >
-                          ›
-                        </span>
-                      )}
-                    </li>
-                  )
-                })}
-              </ul>
-            ))}
+                    )}
+                    <span
+                      class={cls(`${prefixCls}-menu-item-content`, props.classNames?.menuItemContent)}
+                      style={props.styles?.menuItemContent}
+                    >
+                      {getLabel(opt)}
+                    </span>
+                    {hasChildren && (
+                      <span
+                        class={cls(`${prefixCls}-menu-item-expand-icon`, props.classNames?.menuItemExpandIcon)}
+                        style={props.styles?.menuItemExpandIcon}
+                      >
+                        ›
+                      </span>
+                    )}
+                  </li>
+                )
+              }
+
+              // 每列独立虚拟滚动
+              if (props.virtual && colOpts.length > 10) {
+                return (
+                  <VirtualList
+                    key={colIndex}
+                    data={colOpts}
+                    height={Math.min(props.listHeight, colOpts.length * props.listItemHeight)}
+                    itemHeight={props.listItemHeight}
+                    renderItem={(opt: CascaderOption, _index: number) => renderColumnItem(opt)}
+                    itemKey={(opt: CascaderOption) => getValue(opt)}
+                  />
+                )
+              }
+
+              return (
+                <ul key={colIndex} class={cls(`${prefixCls}-menu`, props.classNames?.menu)} style={props.styles?.menu}>
+                  {colOpts.map((opt) => renderColumnItem(opt))}
+                </ul>
+              )
+            })}
           </div>
         )}
       </>

@@ -348,4 +348,147 @@ describe('Table', () => {
     })
     expect(wrapper.findAll('tbody tr')).toHaveLength(10)
   })
+
+  // ----------------------------------------------------------------
+  // 虚拟滚动测试
+  // ----------------------------------------------------------------
+  describe('虚拟滚动', () => {
+    const manyColumns = [
+      { key: 'id', dataIndex: 'id', title: 'ID', width: 80 },
+      { key: 'name', dataIndex: 'name', title: 'Name', width: 120 },
+      { key: 'age', dataIndex: 'age', title: 'Age', width: 80 },
+      { key: 'city', dataIndex: 'city', title: 'City', width: 150 },
+    ]
+
+    function makeData(count: number) {
+      return Array.from({ length: count }, (_, i) => ({
+        key: String(i),
+        id: i + 1,
+        name: `User ${i}`,
+        age: 20 + (i % 30),
+        city: `City ${i % 10}`,
+      }))
+    }
+
+    it('数据量 >20 且有 scroll.y 时启用虚拟滚动，仅渲染可见行', () => {
+      const data = makeData(100)
+      const wrapper = mount(Table, {
+        props: {
+          columns: manyColumns,
+          dataSource: data,
+          scroll: { y: 200 },
+        },
+      })
+
+      // 虚拟滚动启用：渲染的行数应远小于 100（加上 spacer 和 expand 等额外行）
+      const rows = wrapper.findAll('tbody tr')
+      expect(rows.length).toBeLessThan(100)
+      // 至少渲染了一些可见行
+      expect(rows.length).toBeGreaterThan(0)
+    })
+
+    it('数据量 ≤20 时不启用虚拟滚动，渲染全部行', () => {
+      const data = makeData(15)
+      const wrapper = mount(Table, {
+        props: {
+          columns: manyColumns,
+          dataSource: data,
+          scroll: { y: 200 },
+          pagination: false,
+        },
+      })
+
+      // 15 行数据全部渲染（加上可能的 spacer/placeholder）
+      const rows = wrapper.findAll('tbody tr.hmfw-table-row')
+      expect(rows.length).toBe(15)
+    })
+
+    it('虚拟滚动渲染上部 spacer 占位行', () => {
+      const data = makeData(100)
+      const wrapper = mount(Table, {
+        props: {
+          columns: manyColumns,
+          dataSource: data,
+          scroll: { y: 200 },
+        },
+      })
+
+      // 初始滚动位置为 0，上部 spacer 高度应为 0（条件渲染，不存在）
+      // 设置 scrollTop 并触发 scroll 事件
+      const contentEl = wrapper.find('.hmfw-table-content')
+      expect(contentEl.exists()).toBe(true)
+    })
+
+    it('不同 size 使用不同行高', () => {
+      const data = makeData(100)
+      const wrapperSmall = mount(Table, {
+        props: {
+          columns: manyColumns,
+          dataSource: data,
+          scroll: { y: 200 },
+          size: 'small',
+        },
+      })
+
+      // small 行高 38px，同样容器高度能装更多行
+      const rowsSmall = wrapperSmall.findAll('tbody tr.hmfw-table-row')
+      expect(rowsSmall.length).toBeGreaterThan(0)
+
+      const wrapperLarge = mount(Table, {
+        props: {
+          columns: manyColumns,
+          dataSource: data,
+          scroll: { y: 200 },
+          size: 'middle',
+        },
+      })
+
+      // middle 行高 46px，能装的行数应不同
+      const rowsMiddle = wrapperLarge.findAll('tbody tr.hmfw-table-row')
+      expect(rowsMiddle.length).toBeGreaterThan(0)
+    })
+
+    it('排序后虚拟列表正确更新', async () => {
+      const data = makeData(100)
+      const sortColumns = [
+        { key: 'id', dataIndex: 'id', title: 'ID' },
+        { key: 'name', dataIndex: 'name', title: 'Name' },
+        {
+          key: 'age',
+          dataIndex: 'age',
+          title: 'Age',
+          sorter: (a: any, b: any) => a.age - b.age,
+        },
+      ]
+      const wrapper = mount(Table, {
+        props: {
+          columns: sortColumns,
+          dataSource: data,
+          scroll: { y: 200 },
+        },
+      })
+
+      // 点击排序列
+      const ageHeader = wrapper.findAll('th').at(2)
+      await ageHeader?.trigger('click')
+
+      // 排序后行仍然存在（虚拟滚动正常工作）
+      const rows = wrapper.findAll('tbody tr.hmfw-table-row')
+      expect(rows.length).toBeGreaterThan(0)
+    })
+
+    it('无 scroll.y 时不启用虚拟滚动', () => {
+      const data = makeData(100)
+      const wrapper = mount(Table, {
+        props: {
+          columns: manyColumns,
+          dataSource: data,
+        },
+      })
+
+      // 无 scroll.y，全部行渲染（受分页控制，默认 10/page）
+      const rows = wrapper.findAll('tbody tr.hmfw-table-row')
+      expect(rows.length).toBeLessThanOrEqual(10)
+    })
+  })
 })

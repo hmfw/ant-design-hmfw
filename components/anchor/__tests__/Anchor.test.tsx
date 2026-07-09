@@ -318,7 +318,7 @@ describe('Anchor', () => {
   it('prevents default for internal links', async () => {
     const wrapper = mount(Anchor, { props: { items } })
     const link = wrapper.find('a')
-    const event = await link.trigger('click')
+    await link.trigger('click')
     // Internal links should have preventDefault called
     // jsdom might not fully simulate this, but the handler should not throw
     expect(wrapper.emitted('click')).toBeTruthy()

@@ -22,6 +22,7 @@
 @import './pagination/style/index.css';
 @import './tabs/style/index.css';
 @import './modal/style/index.css';
+@import './mentions/style/index.css';
 @import './drawer/style/index.css';
 @import './message/style/index.css';
 @import './tooltip/style/index.css';

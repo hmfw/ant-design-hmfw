@@ -161,4 +161,15 @@ export interface TransferProps {
   classNames?: TransferSemanticClassNames
   /** 语义化 style */
   styles?: TransferSemanticStyles
+
+  // ----------------------------------------------------------------
+  // 虚拟滚动
+  // ----------------------------------------------------------------
+
+  /** 是否启用虚拟滚动（与 pagination 互斥，大数据量时开启） */
+  virtual?: boolean
+  /** 列表容器高度（px），默认 400 */
+  listHeight?: number
+  /** 列表项高度（px），默认 40 */
+  listItemHeight?: number
 }

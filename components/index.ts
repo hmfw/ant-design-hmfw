@@ -107,6 +107,15 @@ export type { TabsProps, TabItem, TabsType, TabsSize, TabsPosition } from './tab
 
 export { Modal } from './modal'
 
+export { Mentions } from './mentions'
+export type {
+  MentionOption,
+  MentionProps,
+  MentionInstance,
+  MentionSemanticClassNames,
+  MentionSemanticStyles,
+} from './mentions'
+
 export { Drawer } from './drawer'
 export type { DrawerPlacement, DrawerSize, DrawerContent, DrawerGetContainer } from './drawer'
 
@@ -459,6 +468,7 @@ import { Breadcrumb } from './breadcrumb'
 import { Pagination } from './pagination'
 import { Tabs } from './tabs'
 import { Modal } from './modal'
+import { Mentions } from './mentions'
 import { Drawer } from './drawer'
 import { App as AppComponent } from './app'
 import { Image, PreviewGroup } from './image'
@@ -546,6 +556,7 @@ const components = [
   Pagination,
   Tabs,
   Modal,
+  Mentions,
   Drawer,
   Image,
   PreviewGroup,

@@ -5,6 +5,7 @@ import { Input } from '../input'
 import { Empty } from '../empty'
 import { Dropdown } from '../dropdown'
 import { Pagination } from '../pagination'
+import { VirtualList } from '../_internal/virtual-list'
 import { DownOutlined, DeleteOutlined, SearchOutlined } from '@hmfw/icons'
 import type {
   TransferItem,
@@ -74,6 +75,11 @@ export const TransferList = defineComponent({
     listStyle: { type: Object as PropType<CSSProperties>, default: () => ({}) },
     classNames: { type: Object as PropType<TransferSemanticClassNames>, default: () => ({}) },
     styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
+
+    // 虚拟滚动
+    virtual: { type: Boolean, default: false },
+    listHeight: { type: Number, default: 400 },
+    listItemHeight: { type: Number, default: 40 },
     // locale
     searchPlaceholder: { type: String, default: '请输入搜索内容' },
     notFoundContent: {
@@ -345,6 +351,9 @@ export const TransferList = defineComponent({
       ) : null
 
       // 内容项
+      // 虚拟滚动启用条件：virtual=true 且无分页
+      const virtualEnabled = computed(() => !!(props.virtual && !mergedPagination.value))
+
       const itemNodes = pagedRenderItems.value.map(({ item, renderedEl }) => {
         const key = item.key as TransferKey
         const mergedDisabled = props.disabled || item.disabled
@@ -428,36 +437,127 @@ export const TransferList = defineComponent({
         ? props.notFoundContent[props.direction === 'left' ? 0 : 1]
         : props.notFoundContent
 
-      const bodyNode = pagedRenderItems.value.length ? (
-        <>
-          <ul
-            class={cls(`${lp}-content`, sn('list'), {
-              [`${lp}-content-show-remove`]: props.showRemove,
-            })}
-            style={ss('list')}
-            onScroll={(e: Event) => emit('scroll', props.direction, e)}
-          >
-            {itemNodes}
-          </ul>
-          {mergedPagination.value && (
-            <Pagination
-              size="small"
-              disabled={props.disabled}
-              simple={mergedPagination.value.simple}
-              pageSize={mergedPagination.value.pageSize}
-              showSizeChanger={mergedPagination.value.showSizeChanger}
-              class={`${lp}-pagination`}
-              total={filteredRenderItems.value.length}
-              current={current.value}
-              onChange={(cur: number) => {
-                current.value = cur
-              }}
-            />
-          )}
-        </>
-      ) : (
-        <div class={`${lp}-body-not-found`}>{notFound ?? <Empty description={false} />}</div>
-      )
+      const bodyNode =
+        filteredRenderItems.value.length === 0 ? (
+          <div class={`${lp}-body-not-found`}>{notFound ?? <Empty description={false} />}</div>
+        ) : virtualEnabled.value ? (
+          /* 虚拟滚动模式 */
+          <VirtualList
+            data={filteredRenderItems.value}
+            height={props.listHeight}
+            itemHeight={props.listItemHeight}
+            renderItem={(ri: RenderedItem, _index: number) => {
+              const { item, renderedEl } = ri
+              const key = item.key as TransferKey
+              const mergedDisabled = props.disabled || item.disabled
+              const checked = props.checkedKeys.includes(key)
+              const isDragging = draggingKey.value === key
+              const isDragOver = dragOverKey.value === key
+              const dragHandlers =
+                canDragItem(item) && !props.virtual
+                  ? {
+                      draggable: true,
+                      onDragstart: (e: DragEvent) => handleDragStart(e, key),
+                      onDragover: (e: DragEvent) => handleDragOver(e, key),
+                      onDragleave: (e: DragEvent) => handleDragLeave(e, key),
+                      onDrop: (e: DragEvent) => handleDrop(e, key),
+                      onDragend: () => handleDragEnd(),
+                    }
+                  : {}
+              const dragClass = {
+                [`${lp}-content-item-draggable`]: !!props.draggable && !mergedDisabled,
+                [`${lp}-content-item-dragging`]: isDragging,
+                [`${lp}-content-item-drag-over`]: isDragOver && !isDragging,
+                [`${lp}-content-item-drag-over-after`]: isDragOver && !isDragging && dragOverAfter.value,
+                [`${lp}-content-item-drag-over-before`]: isDragOver && !isDragging && !dragOverAfter.value,
+              }
+              const labelNode = (
+                <span class={cls(`${lp}-content-item-text`, sn('itemContent'))} style={ss('itemContent')}>
+                  {renderedEl}
+                </span>
+              )
+
+              if (props.showRemove) {
+                return (
+                  <li
+                    key={key}
+                    class={cls(`${lp}-content-item`, sn('item'), dragClass, {
+                      [`${lp}-content-item-disabled`]: mergedDisabled,
+                    })}
+                    style={ss('item')}
+                    {...dragHandlers}
+                  >
+                    {labelNode}
+                    <button
+                      type="button"
+                      disabled={mergedDisabled}
+                      class={`${lp}-content-item-remove`}
+                      aria-label={props.removeCurrent}
+                      onClick={() => !mergedDisabled && emit('itemRemove', [key])}
+                    >
+                      <DeleteOutlined class="hmfw-icon" />
+                    </button>
+                  </li>
+                )
+              }
+              return (
+                <li
+                  key={key}
+                  class={cls(`${lp}-content-item`, sn('item'), dragClass, {
+                    [`${lp}-content-item-disabled`]: mergedDisabled,
+                    [`${lp}-content-item-checked`]: checked && !mergedDisabled,
+                  })}
+                  style={ss('item')}
+                  {...dragHandlers}
+                  onClick={(e: MouseEvent) => !mergedDisabled && emit('itemSelect', key, !checked, e)}
+                >
+                  <Checkbox
+                    class={cls(`${lp}-checkbox`, sn('itemIcon'))}
+                    style={ss('itemIcon')}
+                    checked={checked}
+                    disabled={mergedDisabled}
+                    onChange={(e: any) => {
+                      if (!mergedDisabled) {
+                        e.nativeEvent?.stopPropagation()
+                        emit('itemSelect', key, !checked)
+                      }
+                    }}
+                  />
+                  {labelNode}
+                </li>
+              )
+            }}
+            itemKey={(ri: RenderedItem) => (ri.item.key as TransferKey) ?? ''}
+          />
+        ) : (
+          /* 普通 / 分页模式 */
+          <>
+            <ul
+              class={cls(`${lp}-content`, sn('list'), {
+                [`${lp}-content-show-remove`]: props.showRemove,
+              })}
+              style={ss('list')}
+              onScroll={(e: Event) => emit('scroll', props.direction, e)}
+            >
+              {itemNodes}
+            </ul>
+            {mergedPagination.value && (
+              <Pagination
+                size="small"
+                disabled={props.disabled}
+                simple={mergedPagination.value.simple}
+                pageSize={mergedPagination.value.pageSize}
+                showSizeChanger={mergedPagination.value.showSizeChanger}
+                class={`${lp}-pagination`}
+                total={filteredRenderItems.value.length}
+                current={current.value}
+                onChange={(cur: number) => {
+                  current.value = cur
+                }}
+              />
+            )}
+          </>
+        )
 
       // 底部
       const footerDom = props.footer
