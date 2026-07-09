@@ -34,7 +34,6 @@ export interface AnchorProps {
   affix?: boolean
   offsetTop?: number
   bounds?: number
-  targetOffset?: number
   direction?: 'vertical' | 'horizontal'
   replace?: boolean
   getCurrentAnchor?: (activeLink: string) => string

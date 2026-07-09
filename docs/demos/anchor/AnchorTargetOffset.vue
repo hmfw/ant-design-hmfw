@@ -14,8 +14,8 @@
         <p>Content with default offset.</p>
       </div>
     </div>
-    <Anchor :target-offset="100" style="width: 200px">
-      <AnchorLink href="#target-1" title="Target 1 (offset 50)" :target-offset="50" />
+    <Anchor :offset-top="64" style="width: 200px">
+      <AnchorLink href="#target-1" title="Target 1 (offset 0)" :target-offset="0" />
       <AnchorLink href="#target-2" title="Target 2 (offset 150)" :target-offset="150" />
       <AnchorLink href="#target-3" title="Target 3 (default)" />
     </Anchor>

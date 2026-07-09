@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Anchor direction="horizontal" :items="items" style="margin-bottom: 24px" />
+    <Anchor direction="horizontal" :items="items" :offset-top="64" style="margin-bottom: 24px" />
     <div id="h-part-1" style="height: 160px; background: #e6f4ff; padding: 16px; margin-bottom: 16px">
       <h3>第一部分</h3>
     </div>

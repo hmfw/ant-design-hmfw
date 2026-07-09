@@ -1,4 +1,15 @@
-import { defineComponent, ref, computed, onMounted, onUnmounted, watch, nextTick, type PropType, type VNode } from 'vue'
+import {
+  defineComponent,
+  ref,
+  toRef,
+  computed,
+  onMounted,
+  onUnmounted,
+  watch,
+  nextTick,
+  type PropType,
+  type VNode,
+} from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { AnchorLinkItem, AnchorClassNames, AnchorStyles } from './types'
@@ -12,7 +23,6 @@ export const Anchor = defineComponent({
     affix: { type: Boolean, default: true },
     offsetTop: { type: Number, default: 0 },
     bounds: { type: Number, default: 5 },
-    targetOffset: Number,
     direction: { type: String as PropType<'vertical' | 'horizontal'>, default: 'vertical' },
     replace: Boolean,
     getCurrentAnchor: Function as PropType<(activeLink: string) => string>,
@@ -30,6 +40,8 @@ export const Anchor = defineComponent({
     const inkRef = ref<HTMLSpanElement>()
     const animating = ref(false)
     let scrollTimer: number | null = null
+    let scrollContainer: HTMLElement | Window
+    let scrollRAFId: number | null = null
 
     const getScrollContainer = () => {
       return props.getContainer ? props.getContainer() : window
@@ -85,7 +97,12 @@ export const Anchor = defineComponent({
         inkStyle.width = horizontalAnchor ? `${linkNode.clientWidth}px` : ''
 
         if (horizontalAnchor) {
-          linkNode.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+          // 仅在 Anchor 自身的水平滚动容器内滚动，避免 scrollIntoView 冒泡到 document
+          // 导致页面级垂直滚动，进而引发 scroll 事件死循环
+          const scrollContainer = wrapperRef.value?.querySelector<HTMLElement>(`.${prefixCls}`)
+          if (scrollContainer) {
+            scrollContainer.scrollTo({ left: linkNode.offsetLeft, behavior: 'smooth' })
+          }
         }
       }
     }
@@ -100,7 +117,7 @@ export const Anchor = defineComponent({
       const container = getScrollContainer()
 
       _links.forEach((link) => {
-        const match = /#([\S ]+)$/.exec(link)
+        const match = /#(.+)$/.exec(link)
         if (!match) return
 
         const target = document.getElementById(match[1])
@@ -137,20 +154,27 @@ export const Anchor = defineComponent({
         return
       }
 
-      const currentActiveLink = getInternalCurrentAnchor(
-        links.value,
-        props.targetOffset ?? props.offsetTop ?? 0,
-        props.bounds,
-      )
+      const currentActiveLink = getInternalCurrentAnchor(links.value, props.offsetTop ?? 0, props.bounds)
 
       setCurrentActiveLink(currentActiveLink)
+    }
+
+    const handleScrollThrottled = () => {
+      if (scrollRAFId !== null) {
+        return
+      }
+
+      scrollRAFId = requestAnimationFrame(() => {
+        scrollRAFId = null
+        handleScroll()
+      })
     }
 
     const scrollTo = (link: string, targetOffsetParam?: number) => {
       const previousActiveLink = activeLink.value
       setCurrentActiveLink(link)
 
-      const match = /#([\S ]+)$/.exec(link)
+      const match = /#(.+)$/.exec(link)
       if (!match) return
 
       const targetElement = document.getElementById(match[1])
@@ -160,11 +184,17 @@ export const Anchor = defineComponent({
         return
       }
 
+      // Cancel any in-progress scroll animation
+      if (scrollTimer !== null) {
+        cancelAnimationFrame(scrollTimer)
+        scrollTimer = null
+      }
+
       const container = getScrollContainer()
       const scrollTop = getScroll(container)
       const eleOffsetTop = getOffsetTop(targetElement, container)
       let y = scrollTop + eleOffsetTop
-      const finalTargetOffset = targetOffsetParam ?? props.targetOffset ?? props.offsetTop ?? 0
+      const finalTargetOffset = targetOffsetParam ?? props.offsetTop ?? 0
       y -= finalTargetOffset
 
       animating.value = true
@@ -204,26 +234,30 @@ export const Anchor = defineComponent({
     provideAnchorContext({
       registerLink,
       unregisterLink,
-      activeLink: activeLink.value,
+      activeLink,
       scrollTo,
       onClick: handleClick,
-      direction: props.direction,
-      replace: props.replace,
-      classNames: props.classNames,
-      styles: props.styles,
+      direction: toRef(props, 'direction'),
+      replace: toRef(props, 'replace'),
+      classNames: toRef(props, 'classNames'),
+      styles: toRef(props, 'styles'),
     })
 
     onMounted(() => {
-      const container = getScrollContainer()
-      container.addEventListener('scroll', handleScroll)
+      scrollContainer = getScrollContainer()
+      scrollContainer.addEventListener('scroll', handleScrollThrottled)
+      window.addEventListener('resize', handleScrollThrottled)
       handleScroll()
     })
 
     onUnmounted(() => {
-      const container = getScrollContainer()
-      container.removeEventListener('scroll', handleScroll)
+      scrollContainer.removeEventListener('scroll', handleScrollThrottled)
+      window.removeEventListener('resize', handleScrollThrottled)
       if (scrollTimer !== null) {
         cancelAnimationFrame(scrollTimer)
+      }
+      if (scrollRAFId !== null) {
+        cancelAnimationFrame(scrollRAFId)
       }
     })
 
@@ -283,6 +317,8 @@ export const Anchor = defineComponent({
       ))
     }
 
+    const renderedLinks = computed(() => (props.items?.length ? renderLinks(props.items) : null))
+
     const wrapperClass = computed(() =>
       cls(
         `${prefixCls}-wrapper`,
@@ -322,7 +358,7 @@ export const Anchor = defineComponent({
       <div ref={wrapperRef} class={wrapperClass.value} style={wrapperStyle.value}>
         <div class={anchorClass.value} style={props.styles?.root}>
           <span class={inkClass.value} ref={inkRef} style={props.styles?.ink} />
-          {props.items?.length ? renderLinks(props.items) : slots.default?.()}
+          {renderedLinks.value ?? slots.default?.()}
         </div>
       </div>
     )

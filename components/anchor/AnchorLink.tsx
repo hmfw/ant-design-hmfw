@@ -44,7 +44,7 @@ export const AnchorLink = defineComponent({
       const isExternalLink = props.href.startsWith('http://') || props.href.startsWith('https://')
       // Support external link
       if (isExternalLink) {
-        const shouldReplace = props.replace ?? context?.replace
+        const shouldReplace = props.replace ?? context?.replace.value
         if (shouldReplace) {
           e.preventDefault()
           window.location.replace(props.href)
@@ -54,12 +54,12 @@ export const AnchorLink = defineComponent({
 
       // Handling internal anchor link
       e.preventDefault()
-      const shouldReplace = props.replace ?? context?.replace
+      const shouldReplace = props.replace ?? context?.replace.value
       const historyMethod = shouldReplace ? 'replaceState' : 'pushState'
       window.history[historyMethod](null, '', props.href)
     }
 
-    const active = computed(() => context?.activeLink === props.href)
+    const active = computed(() => context?.activeLink.value === props.href)
 
     const wrapperClass = computed(() =>
       cls(
@@ -67,8 +67,8 @@ export const AnchorLink = defineComponent({
         {
           [`${prefixCls}-link-active`]: active.value,
         },
-        context?.classNames?.link,
-        active.value ? context?.classNames?.linkActive : undefined,
+        context?.classNames.value?.link,
+        active.value ? context?.classNames.value?.linkActive : undefined,
       ),
     )
 
@@ -78,19 +78,19 @@ export const AnchorLink = defineComponent({
         {
           [`${prefixCls}-link-title-active`]: active.value,
         },
-        context?.classNames?.title,
-        active.value ? context?.classNames?.titleActive : undefined,
+        context?.classNames.value?.title,
+        active.value ? context?.classNames.value?.titleActive : undefined,
       ),
     )
 
     const wrapperStyle = computed(() => ({
-      ...context?.styles?.link,
-      ...(active.value ? context?.styles?.linkActive : {}),
+      ...context?.styles.value?.link,
+      ...(active.value ? context?.styles.value?.linkActive : {}),
     }))
 
     const titleStyle = computed(() => ({
-      ...context?.styles?.title,
-      ...(active.value ? context?.styles?.titleActive : {}),
+      ...context?.styles.value?.title,
+      ...(active.value ? context?.styles.value?.titleActive : {}),
     }))
 
     return () => (
@@ -105,7 +105,7 @@ export const AnchorLink = defineComponent({
         >
           {props.title}
         </a>
-        {context?.direction !== 'horizontal' ? slots.default?.() : null}
+        {context?.direction.value !== 'horizontal' ? slots.default?.() : null}
       </div>
     )
   },

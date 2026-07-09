@@ -15,9 +15,17 @@
         <h3>Static Anchor</h3>
         <p>Do not change hash when scrolling.</p>
       </div>
-      <div id="API" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px">
+      <div id="API" style="background: #fff7e6; padding: 16px; margin-bottom: 16px">
         <h3>API</h3>
         <p>API documentation.</p>
+        <div id="Anchor-Props" style="background: #fff2e8; padding: 12px; margin: 8px 0 8px 16px; border-radius: 4px">
+          <h4>Anchor Props</h4>
+          <p>Anchor 组件的属性配置。</p>
+        </div>
+        <div id="Link-Props" style="background: #fff2e8; padding: 12px; margin: 8px 0 8px 16px; border-radius: 4px">
+          <h4>Link Props</h4>
+          <p>Anchor.Link 组件的属性配置。</p>
+        </div>
       </div>
     </div>
     <Anchor :offset-top="64" style="width: 200px">

@@ -57,6 +57,46 @@
   <AnchorClassNames />
 </DemoBlock>
 
+### 自定义边界
+
+通过 `bounds` 属性调整锚点高亮的判定边界值，影响激活状态切换的灵敏度。
+
+<DemoBlock title="自定义边界" :source="AnchorBoundsSource">
+  <AnchorBounds />
+</DemoBlock>
+
+### 替换历史记录
+
+通过 `replace` 属性控制点击锚点时是添加新历史记录（`pushState`）还是替换当前记录（`replaceState`）。
+
+<DemoBlock title="替换历史记录" :source="AnchorReplaceSource">
+  <AnchorReplace />
+</DemoBlock>
+
+### 自定义高亮锚点
+
+通过 `getCurrentAnchor` 自定义激活锚点的判定逻辑。
+
+<DemoBlock title="自定义高亮锚点" :source="AnchorGetCurrentAnchorSource">
+  <AnchorGetCurrentAnchor />
+</DemoBlock>
+
+### 自定义滚动容器
+
+通过 `getContainer` 指定滚动的目标容器，适用于锚点与内容区域不在同一滚动上下文中的场景。
+
+<DemoBlock title="自定义滚动容器" :source="AnchorGetContainerSource">
+  <AnchorGetContainer />
+</DemoBlock>
+
+### 外部链接
+
+锚点支持外部链接（http/https），可配合 `target` 属性在新窗口中打开。
+
+<DemoBlock title="外部链接" :source="AnchorExternalLinkSource">
+  <AnchorExternalLink />
+</DemoBlock>
+
 ## API
 
 ### Anchor Props
@@ -65,8 +105,7 @@
 | ---------------- | -------------------------------------------------------------------------------- | -------------------------------- | -------------- |
 | items            | 数据化配置选项内容                                                               | `AnchorLinkItem[]`               | `[]`           |
 | affix            | 固定模式                                                                         | `boolean`                        | `true`         |
-| offsetTop        | 距离窗口顶部达到指定偏移量后触发                                                 | `number`                         | `0`            |
-| targetOffset     | 滚动偏移量，影响锚点高亮判断                                                     | `number`                         | `offsetTop`    |
+| offsetTop        | 距离窗口顶部达到指定偏移量后触发，影响滚动定位、高亮判定和 wrapper 高度          | `number`                         | `0`            |
 | direction        | 锚点方向                                                                         | `'vertical' \| 'horizontal'`     | `'vertical'`   |
 | bounds           | 锚点区域边界                                                                     | `number`                         | `5`            |
 | replace          | 是否替换浏览器历史记录                                                           | `boolean`                        | `false`        |

@@ -1,16 +1,16 @@
-import { inject, provide, type InjectionKey } from 'vue'
+import { inject, provide, type InjectionKey, type Ref } from 'vue'
 import type { AnchorClassNames, AnchorStyles } from './types'
 
 export interface AnchorContext {
   registerLink: (link: string, targetOffset?: number) => void
   unregisterLink: (link: string) => void
-  activeLink: string | null
+  activeLink: Ref<string | null>
   scrollTo: (link: string, targetOffset?: number) => void
   onClick?: (e: MouseEvent, link: { title: string; href: string }) => void
-  direction: 'vertical' | 'horizontal'
-  replace?: boolean
-  classNames?: AnchorClassNames
-  styles?: AnchorStyles
+  direction: Ref<'vertical' | 'horizontal'>
+  replace: Ref<boolean | undefined>
+  classNames: Ref<AnchorClassNames | undefined>
+  styles: Ref<AnchorStyles | undefined>
 }
 
 const AnchorContextKey: InjectionKey<AnchorContext> = Symbol('AnchorContext')

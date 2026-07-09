@@ -9,9 +9,23 @@
         <h3>第二部分</h3>
         <p>这是第二部分的内容。</p>
       </div>
-      <div id="part-3" style="height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px">
+      <div id="part-3" style="height: 100px; background: #fff7e6; padding: 16px; margin-bottom: 16px">
         <h3>第三部分</h3>
         <p>这是第三部分的内容。</p>
+      </div>
+      <div
+        id="part-3-1"
+        style="height: 100px; background: #fff2e8; padding: 16px; margin-bottom: 8px; margin-left: 16px"
+      >
+        <h4>第三部分-1</h4>
+        <p>第三部分的第一个子章节。</p>
+      </div>
+      <div
+        id="part-3-2"
+        style="height: 100px; background: #fff2e8; padding: 16px; margin-bottom: 16px; margin-left: 16px"
+      >
+        <h4>第三部分-2</h4>
+        <p>第三部分的第二个子章节。</p>
       </div>
     </div>
     <Anchor :items="items" :offset-top="64" style="width: 160px" />
