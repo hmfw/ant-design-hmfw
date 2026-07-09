@@ -46,7 +46,7 @@ export const Select = defineComponent({
       default: undefined,
     },
     dropdownMatchSelectWidth: {
-      type: Boolean,
+      type: [Boolean, Number] as PropType<boolean | number>,
       default: true,
     },
     labelInValue: Boolean,

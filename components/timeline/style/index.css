@@ -2,9 +2,9 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: var(--hmfw-font-size-base, 14px);
+  font-size: var(--hmfw-font-size-base);
   line-height: var(--hmfw-line-height);
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
 }
 
 .hmfw-timeline-item {
@@ -28,7 +28,7 @@
   top: 10px;
   left: 4px;
   height: calc(100% - 10px);
-  border-left: 2px solid var(--hmfw-color-border, rgba(5, 5, 5, 0.06));
+  border-left: 2px solid var(--hmfw-color-border);
 }
 
 /* Head */
@@ -40,28 +40,28 @@
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 4px; /* 调整为4px，使小圆点与第一行文本基线更好地对齐 */
-  background-color: var(--hmfw-color-bg-container, #fff);
+  background-color: var(--hmfw-color-bg-container);
   box-sizing: border-box;
 }
 
 .hmfw-timeline-item-head-blue {
-  border-color: var(--hmfw-color-primary, #1677ff);
-  color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
+  color: var(--hmfw-color-primary);
 }
 
 .hmfw-timeline-item-head-red {
-  border-color: var(--hmfw-color-error, #ff4d4f);
-  color: var(--hmfw-color-error, #ff4d4f);
+  border-color: var(--hmfw-color-error);
+  color: var(--hmfw-color-error);
 }
 
 .hmfw-timeline-item-head-green {
-  border-color: var(--hmfw-color-success, #52c41a);
-  color: var(--hmfw-color-success, #52c41a);
+  border-color: var(--hmfw-color-success);
+  color: var(--hmfw-color-success);
 }
 
 .hmfw-timeline-item-head-gray {
-  border-color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  border-color: var(--hmfw-color-text-secondary);
+  color: var(--hmfw-color-text-secondary);
 }
 
 .hmfw-timeline-item-head-custom {
@@ -69,7 +69,7 @@
   height: auto;
   border: none;
   background: transparent;
-  font-size: var(--hmfw-font-size-base, 14px);
+  font-size: var(--hmfw-font-size-base);
   line-height: 1;
   padding: 0;
   margin-top: 0; /* 自定义图标使用 margin-top: 0，通过 flex 自动居中 */
@@ -82,15 +82,15 @@
 .hmfw-timeline-item-content {
   flex: 1;
   min-width: 0;
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
   padding-top: 0;
 }
 
 /* Label (title) */
 .hmfw-timeline-item-label {
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
-  font-size: var(--hmfw-font-size-base, 14px);
-  min-width: var(--hmfw-timeline-title-span, 80px);
+  color: var(--hmfw-color-text-secondary);
+  font-size: var(--hmfw-font-size-base);
+  min-width: var(--hmfw-timeline-title-span);
   text-align: right;
   flex-shrink: 0;
 }
@@ -140,23 +140,23 @@
 
 /* Variant: filled */
 .hmfw-timeline-filled .hmfw-timeline-item-head-blue {
-  background-color: var(--hmfw-color-primary, #1677ff);
-  border-color: var(--hmfw-color-primary, #1677ff);
+  background-color: var(--hmfw-color-primary);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-timeline-filled .hmfw-timeline-item-head-red {
-  background-color: var(--hmfw-color-error, #ff4d4f);
-  border-color: var(--hmfw-color-error, #ff4d4f);
+  background-color: var(--hmfw-color-error);
+  border-color: var(--hmfw-color-error);
 }
 
 .hmfw-timeline-filled .hmfw-timeline-item-head-green {
-  background-color: var(--hmfw-color-success, #52c41a);
-  border-color: var(--hmfw-color-success, #52c41a);
+  background-color: var(--hmfw-color-success);
+  border-color: var(--hmfw-color-success);
 }
 
 .hmfw-timeline-filled .hmfw-timeline-item-head-gray {
-  background-color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
-  border-color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  background-color: var(--hmfw-color-text-secondary);
+  border-color: var(--hmfw-color-text-secondary);
 }
 
 /* Horizontal orientation */
@@ -184,7 +184,7 @@
   width: calc(100% - 10px);
   height: 2px;
   border-left: none;
-  border-top: 2px solid var(--hmfw-color-border, rgba(5, 5, 5, 0.06));
+  border-top: 2px solid var(--hmfw-color-border);
 }
 
 .hmfw-timeline-horizontal .hmfw-timeline-item-label {

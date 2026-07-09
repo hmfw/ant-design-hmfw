@@ -13,7 +13,7 @@
   line-height: var(--hmfw-line-height);
   pointer-events: none;
   /* 箭头背景色（白色浮层） */
-  --hmfw-arrow-bg: var(--tooltip-bg, #fff);
+  --hmfw-arrow-bg: var(--tooltip-bg);
   /* 覆盖 hmfw-trigger-popup 的基础样式，视觉容器是 -inner */
   background: transparent;
   border-radius: 0;
@@ -45,14 +45,9 @@
 }
 
 .hmfw-popover-inner {
-  background: var(--tooltip-bg, var(--hmfw-color-bg-elevated, #fff));
-  border-radius: var(--hmfw-border-radius-lg, 8px);
-  box-shadow: var(
-    --hmfw-box-shadow-secondary,
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05)
-  );
+  background: var(--tooltip-bg);
+  border-radius: var(--hmfw-border-radius-lg);
+  box-shadow: var(--hmfw-box-shadow-secondary);
   pointer-events: auto;
   overflow: hidden;
   /* AntD v6 默认主题（非 wireframe）：内边距落在容器上，标题/内容自身无 padding。 */

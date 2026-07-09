@@ -164,7 +164,7 @@
   height: 100%;
   width: 0;
   background: rgba(255, 255, 255, 0.5);
-  animation: carousel-dot-progress var(--carousel-dot-duration, 3000ms) linear forwards;
+  animation: carousel-dot-progress var(--carousel-dot-duration) linear forwards;
 }
 
 @keyframes carousel-dot-progress {

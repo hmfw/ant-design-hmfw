@@ -6,6 +6,38 @@
 
 ---
 
+## [0.7.1] - 2026-07-09
+
+### 🔧 重构
+
+- **Dropdown**: Props 定义迁移到 `satisfies Record<keyof DropdownProps, any>` 模式，与 Button/Breadcrumb 类型安全规范统一
+- **Dropdown**: 新增 `arrow` 属性（`boolean | { pointAtCenter?: boolean }`），支持下拉菜单箭头及指向控制
+- **Dropdown**: `destroyOnHidden` 作为 `destroyPopupOnHide` 的废弃别名，通过 `??` 链式回退保持兼容
+
+### ✨ 增强
+
+- **Trigger**: `matchWidth` 属性从 `boolean` 扩展为 `boolean | number`，数字时设置 `minWidth` 而非固定 `width`，支持弹层最小宽度约束
+- **Trigger**: 修复 `matchWidth` 设置 `minWidth` 后弹层宽度变化需重新测量定位的问题
+- **Trigger**: 修复 `defaultOpen` 或 `open` 初始为 `true` 时弹层位置未在挂载后立即计算的问题
+- **Select**: `dropdownMatchSelectWidth` 类型扩展为 `boolean | number`，支持设置下拉最小宽度
+- **Cascader**: 接入 `matchWidth`，下拉菜单宽度与触发器对齐
+
+### 🎨 Design Token
+
+- **Theme**: 新增 14 个 CSS 变量补充 Token 体系 — `--hmfw-arrow-bg`、`--hmfw-border-radius-xs`、`--hmfw-box-shadow-tertiary`、`--hmfw-color-fill-alter`、`--hmfw-color-fill-content`、`--hmfw-color-split`、`--hmfw-control-item-bg-hover`、`--hmfw-control-padding-horizontal`、`--hmfw-control-padding-horizontal-sm`、`--hmfw-line-width-bold`、`--hmfw-skeleton-color-base`、`--hmfw-skeleton-color-highlight`、`--hmfw-timeline-title-span`、`--hmfw-z-index-base`、`--hmfw-z-index-popup`
+- **CSS 变量清理**: 40+ 组件样式移除 CSS 变量中的硬编码 fallback 值（如 `var(--hmfw-color-primary, #1677ff)` → `var(--hmfw-color-primary)`），默认值统一由 Theme 层管理，减少重复维护
+
+### 🧪 测试
+
+- **Dropdown**: 测试用例大幅扩充（+385 行），覆盖 arrow、destroyOnHidden、受控/非受控模式等场景
+- **Trigger**: 测试更新适配 `matchWidth` 新类型
+
+### 📊 统计
+
+- 全量单测通过，类型检查通过
+
+---
+
 ## [0.7.0] - 2026-07-09
 
 ### 🚀 新组件

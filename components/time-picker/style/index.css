@@ -3,8 +3,8 @@
   align-items: center;
   width: 128px;
   padding: 4px 11px;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
-  border-radius: var(--hmfw-border-radius, 6px);
+  border: 1px solid var(--hmfw-color-border);
+  border-radius: var(--hmfw-border-radius);
   background: #fff;
   cursor: pointer;
   transition: all 0.2s;
@@ -12,30 +12,30 @@
 }
 
 .hmfw-time-picker:hover {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-time-picker-open {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
   box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
 }
 
 .hmfw-time-picker-disabled {
-  background: var(--hmfw-color-bg-container-disabled, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-color-bg-container-disabled);
   cursor: not-allowed;
-  border-color: var(--hmfw-color-border, #d9d9d9);
+  border-color: var(--hmfw-color-border);
 }
 
 .hmfw-time-picker-disabled:hover {
-  border-color: var(--hmfw-color-border, #d9d9d9);
+  border-color: var(--hmfw-color-border);
 }
 
 .hmfw-time-picker-status-error {
-  border-color: var(--hmfw-color-error, #ff4d4f);
+  border-color: var(--hmfw-color-error);
 }
 
 .hmfw-time-picker-status-warning {
-  border-color: var(--hmfw-color-warning, #faad14);
+  border-color: var(--hmfw-color-warning);
 }
 
 .hmfw-time-picker-small {
@@ -55,28 +55,28 @@
 }
 
 .hmfw-time-picker-borderless:hover {
-  background: var(--hmfw-color-bg-text-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-color-bg-text-hover);
 }
 
 .hmfw-time-picker-filled {
-  background: var(--hmfw-color-fill-tertiary, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-color-fill-tertiary);
   border-color: transparent;
 }
 
 .hmfw-time-picker-filled:hover {
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-color-fill-secondary);
 }
 
 .hmfw-time-picker-underlined {
   border: none;
-  border-bottom: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-bottom: 1px solid var(--hmfw-color-border);
   border-radius: 0;
   padding-left: 0;
   padding-right: 0;
 }
 
 .hmfw-time-picker-underlined:hover {
-  border-bottom-color: var(--hmfw-color-primary, #1677ff);
+  border-bottom-color: var(--hmfw-color-primary);
 }
 
 .hmfw-time-picker-input {
@@ -95,19 +95,19 @@
   background: transparent;
   font-size: inherit;
   line-height: var(--hmfw-line-height);
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
   cursor: pointer;
   min-width: 0;
 }
 
 .hmfw-time-picker-input-inner::placeholder {
-  color: var(--hmfw-color-text-placeholder, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-placeholder);
 }
 
 .hmfw-time-picker-suffix {
   display: inline-flex;
   align-items: center;
-  color: var(--hmfw-color-text-placeholder, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-placeholder);
   font-size: 14px;
   transition: opacity 0.2s;
 }
@@ -120,7 +120,7 @@
   display: inline-flex;
   align-items: center;
   background: #fff;
-  color: var(--hmfw-color-text-placeholder, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-placeholder);
   font-size: 14px;
   cursor: pointer;
   opacity: 0;
@@ -131,7 +131,7 @@
 }
 
 .hmfw-time-picker-clear:hover {
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
 }
 
 .hmfw-time-picker:hover .hmfw-time-picker-clear {
@@ -163,7 +163,7 @@
   border-radius: inherit;
   overflow: hidden;
   min-width: 200px;
-  border: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
+  border: 1px solid var(--hmfw-color-border-secondary);
 }
 
 .hmfw-time-picker-panel-inner {
@@ -177,7 +177,7 @@
   margin: 0;
   padding: 0;
   overflow-y: auto;
-  border-right: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
+  border-right: 1px solid var(--hmfw-color-border-secondary);
   scrollbar-width: none;
   contain: layout style;
   will-change: scroll-position;
@@ -196,7 +196,7 @@
   text-align: center;
   cursor: pointer;
   font-size: 14px;
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
   transition:
     background 0.2s,
     color 0.2s;
@@ -206,17 +206,17 @@
 }
 
 .hmfw-time-picker-panel-cell:hover {
-  background: var(--hmfw-color-bg-text-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-color-bg-text-hover);
 }
 
 .hmfw-time-picker-panel-cell-selected {
-  background: var(--hmfw-color-primary-bg, #e6f4ff);
-  color: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary-bg);
+  color: var(--hmfw-color-primary);
   font-weight: 600;
 }
 
 .hmfw-time-picker-panel-cell-disabled {
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
   cursor: not-allowed;
 }
 
@@ -225,7 +225,7 @@
 }
 
 .hmfw-time-picker-panel-footer {
-  border-top: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
+  border-top: 1px solid var(--hmfw-color-border-secondary);
   padding: 8px 12px;
   display: flex;
   flex-direction: column;
@@ -250,16 +250,16 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
 }
 
 .hmfw-time-picker-panel-footer-ok {
   padding: 0 14px;
-  background: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary);
   color: #fff;
   border-radius: 4px;
 }
 
 .hmfw-time-picker-panel-footer-ok:hover {
-  background: var(--hmfw-color-primary-hover, #4096ff);
+  background: var(--hmfw-color-primary-hover);
 }

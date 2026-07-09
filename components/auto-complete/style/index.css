@@ -5,7 +5,7 @@
 
 .hmfw-auto-complete-dropdown {
   /* bg/radius/shadow 由 hmfw-trigger-popup 统一提供 */
-  border: 1px solid var(--hmfw-color-border-secondary, #f0f0f0);
+  border: 1px solid var(--hmfw-color-border-secondary);
   overflow: hidden;
   max-height: 256px;
   overflow-y: auto;
@@ -13,33 +13,33 @@
 
 .hmfw-auto-complete-dropdown-item {
   padding: 5px 12px;
-  font-size: var(--hmfw-font-size, 14px);
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-text);
   cursor: pointer;
-  transition: background var(--hmfw-motion-duration-fast, 0.15s);
-  min-height: var(--hmfw-control-height, 32px);
+  transition: background var(--hmfw-motion-duration-fast);
+  min-height: var(--hmfw-control-height);
   display: flex;
   align-items: center;
 }
 
 .hmfw-auto-complete-dropdown-item:hover,
 .hmfw-auto-complete-dropdown-item-active {
-  background: var(--hmfw-control-item-bg-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-control-item-bg-hover);
 }
 
 .hmfw-auto-complete-dropdown-item-selected {
   font-weight: 600;
-  color: var(--hmfw-color-primary, #1677ff);
-  background: var(--hmfw-color-primary-bg, #e6f4ff);
+  color: var(--hmfw-color-primary);
+  background: var(--hmfw-color-primary-bg);
 }
 
 .hmfw-auto-complete-dropdown-item-selected:hover,
 .hmfw-auto-complete-dropdown-item-selected.hmfw-auto-complete-dropdown-item-active {
-  background: var(--hmfw-color-primary-bg-hover, #bae0ff);
+  background: var(--hmfw-color-primary-bg-hover);
 }
 
 .hmfw-auto-complete-dropdown-item-disabled {
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
   cursor: not-allowed;
 }
 
@@ -49,7 +49,7 @@
 
 .hmfw-auto-complete-dropdown-empty {
   padding: 16px 12px;
-  font-size: var(--hmfw-font-size, 14px);
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-text-disabled);
   text-align: center;
 }

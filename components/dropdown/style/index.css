@@ -4,10 +4,10 @@
 
 .hmfw-dropdown {
   position: absolute;
-  z-index: var(--hmfw-z-index-popup, 1050);
-  transition: opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+  z-index: var(--hmfw-z-index-popup);
+  transition: opacity var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
   /* 箭头背景色（白色菜单） */
-  --hmfw-arrow-bg: var(--hmfw-color-bg-elevated, #fff);
+  --hmfw-arrow-bg: var(--hmfw-color-bg-elevated);
   /* 覆盖 hmfw-trigger-popup 的基础样式，视觉容器是 -content */
   background: transparent;
   border-radius: 0;
@@ -21,17 +21,12 @@
 /* 内容层承载视觉样式（背景、圆角、阴影），overflow 裁剪只作用于内容，不影响箭头 */
 .hmfw-dropdown-content {
   position: relative;
-  background: var(--hmfw-color-bg-elevated, #fff);
-  border-radius: var(--hmfw-border-radius-lg, 8px);
-  box-shadow: var(
-    --hmfw-box-shadow-secondary,
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05)
-  );
+  background: var(--hmfw-color-bg-elevated);
+  border-radius: var(--hmfw-border-radius-lg);
+  box-shadow: var(--hmfw-box-shadow-secondary);
   overflow: hidden;
   min-width: 120px;
-  padding: var(--hmfw-padding-xxs, 4px) 0;
+  padding: var(--hmfw-padding-xxs) 0;
 }
 
 /* 组件专属箭头：附加投影（::after） */
@@ -46,7 +41,7 @@
   margin: auto;
   background: transparent;
   border-radius: 0 0 2px 0;
-  box-shadow: var(--hmfw-box-shadow-popover-arrow, 2px 2px 5px rgba(0, 0, 0, 0.05));
+  box-shadow: var(--hmfw-box-shadow-popover-arrow);
   transform: translateY(50%) rotate(-135deg);
   content: '';
 }
@@ -61,23 +56,23 @@
 .hmfw-dropdown-menu-item {
   display: flex;
   align-items: center;
-  gap: var(--hmfw-margin-xs, 8px);
-  padding: var(--hmfw-padding-xs, 5px) var(--hmfw-padding-sm, 12px);
+  gap: var(--hmfw-margin-xs);
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding-sm);
   cursor: pointer;
-  transition: background var(--hmfw-motion-duration-mid, 0.2s);
-  font-size: var(--hmfw-font-size-base, 14px);
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
-  min-height: var(--hmfw-control-height-sm, 32px);
+  transition: background var(--hmfw-motion-duration-mid);
+  font-size: var(--hmfw-font-size-base);
+  color: var(--hmfw-color-text);
+  min-height: var(--hmfw-control-height-sm);
   white-space: nowrap;
-  border-radius: var(--hmfw-border-radius-sm, 4px);
+  border-radius: var(--hmfw-border-radius-sm);
 }
 
 .hmfw-dropdown-menu-item:hover {
-  background: var(--hmfw-control-item-bg-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-control-item-bg-hover);
 }
 
 .hmfw-dropdown-menu-item-disabled {
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
   cursor: not-allowed;
 }
 
@@ -86,22 +81,22 @@
 }
 
 .hmfw-dropdown-menu-item-danger {
-  color: var(--hmfw-color-error, #ff4d4f);
+  color: var(--hmfw-color-error);
 }
 
 .hmfw-dropdown-menu-item-danger:hover {
-  background: var(--hmfw-color-error-bg, #fff2f0);
-  color: var(--hmfw-color-error-hover, #ff7875);
+  background: var(--hmfw-color-error-bg);
+  color: var(--hmfw-color-error-hover);
 }
 
 .hmfw-dropdown-menu-divider {
   height: 1px;
-  background: var(--hmfw-color-split, rgba(5, 5, 5, 0.06));
-  margin: var(--hmfw-margin-xxs, 4px) 0;
+  background: var(--hmfw-color-split);
+  margin: var(--hmfw-margin-xxs) 0;
 }
 
 .hmfw-dropdown-menu-item-icon {
-  font-size: var(--hmfw-font-size-base, 14px);
+  font-size: var(--hmfw-font-size-base);
   flex-shrink: 0;
 }
 
@@ -113,7 +108,7 @@
 
 .hmfw-dropdown-menu-submenu-arrow {
   margin-left: auto;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
   font-size: 10px;
 }
 

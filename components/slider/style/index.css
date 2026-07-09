@@ -35,7 +35,7 @@
 .hmfw-slider-track {
   position: absolute;
   height: 4px;
-  background-color: var(--hmfw-color-primary, #1677ff);
+  background-color: var(--hmfw-color-primary);
   border-radius: 6px;
   transition: background-color 0.3s;
 }
@@ -52,7 +52,7 @@
   height: 14px;
   margin-top: -7px;
   background-color: #fff;
-  border: 2px solid var(--hmfw-color-primary, #1677ff);
+  border: 2px solid var(--hmfw-color-primary);
   border-radius: 50%;
   cursor: grab;
   transform: translateX(-50%);
@@ -64,7 +64,7 @@
 
 .hmfw-slider-handle:hover,
 .hmfw-slider-handle-dragging {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
   box-shadow: 0 0 0 5px rgba(22, 119, 255, 0.12);
 }
 
@@ -109,7 +109,7 @@
 }
 
 .hmfw-slider-dot-active {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 /* Marks */

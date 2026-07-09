@@ -400,8 +400,8 @@ describe('Trigger', () => {
     await nextTick()
     const popup = document.querySelector('.hmfw-trigger-popup') as HTMLElement
     expect(popup).not.toBeNull()
-    // matchWidth 生效则 style.width 不为空字符串（jsdom 中 trigger rect.width=0 → "0px"）
-    expect(popup?.style.width).toBe('0px')
+    // matchWidth 生效则 style.minWidth 不为空字符串（jsdom 中 trigger rect.width=0 → "0px"）
+    expect(popup?.style.minWidth).toBe('0px')
     wrapper.unmount()
   })
 

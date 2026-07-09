@@ -42,8 +42,6 @@ export interface ComputeOptions {
   viewportHeight?: number
   /** 箭头尖端对齐触发器中心（Dropdown 的 arrow.pointAtCenter）。 */
   arrowPointAtCenter?: boolean
-  /** 箭头尖端距弹层边缘的距离，默认 20（arrowOffsetHorizontal 12 + 半箭头宽 8）。 */
-  arrowTipOffset?: number
 }
 
 /** computePosition 的输出：文档坐标 + 翻转后实际生效的方位。 */
@@ -69,8 +67,8 @@ export interface TriggerProps {
   disabled?: boolean
   destroyOnHidden?: boolean
   forceRender?: boolean
-  /** 弹层宽度与触发器宽度一致（Select 的 dropdownMatchSelectWidth）。 */
-  matchWidth?: boolean
+  /** 弹层最小宽度匹配触发器宽度（Select 的 dropdownMatchSelectWidth）。true 使用触发器宽度，number 指定固定最小宽度。 */
+  matchWidth?: boolean | number
   gap?: number
   zIndex?: number
   closeOnEscape?: boolean

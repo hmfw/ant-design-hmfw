@@ -23,7 +23,7 @@
   line-height: 20px;
   white-space: nowrap;
   text-align: center;
-  background: var(--hmfw-color-error, #ff4d4f);
+  background: var(--hmfw-color-error);
   border-radius: 10px;
   box-shadow: 0 0 0 1px #fff;
   z-index: 1;
@@ -108,20 +108,20 @@
 }
 
 .hmfw-badge-status-success {
-  background: var(--hmfw-color-success, #52c41a);
+  background: var(--hmfw-color-success);
 }
 .hmfw-badge-status-processing {
-  background: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary);
   animation: hmfw-badge-processing 1.2s infinite ease-in-out;
 }
 .hmfw-badge-status-default {
-  background: var(--hmfw-color-text-placeholder, #d9d9d9);
+  background: var(--hmfw-color-text-placeholder);
 }
 .hmfw-badge-status-error {
-  background: var(--hmfw-color-error, #ff4d4f);
+  background: var(--hmfw-color-error);
 }
 .hmfw-badge-status-warning {
-  background: var(--hmfw-color-warning, #faad14);
+  background: var(--hmfw-color-warning);
 }
 
 /* Preset colors for status dot */
@@ -195,10 +195,10 @@
   top: 8px;
   height: 22px;
   padding: 0 8px;
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
   line-height: 22px;
   white-space: nowrap;
-  background-color: var(--hmfw-color-primary, #1677ff);
+  background-color: var(--hmfw-color-primary);
   border-radius: 4px;
 }
 

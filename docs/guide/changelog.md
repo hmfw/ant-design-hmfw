@@ -6,7 +6,187 @@
 
 ---
 
-## [0.6.7] - 2026-07-08
+## [0.7.1] - 2026-07-09
+
+### 🔧 重构
+
+- **Dropdown**: Props 定义迁移到 `satisfies Record<keyof DropdownProps, any>` 模式，与 Button/Breadcrumb 类型安全规范统一
+- **Dropdown**: 新增 `arrow` 属性（`boolean | { pointAtCenter?: boolean }`），支持下拉菜单箭头及指向控制
+- **Dropdown**: `destroyOnHidden` 作为 `destroyPopupOnHide` 的废弃别名，通过 `??` 链式回退保持兼容
+
+### ✨ 增强
+
+- **Trigger**: `matchWidth` 属性从 `boolean` 扩展为 `boolean | number`，数字时设置 `minWidth` 而非固定 `width`，支持弹层最小宽度约束
+- **Trigger**: 修复 `matchWidth` 设置 `minWidth` 后弹层宽度变化需重新测量定位的问题
+- **Trigger**: 修复 `defaultOpen` 或 `open` 初始为 `true` 时弹层位置未在挂载后立即计算的问题
+- **Select**: `dropdownMatchSelectWidth` 类型扩展为 `boolean | number`，支持设置下拉最小宽度
+- **Cascader**: 接入 `matchWidth`，下拉菜单宽度与触发器对齐
+
+### 🎨 Design Token
+
+- **Theme**: 新增 14 个 CSS 变量补充 Token 体系 — `--hmfw-arrow-bg`、`--hmfw-border-radius-xs`、`--hmfw-box-shadow-tertiary`、`--hmfw-color-fill-alter`、`--hmfw-color-fill-content`、`--hmfw-color-split`、`--hmfw-control-item-bg-hover`、`--hmfw-control-padding-horizontal`、`--hmfw-control-padding-horizontal-sm`、`--hmfw-line-width-bold`、`--hmfw-skeleton-color-base`、`--hmfw-skeleton-color-highlight`、`--hmfw-timeline-title-span`、`--hmfw-z-index-base`、`--hmfw-z-index-popup`
+- **CSS 变量清理**: 40+ 组件样式移除 CSS 变量中的硬编码 fallback 值（如 `var(--hmfw-color-primary, #1677ff)` → `var(--hmfw-color-primary)`），默认值统一由 Theme 层管理，减少重复维护
+
+### 🧪 测试
+
+- **Dropdown**: 测试用例大幅扩充（+385 行），覆盖 arrow、destroyOnHidden、受控/非受控模式等场景
+- **Trigger**: 测试更新适配 `matchWidth` 新类型
+
+### 📊 统计
+
+- 全量单测通过，类型检查通过
+
+---
+
+## [0.7.0] - 2026-07-09
+
+### 🚀 新组件
+
+- **Mentions**: 新增 `@` 提及组件，支持多前缀触发、搜索过滤、键盘导航、虚拟滚动下拉列表
+
+### 🔧 重构
+
+- **VirtualList**: 提取 `useVirtualScroll` composable，将核心虚拟滚动算法（O(1) 可见范围计算、缓冲区管理、数据变化自动重置）从组件中解耦为可复用逻辑
+- **Table**: 自定义 O(n) 虚拟滚动统一到 `useVirtualScroll` composable，消除 ~200 行重复的虚拟/非虚拟渲染代码，移除 `rowHeightCache` 死代码
+- **TreeSelect**: 自实现虚拟滚动（`scrollTop` + `visibleRange` + spacer div）统一到 VirtualList 组件，裁撤 ~30 行手动计算逻辑
+
+### ✨ 虚拟滚动接入
+
+- **Cascader**: 搜索模式 + 列模式（选项 >10 时）双重 VirtualList 接入，支持大数据量级联选择
+- **Transfer**: VirtualList 接入穿梭框两侧列表，与 `pagination` 互斥，与 `draggable` 不兼容时自动降级
+- **AutoComplete**: `virtual` prop 控制 VirtualList 下拉渲染，与 Select 保持一致的接入模式
+
+### 🧪 测试
+
+- **VirtualList**: 单元测试 25 → 25（composable 提取后 API 不变）
+- **Table**: 新增 6 项虚拟滚动单元测试 + 2 项 E2E 测试（31 total）
+- **Mentions**: 17 项测试（含键盘导航、搜索过滤、虚拟滚动）
+- **Cascader**: 新增 5 项虚拟滚动测试（34 total）
+- **Transfer**: 新增 6 项虚拟滚动测试（46 total）
+- **AutoComplete**: 新增 4 项虚拟滚动测试（32 total）
+- **TreeSelect**: 更新 4 项虚拟滚动测试适配新 DOM 结构（34 total）
+
+### 📊 统计
+
+- 已接入 VirtualList 的组件：**9 个**（VirtualList · Select · Tree · List · Table · Mentions · Cascader · Transfer · AutoComplete · TreeSelect）
+- 全量单测：**2072 passed**（72 files），类型检查通过
+
+---
+
+## [0.6.11] - 2026-07-09
+
+### 🐛 修复
+
+- **Trigger**: 修复 `handleFocusOut` 焦点移入弹层时错误关闭的严重 Bug，弹层内可聚焦元素（下拉菜单项、输入框等）现在可正常获得焦点
+- **Anchor**: 消除 jsdom 中 `<a href>` 异步 navigation 引发的 stderr 噪音，改用 `vi.useFakeTimers()` 阻止
+
+### ✨ 优化
+
+- **Trigger**: 新增全局事件管理器 `eventManager.ts`，N 个实例共享一组 `document`/`window` 监听器，消除 N 倍回调开销
+- **Trigger**: Props 定义从混用简写/完整写法统一为全完整 `{ type, default }` 格式，与 Button/Breadcrumb 保持一致
+- **Trigger**: `attrs.class` / `attrs.style` 的 `as any` 替换为精确类型断言 `as string | undefined` / `as Record<string, any> | undefined`
+- **Trigger**: 代码组织重排为 9 层清晰结构（响应式状态 → Props 同步 → 核心方法 → 副作用 Watch → 事件处理 → 生命周期 → 工具方法 → 暴露 API → 渲染）
+- **Trigger**: render 函数中 class/style/events 逻辑提取为 `popupCls`/`triggerCls`/`triggerSty`/`triggerEvents`/`popupEvents` 变量
+- **Trigger**: `child` 重命名为 `children`，语义更准确
+- **Trigger**: `TriggerProps` 接口与运行时 props 完全同步，新增 9 个缺失字段
+- **Trigger**: `observePopupResize` prop 动态变更时 ResizeObserver 状态同步
+- **Trigger**: `updatePosition` 增加可见性守卫，防止隐藏态计算出错
+
+### 🧪 测试
+
+- **Trigger**: 单元测试从 13 项扩充至 55 项，覆盖全部 22 项未测 Props 与行为（contextMenu、多 trigger、focusOut relatedTarget、matchWidth、triggerDisplay contents、ResizeObserver 等）
+- **Trigger**: 新增 12 项 E2E 测试，覆盖真实浏览器视口定位、autoAdjustOverflow 翻转、焦点管理、matchWidth、hover 触发、多实例等场景
+- **Anchor**: 新增 6 项 E2E 测试，覆盖真实滚动联动、active link 切换、ink bar 渲染等场景
+
+## [0.6.10] - 2026-07-09
+
+### 🐛 修复
+
+- **Breadcrumb**: `getBreadcrumbName` 修复空 `params` 时正则 `/:()/g` 误匹配标题中独立 `:` 字符的边缘情况
+- **Breadcrumb**: `pickAttrs` 从白名单改为黑名单方式，`target`/`rel` 等标准 HTML 属性现在可正确透传到 `<a>` 标签
+- **Breadcrumb**: 修复显式 `href` 被 `path` 拼接结果静默覆盖的问题，显式 `href` 优先
+- **Breadcrumb**: 分隔符渲染判断 `||` 改为 `??`，正确处理 `''`/`0` 等 falsy 边界值
+- **Breadcrumb**: 自动插入的分隔符 `<li>` 添加 `key` 属性，避免 Vue 重渲染异常
+
+### ✨ 优化
+
+- **Breadcrumb**: Props 类型采用 `satisfies Record<keyof BreadcrumbProps, any>` 模式，接口与运行时 props 编译时强制同步，杜绝双源头漂移
+- **Breadcrumb**: 抽取 `BreadcrumbItemRender` 类型别名，消除 `itemRender` 签名在两处重复定义
+- **Breadcrumb**: 变量 `crumbs` 重命名为 `crumbNodes`，语义更明确
+- **Breadcrumb**: 完善 `normalizeMenu` 中 `as any` 和 `getBreadcrumbName` 中 number 类型分支的注释
+- **Docs**: 清理 breadcrumb 等 9 个组件文档中冗余的 `<script setup>` 块（`autoDemoImports` 插件自动生成，手动维护多余且易漏）
+- **CLAUDE.md**: 新增「Props 类型定义规范」章节
+
+### 🎨 样式
+
+- **Breadcrumb**: 移除 CSS `var()` 中所有冗余 fallback 值，统一为裸变量引用
+
+### ✅ 测试
+
+- **Breadcrumb**: 新增 12 个边界测试用例（28→40），覆盖 href 优先级、target/rel 透传、空 items、空 menu.items、itemRender 与 menu 互斥、VNode 分隔符、多参数 path、title 含冒号+空 params 等场景
+
+### 📖 文档
+
+- **Breadcrumb**: 新增「带下拉菜单」demo（BreadcrumbMenu.vue 之前未在文档中展示）
+- **Breadcrumb**: 新增「自定义下拉图标」demo（dropdownIcon + dropdownProps）
+- **Breadcrumb**: 新增「target 与 rel」demo（新窗口打开 + rel 安全属性）
+- **Breadcrumb**: API 表格补充 `dropdownIcon`/`itemRender`/`target`/`rel`/`menu`/`dropdownProps`
+
+---
+
+## [0.6.9] - 2026-07-09
+
+### 🐛 修复
+
+- **Anchor**: 修复 `activeLink` 在 context 中响应式断裂导致高亮和 ink 指示器完全失效的核心 bug。`activeLink`、`direction`、`replace`、`classNames`、`styles` 改为 Ref 传递
+- **Anchor**: 修复水平模式下 `scrollIntoView` 冒泡到 `document` 导致页面滚动死循环的问题，改为仅在 Anchor 自身容器内水平滚动
+- **Anchor**: 修复 `scrollTo` 多次调用时旧 `requestAnimationFrame` 帧泄漏
+- **Anchor**: 修复 `onUnmounted` 中 `getScrollContainer()` 可能与 `onMounted` 时引用不一致导致事件监听器泄漏
+
+### ✨ 优化
+
+- **Anchor**: scroll/resize 事件使用 `requestAnimationFrame` 节流，减少高频触发带来的性能开销
+- **Anchor**: `renderLinks` 改为 `computed`，减少不必要的 VNode 重建
+- **Anchor**: 添加 `window.resize` 事件监听，窗口大小变化时重新计算激活锚点
+- **Anchor**: 移除 `targetOffset` prop，与 `offsetTop` 职责合并，精简 API
+- **Anchor**: 正则表达式 `[\S ]` 改为 `.`，提升可读性
+
+### 🎨 样式
+
+- **Anchor**: 硬编码 `font-family` 替换为 `var(--hmfw-font-family)`，统一使用 Design Token
+- **Theme**: 全局字体栈精简，移除冗余的 `BlinkMacSystemFont`（现代 macOS Chrome 已支持 `-apple-system`）
+
+### 📝 文档
+
+- **Anchor**: 新增 5 个 Demo：`AnchorBounds`（边界值）、`AnchorReplace`（历史记录替换）、`AnchorGetCurrentAnchor`（自定义高亮）、`AnchorGetContainer`（自定义滚动容器）、`AnchorExternalLink`（外部链接）
+- **Anchor**: Demo `AnchorBasic` 和 `AnchorLink` 补齐缺失的子锚点目标 DOM 元素
+- **Anchor**: Demo `AnchorHorizontal` 添加 `offset-top` 避免内容被顶部导航遮挡
+
+### 🧪 测试
+
+- **Anchor**: 测试用例从 16 个扩展到 48 个，新增覆盖 `classNames`、`styles`、`offsetTop`、`replace`、`getContainer`、`getCurrentAnchor`、外部链接、动态变更、水平方向、边界情况等
+
+---
+
+## [0.6.8] - 2026-07-08
+
+### 🐛 修复
+
+- **Layout**: 修复 Sider 与 Content 上下排列而非左右排列的问题。根因是 Vue 3 的 Boolean prop 自动转换机制：`hasSider` 未显式传递时 Vue 默认转为 `false`（而非 `undefined`），导致 `props.hasSider !== undefined` 判断永远为 true，`siderCount` 自动检测逻辑失效。改为 `props.hasSider || siderCount.value > 0`
+- **Layout**: 修复 `CollapseType` 类型未从主入口导出的问题，Demo 文件 `LayoutCollapsible.vue` 不再报 TS 2724 错误
+
+### ✨ 优化
+
+- **Flex**: `gap` 预设值从硬编码像素值迁移至 Design Token CSS 变量（`--hmfw-padding-xs` / `--hmfw-padding` / `--hmfw-padding-lg`），支持 ConfigProvider 主题覆盖
+- **Grid (Col)**: 响应式断点的 `offset`/`order`/`pull`/`push` 支持值为 `0` 的情况，允许显式重置上级断点设置，与 ant-design v6 行为对齐
+- **Grid (style)**: 栅格样式从手写 24 列 × 6 断点 × 5 方向硬编码迁移为 CSS 变量化方案，大幅减少样式体积
+- **Divider**: 重构代码结构，提取 `isHorizontalWithText` computed 复用，优化 `textStyle` 计算逻辑，增加详细注释
+- **Divider/Layout/Space (style)**: 样式微调，接入 Design Token
+
+### 📝 文档
+
+- 新增 `DividerOrientationMargin`、`FlexAlign`、`FlexComponent`、`GridAlign`、`GridOrder`、`LayoutReverseArrow` Demo
+- 更新 Divider、Flex、Grid、Layout 组件文档与 Demo
 
 ### ✨ 优化
 

@@ -15,9 +15,9 @@
 .hmfw-upload-drag {
   display: block;
   width: 100%;
-  border: 1px dashed var(--hmfw-color-border, #d9d9d9);
+  border: 1px dashed var(--hmfw-color-border);
   border-radius: 8px;
-  background: var(--hmfw-color-bg-container, #fafafa);
+  background: var(--hmfw-color-bg-container);
   cursor: pointer;
   text-align: center;
   transition:
@@ -26,12 +26,12 @@
 }
 
 .hmfw-upload-drag:hover {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-upload-drag-hover {
-  border-color: var(--hmfw-color-primary, #1677ff);
-  background: var(--hmfw-color-primary-bg, #e6f4ff);
+  border-color: var(--hmfw-color-primary);
+  background: var(--hmfw-color-primary-bg);
 }
 
 .hmfw-upload-drag.hmfw-upload-disabled {
@@ -59,7 +59,7 @@
 }
 
 .hmfw-upload-list-item:hover {
-  background: var(--hmfw-color-bg-text-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-color-bg-text-hover);
 }
 
 .hmfw-upload-list-item-info {
@@ -81,17 +81,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
   cursor: pointer;
   text-decoration: none;
 }
 
 .hmfw-upload-list-item-name:hover {
-  color: var(--hmfw-color-primary-hover, #4096ff);
+  color: var(--hmfw-color-primary-hover);
 }
 
 .hmfw-upload-list-item-size {
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
   font-size: 12px;
   flex-shrink: 0;
 }
@@ -101,7 +101,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
   font-size: 12px;
   flex-shrink: 0;
   opacity: 0;
@@ -113,7 +113,7 @@
 }
 
 .hmfw-upload-list-item-error .hmfw-upload-list-item-name {
-  color: var(--hmfw-color-error, #ff4d4f);
+  color: var(--hmfw-color-error);
 }
 
 /* Progress bar */
@@ -123,20 +123,20 @@
   left: 24px;
   right: 24px;
   height: 2px;
-  background: var(--hmfw-color-border, #f0f0f0);
+  background: var(--hmfw-color-border);
   border-radius: 1px;
 }
 
 .hmfw-upload-list-item-progress-bar {
   height: 100%;
-  background: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary);
   border-radius: 1px;
   transition: width 0.3s;
 }
 
 /* Picture list */
 .hmfw-upload-list-picture .hmfw-upload-list-item {
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border: 1px solid var(--hmfw-color-border);
   border-radius: 8px;
   margin-bottom: 8px;
   padding: 8px;
@@ -176,14 +176,14 @@
 .hmfw-upload-list-item-card {
   width: 104px;
   height: 104px;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border: 1px solid var(--hmfw-color-border);
   border-radius: 8px;
   overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--hmfw-color-bg-container, #fafafa);
+  background: var(--hmfw-color-bg-container);
 }
 
 .hmfw-upload-list-picture-circle .hmfw-upload-list-item-card {
@@ -236,10 +236,10 @@
   justify-content: center;
   width: 104px;
   height: 104px;
-  border: 1px dashed var(--hmfw-color-border, #d9d9d9);
+  border: 1px dashed var(--hmfw-color-border);
   border-radius: 8px;
   cursor: pointer;
-  background: var(--hmfw-color-bg-container, #fafafa);
+  background: var(--hmfw-color-bg-container);
   transition: all 0.2s;
 }
 
@@ -249,8 +249,8 @@
 
 .hmfw-upload-select-picture-card:hover,
 .hmfw-upload-select-picture-circle:hover {
-  border-color: var(--hmfw-color-primary, #1677ff);
-  background: var(--hmfw-color-primary-bg, #e6f4ff);
+  border-color: var(--hmfw-color-primary);
+  background: var(--hmfw-color-primary-bg);
 }
 
 .hmfw-upload-select-btn {
@@ -258,7 +258,7 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
 }
 
 .hmfw-upload-select-icon {

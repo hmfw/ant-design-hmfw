@@ -6,7 +6,7 @@
   overflow: hidden;
   white-space: nowrap;
   vertical-align: middle;
-  background: var(--hmfw-color-text-placeholder, #ccc);
+  background: var(--hmfw-color-text-placeholder);
   color: #fff;
   font-size: 18px;
   border-radius: 50%;
@@ -20,7 +20,7 @@
 }
 
 .hmfw-avatar-square {
-  border-radius: var(--hmfw-border-radius-lg, 8px);
+  border-radius: var(--hmfw-border-radius-lg);
 }
 
 .hmfw-avatar-large {

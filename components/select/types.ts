@@ -91,7 +91,7 @@ export interface SelectProps {
   maxCount?: number
   maxTagPlaceholder?: string | ((omittedValues: (string | number)[]) => string)
   open?: boolean
-  dropdownMatchSelectWidth?: boolean
+  dropdownMatchSelectWidth?: boolean | number
   labelInValue?: boolean
   tokenSeparators?: string[]
   optionRender?: (option: SelectOption, info: { index: number }) => any

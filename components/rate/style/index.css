@@ -1,9 +1,9 @@
 .hmfw-rate {
   --hmfw-rate-star-color: #fadb14; /* Rate 专用：星星颜色，对应 Ant Design 的 yellow */
-  --hmfw-rate-star-bg: var(--hmfw-color-fill-content, rgba(0, 0, 0, 0.06)); /* Rate 专用：星星背景色 */
-  --hmfw-rate-star-size: calc(var(--hmfw-control-height, 32px) * 0.625); /* Rate 专用：星星尺寸 */
-  --hmfw-rate-star-size-sm: calc(var(--hmfw-control-height-sm, 24px) * 0.625); /* Rate 专用：小星星尺寸 */
-  --hmfw-rate-star-size-lg: calc(var(--hmfw-control-height-lg, 40px) * 0.625); /* Rate 专用：大星星尺寸 */
+  --hmfw-rate-star-bg: var(--hmfw-color-fill-content); /* Rate 专用：星星背景色 */
+  --hmfw-rate-star-size: calc(var(--hmfw-control-height) * 0.625); /* Rate 专用：星星尺寸 */
+  --hmfw-rate-star-size-sm: calc(var(--hmfw-control-height-sm) * 0.625); /* Rate 专用：小星星尺寸 */
+  --hmfw-rate-star-size-lg: calc(var(--hmfw-control-height-lg) * 0.625); /* Rate 专用：大星星尺寸 */
   --hmfw-rate-star-hover-scale: 1.1; /* Rate 专用：悬浮缩放比例 */
 
   display: inline-block;
@@ -36,12 +36,12 @@
 }
 
 .hmfw-rate-star:not(:last-child) {
-  margin-inline-end: var(--hmfw-margin-xs, 8px);
+  margin-inline-end: var(--hmfw-margin-xs);
 }
 
 .hmfw-rate-star > div {
   transition:
-    all var(--hmfw-motion-duration-mid, 0.2s),
+    all var(--hmfw-motion-duration-mid),
     outline 0s;
 }
 
@@ -69,7 +69,7 @@
 .hmfw-rate-star-first,
 .hmfw-rate-star-second {
   color: var(--hmfw-rate-star-bg);
-  transition: all var(--hmfw-motion-duration-mid, 0.2s);
+  transition: all var(--hmfw-motion-duration-mid);
   user-select: none;
 }
 

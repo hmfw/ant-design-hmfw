@@ -12,7 +12,7 @@
   pointer-events: none;
   transition: opacity 0.2s;
   /* 箭头背景色（暗色 tooltip） */
-  --hmfw-arrow-bg: var(--tooltip-bg, rgba(0, 0, 0, 0.85));
+  --hmfw-arrow-bg: var(--tooltip-bg);
   /* 覆盖 hmfw-trigger-popup 的基础样式，视觉容器是 -inner */
   background: transparent;
   border-radius: 0;
@@ -35,7 +35,7 @@
   text-align: left;
   text-decoration: none;
   word-wrap: break-word;
-  background-color: var(--tooltip-bg, rgba(0, 0, 0, 0.85));
+  background-color: var(--tooltip-bg);
   border-radius: 6px;
   box-shadow:
     0 6px 16px 0 rgba(0, 0, 0, 0.08),

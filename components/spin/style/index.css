@@ -44,7 +44,7 @@
   display: block;
   width: 9px;
   height: 9px;
-  background: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary);
   border-radius: 50%;
   transform: scale(0.75);
   transform-origin: 50% 50%;
@@ -103,7 +103,7 @@
 
 .hmfw-spin-description {
   font-size: var(--hmfw-font-size-base);
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
 }
 
 /* Progress 环形进度 */
@@ -127,7 +127,7 @@
 }
 
 .hmfw-spin-dot-circle-bg {
-  stroke: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  stroke: var(--hmfw-color-fill-secondary);
 }
 
 /* Nested loading */

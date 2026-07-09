@@ -25,7 +25,6 @@ function placeAt(
   scrollX: number,
   scrollY: number,
   arrowPointAtCenter: boolean,
-  arrowTipOffset: number,
 ): { top: number; left: number } {
   let top = 0
   let left = 0
@@ -40,12 +39,14 @@ function placeAt(
     top = placement.startsWith('top') ? tTop - popup.height - gap : tBottom + gap
     if (placement === 'top' || placement === 'bottom') {
       left = centerX - popup.width / 2
+    } else if (arrowPointAtCenter) {
+      // 箭头已在弹层中央（CSS left: 50%），弹层也居中于触发器
+      left = centerX - popup.width / 2
     } else if (placement.endsWith('Left')) {
-      // pointAtCenter 时让箭头尖端（距弹层左缘 arrowTipOffset）对齐触发器中心
-      left = arrowPointAtCenter ? centerX - arrowTipOffset : tLeft
+      left = tLeft
     } else {
       // *Right
-      left = arrowPointAtCenter ? centerX - popup.width + arrowTipOffset : tRight - popup.width
+      left = tRight - popup.width
     }
   } else if (placement.startsWith('left')) {
     left = tLeft - popup.width - gap
@@ -96,18 +97,17 @@ export function computePosition(
   const gap = options.gap ?? 4
   const autoAdjustOverflow = options.autoAdjustOverflow ?? true
   const arrowPointAtCenter = options.arrowPointAtCenter ?? false
-  const arrowTipOffset = options.arrowTipOffset ?? 20
   const scrollX = options.scrollX ?? (typeof window !== 'undefined' ? window.scrollX : 0)
   const scrollY = options.scrollY ?? (typeof window !== 'undefined' ? window.scrollY : 0)
   const vw = options.viewportWidth ?? (typeof window !== 'undefined' ? window.innerWidth : 0)
   const vh = options.viewportHeight ?? (typeof window !== 'undefined' ? window.innerHeight : 0)
 
   let active = placement
-  let pos = placeAt(active, trigger, popup, gap, scrollX, scrollY, arrowPointAtCenter, arrowTipOffset)
+  let pos = placeAt(active, trigger, popup, gap, scrollX, scrollY, arrowPointAtCenter)
 
   if (autoAdjustOverflow && overflowsOnAxis(active, pos, popup, scrollX, scrollY, vw, vh)) {
     const flipped = FLIP_PLACEMENT[active]
-    const flippedPos = placeAt(flipped, trigger, popup, gap, scrollX, scrollY, arrowPointAtCenter, arrowTipOffset)
+    const flippedPos = placeAt(flipped, trigger, popup, gap, scrollX, scrollY, arrowPointAtCenter)
     // 仅当翻转后不再溢出时才采用，避免两侧都放不下时来回跳。
     if (!overflowsOnAxis(flipped, flippedPos, popup, scrollX, scrollY, vw, vh)) {
       active = flipped

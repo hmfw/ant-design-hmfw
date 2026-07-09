@@ -21,7 +21,7 @@
   min-height: 32px;
   padding: 0 11px;
   background: #fff;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border: 1px solid var(--hmfw-color-border);
   border-radius: 6px;
   transition: all 0.2s;
   overflow: hidden;
@@ -29,16 +29,16 @@
 }
 
 .hmfw-tree-select-selector:hover {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-tree-select-open .hmfw-tree-select-selector {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
   box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
 }
 
 .hmfw-tree-select-status-error .hmfw-tree-select-selector {
-  border-color: var(--hmfw-color-error, #ff4d4f);
+  border-color: var(--hmfw-color-error);
 }
 
 .hmfw-tree-select-status-error.hmfw-tree-select-open .hmfw-tree-select-selector {
@@ -46,7 +46,7 @@
 }
 
 .hmfw-tree-select-status-warning .hmfw-tree-select-selector {
-  border-color: var(--hmfw-color-warning, #faad14);
+  border-color: var(--hmfw-color-warning);
 }
 
 .hmfw-tree-select-status-warning.hmfw-tree-select-open .hmfw-tree-select-selector {
@@ -175,7 +175,7 @@
 
 .hmfw-tree-select-dropdown-empty {
   padding: 10px 12px;
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
   text-align: center;
 }
 
@@ -202,24 +202,24 @@
   align-items: center;
   padding: 5px 8px 5px 0;
   cursor: pointer;
-  transition: background var(--hmfw-motion-duration-mid, 0.2s);
-  font-size: var(--hmfw-font-size, 14px);
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
-  min-height: var(--hmfw-control-height, 32px);
+  transition: background var(--hmfw-motion-duration-mid);
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-text);
+  min-height: var(--hmfw-control-height);
 }
 
 .hmfw-tree-select-tree-node:hover {
-  background: var(--hmfw-control-item-bg-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-control-item-bg-hover);
 }
 
 .hmfw-tree-select-tree-node-selected {
-  background: var(--hmfw-color-primary-bg, #e6f4ff);
-  color: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary-bg);
+  color: var(--hmfw-color-primary);
   font-weight: 500;
 }
 
 .hmfw-tree-select-tree-node-disabled {
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
   cursor: not-allowed;
 }
 
@@ -253,7 +253,7 @@
 .hmfw-tree-select-tree-checkbox-inner {
   width: 16px;
   height: 16px;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border: 1px solid var(--hmfw-color-border);
   border-radius: 2px;
   background: #fff;
   display: block;
@@ -262,8 +262,8 @@
 }
 
 .hmfw-tree-select-tree-checkbox-checked .hmfw-tree-select-tree-checkbox-inner {
-  background: var(--hmfw-color-primary, #1677ff);
-  border-color: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-tree-select-tree-checkbox-checked .hmfw-tree-select-tree-checkbox-inner::after {
@@ -280,8 +280,8 @@
 }
 
 .hmfw-tree-select-tree-checkbox-indeterminate .hmfw-tree-select-tree-checkbox-inner {
-  background: var(--hmfw-color-primary, #1677ff);
-  border-color: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-tree-select-tree-checkbox-indeterminate .hmfw-tree-select-tree-checkbox-inner::after {

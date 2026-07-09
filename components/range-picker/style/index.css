@@ -31,7 +31,7 @@
   min-width: 120px;
   max-height: 280px;
   overflow: auto;
-  border-right: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-right: 1px solid var(--hmfw-color-border);
 }
 
 .hmfw-date-picker-presets ul {
@@ -52,11 +52,11 @@
 }
 
 .hmfw-date-picker-preset:hover {
-  background: var(--hmfw-color-primary-bg, #e6f4ff);
+  background: var(--hmfw-color-primary-bg);
 }
 
 .hmfw-date-picker-range-panels .hmfw-date-picker-panel {
-  border-right: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-right: 1px solid var(--hmfw-color-border);
 }
 
 .hmfw-date-picker-range-panels .hmfw-date-picker-panel:last-child {
@@ -65,7 +65,7 @@
 
 /* Range highlight */
 .hmfw-date-picker-day-in-range {
-  background: var(--hmfw-color-primary-bg, #e6f4ff);
+  background: var(--hmfw-color-primary-bg);
   border-radius: 0;
 }
 

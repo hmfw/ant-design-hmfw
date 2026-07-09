@@ -32,11 +32,11 @@
 }
 
 .hmfw-select-selector:hover {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-select-open .hmfw-select-selector {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
   box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
 }
 
@@ -186,27 +186,27 @@
   align-items: center;
   padding: 5px 12px;
   cursor: pointer;
-  transition: background var(--hmfw-motion-duration-mid, 0.2s);
-  font-size: var(--hmfw-font-size, 14px);
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
-  min-height: var(--hmfw-control-height, 32px);
+  transition: background var(--hmfw-motion-duration-mid);
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-text);
+  min-height: var(--hmfw-control-height);
 }
 
 .hmfw-select-item-option-active:hover {
-  background: var(--hmfw-control-item-bg-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-control-item-bg-hover);
 }
 
 .hmfw-select-item-option-active {
-  background: var(--hmfw-control-item-bg-hover, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-control-item-bg-hover);
 }
 
 .hmfw-select-item-option-selected {
-  background: var(--hmfw-color-primary-bg, #e6f4ff);
+  background: var(--hmfw-color-primary-bg);
   font-weight: 600;
 }
 
 .hmfw-select-item-option-disabled {
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
   cursor: not-allowed;
 }
 
@@ -218,13 +218,13 @@
 }
 
 .hmfw-select-item-option-state {
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
   margin-left: 8px;
 }
 
 .hmfw-select-item-empty {
   padding: 10px 12px;
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
   text-align: center;
 }
 
@@ -250,8 +250,8 @@
 
 .hmfw-select-item-group-label {
   padding: 5px 12px;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
-  font-size: var(--hmfw-font-size-sm, 12px);
+  color: var(--hmfw-color-text-secondary);
+  font-size: var(--hmfw-font-size-sm);
   font-weight: 600;
   cursor: default;
 }

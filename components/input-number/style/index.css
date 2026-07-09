@@ -15,11 +15,11 @@
 }
 
 .hmfw-input-number:hover {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-input-number-focused {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
   box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
   outline: 0;
 }
@@ -142,7 +142,7 @@
 }
 
 .hmfw-input-number-handler:hover {
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
   background: rgba(0, 0, 0, 0.02);
 }
 

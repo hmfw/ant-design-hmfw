@@ -47,7 +47,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--hmfw-color-fill-tertiary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-color-fill-tertiary);
 }
 
 .hmfw-image-placeholder:empty {
@@ -72,9 +72,9 @@
   aspect-ratio: 1;
   min-width: 96px;
   min-height: 96px;
-  background: var(--hmfw-color-fill-quaternary, rgba(0, 0, 0, 0.02));
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
-  color: var(--hmfw-color-text-quaternary, rgba(0, 0, 0, 0.25));
+  background: var(--hmfw-color-fill-quaternary);
+  border: 1px solid var(--hmfw-color-border);
+  color: var(--hmfw-color-text-quaternary);
   font-size: 12px;
 }
 
@@ -82,7 +82,7 @@
 .hmfw-image-preview-root {
   position: fixed;
   inset: 0;
-  z-index: var(--hmfw-z-index-popup, 1080);
+  z-index: var(--hmfw-z-index-popup);
 }
 
 .hmfw-image-preview-mask {

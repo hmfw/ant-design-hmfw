@@ -40,7 +40,7 @@ const triggerProps = {
   destroyOnHidden: { type: Boolean, default: false },
   forceRender: { type: Boolean, default: false },
   /** 弹层宽度与触发器宽度一致（Select 的 dropdownMatchSelectWidth）。 */
-  matchWidth: { type: Boolean, default: false },
+  matchWidth: { type: [Boolean, Number] as PropType<boolean | number>, default: false },
   gap: { type: Number, default: 4 },
   zIndex: { type: Number, default: 1050 },
   closeOnEscape: { type: Boolean, default: true },
@@ -138,7 +138,7 @@ export const Trigger = defineComponent({
       })
       actualPlacement.value = r.placement
       position.value = { top: r.top, left: r.left }
-      if (props.matchWidth) popupWidth.value = triggerRect.width
+      if (props.matchWidth === true) popupWidth.value = triggerRect.width
     }
 
     // ================================================================
@@ -148,6 +148,11 @@ export const Trigger = defineComponent({
       if (v) {
         await nextTick()
         updatePosition()
+        // matchWidth 设置 minWidth 后弹层可能变宽，需等 DOM 更新后重新测量定位
+        if (props.matchWidth) {
+          await nextTick()
+          updatePosition()
+        }
         if (props.observePopupResize && resizeObserver && popupRef.value) {
           resizeObserver.observe(popupRef.value)
         }
@@ -257,6 +262,11 @@ export const Trigger = defineComponent({
           }
         })
       }
+
+      // defaultOpen 或 open 为 true 时，弹层初始即可见，需在挂载后立即计算位置
+      if (visible.value) {
+        nextTick(() => updatePosition())
+      }
     })
 
     onBeforeUnmount(() => {
@@ -298,7 +308,11 @@ export const Trigger = defineComponent({
         top: `${position.value.top}px`,
         left: `${position.value.left}px`,
         zIndex: props.zIndex,
-        ...(props.matchWidth && popupWidth.value != null ? { width: `${popupWidth.value}px` } : null),
+        ...(typeof props.matchWidth === 'number'
+          ? { minWidth: `${props.matchWidth}px` }
+          : props.matchWidth === true && popupWidth.value != null
+            ? { minWidth: `${popupWidth.value}px` }
+            : null),
         ...props.popupStyle,
       }
 

@@ -118,4 +118,22 @@
   --hmfw-margin-lg: 24px;
   --hmfw-margin-xl: 32px;
   --hmfw-margin-xxl: 48px;
+
+  /* 补充 token：由组件 CSS fallback 提取，暂未纳入 generateMapTokens */
+  --hmfw-arrow-bg: #fff;
+  --hmfw-border-radius-xs: 4px;
+  --hmfw-box-shadow-tertiary:
+    0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  --hmfw-color-fill-alter: rgba(0, 0, 0, 0.02);
+  --hmfw-color-fill-content: rgba(0, 0, 0, 0.06);
+  --hmfw-color-split: #f0f0f0;
+  --hmfw-control-item-bg-hover: rgba(0, 0, 0, 0.04);
+  --hmfw-control-padding-horizontal: 12px;
+  --hmfw-control-padding-horizontal-sm: 8px;
+  --hmfw-line-width-bold: 2px;
+  --hmfw-skeleton-color-base: var(--hmfw-color-fill-secondary);
+  --hmfw-skeleton-color-highlight: var(--hmfw-color-fill);
+  --hmfw-timeline-title-span: 80px;
+  --hmfw-z-index-base: 0;
+  --hmfw-z-index-popup: 1050;
 }

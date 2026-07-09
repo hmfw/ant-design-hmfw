@@ -6,9 +6,9 @@
   font-size: 12px;
   line-height: 20px;
   white-space: nowrap;
-  border-radius: var(--hmfw-border-radius, 4px);
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
-  background: var(--hmfw-color-fill-quaternary, rgba(0, 0, 0, 0.02));
+  border-radius: var(--hmfw-border-radius);
+  border: 1px solid var(--hmfw-color-border);
+  background: var(--hmfw-color-fill-quaternary);
   color: var(--hmfw-color-text);
   cursor: default;
   transition: all 0.2s;
@@ -29,15 +29,15 @@ a.hmfw-tag {
 
 .hmfw-tag-disabled,
 .hmfw-tag-disabled.hmfw-tag-has-color {
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
-  background: var(--hmfw-color-bg-container-disabled, rgba(0, 0, 0, 0.04));
-  border-color: var(--hmfw-color-border, #d9d9d9);
+  color: var(--hmfw-color-text-disabled);
+  background: var(--hmfw-color-bg-container-disabled);
+  border-color: var(--hmfw-color-border);
   cursor: not-allowed;
 }
 
 .hmfw-tag-disabled .hmfw-tag-close-icon {
   cursor: not-allowed;
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
 }
 
 .hmfw-tag-has-color {
@@ -137,7 +137,7 @@ a.hmfw-tag {
   justify-content: center;
   font-size: 10px;
   cursor: pointer;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
   transition: color 0.2s;
   margin-inline-start: 2px;
 }
@@ -151,21 +151,21 @@ a.hmfw-tag {
   cursor: pointer;
   background: transparent;
   border-color: transparent;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.65));
+  color: var(--hmfw-color-text-secondary);
 }
 
 .hmfw-tag-checkable:hover {
-  color: var(--hmfw-color-primary, #1677ff);
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  color: var(--hmfw-color-primary);
+  background: var(--hmfw-color-fill-secondary);
 }
 
 .hmfw-tag-checkable-checked {
   color: #fff;
-  background: var(--hmfw-color-primary, #1677ff);
+  background: var(--hmfw-color-primary);
   border-color: transparent;
 }
 
 .hmfw-tag-checkable-checked:hover {
   color: #fff;
-  background: var(--hmfw-color-primary-hover, #4096ff);
+  background: var(--hmfw-color-primary-hover);
 }

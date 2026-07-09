@@ -19,7 +19,7 @@
   --hmfw-menu-item-hover-bg: rgba(0, 0, 0, 0.06);
   --hmfw-menu-item-hover-color: rgba(0, 0, 0, 0.88);
   --hmfw-menu-item-active-bg: #e6f4ff;
-  --hmfw-menu-item-selected-color: var(--hmfw-color-primary, #1677ff);
+  --hmfw-menu-item-selected-color: var(--hmfw-color-primary);
   --hmfw-menu-item-selected-bg: #e6f4ff;
   --hmfw-menu-item-disabled-color: rgba(0, 0, 0, 0.25);
 
@@ -66,7 +66,7 @@
 }
 
 .hmfw-menu:focus-visible {
-  outline: 2px solid var(--hmfw-color-primary, #1677ff);
+  outline: 2px solid var(--hmfw-color-primary);
   outline-offset: -2px;
   border-radius: 8px;
 }
@@ -74,8 +74,7 @@
 /* ---- Vertical / Inline Container ---- */
 .hmfw-menu-vertical,
 .hmfw-menu-inline {
-  width: 256px;
-  border-right: 1px solid rgba(5, 5, 5, 0.06);
+  width: 100%;
 }
 
 .hmfw-menu-root.hmfw-menu-vertical,
@@ -451,7 +450,7 @@
   --hmfw-menu-item-hover-bg: transparent;
   --hmfw-menu-item-hover-color: #fff;
   --hmfw-menu-item-active-bg: transparent;
-  --hmfw-menu-item-selected-bg: var(--hmfw-color-primary, #1677ff);
+  --hmfw-menu-item-selected-bg: var(--hmfw-color-primary);
   --hmfw-menu-item-selected-color: #fff;
   --hmfw-menu-item-disabled-color: rgba(255, 255, 255, 0.25);
   --hmfw-menu-divider-color: rgba(255, 255, 255, 0.12);
@@ -460,7 +459,6 @@
 
   background: #001529;
   color: rgba(255, 255, 255, 0.65);
-  border-right-color: #001529;
 }
 
 .hmfw-menu-dark .hmfw-menu-item-danger {
@@ -616,7 +614,7 @@
    ======================================== */
 .hmfw-menu-item:focus-visible,
 .hmfw-menu-submenu-title:focus-visible {
-  outline: 2px solid var(--hmfw-color-primary, #1677ff);
+  outline: 2px solid var(--hmfw-color-primary);
   outline-offset: -2px;
   border-radius: var(--hmfw-menu-item-border-radius);
 }

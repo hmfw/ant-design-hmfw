@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { h, nextTick } from 'vue'
 import { Dropdown } from '../Dropdown'
 import { DropdownButton } from '../DropdownButton'
-import { nextTick } from 'vue'
 
 const menu = {
   items: [
@@ -163,7 +163,7 @@ describe('Dropdown', () => {
   })
 
   it('pointAtCenter aligns arrow tip to trigger center', async () => {
-    // 触发器宽 100、左缘 50 → 中心 100；弹层宽 120；箭头尖端距边缘 20px
+    // 触发器宽 100、左缘 50 → 中心 100；弹层宽 120
     const triggerRect = { left: 50, right: 150, top: 0, bottom: 30, width: 100, height: 30 }
     const dropdownRect = { width: 120, height: 80, left: 0, right: 0, top: 0, bottom: 0 }
 
@@ -188,14 +188,14 @@ describe('Dropdown', () => {
     expect(left1).toBe('50px')
     w1.unmount()
 
-    // pointAtCenter：箭头尖端(距左缘 20px)对齐触发器中心(100) → left = 80
+    // pointAtCenter：弹层居中于触发器中心(100) → left = 100 - 120/2 = 40
     const w2 = makeWrapper({ pointAtCenter: true })
     stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
     stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
     window.dispatchEvent(new Event('resize'))
     await nextTick()
     const left2 = (document.querySelector('.hmfw-dropdown') as HTMLElement).style.left
-    expect(left2).toBe('80px')
+    expect(left2).toBe('40px')
     w2.unmount()
   })
 
@@ -320,6 +320,383 @@ describe('Dropdown', () => {
     await nextTick()
     const dropdown = document.querySelector('.hmfw-dropdown')
     expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // openClassName
+  // ================================================================
+  it('applies openClassName in controlled mode when open=true', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: true, openClassName: 'trigger-open' },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(wrapper.find('div').classes()).toContain('trigger-open')
+    wrapper.unmount()
+  })
+
+  it('does not apply openClassName in controlled mode when open=false', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: false, openClassName: 'trigger-open' },
+      slots: { default: '<button>Closed</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(wrapper.find('div').classes()).not.toContain('trigger-open')
+    wrapper.unmount()
+  })
+
+  it('applies openClassName in uncontrolled mode after hover opens dropdown', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, openClassName: 'trigger-open', mouseEnterDelay: 0 },
+      slots: { default: '<button>Hover</button>' },
+      attachTo: document.body,
+    })
+    await wrapper.find('div').trigger('mouseenter')
+    vi.runAllTimers()
+    await nextTick()
+    expect(wrapper.find('div').classes()).toContain('trigger-open')
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // getPopupContainer
+  // ================================================================
+  it('renders dropdown in custom container via getPopupContainer', async () => {
+    const container = document.createElement('div')
+    container.id = 'custom-popup-container'
+    document.body.appendChild(container)
+
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: true, getPopupContainer: () => container },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
+    expect(dropdown).not.toBeNull()
+    expect(container.contains(dropdown)).toBe(true)
+
+    document.body.removeChild(container)
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // popupRender / dropdownRender
+  // ================================================================
+  it('supports popupRender to customize dropdown content', async () => {
+    const wrapper = mount(Dropdown, {
+      props: {
+        menu,
+        open: true,
+        popupRender: (node: any) => h('div', { class: 'custom-popup-wrapper' }, [node]),
+      },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.custom-popup-wrapper')).not.toBeNull()
+    expect(document.querySelector('.custom-popup-wrapper .hmfw-menu')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('supports dropdownRender as deprecated alias of popupRender', async () => {
+    const wrapper = mount(Dropdown, {
+      props: {
+        menu,
+        open: true,
+        dropdownRender: (node: any) => h('div', { class: 'deprecated-wrapper' }, [node]),
+      },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.deprecated-wrapper')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // forceRender
+  // ================================================================
+  it('forceRender keeps dropdown in DOM when closed', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: false, forceRender: true },
+      slots: { default: '<button>Closed</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const dropdown = document.querySelector('.hmfw-dropdown')
+    expect(dropdown).not.toBeNull()
+    expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('without forceRender, dropdown is not in DOM when closed', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: false, forceRender: false, destroyOnHidden: true },
+      slots: { default: '<button>Closed</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-dropdown')).toBeNull()
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // classNames
+  // ================================================================
+  it('applies semantic classNames to all sub-elements', async () => {
+    const wrapper = mount(Dropdown, {
+      props: {
+        menu,
+        open: true,
+        arrow: true,
+        classNames: {
+          trigger: 'custom-trigger',
+          dropdown: 'custom-dropdown',
+          arrow: 'custom-arrow',
+          content: 'custom-content',
+        },
+      },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(wrapper.find('div.custom-trigger').exists()).toBe(true)
+    expect(document.querySelector('.custom-dropdown')).not.toBeNull()
+    expect(document.querySelector('.custom-arrow')).not.toBeNull()
+    expect(document.querySelector('.custom-content')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // styles
+  // ================================================================
+  it('applies semantic styles to sub-elements', async () => {
+    const wrapper = mount(Dropdown, {
+      props: {
+        menu,
+        open: true,
+        styles: {
+          dropdown: { width: '300px' },
+          content: { backgroundColor: 'rgb(255, 0, 0)' },
+        },
+      },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
+    expect(dropdown?.style.width).toBe('300px')
+    const content = document.querySelector('.hmfw-dropdown-content') as HTMLElement
+    expect(content?.style.backgroundColor).toBe('rgb(255, 0, 0)')
+    wrapper.unmount()
+  })
+
+  it('styles.trigger applies to trigger wrapper', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, styles: { trigger: { margin: '10px' } } },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(wrapper.find('div').attributes('style')).toContain('margin')
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // overlay slot
+  // ================================================================
+  it('renders custom overlay via slot when menu is not provided', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { open: true },
+      slots: {
+        default: '<button>Open</button>',
+        overlay: '<div class="custom-overlay-content">Custom Content</div>',
+      },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.custom-overlay-content')).not.toBeNull()
+    expect(document.querySelector('.hmfw-menu')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('prefers menu prop over overlay slot', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: true },
+      slots: {
+        default: '<button>Open</button>',
+        overlay: '<div class="custom-overlay">Custom</div>',
+      },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-menu')).not.toBeNull()
+    expect(document.querySelector('.custom-overlay')).toBeNull()
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // openChange source='popup'
+  // ================================================================
+  it('emits openChange with source=popup when menu item is clicked', async () => {
+    const onOpenChange = vi.fn()
+    const wrapper = mount(Dropdown, {
+      props: { menu, trigger: 'click', onOpenChange },
+      slots: { default: '<button>Click</button>' },
+      attachTo: document.body,
+    })
+    await wrapper.find('div').trigger('click')
+    await nextTick()
+    expect(onOpenChange).toHaveBeenCalledWith(true, { source: 'trigger' })
+
+    const firstItem = document.querySelector('.hmfw-menu-item') as HTMLElement
+    firstItem?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await nextTick()
+    expect(onOpenChange).toHaveBeenCalledWith(false, { source: 'popup' })
+    wrapper.unmount()
+  })
+
+  it('does not close on menu click when selectable and multiple', async () => {
+    const onOpenChange = vi.fn()
+    const wrapper = mount(Dropdown, {
+      props: {
+        menu: { ...menu, selectable: true, multiple: true },
+        trigger: 'click',
+        onOpenChange,
+      },
+      slots: { default: '<button>Click</button>' },
+      attachTo: document.body,
+    })
+    await wrapper.find('div').trigger('click')
+    await nextTick()
+    const openCallCount = onOpenChange.mock.calls.length
+
+    const firstItem = document.querySelector('.hmfw-menu-item') as HTMLElement
+    firstItem?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await nextTick()
+    expect(onOpenChange).toHaveBeenCalledTimes(openCallCount)
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // menu.onClick
+  // ================================================================
+  it('calls menu.onClick when menu item is clicked', async () => {
+    const onMenuClick = vi.fn()
+    const wrapper = mount(Dropdown, {
+      props: { menu: { ...menu, onClick: onMenuClick }, open: true, trigger: 'click' },
+      slots: { default: '<button>Click</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const firstItem = document.querySelector('.hmfw-menu-item') as HTMLElement
+    firstItem?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await nextTick()
+    expect(onMenuClick).toHaveBeenCalled()
+    expect(onMenuClick.mock.calls[0][0]).toHaveProperty('key')
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // mouseEnterDelay / mouseLeaveDelay
+  // ================================================================
+  it('delays showing dropdown by mouseEnterDelay', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, mouseEnterDelay: 0.5, mouseLeaveDelay: 0 },
+      slots: { default: '<button>Hover</button>' },
+      attachTo: document.body,
+    })
+    await wrapper.find('div').trigger('mouseenter')
+    await nextTick()
+    let dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
+    expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(true)
+
+    vi.advanceTimersByTime(500)
+    await nextTick()
+    dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
+    expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('delays hiding dropdown by mouseLeaveDelay', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, mouseEnterDelay: 0, mouseLeaveDelay: 0.5 },
+      slots: { default: '<button>Hover</button>' },
+      attachTo: document.body,
+    })
+    await wrapper.find('div').trigger('mouseenter')
+    vi.runAllTimers()
+    await nextTick()
+
+    await wrapper.find('div').trigger('mouseleave')
+    await nextTick()
+    let dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
+    expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
+
+    vi.advanceTimersByTime(500)
+    await nextTick()
+    dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
+    expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(true)
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // autoAdjustOverflow
+  // ================================================================
+  it('respects autoAdjustOverflow=false without flipping placement', async () => {
+    const viewportH = window.innerHeight
+    const triggerRect = { left: 50, right: 150, top: viewportH - 40, bottom: viewportH - 10, width: 100, height: 30 }
+    const dropdownRect = { width: 120, height: 200, left: 0, right: 0, top: 0, bottom: 0 }
+
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: true, placement: 'bottomLeft', autoAdjustOverflow: false, arrow: true },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+
+    const stub = (el: Element | null, rect: any) => {
+      if (el) (el as HTMLElement).getBoundingClientRect = () => rect as DOMRect
+    }
+    stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
+    stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
+    window.dispatchEvent(new Event('resize'))
+    await nextTick()
+
+    const dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
+    expect(dropdown.classList.contains('hmfw-trigger-placement-bottomLeft')).toBe(true)
+    expect(dropdown.classList.contains('hmfw-trigger-placement-topLeft')).toBe(false)
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // rootClassName
+  // ================================================================
+  it('applies rootClassName to dropdown overlay', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: true, rootClassName: 'my-root-class' },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-dropdown')?.classList.contains('my-root-class')).toBe(true)
+    wrapper.unmount()
+  })
+
+  // ================================================================
+  // destroyPopupOnHide（已废弃别名）
+  // ================================================================
+  it('destroyPopupOnHide (deprecated) works same as destroyOnHidden', async () => {
+    const wrapper = mount(Dropdown, {
+      props: { menu, open: false, destroyPopupOnHide: true },
+      slots: { default: '<button>Open</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-dropdown')).toBeNull()
     wrapper.unmount()
   })
 })

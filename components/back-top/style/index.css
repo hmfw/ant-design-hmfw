@@ -1,8 +1,8 @@
 .hmfw-back-top {
   position: fixed;
-  inset-inline-end: calc(var(--hmfw-control-height-lg, 40px) * 2.5);
-  inset-block-end: calc(var(--hmfw-control-height-lg, 40px) * 1.25);
-  z-index: calc(var(--hmfw-z-index-base, 0) + 10);
+  inset-inline-end: calc(var(--hmfw-control-height-lg) * 2.5);
+  inset-block-end: calc(var(--hmfw-control-height-lg) * 1.25);
+  z-index: calc(var(--hmfw-z-index-base) + 10);
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -16,24 +16,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--hmfw-control-height-lg, 40px);
-  height: var(--hmfw-control-height-lg, 40px);
+  width: var(--hmfw-control-height-lg);
+  height: var(--hmfw-control-height-lg);
   overflow: hidden;
-  color: var(--hmfw-color-text-light-solid, #fff);
+  color: var(--hmfw-color-text-light-solid);
   text-align: center;
-  background-color: var(--hmfw-color-text-description, rgba(0, 0, 0, 0.45));
-  border-radius: var(--hmfw-control-height-lg, 40px);
-  transition: all var(--hmfw-motion-duration-mid, 0.2s);
+  background-color: var(--hmfw-color-text-description);
+  border-radius: var(--hmfw-control-height-lg);
+  transition: all var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-back-top-content:hover {
-  background-color: var(--hmfw-color-text, rgba(0, 0, 0, 0.85));
-  transition: all var(--hmfw-motion-duration-mid, 0.2s);
+  background-color: var(--hmfw-color-text);
+  transition: all var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-back-top-icon {
-  font-size: var(--hmfw-font-size-heading-3, 24px);
-  line-height: var(--hmfw-control-height-lg, 40px);
+  font-size: var(--hmfw-font-size-heading-3);
+  line-height: var(--hmfw-control-height-lg);
 }
 
 /* RTL support */
@@ -44,7 +44,7 @@
 /* Fade transition */
 .hmfw-fade-enter-active,
 .hmfw-fade-leave-active {
-  transition: opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+  transition: opacity var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
 }
 
 .hmfw-fade-enter-from,
@@ -55,12 +55,12 @@
 /* Responsive positioning */
 @media (max-width: 768px) {
   .hmfw-back-top {
-    inset-inline-end: calc(var(--hmfw-control-height-lg, 40px) * 1.5);
+    inset-inline-end: calc(var(--hmfw-control-height-lg) * 1.5);
   }
 }
 
 @media (max-width: 480px) {
   .hmfw-back-top {
-    inset-inline-end: calc(var(--hmfw-control-height-lg, 40px) * 0.5);
+    inset-inline-end: calc(var(--hmfw-control-height-lg) * 0.5);
   }
 }

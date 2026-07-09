@@ -8,7 +8,7 @@
   align-items: center;
   gap: 8px;
   padding: 4px 8px;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border: 1px solid var(--hmfw-color-border);
   border-radius: 6px;
   cursor: pointer;
   background: #fff;
@@ -19,7 +19,7 @@
 
 .hmfw-color-picker-trigger:hover,
 .hmfw-color-picker-trigger-open {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-color-picker-disabled .hmfw-color-picker-trigger {
@@ -170,7 +170,7 @@
   flex: 1;
   height: 28px;
   padding: 0 8px;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border: 1px solid var(--hmfw-color-border);
   border-radius: 4px;
   font-size: 12px;
   font-family: monospace;
@@ -179,7 +179,7 @@
 }
 
 .hmfw-color-picker-hex-input:focus {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-color-picker-format-label {
@@ -191,7 +191,7 @@
 
 /* Presets */
 .hmfw-color-picker-presets {
-  border-top: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-top: 1px solid var(--hmfw-color-border);
   padding-top: 8px;
   margin-top: 4px;
 }
@@ -228,7 +228,7 @@
 }
 
 .hmfw-color-picker-preset-color-active {
-  box-shadow: 0 0 0 2px var(--hmfw-color-primary, #1677ff);
+  box-shadow: 0 0 0 2px var(--hmfw-color-primary);
 }
 
 /* Clear */
@@ -238,11 +238,11 @@
   color: rgba(0, 0, 0, 0.45);
   cursor: pointer;
   padding: 4px 0;
-  border-top: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-top: 1px solid var(--hmfw-color-border);
   margin-top: 4px;
   transition: color 0.2s;
 }
 
 .hmfw-color-picker-clear-btn:hover {
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
 }

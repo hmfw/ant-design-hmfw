@@ -1,8 +1,8 @@
 .hmfw-collapse {
-  background-color: var(--hmfw-color-fill-alter, rgba(0, 0, 0, 0.02));
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  background-color: var(--hmfw-color-fill-alter);
+  border: 1px solid var(--hmfw-color-border);
   border-bottom: 0;
-  border-radius: var(--hmfw-border-radius-lg, 8px);
+  border-radius: var(--hmfw-border-radius-lg);
   overflow: hidden;
 }
 
@@ -27,44 +27,44 @@
 
 /* Item */
 .hmfw-collapse-item {
-  border-bottom: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-bottom: 1px solid var(--hmfw-color-border);
 }
 
 .hmfw-collapse-item:last-child {
-  border-radius: 0 0 var(--hmfw-border-radius-lg, 8px) var(--hmfw-border-radius-lg, 8px);
+  border-radius: 0 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg);
 }
 
 .hmfw-collapse-item-disabled .hmfw-collapse-header {
   cursor: not-allowed;
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
 }
 
 .hmfw-collapse-item-disabled .hmfw-collapse-expand-icon {
   cursor: not-allowed;
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
 }
 
 /* Header */
 .hmfw-collapse-header {
   display: flex;
   align-items: center;
-  padding: var(--hmfw-padding-sm, 12px) var(--hmfw-padding, 16px);
+  padding: var(--hmfw-padding-sm) var(--hmfw-padding);
   cursor: pointer;
-  transition: all var(--hmfw-motion-duration-mid, 0.3s);
+  transition: all var(--hmfw-motion-duration-mid);
   user-select: none;
   gap: 8px;
 }
 
 .hmfw-collapse-header:hover:not(.hmfw-collapse-item-disabled .hmfw-collapse-header) {
-  background: var(--hmfw-color-fill-alter, rgba(0, 0, 0, 0.02));
+  background: var(--hmfw-color-fill-alter);
 }
 
 .hmfw-collapse-expand-icon {
   display: inline-flex;
   align-items: center;
   font-size: 12px;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
-  transition: transform var(--hmfw-motion-duration-mid, 0.3s) var(--hmfw-motion-ease-in-out, ease);
+  color: var(--hmfw-color-text-secondary);
+  transition: transform var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
 }
 
 .hmfw-collapse-expand-icon-active {
@@ -88,47 +88,47 @@
 
 .hmfw-collapse-header-text {
   flex: 1;
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
   font-weight: 500;
-  font-size: var(--hmfw-font-size-base, 14px);
+  font-size: var(--hmfw-font-size-base);
 }
 
 .hmfw-collapse-extra {
   margin-left: auto;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
-  font-size: var(--hmfw-font-size-sm, 12px);
+  color: var(--hmfw-color-text-secondary);
+  font-size: var(--hmfw-font-size-sm);
 }
 
 /* Content */
 .hmfw-collapse-content {
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
-  background-color: var(--hmfw-color-bg-container, #fff);
-  border-top: 1px solid var(--hmfw-color-border, #d9d9d9);
+  color: var(--hmfw-color-text);
+  background-color: var(--hmfw-color-bg-container);
+  border-top: 1px solid var(--hmfw-color-border);
   overflow: hidden;
   transition:
-    height var(--hmfw-motion-duration-mid, 0.3s) var(--hmfw-motion-ease-in-out, ease),
-    opacity var(--hmfw-motion-duration-mid, 0.3s) var(--hmfw-motion-ease-in-out, ease);
+    height var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out),
+    opacity var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
 }
 
 .hmfw-collapse-content-box {
-  padding: var(--hmfw-padding, 16px);
+  padding: var(--hmfw-padding);
 }
 
 /* Sizes */
 .hmfw-collapse-small .hmfw-collapse-header {
-  padding: 6px var(--hmfw-padding-sm, 12px);
-  font-size: var(--hmfw-font-size-sm, 12px);
+  padding: 6px var(--hmfw-padding-sm);
+  font-size: var(--hmfw-font-size-sm);
 }
 
 .hmfw-collapse-small .hmfw-collapse-content-box {
-  padding: 8px var(--hmfw-padding-sm, 12px);
+  padding: 8px var(--hmfw-padding-sm);
 }
 
 .hmfw-collapse-large .hmfw-collapse-header {
-  padding: var(--hmfw-padding, 16px) var(--hmfw-padding-lg, 20px);
-  font-size: var(--hmfw-font-size-lg, 16px);
+  padding: var(--hmfw-padding) var(--hmfw-padding-lg);
+  font-size: var(--hmfw-font-size-lg);
 }
 
 .hmfw-collapse-large .hmfw-collapse-content-box {
-  padding: var(--hmfw-padding-lg, 20px);
+  padding: var(--hmfw-padding-lg);
 }

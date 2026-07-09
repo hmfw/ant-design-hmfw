@@ -15,7 +15,7 @@
 
 .hmfw-skeleton-header {
   display: table-cell;
-  padding-inline-end: var(--hmfw-padding, 16px);
+  padding-inline-end: var(--hmfw-padding);
   vertical-align: top;
 }
 
@@ -34,9 +34,9 @@
 .hmfw-skeleton-avatar {
   display: inline-block;
   vertical-align: top;
-  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
-  width: var(--hmfw-control-height, 32px);
-  height: var(--hmfw-control-height, 32px);
+  background: var(--hmfw-skeleton-color-base);
+  width: var(--hmfw-control-height);
+  height: var(--hmfw-control-height);
 }
 
 .hmfw-skeleton-avatar-circle {
@@ -44,34 +44,34 @@
 }
 
 .hmfw-skeleton-avatar-square {
-  border-radius: var(--hmfw-border-radius-sm, 4px);
+  border-radius: var(--hmfw-border-radius-sm);
 }
 
 .hmfw-skeleton-avatar-lg {
-  width: var(--hmfw-control-height-lg, 40px);
-  height: var(--hmfw-control-height-lg, 40px);
+  width: var(--hmfw-control-height-lg);
+  height: var(--hmfw-control-height-lg);
 }
 
 .hmfw-skeleton-avatar-sm {
-  width: var(--hmfw-control-height-sm, 24px);
-  height: var(--hmfw-control-height-sm, 24px);
+  width: var(--hmfw-control-height-sm);
+  height: var(--hmfw-control-height-sm);
 }
 
 /* Title */
 .hmfw-skeleton-title {
   width: 100%;
   height: 16px;
-  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
-  border-radius: var(--hmfw-border-radius-sm, 4px);
+  background: var(--hmfw-skeleton-color-base);
+  border-radius: var(--hmfw-border-radius-sm);
   margin: 0;
 }
 
 .hmfw-skeleton-title + .hmfw-skeleton-paragraph {
-  margin-block-start: var(--hmfw-control-height-sm, 24px);
+  margin-block-start: var(--hmfw-control-height-sm);
 }
 
 .hmfw-skeleton-with-avatar .hmfw-skeleton-section .hmfw-skeleton-title {
-  margin-block-start: var(--hmfw-margin-sm, 12px);
+  margin-block-start: var(--hmfw-margin-sm);
 }
 
 .hmfw-skeleton-with-avatar .hmfw-skeleton-section .hmfw-skeleton-title + .hmfw-skeleton-paragraph {
@@ -88,19 +88,19 @@
 .hmfw-skeleton-paragraph li {
   width: 100%;
   height: 16px;
-  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
-  border-radius: var(--hmfw-border-radius-sm, 4px);
+  background: var(--hmfw-skeleton-color-base);
+  border-radius: var(--hmfw-border-radius-sm);
   list-style: none;
 }
 
 .hmfw-skeleton-paragraph li + li {
-  margin-block-start: var(--hmfw-control-height-xs, 16px);
+  margin-block-start: var(--hmfw-control-height-xs);
 }
 
 /* Round */
 .hmfw-skeleton-round .hmfw-skeleton-section .hmfw-skeleton-title,
 .hmfw-skeleton-round .hmfw-skeleton-section .hmfw-skeleton-paragraph li {
-  border-radius: var(--hmfw-border-radius, 6px);
+  border-radius: var(--hmfw-border-radius);
 }
 
 /* Active animation - 纯 CSS keyframes 驱动，background-position 动画不触发 layout reflow */
@@ -113,9 +113,9 @@
 .hmfw-skeleton-active .hmfw-skeleton-node {
   background: linear-gradient(
     90deg,
-    var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06))) 25%,
-    var(--hmfw-skeleton-color-highlight, var(--hmfw-color-fill, rgba(0, 0, 0, 0.15))) 37%,
-    var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06))) 63%
+    var(--hmfw-skeleton-color-base) 25%,
+    var(--hmfw-skeleton-color-highlight) 37%,
+    var(--hmfw-skeleton-color-base) 63%
   );
   background-size: 400% 100%;
   animation: hmfw-skeleton-loading 1.4s ease infinite;
@@ -132,78 +132,78 @@
 .hmfw-skeleton-button {
   display: inline-block;
   vertical-align: top;
-  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
-  border-radius: var(--hmfw-border-radius-sm, 4px);
-  width: calc(var(--hmfw-control-height, 32px) * 2);
-  min-width: calc(var(--hmfw-control-height, 32px) * 2);
-  height: var(--hmfw-control-height, 32px);
+  background: var(--hmfw-skeleton-color-base);
+  border-radius: var(--hmfw-border-radius-sm);
+  width: calc(var(--hmfw-control-height) * 2);
+  min-width: calc(var(--hmfw-control-height) * 2);
+  height: var(--hmfw-control-height);
 }
 
 .hmfw-skeleton-button-lg {
-  width: calc(var(--hmfw-control-height-lg, 40px) * 2);
-  min-width: calc(var(--hmfw-control-height-lg, 40px) * 2);
-  height: var(--hmfw-control-height-lg, 40px);
+  width: calc(var(--hmfw-control-height-lg) * 2);
+  min-width: calc(var(--hmfw-control-height-lg) * 2);
+  height: var(--hmfw-control-height-lg);
 }
 
 .hmfw-skeleton-button-sm {
-  width: calc(var(--hmfw-control-height-sm, 24px) * 2);
-  min-width: calc(var(--hmfw-control-height-sm, 24px) * 2);
-  height: var(--hmfw-control-height-sm, 24px);
+  width: calc(var(--hmfw-control-height-sm) * 2);
+  min-width: calc(var(--hmfw-control-height-sm) * 2);
+  height: var(--hmfw-control-height-sm);
 }
 
 .hmfw-skeleton-button-circle {
-  width: var(--hmfw-control-height, 32px);
-  min-width: var(--hmfw-control-height, 32px);
+  width: var(--hmfw-control-height);
+  min-width: var(--hmfw-control-height);
   border-radius: 50%;
 }
 
 .hmfw-skeleton-button-lg.hmfw-skeleton-button-circle {
-  width: var(--hmfw-control-height-lg, 40px);
-  min-width: var(--hmfw-control-height-lg, 40px);
+  width: var(--hmfw-control-height-lg);
+  min-width: var(--hmfw-control-height-lg);
 }
 
 .hmfw-skeleton-button-sm.hmfw-skeleton-button-circle {
-  width: var(--hmfw-control-height-sm, 24px);
-  min-width: var(--hmfw-control-height-sm, 24px);
+  width: var(--hmfw-control-height-sm);
+  min-width: var(--hmfw-control-height-sm);
 }
 
 .hmfw-skeleton-button-round {
-  border-radius: var(--hmfw-control-height, 32px);
+  border-radius: var(--hmfw-control-height);
 }
 
 .hmfw-skeleton-button-square {
-  border-radius: var(--hmfw-border-radius-sm, 4px);
+  border-radius: var(--hmfw-border-radius-sm);
 }
 
 .hmfw-skeleton-button-lg.hmfw-skeleton-button-round {
-  border-radius: var(--hmfw-control-height-lg, 40px);
+  border-radius: var(--hmfw-control-height-lg);
 }
 
 .hmfw-skeleton-button-sm.hmfw-skeleton-button-round {
-  border-radius: var(--hmfw-control-height-sm, 24px);
+  border-radius: var(--hmfw-control-height-sm);
 }
 
 /* Input */
 .hmfw-skeleton-input {
   display: inline-block;
   vertical-align: top;
-  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
-  border-radius: var(--hmfw-border-radius-sm, 4px);
-  width: calc(var(--hmfw-control-height, 32px) * 5);
-  min-width: calc(var(--hmfw-control-height, 32px) * 5);
-  height: var(--hmfw-control-height, 32px);
+  background: var(--hmfw-skeleton-color-base);
+  border-radius: var(--hmfw-border-radius-sm);
+  width: calc(var(--hmfw-control-height) * 5);
+  min-width: calc(var(--hmfw-control-height) * 5);
+  height: var(--hmfw-control-height);
 }
 
 .hmfw-skeleton-input-lg {
-  width: calc(var(--hmfw-control-height-lg, 40px) * 5);
-  min-width: calc(var(--hmfw-control-height-lg, 40px) * 5);
-  height: var(--hmfw-control-height-lg, 40px);
+  width: calc(var(--hmfw-control-height-lg) * 5);
+  min-width: calc(var(--hmfw-control-height-lg) * 5);
+  height: var(--hmfw-control-height-lg);
 }
 
 .hmfw-skeleton-input-sm {
-  width: calc(var(--hmfw-control-height-sm, 24px) * 5);
-  min-width: calc(var(--hmfw-control-height-sm, 24px) * 5);
-  height: var(--hmfw-control-height-sm, 24px);
+  width: calc(var(--hmfw-control-height-sm) * 5);
+  min-width: calc(var(--hmfw-control-height-sm) * 5);
+  height: var(--hmfw-control-height-sm);
 }
 
 /* Block */
@@ -222,17 +222,17 @@
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
-  border-radius: var(--hmfw-border-radius-sm, 4px);
-  width: calc(var(--hmfw-control-height, 32px) * 1.5 * 2);
-  height: calc(var(--hmfw-control-height, 32px) * 1.5 * 2);
+  background: var(--hmfw-skeleton-color-base);
+  border-radius: var(--hmfw-border-radius-sm);
+  width: calc(var(--hmfw-control-height) * 1.5 * 2);
+  height: calc(var(--hmfw-control-height) * 1.5 * 2);
 }
 
 .hmfw-skeleton-image-svg {
-  width: calc(var(--hmfw-control-height, 32px) * 1.5);
-  height: calc(var(--hmfw-control-height, 32px) * 1.5);
-  max-width: calc(var(--hmfw-control-height, 32px) * 1.5 * 4);
-  max-height: calc(var(--hmfw-control-height, 32px) * 1.5 * 4);
+  width: calc(var(--hmfw-control-height) * 1.5);
+  height: calc(var(--hmfw-control-height) * 1.5);
+  max-width: calc(var(--hmfw-control-height) * 1.5 * 4);
+  max-height: calc(var(--hmfw-control-height) * 1.5 * 4);
 }
 
 .hmfw-skeleton-image-path {
@@ -245,10 +245,10 @@
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  background: var(--hmfw-skeleton-color-base, var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06)));
-  border-radius: var(--hmfw-border-radius-sm, 4px);
-  width: calc(var(--hmfw-control-height, 32px) * 1.5 * 2);
-  height: calc(var(--hmfw-control-height, 32px) * 1.5 * 2);
+  background: var(--hmfw-skeleton-color-base);
+  border-radius: var(--hmfw-border-radius-sm);
+  width: calc(var(--hmfw-control-height) * 1.5 * 2);
+  height: calc(var(--hmfw-control-height) * 1.5 * 2);
 }
 
 /* SkeletonNode 支持 fullSize 子节点填满整个区域 */
@@ -285,7 +285,7 @@
   .hmfw-skeleton-input,
   .hmfw-skeleton-image,
   .hmfw-skeleton-node {
-    background: var(--hmfw-skeleton-color-base, rgba(255, 255, 255, 0.08));
+    background: var(--hmfw-skeleton-color-base);
   }
 
   .hmfw-skeleton-image-path {

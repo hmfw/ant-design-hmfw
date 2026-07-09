@@ -68,7 +68,7 @@
   display: flex;
   align-items: center;
   padding: 16px 24px;
-  border-bottom: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-bottom: 1px solid var(--hmfw-color-border);
   flex-shrink: 0;
 }
 
@@ -109,7 +109,7 @@
   border: none;
   cursor: pointer;
   font-size: 16px;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
   padding: 0;
   border-radius: 4px;
   transition: color 0.2s;
@@ -130,7 +130,7 @@
 
 .hmfw-drawer-footer {
   padding: 8px 16px;
-  border-top: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-top: 1px solid var(--hmfw-color-border);
   flex-shrink: 0;
 }
 

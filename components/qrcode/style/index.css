@@ -2,10 +2,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--hmfw-padding-sm, 12px);
-  background-color: var(--hmfw-color-bg-container, #ffffff);
-  border-radius: var(--hmfw-border-radius-lg, 8px);
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
+  padding: var(--hmfw-padding-sm);
+  background-color: var(--hmfw-color-bg-container);
+  border-radius: var(--hmfw-border-radius-lg);
+  border: 1px solid var(--hmfw-color-border);
   position: relative;
   overflow: hidden;
 }
@@ -33,7 +33,7 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
   line-height: var(--hmfw-line-height);
   background: rgba(255, 255, 255, 0.96);
   text-align: center;
@@ -41,9 +41,9 @@
 
 .hmfw-qrcode-expired,
 .hmfw-qrcode-scanned {
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
   margin: 0;
-  font-size: var(--hmfw-font-size-base, 14px);
+  font-size: var(--hmfw-font-size-base);
 }
 
 .hmfw-qrcode-refresh {
@@ -51,15 +51,15 @@
   align-items: center;
   margin-top: 8px;
   padding: 4px 15px;
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: var(--hmfw-font-size-base, 14px);
+  font-size: var(--hmfw-font-size-base);
   line-height: var(--hmfw-line-height);
   transition: color 0.3s;
 }
 
 .hmfw-qrcode-refresh:hover {
-  color: var(--hmfw-color-primary-hover, #4096ff);
+  color: var(--hmfw-color-primary-hover);
 }

@@ -34,7 +34,7 @@
 .hmfw-modal-content {
   position: relative;
   background: #fff;
-  border-radius: var(--hmfw-border-radius-lg, 8px);
+  border-radius: var(--hmfw-border-radius-lg);
   box-shadow:
     0 6px 16px rgba(0, 0, 0, 0.08),
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
@@ -50,7 +50,7 @@
   border: none;
   cursor: pointer;
   font-size: 16px;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
   line-height: 1;
   padding: 4px;
   border-radius: 4px;
@@ -63,7 +63,7 @@
 
 .hmfw-modal-header {
   padding: 16px 24px;
-  border-bottom: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-bottom: 1px solid var(--hmfw-color-border);
 }
 
 .hmfw-modal-title {
@@ -80,7 +80,7 @@
 
 .hmfw-modal-footer {
   padding: 12px 24px;
-  border-top: 1px solid var(--hmfw-color-border, #d9d9d9);
+  border-top: 1px solid var(--hmfw-color-border);
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -160,15 +160,15 @@
 }
 
 .hmfw-modal-confirm-info .hmfw-modal-confirm-icon {
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
 }
 .hmfw-modal-confirm-success .hmfw-modal-confirm-icon {
-  color: var(--hmfw-color-success, #52c41a);
+  color: var(--hmfw-color-success);
 }
 .hmfw-modal-confirm-error .hmfw-modal-confirm-icon {
-  color: var(--hmfw-color-error, #ff4d4f);
+  color: var(--hmfw-color-error);
 }
 .hmfw-modal-confirm-warning .hmfw-modal-confirm-icon,
 .hmfw-modal-confirm-confirm .hmfw-modal-confirm-icon {
-  color: var(--hmfw-color-warning, #faad14);
+  color: var(--hmfw-color-warning);
 }

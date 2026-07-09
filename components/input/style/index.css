@@ -7,48 +7,48 @@
   font-size: var(--hmfw-font-size-base);
   line-height: var(--hmfw-line-height);
   background: #fff;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
-  border-radius: var(--hmfw-border-radius, 4px);
+  border: 1px solid var(--hmfw-color-border);
+  border-radius: var(--hmfw-border-radius);
   transition: all 0.2s;
   outline: none;
   box-sizing: border-box;
 }
 
 .hmfw-input::placeholder {
-  color: var(--hmfw-color-text-placeholder, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-placeholder);
 }
 
 .hmfw-input:hover {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-input:focus {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
   box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
 }
 
 .hmfw-input-disabled,
 .hmfw-input[disabled] {
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
-  background: var(--hmfw-color-bg-container-disabled, rgba(0, 0, 0, 0.04));
-  border-color: var(--hmfw-color-border, #d9d9d9);
+  color: var(--hmfw-color-text-disabled);
+  background: var(--hmfw-color-bg-container-disabled);
+  border-color: var(--hmfw-color-border);
   cursor: not-allowed;
 }
 
 .hmfw-input-lg {
   padding: 7px 11px;
   font-size: 16px;
-  border-radius: var(--hmfw-border-radius-lg, 8px);
+  border-radius: var(--hmfw-border-radius-lg);
 }
 
 .hmfw-input-sm {
   padding: 0 7px;
   font-size: 12px;
-  border-radius: var(--hmfw-border-radius-sm, 2px);
+  border-radius: var(--hmfw-border-radius-sm);
 }
 
 .hmfw-input-status-error {
-  border-color: var(--hmfw-color-error, #ff4d4f);
+  border-color: var(--hmfw-color-error);
 }
 
 .hmfw-input-status-error:focus {
@@ -56,7 +56,7 @@
 }
 
 .hmfw-input-status-warning {
-  border-color: var(--hmfw-color-warning, #faad14);
+  border-color: var(--hmfw-color-warning);
 }
 
 .hmfw-input-status-warning:focus {
@@ -70,45 +70,45 @@
   width: 100%;
   padding: 4px 11px;
   background: #fff;
-  border: 1px solid var(--hmfw-color-border, #d9d9d9);
-  border-radius: var(--hmfw-border-radius, 4px);
+  border: 1px solid var(--hmfw-color-border);
+  border-radius: var(--hmfw-border-radius);
   transition: all 0.2s;
   box-sizing: border-box;
 }
 
 .hmfw-input-affix-wrapper:hover {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
 }
 
 .hmfw-input-affix-wrapper:focus-within {
-  border-color: var(--hmfw-color-primary, #1677ff);
+  border-color: var(--hmfw-color-primary);
   box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
 }
 
 .hmfw-input-affix-wrapper-disabled {
-  background: var(--hmfw-color-bg-container-disabled, rgba(0, 0, 0, 0.04));
-  border-color: var(--hmfw-color-border, #d9d9d9);
+  background: var(--hmfw-color-bg-container-disabled);
+  border-color: var(--hmfw-color-border);
   cursor: not-allowed;
 }
 
 .hmfw-input-affix-wrapper-lg {
   padding: 7px 11px;
   font-size: 16px;
-  border-radius: var(--hmfw-border-radius-lg, 8px);
+  border-radius: var(--hmfw-border-radius-lg);
 }
 
 .hmfw-input-affix-wrapper-sm {
   padding: 0 7px;
   font-size: 12px;
-  border-radius: var(--hmfw-border-radius-sm, 2px);
+  border-radius: var(--hmfw-border-radius-sm);
 }
 
 .hmfw-input-affix-wrapper-status-error {
-  border-color: var(--hmfw-color-error, #ff4d4f);
+  border-color: var(--hmfw-color-error);
 }
 
 .hmfw-input-affix-wrapper-status-warning {
-  border-color: var(--hmfw-color-warning, #faad14);
+  border-color: var(--hmfw-color-warning);
 }
 
 .hmfw-input-affix-wrapper .hmfw-input {
@@ -127,7 +127,7 @@
 .hmfw-input-suffix {
   display: flex;
   align-items: center;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
   flex-shrink: 0;
 }
 
@@ -144,18 +144,18 @@
   align-items: center;
   justify-content: center;
   margin-left: 4px;
-  color: var(--hmfw-color-text-placeholder, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-placeholder);
   cursor: pointer;
   font-size: 12px;
   transition: color 0.2s;
 }
 
 .hmfw-input-clear-icon:hover {
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
 }
 
 .hmfw-input-show-count-suffix {
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
   font-size: 12px;
   white-space: nowrap;
 }
@@ -191,7 +191,7 @@
 
 /* 超出范围时的样式 */
 .hmfw-input-out-of-range .hmfw-input-data-count {
-  color: var(--hmfw-color-error, #ff4d4f);
+  color: var(--hmfw-color-error);
 }
 
 /* Search */
@@ -207,17 +207,17 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));
+  color: var(--hmfw-color-text-secondary);
   transition: color 0.2s;
 }
 
 .hmfw-input-search-button:hover {
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
 }
 
 .hmfw-input-search-button:disabled {
   cursor: not-allowed;
-  color: var(--hmfw-color-text-disabled, rgba(0, 0, 0, 0.25));
+  color: var(--hmfw-color-text-disabled);
 }
 
 /* Password */

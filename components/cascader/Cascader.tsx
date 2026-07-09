@@ -485,6 +485,7 @@ export const Cascader = defineComponent({
         trigger="click"
         placement={'bottomLeft' as Placement}
         disabled={props.disabled}
+        matchWidth
         destroyOnHidden
         popupClass={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
         popupStyle={props.styles?.dropdown}

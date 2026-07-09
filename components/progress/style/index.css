@@ -1,6 +1,6 @@
 .hmfw-progress {
   display: inline-flex;
-  font-size: var(--hmfw-font-size-base, 14px);
+  font-size: var(--hmfw-font-size-base);
   line-height: 1;
 }
 
@@ -14,18 +14,18 @@
   display: inline-flex;
   align-items: center;
   width: 100%;
-  gap: var(--hmfw-margin-xs, 8px);
+  gap: var(--hmfw-margin-xs);
 }
 
 .hmfw-progress-body-layout-bottom {
   flex-direction: column;
   align-items: center;
-  gap: var(--hmfw-margin-xxs, 4px);
+  gap: var(--hmfw-margin-xxs);
 }
 
 .hmfw-progress-rail {
   flex: auto;
-  background: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  background: var(--hmfw-color-fill-secondary);
   border-radius: 100px;
   position: relative;
   width: 100%;
@@ -37,30 +37,30 @@
   inset-inline-start: 0;
   inset-block: 0;
   border-radius: inherit;
-  background: var(--hmfw-color-primary, #1677ff);
-  transition: all var(--hmfw-motion-duration-slow, 0.3s) var(--hmfw-motion-ease-in-out, ease);
+  background: var(--hmfw-color-primary);
+  transition: all var(--hmfw-motion-duration-slow) var(--hmfw-motion-ease-in-out);
   min-width: max-content;
   display: flex;
   align-items: center;
 }
 
 .hmfw-progress-track-success {
-  background: var(--hmfw-color-success, #52c41a);
+  background: var(--hmfw-color-success);
 }
 
 .hmfw-progress-status-exception .hmfw-progress-track {
-  background: var(--hmfw-color-error, #ff4d4f);
+  background: var(--hmfw-color-error);
 }
 
 .hmfw-progress-status-success .hmfw-progress-track {
-  background: var(--hmfw-color-success, #52c41a);
+  background: var(--hmfw-color-success);
 }
 
 .hmfw-progress-status-active .hmfw-progress-track::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--hmfw-color-bg-container, #fff);
+  background: var(--hmfw-color-bg-container);
   border-radius: inherit;
   opacity: 0;
   animation: hmfw-progress-active 2.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
@@ -83,7 +83,7 @@
 
 /* Indicator */
 .hmfw-progress-indicator {
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
   line-height: 1;
   white-space: nowrap;
   vertical-align: middle;
@@ -95,8 +95,8 @@
 }
 
 .hmfw-progress-indicator-inner {
-  color: var(--hmfw-color-white, #fff);
-  padding-inline: var(--hmfw-padding-xxs, 4px);
+  color: var(--hmfw-color-white);
+  padding-inline: var(--hmfw-padding-xxs);
   width: 100%;
   display: flex;
   justify-content: center;
@@ -115,16 +115,16 @@
 }
 
 .hmfw-progress-status-exception .hmfw-progress-indicator {
-  color: var(--hmfw-color-error, #ff4d4f);
+  color: var(--hmfw-color-error);
 }
 
 .hmfw-progress-status-success .hmfw-progress-indicator {
-  color: var(--hmfw-color-success, #52c41a);
+  color: var(--hmfw-color-success);
 }
 
 /* Small size */
 .hmfw-progress-small.hmfw-progress-line .hmfw-progress-indicator {
-  font-size: var(--hmfw-font-size-sm, 12px);
+  font-size: var(--hmfw-font-size-sm);
 }
 
 /* ====== Circle Progress ====== */
@@ -145,7 +145,7 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
   font-size: 1em;
   line-height: 1;
   white-space: normal;
@@ -154,24 +154,24 @@
 }
 
 .hmfw-progress-circle-rail {
-  stroke: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  stroke: var(--hmfw-color-fill-secondary);
 }
 
 .hmfw-progress-circle-path {
-  stroke: var(--hmfw-color-primary, #1677ff);
-  transition: stroke-dashoffset var(--hmfw-motion-duration-slow, 0.3s) ease;
+  stroke: var(--hmfw-color-primary);
+  transition: stroke-dashoffset var(--hmfw-motion-duration-slow) ease;
 }
 
 .hmfw-progress-circle-path-success {
-  stroke: var(--hmfw-color-success, #52c41a);
+  stroke: var(--hmfw-color-success);
 }
 
 .hmfw-progress-status-exception .hmfw-progress-circle-path {
-  stroke: var(--hmfw-color-error, #ff4d4f);
+  stroke: var(--hmfw-color-error);
 }
 
 .hmfw-progress-status-success .hmfw-progress-circle-path {
-  stroke: var(--hmfw-color-success, #52c41a);
+  stroke: var(--hmfw-color-success);
 }
 
 /* ====== Steps Progress ====== */
@@ -183,31 +183,31 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: calc(var(--hmfw-margin-xxs, 4px) / 2);
+  gap: calc(var(--hmfw-margin-xxs) / 2);
 }
 
 .hmfw-progress-steps-body .hmfw-progress-indicator {
-  margin-inline-start: var(--hmfw-margin-xs, 8px);
+  margin-inline-start: var(--hmfw-margin-xs);
 }
 
 .hmfw-progress-steps-item {
   flex-shrink: 0;
-  min-width: calc(var(--hmfw-margin-xxs, 4px) / 2);
-  background-color: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
-  transition: all var(--hmfw-motion-duration-slow, 0.3s);
+  min-width: calc(var(--hmfw-margin-xxs) / 2);
+  background-color: var(--hmfw-color-fill-secondary);
+  transition: all var(--hmfw-motion-duration-slow);
   border-radius: 2px;
 }
 
 .hmfw-progress-steps-item-active {
-  background-color: var(--hmfw-color-primary, #1677ff);
+  background-color: var(--hmfw-color-primary);
 }
 
 .hmfw-progress-status-exception .hmfw-progress-steps-item-active {
-  background-color: var(--hmfw-color-error, #ff4d4f);
+  background-color: var(--hmfw-color-error);
 }
 
 .hmfw-progress-status-success .hmfw-progress-steps-item-active {
-  background-color: var(--hmfw-color-success, #52c41a);
+  background-color: var(--hmfw-color-success);
 }
 
 /* ====== Inline circle (size <= 20) ====== */

@@ -3,7 +3,7 @@
   top: 8px;
   left: 0;
   right: 0;
-  z-index: var(--hmfw-z-index-popup, 1010);
+  z-index: var(--hmfw-z-index-popup);
   width: 100%;
   pointer-events: none;
 }
@@ -31,17 +31,12 @@
 .hmfw-message-notice {
   display: inline-block;
   padding: 9px 12px;
-  background: var(--hmfw-color-bg-elevated, #fff);
-  border-radius: var(--hmfw-border-radius-lg, 8px);
-  box-shadow: var(
-    --hmfw-box-shadow-secondary,
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05)
-  );
-  font-size: var(--hmfw-font-size-base, 14px);
+  background: var(--hmfw-color-bg-elevated);
+  border-radius: var(--hmfw-border-radius-lg);
+  box-shadow: var(--hmfw-box-shadow-secondary);
+  font-size: var(--hmfw-font-size-base);
   line-height: var(--hmfw-line-height);
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  color: var(--hmfw-color-text);
   pointer-events: all;
 }
 
@@ -53,22 +48,22 @@
 
 .hmfw-message-notice-icon {
   display: inline-flex;
-  font-size: var(--hmfw-font-size-lg, 16px);
+  font-size: var(--hmfw-font-size-lg);
   line-height: 0;
 }
 
 .hmfw-message-notice-success .hmfw-message-notice-icon {
-  color: var(--hmfw-color-success, #52c41a);
+  color: var(--hmfw-color-success);
 }
 .hmfw-message-notice-error .hmfw-message-notice-icon {
-  color: var(--hmfw-color-error, #ff4d4f);
+  color: var(--hmfw-color-error);
 }
 .hmfw-message-notice-warning .hmfw-message-notice-icon {
-  color: var(--hmfw-color-warning, #faad14);
+  color: var(--hmfw-color-warning);
 }
 .hmfw-message-notice-info .hmfw-message-notice-icon,
 .hmfw-message-notice-loading .hmfw-message-notice-icon {
-  color: var(--hmfw-color-primary, #1677ff);
+  color: var(--hmfw-color-primary);
 }
 
 @keyframes hmfw-message-move-in {

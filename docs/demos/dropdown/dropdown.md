@@ -65,6 +65,38 @@
   <DropdownClassNames />
 </DemoBlock>
 
+### 右键菜单与组合触发
+
+通过 `trigger` 设置 `contextMenu` 实现右键菜单，也支持组合 `['hover', 'click']` 多触发方式。
+
+<DemoBlock title="右键菜单与组合触发" :source="DropdownContextMenuSource">
+  <DropdownContextMenu />
+</DemoBlock>
+
+### 浮层样式与自定义内容
+
+通过 `overlayClassName` / `overlayStyle` 自定义浮层外观，或使用 `overlay` 插槽完全自定义浮层内容（此时不会渲染 `menu`）。
+
+<DemoBlock title="浮层样式与自定义内容" :source="DropdownOverlayStyleSource">
+  <DropdownOverlayStyle />
+</DemoBlock>
+
+### 自定义渲染与强制挂载
+
+通过 `popupRender` 在菜单外包裹自定义元素；`forceRender` 让下拉框始终存在于 DOM 中（默认隐藏），适合需要提前测量尺寸等场景。
+
+<DemoBlock title="自定义渲染与强制挂载" :source="DropdownRenderSource">
+  <DropdownRender />
+</DemoBlock>
+
+### 受控模式与默认展开
+
+通过 `open` / `defaultOpen` 控制下拉框显示，配合 `openClassName` 在展开时给触发元素添加样式。
+
+<DemoBlock title="受控模式与默认展开" :source="DropdownControlledSource">
+  <DropdownControlled />
+</DemoBlock>
+
 ## API
 
 ### Dropdown Props

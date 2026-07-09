@@ -45,7 +45,6 @@ export interface DropdownProps {
   defaultOpen?: boolean
   disabled?: boolean
   arrow?: boolean | DropdownArrowOptions
-  autoFocus?: boolean
   overlayClassName?: string
   overlayStyle?: Record<string, any>
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
@@ -59,6 +58,8 @@ export interface DropdownProps {
   forceRender?: boolean
   openClassName?: string
   rootClassName?: string
+  /** 弹层最小宽度匹配触发器宽度，默认 true。number 指定固定最小宽度（px） */
+  matchWidth?: boolean | number
   /** 语义化 className */
   classNames?: DropdownClassNames
   /** 语义化 style */

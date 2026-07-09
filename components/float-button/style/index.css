@@ -15,14 +15,9 @@
   cursor: pointer;
   font-family: var(--hmfw-font-family);
   background: transparent;
-  box-shadow: var(
-    --hmfw-box-shadow,
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05)
-  );
-  border-radius: var(--hmfw-border-radius-lg, 8px);
-  transition: all var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+  box-shadow: var(--hmfw-box-shadow);
+  border-radius: var(--hmfw-border-radius-lg);
+  transition: all var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
 }
 
 /* Reset anchor styles when rendered as <a> tag */
@@ -68,25 +63,25 @@ a.hmfw-float-btn {
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  transition: background var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+  transition: background var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
 }
 
 /* Default type */
 .hmfw-float-btn-default .hmfw-float-btn-body {
-  background: var(--hmfw-color-bg-elevated, #fff);
-  color: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  background: var(--hmfw-color-bg-elevated);
+  color: var(--hmfw-color-text);
 }
 .hmfw-float-btn-default:hover .hmfw-float-btn-body {
-  background: var(--hmfw-color-fill-tertiary, rgba(0, 0, 0, 0.04));
+  background: var(--hmfw-color-fill-tertiary);
 }
 
 /* Primary type */
 .hmfw-float-btn-primary .hmfw-float-btn-body {
-  background: var(--hmfw-color-primary, #1677ff);
-  color: var(--hmfw-color-text-light-solid, #fff);
+  background: var(--hmfw-color-primary);
+  color: var(--hmfw-color-text-light-solid);
 }
 .hmfw-float-btn-primary:hover .hmfw-float-btn-body {
-  background: var(--hmfw-color-primary-hover, #4096ff);
+  background: var(--hmfw-color-primary-hover);
 }
 
 .hmfw-float-btn-icon {
@@ -102,7 +97,7 @@ a.hmfw-float-btn {
 .hmfw-float-btn-content {
   display: flex;
   align-items: center;
-  font-size: var(--hmfw-font-size-sm, 12px);
+  font-size: var(--hmfw-font-size-sm);
   line-height: 1.2;
   padding: 0 2px;
 }
@@ -153,13 +148,8 @@ a.hmfw-float-btn {
 /* Square group with no trigger: merge children into one column */
 .hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) {
   gap: 0;
-  border-radius: var(--hmfw-border-radius-lg, 8px);
-  box-shadow: var(
-    --hmfw-box-shadow,
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05)
-  );
+  border-radius: var(--hmfw-border-radius-lg);
+  box-shadow: var(--hmfw-box-shadow);
 }
 .hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn {
   box-shadow: none;
@@ -169,15 +159,15 @@ a.hmfw-float-btn {
   border-radius: 0;
 }
 .hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn:not(:last-child) .hmfw-float-btn-body {
-  border-bottom: 1px solid var(--hmfw-color-border, rgba(5, 5, 5, 0.06));
+  border-bottom: 1px solid var(--hmfw-color-border);
 }
 .hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn:first-child .hmfw-float-btn-body {
-  border-start-start-radius: var(--hmfw-border-radius-lg, 8px);
-  border-start-end-radius: var(--hmfw-border-radius-lg, 8px);
+  border-start-start-radius: var(--hmfw-border-radius-lg);
+  border-start-end-radius: var(--hmfw-border-radius-lg);
 }
 .hmfw-float-btn-group-square:not(.hmfw-float-btn-group-trigger) .hmfw-float-btn:last-child .hmfw-float-btn-body {
-  border-end-start-radius: var(--hmfw-border-radius-lg, 8px);
-  border-end-end-radius: var(--hmfw-border-radius-lg, 8px);
+  border-end-start-radius: var(--hmfw-border-radius-lg);
+  border-end-end-radius: var(--hmfw-border-radius-lg);
 }
 
 /* ===========================================================================
@@ -250,8 +240,8 @@ a.hmfw-float-btn {
 .hmfw-float-btn-fade-enter-active,
 .hmfw-float-btn-fade-leave-active {
   transition:
-    opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out),
-    transform var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+    opacity var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out),
+    transform var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
 }
 .hmfw-float-btn-fade-enter-from,
 .hmfw-float-btn-fade-leave-to {
@@ -262,8 +252,8 @@ a.hmfw-float-btn {
 .hmfw-float-btn-group-wrap-enter-active,
 .hmfw-float-btn-group-wrap-leave-active {
   transition:
-    opacity var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out),
-    transform var(--hmfw-motion-duration-mid, 0.2s) var(--hmfw-motion-ease-in-out, ease-in-out);
+    opacity var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out),
+    transform var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
 }
 .hmfw-float-btn-group-wrap-enter-from,
 .hmfw-float-btn-group-wrap-leave-to {
