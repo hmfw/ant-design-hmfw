@@ -74,6 +74,30 @@
   <BreadcrumbPath />
 </DemoBlock>
 
+### 带下拉菜单
+
+配置 `menu` 属性，面包屑项可以展开下拉菜单。
+
+<DemoBlock title="带下拉菜单" :source="BreadcrumbMenuSource">
+  <BreadcrumbMenu />
+</DemoBlock>
+
+### 自定义下拉图标
+
+使用 `dropdownIcon` 属性自定义展开图标，同时可通过 `dropdownProps` 透传 Dropdown 属性（如 `trigger`）。
+
+<DemoBlock title="自定义下拉图标" :source="BreadcrumbDropdownIconSource">
+  <BreadcrumbDropdownIcon />
+</DemoBlock>
+
+### target 与 rel 属性
+
+通过 `target` 和 `rel` 属性控制链接打开方式和安全性，与 HTML `<a>` 标签行为一致。
+
+<DemoBlock title="target 与 rel" :source="BreadcrumbTargetSource">
+  <BreadcrumbTarget />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
@@ -86,13 +110,15 @@
 
 ### Breadcrumb Props
 
-| 参数       | 说明                                                                             | 类型                   | 默认值 |
-| ---------- | -------------------------------------------------------------------------------- | ---------------------- | ------ |
-| items      | 路由栈信息                                                                       | `ItemType[]`           | `[]`   |
-| separator  | 分隔符                                                                           | `string \| VNode`      | `'/'`  |
-| params     | 路径参数                                                                         | `Record<string, any>`  | `{}`   |
-| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BreadcrumbClassNames` | -      |
-| styles     | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BreadcrumbStyles`     | -      |
+| 参数         | 说明                                                                             | 类型                                    | 默认值         |
+| ------------ | -------------------------------------------------------------------------------- | --------------------------------------- | -------------- |
+| items        | 路由栈信息                                                                       | `ItemType[]`                            | `[]`           |
+| separator    | 分隔符                                                                           | `string \| VNode`                       | `'/'`          |
+| params       | 路径参数                                                                         | `Record<string, any>`                   | `{}`           |
+| dropdownIcon | 自定义下拉菜单展开图标                                                           | `VNode`                                 | `DownOutlined` |
+| itemRender   | 自定义渲染面包屑项                                                               | `(item, params, items, paths) => VNode` | -              |
+| classNames   | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BreadcrumbClassNames`                  | -              |
+| styles       | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BreadcrumbStyles`                      | -              |
 
 ### ItemType
 
@@ -100,17 +126,21 @@
 
 **BreadcrumbItemType:**
 
-| 参数      | 说明                         | 类型                        | 默认值 |
-| --------- | ---------------------------- | --------------------------- | ------ |
-| key       | 唯一标识                     | `string \| number`          | -      |
-| title     | 名称                         | `string \| number \| VNode` | -      |
-| href      | 链接地址                     | `string`                    | -      |
-| path      | 路径（会自动拼接前面的路径） | `string`                    | -      |
-| className | 自定义类名                   | `string`                    | -      |
-| style     | 自定义样式                   | `CSSProperties`             | -      |
-| onClick   | 点击事件                     | `(e: MouseEvent) => void`   | -      |
-| data-\*   | 自定义数据属性               | `any`                       | -      |
-| aria-\*   | ARIA 无障碍属性              | `any`                       | -      |
+| 参数          | 说明                         | 类型                        | 默认值 |
+| ------------- | ---------------------------- | --------------------------- | ------ |
+| key           | 唯一标识                     | `string \| number`          | -      |
+| title         | 名称                         | `string \| number \| VNode` | -      |
+| href          | 链接地址                     | `string`                    | -      |
+| path          | 路径（会自动拼接前面的路径） | `string`                    | -      |
+| target        | 链接打开方式，同 `<a>` 标签  | `string`                    | -      |
+| rel           | 链接关系属性，同 `<a>` 标签  | `string`                    | -      |
+| className     | 自定义类名                   | `string`                    | -      |
+| style         | 自定义样式                   | `CSSProperties`             | -      |
+| onClick       | 点击事件                     | `(e: MouseEvent) => void`   | -      |
+| menu          | 下拉菜单配置                 | `BreadcrumbMenu`            | -      |
+| dropdownProps | 透传给 Dropdown 的属性       | `DropdownProps`             | -      |
+| data-\*       | 自定义数据属性               | `any`                       | -      |
+| aria-\*       | ARIA 无障碍属性              | `any`                       | -      |
 
 **BreadcrumbSeparatorType:**
 
@@ -297,24 +327,3 @@ Breadcrumb 组件使用以下 Design Token 控制样式，可通过 ConfigProvid
 | `--hmfw-border-radius-sm`     | 小号圆角     | `4px`              |
 | `--hmfw-margin-xs`            | 超小号外边距 | `8px`              |
 | `--hmfw-motion-duration-mid`  | 中速动画时长 | `0.2s`             |
-
-<script setup>
-import BreadcrumbBasic from './BreadcrumbBasic.vue'
-import BreadcrumbBasicSource from './BreadcrumbBasic.vue?raw'
-import BreadcrumbLink from './BreadcrumbLink.vue'
-import BreadcrumbLinkSource from './BreadcrumbLink.vue?raw'
-import BreadcrumbSeparator from './BreadcrumbSeparator.vue'
-import BreadcrumbSeparatorSource from './BreadcrumbSeparator.vue?raw'
-import BreadcrumbIcon from './BreadcrumbIcon.vue'
-import BreadcrumbIconSource from './BreadcrumbIcon.vue?raw'
-import BreadcrumbClick from './BreadcrumbClick.vue'
-import BreadcrumbClickSource from './BreadcrumbClick.vue?raw'
-import BreadcrumbParams from './BreadcrumbParams.vue'
-import BreadcrumbParamsSource from './BreadcrumbParams.vue?raw'
-import BreadcrumbSeparatorType from './BreadcrumbSeparatorType.vue'
-import BreadcrumbSeparatorTypeSource from './BreadcrumbSeparatorType.vue?raw'
-import BreadcrumbPath from './BreadcrumbPath.vue'
-import BreadcrumbPathSource from './BreadcrumbPath.vue?raw'
-import BreadcrumbClassNames from './BreadcrumbClassNames.vue'
-import BreadcrumbClassNamesSource from './BreadcrumbClassNames.vue?raw'
-</script>

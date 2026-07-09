@@ -459,26 +459,3 @@ List 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全
 | `--hmfw-padding-sm`           | 小号内边距   | `8px`                |
 | `--hmfw-padding-xs`           | 超小内边距   | `4px`                |
 | `--hmfw-motion-duration-mid`  | 中速动画时长 | `0.2s`               |
-
-<script setup>
-import ListBasic from './ListBasic.vue'
-import ListBasicSource from './ListBasic.vue?raw'
-import ListActions from './ListActions.vue'
-import ListActionsSource from './ListActions.vue?raw'
-import ListAvatar from './ListAvatar.vue'
-import ListAvatarSource from './ListAvatar.vue?raw'
-import ListGrid from './ListGrid.vue'
-import ListGridSource from './ListGrid.vue?raw'
-import ListResponsiveGrid from './ListResponsiveGrid.vue'
-import ListResponsiveGridSource from './ListResponsiveGrid.vue?raw'
-import ListPagination from './ListPagination.vue'
-import ListPaginationSource from './ListPagination.vue?raw'
-import ListVertical from './ListVertical.vue'
-import ListVerticalSource from './ListVertical.vue?raw'
-import ListVirtual from './ListVirtual.vue'
-import ListVirtualSource from './ListVirtual.vue?raw'
-import ListInfiniteScroll from './ListInfiniteScroll.vue'
-import ListInfiniteScrollSource from './ListInfiniteScroll.vue?raw'
-import ListClassNames from './ListClassNames.vue'
-import ListClassNamesSource from './ListClassNames.vue?raw'
-</script>

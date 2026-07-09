@@ -115,6 +115,46 @@ interface SemanticAPI {
 </Button>
 ```
 
+### Props 类型定义规范
+
+**必须**使用 `satisfies Record<keyof XProps, any>` 模式确保运行时 props 与 TypeScript 接口一致，杜绝双源头漂移：
+
+```typescript
+// types.ts — 单一类型来源
+export interface ButtonProps {
+  type?: ButtonType
+  size?: ButtonSize
+  disabled?: boolean
+  // ...
+}
+
+// Button.tsx
+import type { ButtonProps } from './types'
+
+// 1. 提取 props 对象，用 satisfies 强制 key 集合与接口完全一致
+const buttonProps = {
+  type: { type: String as PropType<ButtonType>, default: 'default' },
+  size: { type: String as PropType<ButtonSize>, default: 'middle' },
+  disabled: { type: Boolean, default: false },
+  // 可选且无默认值的属性必须显式 default: undefined
+  classNames: { type: Object as PropType<ButtonClassNames>, default: undefined },
+} satisfies Record<keyof ButtonProps, any>
+//  ↑ 接口中增/删属性 → 此处编译报错，强制同步
+
+// 2. 组件引用 props 对象
+export default defineComponent({
+  name: 'Button',
+  props: buttonProps,
+  // ...
+})
+```
+
+**注意**：
+
+- 可选且**有**默认值的属性（如 `type: 'default'`）→ 写实际默认值
+- 可选且**无**默认值的属性（如 `classNames`）→ 必须写 `default: undefined`，否则 `satisfies` 无法匹配 `?` 可选字段
+- 若组件无 `emits` 事件（如 `Breadcrumb`），可进一步用 `defineComponent<XProps>({...})` 在 `setup(props)` 中获取接口类型
+
 ### 添加新组件流程
 
 1. **创建目录**: `mkdir -p components/my-component/{style,__tests__}`

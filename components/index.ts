@@ -96,6 +96,7 @@ export type {
   BreadcrumbItemType as BreadcrumbItem,
   BreadcrumbClassNames,
   BreadcrumbStyles,
+  BreadcrumbItemRender,
 } from './breadcrumb'
 
 export { Pagination } from './pagination'

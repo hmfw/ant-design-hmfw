@@ -386,4 +386,179 @@ describe('Breadcrumb', () => {
     expect(dropdown.exists()).toBe(true)
     expect(dropdown.props('trigger')).toEqual(['click'])
   })
+
+  // ========================
+  // 边界情况 & 回归测试
+  // ========================
+
+  it('explicit href takes priority over path concatenation', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          { path: 'home', title: 'Home', href: '/custom-home' },
+          { path: 'user', title: 'User' },
+        ],
+      },
+    })
+    const links = wrapper.findAll('a')
+    // 显式 href 优先，不被 path 拼接覆盖
+    expect(links[0].attributes('href')).toBe('/custom-home')
+    // 第二项无显式 href，仍使用 path 拼接
+    expect(links[1].attributes('href')).toBe('#/home/user')
+  })
+
+  it('passes target and rel attributes to anchor element', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [{ title: 'External', href: 'https://example.com', target: '_blank', rel: 'noopener noreferrer' }],
+      },
+    })
+    const link = wrapper.find('a')
+    expect(link.attributes('target')).toBe('_blank')
+    expect(link.attributes('rel')).toBe('noopener noreferrer')
+  })
+
+  it('renders empty nav when items is empty array', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: { items: [] },
+    })
+    expect(wrapper.find('nav').exists()).toBe(true)
+    expect(wrapper.find('ol').exists()).toBe(true)
+    expect(wrapper.findAll('.hmfw-breadcrumb-item').length).toBe(0)
+  })
+
+  it('renders empty nav when items is undefined', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {},
+    })
+    expect(wrapper.find('nav').exists()).toBe(true)
+    expect(wrapper.find('ol').exists()).toBe(true)
+  })
+
+  it('does not render Dropdown when menu.items is empty', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          {
+            title: 'NoMenu',
+            menu: { items: [] },
+          },
+        ],
+      },
+    })
+    // 空菜单不渲染 Dropdown，应退化为普通 span
+    expect(wrapper.findComponent({ name: 'Dropdown' }).exists()).toBe(false)
+    expect(wrapper.find('.hmfw-breadcrumb-link').exists()).toBe(true)
+  })
+
+  it('itemRender takes priority over menu dropdown', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          {
+            title: 'Custom',
+            menu: { items: [{ key: '1', label: 'Item 1' }] },
+          },
+        ],
+        itemRender: (item) => {
+          return h('span', { class: 'custom-no-menu' }, item.title as string)
+        },
+      },
+    })
+    // itemRender 优先，不渲染 Dropdown
+    expect(wrapper.findComponent({ name: 'Dropdown' }).exists()).toBe(false)
+    expect(wrapper.find('.custom-no-menu').exists()).toBe(true)
+    expect(wrapper.find('.custom-no-menu').text()).toBe('Custom')
+  })
+
+  it('supports VNode as separator type in items', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          { title: 'A' },
+          { type: 'separator', separator: h('span', { class: 'vnode-sep' }, '→') },
+          { title: 'B' },
+        ],
+      },
+    })
+    expect(wrapper.find('.vnode-sep').exists()).toBe(true)
+    expect(wrapper.find('.vnode-sep').text()).toBe('→')
+  })
+
+  it('handles path with multiple params', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          { path: ':org', title: 'Org' },
+          { path: ':team/:member', title: 'Member' },
+        ],
+        params: { org: 'acme', team: 'design', member: 'alice' },
+      },
+    })
+    const links = wrapper.findAll('a')
+    expect(links[0].attributes('href')).toBe('#/acme')
+    expect(links[1].attributes('href')).toBe('#/acme/design/alice')
+  })
+
+  it('title with colon and empty params renders as-is', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [{ title: 'Score: 100' }],
+        params: {},
+      },
+    })
+    // 空 params 不影响 title 中的冒号
+    expect(wrapper.text()).toContain('Score: 100')
+  })
+
+  it('handles empty string path gracefully', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          { path: 'home', title: 'Home' },
+          { path: '', title: 'Empty' },
+        ],
+      },
+    })
+    const links = wrapper.findAll('a')
+    expect(links.length).toBe(2)
+    // path='' 仍会生成 href（空字符串被推入 paths）
+    expect(links[1].attributes('href')).toBe('#/home/')
+  })
+
+  it('multiple items with dropdown menus', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [
+          {
+            title: 'Category',
+            menu: { items: [{ key: 'c1', label: 'Cat 1' }] },
+          },
+          {
+            title: 'Product',
+            menu: { items: [{ key: 'p1', label: 'Prod 1' }] },
+          },
+        ],
+      },
+    })
+    // 两个 Dropdown 都渲染
+    const dropdowns = wrapper.findAllComponents({ name: 'Dropdown' })
+    expect(dropdowns.length).toBe(2)
+  })
+
+  it('itemRender returning null is handled', () => {
+    const wrapper = mount(Breadcrumb, {
+      props: {
+        items: [{ title: 'Home' }, { title: 'Hidden' }, { title: 'Visible' }],
+        itemRender: (item) => {
+          if (item.title === 'Hidden') return null as any
+          return h('span', item.title as string)
+        },
+      },
+    })
+    // Hidden 项返回 null，不影响结构
+    const items = wrapper.findAll('.hmfw-breadcrumb-item')
+    expect(items.length).toBe(3)
+    expect(items[1].text()).toBe('')
+  })
 })

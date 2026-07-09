@@ -347,24 +347,3 @@ Rate 组件还依赖以下全局 Design Token：
 | `--hmfw-control-height-sm`   | 小号控件高度 | `24px`             |
 | `--hmfw-margin-xs`           | 超小间距     | `8px`              |
 | `--hmfw-motion-duration-mid` | 中速动画时长 | `0.2s`             |
-
-<script setup>
-import RateBasic from './RateBasic.vue'
-import RateBasicSource from './RateBasic.vue?raw'
-import RateHalfStar from './RateHalfStar.vue'
-import RateHalfStarSource from './RateHalfStar.vue?raw'
-import RateCustom from './RateCustom.vue'
-import RateCustomSource from './RateCustom.vue?raw'
-import RateTooltip from './RateTooltip.vue'
-import RateTooltipSource from './RateTooltip.vue?raw'
-import RateSize from './RateSize.vue'
-import RateSizeSource from './RateSize.vue?raw'
-import RateClear from './RateClear.vue'
-import RateClearSource from './RateClear.vue?raw'
-import RateCharacterFunction from './RateCharacterFunction.vue'
-import RateCharacterFunctionSource from './RateCharacterFunction.vue?raw'
-import RateKeyboard from './RateKeyboard.vue'
-import RateKeyboardSource from './RateKeyboard.vue?raw'
-import RateClassNames from './RateClassNames.vue'
-import RateClassNamesSource from './RateClassNames.vue?raw'
-</script>

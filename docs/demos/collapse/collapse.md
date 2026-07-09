@@ -316,22 +316,3 @@ Collapse 组件使用以下 Design Token 控制样式，可通过 ConfigProvider
 | `--hmfw-padding`              | 标准内边距   | `12px`                                  |
 | `--hmfw-padding-lg`           | 大号内边距   | `24px`                                  |
 | `--hmfw-padding-sm`           | 小号内边距   | `8px`                                   |
-
-<script setup>
-import CollapseBasic from './CollapseBasic.vue'
-import CollapseBasicSource from './CollapseBasic.vue?raw'
-import CollapseAccordion from './CollapseAccordion.vue'
-import CollapseAccordionSource from './CollapseAccordion.vue?raw'
-import CollapseBorderless from './CollapseBorderless.vue'
-import CollapseBorderlessSource from './CollapseBorderless.vue?raw'
-import CollapseCollapsible from './CollapseCollapsible.vue'
-import CollapseCollapsibleSource from './CollapseCollapsible.vue?raw'
-import CollapseCustomIcon from './CollapseCustomIcon.vue'
-import CollapseCustomIconSource from './CollapseCustomIcon.vue?raw'
-import CollapseExtra from './CollapseExtra'
-import CollapseExtraSource from './CollapseExtra.vue?raw'
-import CollapseSize from './CollapseSize.vue'
-import CollapseSizeSource from './CollapseSize.vue?raw'
-import CollapseClassNames from './CollapseClassNames.vue'
-import CollapseClassNamesSource from './CollapseClassNames.vue?raw'
-</script>

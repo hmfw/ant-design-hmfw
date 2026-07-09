@@ -9,25 +9,6 @@
 
 ## 代码演示
 
-<script setup>
-import TimelineBasic from './TimelineBasic.vue'
-import TimelineBasicSource from './TimelineBasic.vue?raw'
-import TimelineAlternate from './TimelineAlternate.vue'
-import TimelineAlternateSource from './TimelineAlternate.vue?raw'
-import TimelineCustomColor from './TimelineCustomColor.vue'
-import TimelineCustomColorSource from './TimelineCustomColor.vue?raw'
-import TimelinePending from './TimelinePending.vue'
-import TimelinePendingSource from './TimelinePending.vue?raw'
-import TimelineLoading from './TimelineLoading.vue'
-import TimelineLoadingSource from './TimelineLoading.vue?raw'
-import TimelineVariant from './TimelineVariant.vue'
-import TimelineVariantSource from './TimelineVariant.vue?raw'
-import TimelineHorizontal from './TimelineHorizontal.vue'
-import TimelineHorizontalSource from './TimelineHorizontal.vue?raw'
-import TimelineClassNames from './TimelineClassNames.vue'
-import TimelineClassNamesSource from './TimelineClassNames.vue?raw'
-</script>
-
 ### 基础用法
 
 基本的时间轴。

@@ -8,4 +8,5 @@ export type {
   ItemType,
   BreadcrumbClassNames,
   BreadcrumbStyles,
+  BreadcrumbItemRender,
 } from './types'

@@ -84,16 +84,3 @@
 | 名称    | 说明             |
 | ------- | ---------------- |
 | default | 被水印覆盖的内容 |
-
-<script setup>
-import WatermarkBasic from './WatermarkBasic.vue'
-import WatermarkBasicSource from './WatermarkBasic.vue?raw'
-import WatermarkMultiline from './WatermarkMultiline.vue'
-import WatermarkMultilineSource from './WatermarkMultiline.vue?raw'
-import WatermarkCustomStyle from './WatermarkCustomStyle.vue'
-import WatermarkCustomStyleSource from './WatermarkCustomStyle.vue?raw'
-import WatermarkImage from './WatermarkImage.vue'
-import WatermarkImageSource from './WatermarkImage.vue?raw'
-import WatermarkOffset from './WatermarkOffset.vue'
-import WatermarkOffsetSource from './WatermarkOffset.vue?raw'
-</script>

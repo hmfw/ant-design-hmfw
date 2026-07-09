@@ -66,23 +66,6 @@
   <CascaderClassNames />
 </DemoBlock>
 
-<script setup>
-import CascaderBasic from './CascaderBasic.vue'
-import CascaderBasicSource from './CascaderBasic.vue?raw'
-import CascaderHover from './CascaderHover.vue'
-import CascaderHoverSource from './CascaderHover.vue?raw'
-import CascaderSearch from './CascaderSearch.vue'
-import CascaderSearchSource from './CascaderSearch.vue?raw'
-import CascaderChangeOnSelect from './CascaderChangeOnSelect.vue'
-import CascaderChangeOnSelectSource from './CascaderChangeOnSelect.vue?raw'
-import CascaderMultiple from './CascaderMultiple.vue'
-import CascaderMultipleSource from './CascaderMultiple.vue?raw'
-import CascaderAdvanced from './CascaderAdvanced.vue'
-import CascaderAdvancedSource from './CascaderAdvanced.vue?raw'
-import CascaderClassNames from './CascaderClassNames.vue'
-import CascaderClassNamesSource from './CascaderClassNames.vue?raw'
-</script>
-
 ## API
 
 ### Cascader Props

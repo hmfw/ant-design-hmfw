@@ -458,21 +458,3 @@ Skeleton 组件使用以下 Design Token 控制样式，可通过 ConfigProvider
 | `--hmfw-control-height-xs`        | 超小控件高度 | `16px`                |
 | `--hmfw-padding`                  | 标准内边距   | `12px` (sizeStep × 3) |
 | `--hmfw-margin-sm`                | 小号外边距   | `8px` (sizeStep × 2)  |
-
-<script setup lang="ts">
-import SkeletonBasic from './SkeletonBasic.vue'
-import SkeletonActive from './SkeletonActive.vue'
-import SkeletonWithChildren from './SkeletonWithChildren.vue'
-import SkeletonButtonInput from './SkeletonButtonInput.vue'
-import SkeletonAvatar from './SkeletonAvatar.vue'
-import SkeletonImageNode from './SkeletonImageNode.vue'
-import SkeletonClassNames from './SkeletonClassNames.vue'
-
-import SkeletonBasicSource from './SkeletonBasic.vue?raw'
-import SkeletonActiveSource from './SkeletonActive.vue?raw'
-import SkeletonWithChildrenSource from './SkeletonWithChildren.vue?raw'
-import SkeletonButtonInputSource from './SkeletonButtonInput.vue?raw'
-import SkeletonAvatarSource from './SkeletonAvatar.vue?raw'
-import SkeletonImageNodeSource from './SkeletonImageNode.vue?raw'
-import SkeletonClassNamesSource from './SkeletonClassNames.vue?raw'
-</script>

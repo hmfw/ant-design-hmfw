@@ -11,17 +11,6 @@
 
 ## 代码演示
 
-<script setup lang="ts">
-import BackTopBasic from './BackTopBasic.vue'
-import BackTopCustom from './BackTopCustom.vue'
-import BackTopTarget from './BackTopTarget.vue'
-import BackTopClassNames from './BackTopClassNames.vue'
-import BackTopBasicSource from './BackTopBasic.vue?raw'
-import BackTopCustomSource from './BackTopCustom.vue?raw'
-import BackTopTargetSource from './BackTopTarget.vue?raw'
-import BackTopClassNamesSource from './BackTopClassNames.vue?raw'
-</script>
-
 ### 基础用法
 
 滚动页面后，右下角会出现回到顶部按钮。

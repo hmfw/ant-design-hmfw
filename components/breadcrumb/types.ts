@@ -50,6 +50,10 @@ export interface BreadcrumbItemType {
    * 透传给 Dropdown 的属性（如 placement、trigger 等）
    */
   dropdownProps?: DropdownProps
+  /** 链接打开方式，同 HTML <a> target 属性 */
+  target?: string
+  /** 链接与当前页面的关系，同 HTML <a> rel 属性 */
+  rel?: string
   /** Custom data attributes */
   [key: `data-${string}`]: any
   /** ARIA attributes */
@@ -100,25 +104,28 @@ export interface BreadcrumbStyles {
   overlayLink?: CSSProperties
 }
 
+/**
+ * 自定义渲染面包屑项
+ * @param item 当前项
+ * @param params 参数对象
+ * @param items 所有项
+ * @param paths 路径数组
+ */
+export type BreadcrumbItemRender = (
+  item: BreadcrumbItemType,
+  params: Record<string, any>,
+  items: BreadcrumbItemType[],
+  paths: string[],
+) => VNode
+
 export interface BreadcrumbProps {
   items?: ItemType[]
   separator?: string | VNode
   params?: Record<string, any>
   /** 自定义下拉菜单的展开图标，默认 DownOutlined */
   dropdownIcon?: VNode
-  /**
-   * 自定义渲染面包屑项
-   * @param item 当前项
-   * @param params 参数对象
-   * @param items 所有项
-   * @param paths 路径数组
-   */
-  itemRender?: (
-    item: BreadcrumbItemType,
-    params: Record<string, any>,
-    items: BreadcrumbItemType[],
-    paths: string[],
-  ) => VNode
+  /** 自定义渲染面包屑项 */
+  itemRender?: BreadcrumbItemRender
   /** 语义化 className */
   classNames?: BreadcrumbClassNames
   /** 语义化 style */

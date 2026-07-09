@@ -370,28 +370,3 @@ Menu 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全
 | `--hmfw-color-primary` | 主题色 | `#1677ff` |
 
 ## Menu Events
-
-<script setup lang="ts">
-import MenuHorizontal from './MenuHorizontal.vue'
-import MenuHorizontalSource from './MenuHorizontal.vue?raw'
-import MenuInline from './MenuInline.vue'
-import MenuInlineSource from './MenuInline.vue?raw'
-import MenuCollapsed from './MenuCollapsed.vue'
-import MenuCollapsedSource from './MenuCollapsed.vue?raw'
-import MenuDanger from './MenuDanger.vue'
-import MenuDangerSource from './MenuDanger.vue?raw'
-import MenuGroup from './MenuGroup.vue'
-import MenuGroupSource from './MenuGroup.vue?raw'
-import MenuMultiple from './MenuMultiple.vue'
-import MenuMultipleSource from './MenuMultiple.vue?raw'
-import MenuGlobalIcon from './MenuGlobalIcon.vue'
-import MenuGlobalIconSource from './MenuGlobalIcon.vue?raw'
-import MenuTooltip from './MenuTooltip.vue'
-import MenuTooltipSource from './MenuTooltip.vue?raw'
-import MenuIndent from './MenuIndent.vue'
-import MenuIndentSource from './MenuIndent.vue?raw'
-import MenuTrigger from './MenuTrigger.vue'
-import MenuTriggerSource from './MenuTrigger.vue?raw'
-import MenuClassNames from './MenuClassNames.vue'
-import MenuClassNamesSource from './MenuClassNames.vue?raw'
-</script>
