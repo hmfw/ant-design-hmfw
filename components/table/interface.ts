@@ -192,7 +192,6 @@ export interface TableProps<T = any> {
   // Semantic
   classNames?: TableSemanticClassNames
   styles?: TableSemanticStyles
-  rootClassName?: string
 
   // Events
   onChange?: (

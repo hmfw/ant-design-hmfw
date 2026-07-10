@@ -48,7 +48,6 @@ export const Input = defineComponent({
     prefix: [String, Object, Function] as PropType<InputAffix>,
     suffix: [String, Object, Function] as PropType<InputAffix>,
     id: String,
-    rootClassName: String,
     classNames: Object as PropType<{
       affixWrapper?: string
       prefix?: string
@@ -211,10 +210,7 @@ export const Input = defineComponent({
       const suffixNode = slots.suffix?.() || (props.suffix && <span>{renderAffix(props.suffix)}</span>)
 
       return (
-        <span
-          class={cls(wrapperCls.value, props.rootClassName, props.classNames?.affixWrapper)}
-          style={props.styles?.affixWrapper}
-        >
+        <span class={cls(wrapperCls.value, props.classNames?.affixWrapper)} style={props.styles?.affixWrapper}>
           {prefixNode && (
             <span class={cls(`${prefixCls}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
               {prefixNode}
@@ -262,7 +258,6 @@ export const InputPassword = defineComponent({
       type: String as PropType<'click' | 'hover'>,
       default: 'click',
     },
-    rootClassName: String,
   },
   emits: ['update:value', 'change', 'input', 'focus', 'blur'],
   setup(props, { emit, expose }) {
@@ -315,7 +310,7 @@ export const InputPassword = defineComponent({
     })
 
     const wrapperCls = computed(() =>
-      cls(`${prefixCls}-affix-wrapper`, `${prefixCls}-password`, props.rootClassName, {
+      cls(`${prefixCls}-affix-wrapper`, `${prefixCls}-password`, {
         [`${prefixCls}-affix-wrapper-disabled`]: props.disabled,
         [`${prefixCls}-affix-wrapper-lg`]: mergedSize.value === 'large',
         [`${prefixCls}-affix-wrapper-sm`]: mergedSize.value === 'small',
@@ -418,7 +413,6 @@ export const TextArea = defineComponent({
     },
     allowClear: [Boolean, Object] as PropType<boolean | { clearIcon?: VNode; disabled?: boolean }>,
     autoSize: [Boolean, Object] as PropType<boolean | { minRows?: number; maxRows?: number }>,
-    rootClassName: String,
     classNames: Object as PropType<{
       textarea?: string
       count?: string
@@ -642,7 +636,7 @@ export const TextArea = defineComponent({
       })()
 
       return (
-        <div class={cls(`${prefixCls}-textarea-show-count`, props.rootClassName)}>
+        <div class={cls(`${prefixCls}-textarea-show-count`)}>
           {textarea}
           {clearBtn}
           {countNode}
@@ -671,7 +665,6 @@ export const InputSearch = defineComponent({
       default: false,
     },
     searchIcon: [String, Object, Function] as PropType<InputAffix>,
-    rootClassName: String,
   },
   emits: ['update:value', 'change', 'input', 'search', 'pressEnter', 'onPressEnter'],
   setup(props, { emit, expose }) {
@@ -737,7 +730,7 @@ export const InputSearch = defineComponent({
 
       return (
         <span
-          class={cls(`${prefixCls}-search`, `${prefixCls}-affix-wrapper`, props.rootClassName, {
+          class={cls(`${prefixCls}-search`, `${prefixCls}-affix-wrapper`, {
             [`${prefixCls}-affix-wrapper-lg`]: mergedSize.value === 'large',
             [`${prefixCls}-affix-wrapper-sm`]: mergedSize.value === 'small',
             [`${prefixCls}-affix-wrapper-disabled`]: props.disabled,

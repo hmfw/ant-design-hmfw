@@ -179,8 +179,6 @@ export interface ImageProps {
   fallback?: string
   /** 加载占位：true 显示骨架动画，或自定义 VNode */
   placeholder?: boolean | ImageContent
-  /** 根节点 class */
-  rootClassName?: string
   /** img class */
   class?: string
   /** 语义化结构 class */

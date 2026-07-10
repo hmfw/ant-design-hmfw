@@ -57,7 +57,6 @@ export interface DropdownProps {
   dropdownRender?: (originNode: VNode) => VNode
   forceRender?: boolean
   openClassName?: string
-  rootClassName?: string
   /** 弹层最小宽度匹配触发器宽度，默认 true。number 指定固定最小宽度（px） */
   matchWidth?: boolean | number
   /** 语义化 className */

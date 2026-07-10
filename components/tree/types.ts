@@ -151,7 +151,6 @@ export interface TreeProps {
   /** 自定义节点标题渲染 */
   titleRender?: (node: TreeDataNode) => VNodeChild
   fieldNames?: FieldNames
-  rootClassName?: string
   classNames?: TreeSemanticClassNames
   styles?: TreeSemanticStyles
 }

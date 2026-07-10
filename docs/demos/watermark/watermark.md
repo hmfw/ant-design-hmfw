@@ -53,20 +53,19 @@
 
 ### Watermark Props
 
-| 参数          | 说明                                                             | 类型                 | 默认值                 |
-| ------------- | ---------------------------------------------------------------- | -------------------- | ---------------------- |
-| content       | 水印文字内容                                                     | `string \| string[]` | -                      |
-| font          | 文字样式                                                         | `WatermarkFont`      | -                      |
-| rotate        | 水印绘制时，旋转的角度，单位 `°`                                 | `number`             | `-22`                  |
-| gap           | 水印之间的间距                                                   | `[number, number]`   | `[100, 100]`           |
-| offset        | 水印距离容器左上角的偏移量，默认为 `gap/2`                       | `[number, number]`   | `[gap[0]/2, gap[1]/2]` |
-| zIndex        | 追加的水印元素的 z-index                                         | `number`             | `999`                  |
-| image         | 图片源，建议使用 2x 或 3x 图，优先级高于文字（支持 base64 格式） | `string`             | -                      |
-| width         | 水印的宽度，`content` 的默认值为自身的宽度                       | `number`             | `120`                  |
-| height        | 水印的高度，`content` 的默认值为自身的高度                       | `number`             | `64`                   |
-| inherit       | 是否将水印传导给弹出组件如 Modal、Drawer                         | `boolean`            | `true`                 |
-| rootClassName | 添加到根容器的 className                                         | `string`             | -                      |
-| onRemove      | 水印节点被外部移除后重建时触发                                   | `() => void`         | -                      |
+| 参数     | 说明                                                             | 类型                 | 默认值                 |
+| -------- | ---------------------------------------------------------------- | -------------------- | ---------------------- |
+| content  | 水印文字内容                                                     | `string \| string[]` | -                      |
+| font     | 文字样式                                                         | `WatermarkFont`      | -                      |
+| rotate   | 水印绘制时，旋转的角度，单位 `°`                                 | `number`             | `-22`                  |
+| gap      | 水印之间的间距                                                   | `[number, number]`   | `[100, 100]`           |
+| offset   | 水印距离容器左上角的偏移量，默认为 `gap/2`                       | `[number, number]`   | `[gap[0]/2, gap[1]/2]` |
+| zIndex   | 追加的水印元素的 z-index                                         | `number`             | `999`                  |
+| image    | 图片源，建议使用 2x 或 3x 图，优先级高于文字（支持 base64 格式） | `string`             | -                      |
+| width    | 水印的宽度，`content` 的默认值为自身的宽度                       | `number`             | `120`                  |
+| height   | 水印的高度，`content` 的默认值为自身的高度                       | `number`             | `64`                   |
+| inherit  | 是否将水印传导给弹出组件如 Modal、Drawer                         | `boolean`            | `true`                 |
+| onRemove | 水印节点被外部移除后重建时触发                                   | `() => void`         | -                      |
 
 ### WatermarkFont
 

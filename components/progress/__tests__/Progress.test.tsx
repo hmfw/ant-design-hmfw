@@ -295,8 +295,8 @@ describe('Progress', () => {
     expect(track.attributes('style')).toContain('255, 0, 0')
   })
 
-  it('supports rootClassName', () => {
-    const wrapper = mount(Progress, { props: { percent: 50, rootClassName: 'custom-root' } })
+  it('supports semantic classNames.root', () => {
+    const wrapper = mount(Progress, { props: { percent: 50, classNames: { root: 'custom-root' } } })
     expect(wrapper.classes()).toContain('custom-root')
   })
 

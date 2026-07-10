@@ -155,8 +155,6 @@ export interface TransferProps {
   status?: InputStatus
   /** 文案 */
   locale?: Partial<TransferLocale>
-  /** 根 class */
-  rootClassName?: string
   /** 语义化 class */
   classNames?: TransferSemanticClassNames
   /** 语义化 style */

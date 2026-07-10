@@ -124,7 +124,6 @@
 | virtual                | 是否开启虚拟滚动                                                                 | `boolean`                                                   | `false` |
 | height                 | 虚拟滚动容器高度（开启 virtual 时必需）                                          | `number \| string`                                          | -       |
 | itemHeight             | 虚拟滚动每项高度                                                                 | `number`                                                    | `28`    |
-| rootClassName          | 根节点 className                                                                 | `string`                                                    | -       |
 | classNames             | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `object`                                                    | -       |
 | styles                 | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `object`                                                    | -       |
 

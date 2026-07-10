@@ -38,7 +38,6 @@ export const Progress = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: String,
-    rootClassName: String,
     classNames: Object as PropType<ProgressClassNames>,
     styles: Object as PropType<ProgressStyles>,
     percent: { type: Number, default: 0 },
@@ -438,7 +437,6 @@ export const Progress = defineComponent({
           [`${prefixCls}-small`]: props.size === 'small',
           [`${prefixCls}-rtl`]: isRTL.value,
         },
-        props.rootClassName,
         props.classNames?.root,
         attrs.class as string,
       )

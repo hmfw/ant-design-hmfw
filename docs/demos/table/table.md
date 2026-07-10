@@ -109,30 +109,29 @@
 
 ### Table Props
 
-| 参数          | 说明                                                       | 类型                                                          | 默认值      |
-| ------------- | ---------------------------------------------------------- | ------------------------------------------------------------- | ----------- |
-| dataSource    | 数据数组                                                   | `any[]`                                                       | -           |
-| columns       | 表格列的配置描述                                           | `TableColumn[]`                                               | -           |
-| rowKey        | 表格行 key 的取值                                          | `string \| ((record: any) => Key)`                            | `'key'`     |
-| loading       | 页面是否加载中                                             | `boolean`                                                     | `false`     |
-| pagination    | 分页器，设为 false 时不展示                                | `TablePaginationConfig \| false`                              | -           |
-| rowSelection  | 列表项是否可选择                                           | `TableRowSelection`                                           | -           |
-| expandable    | 配置展开属性                                               | `ExpandableConfig`                                            | -           |
-| size          | 表格大小                                                   | `'default' \| 'middle' \| 'small'`                            | `'default'` |
-| bordered      | 是否展示外边框和列边框                                     | `boolean`                                                     | `false`     |
-| showHeader    | 是否显示表头                                               | `boolean`                                                     | `true`      |
-| sticky        | 设置粘性头部和滚动条                                       | `boolean \| { offsetHeader?: number, offsetScroll?: number }` | `false`     |
-| scroll        | 表格是否可滚动                                             | `{ x?: number \| string, y?: number \| string }`              | -           |
-| summary       | 总结栏                                                     | `(pageData: any[]) => VNode`                                  | -           |
-| title         | 表格标题                                                   | `string \| ((data: any[]) => VNode)`                          | -           |
-| footer        | 表格页脚                                                   | `string \| ((data: any[]) => VNode)`                          | -           |
-| locale        | 国际化配置                                                 | `{ emptyText?: string }`                                      | -           |
-| onChange      | 分页、排序、筛选变化时触发                                 | `(pagination, filters, sorter, extra) => void`                | -           |
-| onRow         | 设置行属性                                                 | `(record, index) => object`                                   | -           |
-| onHeaderRow   | 设置表头行属性                                             | `(columns, index) => object`                                  | -           |
-| classNames    | 语义化 className（[详见下方](#语义化-classname-与-style)） | `TableSemanticClassNames`                                     | -           |
-| styles        | 语义化 style（[详见下方](#语义化-classname-与-style)）     | `TableSemanticStyles`                                         | -           |
-| rootClassName | 根节点额外类名                                             | `string`                                                      | -           |
+| 参数         | 说明                                                       | 类型                                                          | 默认值      |
+| ------------ | ---------------------------------------------------------- | ------------------------------------------------------------- | ----------- |
+| dataSource   | 数据数组                                                   | `any[]`                                                       | -           |
+| columns      | 表格列的配置描述                                           | `TableColumn[]`                                               | -           |
+| rowKey       | 表格行 key 的取值                                          | `string \| ((record: any) => Key)`                            | `'key'`     |
+| loading      | 页面是否加载中                                             | `boolean`                                                     | `false`     |
+| pagination   | 分页器，设为 false 时不展示                                | `TablePaginationConfig \| false`                              | -           |
+| rowSelection | 列表项是否可选择                                           | `TableRowSelection`                                           | -           |
+| expandable   | 配置展开属性                                               | `ExpandableConfig`                                            | -           |
+| size         | 表格大小                                                   | `'default' \| 'middle' \| 'small'`                            | `'default'` |
+| bordered     | 是否展示外边框和列边框                                     | `boolean`                                                     | `false`     |
+| showHeader   | 是否显示表头                                               | `boolean`                                                     | `true`      |
+| sticky       | 设置粘性头部和滚动条                                       | `boolean \| { offsetHeader?: number, offsetScroll?: number }` | `false`     |
+| scroll       | 表格是否可滚动                                             | `{ x?: number \| string, y?: number \| string }`              | -           |
+| summary      | 总结栏                                                     | `(pageData: any[]) => VNode`                                  | -           |
+| title        | 表格标题                                                   | `string \| ((data: any[]) => VNode)`                          | -           |
+| footer       | 表格页脚                                                   | `string \| ((data: any[]) => VNode)`                          | -           |
+| locale       | 国际化配置                                                 | `{ emptyText?: string }`                                      | -           |
+| onChange     | 分页、排序、筛选变化时触发                                 | `(pagination, filters, sorter, extra) => void`                | -           |
+| onRow        | 设置行属性                                                 | `(record, index) => object`                                   | -           |
+| onHeaderRow  | 设置表头行属性                                             | `(columns, index) => object`                                  | -           |
+| classNames   | 语义化 className（[详见下方](#语义化-classname-与-style)） | `TableSemanticClassNames`                                     | -           |
+| styles       | 语义化 style（[详见下方](#语义化-classname-与-style)）     | `TableSemanticStyles`                                         | -           |
 
 ### TableColumn
 

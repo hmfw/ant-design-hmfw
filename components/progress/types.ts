@@ -48,7 +48,6 @@ export interface ProgressStepsConfig {
 
 export interface ProgressProps {
   prefixCls?: string
-  rootClassName?: string
   classNames?: ProgressClassNames
   styles?: ProgressStyles
 

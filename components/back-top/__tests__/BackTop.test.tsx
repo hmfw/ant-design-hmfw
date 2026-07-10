@@ -75,12 +75,12 @@ describe('BackTop', () => {
     // The actual scrollTo behavior is tested in integration/E2E
   })
 
-  it('supports className and rootClassName', async () => {
+  it('supports className and classNames.root', async () => {
     const wrapper = mount(BackTop, {
       props: {
         visibilityHeight: 0,
         className: 'custom-class',
-        rootClassName: 'root-class',
+        classNames: { root: 'root-class' },
       },
     })
     await nextTick()

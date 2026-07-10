@@ -189,7 +189,6 @@ export const Watermark = defineComponent({
     },
     offset: Array as unknown as PropType<[number, number]>,
     inherit: { type: Boolean, default: true },
-    rootClassName: String,
     onRemove: Function as PropType<() => void>,
   },
   setup(props, { slots, attrs }) {
@@ -526,7 +525,7 @@ export const Watermark = defineComponent({
         <div
           {...restAttrs}
           ref={containerRef}
-          class={[prefixCls, props.rootClassName, attrClass]}
+          class={[prefixCls, attrClass]}
           style={[{ ...fixedStyle, ...inheritStyle } as CSSProperties, attrStyle as CSSProperties]}
         >
           {slots.default?.()}

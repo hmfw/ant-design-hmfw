@@ -113,7 +113,6 @@ export const BackTop = defineComponent({
     target: Function as PropType<() => HTMLElement | Window | Document>,
     duration: { type: Number, default: 450 },
     className: String,
-    rootClassName: String,
     style: [String, Object] as PropType<string | CSSProperties>,
     prefixCls: String,
     classNames: Object as PropType<BackTopClassNames>,
@@ -160,7 +159,6 @@ export const BackTop = defineComponent({
           [`${prefixCls}-rtl`]: config.value.direction === 'rtl',
         },
         props.className,
-        props.rootClassName,
         props.classNames?.root,
       ),
     )

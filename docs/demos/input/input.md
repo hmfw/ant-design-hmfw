@@ -84,7 +84,6 @@
 | status         | 设置校验状态                                                                     | `'error' \| 'warning'`                                                                                                           | -          |
 | readonly       | 是否只读                                                                         | `boolean`                                                                                                                        | `false`    |
 | id             | 输入框的 id                                                                      | `string`                                                                                                                         | -          |
-| rootClassName  | 根节点的 className                                                               | `string`                                                                                                                         | -          |
 | classNames     | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ affixWrapper?: string; prefix?: string; suffix?: string; input?: string; count?: string }`                                    | -          |
 | styles         | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ affixWrapper?: CSSProperties; prefix?: CSSProperties; suffix?: CSSProperties; input?: CSSProperties; count?: CSSProperties }` | -          |
 
@@ -430,7 +429,6 @@ interface TextAreaStyles {
 - `affixWrapper` 仅在有 `prefix` / `suffix` / `allowClear` / `showCount` 时才会渲染
 - `input` 样式会应用到实际的 `<input>` 元素，不受外层容器影响
 - TextArea 的 `textarea` 对应 `<textarea>` 元素，`count` 对应字数统计的 `<span>`
-- 当同时设置 `rootClassName` 和 `classNames.affixWrapper` 时，`rootClassName` 应用于最外层容器
 
 ## 设计 Token
 

@@ -51,7 +51,6 @@ export const Transfer = defineComponent({
     pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
     status: String as PropType<InputStatus>,
     locale: { type: Object as PropType<Partial<TransferLocale>>, default: () => ({}) },
-    rootClassName: String,
     classNames: { type: Object as PropType<TransferSemanticClassNames>, default: () => ({}) },
     styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
 
@@ -291,7 +290,7 @@ export const Transfer = defineComponent({
 
     return () => (
       <div
-        class={cls(prefixCls, props.rootClassName, props.classNames.root, {
+        class={cls(prefixCls, props.classNames.root, {
           [`${prefixCls}-disabled`]: props.disabled,
           [`${prefixCls}-status-error`]: props.status === 'error',
           [`${prefixCls}-status-warning`]: props.status === 'warning',

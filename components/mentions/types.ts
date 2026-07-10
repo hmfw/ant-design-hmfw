@@ -97,7 +97,6 @@ export interface MentionProps {
 
   classNames?: MentionSemanticClassNames
   styles?: MentionSemanticStyles
-  rootClassName?: string
 
   // ----------------------------------------------------------------
   // 回调

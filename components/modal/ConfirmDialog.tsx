@@ -111,7 +111,7 @@ export const ConfirmDialog = defineComponent({
           width={c.width ?? 416}
           zIndex={c.zIndex}
           wrapClassName={c.wrapClassName}
-          rootClassName={c.className}
+          classNames={{ root: c.className }}
           getContainer={c.getContainer}
           onCancel={(e: MouseEvent) => handleCancel(e)}
           onAfterClose={() => emit('afterClose')}

@@ -530,7 +530,6 @@ export const Image = defineComponent({
       type: [Boolean, Object, Function] as PropType<ImageProps['placeholder']>,
       default: false,
     },
-    rootClassName: String,
     classNames: Object as PropType<ImageClassNames>,
     styles: Object as PropType<ImageStyles>,
     onError: Function as PropType<(e: Event) => void>,
@@ -660,7 +659,6 @@ export const Image = defineComponent({
       <div
         class={cls(
           prefixCls,
-          props.rootClassName,
           attrs.class as string,
           {
             [`${prefixCls}-preview`]: canPreview.value,

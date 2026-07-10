@@ -49,11 +49,6 @@ export interface BackTopProps {
   className?: string
 
   /**
-   * 根节点类名
-   */
-  rootClassName?: string
-
-  /**
    * 自定义样式
    */
   style?: CSSProperties

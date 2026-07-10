@@ -12,7 +12,7 @@ export interface LoadingConfig {
 
 /**
  * Button 语义化结构 className 配置
- * - root: 根元素（与 class/rootClassName 叠加）
+ * - root: 根元素
  * - icon: 图标容器
  * - loading: 加载图标容器（loading 状态下的图标）
  */

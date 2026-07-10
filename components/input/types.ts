@@ -22,7 +22,6 @@ export interface InputProps {
   showCount?: boolean | { formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string }
   type?: string
   id?: string
-  rootClassName?: string
   classNames?: {
     affixWrapper?: string
     prefix?: string
@@ -51,7 +50,6 @@ export interface TextAreaProps {
   showCount?: boolean | { formatter?: (info: { value: string; count: number; maxLength?: number }) => VNode | string }
   status?: InputStatus
   allowClear?: boolean | { clearIcon?: VNode; disabled?: boolean }
-  rootClassName?: string
   classNames?: {
     textarea?: string
     count?: string
@@ -72,7 +70,6 @@ export interface InputPasswordProps {
   visibilityToggle?: boolean | { visible?: boolean; onVisibleChange?: (visible: boolean) => void }
   iconRender?: (visible: boolean) => VNode | string
   action?: 'click' | 'hover'
-  rootClassName?: string
 }
 
 export interface InputSearchProps {
@@ -84,5 +81,4 @@ export interface InputSearchProps {
   loading?: boolean
   enterButton?: boolean | string
   searchIcon?: InputAffix
-  rootClassName?: string
 }

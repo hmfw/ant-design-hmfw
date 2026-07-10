@@ -178,8 +178,8 @@ describe('Image', () => {
     wrapper.unmount()
   })
 
-  it('rootClassName applied', () => {
-    const wrapper = mount(Image, { props: { src: 'test.jpg', rootClassName: 'my-image' } })
+  it('classNames.root applied', () => {
+    const wrapper = mount(Image, { props: { src: 'test.jpg', classNames: { root: 'my-image' } } })
     expect(wrapper.find('.my-image').exists()).toBe(true)
   })
 

@@ -673,11 +673,11 @@ describe('Dropdown', () => {
   })
 
   // ================================================================
-  // rootClassName
+  // classNames.dropdown
   // ================================================================
-  it('applies rootClassName to dropdown overlay', async () => {
+  it('applies classNames.dropdown to dropdown overlay', async () => {
     const wrapper = mount(Dropdown, {
-      props: { menu, open: true, rootClassName: 'my-root-class' },
+      props: { menu, open: true, classNames: { dropdown: 'my-root-class' } },
       slots: { default: '<button>Open</button>' },
       attachTo: document.body,
     })

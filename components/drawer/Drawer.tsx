@@ -123,7 +123,6 @@ export const Drawer = defineComponent({
       type: [String, Object, Function, Boolean] as PropType<DrawerGetContainer>,
       default: undefined,
     },
-    rootClassName: { type: String, default: undefined },
     rootStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     bodyStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     headerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
@@ -310,7 +309,7 @@ export const Drawer = defineComponent({
           <Transition name={`hmfw-drawer-${props.placement}`} appear>
             {(isOpen.value || props.forceRender) && (
               <div
-                class={cls(`${prefixCls}-root`, props.rootClassName, {
+                class={cls(`${prefixCls}-root`, {
                   [`${prefixCls}-no-mask`]: !props.mask,
                 })}
                 style={{ ...rootStyle, display: isOpen.value ? '' : 'none' }}

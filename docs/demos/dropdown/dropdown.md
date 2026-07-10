@@ -123,7 +123,6 @@
 | dropdownRender     | 自定义下拉框内容（已废弃，请使用 popupRender）                                   | `(originNode: VNode) => VNode`                                                  | -                     |
 | forceRender        | 强制渲染 Dropdown                                                                | `boolean`                                                                       | `false`               |
 | openClassName      | 菜单展开时给触发元素添加的类名                                                   | `string`                                                                        | -                     |
-| rootClassName      | 下拉根元素的类名称                                                               | `string`                                                                        | -                     |
 | classNames         | 语义化 className，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DropdownClassNames`                                                            | -                     |
 | styles             | 语义化 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)     | `DropdownStyles`                                                                | -                     |
 

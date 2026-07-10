@@ -31,7 +31,6 @@ const dropdownProps = {
   forceRender: { type: Boolean, default: false },
   matchWidth: { type: [Boolean, Number] as PropType<boolean | number>, default: true },
   openClassName: { type: String, default: undefined },
-  rootClassName: { type: String, default: undefined },
   classNames: { type: Object as PropType<import('./types').DropdownClassNames>, default: undefined },
   styles: { type: Object as PropType<import('./types').DropdownStyles>, default: undefined },
 } satisfies Record<keyof DropdownProps, any>
@@ -99,7 +98,7 @@ export const Dropdown = defineComponent({
         attrs.class as any,
       )
 
-      const popupClass = cls(prefixCls, props.overlayClassName, props.rootClassName, props.classNames?.dropdown)
+      const popupClass = cls(prefixCls, props.overlayClassName, props.classNames?.dropdown)
 
       const renderPopup = () => (
         <>

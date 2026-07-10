@@ -55,7 +55,6 @@
 | target           | 设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数                    | `() => HTMLElement \| Window \| Document` | `() => window` |
 | duration         | 回到顶部所需时间（ms）                                                           | `number`                                  | `450`          |
 | className        | 自定义类名                                                                       | `string`                                  | -              |
-| rootClassName    | 根节点类名                                                                       | `string`                                  | -              |
 | style            | 自定义样式                                                                       | `CSSProperties`                           | -              |
 | classNames       | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BackTopClassNames`                       | -              |
 | styles           | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BackTopStyles`                           | -              |

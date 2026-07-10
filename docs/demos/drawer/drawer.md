@@ -74,7 +74,6 @@
 | forceRender            | 预渲染抽屉内的内容                                                               | `boolean`                                             | `false`   |
 | focusTriggerAfterClose | 关闭后是否将焦点返回触发元素                                                     | `boolean`                                             | `true`    |
 | getContainer           | 挂载节点，`false` 时渲染在当前位置                                               | `string \| HTMLElement \| () => HTMLElement \| false` | `body`    |
-| rootClassName          | 根容器（含遮罩）的类名                                                           | `string`                                              | -         |
 | rootStyle              | 根容器（含遮罩）的样式                                                           | `CSSProperties`                                       | -         |
 | contentWrapperStyle    | 抽屉内容包裹层的样式                                                             | `CSSProperties`                                       | -         |
 | bodyStyle              | 抽屉内容部分的样式                                                               | `CSSProperties`                                       | -         |

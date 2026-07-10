@@ -86,7 +86,6 @@ export const Tree = defineComponent({
     virtual: Boolean,
     height: [Number, String] as PropType<number | string>,
     itemHeight: { type: Number, default: 28 },
-    rootClassName: String,
     classNames: Object as PropType<TreeSemanticClassNames>,
     styles: Object as PropType<TreeSemanticStyles>,
     /** DirectoryTree 用：展开触发方式 */
@@ -637,7 +636,7 @@ export const Tree = defineComponent({
       return (
         <div
           ref={treeRef}
-          class={cls(prefixCls, props.rootClassName, sn('root'), {
+          class={cls(prefixCls, sn('root'), {
             [`${prefixCls}-show-line`]: showLineEnabled.value,
             [`${prefixCls}-block-node`]: props.blockNode,
             [`${prefixCls}-disabled`]: props.disabled,

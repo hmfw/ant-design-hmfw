@@ -67,7 +67,6 @@ export const Table = defineComponent({
     >,
     classNames: Object as PropType<import('./interface').TableSemanticClassNames>,
     styles: Object as PropType<import('./interface').TableSemanticStyles>,
-    rootClassName: String,
   },
   emits: ['change'],
   setup(props, { emit }) {
@@ -418,7 +417,6 @@ export const Table = defineComponent({
               [`${prefixCls}-scroll-horizontal`]: !!props.scroll?.x,
               [`${prefixCls}-sticky`]: !!stickyConfig,
             },
-            props.rootClassName,
             props.classNames?.root,
           )}
           style={props.styles?.root}

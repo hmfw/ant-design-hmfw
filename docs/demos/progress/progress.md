@@ -115,7 +115,6 @@
 | gapPosition     | (已废弃) 使用 `gapPlacement` 代替                                                | `'top' \| 'bottom' \| 'left' \| 'right'`                                                | -                                 |
 | percentPosition | 进度文字位置                                                                     | `{ align?: 'start' \| 'center' \| 'end'; type?: 'inner' \| 'outer' }`                   | `{ align: 'end', type: 'outer' }` |
 | rounding        | 步骤进度条已激活段数舍入函数                                                     | `(step: number) => number`                                                              | `Math.round`                      |
-| rootClassName   | 根元素类名                                                                       | `string`                                                                                | -                                 |
 | classNames      | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ProgressClassNames`                                                                    | -                                 |
 | styles          | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ProgressStyles`                                                                        | -                                 |
 

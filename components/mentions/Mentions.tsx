@@ -49,7 +49,6 @@ export const Mentions = defineComponent({
     // 语义化
     classNames: { type: Object as PropType<MentionSemanticClassNames>, default: () => ({}) },
     styles: { type: Object as PropType<MentionSemanticStyles>, default: () => ({}) },
-    rootClassName: String,
 
     // 回调
     onSelect: Function as PropType<(option: MentionOption, prefix: string) => void>,
@@ -396,7 +395,6 @@ export const Mentions = defineComponent({
                   [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
                 },
                 statusClass(inputPfx, props.status),
-                props.rootClassName,
                 props.classNames?.root,
               )}
               style={props.styles?.root}

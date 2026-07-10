@@ -343,8 +343,8 @@ describe('Tree', () => {
     expect(wrapper.find('.my-title').exists()).toBe(true)
   })
 
-  it('rootClassName applies to root', () => {
-    const wrapper = mount(Tree, { props: { treeData, rootClassName: 'custom-root' } })
+  it('classNames.root applies to root', () => {
+    const wrapper = mount(Tree, { props: { treeData, classNames: { root: 'custom-root' } } })
     expect(wrapper.classes()).toContain('custom-root')
   })
 

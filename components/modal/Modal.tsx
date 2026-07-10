@@ -114,7 +114,6 @@ export const Modal = defineComponent({
       default: undefined,
     },
     wrapClassName: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     focusTriggerAfterClose: { type: Boolean, default: true },
     bodyStyle: { type: Object, default: undefined },
     maskStyle: { type: Object, default: undefined },
@@ -285,7 +284,7 @@ export const Modal = defineComponent({
           <Transition name="hmfw-zoom" onAfterLeave={onAfterLeave}>
             {(isOpen.value || props.forceRender) && (
               <div
-                class={cls(`${prefixCls}-root`, props.rootClassName)}
+                class={cls(`${prefixCls}-root`, props.classNames?.root)}
                 style={{ zIndex: props.zIndex, display: isOpen.value ? '' : 'none' }}
                 onKeydown={handleKeydown}
               >

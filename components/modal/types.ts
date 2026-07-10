@@ -14,6 +14,7 @@ export type GetContainer = string | HTMLElement | (() => HTMLElement) | false
 
 /** 细粒度控制 Modal 各部分的 class */
 export interface ModalClassNames {
+  root?: string
   header?: string
   body?: string
   footer?: string
@@ -57,7 +58,6 @@ export interface ModalProps {
   zIndex?: number
   getContainer?: GetContainer
   wrapClassName?: string
-  rootClassName?: string
   focusTriggerAfterClose?: boolean
   bodyStyle?: CSSProperties
   maskStyle?: CSSProperties

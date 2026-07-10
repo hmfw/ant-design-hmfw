@@ -63,19 +63,18 @@
 
 ### Image Props
 
-| 参数          | 说明                                                                             | 类型                                | 默认值  |
-| ------------- | -------------------------------------------------------------------------------- | ----------------------------------- | ------- |
-| src           | 图片地址                                                                         | `string`                            | -       |
-| alt           | 图片描述                                                                         | `string`                            | -       |
-| width         | 宽度                                                                             | `number \| string`                  | -       |
-| height        | 高度                                                                             | `number \| string`                  | -       |
-| preview       | 预览配置，`false` 时禁用                                                         | `boolean \| PreviewConfig`          | `true`  |
-| fallback      | 加载失败时的替代图片地址                                                         | `string`                            | -       |
-| placeholder   | 加载占位：`true` 显示骨架动画，或自定义 VNode                                    | `boolean \| VNode \| (() => VNode)` | `false` |
-| rootClassName | 根节点 class                                                                     | `string`                            | -       |
-| classNames    | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ImageClassNames`                   | -       |
-| styles        | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ImageStyles`                       | -       |
-| onError       | 加载失败回调                                                                     | `(e: Event) => void`                | -       |
+| 参数        | 说明                                                                             | 类型                                | 默认值  |
+| ----------- | -------------------------------------------------------------------------------- | ----------------------------------- | ------- |
+| src         | 图片地址                                                                         | `string`                            | -       |
+| alt         | 图片描述                                                                         | `string`                            | -       |
+| width       | 宽度                                                                             | `number \| string`                  | -       |
+| height      | 高度                                                                             | `number \| string`                  | -       |
+| preview     | 预览配置，`false` 时禁用                                                         | `boolean \| PreviewConfig`          | `true`  |
+| fallback    | 加载失败时的替代图片地址                                                         | `string`                            | -       |
+| placeholder | 加载占位：`true` 显示骨架动画，或自定义 VNode                                    | `boolean \| VNode \| (() => VNode)` | `false` |
+| classNames  | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ImageClassNames`                   | -       |
+| styles      | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ImageStyles`                       | -       |
+| onError     | 加载失败回调                                                                     | `(e: Event) => void`                | -       |
 
 ### PreviewConfig
 

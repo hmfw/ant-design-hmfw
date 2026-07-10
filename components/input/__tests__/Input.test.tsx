@@ -102,8 +102,8 @@ describe('Input', () => {
     expect(wrapper.find('input').attributes('id')).toBe('test-input')
   })
 
-  it('applies rootClassName', () => {
-    const wrapper = mount(Input, { props: { prefix: '@', rootClassName: 'custom-class' } })
+  it('applies classNames.affixWrapper', () => {
+    const wrapper = mount(Input, { props: { prefix: '@', classNames: { affixWrapper: 'custom-class' } } })
     expect(wrapper.find('.hmfw-input-affix-wrapper').classes()).toContain('custom-class')
   })
 })

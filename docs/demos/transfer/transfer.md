@@ -90,7 +90,6 @@
 | pagination             | 分页配置                                                                         | `boolean \| PaginationType`                                                    | -          |
 | status                 | 校验状态                                                                         | `'error' \| 'warning'`                                                         | -          |
 | locale                 | 文案配置                                                                         | `Partial<TransferLocale>`                                                      | -          |
-| rootClassName          | 根元素 class                                                                     | `string`                                                                       | -          |
 | classNames             | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticClassNames`                                                   | -          |
 | styles                 | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticStyles`                                                       | -          |
 
