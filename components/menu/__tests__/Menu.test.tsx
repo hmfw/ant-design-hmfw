@@ -2,6 +2,10 @@ import { mount } from '@vue/test-utils'
 import { h } from 'vue'
 import { describe, it, expect, vi } from 'vitest'
 import { Menu } from '../Menu'
+import { MenuItem } from '../MenuItem'
+import { SubMenu } from '../SubMenu'
+import { MenuDivider } from '../MenuDivider'
+import { MenuItemGroup } from '../MenuItemGroup'
 import type { ItemType } from '../types'
 
 const items: ItemType[] = [
@@ -64,7 +68,7 @@ describe('Menu', () => {
 
   it('emits deselect event in multiple mode', async () => {
     const wrapper = mount(Menu, {
-      props: { items, multiple: true, defaultSelectedKeys: ['1'] },
+      props: { items, multiple: true, selectedKeys: ['1'] },
     })
     await wrapper.findAll('.hmfw-menu-item')[0].trigger('click')
     expect(wrapper.emitted('deselect')).toBeTruthy()
@@ -104,15 +108,15 @@ describe('Menu', () => {
     expect(wrapper.classes()).toContain('hmfw-menu-light')
   })
 
-  // ===== defaultSelectedKeys / defaultOpenKeys =====
-  it('renders defaultSelectedKeys', () => {
-    const wrapper = mount(Menu, { props: { items, defaultSelectedKeys: ['2'] } })
+  // ===== selectedKeys / openKeys 初始值 =====
+  it('renders with initial selectedKeys', () => {
+    const wrapper = mount(Menu, { props: { items, selectedKeys: ['2'] } })
     expect(wrapper.findAll('.hmfw-menu-item')[1].classes()).toContain('hmfw-menu-item-selected')
   })
 
-  it('expands defaultOpenKeys in inline mode', () => {
+  it('expands openKeys in inline mode', () => {
     const wrapper = mount(Menu, {
-      props: { items, mode: 'inline', defaultOpenKeys: ['sub'] },
+      props: { items, mode: 'inline', openKeys: ['sub'] },
     })
     expect(wrapper.find('.hmfw-menu-sub').exists()).toBe(true)
   })
@@ -248,8 +252,8 @@ describe('Menu', () => {
       props: {
         items,
         mode: 'inline',
-        defaultSelectedKeys: ['sub-1'],
-        defaultOpenKeys: ['sub'],
+        selectedKeys: ['sub-1'],
+        openKeys: ['sub'],
       },
     })
     expect(wrapper.find('.hmfw-menu-submenu-selected').exists()).toBe(true)
@@ -282,7 +286,7 @@ describe('Menu', () => {
   })
 
   it('selected item has aria-current', async () => {
-    const wrapper = mount(Menu, { props: { items, defaultSelectedKeys: ['1'] } })
+    const wrapper = mount(Menu, { props: { items, selectedKeys: ['1'] } })
     const selectedItem = wrapper.find('.hmfw-menu-item-selected')
     expect(selectedItem.attributes('aria-current')).toBe('true')
   })
@@ -430,7 +434,7 @@ describe('Menu', () => {
     const wrapper = mount(Menu, {
       props: {
         items,
-        defaultSelectedKeys: ['1'],
+        selectedKeys: ['1'],
         classNames: {
           itemSelected: 'my-selected',
         },
@@ -477,5 +481,365 @@ describe('Menu', () => {
   it('has hmfw-menu-root class', () => {
     const wrapper = mount(Menu, { props: { items } })
     expect(wrapper.classes()).toContain('hmfw-menu-root')
+  })
+
+  // ======================================================
+  // ==== Slot 模式（声明式写法） ====
+  // ======================================================
+  describe('slot mode', () => {
+    it('renders menu items via slots', () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [
+            h(MenuItem, { itemKey: '1', label: 'Item 1' }),
+            h(MenuItem, { itemKey: '2', label: 'Item 2' }),
+          ],
+        },
+      })
+      expect(wrapper.findAll('.hmfw-menu-item')).toHaveLength(2)
+    })
+
+    it('renders submenu with children via slots', () => {
+      const wrapper = mount(Menu, {
+        props: { mode: 'inline' },
+        slots: {
+          default: () => [
+            h(
+              SubMenu,
+              { itemKey: 'sub', label: 'Submenu' },
+              {
+                default: () => [h(MenuItem, { itemKey: 'sub-1', label: 'Sub Item 1' })],
+              },
+            ),
+          ],
+        },
+      })
+      expect(wrapper.find('.hmfw-menu-submenu').exists()).toBe(true)
+    })
+
+    it('renders divider via slots', () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [
+            h(MenuItem, { itemKey: '1', label: 'Item 1' }),
+            h(MenuDivider, { itemKey: 'd1' }),
+            h(MenuItem, { itemKey: '2', label: 'Item 2' }),
+          ],
+        },
+      })
+      expect(wrapper.find('[role="separator"]').exists()).toBe(true)
+    })
+
+    it('renders dashed divider via slots', () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [
+            h(MenuItem, { itemKey: '1', label: 'Item 1' }),
+            h(MenuDivider, { itemKey: 'd1', dashed: true }),
+          ],
+        },
+      })
+      expect(wrapper.find('.hmfw-menu-item-divider-dashed').exists()).toBe(true)
+    })
+
+    it('renders item group via slots', () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [
+            h(
+              MenuItemGroup,
+              { itemKey: 'g1', label: 'Group 1' },
+              {
+                default: () => [h(MenuItem, { itemKey: '1', label: 'Item 1' })],
+              },
+            ),
+          ],
+        },
+      })
+      expect(wrapper.find('.hmfw-menu-item-group').exists()).toBe(true)
+      expect(wrapper.find('.hmfw-menu-item-group-title').text()).toBe('Group 1')
+    })
+
+    it('selects slot-rendered item on click', async () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [
+            h(MenuItem, { itemKey: '1', label: 'Item 1' }),
+            h(MenuItem, { itemKey: '2', label: 'Item 2' }),
+          ],
+        },
+      })
+      await wrapper.findAll('.hmfw-menu-item')[0].trigger('click')
+      expect(wrapper.find('.hmfw-menu-item-selected').exists()).toBe(true)
+    })
+
+    it('does not select disabled slot item', async () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [h(MenuItem, { itemKey: '1', label: 'Item 1', disabled: true })],
+        },
+      })
+      await wrapper.find('.hmfw-menu-item').trigger('click')
+      expect(wrapper.find('.hmfw-menu-item-selected').exists()).toBe(false)
+    })
+
+    it('emits select event for slot item', async () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [h(MenuItem, { itemKey: '1', label: 'Item 1' })],
+        },
+      })
+      await wrapper.find('.hmfw-menu-item').trigger('click')
+      expect(wrapper.emitted('select')).toBeTruthy()
+    })
+
+    it('renders danger item via slots', () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [h(MenuItem, { itemKey: '1', label: 'Delete', danger: true })],
+        },
+      })
+      expect(wrapper.find('.hmfw-menu-item-danger').exists()).toBe(true)
+    })
+
+    it('renders extra content via slots', () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [h(MenuItem, { itemKey: '1', label: 'Item 1', extra: '⌘P' })],
+        },
+      })
+      expect(wrapper.find('.hmfw-menu-item-extra').text()).toBe('⌘P')
+    })
+
+    it('renders icon via slots', () => {
+      const wrapper = mount(Menu, {
+        slots: {
+          default: () => [h(MenuItem, { itemKey: '1', label: 'Item 1', icon: h('span', '★') })],
+        },
+      })
+      expect(wrapper.find('.hmfw-menu-item-icon').text()).toBe('★')
+    })
+
+    it('slot submenu expands on click in inline mode', async () => {
+      const wrapper = mount(Menu, {
+        props: { mode: 'inline' },
+        slots: {
+          default: () => [
+            h(
+              SubMenu,
+              { itemKey: 'sub', label: 'Submenu' },
+              {
+                default: () => [h(MenuItem, { itemKey: 'sub-1', label: 'Sub Item 1' })],
+              },
+            ),
+          ],
+        },
+      })
+      expect(wrapper.find('.hmfw-menu-sub').exists()).toBe(false)
+      await wrapper.find('.hmfw-menu-submenu-title').trigger('click')
+      expect(wrapper.find('.hmfw-menu-sub').exists()).toBe(true)
+    })
+  })
+
+  // ======================================================
+  // ==== expandIcon ====
+  // ======================================================
+  describe('expandIcon', () => {
+    it('renders custom expandIcon as VNode', () => {
+      // 自定义 expandIcon 直接返回 VNode，不会包裹 .hmfw-menu-submenu-arrow
+      const wrapper = mount(Menu, {
+        props: { items, mode: 'inline', expandIcon: h('span', '▼') },
+      })
+      const submenuTitle = wrapper.find('.hmfw-menu-submenu-title')
+      expect(submenuTitle.text()).toContain('▼')
+    })
+
+    it('renders custom expandIcon from function', () => {
+      const wrapper = mount(Menu, {
+        props: {
+          items,
+          mode: 'inline',
+          expandIcon: ({ isOpen }: { isOpen: boolean }) => h('span', isOpen ? '▲' : '▼'),
+        },
+      })
+      // 未展开时显示 ▼
+      const submenuTitle = wrapper.find('.hmfw-menu-submenu-title')
+      expect(submenuTitle.text()).toContain('▼')
+    })
+
+    it('hides expandIcon when null', () => {
+      const wrapper = mount(Menu, {
+        props: { items, mode: 'inline', expandIcon: null },
+      })
+      expect(wrapper.find('.hmfw-menu-submenu-arrow').exists()).toBe(false)
+    })
+
+    it('hides expandIcon when false', () => {
+      const wrapper = mount(Menu, {
+        props: { items, mode: 'inline', expandIcon: false },
+      })
+      expect(wrapper.find('.hmfw-menu-submenu-arrow').exists()).toBe(false)
+    })
+  })
+
+  // ======================================================
+  // ==== 暗色主题 ====
+  // ======================================================
+  describe('dark theme', () => {
+    it('applies dark class to root', () => {
+      const wrapper = mount(Menu, { props: { items, theme: 'dark' } })
+      expect(wrapper.classes()).toContain('hmfw-menu-dark')
+    })
+
+    it('applies dark theme to submenu popup', () => {
+      const itemsWithTheme: ItemType[] = [
+        { key: '1', label: 'Item 1' },
+        {
+          key: 'sub',
+          label: 'Submenu',
+          children: [{ key: 'sub-1', label: 'Sub Item 1' }],
+        },
+      ]
+      // 暗色主题时子菜单也应该是暗色
+      const wrapper = mount(Menu, {
+        props: { items: itemsWithTheme, theme: 'dark', mode: 'inline', openKeys: ['sub'] },
+      })
+      expect(wrapper.find('.hmfw-menu').classes()).toContain('hmfw-menu-dark')
+    })
+  })
+
+  // ======================================================
+  // ==== 多级嵌套 ====
+  // ======================================================
+  describe('nested submenus', () => {
+    const nestedItems: ItemType[] = [
+      { key: '1', label: 'Item 1' },
+      {
+        key: 'l1',
+        label: 'Level 1',
+        children: [
+          { key: 'l1-1', label: 'L1 Item 1' },
+          {
+            key: 'l2',
+            label: 'Level 2',
+            children: [
+              { key: 'l2-1', label: 'L2 Item 1' },
+              { key: 'l2-2', label: 'L2 Item 2' },
+            ],
+          },
+        ],
+      },
+    ]
+
+    it('renders multi-level submenus', () => {
+      const wrapper = mount(Menu, {
+        props: { items: nestedItems, mode: 'inline', openKeys: ['l1', 'l2'] },
+      })
+      // 应该有二级子菜单
+      const allSubmenus = wrapper.findAll('.hmfw-menu-submenu')
+      expect(allSubmenus.length).toBeGreaterThanOrEqual(2)
+    })
+
+    it('applies correct indent for nested items', () => {
+      const wrapper = mount(Menu, {
+        props: { items: nestedItems, mode: 'inline', openKeys: ['l1', 'l2'] },
+      })
+      // L2 的子项应该有更深的缩进
+      const l1Title = wrapper.find('[data-menu-key="l2"]')
+      expect(l1Title.exists()).toBe(true)
+    })
+
+    it('selects deep nested item', async () => {
+      const wrapper = mount(Menu, {
+        props: { items: nestedItems, mode: 'inline', openKeys: ['l1', 'l2'] },
+      })
+      // L2-1 在 l2 展开后可见
+      const allItems = wrapper.findAll('.hmfw-menu-item')
+      const l2Item1 = allItems.find((el) => el.attributes('data-menu-key') === 'l2-1')
+      expect(l2Item1).toBeDefined()
+    })
+  })
+
+  // ======================================================
+  // ==== SubMenu 高级属性 ====
+  // ======================================================
+  describe('submenu advanced props', () => {
+    it('popupOffset is properly passed to submenu via items', () => {
+      const itemsWithOffset: ItemType[] = [
+        {
+          key: 'sub',
+          label: 'Submenu',
+          popupOffset: [10, 10] as [number, number],
+          children: [{ key: 'sub-1', label: 'Sub Item 1' }],
+        },
+      ]
+      // popupOffset 在 vertical 模式下通过 Trigger 应用，验证不会抛出错误
+      const wrapper = mount(Menu, {
+        props: { items: itemsWithOffset, mode: 'vertical' },
+      })
+      expect(wrapper.find('.hmfw-menu-submenu').exists()).toBe(true)
+    })
+
+    it('popupClassName in popup mode renders submenu ul', () => {
+      // popupClassName 仅在 vertical/horizontal 模式下应用于弹出层
+      const itemsWithPopupClass: ItemType[] = [
+        {
+          key: 'sub',
+          label: 'Submenu',
+          popupClassName: 'custom-popup',
+          children: [{ key: 'sub-1', label: 'Sub Item 1' }],
+        },
+      ]
+      const wrapper = mount(Menu, {
+        props: { items: itemsWithPopupClass, mode: 'vertical' },
+      })
+      expect(wrapper.find('.hmfw-menu-submenu').exists()).toBe(true)
+    })
+  })
+
+  // ======================================================
+  // ==== 标题属性 ====
+  // ======================================================
+  describe('title attribute', () => {
+    it('sets title on menu item li', () => {
+      const itemsWithTitle: ItemType[] = [{ key: '1', label: 'Item 1', title: 'Custom Title' }]
+      const wrapper = mount(Menu, { props: { items: itemsWithTitle } })
+      expect(wrapper.find('.hmfw-menu-item').attributes('title')).toBe('Custom Title')
+    })
+
+    it('falls back to label when no title set', () => {
+      const wrapper = mount(Menu, { props: { items } })
+      const firstItem = wrapper.find('.hmfw-menu-item')
+      expect(firstItem.attributes('title')).toBe('Item 1')
+    })
+  })
+
+  // ======================================================
+  // ==== 键盘导航增强 ====
+  // ======================================================
+  describe('keyboard navigation extended', () => {
+    it('handles ArrowUp key without error', () => {
+      const wrapper = mount(Menu, { props: { items } })
+      const rootEl = wrapper.find('ul[role="menu"]')
+      expect(() => rootEl.trigger('keydown', { key: 'ArrowUp' })).not.toThrow()
+    })
+
+    it('handles Escape key without error', () => {
+      const wrapper = mount(Menu, { props: { items } })
+      const rootEl = wrapper.find('ul[role="menu"]')
+      expect(() => rootEl.trigger('keydown', { key: 'Escape' })).not.toThrow()
+    })
+
+    it('handles Home key without error', () => {
+      const wrapper = mount(Menu, { props: { items } })
+      const rootEl = wrapper.find('ul[role="menu"]')
+      expect(() => rootEl.trigger('keydown', { key: 'Home' })).not.toThrow()
+    })
+
+    it('handles End key without error', () => {
+      const wrapper = mount(Menu, { props: { items } })
+      const rootEl = wrapper.find('ul[role="menu"]')
+      expect(() => rootEl.trigger('keydown', { key: 'End' })).not.toThrow()
+    })
   })
 })

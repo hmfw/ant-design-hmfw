@@ -3,7 +3,6 @@ import { describe, it, expect, vi } from 'vitest'
 import { FloatButton } from '../FloatButton'
 import { FloatButtonGroup } from '../FloatButtonGroup'
 import { FloatButtonBackTop } from '../FloatButtonBackTop'
-import { FloatButton as FloatButtonCompound } from '../index'
 import { SettingOutlined } from '@hmfw/icons'
 
 describe('FloatButton', () => {
@@ -112,13 +111,6 @@ describe('FloatButton', () => {
       props: { tooltip: { title: 'Tip', placement: 'top' } },
     })
     expect(wrapper.find('.hmfw-float-btn').exists()).toBe(true)
-  })
-})
-
-describe('FloatButton compound statics', () => {
-  it('exposes Group and BackTop', () => {
-    expect(FloatButtonCompound.Group).toBe(FloatButtonGroup)
-    expect(FloatButtonCompound.BackTop).toBe(FloatButtonBackTop)
   })
 })
 

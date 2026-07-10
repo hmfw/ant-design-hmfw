@@ -620,7 +620,3 @@ export const FormItem = defineComponent({
     }
   },
 })
-
-// Compound API: AntD parity for `<Form.Item>` usage in templates.
-;(Form as typeof Form & { Item: typeof FormItem; useForm: typeof useForm }).Item = FormItem
-;(Form as typeof Form & { useForm: typeof useForm }).useForm = useForm

@@ -1,17 +1,28 @@
-import { defineComponent } from 'vue'
+import { defineComponent, inject } from 'vue'
+import { cls } from '../_utils'
+import { MENU_CONTEXT_KEY, type MenuContext } from './types'
+import type { MenuDividerType } from './types'
 
-/**
- * Menu.Divider 子组件 — 用于 JSX 声明式写法
- *
- * 该组件本身不渲染任何 DOM，由父级 Menu 通过 slot 解析并统一渲染。
- */
 export const MenuDivider = defineComponent({
   name: 'MenuDivider',
   props: {
-    key: String,
+    /** items prop 驱动时传入 */
+    item: Object as unknown as () => MenuDividerType,
+    /** slot 声明式时传入 */
+    itemKey: String,
     dashed: Boolean,
   },
-  setup() {
-    return () => null
+  setup(props) {
+    const context = inject<MenuContext>(MENU_CONTEXT_KEY)!
+
+    return () => {
+      const dashed = props.item?.dashed ?? props.dashed
+      const dividerCls = cls(
+        `${context.prefixCls}-item-divider`,
+        { [`${context.prefixCls}-item-divider-dashed`]: dashed },
+        context.classNames?.divider,
+      )
+      return <li class={dividerCls} style={context.styles?.divider} role="separator" />
+    }
   },
 })

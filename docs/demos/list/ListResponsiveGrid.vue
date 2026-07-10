@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Card } from '@hmfw/ant-design'
+import { List, ListItem, Card } from '@hmfw/ant-design'
 
 const data = Array.from({ length: 12 }, (_, i) => ({
   id: i + 1,
@@ -30,7 +30,7 @@ const data = Array.from({ length: 12 }, (_, i) => ({
 }))
 
 const renderItem = (item: { id: number; title: string; content: string }) =>
-  h(List.Item, null, () => h(Card, { title: item.title, hoverable: true }, () => item.content))
+  h(ListItem, null, () => h(Card, { title: item.title, hoverable: true }, () => item.content))
 </script>
 
 <style scoped>

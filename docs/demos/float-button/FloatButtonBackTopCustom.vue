@@ -5,7 +5,7 @@
       <div class="back-top-demo__inner">
         <p v-for="n in 20" :key="n">默认样式，第 {{ n }} 行…</p>
       </div>
-      <FloatButton.BackTop :target="() => container1" :visibility-height="50" :style="pos" />
+      <FloatButtonBackTop :target="() => container1" :visibility-height="50" :style="pos" />
     </div>
 
     <!-- 场景 2：自定义图标和形状 -->
@@ -13,7 +13,7 @@
       <div class="back-top-demo__inner">
         <p v-for="n in 20" :key="n">自定义图标，第 {{ n }} 行…</p>
       </div>
-      <FloatButton.BackTop
+      <FloatButtonBackTop
         :target="() => container2"
         :visibility-height="50"
         type="primary"
@@ -29,7 +29,7 @@
       <div class="back-top-demo__inner">
         <p v-for="n in 20" :key="n">带文本，第 {{ n }} 行…</p>
       </div>
-      <FloatButton.BackTop
+      <FloatButtonBackTop
         :target="() => container3"
         :visibility-height="50"
         type="primary"
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FloatButton } from '@hmfw/ant-design'
+import { FloatButtonBackTop } from '@hmfw/ant-design'
 
 const container1 = ref<HTMLElement | null>(null)
 const container2 = ref<HTMLElement | null>(null)

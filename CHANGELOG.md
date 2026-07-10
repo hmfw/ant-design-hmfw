@@ -6,6 +6,28 @@
 
 ---
 
+## [0.11.0] - 2026-07-10
+
+### 🔧 重构
+
+- **Menu 渲染架构**: Menu.tsx（~790 → ~236 行）渲染逻辑分发到 `MenuItem`/`SubMenu`/`MenuDivider`/`MenuItemGroup` 四个子组件，采用 `provide`/`inject` 通信模式，与 Collapse/Form/Radio 保持一致
+- **Menu 依赖精简**: `context.ts` 合并至 `types.ts`，`renderUtils.tsx` 转换为 `composables/useMenuRender.tsx`，减少文件碎片
+- **移除 JSX 复合组件模式**: 7 个组件的 `Parent.Child = Child` 静态属性挂载已移除（`Menu`、`Form`、`Radio`、`Descriptions`、`List`、`FloatButton`、`Timeline`），统一使用 re-export，Vue 模板中直接 import 子组件使用
+
+### 🐛 修复
+
+- **Menu**: 子组件 `key` prop 重命名为 `itemKey`，修复 Vue 保留字冲突导致的 `[Vue warn]: Invalid prop name: "key"` 告警
+
+### 🧪 测试
+
+- **Menu**: 测试用例从 53 → 79（+26），新增 Slot 模式、expandIcon、暗色主题、多级嵌套、SubMenu 高级属性、键盘导航增强等覆盖
+
+### 📝 文档
+
+- **Menu**: 新增 4 个 Demo（暗色主题、声明式写法、自定义展开图标、垂直弹出模式）
+
+---
+
 ## [0.10.0] - 2026-07-10
 
 ### 🔧 重构

@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List } from '@hmfw/ant-design'
+import { List, ListItem } from '@hmfw/ant-design'
 
 const data = [{ title: '列表项 1' }, { title: '列表项 2' }, { title: '列表项 3' }]
 
@@ -18,7 +18,7 @@ function onDelete(item: any) {
 
 const renderItem = (item: any) =>
   h(
-    List.Item,
+    ListItem,
     {
       actions: [h('a', { onClick: () => onEdit(item) }, '编辑'), h('a', { onClick: () => onDelete(item) }, '删除')],
     },

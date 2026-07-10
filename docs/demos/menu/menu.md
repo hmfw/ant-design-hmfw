@@ -26,6 +26,14 @@
   <MenuInline />
 </DemoBlock>
 
+### 暗色主题
+
+设置 `theme="dark"` 使用暗色主题。
+
+<DemoBlock title="暗色主题" :source="MenuDarkSource">
+  <MenuDark />
+</DemoBlock>
+
 ### 折叠菜单
 
 内嵌菜单可以被折叠。
@@ -66,6 +74,14 @@
   <MenuGlobalIcon />
 </DemoBlock>
 
+### 自定义展开图标
+
+通过 `expandIcon` 属性自定义子菜单展开图标，支持 VNode、函数（接收 `{ isOpen }` 参数）、`null`/`false`（隐藏图标）。
+
+<DemoBlock title="自定义展开图标" :source="MenuExpandIconSource">
+  <MenuExpandIcon />
+</DemoBlock>
+
 ### 收起状态提示
 
 inlineCollapsed 为 true 时，鼠标悬停会自动显示 Tooltip 提示。
@@ -90,12 +106,28 @@ inlineCollapsed 为 true 时，鼠标悬停会自动显示 Tooltip 提示。
   <MenuTrigger />
 </DemoBlock>
 
+### 垂直弹出模式
+
+`mode="vertical"` 时子菜单以弹出层形式展开，支持悬停或点击触发。
+
+<DemoBlock title="垂直弹出模式" :source="MenuVerticalSource">
+  <MenuVertical />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
 
 <DemoBlock title="语义化 className 与 style" :source="MenuClassNamesSource">
   <MenuClassNames />
+</DemoBlock>
+
+### 声明式写法（Slots）
+
+除了 `items` 属性，也支持直接使用 `<MenuItem>`、`<SubMenu>` 等子组件进行声明式组合。
+
+<DemoBlock title="声明式写法" :source="MenuSlotSource">
+  <MenuSlot />
 </DemoBlock>
 
 ## API

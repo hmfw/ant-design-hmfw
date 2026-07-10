@@ -3,13 +3,13 @@
     <div class="back-top-demo__inner">
       <p v-for="n in 30" :key="n">向下滚动这块区域，第 {{ n }} 行…</p>
     </div>
-    <FloatButton.BackTop :target="getTarget" :visibility-height="80" tooltip="回到顶部" :style="pos" />
+    <FloatButtonBackTop :target="getTarget" :visibility-height="80" tooltip="回到顶部" :style="pos" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FloatButton } from '@hmfw/ant-design'
+import { FloatButtonBackTop } from '@hmfw/ant-design'
 
 const containerRef = ref<HTMLElement | null>(null)
 const getTarget = () => containerRef.value as HTMLElement

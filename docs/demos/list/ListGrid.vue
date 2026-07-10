@@ -4,10 +4,9 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Card } from '@hmfw/ant-design'
+import { List, ListItem, Card } from '@hmfw/ant-design'
 
 const data = ['Content 1', 'Content 2', 'Content 3', 'Content 4', 'Content 5', 'Content 6', 'Content 7', 'Content 8']
 
-const renderItem = (item: string) =>
-  h(List.Item, null, () => h(Card, { title: item }, () => `Card content for ${item}`))
+const renderItem = (item: string) => h(ListItem, null, () => h(Card, { title: item }, () => `Card content for ${item}`))
 </script>

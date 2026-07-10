@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Avatar } from '@hmfw/ant-design'
+import { List, ListItem, ListItemMeta, Avatar } from '@hmfw/ant-design'
 
 const data = [
   {
@@ -27,13 +27,13 @@ const data = [
 
 const renderItem = (item: any) =>
   h(
-    List.Item,
+    ListItem,
     {
       extra: h('img', { src: item.extra, style: { width: '272px' } }),
       actions: [h('span', '👁 156'), h('span', '💬 2'), h('span', '⭐ 156')],
     },
     () => [
-      h(List.Item.Meta, {
+      h(ListItemMeta, {
         avatar: h(Avatar, { src: item.avatar }),
         title: h('a', { href: '#' }, item.title),
         description: item.description,

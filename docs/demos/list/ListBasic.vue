@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List } from '@hmfw/ant-design'
+import { List, ListItem } from '@hmfw/ant-design'
 
 const data = [
   'Racing car sprays burning fuel into crowd.',
@@ -13,5 +13,5 @@ const data = [
   'Man charged over missing wedding girl.',
 ]
 
-const renderItem = (item: string) => h(List.Item, null, () => item)
+const renderItem = (item: string) => h(ListItem, null, () => item)
 </script>

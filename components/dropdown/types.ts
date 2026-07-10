@@ -10,6 +10,17 @@ export interface DropdownArrowOptions {
 }
 
 /**
+ * Dropdown 菜单配置 — 在 MenuProps 基础上补充事件回调
+ * 注意：这些回调不在 Vue prop 系统中传递，而是由 Dropdown 拦截 Menu 事件后调用
+ */
+export interface DropdownMenuConfig extends MenuProps {
+  onClick?: (info: { key: string }) => void
+  onSelect?: (info: { key: string; selectedKeys: string[] }) => void
+  onDeselect?: (info: { key: string; selectedKeys: string[] }) => void
+  onOpenChange?: (openKeys: string[]) => void
+}
+
+/**
  * Dropdown 各部分的语义化 className
  */
 export interface DropdownClassNames {
@@ -38,7 +49,7 @@ export interface DropdownStyles {
 }
 
 export interface DropdownProps {
-  menu?: MenuProps
+  menu?: DropdownMenuConfig
   trigger?: DropdownTrigger | DropdownTrigger[]
   placement?: DropdownPlacement
   open?: boolean

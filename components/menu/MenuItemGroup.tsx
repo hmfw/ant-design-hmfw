@@ -1,17 +1,41 @@
-import { defineComponent } from 'vue'
+import { defineComponent, inject } from 'vue'
+import { cls } from '../_utils'
+import { MENU_CONTEXT_KEY, type MenuContext } from './types'
+import type { MenuItemGroupType } from './types'
 
-/**
- * Menu.ItemGroup 子组件 — 用于 JSX 声明式写法
- *
- * 该组件本身不渲染任何 DOM，由父级 Menu 通过 slot 解析并统一渲染。
- */
 export const MenuItemGroup = defineComponent({
   name: 'MenuItemGroup',
   props: {
-    key: String,
+    /** items prop 驱动时传入 */
+    item: Object as unknown as () => MenuItemGroupType,
+    /** slot 声明式时传入 */
+    itemKey: String,
     label: String,
   },
-  setup() {
-    return () => null
+  setup(props, { slots }) {
+    const context = inject<MenuContext>(MENU_CONTEXT_KEY)!
+
+    return () => {
+      const label = props.item?.label ?? props.label
+      return (
+        <li
+          class={cls(`${context.prefixCls}-item-group`, context.classNames?.itemGroup)}
+          style={context.styles?.itemGroup}
+        >
+          <div
+            class={cls(`${context.prefixCls}-item-group-title`, context.classNames?.itemGroupTitle)}
+            style={context.styles?.itemGroupTitle}
+          >
+            {label}
+          </div>
+          <ul
+            class={cls(`${context.prefixCls}-item-group-list`, context.classNames?.itemGroupList)}
+            style={context.styles?.itemGroupList}
+          >
+            {slots.default?.()}
+          </ul>
+        </li>
+      )
+    }
   },
 })

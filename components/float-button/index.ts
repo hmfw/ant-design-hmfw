@@ -1,17 +1,7 @@
-import { FloatButton as InternalFloatButton } from './FloatButton'
-import { FloatButtonGroup } from './FloatButtonGroup'
-import { FloatButtonBackTop } from './FloatButtonBackTop'
+export { FloatButton } from './FloatButton'
+export { FloatButtonGroup } from './FloatButtonGroup'
+export { FloatButtonBackTop } from './FloatButtonBackTop'
 
-type FloatButtonCompound = typeof InternalFloatButton & {
-  Group: typeof FloatButtonGroup
-  BackTop: typeof FloatButtonBackTop
-}
-
-const FloatButton = InternalFloatButton as FloatButtonCompound
-FloatButton.Group = FloatButtonGroup
-FloatButton.BackTop = FloatButtonBackTop
-
-export { FloatButton, FloatButtonGroup, FloatButtonBackTop }
 export type {
   FloatButtonProps,
   FloatButtonGroupProps,

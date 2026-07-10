@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List, Avatar } from '@hmfw/ant-design'
+import { List, ListItem, ListItemMeta, Avatar } from '@hmfw/ant-design'
 
 const data = [
   {
@@ -25,8 +25,8 @@ const data = [
 ]
 
 const renderItem = (item: any) =>
-  h(List.Item, null, () =>
-    h(List.Item.Meta, {
+  h(ListItem, null, () =>
+    h(ListItemMeta, {
       avatar: h(Avatar, { src: item.avatar }),
       title: item.title,
       description: item.description,

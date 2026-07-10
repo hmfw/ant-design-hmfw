@@ -79,11 +79,6 @@ describe('FormItem', () => {
 })
 
 describe('Form (extended)', () => {
-  it('exposes Form.Item / Form.useForm namespace (AntD parity)', () => {
-    expect((Form as any).Item).toBe(FormItem)
-    expect((Form as any).useForm).toBe(useForm)
-  })
-
   it('formRef.validate() resolves on valid model', async () => {
     const ChildForm = defineComponent({
       setup(_, { expose }) {

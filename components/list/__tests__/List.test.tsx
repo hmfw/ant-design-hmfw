@@ -229,12 +229,6 @@ describe('ListItemMeta', () => {
   })
 })
 
-describe('List.Item.Meta', () => {
-  it('is properly mounted', () => {
-    expect(List.Item.Meta).toBe(ListItemMeta)
-  })
-})
-
 describe('List Virtual Scroll', () => {
   it('renders with virtual scroll enabled', () => {
     const largeData = Array.from({ length: 1000 }, (_, i) => `Item ${i + 1}`)
