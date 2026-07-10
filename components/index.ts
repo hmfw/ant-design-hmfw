@@ -385,7 +385,7 @@ export type {
 
 // Carousel
 export { Carousel } from './carousel'
-export type { CarouselProps, CarouselEffect, CarouselDotPosition, CarouselClassNames, CarouselStyles } from './carousel'
+export type { CarouselProps, CarouselEffect, CarouselClassNames, CarouselStyles } from './carousel'
 
 // Tour
 export { Tour } from './tour'

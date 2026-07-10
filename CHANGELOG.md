@@ -6,6 +6,48 @@
 
 ---
 
+## [0.8.0] - 2026-07-10
+
+### 💥 Breaking Changes
+
+- **Carousel**: `infinite` → `loop`，与 Swiper 生态命名对齐
+- **Carousel**: `slidesToShow` → `slidesPerView`，`slidesToScroll` → `slidesPerGroup`，与 Swiper 命名对齐
+- **Carousel**: `autoplaySpeed` → `delay`，语义更准确
+- **Carousel**: `rootClassName` 移除，统一使用 `classNames.root`
+- **Carousel**: `dots` 不再支持 `{ className }` 对象形式，使用 `classNames.dots` 替代
+- **Carousel**: `autoplay` 不再支持 `{ dotDuration }` 对象形式，`dotDuration` 功能已移除
+- **Carousel**: `CarouselAutoplayConfig`、`CarouselDotsConfig` 接口已移除
+- **Carousel**: `CarouselDotPosition` 类型名称已移除，统一为 `CarouselDotPlacement`
+
+### 🔧 重构
+
+- **Carousel**: `goTo` 函数拆分为 `normalizeIndex` + `handleTransitionEnd` + `clearTransitionTimer`，函数体从 54 行缩减至 25 行
+- **Carousel**: 提取 `wrapIndex` 工具函数，消除 5 处重复的模运算回绕代码
+- **Carousel**: 提取 `renderArrow` 消除 prev/next 箭头渲染重复
+- **Carousel**: 提取 `renderTrack` / `renderDots` / `renderSlide` 子渲染函数，主 render 从 130 行缩减至 ~35 行
+- **Carousel**: track/list style 从 computed 改为 render 局部变量，减少不必要的依赖追踪
+- **Carousel**: 箭头改用原生 `<button>` 替代 `<Button>` 组件，消除 CSS 中全部 `!important`
+- **Carousel**: `carouselProps` 添加 `as PropType<T>` 类型标注，与 Button/Input 等组件规范统一
+- **Carousel**: 补充 `CarouselEmits` 类型定义并导出
+
+### ✨ 增强
+
+- **Carousel**: `loop: false` 时首/尾箭头自动置灰 + `cursor: not-allowed`
+- **Carousel**: `waitForAnimate` 拦截时开发环境输出 console.warn，提示动画进行中
+- **Carousel**: `slidesPerView`/`slidesPerGroup` ≤ 0 时开发环境输出 console.warn，提示已自动修正
+- **Carousel**: `onBeforeUnmount` 补充 `clearTransitionTimer()`，防止非 autoplay 场景定时器泄漏
+
+### 🐛 修复
+
+- **Carousel**: 自适应高度模式下 `align-items: flex-start` 解除 flex stretch，修复不同高度 slide 切换时高度不变的问题
+- **Carousel**: `CarouselDotPlacement` 类型补全 `'left' | 'right'`，与运行时兼容映射对齐
+
+### 🌐 国际化
+
+- **Carousel**: `aria-label` 统一改为中文（走马灯 / 上一页 / 下一页 / 跳转到第 N 页）
+
+---
+
 ## [0.7.1] - 2026-07-09
 
 ### 🔧 重构

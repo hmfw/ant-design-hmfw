@@ -2,26 +2,20 @@ import type { CSSProperties, VNode } from 'vue'
 
 export type CarouselEffect = 'scrollx' | 'fade'
 
-/** @deprecated Use `dotPlacement` instead */
-export type CarouselDotPosition = 'top' | 'bottom' | 'left' | 'right'
-
-export type CarouselDotPlacement = 'top' | 'bottom' | 'start' | 'end'
-
-export interface CarouselDotsConfig {
-  className?: string
-}
-
-export interface CarouselAutoplayConfig {
-  /** Display progress bar on dots (v5.24.0+) */
-  dotDuration?: boolean
-}
+export type CarouselDotPlacement = 'top' | 'bottom' | 'left' | 'right' | 'start' | 'end'
 
 export interface CarouselRef {
+  /** 跳转到指定 slide */
   goTo: (slide: number, dontAnimate?: boolean) => void
+  /** 切换到下一张 */
   next: () => void
+  /** 切换到上一张 */
   prev: () => void
+  /** 跳转到指定页 */
   goToPage: (page: number, dontAnimate?: boolean) => void
+  /** 切换到下一页 */
   nextPage: () => void
+  /** 切换到上一页 */
   prevPage: () => void
 }
 
@@ -82,53 +76,51 @@ export interface CarouselStyles {
 }
 
 export interface CarouselProps {
-  /** Whether to scroll automatically */
-  autoplay?: boolean | CarouselAutoplayConfig
-  /** Delay between each auto scroll (in milliseconds) */
-  autoplaySpeed?: number
-  /** Whether to show the dots at the bottom of the gallery */
-  dots?: boolean | CarouselDotsConfig
-  /**
-   * The position of the dots
-   * @deprecated Use `dotPlacement` instead
-   */
-  dotPosition?: CarouselDotPosition
-  /** The position of the dots, which can be one of `top` `bottom` `start` `end` */
+  /** 是否自动切换 */
+  autoplay?: boolean
+  /** 自动切换间隔（ms） */
+  delay?: number
+  /** 是否显示指示点 */
+  dots?: boolean
+  /** 指示点位置，可选 `top` `bottom` `start` `end` */
   dotPlacement?: CarouselDotPlacement
-  /** Transition effect */
+  /** 切换效果 */
   effect?: CarouselEffect
-  /** Whether to use fade transition (takes priority over effect) */
+  /** 是否使用渐显过渡（优先级高于 `effect`） */
   fade?: boolean
-  /** Infinitely wrap around contents */
-  infinite?: boolean
-  /** Animation speed in milliseconds */
+  /** 是否循环播放 */
+  loop?: boolean
+  /** 动画时长（ms） */
   speed?: number
-  /** Transition interpolation function name */
+  /** 过渡缓动函数 */
   easing?: string
-  /** Initial slide index */
+  /** 初始 slide 索引 */
   initialSlide?: number
-  /** Whether to show switch arrows */
+  /** 是否显示切换箭头 */
   arrows?: boolean
-  /** Custom previous arrow */
+  /** 自定义前进箭头 */
   prevArrow?: VNode
-  /** Custom next arrow */
+  /** 自定义后退箭头 */
   nextArrow?: VNode
-  /** Whether to wait for the animation when switching */
+  /** 切换时是否等待动画完成 */
   waitForAnimate?: boolean
-  /** Adjust the height of the carousel for the current slide */
+  /** 根据当前 slide 自动调整高度 */
   adaptiveHeight?: boolean
-  /** Number of slides to show at once */
-  slidesToShow?: number
-  /** Number of slides to scroll at once */
-  slidesToScroll?: number
-  /** Center mode: center current slide with partial prev/next slides visible */
-  centerMode?: boolean
-  /** Side padding when in center mode (px or %) */
-  centerPadding?: string
-  /** Root class name */
-  rootClassName?: string
+  /** 每屏显示的 slide 数量 */
+  slidesPerView?: number
+  /** 每次步进的 slide 数量 */
+  slidesPerGroup?: number
+  /** slide 之间的间距（px），仅在 `slidesPerView > 1` 时生效 */
+  spaceBetween?: number
   /** 语义化类名 */
   classNames?: CarouselClassNames
   /** 语义化样式 */
   styles?: CarouselStyles
+}
+
+export interface CarouselEmits {
+  /** 切换前触发 */
+  beforeChange: (from: number, to: number) => void
+  /** 切换完成时触发 */
+  afterChange: (current: number) => void
 }

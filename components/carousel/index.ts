@@ -1,11 +1,9 @@
 export { Carousel } from './Carousel'
 export type {
   CarouselProps,
+  CarouselEmits,
   CarouselEffect,
-  CarouselDotPosition,
   CarouselDotPlacement,
-  CarouselDotsConfig,
-  CarouselAutoplayConfig,
   CarouselRef,
   CarouselClassNames,
   CarouselStyles,

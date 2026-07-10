@@ -20,7 +20,7 @@ describe('Carousel', () => {
 
   it('renders slides', () => {
     const wrapper = mount(Carousel, {
-      props: { infinite: false },
+      props: { loop: false },
       slots: { default: slides },
     })
     expect(wrapper.findAll('.hmfw-carousel-slide').length).toBe(3)
@@ -28,7 +28,7 @@ describe('Carousel', () => {
 
   it('shows first slide as active by default', () => {
     const wrapper = mount(Carousel, {
-      props: { infinite: false },
+      props: { loop: false },
       slots: { default: slides },
     })
     const active = wrapper.findAll('.hmfw-carousel-slide-active')
@@ -50,9 +50,9 @@ describe('Carousel', () => {
     expect(wrapper.find('.hmfw-carousel-dots').exists()).toBe(false)
   })
 
-  it('supports dots object config with className', () => {
+  it('supports custom dots class via classNames', () => {
     const wrapper = mount(Carousel, {
-      props: { dots: { className: 'custom-dots' } },
+      props: { classNames: { dots: 'custom-dots' } },
       slots: { default: slides },
     })
     expect(wrapper.find('.custom-dots').exists()).toBe(true)
@@ -137,7 +137,7 @@ describe('Carousel', () => {
 
   it('autoplay advances slides', async () => {
     const wrapper = mount(Carousel, {
-      props: { autoplay: true, autoplaySpeed: 1000 },
+      props: { autoplay: true, delay: 1000 },
       slots: { default: slides },
     })
     vi.advanceTimersByTime(1500)
@@ -146,18 +146,9 @@ describe('Carousel', () => {
     wrapper.unmount()
   })
 
-  it('supports autoplay object config with dotDuration', () => {
+  it('wraps around with loop=true', async () => {
     const wrapper = mount(Carousel, {
-      props: { autoplay: { dotDuration: true }, autoplaySpeed: 2000 },
-      slots: { default: slides },
-    })
-    expect(wrapper.find('.hmfw-carousel-dots-progress').exists()).toBe(true)
-    expect(wrapper.find('.hmfw-carousel').attributes('style')).toContain('--carousel-dot-duration: 2000ms')
-  })
-
-  it('wraps around with infinite=true', async () => {
-    const wrapper = mount(Carousel, {
-      props: { infinite: true, arrows: true },
+      props: { loop: true, arrows: true },
       slots: { default: slides },
     })
     await wrapper.findAll('.hmfw-carousel-dots li')[2].trigger('click')
@@ -220,22 +211,6 @@ describe('Carousel', () => {
     expect(wrapper.find('.hmfw-carousel-slide-active').text()).toBe('Slide 2')
   })
 
-  it('applies rootClassName', () => {
-    const wrapper = mount(Carousel, {
-      props: { rootClassName: 'my-carousel' },
-      slots: { default: slides },
-    })
-    expect(wrapper.find('.my-carousel').exists()).toBe(true)
-  })
-
-  it('uses dotPlacement instead of deprecated dotPosition', () => {
-    const wrapper = mount(Carousel, {
-      props: { dotPlacement: 'top' },
-      slots: { default: slides },
-    })
-    expect(wrapper.find('.hmfw-carousel-dots-top').exists()).toBe(true)
-  })
-
   it('maps dotPlacement start/end to left/right CSS classes', () => {
     const wrapper1 = mount(Carousel, {
       props: { dotPlacement: 'start' },
@@ -252,20 +227,12 @@ describe('Carousel', () => {
     expect(wrapper2.find('.hmfw-carousel-vertical').exists()).toBe(true)
   })
 
-  it('supports deprecated dotPosition with mapping', () => {
-    const wrapper = mount(Carousel, {
-      props: { dotPosition: 'left' },
-      slots: { default: slides },
-    })
-    expect(wrapper.find('.hmfw-carousel-dots-left').exists()).toBe(true)
-  })
-
   it('has accessibility attributes', () => {
     const wrapper = mount(Carousel, { slots: { default: slides } })
     const root = wrapper.find('.hmfw-carousel')
     expect(root.attributes('role')).toBe('region')
     expect(root.attributes('aria-roledescription')).toBe('carousel')
-    expect(root.attributes('aria-label')).toBe('Carousel')
+    expect(root.attributes('aria-label')).toBe('走马灯')
 
     const slide = wrapper.find('.hmfw-carousel-slide')
     expect(slide.attributes('role')).toBe('group')
@@ -318,9 +285,9 @@ describe('Carousel - Multiple Slides', () => {
     vi.useRealTimers()
   })
 
-  it('renders multiple slides per view with slidesToShow', () => {
+  it('renders multiple slides per view with slidesPerView', () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 3 },
+      props: { slidesPerView: 3 },
       slots: { default: slides },
     })
     const slideElements = wrapper.findAll('.hmfw-carousel-slide')
@@ -330,9 +297,9 @@ describe('Carousel - Multiple Slides', () => {
     expect(slideElements[1].attributes('style')).toContain('33.33')
   })
 
-  it('calculates page count correctly with slidesToShow and slidesToScroll', () => {
+  it('calculates page count correctly with slidesPerView and slidesPerGroup', () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 3, slidesToScroll: 2 },
+      props: { slidesPerView: 3, slidesPerGroup: 2 },
       slots: { default: () => Array.from({ length: 10 }, (_, i) => h('div', `Slide ${i + 1}`)) },
     })
 
@@ -340,9 +307,9 @@ describe('Carousel - Multiple Slides', () => {
     expect(wrapper.findAll('.hmfw-carousel-dots li').length).toBe(4)
   })
 
-  it('scrolls by slidesToScroll amount', async () => {
+  it('scrolls by slidesPerGroup amount', async () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 2, slidesToScroll: 2, arrows: true },
+      props: { slidesPerView: 2, slidesPerGroup: 2, arrows: true },
       slots: { default: () => Array.from({ length: 8 }, (_, i) => h('div', `Slide ${i + 1}`)) },
     })
 
@@ -356,7 +323,7 @@ describe('Carousel - Multiple Slides', () => {
 
   it('exposes goToPage, nextPage, prevPage methods', async () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 2, slidesToScroll: 2 },
+      props: { slidesPerView: 2, slidesPerGroup: 2 },
       slots: { default: () => Array.from({ length: 8 }, (_, i) => h('div', `Slide ${i + 1}`)) },
     })
     await wrapper.vm.$nextTick()
@@ -374,9 +341,9 @@ describe('Carousel - Multiple Slides', () => {
     expect(wrapper.emitted('afterChange')?.[0]).toEqual([4])
   })
 
-  it('handles last page with fewer slides than slidesToShow', async () => {
+  it('handles last page with fewer slides than slidesPerView', async () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 3, slidesToScroll: 3, arrows: true },
+      props: { slidesPerView: 3, slidesPerGroup: 3, arrows: true },
       slots: { default: () => Array.from({ length: 7 }, (_, i) => h('div', `Slide ${i + 1}`)) },
     })
 
@@ -390,14 +357,14 @@ describe('Carousel - Multiple Slides', () => {
     vi.advanceTimersByTime(500)
     await wrapper.vm.$nextTick()
 
-    // 应该滚动到 slide index 3 (page 1 * slidesToScroll 3)
+    // 应该滚动到 slide index 3 (page 1 * slidesPerGroup 3)
     // 但最大索引是 4 (7 - 3)，所以是 3
     expect(wrapper.emitted('afterChange')?.[0]).toEqual([3])
   })
 
-  it('disables fade effect when slidesToShow > 1', () => {
+  it('disables fade effect when slidesPerView > 1', () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 3, fade: true },
+      props: { slidesPerView: 3, fade: true },
       slots: { default: slides },
     })
 
@@ -405,34 +372,58 @@ describe('Carousel - Multiple Slides', () => {
     expect(wrapper.find('.hmfw-carousel-fade').exists()).toBe(false)
   })
 
-  it('applies centerMode padding', () => {
+  it('applies spaceBetween gap on track when > 0', () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 3, centerMode: true, centerPadding: '10%' },
+      props: { slidesPerView: 3, spaceBetween: 16 },
       slots: { default: slides },
     })
 
-    const list = wrapper.find('.hmfw-carousel-list')
-    // Vue 会将 padding 格式化为 padding: 0px 10%;
-    expect(list.attributes('style')).toMatch(/padding.*10%/)
+    const track = wrapper.find('.hmfw-carousel-track')
+    expect(track.attributes('style')).toContain('gap: 16px')
   })
 
-  it('shows arrows only when slides > slidesToShow', () => {
+  it('translates track with gap offset when spaceBetween > 0', () => {
+    const wrapper = mount(Carousel, {
+      props: { slidesPerView: 3, spaceBetween: 8, loop: false },
+      slots: { default: slides },
+    })
+
+    const track = wrapper.find('.hmfw-carousel-track')
+    const style = track.attributes('style')
+    // transform 应包含 calc 表达式，补偿 gap 偏移
+    expect(style).toMatch(/calc\(/)
+    expect(style).toContain('8px')
+  })
+
+  it('no gap on track when spaceBetween=0 (default)', () => {
+    const wrapper = mount(Carousel, {
+      props: { slidesPerView: 3 },
+      slots: { default: slides },
+    })
+
+    const track = wrapper.find('.hmfw-carousel-track')
+    const style = track.attributes('style') || ''
+    // 默认不应有 gap
+    expect(style).not.toContain('gap:')
+  })
+
+  it('shows arrows only when slides > slidesPerView', () => {
     const wrapper1 = mount(Carousel, {
-      props: { slidesToShow: 3, arrows: true },
+      props: { slidesPerView: 3, arrows: true },
       slots: { default: slides }, // 3 slides
     })
     expect(wrapper1.find('.hmfw-carousel-arrow').exists()).toBe(false)
 
     const wrapper2 = mount(Carousel, {
-      props: { slidesToShow: 2, arrows: true },
+      props: { slidesPerView: 2, arrows: true },
       slots: { default: slides }, // 3 slides
     })
     expect(wrapper2.find('.hmfw-carousel-arrow').exists()).toBe(true)
   })
 
-  it('autoplay respects slidesToScroll', async () => {
+  it('autoplay respects slidesPerGroup', async () => {
     const wrapper = mount(Carousel, {
-      props: { autoplay: true, autoplaySpeed: 1000, slidesToShow: 2, slidesToScroll: 2 },
+      props: { autoplay: true, delay: 1000, slidesPerView: 2, slidesPerGroup: 2 },
       slots: { default: () => Array.from({ length: 8 }, (_, i) => h('div', `Slide ${i + 1}`)) },
     })
 
@@ -453,9 +444,9 @@ describe('Carousel - Infinite Loop with Multiple Slides', () => {
     vi.useRealTimers()
   })
 
-  it('renders cloned slides for infinite loop with slidesToShow > 1', () => {
+  it('renders cloned slides for loop loop with slidesPerView > 1', () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 3, infinite: true },
+      props: { slidesPerView: 3, loop: true },
       slots: { default: () => Array.from({ length: 5 }, (_, i) => h('div', `Slide ${i + 1}`)) },
     })
 
@@ -464,20 +455,20 @@ describe('Carousel - Infinite Loop with Multiple Slides', () => {
     expect(slides.length).toBe(15)
   })
 
-  it('does not clone slides for infinite loop with slidesToShow = 1', () => {
+  it('does not clone slides for loop loop with slidesPerView = 1', () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 1, infinite: true },
+      props: { slidesPerView: 1, loop: true },
       slots: { default: slides }, // 3 slides
     })
 
-    // infinite 模式下会克隆（3组，共9个）
+    // loop 模式下会克隆（3组，共9个）
     const allSlides = wrapper.findAll('.hmfw-carousel-slide')
     expect(allSlides.length).toBe(9) // 3 * 3 = 9
   })
 
-  it('seamless infinite loop - next at end', async () => {
+  it('seamless loop loop - next at end', async () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 3, slidesToScroll: 1, infinite: true, arrows: true },
+      props: { slidesPerView: 3, slidesPerGroup: 1, loop: true, arrows: true },
       slots: { default: () => Array.from({ length: 6 }, (_, i) => h('div', `Slide ${i + 1}`)) },
     })
 
@@ -501,9 +492,9 @@ describe('Carousel - Infinite Loop with Multiple Slides', () => {
     expect(lastEvent[0]).toBeLessThan(6)
   })
 
-  it('seamless infinite loop - prev at start', async () => {
+  it('seamless loop loop - prev at start', async () => {
     const wrapper = mount(Carousel, {
-      props: { slidesToShow: 3, infinite: true, arrows: true },
+      props: { slidesPerView: 3, loop: true, arrows: true },
       slots: { default: () => Array.from({ length: 6 }, (_, i) => h('div', `Slide ${i + 1}`)) },
     })
 
@@ -516,5 +507,280 @@ describe('Carousel - Infinite Loop with Multiple Slides', () => {
     // 应该跳转到负索引，然后重置
     const afterChangeEvents = wrapper.emitted('afterChange') as any[]
     expect(afterChangeEvents.length).toBeGreaterThan(0)
+  })
+})
+
+// ============================================================
+// 🔴 高优先级补充测试
+// ============================================================
+
+describe('Carousel - adaptiveHeight', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('sets height on list container when adaptiveHeight=true', async () => {
+    const wrapper = mount(Carousel, {
+      props: { adaptiveHeight: true, loop: false },
+      slots: { default: slides },
+    })
+    // updateAdaptiveHeight 内部使用 nextTick，需要两次 tick 才能完成 DOM 更新
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    const list = wrapper.find('.hmfw-carousel-list')
+    const styleAttr = list.attributes('style') || ''
+    // offsetHeight 在 jsdom 中为 0，height 应被设置为 '0px'
+    expect(styleAttr).toContain('height')
+  })
+
+  it('skips height adjustment when dots are vertical (dotPlacement=start)', async () => {
+    const wrapper = mount(Carousel, {
+      props: { adaptiveHeight: true, dotPlacement: 'start', loop: false },
+      slots: { default: slides },
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    const list = wrapper.find('.hmfw-carousel-list')
+    const styleAttr = list.attributes('style') || ''
+    // 竖排 dots 模式下应跳过高度调整，不应有 height
+    expect(styleAttr).not.toContain('height')
+  })
+
+  it('updates height when navigating to a different slide', async () => {
+    const wrapper = mount(Carousel, {
+      props: { adaptiveHeight: true, arrows: true, loop: false },
+      slots: { default: slides },
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    // 导航到下一个 slide
+    await wrapper.find('.hmfw-carousel-arrow-right').trigger('click')
+    vi.advanceTimersByTime(500)
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick() // updateAdaptiveHeight 内部的 nextTick + re-render
+
+    const list = wrapper.find('.hmfw-carousel-list')
+    const styleAttr = list.attributes('style') || ''
+    // 高度 style 应存在
+    expect(styleAttr).toContain('height')
+  })
+})
+
+describe('Carousel - Empty State', () => {
+  it('renders empty root div safely when no slides provided', () => {
+    const wrapper = mount(Carousel, {
+      slots: { default: () => [] },
+    })
+    const root = wrapper.find('.hmfw-carousel')
+    expect(root.exists()).toBe(true)
+    // 没有 slides 时不渲染 list/track/dots/arrows
+    expect(root.find('.hmfw-carousel-list').exists()).toBe(false)
+    expect(root.find('.hmfw-carousel-dots').exists()).toBe(false)
+    expect(root.find('.hmfw-carousel-track').exists()).toBe(false)
+  })
+})
+
+// ============================================================
+// 🟡 中优先级补充测试
+// ============================================================
+
+describe('Carousel - Custom Arrows', () => {
+  it('renders custom prevArrow VNode instead of default button', () => {
+    const wrapper = mount(Carousel, {
+      props: {
+        arrows: true,
+        prevArrow: h('div', { class: 'custom-prev-arrow' }, 'Prev'),
+      },
+      slots: { default: slides },
+    })
+    // 自定义箭头应渲染，默认 Button 不应出现
+    expect(wrapper.find('.custom-prev-arrow').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-carousel-arrow-left').exists()).toBe(false)
+  })
+
+  it('renders custom nextArrow VNode instead of default button', () => {
+    const wrapper = mount(Carousel, {
+      props: {
+        arrows: true,
+        nextArrow: h('div', { class: 'custom-next-arrow' }, 'Next'),
+      },
+      slots: { default: slides },
+    })
+    expect(wrapper.find('.custom-next-arrow').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-carousel-arrow-right').exists()).toBe(false)
+  })
+})
+
+describe('Carousel - Semantic API (classNames / styles)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+  it('applies classNames to corresponding DOM elements', () => {
+    const wrapper = mount(Carousel, {
+      props: {
+        loop: false,
+        classNames: {
+          root: 'my-root',
+          list: 'my-list',
+          slide: 'my-slide',
+          dots: 'my-dots',
+          dot: 'my-dot',
+        },
+      },
+      slots: { default: slides },
+    })
+    expect(wrapper.find('.my-root').exists()).toBe(true)
+    expect(wrapper.find('.my-list').exists()).toBe(true)
+    expect(wrapper.find('.my-slide').exists()).toBe(true)
+    expect(wrapper.find('.my-dots').exists()).toBe(true)
+    expect(wrapper.find('.my-dot').exists()).toBe(true)
+  })
+
+  it('applies styles to corresponding DOM elements', () => {
+    const wrapper = mount(Carousel, {
+      props: {
+        loop: false,
+        styles: {
+          root: { backgroundColor: 'rgb(255, 0, 0)' },
+          dots: { bottom: '30px' },
+        },
+      },
+      slots: { default: slides },
+    })
+    const root = wrapper.find('.hmfw-carousel')
+    expect(root.attributes('style')).toMatch(/background-color:\s*rgb\(255,\s*0,\s*0\)/)
+    const dots = wrapper.find('.hmfw-carousel-dots')
+    expect(dots.attributes('style')).toContain('bottom: 30px')
+  })
+
+  it('applies slideActive classNames/styles only on the active slide', async () => {
+    const wrapper = mount(Carousel, {
+      props: {
+        loop: false,
+        arrows: true,
+        classNames: { slideActive: 'active-slide-custom' },
+        styles: { slideActive: { border: '2px solid rgb(0, 0, 255)' } },
+      },
+      slots: { default: slides },
+    })
+
+    const slidesFirst = wrapper.findAll('.hmfw-carousel-slide')
+    // 第一张 slide 应有 active 类名和样式
+    expect(slidesFirst[0].classes()).toContain('active-slide-custom')
+    expect(slidesFirst[0].attributes('style')).toMatch(/border/)
+    // 第二张不应有
+    expect(slidesFirst[1].classes()).not.toContain('active-slide-custom')
+
+    // 切换到第二张
+    await wrapper.find('.hmfw-carousel-arrow-right').trigger('click')
+    vi.advanceTimersByTime(500)
+    await wrapper.vm.$nextTick()
+
+    const slidesAfter = wrapper.findAll('.hmfw-carousel-slide')
+    expect(slidesAfter[1].classes()).toContain('active-slide-custom')
+    expect(slidesAfter[1].attributes('style')).toMatch(/border/)
+  })
+
+  it('supports arrow classNames', () => {
+    const wrapper = mount(Carousel, {
+      props: {
+        arrows: true,
+        classNames: {
+          arrow: 'my-arrow',
+          arrowLeft: 'my-arrow-left',
+          arrowRight: 'my-arrow-right',
+        },
+      },
+      slots: { default: slides },
+    })
+    expect(wrapper.find('.my-arrow').exists()).toBe(true)
+    expect(wrapper.find('.my-arrow-left').exists()).toBe(true)
+    expect(wrapper.find('.my-arrow-right').exists()).toBe(true)
+  })
+
+  it('supports arrow styles', () => {
+    const wrapper = mount(Carousel, {
+      props: {
+        arrows: true,
+        styles: {
+          arrow: { fontSize: '24px' },
+          arrowLeft: { left: '20px' },
+          arrowRight: { right: '20px' },
+        },
+      },
+      slots: { default: slides },
+    })
+    const leftArrow = wrapper.find('.hmfw-carousel-arrow-left')
+    expect(leftArrow.attributes('style')).toMatch(/font-size:\s*24px/)
+    expect(leftArrow.attributes('style')).toContain('left: 20px')
+  })
+})
+
+// ============================================================
+// 🟢 低优先级补充测试
+// ============================================================
+
+describe('Carousel - Dynamic Props', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('starts and stops autoplay when prop toggles', async () => {
+    const wrapper = mount(Carousel, {
+      props: { autoplay: false, delay: 1000 },
+      slots: { default: slides },
+    })
+
+    // 初始不动
+    vi.advanceTimersByTime(2000)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('.hmfw-carousel-slide-active').text()).toBe('Slide 1')
+
+    // 动态开启 autoplay
+    await wrapper.setProps({ autoplay: true })
+    vi.advanceTimersByTime(1500)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('.hmfw-carousel-slide-active').text()).toBe('Slide 2')
+
+    // 动态关闭 autoplay
+    await wrapper.setProps({ autoplay: false })
+    vi.advanceTimersByTime(3000)
+    await wrapper.vm.$nextTick()
+    // 应该停留在 Slide 2，不再自动播放
+    expect(wrapper.find('.hmfw-carousel-slide-active').text()).toBe('Slide 2')
+
+    wrapper.unmount()
+  })
+
+  it('handles different slide counts correctly', () => {
+    // 测试 5 个 slides
+    const wrapper5 = mount(Carousel, {
+      props: { loop: false },
+      slots: { default: () => Array.from({ length: 5 }, (_, i) => h('div', `Slide ${i + 1}`)) },
+    })
+    expect(wrapper5.findAll('.hmfw-carousel-slide').length).toBe(5)
+    expect(wrapper5.findAll('.hmfw-carousel-dots li').length).toBe(5)
+    wrapper5.unmount()
+
+    // 测试 10 个 slides
+    const wrapper10 = mount(Carousel, {
+      props: { loop: false },
+      slots: { default: () => Array.from({ length: 10 }, (_, i) => h('div', `Slide ${i + 1}`)) },
+    })
+    expect(wrapper10.findAll('.hmfw-carousel-slide').length).toBe(10)
+    expect(wrapper10.findAll('.hmfw-carousel-dots li').length).toBe(10)
+    wrapper10.unmount()
   })
 })

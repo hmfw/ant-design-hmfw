@@ -1,205 +1,239 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 24px">
-    <!-- 场景 1：自定义根容器 -->
-    <div>
-      <div style="margin-bottom: 8px; color: #666">自定义根容器圆角与阴影：</div>
-      <Carousel :class-names="{ root: 'custom-root' }">
-        <div class="demo-slide" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
-          <h3>Slide 1</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)">
-          <h3>Slide 2</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)">
-          <h3>Slide 3</h3>
+  <div class="semantic-demo">
+    <!-- ======================== classNames ======================== -->
+    <section class="demo-block">
+      <h4 class="demo-heading">classNames</h4>
+      <p class="demo-note">
+        通过 CSS 类名控制各语义槽位样式，<code>slideActive</code> / <code>dotActive</code> 会与基础类名叠加
+      </p>
+      <Carousel arrows :class-names="classNamesConfig">
+        <div v-for="s in data" :key="s.label" class="card" :style="{ background: s.gradient }">
+          <span class="card-icon">{{ s.icon }}</span>
+          <span class="card-text">{{ s.label }}</span>
         </div>
       </Carousel>
-    </div>
+    </section>
 
-    <!-- 场景 2：自定义指示器样式 -->
-    <div>
-      <div style="margin-bottom: 8px; color: #666">自定义指示器：圆形 dots 与渐变色：</div>
-      <Carousel :class-names="{ dots: 'custom-dots', dot: 'custom-dot', dotActive: 'custom-dot-active' }">
-        <div class="demo-slide" style="background: linear-gradient(to right, #f857a6, #ff5858)">
-          <h3>Slide 1</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(to right, #a8edea, #fed6e3)">
-          <h3>Slide 2</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(to right, #ffecd2, #fcb69f)">
-          <h3>Slide 3</h3>
+    <!-- ======================== styles ======================== -->
+    <section class="demo-block">
+      <h4 class="demo-heading">styles</h4>
+      <p class="demo-note">
+        通过内联样式控制，<code>styles.slideActive</code> 与 <code>styles.slide</code> 合并，激活态优先
+      </p>
+      <Carousel arrows :styles="stylesConfig">
+        <div v-for="s in data" :key="s.label" class="card" :style="{ background: s.gradient }">
+          <span class="card-icon">{{ s.icon }}</span>
+          <span class="card-text">{{ s.label }}</span>
         </div>
       </Carousel>
-    </div>
+    </section>
 
-    <!-- 场景 3：自定义箭头样式 -->
-    <div>
-      <div style="margin-bottom: 8px; color: #666">自定义箭头：渐变背景与圆形：</div>
+    <!-- ======================== 组合使用 ======================== -->
+    <section class="demo-block">
+      <h4 class="demo-heading">classNames + styles 组合</h4>
+      <p class="demo-note">两者可同时使用，<code>styles</code> 内联样式优先级更高</p>
       <Carousel
         arrows
-        :class-names="{
-          arrow: 'custom-arrow',
-          arrowLeft: 'custom-arrow-left',
-          arrowRight: 'custom-arrow-right',
-        }"
-      >
-        <div class="demo-slide" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
-          <h3>Slide 1</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%)">
-          <h3>Slide 2</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%)">
-          <h3>Slide 3</h3>
-        </div>
-      </Carousel>
-    </div>
-
-    <!-- 场景 4：自定义幻灯片与激活状态 -->
-    <div>
-      <div style="margin-bottom: 8px; color: #666">自定义幻灯片缩放与激活态边框：</div>
-      <Carousel
-        :class-names="{
-          list: 'custom-list',
-          slide: 'custom-slide',
-          slideActive: 'custom-slide-active',
-        }"
-      >
-        <div class="demo-slide" style="background: linear-gradient(to right, #6a11cb, #2575fc)">
-          <h3>Slide 1</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(to right, #ff6a00, #ee0979)">
-          <h3>Slide 2</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(to right, #00c9ff, #92fe9d)">
-          <h3>Slide 3</h3>
-        </div>
-      </Carousel>
-    </div>
-
-    <!-- 场景 5：使用 styles 内联样式 -->
-    <div>
-      <div style="margin-bottom: 8px; color: #666">使用 styles 内联样式控制：</div>
-      <Carousel
-        arrows
+        :class-names="{ root: 'combo-root', arrow: 'combo-arrow', dots: 'combo-dots' }"
         :styles="{
-          root: { borderRadius: '16px', overflow: 'hidden' },
-          dots: { bottom: '20px' },
-          dot: { opacity: 0.8 },
-          arrow: { background: 'rgba(255,255,255,0.9)', color: '#1677ff' },
+          root: { boxShadow: '0 2px 12px rgb(0 0 0 / 6%)' },
+          arrow: { fontSize: '18px' },
+          dots: { gap: '10px' },
         }"
       >
-        <div class="demo-slide" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
-          <h3>Slide 1</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)">
-          <h3>Slide 2</h3>
-        </div>
-        <div class="demo-slide" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)">
-          <h3>Slide 3</h3>
+        <div v-for="s in data" :key="s.label" class="card" :style="{ background: s.gradient }">
+          <span class="card-icon">{{ s.icon }}</span>
+          <span class="card-text">{{ s.label }}</span>
         </div>
       </Carousel>
-    </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Carousel } from '@hmfw/ant-design'
+
+const data = [
+  { icon: '🎨', label: 'Design', gradient: 'linear-gradient(135deg, #a78bfa, #7c3aed)' },
+  { icon: '⚡', label: 'Build', gradient: 'linear-gradient(135deg, #f472b6, #e11d48)' },
+  { icon: '🚀', label: 'Launch', gradient: 'linear-gradient(135deg, #38bdf8, #0284c7)' },
+  { icon: '✨', label: 'Polish', gradient: 'linear-gradient(135deg, #34d399, #059669)' },
+]
+
+const classNamesConfig = {
+  root: 'cls-root',
+  list: 'cls-list',
+  slide: 'cls-slide',
+  slideActive: 'cls-slide-active',
+  arrow: 'cls-arrow',
+  arrowLeft: 'cls-arrow-left',
+  arrowRight: 'cls-arrow-right',
+  dots: 'cls-dots',
+  dot: 'cls-dot',
+  dotActive: 'cls-dot-active',
+}
+
+const stylesConfig = {
+  root: { borderRadius: '10px', overflow: 'hidden' },
+  list: {},
+  track: {},
+  slide: { padding: '6px', opacity: '0.55', transform: 'scale(0.92)', transition: 'all .35s' },
+  slideActive: { opacity: '1', transform: 'scale(1)' },
+  arrow: {
+    width: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    background: 'rgb(255 255 255 / 88%)',
+    color: '#475569',
+    boxShadow: '0 1px 6px rgb(0 0 0 / 6%)',
+    fontSize: '15px',
+  },
+  arrowLeft: { left: '10px' },
+  arrowRight: { right: '10px' },
+  dots: { bottom: '14px', gap: '8px' },
+  dot: { opacity: '0.5', transition: 'all .3s' },
+  dotActive: { opacity: '1', transform: 'scale(1.4)' },
+}
 </script>
 
 <style scoped>
-.demo-slide {
+.semantic-demo {
   display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.demo-block {
+  max-width: 600px;
+}
+
+.demo-heading {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.demo-note {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.demo-note code {
+  font-size: 12px;
+  padding: 0 5px;
+  background: #f1f5f9;
+  border-radius: 3px;
+  color: #64748b;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
-  color: white;
-  font-size: 24px;
-}
-
-.demo-slide h3 {
-  margin: 0;
-}
-
-/* 场景 1：自定义根容器 */
-:deep(.custom-root) {
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  transition: box-shadow 0.3s;
-}
-
-:deep(.custom-root:hover) {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-}
-
-/* 场景 2：自定义指示器 */
-:deep(.custom-dots) {
-  gap: 10px;
-  bottom: 16px;
-}
-
-:deep(.custom-dot button) {
-  width: 12px !important;
-  height: 12px !important;
-  border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.4) !important;
-  transition: all 0.3s !important;
-}
-
-:deep(.custom-dot:hover button) {
-  background: rgba(255, 255, 255, 0.7) !important;
-  transform: scale(1.2);
-}
-
-:deep(.custom-dot-active button) {
-  width: 12px !important;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  transform: scale(1.4);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.5);
-}
-
-/* 场景 3：自定义箭头 */
-:deep(.custom-arrow) {
-  width: 48px !important;
-  height: 48px !important;
-  border-radius: 50% !important;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  opacity: 0.9 !important;
-  transition: all 0.3s !important;
-  font-size: 24px !important;
-}
-
-:deep(.custom-arrow:hover) {
-  opacity: 1 !important;
-  transform: translateY(-50%) scale(1.1) !important;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-:deep(.custom-arrow-left) {
-  left: 16px;
-}
-
-:deep(.custom-arrow-right) {
-  right: 16px;
-}
-
-/* 场景 4：自定义幻灯片 */
-:deep(.custom-list) {
-  padding: 8px;
-}
-
-:deep(.custom-slide) {
+  gap: 6px;
+  height: 180px;
+  color: #fff;
   border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.3s;
-  opacity: 0.7;
-  transform: scale(0.95);
+  user-select: none;
 }
 
-:deep(.custom-slide-active) {
+.card-icon {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.card-text {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ======== classNames 示例的自定义样式 ======== */
+:deep(.cls-root) {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
+}
+
+:deep(.cls-slide) {
+  padding: 6px;
+  opacity: 0.5;
+  transform: scale(0.92);
+  transition: all 0.35s;
+}
+
+:deep(.cls-slide-active) {
   opacity: 1;
   transform: scale(1);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+:deep(.cls-arrow) {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgb(255 255 255 / 88%) !important;
+  box-shadow: 0 1px 6px rgb(0 0 0 / 6%);
+  color: #475569 !important;
+  font-size: 15px !important;
+  opacity: 0 !important;
+}
+
+:deep(.cls-root:hover .cls-arrow) {
+  opacity: 1 !important;
+}
+
+:deep(.cls-arrow-left) {
+  left: 10px;
+}
+
+:deep(.cls-arrow-right) {
+  right: 10px;
+}
+
+:deep(.cls-dots) {
+  bottom: 14px;
+  gap: 8px;
+}
+
+:deep(.cls-dot button) {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  background: rgb(255 255 255 / 35%) !important;
+  transition: all 0.3s !important;
+}
+
+:deep(.cls-dot-active button) {
+  width: 22px !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+}
+
+/* ======== 组合示例 ======== */
+:deep(.combo-root) {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+:deep(.combo-arrow) {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgb(255 255 255 / 88%) !important;
+  color: #475569 !important;
+  font-size: 15px !important;
+  opacity: 0 !important;
+}
+
+:deep(.combo-root:hover .combo-arrow) {
+  opacity: 1 !important;
+}
+
+:deep(.combo-dots) {
+  bottom: 14px;
 }
 </style>

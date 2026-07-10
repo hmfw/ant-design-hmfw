@@ -20,7 +20,6 @@
   flex: 0 0 100%;
   min-width: 0;
   width: 100%;
-  content-visibility: auto; /* 性能优化：延迟渲染非激活 slide */
 }
 
 /* Fade effect */
@@ -35,15 +34,18 @@
   backface-visibility: hidden; /* GPU 加速优化 */
 }
 
-/* Arrows (Button components) */
+/* Arrows */
 .hmfw-carousel-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  background: rgba(0, 0, 0, 0.3) !important;
-  border: none !important;
-  color: #fff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: #fff;
   font-size: 20px;
   width: 32px;
   height: 32px;
@@ -56,12 +58,25 @@
   opacity: 0;
 }
 
-.hmfw-carousel:hover .hmfw-carousel-arrow {
+.hmfw-carousel-arrow svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+/* 非 disabled 时才在 hover 时显示 */
+.hmfw-carousel:hover .hmfw-carousel-arrow:not(:disabled) {
   opacity: 1;
 }
 
-.hmfw-carousel-arrow:hover {
-  background: rgba(0, 0, 0, 0.6) !important;
+/* disabled 时 hover 置灰 + not-allowed */
+.hmfw-carousel:hover .hmfw-carousel-arrow:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.hmfw-carousel-arrow:not(:disabled):hover {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .hmfw-carousel-arrow-left {
@@ -100,16 +115,14 @@
   flex-direction: row;
 }
 
-.hmfw-carousel-dots-left,
-.hmfw-carousel-dots-start {
+.hmfw-carousel-dots-left {
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
   flex-direction: column;
 }
 
-.hmfw-carousel-dots-right,
-.hmfw-carousel-dots-end {
+.hmfw-carousel-dots-right {
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
@@ -134,8 +147,9 @@
   background: rgba(255, 255, 255, 0.6);
 }
 
-.hmfw-carousel-dot-active button {
-  background: #fff !important;
+/* li 提高优先级，覆盖 hover 规则，无需 !important */
+.hmfw-carousel-dots li.hmfw-carousel-dot-active button {
+  background: #fff;
   width: 24px;
 }
 
@@ -145,30 +159,8 @@
   height: 16px;
 }
 
-.hmfw-carousel-vertical .hmfw-carousel-dot-active button {
+.hmfw-carousel-vertical .hmfw-carousel-dots-left li.hmfw-carousel-dot-active button,
+.hmfw-carousel-vertical .hmfw-carousel-dots-right li.hmfw-carousel-dot-active button {
   width: 3px;
   height: 24px;
-}
-
-/* Progress dots (autoplay.dotDuration) */
-.hmfw-carousel-dots-progress .hmfw-carousel-dot-active button {
-  position: relative;
-  overflow: hidden;
-}
-
-.hmfw-carousel-dots-progress .hmfw-carousel-dot-active button::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 0;
-  background: rgba(255, 255, 255, 0.5);
-  animation: carousel-dot-progress var(--carousel-dot-duration) linear forwards;
-}
-
-@keyframes carousel-dot-progress {
-  to {
-    width: 100%;
-  }
 }

@@ -1048,15 +1048,15 @@ import { Carousel } from '@hmfw/ant-design'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| autoplay | 是否自动切换，可指定 `autoplay.dotDuration` 显示进度条 | `boolean \| { dotDuration?: boolean }` | `false` |
-| autoplaySpeed | 自动切换间隔（ms） | `number` | `3000` |
+| autoplay | 是否自动切换 | `boolean` | `false` |
+| delay | 自动切换间隔（ms） | `number` | `3000` |
 | arrows | 是否显示切换箭头 | `boolean` | `false` |
-| dots | 是否显示指示点，可指定 `className` 自定义 class | `boolean \| { className?: string }` | `true` |
+| dots | 是否显示指示点 | `boolean` | `true` |
 | dotPosition | 指示点位置（已废弃，推荐使用 `dotPlacement`） | `'top' \| 'bottom' \| 'left' \| 'right'` | `'bottom'` |
 | dotPlacement | 指示点位置，`start`/`end` 替代 `left`/`right`，支持 RTL | `'top' \| 'bottom' \| 'start' \| 'end'` | `'bottom'` |
 | effect | 切换效果 | `'scrollx' \| 'fade'` | `'scrollx'` |
 | fade | 是否使用渐显过渡（优先级高于 `effect`） | `boolean` | - |
-| infinite | 是否无限循环 | `boolean` | `true` |
+| loop | 是否循环播放 | `boolean` | `true` |
 | speed | 动画时长（ms） | `number` | `500` |
 | easing | 过渡缓动函数 | `string` | `'ease'` |
 | initialSlide | 初始 slide 索引 | `number` | `0` |
@@ -1064,11 +1064,10 @@ import { Carousel } from '@hmfw/ant-design'
 | prevArrow | 自定义前进箭头 | `VNode` | - |
 | nextArrow | 自定义后退箭头 | `VNode` | - |
 | adaptiveHeight | 根据当前 slide 自动调整高度 | `boolean` | `false` |
-| slidesToShow | 一次显示几个 slides | `number` | `1` |
-| slidesToScroll | 一次滚动几个 slides | `number` | `1` |
+| slidesPerView | 一次显示几个 slides | `number` | `1` |
+| slidesPerGroup | 一次滚动几个 slides | `number` | `1` |
 | centerMode | 居中模式：当前 slide 居中，两侧露出部分 slide | `boolean` | `false` |
 | centerPadding | 居中模式下两侧的 padding（可以是 px 或 %） | `string` | `'50px'` |
-| rootClassName | 根元素 class | `string` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselStyles` | - |
 
@@ -6580,7 +6579,6 @@ import { Transfer } from '@hmfw/ant-design'
 | pagination | 分页配置 | `boolean \| PaginationType` | - |
 | status | 校验状态 | `'error' \| 'warning'` | - |
 | locale | 文案配置 | `Partial<TransferLocale>` | - |
-| rootClassName | 根元素 class | `string` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticStyles` | - |
 

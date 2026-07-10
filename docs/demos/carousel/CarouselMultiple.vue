@@ -1,21 +1,21 @@
 <template>
   <div class="carousel-multiple-demo">
-    <h4>一次显示 3 个（slidesToShow: 3）</h4>
-    <Carousel :slides-to-show="3" arrows>
+    <h4>一次显示 3 个（slidesPerView: 3）</h4>
+    <Carousel :slides-per-view="3" :space-between="20" arrows>
       <div v-for="i in 9" :key="i" class="slide-item">
         <div class="slide-content">{{ i }}</div>
       </div>
     </Carousel>
 
     <h4 style="margin-top: 32px">一次显示 3 个，每次滚动 3 个</h4>
-    <Carousel :slides-to-show="3" :slides-to-scroll="3" arrows>
+    <Carousel :slides-per-view="3" :slides-per-group="3" :space-between="16" arrows>
       <div v-for="i in 9" :key="i" class="slide-item">
         <div class="slide-content">{{ i }}</div>
       </div>
     </Carousel>
 
     <h4 style="margin-top: 32px">一次显示 4 个，每次滚动 2 个</h4>
-    <Carousel :slides-to-show="4" :slides-to-scroll="2" arrows>
+    <Carousel :slides-per-view="4" :slides-per-group="2" :space-between="10" arrows>
       <div v-for="i in 12" :key="i" class="slide-item">
         <div class="slide-content">{{ i }}</div>
       </div>
