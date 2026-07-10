@@ -23,6 +23,9 @@ import { useMenuOverflow } from './composables/useMenuOverflow'
 import { MENU_CONTEXT_KEY, type MenuContext } from './types'
 import { useMenuRender } from './composables/useMenuRender'
 
+// 水平菜单溢出「更多」子菜单的保留 key（不会与用户 items 的 key 冲突）
+const OVERFLOW_KEY = '__overflow__'
+
 // Props 定义（使用 satisfies 确保与 MenuProps 类型一致）
 const menuProps = {
   items: { type: Array as PropType<ItemType[]>, default: undefined },
@@ -61,7 +64,7 @@ export const Menu = defineComponent({
       return siderContext?.siderCollapsed ?? false
     })
 
-    const mode = computed(() => props.mode)
+    const mode = toRef(props, 'mode')
 
     // ---- 选中状态 (Composable) ----
 
@@ -99,6 +102,7 @@ export const Menu = defineComponent({
       { mode, rootRef, prefixCls },
       menuItemsForOverflow,
     )
+    const isOverflowOpen = computed(() => currentOpen.value.includes(OVERFLOW_KEY))
 
     // ---- 渲染工具 (Composable) ----
     const { renderItems } = useMenuRender()
@@ -122,9 +126,6 @@ export const Menu = defineComponent({
       },
       get inlineCollapsed() {
         return mergedInlineCollapsed.value
-      },
-      get firstLevel() {
-        return true
       },
       get triggerSubMenuAction() {
         return props.triggerSubMenuAction
@@ -150,11 +151,57 @@ export const Menu = defineComponent({
       onOpenChange: handleOpenChange,
     } as MenuContext)
 
+    // 水平菜单溢出「更多」指示器（仅 items prop 模式支持）
+    const renderOverflowIndicator = () => (
+      <li
+        class={cls(`${prefixCls}-submenu`, `${prefixCls}-overflowed-submenu`)}
+        onMouseenter={() => {
+          if (props.triggerSubMenuAction === 'hover') {
+            handleOpenImmediate(OVERFLOW_KEY, true)
+          }
+        }}
+        onMouseleave={() => {
+          if (props.triggerSubMenuAction === 'hover') {
+            handleOpenChange(OVERFLOW_KEY, false)
+          }
+        }}
+        onClick={() => {
+          if (props.triggerSubMenuAction === 'click') {
+            handleOpenChange(OVERFLOW_KEY, !isOverflowOpen.value)
+          }
+        }}
+      >
+        <div
+          class={cls(`${prefixCls}-submenu-title`)}
+          role="button"
+          tabindex={0}
+          aria-expanded={isOverflowOpen.value}
+          aria-haspopup="true"
+          data-menu-key={OVERFLOW_KEY}
+          data-menu-label="更多"
+        >
+          {props.overflowedIndicator || <span class={`${prefixCls}-overflowed-indicator`}>•••</span>}
+        </div>
+        <Transition name={`${prefixCls}-popup-zoom`}>
+          {isOverflowOpen.value && (
+            <ul
+              class={cls(
+                `${prefixCls}-sub`,
+                `${prefixCls}-${props.mode}`,
+                `${prefixCls}-${props.theme}`,
+                props.classNames?.sub,
+              )}
+              style={props.styles?.sub}
+            >
+              {renderItems(overflowedItems.value)}
+            </ul>
+          )}
+        </Transition>
+      </li>
+    )
+
     // ====================== 渲染根元素 ======================
     return () => {
-      // 受控模式下 emit 不触发同步时，溢出项可能存在瞬时闪烁，showOverflow 强制触发重新计算
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      showOverflow.value
       const menuCls = cls(
         prefixCls,
         `${prefixCls}-root`,
@@ -175,55 +222,7 @@ export const Menu = defineComponent({
         <ul ref={rootRef} class={menuCls} style={props.styles?.root} role="menu" tabindex={0} onKeydown={handleKeyDown}>
           {hasSlotContent ? slotChildren : renderItems(visibleItems.value)}
 
-          {/* 水平菜单溢出指示器（仅 items prop 模式支持） */}
-          {!hasSlotContent && showOverflow.value && (
-            <li
-              class={cls(`${prefixCls}-submenu`, `${prefixCls}-overflowed-submenu`)}
-              style={{ position: 'relative' }}
-              onMouseenter={() => {
-                if (props.triggerSubMenuAction === 'hover') {
-                  handleOpenImmediate('__overflow__', true)
-                }
-              }}
-              onMouseleave={() => {
-                if (props.triggerSubMenuAction === 'hover') {
-                  handleOpenChange('__overflow__', false)
-                }
-              }}
-              onClick={() => {
-                if (props.triggerSubMenuAction === 'click') {
-                  handleOpenChange('__overflow__', !currentOpen.value.includes('__overflow__'))
-                }
-              }}
-            >
-              <div
-                class={cls(`${prefixCls}-submenu-title`)}
-                role="button"
-                tabindex={0}
-                aria-expanded={currentOpen.value.includes('__overflow__')}
-                aria-haspopup="true"
-                data-menu-key="__overflow__"
-                data-menu-label="更多"
-              >
-                {props.overflowedIndicator || <span class={`${prefixCls}-overflowed-indicator`}>•••</span>}
-              </div>
-              <Transition name={`${prefixCls}-popup-zoom`}>
-                {currentOpen.value.includes('__overflow__') && (
-                  <ul
-                    class={cls(
-                      `${prefixCls}-sub`,
-                      `${prefixCls}-${props.mode}`,
-                      `${prefixCls}-${props.theme}`,
-                      props.classNames?.sub,
-                    )}
-                    style={props.styles?.sub}
-                  >
-                    {renderItems(overflowedItems.value)}
-                  </ul>
-                )}
-              </Transition>
-            </li>
-          )}
+          {!hasSlotContent && showOverflow.value && renderOverflowIndicator()}
         </ul>
       )
     }

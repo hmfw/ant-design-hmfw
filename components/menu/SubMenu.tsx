@@ -1,4 +1,4 @@
-import { defineComponent, inject, provide, Transition, type PropType, type VNode, type CSSProperties } from 'vue'
+import { defineComponent, inject, Transition, type PropType, type VNode, type CSSProperties } from 'vue'
 import { cls } from '../_utils'
 import { Trigger } from '../_internal/trigger'
 import { MENU_CONTEXT_KEY, type MenuContext } from './types'
@@ -60,14 +60,8 @@ export const SubMenu = defineComponent({
         return false
       })
 
-    // 提供嵌套 context
-    const nestedContext: MenuContext = {
-      ...context,
-      get firstLevel() {
-        return false
-      },
-    }
-    provide(MENU_CONTEXT_KEY, nestedContext)
+    // 无需 re-provide：子组件直接继承 Menu 注入的响应式 context
+    // （原先仅为覆盖已废弃的 firstLevel 字段，且 {...context} 会把 getter 求值成静态快照，反而破坏响应性）
 
     // 展开图标渲染
     const renderExpandIcon = (open: boolean): VNode | null => {

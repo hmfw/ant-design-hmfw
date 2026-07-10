@@ -46,70 +46,17 @@
   content: '';
 }
 
-/* 菜单项 */
-.hmfw-dropdown-menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.hmfw-dropdown-menu-item {
-  display: flex;
-  align-items: center;
-  gap: var(--hmfw-margin-xs);
-  padding: var(--hmfw-padding-xs) var(--hmfw-padding-sm);
-  cursor: pointer;
-  transition: background var(--hmfw-motion-duration-mid);
-  font-size: var(--hmfw-font-size-base);
-  color: var(--hmfw-color-text);
-  min-height: var(--hmfw-control-height-sm);
-  white-space: nowrap;
-  border-radius: var(--hmfw-border-radius-sm);
-}
-
-.hmfw-dropdown-menu-item:hover {
-  background: var(--hmfw-control-item-bg-hover);
-}
-
-.hmfw-dropdown-menu-item-disabled {
-  color: var(--hmfw-color-text-disabled);
-  cursor: not-allowed;
-}
-
-.hmfw-dropdown-menu-item-disabled:hover {
-  background: transparent;
-}
-
-.hmfw-dropdown-menu-item-danger {
-  color: var(--hmfw-color-error);
-}
-
-.hmfw-dropdown-menu-item-danger:hover {
-  background: var(--hmfw-color-error-bg);
-  color: var(--hmfw-color-error-hover);
-}
-
-.hmfw-dropdown-menu-divider {
-  height: 1px;
-  background: var(--hmfw-color-split);
-  margin: var(--hmfw-margin-xxs) 0;
-}
-
-.hmfw-dropdown-menu-item-icon {
-  font-size: var(--hmfw-font-size-base);
-  flex-shrink: 0;
-}
-
-.hmfw-dropdown-menu-submenu-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.hmfw-dropdown-menu-submenu-arrow {
-  margin-left: auto;
-  color: var(--hmfw-color-text-secondary);
-  font-size: 10px;
+/* 菜单项高度：Menu 独立使用时项高为 controlHeightLG(40px)，放入 Dropdown 后
+   按 AntD 规范收敛为 controlHeight(32px)——不再固定 height，改为 padding 驱动高度，
+   padding-block = (controlHeight - fontSize × lineHeight) / 2。
+   注意：Dropdown 实际渲染的是 <Menu> 组件（真实类名 .hmfw-menu-*），
+   覆盖目标必须是 .hmfw-menu-item / .hmfw-menu-submenu-title，而非 .hmfw-dropdown-menu-*。 */
+.hmfw-dropdown .hmfw-menu-item,
+.hmfw-dropdown .hmfw-menu-submenu-title {
+  height: auto;
+  line-height: var(--hmfw-line-height);
+  padding-block: calc((var(--hmfw-control-height) - var(--hmfw-font-size-base) * var(--hmfw-line-height)) / 2);
+  padding-inline: var(--hmfw-control-padding-horizontal);
 }
 
 /* DropdownButton styles */

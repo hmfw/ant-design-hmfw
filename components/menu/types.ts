@@ -182,7 +182,6 @@ export interface MenuContext {
   prefixCls: string
   inlineIndent: number
   inlineCollapsed: boolean
-  firstLevel: boolean
   triggerSubMenuAction: MenuTriggerSubMenuAction
   selectable: boolean
   classNames?: MenuClassNames
