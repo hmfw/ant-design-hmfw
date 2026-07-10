@@ -14,14 +14,14 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { Menu } from '@hmfw/ant-design'
-import { MailOutlined, SettingOutlined } from '@hmfw/icons'
+import { MailOutlined, SettingOutlined, DownOutlined, RightOutlined } from '@hmfw/icons'
 
 const selectedKeys = ref(['1'])
 
 /**
- * 自定义展开图标：展开/折叠状态不同
+ * 自定义展开图标：展开时向下、折叠时向右
  */
-const expandIcon = ({ isOpen }: { isOpen: boolean }) => h('span', isOpen ? '▾' : '▸')
+const expandIcon = ({ isOpen }: { isOpen: boolean }) => h(isOpen ? DownOutlined : RightOutlined)
 
 const items = [
   {

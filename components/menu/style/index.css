@@ -315,7 +315,8 @@
   padding-inline-end: 16px;
 }
 
-.hmfw-menu-submenu-arrow {
+.hmfw-menu-submenu-arrow,
+.hmfw-menu-submenu-expand-icon {
   position: absolute;
   top: 50%;
   inset-inline-end: 16px;
@@ -325,6 +326,13 @@
   transition:
     transform var(--hmfw-menu-transition-duration),
     opacity var(--hmfw-menu-transition-duration);
+}
+
+/* 自定义展开图标：图标本身居中显示在定位容器内 */
+.hmfw-menu-submenu-expand-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hmfw-menu-submenu-arrow::before,
@@ -373,7 +381,8 @@
 }
 
 /* horizontal 模式隐藏箭头 */
-.hmfw-menu-horizontal .hmfw-menu-submenu-arrow {
+.hmfw-menu-horizontal .hmfw-menu-submenu-arrow,
+.hmfw-menu-horizontal .hmfw-menu-submenu-expand-icon {
   display: none;
 }
 
@@ -510,7 +519,8 @@
   overflow: hidden;
 }
 
-.hmfw-menu-inline-collapsed .hmfw-menu-submenu-arrow {
+.hmfw-menu-inline-collapsed .hmfw-menu-submenu-arrow,
+.hmfw-menu-inline-collapsed .hmfw-menu-submenu-expand-icon {
   opacity: 0;
 }
 

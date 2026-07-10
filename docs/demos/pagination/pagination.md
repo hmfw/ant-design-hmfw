@@ -41,6 +41,14 @@
   <PaginationSmall />
 </DemoBlock>
 
+### 响应式
+
+开启 `responsive` 后，在未显式指定 `size` 的情况下，分页器会在屏幕宽度小于 576px（`xs` 断点）时自动切换为小尺寸。显式设置的 `size` 优先级更高，会覆盖响应式行为。
+
+<DemoBlock title="响应式" :source="PaginationResponsiveSource">
+  <PaginationResponsive />
+</DemoBlock>
+
 ### 自定义渲染
 
 通过 `itemRender` 自定义页码的结构，可以自定义上一页/下一页文本、页码样式或渲染为链接等。
@@ -71,11 +79,9 @@
 
 | 参数             | 说明                                                                             | 类型                                                                                                              | 默认值              |
 | ---------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------- |
-| current          | 当前页数（v-model）                                                              | `number`                                                                                                          | -                   |
-| defaultCurrent   | 默认的当前页数                                                                   | `number`                                                                                                          | `1`                 |
+| current          | 当前页数（v-model）                                                              | `number`                                                                                                          | `1`                 |
 | total            | 数据总数                                                                         | `number`                                                                                                          | `0`                 |
-| pageSize         | 每页条数（v-model）                                                              | `number`                                                                                                          | -                   |
-| defaultPageSize  | 默认的每页条数                                                                   | `number`                                                                                                          | `10`                |
+| pageSize         | 每页条数（v-model）                                                              | `number`                                                                                                          | `10`                |
 | pageSizeOptions  | 指定每页可以显示多少条                                                           | `number[]`                                                                                                        | `[10, 20, 50, 100]` |
 | showSizeChanger  | 是否展示 pageSize 切换器                                                         | `boolean`                                                                                                         | `false`             |
 | showQuickJumper  | 是否可以快速跳转至某页                                                           | `boolean`                                                                                                         | `false`             |
@@ -85,7 +91,7 @@
 | disabled         | 禁用分页                                                                         | `boolean`                                                                                                         | `false`             |
 | hideOnSinglePage | 只有一页时是否隐藏分页器                                                         | `boolean`                                                                                                         | `false`             |
 | itemRender       | 自定义页码的结构，可以自定义上一页/下一页文本、页码样式等                        | `(page: number, type: 'page' \| 'prev' \| 'next' \| 'jump-prev' \| 'jump-next', originalElement: VNode) => VNode` | -                   |
-| responsive       | 当屏幕尺寸小于 576px 时，自动变为 small                                          | `boolean`                                                                                                         | `false`             |
+| responsive       | 未指定 `size` 时，屏幕宽度小于 576px 自动变为 small                              | `boolean`                                                                                                         | `false`             |
 | align            | 分页器的对齐方式，可选 `start`（左对齐）、`center`（居中）、`end`（右对齐）      | `'start' \| 'center' \| 'end'`                                                                                    | -                   |
 | classNames       | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `PaginationClassNames`                                                                                            | -                   |
 | styles           | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `PaginationStyles`                                                                                                | -                   |
@@ -215,16 +221,27 @@ interface PaginationStyles {
     <a>2</a>
   </li>
 
-  <!-- 向前跳转按钮（显示为省略号 •••） -->
+  <!-- 向前跳转按钮（默认显示省略号 •••，hover 显示双箭头图标） -->
   <li class="hmfw-pagination-jump-prev">
     <!-- ↑ classNames.jumpPrev / styles.jumpPrev 应用于此 -->
-    <a>•••</a>
+    <button class="hmfw-pagination-item-link">
+      <div class="hmfw-pagination-item-container">
+        <!-- 图标与省略号叠放，通过 opacity 切换 -->
+        <span class="hmfw-pagination-item-link-icon"><!-- DoubleLeftOutlined --></span>
+        <span class="hmfw-pagination-item-ellipsis">•••</span>
+      </div>
+    </button>
   </li>
 
-  <!-- 向后跳转按钮（显示为省略号 •••） -->
+  <!-- 向后跳转按钮（默认显示省略号 •••，hover 显示双箭头图标） -->
   <li class="hmfw-pagination-jump-next">
     <!-- ↑ classNames.jumpNext / styles.jumpNext 应用于此 -->
-    <a>•••</a>
+    <button class="hmfw-pagination-item-link">
+      <div class="hmfw-pagination-item-container">
+        <span class="hmfw-pagination-item-link-icon"><!-- DoubleRightOutlined --></span>
+        <span class="hmfw-pagination-item-ellipsis">•••</span>
+      </div>
+    </button>
   </li>
 
   <!-- 下一页按钮 -->

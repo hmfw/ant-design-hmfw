@@ -1,14 +1,5 @@
 export type FlexAlign =
-  | 'flex-start'
-  | 'flex-end'
-  | 'center'
-  | 'baseline'
-  | 'stretch'
-  | 'normal'
-  | 'start'
-  | 'end'
-  | 'self-start'
-  | 'self-end'
+  'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch' | 'normal' | 'start' | 'end' | 'self-start' | 'self-end'
 export type FlexJustify =
   | 'flex-start'
   | 'flex-end'

@@ -68,8 +68,17 @@ export const SubMenu = defineComponent({
       const expandIcon = context.expandIcon
       if (expandIcon !== undefined) {
         if (expandIcon === null || expandIcon === false) return null
-        if (typeof expandIcon === 'function') return expandIcon({ isOpen: open })
-        return expandIcon as VNode
+        const iconNode = typeof expandIcon === 'function' ? expandIcon({ isOpen: open }) : (expandIcon as VNode)
+        if (!iconNode) return null
+        // 与默认箭头保持一致的绝对定位，避免自定义图标跟随文档流跑到不同位置
+        return (
+          <span
+            class={cls(`${context.prefixCls}-submenu-expand-icon`, context.classNames?.submenuArrow)}
+            style={context.styles?.submenuArrow}
+          >
+            {iconNode}
+          </span>
+        )
       }
       return (
         <span

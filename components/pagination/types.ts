@@ -2,11 +2,18 @@ import type { VNode, CSSProperties } from 'vue'
 
 export type PaginationSize = 'default' | 'small'
 
-export type ItemRenderFn = (
-  page: number,
-  type: 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next',
-  originalElement: VNode,
-) => VNode
+export type PaginationAlign = 'start' | 'center' | 'end'
+
+export type PaginationItemType = 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next'
+
+/**
+ * 自定义总数文案。
+ * @param total 数据总条数
+ * @param range 当前页数据区间 `[起, 止]`（从 1 开始计数）；当 `total` 为 0 时为 `[0, 0]`，调用方需自行处理空态
+ */
+export type ShowTotalFn = (total: number, range: [number, number]) => string
+
+export type ItemRenderFn = (page: number, type: PaginationItemType, originalElement: VNode) => VNode
 
 /**
  * Pagination 各部分的语义化 className
@@ -66,21 +73,19 @@ export interface PaginationStyles {
 
 export interface PaginationProps {
   current?: number
-  defaultCurrent?: number
   total?: number
   pageSize?: number
-  defaultPageSize?: number
   pageSizeOptions?: number[]
   showSizeChanger?: boolean
   showQuickJumper?: boolean
-  showTotal?: (total: number, range: [number, number]) => string
+  showTotal?: ShowTotalFn
   size?: PaginationSize
   simple?: boolean
   disabled?: boolean
   hideOnSinglePage?: boolean
   itemRender?: ItemRenderFn
   responsive?: boolean
-  align?: 'start' | 'center' | 'end'
+  align?: PaginationAlign
   /** 语义化 className */
   classNames?: PaginationClassNames
   /** 语义化 style */

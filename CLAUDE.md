@@ -39,7 +39,6 @@ ant-design-hmfw/
 │   └── style.css       # 统一样式
 ├── docs/               # 文档站（VitePress）
 ├── scripts/            # 构建脚本
-├── e2e/                # E2E 冒烟测试
 └── dist/               # 构建产物
 ```
 

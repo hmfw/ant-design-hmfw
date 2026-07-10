@@ -18,7 +18,11 @@ test.describe('Rate 评分', () => {
 
   test('点击第 5 颗星将评分设为 5', async ({ page }) => {
     const rate = page.locator('.hmfw-rate').first()
-    await rate.locator('.hmfw-rate-star').nth(4).locator('.hmfw-rate-star-second').click()
+    const fifthStar = rate.locator('.hmfw-rate-star').nth(4)
+
+    // 滚动到元素可见并等待稳定
+    await fifthStar.scrollIntoViewIfNeeded()
+    await fifthStar.click()
 
     await expect(rate.locator('.hmfw-rate-star-full')).toHaveCount(5)
     await expect(page.getByText('评分：5', { exact: false })).toBeVisible()

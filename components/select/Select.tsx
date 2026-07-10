@@ -618,7 +618,7 @@ export const Select = defineComponent({
             props.classNames?.root,
           )}
           triggerStyle={props.styles?.root}
-          popupClass={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
+          popupClass={cls(`${prefixCls}-dropdown`, `${prefixCls}-dropdown-${props.size}`, props.classNames?.dropdown)}
           popupStyle={props.styles?.dropdown}
           onOpenChange={(v: boolean) => {
             if (v) openDropdown()

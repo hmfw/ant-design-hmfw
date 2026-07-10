@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import { h } from 'vue'
 import { List, ListItem, ListItemMeta, Avatar } from '@hmfw/ant-design'
+import { EyeOutlined, MessageOutlined, StarOutlined } from '@hmfw/icons'
 
 const data = [
   {
@@ -30,7 +31,11 @@ const renderItem = (item: any) =>
     ListItem,
     {
       extra: h('img', { src: item.extra, style: { width: '272px' } }),
-      actions: [h('span', '👁 156'), h('span', '💬 2'), h('span', '⭐ 156')],
+      actions: [
+        h('span', [h(EyeOutlined), ' 156']),
+        h('span', [h(MessageOutlined), ' 2']),
+        h('span', [h(StarOutlined), ' 156']),
+      ],
     },
     () => [
       h(ListItemMeta, {

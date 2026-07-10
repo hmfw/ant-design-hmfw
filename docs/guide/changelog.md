@@ -6,6 +6,46 @@
 
 ---
 
+## [0.13.0] - 2026-07-10
+
+### 💥 Breaking Changes
+
+- **Pagination（受控化）**: 移除 `defaultCurrent` 与 `defaultPageSize`，改为完全受控模式。`current`（默认 `1`）与 `pageSize`（默认 `10`）成为唯一状态来源，需通过 `v-model:current` / `v-model:pageSize` 或监听 `change` 事件驱动更新，组件不再维护内部页码/页长状态
+
+### ✨ 增强
+
+- **Pagination（响应式）**: `responsive` 行为对齐 AntD——仅在未显式指定 `size` 时，屏幕宽度小于 576px（`xs` 断点）自动切换为 small；显式 `size` 优先级更高。新增响应式 Demo（`PaginationResponsive.vue`）
+- **Pagination（快速跳转图标）**: jump-prev / jump-next 默认显示省略号，hover 时淡入 `DoubleLeftOutlined` / `DoubleRightOutlined` 双箭头图标；图标与省略号叠放并以 `opacity` 切换，消除 hover 时的宽度跳变
+- **Select（下拉尺寸）**: 下拉面板补充 `small` / `large` 尺寸样式（选项高度、内边距、字号随 `size` 联动）；选项内边距与状态图标间距改用主题 Token（`--hmfw-control-padding-horizontal`、`--hmfw-margin-xs`）
+- **Menu（自定义展开图标）**: 自定义 `expandIcon` 现包裹于绝对定位容器 `.hmfw-menu-submenu-expand-icon`，与默认箭头位置一致，不再跟随文档流错位；horizontal / inline-collapsed 模式下同步隐藏
+
+### 🐛 修复
+
+- **Pagination（翻页闪动）**: 基础页码 item 的 `transition` 收窄为仅 `border-color`，激活态背景切换保持瞬时，修复省略号窗口滑动时相邻页码同时淡入淡出导致的高亮闪动
+- **Pagination（空态区间）**: `total` 为 0 时 `showTotal` 的 range 返回 `[0, 0]`；`pageSize` 通过 `Math.max(1, …)` 兜底防止除零
+- **useBreakpoint（SSR 兼容）**: 无 `window.matchMedia` 的环境（SSR / 旧浏览器）下退化为空断点表，不再抛错
+
+### 🔧 重构
+
+- **Pagination**: props 补齐 `satisfies Record<keyof PaginationProps, any>` 约束；渲染逻辑拆分为 `renderPrevButton` / `renderNextButton` / `renderSizeChanger` / `renderQuickJumper` 等函数；抽出 `JUMP_SIZE` / `ELLIPSIS_THRESHOLD` / `JUMP_PREV` / `JUMP_NEXT` 常量；types 补充 `PaginationAlign`、`PaginationItemType`、`ShowTotalFn` 具名类型
+- **theme 生成脚本**: `generate-theme-css.ts` 生成 CSS 后自动调用 Prettier 格式化，保持与仓库风格一致
+
+### 🧹 清理
+
+- 移除跨组件冒烟测试 `e2e/smoke.spec.ts`，`playwright.config.ts` 的 `testMatch` 收窄为 `components/**/*.e2e.spec.ts`
+
+### 📝 文档
+
+- **List**: 垂直列表 Demo 的操作项 emoji 替换为 `EyeOutlined` / `MessageOutlined` / `StarOutlined` 图标
+- **Menu**: 自定义展开图标 Demo 改用 `DownOutlined` / `RightOutlined`
+- **NavBar**: GitHub 内联 SVG 替换为 `GithubOutlined` 图标
+
+### 🧪 测试
+
+- Pagination 单测扩充受控化、响应式、jump 图标、空态区间等用例；全量 2151 个测试通过
+
+---
+
 ## [0.12.0] - 2026-07-10
 
 ### 💥 Breaking Changes
@@ -37,6 +77,28 @@
 ### 🧪 测试
 
 - 同步更新受影响组件的单测（移除废弃行为用例、别名 prop 改为新 API），新增 Tooltip 可访问性回归用例（`aria-hidden`/`aria-describedby`）；全量 2136 个测试通过
+
+---
+
+## [0.11.0] - 2026-07-10
+
+### 🔧 重构
+
+- **Menu 渲染架构**: Menu.tsx（~790 → ~236 行）渲染逻辑分发到 `MenuItem`/`SubMenu`/`MenuDivider`/`MenuItemGroup` 四个子组件，采用 `provide`/`inject` 通信模式，与 Collapse/Form/Radio 保持一致
+- **Menu 依赖精简**: `context.ts` 合并至 `types.ts`，`renderUtils.tsx` 转换为 `composables/useMenuRender.tsx`，减少文件碎片
+- **移除 JSX 复合组件模式**: 7 个组件的 `Parent.Child = Child` 静态属性挂载已移除（`Menu`、`Form`、`Radio`、`Descriptions`、`List`、`FloatButton`、`Timeline`），统一使用 re-export，Vue 模板中直接 import 子组件使用
+
+### 🐛 修复
+
+- **Menu**: 子组件 `key` prop 重命名为 `itemKey`，修复 Vue 保留字冲突导致的 `[Vue warn]: Invalid prop name: "key"` 告警
+
+### 🧪 测试
+
+- **Menu**: 测试用例从 53 → 79（+26），新增 Slot 模式、expandIcon、暗色主题、多级嵌套、SubMenu 高级属性、键盘导航增强等覆盖
+
+### 📝 文档
+
+- **Menu**: 新增 4 个 Demo（暗色主题、声明式写法、自定义展开图标、垂直弹出模式）
 
 ---
 

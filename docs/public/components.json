@@ -7805,13 +7805,6 @@
           "name": "current",
           "description": "当前页数（v-model）",
           "type": "`number`",
-          "default": "-"
-        },
-        {
-          "section": "Pagination Props",
-          "name": "defaultCurrent",
-          "description": "默认的当前页数",
-          "type": "`number`",
           "default": "`1`"
         },
         {
@@ -7825,13 +7818,6 @@
           "section": "Pagination Props",
           "name": "pageSize",
           "description": "每页条数（v-model）",
-          "type": "`number`",
-          "default": "-"
-        },
-        {
-          "section": "Pagination Props",
-          "name": "defaultPageSize",
-          "description": "默认的每页条数",
           "type": "`number`",
           "default": "`10`"
         },
@@ -7901,7 +7887,7 @@
         {
           "section": "Pagination Props",
           "name": "responsive",
-          "description": "当屏幕尺寸小于 576px 时，自动变为 small",
+          "description": "未指定 `size` 时，屏幕宽度小于 576px 自动变为 small",
           "type": "`boolean`",
           "default": "`false`"
         },
@@ -7974,6 +7960,11 @@
           "title": "小型分页",
           "description": "通过 `size=\"small\"` 设置小型分页。",
           "code": "<template>\n  <Space direction=\"vertical\">\n    <Pagination v-model:current=\"current\" size=\"small\" :total=\"50\" />\n    <Pagination v-model:current=\"current\" size=\"small\" :total=\"50\" show-size-changer show-quick-jumper />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Pagination, Space } from '@hmfw/ant-design'\n\nconst current = ref(1)\n</script>"
+        },
+        {
+          "title": "响应式",
+          "description": "开启 `responsive` 后，在未显式指定 `size` 的情况下，分页器会在屏幕宽度小于 576px（`xs` 断点）时自动切换为小尺寸。显式设置的 `size` 优先级更高，会覆盖响应式行为。",
+          "code": "<template>\n  <Space direction=\"vertical\">\n    <p class=\"tip\">缩小浏览器窗口至 576px 以下，分页器会自动切换为小尺寸。</p>\n    <Pagination v-model:current=\"current\" :total=\"500\" responsive show-size-changer show-quick-jumper />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Pagination, Space } from '@hmfw/ant-design'\n\nconst current = ref(1)\n</script>\n\n<style scoped>\n.tip {\n  margin: 0;\n  color: var(--hmfw-color-text-secondary, rgba(0, 0, 0, 0.45));\n  font-size: 13px;\n}\n</style>"
         },
         {
           "title": "自定义渲染",

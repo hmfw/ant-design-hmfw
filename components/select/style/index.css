@@ -4,9 +4,9 @@
   align-items: center;
   width: 100%;
   cursor: pointer;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
-  transition: all 0.2s;
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-text);
+  transition: all var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-select-disabled {
@@ -21,14 +21,14 @@
   flex: 1;
   flex-wrap: wrap;
   align-items: center;
-  min-height: 32px;
-  padding: 0 11px;
-  background: #fff;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  transition: all 0.2s;
+  min-height: var(--hmfw-control-height);
+  padding: 0 30px 0 var(--hmfw-control-padding-horizontal);
+  background: var(--hmfw-color-bg-container);
+  border: 1px solid var(--hmfw-color-border);
+  border-radius: var(--hmfw-border-radius);
+  transition: all var(--hmfw-motion-duration-mid);
   overflow: hidden;
-  gap: 4px;
+  gap: var(--hmfw-margin-xxs);
 }
 
 .hmfw-select-selector:hover {
@@ -37,33 +37,33 @@
 
 .hmfw-select-open .hmfw-select-selector {
   border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--hmfw-color-primary-bg);
 }
 
 .hmfw-select-status-error .hmfw-select-selector {
-  border-color: #ff4d4f;
+  border-color: var(--hmfw-color-error);
 }
 
 .hmfw-select-status-warning .hmfw-select-selector {
-  border-color: #faad14;
+  border-color: var(--hmfw-color-warning);
 }
 
 /* Sizes */
 .hmfw-select-small .hmfw-select-selector {
-  min-height: 24px;
-  padding: 0 7px;
-  font-size: 12px;
+  min-height: var(--hmfw-control-height-sm);
+  padding: 0 24px 0 var(--hmfw-control-padding-horizontal-sm);
+  font-size: var(--hmfw-font-size-sm);
 }
 
 .hmfw-select-large .hmfw-select-selector {
-  min-height: 40px;
-  padding: 0 11px;
-  font-size: 16px;
+  min-height: var(--hmfw-control-height-lg);
+  padding: 0 30px 0 var(--hmfw-control-padding-horizontal);
+  font-size: var(--hmfw-font-size-lg);
 }
 
 /* Placeholder */
 .hmfw-select-selection-placeholder {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--hmfw-color-text-placeholder);
   pointer-events: none;
   user-select: none;
 }
@@ -80,12 +80,12 @@
 
 /* Multiple tags */
 .hmfw-select-multiple .hmfw-select-selection-item {
-  background: rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  padding: 0 4px 0 8px;
-  gap: 4px;
-  font-size: 12px;
+  background: var(--hmfw-color-fill-secondary);
+  border: 1px solid var(--hmfw-color-fill);
+  border-radius: var(--hmfw-border-radius-xs);
+  padding: 0 var(--hmfw-padding-xxs) 0 var(--hmfw-padding-xs);
+  gap: var(--hmfw-margin-xxs);
+  font-size: var(--hmfw-font-size-sm);
   height: 22px;
 }
 
@@ -99,14 +99,14 @@
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.45);
-  font-size: 14px;
+  color: var(--hmfw-color-text-tertiary);
+  font-size: var(--hmfw-font-size);
   padding: 0 2px;
-  transition: color 0.2s;
+  transition: color var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-select-selection-item-remove:hover {
-  color: rgba(0, 0, 0, 0.75);
+  color: var(--hmfw-color-text-secondary);
 }
 
 /* Search input */
@@ -124,17 +124,21 @@
   display: inline-flex;
   align-items: center;
   position: absolute;
-  right: 11px;
+  right: var(--hmfw-control-padding-horizontal);
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: rgba(0, 0, 0, 0.25);
-  font-size: 12px;
+  color: var(--hmfw-color-text-quaternary);
+  font-size: var(--hmfw-font-size-sm);
+}
+
+.hmfw-select-small .hmfw-select-arrow {
+  right: var(--hmfw-control-padding-horizontal-sm);
 }
 
 .hmfw-select-suffix {
   display: inline-block;
-  transition: transform 0.2s;
+  transition: transform var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-select-suffix-open {
@@ -144,7 +148,7 @@
 /* Clear */
 .hmfw-select-clear {
   position: absolute;
-  right: 11px;
+  right: var(--hmfw-control-padding-horizontal);
   top: 50%;
   transform: translateY(-50%);
   display: none;
@@ -152,13 +156,17 @@
   justify-content: center;
   width: 16px;
   height: 16px;
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   border-radius: 50%;
-  color: rgba(0, 0, 0, 0.25);
-  font-size: 14px;
+  color: var(--hmfw-color-text-quaternary);
+  font-size: var(--hmfw-font-size);
   cursor: pointer;
   z-index: 1;
-  transition: color 0.2s;
+  transition: color var(--hmfw-motion-duration-mid);
+}
+
+.hmfw-select-small .hmfw-select-clear {
+  right: var(--hmfw-control-padding-horizontal-sm);
 }
 
 .hmfw-select-allow-clear:hover .hmfw-select-clear {
@@ -170,7 +178,7 @@
 }
 
 .hmfw-select-clear:hover {
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-tertiary);
 }
 
 /* Dropdown（bg/radius/shadow 由 hmfw-trigger-popup 统一提供） */
@@ -178,18 +186,31 @@
   overflow: hidden;
   max-height: 256px;
   overflow-y: auto;
-  padding: 4px 0;
+  padding: var(--hmfw-padding-xxs) 0;
 }
 
 .hmfw-select-item {
   display: flex;
   align-items: center;
-  padding: 5px 12px;
+  padding: 5px var(--hmfw-control-padding-horizontal);
   cursor: pointer;
   transition: background var(--hmfw-motion-duration-mid);
   font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text);
   min-height: var(--hmfw-control-height);
+}
+
+/* Dropdown sizes */
+.hmfw-select-dropdown-small .hmfw-select-item {
+  min-height: var(--hmfw-control-height-sm);
+  padding: 5px var(--hmfw-control-padding-horizontal-sm);
+  font-size: var(--hmfw-font-size-sm);
+}
+
+.hmfw-select-dropdown-large .hmfw-select-item {
+  min-height: var(--hmfw-control-height-lg);
+  padding: 5px var(--hmfw-control-padding-horizontal);
+  font-size: var(--hmfw-font-size-lg);
 }
 
 .hmfw-select-item-option-active:hover {
@@ -219,11 +240,11 @@
 
 .hmfw-select-item-option-state {
   color: var(--hmfw-color-primary);
-  margin-left: 8px;
+  margin-left: var(--hmfw-margin-xs);
 }
 
 .hmfw-select-item-empty {
-  padding: 10px 12px;
+  padding: 10px var(--hmfw-control-padding-horizontal);
   color: var(--hmfw-color-text-disabled);
   text-align: center;
 }
@@ -249,7 +270,7 @@
 }
 
 .hmfw-select-item-group-label {
-  padding: 5px 12px;
+  padding: 5px var(--hmfw-control-padding-horizontal);
   color: var(--hmfw-color-text-secondary);
   font-size: var(--hmfw-font-size-sm);
   font-weight: 600;

@@ -27,6 +27,8 @@ export function useBreakpoint() {
   }
 
   onMounted(() => {
+    // SSR 或旧环境可能没有 matchMedia，此时退化为空断点表（视为非响应式）。
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return
     responsiveArray.forEach((breakpoint) => {
       const query = responsiveMap[breakpoint]
       const mql = window.matchMedia(query)
