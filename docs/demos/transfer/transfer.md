@@ -75,7 +75,7 @@
 | targetKeys (v-model)   | 右侧列表的 key 集合                                                              | `TransferKey[]`                                                                | `[]`       |
 | selectedKeys (v-model) | 选中项的 key 集合                                                                | `TransferKey[]`                                                                | `[]`       |
 | titles                 | 标题集合                                                                         | `(VNode \| string)[]`                                                          | `['', '']` |
-| operations             | 操作按钮文案（已废弃）                                                           | `string[]`                                                                     | `[]`       |
+| actions                | 操作按钮文案 [左→右, 右→左]                                                      | `(VNode \| string)[]`                                                          | `[]`       |
 | render                 | 自定义渲染函数                                                                   | `(item: TransferItem) => RenderResult`                                         | -          |
 | rowKey                 | 自定义提取 key                                                                   | `(record: TransferItem) => TransferKey`                                        | -          |
 | showSearch             | 显示搜索框                                                                       | `boolean \| TransferSearchOption`                                              | `false`    |

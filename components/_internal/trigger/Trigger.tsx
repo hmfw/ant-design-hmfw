@@ -358,7 +358,7 @@ export const Trigger = defineComponent({
           {shouldRender && (
             <Teleport to={getContainer()}>
               <div ref={popupRef} class={popupCls} style={popupStyle} {...popupEvents}>
-                {slots.popup?.({ placement: actualPlacement.value })}
+                {slots.popup?.({ placement: actualPlacement.value, visible: visible.value })}
               </div>
             </Teleport>
           )}

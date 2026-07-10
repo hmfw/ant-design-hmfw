@@ -17,7 +17,6 @@ import '@hmfw/ant-design/style.css'
 - [App 全局化配置](https://hmfw.github.io/ant-design-hmfw/components/app): 应用级别的全局上下文，提供 `useApp()` 组合式 API，使子组件可以通过 hooks 调用 `message`、`notification`、`mod
 - [AutoComplete 自动完成](https://hmfw.github.io/ant-design-hmfw/components/auto-complete): 输入框自动完成功能。
 - [Avatar 头像](https://hmfw.github.io/ant-design-hmfw/components/avatar): 用来代表用户或事物，支持图片、图标或字符展示。
-- [BackTop 回到顶部](https://hmfw.github.io/ant-design-hmfw/components/back-top): 返回页面顶部的操作按钮。
 - [Badge 徽标数](https://hmfw.github.io/ant-design-hmfw/components/badge): 图标右上角的圆形徽标数字。
 - [Breadcrumb 面包屑](https://hmfw.github.io/ant-design-hmfw/components/breadcrumb): 显示当前页面在系统层级结构中的位置，并能向上返回。
 - [Button 按钮](https://hmfw.github.io/ant-design-hmfw/components/button): 按钮用于开始一个即时操作。

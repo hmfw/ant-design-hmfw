@@ -107,7 +107,6 @@ export const componentsSidebar: SidebarGroup[] = [
     text: '其他',
     items: [
       { text: 'App 包裹组件', link: '/components/app' },
-      { text: 'BackTop 回到顶部', link: '/components/back-top' },
       { text: 'ConfigProvider 全局配置', link: '/components/config-provider' },
       { text: 'Tour 漫游引导', link: '/components/tour' },
     ],

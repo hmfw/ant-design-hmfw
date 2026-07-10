@@ -9,7 +9,6 @@ import {
   onBeforeUnmount,
   Teleport,
   Transition,
-  isVNode,
   type PropType,
   type InjectionKey,
   type VNode,
@@ -73,15 +72,8 @@ function resolveMask(cfg: PreviewConfig): {
   closable: boolean
   coverNode: VNode | null
 } {
-  const cover = renderContent(cfg.cover)
-  // mask 作为 VNode 是 deprecated 的 cover 别名
-  let coverNode: VNode | null = cover
-  let maskObj: boolean | MaskType | undefined
-  if (isVNode(cfg.mask)) {
-    if (!coverNode) coverNode = cfg.mask
-  } else {
-    maskObj = cfg.mask as boolean | MaskType | undefined
-  }
+  const coverNode: VNode | null = renderContent(cfg.cover)
+  const maskObj: boolean | MaskType | undefined = cfg.mask
   let enabled = true
   let closable = true
   if (typeof maskObj === 'boolean') {
@@ -396,8 +388,7 @@ const ImagePreview = defineComponent({
 
     const renderToolbar = (): VNode => {
       const original = renderDefaultToolbar()
-      // 优先使用 AntD v6 对齐的 toolbarRender，其次兼容 deprecated 的 actionsRender
-      const render = props.config.toolbarRender ?? props.config.actionsRender
+      const render = props.config.toolbarRender
       if (render) {
         return render(original, {
           transform: { ...transform.value },
@@ -576,7 +567,7 @@ export const Image = defineComponent({
     const canPreview = computed(() => previewConfig.value !== null && status.value !== 'error')
 
     // 受控 open（仅非 group 单图场景；group 由 group 统一管理）
-    const controlledOpen = computed(() => previewConfig.value?.open ?? previewConfig.value?.visible)
+    const controlledOpen = computed(() => previewConfig.value?.open)
     const isControlled = computed(() => controlledOpen.value !== undefined)
     const actualVisible = computed(() => (isControlled.value ? !!controlledOpen.value : selfVisible.value))
 
@@ -584,7 +575,6 @@ export const Image = defineComponent({
       const cfg = previewConfig.value
       if (!cfg) return
       cfg.onOpenChange?.(open)
-      cfg.onVisibleChange?.(open, !open)
     }
 
     const setOpen = (open: boolean) => {
@@ -732,7 +722,7 @@ export const PreviewGroup = defineComponent({
 
     const cfg = computed<PreviewConfig | null>(() => normalizePreview(props.preview))
 
-    const isControlled = computed(() => cfg.value?.open ?? cfg.value?.visible)
+    const isControlled = computed(() => cfg.value?.open)
     const visible = computed(() => (isControlled.value !== undefined ? !!isControlled.value : selfVisible.value))
     const currentControlled = computed(() => props.current)
     const current = computed(() =>
@@ -758,7 +748,6 @@ export const PreviewGroup = defineComponent({
       const c = cfg.value
       if (c) {
         c.onOpenChange?.(v)
-        c.onVisibleChange?.(v, !v)
       }
     }
 

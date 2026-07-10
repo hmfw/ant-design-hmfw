@@ -58,19 +58,13 @@ export interface ProgressProps {
   strokeWidth?: number
   strokeLinecap?: StrokeLinecap
   strokeColor?: string | string[] | ProgressGradient
-  /** @deprecated 使用 railColor 代替 */
-  trailColor?: string
   railColor?: string
-  /** @deprecated 使用 size 代替 */
-  width?: number
   size?: ProgressSize | number | [number | string, number] | { width?: number; height?: number }
   format?: ProgressFormat
   success?: SuccessProps
   steps?: number | ProgressStepsConfig
   gapDegree?: number
   gapPlacement?: GapPlacement
-  /** @deprecated 使用 gapPlacement 代替 */
-  gapPosition?: GapPosition
   percentPosition?: PercentPositionType
   rounding?: (step: number) => number
 }

@@ -35,39 +35,10 @@ describe('Timeline', () => {
     expect(heads[2].classes()).toContain('hmfw-timeline-item-head-red')
   })
 
-  it('renders pending item with loading', () => {
-    const wrapper = mount(Timeline, { props: { items, pending: true } })
-    expect(wrapper.findAll('.hmfw-timeline-item')).toHaveLength(4)
-    expect(wrapper.find('.hmfw-timeline-item-loading').exists()).toBe(true)
-  })
-
-  it('applies pending class to container', () => {
-    const wrapper = mount(Timeline, { props: { items, pending: true } })
-    expect(wrapper.classes()).toContain('hmfw-timeline-pending')
-  })
-
-  it('renders pending with custom content', () => {
-    const wrapper = mount(Timeline, { props: { items, pending: 'Loading...' } })
-    const lastContent = wrapper.findAll('.hmfw-timeline-item-content').at(-1)
-    expect(lastContent?.text()).toBe('Loading...')
-  })
-
-  it('renders title (primary API)', () => {
+  it('renders title', () => {
     const titleItems = [{ title: '2024-01-01', content: 'Event' }]
     const wrapper = mount(Timeline, { props: { items: titleItems } })
     expect(wrapper.find('.hmfw-timeline-item-label').text()).toBe('2024-01-01')
-  })
-
-  it('renders label (legacy API)', () => {
-    const labelItems = [{ label: '2024-01-01', children: 'Event' }]
-    const wrapper = mount(Timeline, { props: { items: labelItems } })
-    expect(wrapper.find('.hmfw-timeline-item-label').text()).toBe('2024-01-01')
-  })
-
-  it('title takes precedence over label', () => {
-    const mixedItems = [{ title: 'Title', label: 'Label', content: 'Event' }]
-    const wrapper = mount(Timeline, { props: { items: mixedItems } })
-    expect(wrapper.find('.hmfw-timeline-item-label').text()).toBe('Title')
   })
 
   it('applies reverse class and reverses items', () => {
@@ -131,17 +102,6 @@ describe('Timeline', () => {
       { content: 'End', placement: 'end' as const },
     ]
     const wrapper = mount(Timeline, { props: { items: placementItems } })
-    const itemsEl = wrapper.findAll('.hmfw-timeline-item')
-    expect(itemsEl[0].classes()).not.toContain('hmfw-timeline-item-end')
-    expect(itemsEl[1].classes()).toContain('hmfw-timeline-item-end')
-  })
-
-  it('supports position prop (legacy)', () => {
-    const positionItems = [
-      { content: 'Left', position: 'left' as const },
-      { content: 'Right', position: 'right' as const },
-    ]
-    const wrapper = mount(Timeline, { props: { items: positionItems } })
     const itemsEl = wrapper.findAll('.hmfw-timeline-item')
     expect(itemsEl[0].classes()).not.toContain('hmfw-timeline-item-end')
     expect(itemsEl[1].classes()).toContain('hmfw-timeline-item-end')

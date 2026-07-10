@@ -33,10 +33,8 @@ export const Alert = defineComponent({
       type: String as PropType<AlertVariant>,
       default: 'outlined',
     },
-    /** 标题内容（与 AntD v6 对齐，`message` 为其别名） */
+    /** 标题内容（与 AntD v6 对齐） */
     title: String,
-    /** @deprecated 请使用 `title` */
-    message: String,
     description: String,
     showIcon: {
       type: Boolean,
@@ -46,8 +44,6 @@ export const Alert = defineComponent({
       type: [Boolean, Object] as PropType<AlertClosable>,
       default: undefined,
     },
-    closeText: [String, Object, Array, Function] as PropType<VNodeChild>,
-    closeIcon: [String, Object, Array, Function] as PropType<VNodeChild>,
     icon: [String, Object, Array, Function] as PropType<VNodeChild>,
     banner: Boolean,
     action: [String, Object, Array, Function] as PropType<VNodeChild>,
@@ -73,27 +69,22 @@ export const Alert = defineComponent({
     // banner 模式默认显示图标（与 AntD v6 对齐）
     const isShowIcon = computed(() => (props.banner && props.showIcon === undefined ? true : !!props.showIcon))
 
-    const mergedTitle = computed(() => props.title ?? props.message)
+    const mergedTitle = computed(() => props.title)
 
-    // 是否可关闭：closable 对象含 closeIcon、closeText、closeIcon prop 或 closable=true 均可关闭
+    // 是否可关闭：closable 传对象即可关闭，boolean 时按其值
     const isClosable = computed(() => {
-      const { closable, closeText, closeIcon } = props
-      // closable 传对象即视为可关闭
+      const { closable } = props
       if (isPlainObject(closable)) return true
-      if (closeText != null && closeText !== '') return true
       if (typeof closable === 'boolean') return closable
-      if (closeIcon != null) return true
       return false
     })
 
-    // 合并关闭图标：closable.closeIcon > closeText > closeIcon prop > slot > 默认 CloseOutlined
+    // 合并关闭图标：closable.closeIcon > slot > 默认 CloseOutlined
     const mergedCloseIcon = computed<VNodeChild>(() => {
-      const { closable, closeText, closeIcon } = props
+      const { closable } = props
       if (isPlainObject(closable) && closable.closeIcon != null) {
         return closable.closeIcon as VNodeChild
       }
-      if (closeText != null && closeText !== '') return closeText
-      if (closeIcon != null) return closeIcon
       if (slots.closeIcon) return slots.closeIcon()
       return undefined
     })
@@ -125,7 +116,7 @@ export const Alert = defineComponent({
       // 图标内容：icon prop > slot > 默认状态图标
       const iconNode = props.icon ?? slots.icon?.() ?? <IconComp />
       const closeIconNode = mergedCloseIcon.value ?? <CloseOutlined />
-      const titleNode = slots.message?.() ?? slots.title?.() ?? mergedTitle.value
+      const titleNode = slots.title?.() ?? mergedTitle.value
       const actionNode = props.action ?? slots.action?.()
 
       return (

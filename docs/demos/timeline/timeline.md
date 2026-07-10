@@ -85,28 +85,22 @@
 | variant     | 设置样式变体                                                                     | `'outlined' \| 'filled'`                               | `'outlined'` |
 | reverse     | 节点排序                                                                         | `boolean`                                              | `false`      |
 | titleSpan   | 设置标题占比空间（到 dot 中心点距离）                                            | `number \| string`                                     | -            |
-| pending     | 指定最后一个幽灵节点是否存在或内容（已废弃，建议使用 items 中的 loading）        | `boolean \| string \| VNode`                           | -            |
-| pendingDot  | 当最后一个幽灵节点存在时，指定其时间图点（已废弃）                               | `string \| VNode`                                      | -            |
 | classNames  | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TimelineClassNames`                                   | -            |
 | styles      | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TimelineStyles`                                       | -            |
 
 ### TimelineItemProps
 
-| 参数      | 说明                                     | 类型                                             | 默认值   |
-| --------- | ---------------------------------------- | ------------------------------------------------ | -------- |
-| title     | 设置标题                                 | `string \| VNode`                                | -        |
-| content   | 设置内容                                 | `string \| VNode`                                | -        |
-| icon      | 自定义节点图标                           | `string \| VNode`                                | -        |
-| placement | 自定义节点位置                           | `'start' \| 'end'`                               | -        |
-| loading   | 设置加载状态                             | `boolean`                                        | `false`  |
-| color     | 指定圆圈颜色                             | `'blue' \| 'red' \| 'green' \| 'gray' \| string` | `'blue'` |
-| className | 自定义类名                               | `string`                                         | -        |
-| style     | 自定义样式                               | `CSSProperties`                                  | -        |
-| key       | 唯一标识                                 | `string \| number`                               | -        |
-| label     | 设置标签（已废弃，使用 title）           | `string \| VNode`                                | -        |
-| children  | 内容（已废弃，使用 content）             | `unknown`                                        | -        |
-| dot       | 自定义时间轴点（已废弃，使用 icon）      | `string \| VNode`                                | -        |
-| position  | 自定义节点位置（已废弃，使用 placement） | `'left' \| 'right'`                              | -        |
+| 参数      | 说明           | 类型                                             | 默认值   |
+| --------- | -------------- | ------------------------------------------------ | -------- |
+| title     | 设置标题       | `string \| VNode`                                | -        |
+| content   | 设置内容       | `string \| VNode`                                | -        |
+| icon      | 自定义节点图标 | `string \| VNode`                                | -        |
+| placement | 自定义节点位置 | `'start' \| 'end'`                               | -        |
+| loading   | 设置加载状态   | `boolean`                                        | `false`  |
+| color     | 指定圆圈颜色   | `'blue' \| 'red' \| 'green' \| 'gray' \| string` | `'blue'` |
+| className | 自定义类名     | `string`                                         | -        |
+| style     | 自定义样式     | `CSSProperties`                                  | -        |
+| key       | 唯一标识       | `string \| number`                               | -        |
 
 ---
 
@@ -289,7 +283,7 @@ interface TimelineStyles {
 
 - `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
 - `classNames.item` / `styles.item` 应用于每个时间轴节点，会与 `items[i].className` / `items[i].style` 合并
-- `classNames.label` / `styles.label` 仅在设置了 `title` 或 `label` 属性的项上生效
+- `classNames.label` / `styles.label` 仅在设置了 `title` 属性的项上生效
 - `classNames.dot` / `styles.dot` 会与 `items[i].style` 合并应用到节点圆点上
 - `classNames.tail` 作用于连接线，可用于自定义线型（虚线、点线）、颜色、粗细
 - 水平布局（`orientation="horizontal"`）和垂直布局的 DOM 结构相同，但样式应用效果不同，需分别调试

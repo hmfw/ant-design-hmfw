@@ -19,7 +19,7 @@
 
 ### 垂直步骤条
 
-通过 `direction="vertical"` 或 `orientation="vertical"` 设置垂直方向步骤条。
+通过 `orientation="vertical"` 设置垂直方向步骤条。
 
 <DemoBlock title="垂直步骤条" :source="StepsVerticalSource">
   <StepsVertical />
@@ -74,13 +74,10 @@
 | current        | 指定当前步骤，从 0 开始记数                                                      | `number`                                     | `0`            |
 | initial        | 起始序号，从 0 开始记数                                                          | `number`                                     | `0`            |
 | items          | 配置选项                                                                         | `StepItem[]`                                 | `[]`           |
-| direction      | 指定步骤条方向（已废弃，请使用 orientation）                                     | `'horizontal' \| 'vertical'`                 | `'horizontal'` |
 | orientation    | 指定步骤条方向                                                                   | `'horizontal' \| 'vertical'`                 | `'horizontal'` |
 | size           | 指定大小                                                                         | `'default' \| 'small'`                       | `'default'`    |
 | status         | 指定当前步骤的状态                                                               | `'wait' \| 'process' \| 'finish' \| 'error'` | `'process'`    |
 | type           | 步骤条类型                                                                       | `'default' \| 'inline' \| 'dot'`             | `'default'`    |
-| progressDot    | 点状步骤条（已废弃，请使用 type="dot"）                                          | `boolean \| function`                        | `false`        |
-| labelPlacement | 指定标签放置位置（已废弃，请使用 titlePlacement）                                | `'horizontal' \| 'vertical'`                 | `'horizontal'` |
 | titlePlacement | 指定标签放置位置                                                                 | `'horizontal' \| 'vertical'`                 | `'horizontal'` |
 | variant        | 步骤条样式变体                                                                   | `'filled' \| 'outlined'`                     | `'filled'`     |
 | responsive     | 是否响应式                                                                       | `boolean`                                    | `true`         |
@@ -98,16 +95,15 @@
 
 ### StepItem
 
-| 参数        | 说明                                     | 类型                                         | 默认值  |
-| ----------- | ---------------------------------------- | -------------------------------------------- | ------- |
-| title       | 标题                                     | `string \| VNode`                            | -       |
-| description | 步骤的详情描述（已废弃，请使用 content） | `string \| VNode`                            | -       |
-| content     | 步骤的详情描述                           | `string \| VNode`                            | -       |
-| subTitle    | 子标题                                   | `string \| VNode`                            | -       |
-| status      | 指定状态                                 | `'wait' \| 'process' \| 'finish' \| 'error'` | -       |
-| icon        | 步骤图标                                 | `VNode`                                      | -       |
-| disabled    | 禁用点击                                 | `boolean`                                    | `false` |
-| onClick     | 点击步骤时的回调                         | `(e: MouseEvent) => void`                    | -       |
+| 参数     | 说明             | 类型                                         | 默认值  |
+| -------- | ---------------- | -------------------------------------------- | ------- |
+| title    | 标题             | `string \| VNode`                            | -       |
+| content  | 步骤的详情描述   | `string \| VNode`                            | -       |
+| subTitle | 子标题           | `string \| VNode`                            | -       |
+| status   | 指定状态         | `'wait' \| 'process' \| 'finish' \| 'error'` | -       |
+| icon     | 步骤图标         | `VNode`                                      | -       |
+| disabled | 禁用点击         | `boolean`                                    | `false` |
+| onClick  | 点击步骤时的回调 | `(e: MouseEvent) => void`                    | -       |
 
 ---
 

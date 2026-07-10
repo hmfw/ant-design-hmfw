@@ -60,12 +60,10 @@ export interface DropdownProps {
   overlayStyle?: Record<string, any>
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
   autoAdjustOverflow?: boolean
-  destroyPopupOnHide?: boolean
   destroyOnHidden?: boolean
   mouseEnterDelay?: number
   mouseLeaveDelay?: number
   popupRender?: (originNode: VNode) => VNode
-  dropdownRender?: (originNode: VNode) => VNode
   forceRender?: boolean
   openClassName?: string
   /** 弹层最小宽度匹配触发器宽度，默认 true。number 指定固定最小宽度（px） */

@@ -41,8 +41,6 @@ export interface PopoverProps {
   zIndex?: number
   /** Destroy popup DOM when hidden (AntD 5.25+). */
   destroyOnHidden?: boolean
-  /** @deprecated Use `destroyOnHidden`. */
-  destroyTooltipOnHide?: boolean
   /** Specify a function to provide a mount container for the popup. */
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
   /** Background color of the popover. */

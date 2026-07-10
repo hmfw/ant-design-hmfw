@@ -16,7 +16,7 @@
 
 ### 核心特性
 
-- 🎨 **68 个高质量组件** - 涵盖所有常用场景
+- 🎨 **67 个高质量组件** - 涵盖所有常用场景
 - 💪 **完整 TypeScript 支持** - 所有组件提供完整类型定义
 - 🎨 **语义化 API** - 所有组件支持 classNames/styles 精细化样式控制
 - ⚡ **高性能** - Select/Table 支持虚拟滚动
@@ -32,7 +32,7 @@
 
 ```
 ant-design-hmfw/
-├── components/          # 组件库核心（68 个组件）
+├── components/          # 组件库核心（67 个组件）
 │   ├── button/、input/、...
 │   ├── _theme/         # 设计 Token 系统
 │   ├── index.ts        # 统一导出

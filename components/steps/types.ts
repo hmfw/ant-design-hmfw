@@ -4,8 +4,6 @@ export type StepStatus = 'wait' | 'process' | 'finish' | 'error'
 
 export interface StepItem {
   title?: string | VNode
-  /** @deprecated Please use `content` instead */
-  description?: string | VNode
   content?: string | VNode
   subTitle?: string | VNode
   status?: StepStatus
@@ -78,17 +76,11 @@ export interface StepsProps {
   current?: number
   initial?: number
   items?: StepItem[]
-  /** @deprecated Please use `orientation` instead */
-  direction?: 'horizontal' | 'vertical'
   orientation?: 'horizontal' | 'vertical'
   size?: 'default' | 'small'
   status?: StepStatus
   type?: 'default' | 'inline' | 'dot'
-  /** @deprecated Please use `titlePlacement` instead */
-  labelPlacement?: 'horizontal' | 'vertical'
   titlePlacement?: 'horizontal' | 'vertical'
-  /** @deprecated Please use `type="dot"` instead */
-  progressDot?: boolean | ((iconDot: VNode, info: IconRenderInfo) => VNode)
   variant?: 'filled' | 'outlined'
   responsive?: boolean
   ellipsis?: boolean

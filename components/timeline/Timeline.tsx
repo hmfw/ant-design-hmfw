@@ -18,11 +18,7 @@ function getItemPlacement(
   index: number,
   mode: 'start' | 'end' | 'alternate',
 ): 'start' | 'end' {
-  // Primary API
   if (item.placement) return item.placement
-  // Legacy API
-  if (item.position === 'left') return 'start'
-  if (item.position === 'right') return 'end'
   // Mode-based
   if (mode === 'alternate') {
     return index % 2 === 0 ? 'start' : 'end'
@@ -59,11 +55,6 @@ export const TimelineItem = defineComponent({
     icon: [String, Object] as PropType<string | VNode>,
     placement: String as PropType<'start' | 'end'>,
     loading: Boolean,
-    // Legacy
-    label: [String, Object] as PropType<string | VNode>,
-    children: null as unknown as PropType<unknown>,
-    dot: [String, Object] as PropType<string | VNode>,
-    position: String as PropType<'left' | 'right'>,
     // Common
     color: String,
     className: String,
@@ -85,9 +76,6 @@ export const Timeline = defineComponent({
     variant: { type: String as PropType<TimelineVariant>, default: 'outlined' },
     reverse: Boolean,
     titleSpan: [Number, String] as PropType<number | string>,
-    // Deprecated
-    pending: [Boolean, String, Object] as PropType<boolean | string | VNode>,
-    pendingDot: [String, Object] as PropType<string | VNode>,
     classNames: Object as PropType<import('./types').TimelineClassNames>,
     styles: Object as PropType<import('./types').TimelineStyles>,
   },
@@ -106,18 +94,6 @@ export const Timeline = defineComponent({
         rawItems = extractItemsFromChildren(children)
       }
 
-      // Add pending item if needed
-      if (props.pending) {
-        const pendingContent =
-          typeof props.pending === 'string' ? props.pending : props.pending === true ? undefined : props.pending
-        rawItems.push({
-          content: pendingContent,
-          icon: props.pendingDot,
-          loading: !props.pendingDot,
-          color: 'gray',
-        })
-      }
-
       // Reverse if needed
       const items = props.reverse ? [...rawItems].reverse() : rawItems
 
@@ -127,7 +103,6 @@ export const Timeline = defineComponent({
           [`${prefixCls}-${props.orientation}`]: props.orientation === 'horizontal',
           [`${prefixCls}-${mergedMode}`]: mergedMode !== 'start',
           [`${prefixCls}-${props.variant}`]: props.variant !== 'outlined',
-          [`${prefixCls}-pending`]: !!props.pending,
           [`${prefixCls}-reverse`]: props.reverse,
         },
         props.classNames?.root,
@@ -148,10 +123,9 @@ export const Timeline = defineComponent({
             const isLast = index === items.length - 1
             const placement = getItemPlacement(item, index, mergedMode)
 
-            // Merge primary and legacy API
-            const title = item.title ?? item.label
-            const content = item.content ?? item.children
-            let icon = item.icon ?? item.dot
+            const title = item.title
+            const content = item.content
+            let icon = item.icon
 
             // Handle loading state
             if (item.loading && !icon) {

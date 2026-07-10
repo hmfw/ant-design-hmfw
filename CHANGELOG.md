@@ -6,6 +6,40 @@
 
 ---
 
+## [0.12.0] - 2026-07-10
+
+### 💥 Breaking Changes
+
+集中移除全部已废弃 API（`@deprecated` 别名与遗留 prop），并整体删除已废弃的 `BackTop` 组件。迁移对照如下：
+
+- **BackTop（整体移除）**: 组件、导出与样式已删除，请改用 `FloatButton.BackTop`
+- **Tooltip / Popover / Popconfirm**: 移除 `destroyTooltipOnHide` → 使用 `destroyOnHidden`
+- **Dropdown / DropdownButton**: 移除 `destroyPopupOnHide` → `destroyOnHidden`；移除 `dropdownRender` → `popupRender`
+- **Progress**: 移除 `trailColor` → `railColor`；`width` → `size`；`gapPosition` → `gapPlacement`
+- **Alert**: 移除 `message` → `title`（含同名 slot：`#message` → `#title`）；移除 `closeText`、`closeIcon` prop → 使用 `closable.closeIcon`（`#closeIcon` slot 保留）
+- **Transfer**: 移除 `operations` → 新增 `actions`（`(VNode | string)[]`，与 AntD v6 对齐）
+- **Image（preview 配置）**: 移除 `visible` → `open`；`onVisibleChange` → `onOpenChange`；`actionsRender` → `toolbarRender`；`mask` 收窄为 `boolean | MaskType`（去除 VNode 形态，自定义遮罩内容请用 `cover`）
+- **Steps**: 移除 `direction` → `orientation`；`labelPlacement` → `titlePlacement`；`progressDot` → `type="dot"`（自定义点用 `iconRender`）；item 级 `description` → `content`
+- **Space**: 移除 `split` prop → `separator`（`#split` slot 与 `classNames.split` 保留）
+- **Modal**: 移除静态方法 `Modal.warn()` → `Modal.warning()`
+- **Timeline**: 移除 `pending`、`pendingDot` → 使用带 `loading: true` 的普通 item；item 级 `label` → `title`、`children` → `content`、`dot` → `icon`、`position` → `placement`
+
+### 🐛 修复
+
+- **Tooltip**: 修复非受控（hover/focus）模式下 `aria-hidden` 恒为 `true` 的可访问性缺陷——`Trigger` 现通过 popup 插槽回传真实可见状态；触发器补充 `aria-describedby` 关联弹层内容；`tooltipId` 改用 `useId()` 生成，消除 SSR 水合不匹配
+- **Tooltip / Popover**: 修复未传 `color` 时 `--tooltip-bg` 无默认值导致背景透明、文字不可见的问题——Tooltip 默认取暗色 token `--hmfw-color-bg-spotlight`，Popover 取 `--hmfw-color-bg-elevated`，背景色随主题变化
+
+### 🔧 重构
+
+- **Tooltip**: props 补齐 `satisfies Record<keyof TooltipProps, any>` 约束；抽出 `resolveTitle()` 统一标题解析；清理死代码与类型收窄
+- **Dropdown**: `destroyOnHidden` 默认值由刻意的 `undefined` 恢复为 `false`（不再需要 `??` 穿透回退到废弃别名）
+
+### 🧪 测试
+
+- 同步更新受影响组件的单测（移除废弃行为用例、别名 prop 改为新 API），新增 Tooltip 可访问性回归用例（`aria-hidden`/`aria-describedby`）；全量 2136 个测试通过
+
+---
+
 ## [0.11.0] - 2026-07-10
 
 ### 🔧 重构

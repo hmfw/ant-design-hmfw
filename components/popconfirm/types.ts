@@ -72,8 +72,6 @@ export interface PopconfirmProps {
   autoAdjustOverflow?: boolean
   zIndex?: number
   destroyOnHidden?: boolean
-  /** @deprecated Use `destroyOnHidden`. */
-  destroyTooltipOnHide?: boolean
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
   overlayStyle?: Record<string, string>
   overlayInnerStyle?: Record<string, string>

@@ -402,21 +402,6 @@ describe('Dropdown', () => {
     wrapper.unmount()
   })
 
-  it('supports dropdownRender as deprecated alias of popupRender', async () => {
-    const wrapper = mount(Dropdown, {
-      props: {
-        menu,
-        open: true,
-        dropdownRender: (node: any) => h('div', { class: 'deprecated-wrapper' }, [node]),
-      },
-      slots: { default: '<button>Open</button>' },
-      attachTo: document.body,
-    })
-    await nextTick()
-    expect(document.querySelector('.deprecated-wrapper')).not.toBeNull()
-    wrapper.unmount()
-  })
-
   // ================================================================
   // forceRender
   // ================================================================
@@ -683,20 +668,6 @@ describe('Dropdown', () => {
     })
     await nextTick()
     expect(document.querySelector('.hmfw-dropdown')?.classList.contains('my-root-class')).toBe(true)
-    wrapper.unmount()
-  })
-
-  // ================================================================
-  // destroyPopupOnHide（已废弃别名）
-  // ================================================================
-  it('destroyPopupOnHide (deprecated) works same as destroyOnHidden', async () => {
-    const wrapper = mount(Dropdown, {
-      props: { menu, open: false, destroyPopupOnHide: true },
-      slots: { default: '<button>Open</button>' },
-      attachTo: document.body,
-    })
-    await nextTick()
-    expect(document.querySelector('.hmfw-dropdown')).toBeNull()
     wrapper.unmount()
   })
 })

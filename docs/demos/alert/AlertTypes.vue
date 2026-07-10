@@ -1,9 +1,9 @@
 <template>
   <div style="display: flex; flex-direction: column; gap: 12px">
-    <Alert message="成功提示" type="success" />
-    <Alert message="消息提示" type="info" />
-    <Alert message="警告提示" type="warning" />
-    <Alert message="错误提示" type="error" />
+    <Alert title="成功提示" type="success" />
+    <Alert title="消息提示" type="info" />
+    <Alert title="警告提示" type="warning" />
+    <Alert title="错误提示" type="error" />
   </div>
 </template>
 

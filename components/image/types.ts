@@ -100,20 +100,16 @@ export type ImageContent = VNode | (() => VNode)
 export interface PreviewConfig {
   /** 受控：是否打开预览 */
   open?: boolean
-  /** @deprecated 使用 open 代替 */
-  visible?: boolean
   /** 预览开关变化回调 */
   onOpenChange?: (open: boolean) => void
-  /** @deprecated 使用 onOpenChange 代替 */
-  onVisibleChange?: (open: boolean, prevOpen: boolean) => void
   /** 自定义预览图片地址 */
   src?: string
   /** 自定义关闭图标 */
   closeIcon?: ImageContent | false
   /** 自定义 hover 遮罩内容（cover） */
   cover?: ImageContent
-  /** @deprecated 使用 cover 代替 */
-  mask?: boolean | MaskType | VNode
+  /** 遮罩开关与可点击关闭配置 */
+  mask?: boolean | MaskType
   /** 缩放每步倍率（1 + scaleStep） */
   scaleStep?: number
   /** 最小缩放 */
@@ -132,8 +128,6 @@ export interface PreviewConfig {
   imageRender?: (originalNode: VNode, info: ImageRenderInfoType) => VNode
   /** 自定义底部工具栏渲染（参考 AntD v6 preview.toolbarRender） */
   toolbarRender?: (originalNode: VNode, info: ToolbarRenderInfoType) => VNode
-  /** @deprecated 使用 toolbarRender 代替 */
-  actionsRender?: (originalNode: VNode, info: ToolbarRenderInfoType) => VNode
 }
 
 /** imageRender 信息 */

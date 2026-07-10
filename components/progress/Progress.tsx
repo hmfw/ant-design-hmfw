@@ -18,7 +18,6 @@ import type {
   ProgressFormat,
   ProgressStepsConfig,
   GapPlacement,
-  GapPosition,
 } from './types'
 import {
   validProgress,
@@ -46,9 +45,7 @@ export const Progress = defineComponent({
     showInfo: { type: Boolean, default: true },
     strokeWidth: Number,
     strokeColor: [String, Array, Object] as PropType<string | string[] | ProgressGradient>,
-    trailColor: String,
     railColor: String,
-    width: Number,
     size: {
       type: [String, Number, Object, Array] as PropType<
         ProgressSize | number | [number | string, number] | { width?: number; height?: number }
@@ -61,7 +58,6 @@ export const Progress = defineComponent({
     steps: [Number, Object] as PropType<number | ProgressStepsConfig>,
     gapDegree: Number,
     gapPlacement: String as PropType<GapPlacement>,
-    gapPosition: String as PropType<GapPosition>,
     percentPosition: {
       type: Object as PropType<PercentPositionType>,
       default: () => ({}),
@@ -75,7 +71,7 @@ export const Progress = defineComponent({
     // 当前实例的圆形渐变 id 种子（稳定且唯一，避免每次渲染随机变化导致 SVG 重绘/SSR 不一致）
     const gradientUid = circleGradientSeed++
 
-    const mergedRailColor = computed(() => props.railColor ?? props.trailColor)
+    const mergedRailColor = computed(() => props.railColor)
     const infoAlign = computed(() => props.percentPosition?.align ?? 'end')
     const infoPosition = computed(() => props.percentPosition?.type ?? 'outer')
 
@@ -275,9 +271,7 @@ export const Progress = defineComponent({
 
     // ====== Circle / Dashboard ======
     const circleSize = computed(() => {
-      // width 是已废弃的兼容 prop：仅在没有显式 size 时生效
-      const usedSize = props.size === 'medium' && props.width !== undefined ? props.width : normalizedSize.value
-      const [w] = getSize(usedSize as any, props.type === 'dashboard' ? 'dashboard' : 'circle')
+      const [w] = getSize(normalizedSize.value as any, props.type === 'dashboard' ? 'dashboard' : 'circle')
       return w
     })
 
@@ -294,16 +288,15 @@ export const Progress = defineComponent({
       // gapDegree 默认值
       const gapDegree = props.gapDegree !== undefined ? props.gapDegree : isDashboard ? 75 : 0
 
-      // gapPlacement 取值（支持 v6 新 API gapPlacement，回退到旧 gapPosition）
-      const placement: GapPlacement | GapPosition | undefined =
-        props.gapPlacement ?? props.gapPosition ?? (isDashboard ? 'bottom' : undefined)
+      // gapPlacement 取值
+      const placement: GapPlacement | undefined = props.gapPlacement ?? (isDashboard ? 'bottom' : undefined)
 
       // 计算旋转：根据 placement 决定 dash 起点
       let rotation = -90
       if (placement === 'bottom') rotation = 90 + gapDegree / 2
       else if (placement === 'top') rotation = -90 + gapDegree / 2
-      else if (placement === 'start' || placement === 'left') rotation = 180 + gapDegree / 2 - (isRTL.value ? 180 : 0)
-      else if (placement === 'end' || placement === 'right') rotation = (isRTL.value ? 180 : 0) + gapDegree / 2
+      else if (placement === 'start') rotation = 180 + gapDegree / 2 - (isRTL.value ? 180 : 0)
+      else if (placement === 'end') rotation = (isRTL.value ? 180 : 0) + gapDegree / 2
 
       const totalArc = circumference - (gapDegree / 360) * circumference
 

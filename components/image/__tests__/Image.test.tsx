@@ -203,19 +203,6 @@ describe('Image', () => {
     wrapper.unmount()
   })
 
-  it('actionsRender still works as deprecated alias', async () => {
-    const actionsRender = vi.fn((original: any) => original)
-    const wrapper = mount(Image, {
-      props: { src: 'test.jpg', preview: { actionsRender } },
-      attachTo: document.body,
-    })
-    await wrapper.find('img').trigger('load')
-    await wrapper.find('.hmfw-image-mask').trigger('click')
-    await nextTick()
-    expect(actionsRender).toHaveBeenCalled()
-    wrapper.unmount()
-  })
-
   it('imageRender customizes preview content with info', async () => {
     const imageRender = vi.fn(() => <div class="custom-image">rendered</div>)
     const wrapper = mount(Image, {

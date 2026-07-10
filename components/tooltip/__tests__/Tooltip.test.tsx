@@ -328,6 +328,51 @@ describe('Tooltip', () => {
     wrapper.unmount()
   })
 
+  it('aria-hidden reflects real visibility in uncontrolled hover mode', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip text', mouseEnterDelay: 0 },
+      slots: { default: '<button>hover me</button>' },
+      attachTo: document.body,
+    })
+    // 未展开时内容标记为隐藏
+    let content = document.querySelector('.hmfw-tooltip-content')
+    expect(content?.getAttribute('aria-hidden')).toBe('true')
+
+    await wrapper.find('div').trigger('mouseenter')
+    vi.runAllTimers()
+    await nextTick()
+
+    // hover 展开后（非受控，props.open 为 undefined）应反映为可见
+    content = document.querySelector('.hmfw-tooltip-content')
+    expect(content?.getAttribute('aria-hidden')).toBe('false')
+    wrapper.unmount()
+  })
+
+  it('links trigger to tooltip content via aria-describedby', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: 'tip text', open: true },
+      slots: { default: '<button>hover me</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const describedBy = wrapper.find('button').attributes('aria-describedby')
+    expect(describedBy).toBeTruthy()
+    const content = document.querySelector('.hmfw-tooltip-content')
+    expect(content?.id).toBe(describedBy)
+    wrapper.unmount()
+  })
+
+  it('does not set aria-describedby when title is empty', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { title: '', open: true },
+      slots: { default: '<button>x</button>' },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(wrapper.find('button').attributes('aria-describedby')).toBeUndefined()
+    wrapper.unmount()
+  })
+
   it('ResizeObserver monitors content size changes when tooltip opens', async () => {
     // 模拟 ResizeObserver
     const observeMock = vi.fn()

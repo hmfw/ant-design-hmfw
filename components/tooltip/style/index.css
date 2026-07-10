@@ -11,6 +11,9 @@
   line-height: var(--hmfw-line-height);
   pointer-events: none;
   transition: opacity 0.2s;
+  /* 背景色默认取暗色 spotlight token；传入 color prop 时由 JS 内联覆盖 --tooltip-bg。
+     缺此默认值时 var(--tooltip-bg) 解析失败会导致背景透明、白字不可见。 */
+  --tooltip-bg: var(--hmfw-color-bg-spotlight);
   /* 箭头背景色（暗色 tooltip） */
   --hmfw-arrow-bg: var(--tooltip-bg);
   /* 覆盖 hmfw-trigger-popup 的基础样式，视觉容器是 -inner */

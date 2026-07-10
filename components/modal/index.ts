@@ -10,8 +10,6 @@ type ModalType = typeof OriginModal & {
   success: ModalStaticFn
   error: ModalStaticFn
   warning: ModalStaticFn
-  /** @deprecated use `warning` */
-  warn: ModalStaticFn
   confirm: ModalStaticFn
   destroyAll: () => void
 }
@@ -22,7 +20,6 @@ Modal.info = (props) => confirm(withInfo(props))
 Modal.success = (props) => confirm(withSuccess(props))
 Modal.error = (props) => confirm(withError(props))
 Modal.warning = (props) => confirm(withWarn(props))
-Modal.warn = (props) => confirm(withWarn(props))
 Modal.confirm = (props) => confirm(withConfirm(props))
 
 Modal.destroyAll = () => {

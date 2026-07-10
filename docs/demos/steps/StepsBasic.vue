@@ -16,8 +16,8 @@ import { Steps, Button, Space } from '@hmfw/ant-design'
 const current = ref(0)
 
 const items = [
-  { title: '第一步', description: '填写基本信息' },
-  { title: '第二步', description: '确认订单信息' },
-  { title: '第三步', description: '完成支付' },
+  { title: '第一步', content: '填写基本信息' },
+  { title: '第二步', content: '确认订单信息' },
+  { title: '第三步', content: '完成支付' },
 ]
 </script>

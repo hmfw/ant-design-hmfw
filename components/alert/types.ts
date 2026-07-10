@@ -42,18 +42,12 @@ export interface AlertProps {
    * @since AntD v6.4.0
    */
   variant?: AlertVariant
-  /** 标题内容（`message` 为其别名，已废弃） */
+  /** 标题内容 */
   title?: string
-  /** @deprecated 请使用 `title` */
-  message?: string
   description?: string
   showIcon?: boolean
   /** 是否可关闭；可传对象自定义 closeIcon 与 aria-label */
   closable?: AlertClosable
-  /** @deprecated 请使用 `closable.closeIcon` */
-  closeText?: VNodeChild
-  /** 自定义关闭图标（@deprecated 请使用 `closable.closeIcon`） */
-  closeIcon?: VNodeChild
   /** 自定义图标 */
   icon?: VNodeChild
   banner?: boolean

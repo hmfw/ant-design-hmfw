@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.6.8。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.12.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -25,13 +25,10 @@ import { Alert } from '@hmfw/ant-design'
 | type | 指定警告提示的样式 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'`（banner 模式为 `'warning'`） |
 | variant | 样式变体 | `'outlined' \| 'filled'` | `'outlined'` |
 | title | 警告提示内容 | `string` | - |
-| message | `title` 的别名（已废弃，请使用 `title`） | `string` | - |
 | description | 警告提示的辅助性文字介绍 | `string` | - |
 | showIcon | 是否显示辅助图标（banner 模式默认 `true`） | `boolean` | `false` |
 | icon | 自定义图标（`showIcon` 为 `true` 时有效） | `VNode \| slot` | - |
 | closable | 是否显示关闭按钮，可传对象自定义图标与无障碍标签 | `boolean \| { closeIcon?, 'aria-label'? }` | `false` |
-| closeIcon | 自定义关闭按钮图标 | `VNode \| slot` | - |
-| closeText | 自定义关闭按钮文字（已废弃，请使用 `closeIcon`） | `string` | - |
 | action | 自定义操作项 | `VNode \| slot` | - |
 | role | 根节点 `role` 属性 | `string` | `'alert'` |
 | banner | 是否用作顶部公告 | `boolean` | `false` |
@@ -52,10 +49,10 @@ import { Alert } from '@hmfw/ant-design'
 ```vue
 <template>
   <div style="display: flex; flex-direction: column; gap: 12px">
-    <Alert message="成功提示" type="success" />
-    <Alert message="消息提示" type="info" />
-    <Alert message="警告提示" type="warning" />
-    <Alert message="错误提示" type="error" />
+    <Alert title="成功提示" type="success" />
+    <Alert title="消息提示" type="info" />
+    <Alert title="警告提示" type="warning" />
+    <Alert title="错误提示" type="error" />
   </div>
 </template>
 
@@ -69,8 +66,8 @@ import { Alert } from '@hmfw/ant-design'
 ```vue
 <template>
   <div style="display: flex; flex-direction: column; gap: 12px">
-    <Alert message="成功提示" description="详细的成功描述和对此次成功的说明。" type="success" show-icon />
-    <Alert message="错误提示" description="详细的错误描述和对此次错误的说明。" type="error" show-icon />
+    <Alert title="成功提示" description="详细的成功描述和对此次成功的说明。" type="success" show-icon />
+    <Alert title="错误提示" description="详细的错误描述和对此次错误的说明。" type="error" show-icon />
   </div>
 </template>
 
@@ -156,11 +153,17 @@ import { Anchor, AnchorLink } from '@hmfw/ant-design'
         <h3>第三部分</h3>
         <p>这是第三部分的内容。</p>
       </div>
-      <div id="part-3-1" style="height: 100px; background: #fff2e8; padding: 16px; margin-bottom: 8px; margin-left: 16px">
+      <div
+        id="part-3-1"
+        style="height: 100px; background: #fff2e8; padding: 16px; margin-bottom: 8px; margin-left: 16px"
+      >
         <h4>第三部分-1</h4>
         <p>第三部分的第一个子章节。</p>
       </div>
-      <div id="part-3-2" style="height: 100px; background: #fff2e8; padding: 16px; margin-bottom: 16px; margin-left: 16px">
+      <div
+        id="part-3-2"
+        style="height: 100px; background: #fff2e8; padding: 16px; margin-bottom: 16px; margin-left: 16px"
+      >
         <h4>第三部分-2</h4>
         <p>第三部分的第二个子章节。</p>
       </div>
@@ -503,99 +506,6 @@ import { Avatar } from '@hmfw/ant-design'
 
 ---
 
-## BackTop 回到顶部
-
-返回页面顶部的操作按钮。
-
-导入：
-```ts
-import { BackTop } from '@hmfw/ant-design'
-```
-
-### Props
-
-**BackTop Props**
-
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| visibilityHeight | 滚动高度达到此参数值才出现 BackTop | `number` | `400` |
-| target | 设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数 | `() => HTMLElement \| Window \| Document` | `() => window` |
-| duration | 回到顶部所需时间（ms） | `number` | `450` |
-| className | 自定义类名 | `string` | - |
-| rootClassName | 根节点类名 | `string` | - |
-| style | 自定义样式 | `CSSProperties` | - |
-| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BackTopClassNames` | - |
-| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BackTopStyles` | - |
-| prefixCls | 自定义前缀 | `string` | `'hmfw'` |
-
-### Events
-
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| click | 点击按钮的回调函数 | `(e: MouseEvent) => void` |
-
-### 示例
-
-基础用法 — 滚动页面后，右下角会出现回到顶部按钮。
-
-```vue
-<template>
-  <div style="height: 1500px; padding: 20px; background: linear-gradient(to bottom, #fff, #f0f0f0)">
-    <p style="margin-bottom: 20px">向下滚动页面，右下角会出现回到顶部按钮。</p>
-    <p style="margin-bottom: 20px">默认当页面滚动超过 400px 时显示。</p>
-    <div v-for="i in 50" :key="i" style="margin-bottom: 10px">内容行 {{ i }}</div>
-    <BackTop />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { BackTop } from '@hmfw/ant-design'
-</script>
-```
-
-自定义内容 — 可以自定义回到顶部按钮的样式。
-
-```vue
-<template>
-  <div style="height: 1500px; padding: 20px">
-    <p style="margin-bottom: 20px">向下滚动页面，右下角会出现自定义的回到顶部按钮。</p>
-    <p style="margin-bottom: 20px">此示例设置 visibilityHeight 为 200px，并自定义了按钮样式。</p>
-    <div v-for="i in 50" :key="i" style="margin-bottom: 10px">内容行 {{ i }}</div>
-    <BackTop :visibility-height="200" @click="onBackTop">
-      <div
-        style="
-          width: 50px;
-          height: 50px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          font-size: 20px;
-          font-weight: bold;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          transition: all 0.3s;
-        "
-      >
-        ↑
-      </div>
-    </BackTop>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { BackTop } from '@hmfw/ant-design'
-
-function onBackTop() {
-  console.log('回到顶部')
-}
-</script>
-```
-
-
----
-
 ## Badge 徽标数
 
 图标右上角的圆形徽标数字。
@@ -698,6 +608,8 @@ import { Breadcrumb } from '@hmfw/ant-design'
 | items | 路由栈信息 | `ItemType[]` | `[]` |
 | separator | 分隔符 | `string \| VNode` | `'/'` |
 | params | 路径参数 | `Record<string, any>` | `{}` |
+| dropdownIcon | 自定义下拉菜单展开图标 | `VNode` | `DownOutlined` |
+| itemRender | 自定义渲染面包屑项 | `(item, params, items, paths) => VNode` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BreadcrumbClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `BreadcrumbStyles` | - |
 
@@ -709,9 +621,13 @@ import { Breadcrumb } from '@hmfw/ant-design'
 | title | 名称 | `string \| number \| VNode` | - |
 | href | 链接地址 | `string` | - |
 | path | 路径（会自动拼接前面的路径） | `string` | - |
+| target | 链接打开方式，同 `<a>` 标签 | `string` | - |
+| rel | 链接关系属性，同 `<a>` 标签 | `string` | - |
 | className | 自定义类名 | `string` | - |
 | style | 自定义样式 | `CSSProperties` | - |
 | onClick | 点击事件 | `(e: MouseEvent) => void` | - |
+| menu | 下拉菜单配置 | `BreadcrumbMenu` | - |
+| dropdownProps | 透传给 Dropdown 的属性 | `DropdownProps` | - |
 | data-\* | 自定义数据属性 | `any` | - |
 | aria-\* | ARIA 无障碍属性 | `any` | - |
 | type | 类型（必须为 'separator'） | `'separator'` | - |
@@ -1052,46 +968,33 @@ import { Carousel } from '@hmfw/ant-design'
 | delay | 自动切换间隔（ms） | `number` | `3000` |
 | arrows | 是否显示切换箭头 | `boolean` | `false` |
 | dots | 是否显示指示点 | `boolean` | `true` |
-| dotPosition | 指示点位置（已废弃，推荐使用 `dotPlacement`） | `'top' \| 'bottom' \| 'left' \| 'right'` | `'bottom'` |
-| dotPlacement | 指示点位置，`start`/`end` 替代 `left`/`right`，支持 RTL | `'top' \| 'bottom' \| 'start' \| 'end'` | `'bottom'` |
+| dotPlacement | 指示点位置，`start` / `end` 替代 `left` / `right`，适配 RTL | `'top' \| 'bottom' \| 'start' \| 'end'` | `'bottom'` |
 | effect | 切换效果 | `'scrollx' \| 'fade'` | `'scrollx'` |
-| fade | 是否使用渐显过渡（优先级高于 `effect`） | `boolean` | - |
-| loop | 是否循环播放 | `boolean` | `true` |
+| fade | 是否使用渐显过渡（优先级高于 `effect`） | `boolean` |  |
+| loop | 是否无限循环 | `boolean` | `true` |
 | speed | 动画时长（ms） | `number` | `500` |
 | easing | 过渡缓动函数 | `string` | `'ease'` |
 | initialSlide | 初始 slide 索引 | `number` | `0` |
-| waitForAnimate | 切换时是否等待动画完成 | `boolean` | `false` |
-| prevArrow | 自定义前进箭头 | `VNode` | - |
-| nextArrow | 自定义后退箭头 | `VNode` | - |
-| adaptiveHeight | 根据当前 slide 自动调整高度 | `boolean` | `false` |
-| slidesPerView | 一次显示几个 slides | `number` | `1` |
-| slidesPerGroup | 一次滚动几个 slides | `number` | `1` |
-| centerMode | 居中模式：当前 slide 居中，两侧露出部分 slide | `boolean` | `false` |
-| centerPadding | 居中模式下两侧的 padding（可以是 px 或 %） | `string` | `'50px'` |
-| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselClassNames` | - |
-| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselStyles` | - |
-
-**Carousel Ref 方法**
-
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| `(slideNumber: number, dontAnimate?: boolean) => void` | 跳转到指定 slide |  |  |
-| `() => void` | 切换到下一张 |  |  |
-| `() => void` | 切换到上一张 |  |  |
-| `(pageNumber: number, dontAnimate?: boolean) => void` | 跳转到指定页 |  |  |
-| `() => void` | 切换到下一页 |  |  |
-| `() => void` | 切换到上一页 |  |  |
+| waitForAnimate | 动画进行中是否忽略操作 | `boolean` | `false` |
+| prevArrow | 自定义上一张箭头 | `VNode` |  |
+| nextArrow | 自定义下一张箭头 | `VNode` |  |
+| adaptiveHeight | 根据当前 slide 高度自适应 | `boolean` | `false` |
+| slidesPerView | 同时显示的 slide 数量 | `number` | `1` |
+| slidesPerGroup | 每次滚动的 slide 数量 | `number` | `1` |
+| spaceBetween | slide 间距（px），仅 `slidesPerView > 1` 生效 | `number` | `0` |
+| classNames | 语义化类名，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselClassNames` |  |
+| styles | 语义化内联样式，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CarouselStyles` |  |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| beforeChange | 切换前回调 | `(from: number, to: number) => void` |
-| afterChange | 切换后回调 | `(current: number) => void` |
+| beforeChange | 切换前触发 | `(from: number, to: number) => void` |
+| afterChange | 切换完成时触发 | `(current: number) => void` |
 
 ### 示例
 
-基础用法 — 默认 scrollx 滚动效果，底部显示 dots。
+基础用法 — 默认 scrollx 滚动效果，底部显示指示点，开启无限循环。
 
 ```vue
 <template>
@@ -1111,7 +1014,7 @@ import { Carousel } from '@hmfw/ant-design'
 </script>
 ```
 
-渐显效果 — 切换 effect 为 fade，使用渐显过渡。
+渐显效果 — 设置 `effect="fade"` 或 `fade` 使用渐显过渡。
 
 ```vue
 <template>
@@ -1681,67 +1584,158 @@ import { ConfigProvider, useConfig, usePrefixCls, useLocale } from '@hmfw/ant-de
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| theme | 设置主题，包括主色等 Design Token | `{ token?: { colorPrimary?: string, borderRadius?: number, ... } }` | - |
+| theme | 设置主题 Token | `Partial<SeedTokens>` | - |
 | locale | 语言包配置 | `zhCN \| enUS` | `zhCN` |
 | prefixCls | 设置统一样式前缀 | `string` | `'hmfw'` |
-| componentSize | 设置 antd 组件大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| componentSize | 设置组件大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | direction | 设置布局方向 | `'ltr' \| 'rtl'` | `'ltr'` |
 
 ### 示例
 
-主题配置 — 通过 theme 属性配置全局主题色。
+主题配置 — 通过 `theme` 属性修改品牌色。**只需改 `colorPrimary` 一个值**，所有派生色（hover、active、bg、border、text 变体）自动计算。
 
 ```vue
 <template>
-  <ConfigProvider :theme="theme">
-    <div style="display: flex; flex-direction: column; gap: 12px">
-      <Button
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; gap: 8px; align-items: center">
+      <span style="font-size: 13px; color: var(--hmfw-color-text-secondary)">品牌色：</span>
+      <span v-for="color in colors" :key="color" :style="getColorStyle(color)" @click="primaryColor = color" />
+    </div>
+
+    <ConfigProvider :theme="{ colorPrimary: primaryColor }">
+      <div
         style="
-          background: var(--hmfw-color-primary);
-          color: white;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 6px;
-          cursor: pointer;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          padding: 16px;
+          background: var(--hmfw-color-bg-layout);
+          border-radius: var(--hmfw-border-radius);
+          align-items: center;
         "
       >
-        主色按钮
-      </Button>
-      <p style="color: var(--hmfw-color-primary)">主色文字</p>
+        <Button type="primary">主按钮</Button>
+        <Button>默认按钮</Button>
+        <Button type="dashed">虚线按钮</Button>
+        <Button type="primary" disabled>禁用</Button>
+        <Button danger>危险按钮</Button>
+      </div>
+    </ConfigProvider>
+
+    <div v-if="derivedColors.length" style="display: flex; flex-wrap: wrap; gap: 6px">
+      <div
+        v-for="d in derivedColors"
+        :key="d.label"
+        :style="{
+          flex: '0 0 auto',
+          padding: '6px 12px',
+          borderRadius: 4,
+          background: d.bg,
+          color: d.color,
+          border: d.border ? `1px solid ${d.border}` : '1px solid transparent',
+          fontSize: 12,
+          fontFamily: 'var(--hmfw-font-family)',
+        }"
+      >
+        {{ d.label }}
+        <div style="font-size: 10px; opacity: 0.7; margin-top: 2px">{{ d.value }}</div>
+      </div>
     </div>
-  </ConfigProvider>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { ConfigProvider, Button } from '@hmfw/ant-design'
+import { generateMapTokens, defaultSeedTokens } from '@hmfw/ant-design'
 
-const theme = {
-  token: {
-    colorPrimary: '#00b96b',
-    borderRadius: 2,
-  },
+const colors = ['#1677ff', '#00b96b', '#fa541c', '#722ed1', '#eb2f96']
+const primaryColor = ref('#1677ff')
+
+function getColorStyle(color: string) {
+  const selected = primaryColor.value === color
+  return {
+    display: 'inline-block',
+    width: '24px',
+    height: '24px',
+    borderRadius: '4px',
+    background: color,
+    cursor: 'pointer',
+    border: selected ? '2px solid var(--hmfw-color-primary)' : '2px solid transparent',
+    outline: selected ? '2px solid var(--hmfw-color-primary-border)' : 'none',
+  }
 }
+
+const derivedColors = computed(() => {
+  const seed = { ...defaultSeedTokens, colorPrimary: primaryColor.value }
+  const t = generateMapTokens(seed)
+  return [
+    { label: 'hover', value: t.colorPrimaryHover, bg: t.colorPrimaryHover, color: '#fff' },
+    { label: 'active', value: t.colorPrimaryActive, bg: t.colorPrimaryActive, color: '#fff' },
+    {
+      label: 'bg',
+      value: t.colorPrimaryBg,
+      bg: t.colorPrimaryBg,
+      color: t.colorPrimaryText,
+      border: t.colorPrimaryBorder,
+    },
+    {
+      label: 'bg-hover',
+      value: t.colorPrimaryBgHover,
+      bg: t.colorPrimaryBgHover,
+      color: t.colorPrimaryText,
+      border: t.colorPrimaryBorderHover,
+    },
+    {
+      label: 'border',
+      value: t.colorPrimaryBorder,
+      bg: t.colorPrimaryBg,
+      color: t.colorPrimaryBorder,
+      border: t.colorPrimaryBorder,
+    },
+    { label: 'text', value: t.colorPrimaryText, bg: '#fff', color: t.colorPrimaryText },
+    { label: 'text-hover', value: t.colorPrimaryTextHover, bg: '#fff', color: t.colorPrimaryTextHover },
+  ]
+})
 </script>
 ```
 
-国际化 — 通过 locale 属性配置国际化语言。
+暗色模式 — 通过修改 `colorTextBase` 和 `colorBgBase` 实现暗色/浅色主题切换，所有文字色、背景色、边框色、填充色自动重新派生。
 
 ```vue
 <template>
-  <div style="display: flex; gap: 12px; margin-bottom: 16px">
-    <Button @click="locale = zhCN">中文</Button>
-    <Button @click="locale = enUS">English</Button>
-  </div>
-  <ConfigProvider :locale="locale">
-    <p>当前语言：{{ locale.locale }}</p>
-  </ConfigProvider>
+  <Space align="start">
+    <Button :type="toggle ? 'default' : 'primary'" @click="toggle = !toggle">
+      {{ toggle ? '浅色模式' : '暗色模式' }}
+    </Button>
+    <ConfigProvider :theme="toggle ? {} : { colorTextBase: '#ffffff', colorBgBase: '#000000' }">
+      <Card :title="toggle ? '浅色主题' : '暗色主题'">
+        <Text> 这段文字的颜色从 colorTextBase 派生 </Text>
+        <br />
+        <Text type="secondary">辅助文字 · 占位符 · 禁用态 — 全部自动派生</Text>
+        <br />
+        <Text type="secondary">
+          <Text delete>删除线文字</Text>
+          {' '}·{' '}
+          <Text disabled>禁用文字</Text>
+        </Text>
+        <div style="margin-top: 12px">
+          <Space>
+            <Button type="primary">主按钮</Button>
+            <Button>默认</Button>
+            <Button type="dashed">虚线</Button>
+          </Space>
+        </div>
+      </Card>
+    </ConfigProvider>
+  </Space>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ConfigProvider, Button, zhCN, enUS } from '@hmfw/ant-design'
+import { ConfigProvider, Button, Card, Space, Text } from '@hmfw/ant-design'
 
-const locale = ref(zhCN)
+const toggle = ref(true)
 </script>
 ```
 
@@ -2042,7 +2036,6 @@ import { Drawer } from '@hmfw/ant-design'
 | forceRender | 预渲染抽屉内的内容 | `boolean` | `false` |
 | focusTriggerAfterClose | 关闭后是否将焦点返回触发元素 | `boolean` | `true` |
 | getContainer | 挂载节点，`false` 时渲染在当前位置 | `string \| HTMLElement \| () => HTMLElement \| false` | `body` |
-| rootClassName | 根容器（含遮罩）的类名 | `string` | - |
 | rootStyle | 根容器（含遮罩）的样式 | `CSSProperties` | - |
 | contentWrapperStyle | 抽屉内容包裹层的样式 | `CSSProperties` | - |
 | bodyStyle | 抽屉内容部分的样式 | `CSSProperties` | - |
@@ -2159,15 +2152,12 @@ import { Dropdown } from '@hmfw/ant-design'
 | overlayStyle | 下拉根元素的样式 | `CSSProperties` | - |
 | getPopupContainer | 菜单渲染父节点 | `(triggerNode: HTMLElement) => HTMLElement` | `() => document.body` |
 | autoAdjustOverflow | 下拉框被遮挡时自动调整位置 | `boolean` | `true` |
-| destroyPopupOnHide | 关闭后是否销毁 Dropdown（已废弃，请使用 destroyOnHidden） | `boolean` | `false` |
 | destroyOnHidden | 关闭后是否销毁 Dropdown | `boolean` | `false` |
 | mouseEnterDelay | 鼠标移入后延时多少才显示 Dropdown，单位：秒 | `number` | `0.15` |
 | mouseLeaveDelay | 鼠标移出后延时多少才隐藏 Dropdown，单位：秒 | `number` | `0.1` |
 | popupRender | 自定义下拉框内容 | `(originNode: VNode) => VNode` | - |
-| dropdownRender | 自定义下拉框内容（已废弃，请使用 popupRender） | `(originNode: VNode) => VNode` | - |
 | forceRender | 强制渲染 Dropdown | `boolean` | `false` |
 | openClassName | 菜单展开时给触发元素添加的类名 | `string` | - |
-| rootClassName | 下拉根元素的类名称 | `string` | - |
 | classNames | 语义化 className，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DropdownClassNames` | - |
 | styles | 语义化 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DropdownStyles` | - |
 
@@ -2196,10 +2186,7 @@ import { Dropdown } from '@hmfw/ant-design'
 ```vue
 <template>
   <Dropdown :menu="menu">
-    <Button>
-      下拉菜单
-      <DownOutlined class="hmfw-icon" />
-    </Button>
+    <Button :icon="DownOutlined" icon-position="end"> 下拉菜单 </Button>
   </Dropdown>
 </template>
 
@@ -2955,7 +2942,6 @@ import { Image, PreviewGroup } from '@hmfw/ant-design'
 | preview | 预览配置，`false` 时禁用 | `boolean \| PreviewConfig` | `true` |
 | fallback | 加载失败时的替代图片地址 | `string` | - |
 | placeholder | 加载占位：`true` 显示骨架动画，或自定义 VNode | `boolean \| VNode \| (() => VNode)` | `false` |
-| rootClassName | 根节点 class | `string` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ImageClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ImageStyles` | - |
 | onError | 加载失败回调 | `(e: Event) => void` | - |
@@ -2979,7 +2965,6 @@ import { Image, PreviewGroup } from '@hmfw/ant-design'
 | onTransform | 预览 transform 变化回调 | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
 | imageRender | 自定义预览内容渲染 | `(originalNode: VNode, info: ImageRenderInfoType) => VNode` | - |
 | toolbarRender | 自定义底部工具栏渲染（参考 AntD v6） | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode` | - |
-| ~~actionsRender~~ | 已废弃，请使用 `toolbarRender` | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode` | - |
 
 **MaskType**
 
@@ -3078,7 +3063,6 @@ import { Input, InputPassword, TextArea, InputSearch } from '@hmfw/ant-design'
 | status | 设置校验状态 | `'error' \| 'warning'` | - |
 | readonly | 是否只读 | `boolean` | `false` |
 | id | 输入框的 id | `string` | - |
-| rootClassName | 根节点的 className | `string` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ affixWrapper?: string; prefix?: string; suffix?: string; input?: string; count?: string }` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ affixWrapper?: CSSProperties; prefix?: CSSProperties; suffix?: CSSProperties; input?: CSSProperties; count?: CSSProperties }` | - |
 
@@ -3447,7 +3431,7 @@ import { List, ListItem, ListItemMeta } from '@hmfw/ant-design'
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List } from '@hmfw/ant-design'
+import { List, ListItem } from '@hmfw/ant-design'
 
 const data = [
   'Racing car sprays burning fuel into crowd.',
@@ -3456,7 +3440,7 @@ const data = [
   'Man charged over missing wedding girl.',
 ]
 
-const renderItem = (item: string) => h(List.Item, null, () => item)
+const renderItem = (item: string) => h(ListItem, null, () => item)
 </script>
 ```
 
@@ -3469,7 +3453,7 @@ const renderItem = (item: string) => h(List.Item, null, () => item)
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { List } from '@hmfw/ant-design'
+import { List, ListItem } from '@hmfw/ant-design'
 
 const data = [{ title: '列表项 1' }, { title: '列表项 2' }, { title: '列表项 3' }]
 
@@ -3483,7 +3467,7 @@ function onDelete(item: any) {
 
 const renderItem = (item: any) =>
   h(
-    List.Item,
+    ListItem,
     {
       actions: [h('a', { onClick: () => onEdit(item) }, '编辑'), h('a', { onClick: () => onDelete(item) }, '删除')],
     },
@@ -3801,7 +3785,6 @@ import { Modal } from '@hmfw/ant-design'
 | forceRender | 强制渲染对话框 | `boolean` | `false` |
 | zIndex | 层级 | `number` | `1000` |
 | wrapClassName | 应用到包裹层 `.hmfw-modal-wrap` 的 class | `string` | - |
-| rootClassName | 应用到根元素 `.hmfw-modal-root` 的 class | `string` | - |
 | focusTriggerAfterClose | 关闭后是否将焦点还给打开前的元素 | `boolean` | `true` |
 | bodyStyle | body 内联样式 | `CSSProperties` | - |
 | maskStyle | mask 内联样式 | `CSSProperties` | - |
@@ -4352,20 +4335,16 @@ import { Progress } from '@hmfw/ant-design'
 | showInfo | 是否显示进度数值或状态图标 | `boolean` | `true` |
 | strokeColor | 进度条色彩，支持字符串 / 数组 / 渐变对象 | `string \| string[] \| ProgressGradient` | - |
 | railColor | 未完成分段颜色 | `string` | - |
-| trailColor | (已废弃) 使用 `railColor` 代替 | `string` | - |
 | strokeWidth | 进度条线宽度 | `number` | `8` (line), 自适应 (circle) |
 | strokeLinecap | 进度条端点形状 | `'round' \| 'butt' \| 'square'` | `'round'` |
 | size | 进度条尺寸 | `'small' \| 'medium' \| 'default' \| number \| [number, number] \| { width?, height? }` | `'medium'` |
-| width | (已废弃) circle/dashboard 画布宽度，使用 `size` 代替 | `number` | `120` |
 | format | 内容模板函数，可返回 VNode | `(percent?: number, successPercent?: number) => VNode \| string \| number \| null` | - |
 | steps | 步骤进度条；对象形式可指定段间距 | `number \| { count: number; gap: number }` | - |
 | success | 成功进度条配置 | `{ percent?: number; strokeColor?: string }` | - |
 | gapDegree | 圆形进度条缺口角度，dashboard 默认 75 | `number` | `0` (circle), `75` (dashboard) |
-| gapPlacement | 仪表盘缺口位置（v6 新 API） | `'top' \| 'bottom' \| 'start' \| 'end'` | `'bottom'` (dashboard) |
-| gapPosition | (已废弃) 使用 `gapPlacement` 代替 | `'top' \| 'bottom' \| 'left' \| 'right'` | - |
+| gapPlacement | 仪表盘缺口位置 | `'top' \| 'bottom' \| 'start' \| 'end'` | `'bottom'` (dashboard) |
 | percentPosition | 进度文字位置 | `{ align?: 'start' \| 'center' \| 'end'; type?: 'inner' \| 'outer' }` | `{ align: 'end', type: 'outer' }` |
 | rounding | 步骤进度条已激活段数舍入函数 | `(step: number) => number` | `Math.round` |
-| rootClassName | 根元素类名 | `string` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ProgressClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ProgressStyles` | - |
 
@@ -5334,7 +5313,6 @@ import { Space } from '@hmfw/ant-design'
 | align | 对齐方式 | `'start' \| 'end' \| 'center' \| 'baseline'` | - |
 | wrap | 是否自动换行，仅水平方向有效 | `boolean` | `false` |
 | separator | 设置分隔符 | `VNode \| string` | - |
-| split | `separator` 的别名（已废弃，请使用 `separator`） | `VNode \| string` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceStyles` | - |
 
@@ -5552,13 +5530,10 @@ import { Steps } from '@hmfw/ant-design'
 | current | 指定当前步骤，从 0 开始记数 | `number` | `0` |
 | initial | 起始序号，从 0 开始记数 | `number` | `0` |
 | items | 配置选项 | `StepItem[]` | `[]` |
-| direction | 指定步骤条方向（已废弃，请使用 orientation） | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | orientation | 指定步骤条方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | size | 指定大小 | `'default' \| 'small'` | `'default'` |
 | status | 指定当前步骤的状态 | `'wait' \| 'process' \| 'finish' \| 'error'` | `'process'` |
 | type | 步骤条类型 | `'default' \| 'inline' \| 'dot'` | `'default'` |
-| progressDot | 点状步骤条（已废弃，请使用 type="dot"） | `boolean \| function` | `false` |
-| labelPlacement | 指定标签放置位置（已废弃，请使用 titlePlacement） | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | titlePlacement | 指定标签放置位置 | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | variant | 步骤条样式变体 | `'filled' \| 'outlined'` | `'filled'` |
 | responsive | 是否响应式 | `boolean` | `true` |
@@ -5573,7 +5548,6 @@ import { Steps } from '@hmfw/ant-design'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | title | 标题 | `string \| VNode` | - |
-| description | 步骤的详情描述（已废弃，请使用 content） | `string \| VNode` | - |
 | content | 步骤的详情描述 | `string \| VNode` | - |
 | subTitle | 子标题 | `string \| VNode` | - |
 | status | 指定状态 | `'wait' \| 'process' \| 'finish' \| 'error'` | - |
@@ -5610,18 +5584,18 @@ import { Steps, Button, Space } from '@hmfw/ant-design'
 const current = ref(0)
 
 const items = [
-  { title: '第一步', description: '填写基本信息' },
-  { title: '第二步', description: '确认订单信息' },
-  { title: '第三步', description: '完成支付' },
+  { title: '第一步', content: '填写基本信息' },
+  { title: '第二步', content: '确认订单信息' },
+  { title: '第三步', content: '完成支付' },
 ]
 </script>
 ```
 
-垂直步骤条 — 通过 `direction="vertical"` 或 `orientation="vertical"` 设置垂直方向步骤条。
+垂直步骤条 — 通过 `orientation="vertical"` 设置垂直方向步骤条。
 
 ```vue
 <template>
-  <Steps direction="vertical" :current="1" :items="items" />
+  <Steps orientation="vertical" :current="1" :items="items" />
 </template>
 
 <script setup lang="ts">
@@ -5630,15 +5604,15 @@ import { Steps } from '@hmfw/ant-design'
 const items = [
   {
     title: '已完成',
-    description: '这是一段描述文字。',
+    content: '这是一段描述文字。',
   },
   {
     title: '进行中',
-    description: '这是一段描述文字。',
+    content: '这是一段描述文字。',
   },
   {
     title: '待处理',
-    description: '这是一段描述文字。',
+    content: '这是一段描述文字。',
   },
 ]
 </script>
@@ -5780,7 +5754,6 @@ import { Table } from '@hmfw/ant-design'
 | onHeaderRow | 设置表头行属性 | `(columns, index) => object` | - |
 | classNames | 语义化 className（[详见下方](#语义化-classname-与-style)） | `TableSemanticClassNames` | - |
 | styles | 语义化 style（[详见下方](#语义化-classname-与-style)） | `TableSemanticStyles` | - |
-| rootClassName | 根节点额外类名 | `string` | - |
 
 **TableColumn**
 
@@ -6226,8 +6199,6 @@ import { Timeline, TimelineItem } from '@hmfw/ant-design'
 | variant | 设置样式变体 | `'outlined' \| 'filled'` | `'outlined'` |
 | reverse | 节点排序 | `boolean` | `false` |
 | titleSpan | 设置标题占比空间（到 dot 中心点距离） | `number \| string` | - |
-| pending | 指定最后一个幽灵节点是否存在或内容（已废弃，建议使用 items 中的 loading） | `boolean \| string \| VNode` | - |
-| pendingDot | 当最后一个幽灵节点存在时，指定其时间图点（已废弃） | `string \| VNode` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TimelineClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TimelineStyles` | - |
 
@@ -6244,10 +6215,6 @@ import { Timeline, TimelineItem } from '@hmfw/ant-design'
 | className | 自定义类名 | `string` | - |
 | style | 自定义样式 | `CSSProperties` | - |
 | key | 唯一标识 | `string \| number` | - |
-| label | 设置标签（已废弃，使用 title） | `string \| VNode` | - |
-| children | 内容（已废弃，使用 content） | `unknown` | - |
-| dot | 自定义时间轴点（已废弃，使用 icon） | `string \| VNode` | - |
-| position | 自定义节点位置（已废弃，使用 placement） | `'left' \| 'right'` | - |
 
 ### 示例
 
@@ -6322,7 +6289,6 @@ import { Tooltip } from '@hmfw/ant-design'
 | autoAdjustOverflow | 浮层超出视口时自动翻转方向 | `boolean` | `true` |
 | zIndex | 自定义浮层 z-index | `number` | `1070` |
 | destroyOnHidden | 隐藏时销毁浮层 DOM | `boolean` | `false` |
-| destroyTooltipOnHide | 同 `destroyOnHidden`（旧名，已弃用） | `boolean` | `false` |
 | getPopupContainer | 自定义浮层挂载容器（默认 `body`） | `(triggerNode: HTMLElement) => HTMLElement` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TooltipClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TooltipStyles` | - |
@@ -6564,7 +6530,7 @@ import { Transfer } from '@hmfw/ant-design'
 | targetKeys (v-model) | 右侧列表的 key 集合 | `TransferKey[]` | `[]` |
 | selectedKeys (v-model) | 选中项的 key 集合 | `TransferKey[]` | `[]` |
 | titles | 标题集合 | `(VNode \| string)[]` | `['', '']` |
-| operations | 操作按钮文案（已废弃） | `string[]` | `[]` |
+| actions | 操作按钮文案 [左→右, 右→左] | `(VNode \| string)[]` | `[]` |
 | render | 自定义渲染函数 | `(item: TransferItem) => RenderResult` | - |
 | rowKey | 自定义提取 key | `(record: TransferItem) => TransferKey` | - |
 | showSearch | 显示搜索框 | `boolean \| TransferSearchOption` | `false` |
@@ -6696,7 +6662,6 @@ import { Tree, DirectoryTree } from '@hmfw/ant-design'
 | virtual | 是否开启虚拟滚动 | `boolean` | `false` |
 | height | 虚拟滚动容器高度（开启 virtual 时必需） | `number \| string` | - |
 | itemHeight | 虚拟滚动每项高度 | `number` | `28` |
-| rootClassName | 根节点 className | `string` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `object` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `object` | - |
 
@@ -7234,7 +7199,6 @@ import { Watermark } from '@hmfw/ant-design'
 | width | 水印的宽度，`content` 的默认值为自身的宽度 | `number` | `120` |
 | height | 水印的高度，`content` 的默认值为自身的高度 | `number` | `64` |
 | inherit | 是否将水印传导给弹出组件如 Modal、Drawer | `boolean` | `true` |
-| rootClassName | 添加到根容器的 className | `string` | - |
 | onRemove | 水印节点被外部移除后重建时触发 | `() => void` | - |
 
 **WatermarkFont**

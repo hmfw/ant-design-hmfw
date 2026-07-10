@@ -5,9 +5,9 @@ import { Steps } from '../Steps'
 import type { StepItem } from '../types'
 
 const items: StepItem[] = [
-  { title: 'Step 1', description: 'Desc 1' },
-  { title: 'Step 2', description: 'Desc 2' },
-  { title: 'Step 3', description: 'Desc 3' },
+  { title: 'Step 1', content: 'Desc 1' },
+  { title: 'Step 2', content: 'Desc 2' },
+  { title: 'Step 3', content: 'Desc 3' },
 ]
 
 describe('Steps', () => {
@@ -38,11 +38,6 @@ describe('Steps', () => {
     expect(wrapper.findAll('.hmfw-steps-item')[2].classes()).toContain('hmfw-steps-item-error')
   })
 
-  it('applies vertical direction', () => {
-    const wrapper = mount(Steps, { props: { items, direction: 'vertical' } })
-    expect(wrapper.classes()).toContain('hmfw-steps-vertical')
-  })
-
   it('applies orientation prop', () => {
     const wrapper = mount(Steps, { props: { items, orientation: 'vertical' } })
     expect(wrapper.classes()).toContain('hmfw-steps-vertical')
@@ -53,7 +48,7 @@ describe('Steps', () => {
     expect(wrapper.classes()).toContain('hmfw-steps-small')
   })
 
-  it('renders descriptions', () => {
+  it('renders content into description node', () => {
     const wrapper = mount(Steps, { props: { items } })
     const descs = wrapper.findAll('.hmfw-steps-item-description')
     expect(descs[0].text()).toBe('Desc 1')
@@ -88,11 +83,6 @@ describe('Steps', () => {
 
   it('applies dot type', () => {
     const wrapper = mount(Steps, { props: { items, type: 'dot' } })
-    expect(wrapper.classes()).toContain('hmfw-steps-dot')
-  })
-
-  it('applies progressDot prop', () => {
-    const wrapper = mount(Steps, { props: { items, progressDot: true } })
     expect(wrapper.classes()).toContain('hmfw-steps-dot')
   })
 
@@ -139,11 +129,6 @@ describe('Steps', () => {
 
   it('supports titlePlacement', () => {
     const wrapper = mount(Steps, { props: { items, titlePlacement: 'vertical' } })
-    expect(wrapper.classes()).toContain('hmfw-steps-label-vertical')
-  })
-
-  it('supports labelPlacement (deprecated)', () => {
-    const wrapper = mount(Steps, { props: { items, labelPlacement: 'vertical' } })
     expect(wrapper.classes()).toContain('hmfw-steps-label-vertical')
   })
 })

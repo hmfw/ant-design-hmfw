@@ -37,7 +37,6 @@ export const DropdownButton = defineComponent({
     getPopupContainer: Function,
     mouseEnterDelay: Number,
     mouseLeaveDelay: Number,
-    destroyPopupOnHide: Boolean,
     destroyOnHidden: { type: Boolean, default: undefined },
     /** 弹层最小宽度。true 匹配整个按钮组宽度，number 指定固定值，false 不限制 */
     matchWidth: { type: [Boolean, Number] as PropType<boolean | number>, default: true },
@@ -103,7 +102,6 @@ export const DropdownButton = defineComponent({
             getPopupContainer={props.getPopupContainer as any}
             mouseEnterDelay={props.mouseEnterDelay}
             mouseLeaveDelay={props.mouseLeaveDelay}
-            destroyPopupOnHide={props.destroyPopupOnHide}
             destroyOnHidden={props.destroyOnHidden}
             matchWidth={resolvedMatchWidth.value}
             onUpdate:open={(v) => emit('update:open', v)}

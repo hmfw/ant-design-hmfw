@@ -10,7 +10,6 @@ export const Steps = defineComponent({
     current: { type: Number, default: 0 },
     initial: { type: Number, default: 0 },
     items: { type: Array as PropType<StepItem[]>, default: () => [] },
-    direction: { type: String as PropType<'horizontal' | 'vertical'> },
     orientation: { type: String as PropType<'horizontal' | 'vertical'> },
     size: { type: String as PropType<'default' | 'small'>, default: 'default' },
     status: { type: String as PropType<StepStatus>, default: 'process' },
@@ -18,11 +17,7 @@ export const Steps = defineComponent({
       type: String as PropType<'default' | 'inline' | 'dot'>,
       default: 'default',
     },
-    labelPlacement: { type: String as PropType<'horizontal' | 'vertical'> },
     titlePlacement: { type: String as PropType<'horizontal' | 'vertical'> },
-    progressDot: {
-      type: [Boolean, Function] as PropType<boolean | ((iconDot: VNode, info: IconRenderInfo) => VNode)>,
-    },
     variant: { type: String as PropType<'filled' | 'outlined'>, default: 'filled' },
     responsive: { type: Boolean, default: true },
     ellipsis: Boolean,
@@ -35,32 +30,19 @@ export const Steps = defineComponent({
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('steps')
 
-    // Merge type from progressDot
-    const mergedType = computed(() => {
-      if (props.type && props.type !== 'default') {
-        return props.type
-      }
-      if (props.progressDot) {
-        return 'dot'
-      }
-      return props.type
-    })
+    const mergedType = computed(() => props.type)
 
     const isDot = computed(() => mergedType.value === 'dot' || mergedType.value === 'inline')
     const isInline = computed(() => mergedType.value === 'inline')
 
-    // Merge orientation
-    const mergedOrientation = computed(() => {
-      const nextOrientation = props.orientation || props.direction
-      return nextOrientation === 'vertical' ? 'vertical' : 'horizontal'
-    })
+    const mergedOrientation = computed(() => (props.orientation === 'vertical' ? 'vertical' : 'horizontal'))
 
     // Merge titlePlacement
     const mergedTitlePlacement = computed(() => {
       if (isDot.value || mergedOrientation.value === 'vertical') {
         return mergedOrientation.value === 'vertical' ? 'horizontal' : 'vertical'
       }
-      return props.titlePlacement || props.labelPlacement || 'horizontal'
+      return props.titlePlacement || 'horizontal'
     })
 
     const getStepStatus = (index: number, item: StepItem): StepStatus => {
@@ -101,13 +83,6 @@ export const Steps = defineComponent({
           item: { ...item, status },
         }
         iconNode = props.iconRender(iconNode, info)
-      } else if (typeof props.progressDot === 'function') {
-        const info: IconRenderInfo = {
-          index,
-          active: index + props.initial === props.current,
-          item: { ...item, status },
-        }
-        iconNode = props.progressDot(iconNode, info)
       }
 
       return iconNode
@@ -150,7 +125,7 @@ export const Steps = defineComponent({
             const status = getStepStatus(index, item)
             const icon = renderIcon(index, status, item)
             const isClickable = !item.disabled
-            const content = item.content || item.description
+            const content = item.content
 
             return (
               <div

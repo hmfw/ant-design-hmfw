@@ -12,6 +12,9 @@
   font-size: 14px;
   line-height: var(--hmfw-line-height);
   pointer-events: none;
+  /* 背景色默认取白色浮层 token；传入 color prop 时由 JS 内联覆盖 --tooltip-bg。
+     缺此默认值时 var(--tooltip-bg) 解析失败会导致浮层背景透明。 */
+  --tooltip-bg: var(--hmfw-color-bg-elevated);
   /* 箭头背景色（白色浮层） */
   --hmfw-arrow-bg: var(--tooltip-bg);
   /* 覆盖 hmfw-trigger-popup 的基础样式，视觉容器是 -inner */

@@ -23,8 +23,6 @@ export interface SpaceProps {
   size?: SpaceSize | [SpaceSize, SpaceSize]
   align?: SpaceAlign
   wrap?: boolean
-  /** @deprecated 请使用 `separator` */
-  split?: VNode | string
   separator?: VNode | string
   classNames?: SpaceClassNames
   styles?: SpaceStyles

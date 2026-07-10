@@ -7,8 +7,6 @@ import type { Placement } from '../_internal/trigger'
 import type { DropdownProps, DropdownPlacement, DropdownTrigger, DropdownArrowOptions } from './types'
 
 // satisfies 强制 props key 集合与 DropdownProps 接口一致，增删属性时编译报错。
-// 注意：destroyOnHidden 默认 undefined（而非 false），这是为了让废弃别名 destroyPopupOnHide
-// 能通过 ?? 回退生效——若默认为 false，?? 不会穿透 falsy 值。
 const dropdownProps = {
   menu: { type: Object as PropType<DropdownProps['menu']>, default: undefined },
   trigger: { type: [String, Array] as PropType<DropdownTrigger | DropdownTrigger[]>, default: 'hover' },
@@ -21,13 +19,10 @@ const dropdownProps = {
   overlayStyle: { type: Object as PropType<Record<string, any>>, default: undefined },
   getPopupContainer: { type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>, default: undefined },
   autoAdjustOverflow: { type: Boolean, default: true },
-  destroyPopupOnHide: { type: Boolean, default: false },
-  // ⚠️ 默认 undefined 是刻意的：false 会让 ?? 无法回退到废弃别名 destroyPopupOnHide
-  destroyOnHidden: { type: Boolean, default: undefined },
+  destroyOnHidden: { type: Boolean, default: false },
   mouseEnterDelay: { type: Number, default: 0.15 },
   mouseLeaveDelay: { type: Number, default: 0.1 },
   popupRender: { type: Function as PropType<(originNode: VNode) => VNode>, default: undefined },
-  dropdownRender: { type: Function as PropType<(originNode: VNode) => VNode>, default: undefined },
   forceRender: { type: Boolean, default: false },
   matchWidth: { type: [Boolean, Number] as PropType<boolean | number>, default: true },
   openClassName: { type: String, default: undefined },
@@ -51,8 +46,7 @@ export const Dropdown = defineComponent({
     const pointAtCenter = computed(
       () => typeof props.arrow === 'object' && props.arrow !== null && props.arrow.pointAtCenter === true,
     )
-    // destroyOnHidden 优先，未显式传入时回退到废弃的 destroyPopupOnHide
-    const shouldDestroy = computed(() => props.destroyOnHidden ?? props.destroyPopupOnHide ?? false)
+    const shouldDestroy = computed(() => props.destroyOnHidden)
     // 带箭头时间距更大（12px），避免箭头与触发器过于紧凑；无箭头时 4px 即可
     const gap = computed(() => (props.arrow ? 12 : 4))
 
@@ -83,8 +77,7 @@ export const Dropdown = defineComponent({
       const menuNode = (
         <Menu {...props.menu} mode="vertical" selectable={props.menu.selectable ?? false} onClick={handleMenuClick} />
       )
-      // popupRender 优先，dropdownRender 为废弃别名
-      const renderFn = props.popupRender || props.dropdownRender
+      const renderFn = props.popupRender
       return renderFn ? renderFn(menuNode) : menuNode
     }
 

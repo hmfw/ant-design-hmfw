@@ -285,9 +285,6 @@ export type { FormProps, FormItemProps, FormRule, NamePath, ValidateStatus } fro
 export { Watermark } from './watermark'
 export type { WatermarkProps, WatermarkFont } from './watermark'
 
-export { BackTop } from './back-top'
-export type { BackTopProps } from './back-top'
-
 export { FloatButton, FloatButtonGroup, FloatButtonBackTop } from './float-button'
 export type {
   FloatButtonProps,
@@ -501,7 +498,6 @@ import { Table } from './table'
 import { Menu } from './menu'
 import { Form, FormItem } from './form'
 import { Watermark } from './watermark'
-import { BackTop } from './back-top'
 import { FloatButton, FloatButtonGroup, FloatButtonBackTop } from './float-button'
 import { QRCode } from './qrcode'
 import { Anchor, AnchorLink } from './anchor'
@@ -601,7 +597,6 @@ const components = [
   Form,
   FormItem,
   Watermark,
-  BackTop,
   FloatButton,
   FloatButtonGroup,
   FloatButtonBackTop,

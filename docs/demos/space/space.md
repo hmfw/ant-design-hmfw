@@ -36,7 +36,7 @@
 
 ### 分隔符
 
-通过 `separator`（或别名 `split`）属性设置分隔符。
+通过 `separator` 属性设置分隔符。
 
 <DemoBlock title="分隔符" :source="SpaceSplitSource">
   <SpaceSplit />
@@ -70,7 +70,6 @@
 | align      | 对齐方式                                                                         | `'start' \| 'end' \| 'center' \| 'baseline'`                   | -              |
 | wrap       | 是否自动换行，仅水平方向有效                                                     | `boolean`                                                      | `false`        |
 | separator  | 设置分隔符                                                                       | `VNode \| string`                                              | -              |
-| split      | `separator` 的别名（已废弃，请使用 `separator`）                                 | `VNode \| string`                                              | -              |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceClassNames`                                              | -              |
 | styles     | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceStyles`                                                  | -              |
 
@@ -192,7 +191,7 @@ interface SpaceStyles {
 ### 注意事项
 
 - `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `split` 节点仅在设置了 `separator` 或 `split` prop 时才会渲染
+- `split` 节点仅在设置了 `separator` prop 或 `split` 插槽时才会渲染
 - 当使用 `wrap` 属性时，子元素容器会自动换行，可通过 `classNames.item` 自定义换行后的样式
 
 ## 设计 Token

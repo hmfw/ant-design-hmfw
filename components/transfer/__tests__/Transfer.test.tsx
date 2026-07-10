@@ -262,9 +262,9 @@ describe('Transfer', () => {
     expect(emitted[1][0].length).toBeGreaterThan(1)
   })
 
-  it('supports operations (deprecated) for button text', () => {
+  it('supports actions for button text', () => {
     const wrapper = mount(Transfer, {
-      props: { dataSource, operations: ['To Right', 'To Left'] },
+      props: { dataSource, actions: ['To Right', 'To Left'] },
     })
     const buttons = wrapper.findAll('.hmfw-transfer-actions .hmfw-btn')
     expect(buttons[0].text()).toContain('To Right')

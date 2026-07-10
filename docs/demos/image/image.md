@@ -78,24 +78,23 @@
 
 ### PreviewConfig
 
-| 参数              | 说明                                               | 类型                                                                    | 默认值              |
-| ----------------- | -------------------------------------------------- | ----------------------------------------------------------------------- | ------------------- |
-| open              | 受控：是否打开预览                                 | `boolean`                                                               | -                   |
-| onOpenChange      | 预览开关变化回调                                   | `(open: boolean) => void`                                               | -                   |
-| src               | 自定义预览图片地址（与 thumb 不同）                | `string`                                                                | -                   |
-| closeIcon         | 自定义关闭图标，`false` 隐藏                       | `VNode \| (() => VNode) \| false`                                       | `<CloseOutlined />` |
-| cover             | 自定义 hover 遮罩内容                              | `VNode \| (() => VNode)`                                                | -                   |
-| mask              | 遮罩配置：`false` 隐藏遮罩，对象形式可配置可点击性 | `boolean \| MaskType`                                                   | `true`              |
-| scaleStep         | 缩放每步倍率（1 + scaleStep）                      | `number`                                                                | `0.5`               |
-| minScale          | 最小缩放                                           | `number`                                                                | `1`                 |
-| maxScale          | 最大缩放                                           | `number`                                                                | `50`                |
-| movable           | 是否可拖拽移动                                     | `boolean`                                                               | `true`              |
-| getContainer      | 预览挂载容器；`false` 时原地渲染                   | `string \| HTMLElement \| (() => HTMLElement) \| false`                 | `document.body`     |
-| zIndex            | 预览根节点 z-index                                 | `number`                                                                | `1080`              |
-| onTransform       | 预览 transform 变化回调                            | `(info: { transform: TransformType; action: TransformAction }) => void` | -                   |
-| imageRender       | 自定义预览内容渲染                                 | `(originalNode: VNode, info: ImageRenderInfoType) => VNode`             | -                   |
-| toolbarRender     | 自定义底部工具栏渲染（参考 AntD v6）               | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode`           | -                   |
-| ~~actionsRender~~ | 已废弃，请使用 `toolbarRender`                     | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode`           | -                   |
+| 参数          | 说明                                               | 类型                                                                    | 默认值              |
+| ------------- | -------------------------------------------------- | ----------------------------------------------------------------------- | ------------------- |
+| open          | 受控：是否打开预览                                 | `boolean`                                                               | -                   |
+| onOpenChange  | 预览开关变化回调                                   | `(open: boolean) => void`                                               | -                   |
+| src           | 自定义预览图片地址（与 thumb 不同）                | `string`                                                                | -                   |
+| closeIcon     | 自定义关闭图标，`false` 隐藏                       | `VNode \| (() => VNode) \| false`                                       | `<CloseOutlined />` |
+| cover         | 自定义 hover 遮罩内容                              | `VNode \| (() => VNode)`                                                | -                   |
+| mask          | 遮罩配置：`false` 隐藏遮罩，对象形式可配置可点击性 | `boolean \| MaskType`                                                   | `true`              |
+| scaleStep     | 缩放每步倍率（1 + scaleStep）                      | `number`                                                                | `0.5`               |
+| minScale      | 最小缩放                                           | `number`                                                                | `1`                 |
+| maxScale      | 最大缩放                                           | `number`                                                                | `50`                |
+| movable       | 是否可拖拽移动                                     | `boolean`                                                               | `true`              |
+| getContainer  | 预览挂载容器；`false` 时原地渲染                   | `string \| HTMLElement \| (() => HTMLElement) \| false`                 | `document.body`     |
+| zIndex        | 预览根节点 z-index                                 | `number`                                                                | `1080`              |
+| onTransform   | 预览 transform 变化回调                            | `(info: { transform: TransformType; action: TransformAction }) => void` | -                   |
+| imageRender   | 自定义预览内容渲染                                 | `(originalNode: VNode, info: ImageRenderInfoType) => VNode`             | -                   |
+| toolbarRender | 自定义底部工具栏渲染（参考 AntD v6）               | `(originalNode: VNode, info: ToolbarRenderInfoType) => VNode`           | -                   |
 
 ### ImageRenderInfoType / ToolbarRenderInfoType
 

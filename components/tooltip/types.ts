@@ -16,10 +16,10 @@ export type TooltipPlacement =
 
 export type TooltipTrigger = 'hover' | 'click' | 'focus' | 'contextMenu'
 
-/** AntD v6 arrow config — `boolean` for show/hide, object for `pointAtCenter`. */
+/** AntD v6 箭头配置 —— `boolean` 控制显隐，对象形式用于 `pointAtCenter`。 */
 export type TooltipArrow = boolean | { pointAtCenter?: boolean }
 
-/** Title can be plain text, VNode, or a render function (matching AntD `RenderFunction`). */
+/** 标题可为纯文本、VNode 或渲染函数（对齐 AntD 的 `RenderFunction`）。 */
 export type TooltipTitle = string | number | VNode | (() => VNode | string | number)
 
 /** Tooltip 语义化类名 */
@@ -48,7 +48,7 @@ export interface TooltipStyles {
 
 export interface TooltipProps {
   title?: TooltipTitle
-  /** AntD legacy alias for `title`; same behavior. */
+  /** AntD 遗留的 `title` 别名；行为一致。 */
   overlay?: TooltipTitle
   placement?: TooltipPlacement
   trigger?: TooltipTrigger | TooltipTrigger[]
@@ -59,20 +59,22 @@ export interface TooltipProps {
   mouseEnterDelay?: number
   mouseLeaveDelay?: number
   disabled?: boolean
-  /** @deprecated Use `destroyOnHidden` (AntD 5.25+ rename). */
-  destroyTooltipOnHide?: boolean
-  /** Destroy popup DOM when hidden (AntD 5.25+). */
+  /** 隐藏时销毁弹层 DOM（AntD 5.25+）。 */
   destroyOnHidden?: boolean
-  /** Auto-flip placement when popup would overflow the viewport. */
+  /** 弹层溢出视口时自动翻转方位。 */
   autoAdjustOverflow?: boolean
-  /** Custom z-index for the popup. */
+  /** 弹层的自定义 z-index。 */
   zIndex?: number
-  /** Specify a function to provide a mount container for the popup. */
+  /** 指定弹层挂载容器的函数。 */
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
   /** 强制重新计算位置的标记，当该值变化时触发位置更新（适用于触发元素位置动态变化的场景）。 */
   fresh?: boolean | number
   /** 触发器外层 wrapper 的 display，默认 inline-block。用于不破坏宿主布局（如菜单项可设为 `contents`）。 */
   triggerDisplay?: string
+  /** @internal 覆盖默认的 `hmfw-tooltip` 前缀（供 Popover/Popconfirm 等封装组件复用）。 */
+  customPrefixCls?: string
+  /** @internal 合并到弹层元素上的额外内联样式（供封装组件透传 `overlayStyle`）。 */
+  popupStyle?: Record<string, string>
   /** 语义化类名 */
   classNames?: TooltipClassNames
   /** 语义化样式 */

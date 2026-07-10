@@ -125,8 +125,8 @@ export interface TransferProps {
   defaultSelectedKeys?: TransferKey[]
   /** 两侧标题 */
   titles?: (VNode | string)[]
-  /** @deprecated 请使用 actions */
-  operations?: string[]
+  /** 操作按钮文案 [左→右, 右→左] */
+  actions?: (VNode | string)[]
   /** 自定义每项渲染 */
   render?: (item: TransferItem) => RenderResult
   /** 自定义 rowKey */

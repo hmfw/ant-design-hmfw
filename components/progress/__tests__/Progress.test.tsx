@@ -243,13 +243,6 @@ describe('Progress', () => {
     expect(wrapper.find('.hmfw-progress-circle').exists()).toBe(true)
   })
 
-  it('falls back to deprecated gapPosition', () => {
-    const wrapper = mount(Progress, {
-      props: { percent: 75, type: 'dashboard', gapPosition: 'left' },
-    })
-    expect(wrapper.find('.hmfw-progress-circle').exists()).toBe(true)
-  })
-
   it('renders linearGradient defs for circle gradient strokeColor', () => {
     const wrapper = mount(Progress, {
       props: {

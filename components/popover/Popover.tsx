@@ -32,7 +32,6 @@ const InternalPopover = defineComponent({
     autoAdjustOverflow: { type: Boolean, default: true },
     zIndex: Number,
     destroyOnHidden: Boolean,
-    destroyTooltipOnHide: Boolean,
     getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
     color: String,
     classNames: [Object, Function] as PropType<
@@ -134,7 +133,6 @@ const InternalPopover = defineComponent({
           autoAdjustOverflow: props.autoAdjustOverflow,
           zIndex: props.zIndex,
           destroyOnHidden: props.destroyOnHidden,
-          destroyTooltipOnHide: props.destroyTooltipOnHide,
           getPopupContainer: props.getPopupContainer,
           color: props.color,
           popupStyle: props.overlayStyle,

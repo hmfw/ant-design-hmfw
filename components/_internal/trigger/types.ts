@@ -93,6 +93,8 @@ export interface TriggerProps {
 export interface PopupSlotContext {
   /** 翻转后实际方位，供箭头方向等使用。 */
   placement: Placement
+  /** 弹层当前是否可见（受控/非受控合并后的真实状态），供 aria-hidden 等使用。 */
+  visible: boolean
 }
 
 export type PopupRender = (ctx: PopupSlotContext) => VNode | VNode[]

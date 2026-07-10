@@ -68,7 +68,7 @@
 
 ### 仪表盘缺口位置
 
-通过 `gapPlacement` 控制仪表盘缺口位置（v6 替代 `gapPosition`）。
+通过 `gapPlacement` 控制仪表盘缺口位置。
 
 <DemoBlock title="仪表盘缺口位置" :source="ProgressGapPlacementSource">
   <ProgressGapPlacement />
@@ -102,17 +102,14 @@
 | showInfo        | 是否显示进度数值或状态图标                                                       | `boolean`                                                                               | `true`                            |
 | strokeColor     | 进度条色彩，支持字符串 / 数组 / 渐变对象                                         | `string \| string[] \| ProgressGradient`                                                | -                                 |
 | railColor       | 未完成分段颜色                                                                   | `string`                                                                                | -                                 |
-| trailColor      | (已废弃) 使用 `railColor` 代替                                                   | `string`                                                                                | -                                 |
 | strokeWidth     | 进度条线宽度                                                                     | `number`                                                                                | `8` (line), 自适应 (circle)       |
 | strokeLinecap   | 进度条端点形状                                                                   | `'round' \| 'butt' \| 'square'`                                                         | `'round'`                         |
 | size            | 进度条尺寸                                                                       | `'small' \| 'medium' \| 'default' \| number \| [number, number] \| { width?, height? }` | `'medium'`                        |
-| width           | (已废弃) circle/dashboard 画布宽度，使用 `size` 代替                             | `number`                                                                                | `120`                             |
 | format          | 内容模板函数，可返回 VNode                                                       | `(percent?: number, successPercent?: number) => VNode \| string \| number \| null`      | -                                 |
 | steps           | 步骤进度条；对象形式可指定段间距                                                 | `number \| { count: number; gap: number }`                                              | -                                 |
 | success         | 成功进度条配置                                                                   | `{ percent?: number; strokeColor?: string }`                                            | -                                 |
 | gapDegree       | 圆形进度条缺口角度，dashboard 默认 75                                            | `number`                                                                                | `0` (circle), `75` (dashboard)    |
-| gapPlacement    | 仪表盘缺口位置（v6 新 API）                                                      | `'top' \| 'bottom' \| 'start' \| 'end'`                                                 | `'bottom'` (dashboard)            |
-| gapPosition     | (已废弃) 使用 `gapPlacement` 代替                                                | `'top' \| 'bottom' \| 'left' \| 'right'`                                                | -                                 |
+| gapPlacement    | 仪表盘缺口位置                                                                   | `'top' \| 'bottom' \| 'start' \| 'end'`                                                 | `'bottom'` (dashboard)            |
 | percentPosition | 进度文字位置                                                                     | `{ align?: 'start' \| 'center' \| 'end'; type?: 'inner' \| 'outer' }`                   | `{ align: 'end', type: 'outer' }` |
 | rounding        | 步骤进度条已激活段数舍入函数                                                     | `(step: number) => number`                                                              | `Math.round`                      |
 | classNames      | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ProgressClassNames`                                                                    | -                                 |

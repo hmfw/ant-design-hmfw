@@ -56,11 +56,7 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    split: {
-      type: [Object, String] as PropType<VNode | string>,
-      default: undefined,
-    },
-    /** `split` 的别名（与 AntD v6 对齐） */
+    /** 分隔符（与 AntD v6 对齐） */
     separator: {
       type: [Object, String] as PropType<VNode | string>,
       default: undefined,
@@ -79,8 +75,8 @@ export default defineComponent({
 
     const mergedDirection = computed<SpaceDirection>(() => (props.vertical ? 'vertical' : props.direction))
 
-    // 优先级：slot > separator prop > split prop
-    const mergedSeparator = computed(() => slots.split?.() ?? props.separator ?? props.split)
+    // 优先级：slot > separator prop
+    const mergedSeparator = computed(() => slots.split?.() ?? props.separator)
 
     const mergedAlign = computed(() => {
       if (props.align) return props.align

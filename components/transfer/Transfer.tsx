@@ -29,8 +29,8 @@ export const Transfer = defineComponent({
     selectedKeys: Array as PropType<TransferKey[]>,
     defaultSelectedKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
     titles: { type: Array as PropType<(VNode | string)[]>, default: () => ['', ''] },
-    /** @deprecated 请使用 actions */
-    operations: { type: Array as PropType<string[]>, default: () => [] },
+    /** 操作按钮文案 [左→右, 右→左] */
+    actions: { type: Array as PropType<(VNode | string)[]>, default: () => [] },
     render: Function as PropType<(item: TransferItem) => RenderResult>,
     rowKey: Function as PropType<(record: TransferItem) => TransferKey>,
     showSearch: {
@@ -238,8 +238,8 @@ export const Transfer = defineComponent({
     const rightActive = computed(() => sourceSelectedKeys.value.length > 0)
     const leftActive = computed(() => targetSelectedKeys.value.length > 0)
 
-    // 操作按钮文案（兼容废弃的 operations）
-    const operations = computed(() => props.operations || [])
+    // 操作按钮文案
+    const actions = computed(() => props.actions || [])
 
     function renderListProps(direction: TransferDirection) {
       const isLeft = direction === 'left'
@@ -307,7 +307,7 @@ export const Transfer = defineComponent({
             disabled={!rightActive.value || props.disabled}
             onClick={moveToRight}
           >
-            {operations.value[0]}
+            {actions.value[0]}
           </Button>
           {!props.oneWay && (
             <Button
@@ -317,7 +317,7 @@ export const Transfer = defineComponent({
               disabled={!leftActive.value || props.disabled}
               onClick={moveToLeft}
             >
-              {operations.value[1]}
+              {actions.value[1]}
             </Button>
           )}
         </div>

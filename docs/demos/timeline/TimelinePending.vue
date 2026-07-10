@@ -1,5 +1,5 @@
 <template>
-  <Timeline :items="items" pending="记录中..." />
+  <Timeline :items="items" />
 </template>
 
 <script setup lang="ts">
@@ -9,5 +9,6 @@ const items = [
   { content: '创建服务现场 2015-09-01' },
   { content: '初步排除网络异常 2015-09-01' },
   { content: '技术测试异常 2015-09-01' },
+  { content: '记录中...', loading: true, color: 'gray' },
 ]
 </script>

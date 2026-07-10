@@ -6,9 +6,9 @@
 import { Steps } from '@hmfw/ant-design'
 
 const items = [
-  { title: '已完成', description: '2024-01-01' },
-  { title: '进行中', description: '2024-01-02' },
-  { title: '待处理', description: '2024-01-03' },
-  { title: '待处理', description: '2024-01-04' },
+  { title: '已完成', content: '2024-01-01' },
+  { title: '进行中', content: '2024-01-02' },
+  { title: '待处理', content: '2024-01-03' },
+  { title: '待处理', content: '2024-01-04' },
 ]
 </script>
