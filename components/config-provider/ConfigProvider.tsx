@@ -1,11 +1,9 @@
-import { defineComponent, provide, computed, onMounted, ref, watch, type PropType } from 'vue'
+import { defineComponent, provide, computed, onMounted, watch, type PropType } from 'vue'
 import { CONFIG_PROVIDER_KEY } from './context'
-import { defaultSeedTokens } from '../_theme/seed'
-import { generateMapTokens } from '../_theme/map'
-import { injectCssVars, injectScopedCssVars } from '../_theme/inject'
+import { defaultSeedTokens, generateMapTokens, injectCssVars } from '../_theme/theme'
 import { zhCN } from '../_locale'
 import type { Locale } from '../_locale/types'
-import type { SeedTokens } from '../_theme/seed'
+import type { SeedTokens } from '../_theme/theme'
 
 export default defineComponent({
   name: 'ConfigProvider',
@@ -36,8 +34,6 @@ export default defineComponent({
     },
   },
   setup(props, { slots }) {
-    const containerRef = ref<HTMLElement | null>(null)
-
     const mergedTheme = computed<SeedTokens>(() => ({
       ...defaultSeedTokens,
       ...props.theme,
@@ -56,21 +52,13 @@ export default defineComponent({
 
     provide(CONFIG_PROVIDER_KEY, context)
 
-    // Inject CSS variables globally on first mount, scoped if nested
+    // 全局注入 CSS 变量：首次挂载 + theme 变化时更新
     onMounted(() => {
-      if (containerRef.value) {
-        injectScopedCssVars(containerRef.value, mapTokens.value, props.prefixCls)
-      } else {
-        injectCssVars(mapTokens.value, props.prefixCls)
-      }
+      injectCssVars(mapTokens.value, props.prefixCls)
     })
 
     watch(mapTokens, (tokens) => {
-      if (containerRef.value) {
-        injectScopedCssVars(containerRef.value, tokens, props.prefixCls)
-      } else {
-        injectCssVars(tokens, props.prefixCls)
-      }
+      injectCssVars(tokens, props.prefixCls)
     })
 
     return () => slots.default?.()

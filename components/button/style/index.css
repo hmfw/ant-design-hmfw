@@ -53,39 +53,39 @@
 
 /* Sizes */
 .hmfw-btn-small {
-  height: 24px;
-  padding: 0 7px;
+  height: var(--hmfw-control-height-sm);
+  padding: 0 var(--hmfw-padding-xs);
   font-size: var(--hmfw-font-size-sm);
   border-radius: var(--hmfw-border-radius-sm);
 }
 
 .hmfw-btn-middle {
-  height: 32px;
-  padding: 4px 15px;
+  height: var(--hmfw-control-height);
+  padding: var(--hmfw-padding-xxs) var(--hmfw-padding);
   font-size: var(--hmfw-font-size);
   border-radius: var(--hmfw-border-radius);
 }
 
 .hmfw-btn-large {
-  height: 40px;
-  padding: 6px 15px;
+  height: var(--hmfw-control-height-lg);
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding);
   font-size: var(--hmfw-font-size-lg);
   border-radius: var(--hmfw-border-radius);
 }
 
 /* Icon only */
 .hmfw-btn-icon-only.hmfw-btn-small {
-  width: 24px;
+  width: var(--hmfw-control-height-sm);
   padding: 0;
 }
 
 .hmfw-btn-icon-only.hmfw-btn-middle {
-  width: 32px;
+  width: var(--hmfw-control-height);
   padding: 0;
 }
 
 .hmfw-btn-icon-only.hmfw-btn-large {
-  width: 40px;
+  width: var(--hmfw-control-height-lg);
   padding: 0;
 }
 

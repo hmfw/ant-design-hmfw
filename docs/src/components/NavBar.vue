@@ -20,6 +20,7 @@
         组件
       </RouterLink>
     </nav>
+    <ThemeSwitcher style="margin-right: 12px" />
     <div class="navbar__social">
       <a
         href="https://github.com/hmfw/ant-design-hmfw"
@@ -40,5 +41,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import ThemeSwitcher from './ThemeSwitcher.vue'
+
 const route = useRoute()
 </script>

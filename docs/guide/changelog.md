@@ -6,6 +6,97 @@
 
 ---
 
+## [0.10.0] - 2026-07-10
+
+### 🔧 重构
+
+- **主题系统**: `seed.ts` + `map.ts` + `inject.ts` 三文件合并为单一 `theme.ts`（~530 行），统一设计 Token 的三层管道（Seed → Map → CSS 变量）
+- **颜色工具**: 新增 `alpha()` 工具函数，支持 hex→rgba 转换并带 `isValidHex` 格式校验；`lighten`/`darken` 对无效输入安全降级
+- **间距系统**: `SIZE_UNIT`/`SIZE_STEP` 内置为常量（不再从 seed 取值），`sizeXXS` 增加 `Math.max(0, …)` 下限防护
+- **CSS 变量生成**: 新增 `scripts/generate-theme-css.ts` 脚本，从 `theme.ts` 自动生成 `components/_theme/style/index.css`（CSS 文件严禁手动编辑）
+- **ConfigProvider**: 移除 `containerRef` 局部注入逻辑，统一使用全局 CSS 变量注入；导入路径从三文件简化为单一 `_theme/theme`
+
+### ✨ 增强
+
+- **MapToken 扩充**: 新增 ~20 个派生 Token，包括 `colorSuccess/Warning/InfoHover/Active`、`colorInfo*` 全套变体、`arrowBg`、`borderRadiusXS`、`colorFillAlter`、`colorSplit`、`controlItemBgHover`、`controlPaddingHorizontal*`、`lineWidthBold`、`zIndexBase/Popup`、`skeletonColor*`、`timelineTitleSpan`
+- **ConfigProvider**: 新增紧凑模式 Demo（`ConfigProviderCompact.vue`）和暗色模式 Demo（`ConfigProviderDarkMode.vue`）
+- **文档站**: 新增 `ThemeSwitcher` 主题切换组件和 `useTheme` 工具函数
+- **构建流程**: `build:lib` 前置 `generate-theme` 步骤；`precheck` 新增主题 CSS 同步校验（`git diff --exit-code`），防止 TS 与 CSS 漂移
+- **Button/Input 样式**: 适配新增的 design token 引用
+
+### 🧪 测试
+
+- **主题测试**: 新增 `theme.test.ts`（270 行），覆盖间距、颜色派生、语义色变体、补充 token、字号下限守卫、整体一致性；旧 `map.test.ts` 已移除
+
+---
+
+## [0.9.0] - 2026-07-10
+
+### 💥 Breaking Changes
+
+- **全面移除 `rootClassName`**: 所有组件的 `rootClassName` prop 已移除，统一使用语义化 API `classNames.root`（或对应节点的 `classNames.xxx`）替代
+  - **Tree**: `rootClassName` → `classNames.root`
+  - **Dropdown**: `rootClassName` → `classNames.dropdown`
+  - **Drawer**: `rootClassName` → 使用 `class` 或 `classNames.root`
+  - **Progress**: `rootClassName` → `classNames.root`
+  - **Input / InputPassword / Textarea / Search**: `rootClassName` → `classNames.affixWrapper`（或 `classNames.root`）
+  - **Transfer**: `rootClassName` → `classNames.root`
+  - **Mentions**: `rootClassName` → `classNames.root`
+  - **BackTop**: `rootClassName` → `classNames.root`（`className` 保留不变）
+  - **Image**: `rootClassName` → `classNames.root`
+  - **Watermark**: `rootClassName` → 使用 `class` 透传
+  - **Table**: `rootClassName` → `classNames.root`
+  - **Modal**: `rootClassName` → `classNames.root`
+  - **ConfirmDialog**: `rootClassName` → `classNames.root`
+
+### 🔧 修复
+
+- **Modal**: `ModalClassNames` 新增 `root` 字段，支持 `classNames.root` 语义化控制
+
+---
+
+## [0.8.0] - 2026-07-10
+
+### 💥 Breaking Changes
+
+- **Carousel**: `infinite` → `loop`，与 Swiper 生态命名对齐
+- **Carousel**: `slidesToShow` → `slidesPerView`，`slidesToScroll` → `slidesPerGroup`，与 Swiper 命名对齐
+- **Carousel**: `autoplaySpeed` → `delay`，语义更准确
+- **Carousel**: `rootClassName` 移除，统一使用 `classNames.root`
+- **Carousel**: `dots` 不再支持 `{ className }` 对象形式，使用 `classNames.dots` 替代
+- **Carousel**: `autoplay` 不再支持 `{ dotDuration }` 对象形式，`dotDuration` 功能已移除
+- **Carousel**: `CarouselAutoplayConfig`、`CarouselDotsConfig` 接口已移除
+- **Carousel**: `CarouselDotPosition` 类型名称已移除，统一为 `CarouselDotPlacement`
+
+### 🔧 重构
+
+- **Carousel**: `goTo` 函数拆分为 `normalizeIndex` + `handleTransitionEnd` + `clearTransitionTimer`，函数体从 54 行缩减至 25 行
+- **Carousel**: 提取 `wrapIndex` 工具函数，消除 5 处重复的模运算回绕代码
+- **Carousel**: 提取 `renderArrow` 消除 prev/next 箭头渲染重复
+- **Carousel**: 提取 `renderTrack` / `renderDots` / `renderSlide` 子渲染函数，主 render 从 130 行缩减至 ~35 行
+- **Carousel**: track/list style 从 computed 改为 render 局部变量，减少不必要的依赖追踪
+- **Carousel**: 箭头改用原生 `<button>` 替代 `<Button>` 组件，消除 CSS 中全部 `!important`
+- **Carousel**: `carouselProps` 添加 `as PropType<T>` 类型标注，与 Button/Input 等组件规范统一
+- **Carousel**: 补充 `CarouselEmits` 类型定义并导出
+
+### ✨ 增强
+
+- **Carousel**: `loop: false` 时首/尾箭头自动置灰 + `cursor: not-allowed`
+- **Carousel**: `waitForAnimate` 拦截时开发环境输出 console.warn，提示动画进行中
+- **Carousel**: `slidesPerView`/`slidesPerGroup` ≤ 0 时开发环境输出 console.warn，提示已自动修正
+- **Carousel**: `onBeforeUnmount` 补充 `clearTransitionTimer()`，防止非 autoplay 场景定时器泄漏
+
+### 🐛 修复
+
+- **Carousel**: 自适应高度模式下 `align-items: flex-start` 解除 flex stretch，修复不同高度 slide 切换时高度不变的问题
+- **Carousel**: `CarouselDotPlacement` 类型补全 `'left' | 'right'`，与运行时兼容映射对齐
+
+### 🌐 国际化
+
+- **Carousel**: `aria-label` 统一改为中文（走马灯 / 上一页 / 下一页 / 跳转到第 N 页）
+
+---
+
 ## [0.7.1] - 2026-07-09
 
 ### 🔧 重构

@@ -53,8 +53,9 @@ pnpm dev              # 启动文档站（http://localhost:5173）
 #      （检查 http://localhost:5173 或对应端口），已启动则无需重复启动。
 
 # 构建
-pnpm build:lib        # 构建组件库
+pnpm build:lib        # 构建组件库（含主题 CSS 自动生成）
 pnpm build:docs       # 构建文档站
+pnpm generate-theme   # 单独生成主题 CSS（修改 seed/map 后运行）
 
 # 测试
 pnpm test             # 运行单元测试
@@ -209,15 +210,22 @@ const allIcons = getAllIcons() // 681 个图标
 
 ## 设计 Token 系统
 
-位于 `components/_theme/`：
+位于 `components/_theme/`，采用**构建时生成 + 运行时覆盖**架构：
 
-- `seed.ts` - 基础 Token（颜色、字体、间距原始值）
-- `map.ts` - 派生 Token（由 seed 计算）
-- `inject.ts` - 注入为 CSS 变量
+- `theme.ts` - **唯一源文件**，包含完整三层管道：
+  1. `SeedTokens` 接口 + `defaultSeedTokens`（18 个原始语义参数）
+  2. `MapTokens` 接口 + `generateMapTokens()`（~100 个派生 Token，通过 `lighten`/`darken`/`alpha` 计算）
+  3. `tokensToCssVars()` / `injectCssVars()` / `injectScopedCssVars()`（CSS 变量注入）
+- `style/index.css` - 静态 CSS 变量默认值，由 `scripts/generate-theme-css.ts` **自动生成，严禁手动编辑**
 
-**重要**：`inject.ts` 中 `UNITLESS_KEYS` 列表包含不加 `px` 的键（`lineHeight`、`fontWeight`、`opacity`、`zIndex` 等）。
+### 关键约束
 
-用户通过 `ConfigProvider` 的 `theme` 属性覆盖：
+- **TS 代码是唯一真值源**：修改 seed 默认值或 map 派生逻辑后，必须运行 `pnpm generate-theme` 重新生成 CSS
+- `precheck` 中会自动校验 CSS 是否与 TS 同步（`git diff --exit-code`），不匹配则发布失败
+- `build:lib` 会先执行 `pnpm generate-theme` 再构建，确保产物中的 CSS 是最新的
+- `isUnitless` 使用前缀匹配（`startsWith`）识别无单位属性（`lineHeight`、`zIndex`、`opacity` 等）
+
+用户通过 `ConfigProvider` 的 `theme` 属性覆盖 seed token，所有派生 token 自动重算并注入：
 
 ```vue
 <ConfigProvider :theme="{ colorPrimary: '#00b96b', borderRadius: 8 }">

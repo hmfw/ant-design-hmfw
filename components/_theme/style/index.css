@@ -1,13 +1,6 @@
-/**
- * 静态默认 CSS 变量
- *
- * ConfigProvider 在 onMounted 时会动态注入一份同名 :root（或 scoped）变量，
- * 优先级高于此处。本文件的作用是：当用户未挂 ConfigProvider 时，组件 CSS
- * 中的 `var(--hmfw-*)` 仍能得到正确默认值——避免再为每个 var() 写 fallback。
- *
- * 由 generateMapTokens(defaultSeedTokens) + tokensToCssVars 生成，
- * 改 token 时同步更新此处。
- */
+/* 由 scripts/generate-theme-css.ts 自动生成，请勿手动编辑 */
+/* theme.ts 是唯一真值源 */
+
 :root {
   --hmfw-color-primary: #1677ff;
   --hmfw-color-success: #52c41a;
@@ -16,14 +9,13 @@
   --hmfw-color-info: #1677ff;
   --hmfw-color-text-base: #000000;
   --hmfw-color-bg-base: #ffffff;
-  --hmfw-font-family: -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --hmfw-font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
   --hmfw-font-size-base: 14px;
   --hmfw-line-height-base: 1.5714285714285714;
   --hmfw-border-radius: 6px;
   --hmfw-border-radius-sm: 4px;
   --hmfw-border-radius-lg: 8px;
-  --hmfw-size-unit: 4px;
-  --hmfw-size-step: 4px;
   --hmfw-motion-duration-fast: 0.1s;
   --hmfw-motion-duration-mid: 0.2s;
   --hmfw-motion-duration-slow: 0.3s;
@@ -33,7 +25,10 @@
     0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
   --hmfw-box-shadow-secondary:
     0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  --hmfw-box-shadow-tertiary:
+    0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
   --hmfw-box-shadow-popover-arrow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+  --hmfw-color-bg-header: #001529;
   --hmfw-color-text: rgba(0, 0, 0, 0.88);
   --hmfw-color-text-secondary: rgba(0, 0, 0, 0.65);
   --hmfw-color-text-tertiary: rgba(0, 0, 0, 0.45);
@@ -54,6 +49,8 @@
   --hmfw-color-fill-secondary: rgba(0, 0, 0, 0.06);
   --hmfw-color-fill-tertiary: rgba(0, 0, 0, 0.04);
   --hmfw-color-fill-quaternary: rgba(0, 0, 0, 0.02);
+  --hmfw-color-fill-content: rgba(0, 0, 0, 0.06);
+  --hmfw-color-fill-content-hover: rgba(0, 0, 0, 0.15);
   --hmfw-color-primary-hover: #4592ff;
   --hmfw-color-primary-active: #146be5;
   --hmfw-color-primary-bg: #e8f1ff;
@@ -66,20 +63,28 @@
   --hmfw-color-success-bg: #eef9e8;
   --hmfw-color-success-border: #a9e28d;
   --hmfw-color-success-text: #52c41a;
+  --hmfw-color-success-hover: #75d048;
+  --hmfw-color-success-active: #4ab017;
   --hmfw-color-warning-bg: #fff7e8;
   --hmfw-color-warning-border: #fdd68a;
   --hmfw-color-warning-text: #faad14;
+  --hmfw-color-warning-hover: #fbbd43;
+  --hmfw-color-warning-active: #e19c12;
   --hmfw-color-error-bg: #ffeded;
   --hmfw-color-error-border: #ffa6a7;
   --hmfw-color-error-text: #ff4d4f;
   --hmfw-color-error-hover: #ff7172;
   --hmfw-color-error-active: #e54547;
+  --hmfw-color-info-bg: #e8f1ff;
+  --hmfw-color-info-border: #8bbbff;
+  --hmfw-color-info-text: #1677ff;
+  --hmfw-color-info-hover: #4592ff;
+  --hmfw-color-info-active: #146be5;
   --hmfw-color-white: #ffffff;
   --hmfw-color-link: #1677ff;
   --hmfw-color-link-hover: #4592ff;
   --hmfw-color-link-active: #146be5;
   --hmfw-color-bg-container-disabled: rgba(0, 0, 0, 0.04);
-  --hmfw-color-bg-header: #001529;
   --hmfw-color-bg-text-hover: rgba(0, 0, 0, 0.06);
   --hmfw-color-text-light-solid: #ffffff;
   --hmfw-font-size: 14px;
@@ -118,22 +123,17 @@
   --hmfw-margin-lg: 24px;
   --hmfw-margin-xl: 32px;
   --hmfw-margin-xxl: 48px;
-
-  /* 补充 token：由组件 CSS fallback 提取，暂未纳入 generateMapTokens */
-  --hmfw-arrow-bg: #fff;
+  --hmfw-arrow-bg: #ffffff;
   --hmfw-border-radius-xs: 4px;
-  --hmfw-box-shadow-tertiary:
-    0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
   --hmfw-color-fill-alter: rgba(0, 0, 0, 0.02);
-  --hmfw-color-fill-content: rgba(0, 0, 0, 0.06);
   --hmfw-color-split: #f0f0f0;
   --hmfw-control-item-bg-hover: rgba(0, 0, 0, 0.04);
   --hmfw-control-padding-horizontal: 12px;
   --hmfw-control-padding-horizontal-sm: 8px;
   --hmfw-line-width-bold: 2px;
-  --hmfw-skeleton-color-base: var(--hmfw-color-fill-secondary);
-  --hmfw-skeleton-color-highlight: var(--hmfw-color-fill);
-  --hmfw-timeline-title-span: 80px;
   --hmfw-z-index-base: 0;
   --hmfw-z-index-popup: 1050;
+  --hmfw-skeleton-color-base: rgba(0, 0, 0, 0.06);
+  --hmfw-skeleton-color-highlight: rgba(0, 0, 0, 0.15);
+  --hmfw-timeline-title-span: 80px;
 }

@@ -1,4 +1,4 @@
-import type { SeedTokens } from '../_theme/seed'
+import type { SeedTokens } from '../_theme/theme'
 import type { Locale } from '../_locale/types'
 
 export interface ConfigProviderProps {

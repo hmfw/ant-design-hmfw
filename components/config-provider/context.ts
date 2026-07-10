@@ -1,6 +1,6 @@
 import { inject, computed, type InjectionKey, type ComputedRef } from 'vue'
 import type { ConfigContext } from './types'
-import { defaultSeedTokens } from '../_theme/seed'
+import { defaultSeedTokens } from '../_theme/theme'
 import { zhCN } from '../_locale'
 
 export const CONFIG_PROVIDER_KEY: InjectionKey<ComputedRef<ConfigContext>> = Symbol('ConfigProvider')

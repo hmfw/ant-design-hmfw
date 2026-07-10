@@ -2,7 +2,8 @@
 .hmfw-input {
   display: inline-block;
   width: 100%;
-  padding: 4px 11px;
+  height: var(--hmfw-control-height);
+  padding: var(--hmfw-padding-xxs) var(--hmfw-padding-sm);
   color: var(--hmfw-color-text);
   font-size: var(--hmfw-font-size-base);
   line-height: var(--hmfw-line-height);
@@ -36,14 +37,16 @@
 }
 
 .hmfw-input-lg {
-  padding: 7px 11px;
-  font-size: 16px;
+  height: var(--hmfw-control-height-lg);
+  padding: var(--hmfw-padding-xxs) var(--hmfw-padding-sm);
+  font-size: var(--hmfw-font-size-lg);
   border-radius: var(--hmfw-border-radius-lg);
 }
 
 .hmfw-input-sm {
-  padding: 0 7px;
-  font-size: 12px;
+  height: var(--hmfw-control-height-sm);
+  padding: 0 var(--hmfw-padding-xs);
+  font-size: var(--hmfw-font-size-sm);
   border-radius: var(--hmfw-border-radius-sm);
 }
 
@@ -68,7 +71,8 @@
   display: inline-flex;
   align-items: center;
   width: 100%;
-  padding: 4px 11px;
+  height: var(--hmfw-control-height);
+  padding: var(--hmfw-padding-xxs) var(--hmfw-padding-sm);
   background: #fff;
   border: 1px solid var(--hmfw-color-border);
   border-radius: var(--hmfw-border-radius);
@@ -92,14 +96,16 @@
 }
 
 .hmfw-input-affix-wrapper-lg {
-  padding: 7px 11px;
-  font-size: 16px;
+  height: var(--hmfw-control-height-lg);
+  padding: var(--hmfw-padding-xxs) var(--hmfw-padding-sm);
+  font-size: var(--hmfw-font-size-lg);
   border-radius: var(--hmfw-border-radius-lg);
 }
 
 .hmfw-input-affix-wrapper-sm {
-  padding: 0 7px;
-  font-size: 12px;
+  height: var(--hmfw-control-height-sm);
+  padding: 0 var(--hmfw-padding-xs);
+  font-size: var(--hmfw-font-size-sm);
   border-radius: var(--hmfw-border-radius-sm);
 }
 
@@ -164,7 +170,7 @@
 .hmfw-input-textarea {
   resize: vertical;
   height: auto;
-  min-height: 32px;
+  min-height: var(--hmfw-control-height);
 }
 
 .hmfw-input-textarea-show-count {

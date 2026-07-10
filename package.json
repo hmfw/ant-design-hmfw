@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 68 high-quality components with TypeScript support",
   "keywords": [
     "vue3",
@@ -61,7 +61,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm build:lib",
-    "build:lib": "tsup",
+    "build:lib": "pnpm generate-theme && tsup",
     "gen:dts": "tsc -p tsconfig.dts.json",
     "postbuild:lib": "pnpm gen:dts && node scripts/fix-extensions.js",
     "build:docs": "vite build",
@@ -75,11 +75,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "gen:llm": "tsx scripts/generate-llm-manifest.ts",
+    "generate-theme": "tsx scripts/generate-theme-css.ts",
     "prebuild:docs": "pnpm gen:llm",
     "e2e": "playwright test",
     "size": "node scripts/analyze-bundle.js && node scripts/test-tree-shaking.js",
     "sync-changelog": "cp CHANGELOG.md docs/guide/changelog.md",
-    "precheck": "pnpm sync-changelog && node scripts/prepublish-check.js",
+    "precheck": "pnpm sync-changelog && pnpm generate-theme && git diff --exit-code components/_theme/style/index.css && node scripts/prepublish-check.js",
     "prepublishOnly": "pnpm test && pnpm typecheck && pnpm build:lib",
     "prepare": "husky"
   },
