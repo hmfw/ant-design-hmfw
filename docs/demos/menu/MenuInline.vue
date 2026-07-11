@@ -1,6 +1,13 @@
 <template>
   <div style="width: 256px; border-right: 1px solid #f0f0f0">
-    <Menu mode="inline" :items="items" :selected-keys="selectedKeys" :default-open-keys="['sub1']" @select="onSelect" />
+    <Menu
+      mode="inline"
+      :items="items"
+      :selected-keys="selectedKeys"
+      :open-keys="openKeys"
+      @select="onSelect"
+      @open-change="onOpenChange"
+    />
   </div>
 </template>
 
@@ -10,6 +17,7 @@ import { Menu } from '@hmfw/ant-design'
 import { MailOutlined, SettingOutlined, UserOutlined } from '@hmfw/icons'
 
 const selectedKeys = ref(['1'])
+const openKeys = ref(['sub1'])
 
 const items = [
   {
@@ -36,5 +44,9 @@ const items = [
 
 const onSelect = ({ key }: { key: string }) => {
   selectedKeys.value = [key]
+}
+
+const onOpenChange = (keys: string[]) => {
+  openKeys.value = keys
 }
 </script>

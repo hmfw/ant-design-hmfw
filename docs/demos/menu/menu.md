@@ -142,7 +142,6 @@ inlineCollapsed 为 true 时，鼠标悬停会自动显示 Tooltip 提示。
 | selectedKeys         | 当前选中的菜单项 key 数组                                                        | `string[]`                                         | -            |
 | defaultSelectedKeys  | 初始选中的菜单项 key 数组                                                        | `string[]`                                         | `[]`         |
 | openKeys             | 当前展开的 SubMenu 菜单项 key 数组                                               | `string[]`                                         | -            |
-| defaultOpenKeys      | 初始展开的 SubMenu 菜单项 key 数组                                               | `string[]`                                         | `[]`         |
 | inlineCollapsed      | inline 时菜单是否收起状态，收起时会自动显示 Tooltip                              | `boolean`                                          | `false`      |
 | inlineIndent         | inline 模式的菜单缩进宽度（单位：px），分组内项目会递增 depth 正确计算缩进       | `number`                                           | `24`         |
 | multiple             | 是否允许多选                                                                     | `boolean`                                          | `false`      |
