@@ -15,8 +15,8 @@
           affixWrapper: { border: '2px solid #1890ff', borderRadius: '8px' },
           input: { color: '#1890ff', fontWeight: 'bold' },
         }"
-        prefix="🔍"
-        suffix="✨"
+        :prefix="SearchOutlined"
+        :suffix="StarOutlined"
       />
 
       <Input
@@ -64,6 +64,7 @@
 import { ref } from 'vue'
 import { Input, TextArea } from '@hmfw/ant-design'
 import { Space } from '@hmfw/ant-design'
+import { SearchOutlined, StarOutlined } from '@hmfw/icons'
 
 const value1 = ref('')
 const value2 = ref('')

@@ -6,6 +6,40 @@
 
 ---
 
+## [0.15.0] - 2026-07-11
+
+### 💥 Breaking Changes
+
+- **Input（受控化）**: 移除 `defaultValue` 属性，Input / TextArea / InputPassword / InputSearch 全部改为完全受控模式，`value`（配合 `v-model`）成为唯一状态来源
+
+### ✨ 增强
+
+- **Input（类型系统）**: 新增 `ShowCountConfig`、`CountConfig`、`AllowClearConfig`、`VisibilityToggleConfig`、`AutoSizeConfig` 具名配置类型，替代原有内联字面量；`styles` 属性从 `Record<string, string>` 统一为 `CSSProperties` 类型
+- **TextArea（count 配置）**: 新增 `count` 属性（对齐 Ant Design v6），支持 `show`/`max`/`strategy`/`exceedFormatter` 完整配置，超长时计数变红但不截断输入
+- **InputPassword**: 新增 `readOnly`、`maxLength`、`id` 属性
+- **InputSearch**: 新增 `readOnly`、`status`、`id` 属性
+- **导出**: 新增 `InputAffix`、`ShowCountConfig`、`CountConfig`、`AllowClearConfig`、`VisibilityToggleConfig`、`InputClassNames`、`InputStyles`、`TextAreaClassNames`、`TextAreaStyles` 类型导出
+
+### 🔧 重构
+
+- **Input（文件拆分）**: 将原先 692 行单体 `Input.tsx` 拆分为独立文件——`Input.tsx`（核心输入框）、`InputPassword.tsx`（密码框）、`InputSearch.tsx`（搜索框）、`TextArea.tsx`（文本域），共享逻辑抽取到 `hooks.ts`（useInput / useComposition / useCount 等 composable）和 `shared.tsx`（共享渲染逻辑）
+
+### 🎨 样式
+
+- **Input（输入框）**: 内部 `<input>` / `<textarea>` 添加 `height: auto; background: transparent`，边框/高度/背景由外层 wrapper 统一控制，修复输入内容溢出遮挡 wrapper 边框的问题
+- **Input（搜索按钮）**: 禁用态改用独立 class `.hmfw-input-search-button-disabled` 控制，而非伪类 `:disabled`，修复禁用时 hover 仍变色的问题
+
+### 📝 文档
+
+- **Input**: 新增 `InputStatus` Demo（error / warning 校验状态展示）
+- **Input**: API 表格移除 `defaultValue`、补充 `count` 配置说明；更新 `CountConfig.max` 描述为「超出时计数变红，不会截断输入」
+
+### 🧪 测试
+
+- Input 单测扩充至覆盖 InputPassword / InputSearch / TextArea 的渲染、事件、组合输入、清除、计数等功能
+
+---
+
 ## [0.14.0] - 2026-07-11
 
 ### 💥 Breaking Changes

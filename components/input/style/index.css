@@ -123,6 +123,10 @@
   box-shadow: none;
   flex: 1;
   min-width: 0;
+  /* 由 wrapper 提供边框/高度/背景；内部 input 不能撑满高度或用白底，
+     否则会溢出内容区并遮挡 wrapper 上下边框（表现为「中间缺失边框」） */
+  height: auto;
+  background: transparent;
 }
 
 .hmfw-input-affix-wrapper .hmfw-input:focus {
@@ -205,13 +209,8 @@
   position: relative;
 }
 
+/* Search suffix（复用 .hmfw-input-suffix 布局，仅补充点击态） */
 .hmfw-input-search-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-  background: transparent;
-  border: none;
   cursor: pointer;
   color: var(--hmfw-color-text-secondary);
   transition: color 0.2s;
@@ -221,8 +220,12 @@
   color: var(--hmfw-color-primary);
 }
 
-.hmfw-input-search-button:disabled {
+.hmfw-input-search-button-disabled {
   cursor: not-allowed;
+  color: var(--hmfw-color-text-disabled);
+}
+
+.hmfw-input-search-button-disabled:hover {
   color: var(--hmfw-color-text-disabled);
 }
 

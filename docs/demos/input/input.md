@@ -49,6 +49,14 @@
   <InputSearch />
 </DemoBlock>
 
+### 校验状态
+
+error / warning 状态的输入框。
+
+<DemoBlock title="校验状态" :source="InputStatusSource">
+  <InputStatus />
+</DemoBlock>
+
 ### 高级功能
 
 展示细粒度样式控制（classNames / styles）和 TextArea 的 pressEnter 事件。
@@ -72,7 +80,6 @@
 | 参数           | 说明                                                                             | 类型                                                                                                                             | 默认值     |
 | -------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | value(v-model) | 输入框内容                                                                       | `string`                                                                                                                         | -          |
-| defaultValue   | 输入框默认内容                                                                   | `string`                                                                                                                         | -          |
 | placeholder    | 输入框占位文本                                                                   | `string`                                                                                                                         | -          |
 | disabled       | 是否禁用状态                                                                     | `boolean`                                                                                                                        | `false`    |
 | size           | 控件大小                                                                         | `'small' \| 'middle' \| 'large'`                                                                                                 | `'middle'` |
@@ -117,7 +124,7 @@
 interface CountConfig {
   // 是否显示计数
   show?: boolean | ((args: { value: string; count: number; maxLength?: number }) => VNode | string)
-  // 最大值限制（超出会自动截断并显示红色）
+  // 最大值限制（超出时计数变红，不会截断输入）
   max?: number
   // 自定义计数策略（默认为字符数）
   strategy?: (text: string) => number
