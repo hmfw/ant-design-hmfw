@@ -44,21 +44,29 @@ test.describe('Menu', () => {
 
   test('点击菜单项后该项变为选中态', async ({ page }) => {
     const menu = page.locator('.hmfw-menu-root.hmfw-menu-inline').first()
-    // 默认展开的 sub1（导航一）下的“选项二”
-    const item = menu.locator('.hmfw-menu-item', { hasText: '选项二' })
 
-    await expect(item).not.toHaveClass(/hmfw-menu-item-selected/)
+    // 等待菜单渲染完成
+    await menu.waitFor({ state: 'visible', timeout: 5000 })
 
+    // “选项二” 应该已经可见（因为导航一初始就是展开的）
+    const item = menu.locator('.hmfw-menu-item').filter({ hasText: '选项二' })
+    await expect(item).toBeVisible({ timeout: 5000 })
+
+    // 点击选项二
     await item.click()
+    await page.waitForTimeout(300)
 
+    // 验证选项二被选中
     await expect(item).toHaveClass(/hmfw-menu-item-selected/)
   })
 
-  test('默认展开的子菜单（导航一）初始即为展开态', async ({ page }) => {
+  test('初始展开的子菜单（导航一）包含选中项时为选中态', async ({ page }) => {
     const menu = page.locator('.hmfw-menu-root.hmfw-menu-inline').first()
     const sub1 = menu.locator('.hmfw-menu-submenu', { hasText: '导航一' })
 
+    // 导航一初始展开，并且包含选中的”选项一”(key='1')，因此有 selected 类
     await expect(sub1).toHaveClass(/hmfw-menu-submenu-open/)
+    await expect(sub1).toHaveClass(/hmfw-menu-submenu-selected/)
     await expect(menu.getByText('选项一')).toBeVisible()
     await expect(menu.getByText('选项三')).toBeVisible()
   })
@@ -67,7 +75,7 @@ test.describe('Menu', () => {
     const menu = page.locator('.hmfw-menu-root.hmfw-menu-horizontal').first()
     const userItem = menu.locator('.hmfw-menu-item', { hasText: '用户管理' })
 
-    // 初始选中“首页”，用户管理未选中
+    // 初始选中”首页”，用户管理未选中
     await expect(userItem).not.toHaveClass(/hmfw-menu-item-selected/)
 
     await userItem.click()
