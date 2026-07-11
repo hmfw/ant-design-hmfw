@@ -82,7 +82,12 @@
     "sync-changelog": "cp CHANGELOG.md docs/guide/changelog.md",
     "precheck": "pnpm sync-changelog && pnpm generate-theme && git diff --exit-code components/_theme/style/index.css && node scripts/prepublish-check.js",
     "prepublishOnly": "pnpm test && pnpm typecheck && pnpm build:lib",
-    "prepare": "husky"
+    "prepare": "husky",
+    "e2e:clean": "rm -rf test-results playwright-report",
+    "e2e:kill": "lsof -ti:5173 | xargs kill -9 2>/dev/null || true",
+    "pretest:e2e": "pnpm e2e:clean",
+    "e2e:cleanup": "./scripts/cleanup-e2e.sh",
+    "e2e:safe": "pnpm e2e:cleanup && pnpm e2e"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs}": [
