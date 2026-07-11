@@ -6,11 +6,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { TreeSelect, Space } from '@hmfw/ant-design'
 import type { TreeSelectNode } from '@hmfw/ant-design'
 
-const value = ref<string>()
+const value = shallowRef<string>()
 
 const treeData: TreeSelectNode[] = [
   {

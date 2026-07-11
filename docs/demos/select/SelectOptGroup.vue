@@ -5,14 +5,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { Select } from '@hmfw/ant-design'
 
-const value = ref<string>('')
+const value = shallowRef<string>()
 
 const options = [
   {
     label: '浙江',
+    value: '浙江',
     options: [
       { label: '杭州', value: 'hangzhou' },
       { label: '宁波', value: 'ningbo' },
@@ -21,6 +22,7 @@ const options = [
   },
   {
     label: '江苏',
+    value: '江苏',
     options: [
       { label: '南京', value: 'nanjing' },
       { label: '苏州', value: 'suzhou' },

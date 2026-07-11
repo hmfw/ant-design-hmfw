@@ -65,9 +65,67 @@
   <SelectMaxCount />
 </DemoBlock>
 
+### 三种大小
+
+通过 `size` 设置选择器大小，可选 `large`、`middle`、`small`。
+
+<DemoBlock title="三种大小" :source="SelectSizeSource">
+  <SelectSize />
+</DemoBlock>
+
+### 状态
+
+通过 `status`、`loading`、`allowClear` 展示校验状态、加载中与可清除。
+
+<DemoBlock title="状态" :source="SelectStatusSource">
+  <SelectStatus />
+</DemoBlock>
+
+### 折叠标签
+
+通过 `maxTagCount` 限制展示的标签数量，`maxTagPlaceholder` 自定义超出部分的提示。
+
+<DemoBlock title="折叠标签" :source="SelectMaxTagCountSource">
+  <SelectMaxTagCount />
+</DemoBlock>
+
+### 自动分词
+
+tags 模式下通过 `tokenSeparators` 配置多个分隔符，粘贴或输入时自动分词，支持逗号、分号、竖线等混合使用。
+
+<DemoBlock title="自动分词" :source="SelectTokenSeparatorsSource">
+  <SelectTokenSeparators />
+</DemoBlock>
+
+### 自定义字段名
+
+通过 `fieldNames` 自定义选项数据结构中的 `label`、`value`、`options` 字段名。
+
+<DemoBlock title="自定义字段名" :source="SelectFieldNamesSource">
+  <SelectFieldNames />
+</DemoBlock>
+
+### 自定义渲染
+
+通过 `optionRender` 自定义下拉选项、`tagRender` 自定义多选标签的渲染内容。
+
+<DemoBlock title="自定义渲染" :source="SelectCustomRenderSource">
+  <SelectCustomRender />
+</DemoBlock>
+
+### 受控展开
+
+通过 `open` 配合 `dropdownVisibleChange` 事件受控管理下拉菜单的展开与收起。
+
+<DemoBlock title="受控展开" :source="SelectControlledOpenSource">
+  <SelectControlledOpen />
+</DemoBlock>
+
 ### 虚拟滚动
 
 使用 `virtual` 属性开启虚拟滚动，适用于大数据量场景（推荐选项数超过 100 时使用）。
+
+通过 `listHeight` 控制下拉可视区高度、`listItemHeight` 控制每项行高——这两个属性**仅在 `virtual` 开启时生效**。虚拟滚动依赖等高选项做位置计算，因此所有选项高度需与 `listItemHeight` 一致；若使用 `optionRender` 导致选项高度不一（如换行、多行内容），请关闭 `virtual`，改由 CSS 控制普通模式的下拉高度。
 
 <DemoBlock title="虚拟滚动" :source="SelectVirtualSource">
   <SelectVirtual />
@@ -85,38 +143,37 @@
 
 ### Select Props
 
-| 参数                     | 说明                                                                | 类型                                                                         | 默认值                                                   |
-| ------------------------ | ------------------------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------- |
-| value(v-model)           | 指定当前选中的条目                                                  | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | -                                                        |
-| defaultValue             | 指定默认选中的条目                                                  | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | -                                                        |
-| options                  | 数据化配置选项内容，支持嵌套（OptGroup）                            | `SelectOption[]`                                                             | `[]`                                                     |
-| disabled                 | 是否禁用                                                            | `boolean`                                                                    | `false`                                                  |
-| placeholder              | 选择框默认文字                                                      | `string`                                                                     | -                                                        |
-| allowClear               | 支持清除                                                            | `boolean`                                                                    | `false`                                                  |
-| size                     | 选择框大小                                                          | `'small' \| 'middle' \| 'large'`                                             | `'middle'`                                               |
-| mode                     | 设置 Select 的模式为多选或标签                                      | `'multiple' \| 'tags'`                                                       | -                                                        |
-| showSearch               | 使单选模式可搜索                                                    | `boolean`                                                                    | `false`                                                  |
-| maxTagCount              | 最多显示多少个 tag                                                  | `number`                                                                     | -                                                        |
-| maxCount                 | 最多选择多少个选项（multiple/tags 模式）                            | `number`                                                                     | -                                                        |
-| maxTagPlaceholder        | 隐藏 tag 时显示的内容                                               | `string \| ((omittedValues) => string)`                                      | -                                                        |
-| status                   | 设置校验状态                                                        | `'error' \| 'warning'`                                                       | -                                                        |
-| open                     | 是否展开下拉菜单                                                    | `boolean`                                                                    | -                                                        |
-| loading                  | 加载中状态                                                          | `boolean`                                                                    | `false`                                                  |
-| labelInValue             | 是否把每个选项的 label 包装到 value 中                              | `boolean`                                                                    | `false`                                                  |
-| tokenSeparators          | 自动分词的分隔符（tags 模式）                                       | `string[]`                                                                   | -                                                        |
-| filterOption             | 是否根据输入项进行筛选                                              | `boolean \| ((input: string, option: SelectOption) => boolean)`              | `true`                                                   |
-| notFoundContent          | 当下拉列表为空时显示的内容                                          | `string`                                                                     | -                                                        |
-| dropdownMatchSelectWidth | 下拉菜单和选择器同宽                                                | `boolean`                                                                    | `true`                                                   |
-| autoClearSearchValue     | 选中后是否清空搜索框（multiple/tags 模式）                          | `boolean`                                                                    | `true`                                                   |
-| optionRender             | 自定义下拉选项渲染                                                  | `(option: SelectOption, info: { index: number }) => VNode`                   | -                                                        |
-| labelRender              | 自定义选中项渲染                                                    | `(props: LabeledValue) => VNode`                                             | -                                                        |
-| tagRender                | 自定义 tag 渲染（multiple/tags 模式）                               | `(props: { label, value, closable, onClose }) => VNode`                      | -                                                        |
-| fieldNames               | 自定义字段名                                                        | `{ label?: string; value?: string; options?: string }`                       | `{ label: 'label', value: 'value', options: 'options' }` |
-| virtual                  | 启用虚拟滚动（推荐选项数 > 100 时使用）                             | `boolean`                                                                    | `false`                                                  |
-| listHeight               | 下拉列表高度（启用虚拟滚动时）                                      | `number`                                                                     | `256`                                                    |
-| listItemHeight           | 下拉列表每项高度（启用虚拟滚动时）                                  | `number`                                                                     | `32`                                                     |
-| classNames               | 语义化 className 与 style（[详见下方](#语义化-classname-与-style)） | `SelectClassNames`                                                           | -                                                        |
-| styles                   | 语义化 className 与 style（[详见下方](#语义化-classname-与-style)） | `SelectStyles`                                                               | -                                                        |
+| 参数                     | 说明                                                                     | 类型                                                                         | 默认值                                                   |
+| ------------------------ | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- | -------------------------------------------------------- |
+| value(v-model)           | 指定当前选中的条目                                                       | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | -                                                        |
+| options                  | 数据化配置选项内容，支持嵌套（OptGroup）                                 | `SelectOption[]`                                                             | `[]`                                                     |
+| disabled                 | 是否禁用                                                                 | `boolean`                                                                    | `false`                                                  |
+| placeholder              | 选择框默认文字                                                           | `string`                                                                     | -                                                        |
+| allowClear               | 支持清除                                                                 | `boolean`                                                                    | `false`                                                  |
+| size                     | 选择框大小                                                               | `'small' \| 'middle' \| 'large'`                                             | `'middle'`                                               |
+| mode                     | 设置 Select 的模式为多选或标签                                           | `'multiple' \| 'tags'`                                                       | -                                                        |
+| showSearch               | 使单选模式可搜索                                                         | `boolean`                                                                    | `false`                                                  |
+| maxTagCount              | 最多显示多少个 tag                                                       | `number`                                                                     | -                                                        |
+| maxCount                 | 最多选择多少个选项（multiple/tags 模式）                                 | `number`                                                                     | -                                                        |
+| maxTagPlaceholder        | 隐藏 tag 时显示的内容                                                    | `string \| ((omittedValues) => string)`                                      | -                                                        |
+| status                   | 设置校验状态                                                             | `'error' \| 'warning'`                                                       | -                                                        |
+| open                     | 是否展开下拉菜单                                                         | `boolean`                                                                    | -                                                        |
+| loading                  | 加载中状态                                                               | `boolean`                                                                    | `false`                                                  |
+| labelInValue             | 是否把每个选项的 label 包装到 value 中                                   | `boolean`                                                                    | `false`                                                  |
+| tokenSeparators          | 自动分词的分隔符（tags 模式）                                            | `string[]`                                                                   | -                                                        |
+| filterOption             | 是否根据输入项进行筛选                                                   | `boolean \| ((input: string, option: SelectOption) => boolean)`              | `true`                                                   |
+| notFoundContent          | 当下拉列表为空时显示的内容                                               | `string`                                                                     | -                                                        |
+| dropdownMatchSelectWidth | 下拉菜单和选择器同宽                                                     | `boolean`                                                                    | `true`                                                   |
+| autoClearSearchValue     | 选中后是否清空搜索框（multiple/tags 模式）                               | `boolean`                                                                    | `true`                                                   |
+| optionRender             | 自定义下拉选项渲染                                                       | `(option: SelectOption, info: { index: number }) => VNode`                   | -                                                        |
+| labelRender              | 自定义选中项渲染                                                         | `(props: LabeledValue) => VNode`                                             | -                                                        |
+| tagRender                | 自定义 tag 渲染（multiple/tags 模式）                                    | `(props: { label, value, closable, onClose }) => VNode`                      | -                                                        |
+| fieldNames               | 自定义字段名（`groupLabel` 缺省复用 `label`）                            | `{ label?: string; value?: string; options?: string; groupLabel?: string }`  | `{ label: 'label', value: 'value', options: 'options' }` |
+| virtual                  | 启用虚拟滚动（推荐选项数 > 100 时使用）                                  | `boolean`                                                                    | `false`                                                  |
+| listHeight               | 下拉可视区高度，**仅 `virtual` 开启时生效**；普通模式下拉高度由 CSS 控制 | `number`                                                                     | `256`                                                    |
+| listItemHeight           | 每个选项的固定行高，**仅 `virtual` 开启时生效**，要求所有选项等高        | `number`                                                                     | `32`                                                     |
+| classNames               | 语义化 className 与 style（[详见下方](#语义化-classname-与-style)）      | `SelectClassNames`                                                           | -                                                        |
+| styles                   | 语义化 className 与 style（[详见下方](#语义化-classname-与-style)）      | `SelectStyles`                                                               | -                                                        |
 
 ### SelectOption
 

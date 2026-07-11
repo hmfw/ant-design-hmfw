@@ -61,11 +61,24 @@
   font-size: var(--hmfw-font-size-lg);
 }
 
-/* Placeholder */
+/* Placeholder —— 绝对定位叠加，不参与 flex 布局，避免把内容/输入框挤位 */
 .hmfw-select-selection-placeholder {
+  position: absolute;
+  top: 50%;
+  left: var(--hmfw-control-padding-horizontal);
+  right: 30px;
+  transform: translateY(-50%);
   color: var(--hmfw-color-text-placeholder);
   pointer-events: none;
   user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hmfw-select-small .hmfw-select-selection-placeholder {
+  left: var(--hmfw-control-padding-horizontal-sm);
+  right: 24px;
 }
 
 /* Selected item */
@@ -109,14 +122,19 @@
   color: var(--hmfw-color-text-secondary);
 }
 
-/* Search input */
+/* Search input：flex 自适应剩余宽度，min-width:0 允许在容器内收缩，
+   避免用 ch 估算宽度导致中文（宽字符）溢出被裁剪 */
 .hmfw-select-selection-search-input {
+  flex: 1 1 40px;
+  min-width: 40px;
+  width: 100%;
   border: none;
   outline: none;
   background: transparent;
   font-size: inherit;
   color: inherit;
-  min-width: 4px;
+  padding: 0;
+  margin: 0;
 }
 
 /* Arrow */
@@ -186,13 +204,15 @@
   overflow: hidden;
   max-height: 256px;
   overflow-y: auto;
-  padding: var(--hmfw-padding-xxs) 0;
+  padding: var(--hmfw-padding-xxs);
 }
 
 .hmfw-select-item {
+  position: relative;
   display: flex;
   align-items: center;
   padding: 5px var(--hmfw-control-padding-horizontal);
+  border-radius: var(--hmfw-border-radius-sm);
   cursor: pointer;
   transition: background var(--hmfw-motion-duration-mid);
   font-size: var(--hmfw-font-size);
@@ -271,8 +291,7 @@
 
 .hmfw-select-item-group-label {
   padding: 5px var(--hmfw-control-padding-horizontal);
-  color: var(--hmfw-color-text-secondary);
+  color: var(--hmfw-color-text-description);
   font-size: var(--hmfw-font-size-sm);
-  font-weight: 600;
   cursor: default;
 }

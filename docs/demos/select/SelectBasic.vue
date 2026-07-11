@@ -7,11 +7,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { Select } from '@hmfw/ant-design'
 
-const value = ref<string>('')
-const value2 = ref<string>('')
+const value = shallowRef<string>()
+const value2 = shallowRef<string>()
 
 const options = [
   { label: 'Vue', value: 'vue' },

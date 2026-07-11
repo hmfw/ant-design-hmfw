@@ -73,39 +73,76 @@ export interface SelectStyles {
   optionState?: CSSProperties
 }
 
+/** 选项过滤：false 关闭本地过滤，或自定义匹配函数 */
+export type SelectFilterOption = boolean | ((input: string, option: SelectOption) => boolean)
+
+/** 超出 maxTagCount 时的折叠标签占位内容 */
+export type SelectMaxTagPlaceholder = string | ((omittedValues: (string | number)[]) => string)
+
+/** 自定义下拉选项渲染 */
+export type SelectOptionRender = (option: SelectOption, info: { index: number }) => any
+
+/** 自定义选中项标签渲染 */
+export type SelectLabelRender = (props: LabeledValue) => any
+
+/** tagRender 回调参数 */
+export interface SelectTagRenderProps {
+  label: string
+  value: string | number
+  closable: boolean
+  onClose: () => void
+}
+
+/** 自定义标签渲染（多选 / tags 模式） */
+export type SelectTagRender = (props: SelectTagRenderProps) => any
+
+/** options 数据字段映射 */
+export interface SelectFieldNames {
+  label?: string
+  value?: string
+  options?: string
+  /** 分组标题字段，缺省时复用 label 字段 */
+  groupLabel?: string
+}
+
 export interface SelectProps {
+  // 数据与取值
   value?: SelectValue
-  defaultValue?: SelectValue
   options?: SelectOption[]
+  fieldNames?: SelectFieldNames
+  labelInValue?: boolean
+  // 模式与状态
   mode?: SelectMode
   size?: SelectSize
   status?: SelectStatus
-  placeholder?: string
   disabled?: boolean
   loading?: boolean
+  // 展现与交互
+  placeholder?: string
   allowClear?: boolean
-  showSearch?: boolean
-  filterOption?: boolean | ((input: string, option: SelectOption) => boolean)
-  notFoundContent?: string
-  maxTagCount?: number
-  maxCount?: number
-  maxTagPlaceholder?: string | ((omittedValues: (string | number)[]) => string)
   open?: boolean
   dropdownMatchSelectWidth?: boolean | number
-  labelInValue?: boolean
-  tokenSeparators?: string[]
-  optionRender?: (option: SelectOption, info: { index: number }) => any
-  labelRender?: (props: LabeledValue) => any
-  tagRender?: (props: { label: string; value: string | number; closable: boolean; onClose: () => void }) => any
+  // 搜索
+  showSearch?: boolean
+  filterOption?: SelectFilterOption
   autoClearSearchValue?: boolean
-  fieldNames?: {
-    label?: string
-    value?: string
-    options?: string
-  }
+  notFoundContent?: string
+  // 多选 / 标签
+  maxCount?: number
+  maxTagCount?: number
+  maxTagPlaceholder?: SelectMaxTagPlaceholder
+  tokenSeparators?: string[]
+  // 自定义渲染
+  optionRender?: SelectOptionRender
+  labelRender?: SelectLabelRender
+  tagRender?: SelectTagRender
+  // 虚拟滚动
   virtual?: boolean
+  /** 下拉可视区高度，仅 virtual 开启时生效；普通模式由 CSS 控制 */
   listHeight?: number
+  /** 每个选项固定行高，仅 virtual 开启时生效，要求所有选项等高 */
   listItemHeight?: number
+  // 语义化 API
   /** 语义化 className */
   classNames?: SelectClassNames
   /** 语义化 style */

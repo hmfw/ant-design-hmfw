@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 67 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -1583,12 +1583,12 @@
         {
           "title": "基础用法",
           "description": "一个通用的日历面板，支持年/月切换。",
-          "code": "<template>\n  <Calendar v-model:value=\"value\" @select=\"onSelect\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Calendar } from '@hmfw/ant-design'\n\nconst value = ref<string>()\n\nconst onSelect = (dateStr: string) => {\n  console.log('选中日期：', dateStr)\n}\n</script>"
+          "code": "<template>\n  <Calendar v-model:value=\"value\" @select=\"onSelect\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport { Calendar } from '@hmfw/ant-design'\n\nconst value = shallowRef<string>()\n\nconst onSelect = (dateStr: string) => {\n  console.log('选中日期：', dateStr)\n}\n</script>"
         },
         {
           "title": "卡片模式",
           "description": "用于嵌套在空间有限的容器中。",
-          "code": "<template>\n  <div style=\"width: 300px; border: 1px solid #d9d9d9; border-radius: 8px\">\n    <Calendar v-model:value=\"value\" :fullscreen=\"false\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Calendar } from '@hmfw/ant-design'\n\nconst value = ref<string>()\n</script>"
+          "code": "<template>\n  <div style=\"width: 300px; border: 1px solid #d9d9d9; border-radius: 8px\">\n    <Calendar v-model:value=\"value\" :fullscreen=\"false\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport { Calendar } from '@hmfw/ant-design'\n\nconst value = shallowRef<string>()\n</script>"
         },
         {
           "title": "切换模式",
@@ -6603,7 +6603,7 @@
         {
           "title": "竖排列表",
           "description": "通过设置 `itemLayout=\"vertical\"` 来实现竖排列表。",
-          "code": "<template>\n  <List :data-source=\"data\" :render-item=\"renderItem\" item-layout=\"vertical\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { List, ListItem, ListItemMeta, Avatar } from '@hmfw/ant-design'\n\nconst data = [\n  {\n    title: 'Ant Design Title 1',\n    description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',\n    content:\n      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',\n    avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=1',\n    extra: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',\n  },\n  {\n    title: 'Ant Design Title 2',\n    description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',\n    content:\n      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',\n    avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=2',\n    extra: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',\n  },\n]\n\nconst renderItem = (item: any) =>\n  h(\n    ListItem,\n    {\n      extra: h('img', { src: item.extra, style: { width: '272px' } }),\n      actions: [h('span', '👁 156'), h('span', '💬 2'), h('span', '⭐ 156')],\n    },\n    () => [\n      h(ListItemMeta, {\n        avatar: h(Avatar, { src: item.avatar }),\n        title: h('a', { href: '#' }, item.title),\n        description: item.description,\n      }),\n      item.content,\n    ],\n  )\n</script>"
+          "code": "<template>\n  <List :data-source=\"data\" :render-item=\"renderItem\" item-layout=\"vertical\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { List, ListItem, ListItemMeta, Avatar } from '@hmfw/ant-design'\nimport { EyeOutlined, MessageOutlined, StarOutlined } from '@hmfw/icons'\n\nconst data = [\n  {\n    title: 'Ant Design Title 1',\n    description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',\n    content:\n      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',\n    avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=1',\n    extra: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',\n  },\n  {\n    title: 'Ant Design Title 2',\n    description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',\n    content:\n      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',\n    avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=2',\n    extra: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',\n  },\n]\n\nconst renderItem = (item: any) =>\n  h(\n    ListItem,\n    {\n      extra: h('img', { src: item.extra, style: { width: '272px' } }),\n      actions: [\n        h('span', [h(EyeOutlined), ' 156']),\n        h('span', [h(MessageOutlined), ' 2']),\n        h('span', [h(StarOutlined), ' 156']),\n      ],\n    },\n    () => [\n      h(ListItemMeta, {\n        avatar: h(Avatar, { src: item.avatar }),\n        title: h('a', { href: '#' }, item.title),\n        description: item.description,\n      }),\n      item.content,\n    ],\n  )\n</script>"
         },
         {
           "title": "虚拟滚动",
@@ -6672,13 +6672,6 @@
           "description": "当前展开的 SubMenu 菜单项 key 数组",
           "type": "`string[]`",
           "default": "-"
-        },
-        {
-          "section": "Menu Props",
-          "name": "defaultOpenKeys",
-          "description": "初始展开的 SubMenu 菜单项 key 数组",
-          "type": "`string[]`",
-          "default": "`[]`"
         },
         {
           "section": "Menu Props",
@@ -6906,7 +6899,7 @@
         {
           "title": "内嵌菜单",
           "description": "垂直菜单，子菜单内嵌在菜单区域。",
-          "code": "<template>\n  <div style=\"width: 256px; border-right: 1px solid #f0f0f0\">\n    <Menu mode=\"inline\" :items=\"items\" :selected-keys=\"selectedKeys\" :default-open-keys=\"['sub1']\" @select=\"onSelect\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { MailOutlined, SettingOutlined, UserOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['1'])\n\nconst items = [\n  {\n    key: 'sub1',\n    label: '导航一',\n    icon: h(MailOutlined),\n    children: [\n      { key: '1', label: '选项一' },\n      { key: '2', label: '选项二' },\n      { key: '3', label: '选项三' },\n    ],\n  },\n  {\n    key: 'sub2',\n    label: '导航二',\n    icon: h(SettingOutlined),\n    children: [\n      { key: '5', label: '选项五' },\n      { key: '6', label: '选项六' },\n    ],\n  },\n  { key: '9', label: '导航三', icon: h(UserOutlined) },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
+          "code": "<template>\n  <div style=\"width: 256px; border-right: 1px solid #f0f0f0\">\n    <Menu\n      mode=\"inline\"\n      :items=\"items\"\n      :selected-keys=\"selectedKeys\"\n      :open-keys=\"openKeys\"\n      @select=\"onSelect\"\n      @open-change=\"onOpenChange\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { MailOutlined, SettingOutlined, UserOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['1'])\nconst openKeys = ref(['sub1'])\n\nconst items = [\n  {\n    key: 'sub1',\n    label: '导航一',\n    icon: h(MailOutlined),\n    children: [\n      { key: '1', label: '选项一' },\n      { key: '2', label: '选项二' },\n      { key: '3', label: '选项三' },\n    ],\n  },\n  {\n    key: 'sub2',\n    label: '导航二',\n    icon: h(SettingOutlined),\n    children: [\n      { key: '5', label: '选项五' },\n      { key: '6', label: '选项六' },\n    ],\n  },\n  { key: '9', label: '导航三', icon: h(UserOutlined) },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n\nconst onOpenChange = (keys: string[]) => {\n  openKeys.value = keys\n}\n</script>"
         },
         {
           "title": "暗色主题",
@@ -6941,7 +6934,7 @@
         {
           "title": "自定义展开图标",
           "description": "通过 `expandIcon` 属性自定义子菜单展开图标，支持 VNode、函数（接收 `{ isOpen }` 参数）、`null`/`false`（隐藏图标）。",
-          "code": "<template>\n  <div style=\"width: 256px; border-right: 1px solid #f0f0f0\">\n    <Menu\n      mode=\"inline\"\n      :items=\"items\"\n      :selected-keys=\"selectedKeys\"\n      :default-open-keys=\"['sub1', 'sub2']\"\n      :expand-icon=\"expandIcon\"\n      @select=\"onSelect\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { MailOutlined, SettingOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['1'])\n\n/**\n * 自定义展开图标：展开/折叠状态不同\n */\nconst expandIcon = ({ isOpen }: { isOpen: boolean }) => h('span', isOpen ? '▾' : '▸')\n\nconst items = [\n  {\n    key: 'sub1',\n    label: '折叠图标示例',\n    icon: h(MailOutlined),\n    children: [\n      { key: '1', label: '选项一' },\n      { key: '2', label: '选项二' },\n    ],\n  },\n  {\n    key: 'sub2',\n    label: '更多菜单',\n    icon: h(SettingOutlined),\n    children: [\n      { key: '3', label: '选项三' },\n      { key: '4', label: '选项四' },\n    ],\n  },\n  { key: '5', label: '普通菜单项' },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
+          "code": "<template>\n  <div style=\"width: 256px; border-right: 1px solid #f0f0f0\">\n    <Menu\n      mode=\"inline\"\n      :items=\"items\"\n      :selected-keys=\"selectedKeys\"\n      :default-open-keys=\"['sub1', 'sub2']\"\n      :expand-icon=\"expandIcon\"\n      @select=\"onSelect\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Menu } from '@hmfw/ant-design'\nimport { MailOutlined, SettingOutlined, DownOutlined, RightOutlined } from '@hmfw/icons'\n\nconst selectedKeys = ref(['1'])\n\n/**\n * 自定义展开图标：展开时向下、折叠时向右\n */\nconst expandIcon = ({ isOpen }: { isOpen: boolean }) => h(isOpen ? DownOutlined : RightOutlined)\n\nconst items = [\n  {\n    key: 'sub1',\n    label: '折叠图标示例',\n    icon: h(MailOutlined),\n    children: [\n      { key: '1', label: '选项一' },\n      { key: '2', label: '选项二' },\n    ],\n  },\n  {\n    key: 'sub2',\n    label: '更多菜单',\n    icon: h(SettingOutlined),\n    children: [\n      { key: '3', label: '选项三' },\n      { key: '4', label: '选项四' },\n    ],\n  },\n  { key: '5', label: '普通菜单项' },\n]\n\nconst onSelect = ({ key }: { key: string }) => {\n  selectedKeys.value = [key]\n}\n</script>"
         },
         {
           "title": "收起状态提示",
@@ -9643,13 +9636,6 @@
         },
         {
           "section": "Select Props",
-          "name": "defaultValue",
-          "description": "指定默认选中的条目",
-          "type": "`string | number | (string | number)[] | LabeledValue | LabeledValue[]`",
-          "default": "-"
-        },
-        {
-          "section": "Select Props",
           "name": "options",
           "description": "数据化配置选项内容，支持嵌套（OptGroup）",
           "type": "`SelectOption[]`",
@@ -9805,8 +9791,8 @@
         {
           "section": "Select Props",
           "name": "fieldNames",
-          "description": "自定义字段名",
-          "type": "`{ label?: string; value?: string; options?: string }`",
+          "description": "自定义字段名（`groupLabel` 缺省复用 `label`）",
+          "type": "`{ label?: string; value?: string; options?: string; groupLabel?: string }`",
           "default": "`{ label: 'label', value: 'value', options: 'options' }`"
         },
         {
@@ -9819,14 +9805,14 @@
         {
           "section": "Select Props",
           "name": "listHeight",
-          "description": "下拉列表高度（启用虚拟滚动时）",
+          "description": "下拉可视区高度，**仅 `virtual` 开启时生效**；普通模式下拉高度由 CSS 控制",
           "type": "`number`",
           "default": "`256`"
         },
         {
           "section": "Select Props",
           "name": "listItemHeight",
-          "description": "下拉列表每项高度（启用虚拟滚动时）",
+          "description": "每个选项的固定行高，**仅 `virtual` 开启时生效**，要求所有选项等高",
           "type": "`number`",
           "default": "`32`"
         },
@@ -9976,7 +9962,7 @@
         {
           "title": "基础用法",
           "description": "基本使用。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <Select v-model:value=\"value\" :options=\"options\" placeholder=\"请选择\" style=\"width: 100%\" />\n    <Select v-model:value=\"value2\" :options=\"options\" placeholder=\"禁用状态\" disabled style=\"width: 100%\" />\n    <p>选中：{{ value }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst value = ref<string>('')\nconst value2 = ref<string>('')\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n  { label: 'Svelte（禁用）', value: 'svelte', disabled: true },\n]\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 300px\">\n    <Select v-model:value=\"value\" :options=\"options\" placeholder=\"请选择\" style=\"width: 100%\" />\n    <Select v-model:value=\"value2\" :options=\"options\" placeholder=\"禁用状态\" disabled style=\"width: 100%\" />\n    <p>选中：{{ value }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst value = shallowRef<string>()\nconst value2 = shallowRef<string>()\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n  { label: 'Svelte（禁用）', value: 'svelte', disabled: true },\n]\n</script>"
         },
         {
           "title": "多选",
@@ -10001,12 +9987,47 @@
         {
           "title": "选项分组",
           "description": "使用 `options` 的嵌套结构实现选项分组。",
-          "code": "<template>\n  <div style=\"max-width: 400px\">\n    <Select v-model:value=\"value\" :options=\"options\" placeholder=\"选择城市\" style=\"width: 100%\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst value = ref<string>('')\n\nconst options = [\n  {\n    label: '浙江',\n    options: [\n      { label: '杭州', value: 'hangzhou' },\n      { label: '宁波', value: 'ningbo' },\n      { label: '温州', value: 'wenzhou' },\n    ],\n  },\n  {\n    label: '江苏',\n    options: [\n      { label: '南京', value: 'nanjing' },\n      { label: '苏州', value: 'suzhou' },\n      { label: '镇江', value: 'zhenjiang' },\n    ],\n  },\n]\n</script>"
+          "code": "<template>\n  <div style=\"max-width: 400px\">\n    <Select v-model:value=\"value\" :options=\"options\" placeholder=\"选择城市\" style=\"width: 100%\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst value = shallowRef<string>()\n\nconst options = [\n  {\n    label: '浙江',\n    value: '浙江',\n    options: [\n      { label: '杭州', value: 'hangzhou' },\n      { label: '宁波', value: 'ningbo' },\n      { label: '温州', value: 'wenzhou' },\n    ],\n  },\n  {\n    label: '江苏',\n    value: '江苏',\n    options: [\n      { label: '南京', value: 'nanjing' },\n      { label: '苏州', value: 'suzhou' },\n      { label: '镇江', value: 'zhenjiang' },\n    ],\n  },\n]\n</script>"
         },
         {
           "title": "限制选择数量",
           "description": "通过 `max-count` 限制多选模式下的最大选择数量。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Select\n      v-model:value=\"value\"\n      :options=\"options\"\n      mode=\"multiple\"\n      :max-count=\"3\"\n      placeholder=\"最多选择 3 个\"\n      style=\"width: 100%\"\n    />\n    <p>已选：{{ value }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst value = ref<string[]>([])\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n  { label: 'Svelte', value: 'svelte' },\n  { label: 'Solid', value: 'solid' },\n]\n</script>"
+        },
+        {
+          "title": "三种大小",
+          "description": "通过 `size` 设置选择器大小，可选 `large`、`middle`、`small`。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Select v-model:value=\"v1\" :options=\"options\" size=\"large\" placeholder=\"大尺寸 large\" style=\"width: 100%\" />\n    <Select v-model:value=\"v2\" :options=\"options\" size=\"middle\" placeholder=\"默认尺寸 middle\" style=\"width: 100%\" />\n    <Select v-model:value=\"v3\" :options=\"options\" size=\"small\" placeholder=\"小尺寸 small\" style=\"width: 100%\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst v1 = ref<string>()\nconst v2 = ref<string>()\nconst v3 = ref<string>()\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n]\n</script>"
+        },
+        {
+          "title": "状态",
+          "description": "通过 `status`、`loading`、`allowClear` 展示校验状态、加载中与可清除。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Select v-model:value=\"v1\" :options=\"options\" status=\"error\" placeholder=\"错误状态\" style=\"width: 100%\" />\n    <Select v-model:value=\"v2\" :options=\"options\" status=\"warning\" placeholder=\"警告状态\" style=\"width: 100%\" />\n    <Select :options=\"options\" loading placeholder=\"加载中状态\" style=\"width: 100%\" />\n    <Select v-model:value=\"v3\" :options=\"options\" allow-clear placeholder=\"可清除（选中后出现清除按钮）\" style=\"width: 100%\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst v1 = ref<string>()\nconst v2 = ref<string>()\nconst v3 = ref<string>('vue')\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n]\n</script>"
+        },
+        {
+          "title": "折叠标签",
+          "description": "通过 `maxTagCount` 限制展示的标签数量，`maxTagPlaceholder` 自定义超出部分的提示。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Select\n      v-model:value=\"value\"\n      :options=\"options\"\n      mode=\"multiple\"\n      :max-tag-count=\"2\"\n      :max-tag-placeholder=\"(omitted) => `+ ${omitted.length} 项`\"\n      placeholder=\"最多显示 2 个标签\"\n      style=\"width: 100%\"\n    />\n    <p>已选：{{ value }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst value = ref<string[]>(['vue', 'react', 'angular', 'svelte'])\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n  { label: 'Svelte', value: 'svelte' },\n  { label: 'Solid', value: 'solid' },\n]\n</script>"
+        },
+        {
+          "title": "自动分词",
+          "description": "tags 模式下通过 `tokenSeparators` 配置多个分隔符，粘贴或输入时自动分词，支持逗号、分号、竖线等混合使用。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Select\n      v-model:value=\"value\"\n      mode=\"tags\"\n      :options=\"options\"\n      :token-separators=\"[',', ';', '|']\"\n      placeholder=\"输入内容，用 , ; | 任意分隔符自动分词\"\n      style=\"width: 100%\"\n    />\n    <p>已选：{{ value }}</p>\n    <p style=\"color: #888; font-size: 12px\">试试粘贴：tag1,tag2;tag3|tag4</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst value = ref<string[]>([])\n\nconst options = [\n  { label: '前端', value: '前端' },\n  { label: '后端', value: '后端' },\n  { label: '全栈', value: '全栈' },\n]\n</script>"
+        },
+        {
+          "title": "自定义字段名",
+          "description": "通过 `fieldNames` 自定义选项数据结构中的 `label`、`value`、`options` 字段名。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Select\n      v-model:value=\"value\"\n      :options=\"options\"\n      :field-names=\"{ label: 'name', value: 'id' }\"\n      placeholder=\"使用自定义字段名 name / id\"\n      style=\"width: 100%\"\n    />\n    <p>已选：{{ value }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst value = shallowRef<number>()\n\n// 选项使用 name / id 而非默认的 label / value\nconst options = [\n  { name: '北京', id: 1 },\n  { name: '上海', id: 2 },\n  { name: '广州', id: 3 },\n  { name: '深圳', id: 4 },\n]\n</script>"
+        },
+        {
+          "title": "自定义渲染",
+          "description": "通过 `optionRender` 自定义下拉选项、`tagRender` 自定义多选标签的渲染内容。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Select\n      v-model:value=\"single\"\n      :options=\"options\"\n      placeholder=\"自定义选项渲染 optionRender\"\n      style=\"width: 100%\"\n      :option-render=\"renderOption\"\n    />\n    <Select\n      v-model:value=\"tags\"\n      :options=\"options\"\n      mode=\"multiple\"\n      placeholder=\"自定义标签渲染 tagRender\"\n      style=\"width: 100%\"\n      :tag-render=\"renderTag\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"tsx\">\nimport { ref } from 'vue'\nimport { Select } from '@hmfw/ant-design'\nimport type { SelectOption } from '@hmfw/ant-design'\n\nconst single = ref<string>()\nconst tags = ref<string[]>(['vue'])\n\nconst options: SelectOption[] = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n]\n\n// 自定义选项：图标 + 文本\nconst renderOption = (option: SelectOption) => (\n  <span style=\"display: flex; align-items: center; gap: 8px\">\n    <span style=\"width: 8px; height: 8px; border-radius: 50%; background: #1677ff\" />\n    {option.label}\n  </span>\n)\n\n// 自定义标签：带边框的胶囊样式\nconst renderTag = (props: { label: string; value: string | number; closable: boolean; onClose: () => void }) => (\n  <span style=\"display: inline-flex; align-items: center; gap: 4px; padding: 0 8px; margin: 2px; border: 1px solid #1677ff; border-radius: 10px; color: #1677ff\">\n    {props.label}\n    {props.closable && (\n      <span style=\"cursor: pointer\" onClick={props.onClose}>\n        ×\n      </span>\n    )}\n  </span>\n)\n</script>"
+        },
+        {
+          "title": "受控展开",
+          "description": "通过 `open` 配合 `dropdownVisibleChange` 事件受控管理下拉菜单的展开与收起。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <button style=\"width: fit-content; padding: 4px 12px\" @click=\"open = !open\">\n      {{ open ? '收起' : '展开' }}下拉菜单\n    </button>\n    <Select\n      v-model:value=\"value\"\n      :options=\"options\"\n      :open=\"open\"\n      placeholder=\"受控展开状态\"\n      style=\"width: 100%\"\n      @dropdown-visible-change=\"onVisibleChange\"\n    />\n    <p>下拉状态：{{ open ? '展开' : '收起' }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport { Select } from '@hmfw/ant-design'\n\nconst value = shallowRef<string>()\nconst open = shallowRef(false)\n\nconst onVisibleChange = (visible: boolean) => {\n  open.value = visible\n}\n\nconst options = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n]\n</script>"
         },
         {
           "title": "虚拟滚动",
@@ -13916,7 +13937,7 @@
         {
           "title": "基础用法",
           "description": "",
-          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 300px\">\n    <TreeSelect v-model:value=\"value\" :tree-data=\"treeData\" placeholder=\"请选择\" style=\"width: 100%\" />\n    <span>选中：{{ value }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TreeSelect, Space } from '@hmfw/ant-design'\nimport type { TreeSelectNode } from '@hmfw/ant-design'\n\nconst value = ref<string>()\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'parent1',\n    label: '父节点 1',\n    children: [\n      { value: 'child1-1', label: '子节点 1-1' },\n      { value: 'child1-2', label: '子节点 1-2' },\n    ],\n  },\n  {\n    value: 'parent2',\n    label: '父节点 2',\n    children: [{ value: 'child2-1', label: '子节点 2-1' }],\n  },\n]\n</script>"
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 300px\">\n    <TreeSelect v-model:value=\"value\" :tree-data=\"treeData\" placeholder=\"请选择\" style=\"width: 100%\" />\n    <span>选中：{{ value }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport { TreeSelect, Space } from '@hmfw/ant-design'\nimport type { TreeSelectNode } from '@hmfw/ant-design'\n\nconst value = shallowRef<string>()\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'parent1',\n    label: '父节点 1',\n    children: [\n      { value: 'child1-1', label: '子节点 1-1' },\n      { value: 'child1-2', label: '子节点 1-2' },\n    ],\n  },\n  {\n    value: 'parent2',\n    label: '父节点 2',\n    children: [{ value: 'child2-1', label: '子节点 2-1' }],\n  },\n]\n</script>"
         },
         {
           "title": "多选",
@@ -13931,7 +13952,7 @@
         {
           "title": "搜索",
           "description": "",
-          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 300px\">\n    <TreeSelect v-model:value=\"value\" :tree-data=\"treeData\" show-search placeholder=\"搜索节点\" style=\"width: 100%\" />\n    <span>选中：{{ value }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TreeSelect, Space } from '@hmfw/ant-design'\nimport type { TreeSelectNode } from '@hmfw/ant-design'\n\nconst value = ref<string>()\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'parent1',\n    label: '父节点 1',\n    children: [\n      { value: 'child1-1', label: '子节点 1-1' },\n      { value: 'child1-2', label: '子节点 1-2' },\n    ],\n  },\n  {\n    value: 'parent2',\n    label: '父节点 2',\n    children: [\n      { value: 'child2-1', label: '子节点 2-1' },\n      { value: 'child2-2', label: '子节点 2-2' },\n    ],\n  },\n]\n</script>"
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 300px\">\n    <TreeSelect v-model:value=\"value\" :tree-data=\"treeData\" show-search placeholder=\"搜索节点\" style=\"width: 100%\" />\n    <span>选中：{{ value }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport { TreeSelect, Space } from '@hmfw/ant-design'\nimport type { TreeSelectNode } from '@hmfw/ant-design'\n\nconst value = shallowRef<string>()\n\nconst treeData: TreeSelectNode[] = [\n  {\n    value: 'parent1',\n    label: '父节点 1',\n    children: [\n      { value: 'child1-1', label: '子节点 1-1' },\n      { value: 'child1-2', label: '子节点 1-2' },\n    ],\n  },\n  {\n    value: 'parent2',\n    label: '父节点 2',\n    children: [\n      { value: 'child2-1', label: '子节点 2-1' },\n      { value: 'child2-2', label: '子节点 2-2' },\n    ],\n  },\n]\n</script>"
         },
         {
           "title": "细粒度样式控制",

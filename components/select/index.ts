@@ -7,4 +7,11 @@ export type {
   SelectStatus,
   LabeledValue,
   SelectValue,
+  SelectFilterOption,
+  SelectMaxTagPlaceholder,
+  SelectOptionRender,
+  SelectLabelRender,
+  SelectTagRender,
+  SelectTagRenderProps,
+  SelectFieldNames,
 } from './types'

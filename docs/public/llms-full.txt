@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.12.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.13.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -823,10 +823,10 @@ import { Calendar } from '@hmfw/ant-design'
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { Calendar } from '@hmfw/ant-design'
 
-const value = ref<string>()
+const value = shallowRef<string>()
 
 const onSelect = (dateStr: string) => {
   console.log('选中日期：', dateStr)
@@ -844,10 +844,10 @@ const onSelect = (dateStr: string) => {
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { Calendar } from '@hmfw/ant-design'
 
-const value = ref<string>()
+const value = shallowRef<string>()
 </script>
 ```
 
@@ -3500,7 +3500,6 @@ import { Menu, MenuItem, SubMenu, MenuDivider, MenuItemGroup } from '@hmfw/ant-d
 | selectedKeys | 当前选中的菜单项 key 数组 | `string[]` | - |
 | defaultSelectedKeys | 初始选中的菜单项 key 数组 | `string[]` | `[]` |
 | openKeys | 当前展开的 SubMenu 菜单项 key 数组 | `string[]` | - |
-| defaultOpenKeys | 初始展开的 SubMenu 菜单项 key 数组 | `string[]` | `[]` |
 | inlineCollapsed | inline 时菜单是否收起状态，收起时会自动显示 Tooltip | `boolean` | `false` |
 | inlineIndent | inline 模式的菜单缩进宽度（单位：px），分组内项目会递增 depth 正确计算缩进 | `number` | `24` |
 | multiple | 是否允许多选 | `boolean` | `false` |
@@ -3584,7 +3583,14 @@ const onSelect = ({ key }: { key: string }) => {
 ```vue
 <template>
   <div style="width: 256px; border-right: 1px solid #f0f0f0">
-    <Menu mode="inline" :items="items" :selected-keys="selectedKeys" :default-open-keys="['sub1']" @select="onSelect" />
+    <Menu
+      mode="inline"
+      :items="items"
+      :selected-keys="selectedKeys"
+      :open-keys="openKeys"
+      @select="onSelect"
+      @open-change="onOpenChange"
+    />
   </div>
 </template>
 
@@ -3594,6 +3600,7 @@ import { Menu } from '@hmfw/ant-design'
 import { MailOutlined, SettingOutlined, UserOutlined } from '@hmfw/icons'
 
 const selectedKeys = ref(['1'])
+const openKeys = ref(['sub1'])
 
 const items = [
   {
@@ -3620,6 +3627,10 @@ const items = [
 
 const onSelect = ({ key }: { key: string }) => {
   selectedKeys.value = [key]
+}
+
+const onOpenChange = (keys: string[]) => {
+  openKeys.value = keys
 }
 </script>
 ```
@@ -4932,7 +4943,6 @@ import { Select } from '@hmfw/ant-design'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | value(v-model) | 指定当前选中的条目 | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | - |
-| defaultValue | 指定默认选中的条目 | `string \| number \| (string \| number)[] \| LabeledValue \| LabeledValue[]` | - |
 | options | 数据化配置选项内容，支持嵌套（OptGroup） | `SelectOption[]` | `[]` |
 | disabled | 是否禁用 | `boolean` | `false` |
 | placeholder | 选择框默认文字 | `string` | - |
@@ -4955,10 +4965,10 @@ import { Select } from '@hmfw/ant-design'
 | optionRender | 自定义下拉选项渲染 | `(option: SelectOption, info: { index: number }) => VNode` | - |
 | labelRender | 自定义选中项渲染 | `(props: LabeledValue) => VNode` | - |
 | tagRender | 自定义 tag 渲染（multiple/tags 模式） | `(props: { label, value, closable, onClose }) => VNode` | - |
-| fieldNames | 自定义字段名 | `{ label?: string; value?: string; options?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
+| fieldNames | 自定义字段名（`groupLabel` 缺省复用 `label`） | `{ label?: string; value?: string; options?: string; groupLabel?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
 | virtual | 启用虚拟滚动（推荐选项数 > 100 时使用） | `boolean` | `false` |
-| listHeight | 下拉列表高度（启用虚拟滚动时） | `number` | `256` |
-| listItemHeight | 下拉列表每项高度（启用虚拟滚动时） | `number` | `32` |
+| listHeight | 下拉可视区高度，**仅 `virtual` 开启时生效**；普通模式下拉高度由 CSS 控制 | `number` | `256` |
+| listItemHeight | 每个选项的固定行高，**仅 `virtual` 开启时生效**，要求所有选项等高 | `number` | `32` |
 | classNames | 语义化 className 与 style（[详见下方](#语义化-classname-与-style)） | `SelectClassNames` | - |
 | styles | 语义化 className 与 style（[详见下方](#语义化-classname-与-style)） | `SelectStyles` | - |
 
@@ -5015,11 +5025,11 @@ import { Select } from '@hmfw/ant-design'
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { Select } from '@hmfw/ant-design'
 
-const value = ref<string>('')
-const value2 = ref<string>('')
+const value = shallowRef<string>()
+const value2 = shallowRef<string>()
 
 const options = [
   { label: 'Vue', value: 'vue' },
@@ -6850,11 +6860,11 @@ import { TreeSelect } from '@hmfw/ant-design'
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { TreeSelect, Space } from '@hmfw/ant-design'
 import type { TreeSelectNode } from '@hmfw/ant-design'
 
-const value = ref<string>()
+const value = shallowRef<string>()
 
 const treeData: TreeSelectNode[] = [
   {
