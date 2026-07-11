@@ -1,15 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '../layouts/AppLayout.vue'
 import HomePage from '../pages/HomePage.vue'
+import { demoRoutes } from './demo-routes.gen'
 
-const demoMds = import.meta.glob('../../demos/*/*.md')
-
-const componentRoutes = Object.entries(demoMds)
-  .filter(([p]) => /\/demos\/([^/]+)\/\1\.md$/.test(p))
-  .map(([p, component]) => ({
-    path: `components/${p.match(/\/demos\/([^/]+)\//)![1]}`,
-    component,
-  }))
+const componentRoutes = Object.entries(demoRoutes).map(([name, component]) => ({
+  path: `components/${name}`,
+  component,
+}))
 
 export const router = createRouter({
   history: createWebHistory('/ant-design-hmfw/'),

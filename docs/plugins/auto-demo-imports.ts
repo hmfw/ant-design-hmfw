@@ -22,6 +22,17 @@ function stripTopLevelScriptSetup(src: string): string {
   return result + src.slice(lastIndex)
 }
 
+/** 匹配 components/<name>/demos/ 路径 */
+const DEMOS_PATH_RE = /\/components\/[^/]+\/demos\//
+
+function isDemoMd(id: string): boolean {
+  return id.endsWith('.md') && DEMOS_PATH_RE.test(id)
+}
+
+function isDemoVue(file: string): boolean {
+  return file.endsWith('.vue') && DEMOS_PATH_RE.test(file)
+}
+
 export function autoDemoImports(): Plugin {
   return {
     name: 'auto-demo-imports',
@@ -30,9 +41,10 @@ export function autoDemoImports(): Plugin {
       // demo 目录下 .vue 文件增删时，让同目录的 .md 模块失效，
       // 这样下次访问时插件会重新 readdir，拿到最新的文件列表。
       const invalidate = (file: string) => {
-        if (!file.endsWith('.vue') || !file.includes('/demos/')) return
+        if (!isDemoVue(file)) return
         const dir = path.dirname(file)
-        const mdPath = path.join(dir, path.basename(dir) + '.md')
+        const dirName = path.basename(dir)
+        const mdPath = path.join(dir, dirName + '.md')
         const mods = server.moduleGraph.getModulesByFile(mdPath)
         mods?.forEach((m) => server.moduleGraph.invalidateModule(m))
       }
@@ -40,7 +52,7 @@ export function autoDemoImports(): Plugin {
       server.watcher.on('unlink', invalidate)
     },
     transform(code, id) {
-      if (!id.endsWith('.md') || !id.includes('/demos/')) return
+      if (!isDemoMd(id)) return
       const dir = path.dirname(id)
       const vueFiles = fs
         .readdirSync(dir)
@@ -53,11 +65,8 @@ export function autoDemoImports(): Plugin {
           return `import ${name} from './${f}'\nimport ${name}Source from './${f}?raw'`
         })
         .join('\n')
-      // Strip author-written <script setup> blocks (with or without
-      // attributes like lang="ts") so we don't emit a duplicate one.
-      // 仅删除顶层的 <script setup>，跳过 ```vue / ```html 等代码围栏内的示例，
-      // 否则示例里的 <script setup> 会被误删、真实的脚本块反而残留，导致出现
-      // 两个 <script setup>，Vue 编译报 "missing end tag"。
+      // 仅删除顶层的 <script setup>，跳过代码围栏内的示例，
+      // 否则示例里的 <script setup> 会被误删、真实的脚本块反而残留
       const stripped = stripTopLevelScriptSetup(code)
       return `<script setup>\n${imports}\n</script>\n\n${stripped}`
     },

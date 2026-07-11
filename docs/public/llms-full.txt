@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.13.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.15.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -3051,7 +3051,6 @@ import { Input, InputPassword, TextArea, InputSearch } from '@hmfw/ant-design'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | value(v-model) | 输入框内容 | `string` | - |
-| defaultValue | 输入框默认内容 | `string` | - |
 | placeholder | 输入框占位文本 | `string` | - |
 | disabled | 是否禁用状态 | `boolean` | `false` |
 | size | 控件大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
@@ -3140,7 +3139,7 @@ const value = ref('')
 ```vue
 <template>
   <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px">
-    <Input v-model:value="value1" placeholder="请输入用户名" prefix="👤" />
+    <Input v-model:value="value1" placeholder="请输入用户名" :prefix="UserOutlined" />
     <Input v-model:value="value2" placeholder="请输入金额" prefix="¥" suffix="元" />
     <!-- addon-before/addon-after are deprecated, use Space.Compact instead -->
     <Input v-model:value="value4" placeholder="支持清除" allow-clear />
@@ -3150,6 +3149,7 @@ const value = ref('')
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Input } from '@hmfw/ant-design'
+import { UserOutlined } from '@hmfw/icons'
 
 const value1 = ref('')
 const value2 = ref('')

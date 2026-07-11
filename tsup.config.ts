@@ -8,6 +8,7 @@ export default defineConfig([
     entry: [
       'components/**/*.{ts,tsx}',
       '!components/**/__tests__/**',
+      '!components/**/demos/**',
       '!components/**/*.test.*',
       '!components/**/*.spec.*',
       '!components/_visual/**',

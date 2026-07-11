@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
-const DEMOS_DIR = join(ROOT, 'docs/demos')
+const COMPONENTS_DIR = join(ROOT, 'components')
 const OUT_DIR = join(ROOT, 'docs/public')
 const SITE = 'https://hmfw.github.io/ant-design-hmfw'
 const PKG_NAME = '@hmfw/ant-design'
@@ -198,11 +198,17 @@ console.log('🔍 Scanning component docs...')
 const { version, description } = readPkg()
 const slugMap = buildSlugMap()
 
-const slugs = readdirSync(DEMOS_DIR, { withFileTypes: true })
-  .filter((d) => d.isDirectory())
-  .map((d) => d.name)
-  .filter((slug) => existsSync(join(DEMOS_DIR, slug, `${slug}.md`)))
-  .sort()
+const slugs: string[] = []
+if (existsSync(COMPONENTS_DIR)) {
+  for (const name of readdirSync(COMPONENTS_DIR)) {
+    if (name.startsWith('_')) continue
+    const mdPath = join(COMPONENTS_DIR, name, 'demos', `${name}.md`)
+    if (existsSync(mdPath)) {
+      slugs.push(name)
+    }
+  }
+}
+slugs.sort()
 
 interface Component {
   name: string
@@ -221,7 +227,7 @@ interface Component {
 const components: Component[] = []
 
 for (const slug of slugs) {
-  const dir = join(DEMOS_DIR, slug)
+  const dir = join(COMPONENTS_DIR, slug, 'demos')
   const md = readFileSync(join(dir, `${slug}.md`), 'utf8')
 
   const titleMatch = md.match(/^#\s+(.+?)\s*$/m)

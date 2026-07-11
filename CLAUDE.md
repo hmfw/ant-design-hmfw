@@ -32,12 +32,16 @@
 
 ```
 ant-design-hmfw/
-├── components/          # 组件库核心（67 个组件）
+├── components/          # 组件库核心（67 个组件，含 demos）
 │   ├── button/、input/、...
+│   │   ├── *.tsx       # 组件实现
+│   │   ├── style/      # 组件样式
+│   │   ├── __tests__/  # 单元测试
+│   │   └── demos/      # 文档 & 演示
 │   ├── _theme/         # 设计 Token 系统
 │   ├── index.ts        # 统一导出
 │   └── style.css       # 统一样式
-├── docs/               # 文档站（VitePress）
+├── docs/               # 文档站框架（路由、布局、插件）
 ├── scripts/            # 构建脚本
 └── dist/               # 构建产物
 ```
@@ -89,11 +93,14 @@ pnpm release          # 发布到 npm
 
 ```
 components/button/
-├── Button.tsx           # 组件实现
-├── index.ts             # 导出
-├── style/index.css      # 组件样式
+├── Button.tsx              # 组件实现
+├── index.ts                # 导出
+├── types.ts                # 类型定义
+├── style/index.css         # 组件样式
 ├── __tests__/Button.test.tsx
-└── types.ts             # 类型定义
+└── demos/                  # 文档与示例
+    ├── button.md           # 组件文档（路由页面）
+    └── ButtonBasic.vue     # 演示组件
 ```
 
 ### 语义化 API
@@ -163,9 +170,10 @@ export default defineComponent({
    - `components/index.ts` - 添加组件导出
    - `components/style.css` - 添加 `@import './my-component/style/index.css'`
 4. **添加文档**:
-   - `docs/demos/my-component/MyComponentBasic.vue` - demo 文件
-   - `docs/demos/my-component/my-component.md` - 组件文档
+   - `components/my-component/demos/my-component.md` - 组件文档
+   - `components/my-component/demos/MyComponentBasic.vue` - demo 文件
    - `docs/src/nav/sidebar.ts` - 添加侧边栏条目
+   - 运行 `pnpm gen:demo-routes` 更新路由
 5. **编写测试**: 单元测试（必需）+ E2E 测试（可选）
 
 ## 测试
