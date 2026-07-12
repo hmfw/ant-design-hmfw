@@ -2,7 +2,7 @@
   <div>
     <div style="margin-bottom: 16px">
       <span style="margin-right: 8px">Tab Position: </span>
-      <Select v-model:value="tabPosition" :options="positionOptions" style="width: 120px" />
+      <RadioGroup v-model:value="tabPosition" :options="positionOptions" option-type="button" button-style="outline" />
     </div>
     <Tabs :items="items" :tab-position="tabPosition" />
   </div>
@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tabs, Select } from '@hmfw/ant-design'
+import { Tabs, RadioGroup } from '@hmfw/ant-design'
 import type { TabsPosition } from '@hmfw/ant-design'
 
 const tabPosition = ref<TabsPosition>('top')

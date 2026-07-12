@@ -56,7 +56,6 @@ export const Tabs = defineComponent({
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('tabs')
     const navListRef = ref<HTMLElement | null>(null)
-    const inkBarRef = ref<HTMLElement | null>(null)
 
     /**
      * 获取初始激活 key：使用第一个 item 的 key，items 为空时返回空字符串
@@ -89,10 +88,9 @@ export const Tabs = defineComponent({
       return { inkBar: true, tabPane: false, ...props.animated }
     })
 
-    // Ink bar 位置/尺寸管理（通过 composable 封装）
-    useInkBar({
+    // Ink bar 位置/尺寸管理（数据驱动：tabSizes → indicatorStyle → 模板绑定）
+    const { indicatorStyle } = useInkBar({
       navListRef,
-      inkBarRef,
       prefixCls,
       type: () => props.type,
       tabPosition: () => props.tabPosition,
@@ -267,7 +265,7 @@ export const Tabs = defineComponent({
       const isVertical = props.tabPosition === 'left' || props.tabPosition === 'right'
 
       const sizeClass = props.size ? `${prefixCls}-${props.size}` : ''
-      const posClass = props.tabPosition !== 'top' ? `${prefixCls}-${props.tabPosition}` : ''
+      const posClass = `${prefixCls}-${props.tabPosition}`
 
       const extraContent = renderExtraContent()
 
@@ -303,20 +301,19 @@ export const Tabs = defineComponent({
                     {props.addIcon || <PlusOutlined class="hmfw-icon" />}
                   </button>
                 )}
+                {props.type === 'line' && (
+                  <div
+                    class={cls(
+                      `${prefixCls}-ink-bar`,
+                      {
+                        [`${prefixCls}-ink-bar-animated`]: animatedConfig.value.inkBar,
+                      },
+                      props.classNames?.inkBar,
+                    )}
+                    style={{ ...indicatorStyle.value, ...props.styles?.inkBar }}
+                  />
+                )}
               </div>
-              {props.type === 'line' && (
-                <div
-                  ref={inkBarRef}
-                  class={cls(
-                    `${prefixCls}-ink-bar`,
-                    {
-                      [`${prefixCls}-ink-bar-animated`]: animatedConfig.value.inkBar,
-                    },
-                    props.classNames?.inkBar,
-                  )}
-                  style={props.styles?.inkBar}
-                />
-              )}
             </div>
             {extraContent.right}
           </div>

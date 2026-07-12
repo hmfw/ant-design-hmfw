@@ -9,8 +9,25 @@
   display: flex;
   flex: none;
   align-items: center;
-  border-bottom: 1px solid var(--hmfw-color-border);
   margin-bottom: 16px;
+}
+
+/* 水平布局的底线（对齐 antd ::before） */
+.hmfw-tabs-top .hmfw-tabs-nav::before,
+.hmfw-tabs-bottom .hmfw-tabs-nav::before {
+  position: absolute;
+  right: 0;
+  left: 0;
+  border-bottom: 1px solid var(--hmfw-color-border);
+  content: '';
+}
+
+.hmfw-tabs-top .hmfw-tabs-nav::before {
+  bottom: 0;
+}
+
+.hmfw-tabs-bottom .hmfw-tabs-nav::before {
+  top: 0;
 }
 
 .hmfw-tabs-nav-wrap {
@@ -112,6 +129,34 @@
   pointer-events: none;
 }
 
+/* 水平方向厚度 + 贴边方向（对齐 rc-tabs） */
+.hmfw-tabs-top .hmfw-tabs-ink-bar,
+.hmfw-tabs-bottom .hmfw-tabs-ink-bar {
+  height: 2px;
+}
+
+.hmfw-tabs-top .hmfw-tabs-ink-bar {
+  bottom: 0;
+}
+
+.hmfw-tabs-bottom .hmfw-tabs-ink-bar {
+  top: 0;
+}
+
+/* 垂直方向厚度 + 贴边方向 */
+.hmfw-tabs-left .hmfw-tabs-ink-bar,
+.hmfw-tabs-right .hmfw-tabs-ink-bar {
+  width: 2px;
+}
+
+.hmfw-tabs-left .hmfw-tabs-ink-bar {
+  right: 0;
+}
+
+.hmfw-tabs-right .hmfw-tabs-ink-bar {
+  left: 0;
+}
+
 .hmfw-tabs-ink-bar-animated {
   transition:
     left 0.3s,
@@ -157,24 +202,101 @@
   display: none;
 }
 
-/* Card & Editable card — 共用样式 */
-:is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-nav {
-  border-bottom: 1px solid var(--hmfw-color-border);
+/* Card & Editable card — 对齐 antd genCardStyle */
+
+/* 隐藏 ink bar（卡片式不需要墨条） */
+:is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-ink-bar {
+  visibility: hidden;
 }
 
+/* 卡片基础：四边完整边框，底线由 nav::before 提供 */
 :is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-tab {
+  margin: 0;
   padding: 8px 16px;
-  border: 1px solid var(--hmfw-color-border);
-  border-bottom: none;
-  border-radius: var(--hmfw-border-radius) var(--hmfw-border-radius) 0 0;
   background: var(--hmfw-color-fill-quaternary);
-  margin-right: 2px;
-  margin-bottom: -1px;
+  border: 1px solid var(--hmfw-color-border);
+
+  transition: all 0.2s ease-in-out;
 }
 
-:is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-tab-active {
+/* 间距通过相邻兄弟选择器控制（对齐 antd cardGutter） */
+:is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-tab + .hmfw-tabs-tab {
+  margin-left: 2px;
+}
+
+/* ==================== Top 位置 ==================== */
+.hmfw-tabs-card.hmfw-tabs-top .hmfw-tabs-tab,
+.hmfw-tabs-editable-card.hmfw-tabs-top .hmfw-tabs-tab {
+  border-radius: var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg) 0 0;
+}
+.hmfw-tabs-card.hmfw-tabs-top .hmfw-tabs-tab-active,
+.hmfw-tabs-editable-card.hmfw-tabs-top .hmfw-tabs-tab-active {
   background: var(--hmfw-color-bg-container);
   border-bottom-color: var(--hmfw-color-bg-container);
+}
+
+/* ==================== Bottom 位置 ==================== */
+.hmfw-tabs-card.hmfw-tabs-bottom .hmfw-tabs-tab,
+.hmfw-tabs-editable-card.hmfw-tabs-bottom .hmfw-tabs-tab {
+  border-radius: 0 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg);
+}
+.hmfw-tabs-card.hmfw-tabs-bottom .hmfw-tabs-tab-active,
+.hmfw-tabs-editable-card.hmfw-tabs-bottom .hmfw-tabs-tab-active {
+  background: var(--hmfw-color-bg-container);
+  border-top-color: var(--hmfw-color-bg-container);
+}
+
+/* ==================== Left 位置 ==================== */
+.hmfw-tabs-card.hmfw-tabs-left .hmfw-tabs-tab,
+.hmfw-tabs-editable-card.hmfw-tabs-left .hmfw-tabs-tab {
+  border-radius: var(--hmfw-border-radius-lg) 0 0 var(--hmfw-border-radius-lg);
+}
+.hmfw-tabs-card.hmfw-tabs-left .hmfw-tabs-tab-active,
+.hmfw-tabs-editable-card.hmfw-tabs-left .hmfw-tabs-tab-active {
+  background: var(--hmfw-color-bg-container);
+  border-right-color: var(--hmfw-color-bg-container);
+}
+
+/* ==================== Right 位置 ==================== */
+.hmfw-tabs-card.hmfw-tabs-right .hmfw-tabs-tab,
+.hmfw-tabs-editable-card.hmfw-tabs-right .hmfw-tabs-tab {
+  border-radius: 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg) 0;
+}
+.hmfw-tabs-card.hmfw-tabs-right .hmfw-tabs-tab-active,
+.hmfw-tabs-editable-card.hmfw-tabs-right .hmfw-tabs-tab-active {
+  background: var(--hmfw-color-bg-container);
+  border-left-color: var(--hmfw-color-bg-container);
+}
+
+/* 垂直布局下卡片间距（顶部间距替代左边距） */
+.hmfw-tabs-card.hmfw-tabs-left .hmfw-tabs-tab + .hmfw-tabs-tab,
+.hmfw-tabs-editable-card.hmfw-tabs-left .hmfw-tabs-tab + .hmfw-tabs-tab,
+.hmfw-tabs-card.hmfw-tabs-right .hmfw-tabs-tab + .hmfw-tabs-tab,
+.hmfw-tabs-editable-card.hmfw-tabs-right .hmfw-tabs-tab + .hmfw-tabs-tab {
+  margin-left: 0;
+  margin-top: 2px;
+}
+
+/* nav-add（对齐 antd） */
+:is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-nav-add {
+  min-width: 40px;
+  min-height: 40px;
+  margin-left: 2px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--hmfw-color-border);
+  border-radius: var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg) 0 0;
+  color: var(--hmfw-color-text);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+:is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-nav-add:hover {
+  color: var(--hmfw-color-primary);
+}
+
+.hmfw-tabs-editable-card.hmfw-tabs-bottom .hmfw-tabs-nav-add {
+  border-radius: 0 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg);
 }
 
 /* Size variants */
@@ -212,19 +334,37 @@
 .hmfw-tabs-left .hmfw-tabs-nav,
 .hmfw-tabs-right .hmfw-tabs-nav {
   flex-direction: column;
-  border-bottom: none;
   margin-bottom: 0;
 }
 
-.hmfw-tabs-left .hmfw-tabs-nav {
+/* Left/Right 的竖线使用 ::before */
+.hmfw-tabs-left .hmfw-tabs-nav::before,
+.hmfw-tabs-right .hmfw-tabs-nav::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
   border-right: 1px solid var(--hmfw-color-border);
+  content: '';
+}
+
+.hmfw-tabs-left .hmfw-tabs-nav {
   margin-right: 16px;
 }
 
+.hmfw-tabs-left .hmfw-tabs-nav::before {
+  right: 0;
+}
+
 .hmfw-tabs-right .hmfw-tabs-nav {
-  border-left: 1px solid var(--hmfw-color-border);
   margin-left: 16px;
   order: 1;
+}
+
+.hmfw-tabs-right .hmfw-tabs-nav::before {
+  right: auto;
+  border-right: none;
+  border-left: 1px solid var(--hmfw-color-border);
+  left: 0;
 }
 
 .hmfw-tabs-left .hmfw-tabs-nav-list,
@@ -249,8 +389,6 @@
 }
 
 .hmfw-tabs-bottom .hmfw-tabs-nav {
-  border-bottom: none;
-  border-top: 1px solid var(--hmfw-color-border);
   margin-bottom: 0;
   margin-top: 16px;
 }

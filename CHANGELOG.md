@@ -6,6 +6,24 @@
 
 ---
 
+## [0.16.1] - 2026-07-12
+
+### 🔧 重构
+
+- **Tabs（useInkBar 数据驱动）**: 重写 ink bar 为数据驱动架构（对齐 rc-tabs），核心管线 `ResizeObserver → tabSizes(Map) → activeTabOffset(computed) → indicatorStyle(computed)` → 模板绑定，不再直接操作 DOM ref；`indicatorStyle` 返回 `CSSProperties` 类型与项目体系一致
+
+### 🎨 样式
+
+- **Tabs（ink bar 样式分离）**: 厚度与贴边方向移至 CSS（对齐 rc-tabs），四个 position 各自独立——top→`bottom:0`、bottom→`top:0`、left→`right:0`、right→`left:0`；inline style 仅负责沿轴尺寸与位置
+- **Tabs（nav 底线 ::before）**: `.hmfw-tabs-nav` 的 `border-bottom` 改为 `::before` 伪元素实现（对齐 antd），底线脱离文档流，卡片式 tab 保留四边完整边框，激活态通过 `border-*-color: bgColor` 自然覆盖
+- **Tabs（卡片式对齐 antd genCardStyle）**: 四位置（top/bottom/left/right）独立 border-radius + 激活态 border-color；`:is()` 合并 card/editable-card 共用规则；隐藏 ink bar；nav-add 透明背景
+
+### 🐛 修复
+
+- **Tabs**: 补齐 `.hmfw-tabs-top` 类名（原先 `tabPosition='top'` 时缺失），使 ink bar CSS 选择器正确匹配；移除未使用的 `DEFAULT_SIZE` 常量
+
+---
+
 ## [0.16.0] - 2026-07-12
 
 ### 💥 Breaking Changes
