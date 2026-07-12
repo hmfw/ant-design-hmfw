@@ -85,14 +85,85 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
   <TabsClassNames />
 </DemoBlock>
 
+### 禁用选项
+
+禁用指定的 tab 页签。
+
+<DemoBlock title="禁用选项" :source="TabsDisabledSource">
+  <TabsDisabled />
+</DemoBlock>
+
+### 动画配置
+
+通过 animated 属性控制墨条和内容切换的动画效果。
+
+<DemoBlock title="动画配置" :source="TabsAnimatedSource">
+  <TabsAnimated />
+</DemoBlock>
+
+### 左右附加内容
+
+通过 `tabBarExtraContent` 的对象形式在标签栏左右两侧放置额外元素。
+
+<DemoBlock title="左右附加内容" :source="TabsExtraLRSource">
+  <TabsExtraLR />
+</DemoBlock>
+
+### 自定义图标
+
+自定义添加/删除按钮的图标。
+
+<DemoBlock title="自定义图标" :source="TabsCustomIconSource">
+  <TabsCustomIcon />
+</DemoBlock>
+
+### 强制渲染与销毁
+
+通过 `forceRender` 和 `destroyInactiveTabPane` 控制非激活 tab 的 DOM 行为。
+
+<DemoBlock title="强制渲染与销毁" :source="TabsForceRenderSource">
+  <TabsForceRender />
+</DemoBlock>
+
+### 间距与样式
+
+通过 `tabBarGutter`、`tabBarStyle`、`hideAdd` 精细控制标签栏布局。
+
+<DemoBlock title="间距与样式" :source="TabsGutterSource">
+  <TabsGutter />
+</DemoBlock>
+
+### 受控模式
+
+通过 `v-model:activeKey` 实现完全受控的标签页，适用于需要外部管理激活状态的场景。
+
+<DemoBlock title="受控模式" :source="TabsControlledSource">
+  <TabsControlled />
+</DemoBlock>
+
+### 额外操作
+
+在标签栏右侧添加操作按钮，常用于批量操作或更多功能入口。
+
+<DemoBlock title="额外操作" :source="TabsExtraActionsSource">
+  <TabsExtraActions />
+</DemoBlock>
+
+### 嵌套标签页
+
+在 Tab 内容中嵌套使用 Tabs 组件，实现多层级内容组织。
+
+<DemoBlock title="嵌套标签页" :source="TabsNestSource">
+  <TabsNest />
+</DemoBlock>
+
 ## API
 
 ### Tabs
 
 | 参数                   | 说明                                                                              | 类型                                     | 默认值     |
 | ---------------------- | --------------------------------------------------------------------------------- | ---------------------------------------- | ---------- |
-| activeKey(v-model)     | 当前激活 tab 面板的 key                                                           | string                                   | -          |
-| defaultActiveKey       | 初始化选中面板的 key，如果没有设置 activeKey                                      | string                                   | 第一个面板 |
+| activeKey(v-model)     | 当前激活 tab 面板的 key                                                           | string                                   | 第一个面板 |
 | type                   | 页签的基本样式，可选 `line`、`card`、`editable-card` 类型                         | string                                   | `line`     |
 | size                   | 大小，提供 `large` 和 `small` 两种大小                                            | string                                   | -          |
 | tabPosition            | 页签位置，可选值有 `top` `right` `bottom` `left`                                  | string                                   | `top`      |

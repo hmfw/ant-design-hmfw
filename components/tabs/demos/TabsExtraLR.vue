@@ -1,0 +1,19 @@
+<template>
+  <Tabs :items="items" :tab-bar-extra-content="extra" />
+</template>
+
+<script setup lang="ts">
+import { h } from 'vue'
+import { Button, Tabs } from '@hmfw/ant-design'
+
+const items = [
+  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },
+  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },
+  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },
+]
+
+const extra = {
+  left: h(Button, { size: 'small' }, () => 'Left Action'),
+  right: h(Button, { type: 'primary', size: 'small' }, () => 'Right Action'),
+}
+</script>

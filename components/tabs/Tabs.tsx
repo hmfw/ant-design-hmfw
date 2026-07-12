@@ -1,65 +1,86 @@
-import {
-  defineComponent,
-  ref,
-  watch,
-  computed,
-  onMounted,
-  onUnmounted,
-  nextTick,
-  isVNode,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { defineComponent, ref, watch, computed, isVNode, type PropType, type VNode, CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { PlusOutlined, CloseOutlined } from '@hmfw/icons'
-import type { TabsType, TabsSize, TabsPosition, TabItem, TabBarExtraContent, AnimatedConfig } from './types'
+import type {
+  TabsType,
+  TabsSize,
+  TabsPosition,
+  TabItem,
+  TabBarExtraContent,
+  AnimatedConfig,
+  TabsProps,
+  TabsClassNames,
+  TabsStyles,
+} from './types'
+import { useInkBar } from './useInkBar'
+import { useKeyboardNav } from './useKeyboardNav'
+
+// Props 定义（使用 satisfies 确保与 TabsProps 类型一致）
+const tabsProps = {
+  activeKey: { type: String, default: undefined },
+  items: { type: Array as PropType<TabItem[]>, default: undefined },
+  type: { type: String as PropType<TabsType>, default: 'line' },
+  size: { type: String as PropType<TabsSize>, default: undefined },
+  tabPosition: { type: String as PropType<TabsPosition>, default: 'top' },
+  centered: { type: Boolean, default: false },
+  animated: { type: [Boolean, Object] as PropType<boolean | AnimatedConfig>, default: true },
+  tabBarExtraContent: { type: [Object, Function] as PropType<VNode | TabBarExtraContent>, default: undefined },
+  tabBarGutter: { type: Number, default: undefined },
+  tabBarStyle: { type: Object, default: undefined },
+  hideAdd: { type: Boolean, default: false },
+  addIcon: { type: Object as PropType<VNode>, default: undefined },
+  removeIcon: { type: Object as PropType<VNode>, default: undefined },
+  destroyInactiveTabPane: { type: Boolean, default: false },
+  classNames: { type: Object as PropType<TabsClassNames>, default: undefined },
+  styles: { type: Object as PropType<TabsStyles>, default: undefined },
+} satisfies Record<keyof TabsProps, any>
+
+/**
+ * 判断一个值是否为 TabBarExtraContent 对象（而非 VNode）。
+ * 通过检查 VNode 内部标记 __v_isVNode 避免误判。
+ */
+function isTabBarExtraContent(value: unknown): value is TabBarExtraContent {
+  if (isVNode(value)) return false
+  if (typeof value !== 'object' || value === null) return false
+  const obj = value as Record<string, unknown>
+  // 排除 VNode 内部属性，避免带 left/right 属性的 VNode 被误判
+  if ('__v_isVNode' in obj) return false
+  return 'left' in obj || 'right' in obj
+}
 
 export const Tabs = defineComponent({
   name: 'Tabs',
-  props: {
-    activeKey: String,
-    defaultActiveKey: String,
-    type: {
-      type: String as PropType<TabsType>,
-      default: 'line',
-    },
-    size: String as PropType<TabsSize>,
-    tabPosition: {
-      type: String as PropType<TabsPosition>,
-      default: 'top',
-    },
-    centered: Boolean,
-    items: Array as PropType<TabItem[]>,
-    animated: {
-      type: [Boolean, Object] as PropType<boolean | AnimatedConfig>,
-      default: true,
-    },
-    tabBarExtraContent: [Object, Function] as PropType<VNode | TabBarExtraContent>,
-    tabBarGutter: Number,
-    tabBarStyle: Object as PropType<Record<string, unknown>>,
-    hideAdd: Boolean,
-    addIcon: Object as PropType<VNode>,
-    removeIcon: Object as PropType<VNode>,
-    destroyInactiveTabPane: Boolean,
-    classNames: Object as PropType<import('./types').TabsClassNames>,
-    styles: Object as PropType<import('./types').TabsStyles>,
-  },
+  props: tabsProps,
   emits: ['update:activeKey', 'change', 'tabClick', 'edit'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('tabs')
-    const innerKey = ref(props.defaultActiveKey ?? props.items?.[0]?.key ?? '')
     const navListRef = ref<HTMLElement | null>(null)
     const inkBarRef = ref<HTMLElement | null>(null)
 
+    /**
+     * 获取初始激活 key：使用第一个 item 的 key，items 为空时返回空字符串
+     */
+    const getInitialKey = (): string => {
+      const items = props.items ?? []
+      return items[0]?.key ?? ''
+    }
+
+    const innerKey = ref(getInitialKey())
+
+    // 受控/非受控切换：受控时同步 activeKey，非受控时 currentKey 降级使用 innerKey
     watch(
       () => props.activeKey,
       (v) => {
-        if (v !== undefined) innerKey.value = v
+        if (v !== undefined) {
+          innerKey.value = v
+        }
+        // 当 activeKey 变为 undefined（受控→非受控切换），innerKey 保持上一次同步的值，
+        // currentKey 通过 computed 自动降级为非受控模式，用户可自由切换 tab
       },
     )
 
-    const currentKey = computed(() => (props.activeKey !== undefined ? props.activeKey : innerKey.value))
+    const currentKey = computed(() => props.activeKey ?? innerKey.value)
 
     const animatedConfig = computed(() => {
       if (typeof props.animated === 'boolean') {
@@ -68,44 +89,25 @@ export const Tabs = defineComponent({
       return { inkBar: true, tabPane: false, ...props.animated }
     })
 
-    const updateInkBar = () => {
-      if (!navListRef.value || !inkBarRef.value || props.type !== 'line') return
+    // Ink bar 位置/尺寸管理（通过 composable 封装）
+    useInkBar({
+      navListRef,
+      inkBarRef,
+      prefixCls,
+      type: () => props.type,
+      tabPosition: () => props.tabPosition,
+      currentKey,
+    })
 
-      const activeTab = navListRef.value.querySelector(`.${prefixCls}-tab-active`) as HTMLElement
-      if (!activeTab) return
-
-      const isVertical = props.tabPosition === 'left' || props.tabPosition === 'right'
-
-      if (isVertical) {
-        inkBarRef.value.style.top = `${activeTab.offsetTop}px`
-        inkBarRef.value.style.height = `${activeTab.offsetHeight}px`
-        inkBarRef.value.style.width = '2px'
-        inkBarRef.value.style.left = props.tabPosition === 'left' ? 'auto' : '0'
-        inkBarRef.value.style.right = props.tabPosition === 'left' ? '0' : 'auto'
-      } else {
-        // 计算 activeTab 相对于 nav-wrap 的偏移（考虑 centered 模式下 nav-list 的偏移）
-        const navListOffsetLeft = navListRef.value.offsetLeft
-        inkBarRef.value.style.left = `${navListOffsetLeft + activeTab.offsetLeft}px`
-        inkBarRef.value.style.width = `${activeTab.offsetWidth}px`
-        inkBarRef.value.style.height = '2px'
-        inkBarRef.value.style.top = 'auto'
-        inkBarRef.value.style.bottom = '0'
-      }
+    /**
+     * 激活指定 key 的 tab（不触发 tabClick 事件）。
+     * 供键盘导航等内部逻辑使用，与用户点击行为分离。
+     */
+    const activateTab = (key: string) => {
+      innerKey.value = key
+      emit('update:activeKey', key)
+      emit('change', key)
     }
-
-    watch(currentKey, () => {
-      nextTick(updateInkBar)
-    })
-
-    onMounted(() => {
-      updateInkBar()
-      // 监听窗口大小变化以重新计算 ink-bar 位置（centered 模式下很重要）
-      window.addEventListener('resize', updateInkBar)
-    })
-
-    onUnmounted(() => {
-      window.removeEventListener('resize', updateInkBar)
-    })
 
     const handleTabClick = (key: string, event: MouseEvent) => {
       innerKey.value = key
@@ -123,51 +125,22 @@ export const Tabs = defineComponent({
       emit('edit', key, 'remove')
     }
 
-    const handleKeyDown = (key: string, event: KeyboardEvent, index: number) => {
-      const items = props.items ?? []
-      let targetIndex = index
+    // 键盘导航（通过 composable 封装）
+    const { handleKeyDown } = useKeyboardNav({
+      items: () => props.items ?? [],
+      prefixCls,
+      navListRef,
+      onActivate: activateTab,
+    })
 
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-        event.preventDefault()
-        targetIndex = index - 1
-        if (targetIndex < 0) targetIndex = items.length - 1
-      } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-        event.preventDefault()
-        targetIndex = index + 1
-        if (targetIndex >= items.length) targetIndex = 0
-      } else if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault()
-        if (!items[index].disabled) {
-          handleTabClick(key, event as unknown as MouseEvent)
-        }
-        return
-      } else {
-        return
-      }
+    // ===== 渲染辅助函数 =====
 
-      // Find next non-disabled tab
-      let attempts = 0
-      while (items[targetIndex]?.disabled && attempts < items.length) {
-        targetIndex = event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? targetIndex - 1 : targetIndex + 1
-        if (targetIndex < 0) targetIndex = items.length - 1
-        if (targetIndex >= items.length) targetIndex = 0
-        attempts++
-      }
-
-      if (!items[targetIndex]?.disabled) {
-        const targetTab = navListRef.value?.querySelectorAll(`.${prefixCls}-tab`)[targetIndex] as HTMLElement
-        targetTab?.focus()
-      }
-    }
-
-    return () => {
-      const items = props.items ?? []
-      const isEditable = props.type === 'editable-card'
-
-      const sizeClass = props.size ? `${prefixCls}-${props.size}` : ''
-      const posClass = props.tabPosition !== 'top' ? `${prefixCls}-${props.tabPosition}` : ''
-
-      const isVertical = props.tabPosition === 'left' || props.tabPosition === 'right'
+    /**
+     * 渲染单个 tab 标签
+     */
+    const renderTab = (item: TabItem, index: number, items: TabItem[], isEditable: boolean, isVertical: boolean) => {
+      const isActive = item.key === currentKey.value
+      const showClose = isEditable && item.closable !== false
 
       const tabBarGutterStyle =
         props.tabBarGutter !== undefined
@@ -176,48 +149,147 @@ export const Tabs = defineComponent({
             : { marginRight: `${props.tabBarGutter}px` }
           : {}
 
-      const renderExtraContent = () => {
-        if (!props.tabBarExtraContent) return { left: null, right: null }
+      const tabCls = cls(
+        `${prefixCls}-tab`,
+        {
+          [`${prefixCls}-tab-active`]: isActive,
+          [`${prefixCls}-tab-disabled`]: item.disabled,
+        },
+        props.classNames?.tab,
+        isActive && props.classNames?.tabActive,
+      )
 
-        // 判断是否为 { left, right } 对象形式（排除 VNode）
-        if (
-          !isVNode(props.tabBarExtraContent) &&
-          typeof props.tabBarExtraContent === 'object' &&
-          ('left' in props.tabBarExtraContent || 'right' in props.tabBarExtraContent)
-        ) {
-          const extra = props.tabBarExtraContent as TabBarExtraContent
-          return {
-            left: extra.left ? <div class={`${prefixCls}-extra-content-left`}>{extra.left}</div> : null,
-            right: extra.right ? <div class={`${prefixCls}-extra-content-right`}>{extra.right}</div> : null,
-          }
-        }
-
-        // 单个 VNode，默认靠右
-        return {
-          left: null,
-          right: <div class={`${prefixCls}-extra-content`}>{props.tabBarExtraContent}</div>,
-        }
+      const tabStyle: CSSProperties = {
+        ...(index < items.length - 1 ? tabBarGutterStyle : undefined),
+        ...props.styles?.tab,
+        ...(isActive ? props.styles?.tabActive : undefined),
       }
 
       return (
         <div
-          class={cls(
-            prefixCls,
-            `${prefixCls}-${props.type}`,
-            sizeClass,
-            posClass,
-            {
-              [`${prefixCls}-centered`]: props.centered,
-            },
-            props.classNames?.root,
-          )}
-          style={props.styles?.root}
+          key={item.key}
+          id={`tab-${item.key}`}
+          class={tabCls}
+          style={tabStyle}
+          role="tab"
+          aria-selected={isActive}
+          aria-controls={`tabpanel-${item.key}`}
+          aria-disabled={item.disabled || undefined}
+          tabindex={item.disabled ? -1 : isActive ? 0 : -1}
+          onClick={(e) => !item.disabled && handleTabClick(item.key, e)}
+          onKeydown={(e) => handleKeyDown(item.key, e, index)}
         >
+          <div class={`${prefixCls}-tab-btn`}>
+            {item.icon && (
+              <span class={cls(`${prefixCls}-tab-icon`, props.classNames?.tabIcon)} style={props.styles?.tabIcon}>
+                {item.icon}
+              </span>
+            )}
+            {item.label}
+            {showClose && (
+              <button
+                type="button"
+                class={`${prefixCls}-tab-remove`}
+                aria-label="remove"
+                tabindex={-1}
+                onClick={(e) => handleRemove(item.key, e)}
+              >
+                {item.closeIcon || props.removeIcon || <CloseOutlined class="hmfw-icon" />}
+              </button>
+            )}
+          </div>
+        </div>
+      )
+    }
+
+    /**
+     * 渲染 tab 内容面板
+     */
+    const renderTabPane = (item: TabItem) => {
+      const isActive = item.key === currentKey.value
+      const shouldDestroy =
+        (props.destroyInactiveTabPane || item.destroyInactiveTabPane) && !isActive && !item.forceRender
+      const shouldRender = isActive || item.forceRender || !shouldDestroy
+
+      const tabpaneCls = cls(
+        `${prefixCls}-tabpane`,
+        {
+          [`${prefixCls}-tabpane-active`]: isActive,
+          [`${prefixCls}-tabpane-hidden`]: !isActive,
+        },
+        props.classNames?.tabpane,
+      )
+
+      return (
+        <div
+          key={item.key}
+          id={`tabpanel-${item.key}`}
+          class={tabpaneCls}
+          style={props.styles?.tabpane}
+          role="tabpanel"
+          aria-labelledby={`tab-${item.key}`}
+          tabindex={isActive ? 0 : -1}
+          hidden={!isActive || undefined}
+        >
+          {shouldRender && !shouldDestroy && (item.children ?? slots[item.key]?.())}
+        </div>
+      )
+    }
+
+    /**
+     * 渲染 tab bar 额外内容（左侧/右侧），自动识别 VNode 和 { left, right } 对象形式
+     */
+    const renderExtraContent = () => {
+      if (!props.tabBarExtraContent) return { left: null, right: null }
+
+      // { left, right } 对象形式
+      if (isTabBarExtraContent(props.tabBarExtraContent)) {
+        return {
+          left: props.tabBarExtraContent.left ? (
+            <div class={`${prefixCls}-extra-content-left`}>{props.tabBarExtraContent.left}</div>
+          ) : null,
+          right: props.tabBarExtraContent.right ? (
+            <div class={`${prefixCls}-extra-content-right`}>{props.tabBarExtraContent.right}</div>
+          ) : null,
+        }
+      }
+
+      // 单个 VNode，默认靠右
+      return {
+        left: null,
+        right: <div class={`${prefixCls}-extra-content`}>{props.tabBarExtraContent}</div>,
+      }
+    }
+
+    return () => {
+      const items = props.items ?? []
+      const isEditable = props.type === 'editable-card'
+      const isVertical = props.tabPosition === 'left' || props.tabPosition === 'right'
+
+      const sizeClass = props.size ? `${prefixCls}-${props.size}` : ''
+      const posClass = props.tabPosition !== 'top' ? `${prefixCls}-${props.tabPosition}` : ''
+
+      const extraContent = renderExtraContent()
+
+      const tabsCls = cls(
+        prefixCls,
+        `${prefixCls}-${props.type}`,
+        sizeClass,
+        posClass,
+        {
+          [`${prefixCls}-centered`]: props.centered,
+        },
+        props.classNames?.root,
+      )
+
+      return (
+        <div class={tabsCls} style={props.styles?.root}>
+          {/* Tab 导航栏 */}
           <div
             class={cls(`${prefixCls}-nav`, props.classNames?.nav)}
-            style={{ ...(props.tabBarStyle as any), ...props.styles?.nav }}
+            style={{ ...props.tabBarStyle, ...props.styles?.nav }}
           >
-            {renderExtraContent().left}
+            {extraContent.left}
             <div class={`${prefixCls}-nav-wrap`}>
               <div
                 ref={navListRef}
@@ -225,61 +297,7 @@ export const Tabs = defineComponent({
                 role="tablist"
                 aria-orientation={isVertical ? 'vertical' : 'horizontal'}
               >
-                {items.map((item, index) => {
-                  const isActive = item.key === currentKey.value
-                  const showClose = isEditable && item.closable !== false
-
-                  return (
-                    <div
-                      key={item.key}
-                      id={`tab-${item.key}`}
-                      class={cls(
-                        `${prefixCls}-tab`,
-                        {
-                          [`${prefixCls}-tab-active`]: isActive,
-                          [`${prefixCls}-tab-disabled`]: item.disabled,
-                        },
-                        props.classNames?.tab,
-                        isActive && props.classNames?.tabActive,
-                      )}
-                      style={{
-                        ...(index < items.length - 1 ? tabBarGutterStyle : undefined),
-                        ...props.styles?.tab,
-                        ...(isActive ? props.styles?.tabActive : undefined),
-                      }}
-                      role="tab"
-                      aria-selected={isActive}
-                      aria-controls={`tabpanel-${item.key}`}
-                      aria-disabled={item.disabled || undefined}
-                      tabindex={item.disabled ? -1 : isActive ? 0 : -1}
-                      onClick={(e) => !item.disabled && handleTabClick(item.key, e)}
-                      onKeydown={(e) => handleKeyDown(item.key, e, index)}
-                    >
-                      <div class={`${prefixCls}-tab-btn`}>
-                        {item.icon && (
-                          <span
-                            class={cls(`${prefixCls}-tab-icon`, props.classNames?.tabIcon)}
-                            style={props.styles?.tabIcon}
-                          >
-                            {item.icon}
-                          </span>
-                        )}
-                        {item.label}
-                        {showClose && (
-                          <button
-                            type="button"
-                            class={`${prefixCls}-tab-remove`}
-                            aria-label="remove"
-                            tabindex={-1}
-                            onClick={(e) => handleRemove(item.key, e)}
-                          >
-                            {item.closeIcon || props.removeIcon || <CloseOutlined class="hmfw-icon" />}
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
+                {items.map((item, index) => renderTab(item, index, items, isEditable, isVertical))}
                 {isEditable && !props.hideAdd && (
                   <button type="button" class={`${prefixCls}-nav-add`} aria-label="add" onClick={handleAdd}>
                     {props.addIcon || <PlusOutlined class="hmfw-icon" />}
@@ -300,8 +318,10 @@ export const Tabs = defineComponent({
                 />
               )}
             </div>
-            {renderExtraContent().right}
+            {extraContent.right}
           </div>
+
+          {/* Tab 内容区域 */}
           <div class={`${prefixCls}-content-holder`}>
             <div
               class={cls(
@@ -313,33 +333,7 @@ export const Tabs = defineComponent({
               )}
               style={props.styles?.content}
             >
-              {items.map((item) => {
-                const isActive = item.key === currentKey.value
-                const shouldRender = isActive || item.forceRender || !props.destroyInactiveTabPane
-                const shouldDestroy = props.destroyInactiveTabPane && !isActive && !item.forceRender
-
-                return (
-                  <div
-                    key={item.key}
-                    id={`tabpanel-${item.key}`}
-                    class={cls(
-                      `${prefixCls}-tabpane`,
-                      {
-                        [`${prefixCls}-tabpane-active`]: isActive,
-                        [`${prefixCls}-tabpane-hidden`]: !isActive,
-                      },
-                      props.classNames?.tabpane,
-                    )}
-                    style={props.styles?.tabpane}
-                    role="tabpanel"
-                    aria-labelledby={`tab-${item.key}`}
-                    tabindex={isActive ? 0 : -1}
-                    hidden={!isActive || undefined}
-                  >
-                    {shouldRender && !shouldDestroy && (item.children ?? slots[item.key]?.())}
-                  </div>
-                )
-              })}
+              {items.map(renderTabPane)}
             </div>
           </div>
         </div>

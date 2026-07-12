@@ -75,4 +75,30 @@ test.describe('Tabs', () => {
 
     await expect(inkBar).toBeVisible()
   })
+
+  test('centered 模式下 ink-bar 初始位置与激活 tab 对齐', async ({ page }) => {
+    const centeredDemo = page.locator('.hmfw-tabs-centered').first()
+    await centeredDemo.waitFor({ state: 'visible' })
+    // 等待 requestAnimationFrame + 渲染完成
+    await page.waitForTimeout(300)
+
+    const inkBar = centeredDemo.locator('.hmfw-tabs-ink-bar')
+    const activeTab = centeredDemo.locator('.hmfw-tabs-tab-active')
+    const navWrap = centeredDemo.locator('.hmfw-tabs-nav-wrap')
+
+    const inkBarBox = await inkBar.boundingBox()
+    const activeTabBox = await activeTab.boundingBox()
+    const navWrapBox = await navWrap.boundingBox()
+
+    expect(inkBarBox).not.toBeNull()
+    expect(activeTabBox).not.toBeNull()
+    expect(navWrapBox).not.toBeNull()
+
+    // ink-bar 的 left 应该与激活 tab 的 left 一致（相对于 nav-wrap，容差 0.5px）
+    const inkBarLeft = inkBarBox!.x - navWrapBox!.x
+    const activeTabLeft = activeTabBox!.x - navWrapBox!.x
+    expect(Math.abs(inkBarLeft - activeTabLeft)).toBeLessThan(0.5)
+    // ink-bar 的 width 应该与激活 tab 的 width 一致（容差 0.5px）
+    expect(Math.abs(inkBarBox!.width - activeTabBox!.width)).toBeLessThan(0.5)
+  })
 })

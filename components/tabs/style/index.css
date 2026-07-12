@@ -63,12 +63,6 @@
   gap: 8px;
 }
 
-.hmfw-tabs-tab-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .hmfw-tabs-tab-icon {
   display: inline-flex;
   align-items: center;
@@ -163,12 +157,12 @@
   display: none;
 }
 
-/* Card type */
-.hmfw-tabs-card .hmfw-tabs-nav {
+/* Card & Editable card — 共用样式 */
+:is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-nav {
   border-bottom: 1px solid var(--hmfw-color-border);
 }
 
-.hmfw-tabs-card .hmfw-tabs-tab {
+:is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-tab {
   padding: 8px 16px;
   border: 1px solid var(--hmfw-color-border);
   border-bottom: none;
@@ -178,32 +172,7 @@
   margin-bottom: -1px;
 }
 
-.hmfw-tabs-card .hmfw-tabs-tab-active {
-  background: var(--hmfw-color-bg-container);
-  border-bottom-color: var(--hmfw-color-bg-container);
-}
-
-/* Editable card type */
-.hmfw-tabs-editable-card .hmfw-tabs-nav {
-  border-bottom: 1px solid var(--hmfw-color-border);
-}
-
-.hmfw-tabs-editable-card .hmfw-tabs-tab {
-  padding: 8px 16px;
-  border: 1px solid var(--hmfw-color-border);
-  border-bottom: none;
-  border-radius: var(--hmfw-border-radius) var(--hmfw-border-radius) 0 0;
-  background: var(--hmfw-color-fill-quaternary);
-  margin-right: 2px;
-  margin-bottom: -1px;
-}
-
-.hmfw-tabs-editable-card .hmfw-tabs-tab-active {
-  background: var(--hmfw-color-bg-container);
-  border-bottom-color: var(--hmfw-color-bg-container);
-}
-
-.hmfw-tabs-editable-card .hmfw-tabs-tab-active {
+:is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-tab-active {
   background: var(--hmfw-color-bg-container);
   border-bottom-color: var(--hmfw-color-bg-container);
 }

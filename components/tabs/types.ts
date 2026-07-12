@@ -7,7 +7,8 @@ export type TabsSize = 'large' | 'small'
 export interface TabItem {
   key: string
   label: string | VNode
-  children?: unknown
+  /** Tab 内容，支持 VNode 或字符串 */
+  children?: VNode | string
   disabled?: boolean
   closable?: boolean
   icon?: VNode
@@ -71,17 +72,20 @@ export interface TabsStyles {
 }
 
 export interface TabsProps {
+  /**
+   * 受控模式下的当前激活 key
+   * @remarks 支持 v-model:activeKey 双向绑定
+   */
   activeKey?: string
-  defaultActiveKey?: string
+  items?: TabItem[]
   type?: TabsType
   size?: TabsSize
   tabPosition?: TabsPosition
   centered?: boolean
-  items?: TabItem[]
   animated?: boolean | AnimatedConfig
   tabBarExtraContent?: VNode | TabBarExtraContent
   tabBarGutter?: number
-  tabBarStyle?: Record<string, unknown>
+  tabBarStyle?: CSSProperties
   hideAdd?: boolean
   addIcon?: VNode
   removeIcon?: VNode
@@ -92,9 +96,16 @@ export interface TabsProps {
   styles?: TabsStyles
 }
 
+/**
+ * Tabs 事件类型
+ * @remarks edit 事件通过 action 参数自动窄化 targetKey 类型：
+ *   - add 时 targetKey 为 MouseEvent
+ *   - remove 时 targetKey 为 string
+ */
 export interface TabsEmits {
   (e: 'update:activeKey', key: string): void
   (e: 'change', key: string): void
   (e: 'tabClick', key: string, event: MouseEvent): void
-  (e: 'edit', targetKey: string | MouseEvent, action: 'add' | 'remove'): void
+  (e: 'edit', targetKey: MouseEvent, action: 'add'): void
+  (e: 'edit', targetKey: string, action: 'remove'): void
 }
