@@ -12,10 +12,10 @@
   "include": [
     "components/**/*.ts",
     "components/**/*.tsx",
-    "docs/src/**/*.ts",
-    "docs/src/**/*.tsx",
-    "docs/src/**/*.vue",
-    "docs/src/**/*.d.ts",
+    "docs/**/*.ts",
+    "docs/**/*.tsx",
+    "docs/**/*.vue",
+    "docs/**/*.d.ts",
     "docs/plugins/**/*.ts",
     "vite.config.ts",
     "tsup.config.ts"

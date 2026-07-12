@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ConfigProvider } from '@hmfw/ant-design'
-import { provideTheme } from './utils/useTheme'
+import { provideTheme } from './composables/useTheme'
 
 const { currentTheme: theme } = provideTheme()
 </script>

@@ -1,5 +1,5 @@
 /**
- * 生成 demo 路由文件（输出到 docs/src/router/demo-routes.gen.ts）
+ * 生成 demo 路由文件（输出到 docs/router/demo-routes.gen.ts）
  *
  * 扫描 components/{name}/demos/ 下的所有 .md 文件，生成显式的 import() 路由表。
  *
@@ -9,12 +9,13 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+import { execSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const projectRoot = path.resolve(__dirname, '..')
-const routerDir = path.join(projectRoot, 'docs', 'src', 'router')
+const routerDir = path.join(projectRoot, 'docs', 'router')
 
 interface DemoEntry {
   /** 组件名（如 button） */
@@ -62,4 +63,5 @@ const output = [
 
 const outputPath = path.join(routerDir, 'demo-routes.gen.ts')
 fs.writeFileSync(outputPath, output, 'utf-8')
+execSync(`npx prettier --write ${JSON.stringify(outputPath)}`, { cwd: projectRoot, stdio: 'pipe' })
 console.log(`✅ 已生成 ${entries.length} 个 demo 路由 → ${path.relative(projectRoot, outputPath)}`)

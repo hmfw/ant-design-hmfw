@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AppLayout from '../layouts/AppLayout.vue'
-import HomePage from '../pages/HomePage.vue'
+import AppLayout from '../views/AppLayout.vue'
+import HomePage from '../views/HomePage.vue'
 import { demoRoutes } from './demo-routes.gen'
 
 const componentRoutes = Object.entries(demoRoutes).map(([name, component]) => ({
@@ -21,11 +21,11 @@ export const router = createRouter({
       children: [
         {
           path: 'guide/getting-started',
-          component: () => import('../../guide/getting-started.md'),
+          component: () => import('../views/GettingStarted.vue'),
         },
-        { path: 'guide/theming', component: () => import('../../guide/theming.md') },
-        { path: 'guide/i18n', component: () => import('../../guide/i18n.md') },
-        { path: 'guide/changelog', component: () => import('../../guide/changelog.md') },
+        { path: 'guide/theming', component: () => import('../views/Theming.vue') },
+        { path: 'guide/i18n', component: () => import('../views/I18n.vue') },
+        { path: 'guide/changelog', component: () => import('../../CHANGELOG.md') },
         ...componentRoutes,
       ],
     },

@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SidebarGroup } from '../nav/sidebar'
+import type { SidebarGroup } from '../router/sidebar'
 
 defineProps<{ groups: SidebarGroup[] }>()
 </script>

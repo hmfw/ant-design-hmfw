@@ -14,10 +14,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import NavBar from '../components/NavBar.vue'
-import Sidebar from '../components/Sidebar.vue'
-import TocNav from '../components/TocNav.vue'
-import { componentsSidebar, guideSidebar } from '../nav/sidebar'
+import NavBar from './NavBar.vue'
+import Sidebar from './Sidebar.vue'
+import TocNav from './TocNav.vue'
+import { componentsSidebar, guideSidebar } from '../router/sidebar'
 
 const route = useRoute()
 

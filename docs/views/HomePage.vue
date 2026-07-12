@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import NavBar from '../components/NavBar.vue'
+import NavBar from './NavBar.vue'
 
 const features = [
   { icon: '⚡', title: '高性能', details: '基于 esbuild 的 tsup 构建，支持 Tree Shaking 按需加载' },
