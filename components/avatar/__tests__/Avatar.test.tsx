@@ -20,9 +20,9 @@ describe('Avatar', () => {
     expect(wrapper.classes()).toContain('hmfw-avatar-square')
   })
 
-  it('applies default size class', () => {
-    const wrapper = mount(Avatar, { props: { size: 'default' } })
-    expect(wrapper.classes()).toContain('hmfw-avatar-default')
+  it('applies middle size class', () => {
+    const wrapper = mount(Avatar, { props: { size: 'middle' } })
+    expect(wrapper.classes()).toContain('hmfw-avatar-middle')
   })
 
   it('applies large size class', () => {

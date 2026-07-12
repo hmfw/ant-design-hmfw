@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'vue'
-
-export type SpinSize = 'small' | 'default' | 'large'
+import type { ComponentSize } from '../config-provider'
 
 /** 语义化结构 className */
 export interface SpinClassNames {
@@ -20,7 +19,7 @@ export interface SpinStyles {
 
 export interface SpinProps {
   spinning?: boolean
-  size?: SpinSize
+  size?: ComponentSize
   tip?: string
   /** tip 的新名（与 AntD v6 对齐） */
   description?: string

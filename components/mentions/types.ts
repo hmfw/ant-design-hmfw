@@ -1,4 +1,5 @@
 import type { CSSProperties, VNode } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 /** 选项数据 */
 export interface MentionOption {
@@ -73,7 +74,7 @@ export interface MentionProps {
   status?: 'error' | 'warning' | ''
 
   /** 尺寸 */
-  size?: 'small' | 'middle' | 'large'
+  size?: ComponentSize
 
   /** 下拉菜单放置方向 */
   placement?: 'top' | 'bottom'

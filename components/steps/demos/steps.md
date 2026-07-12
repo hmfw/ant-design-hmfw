@@ -75,7 +75,7 @@
 | initial        | 起始序号，从 0 开始记数                                                          | `number`                                     | `0`            |
 | items          | 配置选项                                                                         | `StepItem[]`                                 | `[]`           |
 | orientation    | 指定步骤条方向                                                                   | `'horizontal' \| 'vertical'`                 | `'horizontal'` |
-| size           | 指定大小                                                                         | `'default' \| 'small'`                       | `'default'`    |
+| size           | 指定大小                                                                         | `'small' \| 'middle' \| 'large'`             | `'middle'`     |
 | status         | 指定当前步骤的状态                                                               | `'wait' \| 'process' \| 'finish' \| 'error'` | `'process'`    |
 | type           | 步骤条类型                                                                       | `'default' \| 'inline' \| 'dot'`             | `'default'`    |
 | titlePlacement | 指定标签放置位置                                                                 | `'horizontal' \| 'vertical'`                 | `'horizontal'` |

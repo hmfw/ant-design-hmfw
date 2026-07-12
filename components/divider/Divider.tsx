@@ -1,14 +1,8 @@
 import { defineComponent, computed, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type {
-  DividerType,
-  DividerOrientation,
-  DividerVariant,
-  DividerSize,
-  DividerClassNames,
-  DividerStyles,
-} from './types'
+import type { ComponentSize } from '../config-provider'
+import type { DividerType, DividerOrientation, DividerVariant, DividerClassNames, DividerStyles } from './types'
 
 export default defineComponent({
   name: 'Divider',
@@ -38,7 +32,7 @@ export default defineComponent({
       default: false,
     },
     size: {
-      type: String as PropType<DividerSize>,
+      type: String as PropType<ComponentSize>,
       default: undefined,
     },
     classNames: {

@@ -5,6 +5,7 @@ import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
 import type { RangeValue, RangePreset, RangePickerClassNames, RangePickerStyles } from './types'
+import type { ComponentSize } from '../config-provider'
 
 function pad(n: number) {
   return String(n).padStart(2, '0')
@@ -65,7 +66,7 @@ export const RangePicker = defineComponent({
     order: { type: Boolean, default: true },
     separator: { type: String, default: '→' },
     presets: { type: Array as PropType<RangePreset[]> },
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     disabledDate: Function as PropType<(d: Date, info?: { from?: Date; type?: string }) => boolean>,
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
     open: { type: Boolean, default: undefined },

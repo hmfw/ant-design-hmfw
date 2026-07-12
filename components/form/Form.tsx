@@ -1,5 +1,6 @@
 import { defineComponent, ref, provide, inject, computed, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
+import type { ComponentSize } from '../config-provider'
 import { cls } from '../_utils'
 
 export interface FormRule {
@@ -76,7 +77,7 @@ export interface FormProps {
   wrapperCol?: { span?: number; offset?: number }
   colon?: boolean
   labelAlign?: 'left' | 'right'
-  size?: 'small' | 'middle' | 'large'
+  size?: ComponentSize
   disabled?: boolean
   scrollToFirstError?: boolean
   validateTrigger?: 'blur' | 'change' | ('blur' | 'change')[]
@@ -279,7 +280,7 @@ export const Form = defineComponent({
     wrapperCol: Object as PropType<{ span?: number; offset?: number }>,
     colon: { type: Boolean, default: true },
     labelAlign: { type: String as PropType<'left' | 'right'>, default: 'right' },
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     disabled: Boolean,
     scrollToFirstError: Boolean,
     validateTrigger: {
@@ -464,8 +465,8 @@ export const Form = defineComponent({
         class={cls(
           prefixCls,
           `${prefixCls}-${props.layout}`,
+          `${prefixCls}-${props.size}`,
           {
-            [`${prefixCls}-${props.size}`]: props.size !== 'middle',
             [`${prefixCls}-hide-required-mark`]: props.requiredMark === false,
           },
           props.classNames?.root,

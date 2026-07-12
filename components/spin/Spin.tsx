@@ -1,7 +1,8 @@
 import { defineComponent, ref, watch, onBeforeUnmount, onMounted, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { SpinSize, SpinClassNames, SpinStyles } from './types'
+import type { SpinClassNames, SpinStyles } from './types'
+import type { ComponentSize } from '../config-provider'
 
 // percent='auto' 时模拟递增的参数（与 AntD v6 usePercent 对齐）
 const AUTO_INTERVAL = 200
@@ -19,8 +20,8 @@ export const Spin = defineComponent({
       default: true,
     },
     size: {
-      type: String as PropType<SpinSize>,
-      default: 'default',
+      type: String as PropType<ComponentSize>,
+      default: 'middle',
     },
     tip: String,
     // description 为 tip 的新名（与 AntD v6 对齐）
@@ -180,11 +181,11 @@ export const Spin = defineComponent({
     }
 
     // 根据 size 返回对应的像素尺寸，用于自定义 indicator 的容器自适应
-    const sizeMap: Record<SpinSize, number> = { small: 14, default: 20, large: 32 }
+    const sizeMap: Record<ComponentSize, number> = { small: 14, middle: 20, large: 32 }
 
     const renderIndicator = () => {
       if (slots.indicator) {
-        const sizeVal = sizeMap[props.size] || sizeMap.default
+        const sizeVal = sizeMap[props.size] || sizeMap.middle
         const indicatorStyle = {
           width: `${sizeVal}px`,
           height: `${sizeVal}px`,

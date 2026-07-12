@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'vue'
-
-export type SwitchSize = 'default' | 'small'
+import type { ComponentSize } from '../config-provider'
 
 /**
  * onChange 处理器返回 void 或 Promise
@@ -49,7 +48,7 @@ export interface SwitchProps {
   defaultChecked?: boolean
   disabled?: boolean
   loading?: boolean
-  size?: SwitchSize
+  size?: ComponentSize
   checkedChildren?: any
   unCheckedChildren?: any
   autoFocus?: boolean

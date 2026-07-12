@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export type RadioValueType = string | number | boolean
 
@@ -61,7 +62,7 @@ export interface RadioGroupProps {
   disabled?: boolean
   buttonStyle?: 'outline' | 'solid'
   optionType?: 'default' | 'button'
-  size?: 'large' | 'middle' | 'small'
+  size?: ComponentSize
   name?: string
   block?: boolean
   options?: Array<

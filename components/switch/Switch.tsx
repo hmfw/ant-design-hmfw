@@ -1,7 +1,8 @@
 import { defineComponent, ref, watch, computed, onMounted, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { SwitchSize, SwitchChangeEventHandler, SwitchClassNames, SwitchStyles } from './types'
+import type { SwitchChangeEventHandler, SwitchClassNames, SwitchStyles } from './types'
+import type { ComponentSize } from '../config-provider'
 
 export const Switch = defineComponent({
   name: 'Switch',
@@ -13,8 +14,8 @@ export const Switch = defineComponent({
     disabled: Boolean,
     loading: Boolean,
     size: {
-      type: String as PropType<SwitchSize>,
-      default: 'default',
+      type: String as PropType<ComponentSize>,
+      default: 'middle',
     },
     checkedChildren: null,
     unCheckedChildren: null,

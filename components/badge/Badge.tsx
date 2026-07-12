@@ -2,7 +2,8 @@ import { defineComponent, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { ScrollNumber } from './ScrollNumber'
-import type { BadgeStatus, BadgeSize, BadgeClassNames, BadgeStyles } from './types'
+import type { BadgeStatus, BadgeClassNames, BadgeStyles } from './types'
+import type { ComponentSize } from '../config-provider'
 
 const PRESET_COLORS = [
   'pink',
@@ -34,8 +35,8 @@ export const Badge = defineComponent({
     color: String,
     text: String,
     size: {
-      type: String as PropType<BadgeSize>,
-      default: 'default',
+      type: String as PropType<ComponentSize>,
+      default: 'middle',
     },
     offset: {
       type: Array as unknown as PropType<[number, number]>,

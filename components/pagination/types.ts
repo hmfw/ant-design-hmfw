@@ -1,6 +1,5 @@
 import type { VNode, CSSProperties } from 'vue'
-
-export type PaginationSize = 'default' | 'small'
+import type { ComponentSize } from '../config-provider'
 
 export type PaginationAlign = 'start' | 'center' | 'end'
 
@@ -79,7 +78,7 @@ export interface PaginationProps {
   showSizeChanger?: boolean
   showQuickJumper?: boolean
   showTotal?: ShowTotalFn
-  size?: PaginationSize
+  size?: ComponentSize
   simple?: boolean
   disabled?: boolean
   hideOnSinglePage?: boolean

@@ -2,7 +2,7 @@ import type { App as VueApp } from 'vue'
 
 // Config
 export { ConfigProvider, useConfig, usePrefixCls, useLocale } from './config-provider'
-export type { ConfigProviderProps, ConfigContext } from './config-provider'
+export type { ConfigProviderProps, ConfigContext, ComponentSize } from './config-provider'
 
 // Locale
 export { zhCN, enUS } from './_locale'
@@ -54,7 +54,7 @@ export { Avatar, AvatarGroup } from './avatar'
 export type { AvatarProps, AvatarGroupProps, AvatarSize, AvatarShape } from './avatar'
 
 export { Badge, Ribbon } from './badge'
-export type { BadgeProps, BadgeStatus, BadgeSize, RibbonProps, RibbonPlacement } from './badge'
+export type { BadgeProps, BadgeStatus, RibbonProps, RibbonPlacement } from './badge'
 
 export { Tag, CheckableTag } from './tag'
 export type { TagProps, CheckableTagProps, TagColor } from './tag'
@@ -82,10 +82,10 @@ export { Radio, RadioGroup, RadioButton } from './radio'
 export type { RadioProps, RadioGroupProps, RadioValueType, RadioChangeEvent } from './radio'
 
 export { Switch } from './switch'
-export type { SwitchProps, SwitchSize, SwitchClassNames, SwitchStyles } from './switch'
+export type { SwitchProps, SwitchClassNames, SwitchStyles } from './switch'
 
 export { Spin } from './spin'
-export type { SpinProps, SpinSize } from './spin'
+export type { SpinProps } from './spin'
 
 export { Progress } from './progress'
 export type { ProgressProps, ProgressType, ProgressStatus } from './progress'
@@ -100,7 +100,7 @@ export type {
 } from './breadcrumb'
 
 export { Pagination } from './pagination'
-export type { PaginationProps, PaginationSize, PaginationClassNames, PaginationStyles } from './pagination'
+export type { PaginationProps, PaginationClassNames, PaginationStyles } from './pagination'
 
 export { Tabs } from './tabs'
 export type { TabsProps, TabItem, TabsType, TabsSize, TabsPosition } from './tabs'
@@ -217,7 +217,7 @@ export type {
 } from './skeleton'
 
 export { Rate } from './rate'
-export type { RateProps, RateSize, RateCharacterRenderContext, RateClassNames, RateStyles } from './rate'
+export type { RateProps, RateCharacterRenderContext, RateClassNames, RateStyles } from './rate'
 
 export { Slider } from './slider'
 export type { SliderProps, SliderMarks, SliderTooltipProps, SliderClassNames, SliderStyles } from './slider'

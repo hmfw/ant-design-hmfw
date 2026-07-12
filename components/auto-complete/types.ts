@@ -1,4 +1,5 @@
 import type { VNodeChild, CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export interface AutoCompleteOption {
   value: string
@@ -59,7 +60,7 @@ export interface AutoCompleteProps {
   disabled?: boolean
   placeholder?: string
   allowClear?: AutoCompleteAllowClear
-  size?: 'small' | 'middle' | 'large'
+  size?: ComponentSize
   status?: 'error' | 'warning' | ''
   filterOption?: boolean | ((inputValue: string, option: AutoCompleteOption) => boolean)
   backfill?: boolean

@@ -1,4 +1,5 @@
 import type { VNode, CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export interface TreeSelectNode {
   value: string | number
@@ -111,7 +112,7 @@ export interface TreeSelectProps {
   allowClear?: boolean
   placeholder?: string
   disabled?: boolean
-  size?: 'small' | 'middle' | 'large'
+  size?: ComponentSize
   /** 设置校验状态 */
   status?: 'error' | 'warning' | ''
   /** 可选中的最多数量，仅在多选时生效 */

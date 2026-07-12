@@ -73,7 +73,7 @@ describe('Steps', () => {
     expect(wrapper.emitted('change')).toBeFalsy()
   })
 
-  it('applies initial offset', () => {
+  it('applies initial index offset', () => {
     const wrapper = mount(Steps, { props: { items, current: 2, initial: 1 } })
     const stepItems = wrapper.findAll('.hmfw-steps-item')
     expect(stepItems[0].classes()).toContain('hmfw-steps-item-finish')

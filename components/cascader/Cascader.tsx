@@ -13,6 +13,7 @@ import type {
   CascaderClassNames,
   CascaderStyles,
 } from './types'
+import type { ComponentSize } from '../config-provider'
 
 export const Cascader = defineComponent({
   name: 'Cascader',
@@ -27,7 +28,7 @@ export const Cascader = defineComponent({
     disabled: Boolean,
     placeholder: { type: String, default: '请选择' },
     allowClear: { type: Boolean, default: true },
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
     expandTrigger: { type: String as PropType<CascaderExpandTrigger>, default: 'click' },
     multiple: Boolean,

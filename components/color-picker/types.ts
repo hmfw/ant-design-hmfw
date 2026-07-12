@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export type ColorFormat = 'hex' | 'rgb' | 'hsb'
 
@@ -57,7 +58,7 @@ export interface ColorPickerProps {
   defaultValue?: string
   format?: ColorFormat
   disabled?: boolean
-  size?: 'small' | 'middle' | 'large'
+  size?: ComponentSize
   showText?: boolean
   allowClear?: boolean
   presets?: Array<{ label: string; colors: string[] }>

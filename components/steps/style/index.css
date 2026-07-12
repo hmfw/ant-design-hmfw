@@ -220,6 +220,31 @@
   font-size: var(--hmfw-font-size-sm);
 }
 
+/* Large */
+.hmfw-steps-large {
+  gap: calc(var(--hmfw-steps-gap) + 4px);
+}
+
+.hmfw-steps-large .hmfw-steps-item-header,
+.hmfw-steps-large .hmfw-steps-item-content {
+  gap: calc(var(--hmfw-steps-gap) + 4px);
+}
+
+.hmfw-steps-large .hmfw-steps-item-icon {
+  width: calc(var(--hmfw-steps-icon-size) + 8px);
+  height: calc(var(--hmfw-steps-icon-size) + 8px);
+  font-size: 18px;
+}
+
+.hmfw-steps-large .hmfw-steps-item-title {
+  font-size: 18px;
+  line-height: calc(var(--hmfw-steps-icon-size) + 8px);
+}
+
+.hmfw-steps-large .hmfw-steps-item-description {
+  font-size: var(--hmfw-font-size-base);
+}
+
 /* Dot Style */
 .hmfw-steps-dot .hmfw-steps-item-icon-placeholder {
   display: none;

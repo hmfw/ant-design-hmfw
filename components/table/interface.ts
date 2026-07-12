@@ -1,4 +1,5 @@
 import type { CSSProperties, VNode } from 'vue'
+import type { ComponentSize } from '../config-provider'
 import type { CheckboxProps } from '../checkbox'
 
 export type Key = string | number
@@ -125,7 +126,7 @@ export interface TablePaginationConfig {
   showSizeChanger?: boolean
   showQuickJumper?: boolean
   showTotal?: (total: number, range: [number, number]) => string
-  size?: 'small' | 'default'
+  size?: ComponentSize
   simple?: boolean
   disabled?: boolean
   hideOnSinglePage?: boolean
@@ -175,7 +176,7 @@ export interface TableProps<T = any> {
   rowKey?: string | ((record: T) => Key)
   loading?: boolean
   bordered?: boolean
-  size?: 'default' | 'middle' | 'small'
+  size?: ComponentSize
   scroll?: { x?: number | string; y?: number | string; scrollToFirstRowOnChange?: boolean }
   pagination?: false | TablePaginationConfig
   rowSelection?: TableRowSelection<T>

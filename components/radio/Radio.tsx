@@ -2,6 +2,7 @@ import { defineComponent, ref, watch, inject, computed, provide, type PropType, 
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import type { RadioValueType, RadioChangeEvent } from './types'
+import type { ComponentSize } from '../config-provider'
 
 const RADIO_GROUP_KEY = Symbol('radio-group')
 
@@ -178,7 +179,7 @@ export const RadioGroup = defineComponent({
     disabled: Boolean,
     buttonStyle: { type: String as PropType<'outline' | 'solid'>, default: 'outline' },
     optionType: { type: String as PropType<'default' | 'button'>, default: 'default' },
-    size: { type: String as PropType<'large' | 'middle' | 'small'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     name: String,
     block: Boolean,
     options: Array as PropType<
@@ -240,9 +241,8 @@ export const RadioGroup = defineComponent({
     provide(RADIO_GROUP_KEY, context)
 
     const groupCls = computed(() =>
-      cls(`${prefixCls}-group`, {
+      cls(`${prefixCls}-group`, `${prefixCls}-group-${props.size}`, {
         [`${prefixCls}-group-${props.buttonStyle}`]: props.optionType === 'button',
-        [`${prefixCls}-group-${props.size}`]: props.size !== 'middle',
         [`${prefixCls}-group-block`]: props.block,
       }),
     )

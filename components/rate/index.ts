@@ -1,2 +1,2 @@
 export { Rate } from './Rate'
-export type { RateProps, RateSize, RateCharacterRenderContext, RateClassNames, RateStyles } from './types'
+export type { RateProps, RateCharacterRenderContext, RateClassNames, RateStyles } from './types'

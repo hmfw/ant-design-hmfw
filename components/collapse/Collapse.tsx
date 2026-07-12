@@ -12,6 +12,7 @@ import {
   type VNode,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
+import type { ComponentSize } from '../config-provider'
 import { cls } from '../_utils'
 import { RightOutlined } from '@hmfw/icons'
 import type { CollapseItem, CollapsibleType, ExpandIconProps, CollapseClassNames, CollapseStyles } from './types'
@@ -67,7 +68,7 @@ export const Collapse = defineComponent({
     accordion: Boolean,
     bordered: { type: Boolean, default: true },
     ghost: Boolean,
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     expandIconPosition: { type: String as PropType<'start' | 'end'>, default: 'start' },
     items: Array as PropType<CollapseItem[]>,
     destroyInactivePanel: Boolean,
@@ -270,10 +271,9 @@ export const Collapse = defineComponent({
 
       return (
         <div
-          class={cls(prefixCls, props.classNames?.root, {
+          class={cls(prefixCls, props.classNames?.root, `${prefixCls}-${props.size}`, {
             [`${prefixCls}-borderless`]: !props.bordered,
             [`${prefixCls}-ghost`]: props.ghost,
-            [`${prefixCls}-${props.size}`]: props.size !== 'middle',
             [`${prefixCls}-icon-position-end`]: props.expandIconPosition === 'end',
           })}
           style={props.styles?.root}

@@ -1,5 +1,6 @@
 import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
+import type { ComponentSize } from '../config-provider'
 import { cls } from '../_utils'
 import { Spin } from '../spin'
 import { Empty } from '../empty'
@@ -40,7 +41,7 @@ export const Table = defineComponent({
     rowKey: [String, Function] as PropType<string | ((record: any) => Key)>,
     loading: Boolean,
     bordered: Boolean,
-    size: { type: String as PropType<'default' | 'middle' | 'small'>, default: 'default' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     scroll: Object as PropType<{
       x?: number | string
       y?: number | string

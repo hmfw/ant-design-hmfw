@@ -1,10 +1,9 @@
 import type { CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export type DividerType = 'horizontal' | 'vertical'
 export type DividerOrientation = 'left' | 'right' | 'center'
 export type DividerVariant = 'dashed' | 'dotted' | 'solid'
-export type DividerSize = 'small' | 'middle' | 'large'
-
 /** 语义化 className */
 export interface DividerClassNames {
   root?: string // 分割线根容器
@@ -30,7 +29,7 @@ export interface DividerProps {
   orientationMargin?: string | number
   plain?: boolean
   /** 分割线间距大小（仅水平分割线生效） */
-  size?: DividerSize
+  size?: ComponentSize
   /** 语义化结构 class */
   classNames?: DividerClassNames
   /** 语义化结构 style */

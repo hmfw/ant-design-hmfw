@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export interface AvatarResponsiveSize {
   xs?: number
@@ -9,7 +10,7 @@ export interface AvatarResponsiveSize {
   xxl?: number
 }
 
-export type AvatarSize = 'large' | 'default' | 'small' | number | AvatarResponsiveSize
+export type AvatarSize = ComponentSize | number | AvatarResponsiveSize
 export type AvatarShape = 'circle' | 'square'
 
 /**

@@ -8,6 +8,29 @@
 
 ## [0.16.1] - 2026-07-12
 
+### 💥 Breaking Changes
+
+- **ComponentSize 统一类型**: 抽取共享类型 `ComponentSize = 'small' | 'middle' | 'large'`，从 `ConfigProvider` / `@hmfw/ant-design` 统一导入；移除所有组件的独立 Size 类型别名（`ButtonSize`、`InputSize` 等除外——这些组件后续迁移）
+- **size 值 `'default'` → `'middle'`**: Pagination、Switch、Spin、Avatar、Badge、Table 的 size prop 默认值及有效值从 `'default'` 迁移为 `'middle'`，与 `ComponentSize` 语义一致
+
+### 🔧 重构
+
+- **Steps**: Props 提取 `satisfies Record<keyof StepsProps, any>` 模式确保类型安全（对齐 Tabs/Input）；移除死代码 `offset`/`responsive`/`mergedType`；简化 `mergedOrientation`；新增 `'large'` 尺寸 + CSS；添加 JSDoc 注释
+- **ComponentSize 全量接入**: 20+ 组件的 size prop 统一使用 `ComponentSize` 类型——TreeSelect、TimePicker、RangePicker、DatePicker、Cascader、Mentions、AutoComplete、ColorPicker、Form、Collapse、Radio、Segmented、Rate、Divider、InputNumber
+- **移除 XxxSize 类型别名**: PaginationSize、InputNumberSize、SpinSize、DividerSize、SwitchSize、BadgeSize、RateSize 全部移除，直接使用 `ComponentSize`
+- **size CSS 类统一渲染**: Steps、Collapse、Radio、Form、Table 的 size 修饰类名不再对 `'middle'` 做条件排除，三档 size 均渲染对应 CSS 类
+
+### 🎨 样式
+
+- **Steps**: 新增 `.hmfw-steps-large` 样式（图标 40px / 标题 18px）
+- **Table**: 新增 `.hmfw-table-large`（`padding: 20px 16px`），`.hmfw-table-middle` 显式 padding，三档尺寸 CSS 类齐全
+
+### 🗑️ 移除
+
+- **Steps**: 移除死代码 prop `offset`
+- **StepsClassNames / StepsStyles**: 移除未使用的 `container` 字段
+- **StepsProps**: 移除 `responsive`（保留 prop + TODO）、`onChange`（应由 emits 处理）
+
 ### 🔧 重构
 
 - **Tabs（useInkBar 数据驱动）**: 重写 ink bar 为数据驱动架构（对齐 rc-tabs），核心管线 `ResizeObserver → tabSizes(Map) → activeTabOffset(computed) → indicatorStyle(computed)` → 模板绑定，不再直接操作 DOM ref；`indicatorStyle` 返回 `CSSProperties` 类型与项目体系一致

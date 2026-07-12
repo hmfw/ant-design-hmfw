@@ -5,10 +5,10 @@ import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { VirtualList } from '../_internal/virtual-list'
 import type { AutoCompleteOption, AutoCompleteAllowClear, AutoCompleteClassNames, AutoCompleteStyles } from './types'
+import type { ComponentSize } from '../config-provider'
 
 // Map AntD-style size to the Input style suffix convention (-lg / -sm).
-const sizeSuffix = (size: 'small' | 'middle' | 'large'): '' | 'lg' | 'sm' =>
-  size === 'large' ? 'lg' : size === 'small' ? 'sm' : ''
+const sizeSuffix = (size: ComponentSize): '' | 'lg' | 'sm' => (size === 'large' ? 'lg' : size === 'small' ? 'sm' : '')
 
 export const AutoComplete = defineComponent({
   name: 'AutoComplete',
@@ -20,7 +20,7 @@ export const AutoComplete = defineComponent({
     disabled: Boolean,
     placeholder: String,
     allowClear: { type: [Boolean, Object] as PropType<AutoCompleteAllowClear>, default: false },
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
     filterOption: {
       type: [Boolean, Function] as PropType<boolean | ((input: string, opt: AutoCompleteOption) => boolean)>,

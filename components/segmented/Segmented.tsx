@@ -3,6 +3,7 @@ import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Tooltip } from '../tooltip'
 import type { SegmentedOption, SegmentedValue, SegmentedOptions } from './types'
+import type { ComponentSize } from '../config-provider'
 
 export const Segmented = defineComponent({
   name: 'Segmented',
@@ -15,7 +16,7 @@ export const Segmented = defineComponent({
     },
     disabled: Boolean,
     block: Boolean,
-    size: { type: String as PropType<'large' | 'middle' | 'small'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     vertical: Boolean,
     orientation: String as PropType<'horizontal' | 'vertical'>,
     shape: { type: String as PropType<'default' | 'round'>, default: 'default' },

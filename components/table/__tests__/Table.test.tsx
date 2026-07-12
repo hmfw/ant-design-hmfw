@@ -36,6 +36,8 @@ describe('Table', () => {
     expect(small.classes()).toContain('hmfw-table-small')
     const middle = mount(Table, { props: { columns, dataSource, size: 'middle' } })
     expect(middle.classes()).toContain('hmfw-table-middle')
+    const large = mount(Table, { props: { columns, dataSource, size: 'large' } })
+    expect(large.classes()).toContain('hmfw-table-large')
   })
 
   it('renders sorter icons for sortable columns', () => {

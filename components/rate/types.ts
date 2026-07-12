@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 import type { TooltipProps } from '../tooltip'
-
-export type RateSize = 'small' | 'middle' | 'large'
 
 /**
  * 自定义字符渲染上下文
@@ -54,7 +53,7 @@ export interface RateProps {
   disabled?: boolean
   character?: string | ((ctx: RateCharacterRenderContext) => any)
   tooltips?: (string | TooltipProps)[]
-  size?: RateSize
+  size?: ComponentSize
   keyboard?: boolean
   autoFocus?: boolean
   /** 语义化 className */

@@ -4,8 +4,8 @@ import { cls } from '../_utils'
 import { LeftOutlined, RightOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@hmfw/icons'
 import { Select } from '../select'
 import { useBreakpoint } from '../grid/hooks/useBreakpoint'
+import type { ComponentSize } from '../config-provider'
 import type {
-  PaginationSize,
   PaginationAlign,
   PaginationItemType,
   ShowTotalFn,
@@ -23,7 +23,7 @@ const paginationProps = {
   showSizeChanger: { type: Boolean, default: false },
   showQuickJumper: { type: Boolean, default: false },
   showTotal: { type: Function as PropType<ShowTotalFn>, default: undefined },
-  size: { type: String as PropType<PaginationSize>, default: undefined },
+  size: { type: String as PropType<ComponentSize>, default: undefined },
   simple: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   hideOnSinglePage: { type: Boolean, default: false },

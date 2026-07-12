@@ -1,6 +1,6 @@
 import type { CSSProperties, PropType, VNode } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
-export type InputNumberSize = 'small' | 'middle' | 'large'
 export type InputNumberStatus = 'error' | 'warning'
 export type InputNumberMode = 'input' | 'spinner'
 
@@ -60,7 +60,7 @@ export interface InputNumberProps {
   parser?: (value: string) => number
   disabled?: boolean
   readOnly?: boolean
-  size?: InputNumberSize
+  size?: ComponentSize
   status?: InputNumberStatus
   placeholder?: string
   controls?: boolean | ControlsConfig
@@ -89,7 +89,7 @@ export const inputNumberProps = {
   parser: Function as PropType<(value: string) => number>,
   disabled: Boolean,
   readOnly: Boolean,
-  size: { type: String as PropType<InputNumberSize>, default: 'middle' },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
   status: String as PropType<InputNumberStatus>,
   placeholder: String,
   controls: { type: [Boolean, Object] as PropType<boolean | ControlsConfig>, default: true },

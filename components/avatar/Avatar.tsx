@@ -43,7 +43,7 @@ function getResponsiveSize(size: AvatarSize, breakpoint: Breakpoint): Exclude<Av
     }
 
     // 如果没找到，返回默认值
-    return 'default'
+    return 'middle'
   }
   return size as Exclude<AvatarSize, object>
 }
@@ -118,7 +118,7 @@ export const Avatar = defineComponent({
 
     // props 优先，其次 AvatarGroup 上下文，最后默认值
     const mergedSize = computed<AvatarSize>(() => {
-      const size = props.size ?? ctx.size ?? 'default'
+      const size = props.size ?? ctx.size ?? 'middle'
       // 如果是响应式配置，返回当前断点对应的尺寸
       return getResponsiveSize(size, currentBreakpoint.value)
     })

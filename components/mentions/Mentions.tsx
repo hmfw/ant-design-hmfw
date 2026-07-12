@@ -5,9 +5,10 @@ import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { VirtualList } from '../_internal/virtual-list'
 import type { MentionOption, MentionSemanticClassNames, MentionSemanticStyles, MentionInstance } from './types'
+import type { ComponentSize } from '../config-provider'
 
 /** 尺寸 → Input 样式后缀 */
-const sizeSuffix = (size: 'small' | 'middle' | 'large') => (size === 'large' ? 'lg' : size === 'small' ? 'sm' : '')
+const sizeSuffix = (size: ComponentSize) => (size === 'large' ? 'lg' : size === 'small' ? 'sm' : '')
 
 /** 校验状态 → Input 样式类名 */
 const statusClass = (prefix: string, status?: string) =>
@@ -38,7 +39,7 @@ export const Mentions = defineComponent({
       default: undefined,
     },
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     placement: { type: String as PropType<'top' | 'bottom'>, default: 'bottom' },
 
     // 虚拟滚动

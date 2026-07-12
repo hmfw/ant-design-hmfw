@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export type RangeValue = [string | null, string | null]
 
@@ -144,7 +145,7 @@ export interface RangePickerProps {
   separator?: string
   /** Preset ranges for quick selection. */
   presets?: RangePreset[]
-  size?: 'small' | 'middle' | 'large'
+  size?: ComponentSize
   disabledDate?: (date: Date, info?: { from?: Date; type?: string }) => boolean
   status?: 'error' | 'warning' | ''
   /** Controlled open state. */

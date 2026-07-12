@@ -56,9 +56,14 @@
 }
 
 /* Sizes */
+.hmfw-table-large .hmfw-table-thead > tr > th,
+.hmfw-table-large .hmfw-table-tbody > tr > td {
+  padding: 20px 16px;
+}
+
 .hmfw-table-middle .hmfw-table-thead > tr > th,
 .hmfw-table-middle .hmfw-table-tbody > tr > td {
-  padding: 12px 8px;
+  padding: 16px;
 }
 
 .hmfw-table-small .hmfw-table-thead > tr > th,

@@ -2,42 +2,53 @@ import { defineComponent, computed, type PropType, type VNode, h } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { CheckOutlined, CloseOutlined } from '@hmfw/icons'
-import type { StepItem, StepStatus, IconRenderInfo } from './types'
+import type {
+  StepItem,
+  StepStatus,
+  IconRenderInfo,
+  IconRenderType,
+  StepsClassNames,
+  StepsStyles,
+  StepsProps,
+} from './types'
+import type { ComponentSize } from '../config-provider'
+
+// 使用 satisfies 确保 props 定义与 StepsProps 接口严格一致
+const stepsProps = {
+  current: { type: Number, default: 0 },
+  initial: { type: Number, default: 0 },
+  items: { type: Array as PropType<StepItem[]>, default: () => [] },
+  orientation: { type: String as PropType<'horizontal' | 'vertical'>, default: undefined },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
+  status: { type: String as PropType<StepStatus>, default: 'process' },
+  type: { type: String as PropType<'default' | 'inline' | 'dot'>, default: 'default' },
+  titlePlacement: { type: String as PropType<'horizontal' | 'vertical'>, default: undefined },
+  variant: { type: String as PropType<'filled' | 'outlined'>, default: 'filled' },
+  responsive: { type: Boolean, default: true },
+  ellipsis: { type: Boolean, default: false },
+  iconRender: { type: Function as PropType<IconRenderType>, default: undefined },
+  classNames: { type: Object as PropType<StepsClassNames>, default: undefined },
+  styles: { type: Object as PropType<StepsStyles>, default: undefined },
+} satisfies Record<keyof StepsProps, any>
 
 export const Steps = defineComponent({
   name: 'Steps',
-  props: {
-    current: { type: Number, default: 0 },
-    initial: { type: Number, default: 0 },
-    items: { type: Array as PropType<StepItem[]>, default: () => [] },
-    orientation: { type: String as PropType<'horizontal' | 'vertical'> },
-    size: { type: String as PropType<'default' | 'small'>, default: 'default' },
-    status: { type: String as PropType<StepStatus>, default: 'process' },
-    type: {
-      type: String as PropType<'default' | 'inline' | 'dot'>,
-      default: 'default',
-    },
-    titlePlacement: { type: String as PropType<'horizontal' | 'vertical'> },
-    variant: { type: String as PropType<'filled' | 'outlined'>, default: 'filled' },
-    responsive: { type: Boolean, default: true },
-    ellipsis: Boolean,
-    offset: { type: Number, default: 0 },
-    iconRender: Function as PropType<(oriNode: VNode, info: IconRenderInfo) => VNode>,
-    classNames: Object as PropType<import('./types').StepsClassNames>,
-    styles: Object as PropType<import('./types').StepsStyles>,
-  },
+  props: stepsProps,
   emits: ['change'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('steps')
 
-    const mergedType = computed(() => props.type)
+    const isDot = computed(() => props.type === 'dot' || props.type === 'inline')
+    const isInline = computed(() => props.type === 'inline')
 
-    const isDot = computed(() => mergedType.value === 'dot' || mergedType.value === 'inline')
-    const isInline = computed(() => mergedType.value === 'inline')
+    const mergedOrientation = computed(() => props.orientation || 'horizontal')
 
-    const mergedOrientation = computed(() => (props.orientation === 'vertical' ? 'vertical' : 'horizontal'))
-
-    // Merge titlePlacement
+    /**
+     * 合并 titlePlacement：
+     * - dot 或 inline 模式：跟随 direction（垂直条 → 水平标签，水平条 → 垂直标签）
+     * - 垂直方向：强制标签水平放置
+     * - 其他情况：使用用户指定的 titlePlacement 或默认水平
+     */
     const mergedTitlePlacement = computed(() => {
       if (isDot.value || mergedOrientation.value === 'vertical') {
         return mergedOrientation.value === 'vertical' ? 'horizontal' : 'vertical'
@@ -45,6 +56,10 @@ export const Steps = defineComponent({
       return props.titlePlacement || 'horizontal'
     })
 
+    /**
+     * 根据 index + initial 偏移量与 current 比较，确定步骤状态。
+     * 优先使用 item 自身的 status，否则按顺序推断。
+     */
     const getStepStatus = (index: number, item: StepItem): StepStatus => {
       if (item.status) return item.status
       const adjustedIndex = index + props.initial
@@ -53,13 +68,21 @@ export const Steps = defineComponent({
       return 'wait'
     }
 
+    /**
+     * 渲染步骤图标：
+     * 1. dot 模式或用户提供了自定义 icon → 渲染 dot/自定义 icon
+     * 2. 非 dot 模式 → 根据状态渲染 ✓ / ✗ / 序号
+     * 3. 如果传了 iconRender，调用自定义渲染函数
+     */
     const renderIcon = (index: number, status: StepStatus, item: StepItem): VNode => {
       const itemIconCls = `${prefixCls}-item-icon`
       let iconContent: VNode | null = null
 
+      // 1. dot 模式或自定义 icon
       if (isDot.value || item.icon) {
         iconContent = item.icon || h('span', { class: `${prefixCls}-icon-dot` })
       } else {
+        // 2. 根据状态渲染默认图标
         switch (status) {
           case 'finish':
             iconContent = h(CheckOutlined, { class: cls('hmfw-icon', `${itemIconCls}-finish`) })
@@ -75,7 +98,7 @@ export const Steps = defineComponent({
 
       let iconNode: VNode = iconContent
 
-      // Custom iconRender
+      // 3. 自定义 iconRender 回调
       if (props.iconRender) {
         const info: IconRenderInfo = {
           index,
@@ -88,6 +111,14 @@ export const Steps = defineComponent({
       return iconNode
     }
 
+    /**
+     * 处理步骤点击事件：
+     * - 禁用项忽略点击
+     * - 触发 item 级别的 onClick 回调（如果有）
+     * - 若步骤不是当前步骤，emit 'change' 事件
+     *
+     * @todo 添加键盘无障碍支持（Enter/Space 触发点击、Tab 导航）
+     */
     const handleStepClick = (index: number, item: StepItem, e: MouseEvent) => {
       if (item.disabled) return
       if (item.onClick) {
@@ -108,8 +139,8 @@ export const Steps = defineComponent({
             prefixCls,
             `${prefixCls}-${mergedOrientation.value}`,
             `${prefixCls}-${props.variant}`,
+            `${prefixCls}-${props.size}`,
             {
-              [`${prefixCls}-${props.size}`]: props.size !== 'default',
               [`${prefixCls}-label-${mergedTitlePlacement.value}`]: mergedTitlePlacement.value !== 'horizontal',
               [`${prefixCls}-dot`]: isDot.value,
               [`${prefixCls}-inline`]: isInline.value,

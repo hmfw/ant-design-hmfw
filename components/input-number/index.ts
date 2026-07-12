@@ -3,7 +3,6 @@ export type {
   InputNumberProps,
   InputNumberClassNames,
   InputNumberStyles,
-  InputNumberSize,
   InputNumberStatus,
   InputNumberMode,
   ControlsConfig,

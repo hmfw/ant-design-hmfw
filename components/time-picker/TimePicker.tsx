@@ -5,6 +5,7 @@ import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { ClockCircleOutlined, CloseCircleFilled } from '@hmfw/icons'
 import type { TimePickerClassNames, TimePickerStyles } from './types'
+import type { ComponentSize } from '../config-provider'
 
 type Variant = 'outlined' | 'borderless' | 'filled' | 'underlined'
 
@@ -77,7 +78,7 @@ export const TimePicker = defineComponent({
     defaultValue: String,
     format: { type: String, default: 'HH:mm:ss' },
     disabled: Boolean,
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     placeholder: { type: String, default: '请选择时间' },
     allowClear: { type: Boolean, default: true },
     hourStep: { type: Number, default: 1 },

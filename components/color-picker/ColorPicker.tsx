@@ -5,6 +5,7 @@ import { hexToHsb, hsbToHex, isValidHex, type HSB } from './color-utils'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import type { ColorFormat, ColorPickerClassNames, ColorPickerStyles } from './types'
+import type { ComponentSize } from '../config-provider'
 
 const DEFAULT_COLOR = '#1677ff'
 
@@ -15,7 +16,7 @@ export const ColorPicker = defineComponent({
     defaultValue: { type: String, default: DEFAULT_COLOR },
     format: { type: String as PropType<ColorFormat>, default: 'hex' },
     disabled: Boolean,
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     showText: Boolean,
     allowClear: Boolean,
     presets: {

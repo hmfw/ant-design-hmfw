@@ -1,4 +1,5 @@
 import type { CSSProperties, VNode } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export interface CascaderOption {
   value: string | number
@@ -108,7 +109,7 @@ export interface CascaderProps {
   disabled?: boolean
   placeholder?: string
   allowClear?: boolean
-  size?: 'small' | 'middle' | 'large'
+  size?: ComponentSize
   status?: 'error' | 'warning' | ''
   expandTrigger?: CascaderExpandTrigger
   multiple?: boolean

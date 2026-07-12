@@ -2,7 +2,8 @@ import { defineComponent, ref, computed, watch, onMounted, type PropType } from 
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Tooltip } from '../tooltip'
-import type { RateSize, RateCharacterRenderContext, RateClassNames, RateStyles } from './types'
+import type { RateCharacterRenderContext, RateClassNames, RateStyles } from './types'
+import type { ComponentSize } from '../config-provider'
 import type { TooltipProps } from '../tooltip'
 
 export const Rate = defineComponent({
@@ -19,7 +20,7 @@ export const Rate = defineComponent({
       default: '★',
     },
     tooltips: Array as PropType<(string | TooltipProps)[]>,
-    size: String as PropType<RateSize>,
+    size: String as PropType<ComponentSize>,
     keyboard: { type: Boolean, default: true },
     autoFocus: Boolean,
     classNames: Object as PropType<RateClassNames>,

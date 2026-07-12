@@ -6,6 +6,7 @@ import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { VirtualList } from '../_internal/virtual-list'
 import type { TreeSelectNode, ShowCheckedStrategy, TreeSelectValue, TreeIcon, MaxTagPlaceholder } from './types'
+import type { ComponentSize } from '../config-provider'
 
 type Key = string | number
 
@@ -34,7 +35,7 @@ export const TreeSelect = defineComponent({
     allowClear: Boolean,
     placeholder: { type: String, default: '请选择' },
     disabled: Boolean,
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
     maxCount: Number,
     notFoundContent: { type: String, default: '暂无数据' },

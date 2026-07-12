@@ -1,3 +1,5 @@
+import type { ComponentSize } from '../config-provider'
+
 export type DatePickerValue = string // YYYY-MM-DD
 
 export type DatePickerMode = 'date' | 'week' | 'month' | 'quarter' | 'year'
@@ -150,7 +152,7 @@ export interface DatePickerProps {
   defaultValue?: DatePickerValue
   format?: string
   disabled?: boolean
-  size?: 'small' | 'middle' | 'large'
+  size?: ComponentSize
   placeholder?: string
   allowClear?: boolean
   mode?: DatePickerMode

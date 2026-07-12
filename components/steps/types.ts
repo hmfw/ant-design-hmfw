@@ -1,4 +1,5 @@
 import type { VNode, CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export type StepStatus = 'wait' | 'process' | 'finish' | 'error'
 
@@ -30,8 +31,6 @@ export interface StepsClassNames {
   item?: string
   /** 步骤项 header div.hmfw-steps-item-header */
   header?: string
-  /** 步骤项容器 div.hmfw-steps-item-container（已废弃，请使用 header） */
-  container?: string
   /** 步骤连接线 div.hmfw-steps-item-tail */
   tail?: string
   /** 步骤图标容器 div.hmfw-steps-item-icon */
@@ -56,8 +55,6 @@ export interface StepsStyles {
   item?: CSSProperties
   /** 步骤项 header div.hmfw-steps-item-header */
   header?: CSSProperties
-  /** 步骤项容器 div.hmfw-steps-item-container（已废弃，请使用 header） */
-  container?: CSSProperties
   /** 步骤连接线 div.hmfw-steps-item-tail */
   tail?: CSSProperties
   /** 步骤图标容器 div.hmfw-steps-item-icon */
@@ -77,16 +74,15 @@ export interface StepsProps {
   initial?: number
   items?: StepItem[]
   orientation?: 'horizontal' | 'vertical'
-  size?: 'default' | 'small'
+  size?: ComponentSize
   status?: StepStatus
   type?: 'default' | 'inline' | 'dot'
   titlePlacement?: 'horizontal' | 'vertical'
   variant?: 'filled' | 'outlined'
+  /** @todo 响应式自动切换方向（小屏 → 垂直），待实现 */
   responsive?: boolean
   ellipsis?: boolean
-  offset?: number
   iconRender?: IconRenderType
-  onChange?: (current: number) => void
   /** 语义化 className */
   classNames?: StepsClassNames
   /** 语义化 style */

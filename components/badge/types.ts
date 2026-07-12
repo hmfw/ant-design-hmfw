@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export type BadgeStatus = 'success' | 'processing' | 'default' | 'error' | 'warning'
-export type BadgeSize = 'default' | 'small'
 export type RibbonPlacement = 'start' | 'end'
 
 /**
@@ -40,7 +40,7 @@ export interface BadgeProps {
   status?: BadgeStatus
   color?: string
   text?: string
-  size?: BadgeSize
+  size?: ComponentSize
   offset?: [number, number]
   title?: string
   /** 语义化 className */

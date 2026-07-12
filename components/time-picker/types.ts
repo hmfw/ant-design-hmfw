@@ -1,4 +1,5 @@
 import type { VNodeChild, CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export type TimePickerValue = string // HH:mm:ss
 
@@ -81,7 +82,7 @@ export interface TimePickerProps {
   defaultValue?: TimePickerValue
   format?: string
   disabled?: boolean
-  size?: 'small' | 'middle' | 'large'
+  size?: ComponentSize
   placeholder?: string
   allowClear?: boolean
   hourStep?: number

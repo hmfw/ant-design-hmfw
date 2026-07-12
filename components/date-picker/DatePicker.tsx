@@ -5,6 +5,7 @@ import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
 import type { DatePickerMode, PresetItem, ShowTimeConfig, DatePickerClassNames, DatePickerStyles } from './types'
+import type { ComponentSize } from '../config-provider'
 
 // --- Date utilities ---
 function pad(n: number) {
@@ -74,7 +75,7 @@ export const DatePicker = defineComponent({
     defaultValue: String,
     format: String,
     disabled: Boolean,
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: 'middle' },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     placeholder: String,
     allowClear: { type: Boolean, default: true },
     picker: { type: String as PropType<DatePickerMode>, default: 'date' },

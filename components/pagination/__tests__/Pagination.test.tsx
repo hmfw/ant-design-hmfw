@@ -249,10 +249,10 @@ describe('Pagination', () => {
     })
 
     it('explicit size takes precedence over responsive', async () => {
-      // xs 命中但显式 size='default'，responsive 不应生效
+      // xs 命中但显式 size='middle'，responsive 不应生效
       mockMatchMedia(['(max-width: 575px)'])
       const wrapper = mount(Pagination, {
-        props: { total: 50, pageSize: 10, responsive: true, size: 'default' },
+        props: { total: 50, pageSize: 10, responsive: true, size: 'middle' },
       })
       await nextTick()
       expect(wrapper.find('.hmfw-pagination-mini').exists()).toBe(false)

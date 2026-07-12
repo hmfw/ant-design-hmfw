@@ -1,2 +1,2 @@
 export { Spin } from './Spin'
-export type { SpinProps, SpinSize, SpinClassNames, SpinStyles } from './types'
+export type { SpinProps, SpinClassNames, SpinStyles } from './types'
