@@ -14,7 +14,9 @@
   transition: all 0.2s;
 }
 
-.hmfw-tag-borderless {
+/* 无边框（filled 变体默认表现，或 bordered=false） */
+.hmfw-tag-borderless,
+.hmfw-tag-filled {
   border-color: transparent;
 }
 
@@ -28,7 +30,8 @@ a.hmfw-tag {
 }
 
 .hmfw-tag-disabled,
-.hmfw-tag-disabled.hmfw-tag-has-color {
+.hmfw-tag-disabled.hmfw-tag-has-color,
+a.hmfw-tag-disabled {
   color: var(--hmfw-color-text-disabled);
   background: var(--hmfw-color-bg-container-disabled);
   border-color: var(--hmfw-color-border);
@@ -131,6 +134,11 @@ a.hmfw-tag {
   font-size: 12px;
 }
 
+.hmfw-tag-content {
+  display: inline-flex;
+  align-items: center;
+}
+
 .hmfw-tag-close-icon {
   display: inline-flex;
   align-items: center;
@@ -154,7 +162,7 @@ a.hmfw-tag {
   color: var(--hmfw-color-text-secondary);
 }
 
-.hmfw-tag-checkable:hover {
+.hmfw-tag-checkable:not(.hmfw-tag-checkable-disabled):hover {
   color: var(--hmfw-color-primary);
   background: var(--hmfw-color-fill-secondary);
 }
@@ -165,7 +173,26 @@ a.hmfw-tag {
   border-color: transparent;
 }
 
-.hmfw-tag-checkable-checked:hover {
+.hmfw-tag-checkable-checked:not(.hmfw-tag-checkable-disabled):hover {
   color: #fff;
   background: var(--hmfw-color-primary-hover);
+}
+
+.hmfw-tag-checkable-disabled {
+  cursor: not-allowed;
+  color: var(--hmfw-color-text-disabled);
+  background: var(--hmfw-color-bg-container-disabled);
+}
+
+.hmfw-tag-checkable-disabled.hmfw-tag-checkable-checked {
+  color: #fff;
+  background: var(--hmfw-color-text-disabled);
+}
+
+/* Checkable group */
+.hmfw-tag-checkable-group {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
 }

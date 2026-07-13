@@ -33,12 +33,36 @@
   <TagCustomColor />
 </DemoBlock>
 
+### 变体
+
+通过 `variant` 控制标签样式：`outlined`（描边，默认）、`filled`（填充）、`solid`（实色）。`bordered={false}` 等价于 `variant="filled"`。
+
+<DemoBlock title="变体" :source="TagVariantSource">
+  <TagVariant />
+</DemoBlock>
+
+### 图标与自定义关闭
+
+通过 `icon` 插槽添加前置图标，通过 `closeIcon` 插槽/属性自定义关闭图标，`:closeIcon="false"` 可隐藏关闭按钮。
+
+<DemoBlock title="图标与自定义关闭" :source="TagIconCloseSource">
+  <TagIconClose />
+</DemoBlock>
+
 ### 可选中标签
 
 可通过 CheckableTag 实现类似 Checkbox 的效果。
 
 <DemoBlock title="可选中标签" :source="TagCheckableSource">
   <TagCheckable />
+</DemoBlock>
+
+### 标签选择组
+
+通过 CheckableTagGroup 快速构建单选/多选的标签组，支持 `v-model:value`。
+
+<DemoBlock title="标签选择组" :source="TagCheckableGroupSource">
+  <TagCheckableGroup />
 </DemoBlock>
 
 ### 链接与禁用
@@ -53,16 +77,27 @@
 
 ### Tag Props
 
-| 参数      | 说明                             | 类型        | 默认值  |
-| --------- | -------------------------------- | ----------- | ------- |
-| color     | 标签色（预设色或自定义色值）     | `string`    | -       |
-| closable  | 标签是否可以关闭，关闭后自动隐藏 | `boolean`   | `false` |
-| closeIcon | 自定义关闭图标组件               | `Component` | -       |
-| icon      | 标签图标组件                     | `Component` | -       |
-| bordered  | 是否有边框                       | `boolean`   | `true`  |
-| href      | 设置后标签渲染为 `<a>` 链接      | `string`    | -       |
-| target    | 链接打开方式，配合 `href`        | `string`    | -       |
-| disabled  | 禁用状态                         | `boolean`   | `false` |
+| 参数       | 说明                                                          | 类型                                  | 默认值       |
+| ---------- | ------------------------------------------------------------- | ------------------------------------- | ------------ |
+| color      | 标签色（预设色、状态色或自定义色值）                          | `string`                              | -            |
+| variant    | 变体样式                                                      | `'outlined' \| 'filled' \| 'solid'`   | `'outlined'` |
+| closable   | 标签是否可以关闭，关闭后自动隐藏                              | `boolean`                             | `false`      |
+| closeIcon  | 自定义关闭图标，`false` 隐藏关闭按钮                          | `boolean \| Component \| () => VNode` | -            |
+| icon       | 标签前置图标组件                                              | `Component`                           | -            |
+| bordered   | 是否有边框（`false` 等价 `variant="filled"`）                 | `boolean`                             | `true`       |
+| href       | 设置后标签渲染为 `<a>` 链接                                   | `string`                              | -            |
+| target     | 链接打开方式，配合 `href`                                     | `string`                              | -            |
+| disabled   | 禁用状态                                                      | `boolean`                             | `false`      |
+| classNames | 语义化 className（`root` / `icon` / `content` / `closeIcon`） | `object`                              | -            |
+| styles     | 语义化 style（同上）                                          | `object`                              | -            |
+
+### Tag Slots
+
+| 插槽名    | 说明           |
+| --------- | -------------- |
+| default   | 标签内容       |
+| icon      | 前置图标       |
+| closeIcon | 自定义关闭图标 |
 
 ### Tag Events
 
@@ -72,15 +107,33 @@
 
 ### CheckableTag Props
 
-| 参数    | 说明               | 类型      | 默认值  |
-| ------- | ------------------ | --------- | ------- |
-| checked | 设置标签的选中状态 | `boolean` | `false` |
+| 参数     | 说明               | 类型        | 默认值  |
+| -------- | ------------------ | ----------- | ------- |
+| checked  | 设置标签的选中状态 | `boolean`   | `false` |
+| icon     | 前置图标组件       | `Component` | -       |
+| disabled | 禁用状态           | `boolean`   | `false` |
 
 ### CheckableTag Events
 
 | 事件名 | 说明                 | 回调参数                     |
 | ------ | -------------------- | ---------------------------- |
 | change | 点击标签时触发的回调 | `(checked: boolean) => void` |
+
+### CheckableTagGroup Props
+
+| 参数         | 说明                               | 类型                                         | 默认值  |
+| ------------ | ---------------------------------- | -------------------------------------------- | ------- |
+| options      | 选项列表（对象或原始值）           | `(CheckableTagOption \| string \| number)[]` | -       |
+| value        | 当前选中值（配合 `v-model:value`） | `Value \| Value[] \| null`                   | -       |
+| defaultValue | 非受控默认值                       | `Value \| Value[] \| null`                   | -       |
+| multiple     | 是否多选                           | `boolean`                                    | `false` |
+| disabled     | 整组禁用                           | `boolean`                                    | `false` |
+
+### CheckableTagGroup Events
+
+| 事件名 | 说明             | 回调参数                            |
+| ------ | ---------------- | ----------------------------------- |
+| change | 选中值变化时触发 | `(value: Value \| Value[] \| null)` |
 
 ---
 

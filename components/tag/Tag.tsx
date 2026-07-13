@@ -1,7 +1,8 @@
-import { defineComponent, computed, ref, type PropType, type VNode } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { defineComponent, computed, ref, isVNode, type PropType, type VNode } from 'vue'
+import { CloseOutlined } from '@hmfw/icons'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
-import type { TagColor, TagClassNames, TagStyles } from './types'
+import type { TagColor, TagVariant, TagCloseIcon, TagClassNames, TagStyles, TagProps, CheckableTagProps } from './types'
 
 const PRESET_COLORS = [
   'magenta',
@@ -15,47 +16,75 @@ const PRESET_COLORS = [
   'blue',
   'geekblue',
   'purple',
-  'success',
-  'processing',
-  'error',
-  'warning',
-  'default',
 ]
+
+const STATUS_COLORS = ['success', 'processing', 'error', 'warning', 'default']
+
+const isValidHex = (c: string): boolean => /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(c)
+
+/** 将 3 位缩写 hex 展开为 6 位（#f50 → #ff5500）；6 位原样返回 */
+const normalizeHex = (hex: string): string => {
+  if (hex.length === 4) {
+    return `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`
+  }
+  return hex
+}
+
+/** 将 hex 颜色提亮到接近白色的浅底（用于 filled 变体的自定义色背景） */
+const toLightBg = (hex: string): string => {
+  const num = parseInt(normalizeHex(hex).slice(1), 16)
+  const mix = (channel: number) => Math.min(255, channel + Math.round((255 - channel) * 0.9))
+  const r = mix((num >> 16) & 0xff)
+  const g = mix((num >> 8) & 0xff)
+  const b = mix(num & 0xff)
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`
+}
+
+const tagProps = {
+  color: { type: String as PropType<TagColor>, default: undefined },
+  variant: { type: String as PropType<TagVariant>, default: undefined },
+  closable: { type: Boolean, default: false },
+  closeIcon: {
+    type: [Object, Boolean, Function] as PropType<TagCloseIcon>,
+    default: undefined,
+  },
+  bordered: { type: Boolean, default: true },
+  icon: { type: null, default: undefined },
+  href: { type: String, default: undefined },
+  target: { type: String, default: undefined },
+  disabled: { type: Boolean, default: false },
+  classNames: { type: Object as PropType<TagClassNames>, default: undefined },
+  styles: { type: Object as PropType<TagStyles>, default: undefined },
+} satisfies Record<keyof TagProps, any>
 
 export const Tag = defineComponent({
   name: 'Tag',
-  props: {
-    color: String as PropType<TagColor>,
-    closable: Boolean,
-    closeIcon: {
-      type: [Object, Boolean, Function] as PropType<boolean | VNode | (() => VNode)>,
-      default: undefined,
-    },
-    bordered: {
-      type: Boolean,
-      default: true,
-    },
-    icon: Object,
-    href: String,
-    target: String,
-    disabled: Boolean,
-    classNames: Object as PropType<TagClassNames>,
-    styles: Object as PropType<TagStyles>,
-  },
+  props: tagProps,
   emits: ['close'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('tag')
+    const locale = useLocale()
     const visible = ref(true)
 
-    const isPresetColor = computed(() => (props.color ? PRESET_COLORS.includes(props.color) : false))
+    const isPreset = computed(() => (props.color ? PRESET_COLORS.includes(props.color) : false))
+    const isStatus = computed(() => (props.color ? STATUS_COLORS.includes(props.color) : false))
+    const isInternalColor = computed(() => isPreset.value || isStatus.value)
+
+    // 变体推导：显式 variant 优先，否则 bordered=false → filled，默认 outlined
+    const mergedVariant = computed<TagVariant>(() => {
+      if (props.variant) return props.variant
+      if (props.bordered === false) return 'filled'
+      return 'outlined'
+    })
 
     const classes = computed(() =>
       cls(
         prefixCls,
+        `${prefixCls}-${mergedVariant.value}`,
         {
-          [`${prefixCls}-${props.color}`]: isPresetColor.value || undefined,
-          [`${prefixCls}-has-color`]: (props.color && !isPresetColor.value) || undefined,
-          [`${prefixCls}-borderless`]: !props.bordered || undefined,
+          [`${prefixCls}-${props.color}`]: isInternalColor.value || undefined,
+          [`${prefixCls}-has-color`]: (props.color && !isInternalColor.value) || undefined,
+          [`${prefixCls}-borderless`]: props.bordered === false || undefined,
           [`${prefixCls}-hidden`]: !visible.value || undefined,
           [`${prefixCls}-disabled`]: props.disabled || undefined,
         },
@@ -63,14 +92,27 @@ export const Tag = defineComponent({
       ),
     )
 
-    const tagStyle = computed(() => {
-      const base: Record<string, unknown> = {}
-      if (props.color && !isPresetColor.value && !props.disabled) {
-        base.backgroundColor = props.color
+    // 自定义颜色（非预设/状态色）的内联样式，与 AntD v6 变体行为对齐
+    const customColorStyle = computed<Record<string, string>>(() => {
+      const color = props.color
+      if (!color || isInternalColor.value || props.disabled) return {}
+      const variant = mergedVariant.value
+      if (variant === 'solid') {
+        return { backgroundColor: color, color: '#fff' }
       }
-      // 合并语义化 root style（优先级更高）
-      return { ...base, ...props.styles?.root }
+      // filled / outlined：浅底 + 彩字
+      const style: Record<string, string> = {
+        color,
+        backgroundColor: isValidHex(color) ? toLightBg(color) : color,
+      }
+      if (variant === 'outlined') style.borderColor = color
+      return style
     })
+
+    const tagStyle = computed(() => ({
+      ...customColorStyle.value,
+      ...props.styles?.root,
+    }))
 
     const handleClose = (e: MouseEvent) => {
       if (props.disabled) return
@@ -94,20 +136,25 @@ export const Tag = defineComponent({
       const closeIconSlot = slots.closeIcon?.()
       if (closeIconSlot) return closeIconSlot
 
-      // closeIcon prop
-      if (props.closeIcon === undefined || props.closeIcon === true) {
-        // 默认图标
-        return '×'
+      const { closeIcon } = props
+      // 默认图标
+      if (closeIcon === undefined || closeIcon === true) {
+        return <CloseOutlined />
       }
-      if (props.closeIcon === false) {
+      if (closeIcon === false) {
         // 不应该到这里，外层已处理
         return null
       }
-      if (typeof props.closeIcon === 'function') {
-        return (props.closeIcon as () => VNode)()
+      // 渲染函数
+      if (typeof closeIcon === 'function') {
+        return (closeIcon as () => VNode)()
       }
-      // VNode 对象
-      const CloseIconComp = props.closeIcon as any
+      // 已经是 VNode（如 h(...) 或 <Comp /> 的结果）直接返回
+      if (isVNode(closeIcon)) {
+        return closeIcon
+      }
+      // 组件对象（如导入的图标组件）
+      const CloseIconComp = closeIcon as any
       return <CloseIconComp />
     }
 
@@ -120,6 +167,24 @@ export const Tag = defineComponent({
       // 判断是否显示关闭按钮：closable 为 true 且 closeIcon 不为 false
       const showClose = props.closable && props.closeIcon !== false
 
+      const iconSlot = slots.icon?.()
+      const iconNode =
+        iconSlot ??
+        (props.icon ? (
+          <IconComp class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon} />
+        ) : null)
+
+      const children = slots.default?.()
+      // 存在 icon 时，用 content 节点包裹 children（对齐 v6 语义化 content）
+      const content =
+        iconNode && children ? (
+          <span class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
+            {children}
+          </span>
+        ) : (
+          children
+        )
+
       return (
         <TagWrapper
           class={classes.value}
@@ -128,10 +193,8 @@ export const Tag = defineComponent({
           target={props.href ? props.target : undefined}
           aria-disabled={props.disabled || undefined}
         >
-          {props.icon && (
-            <IconComp class={cls(`${prefixCls}-icon`, props.classNames?.icon)} style={props.styles?.icon} />
-          )}
-          {slots.default?.()}
+          {iconNode}
+          {content}
           {showClose && (
             <span
               class={cls(`${prefixCls}-close-icon`, props.classNames?.closeIcon)}
@@ -140,7 +203,7 @@ export const Tag = defineComponent({
               onKeydown={handleCloseKeyDown}
               role="button"
               tabindex={props.disabled ? -1 : 0}
-              aria-label="close"
+              aria-label={locale.value.common.close}
               aria-disabled={props.disabled || undefined}
             >
               {renderCloseIcon()}
@@ -152,11 +215,15 @@ export const Tag = defineComponent({
   },
 })
 
+const checkableTagProps = {
+  checked: { type: Boolean, default: false },
+  icon: { type: null, default: undefined },
+  disabled: { type: Boolean, default: false },
+} satisfies Record<keyof CheckableTagProps, any>
+
 export const CheckableTag = defineComponent({
   name: 'CheckableTag',
-  props: {
-    checked: Boolean,
-  },
+  props: checkableTagProps,
   emits: ['change', 'update:checked'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('tag')
@@ -164,19 +231,46 @@ export const CheckableTag = defineComponent({
     const classes = computed(() =>
       cls(prefixCls, `${prefixCls}-checkable`, {
         [`${prefixCls}-checkable-checked`]: props.checked,
+        [`${prefixCls}-checkable-disabled`]: props.disabled,
       }),
     )
 
-    const handleClick = () => {
+    const toggle = () => {
       const next = !props.checked
       emit('update:checked', next)
       emit('change', next)
     }
 
-    return () => (
-      <span class={classes.value} onClick={handleClick}>
-        {slots.default?.()}
-      </span>
-    )
+    const handleClick = () => {
+      if (props.disabled) return
+      toggle()
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (props.disabled) return
+      if (e.key === ' ') {
+        e.preventDefault()
+        toggle()
+      }
+    }
+
+    return () => {
+      const IconComp = props.icon as any
+      const iconNode = slots.icon?.() ?? (props.icon ? <IconComp /> : null)
+      return (
+        <span
+          class={classes.value}
+          role="checkbox"
+          aria-checked={props.checked}
+          aria-disabled={props.disabled || undefined}
+          tabindex={props.disabled ? -1 : 0}
+          onClick={handleClick}
+          onKeydown={handleKeyDown}
+        >
+          {iconNode}
+          <span>{slots.default?.()}</span>
+        </span>
+      )
+    }
   },
 })

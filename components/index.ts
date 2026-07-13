@@ -56,8 +56,15 @@ export type { AvatarProps, AvatarGroupProps, AvatarSize, AvatarShape } from './a
 export { Badge, Ribbon } from './badge'
 export type { BadgeProps, BadgeStatus, RibbonProps, RibbonPlacement } from './badge'
 
-export { Tag, CheckableTag } from './tag'
-export type { TagProps, CheckableTagProps, TagColor } from './tag'
+export { Tag, CheckableTag, CheckableTagGroup } from './tag'
+export type {
+  TagProps,
+  CheckableTagProps,
+  CheckableTagGroupProps,
+  CheckableTagOption,
+  TagColor,
+  TagVariant,
+} from './tag'
 
 export { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from './empty'
 export type { EmptyProps } from './empty'
@@ -452,7 +459,7 @@ import { Text, Title, Paragraph, Link } from './typography'
 import { Layout, Header, Footer, Content, Sider } from './layout'
 import { Avatar, AvatarGroup } from './avatar'
 import { Badge, Ribbon } from './badge'
-import { Tag, CheckableTag } from './tag'
+import { Tag, CheckableTag, CheckableTagGroup } from './tag'
 import { Empty } from './empty'
 import { Card, CardGrid, CardMeta } from './card'
 import { Input, InputPassword, TextArea, InputSearch } from './input'
@@ -532,6 +539,7 @@ const components = [
   Ribbon,
   Tag,
   CheckableTag,
+  CheckableTagGroup,
   Empty,
   Card,
   CardGrid,

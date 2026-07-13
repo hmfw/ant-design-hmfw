@@ -1,5 +1,5 @@
 // 此文件由 scripts/generate-demo-routes.ts 自动生成，请勿手动编辑
-// 生成时间: 2026-07-13T07:02:33.989Z
+// 生成时间: 2026-07-13T08:04:13.709Z
 // 共 67 个组件 demo 路由
 
 export const demoRoutes: Record<string, () => Promise<any>> = {

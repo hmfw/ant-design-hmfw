@@ -6,6 +6,40 @@
 
 ---
 
+## [0.20.0] - 2026-07-13
+
+### ✨ 新特性
+
+- **Tag 新增 `variant` 属性**：支持 `outlined`（描边，默认）、`filled`（填充）、`solid`（实色）三种变体，`bordered={false}` 等价于 `variant="filled"`
+- **新增 CheckableTagGroup 组件**：支持 `options`（对象或原始值）、`v-model:value`、`defaultValue`、`multiple`、整组/单项 `disabled`，半受控实现
+- **Tag 新增 `icon` 插槽**：可通过插槽传入前置图标；有 icon 时 children 自动包裹进 `.hmfw-tag-content` 语义节点
+- **CheckableTag 新增 `icon` / `disabled` 属性**：支持前置图标与禁用态
+
+### 🐛 修复
+
+- **Tag 自定义颜色 3 位缩写 hex 底色错误**：`#f50` 等 3 位 hex 未被识别，导致 filled 变体底色回退成字色（底色与字色一致）；现已展开为 6 位并正确提亮为浅底
+- **Tag 自定义颜色默认表现对齐 v6**：自定义色默认走 filled（浅底 + 彩字），修正原先一律白字导致的对比度问题；`solid` 变体才使用实色白字
+- **CheckableTag 无障碍与键盘支持缺失**：补齐 `role="checkbox"`、`aria-checked`、`aria-disabled`、`tabindex` 及空格键切换，禁用态拦截点击/键盘
+- **Tag 禁用链接指针样式错误**：修复 `a.hmfw-tag` 特异性覆盖导致禁用链接标签仍显示 `pointer` 的问题
+- **Tag `closeIcon` 传入 VNode 渲染失败**：区分 VNode、渲染函数与组件对象，避免 `h(vnode)` 报错；默认关闭图标由 Unicode `×` 改为 `<CloseOutlined />`
+
+### 🔧 重构
+
+- **Tag / CheckableTag 类型安全**：props 改用 `satisfies Record<keyof XProps, any>` 绑定到 `types.ts` 单一类型源，消除双源头漂移
+- **Tag 语义化 API 补齐**：`TagClassNames` / `TagStyles` 新增 `content` 节点
+- **关闭按钮 `aria-label` 国际化**：改为读取 `locale.common.close`，不再硬编码
+
+### 🧪 测试
+
+- Tag 测试从 19 → 41：新增键盘关闭、3 位/6 位 hex 自定义色、variant 变体、content 节点、raw VNode closeIcon、CheckableTag 无障碍/键盘/disabled、CheckableTagGroup 单选/多选/受控/禁用等用例
+
+### 📝 文档
+
+- Tag 新增 3 个 Demo：变体、图标与自定义关闭、标签选择组
+- Tag API 表补充 `variant`、`classNames` / `styles`、Slots、CheckableTag 的 `icon` / `disabled`、CheckableTagGroup 完整 Props / Events
+
+---
+
 ## [0.19.0] - 2026-07-13
 
 ### 🔧 重构

@@ -1,2 +1,15 @@
 export { Tag, CheckableTag } from './Tag'
-export type { TagProps, CheckableTagProps, TagColor, TagClassNames, TagStyles } from './types'
+export { CheckableTagGroup } from './CheckableTagGroup'
+export type {
+  TagProps,
+  TagColor,
+  TagVariant,
+  TagCloseIcon,
+  TagClassNames,
+  TagStyles,
+  CheckableTagProps,
+  CheckableTagOption,
+  CheckableTagGroupProps,
+  CheckableTagGroupClassNames,
+  CheckableTagGroupStyles,
+} from './types'
