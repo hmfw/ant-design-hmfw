@@ -1,10 +1,28 @@
-import { defineComponent, computed, ref, onMounted, onUpdated, onBeforeUnmount, type PropType } from 'vue'
+import {
+  defineComponent,
+  computed,
+  ref,
+  watch,
+  onMounted,
+  onUpdated,
+  onBeforeUnmount,
+  getCurrentInstance,
+  type PropType,
+} from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { AvatarSize, AvatarShape, AvatarClassNames, AvatarStyles } from './types'
-import { provideAvatarContext, useAvatarContext } from './context'
+import type {
+  AvatarSize,
+  AvatarShape,
+  AvatarIcon,
+  AvatarErrorHandler,
+  AvatarClassNames,
+  AvatarStyles,
+  AvatarProps,
+} from './types'
+import { useAvatarContext } from './context'
 
-// 响应式断点定义
+// 响应式断点定义（min-width）
 const BREAKPOINTS = {
   xs: 0,
   sm: 576,
@@ -16,10 +34,12 @@ const BREAKPOINTS = {
 
 type Breakpoint = keyof typeof BREAKPOINTS
 
-// 获取当前断点
+// 从大到小的断点顺序，供匹配与回退共用
+const BREAKPOINT_ORDER: Breakpoint[] = ['xxl', 'xl', 'lg', 'md', 'sm', 'xs']
+
+// 获取当前视口宽度命中的最大断点
 function getCurrentBreakpoint(width: number): Breakpoint {
-  const breakpoints: Breakpoint[] = ['xxl', 'xl', 'lg', 'md', 'sm', 'xs']
-  for (const bp of breakpoints) {
+  for (const bp of BREAKPOINT_ORDER) {
     if (width >= BREAKPOINTS[bp]) {
       return bp
     }
@@ -27,66 +47,48 @@ function getCurrentBreakpoint(width: number): Breakpoint {
   return 'xs'
 }
 
-// 从响应式配置中获取实际尺寸
-function getResponsiveSize(size: AvatarSize, breakpoint: Breakpoint): Exclude<AvatarSize, object> {
-  if (typeof size === 'object' && size !== null) {
-    // 按优先级查找匹配的尺寸
-    const breakpoints: Breakpoint[] = ['xxl', 'xl', 'lg', 'md', 'sm', 'xs']
-    const currentIndex = breakpoints.indexOf(breakpoint)
-
-    // 从当前断点开始向下查找第一个有值的尺寸
-    for (let i = currentIndex; i < breakpoints.length; i++) {
-      const bp = breakpoints[i]
-      if (size[bp] !== undefined) {
-        return size[bp]!
-      }
-    }
-
-    // 如果没找到，返回默认值
-    return 'middle'
-  }
-  return size as Exclude<AvatarSize, object>
+// 是否为响应式尺寸配置对象
+function isResponsiveSize(size: AvatarSize | undefined): size is Exclude<AvatarSize, string | number> {
+  return typeof size === 'object' && size !== null
 }
+
+/**
+ * 从响应式配置中取当前断点对应的尺寸。
+ * 与 AntD 对齐：仅取当前断点的值，缺失即不应用响应式尺寸（回退默认样式），
+ * 不再向更小断点回退，避免大屏命中小屏尺寸的反直觉行为。
+ */
+function getResponsiveSize(size: AvatarSize, breakpoint: Breakpoint): Exclude<AvatarSize, object> {
+  if (isResponsiveSize(size)) {
+    const current = size[breakpoint]
+    return current !== undefined ? current : 'middle'
+  }
+  return size
+}
+
+// props 单一类型源：satisfies 强制 key 集合与 AvatarProps 接口一致
+const avatarProps = {
+  size: { type: [String, Number, Object] as PropType<AvatarSize>, default: undefined },
+  shape: { type: String as PropType<AvatarShape>, default: undefined },
+  src: { type: String, default: undefined },
+  srcSet: { type: String, default: undefined },
+  alt: { type: String, default: undefined },
+  icon: { type: [Object, Function] as PropType<AvatarIcon>, default: undefined },
+  draggable: { type: [Boolean, String] as PropType<boolean | 'true' | 'false'>, default: undefined },
+  crossOrigin: { type: String as PropType<'' | 'anonymous' | 'use-credentials'>, default: undefined },
+  referrerPolicy: { type: String as PropType<AvatarProps['referrerPolicy']>, default: undefined },
+  gap: { type: Number, default: 4 },
+  classNames: { type: Object as PropType<AvatarClassNames>, default: undefined },
+  styles: { type: Object as PropType<AvatarStyles>, default: undefined },
+} satisfies Record<keyof AvatarProps, any>
 
 export const Avatar = defineComponent({
   name: 'Avatar',
-  props: {
-    size: {
-      type: [String, Number, Object] as PropType<AvatarSize>,
-      default: undefined,
-    },
-    shape: {
-      type: String as PropType<AvatarShape>,
-      default: undefined,
-    },
-    src: String,
-    srcSet: String,
-    alt: String,
-    icon: [Object, Function],
-    draggable: {
-      type: [Boolean, String] as PropType<boolean | 'true' | 'false'>,
-      default: undefined,
-    },
-    crossOrigin: String as PropType<'' | 'anonymous' | 'use-credentials'>,
-    referrerPolicy: String as PropType<
-      | 'no-referrer'
-      | 'no-referrer-when-downgrade'
-      | 'origin'
-      | 'origin-when-cross-origin'
-      | 'same-origin'
-      | 'strict-origin'
-      | 'strict-origin-when-cross-origin'
-      | 'unsafe-url'
-    >,
-    gap: {
-      type: Number,
-      default: 4,
-    },
-    classNames: Object as PropType<AvatarClassNames>,
-    styles: Object as PropType<AvatarStyles>,
+  props: avatarProps,
+  emits: {
+    error: (_e: Event) => true,
   },
-  emits: ['error'],
-  setup(props, { slots, emit }) {
+  setup(props, { slots }) {
+    const instance = getCurrentInstance()
     const prefixCls = usePrefixCls('avatar')
     const ctx = useAvatarContext()
     const imgError = ref(false)
@@ -95,7 +97,12 @@ export const Avatar = defineComponent({
     const scale = ref(1)
     const currentBreakpoint = ref<Breakpoint>('md')
 
-    // 监听窗口大小变化以更新断点
+    // props 优先，其次 AvatarGroup 上下文，最后默认值
+    const rawSize = computed<AvatarSize>(() => props.size ?? ctx.size ?? 'middle')
+
+    // 仅当尺寸为响应式对象时才需要监听 resize
+    const needResponsive = computed(() => isResponsiveSize(rawSize.value))
+
     const updateBreakpoint = () => {
       if (typeof window !== 'undefined') {
         currentBreakpoint.value = getCurrentBreakpoint(window.innerWidth)
@@ -103,12 +110,34 @@ export const Avatar = defineComponent({
     }
 
     onMounted(() => {
-      updateBreakpoint()
-      if (typeof window !== 'undefined') {
-        window.addEventListener('resize', updateBreakpoint)
+      if (needResponsive.value) {
+        updateBreakpoint()
+        if (typeof window !== 'undefined') {
+          window.addEventListener('resize', updateBreakpoint)
+        }
       }
       adjustTextScale()
     })
+
+    // 尺寸配置在响应式/非响应式之间切换时，动态增删监听
+    watch(needResponsive, (responsive) => {
+      if (typeof window === 'undefined') return
+      if (responsive) {
+        updateBreakpoint()
+        window.addEventListener('resize', updateBreakpoint)
+      } else {
+        window.removeEventListener('resize', updateBreakpoint)
+      }
+    })
+
+    // src 变化时复位错误态与缩放，支持动态换头像
+    watch(
+      () => props.src,
+      () => {
+        imgError.value = false
+        scale.value = 1
+      },
+    )
 
     onBeforeUnmount(() => {
       if (typeof window !== 'undefined') {
@@ -116,12 +145,9 @@ export const Avatar = defineComponent({
       }
     })
 
-    // props 优先，其次 AvatarGroup 上下文，最后默认值
-    const mergedSize = computed<AvatarSize>(() => {
-      const size = props.size ?? ctx.size ?? 'middle'
-      // 如果是响应式配置，返回当前断点对应的尺寸
-      return getResponsiveSize(size, currentBreakpoint.value)
-    })
+    const mergedSize = computed<Exclude<AvatarSize, object>>(() =>
+      getResponsiveSize(rawSize.value, currentBreakpoint.value),
+    )
     const mergedShape = computed<AvatarShape>(() => props.shape ?? ctx.shape ?? 'circle')
 
     const sizeStyle = computed(() => {
@@ -164,8 +190,13 @@ export const Avatar = defineComponent({
     onUpdated(adjustTextScale)
 
     const handleImgError = (e: Event) => {
-      imgError.value = true
-      emit('error', e)
+      // 直接读取原始 onError 监听器以拿到返回值（Vue 的 emit 会丢弃返回值）：
+      // 返回 false 可阻止默认 fallback，由使用者自行降级
+      const onError = instance?.vnode.props?.onError as AvatarErrorHandler | undefined
+      const errorFlag = onError?.(e)
+      if (errorFlag !== false) {
+        imgError.value = true
+      }
     }
 
     return () => {
@@ -210,65 +241,6 @@ export const Avatar = defineComponent({
         <span ref={avatarRef} class={classes.value} style={{ ...sizeStyle.value, ...props.styles?.root }}>
           {children}
         </span>
-      )
-    }
-  },
-})
-
-export const AvatarGroup = defineComponent({
-  name: 'AvatarGroup',
-  props: {
-    maxCount: Number,
-    maxStyle: Object as PropType<Record<string, string>>,
-    size: {
-      type: [String, Number, Object] as PropType<AvatarSize>,
-      default: undefined,
-    },
-    shape: {
-      type: String as PropType<AvatarShape>,
-      default: undefined,
-    },
-  },
-  setup(props, { slots }) {
-    const prefixCls = usePrefixCls('avatar')
-    const groupPrefixCls = `${prefixCls}-group`
-
-    // 向子 Avatar 提供 size/shape
-    provideAvatarContext({
-      get size() {
-        return props.size
-      },
-      get shape() {
-        return props.shape
-      },
-    })
-
-    return () => {
-      const children = slots.default?.() ?? []
-      const flatChildren = Array.isArray(children) ? children.flat() : [children]
-
-      let visibleChildren = flatChildren
-      let overflowCount = 0
-
-      if (props.maxCount && flatChildren.length > props.maxCount) {
-        visibleChildren = flatChildren.slice(0, props.maxCount)
-        overflowCount = flatChildren.length - props.maxCount
-      }
-
-      return (
-        <div class={groupPrefixCls}>
-          {visibleChildren}
-          {overflowCount > 0 && (
-            <Avatar
-              size={props.size}
-              shape={props.shape}
-              style={props.maxStyle}
-              v-slots={{
-                default: () => `+${overflowCount}`,
-              }}
-            />
-          )}
-        </div>
       )
     }
   },

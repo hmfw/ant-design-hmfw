@@ -1,5 +1,6 @@
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, Component, VNode } from 'vue'
 import type { ComponentSize } from '../config-provider'
+import type { PopoverProps } from '../popover'
 
 export interface AvatarResponsiveSize {
   xs?: number
@@ -12,6 +13,15 @@ export interface AvatarResponsiveSize {
 
 export type AvatarSize = ComponentSize | number | AvatarResponsiveSize
 export type AvatarShape = 'circle' | 'square'
+
+/** icon 可以是图标组件或已渲染的 VNode */
+export type AvatarIcon = Component | VNode
+
+/**
+ * img 加载失败回调。返回 `false` 可阻止默认 fallback（保留 img 元素），
+ * 由使用者自行处理降级逻辑；其他返回值（含 undefined）走默认 fallback。
+ */
+export type AvatarErrorHandler = (e: Event) => boolean | void
 
 /**
  * Avatar 各部分的语义化 className
@@ -43,7 +53,7 @@ export interface AvatarProps {
   src?: string
   srcSet?: string
   alt?: string
-  icon?: unknown
+  icon?: AvatarIcon
   draggable?: boolean | 'true' | 'false'
   crossOrigin?: '' | 'anonymous' | 'use-credentials'
   referrerPolicy?:
@@ -62,9 +72,31 @@ export interface AvatarProps {
   styles?: AvatarStyles
 }
 
+/**
+ * AvatarGroup 溢出配置（对齐 AntD v6 的 `max` 结构化 API）
+ */
+export interface AvatarGroupMax {
+  /** 最多显示的头像数量 */
+  count?: number
+  /** 溢出计数（+N）头像的样式 */
+  style?: CSSProperties
+  /** 溢出头像收纳到 Popover 中展示，透传给内部 Popover */
+  popover?: PopoverProps
+}
+
 export interface AvatarGroupProps {
+  /**
+   * 溢出配置。
+   * @deprecated 请使用 `max={{ count }}`
+   */
   maxCount?: number
-  maxStyle?: Record<string, string>
+  /**
+   * 溢出计数头像样式。
+   * @deprecated 请使用 `max={{ style }}`
+   */
+  maxStyle?: CSSProperties
+  /** 溢出结构化配置 */
+  max?: AvatarGroupMax
   size?: AvatarSize
   shape?: AvatarShape
 }

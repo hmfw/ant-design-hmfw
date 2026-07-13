@@ -1,7 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { h } from 'vue'
-import { Avatar, AvatarGroup } from '../Avatar'
+import { Avatar } from '../Avatar'
+import { AvatarGroup } from '../AvatarGroup'
 
 describe('Avatar', () => {
   it('renders correctly', () => {
@@ -53,10 +54,39 @@ describe('Avatar', () => {
     expect(wrapper.text()).toContain('AB')
   })
 
-  it('emits error when image fails to load', async () => {
+  it('calls onError and falls back when image fails to load', async () => {
+    let called = false
+    const wrapper = mount(Avatar, {
+      props: {
+        src: 'bad-url.jpg',
+        onError: () => {
+          called = true
+        },
+      },
+    })
+    await wrapper.find('img').trigger('error')
+    expect(called).toBe(true)
+    // 默认行为：回退，img 被移除
+    expect(wrapper.find('img').exists()).toBe(false)
+  })
+
+  it('onError returning false prevents default fallback', async () => {
+    const wrapper = mount(Avatar, {
+      props: { src: 'bad-url.jpg', onError: () => false },
+    })
+    await wrapper.find('img').trigger('error')
+    // 返回 false 阻止 fallback，img 仍保留
+    expect(wrapper.find('img').exists()).toBe(true)
+  })
+
+  it('resets error state when src changes', async () => {
     const wrapper = mount(Avatar, { props: { src: 'bad-url.jpg' } })
     await wrapper.find('img').trigger('error')
-    expect(wrapper.emitted('error')).toBeTruthy()
+    expect(wrapper.find('img').exists()).toBe(false)
+    // 切换到新地址后应重新尝试渲染图片
+    await wrapper.setProps({ src: 'https://example.com/new.jpg' })
+    expect(wrapper.find('img').exists()).toBe(true)
+    expect(wrapper.find('img').attributes('src')).toBe('https://example.com/new.jpg')
   })
 })
 
@@ -113,5 +143,48 @@ describe('AvatarGroup', () => {
     const avatar = wrapper.find('.hmfw-avatar')
     expect(avatar.classes()).toContain('hmfw-avatar-small')
     expect(avatar.classes()).not.toContain('hmfw-avatar-large')
+  })
+
+  it('supports structured max.count API', () => {
+    const wrapper = mount(AvatarGroup, {
+      props: { max: { count: 2 } },
+      slots: {
+        default: () => [
+          h(Avatar, null, () => 'A'),
+          h(Avatar, null, () => 'B'),
+          h(Avatar, null, () => 'C'),
+          h(Avatar, null, () => 'D'),
+        ],
+      },
+    })
+    expect(wrapper.text()).toContain('+2')
+  })
+
+  it('max.count takes precedence over deprecated maxCount', () => {
+    const wrapper = mount(AvatarGroup, {
+      props: { maxCount: 1, max: { count: 3 } },
+      slots: {
+        default: () => [
+          h(Avatar, null, () => 'A'),
+          h(Avatar, null, () => 'B'),
+          h(Avatar, null, () => 'C'),
+          h(Avatar, null, () => 'D'),
+        ],
+      },
+    })
+    expect(wrapper.text()).toContain('+1')
+    expect(wrapper.text()).not.toContain('+3')
+  })
+
+  it('applies max.style to the overflow avatar', () => {
+    const wrapper = mount(AvatarGroup, {
+      props: { max: { count: 1, style: { backgroundColor: 'red' } } },
+      slots: {
+        default: () => [h(Avatar, null, () => 'A'), h(Avatar, null, () => 'B')],
+      },
+    })
+    const avatars = wrapper.findAll('.hmfw-avatar')
+    const overflow = avatars[avatars.length - 1]
+    expect(overflow.attributes('style')).toContain('background-color: red')
   })
 })

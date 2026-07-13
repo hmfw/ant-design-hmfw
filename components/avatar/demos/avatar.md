@@ -68,16 +68,23 @@
 | classNames     | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AvatarClassNames`                                                                                                                                                                 | -           |
 | styles         | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AvatarStyles`                                                                                                                                                                     | -           |
 
+### Avatar 事件
+
+| 事件  | 说明                                                                           | 回调参数                        |
+| ----- | ------------------------------------------------------------------------------ | ------------------------------- |
+| error | 图片加载失败时触发。回调返回 `false` 可阻止默认 fallback，由使用者自行处理降级 | `(e: Event) => boolean \| void` |
+
 ### AvatarGroup Props
 
 设置后会自动下发 `size`/`shape` 给子 Avatar（子 Avatar 显式设置可覆盖）。
 
-| 参数     | 说明                                        | 类型                                                                                                                             | 默认值      |
-| -------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| maxCount | 最多显示的头像数量                          | `number`                                                                                                                         | -           |
-| maxStyle | 多余头像样式                                | `CSSProperties`                                                                                                                  | -           |
-| size     | 头像大小（下发给子 Avatar），支持响应式配置 | `number \| 'small' \| 'default' \| 'large' \| { xs?: number; sm?: number; md?: number; lg?: number; xl?: number; xxl?: number }` | `'default'` |
-| shape    | 头像形状（下发给子 Avatar）                 | `'circle' \| 'square'`                                                                                                           | `'circle'`  |
+| 参数     | 说明                                                                                      | 类型                                                                                                                             | 默认值      |
+| -------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| max      | 溢出配置：`count` 最大显示数、`style` 溢出头像样式、`popover` 溢出头像收纳到 Popover 展示 | `{ count?: number; style?: CSSProperties; popover?: PopoverProps }`                                                              | -           |
+| maxCount | 最多显示的头像数量（已废弃，请用 `max.count`）                                            | `number`                                                                                                                         | -           |
+| maxStyle | 多余头像样式（已废弃，请用 `max.style`）                                                  | `CSSProperties`                                                                                                                  | -           |
+| size     | 头像大小（下发给子 Avatar），支持响应式配置                                               | `number \| 'small' \| 'default' \| 'large' \| { xs?: number; sm?: number; md?: number; lg?: number; xl?: number; xxl?: number }` | `'default'` |
+| shape    | 头像形状（下发给子 Avatar）                                                               | `'circle' \| 'square'`                                                                                                           | `'circle'`  |
 
 ---
 

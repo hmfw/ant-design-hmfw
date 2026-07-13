@@ -6,6 +6,36 @@
 
 ---
 
+## [0.18.1] - 2026-07-13
+
+### ✨ 新特性
+
+- **AvatarGroup `max` 结构化 API**: 新增 `max={{ count, style, popover }}`，`max.count` 优先于已废弃的 `maxCount`、`max.style` 优先于 `maxStyle`；配置 `max.popover` 后溢出头像收纳进 Popover 展示，对齐 Ant Design v6
+- **Avatar `error` 事件可阻止 fallback**: `error` 回调返回 `false` 时保留 `img` 元素、不走默认回退，由使用者自行处理降级
+
+### 🐛 修复
+
+- **Avatar（src 变更不复位）**: 新增 `watch(() => props.src)`，切换图片地址时复位 `imgError` / `scale`，修复首图加载失败后换新地址仍停留在 fallback、图片再也不显示的问题
+- **Avatar（响应式回退方向）**: `getResponsiveSize` 改为仅取当前断点值、缺失即不应用响应式尺寸（不再向更小断点回退），修复大屏命中小屏尺寸的反直觉行为
+- **Avatar（resize 监听浪费）**: 仅当 `size` 为响应式对象时才注册 `resize` 监听，并在响应式/非响应式切换时动态增删，避免非响应式头像（含头像组批量场景）产生无谓的全量重渲
+
+### 🔧 重构
+
+- **Avatar props 单一类型源**: `Avatar` / `AvatarGroup` 的 props 改为引用 `types.ts` 接口并加 `satisfies Record<keyof XProps, any>`，消除 `referrerPolicy` 长 union 双写
+- **AvatarGroup 拆分独立文件**: 从 `Avatar.tsx` 拆出 `AvatarGroup.tsx`，连带的 `Popover` 依赖随之移出，对齐 Ant Design v6 与项目 List/Descriptions 惯例
+- **类型收紧**: `icon` 由 `unknown` 收窄为 `Component | VNode`；`maxStyle` 由 `Record<string, string>` 改为 `CSSProperties`；抽出公共断点常量 `BREAKPOINT_ORDER`
+- **AvatarGroup context 合并父级**: `size` / `shape` 以 `props.x ?? ctx.x` 继承上级，支持嵌套 AvatarGroup
+
+### 📝 文档
+
+- **API**: Avatar 补充 `error` 事件说明；AvatarGroup 补充 `max` 结构化 API，`maxCount` / `maxStyle` 标注已废弃
+
+### 🧪 测试
+
+- Avatar 新增：`onError` 回调触发与默认 fallback、返回 `false` 阻止 fallback、`src` 变更复位错误态、`max.count` 结构化 API、`max.count` 优先于 `maxCount`、`max.style` 应用到溢出头像（10 → 20）
+
+---
+
 ## [0.18.0] - 2026-07-13
 
 ### ✨ 新特性
