@@ -11,7 +11,7 @@
 
 ### 基本用法
 
-简单的徽章展示，当 count 为 0 时，默认不显示。
+简单的徽标展示，包括数字徽标、小红点、尺寸、位置偏移和独立使用等基础功能。当 count 为 0 时，默认不显示（可通过 showZero 控制）。
 
 <DemoBlock title="基本用法" :source="BadgeBasicSource">
   <BadgeBasic />
@@ -27,10 +27,10 @@
 
 ### 自定义颜色
 
-可以自定义徽标的颜色。
+可以自定义徽标的颜色，支持 13 种预设颜色名和自定义 RGB/HEX 颜色值。
 
-<DemoBlock title="自定义颜色" :source="BadgeCustomColorSource">
-  <BadgeCustomColor />
+<DemoBlock title="自定义颜色" :source="BadgePresetColorsSource">
+  <BadgePresetColors />
 </DemoBlock>
 
 ### 缎带

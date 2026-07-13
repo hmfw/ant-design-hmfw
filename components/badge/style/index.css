@@ -6,6 +6,18 @@
 
 .hmfw-badge-not-a-wrapper {
   display: inline-block;
+  position: relative;
+  /* 独立徽标需要显式尺寸，避免因 sup 绝对定位导致容器塌陷 */
+  width: fit-content;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+/* 独立徽标的 sup 不需要偏移，直接居中 */
+.hmfw-badge-not-a-wrapper .hmfw-badge-count {
+  position: static;
+  transform: none;
+  display: inline-block;
 }
 
 .hmfw-badge-count {

@@ -71,6 +71,76 @@ describe('Badge', () => {
     })
     expect(wrapped.classes()).not.toContain('hmfw-badge-not-a-wrapper')
   })
+
+  it('handles string count "0" correctly with showZero', () => {
+    const hidden = mount(Badge, { props: { count: '0' } })
+    expect(hidden.find('sup').exists()).toBe(false)
+
+    const shown = mount(Badge, { props: { count: '0', showZero: true } })
+    expect(shown.find('sup').exists()).toBe(true)
+    expect(shown.find('sup').text()).toBe('0')
+  })
+
+  it('applies offset correctly', () => {
+    const wrapper = mount(Badge, { props: { count: 5, offset: [10, 20] } })
+    const sup = wrapper.find('sup')
+    expect(sup.attributes('style')).toContain('margin-top: 20px')
+    expect(sup.attributes('style')).toContain('right: -10px')
+  })
+
+  it('ignores invalid offset', () => {
+    const wrapper1 = mount(Badge, { props: { count: 5, offset: [10] as any } })
+    const style1 = wrapper1.find('sup').attributes('style') || ''
+    expect(style1).not.toMatch(/margin-top/)
+
+    const wrapper2 = mount(Badge, { props: { count: 5, offset: [NaN, 10] as any } })
+    const style2 = wrapper2.find('sup').attributes('style') || ''
+    expect(style2).not.toMatch(/right/)
+  })
+
+  it('handles negative overflowCount correctly', () => {
+    const wrapper = mount(Badge, { props: { count: 100, overflowCount: -1 } })
+    // overflowCount 会被限制为最小 1
+    expect(wrapper.find('sup').text()).toBe('1+')
+  })
+
+  it('handles zero overflowCount correctly', () => {
+    const wrapper = mount(Badge, { props: { count: 100, overflowCount: 0 } })
+    expect(wrapper.find('sup').text()).toBe('1+')
+  })
+
+  it('applies custom color in status mode', () => {
+    const wrapper = mount(Badge, { props: { status: 'success', color: '#ff0000' } })
+    const dot = wrapper.find('.hmfw-badge-status-dot')
+    expect(dot.attributes('style')).toContain('background: rgb(255, 0, 0)')
+  })
+
+  it('applies preset color class when both status and color exist', () => {
+    // 当同时存在 status 和 color 时，color 优先
+    const wrapper = mount(Badge, { props: { status: 'success', color: 'red' } })
+    const dot = wrapper.find('.hmfw-badge-status-dot')
+    // color 是预设颜色，会应用 CSS 类名
+    expect(dot.classes()).toContain('hmfw-badge-color-red')
+    // 不应该有 status 的类名（因为 color 优先）
+    expect(dot.classes()).not.toContain('hmfw-badge-status-success')
+  })
+
+  it('applies preset color to count badge', () => {
+    const wrapper = mount(Badge, {
+      props: { count: 5, color: 'pink' },
+      slots: { default: '<div>child</div>' },
+    })
+    const sup = wrapper.find('sup')
+    expect(sup.classes()).toContain('hmfw-badge-color-pink')
+  })
+
+  it('standalone badge has correct size', () => {
+    const wrapper = mount(Badge, { props: { count: 5 } })
+    expect(wrapper.classes()).toContain('hmfw-badge-not-a-wrapper')
+    // 独立徽标应该有可见尺寸
+    const badge = wrapper.find('.hmfw-badge-not-a-wrapper')
+    expect(badge.exists()).toBe(true)
+  })
 })
 
 describe('Badge.Ribbon', () => {
@@ -107,5 +177,18 @@ describe('Badge.Ribbon', () => {
   it('is attached to Badge.Ribbon', async () => {
     const { Badge: B } = await import('../index')
     expect((B as any).Ribbon).toBe(Ribbon)
+  })
+
+  it('applies custom color to corner via inline style', () => {
+    const wrapper = mount(Ribbon, { props: { text: 'Hot', color: '#ff0000' } })
+    const corner = wrapper.find('.hmfw-ribbon-corner')
+    expect(corner.attributes('style')).toContain('border-color: rgb(255, 0, 0)')
+  })
+
+  it('does not apply corner style for preset colors', () => {
+    const wrapper = mount(Ribbon, { props: { text: 'Hot', color: 'red' } })
+    const corner = wrapper.find('.hmfw-ribbon-corner')
+    // 预设颜色通过 CSS 类名控制，不应有内联样式
+    expect(corner.attributes('style')).toBeFalsy()
   })
 })
