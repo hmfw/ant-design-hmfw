@@ -2,13 +2,13 @@
   <div style="display: flex; flex-direction: column; gap: 32px">
     <!-- 场景 1：自定义根容器背景 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">自定义根容器背景：</div>
+      <h4 style="margin-top: 0">自定义根容器背景：</h4>
       <Steps :current="1" :items="basicItems" :class-names="{ root: 'custom-root' }" />
     </div>
 
     <!-- 场景 2：自定义图标和标题样式 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">自定义图标与标题：</div>
+      <h4 style="margin-top: 0">自定义图标与标题：</h4>
       <Steps
         :current="1"
         :items="basicItems"
@@ -21,7 +21,7 @@
 
     <!-- 场景 3：自定义连接线样式 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">自定义连接线：</div>
+      <h4 style="margin-top: 0">自定义连接线：</h4>
       <Steps
         :current="1"
         :items="itemsWithDescription"
@@ -34,7 +34,7 @@
 
     <!-- 场景 4：使用 styles 内联样式 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">使用内联样式：</div>
+      <h4 style="margin-top: 0">使用内联样式：</h4>
       <Steps
         :current="2"
         :items="basicItems"
@@ -48,14 +48,13 @@
 
     <!-- 场景 5：垂直步骤条组合定制 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">垂直步骤条组合定制：</div>
+      <h4 style="margin-top: 0">垂直步骤条组合定制：</h4>
       <Steps
         orientation="vertical"
         :current="1"
         :items="itemsWithDescription"
         :class-names="{
           item: 'custom-vertical-item',
-          container: 'custom-container',
           content: 'custom-content',
         }"
       />
@@ -123,10 +122,6 @@ const itemsWithDescription = [
 :deep(.custom-vertical-item:hover) {
   background-color: #f0f5ff;
   transform: translateX(4px);
-}
-
-:deep(.custom-container) {
-  padding-left: 8px;
 }
 
 :deep(.custom-content) {

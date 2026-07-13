@@ -1,8 +1,6 @@
 <template>
   <div>
-    <p style="margin-bottom: 12px; color: #666">
-      拖动节点可重新排列。已内置边界检查：节点不能拖到自身或自己的后代上（防止循环引用）。
-    </p>
+    <h4 style="margin-top: 0">拖动节点可重新排列。已内置边界检查：节点不能拖到自身或自己的后代上（防止循环引用）。</h4>
     <Tree
       draggable
       block-node

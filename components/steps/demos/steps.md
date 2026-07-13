@@ -25,12 +25,12 @@
   <StepsVertical />
 </DemoBlock>
 
-### 点状步骤条
+### 步骤条类型
 
-通过 `type="dot"` 或 `progress-dot` 属性设置点状步骤条。
+通过 `type` 属性设置步骤条类型，支持 `default`（默认）、`dot`（点状）、`inline`（内联）三种。
 
-<DemoBlock title="点状步骤条" :source="StepsDotSource">
-  <StepsDot />
+<DemoBlock title="步骤条类型" :source="StepsTypeSource">
+  <StepsType />
 </DemoBlock>
 
 ### 错误状态
@@ -41,20 +41,36 @@
   <StepsError />
 </DemoBlock>
 
-### 小型步骤条
+### 不同尺寸
 
-通过 `size="small"` 设置小型步骤条。
+通过 `size` 属性设置步骤条尺寸，支持 `small`、`middle`（默认）、`large` 三种。
 
-<DemoBlock title="小型步骤条" :source="StepsSmallSource">
-  <StepsSmall />
+<DemoBlock title="不同尺寸" :source="StepsSizeSource">
+  <StepsSize />
 </DemoBlock>
 
-### 内联型步骤条
+### 样式变体
 
-通过 `type="inline"` 设置内联型步骤条。
+通过 `variant` 切换步骤条的视觉变体：`filled`（实心填充，默认）与 `outlined`（描边样式）。
 
-<DemoBlock title="内联型步骤条" :source="StepsInlineSource">
-  <StepsInline />
+<DemoBlock title="样式变体" :source="StepsVariantSource">
+  <StepsVariant />
+</DemoBlock>
+
+### 标签垂直放置
+
+通过 `titlePlacement="vertical"` 将标签放置在图标下方，配合 `ellipsis` 可省略过长文本。
+
+<DemoBlock title="标签垂直放置" :source="StepsTitlePlacementSource">
+  <StepsTitlePlacement />
+</DemoBlock>
+
+### 自定义图标
+
+通过 `StepItem.icon` 为每个步骤设置自定义图标，或使用 `iconRender` 全局控制图标渲染逻辑。
+
+<DemoBlock title="自定义图标" :source="StepsIconSource">
+  <StepsIcon />
 </DemoBlock>
 
 ### 细粒度样式控制

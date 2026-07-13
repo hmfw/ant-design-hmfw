@@ -2,7 +2,7 @@
   <div style="display: flex; flex-direction: column; gap: 32px">
     <!-- 场景 1：自定义根容器与图片 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">自定义根容器与图片样式：</div>
+      <h4 style="margin-top: 0">自定义根容器与图片样式：</h4>
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width="200"
@@ -16,7 +16,7 @@
 
     <!-- 场景 2：自定义 hover 遮罩 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">自定义 hover 遮罩与遮罩文本：</div>
+      <h4 style="margin-top: 0">自定义 hover 遮罩与遮罩文本：</h4>
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width="200"
@@ -29,7 +29,7 @@
 
     <!-- 场景 3：自定义预览弹层 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">自定义预览弹层样式（点击图片预览）：</div>
+      <h4 style="margin-top: 0">自定义预览弹层样式（点击图片预览）：</h4>
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width="200"
@@ -44,7 +44,7 @@
 
     <!-- 场景 4：自定义占位与错误状态 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">自定义占位与错误状态：</div>
+      <h4 style="margin-top: 0">自定义占位与错误状态：</h4>
       <div style="display: flex; gap: 16px">
         <Image
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
@@ -66,7 +66,7 @@
 
     <!-- 场景 5：使用 styles 内联样式 -->
     <div>
-      <div style="margin-bottom: 12px; color: #666">使用内联样式对象：</div>
+      <h4 style="margin-top: 0">使用内联样式对象：</h4>
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width="200"

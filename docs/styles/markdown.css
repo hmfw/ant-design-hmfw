@@ -62,7 +62,8 @@
 }
 
 /* ---- Inline code ---- */
-.markdown-body > :not(pre) > code {
+.markdown-body > :not(pre) > code,
+h4 > code {
   font-family: var(--doc-font-mono);
   font-size: 0.875em;
   color: var(--doc-code-color);
