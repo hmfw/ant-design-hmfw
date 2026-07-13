@@ -1,3 +1,20 @@
+/* ==========================================================================
+ * Tabs 样式 — 设计 Token 化
+ *
+ * 规则顺序：
+ *   1. Base（容器、导航栏）
+ *   2. Tab 基础 + 状态
+ *   3. Tab 内部（btn、icon、remove）
+ *   4. Nav-add、Ink-bar
+ *   5. Extra content、Content area、Tabpane
+ *   6. 类型变体（card、editable-card）
+ *   7. 位置变体（left、right、bottom）
+ *   8. 尺寸变体（small、large）
+ *   9. Centered
+ * ========================================================================== */
+
+/* =========================== 1. Base =========================== */
+
 .hmfw-tabs {
   display: flex;
   flex-direction: column;
@@ -9,25 +26,7 @@
   display: flex;
   flex: none;
   align-items: center;
-  margin-bottom: 16px;
-}
-
-/* 水平布局的底线（对齐 antd ::before） */
-.hmfw-tabs-top .hmfw-tabs-nav::before,
-.hmfw-tabs-bottom .hmfw-tabs-nav::before {
-  position: absolute;
-  right: 0;
-  left: 0;
-  border-bottom: 1px solid var(--hmfw-color-border);
-  content: '';
-}
-
-.hmfw-tabs-top .hmfw-tabs-nav::before {
-  bottom: 0;
-}
-
-.hmfw-tabs-bottom .hmfw-tabs-nav::before {
-  top: 0;
+  margin-bottom: var(--hmfw-margin);
 }
 
 .hmfw-tabs-nav-wrap {
@@ -41,18 +40,20 @@
 .hmfw-tabs-nav-list {
   display: flex;
   position: relative;
-  transition: transform 0.3s;
+  transition: transform var(--hmfw-motion-duration-slow);
 }
+
+/* =========================== 2. Tab 基础 + 状态 =========================== */
 
 .hmfw-tabs-tab {
   position: relative;
   display: inline-flex;
   align-items: center;
-  padding: 12px 0;
-  margin-right: 32px;
+  padding: var(--hmfw-padding-sm) 0;
+  margin-right: var(--hmfw-margin-xl);
   cursor: pointer;
   color: var(--hmfw-color-text-secondary);
-  transition: color 0.2s;
+  transition: color var(--hmfw-motion-duration-mid);
   outline: none;
 }
 
@@ -74,10 +75,12 @@
   color: var(--hmfw-color-text-disabled);
 }
 
+/* =========================== 3. Tab 内部 =========================== */
+
 .hmfw-tabs-tab-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--hmfw-margin-xs);
 }
 
 .hmfw-tabs-tab-icon {
@@ -89,34 +92,36 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
-  margin-left: 4px;
+  width: var(--hmfw-control-height-xs);
+  height: var(--hmfw-control-height-xs);
+  margin-left: var(--hmfw-margin-xxs);
   padding: 0;
   border: none;
   background: transparent;
   color: var(--hmfw-color-text-secondary);
   cursor: pointer;
-  transition: color 0.2s;
-  font-size: 12px;
+  transition: color var(--hmfw-motion-duration-mid);
+  font-size: var(--hmfw-font-size-sm);
 }
 
 .hmfw-tabs-tab-remove:hover {
   color: var(--hmfw-color-text);
 }
 
+/* =========================== 4. Nav-add、Ink-bar =========================== */
+
 .hmfw-tabs-nav-add {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 40px;
-  padding: 0 8px;
+  min-width: var(--hmfw-control-height-lg);
+  padding: 0 var(--hmfw-padding-xs);
   border: 1px solid var(--hmfw-color-border);
   border-radius: var(--hmfw-border-radius) var(--hmfw-border-radius) 0 0;
   background: var(--hmfw-color-bg-container);
   color: var(--hmfw-color-text);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-tabs-nav-add:hover {
@@ -129,41 +134,16 @@
   pointer-events: none;
 }
 
-/* 水平方向厚度 + 贴边方向（对齐 rc-tabs） */
-.hmfw-tabs-top .hmfw-tabs-ink-bar,
-.hmfw-tabs-bottom .hmfw-tabs-ink-bar {
-  height: 2px;
-}
-
-.hmfw-tabs-top .hmfw-tabs-ink-bar {
-  bottom: 0;
-}
-
-.hmfw-tabs-bottom .hmfw-tabs-ink-bar {
-  top: 0;
-}
-
-/* 垂直方向厚度 + 贴边方向 */
-.hmfw-tabs-left .hmfw-tabs-ink-bar,
-.hmfw-tabs-right .hmfw-tabs-ink-bar {
-  width: 2px;
-}
-
-.hmfw-tabs-left .hmfw-tabs-ink-bar {
-  right: 0;
-}
-
-.hmfw-tabs-right .hmfw-tabs-ink-bar {
-  left: 0;
-}
-
+/* Ink-bar 水平/垂直厚度在位置变体中定义 */
 .hmfw-tabs-ink-bar-animated {
   transition:
-    left 0.3s,
-    width 0.3s,
-    top 0.3s,
-    height 0.3s;
+    left var(--hmfw-motion-duration-slow),
+    width var(--hmfw-motion-duration-slow),
+    top var(--hmfw-motion-duration-slow),
+    height var(--hmfw-motion-duration-slow);
 }
+
+/* =========================== 5. Extra content、Content area、Tabpane =========================== */
 
 .hmfw-tabs-extra-content,
 .hmfw-tabs-extra-content-left,
@@ -172,12 +152,12 @@
 }
 
 .hmfw-tabs-extra-content-left {
-  margin-right: 16px;
+  margin-right: var(--hmfw-margin);
 }
 
 .hmfw-tabs-extra-content-right {
   margin-left: auto;
-  margin-right: 16px;
+  margin-right: var(--hmfw-margin);
 }
 
 .hmfw-tabs-content-holder {
@@ -191,7 +171,7 @@
 }
 
 .hmfw-tabs-content-animated {
-  transition: margin 0.3s;
+  transition: margin var(--hmfw-motion-duration-slow);
 }
 
 .hmfw-tabs-tabpane {
@@ -202,7 +182,7 @@
   display: none;
 }
 
-/* Card & Editable card — 对齐 antd genCardStyle */
+/* =========================== 6. 类型变体（card、editable-card） =========================== */
 
 /* 隐藏 ink bar（卡片式不需要墨条） */
 :is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-ink-bar {
@@ -212,11 +192,10 @@
 /* 卡片基础：四边完整边框，底线由 nav::before 提供 */
 :is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-tab {
   margin: 0;
-  padding: 8px 16px;
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding);
   background: var(--hmfw-color-fill-quaternary);
   border: 1px solid var(--hmfw-color-border);
-
-  transition: all 0.2s ease-in-out;
+  transition: all var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
 }
 
 /* 间距通过相邻兄弟选择器控制（对齐 antd cardGutter） */
@@ -224,7 +203,7 @@
   margin-left: 2px;
 }
 
-/* ==================== Top 位置 ==================== */
+/* ------ Card Top ------ */
 .hmfw-tabs-card.hmfw-tabs-top .hmfw-tabs-tab,
 .hmfw-tabs-editable-card.hmfw-tabs-top .hmfw-tabs-tab {
   border-radius: var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg) 0 0;
@@ -235,7 +214,7 @@
   border-bottom-color: var(--hmfw-color-bg-container);
 }
 
-/* ==================== Bottom 位置 ==================== */
+/* ------ Card Bottom ------ */
 .hmfw-tabs-card.hmfw-tabs-bottom .hmfw-tabs-tab,
 .hmfw-tabs-editable-card.hmfw-tabs-bottom .hmfw-tabs-tab {
   border-radius: 0 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg);
@@ -245,8 +224,11 @@
   background: var(--hmfw-color-bg-container);
   border-top-color: var(--hmfw-color-bg-container);
 }
+.hmfw-tabs-editable-card.hmfw-tabs-bottom .hmfw-tabs-nav-add {
+  border-radius: 0 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg);
+}
 
-/* ==================== Left 位置 ==================== */
+/* ------ Card Left ------ */
 .hmfw-tabs-card.hmfw-tabs-left .hmfw-tabs-tab,
 .hmfw-tabs-editable-card.hmfw-tabs-left .hmfw-tabs-tab {
   border-radius: var(--hmfw-border-radius-lg) 0 0 var(--hmfw-border-radius-lg);
@@ -257,7 +239,7 @@
   border-right-color: var(--hmfw-color-bg-container);
 }
 
-/* ==================== Right 位置 ==================== */
+/* ------ Card Right ------ */
 .hmfw-tabs-card.hmfw-tabs-right .hmfw-tabs-tab,
 .hmfw-tabs-editable-card.hmfw-tabs-right .hmfw-tabs-tab {
   border-radius: 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg) 0;
@@ -277,10 +259,10 @@
   margin-top: 2px;
 }
 
-/* nav-add（对齐 antd） */
+/* 卡片式 nav-add */
 :is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-nav-add {
-  min-width: 40px;
-  min-height: 40px;
+  min-width: var(--hmfw-control-height-lg);
+  min-height: var(--hmfw-control-height-lg);
   margin-left: 2px;
   padding: 0;
   background: transparent;
@@ -288,44 +270,49 @@
   border-radius: var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg) 0 0;
   color: var(--hmfw-color-text);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
 }
 
 :is(.hmfw-tabs-card, .hmfw-tabs-editable-card) .hmfw-tabs-nav-add:hover {
   color: var(--hmfw-color-primary);
 }
 
-.hmfw-tabs-editable-card.hmfw-tabs-bottom .hmfw-tabs-nav-add {
-  border-radius: 0 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg);
+/* =========================== 7. 位置变体（left、right、bottom） =========================== */
+
+/* 水平布局的底线（对齐 antd ::before） */
+.hmfw-tabs-top .hmfw-tabs-nav::before,
+.hmfw-tabs-bottom .hmfw-tabs-nav::before {
+  position: absolute;
+  right: 0;
+  left: 0;
+  border-bottom: 1px solid var(--hmfw-color-border);
+  content: '';
 }
 
-/* Size variants */
-.hmfw-tabs-small .hmfw-tabs-tab {
-  padding: 8px 0;
-  font-size: var(--hmfw-font-size-sm);
+.hmfw-tabs-top .hmfw-tabs-nav::before {
+  bottom: 0;
 }
 
-.hmfw-tabs-large .hmfw-tabs-tab {
-  padding: 16px 0;
-  font-size: var(--hmfw-font-size-lg);
+.hmfw-tabs-bottom .hmfw-tabs-nav::before {
+  top: 0;
 }
 
-.hmfw-tabs-card.hmfw-tabs-small .hmfw-tabs-tab,
-.hmfw-tabs-editable-card.hmfw-tabs-small .hmfw-tabs-tab {
-  padding: 4px 12px;
+/* 水平方向 ink-bar 厚度 + 贴边方向 */
+.hmfw-tabs-top .hmfw-tabs-ink-bar,
+.hmfw-tabs-bottom .hmfw-tabs-ink-bar {
+  height: var(--hmfw-line-width-bold);
 }
 
-.hmfw-tabs-card.hmfw-tabs-large .hmfw-tabs-tab,
-.hmfw-tabs-editable-card.hmfw-tabs-large .hmfw-tabs-tab {
-  padding: 12px 20px;
+.hmfw-tabs-top .hmfw-tabs-ink-bar {
+  bottom: 0;
 }
 
-/* Centered */
-.hmfw-tabs-centered .hmfw-tabs-nav-list {
-  margin: 0 auto;
+.hmfw-tabs-bottom .hmfw-tabs-ink-bar {
+  top: 0;
 }
 
-/* Position variants */
+/* ------ Left / Right ------ */
+
 .hmfw-tabs-left,
 .hmfw-tabs-right {
   flex-direction: row;
@@ -348,7 +335,7 @@
 }
 
 .hmfw-tabs-left .hmfw-tabs-nav {
-  margin-right: 16px;
+  margin-right: var(--hmfw-margin);
 }
 
 .hmfw-tabs-left .hmfw-tabs-nav::before {
@@ -356,7 +343,7 @@
 }
 
 .hmfw-tabs-right .hmfw-tabs-nav {
-  margin-left: 16px;
+  margin-left: var(--hmfw-margin);
   order: 1;
 }
 
@@ -372,17 +359,34 @@
   flex-direction: column;
 }
 
+/* 垂直方向 ink-bar 厚度 + 贴边方向 */
+.hmfw-tabs-left .hmfw-tabs-ink-bar,
+.hmfw-tabs-right .hmfw-tabs-ink-bar {
+  width: var(--hmfw-line-width-bold);
+}
+
+.hmfw-tabs-left .hmfw-tabs-ink-bar {
+  right: 0;
+}
+
+.hmfw-tabs-right .hmfw-tabs-ink-bar {
+  left: 0;
+}
+
+/* 垂直方向 tab 间距 */
 .hmfw-tabs-left .hmfw-tabs-tab,
 .hmfw-tabs-right .hmfw-tabs-tab {
-  padding: 8px 24px;
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding-lg);
   margin-right: 0;
   margin-bottom: 0;
 }
 
 .hmfw-tabs-left .hmfw-tabs-tab + .hmfw-tabs-tab,
 .hmfw-tabs-right .hmfw-tabs-tab + .hmfw-tabs-tab {
-  margin-top: 16px;
+  margin-top: var(--hmfw-margin);
 }
+
+/* ------ Bottom ------ */
 
 .hmfw-tabs-bottom {
   flex-direction: column-reverse;
@@ -390,5 +394,37 @@
 
 .hmfw-tabs-bottom .hmfw-tabs-nav {
   margin-bottom: 0;
-  margin-top: 16px;
+  margin-top: var(--hmfw-margin);
+}
+
+/* =========================== 8. 尺寸变体（small、large） =========================== */
+
+/* --- Line 类型 --- */
+
+.hmfw-tabs-small .hmfw-tabs-tab {
+  padding: var(--hmfw-padding-xs) 0;
+  font-size: var(--hmfw-font-size-sm);
+}
+
+.hmfw-tabs-large .hmfw-tabs-tab {
+  padding: var(--hmfw-padding) 0;
+  font-size: var(--hmfw-font-size-lg);
+}
+
+/* --- Card / Editable-card 类型（更高优先级覆盖 line 的通用尺寸） --- */
+
+.hmfw-tabs-card.hmfw-tabs-small .hmfw-tabs-tab,
+.hmfw-tabs-editable-card.hmfw-tabs-small .hmfw-tabs-tab {
+  padding: var(--hmfw-padding-xxs) var(--hmfw-padding-sm);
+}
+
+.hmfw-tabs-card.hmfw-tabs-large .hmfw-tabs-tab,
+.hmfw-tabs-editable-card.hmfw-tabs-large .hmfw-tabs-tab {
+  padding: var(--hmfw-padding-sm) var(--hmfw-padding-md);
+}
+
+/* =========================== 9. Centered =========================== */
+
+.hmfw-tabs-centered .hmfw-tabs-nav-list {
+  margin: 0 auto;
 }

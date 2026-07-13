@@ -27,17 +27,11 @@ export const Badge = defineComponent({
     count: [Number, String] as PropType<number | string>,
     dot: Boolean,
     showZero: Boolean,
-    overflowCount: {
-      type: Number,
-      default: 99,
-    },
+    overflowCount: { type: Number, default: 99 },
     status: String as PropType<BadgeStatus>,
     color: String,
     text: String,
-    size: {
-      type: String as PropType<ComponentSize>,
-      default: 'middle',
-    },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     offset: {
       type: Array as unknown as PropType<[number, number]>,
     },

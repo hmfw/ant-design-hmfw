@@ -13,10 +13,7 @@ export const Switch = defineComponent({
     defaultChecked: Boolean,
     disabled: Boolean,
     loading: Boolean,
-    size: {
-      type: String as PropType<ComponentSize>,
-      default: 'middle',
-    },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     checkedChildren: null,
     unCheckedChildren: null,
     autoFocus: Boolean,

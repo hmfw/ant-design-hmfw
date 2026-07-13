@@ -23,7 +23,7 @@ const paginationProps = {
   showSizeChanger: { type: Boolean, default: false },
   showQuickJumper: { type: Boolean, default: false },
   showTotal: { type: Function as PropType<ShowTotalFn>, default: undefined },
-  size: { type: String as PropType<ComponentSize>, default: undefined },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
   simple: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   hideOnSinglePage: { type: Boolean, default: false },

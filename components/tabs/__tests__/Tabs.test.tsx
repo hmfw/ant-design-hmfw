@@ -47,6 +47,9 @@ describe('Tabs', () => {
     const wrapperSmall = mount(Tabs, { props: { items, size: 'small' } })
     expect(wrapperSmall.classes()).toContain('hmfw-tabs-small')
 
+    const wrapperMiddle = mount(Tabs, { props: { items, size: 'middle' } })
+    expect(wrapperMiddle.classes()).not.toContain('hmfw-tabs-middle')
+
     const wrapperLarge = mount(Tabs, { props: { items, size: 'large' } })
     expect(wrapperLarge.classes()).toContain('hmfw-tabs-large')
   })

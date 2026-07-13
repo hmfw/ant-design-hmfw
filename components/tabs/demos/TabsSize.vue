@@ -1,7 +1,7 @@
 <template>
   <div>
     <Tabs :items="items" size="small" style="margin-bottom: 16px" />
-    <Tabs :items="items" style="margin-bottom: 16px" />
+    <Tabs :items="items" size="middle" style="margin-bottom: 16px" />
     <Tabs :items="items" size="large" />
   </div>
 </template>

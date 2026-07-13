@@ -15,27 +15,15 @@ const STEP_BUCKETS: [limit: number, stepPtg: number][] = [
 export const Spin = defineComponent({
   name: 'Spin',
   props: {
-    spinning: {
-      type: Boolean,
-      default: true,
-    },
-    size: {
-      type: String as PropType<ComponentSize>,
-      default: 'middle',
-    },
+    spinning: { type: Boolean, default: true },
+    size: { type: String as PropType<ComponentSize>, default: 'middle' },
     tip: String,
     // description 为 tip 的新名（与 AntD v6 对齐）
     description: String,
-    delay: {
-      type: Number,
-      default: 0,
-    },
+    delay: { type: Number, default: 0 },
     fullscreen: Boolean,
     // percent：number 受控 / 'auto' 自动模拟递增（与 AntD v6 对齐）
-    percent: {
-      type: [Number, String] as PropType<number | 'auto'>,
-      default: undefined,
-    },
+    percent: { type: [Number, String] as PropType<number | 'auto'>, default: undefined },
     classNames: Object as PropType<SpinClassNames>,
     styles: Object as PropType<SpinStyles>,
   },

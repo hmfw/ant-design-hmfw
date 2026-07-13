@@ -103,7 +103,7 @@ export { Pagination } from './pagination'
 export type { PaginationProps, PaginationClassNames, PaginationStyles } from './pagination'
 
 export { Tabs } from './tabs'
-export type { TabsProps, TabItem, TabsType, TabsSize, TabsPosition } from './tabs'
+export type { TabsProps, TabItem, TabsType, TabsPosition } from './tabs'
 
 export { Modal } from './modal'
 

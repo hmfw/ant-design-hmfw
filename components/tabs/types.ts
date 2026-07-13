@@ -1,8 +1,8 @@
 import type { VNode, CSSProperties } from 'vue'
+import type { ComponentSize } from '../config-provider'
 
 export type TabsType = 'line' | 'card' | 'editable-card'
 export type TabsPosition = 'top' | 'right' | 'bottom' | 'left'
-export type TabsSize = 'large' | 'small'
 
 export interface TabItem {
   key: string
@@ -79,7 +79,7 @@ export interface TabsProps {
   activeKey?: string
   items?: TabItem[]
   type?: TabsType
-  size?: TabsSize
+  size?: ComponentSize
   tabPosition?: TabsPosition
   centered?: boolean
   animated?: boolean | AnimatedConfig

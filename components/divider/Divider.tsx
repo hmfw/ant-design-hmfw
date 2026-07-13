@@ -7,42 +7,15 @@ import type { DividerType, DividerOrientation, DividerVariant, DividerClassNames
 export default defineComponent({
   name: 'Divider',
   props: {
-    type: {
-      type: String as PropType<DividerType>,
-      default: 'horizontal',
-    },
-    dashed: {
-      type: Boolean,
-      default: false,
-    },
-    variant: {
-      type: String as PropType<DividerVariant>,
-      default: undefined,
-    },
-    orientation: {
-      type: String as PropType<DividerOrientation>,
-      default: 'center',
-    },
-    orientationMargin: {
-      type: [String, Number],
-      default: undefined,
-    },
-    plain: {
-      type: Boolean,
-      default: false,
-    },
-    size: {
-      type: String as PropType<ComponentSize>,
-      default: undefined,
-    },
-    classNames: {
-      type: Object as PropType<DividerClassNames>,
-      default: undefined,
-    },
-    styles: {
-      type: Object as PropType<DividerStyles>,
-      default: undefined,
-    },
+    type: { type: String as PropType<DividerType>, default: 'horizontal' },
+    dashed: { type: Boolean, default: false },
+    variant: { type: String as PropType<DividerVariant>, default: undefined },
+    orientation: { type: String as PropType<DividerOrientation>, default: 'center' },
+    orientationMargin: { type: [String, Number], default: undefined },
+    plain: { type: Boolean, default: false },
+    size: { type: String as PropType<ComponentSize>, default: undefined },
+    classNames: { type: Object as PropType<DividerClassNames>, default: undefined },
+    styles: { type: Object as PropType<DividerStyles>, default: undefined },
   },
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('divider')

@@ -39,7 +39,7 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 
 ### 大小
 
-大中小三种大小的标签页，提供了 large 和 small 两个尺寸。
+大中小三种大小的标签页，提供 `small`、`middle` 和 `large` 三种尺寸。
 
 <DemoBlock title="大小" :source="TabsSizeSource">
   <TabsSize />
@@ -165,7 +165,7 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 | ---------------------- | --------------------------------------------------------------------------------- | ---------------------------------------- | ---------- |
 | activeKey(v-model)     | 当前激活 tab 面板的 key                                                           | string                                   | 第一个面板 |
 | type                   | 页签的基本样式，可选 `line`、`card`、`editable-card` 类型                         | string                                   | `line`     |
-| size                   | 大小，提供 `large` 和 `small` 两种大小                                            | string                                   | -          |
+| size                   | 大小，提供 `small`、`middle` 和 `large` 三种大小                                  | string                                   | -          |
 | tabPosition            | 页签位置，可选值有 `top` `right` `bottom` `left`                                  | string                                   | `top`      |
 | centered               | 标签居中展示                                                                      | boolean                                  | false      |
 | items                  | 配置选项卡内容                                                                    | TabItem[]                                | []         |

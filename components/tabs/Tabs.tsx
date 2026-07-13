@@ -2,9 +2,9 @@ import { defineComponent, ref, watch, computed, isVNode, type PropType, type VNo
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { PlusOutlined, CloseOutlined } from '@hmfw/icons'
+import type { ComponentSize } from '../config-provider'
 import type {
   TabsType,
-  TabsSize,
   TabsPosition,
   TabItem,
   TabBarExtraContent,
@@ -21,7 +21,7 @@ const tabsProps = {
   activeKey: { type: String, default: undefined },
   items: { type: Array as PropType<TabItem[]>, default: undefined },
   type: { type: String as PropType<TabsType>, default: 'line' },
-  size: { type: String as PropType<TabsSize>, default: undefined },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
   tabPosition: { type: String as PropType<TabsPosition>, default: 'top' },
   centered: { type: Boolean, default: false },
   animated: { type: [Boolean, Object] as PropType<boolean | AnimatedConfig>, default: true },
@@ -264,16 +264,13 @@ export const Tabs = defineComponent({
       const isEditable = props.type === 'editable-card'
       const isVertical = props.tabPosition === 'left' || props.tabPosition === 'right'
 
-      const sizeClass = props.size ? `${prefixCls}-${props.size}` : ''
-      const posClass = `${prefixCls}-${props.tabPosition}`
-
       const extraContent = renderExtraContent()
 
       const tabsCls = cls(
         prefixCls,
         `${prefixCls}-${props.type}`,
-        sizeClass,
-        posClass,
+        `${prefixCls}-${props.size}`,
+        `${prefixCls}-${props.tabPosition}`,
         {
           [`${prefixCls}-centered`]: props.centered,
         },
