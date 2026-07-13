@@ -271,19 +271,32 @@ interface StepsStyles {
 
 Steps 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
 
-| Token 名称                    | 说明         | 默认值             |
-| ----------------------------- | ------------ | ------------------ |
-| `--hmfw-color-primary`        | 主题色       | `#1677ff`          |
-| `--hmfw-color-error`          | 错误状态色   | `#ff4d4f`          |
-| `--hmfw-color-text`           | 主文本色     | `rgba(0,0,0,0.88)` |
-| `--hmfw-color-text-secondary` | 次级文本色   | `rgba(0,0,0,0.65)` |
-| `--hmfw-color-border`         | 边框色       | `#d9d9d9`          |
-| `--hmfw-color-bg-container`   | 容器背景色   | `#ffffff`          |
-| `--hmfw-font-size-base`       | 基础字号     | `14px`             |
-| `--hmfw-font-size-sm`         | 小号字号     | `12px`             |
-| `--hmfw-motion-duration-mid`  | 中速动画时长 | `0.2s`             |
-| `--hmfw-steps-gap`            | 步骤项间距   | `12px`             |
-| `--hmfw-steps-icon-size`      | 图标尺寸     | `32px`             |
-| `--hmfw-steps-dot-size`       | dot 图标尺寸 | `8px`              |
-| `--hmfw-steps-tail-width`     | 连接线粗细   | `1px`              |
-| `--hmfw-steps-tail-min-width` | 连接线最小宽 | `20px`             |
+### 全局 Token
+
+| Token 名称                    | 说明         | 默认值                |
+| ----------------------------- | ------------ | --------------------- |
+| `--hmfw-color-primary`        | 主题色       | `#1677ff`             |
+| `--hmfw-color-error`          | 错误状态色   | `#ff4d4f`             |
+| `--hmfw-color-text`           | 主文本色     | `rgba(0, 0, 0, 0.88)` |
+| `--hmfw-color-text-secondary` | 次级文本色   | `rgba(0, 0, 0, 0.65)` |
+| `--hmfw-color-border`         | 边框色       | `#d9d9d9`             |
+| `--hmfw-color-bg-container`   | 容器背景色   | `#ffffff`             |
+| `--hmfw-font-size-base`       | 基础字号     | `14px`                |
+| `--hmfw-font-size-sm`         | 小号字号     | `12px`                |
+| `--hmfw-font-size-lg`         | 大号字号     | `16px`                |
+| `--hmfw-font-size-xl`         | 特大字号     | `18px`                |
+| `--hmfw-motion-duration-mid`  | 中速动画时长 | `0.2s`                |
+
+### 组件专属 Token
+
+| Token 名称                    | 说明             | 默认值 |
+| ----------------------------- | ---------------- | ------ |
+| `--hmfw-steps-gap`            | 步骤项间距       | `12px` |
+| `--hmfw-steps-gap-sm`         | 小尺寸步骤项间距 | `8px`  |
+| `--hmfw-steps-gap-lg`         | 大尺寸步骤项间距 | `16px` |
+| `--hmfw-steps-icon-size`      | 图标尺寸         | `32px` |
+| `--hmfw-steps-icon-size-sm`   | 小尺寸图标尺寸   | `24px` |
+| `--hmfw-steps-icon-size-lg`   | 大尺寸图标尺寸   | `40px` |
+| `--hmfw-steps-dot-size`       | dot 类型图标尺寸 | `8px`  |
+| `--hmfw-steps-tail-width`     | 连接线粗细       | `1px`  |
+| `--hmfw-steps-tail-min-width` | 连接线最小宽度   | `20px` |

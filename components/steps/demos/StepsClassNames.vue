@@ -57,6 +57,9 @@
           item: 'custom-vertical-item',
           content: 'custom-content',
         }"
+        :styles="{
+          tail: { left: '27.5px', top: '54px', bottom: '-12px' },
+        }"
       />
     </div>
   </div>
