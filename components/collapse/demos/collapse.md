@@ -59,7 +59,7 @@
 
 ### 不同尺寸
 
-提供三种尺寸：small、middle（默认）、large。
+折叠面板支持 `small`、`middle`（默认）、`large` 三种尺寸。
 
 <DemoBlock title="不同尺寸" :source="CollapseSizeSource">
   <CollapseSize />

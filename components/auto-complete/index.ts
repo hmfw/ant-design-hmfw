@@ -1,2 +1,11 @@
 export { AutoComplete } from './AutoComplete'
-export type { AutoCompleteProps, AutoCompleteOption, AutoCompleteClassNames, AutoCompleteStyles } from './types'
+export type {
+  AutoCompleteProps,
+  AutoCompleteOption,
+  AutoCompleteAllowClear,
+  AutoCompleteFilterProp,
+  AutoCompleteFilterFn,
+  AutoCompleteFilterOption,
+  AutoCompleteClassNames,
+  AutoCompleteStyles,
+} from './types'

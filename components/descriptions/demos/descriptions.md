@@ -50,7 +50,7 @@
 
 ### 不同尺寸
 
-支持 default、middle、small 三种尺寸。
+描述列表支持 `small`、`middle`（默认）、`large` 三种尺寸。
 
 <DemoBlock title="不同尺寸" :source="DescriptionsSizesSource">
   <DescriptionsSizes />

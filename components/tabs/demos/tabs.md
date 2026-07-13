@@ -37,11 +37,11 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
   <TabsCentered />
 </DemoBlock>
 
-### 大小
+### 不同尺寸
 
-大中小三种大小的标签页，提供 `small`、`middle` 和 `large` 三种尺寸。
+标签页支持 `small`、`middle`（默认）、`large` 三种尺寸。
 
-<DemoBlock title="大小" :source="TabsSizeSource">
+<DemoBlock title="不同尺寸" :source="TabsSizeSource">
   <TabsSize />
 </DemoBlock>
 

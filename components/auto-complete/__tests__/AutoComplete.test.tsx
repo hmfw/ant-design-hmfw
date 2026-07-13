@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import { nextTick } from 'vue'
+import { nextTick, h, ref } from 'vue'
 import { AutoComplete } from '../AutoComplete'
 
 const options = [
@@ -68,11 +68,6 @@ describe('AutoComplete', () => {
     await wrapper.find('input').trigger('input')
     expect(wrapper.emitted('change')).toBeTruthy()
     wrapper.unmount()
-  })
-
-  it('uses defaultValue for uncontrolled initial value', () => {
-    const wrapper = mount(AutoComplete, { props: { options, defaultValue: 'apple' } })
-    expect(wrapper.find('input').element.value).toBe('apple')
   })
 
   it('filterOption=false shows all options', async () => {
@@ -207,10 +202,13 @@ describe('AutoComplete', () => {
     wrapper.unmount()
   })
 
-  it('does not render an empty panel when there are no options', async () => {
+  it('renders an empty panel with default notFoundContent when there are no options', async () => {
     const wrapper = mount(AutoComplete, { props: { options: [] }, attachTo: document.body })
     await wrapper.find('input').trigger('focus')
-    expect(document.querySelector('.hmfw-auto-complete-dropdown')).toBeNull()
+    // 对齐 antd：无选项时展示空状态面板，而非整体隐藏
+    const empty = document.querySelector('.hmfw-auto-complete-dropdown-empty')
+    expect(empty).toBeTruthy()
+    expect(empty?.textContent).toBe('无匹配结果')
     wrapper.unmount()
   })
 
@@ -231,21 +229,154 @@ describe('AutoComplete', () => {
     wrapper.unmount()
   })
 
-  it('respects defaultOpen', async () => {
-    const wrapper = mount(AutoComplete, {
-      props: { options, defaultOpen: true },
-      attachTo: document.body,
-    })
-    await wrapper.vm.$nextTick()
-    expect(document.querySelector('.hmfw-auto-complete-dropdown')).toBeTruthy()
-    wrapper.unmount()
-  })
-
   it('renders custom clearIcon from allowClear object', () => {
     const wrapper = mount(AutoComplete, {
       props: { options, value: 'apple', allowClear: { clearIcon: 'X' } },
     })
     expect(wrapper.find('.hmfw-input-clear-icon').text()).toBe('X')
+  })
+
+  // ----------------------------------------------------------------
+  // 重构新增：受控 open / optionFilterProp / backfill / autoFocus / 边界
+  // ----------------------------------------------------------------
+  describe('受控与边界', () => {
+    it('受控 open 下内部交互不改变展示状态，但仍 emit openChange', async () => {
+      const wrapper = mount(AutoComplete, {
+        props: { options, open: false },
+        attachTo: document.body,
+      })
+      await wrapper.find('input').trigger('focus')
+      // open 受控为 false，聚焦不应真正展开面板
+      expect(document.querySelector('.hmfw-auto-complete-dropdown')).toBeNull()
+      // 但应通知父级期望展开
+      expect(wrapper.emitted('openChange')?.[0]).toEqual([true])
+      wrapper.unmount()
+    })
+
+    it('openChange 与 dropdownVisibleChange 别名同时触发', async () => {
+      const wrapper = mount(AutoComplete, { props: { options }, attachTo: document.body })
+      await wrapper.find('input').trigger('focus')
+      expect(wrapper.emitted('openChange')?.[0]).toEqual([true])
+      expect(wrapper.emitted('dropdownVisibleChange')?.[0]).toEqual([true])
+      wrapper.unmount()
+    })
+
+    it('optionFilterProp="label" 时按 label 过滤', async () => {
+      const wrapper = mount(AutoComplete, {
+        props: {
+          options: [
+            { value: '1', label: 'Apple' },
+            { value: '2', label: 'Banana' },
+          ],
+          optionFilterProp: 'label',
+          value: 'app',
+        },
+        attachTo: document.body,
+      })
+      await wrapper.find('input').trigger('focus')
+      const items = document.querySelectorAll('.hmfw-auto-complete-dropdown-item')
+      expect(items.length).toBe(1)
+      expect(items[0].textContent).toBe('Apple')
+      wrapper.unmount()
+    })
+
+    it('label 为非字符串时内置过滤回退到 value 且不抛错', async () => {
+      const wrapper = mount(AutoComplete, {
+        props: {
+          options: [
+            { value: 'apple', label: h('span', 'Apple') },
+            { value: 'banana', label: h('span', 'Banana') },
+          ],
+          optionFilterProp: 'label',
+          value: 'app',
+        },
+        attachTo: document.body,
+      })
+      await wrapper.find('input').trigger('focus')
+      const items = document.querySelectorAll('.hmfw-auto-complete-dropdown-item')
+      // 回退到 value 匹配 'app' → 命中 apple
+      expect(items.length).toBe(1)
+      wrapper.unmount()
+    })
+
+    it('renders custom notFoundContent as VNode', async () => {
+      const wrapper = mount(AutoComplete, {
+        props: { options: [], notFoundContent: h('div', { class: 'my-empty' }, '空空如也') },
+        attachTo: document.body,
+      })
+      await wrapper.find('input').trigger('focus')
+      expect(document.querySelector('.hmfw-auto-complete-dropdown-empty .my-empty')?.textContent).toBe('空空如也')
+      wrapper.unmount()
+    })
+
+    it('backfill 箭头移动仅回填显示、不 emit change；Enter 才 emit change/select', async () => {
+      const value = ref('')
+      const wrapper = mount(AutoComplete, {
+        props: {
+          options,
+          backfill: true,
+          value: value.value,
+          'onUpdate:value': (v: string) => {
+            value.value = v
+          },
+        },
+        attachTo: document.body,
+      })
+      const input = wrapper.find('input')
+      await input.trigger('focus')
+      await input.trigger('keydown', { key: 'ArrowDown' })
+      await wrapper.setProps({ value: value.value })
+      // 回填了显示值，但不触发 change
+      expect(input.element.value).toBe('banana')
+      expect(wrapper.emitted('change')).toBeFalsy()
+      await input.trigger('keydown', { key: 'Enter' })
+      expect(wrapper.emitted('change')?.[0]).toEqual(['banana'])
+      expect(wrapper.emitted('select')?.[0]).toEqual(['banana', options[1]])
+      wrapper.unmount()
+    })
+
+    it('autoFocus 时挂载后自动聚焦', async () => {
+      const wrapper = mount(AutoComplete, { props: { options, autoFocus: true }, attachTo: document.body })
+      await nextTick()
+      expect(document.activeElement).toBe(wrapper.find('input').element)
+      wrapper.unmount()
+    })
+
+    it('透传 id 到 input', () => {
+      const wrapper = mount(AutoComplete, { props: { options, id: 'ac-1' } })
+      expect(wrapper.find('input').attributes('id')).toBe('ac-1')
+    })
+
+    it('过滤后 active 项落在禁用/越界时自动重定位到首个可用项', async () => {
+      const value = ref('')
+      const wrapper = mount(AutoComplete, {
+        props: {
+          options: [
+            { value: 'a', label: 'A' },
+            { value: 'b', label: 'B' },
+            { value: 'c', label: 'C' },
+          ],
+          value: value.value,
+          'onUpdate:value': (v: string) => {
+            value.value = v
+          },
+        },
+        attachTo: document.body,
+      })
+      const input = wrapper.find('input')
+      await input.trigger('focus')
+      // 移动到最后一项
+      await input.trigger('keydown', { key: 'ArrowDown' })
+      await input.trigger('keydown', { key: 'ArrowDown' })
+      // 输入过滤只剩一项，active 应重定位到首个可用项
+      await input.setValue('a')
+      await input.trigger('input')
+      await wrapper.setProps({ value: value.value })
+      await nextTick()
+      await input.trigger('keydown', { key: 'Enter' })
+      expect(wrapper.emitted('select')?.pop()?.[0]).toBe('a')
+      wrapper.unmount()
+    })
   })
 
   // ----------------------------------------------------------------

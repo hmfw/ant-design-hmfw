@@ -42,7 +42,7 @@
 
 ### 不同尺寸
 
-三种大小的输入框，大的用在表单中，中的为默认。
+三种大小的输入框，提供 `small`、`middle`（默认） 和 `large` 三种尺寸。
 
 <DemoBlock title="不同尺寸" :source="AutoCompleteSizeSource">
   <AutoCompleteSize />
@@ -66,12 +66,13 @@
 
 ## API
 
+> **注意：** AutoComplete 是**纯受控组件**，必须绑定 `value` 或使用 `v-model`，否则输入/选择不会反映到显示。
+
 ### AutoComplete Props
 
 | 参数                     | 说明                                                                                                                                     | 类型                                                                       | 默认值     |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------- |
-| value(v-model)           | 指定当前选中的条目                                                                                                                       | `string`                                                                   | -          |
-| defaultValue             | 指定默认选中的条目                                                                                                                       | `string`                                                                   | -          |
+| value(v-model)           | 指定当前选中的条目（**必需**，组件为纯受控模式）                                                                                         | `string`                                                                   | -          |
 | options                  | 数据源                                                                                                                                   | `AutoCompleteOption[]`                                                     | `[]`       |
 | disabled                 | 是否禁用                                                                                                                                 | `boolean`                                                                  | `false`    |
 | placeholder              | 输入框占位文本                                                                                                                           | `string`                                                                   | -          |
@@ -79,34 +80,39 @@
 | size                     | 输入框大小                                                                                                                               | `'small' \| 'middle' \| 'large'`                                           | `'middle'` |
 | status                   | 设置校验状态                                                                                                                             | `'error' \| 'warning'`                                                     | -          |
 | filterOption             | 是否根据输入项进行筛选。当其为一个函数时，会接收 `inputValue` `option` 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false | `boolean \| ((inputValue: string, option: AutoCompleteOption) => boolean)` | `true`     |
-| backfill                 | 使用键盘选择选项的时候把选中项回填到输入框中                                                                                             | `boolean`                                                                  | `false`    |
+| optionFilterProp         | 内置筛选时依据的字段；`label` 为非字符串（VNode）时自动回退到 `value`                                                                    | `'value' \| 'label'`                                                       | `'value'`  |
+| backfill                 | 使用键盘选择选项的时候把选中项回填到输入框中（仅更新显示，不触发 `change`）                                                              | `boolean`                                                                  | `false`    |
 | defaultActiveFirstOption | 是否默认高亮第一个选项                                                                                                                   | `boolean`                                                                  | `true`     |
-| defaultOpen              | 默认是否展开下拉菜单                                                                                                                     | `boolean`                                                                  | `false`    |
+| notFoundContent          | 当下拉列表为空时显示的内容，缺省时使用本地化文案（如“无匹配结果”）                                                                       | `VNodeChild`                                                               | -          |
 | open                     | 是否展开下拉菜单（受控）                                                                                                                 | `boolean`                                                                  | -          |
-| notFoundContent          | 当下拉列表为空时显示的内容                                                                                                               | `string`                                                                   | -          |
+| autoFocus                | 组件挂载后自动获取焦点                                                                                                                   | `boolean`                                                                  | `false`    |
+| id                       | 透传到内部 `input` 的 id，便于表单 `label` 关联                                                                                          | `string`                                                                   | -          |
 | classNames               | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)                                                         | `AutoCompleteClassNames`                                                   | -          |
 | styles                   | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)                                                         | `AutoCompleteStyles`                                                       | -          |
 
+> 注：`size` 缺省时会回退到 `ConfigProvider` 的 `componentSize`。
+
 ### AutoCompleteOption
 
-| 参数     | 说明                                    | 类型      |
-| -------- | --------------------------------------- | --------- |
-| value    | 选项的值                                | `string`  |
-| label    | 选项的标签，若不设置则默认与 value 相同 | `string`  |
-| disabled | 是否禁用该选项                          | `boolean` |
+| 参数     | 说明                                               | 类型         |
+| -------- | -------------------------------------------------- | ------------ |
+| value    | 选项的值，同时作为选中后回填到输入框的内容         | `string`     |
+| label    | 选项的展示内容，支持富文本节点；不设置则回退 value | `VNodeChild` |
+| disabled | 是否禁用该选项                                     | `boolean`    |
 
 ### AutoComplete Events
 
-| 事件名       | 说明                                              | 回调参数                                              |
-| ------------ | ------------------------------------------------- | ----------------------------------------------------- |
-| update:value | 选中 option，或 input 的 value 变化时，调用此函数 | `(value: string) => void`                             |
-| change       | 选中 option，或 input 的 value 变化时，调用此函数 | `(value: string) => void`                             |
-| select       | 被选中时调用，参数为选中项的 value 值             | `(value: string, option: AutoCompleteOption) => void` |
-| search       | 搜索补全项的时候调用                              | `(value: string) => void`                             |
-| focus        | 获得焦点时的回调                                  | `(event: FocusEvent) => void`                         |
-| blur         | 失去焦点时的回调                                  | `(event: FocusEvent) => void`                         |
-| clear        | 点击清除按钮时的回调                              | `() => void`                                          |
-| openChange   | 下拉框展开/收起时的回调                           | `(open: boolean) => void`                             |
+| 事件名                | 说明                                              | 回调参数                                              |
+| --------------------- | ------------------------------------------------- | ----------------------------------------------------- |
+| update:value          | 选中 option，或 input 的 value 变化时，调用此函数 | `(value: string) => void`                             |
+| change                | 选中 option，或 input 的 value 变化时，调用此函数 | `(value: string) => void`                             |
+| select                | 被选中时调用，参数为选中项的 value 值             | `(value: string, option: AutoCompleteOption) => void` |
+| search                | 搜索补全项的时候调用                              | `(value: string) => void`                             |
+| focus                 | 获得焦点时的回调                                  | `(event: FocusEvent) => void`                         |
+| blur                  | 失去焦点时的回调                                  | `(event: FocusEvent) => void`                         |
+| clear                 | 点击清除按钮时的回调                              | `() => void`                                          |
+| openChange            | 下拉框展开/收起时的回调                           | `(open: boolean) => void`                             |
+| dropdownVisibleChange | `openChange` 的别名，对齐 antd v6                 | `(open: boolean) => void`                             |
 
 ### AutoComplete Methods
 
