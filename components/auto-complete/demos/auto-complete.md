@@ -66,13 +66,14 @@
 
 ## API
 
-> **注意：** AutoComplete 是**纯受控组件**，必须绑定 `value` 或使用 `v-model`，否则输入/选择不会反映到显示。
+> **注意：** AutoComplete 为**半受控组件**：不传 `value` 时组件自维护内部值，可用 `defaultValue` 指定初始值；传入 `value`（或使用 `v-model:value`）后转为受控，由父级驱动更新。`open` 亦为半受控，可用 `defaultOpen` 指定初始展开状态。
 
 ### AutoComplete Props
 
 | 参数                     | 说明                                                                                                                                     | 类型                                                                       | 默认值     |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------- |
-| value(v-model)           | 指定当前选中的条目（**必需**，组件为纯受控模式）                                                                                         | `string`                                                                   | -          |
+| value(v-model)           | 指定当前选中的条目（受控值，传入后转为受控模式）                                                                                         | `string`                                                                   | -          |
+| defaultValue             | 非受控模式下的初始值（未传 `value` 时生效）                                                                                              | `string`                                                                   | -          |
 | options                  | 数据源                                                                                                                                   | `AutoCompleteOption[]`                                                     | `[]`       |
 | disabled                 | 是否禁用                                                                                                                                 | `boolean`                                                                  | `false`    |
 | placeholder              | 输入框占位文本                                                                                                                           | `string`                                                                   | -          |
@@ -85,6 +86,7 @@
 | defaultActiveFirstOption | 是否默认高亮第一个选项                                                                                                                   | `boolean`                                                                  | `true`     |
 | notFoundContent          | 当下拉列表为空时显示的内容，缺省时使用本地化文案（如“无匹配结果”）                                                                       | `VNodeChild`                                                               | -          |
 | open                     | 是否展开下拉菜单（受控）                                                                                                                 | `boolean`                                                                  | -          |
+| defaultOpen              | 非受控模式下的初始展开状态（未传 `open` 时生效）                                                                                         | `boolean`                                                                  | -          |
 | autoFocus                | 组件挂载后自动获取焦点                                                                                                                   | `boolean`                                                                  | `false`    |
 | id                       | 透传到内部 `input` 的 id，便于表单 `label` 关联                                                                                          | `string`                                                                   | -          |
 | classNames               | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)                                                         | `AutoCompleteClassNames`                                                   | -          |

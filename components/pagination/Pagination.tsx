@@ -23,7 +23,9 @@ const paginationProps = {
   showSizeChanger: { type: Boolean, default: false },
   showQuickJumper: { type: Boolean, default: false },
   showTotal: { type: Function as PropType<ShowTotalFn>, default: undefined },
-  size: { type: String as PropType<ComponentSize>, default: 'middle' },
+  // 默认 undefined：responsive 需据「是否显式指定 size」判断是否在 xs 断点自动缩小；
+  // 具体渲染尺寸由 isSmall 兜底为 'middle'
+  size: { type: String as PropType<ComponentSize>, default: undefined },
   simple: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   hideOnSinglePage: { type: Boolean, default: false },

@@ -542,4 +542,42 @@ describe('Select', () => {
     expect(document.querySelector('.hmfw-select-item-option-state')).not.toBeNull()
     wrapper.unmount()
   })
+
+  describe('半受控 defaultValue / defaultOpen', () => {
+    it('未传 value 时 defaultValue 作为初始值', () => {
+      const wrapper = mount(Select, { props: { options, defaultValue: 'apple' }, attachTo: document.body })
+      expect(wrapper.find('.hmfw-select-selection-item').text()).toBe('Apple')
+      wrapper.unmount()
+    })
+
+    it('未传 value 时选择后内部值更新（非受控）', async () => {
+      const wrapper = mount(Select, { props: { options, defaultValue: 'apple' }, attachTo: document.body })
+      await wrapper.find('.hmfw-select-selector').trigger('click')
+      await nextTick()
+      const banana = Array.from(document.querySelectorAll('.hmfw-select-item-option')).find((el) =>
+        el.textContent?.includes('Banana'),
+      ) as HTMLElement
+      banana.click()
+      await nextTick()
+      expect(wrapper.find('.hmfw-select-selection-item').text()).toBe('Banana')
+      expect(wrapper.emitted('update:value')).toBeTruthy()
+      wrapper.unmount()
+    })
+
+    it('传入 value 时受控优先，忽略 defaultValue', () => {
+      const wrapper = mount(Select, {
+        props: { options, value: 'banana', defaultValue: 'apple' },
+        attachTo: document.body,
+      })
+      expect(wrapper.find('.hmfw-select-selection-item').text()).toBe('Banana')
+      wrapper.unmount()
+    })
+
+    it('defaultOpen 使下拉初始展开', async () => {
+      const wrapper = mount(Select, { props: { options, defaultOpen: true }, attachTo: document.body })
+      await nextTick()
+      expect(document.querySelector('.hmfw-select-item-option')).not.toBeNull()
+      wrapper.unmount()
+    })
+  })
 })

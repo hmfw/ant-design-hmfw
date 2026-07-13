@@ -75,6 +75,8 @@ export interface AutoCompleteStyles {
 export interface AutoCompleteProps {
   /** 受控值 */
   value?: string
+  /** 非受控模式下的初始值（未传 value 时生效） */
+  defaultValue?: string
   /** 数据源 */
   options?: AutoCompleteOption[]
   /** 是否禁用 */
@@ -104,6 +106,8 @@ export interface AutoCompleteProps {
   notFoundContent?: VNodeChild
   /** 受控的展开状态 */
   open?: boolean
+  /** 非受控模式下的初始展开状态（未传 open 时生效） */
+  defaultOpen?: boolean
   /** 自动聚焦 */
   autoFocus?: boolean
   /** 透传到 input 的 id，便于表单 label 关联 */

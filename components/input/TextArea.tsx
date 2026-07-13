@@ -18,6 +18,7 @@ import { useMergedValue, useFocusExpose, useAllowClear, defaultCountStrategy } f
 const textAreaProps = {
   // 值与基础状态
   value: { type: String, default: undefined },
+  defaultValue: { type: String, default: undefined },
   placeholder: { type: String, default: undefined },
   disabled: { type: Boolean, default: false },
   readOnly: { type: Boolean, default: false },

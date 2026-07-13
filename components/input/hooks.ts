@@ -7,22 +7,22 @@ import type { InputSize, InputStatus, AllowClearConfig } from './types'
 
 interface MergedValueProps {
   value?: string
+  defaultValue?: string
 }
 
 /**
- * 统一受控 / 非受控取值。
- * - 未传 `value` 时以 `innerValue` 为准（非受控）。
- * - 传入 `value` 时同步到 `innerValue`；父组件将其置为 `undefined` 亦能正确清空，
- *   与项目「受控化」方向一致（旧实现用 `v !== undefined` 守卫会漏掉这一情况）。
+ * 统一受控 / 非受控值。
+ * - 未传 `value` 时以 `innerValue` 为准（非受控），初始值取 `defaultValue`。
+ * - 传入 `value` 时同步到 `innerValue`（受控优先）。
  */
 export function useMergedValue(props: MergedValueProps) {
-  const innerValue = ref(props.value ?? '')
+  const innerValue = ref(props.value ?? props.defaultValue ?? '')
 
   watch(
     () => props.value,
     (v) => {
-      // 受控模式下（value 曾被显式传入）跟随父值，包括被清空为 undefined
-      innerValue.value = v ?? ''
+      // 受控模式下（value 显式传入）跟随父值；非受控（undefined）时保留内部状态
+      if (v !== undefined) innerValue.value = v
     },
   )
 

@@ -444,4 +444,33 @@ describe('AutoComplete', () => {
       wrapper.unmount()
     })
   })
+
+  describe('半受控 defaultValue / defaultOpen', () => {
+    it('未传 value 时 defaultValue 作为初始值', () => {
+      const wrapper = mount(AutoComplete, { props: { options, defaultValue: 'apple' } })
+      expect(wrapper.find('input').element.value).toBe('apple')
+    })
+
+    it('未传 value 时输入后内部值更新（非受控）', async () => {
+      const wrapper = mount(AutoComplete, { props: { options, defaultValue: 'a' }, attachTo: document.body })
+      await wrapper.find('input').setValue('ap')
+      await wrapper.find('input').trigger('input')
+      await nextTick()
+      expect(wrapper.find('input').element.value).toBe('ap')
+      expect(wrapper.emitted('update:value')?.at(-1)).toEqual(['ap'])
+      wrapper.unmount()
+    })
+
+    it('传入 value 时受控优先，忽略 defaultValue', () => {
+      const wrapper = mount(AutoComplete, { props: { options, value: 'banana', defaultValue: 'apple' } })
+      expect(wrapper.find('input').element.value).toBe('banana')
+    })
+
+    it('defaultOpen 使下拉初始展开', async () => {
+      const wrapper = mount(AutoComplete, { props: { options, defaultOpen: true }, attachTo: document.body })
+      await nextTick()
+      expect(document.querySelector('.hmfw-auto-complete-dropdown')).toBeTruthy()
+      wrapper.unmount()
+    })
+  })
 })

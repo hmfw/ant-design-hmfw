@@ -27,6 +27,7 @@ import type { SelectProps } from './types'
 const selectProps = {
   // 数据与取值
   value: { type: [String, Number, Array, Object] as PropType<SelectValue>, default: undefined },
+  defaultValue: { type: [String, Number, Array, Object] as PropType<SelectValue>, default: undefined },
   options: { type: Array as PropType<SelectOption[]>, default: () => [] },
   fieldNames: { type: Object as PropType<SelectFieldNames>, default: undefined },
   labelInValue: { type: Boolean, default: false },
@@ -40,6 +41,7 @@ const selectProps = {
   placeholder: { type: String, default: undefined },
   allowClear: { type: Boolean, default: false },
   open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: undefined },
   dropdownMatchSelectWidth: { type: [Boolean, Number] as PropType<boolean | number>, default: true },
   // 搜索
   showSearch: { type: Boolean, default: false },
@@ -150,8 +152,8 @@ export const Select = defineComponent({
       return [v as string | number]
     }
 
-    const innerValue = ref<(string | number)[] | undefined>(extractRawValues(props.value))
-    const innerOpen = ref(false)
+    const innerValue = ref<(string | number)[] | undefined>(extractRawValues(props.value ?? props.defaultValue))
+    const innerOpen = ref(props.defaultOpen ?? false)
     const searchText = ref('')
 
     const isControlled = computed(() => props.value !== undefined)

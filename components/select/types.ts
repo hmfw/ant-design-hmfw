@@ -108,6 +108,8 @@ export interface SelectFieldNames {
 export interface SelectProps {
   // 数据与取值
   value?: SelectValue
+  /** 非受控模式下的初始值（未传 value 时生效） */
+  defaultValue?: SelectValue
   options?: SelectOption[]
   fieldNames?: SelectFieldNames
   labelInValue?: boolean
@@ -121,6 +123,8 @@ export interface SelectProps {
   placeholder?: string
   allowClear?: boolean
   open?: boolean
+  /** 非受控模式下的初始展开状态（未传 open 时生效） */
+  defaultOpen?: boolean
   dropdownMatchSelectWidth?: boolean | number
   // 搜索
   showSearch?: boolean

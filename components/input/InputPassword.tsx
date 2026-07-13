@@ -10,6 +10,7 @@ const HOVER_ACTION = 'hover'
 const inputPasswordProps = {
   // 值与基础状态
   value: { type: String, default: undefined },
+  defaultValue: { type: String, default: undefined },
   placeholder: { type: String, default: undefined },
   disabled: { type: Boolean, default: false },
   readOnly: { type: Boolean, default: false },

@@ -27,6 +27,7 @@ const getOptionText = (opt: AutoCompleteOption, prop: AutoCompleteFilterProp): s
 // Props 定义（使用 satisfies 确保与 AutoCompleteProps 类型一致）
 const autoCompleteProps = {
   value: { type: String, default: undefined },
+  defaultValue: { type: String, default: undefined },
   options: { type: Array as PropType<AutoCompleteOption[]>, default: () => [] },
   disabled: { type: Boolean, default: false },
   placeholder: { type: String, default: undefined },
@@ -46,6 +47,7 @@ const autoCompleteProps = {
     default: undefined,
   },
   open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: undefined },
   autoFocus: { type: Boolean, default: false },
   id: { type: String, default: undefined },
   classNames: { type: Object as PropType<AutoCompleteClassNames>, default: undefined },
@@ -79,13 +81,23 @@ export const AutoComplete = defineComponent({
     const config = useConfig()
     const locale = useLocale()
 
-    const innerOpen = ref(false)
+    const innerOpen = ref(props.defaultOpen ?? false)
+    const innerValue = ref(props.value ?? props.defaultValue ?? '')
     const activeIndex = ref(-1)
     const inputRef = ref<HTMLInputElement>()
 
-    const inputValue = computed(() => props.value ?? '')
+    // value 为半受控：不传时由组件管理（innerValue），传了则受控
+    const inputValue = computed(() => (props.value !== undefined ? props.value : innerValue.value))
     // open 为半受控：不传时由组件管理（innerOpen），传了则受控
     const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
+
+    // 受控值变化时同步内部状态
+    watch(
+      () => props.value,
+      (v) => {
+        if (v !== undefined) innerValue.value = v
+      },
+    )
 
     // size 优先级：显式 prop > ConfigProvider 的 componentSize > 兜底 'middle'
     const mergedSize = computed<ComponentSize>(() => props.size ?? config.value.componentSize ?? 'middle')
@@ -149,11 +161,13 @@ export const AutoComplete = defineComponent({
 
     /** 更新展示值（不 emit change）。用于 backfill：仅回填输入框显示，受控模式由父级决定是否更新。 */
     const setDisplayValue = (val: string) => {
+      if (props.value === undefined) innerValue.value = val
       emit('update:value', val)
     }
 
     /** 提交值：更新值并触发 change（用户输入或确认选择时）。 */
     const setValue = (val: string) => {
+      if (props.value === undefined) innerValue.value = val
       emit('update:value', val)
       emit('change', val)
     }

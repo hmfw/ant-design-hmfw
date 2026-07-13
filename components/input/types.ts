@@ -72,6 +72,8 @@ export interface AutoSizeConfig {
 
 export interface InputProps {
   value?: string
+  /** 非受控模式下的初始值（未传 value 时生效） */
+  defaultValue?: string
   placeholder?: string
   disabled?: boolean
   readOnly?: boolean
@@ -90,6 +92,8 @@ export interface InputProps {
 
 export interface TextAreaProps {
   value?: string
+  /** 非受控模式下的初始值（未传 value 时生效） */
+  defaultValue?: string
   placeholder?: string
   disabled?: boolean
   readOnly?: boolean
@@ -107,6 +111,8 @@ export interface TextAreaProps {
 
 export interface InputPasswordProps {
   value?: string
+  /** 非受控模式下的初始值（未传 value 时生效） */
+  defaultValue?: string
   placeholder?: string
   disabled?: boolean
   readOnly?: boolean
@@ -121,6 +127,8 @@ export interface InputPasswordProps {
 
 export interface InputSearchProps {
   value?: string
+  /** 非受控模式下的初始值（未传 value 时生效） */
+  defaultValue?: string
   placeholder?: string
   disabled?: boolean
   readOnly?: boolean

@@ -6,6 +6,34 @@
 
 ---
 
+## [0.18.0] - 2026-07-13
+
+### ✨ 新特性
+
+- **AutoComplete `defaultValue` / `defaultOpen`（还原半受控）**: 重新支持 `defaultValue` 指定非受控初始值、`defaultOpen` 指定初始展开状态。不传 `value` 时组件自维护内部值（以 `defaultValue` 为初始值）；传入 `value`（或 `v-model:value`）后转为受控。撤销 0.17.0 的「纯受控」限制
+- **Input 系列 `defaultValue`（还原半受控）**: Input / TextArea / InputPassword / InputSearch 重新支持 `defaultValue` 指定非受控初始值。撤销 0.15.0 的「纯受控」限制
+- **Select `defaultValue` / `defaultOpen`（还原半受控）**: 重新支持 `defaultValue` 指定非受控初始值、`defaultOpen` 指定初始展开状态。撤销 0.14.0 移除 `defaultValue` 的变更
+
+### 🔧 重构
+
+- **半受控约定统一**: 三组件内部值 ref 以 `props.value ?? props.defaultValue ?? 默认` 播种；取值 computed 遵循 `props.value !== undefined ? props.value : innerValue`；写入时仅在非受控（`props.value === undefined`）落地内部状态，始终 emit `update:value` + `change`
+- **Input `useMergedValue`**: 种子扩展 `defaultValue`；watch 恢复 `v !== undefined` 受控守卫，非受控时保留内部状态不被父级 `undefined` 清空
+
+### 🐛 修复
+
+- **Pagination（responsive 失效）**: `size` prop 默认值由 `'middle'` 改回 `undefined`，修复 0.16.1 迁移后 `!props.size` 恒为 `false` 导致 `responsive` 在 xs 断点无法自动缩小为 mini 的问题；具体渲染尺寸仍由 `isSmall` 兜底为 `'middle'`
+- **Tabs（测试修正）**: `size='middle'` 现按 0.16.1 的「三档 size 均渲染 CSS 类」正常输出 `hmfw-tabs-middle`，更新对应断言
+
+### 📝 文档
+
+- **API**: AutoComplete / Select 补充 `defaultValue` / `defaultOpen`，Input 补充 `defaultValue`；三者「纯受控」说明改为半受控描述
+
+### 🧪 测试
+
+- 三组件新增半受控用例：不传 `value` 时 `defaultValue` 生效、非受控输入/选择后内部值更新、传 `value` 时受控优先、`defaultOpen` 初始展开（AutoComplete / Select）
+
+---
+
 ## [0.17.0] - 2026-07-13
 
 ### 💥 Breaking Changes

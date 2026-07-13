@@ -581,3 +581,37 @@ describe('InputSearch', () => {
     expect(vm.blur).toBeDefined()
   })
 })
+
+describe('半受控 defaultValue', () => {
+  it('Input：未传 value 时 defaultValue 作为初始值', () => {
+    const wrapper = mount(Input, { props: { defaultValue: 'hello' } })
+    expect(wrapper.find('input').element.value).toBe('hello')
+  })
+
+  it('Input：未传 value 时输入后内部值更新（非受控）', async () => {
+    const wrapper = mount(Input, { props: { defaultValue: 'a' } })
+    await wrapper.find('input').setValue('abc')
+    expect(wrapper.find('input').element.value).toBe('abc')
+    expect(wrapper.emitted('update:value')?.at(-1)).toEqual(['abc'])
+  })
+
+  it('Input：传入 value 时受控优先，忽略 defaultValue', () => {
+    const wrapper = mount(Input, { props: { value: 'controlled', defaultValue: 'ignored' } })
+    expect(wrapper.find('input').element.value).toBe('controlled')
+  })
+
+  it('TextArea：defaultValue 作为初始值', () => {
+    const wrapper = mount(TextArea, { props: { defaultValue: 'multi\nline' } })
+    expect(wrapper.find('textarea').element.value).toBe('multi\nline')
+  })
+
+  it('InputPassword：defaultValue 作为初始值', () => {
+    const wrapper = mount(InputPassword, { props: { defaultValue: 'secret' } })
+    expect(wrapper.find('input').element.value).toBe('secret')
+  })
+
+  it('InputSearch：defaultValue 作为初始值', () => {
+    const wrapper = mount(InputSearch, { props: { defaultValue: 'query' } })
+    expect(wrapper.find('input').element.value).toBe('query')
+  })
+})
