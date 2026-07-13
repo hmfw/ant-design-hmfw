@@ -55,6 +55,7 @@
           },
           thumb: { borderRadius: '12px', background: '#ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },
           itemText: { color: '#ffffff', fontWeight: 500 },
+          itemSelected: { color: '#1677ff' },
         }"
       />
     </div>
@@ -135,7 +136,7 @@ const options5 = [
 }
 
 :deep(.custom-item-selected) {
-  color: #ffffff;
+  color: #1677ff;
   font-weight: 600;
 }
 

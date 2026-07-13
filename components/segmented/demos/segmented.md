@@ -17,6 +17,14 @@
   <SegmentedBasic />
 </DemoBlock>
 
+### 受控模式
+
+通过 `value` + `change` 完全受控。选中项由父级 `value` 决定，点击仅派发事件；父级更新 `value` 后选中态与滑块才跟随，避免视觉与真实值不一致。
+
+<DemoBlock title="受控模式" :source="SegmentedControlledSource">
+  <SegmentedControlled />
+</DemoBlock>
+
 ### Block 模式
 
 block 属性使其适合父元素宽度。
@@ -87,6 +95,14 @@ block 属性使其适合父元素宽度。
 
 <DemoBlock title="语义化 className 与 style" :source="SegmentedClassNamesSource">
   <SegmentedClassNames />
+</DemoBlock>
+
+### 动态选项
+
+异步或动态增删选项。选项为空时不渲染，加载完成后自动选中首项。
+
+<DemoBlock title="动态选项" :source="SegmentedDynamicSource">
+  <SegmentedDynamic />
 </DemoBlock>
 
 ## API
@@ -204,6 +220,16 @@ interface SegmentedStyles {
     </label>
   </div>
 </div>
+```
+
+### 状态样式的继承边界
+
+`itemSelected` / `itemDisabled` 作用于选项 `<label>` 根节点，其**可继承属性**（如 `color`、`fontWeight`）会自然传递到内部的 `itemIcon` / `itemText`；而**不可继承属性**（如 `background`、`textDecoration`、`transform`）只作用于 `<label>` 本身。若需针对选中态的文本/图标设置不可继承样式，请改用 `classNames.itemSelected` + 后代选择器：
+
+```css
+:deep(.your-selected-class) .hmfw-segmented-item-text {
+  text-decoration: underline;
+}
 ```
 
 ### 使用 classNames

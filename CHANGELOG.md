@@ -6,6 +6,40 @@
 
 ---
 
+## [0.21.0] - 2026-07-13
+
+### ✨ 新特性
+
+- **Segmented `size` 接入 ConfigProvider**：未显式传 `size` 时回退到全局 `componentSize`，与 Rate / AutoComplete 等组件行为一致
+- **Segmented 键盘导航跳过禁用项**：方向键遇到连续禁用选项时自动越过，落到下一个可用项
+- **Segmented 无障碍增强**：根节点补 `role="radiogroup"`；纯图标选项为隐藏 radio 补 `aria-label`（优先 `title`，回退 `value`）
+
+### 🐛 修复
+
+- **Segmented 默认模式选项等分导致长文本被裁剪**：`flex: 1` 误加在基础 `-item` 上，使所有模式选项等宽、长文本被 `overflow` 省略；现仅 `block` 模式等分，默认模式按内容自适应（对齐 AntD v6）
+- **Segmented 异步选项默认值失效**：`options` 初始为空、随后异步填充时首项不再被选中；改由 computed 兜底首个可用选项
+- **Segmented 受控模式滑块误移**：受控下点击选项即使父级未更新 `value`，滑块也会滑走导致视觉与真实值不一致；现受控时交由 `value` 变更驱动
+- **Segmented 孤儿选中值滑块尺寸残留**：选项整体替换后旧值无匹配项时，滑块保留过时尺寸（宽/高大于实际选项）；现无匹配时归零隐藏
+- **Segmented Tooltip 包裹选项时列表 key 丢失**：带 tooltip 的选项 `key` 挂在内层 `<label>`，导致列表 key 混用；现 key 上移到每个分支最外层节点
+- **Segmented 双重 outline**：移除根节点 `:focus-within` 描边，仅保留单个选项的 `:focus-visible`，避免鼠标点击即框住整个控件
+- **Segmented 空字符串 label 未走 icon-only 布局**：`label: ''` 被当作有文本；现空串同样视为无文本
+- **Segmented `name` 随机值 SSR 不安全**：`Math.random()` 改用 Vue `useId()`，避免水合属性不匹配
+
+### 🔧 重构
+
+- **Segmented 类型安全**：props 改用 `satisfies Record<keyof SegmentedProps, any>` 绑定 `types.ts` 单一类型源；`emits` 改为带签名的对象形式
+
+### 🧪 测试
+
+- Segmented 测试从 28 → 38：新增异步默认值、受控滑块不误移、孤儿值滑块归零、跳过连续禁用项、空串 label、icon-only `aria-label`、`radiogroup` role、ConfigProvider `componentSize` 继承与显式 `size` 覆盖等用例
+
+### 📝 文档
+
+- Segmented 新增 2 个 Demo：受控模式（`:value` + `@change`）、动态选项（增删 / 异步加载）
+- Segmented 语义化章节补充「状态样式的继承边界」说明：`itemSelected` / `itemDisabled` 作用于 `<label>`，可继承属性传递到 text/icon，不可继承属性需用 classNames + 后代选择器
+
+---
+
 ## [0.20.0] - 2026-07-13
 
 ### ✨ 新特性

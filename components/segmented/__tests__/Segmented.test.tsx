@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { h, nextTick } from 'vue'
 import { Segmented } from '../Segmented'
+import { ConfigProvider } from '../../config-provider'
 import type { SegmentedOption } from '../types'
 
 const options = ['Daily', 'Weekly', 'Monthly']
@@ -211,5 +212,110 @@ describe('Segmented', () => {
     const wrapper = mount(Segmented, { props: { options: objOptions } })
     // Tooltip component should wrap the item
     expect(wrapper.findComponent({ name: 'Tooltip' }).exists()).toBe(true)
+  })
+
+  it('selects first available option when options load asynchronously', async () => {
+    // 初始为空，随后异步填充：currentValue 应兜底为首项
+    const wrapper = mount(Segmented, { props: { options: [] as string[] } })
+    expect(wrapper.findAll('.hmfw-segmented-item')).toHaveLength(0)
+
+    await wrapper.setProps({ options })
+    await nextTick()
+    const items = wrapper.findAll('.hmfw-segmented-item')
+    expect(items).toHaveLength(3)
+    expect(items[0].classes()).toContain('hmfw-segmented-item-selected')
+  })
+
+  it('collapses thumb width when current value has no matching option', async () => {
+    // 选项被整体替换后，旧受控值成为孤儿值：滑块应归零而非停留在过时尺寸
+    const wrapper = mount(Segmented, { props: { options, value: 'Weekly' } })
+    await nextTick()
+    const thumb = wrapper.find('.hmfw-segmented-thumb').element as HTMLElement
+
+    await wrapper.setProps({ options: ['X', 'Y'], value: 'Weekly' })
+    await nextTick()
+    // 无匹配项时水平滑块宽度被置 0
+    expect(thumb.style.width).toBe('0px')
+  })
+
+  it('does not move selection in controlled mode until parent updates value', async () => {
+    // 受控：父级未更新 value 时，点击其它项不应改变选中态
+    const wrapper = mount(Segmented, { props: { options, value: 'Daily' } })
+    await wrapper.findAll('.hmfw-segmented-item')[2].find('input').trigger('change')
+    // 事件应照常派发
+    expect(wrapper.emitted('change')?.[0]).toEqual(['Monthly'])
+    // 但视觉选中仍停留在受控值 Daily
+    const items = wrapper.findAll('.hmfw-segmented-item')
+    expect(items[0].classes()).toContain('hmfw-segmented-item-selected')
+    expect(items[2].classes()).not.toContain('hmfw-segmented-item-selected')
+
+    // 父级更新 value 后，选中态跟随
+    await wrapper.setProps({ value: 'Monthly' })
+    const updated = wrapper.findAll('.hmfw-segmented-item')
+    expect(updated[2].classes()).toContain('hmfw-segmented-item-selected')
+  })
+
+  it('skips consecutive disabled options during keyboard navigation', async () => {
+    const objOptions: SegmentedOption[] = [
+      { label: 'A', value: 'a' },
+      { label: 'B', value: 'b', disabled: true },
+      { label: 'C', value: 'c', disabled: true },
+      { label: 'D', value: 'd' },
+    ]
+    const wrapper = mount(Segmented, { props: { options: objOptions } })
+    const inputs = wrapper.findAll('input[type="radio"]')
+    // 从 A 按 ArrowRight，应跳过 B、C 落到 D
+    await inputs[0].trigger('keydown', { key: 'ArrowRight' })
+    await nextTick()
+    expect(wrapper.emitted('change')?.[0]).toEqual(['d'])
+  })
+
+  it('treats empty string label as icon-only', () => {
+    const objOptions: SegmentedOption[] = [{ value: 'a', label: '', icon: h('span', '★') }]
+    const wrapper = mount(Segmented, { props: { options: objOptions } })
+    const label = wrapper.find('.hmfw-segmented-item-label')
+    expect(label.classes()).toContain('hmfw-segmented-item-icon-only')
+    // 不应渲染文本 span
+    expect(wrapper.find('.hmfw-segmented-item-text').exists()).toBe(false)
+  })
+
+  it('adds aria-label to icon-only radio input', () => {
+    const objOptions: SegmentedOption[] = [
+      { value: 'home', icon: h('span', '⌂'), title: 'Home' },
+      { value: 'user', icon: h('span', '☺') },
+    ]
+    const wrapper = mount(Segmented, { props: { options: objOptions } })
+    const inputs = wrapper.findAll('input[type="radio"]')
+    // 有 title 时优先用 title
+    expect(inputs[0].attributes('aria-label')).toBe('Home')
+    // 无 title 时回退到 value
+    expect(inputs[1].attributes('aria-label')).toBe('user')
+  })
+
+  it('does not add aria-label when label present', () => {
+    const objOptions: SegmentedOption[] = [{ value: 'a', label: 'Alpha', icon: h('span', '★') }]
+    const wrapper = mount(Segmented, { props: { options: objOptions } })
+    expect(wrapper.find('input[type="radio"]').attributes('aria-label')).toBeUndefined()
+  })
+
+  it('applies radiogroup role to root', () => {
+    const wrapper = mount(Segmented, { props: { options } })
+    expect(wrapper.attributes('role')).toBe('radiogroup')
+  })
+
+  it('inherits size from ConfigProvider', () => {
+    const wrapper = mount(ConfigProvider, {
+      props: { componentSize: 'large' },
+      slots: { default: () => h(Segmented, { options }) },
+    })
+    expect(wrapper.find('.hmfw-segmented').classes()).toContain('hmfw-segmented-large')
+  })
+
+  it('explicit size prop overrides ConfigProvider componentSize', () => {
+    const wrapper = mount(ConfigProvider, {
+      props: { componentSize: 'large' },
+      slots: { default: () => h(Segmented, { options, size: 'small' }) },
+    })
+    expect(wrapper.find('.hmfw-segmented').classes()).toContain('hmfw-segmented-small')
   })
 })

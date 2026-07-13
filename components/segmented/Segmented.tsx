@@ -1,30 +1,41 @@
-import { defineComponent, ref, computed, watch, onMounted, onBeforeUnmount, nextTick, type PropType } from 'vue'
+import { defineComponent, ref, computed, watch, onMounted, onBeforeUnmount, nextTick, useId, type PropType } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Tooltip } from '../tooltip'
-import type { SegmentedOption, SegmentedValue, SegmentedOptions } from './types'
+import type {
+  SegmentedOption,
+  SegmentedValue,
+  SegmentedOptions,
+  SegmentedProps,
+  SegmentedClassNames,
+  SegmentedStyles,
+} from './types'
 import type { ComponentSize } from '../config-provider'
+
+// 单一类型来源：接口增删字段时，satisfies 会在此处编译报错，强制同步
+const segmentedProps = {
+  value: { type: [String, Number] as PropType<SegmentedValue>, default: undefined },
+  defaultValue: { type: [String, Number] as PropType<SegmentedValue>, default: undefined },
+  options: { type: Array as PropType<SegmentedOptions>, default: () => [] },
+  disabled: { type: Boolean, default: undefined },
+  block: { type: Boolean, default: undefined },
+  // size 无默认值，未传时在 mergedSize 中回退到 ConfigProvider 的 componentSize
+  size: { type: String as PropType<ComponentSize>, default: undefined },
+  vertical: { type: Boolean, default: undefined },
+  orientation: { type: String as PropType<'horizontal' | 'vertical'>, default: undefined },
+  shape: { type: String as PropType<'default' | 'round'>, default: 'default' },
+  name: { type: String, default: undefined },
+  classNames: { type: Object as PropType<SegmentedClassNames>, default: undefined },
+  styles: { type: Object as PropType<SegmentedStyles>, default: undefined },
+} satisfies Record<keyof SegmentedProps, any>
 
 export const Segmented = defineComponent({
   name: 'Segmented',
-  props: {
-    value: [String, Number] as PropType<SegmentedValue>,
-    defaultValue: [String, Number] as PropType<SegmentedValue>,
-    options: {
-      type: Array as PropType<SegmentedOptions>,
-      default: () => [],
-    },
-    disabled: Boolean,
-    block: Boolean,
-    size: { type: String as PropType<ComponentSize>, default: 'middle' },
-    vertical: Boolean,
-    orientation: String as PropType<'horizontal' | 'vertical'>,
-    shape: { type: String as PropType<'default' | 'round'>, default: 'default' },
-    name: String,
-    classNames: Object as PropType<import('./types').SegmentedClassNames>,
-    styles: Object as PropType<import('./types').SegmentedStyles>,
+  props: segmentedProps,
+  emits: {
+    'update:value': (value: SegmentedValue) => value !== undefined,
+    change: (value: SegmentedValue) => value !== undefined,
   },
-  emits: ['update:value', 'change'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('segmented')
     const config = useConfig()
@@ -36,14 +47,21 @@ export const Segmented = defineComponent({
       props.options.map((opt) => (typeof opt === 'object' ? opt : { label: String(opt), value: opt })),
     )
 
-    // Determine initial value
-    const defaultVal = props.defaultValue ?? props.value ?? normalizeOptions.value[0]?.value
-    const innerValue = ref<SegmentedValue | undefined>(defaultVal)
+    // size 优先级：显式 prop > ConfigProvider 的 componentSize > 兜底 'middle'
+    const mergedSize = computed<ComponentSize>(() => props.size ?? config.value.componentSize ?? 'middle')
+
+    // 非受控内部值
+    const innerValue = ref<SegmentedValue | undefined>(props.defaultValue ?? props.value)
 
     const isControlled = computed(() => props.value !== undefined)
-    const currentValue = computed(() => (isControlled.value ? props.value : innerValue.value))
+    // 当前生效值：受控取 props.value，非受控取内部值；均缺省时兜底首个可用选项
+    const currentValue = computed<SegmentedValue | undefined>(() => {
+      const val = isControlled.value ? props.value : innerValue.value
+      if (val !== undefined) return val
+      return normalizeOptions.value[0]?.value
+    })
 
-    // Sync controlled value
+    // 同步受控值到内部状态，保证由受控切回非受控时保留最后选中项
     watch(
       () => props.value,
       (v) => {
@@ -54,46 +72,57 @@ export const Segmented = defineComponent({
     // Determine vertical orientation (orientation takes priority over vertical)
     const isVertical = computed(() => {
       if (props.orientation) return props.orientation === 'vertical'
-      return props.vertical
+      return !!props.vertical
     })
 
-    // Generate unique name for radio group
-    const radioName = computed(() => props.name || `segmented-${Math.random().toString(36).slice(2, 9)}`)
+    // 为 radio group 生成 SSR 稳定且唯一的 name
+    const autoName = `segmented-${useId()}`
+    const radioName = computed(() => props.name || autoName)
 
     // Handle selection
     const handleSelect = (opt: SegmentedOption, index: number) => {
       if (props.disabled || opt.disabled) return
-      innerValue.value = opt.value
+      // 受控模式下不主动改内部状态，交由父级更新 value 后经 watch 驱动，避免视觉与真实值不一致
+      if (!isControlled.value) {
+        innerValue.value = opt.value
+        nextTick(() => updateThumbPosition(index))
+      }
       emit('update:value', opt.value)
       emit('change', opt.value)
-      nextTick(() => updateThumbPosition(index))
+    }
+
+    // 从 startIndex 出发，按 step 方向寻找下一个未禁用选项的索引，找不到返回 -1
+    const findEnabledIndex = (startIndex: number, step: number): number => {
+      const options = normalizeOptions.value
+      for (let i = startIndex; i >= 0 && i < options.length; i += step) {
+        if (!options[i].disabled) return i
+      }
+      return -1
     }
 
     // Handle keyboard navigation
     const handleKeyDown = (e: KeyboardEvent, opt: SegmentedOption, index: number) => {
       if (props.disabled || opt.disabled) return
-      const options = normalizeOptions.value
       const isHorizontal = !isVertical.value
       const isRtl = config.value.direction === 'rtl'
 
-      let nextIndex = -1
+      let step = 0
       if ((isHorizontal && e.key === 'ArrowRight') || (!isHorizontal && e.key === 'ArrowDown')) {
-        nextIndex = isRtl && isHorizontal ? index - 1 : index + 1
+        step = isRtl && isHorizontal ? -1 : 1
       } else if ((isHorizontal && e.key === 'ArrowLeft') || (!isHorizontal && e.key === 'ArrowUp')) {
-        nextIndex = isRtl && isHorizontal ? index + 1 : index - 1
+        step = isRtl && isHorizontal ? 1 : -1
       }
 
-      if (nextIndex >= 0 && nextIndex < options.length) {
+      if (step === 0) return
+      // 跳过连续禁用项，落到下一个可用选项
+      const nextIndex = findEnabledIndex(index + step, step)
+      if (nextIndex >= 0) {
         e.preventDefault()
-        const nextOpt = options[nextIndex]
-        if (!nextOpt.disabled) {
-          handleSelect(nextOpt, nextIndex)
-          // Focus the next radio input
-          const inputs = groupRef.value?.querySelectorAll('input[type="radio"]')
-          if (inputs?.[nextIndex]) {
-            ;(inputs[nextIndex] as HTMLInputElement).focus()
-          }
-        }
+        handleSelect(normalizeOptions.value[nextIndex], nextIndex)
+        // Focus the next radio input
+        const inputs = groupRef.value?.querySelectorAll('input[type="radio"]')
+        const nextInput = inputs?.[nextIndex] as HTMLInputElement | undefined
+        nextInput?.focus()
       }
     }
 
@@ -125,10 +154,25 @@ export const Segmented = defineComponent({
       }
     }
 
+    // 隐藏滑块：当前值无匹配选项时（如选项异步替换后旧值成为孤儿值），
+    // 将滑块尺寸归零，避免其停留在过时尺寸导致宽/高大于实际选项
+    const hideThumb = () => {
+      if (!thumbRef.value) return
+      if (isVertical.value) {
+        thumbRef.value.style.height = '0'
+      } else {
+        thumbRef.value.style.width = '0'
+      }
+    }
+
     // 重新对齐当前选中项的滑块（用于尺寸/容器变化时）
     const realignThumb = () => {
       const selectedIndex = normalizeOptions.value.findIndex((opt) => opt.value === currentValue.value)
-      if (selectedIndex >= 0) updateThumbPosition(selectedIndex)
+      if (selectedIndex >= 0) {
+        updateThumbPosition(selectedIndex)
+      } else {
+        hideThumb()
+      }
     }
 
     // 监听容器尺寸变化，自动重新计算滑块（block 模式 / 窗口缩放 / 字体加载）
@@ -153,7 +197,7 @@ export const Segmented = defineComponent({
       }
     })
 
-    // 监听 value / 选项 / 方向变化以更新滑块
+    // 监听 value / 选项 / 方向变化以更新滑块（受控与非受控统一由 currentValue 驱动）
     watch([currentValue, normalizeOptions, isVertical], () => {
       nextTick(() => realignThumb())
     })
@@ -161,7 +205,8 @@ export const Segmented = defineComponent({
     // 渲染选项内容（图标 + 文本）
     const renderItemContent = (opt: SegmentedOption) => {
       const hasIcon = !!opt.icon
-      const hasLabel = opt.label !== undefined && opt.label !== null
+      // 空字符串同样视为“无文本”，使 icon-only 布局生效
+      const hasLabel = opt.label !== undefined && opt.label !== null && opt.label !== ''
 
       return (
         <div
@@ -189,6 +234,10 @@ export const Segmented = defineComponent({
     const renderItem = (opt: SegmentedOption, index: number) => {
       const isSelected = opt.value === currentValue.value
       const isDisabled = props.disabled || opt.disabled
+      const hasIcon = !!opt.icon
+      const hasLabel = opt.label !== undefined && opt.label !== null && opt.label !== ''
+      // 纯图标选项无可见文本，补 aria-label 供屏幕阅读器识别
+      const ariaLabel = hasIcon && !hasLabel ? (opt.title ?? String(opt.value)) : undefined
 
       const itemNode = (
         <label
@@ -220,6 +269,7 @@ export const Segmented = defineComponent({
             value={opt.value}
             checked={isSelected}
             disabled={isDisabled}
+            aria-label={ariaLabel}
             onChange={() => handleSelect(opt, index)}
             onKeydown={(e) => handleKeyDown(e, opt, index)}
           />
@@ -227,18 +277,24 @@ export const Segmented = defineComponent({
         </label>
       )
 
-      // Wrap with tooltip if specified
+      // Wrap with tooltip if specified；key 挂在每个分支的最外层节点，避免列表 key 混用
       if (opt.tooltip) {
         const tooltipProps = typeof opt.tooltip === 'string' ? { title: opt.tooltip } : opt.tooltip
-        return <Tooltip {...tooltipProps}>{itemNode}</Tooltip>
+        return (
+          <Tooltip key={opt.value} {...tooltipProps}>
+            {itemNode}
+          </Tooltip>
+        )
       }
 
+      // 非 tooltip 分支：itemNode 的 <label> 已带 key，直接返回
       return itemNode
     }
 
     return () => (
       <div
-        class={cls(prefixCls, props.classNames?.root, `${prefixCls}-${props.size}`, {
+        role="radiogroup"
+        class={cls(prefixCls, props.classNames?.root, `${prefixCls}-${mergedSize.value}`, {
           [`${prefixCls}-disabled`]: props.disabled,
           [`${prefixCls}-block`]: props.block,
           [`${prefixCls}-vertical`]: isVertical.value,

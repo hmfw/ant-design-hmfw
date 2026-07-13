@@ -1,16 +1,11 @@
 .hmfw-segmented {
-  display: inline-block;
+  width: fit-content;
   padding: var(--hmfw-line-width-bold);
   background: var(--hmfw-color-bg-layout);
   border-radius: var(--hmfw-border-radius);
   font-size: var(--hmfw-font-size-base);
   color: var(--hmfw-color-text-label);
   transition: all var(--hmfw-motion-duration-mid);
-}
-
-.hmfw-segmented:focus-within {
-  outline: 2px solid var(--hmfw-color-primary);
-  outline-offset: 2px;
 }
 
 .hmfw-segmented-block {
@@ -77,13 +72,12 @@
   border-radius: var(--hmfw-border-radius-sm);
   user-select: none;
   white-space: nowrap;
-  flex: 1;
-  min-width: 0;
   z-index: 1;
   /* Fix Safari render bug */
   transform: translateZ(0);
 }
 
+/* 仅 block 模式下等分父宽；默认模式各项按内容自适应，长文本可完整显示 */
 .hmfw-segmented-block .hmfw-segmented-item {
   flex: 1;
   min-width: 0;
