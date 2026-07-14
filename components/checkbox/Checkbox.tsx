@@ -1,37 +1,29 @@
-import { defineComponent, ref, watch, inject, computed, provide, type PropType, onMounted, onBeforeUnmount } from 'vue'
+import { defineComponent, ref, watch, inject, computed, type PropType, onMounted, onBeforeUnmount } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { CheckboxValueType, CheckboxChangeEvent, CheckboxOptionType } from './types'
+import type { CheckboxValueType, CheckboxChangeEvent, CheckboxProps, CheckboxClassNames, CheckboxStyles } from './types'
+import { CHECKBOX_GROUP_KEY, type CheckboxGroupContext } from './context'
 
-const CHECKBOX_GROUP_KEY = Symbol('checkbox-group')
-
-interface CheckboxGroupContext {
-  value: CheckboxValueType[]
-  disabled: boolean
-  name?: string
-  onChange: (val: CheckboxValueType, checked: boolean) => void
-  registerValue: (val: CheckboxValueType) => void
-  cancelValue: (val: CheckboxValueType) => void
-}
+const checkboxProps = {
+  checked: { type: Boolean, default: undefined },
+  defaultChecked: { type: Boolean, default: false },
+  indeterminate: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  value: { type: [String, Number, Boolean] as PropType<CheckboxValueType>, default: undefined },
+  autoFocus: { type: Boolean, default: false },
+  name: { type: String, default: undefined },
+  id: { type: String, default: undefined },
+  title: { type: String, default: undefined },
+  tabIndex: { type: Number, default: undefined },
+  required: { type: Boolean, default: false },
+  skipGroup: { type: Boolean, default: false },
+  classNames: { type: Object as PropType<CheckboxClassNames>, default: undefined },
+  styles: { type: Object as PropType<CheckboxStyles>, default: undefined },
+} satisfies Record<keyof CheckboxProps, any>
 
 export const Checkbox = defineComponent({
   name: 'Checkbox',
-  props: {
-    checked: { type: Boolean, default: undefined },
-    defaultChecked: Boolean,
-    indeterminate: Boolean,
-    disabled: Boolean,
-    value: [String, Number, Boolean] as PropType<CheckboxValueType>,
-    autoFocus: Boolean,
-    name: String,
-    id: String,
-    title: String,
-    tabIndex: Number,
-    required: Boolean,
-    skipGroup: Boolean,
-    classNames: Object as PropType<import('./types').CheckboxClassNames>,
-    styles: Object as PropType<import('./types').CheckboxStyles>,
-  },
+  props: checkboxProps,
   emits: ['update:checked', 'change', 'click', 'mouseenter', 'mouseleave', 'keypress', 'keydown', 'focus', 'blur'],
   setup(props, { slots, emit, expose }) {
     const prefixCls = usePrefixCls('checkbox')
@@ -40,10 +32,17 @@ export const Checkbox = defineComponent({
 
     const innerChecked = ref(props.defaultChecked ?? false)
 
+    // Handle controlled/uncontrolled mode switching
     watch(
       () => props.checked,
-      (v) => {
-        if (v !== undefined) innerChecked.value = v
+      (newVal, oldVal) => {
+        if (newVal !== undefined) {
+          // Controlled mode: sync checked value
+          innerChecked.value = newVal
+        } else if (oldVal !== undefined && newVal === undefined) {
+          // Switching from controlled to uncontrolled: preserve last controlled value
+          innerChecked.value = oldVal
+        }
       },
     )
 
@@ -59,7 +58,8 @@ export const Checkbox = defineComponent({
       if (!props.skipGroup && group && props.value !== undefined) {
         group.registerValue(props.value)
       }
-      if (props.autoFocus && inputRef.value) {
+      // SSR compatible: only focus in browser environment
+      if (props.autoFocus && inputRef.value && typeof window !== 'undefined') {
         inputRef.value.focus()
       }
       // Set initial indeterminate state
@@ -136,9 +136,11 @@ export const Checkbox = defineComponent({
       emit('blur', e)
     }
 
-    // Expose input ref for parent access
+    // Expose input ref and helper methods for parent access
     expose({
       input: inputRef,
+      focus: () => inputRef.value?.focus(),
+      blur: () => inputRef.value?.blur(),
     })
 
     const mergedName = computed(() => {
@@ -185,7 +187,7 @@ export const Checkbox = defineComponent({
             title={props.title}
             tabindex={props.tabIndex}
             required={props.required || undefined}
-            value={props.value as any}
+            value={props.value !== undefined ? String(props.value) : undefined}
             onChange={handleChange}
             onKeypress={handleKeyPress}
             onKeydown={handleKeyDown}
@@ -201,119 +203,5 @@ export const Checkbox = defineComponent({
         )}
       </label>
     )
-  },
-})
-
-export const CheckboxGroup = defineComponent({
-  name: 'CheckboxGroup',
-  props: {
-    value: Array as PropType<CheckboxValueType[]>,
-    defaultValue: Array as PropType<CheckboxValueType[]>,
-    disabled: Boolean,
-    name: String,
-    options: Array as PropType<Array<CheckboxValueType | CheckboxOptionType>>,
-    style: Object as PropType<Record<string, any>>,
-    className: String,
-  },
-  emits: ['update:value', 'change'],
-  setup(props, { slots, emit }) {
-    const prefixCls = usePrefixCls('checkbox')
-    const innerValue = ref<CheckboxValueType[]>(props.defaultValue ?? [])
-    const registeredValues = ref<CheckboxValueType[]>([])
-
-    watch(
-      () => props.value,
-      (v) => {
-        if (v !== undefined) innerValue.value = v
-      },
-    )
-
-    const currentValue = computed(() => (props.value !== undefined ? props.value : innerValue.value))
-
-    const registerValue = (val: CheckboxValueType) => {
-      if (!registeredValues.value.includes(val)) {
-        registeredValues.value.push(val)
-      }
-    }
-
-    const cancelValue = (val: CheckboxValueType) => {
-      registeredValues.value = registeredValues.value.filter((v) => v !== val)
-    }
-
-    const handleChange = (val: CheckboxValueType, checked: boolean) => {
-      const next = checked ? [...currentValue.value, val] : currentValue.value.filter((v) => v !== val)
-
-      // Filter to only include registered values and sort by registration order
-      const filteredNext = next
-        .filter((v) => registeredValues.value.includes(v))
-        .sort((a, b) => {
-          const indexA = registeredValues.value.indexOf(a)
-          const indexB = registeredValues.value.indexOf(b)
-          return indexA - indexB
-        })
-
-      innerValue.value = filteredNext
-      emit('update:value', filteredNext)
-      emit('change', filteredNext)
-    }
-
-    provide<CheckboxGroupContext>(CHECKBOX_GROUP_KEY, {
-      get value() {
-        return currentValue.value
-      },
-      get disabled() {
-        return props.disabled ?? false
-      },
-      get name() {
-        return props.name
-      },
-      onChange: handleChange,
-      registerValue,
-      cancelValue,
-    })
-
-    const normalizedOptions = computed(() => {
-      if (!props.options) return []
-      return props.options.map((opt) => {
-        if (typeof opt === 'object' && opt !== null && 'value' in opt) {
-          return opt as CheckboxOptionType
-        }
-        return { label: String(opt), value: opt as CheckboxValueType }
-      })
-    })
-
-    return () => {
-      const groupClass = cls(`${prefixCls}-group`, props.className)
-
-      if (props.options && props.options.length > 0) {
-        return (
-          <div class={groupClass} style={props.style}>
-            {normalizedOptions.value.map((opt) => {
-              const itemDisabled = opt.disabled !== undefined ? opt.disabled : props.disabled
-              return (
-                <Checkbox
-                  key={String(opt.value)}
-                  value={opt.value}
-                  disabled={itemDisabled}
-                  style={opt.style}
-                  class={cls(`${prefixCls}-group-item`, opt.className)}
-                  title={opt.title}
-                  id={opt.id}
-                  required={opt.required}
-                  v-slots={{
-                    default: () => opt.label,
-                  }}
-                />
-              )
-            })}
-          </div>
-        )
-      }
-      return (
-        <div class={groupClass} style={props.style}>
-          {slots.default?.()}
-        </div>
-      )
-    }
   },
 })

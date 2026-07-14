@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import { Checkbox, CheckboxGroup } from '../Checkbox'
+import { Checkbox } from '../Checkbox'
+import { CheckboxGroup } from '../CheckboxGroup'
 import { nextTick, ref } from 'vue'
 
 describe('Checkbox', () => {
