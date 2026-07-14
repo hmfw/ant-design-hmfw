@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 67 high-quality components with TypeScript support",
   "keywords": [
     "vue3",

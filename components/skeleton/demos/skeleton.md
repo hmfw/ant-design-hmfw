@@ -58,6 +58,30 @@
   <SkeletonImageNode />
 </DemoBlock>
 
+### 高级配置
+
+灵活控制标题、段落、圆角等配置项。
+
+<DemoBlock title="高级配置" :source="SkeletonAdvancedSource">
+  <SkeletonAdvanced />
+</DemoBlock>
+
+### 段落配置
+
+自定义段落行数和宽度，支持数组形式精确控制每行宽度。
+
+<DemoBlock title="段落配置" :source="SkeletonParagraphSource">
+  <SkeletonParagraph />
+</DemoBlock>
+
+### 自定义尺寸
+
+使用数字像素值自定义 Avatar 尺寸，适配各种设计需求。
+
+<DemoBlock title="自定义尺寸" :source="SkeletonCustomSizeSource">
+  <SkeletonCustomSize />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对主组件及各子组件的元素做细粒度样式控制。

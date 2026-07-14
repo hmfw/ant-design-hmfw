@@ -23,8 +23,16 @@ Skeleton.Image = SkeletonImage
 Skeleton.Node = SkeletonNode
 
 export { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode }
-export type { SkeletonAvatarProps, SkeletonTitleProps, SkeletonParagraphProps } from './Skeleton'
 export type {
+  SkeletonProps,
+  SkeletonAvatarProps,
+  SkeletonTitleProps,
+  SkeletonParagraphProps,
+  SkeletonButtonProps,
+  SkeletonInputProps,
+  SkeletonAvatarComponentProps,
+  SkeletonImageProps,
+  SkeletonNodeProps,
   SkeletonClassNames,
   SkeletonStyles,
   SkeletonButtonClassNames,

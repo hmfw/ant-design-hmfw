@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { Skeleton, SkeletonButton, SkeletonInput, SkeletonAvatar, SkeletonImage, SkeletonNode } from '../Skeleton'
 import { ConfigProvider } from '../../config-provider'
 
@@ -291,5 +291,169 @@ describe('SkeletonNode', () => {
     })
     expect(wrapper.find('.custom-icon').exists()).toBe(true)
     expect(wrapper.find('circle').exists()).toBe(true)
+  })
+})
+
+describe('Skeleton - Edge Cases', () => {
+  it('handles negative rows', () => {
+    const wrapper = mount(Skeleton, { props: { paragraph: { rows: -5 } } })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    expect(rows.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('handles zero rows', () => {
+    const wrapper = mount(Skeleton, { props: { paragraph: { rows: 0 } } })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    expect(rows.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('limits excessive rows', () => {
+    const wrapper = mount(Skeleton, { props: { paragraph: { rows: 1000 } } })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    expect(rows.length).toBeLessThanOrEqual(20)
+  })
+
+  it('handles zero avatar size', () => {
+    const wrapper = mount(SkeletonAvatar, { props: { size: 0 } })
+    const avatar = wrapper.find('.hmfw-skeleton-avatar')
+    const style = avatar.attributes('style')
+    expect(style).toContain('width: 8px') // 应用最小值
+    expect(style).toContain('height: 8px')
+  })
+
+  it('handles negative avatar size', () => {
+    const wrapper = mount(SkeletonAvatar, { props: { size: -10 } })
+    const avatar = wrapper.find('.hmfw-skeleton-avatar')
+    const style = avatar.attributes('style')
+    expect(style).toContain('width: 8px')
+    expect(style).toContain('height: 8px')
+  })
+
+  it('handles excessive avatar size', () => {
+    const wrapper = mount(SkeletonAvatar, { props: { size: 999 } })
+    const avatar = wrapper.find('.hmfw-skeleton-avatar')
+    const style = avatar.attributes('style')
+    expect(style).toContain('width: 200px') // 应用最大值
+    expect(style).toContain('height: 200px')
+  })
+
+  it('handles NaN avatar size', () => {
+    const wrapper = mount(SkeletonAvatar, { props: { size: NaN } })
+    const avatar = wrapper.find('.hmfw-skeleton-avatar')
+    const style = avatar.attributes('style')
+    // 应回退到默认尺寸
+    expect(style).not.toContain('NaN')
+    expect(avatar.exists()).toBe(true)
+  })
+
+  it('handles Infinity avatar size', () => {
+    const wrapper = mount(SkeletonAvatar, { props: { size: Infinity } })
+    const avatar = wrapper.find('.hmfw-skeleton-avatar')
+    const style = avatar.attributes('style')
+    expect(style).not.toContain('Infinity')
+    expect(style).toContain('32px') // 回退到 default
+  })
+
+  it('handles invalid string width', () => {
+    const wrapper = mount(Skeleton, { props: { title: { width: 'invalid-css' } } })
+    const title = wrapper.find('.hmfw-skeleton-title')
+    // 应回退到默认值
+    expect(title.attributes('style')).toContain('100%')
+  })
+
+  it('handles NaN width', () => {
+    const wrapper = mount(Skeleton, { props: { paragraph: { width: NaN } } })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    const lastRow = rows[rows.length - 1]
+    expect(lastRow.attributes('style')).not.toContain('NaN')
+    expect(lastRow.attributes('style')).toContain('100%')
+  })
+
+  it('pads short width array with 100%', () => {
+    const wrapper = mount(Skeleton, {
+      props: { paragraph: { rows: 5, width: ['50%', '60%'] } },
+    })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    expect(rows).toHaveLength(5)
+    expect(rows[0].attributes('style')).toContain('50%')
+    expect(rows[1].attributes('style')).toContain('60%')
+    expect(rows[2].attributes('style')).toContain('100%')
+    expect(rows[3].attributes('style')).toContain('100%')
+    expect(rows[4].attributes('style')).toContain('100%')
+  })
+
+  it('truncates excessive width array', () => {
+    const wrapper = mount(Skeleton, {
+      props: { paragraph: { rows: 2, width: ['10%', '20%', '30%', '40%'] } },
+    })
+    const rows = wrapper.findAll('.hmfw-skeleton-paragraph li')
+    expect(rows).toHaveLength(2)
+    expect(rows[0].attributes('style')).toContain('10%')
+    expect(rows[1].attributes('style')).toContain('20%')
+  })
+
+  it('handles Infinity width', () => {
+    const wrapper = mount(Skeleton, { props: { title: { width: Infinity } } })
+    const title = wrapper.find('.hmfw-skeleton-title')
+    expect(title.attributes('style')).not.toContain('Infinity')
+    expect(title.attributes('style')).toContain('100%')
+  })
+
+  it('handles empty string width', () => {
+    const wrapper = mount(Skeleton, { props: { title: { width: '   ' } } })
+    const title = wrapper.find('.hmfw-skeleton-title')
+    expect(title.attributes('style')).toContain('100%')
+  })
+})
+
+describe('Skeleton - Warnings', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('warns when all content disabled', () => {
+    mount(Skeleton, {
+      props: { title: false, paragraph: false, avatar: false },
+    })
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('未启用任何内容'))
+  })
+
+  it('warns on invalid NaN size', () => {
+    mount(SkeletonAvatar, { props: { size: NaN } })
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('无效的 size 值'))
+  })
+
+  it('warns on excessive rows', () => {
+    mount(Skeleton, { props: { paragraph: { rows: 100 } } })
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('paragraph.rows 过大'))
+  })
+
+  it('warns on negative rows', () => {
+    mount(Skeleton, { props: { paragraph: { rows: -5 } } })
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('paragraph.rows 不能小于 1'))
+  })
+
+  it('warns on small avatar size', () => {
+    mount(SkeletonAvatar, { props: { size: 2 } })
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('size 2px 过小'))
+  })
+
+  it('warns on large avatar size', () => {
+    mount(SkeletonAvatar, { props: { size: 500 } })
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('size 500px 过大'))
+  })
+
+  it('warns on invalid string width', () => {
+    mount(Skeleton, { props: { title: { width: 'not-a-valid-width' } } })
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('无效的 width 值'))
+  })
+
+  it('warns on NaN width', () => {
+    mount(Skeleton, { props: { paragraph: { width: NaN } } })
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('无效的 width 值'))
   })
 })

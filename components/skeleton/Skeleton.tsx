@@ -2,6 +2,15 @@ import { defineComponent, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import type {
+  SkeletonProps,
+  SkeletonAvatarProps,
+  SkeletonTitleProps,
+  SkeletonParagraphProps,
+  SkeletonButtonProps,
+  SkeletonInputProps,
+  SkeletonAvatarComponentProps,
+  SkeletonImageProps,
+  SkeletonNodeProps,
   SkeletonClassNames,
   SkeletonStyles,
   SkeletonButtonClassNames,
@@ -16,19 +25,87 @@ import type {
   SkeletonNodeStyles,
 } from './types'
 
-export interface SkeletonAvatarProps {
-  size?: 'large' | 'small' | 'default' | number
-  shape?: 'circle' | 'square'
+// 尺寸约束常量
+const SIZE_CONSTRAINTS = {
+  MIN: 8, // 最小尺寸 8px (避免不可见)
+  MAX: 200, // 最大尺寸 200px (避免布局破坏)
+  DEFAULT: { large: 40, small: 24, default: 32 },
+} as const
+
+// 段落约束常量
+const PARAGRAPH_CONSTRAINTS = {
+  MIN_ROWS: 1,
+  MAX_ROWS: 20, // 防止渲染过多 DOM 节点
+  DEFAULT_LAST_ROW_WIDTH: '61%',
+} as const
+
+/**
+ * 标准化数字尺寸，确保在合理范围内
+ */
+function normalizeNumericSize(size: number): number {
+  if (!isFinite(size)) {
+    if (import.meta.env.DEV) {
+      console.warn(`[Skeleton] 无效的 size 值: ${size}，已回退到 ${SIZE_CONSTRAINTS.DEFAULT.default}px`)
+    }
+    return SIZE_CONSTRAINTS.DEFAULT.default
+  }
+  if (size < SIZE_CONSTRAINTS.MIN) {
+    if (import.meta.env.DEV) {
+      console.warn(`[Skeleton] size ${size}px 过小，已调整为 ${SIZE_CONSTRAINTS.MIN}px`)
+    }
+    return SIZE_CONSTRAINTS.MIN
+  }
+  if (size > SIZE_CONSTRAINTS.MAX) {
+    if (import.meta.env.DEV) {
+      console.warn(`[Skeleton] size ${size}px 过大，已调整为 ${SIZE_CONSTRAINTS.MAX}px`)
+    }
+    return SIZE_CONSTRAINTS.MAX
+  }
+  return size
 }
 
-export interface SkeletonTitleProps {
-  width?: string | number
+// 合法宽度正则 (支持数字 + 常见 CSS 单位)
+const VALID_WIDTH_REGEX = /^[\d.]+(%|px|rem|em|vh|vw)?$/
+
+/**
+ * 标准化宽度值，确保类型安全
+ */
+function normalizeWidth(width: string | number | undefined): string {
+  if (width === undefined) return '100%'
+
+  if (typeof width === 'number') {
+    if (!isFinite(width)) {
+      if (import.meta.env.DEV) {
+        console.warn(`[Skeleton] 无效的 width 值: ${width}，已回退到 100%`)
+      }
+      return '100%'
+    }
+    return `${Math.max(0, width)}px`
+  }
+
+  const trimmed = width.trim()
+  if (!trimmed || !VALID_WIDTH_REGEX.test(trimmed)) {
+    if (import.meta.env.DEV) {
+      console.warn(`[Skeleton] 无效的 width 值: "${width}"，已回退到 100%`)
+    }
+    return '100%'
+  }
+
+  return trimmed
 }
 
-export interface SkeletonParagraphProps {
-  rows?: number
-  width?: string | number | (string | number)[]
-}
+/**
+ * 布局宽度常量
+ * 基于 Ant Design 视觉规范
+ */
+const LAYOUT_WIDTHS = {
+  /** 标题宽度: 有头像 + 有段落 */
+  TITLE_WITH_AVATAR_AND_PARAGRAPH: '50%',
+  /** 标题宽度: 无头像 + 有段落 */
+  TITLE_NO_AVATAR_WITH_PARAGRAPH: '38%',
+  /** 标题宽度: 无段落 (独占一行) */
+  TITLE_FULL: '100%',
+} as const
 
 // Helper to get avatar default props based on context
 function getAvatarBasicProps(hasTitle: boolean, hasParagraph: boolean): SkeletonAvatarProps {
@@ -40,9 +117,9 @@ function getAvatarBasicProps(hasTitle: boolean, hasParagraph: boolean): Skeleton
 
 // Helper to get title default width
 function getTitleBasicWidth(hasAvatar: boolean, hasParagraph: boolean): string {
-  if (!hasAvatar && hasParagraph) return '38%'
-  if (hasAvatar && hasParagraph) return '50%'
-  return '100%'
+  if (!hasAvatar && hasParagraph) return LAYOUT_WIDTHS.TITLE_NO_AVATAR_WITH_PARAGRAPH
+  if (hasAvatar && hasParagraph) return LAYOUT_WIDTHS.TITLE_WITH_AVATAR_AND_PARAGRAPH
+  return LAYOUT_WIDTHS.TITLE_FULL
 }
 
 // Helper to get paragraph default rows
@@ -51,21 +128,29 @@ function getParagraphBasicRows(hasAvatar: boolean, hasTitle: boolean): number {
   return 2
 }
 
+const skeletonProps = {
+  active: { type: Boolean, default: undefined },
+  loading: { type: Boolean, default: true },
+  avatar: {
+    type: [Boolean, Object] as PropType<boolean | SkeletonAvatarProps>,
+    default: undefined,
+  },
+  title: {
+    type: [Boolean, Object] as PropType<boolean | SkeletonTitleProps>,
+    default: true,
+  },
+  paragraph: {
+    type: [Boolean, Object] as PropType<boolean | SkeletonParagraphProps>,
+    default: true,
+  },
+  round: { type: Boolean, default: undefined },
+  classNames: { type: Object as PropType<SkeletonClassNames>, default: undefined },
+  styles: { type: Object as PropType<SkeletonStyles>, default: undefined },
+} satisfies Record<keyof SkeletonProps, any>
+
 export const Skeleton = defineComponent({
   name: 'Skeleton',
-  props: {
-    active: Boolean,
-    loading: { type: Boolean, default: true },
-    avatar: [Boolean, Object] as PropType<boolean | SkeletonAvatarProps>,
-    title: { type: [Boolean, Object] as PropType<boolean | SkeletonTitleProps>, default: true },
-    paragraph: {
-      type: [Boolean, Object] as PropType<boolean | SkeletonParagraphProps>,
-      default: true,
-    },
-    round: Boolean,
-    classNames: Object as PropType<SkeletonClassNames>,
-    styles: Object as PropType<SkeletonStyles>,
-  },
+  props: skeletonProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('skeleton')
     const config = useConfig()
@@ -77,6 +162,14 @@ export const Skeleton = defineComponent({
       const showTitle = props.title !== false
       const showParagraph = props.paragraph !== false
 
+      // 开发环境警告: 全部禁用时渲染空白
+      if (import.meta.env.DEV && !showTitle && !showParagraph && !showAvatar) {
+        console.warn(
+          '[Skeleton] 未启用任何内容 (title/paragraph/avatar 全为 false)，将渲染空白区域。\n' +
+            '建议至少启用一项或使用 loading={false} 显示实际内容。',
+        )
+      }
+
       // Merge props with smart defaults
       const avatarProps = typeof props.avatar === 'object' ? props.avatar : {}
       const mergedAvatarProps = { ...getAvatarBasicProps(showTitle, showParagraph), ...avatarProps }
@@ -85,12 +178,28 @@ export const Skeleton = defineComponent({
       const titleWidth = titleProps.width ?? getTitleBasicWidth(showAvatar, showParagraph)
 
       const paragraphProps = typeof props.paragraph === 'object' ? props.paragraph : {}
-      const rows = paragraphProps.rows ?? getParagraphBasicRows(showAvatar, showTitle)
+      const rawRows = paragraphProps.rows ?? getParagraphBasicRows(showAvatar, showTitle)
+      const rows = Math.max(PARAGRAPH_CONSTRAINTS.MIN_ROWS, Math.min(rawRows, PARAGRAPH_CONSTRAINTS.MAX_ROWS))
+
+      // 开发环境警告
+      if (import.meta.env.DEV && paragraphProps.rows !== undefined) {
+        if (paragraphProps.rows < 1) {
+          console.warn(`[Skeleton] paragraph.rows 不能小于 1，已调整为 1`)
+        }
+        if (paragraphProps.rows > PARAGRAPH_CONSTRAINTS.MAX_ROWS) {
+          console.warn(
+            `[Skeleton] paragraph.rows 过大 (${paragraphProps.rows})，已调整为 ${PARAGRAPH_CONSTRAINTS.MAX_ROWS}。` +
+              `提示: 过多行数可能影响性能`,
+          )
+        }
+      }
 
       // Build paragraph widths array
       let paragraphWidths: (string | number)[]
       if (Array.isArray(paragraphProps.width)) {
-        paragraphWidths = paragraphProps.width
+        // 数组长度不足时用 '100%' 填充，超出时自动截断
+        const widthArray = paragraphProps.width
+        paragraphWidths = Array.from({ length: rows }, (_, i) => widthArray[i] ?? '100%')
       } else if (paragraphProps.width !== undefined) {
         // Last row uses the specified width
         paragraphWidths = Array(rows).fill('100%')
@@ -99,18 +208,14 @@ export const Skeleton = defineComponent({
         // Default: last row is 61% when there is no avatar or no title (对齐 AntD，不限制行数)
         paragraphWidths = Array(rows).fill('100%')
         if (!showAvatar || !showTitle) {
-          paragraphWidths[rows - 1] = '61%'
+          paragraphWidths[rows - 1] = PARAGRAPH_CONSTRAINTS.DEFAULT_LAST_ROW_WIDTH
         }
       }
 
       const avatarSize =
         typeof mergedAvatarProps.size === 'number'
-          ? mergedAvatarProps.size
-          : mergedAvatarProps.size === 'large'
-            ? 40
-            : mergedAvatarProps.size === 'small'
-              ? 24
-              : 32
+          ? normalizeNumericSize(mergedAvatarProps.size)
+          : SIZE_CONSTRAINTS.DEFAULT[mergedAvatarProps.size ?? 'default']
       const avatarShape = mergedAvatarProps.shape ?? 'circle'
 
       return (
@@ -153,7 +258,7 @@ export const Skeleton = defineComponent({
               <h3
                 class={cls(`${prefixCls}-title`, props.classNames?.title)}
                 style={{
-                  width: typeof titleWidth === 'number' ? `${titleWidth}px` : titleWidth,
+                  width: normalizeWidth(titleWidth),
                   ...props.styles?.title,
                 }}
               />
@@ -161,12 +266,12 @@ export const Skeleton = defineComponent({
             {showParagraph && (
               <ul class={cls(`${prefixCls}-paragraph`, props.classNames?.paragraph)} style={props.styles?.paragraph}>
                 {Array.from({ length: rows }).map((_, i) => {
-                  const width = paragraphWidths[i] ?? '100%'
+                  const width = paragraphWidths[i]
                   return (
                     <li
                       key={i}
                       class={props.classNames?.row}
-                      style={{ width: typeof width === 'number' ? `${width}px` : width, ...props.styles?.row }}
+                      style={{ width: normalizeWidth(width), ...props.styles?.row }}
                     />
                   )
                 })}
@@ -188,19 +293,21 @@ function useSize(customSize?: 'large' | 'small' | 'default') {
   return contextSize
 }
 
+const skeletonButtonProps = {
+  active: { type: Boolean, default: undefined },
+  size: { type: String as PropType<'large' | 'small' | 'default'>, default: 'default' },
+  shape: {
+    type: String as PropType<'default' | 'circle' | 'round' | 'square'>,
+    default: 'default',
+  },
+  block: { type: Boolean, default: undefined },
+  classNames: { type: Object as PropType<SkeletonButtonClassNames>, default: undefined },
+  styles: { type: Object as PropType<SkeletonButtonStyles>, default: undefined },
+} satisfies Record<keyof SkeletonButtonProps, any>
+
 export const SkeletonButton = defineComponent({
   name: 'SkeletonButton',
-  props: {
-    active: Boolean,
-    size: { type: String as PropType<'large' | 'small' | 'default'>, default: 'default' },
-    shape: {
-      type: String as PropType<'default' | 'circle' | 'round' | 'square'>,
-      default: 'default',
-    },
-    block: Boolean,
-    classNames: Object as PropType<SkeletonButtonClassNames>,
-    styles: Object as PropType<SkeletonButtonStyles>,
-  },
+  props: skeletonButtonProps,
   setup(props) {
     const prefixCls = usePrefixCls('skeleton')
     const mergedSize = useSize(props.size)
@@ -236,15 +343,17 @@ export const SkeletonButton = defineComponent({
   },
 })
 
+const skeletonInputProps = {
+  active: { type: Boolean, default: undefined },
+  size: { type: String as PropType<'large' | 'small' | 'default'>, default: 'default' },
+  block: { type: Boolean, default: undefined },
+  classNames: { type: Object as PropType<SkeletonInputClassNames>, default: undefined },
+  styles: { type: Object as PropType<SkeletonInputStyles>, default: undefined },
+} satisfies Record<keyof SkeletonInputProps, any>
+
 export const SkeletonInput = defineComponent({
   name: 'SkeletonInput',
-  props: {
-    active: Boolean,
-    size: { type: String as PropType<'large' | 'small' | 'default'>, default: 'default' },
-    block: Boolean,
-    classNames: Object as PropType<SkeletonInputClassNames>,
-    styles: Object as PropType<SkeletonInputStyles>,
-  },
+  props: skeletonInputProps,
   setup(props) {
     const prefixCls = usePrefixCls('skeleton')
     const mergedSize = useSize(props.size)
@@ -277,18 +386,20 @@ export const SkeletonInput = defineComponent({
   },
 })
 
+const skeletonAvatarProps = {
+  active: { type: Boolean, default: undefined },
+  size: {
+    type: [String, Number] as PropType<'large' | 'small' | 'default' | number>,
+    default: 'default',
+  },
+  shape: { type: String as PropType<'circle' | 'square'>, default: 'circle' },
+  classNames: { type: Object as PropType<SkeletonAvatarClassNames>, default: undefined },
+  styles: { type: Object as PropType<SkeletonAvatarStyles>, default: undefined },
+} satisfies Record<keyof SkeletonAvatarComponentProps, any>
+
 export const SkeletonAvatar = defineComponent({
   name: 'SkeletonAvatar',
-  props: {
-    active: Boolean,
-    size: {
-      type: [String, Number] as PropType<'large' | 'small' | 'default' | number>,
-      default: 'default',
-    },
-    shape: { type: String as PropType<'circle' | 'square'>, default: 'circle' },
-    classNames: Object as PropType<SkeletonAvatarClassNames>,
-    styles: Object as PropType<SkeletonAvatarStyles>,
-  },
+  props: skeletonAvatarProps,
   setup(props) {
     const prefixCls = usePrefixCls('skeleton')
     const mergedSize = useSize(typeof props.size === 'string' ? props.size : undefined)
@@ -298,9 +409,9 @@ export const SkeletonAvatar = defineComponent({
       const sizeStyle =
         typeof props.size === 'number'
           ? {
-              width: `${props.size}px`,
-              height: `${props.size}px`,
-              lineHeight: `${props.size}px`,
+              width: `${normalizeNumericSize(props.size)}px`,
+              height: `${normalizeNumericSize(props.size)}px`,
+              lineHeight: `${normalizeNumericSize(props.size)}px`,
             }
           : {}
 
@@ -335,13 +446,15 @@ export const SkeletonAvatar = defineComponent({
   },
 })
 
+const skeletonImageProps = {
+  active: { type: Boolean, default: undefined },
+  classNames: { type: Object as PropType<SkeletonImageClassNames>, default: undefined },
+  styles: { type: Object as PropType<SkeletonImageStyles>, default: undefined },
+} satisfies Record<keyof SkeletonImageProps, any>
+
 export const SkeletonImage = defineComponent({
   name: 'SkeletonImage',
-  props: {
-    active: Boolean,
-    classNames: Object as PropType<SkeletonImageClassNames>,
-    styles: Object as PropType<SkeletonImageStyles>,
-  },
+  props: skeletonImageProps,
   setup(props) {
     const prefixCls = usePrefixCls('skeleton')
     return () => (
@@ -376,15 +489,17 @@ export const SkeletonImage = defineComponent({
   },
 })
 
+const skeletonNodeProps = {
+  active: { type: Boolean, default: undefined },
+  fullSize: { type: Boolean, default: undefined },
+  nodeStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  classNames: { type: Object as PropType<SkeletonNodeClassNames>, default: undefined },
+  styles: { type: Object as PropType<SkeletonNodeStyles>, default: undefined },
+} satisfies Record<keyof SkeletonNodeProps, any>
+
 export const SkeletonNode = defineComponent({
   name: 'SkeletonNode',
-  props: {
-    active: Boolean,
-    fullSize: Boolean,
-    nodeStyle: Object as PropType<CSSProperties>,
-    classNames: Object as PropType<SkeletonNodeClassNames>,
-    styles: Object as PropType<SkeletonNodeStyles>,
-  },
+  props: skeletonNodeProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('skeleton')
     return () => (
