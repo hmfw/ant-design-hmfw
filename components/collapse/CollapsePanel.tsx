@@ -3,14 +3,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { RightOutlined } from '@hmfw/icons'
 import type { CollapsibleType, CollapseClassNames, CollapseStyles } from './types'
-import {
-  COLLAPSE_CONTEXT_KEY,
-  deriveCollapsibleState,
-  renderPanelNode,
-  ICON_ROTATE_OPEN,
-  ICON_ROTATE_CLOSED,
-  type CollapseContext,
-} from './Collapse'
+import { COLLAPSE_CONTEXT_KEY, deriveCollapsibleState, renderPanelNode, type CollapseContext } from './Collapse'
 
 export const CollapsePanel = defineComponent({
   name: 'CollapsePanel',
@@ -90,9 +83,7 @@ export const CollapsePanel = defineComponent({
       if (context.expandIcon.value) {
         return context.expandIcon.value({ isActive: isOpen.value, panelKey: key.value })
       }
-      return (
-        <RightOutlined class="hmfw-icon" style={{ transform: isOpen.value ? ICON_ROTATE_OPEN : ICON_ROTATE_CLOSED }} />
-      )
+      return <RightOutlined class="hmfw-icon" />
     }
 
     return () =>

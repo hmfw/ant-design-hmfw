@@ -23,7 +23,7 @@ import type { CollapseItem, CollapsibleType, ExpandIconProps, CollapseClassNames
 const CLOSED_HEIGHT = '0'
 const CLOSED_OPACITY = '0'
 const OPEN_OPACITY = '1'
-export const ICON_ROTATE_OPEN = 'rotate(45deg)'
+export const ICON_ROTATE_OPEN = 'rotate(90deg)'
 export const ICON_ROTATE_CLOSED = 'rotate(0deg)'
 
 // ============================================================
