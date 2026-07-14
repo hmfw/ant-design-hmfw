@@ -1,7 +1,7 @@
-import { defineComponent, type PropType } from 'vue'
+import { defineComponent, type PropType, type CSSProperties, type VNode } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
-import type { EmptyClassNames, EmptyStyles } from './types'
+import type { EmptyProps, EmptyClassNames, EmptyStyles } from './types'
 
 // 预设图片标识（与 AntD 的 PRESENTED_IMAGE_DEFAULT / PRESENTED_IMAGE_SIMPLE 对应）
 export const PRESENTED_IMAGE_DEFAULT = 'default'
@@ -43,32 +43,37 @@ const SimpleEmptyImage = () => (
   </svg>
 )
 
-export const Empty = defineComponent({
-  name: 'Empty',
-  props: {
-    image: {
-      type: [String, Boolean] as PropType<string | false>,
-      default: undefined,
-    },
-    imageStyle: Object as PropType<Record<string, string>>,
-    // 图片宽度，便于在不传整个 imageStyle 的情况下控制默认图片尺寸
-    // 支持数字（按 px 处理）或带单位的字符串
-    imageWidth: {
-      type: [Number, String] as PropType<number | string>,
-      default: undefined,
-    },
-    // 图片高度，同 imageWidth
-    imageHeight: {
-      type: [Number, String] as PropType<number | string>,
-      default: undefined,
-    },
-    description: {
-      type: [String, Boolean] as PropType<string | false>,
-      default: undefined,
-    },
-    classNames: Object as PropType<EmptyClassNames>,
-    styles: Object as PropType<EmptyStyles>,
+// props 单一真值源：用 satisfies 强制 key 集合与 EmptyProps 接口完全一致
+// 接口中增/删属性 → 此处编译报错，杜绝双源头漂移
+const emptyProps = {
+  image: {
+    type: [String, Boolean] as PropType<string | false>,
+    default: undefined,
   },
+  imageStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  // 图片宽度，便于在不传整个 imageStyle 的情况下控制默认图片尺寸
+  // 支持数字（按 px 处理）或带单位的字符串
+  imageWidth: {
+    type: [Number, String] as PropType<number | string>,
+    default: undefined,
+  },
+  // 图片高度，同 imageWidth
+  imageHeight: {
+    type: [Number, String] as PropType<number | string>,
+    default: undefined,
+  },
+  description: {
+    type: [String, Boolean] as PropType<string | false>,
+    default: undefined,
+  },
+  classNames: { type: Object as PropType<EmptyClassNames>, default: undefined },
+  styles: { type: Object as PropType<EmptyStyles>, default: undefined },
+} satisfies Record<keyof EmptyProps, any>
+
+// Empty 无 emits 事件，用 defineComponent<EmptyProps> 在 setup(props) 中获取接口类型
+const EmptyComponent = defineComponent({
+  name: 'Empty',
+  props: emptyProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('empty')
     const locale = useLocale()
@@ -81,47 +86,47 @@ export const Empty = defineComponent({
 
     return () => {
       const showImage = props.image !== false
-      const showDescription = props.description !== false
+      // 提供了 description 插槽时优先展示插槽内容，即使 description=false 也不屏蔽
+      const showDescription = !!slots.description || props.description !== false
       const isSimple = props.image === PRESENTED_IMAGE_SIMPLE
 
       // 合并尺寸控制：imageWidth/imageHeight 作为便捷入口，
       // 与 imageStyle 合并，imageStyle 优先级更高
-      const sizeStyle: Record<string, string> = {}
+      const sizeStyle: CSSProperties = {}
       const w = normalizeSize(props.imageWidth)
       const h = normalizeSize(props.imageHeight)
       if (w !== undefined) sizeStyle.width = w
       if (h !== undefined) sizeStyle.height = h
       // 合并图片样式：尺寸便捷入口 < imageStyle < 语义化 styles.image
-      const mergedImageStyle = { ...sizeStyle, ...props.imageStyle, ...props.styles?.image }
+      const mergedImageStyle: CSSProperties = { ...sizeStyle, ...props.imageStyle, ...props.styles?.image }
 
-      let imageNode: unknown = null
+      // 图片替代文本：description 为字符串时用它，否则回退 'empty'（与 AntD v6 对齐，利于无障碍）
+      const alt = typeof props.description === 'string' ? props.description : 'empty'
+
+      let imageNode: VNode | null = null
       if (showImage) {
+        // 先计算图片内容（自定义插槽 / URL 图片 / 预设插画），再由单一容器包裹，避免重复的 wrapper
+        let imageContent: VNode
         if (slots.image) {
           // 自定义图片插槽
-          imageNode = (
-            <div class={cls(`${prefixCls}-image`, props.classNames?.image)} style={mergedImageStyle}>
-              {slots.image()}
-            </div>
-          )
+          imageContent = <>{slots.image()}</>
         } else if (
           typeof props.image === 'string' &&
           props.image !== PRESENTED_IMAGE_SIMPLE &&
           props.image !== PRESENTED_IMAGE_DEFAULT
         ) {
           // 字符串 URL
-          imageNode = (
-            <div class={cls(`${prefixCls}-image`, props.classNames?.image)} style={mergedImageStyle}>
-              <img src={props.image} alt="empty" draggable={false} />
-            </div>
-          )
+          imageContent = <img src={props.image} alt={alt} draggable={false} />
         } else {
           // 预设插画
-          imageNode = (
-            <div class={cls(`${prefixCls}-image`, props.classNames?.image)} style={mergedImageStyle}>
-              {isSimple ? <SimpleEmptyImage /> : <DefaultEmptyImage />}
-            </div>
-          )
+          imageContent = isSimple ? <SimpleEmptyImage /> : <DefaultEmptyImage />
         }
+
+        imageNode = (
+          <div class={cls(`${prefixCls}-image`, props.classNames?.image)} style={mergedImageStyle}>
+            {imageContent}
+          </div>
+        )
       }
 
       const descriptionNode = showDescription && (
@@ -150,6 +155,13 @@ export const Empty = defineComponent({
   },
 })
 
-// 挂载预设常量（与 AntD 对齐）
-;(Empty as any).PRESENTED_IMAGE_DEFAULT = PRESENTED_IMAGE_DEFAULT
-;(Empty as any).PRESENTED_IMAGE_SIMPLE = PRESENTED_IMAGE_SIMPLE
+// 复合组件类型：组件本体 + 挂载的预设常量（与 AntD 对齐，消除 as any）
+type EmptyType = typeof EmptyComponent & {
+  PRESENTED_IMAGE_DEFAULT: typeof PRESENTED_IMAGE_DEFAULT
+  PRESENTED_IMAGE_SIMPLE: typeof PRESENTED_IMAGE_SIMPLE
+}
+
+export const Empty = Object.assign(EmptyComponent, {
+  PRESENTED_IMAGE_DEFAULT,
+  PRESENTED_IMAGE_SIMPLE,
+}) as EmptyType

@@ -33,6 +33,22 @@
   <EmptyAction />
 </DemoBlock>
 
+### 自定义图片
+
+通过 `image` 传入图片 URL，或使用 `#image` 插槽自定义任意节点；`image={false}` 可隐藏图片。
+
+<DemoBlock title="自定义图片" :source="EmptyCustomImageSource">
+  <EmptyCustomImage />
+</DemoBlock>
+
+### 描述控制
+
+`description={false}` 隐藏描述，`#description` 插槽可自定义富文本描述；插槽优先级高于 `description={false}`。
+
+<DemoBlock title="描述控制" :source="EmptyDescriptionSource">
+  <EmptyDescription />
+</DemoBlock>
+
 ### 简约模式
 
 通过 `image="simple"`（或 `PRESENTED_IMAGE_SIMPLE`）使用更紧凑的简约空状态。
@@ -233,6 +249,8 @@ interface EmptyStyles {
 - `classNames.root` 会与组件内置的状态类名（如 `.hmfw-empty-normal`）合并
 - `description` 和 `footer` 节点仅在有内容时渲染，但 `classNames` / `styles` 会正确应用
 - `styles.image` 与已有的 `imageStyle` prop 会合并，优先级：`sizeStyle` < `imageStyle` < `styles.image`
+- `description` 为 `false` 时不渲染描述节点；但若提供了 `#description` 插槽，则以插槽内容为准（插槽优先级高于 `description=false`）
+- 当 `image` 为图片 URL 时，`img` 的 `alt` 会取字符串 `description`（无字符串描述时回退为 `'empty'`），利于无障碍访问
 
 ## 设计 Token
 

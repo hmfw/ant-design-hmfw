@@ -10,6 +10,30 @@
 
 ## 最近版本
 
+## [0.23.0] - 2026-07-14
+
+[查看完整内容](./changelogs/v0.23.0.md)
+
+### 🔧 重构
+
+- **Empty props 类型规范化**：提取 `emptyProps` 并使用 `satisfies Record<keyof EmptyProps, any>` 模式
+- **图片渲染去重 + 消除 `as any`**：三分支合并单一 wrapper，复合类型挂载预设常量
+
+### ✨ 新特性
+
+- **`img alt` 无障碍增强**：优先取字符串 `description`，与 AntD v6 对齐
+- **`#description` 插槽优先级高于 `description={false}`**：提供插槽时始终展示
+
+### 💥 Breaking Changes
+
+- **`imageStyle` 类型**：`Record<string, string>` → `CSSProperties`（对绝大多数用法向后兼容）
+
+### 📊 质量提升
+
+- 测试覆盖：18 → 21 (+17%)、文档 7 → 9 Demo (+29%)，覆盖全部对外能力
+
+---
+
 ## [0.22.0] - 2026-07-14
 
 [查看完整内容](./changelogs/v0.22.0.md)
@@ -160,29 +184,11 @@
 
 ---
 
-## [0.16.0] - 2026-07-12
-
-[查看完整内容](./changelogs/v0.16.0.md)
-
-### 💥 Breaking Changes
-
-- **Tabs 受控化**：移除 `defaultActiveKey` 属性，改为完全受控模式
-
-### 🔧 重构
-
-- **Tabs 文件拆分**：将 ink bar 定位逻辑抽取为 `useInkBar` composable
-- **Tabs 类型系统**：`TabItem.children` 类型收敛为 `VNode | string`
-
-### 📝 文档
-
-- **Tabs**：新增 9 个 Demo，覆盖禁用、动画、受控、嵌套等场景
-
----
-
 ## 历史版本索引
 
 | 版本                              | 日期       | 重点变更                                   |
 | --------------------------------- | ---------- | ------------------------------------------ |
+| [0.16.0](./changelogs/v0.16.0.md) | 2026-07-12 | Tabs 受控化、ink bar 抽取 composable       |
 | [0.15.0](./changelogs/v0.15.0.md) | 2026-07-11 | Input 受控化、TextArea count 配置          |
 | [0.14.0](./changelogs/v0.14.0.md) | 2026-07-11 | Select 受控化、自定义字段名                |
 | [0.13.0](./changelogs/v0.13.0.md) | 2026-07-10 | Pagination 受控化、响应式优化              |

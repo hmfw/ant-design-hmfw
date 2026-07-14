@@ -23,6 +23,15 @@ describe('Empty', () => {
     expect(wrapper.find('.hmfw-empty-description').exists()).toBe(false)
   })
 
+  it('description slot takes precedence over description=false', () => {
+    const wrapper = mount(Empty, {
+      props: { description: false },
+      slots: { description: '<span class="slot-desc">Custom</span>' },
+    })
+    expect(wrapper.find('.hmfw-empty-description').exists()).toBe(true)
+    expect(wrapper.find('.slot-desc').text()).toBe('Custom')
+  })
+
   it('shows default image', () => {
     const wrapper = mount(Empty)
     expect(wrapper.find('.hmfw-empty-image').exists()).toBe(true)
@@ -32,6 +41,20 @@ describe('Empty', () => {
   it('shows custom image url', () => {
     const wrapper = mount(Empty, { props: { image: 'https://example.com/img.png' } })
     expect(wrapper.find('img').attributes('src')).toBe('https://example.com/img.png')
+  })
+
+  it('uses string description as img alt for accessibility', () => {
+    const wrapper = mount(Empty, {
+      props: { image: 'https://example.com/img.png', description: 'No results found' },
+    })
+    expect(wrapper.find('img').attributes('alt')).toBe('No results found')
+  })
+
+  it('falls back to "empty" alt when description is not a string', () => {
+    const wrapper = mount(Empty, {
+      props: { image: 'https://example.com/img.png', description: false },
+    })
+    expect(wrapper.find('img').attributes('alt')).toBe('empty')
   })
 
   it('hides image when false', () => {
