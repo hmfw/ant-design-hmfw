@@ -30,8 +30,14 @@
   border-bottom: 1px solid var(--hmfw-color-border);
 }
 
-.hmfw-collapse-item:last-child {
+.hmfw-collapse-item:last-child,
+.hmfw-collapse-item:last-child .hmfw-collapse-content {
   border-radius: 0 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg);
+}
+
+.hmfw-collapse-borderless .hmfw-collapse-item:last-child,
+.hmfw-collapse-borderless .hmfw-collapse-item:last-child .hmfw-collapse-content {
+  border-radius: 0;
 }
 
 .hmfw-collapse-item-disabled .hmfw-collapse-header {
