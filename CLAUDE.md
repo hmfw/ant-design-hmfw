@@ -2,10 +2,6 @@
 
 基于 Ant Design v6 的 Vue3 UI 组件库，使用 TypeScript + TSX 实现。
 
-## 项目状态
-
-**v0.1.0 发布版本** - 68 个组件全部完成，1828 个测试通过，已发布到 npm。
-
 ## 语言偏好
 
 **重要**: 处理此项目时，请始终使用**中文**进行回复和交流（代码注释、文档说明、commit 信息、错误提示）。
@@ -72,13 +68,6 @@ pnpm precheck         # 发布前检查
 pnpm release          # 发布到 npm
 ```
 
-## 服务启动约定
-
-**重要**：默认文档站服务（`pnpm dev`）已处于启动状态。
-
-- 需要访问文档站时，先判断服务是否已在运行（检查 `http://localhost:5173` 或相应端口是否可访问），已启动则直接使用，**不要重复启动**。
-- 仅当确认服务未运行时，才执行 `pnpm dev` 启动。
-
 ## 命名规范
 
 - **组件名**: PascalCase（`Button`、`ConfigProvider`）
@@ -105,21 +94,13 @@ components/button/
 
 ### 语义化 API
 
-所有组件都支持 `classNames` 和 `styles` 属性：
+所有组件都支持 `classNames` 和 `styles` 属性，用于精细化控制组件各节点的样式：
 
 ```typescript
 interface SemanticAPI {
   classNames?: { root?: string /* 其他节点 */ }
   styles?: { root?: CSSProperties /* 其他节点 */ }
 }
-```
-
-示例：
-
-```vue
-<Button :classNames="{ root: 'custom-btn', icon: 'custom-icon' }" :styles="{ root: { marginTop: '10px' } }">
-  点击我
-</Button>
 ```
 
 ### Props 类型定义规范
@@ -242,11 +223,31 @@ const allIcons = getAllIcons() // 681 个图标
 
 ## 发布流程
 
-1. 更新 `package.json` 版本号
-2. 更新 `CHANGELOG.md`
-3. 运行 `pnpm precheck`
-4. 发布 `pnpm release`
-5. 打标签 `git tag vX.X.X && git push --tags`
+### CHANGELOG 更新规则
+
+**重要**：CHANGELOG 采用**分布式管理**，主文件仅保留最近 10 个版本，历史版本存档在 `changelogs/` 目录。
+
+#### 新版本发布流程
+
+1. **创建版本文件**：在 `changelogs/` 目录创建 `vX.X.X.md`，编写完整变更记录
+
+2. **更新主 CHANGELOG.md**：
+   - 在「最近版本」章节**头部**插入新版本摘要（3-5 条核心变更）
+   - 添加 `[查看完整内容](./changelogs/vX.X.X.md)` 链接
+   - **删除最旧的版本**（保持最近 10 个版本）
+   - 在「历史版本索引」表格中添加新版本条目
+
+3. **CHANGELOG 格式约定**：
+   - **分类 Emoji**：🔧重构 / ✨新特性 / 🐛修复 / 💥Breaking / 📝文档 / 🧪测试 / 🎨样式 / ⚡性能 / 📊质量提升
+   - **描述规范**：使用**粗体**标注组件名或关键术语，冒号后接具体说明
+   - **破坏性变更**：必须使用 `### 💥 Breaking Changes` 章节单独列出
+
+### 注意事项
+
+- **主文件保持精简**：每个版本摘要控制在 10-15 行，仅列出核心变更
+- **详细内容在独立文件**：`changelogs/vX.X.X.md` 包含完整的变更说明、测试数据、代码示例
+- **索引表格保持最新**：每次发布后同步更新历史版本索引，方便快速查找
+- **破坏性变更突出显示**：使用 `💥 Breaking Changes` 标签，并在主文件摘要中特别标注
 
 ## 参考资源
 
