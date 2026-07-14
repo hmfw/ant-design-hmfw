@@ -10,6 +10,32 @@
 
 ## 最近版本
 
+## [0.24.0] - 2026-07-14
+
+[查看完整内容](./changelogs/v0.24.0.md)
+
+### 🔧 重构
+
+- **Collapse 渲染逻辑去重**：提取 `renderPanelNode` 共享函数，Items/Panel 两模式共用唯一模板（减少 ~200 行重复代码）
+- **CollapsePanel 独立文件**：从 Collapse.tsx 分离到 CollapsePanel.tsx，共享内部 API 通过 export 暴露
+
+### ✨ 新特性
+
+- **Collapse 键盘无障碍**：header 新增 Enter/Space 键支持 + tabindex 管理
+- **Item 级别 `classNames`/`styles`**：面板级语义化样式定制，优先级高于 Collapse 级别
+
+### 🐛 修复
+
+- **Context 类型安全**：定义 `CollapseContext` 接口，消除 `inject<any>`
+- **`CollapseItem.style` 类型修正**：`Record<string, any>` → `CSSProperties`
+- **CSS `:not()` 选择器兼容性**：修复嵌套后代选择器在旧浏览器中的行为
+
+### 📝 文档
+
+- **Collapse demo 扩充**：新增 Ghost、IconPosition、DestroyInactive、PanelLevel 四个 demo（8 → 12）
+
+---
+
 ## [0.23.0] - 2026-07-14
 
 [查看完整内容](./changelogs/v0.23.0.md)
@@ -169,25 +195,12 @@
 
 ---
 
-## [0.16.1] - 2026-07-12
-
-[查看完整内容](./changelogs/v0.16.1.md)
-
-### 💥 Breaking Changes
-
-- **ComponentSize 统一类型**：抽取共享类型 `ComponentSize = 'small' | 'middle' | 'large'`
-- **size 值 `'default'` → `'middle'`**：Pagination、Switch、Spin 等组件统一迁移
-
-### 🔧 重构
-
-- **Tabs ink bar 数据驱动**：重写 ink bar 为数据驱动架构，不再直接操作 DOM
-
----
-
 ## 历史版本索引
 
 | 版本                              | 日期       | 重点变更                                   |
 | --------------------------------- | ---------- | ------------------------------------------ |
+| [0.24.0](./changelogs/v0.24.0.md) | 2026-07-14 | Collapse 全面重构、渲染去重、键盘无障碍    |
+| [0.16.1](./changelogs/v0.16.1.md) | 2026-07-12 | ComponentSize 统一、Tabs ink bar 数据驱动  |
 | [0.16.0](./changelogs/v0.16.0.md) | 2026-07-12 | Tabs 受控化、ink bar 抽取 composable       |
 | [0.15.0](./changelogs/v0.15.0.md) | 2026-07-11 | Input 受控化、TextArea count 配置          |
 | [0.14.0](./changelogs/v0.14.0.md) | 2026-07-11 | Select 受控化、自定义字段名                |

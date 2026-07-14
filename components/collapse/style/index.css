@@ -55,7 +55,7 @@
   gap: 8px;
 }
 
-.hmfw-collapse-header:hover:not(.hmfw-collapse-item-disabled .hmfw-collapse-header) {
+.hmfw-collapse-item:not(.hmfw-collapse-item-disabled) .hmfw-collapse-header:hover {
   background: var(--hmfw-color-fill-alter);
 }
 
@@ -69,10 +69,6 @@
 
 .hmfw-collapse-expand-icon-active {
   /* Rotation is handled inline via style for custom icons */
-}
-
-.hmfw-collapse-icon-position-end .hmfw-collapse-header {
-  flex-direction: row;
 }
 
 .hmfw-collapse-icon-position-end .hmfw-collapse-expand-icon {

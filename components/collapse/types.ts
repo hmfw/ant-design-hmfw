@@ -54,8 +54,12 @@ export interface CollapseItem {
   showArrow?: boolean
   extra?: string | VNode
   collapsible?: CollapsibleType
-  style?: Record<string, any>
+  style?: CSSProperties
   forceRender?: boolean
+  /** 面板级语义化类名（优先级高于 Collapse 级别） */
+  classNames?: CollapseClassNames
+  /** 面板级语义化样式（优先级高于 Collapse 级别） */
+  styles?: CollapseStyles
 }
 
 export interface CollapsePanelProps {
@@ -69,6 +73,8 @@ export interface CollapsePanelProps {
 }
 
 export interface ExpandIconProps {
-  isActive?: boolean
-  panelKey?: string
+  /** 当前面板是否展开 */
+  isActive: boolean
+  /** 面板的 key */
+  panelKey: string
 }

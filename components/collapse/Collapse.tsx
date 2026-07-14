@@ -4,12 +4,12 @@ import {
   computed,
   watch,
   provide,
-  inject,
   Transition,
   cloneVNode,
   Fragment,
   type PropType,
   type VNode,
+  type ComputedRef,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import type { ComponentSize } from '../config-provider'
@@ -17,22 +17,48 @@ import { cls } from '../_utils'
 import { RightOutlined } from '@hmfw/icons'
 import type { CollapseItem, CollapsibleType, ExpandIconProps, CollapseClassNames, CollapseStyles } from './types'
 
+// ============================================================
+// 常量
+// ============================================================
+const CLOSED_HEIGHT = '0'
+const CLOSED_OPACITY = '0'
+const OPEN_OPACITY = '1'
+export const ICON_ROTATE_OPEN = 'rotate(90deg)'
+export const ICON_ROTATE_CLOSED = 'rotate(0deg)'
+
+// ============================================================
+// Context 类型 & Key（Panel 子组件通过 inject 获取）
+// ============================================================
+export interface CollapseContext {
+  activeKeys: ComputedRef<string[]>
+  toggle: (key: string) => void
+  prefixCls: string
+  expandIconPosition: ComputedRef<'start' | 'end'>
+  collapsible: ComputedRef<CollapsibleType | undefined>
+  destroyInactivePanel: ComputedRef<boolean>
+  expandIcon: ComputedRef<((props: ExpandIconProps) => VNode) | undefined>
+  classNames: ComputedRef<CollapseClassNames | undefined>
+  styles: ComputedRef<CollapseStyles | undefined>
+}
+
+export const COLLAPSE_CONTEXT_KEY = Symbol('collapse-context')
+
+// ============================================================
 // 折叠动画钩子
+// ============================================================
 const collapseMotion = {
   onBeforeEnter(el: Element) {
     const element = el as HTMLElement
-    element.style.height = '0'
-    element.style.opacity = '0'
+    element.style.height = CLOSED_HEIGHT
+    element.style.opacity = CLOSED_OPACITY
   },
   onEnter(el: Element) {
     const element = el as HTMLElement
-    // 获取内容的实际高度
     const height = element.scrollHeight
     // 强制浏览器重排以应用初始状态
     element.offsetHeight
-    // 设置目标高度和透明度
     element.style.height = `${height}px`
-    element.style.opacity = '1'
+    element.style.opacity = OPEN_OPACITY
   },
   onAfterEnter(el: Element) {
     const element = el as HTMLElement
@@ -42,14 +68,14 @@ const collapseMotion = {
   onBeforeLeave(el: Element) {
     const element = el as HTMLElement
     element.style.height = `${element.offsetHeight}px`
-    element.style.opacity = '1'
+    element.style.opacity = OPEN_OPACITY
   },
   onLeave(el: Element) {
     const element = el as HTMLElement
     // 强制浏览器重排以应用初始高度
     element.offsetHeight
-    element.style.height = '0'
-    element.style.opacity = '0'
+    element.style.height = CLOSED_HEIGHT
+    element.style.opacity = CLOSED_OPACITY
   },
   onAfterLeave(el: Element) {
     const element = el as HTMLElement
@@ -58,8 +84,168 @@ const collapseMotion = {
   },
 }
 
-const COLLAPSE_CONTEXT_KEY = Symbol('collapse-context')
+// ============================================================
+// 共享：根据 disabled + collapsible 计算派生状态
+// ============================================================
+export interface CollapsibleState {
+  effectiveCollapsible: CollapsibleType | undefined
+  isDisabled: boolean
+  canClickHeader: boolean
+  canClickIcon: boolean
+}
 
+export function deriveCollapsibleState(disabled: boolean, collapsible: CollapsibleType | undefined): CollapsibleState {
+  const effectiveCollapsible = collapsible
+  const isDisabled = disabled || effectiveCollapsible === 'disabled'
+  const canClickHeader = !isDisabled && effectiveCollapsible !== 'icon'
+  const canClickIcon = !isDisabled // !isDisabled 已蕴含 effectiveCollapsible !== 'disabled'
+  return { effectiveCollapsible, isDisabled, canClickHeader, canClickIcon }
+}
+
+// ============================================================
+// 共享：面板节点渲染（Items 模式与 Panel 模式共用唯一模板）
+// ============================================================
+interface PanelRenderOptions {
+  key: string
+  prefixCls: string
+  isOpen: boolean
+  collapsibleState: CollapsibleState
+  showArrow: boolean
+  useTransition: boolean
+  shouldRender: boolean
+  label: string | VNode
+  children: unknown
+  extra?: string | VNode
+  classNames?: CollapseClassNames
+  styles?: CollapseStyles
+  customStyle?: Record<string, any>
+  renderExpandIcon: () => VNode
+  onToggle: () => void
+}
+
+export function renderPanelNode(options: PanelRenderOptions): VNode {
+  const {
+    key,
+    prefixCls,
+    isOpen,
+    collapsibleState: cs,
+    showArrow,
+    useTransition,
+    shouldRender,
+    label,
+    children,
+    extra,
+    classNames,
+    styles,
+    customStyle,
+    renderExpandIcon,
+    onToggle,
+  } = options
+
+  const handleHeaderClick = () => {
+    if (cs.canClickHeader) onToggle()
+  }
+
+  const handleHeaderKeydown = (e: KeyboardEvent) => {
+    if (!cs.canClickHeader) return
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onToggle()
+    }
+  }
+
+  const handleIconClick = (e: MouseEvent) => {
+    if (cs.effectiveCollapsible === 'icon' && cs.canClickIcon) {
+      e.stopPropagation()
+      onToggle()
+    }
+  }
+
+  return (
+    <div
+      key={key}
+      class={cls(`${prefixCls}-item`, classNames?.item, {
+        [`${prefixCls}-item-active`]: isOpen,
+        [`${prefixCls}-item-disabled`]: cs.isDisabled,
+      })}
+      style={{ ...customStyle, ...styles?.item }}
+    >
+      <div
+        class={cls(`${prefixCls}-header`, classNames?.header)}
+        onClick={handleHeaderClick}
+        onKeydown={handleHeaderKeydown}
+        role="button"
+        tabindex={cs.isDisabled ? -1 : 0}
+        aria-expanded={isOpen}
+        aria-disabled={cs.isDisabled}
+        style={{ cursor: cs.canClickHeader ? 'pointer' : 'default', ...styles?.header }}
+      >
+        {showArrow && (
+          <span
+            class={cls(`${prefixCls}-expand-icon`, classNames?.icon, {
+              [`${prefixCls}-expand-icon-active`]: isOpen,
+            })}
+            onClick={handleIconClick}
+            style={{
+              cursor: cs.canClickIcon && cs.effectiveCollapsible === 'icon' ? 'pointer' : 'inherit',
+              ...styles?.icon,
+            }}
+          >
+            {renderExpandIcon()}
+          </span>
+        )}
+        <span class={cls(`${prefixCls}-header-text`, classNames?.headerText)} style={styles?.headerText}>
+          {label}
+        </span>
+        {extra && (
+          <span class={cls(`${prefixCls}-extra`, classNames?.extra)} style={styles?.extra}>
+            {extra}
+          </span>
+        )}
+      </div>
+      {shouldRender && useTransition && (
+        <Transition
+          name={`${prefixCls}-motion`}
+          onBeforeEnter={collapseMotion.onBeforeEnter}
+          onEnter={collapseMotion.onEnter}
+          onAfterEnter={collapseMotion.onAfterEnter}
+          onBeforeLeave={collapseMotion.onBeforeLeave}
+          onLeave={collapseMotion.onLeave}
+          onAfterLeave={collapseMotion.onAfterLeave}
+        >
+          {isOpen && (
+            <div class={cls(`${prefixCls}-content`, classNames?.content)} role="region" style={styles?.content}>
+              <div class={cls(`${prefixCls}-content-box`, classNames?.body)} style={styles?.body}>
+                {children as any}
+              </div>
+            </div>
+          )}
+        </Transition>
+      )}
+      {shouldRender && !useTransition && (
+        <div
+          class={cls(`${prefixCls}-content`, classNames?.content, {
+            [`${prefixCls}-content-hidden`]: !isOpen,
+          })}
+          role="region"
+          style={{
+            height: isOpen ? undefined : CLOSED_HEIGHT,
+            opacity: isOpen ? undefined : CLOSED_OPACITY,
+            ...styles?.content,
+          }}
+        >
+          <div class={cls(`${prefixCls}-content-box`, classNames?.body)} style={styles?.body}>
+            {children as any}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// Collapse 组件
+// ============================================================
 export const Collapse = defineComponent({
   name: 'Collapse',
   props: {
@@ -107,7 +293,6 @@ export const Collapse = defineComponent({
         next = keys.includes(key) ? keys.filter((k) => k !== key) : [...keys, key]
       }
       innerKeys.value = next
-      // Always emit array for consistency with ant-design v6
       emit('update:activeKey', next)
       emit('change', next)
     }
@@ -123,150 +308,75 @@ export const Collapse = defineComponent({
       expandIcon: computed(() => props.expandIcon),
       classNames: computed(() => props.classNames),
       styles: computed(() => props.styles),
-    })
+    } satisfies CollapseContext)
 
+    // 共享的展开图标渲染函数
     const renderExpandIcon = (isActive: boolean, panelKey: string) => {
       if (props.expandIcon) {
         return props.expandIcon({ isActive, panelKey })
       }
-      return <RightOutlined class="hmfw-icon" style={{ transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)' }} />
+      return <RightOutlined class="hmfw-icon" style={{ transform: isActive ? ICON_ROTATE_OPEN : ICON_ROTATE_CLOSED }} />
+    }
+
+    // Items 模式：渲染单个面板（在 setup 级别定义，复用 renderPanelNode）
+    const renderItemPanel = (item: CollapseItem) => {
+      const key = item.key
+      const isOpen = currentKeys.value.includes(key)
+      const collapsibleState = deriveCollapsibleState(item.disabled ?? false, item.collapsible ?? props.collapsible)
+      const shouldRender = isOpen || !props.destroyInactivePanel || (item.forceRender ?? false)
+      const useTransition = !item.forceRender
+      const showArrow = item.showArrow !== false
+
+      // 合并 classNames/styles：Collapse 级别 → Item 级别（Item 优先）
+      const mergedClassNames: CollapseClassNames = {
+        ...props.classNames,
+        ...item.classNames,
+      }
+      const mergedStyles: CollapseStyles = {
+        ...props.styles,
+        ...item.styles,
+      }
+
+      return renderPanelNode({
+        key,
+        prefixCls,
+        isOpen,
+        collapsibleState,
+        showArrow,
+        useTransition,
+        shouldRender,
+        label: item.label,
+        children: item.children,
+        extra: item.extra,
+        classNames: mergedClassNames,
+        styles: mergedStyles,
+        customStyle: item.style as Record<string, any> | undefined,
+        renderExpandIcon: () => renderExpandIcon(isOpen, key),
+        onToggle: () => toggle(key),
+      })
+    }
+
+    // 从插槽 vnode 提取 key，透传给 CollapsePanel 的 panelKey
+    const normalizePanelKey = (vnode: VNode, fallbackIndex: number): VNode => {
+      const resolvedKey = vnode.key != null ? String(vnode.key) : String(fallbackIndex)
+      return cloneVNode(vnode, { panelKey: resolvedKey })
     }
 
     return () => {
       const items = props.items ?? []
-      // 插槽模式下，Vue 会把 <CollapsePanel key="1"> 的 key 存到 vnode.key，
-      // 子组件无法通过 attrs 读取，因此在父级把 vnode.key 透传给 panelKey 属性。
-      const normalizePanelKey = (vnode: VNode, fallbackIndex: number): VNode => {
-        const resolvedKey = vnode.key != null ? String(vnode.key) : String(fallbackIndex)
-        return cloneVNode(vnode, { panelKey: resolvedKey })
-      }
+
+      // 插槽子节点处理：key 透传 + Fragment 展开
       const rawChildren = slots.default?.() ?? []
       let panelIndex = 0
-      const panelChildren = rawChildren.flatMap((vnode) => {
-        // 处理 v-for 包裹的 Fragment
+      const panelChildren: VNode[] = []
+      for (const vnode of rawChildren) {
         if (vnode.type === Fragment && Array.isArray(vnode.children)) {
-          return (vnode.children as VNode[]).map((child) => normalizePanelKey(child, panelIndex++))
+          for (const child of vnode.children as VNode[]) {
+            panelChildren.push(normalizePanelKey(child, panelIndex++))
+          }
+        } else {
+          panelChildren.push(normalizePanelKey(vnode, panelIndex++))
         }
-        return [normalizePanelKey(vnode, panelIndex++)]
-      })
-
-      const renderPanel = (
-        key: string,
-        label: string | VNode,
-        children: unknown,
-        options: {
-          disabled?: boolean
-          showArrow?: boolean
-          extra?: string | VNode
-          collapsible?: CollapsibleType
-          style?: Record<string, any>
-          forceRender?: boolean
-        } = {},
-      ) => {
-        const isOpen = currentKeys.value.includes(key)
-        const shouldRender = isOpen || !props.destroyInactivePanel || options.forceRender
-
-        const effectiveCollapsible = options.collapsible ?? props.collapsible
-        const isDisabled = options.disabled || effectiveCollapsible === 'disabled'
-        const canClickHeader = !isDisabled && effectiveCollapsible !== 'icon'
-        const canClickIcon =
-          !isDisabled &&
-          (effectiveCollapsible === 'icon' || effectiveCollapsible === 'header' || effectiveCollapsible === undefined)
-
-        // 如果 forceRender，内容始终渲染但用 CSS 隐藏；否则用 Transition 处理
-        const useTransition = !options.forceRender
-
-        return (
-          <div
-            key={key}
-            class={cls(`${prefixCls}-item`, props.classNames?.item, {
-              [`${prefixCls}-item-active`]: isOpen,
-              [`${prefixCls}-item-disabled`]: isDisabled,
-            })}
-            style={{ ...options.style, ...props.styles?.item }}
-          >
-            <div
-              class={cls(`${prefixCls}-header`, props.classNames?.header)}
-              onClick={() => canClickHeader && toggle(key)}
-              role="button"
-              aria-expanded={isOpen}
-              aria-disabled={isDisabled}
-              style={{ cursor: canClickHeader ? 'pointer' : 'default', ...props.styles?.header }}
-            >
-              {options.showArrow !== false && (
-                <span
-                  class={cls(`${prefixCls}-expand-icon`, props.classNames?.icon, {
-                    [`${prefixCls}-expand-icon-active`]: isOpen,
-                  })}
-                  onClick={(e) => {
-                    if (effectiveCollapsible === 'icon' && canClickIcon) {
-                      e.stopPropagation()
-                      toggle(key)
-                    }
-                  }}
-                  style={{
-                    cursor: canClickIcon && effectiveCollapsible === 'icon' ? 'pointer' : 'inherit',
-                    ...props.styles?.icon,
-                  }}
-                >
-                  {renderExpandIcon(isOpen, key)}
-                </span>
-              )}
-              <span
-                class={cls(`${prefixCls}-header-text`, props.classNames?.headerText)}
-                style={props.styles?.headerText}
-              >
-                {label}
-              </span>
-              {options.extra && (
-                <span class={cls(`${prefixCls}-extra`, props.classNames?.extra)} style={props.styles?.extra}>
-                  {options.extra}
-                </span>
-              )}
-            </div>
-            {useTransition ? (
-              <Transition
-                name={`${prefixCls}-motion`}
-                onBeforeEnter={collapseMotion.onBeforeEnter}
-                onEnter={collapseMotion.onEnter}
-                onAfterEnter={collapseMotion.onAfterEnter}
-                onBeforeLeave={collapseMotion.onBeforeLeave}
-                onLeave={collapseMotion.onLeave}
-                onAfterLeave={collapseMotion.onAfterLeave}
-              >
-                {shouldRender && isOpen && (
-                  <div
-                    class={cls(`${prefixCls}-content`, props.classNames?.content)}
-                    role="region"
-                    style={props.styles?.content}
-                  >
-                    <div class={cls(`${prefixCls}-content-box`, props.classNames?.body)} style={props.styles?.body}>
-                      {children as any}
-                    </div>
-                  </div>
-                )}
-              </Transition>
-            ) : (
-              shouldRender && (
-                <div
-                  class={cls(`${prefixCls}-content`, props.classNames?.content, {
-                    [`${prefixCls}-content-hidden`]: !isOpen,
-                  })}
-                  role="region"
-                  style={{
-                    height: isOpen ? undefined : '0',
-                    opacity: isOpen ? undefined : '0',
-                    ...props.styles?.content,
-                  }}
-                >
-                  <div class={cls(`${prefixCls}-content-box`, props.classNames?.body)} style={props.styles?.body}>
-                    {children as any}
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-        )
       }
 
       return (
@@ -278,198 +388,10 @@ export const Collapse = defineComponent({
           })}
           style={props.styles?.root}
         >
-          {items.map((item) =>
-            renderPanel(item.key, item.label, item.children, {
-              disabled: item.disabled,
-              showArrow: item.showArrow,
-              extra: item.extra,
-              collapsible: item.collapsible,
-              style: item.style,
-              forceRender: item.forceRender,
-            }),
-          )}
+          {items.map((item) => renderItemPanel(item))}
           {panelChildren}
         </div>
       )
     }
-  },
-})
-
-export const CollapsePanel = defineComponent({
-  name: 'CollapsePanel',
-  props: {
-    header: String,
-    disabled: Boolean,
-    showArrow: { type: Boolean, default: true },
-    extra: [String, Object] as PropType<string | VNode>,
-    forceRender: Boolean,
-    collapsible: String as PropType<CollapsibleType>,
-    panelKey: String,
-    classNames: Object as PropType<CollapseClassNames>,
-    styles: Object as PropType<CollapseStyles>,
-  },
-  setup(props, { slots, attrs }) {
-    const context = inject<any>(COLLAPSE_CONTEXT_KEY, null)
-
-    if (!context) {
-      // Standalone mode (not inside Collapse) - just render static
-      const prefixCls = usePrefixCls('collapse')
-      return () => (
-        <div class={cls(`${prefixCls}-item`, props.classNames?.item)} style={props.styles?.item}>
-          <div class={cls(`${prefixCls}-header`, props.classNames?.header)} style={props.styles?.header}>
-            {props.showArrow && (
-              <span class={cls(`${prefixCls}-expand-icon`, props.classNames?.icon)} style={props.styles?.icon}>
-                <RightOutlined class="hmfw-icon" />
-              </span>
-            )}
-            <span
-              class={cls(`${prefixCls}-header-text`, props.classNames?.headerText)}
-              style={props.styles?.headerText}
-            >
-              {props.header}
-            </span>
-            {props.extra && (
-              <span class={cls(`${prefixCls}-extra`, props.classNames?.extra)} style={props.styles?.extra}>
-                {props.extra}
-              </span>
-            )}
-          </div>
-          <div
-            class={cls(`${prefixCls}-content ${prefixCls}-content-active`, props.classNames?.content)}
-            style={props.styles?.content}
-          >
-            <div class={cls(`${prefixCls}-content-box`, props.classNames?.body)} style={props.styles?.body}>
-              {slots.default?.()}
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    // Integrated mode - use context
-    const key = computed(() => props.panelKey ?? (attrs.key as string) ?? '')
-    const isOpen = computed(() => context.activeKeys.value.includes(key.value))
-    const prefixCls = context.prefixCls
-
-    // 合并 context 和 props 的 classNames/styles，props 优先
-    const mergedClassNames = computed(() => ({
-      ...context.classNames?.value,
-      ...props.classNames,
-    }))
-    const mergedStyles = computed(() => ({
-      ...context.styles?.value,
-      ...props.styles,
-    }))
-
-    const effectiveCollapsible = computed(() => props.collapsible ?? context.collapsible.value)
-    const isDisabled = computed(() => props.disabled || effectiveCollapsible.value === 'disabled')
-    const canClickHeader = computed(() => !isDisabled.value && effectiveCollapsible.value !== 'icon')
-    const canClickIcon = computed(() => !isDisabled.value && effectiveCollapsible.value !== 'disabled')
-
-    const shouldRender = computed(() => isOpen.value || !context.destroyInactivePanel.value || props.forceRender)
-
-    // 如果 forceRender，内容始终渲染但用 CSS 隐藏；否则用 Transition 处理
-    const useTransition = computed(() => !props.forceRender)
-
-    const renderExpandIcon = () => {
-      if (context.expandIcon.value) {
-        return context.expandIcon.value({ isActive: isOpen.value, panelKey: key.value })
-      }
-      return <RightOutlined class="hmfw-icon" style={{ transform: isOpen.value ? 'rotate(90deg)' : 'rotate(0deg)' }} />
-    }
-
-    return () => (
-      <div
-        class={cls(`${prefixCls}-item`, mergedClassNames.value.item, {
-          [`${prefixCls}-item-active`]: isOpen.value,
-          [`${prefixCls}-item-disabled`]: isDisabled.value,
-        })}
-        style={mergedStyles.value.item}
-      >
-        <div
-          class={cls(`${prefixCls}-header`, mergedClassNames.value.header)}
-          onClick={() => canClickHeader.value && context.toggle(key.value)}
-          role="button"
-          aria-expanded={isOpen.value}
-          aria-disabled={isDisabled.value}
-          style={{ cursor: canClickHeader.value ? 'pointer' : 'default', ...mergedStyles.value.header }}
-        >
-          {props.showArrow && (
-            <span
-              class={cls(`${prefixCls}-expand-icon`, mergedClassNames.value.icon, {
-                [`${prefixCls}-expand-icon-active`]: isOpen.value,
-              })}
-              onClick={(e) => {
-                if (effectiveCollapsible.value === 'icon' && canClickIcon.value) {
-                  e.stopPropagation()
-                  context.toggle(key.value)
-                }
-              }}
-              style={{
-                cursor: canClickIcon.value && effectiveCollapsible.value === 'icon' ? 'pointer' : 'inherit',
-                ...mergedStyles.value.icon,
-              }}
-            >
-              {renderExpandIcon()}
-            </span>
-          )}
-          <span
-            class={cls(`${prefixCls}-header-text`, mergedClassNames.value.headerText)}
-            style={mergedStyles.value.headerText}
-          >
-            {props.header}
-          </span>
-          {props.extra && (
-            <span class={cls(`${prefixCls}-extra`, mergedClassNames.value.extra)} style={mergedStyles.value.extra}>
-              {props.extra}
-            </span>
-          )}
-        </div>
-        {useTransition.value ? (
-          <Transition
-            name={`${prefixCls}-motion`}
-            onBeforeEnter={collapseMotion.onBeforeEnter}
-            onEnter={collapseMotion.onEnter}
-            onAfterEnter={collapseMotion.onAfterEnter}
-            onBeforeLeave={collapseMotion.onBeforeLeave}
-            onLeave={collapseMotion.onLeave}
-            onAfterLeave={collapseMotion.onAfterLeave}
-          >
-            {shouldRender.value && isOpen.value && (
-              <div
-                class={cls(`${prefixCls}-content`, mergedClassNames.value.content)}
-                role="region"
-                style={mergedStyles.value.content}
-              >
-                <div
-                  class={cls(`${prefixCls}-content-box`, mergedClassNames.value.body)}
-                  style={mergedStyles.value.body}
-                >
-                  {slots.default?.()}
-                </div>
-              </div>
-            )}
-          </Transition>
-        ) : (
-          shouldRender.value && (
-            <div
-              class={cls(`${prefixCls}-content`, mergedClassNames.value.content, {
-                [`${prefixCls}-content-hidden`]: !isOpen.value,
-              })}
-              role="region"
-              style={{
-                height: isOpen.value ? undefined : '0',
-                opacity: isOpen.value ? undefined : '0',
-                ...mergedStyles.value.content,
-              }}
-            >
-              <div class={cls(`${prefixCls}-content-box`, mergedClassNames.value.body)} style={mergedStyles.value.body}>
-                {slots.default?.()}
-              </div>
-            </div>
-          )
-        )}
-      </div>
-    )
   },
 })

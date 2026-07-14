@@ -33,6 +33,22 @@
   <CollapseBorderless />
 </DemoBlock>
 
+### 幽灵模式
+
+幽灵模式使折叠面板透明且无边框，适合嵌入有背景色的容器中使用。
+
+<DemoBlock title="幽灵模式" :source="CollapseGhostSource">
+  <CollapseGhost />
+</DemoBlock>
+
+### 图标位置
+
+通过 `expandIconPosition` 可以设置展开图标的位置，支持 `start`（默认）和 `end`。
+
+<DemoBlock title="图标位置" :source="CollapseIconPositionSource">
+  <CollapseIconPosition />
+</DemoBlock>
+
 ### 可折叠触发区域
 
 通过 `collapsible` 属性，可以设置面板的可折叠触发区域。
@@ -65,12 +81,28 @@
   <CollapseSize />
 </DemoBlock>
 
+### 销毁未激活面板
+
+通过 `destroyInactivePanel` 可在面板收起时销毁 DOM，配合 `forceRender` 可为特定面板保留 DOM。
+
+<DemoBlock title="销毁未激活面板" :source="CollapseDestroyInactiveSource">
+  <CollapseDestroyInactive />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
 
 <DemoBlock title="语义化 className 与 style" :source="CollapseClassNamesSource">
   <CollapseClassNames />
+</DemoBlock>
+
+### 面板级别定制
+
+Item/Panel 级别的 `classNames`、`styles`、`collapsible`、`disabled` 等属性优先级高于 Collapse 级别。
+
+<DemoBlock title="面板级别定制" :source="CollapsePanelLevelSource">
+  <CollapsePanelLevel />
 </DemoBlock>
 
 ## API

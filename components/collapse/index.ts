@@ -1,4 +1,5 @@
-import { Collapse as _Collapse, CollapsePanel } from './Collapse'
+import { Collapse as _Collapse } from './Collapse'
+import { CollapsePanel } from './CollapsePanel'
 
 export const Collapse = Object.assign(_Collapse, { Panel: CollapsePanel })
 export { CollapsePanel }
