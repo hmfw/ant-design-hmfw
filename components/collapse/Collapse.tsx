@@ -23,7 +23,7 @@ import type { CollapseItem, CollapsibleType, ExpandIconProps, CollapseClassNames
 const CLOSED_HEIGHT = '0'
 const CLOSED_OPACITY = '0'
 const OPEN_OPACITY = '1'
-export const ICON_ROTATE_OPEN = 'rotate(90deg)'
+export const ICON_ROTATE_OPEN = 'rotate(45deg)'
 export const ICON_ROTATE_CLOSED = 'rotate(0deg)'
 
 // ============================================================
@@ -187,6 +187,7 @@ export function renderPanelNode(options: PanelRenderOptions): VNode {
             })}
             onClick={handleIconClick}
             style={{
+              transform: isOpen ? ICON_ROTATE_OPEN : ICON_ROTATE_CLOSED,
               cursor: cs.canClickIcon && cs.effectiveCollapsible === 'icon' ? 'pointer' : 'inherit',
               ...styles?.icon,
             }}
@@ -315,7 +316,7 @@ export const Collapse = defineComponent({
       if (props.expandIcon) {
         return props.expandIcon({ isActive, panelKey })
       }
-      return <RightOutlined class="hmfw-icon" style={{ transform: isActive ? ICON_ROTATE_OPEN : ICON_ROTATE_CLOSED }} />
+      return <RightOutlined class="hmfw-icon" />
     }
 
     // Items 模式：渲染单个面板（在 setup 级别定义，复用 renderPanelNode）
