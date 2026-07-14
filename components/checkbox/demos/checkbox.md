@@ -25,12 +25,60 @@
   <CheckboxGroup />
 </DemoBlock>
 
+### 受控与非受控
+
+展示受控模式（v-model:checked）和非受控模式（defaultChecked）的区别和使用场景。
+
+<DemoBlock title="受控与非受控" :source="CheckboxControlledSource">
+  <CheckboxControlled />
+</DemoBlock>
+
 ### 全选
 
 在实现全选效果时，你可能会用到 `indeterminate` 属性。
 
 <DemoBlock title="全选" :source="CheckboxCheckAllSource">
   <CheckboxCheckAll />
+</DemoBlock>
+
+### CheckboxGroup 禁用状态
+
+演示 CheckboxGroup 的禁用功能，包括整组禁用、单项禁用、禁用优先级等。
+
+<DemoBlock title="禁用状态" :source="CheckboxGroupDisabledSource">
+  <CheckboxGroupDisabled />
+</DemoBlock>
+
+### CheckboxGroup 布局
+
+通过 style 属性控制 CheckboxGroup 的布局方式：水平、垂直、网格等。
+
+<DemoBlock title="布局方式" :source="CheckboxGroupLayoutSource">
+  <CheckboxGroupLayout />
+</DemoBlock>
+
+### CheckboxGroup 嵌套用法
+
+不使用 options 属性，直接在 CheckboxGroup 内嵌套 Checkbox 组件，实现复杂自定义布局。
+
+<DemoBlock title="嵌套 Checkbox" :source="CheckboxGroupNestedSource">
+  <CheckboxGroupNested />
+</DemoBlock>
+
+### 事件监听
+
+展示 Checkbox 支持的所有事件：change、click、focus、blur、mouseenter、mouseleave 等。
+
+<DemoBlock title="事件监听" :source="CheckboxEventsSource">
+  <CheckboxEvents />
+</DemoBlock>
+
+### CheckboxOptionType 完整配置
+
+展示 CheckboxOptionType 的所有可用属性：label、value、disabled、style、className、title、id、required。
+
+<DemoBlock title="选项完整配置" :source="CheckboxGroupOptionsSource">
+  <CheckboxGroupOptions />
 </DemoBlock>
 
 ### skipGroup 属性
