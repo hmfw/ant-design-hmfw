@@ -251,6 +251,24 @@ app.use(AntDesignHmfw, { locale: zhCN }) // 或 enUS
 
 ---
 
+## 🛠️ 开发指南
+
+### 组件审查规范
+
+项目提供了标准化的组件审查流程，确保所有组件的代码质量和文档完整性：
+
+- 📋 [组件审查技能](./.claude/skills/component-review/SKILL.md) - 完整的审查标准、检查清单和修复建议
+
+**审查维度**:
+
+- API 设计合理性
+- 健壮性与边界条件
+- 设计模式与架构
+- 可读性与可维护性
+- Demo 覆盖完整性
+
+---
+
 ## 📄 许可证
 
 [MIT](./LICENSE) © 2026 hmfw
