@@ -109,6 +109,10 @@ describe('Descriptions', () => {
       },
     })
     expect(wrapper.findAll('.hmfw-descriptions-item-label')).toHaveLength(2)
+    // 验证 slot children 内容正确渲染（不应显示 [object Object]）
+    const contents = wrapper.findAll('.hmfw-descriptions-item-content')
+    expect(contents[0].text()).toBe('Cloud Database')
+    expect(contents[1].text()).toBe('Prepaid')
   })
 
   it('supports labelStyle and contentStyle', () => {

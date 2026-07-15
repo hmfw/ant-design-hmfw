@@ -152,11 +152,19 @@ export const Descriptions = defineComponent({
           // 保留组件 VNode，排除文本节点和注释节点
           return vnode.type && (typeof vnode.type === 'object' || typeof vnode.type === 'function')
         })
-        .map((vnode: VNode, index: number) => ({
-          ...(vnode.props || {}),
-          children: vnode.children,
-          key: vnode.key ?? index,
-        })) as InternalDescriptionsItem[]
+        .map((vnode: VNode, index: number) => {
+          // 处理 vnode.children：可能是插槽对象 { default: () => [...] } 或直接内容
+          let actualChildren = vnode.children
+          if (actualChildren && typeof actualChildren === 'object' && 'default' in actualChildren) {
+            // 插槽对象：调用 default 函数获取实际内容
+            actualChildren = (actualChildren as any).default?.()
+          }
+          return {
+            ...(vnode.props || {}),
+            children: actualChildren,
+            key: vnode.key ?? index,
+          }
+        }) as InternalDescriptionsItem[]
     })
 
     // Process items with responsive span
