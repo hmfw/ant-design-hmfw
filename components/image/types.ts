@@ -173,8 +173,6 @@ export interface ImageProps {
   fallback?: string
   /** 加载占位：true 显示骨架动画，或自定义 VNode */
   placeholder?: boolean | ImageContent
-  /** img class */
-  class?: string
   /** 语义化结构 class */
   classNames?: ImageClassNames
   /** 语义化结构 style */
@@ -188,4 +186,8 @@ export interface PreviewGroupProps {
   preview?: boolean | PreviewConfig
   /** 预览图片项（无子组件时用） */
   items?: (string | ImgInfo)[]
+  /** 受控：当前预览索引 */
+  current?: number
+  /** 切换预览图片回调 */
+  onChange?: (current: number, prevCurrent: number) => void
 }

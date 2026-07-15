@@ -1,4 +1,5 @@
-export { Image, PreviewGroup } from './Image'
+export { Image } from './Image'
+export { PreviewGroup } from './PreviewGroup'
 export type {
   ImageProps,
   PreviewGroupProps,

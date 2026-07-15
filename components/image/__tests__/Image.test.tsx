@@ -1,7 +1,8 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
-import { Image, PreviewGroup } from '../Image'
+import { Image } from '../Image'
+import { PreviewGroup } from '../PreviewGroup'
 
 // 清理 teleport 残留
 afterEach(() => {
