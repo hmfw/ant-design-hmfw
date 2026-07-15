@@ -284,8 +284,8 @@ export const Modal = defineComponent({
           <Transition name="hmfw-zoom" onAfterLeave={onAfterLeave}>
             {(isOpen.value || props.forceRender) && (
               <div
-                class={cls(`${prefixCls}-root`, props.classNames?.root)}
-                style={{ zIndex: props.zIndex, display: isOpen.value ? '' : 'none' }}
+                class={cls(`${prefixCls}`, props.classNames?.root)}
+                style={{ zIndex: props.zIndex }}
                 onKeydown={handleKeydown}
               >
                 {props.mask && (

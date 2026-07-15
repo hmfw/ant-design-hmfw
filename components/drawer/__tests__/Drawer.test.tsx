@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { nextTick, h } from 'vue'
 import { Drawer, drawerManager } from '../index'
 
 // Clean up teleported nodes + restore body overflow between tests
 afterEach(() => {
-  document.querySelectorAll('.hmfw-drawer-root, .hmfw-drawer-mask').forEach((n) => n.remove())
+  document.querySelectorAll('.hmfw-drawer, .hmfw-drawer-mask').forEach((n) => n.remove())
   document.body.style.overflow = ''
 })
 
@@ -101,7 +101,7 @@ describe('Drawer', () => {
 
   it('closes on Escape when keyboard (default)', async () => {
     const wrapper = mount(Drawer, { props: { open: true }, attachTo: document.body })
-    const root = document.querySelector('.hmfw-drawer-root') as HTMLElement
+    const root = document.querySelector('.hmfw-drawer') as HTMLElement
     root.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     await nextTick()
     expect(wrapper.emitted('close')).toBeTruthy()
@@ -113,7 +113,7 @@ describe('Drawer', () => {
       props: { open: true, keyboard: false },
       attachTo: document.body,
     })
-    const root = document.querySelector('.hmfw-drawer-root') as HTMLElement
+    const root = document.querySelector('.hmfw-drawer') as HTMLElement
     root.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     await nextTick()
     expect(wrapper.emitted('close')).toBeFalsy()
@@ -241,11 +241,11 @@ describe('Drawer', () => {
     wrapper.unmount()
   })
 
-  it('applies contentWrapperStyle to content-wrapper', () => {
+  it('applies styles.wrapper to content-wrapper', () => {
     const wrapper = mount(Drawer, {
       props: {
         open: true,
-        contentWrapperStyle: { backgroundColor: 'rgb(255, 0, 0)', border: '2px solid blue' },
+        styles: { wrapper: { backgroundColor: 'rgb(255, 0, 0)', border: '2px solid blue' } },
       },
       attachTo: document.body,
     })
@@ -256,17 +256,34 @@ describe('Drawer', () => {
     wrapper.unmount()
   })
 
+  it('applies classNames.root and styles.root to the outermost container', () => {
+    const wrapper = mount(Drawer, {
+      props: {
+        open: true,
+        classNames: { root: 'my-root' },
+        styles: { root: { opacity: '0.9' } },
+      },
+      attachTo: document.body,
+    })
+    const root = document.querySelector('.hmfw-drawer') as HTMLElement
+    expect(root.classList.contains('my-root')).toBe(true)
+    expect(root.style.opacity).toBe('0.9')
+    // zIndex 仍由多层管理注入，不被 styles.root 覆盖
+    expect(root.style.zIndex).toBe('1000')
+    wrapper.unmount()
+  })
+
   it('manages zIndex for multiple drawers (later drawer has higher zIndex)', async () => {
     // 打开第一个 Drawer
     const wrapper1 = mount(Drawer, { props: { open: true, zIndex: 1000 }, attachTo: document.body })
     await nextTick()
-    const root1 = document.querySelectorAll('.hmfw-drawer-root')[0] as HTMLElement
+    const root1 = document.querySelectorAll('.hmfw-drawer')[0] as HTMLElement
     const zIndex1 = parseInt(root1.style.zIndex)
 
     // 打开第二个 Drawer
     const wrapper2 = mount(Drawer, { props: { open: true, zIndex: 1000 }, attachTo: document.body })
     await nextTick()
-    const root2 = document.querySelectorAll('.hmfw-drawer-root')[1] as HTMLElement
+    const root2 = document.querySelectorAll('.hmfw-drawer')[1] as HTMLElement
     const zIndex2 = parseInt(root2.style.zIndex)
 
     // 第二个 Drawer 的 zIndex 应该更高

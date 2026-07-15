@@ -137,7 +137,7 @@
 | okText / cancelText / okType                                          | 同 Modal Props                                    | -                                                          | -                  |
 | okButtonProps / cancelButtonProps                                     | 同 Modal Props                                    | -                                                          | -                  |
 | centered / width / mask / maskClosable / keyboard / closable / zIndex | 同 Modal Props                                    | -                                                          | -                  |
-| className                                                             | 应用到 `.hmfw-modal-root` 的 class                | `string`                                                   | -                  |
+| className                                                             | 应用到 `.hmfw-modal` 的 class                     | `string`                                                   | -                  |
 | wrapClassName                                                         | 应用到 `.hmfw-modal-wrap` 的 class                | `string`                                                   | -                  |
 | onOk                                                                  | 点击 OK；返回 Promise 时按钮 loading 直到 resolve | `() => any \| Promise<any>`                                | -                  |
 | onCancel                                                              | 点击 Cancel                                       | `() => void`                                               | -                  |
@@ -176,7 +176,7 @@ interface ModalStyles {
 ### DOM 结构与 className 映射
 
 ```html
-<div class="hmfw-modal-root">
+<div class="hmfw-modal">
   <!-- 遮罩层 -->
   <div class="hmfw-modal-mask">
     <!-- ↑ classNames.mask / styles.mask 应用于此 -->

@@ -16,7 +16,15 @@ import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
 import type { IconComponent } from '@hmfw/icons'
 import { drawerManager } from './manager'
-import type { DrawerClassNames, DrawerStyles } from './types'
+import type {
+  DrawerProps,
+  DrawerPlacement,
+  DrawerSize,
+  DrawerContent,
+  DrawerGetContainer,
+  DrawerClassNames,
+  DrawerStyles,
+} from './types'
 
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
@@ -69,11 +77,6 @@ function unlockScroll() {
 
 let uid = 0
 
-export type DrawerPlacement = 'top' | 'right' | 'bottom' | 'left'
-export type DrawerSize = 'default' | 'large' | number | string
-export type DrawerContent = string | number | VNode | (() => VNode | string)
-export type DrawerGetContainer = string | HTMLElement | (() => HTMLElement) | false
-
 const DEFAULT_SIZE = 378
 const LARGE_SIZE = 736
 
@@ -94,44 +97,41 @@ function toCssSize(v: number | string): string {
   return typeof v === 'number' ? `${v}px` : v
 }
 
+// 单一类型来源见 types.ts；此处用 satisfies 强制 key 集合与 DrawerProps 接口完全一致
+const drawerProps = {
+  open: { type: Boolean, default: undefined },
+  defaultOpen: Boolean,
+  title: {
+    type: [String, Number, Object, Function] as PropType<DrawerContent>,
+    default: undefined,
+  },
+  placement: { type: String as PropType<DrawerPlacement>, default: 'right' },
+  size: { type: [String, Number] as PropType<DrawerSize>, default: undefined },
+  width: { type: [Number, String], default: DEFAULT_SIZE },
+  height: { type: [Number, String], default: DEFAULT_SIZE },
+  closable: { type: Boolean, default: true },
+  closeIcon: { type: Function as PropType<IconComponent>, default: undefined },
+  maskClosable: { type: Boolean, default: true },
+  mask: { type: Boolean, default: true },
+  keyboard: { type: Boolean, default: true },
+  loading: Boolean,
+  zIndex: { type: Number, default: 1000 },
+  destroyOnClose: Boolean,
+  destroyOnHidden: { type: Boolean, default: undefined },
+  forceRender: Boolean,
+  focusTriggerAfterClose: { type: Boolean, default: true },
+  getContainer: {
+    type: [String, Object, Function, Boolean] as PropType<DrawerGetContainer>,
+    default: undefined,
+  },
+  classNames: { type: Object as PropType<DrawerClassNames>, default: undefined },
+  styles: { type: Object as PropType<DrawerStyles>, default: undefined },
+} satisfies Record<keyof DrawerProps, any>
+
 export const Drawer = defineComponent({
   name: 'Drawer',
   inheritAttrs: false,
-  props: {
-    open: { type: Boolean, default: undefined },
-    defaultOpen: Boolean,
-    title: {
-      type: [String, Number, Object, Function] as PropType<DrawerContent>,
-      default: undefined,
-    },
-    placement: { type: String as PropType<DrawerPlacement>, default: 'right' },
-    size: { type: [String, Number] as PropType<DrawerSize>, default: undefined },
-    width: { type: [Number, String], default: DEFAULT_SIZE },
-    height: { type: [Number, String], default: DEFAULT_SIZE },
-    closable: { type: Boolean, default: true },
-    closeIcon: { type: Function as PropType<IconComponent>, default: undefined },
-    maskClosable: { type: Boolean, default: true },
-    mask: { type: Boolean, default: true },
-    keyboard: { type: Boolean, default: true },
-    loading: Boolean,
-    zIndex: { type: Number, default: 1000 },
-    destroyOnClose: Boolean,
-    destroyOnHidden: { type: Boolean, default: undefined },
-    forceRender: Boolean,
-    focusTriggerAfterClose: { type: Boolean, default: true },
-    getContainer: {
-      type: [String, Object, Function, Boolean] as PropType<DrawerGetContainer>,
-      default: undefined,
-    },
-    rootStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    bodyStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    headerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    footerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    maskStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    contentWrapperStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    classNames: { type: Object as PropType<DrawerClassNames>, default: undefined },
-    styles: { type: Object as PropType<DrawerStyles>, default: undefined },
-  },
+  props: drawerProps,
   emits: ['update:open', 'close', 'afterOpenChange'],
   setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('drawer')
@@ -257,7 +257,7 @@ export const Drawer = defineComponent({
             },
             props.classNames?.header,
           )}
-          style={{ ...props.headerStyle, ...props.styles?.header }}
+          style={props.styles?.header}
         >
           <div class={`${prefixCls}-header-title`}>
             {renderCloseIcon()}
@@ -280,10 +280,7 @@ export const Drawer = defineComponent({
       const footerNode = slots.footer?.()
       if (!footerNode || (Array.isArray(footerNode) && !footerNode.length)) return null
       return (
-        <div
-          class={cls(`${prefixCls}-footer`, props.classNames?.footer)}
-          style={{ ...props.footerStyle, ...props.styles?.footer }}
-        >
+        <div class={cls(`${prefixCls}-footer`, props.classNames?.footer)} style={props.styles?.footer}>
           {footerNode}
         </div>
       )
@@ -301,7 +298,8 @@ export const Drawer = defineComponent({
 
     return () => {
       const hasTitle = renderContent(props.title, slots.title) != null
-      const rootStyle: CSSProperties = { zIndex: computedZIndex.value, ...props.rootStyle }
+      // 根节点携带动态 zIndex（多层管理）+ 语义化 styles.root 覆盖
+      const rootStyle: CSSProperties = { zIndex: computedZIndex.value, ...props.styles?.root }
       const teleportDisabled = props.getContainer === false
 
       return (
@@ -309,16 +307,20 @@ export const Drawer = defineComponent({
           <Transition name={`hmfw-drawer-${props.placement}`} appear>
             {(isOpen.value || props.forceRender) && (
               <div
-                class={cls(`${prefixCls}-root`, {
-                  [`${prefixCls}-no-mask`]: !props.mask,
-                })}
-                style={{ ...rootStyle, display: isOpen.value ? '' : 'none' }}
+                class={cls(
+                  `${prefixCls}`,
+                  {
+                    [`${prefixCls}-no-mask`]: !props.mask,
+                  },
+                  props.classNames?.root,
+                )}
+                style={{ ...rootStyle }}
                 onKeydown={handleKeydown}
               >
                 {props.mask && (
                   <div
                     class={cls(`${prefixCls}-mask`, props.classNames?.mask)}
-                    style={{ ...props.maskStyle, ...props.styles?.mask }}
+                    style={props.styles?.mask}
                     onClick={handleMaskClick}
                   />
                 )}
@@ -329,7 +331,7 @@ export const Drawer = defineComponent({
                     `${prefixCls}-${props.placement}`,
                     props.classNames?.wrapper,
                   )}
-                  style={{ ...sizeStyle.value, ...props.contentWrapperStyle, ...props.styles?.wrapper }}
+                  style={{ ...sizeStyle.value, ...props.styles?.wrapper }}
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby={hasTitle ? ariaId : undefined}
@@ -337,10 +339,7 @@ export const Drawer = defineComponent({
                 >
                   <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
                     {renderHeader()}
-                    <div
-                      class={cls(`${prefixCls}-body`, props.classNames?.body)}
-                      style={{ ...props.bodyStyle, ...props.styles?.body }}
-                    >
+                    <div class={cls(`${prefixCls}-body`, props.classNames?.body)} style={props.styles?.body}>
                       {renderBody()}
                     </div>
                     {renderFooter()}

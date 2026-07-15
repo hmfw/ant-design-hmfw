@@ -2016,12 +2016,6 @@ import { Drawer } from '@hmfw/ant-design'
 | forceRender | 预渲染抽屉内的内容 | `boolean` | `false` |
 | focusTriggerAfterClose | 关闭后是否将焦点返回触发元素 | `boolean` | `true` |
 | getContainer | 挂载节点，`false` 时渲染在当前位置 | `string \| HTMLElement \| () => HTMLElement \| false` | `body` |
-| rootStyle | 根容器（含遮罩）的样式 | `CSSProperties` | - |
-| contentWrapperStyle | 抽屉内容包裹层的样式 | `CSSProperties` | - |
-| bodyStyle | 抽屉内容部分的样式 | `CSSProperties` | - |
-| headerStyle | 抽屉头部的样式 | `CSSProperties` | - |
-| footerStyle | 抽屉页脚的样式 | `CSSProperties` | - |
-| maskStyle | 遮罩的样式 | `CSSProperties` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DrawerClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DrawerStyles` | - |
 
@@ -2988,27 +2982,50 @@ import { Image, Space } from '@hmfw/ant-design'
 </script>
 ```
 
-图片组预览 — 多张图片共享一个预览弹层，支持键盘左右键切换、Esc 关闭。
+加载失败与容错 — `fallback` 提供加载失败时的替代图片；若替代图片也失败，则显示错误占位。`onError` 在每次加载失败时触发。
 
 ```vue
 <template>
-  <PreviewGroup>
-    <Space>
-      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" width="200" />
-      <Image
-        src="https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
-        width="200"
-      />
-      <Image
-        src="https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp"
-        width="200"
-      />
+  <Space direction="vertical" :size="16">
+    <Space wrap :size="16">
+      <div>
+        <p style="margin: 0 0 8px; color: #999; font-size: 14px">src 失败 → fallback 成功</p>
+        <Image
+          src="https://invalid.example.com/not-exist.png"
+          fallback="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          width="160"
+          :on-error="() => handleError('图 1：src 加载失败，已回退')"
+        />
+      </div>
+      <div>
+        <p style="margin: 0 0 8px; color: #999; font-size: 14px">src 与 fallback 均失败 → 错误占位</p>
+        <Image
+          src="https://invalid.example.com/not-exist.png"
+          fallback="https://invalid.example.com/not-exist-fallback.png"
+          width="160"
+          :on-error="() => handleError('图 2：src 与 fallback 均失败')"
+        />
+      </div>
     </Space>
-  </PreviewGroup>
+    <div v-if="logs.length" style="font-size: 13px; color: #666">
+      <strong>onError 日志：</strong>
+      <ul style="margin: 4px 0 0; padding-left: 20px">
+        <li v-for="(log, i) in logs" :key="i">{{ log }}</li>
+      </ul>
+    </div>
+  </Space>
 </template>
 
 <script setup lang="ts">
-import { Image, PreviewGroup, Space } from '@hmfw/ant-design'
+import { ref } from 'vue'
+import { Image, Space } from '@hmfw/ant-design'
+
+// 记录每次图片加载失败（含 fallback 失败）的 onError 回调
+const logs = ref<string[]>([])
+
+function handleError(message: string) {
+  logs.value.push(message)
+}
 </script>
 ```
 

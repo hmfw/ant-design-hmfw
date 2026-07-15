@@ -25,6 +25,14 @@
   <DrawerPlacement />
 </DemoBlock>
 
+### 多层抽屉
+
+在抽屉内部再打开新的抽屉，内置的 `DrawerManager` 会自动为后开的抽屉递增 `zIndex`（每层 +2，遮罩层 + 内容层），确保层级正确。
+
+<DemoBlock title="多层抽屉" :source="DrawerMultiLayerSource">
+  <DrawerMultiLayer />
+</DemoBlock>
+
 ### 额外操作与页脚
 
 通过 `extra` 插槽在右上角放置操作区，`footer` 插槽放置页脚。`size` 可选 `default`（378px）与 `large`（736px）两种预设。
@@ -74,12 +82,6 @@
 | forceRender            | 预渲染抽屉内的内容                                                               | `boolean`                                             | `false`   |
 | focusTriggerAfterClose | 关闭后是否将焦点返回触发元素                                                     | `boolean`                                             | `true`    |
 | getContainer           | 挂载节点，`false` 时渲染在当前位置                                               | `string \| HTMLElement \| () => HTMLElement \| false` | `body`    |
-| rootStyle              | 根容器（含遮罩）的样式                                                           | `CSSProperties`                                       | -         |
-| contentWrapperStyle    | 抽屉内容包裹层的样式                                                             | `CSSProperties`                                       | -         |
-| bodyStyle              | 抽屉内容部分的样式                                                               | `CSSProperties`                                       | -         |
-| headerStyle            | 抽屉头部的样式                                                                   | `CSSProperties`                                       | -         |
-| footerStyle            | 抽屉页脚的样式                                                                   | `CSSProperties`                                       | -         |
-| maskStyle              | 遮罩的样式                                                                       | `CSSProperties`                                       | -         |
 | classNames             | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DrawerClassNames`                                    | -         |
 | styles                 | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DrawerStyles`                                        | -         |
 
@@ -112,6 +114,7 @@
 import type { CSSProperties } from 'vue'
 
 interface DrawerClassNames {
+  root?: string // 最外层容器（含遮罩）
   mask?: string // 遮罩层
   wrapper?: string // 抽屉内容包裹层
   content?: string // 抽屉内容区
@@ -123,6 +126,7 @@ interface DrawerClassNames {
 }
 
 interface DrawerStyles {
+  root?: CSSProperties // 最外层容器（含遮罩）
   mask?: CSSProperties
   wrapper?: CSSProperties
   content?: CSSProperties
@@ -137,7 +141,8 @@ interface DrawerStyles {
 ### DOM 结构与 className 映射
 
 ```html
-<div class="hmfw-drawer-root">
+<div class="hmfw-drawer">
+  <!-- ↑ classNames.root / styles.root 应用于此（最外层，含遮罩） -->
   <div class="hmfw-drawer-mask">
     <!-- ↑ classNames.mask / styles.mask 应用于此 -->
   </div>
@@ -239,7 +244,7 @@ interface DrawerStyles {
 ### 注意事项
 
 - `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `wrapper` 对应 `contentWrapperStyle` prop，`body` 对应 `bodyStyle` prop，`header` 对应 `headerStyle` prop，`footer` 对应 `footerStyle` prop，`mask` 对应 `maskStyle` prop，新增的 `classNames`/`styles` 提供更一致的 API
+- 各子节点样式统一通过 `styles`（`root` / `mask` / `wrapper` / `content` / `header` / `title` / `extra` / `body` / `footer`）设置；`root` 作用于最外层容器（含遮罩）
 - 自定义 `header` 样式时，注意关闭按钮的颜色需要单独处理（如 `.hmfw-drawer-close`）
 - 当 `placement` 为 `left` 时，`wrapper` 的圆角方向需要调整为右侧
 

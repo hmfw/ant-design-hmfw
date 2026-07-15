@@ -3864,48 +3864,6 @@
         },
         {
           "section": "Drawer Props",
-          "name": "rootStyle",
-          "description": "根容器（含遮罩）的样式",
-          "type": "`CSSProperties`",
-          "default": "-"
-        },
-        {
-          "section": "Drawer Props",
-          "name": "contentWrapperStyle",
-          "description": "抽屉内容包裹层的样式",
-          "type": "`CSSProperties`",
-          "default": "-"
-        },
-        {
-          "section": "Drawer Props",
-          "name": "bodyStyle",
-          "description": "抽屉内容部分的样式",
-          "type": "`CSSProperties`",
-          "default": "-"
-        },
-        {
-          "section": "Drawer Props",
-          "name": "headerStyle",
-          "description": "抽屉头部的样式",
-          "type": "`CSSProperties`",
-          "default": "-"
-        },
-        {
-          "section": "Drawer Props",
-          "name": "footerStyle",
-          "description": "抽屉页脚的样式",
-          "type": "`CSSProperties`",
-          "default": "-"
-        },
-        {
-          "section": "Drawer Props",
-          "name": "maskStyle",
-          "description": "遮罩的样式",
-          "type": "`CSSProperties`",
-          "default": "-"
-        },
-        {
-          "section": "Drawer Props",
           "name": "classNames",
           "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
           "type": "`DrawerClassNames`",
@@ -3967,6 +3925,11 @@
           "title": "四个方向",
           "description": "抽屉可以从上、右、下、左四个方向滑出。",
           "code": "<template>\n  <div style=\"display: flex; gap: 8px\">\n    <Button @click=\"show('top')\"> 上 </Button>\n    <Button @click=\"show('right')\"> 右 </Button>\n    <Button @click=\"show('bottom')\"> 下 </Button>\n    <Button @click=\"show('left')\"> 左 </Button>\n  </div>\n  <Drawer v-model:open=\"open\" :placement=\"placement\" :title=\"`从${placementText}滑出`\">\n    <p>抽屉内容</p>\n  </Drawer>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Drawer, Button } from '@hmfw/ant-design'\n\nconst open = ref(false)\nconst placement = ref<'top' | 'right' | 'bottom' | 'left'>('right')\nconst placementText = ref('右侧')\n\nconst textMap: Record<string, string> = {\n  top: '顶部',\n  right: '右侧',\n  bottom: '底部',\n  left: '左侧',\n}\n\nfunction show(dir: 'top' | 'right' | 'bottom' | 'left') {\n  placement.value = dir\n  placementText.value = textMap[dir]\n  open.value = true\n}\n</script>"
+        },
+        {
+          "title": "多层抽屉",
+          "description": "在抽屉内部再打开新的抽屉，内置的 `DrawerManager` 会自动为后开的抽屉递增 `zIndex`（每层 +2，遮罩层 + 内容层），确保层级正确。",
+          "code": "<template>\n  <Button type=\"primary\" @click=\"firstOpen = true\"> 打开第一层抽屉 </Button>\n\n  <Drawer v-model:open=\"firstOpen\" title=\"第一层抽屉\" placement=\"right\">\n    <p>这是第一层抽屉的内容。</p>\n    <p>点击下方按钮可以打开第二层抽屉，系统会自动管理 zIndex 确保层级正确。</p>\n    <Button type=\"primary\" style=\"margin-top: 16px\" @click=\"secondOpen = true\"> 打开第二层抽屉 </Button>\n  </Drawer>\n\n  <Drawer v-model:open=\"secondOpen\" title=\"第二层抽屉\" placement=\"right\">\n    <p>这是第二层抽屉的内容。</p>\n    <p>通过内置的 DrawerManager，后打开的抽屉会自动拥有更高的 zIndex。</p>\n    <Button type=\"primary\" style=\"margin-top: 16px\" @click=\"thirdOpen = true\"> 打开第三层抽屉 </Button>\n  </Drawer>\n\n  <Drawer v-model:open=\"thirdOpen\" title=\"第三层抽屉\" placement=\"right\">\n    <p>这是第三层抽屉的内容。</p>\n    <p>每个抽屉的 zIndex 会自动递增 2（遮罩层 + 内容层），确保显示顺序正确。</p>\n    <div style=\"margin-top: 16px; padding: 12px; background: var(--hmfw-color-fill-quaternary); border-radius: 4px\">\n      <strong>提示：</strong>可以按 Esc 键或点击遮罩关闭最上层的抽屉。\n    </div>\n  </Drawer>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Drawer, Button } from '@hmfw/ant-design'\n\nconst firstOpen = ref(false)\nconst secondOpen = ref(false)\nconst thirdOpen = ref(false)\n</script>"
         },
         {
           "title": "额外操作与页脚",
@@ -5643,9 +5606,19 @@
           "code": "<template>\n  <Space wrap>\n    <Image src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\" width=\"200\" />\n    <Image\n      src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n      width=\"200\"\n      :preview=\"false\"\n    />\n    <Image\n      src=\"error.jpg\"\n      width=\"200\"\n      fallback=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n    />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Image, Space } from '@hmfw/ant-design'\n</script>"
         },
         {
+          "title": "加载失败与容错",
+          "description": "`fallback` 提供加载失败时的替代图片；若替代图片也失败，则显示错误占位。`onError` 在每次加载失败时触发。",
+          "code": "<template>\n  <Space direction=\"vertical\" :size=\"16\">\n    <Space wrap :size=\"16\">\n      <div>\n        <p style=\"margin: 0 0 8px; color: #999; font-size: 14px\">src 失败 → fallback 成功</p>\n        <Image\n          src=\"https://invalid.example.com/not-exist.png\"\n          fallback=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n          width=\"160\"\n          :on-error=\"() => handleError('图 1：src 加载失败，已回退')\"\n        />\n      </div>\n      <div>\n        <p style=\"margin: 0 0 8px; color: #999; font-size: 14px\">src 与 fallback 均失败 → 错误占位</p>\n        <Image\n          src=\"https://invalid.example.com/not-exist.png\"\n          fallback=\"https://invalid.example.com/not-exist-fallback.png\"\n          width=\"160\"\n          :on-error=\"() => handleError('图 2：src 与 fallback 均失败')\"\n        />\n      </div>\n    </Space>\n    <div v-if=\"logs.length\" style=\"font-size: 13px; color: #666\">\n      <strong>onError 日志：</strong>\n      <ul style=\"margin: 4px 0 0; padding-left: 20px\">\n        <li v-for=\"(log, i) in logs\" :key=\"i\">{{ log }}</li>\n      </ul>\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Image, Space } from '@hmfw/ant-design'\n\n// 记录每次图片加载失败（含 fallback 失败）的 onError 回调\nconst logs = ref<string[]>([])\n\nfunction handleError(message: string) {\n  logs.value.push(message)\n}\n</script>"
+        },
+        {
           "title": "图片组预览",
           "description": "多张图片共享一个预览弹层，支持键盘左右键切换、Esc 关闭。",
           "code": "<template>\n  <PreviewGroup>\n    <Space>\n      <Image src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\" width=\"200\" />\n      <Image\n        src=\"https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp\"\n        width=\"200\"\n      />\n      <Image\n        src=\"https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp\"\n        width=\"200\"\n      />\n    </Space>\n  </PreviewGroup>\n</template>\n\n<script setup lang=\"ts\">\nimport { Image, PreviewGroup, Space } from '@hmfw/ant-design'\n</script>"
+        },
+        {
+          "title": "受控图片组",
+          "description": "通过 `current` + `onChange` 受控当前预览索引，预览内切换时外部状态同步更新。",
+          "code": "<template>\n  <Space direction=\"vertical\" :size=\"16\">\n    <span style=\"color: #999; font-size: 14px\">\n      正在预览第 {{ current + 1 }} / {{ images.length }} 张（打开预览后用左右箭头切换，下方索引会同步更新）\n    </span>\n    <PreviewGroup :current=\"current\" :on-change=\"handleChange\">\n      <Space wrap>\n        <Image v-for=\"(src, i) in images\" :key=\"i\" :src=\"src\" width=\"120\" />\n      </Space>\n    </PreviewGroup>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Image, PreviewGroup, Space } from '@hmfw/ant-design'\n\nconst images = [\n  'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n  'https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp',\n  'https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp',\n]\n\n// 受控模式：current 由外部状态驱动，onChange 在预览内切换时回传新索引\nconst current = ref(0)\n\nfunction handleChange(next: number, prev: number) {\n  current.value = next\n  console.log(`从第 ${prev + 1} 张切换到第 ${next + 1} 张`)\n}\n</script>"
         },
         {
           "title": "渐进式加载",
@@ -5656,6 +5629,11 @@
           "title": "自定义预览",
           "description": "自定义预览图地址、缩放范围、关闭图标等。",
           "code": "<template>\n  <Space wrap>\n    <Image\n      src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n      width=\"200\"\n      :preview=\"{\n        src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',\n        minScale: 0.5,\n        maxScale: 10,\n        scaleStep: 0.2,\n      }\"\n    />\n    <Image\n      src=\"https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp\"\n      width=\"200\"\n      :preview=\"{ mask: { enabled: false } }\"\n    />\n    <Image\n      src=\"https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp\"\n      width=\"200\"\n      :preview=\"{ closeIcon: false }\"\n    />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Image, Space } from '@hmfw/ant-design'\n</script>"
+        },
+        {
+          "title": "受控预览",
+          "description": "通过 `preview.open` 与 `preview.onOpenChange` 从外部控制预览的打开与关闭。",
+          "code": "<template>\n  <Space direction=\"vertical\" :size=\"16\">\n    <Space>\n      <Button type=\"primary\" @click=\"open = true\">从外部打开预览</Button>\n      <span style=\"color: #999; font-size: 14px\">当前状态：{{ open ? '已打开' : '已关闭' }}</span>\n    </Space>\n    <Image\n      src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n      width=\"200\"\n      :preview=\"{ open, onOpenChange: handleOpenChange }\"\n    />\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Image, Button, Space } from '@hmfw/ant-design'\n\n// 受控模式：open 由外部状态驱动，onOpenChange 同步内部触发的开关（点击遮罩/关闭按钮/Esc）\nconst open = ref(false)\n\nfunction handleOpenChange(next: boolean) {\n  open.value = next\n}\n</script>"
         },
         {
           "title": "自定义工具栏与预览内容",

@@ -5,7 +5,7 @@ import { Modal } from '../index'
 
 // Clean up teleported nodes + restore body overflow between tests
 afterEach(() => {
-  document.querySelectorAll('.hmfw-modal-root').forEach((n) => n.remove())
+  document.querySelectorAll('.hmfw-modal').forEach((n) => n.remove())
   document.body.style.overflow = ''
 })
 
@@ -93,7 +93,7 @@ describe('Modal', () => {
 
   it('Esc key triggers cancel when keyboard=true', async () => {
     const wrapper = mount(Modal, { props: { open: true }, attachTo: document.body })
-    const root = document.querySelector('.hmfw-modal-root') as HTMLElement
+    const root = document.querySelector('.hmfw-modal') as HTMLElement
     root?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     expect(wrapper.emitted('cancel')).toBeTruthy()
     wrapper.unmount()
@@ -104,7 +104,7 @@ describe('Modal', () => {
       props: { open: true, keyboard: false },
       attachTo: document.body,
     })
-    const root = document.querySelector('.hmfw-modal-root') as HTMLElement
+    const root = document.querySelector('.hmfw-modal') as HTMLElement
     root?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     expect(wrapper.emitted('cancel')).toBeFalsy()
     wrapper.unmount()

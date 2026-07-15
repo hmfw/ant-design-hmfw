@@ -1,5 +1,5 @@
 /* Drawer */
-.hmfw-drawer-root {
+.hmfw-drawer {
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -8,7 +8,7 @@
 .hmfw-drawer-mask {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--hmfw-color-bg-mask);
   pointer-events: auto;
 }
 
@@ -22,8 +22,8 @@
 
 .hmfw-drawer-content-wrapper {
   position: absolute;
-  background: #fff;
-  box-shadow: -6px 0 16px rgba(0, 0, 0, 0.08);
+  background: var(--hmfw-color-bg-elevated);
+  box-shadow: var(--hmfw-box-shadow-secondary);
   display: flex;
   flex-direction: column;
   pointer-events: auto;
@@ -39,21 +39,18 @@
   top: 0;
   left: 0;
   bottom: 0;
-  box-shadow: 6px 0 16px rgba(0, 0, 0, 0.08);
 }
 
 .hmfw-drawer-top {
   top: 0;
   left: 0;
   right: 0;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .hmfw-drawer-bottom {
   bottom: 0;
   left: 0;
   right: 0;
-  box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .hmfw-drawer-content {
@@ -67,7 +64,7 @@
 .hmfw-drawer-header {
   display: flex;
   align-items: center;
-  padding: 16px 24px;
+  padding: var(--hmfw-padding) var(--hmfw-padding-lg);
   border-bottom: 1px solid var(--hmfw-color-border);
   flex-shrink: 0;
 }
@@ -87,7 +84,7 @@
 .hmfw-drawer-title {
   flex: 1;
   margin: 0;
-  font-size: 16px;
+  font-size: var(--hmfw-font-size-lg);
   font-weight: 600;
   line-height: 1.5;
   color: var(--hmfw-color-text);
@@ -104,15 +101,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-inline-end: 12px;
+  margin-inline-end: var(--hmfw-margin-sm);
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: var(--hmfw-font-size-lg);
   color: var(--hmfw-color-text-secondary);
   padding: 0;
-  border-radius: 4px;
-  transition: color 0.2s;
+  border-radius: var(--hmfw-border-radius-sm);
+  transition: color var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-drawer-close:hover {
@@ -123,20 +120,24 @@
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: 24px;
+  padding: var(--hmfw-padding-lg);
   font-size: var(--hmfw-font-size-base);
   color: var(--hmfw-color-text);
 }
 
 .hmfw-drawer-footer {
-  padding: 8px 16px;
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding);
   border-top: 1px solid var(--hmfw-color-border);
   flex-shrink: 0;
 }
 
 /* ===== Transitions ===== */
-/* The transition class lands on `.hmfw-drawer-root`; the mask fades while the
-   content-wrapper slides in from its edge. */
+/* 过渡类挂在 Transition 的直接子节点 `.hmfw-drawer` 上；遮罩淡入淡出，
+   内容面板从对应边缘滑入滑出。
+   注意：Vue <Transition> 以"直接子节点"（即 root）的 transition/animation 时长
+   来决定离场后何时卸载 DOM。真正的视觉过渡写在后代（mask / content-wrapper）上，
+   因此必须在 root 上声明一条等长的 transition 作为"探针"，否则 Vue 读到零时长会
+   立即卸载 root，后代的 leave-to 状态来不及渲染，导致关闭时无动画、突兀消失。 */
 .hmfw-drawer-right-enter-active,
 .hmfw-drawer-right-leave-active,
 .hmfw-drawer-left-enter-active,
@@ -146,6 +147,8 @@
 .hmfw-drawer-bottom-enter-active,
 .hmfw-drawer-bottom-leave-active {
   pointer-events: none;
+  /* 探针：与后代过渡等长，仅用于让 Vue 探测到离场时长（root 自身无 opacity 变化） */
+  transition: opacity var(--hmfw-motion-duration-slow);
 }
 
 .hmfw-drawer-right-enter-active .hmfw-drawer-mask,
@@ -156,7 +159,7 @@
 .hmfw-drawer-top-leave-active .hmfw-drawer-mask,
 .hmfw-drawer-bottom-enter-active .hmfw-drawer-mask,
 .hmfw-drawer-bottom-leave-active .hmfw-drawer-mask {
-  transition: opacity 0.3s;
+  transition: opacity var(--hmfw-motion-duration-slow);
 }
 
 .hmfw-drawer-right-enter-active .hmfw-drawer-content-wrapper,
@@ -167,7 +170,7 @@
 .hmfw-drawer-top-leave-active .hmfw-drawer-content-wrapper,
 .hmfw-drawer-bottom-enter-active .hmfw-drawer-content-wrapper,
 .hmfw-drawer-bottom-leave-active .hmfw-drawer-content-wrapper {
-  transition: transform 0.3s;
+  transition: transform var(--hmfw-motion-duration-slow);
 }
 
 .hmfw-drawer-right-enter-from .hmfw-drawer-mask,
