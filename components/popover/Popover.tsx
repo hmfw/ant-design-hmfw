@@ -1,8 +1,8 @@
 import { defineComponent, computed, h, type PropType, type VNode } from 'vue'
 import { Tooltip } from '../tooltip'
 import { usePrefixCls } from '../config-provider'
-import type { TooltipPlacement, TooltipTrigger, TooltipArrow } from '../tooltip/types'
-import type { PopoverContent, PopoverClassNames, PopoverStyles } from './types'
+import type { TooltipPlacement, TooltipTrigger, TooltipArrow, TooltipOpenChangeInfo } from '../tooltip/types'
+import type { PopoverContent, PopoverClassNames, PopoverStyles, PopoverProps } from './types'
 import { PurePanel } from './PurePanel'
 
 /**
@@ -10,37 +10,44 @@ import { PurePanel } from './PurePanel'
  * (matching AntD's React composition where Popover wraps Tooltip). The only
  * thing Popover adds is the title + content layout inside the popup body.
  */
+
+const popoverProps = {
+  title: { type: [String, Number, Object, Function] as PropType<PopoverContent>, default: undefined },
+  content: { type: [String, Number, Object, Function] as PropType<PopoverContent>, default: undefined },
+  placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
+  trigger: {
+    type: [String, Array] as PropType<TooltipTrigger | TooltipTrigger[]>,
+    default: 'hover',
+  },
+  open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: false },
+  arrow: { type: [Boolean, Object] as PropType<TooltipArrow>, default: true },
+  mouseEnterDelay: { type: Number, default: 0.1 },
+  mouseLeaveDelay: { type: Number, default: 0.1 },
+  disabled: { type: Boolean, default: false },
+  overlayStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
+  overlayInnerStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
+  autoAdjustOverflow: { type: Boolean, default: true },
+  zIndex: { type: Number, default: undefined },
+  destroyOnHidden: { type: Boolean, default: false },
+  getPopupContainer: { type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>, default: undefined },
+  color: { type: String, default: undefined },
+  classNames: {
+    type: [Object, Function] as PropType<
+      PopoverClassNames | ((info: { props: Record<string, unknown> }) => PopoverClassNames)
+    >,
+    default: undefined,
+  },
+  styles: {
+    type: [Object, Function] as PropType<PopoverStyles | ((info: { props: Record<string, unknown> }) => PopoverStyles)>,
+    default: undefined,
+  },
+} satisfies Record<keyof PopoverProps, any>
+
 const InternalPopover = defineComponent({
   name: 'Popover',
   inheritAttrs: false,
-  props: {
-    title: [String, Number, Object, Function] as PropType<PopoverContent>,
-    content: [String, Number, Object, Function] as PropType<PopoverContent>,
-    placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
-    trigger: {
-      type: [String, Array] as PropType<TooltipTrigger | TooltipTrigger[]>,
-      default: 'hover',
-    },
-    open: { type: Boolean, default: undefined },
-    defaultOpen: Boolean,
-    arrow: { type: [Boolean, Object] as PropType<TooltipArrow>, default: true },
-    mouseEnterDelay: { type: Number, default: 0.1 },
-    mouseLeaveDelay: { type: Number, default: 0.1 },
-    disabled: Boolean,
-    overlayStyle: Object as PropType<Record<string, string>>,
-    overlayInnerStyle: Object as PropType<Record<string, string>>,
-    autoAdjustOverflow: { type: Boolean, default: true },
-    zIndex: Number,
-    destroyOnHidden: Boolean,
-    getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
-    color: String,
-    classNames: [Object, Function] as PropType<
-      PopoverClassNames | ((info: { props: Record<string, unknown> }) => PopoverClassNames)
-    >,
-    styles: [Object, Function] as PropType<
-      PopoverStyles | ((info: { props: Record<string, unknown> }) => PopoverStyles)
-    >,
-  },
+  props: popoverProps,
   emits: ['update:open', 'openChange', 'afterOpenChange'],
   setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('popover')
@@ -137,7 +144,7 @@ const InternalPopover = defineComponent({
           color: props.color,
           popupStyle: props.overlayStyle,
           'onUpdate:open': (v: boolean) => emit('update:open', v),
-          onOpenChange: (v: boolean) => emit('openChange', v),
+          onOpenChange: (v: boolean, info: TooltipOpenChangeInfo) => emit('openChange', v, info),
           onAfterOpenChange: (v: boolean) => emit('afterOpenChange', v),
         },
         // Only pass `title` slot when we actually have content; otherwise

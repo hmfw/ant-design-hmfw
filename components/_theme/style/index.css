@@ -136,4 +136,8 @@
   --hmfw-skeleton-color-base: rgba(0, 0, 0, 0.06);
   --hmfw-skeleton-color-highlight: rgba(0, 0, 0, 0.15);
   --hmfw-timeline-title-span: 80px;
+  --hmfw-font-weight-strong: 600;
+  --hmfw-popover-title-min-width: 177px;
+  --hmfw-popover-inner-padding: 12px;
+  --hmfw-popover-title-margin-bottom: 8px;
 }

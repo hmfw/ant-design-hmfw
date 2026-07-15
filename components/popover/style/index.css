@@ -9,7 +9,7 @@
   /* AntD v6：宽度由内容决定，仅以视口为上限（非 Tooltip 的 320px 截断）。 */
   width: max-content;
   max-width: 100vw;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   line-height: var(--hmfw-line-height);
   pointer-events: none;
   /* 背景色默认取白色浮层 token；传入 color prop 时由 JS 内联覆盖 --tooltip-bg。
@@ -54,14 +54,14 @@
   pointer-events: auto;
   overflow: hidden;
   /* AntD v6 默认主题（非 wireframe）：内边距落在容器上，标题/内容自身无 padding。 */
-  padding: 12px;
+  padding: var(--hmfw-popover-inner-padding);
 }
 
 .hmfw-popover-title {
-  min-width: 177px;
-  margin-bottom: 8px;
-  color: rgba(0, 0, 0, 0.88);
-  font-weight: 600;
+  min-width: var(--hmfw-popover-title-min-width);
+  margin-bottom: var(--hmfw-popover-title-margin-bottom);
+  color: var(--hmfw-color-text);
+  font-weight: var(--hmfw-font-weight-strong);
 }
 
 /* 标题作为最后一个元素（仅标题、无内容）时不需要下间距。 */
@@ -70,7 +70,7 @@
 }
 
 .hmfw-popover-inner-content {
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--hmfw-color-text);
 }
 
 /* 组件专属箭头类（空壳，供用户通过 classNames.arrow / styles.arrow 自定义） */

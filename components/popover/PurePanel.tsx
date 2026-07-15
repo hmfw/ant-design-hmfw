@@ -1,36 +1,43 @@
 import { defineComponent, computed, h, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import type { TooltipPlacement, TooltipArrow } from '../tooltip/types'
-import type { PopoverContent, PopoverClassNames, PopoverStyles } from './types'
+import type { PopoverContent, PopoverClassNames, PopoverStyles, PopoverPurePanelProps } from './types'
 
 /**
  * Popover 的纯展示面板（对应 AntD 的
  * `_InternalPanelDoNotUseOrYouWillBeFired`）。
  *
- * 仅渲染气泡卡片的“外观”——标题 + 内容 + 可选箭头，
+ * 仅渲染气泡卡片的”外观”——标题 + 内容 + 可选箭头，
  * 不包含任何触发（hover/click/focus）、定位、Teleport、动画逻辑。
  * 适用于把气泡卡片的样式直接内嵌到页面中（例如在 Card、示意图里）。
  *
  * 注意：根节点带 `.hmfw-popover-pure` 类用于中和 `.hmfw-popover`
  * 的绝对定位与 `pointer-events: none`，使其可作为普通块级元素就地渲染。
  */
+
+const purePanelProps = {
+  title: { type: [String, Number, Object, Function] as PropType<PopoverContent>, default: undefined },
+  content: { type: [String, Number, Object, Function] as PropType<PopoverContent>, default: undefined },
+  placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
+  arrow: { type: [Boolean, Object] as PropType<TooltipArrow>, default: true },
+  color: { type: String, default: undefined },
+  overlayInnerStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
+  classNames: {
+    type: [Object, Function] as PropType<
+      PopoverClassNames | ((info: { props: Record<string, unknown> }) => PopoverClassNames)
+    >,
+    default: undefined,
+  },
+  styles: {
+    type: [Object, Function] as PropType<PopoverStyles | ((info: { props: Record<string, unknown> }) => PopoverStyles)>,
+    default: undefined,
+  },
+} satisfies Record<keyof PopoverPurePanelProps, any>
+
 export const PurePanel = defineComponent({
   name: 'PopoverPurePanel',
   inheritAttrs: false,
-  props: {
-    title: [String, Number, Object, Function] as PropType<PopoverContent>,
-    content: [String, Number, Object, Function] as PropType<PopoverContent>,
-    placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
-    arrow: { type: [Boolean, Object] as PropType<TooltipArrow>, default: true },
-    color: String,
-    overlayInnerStyle: Object as PropType<Record<string, string>>,
-    classNames: [Object, Function] as PropType<
-      PopoverClassNames | ((info: { props: Record<string, unknown> }) => PopoverClassNames)
-    >,
-    styles: [Object, Function] as PropType<
-      PopoverStyles | ((info: { props: Record<string, unknown> }) => PopoverStyles)
-    >,
-  },
+  props: purePanelProps,
   setup(props, { slots, attrs }) {
     const prefixCls = usePrefixCls('popover')
 

@@ -228,6 +228,14 @@ export interface MapTokens extends SeedTokens {
 
   // Timeline
   timelineTitleSpan: number
+
+  // Typography weights
+  fontWeightStrong: number
+
+  // Popover
+  popoverTitleMinWidth: number
+  popoverInnerPadding: number
+  popoverTitleMarginBottom: number
 }
 
 // ============================================================================
@@ -443,6 +451,14 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     skeletonColorHighlight: colorFill,
 
     timelineTitleSpan: 80,
+
+    // Typography weights
+    fontWeightStrong: 600,
+
+    // Popover 专属 token
+    popoverTitleMinWidth: 177,
+    popoverInnerPadding: 12,
+    popoverTitleMarginBottom: sizeXS, // 复用 marginXS (8px)
   }
 }
 

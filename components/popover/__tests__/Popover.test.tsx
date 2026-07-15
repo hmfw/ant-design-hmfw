@@ -390,7 +390,7 @@ describe('Popover', () => {
     await wrapper.find('div').trigger('click')
     await nextTick()
     expect(wrapper.emitted('update:open')?.[0]).toEqual([true])
-    expect(wrapper.emitted('openChange')?.[0]).toEqual([true])
+    expect(wrapper.emitted('openChange')?.[0]).toEqual([true, { source: 'trigger' }])
     wrapper.unmount()
   })
 

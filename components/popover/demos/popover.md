@@ -49,6 +49,38 @@
   <PopoverClassNames />
 </DemoBlock>
 
+### Slot 语法
+
+使用 `title` 和 `content` slot 传入富内容，如图标、按钮、链接等交互元素。
+
+<DemoBlock title="Slot 语法" :source="PopoverSlotSource">
+  <PopoverSlot />
+</DemoBlock>
+
+### 受控模式
+
+通过 `v-model:open` 手动控制显隐，监听 `openChange` 事件获取显隐状态变化。
+
+<DemoBlock title="受控模式" :source="PopoverControlledSource">
+  <PopoverControlled />
+</DemoBlock>
+
+### 属性配置
+
+演示 `disabled`、`arrow`、`destroyOnHidden`、`mouseEnterDelay` 等布尔属性和延迟配置。
+
+<DemoBlock title="属性配置" :source="PopoverPropsSource">
+  <PopoverProps />
+</DemoBlock>
+
+### 高级样式
+
+演示 `color`、`overlayStyle`、`overlayInnerStyle`、`getPopupContainer` 等高级样式定制。
+
+<DemoBlock title="高级样式" :source="PopoverAdvancedSource">
+  <PopoverAdvanced />
+</DemoBlock>
+
 ## API
 
 ### Popover Props
@@ -77,11 +109,11 @@
 
 ### Popover Events
 
-| 事件名          | 说明                      | 回调参数                  |
-| --------------- | ------------------------- | ------------------------- |
-| update:open     | 显示隐藏的回调（v-model） | `(open: boolean) => void` |
-| openChange      | 显示隐藏的回调            | `(open: boolean) => void` |
-| afterOpenChange | 浮层动画结束时触发        | `(open: boolean) => void` |
+| 事件名          | 说明                             | 回调参数                                               |
+| --------------- | -------------------------------- | ------------------------------------------------------ |
+| update:open     | 显示隐藏的回调（v-model）        | `(open: boolean) => void`                              |
+| openChange      | 显示隐藏的回调，附带触发来源信息 | `(open: boolean, info: PopoverOpenChangeInfo) => void` |
+| afterOpenChange | 浮层显隐动画结束时触发           | `(open: boolean) => void`                              |
 
 ### Popover Slots
 
@@ -319,4 +351,27 @@ const dynamicTitle = ref('动态标题')
 
 ## 设计 Token
 
-Popover 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。
+Popover 组件已接入设计 Token 系统，支持通过 ConfigProvider 全局定制：
+
+| Token                      | 说明         | 默认值           |
+| -------------------------- | ------------ | ---------------- |
+| `fontWeightStrong`         | 标题字重     | `600`            |
+| `popoverTitleMinWidth`     | 标题最小宽度 | `177px`          |
+| `popoverInnerPadding`      | 内层内边距   | `12px`           |
+| `popoverTitleMarginBottom` | 标题下边距   | `8px` (marginXS) |
+
+使用示例：
+
+```vue
+<template>
+  <ConfigProvider :theme="{ fontWeightStrong: 700, popoverInnerPadding: 16 }">
+    <Popover title="自定义主题" content="标题字重更粗、内边距更大">
+      <Button>查看</Button>
+    </Popover>
+  </ConfigProvider>
+</template>
+
+<script setup lang="ts">
+import { ConfigProvider, Popover, Button } from '@hmfw/ant-design'
+</script>
+```

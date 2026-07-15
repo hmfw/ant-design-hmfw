@@ -22,6 +22,18 @@ export interface PopoverStyles {
   content?: Record<string, string>
 }
 
+/** `openChange` 回调的附带信息，说明本次显隐由何处触发。 */
+export interface PopoverOpenChangeInfo {
+  /** `trigger` 表示由触发器交互引起，`popup` 表示由浮层内部交互引起。 */
+  source: 'trigger' | 'popup'
+}
+
+/** `openChange` 事件回调签名。 */
+export type PopoverOpenChangeHandler = (open: boolean, info: PopoverOpenChangeInfo) => void
+
+/** `afterOpenChange` 事件回调签名（浮层显隐动画结束后触发）。 */
+export type PopoverAfterOpenChangeHandler = (open: boolean) => void
+
 export interface PopoverProps {
   title?: PopoverContent
   content?: PopoverContent
@@ -49,4 +61,19 @@ export interface PopoverProps {
   classNames?: PopoverClassNames | ((info: { props: PopoverProps }) => PopoverClassNames)
   /** 各语义化 DOM 的自定义内联样式（AntD v6.0.0），支持对象或函数。 */
   styles?: PopoverStyles | ((info: { props: PopoverProps }) => PopoverStyles)
+}
+
+/**
+ * PopoverPurePanel Props（`_InternalPanelDoNotUseOrYouWillBeFired`）。
+ * 仅渲染气泡卡片外观，不含触发与定位逻辑。
+ */
+export interface PopoverPurePanelProps {
+  title?: PopoverContent
+  content?: PopoverContent
+  placement?: TooltipPlacement
+  arrow?: TooltipArrow
+  color?: string
+  overlayInnerStyle?: Record<string, string>
+  classNames?: PopoverClassNames | ((info: { props: Record<string, unknown> }) => PopoverClassNames)
+  styles?: PopoverStyles | ((info: { props: Record<string, unknown> }) => PopoverStyles)
 }
