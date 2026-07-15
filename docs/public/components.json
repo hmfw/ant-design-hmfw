@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.15.0",
+  "version": "0.24.0",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 67 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -419,14 +419,14 @@
         {
           "section": "AutoComplete Props",
           "name": "value(v-model)",
-          "description": "指定当前选中的条目",
+          "description": "指定当前选中的条目（受控值，传入后转为受控模式）",
           "type": "`string`",
           "default": "-"
         },
         {
           "section": "AutoComplete Props",
           "name": "defaultValue",
-          "description": "指定默认选中的条目",
+          "description": "非受控模式下的初始值（未传 `value` 时生效）",
           "type": "`string`",
           "default": "-"
         },
@@ -481,8 +481,15 @@
         },
         {
           "section": "AutoComplete Props",
+          "name": "optionFilterProp",
+          "description": "内置筛选时依据的字段；`label` 为非字符串（VNode）时自动回退到 `value`",
+          "type": "`'value' | 'label'`",
+          "default": "`'value'`"
+        },
+        {
+          "section": "AutoComplete Props",
           "name": "backfill",
-          "description": "使用键盘选择选项的时候把选中项回填到输入框中",
+          "description": "使用键盘选择选项的时候把选中项回填到输入框中（仅更新显示，不触发 `change`）",
           "type": "`boolean`",
           "default": "`false`"
         },
@@ -495,10 +502,10 @@
         },
         {
           "section": "AutoComplete Props",
-          "name": "defaultOpen",
-          "description": "默认是否展开下拉菜单",
-          "type": "`boolean`",
-          "default": "`false`"
+          "name": "notFoundContent",
+          "description": "当下拉列表为空时显示的内容，缺省时使用本地化文案（如“无匹配结果”）",
+          "type": "`VNodeChild`",
+          "default": "-"
         },
         {
           "section": "AutoComplete Props",
@@ -509,8 +516,22 @@
         },
         {
           "section": "AutoComplete Props",
-          "name": "notFoundContent",
-          "description": "当下拉列表为空时显示的内容",
+          "name": "defaultOpen",
+          "description": "非受控模式下的初始展开状态（未传 `open` 时生效）",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "AutoComplete Props",
+          "name": "autoFocus",
+          "description": "组件挂载后自动获取焦点",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "AutoComplete Props",
+          "name": "id",
+          "description": "透传到内部 `input` 的 id，便于表单 `label` 关联",
           "type": "`string`",
           "default": "-"
         },
@@ -531,15 +552,15 @@
         {
           "section": "AutoCompleteOption",
           "name": "value",
-          "description": "选项的值",
+          "description": "选项的值，同时作为选中后回填到输入框的内容",
           "type": "`string`",
           "default": ""
         },
         {
           "section": "AutoCompleteOption",
           "name": "label",
-          "description": "选项的标签，若不设置则默认与 value 相同",
-          "type": "`string`",
+          "description": "选项的展示内容，支持富文本节点；不设置则回退 value",
+          "type": "`VNodeChild`",
           "default": ""
         },
         {
@@ -598,6 +619,12 @@
           "name": "openChange",
           "description": "下拉框展开/收起时的回调",
           "params": "`(open: boolean) => void`"
+        },
+        {
+          "section": "AutoComplete Events",
+          "name": "dropdownVisibleChange",
+          "description": "`openChange` 的别名，对齐 antd v6",
+          "params": "`(open: boolean) => void`"
         }
       ],
       "slots": [],
@@ -619,7 +646,7 @@
         },
         {
           "title": "不同尺寸",
-          "description": "三种大小的输入框，大的用在表单中，中的为默认。",
+          "description": "三种大小的输入框，提供 `small`、`middle`（默认） 和 `large` 三种尺寸。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; width: 300px\">\n    <AutoComplete v-model:value=\"value1\" :options=\"options\" size=\"large\" placeholder=\"Large size\" />\n    <AutoComplete v-model:value=\"value2\" :options=\"options\" placeholder=\"Default size\" />\n    <AutoComplete v-model:value=\"value3\" :options=\"options\" size=\"small\" placeholder=\"Small size\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { AutoComplete } from '@hmfw/ant-design'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value3 = ref('')\nconst options = ref([{ value: 'Vue' }, { value: 'React' }, { value: 'Angular' }])\n</script>"
         },
         {
@@ -728,16 +755,30 @@
           "default": "-"
         },
         {
+          "section": "Avatar 事件",
+          "name": "`(e: Event) => boolean | void`",
+          "description": "图片加载失败时触发。回调返回 `false` 可阻止默认 fallback，由使用者自行处理降级",
+          "type": "",
+          "default": ""
+        },
+        {
+          "section": "AvatarGroup Props",
+          "name": "max",
+          "description": "溢出配置：`count` 最大显示数、`style` 溢出头像样式、`popover` 溢出头像收纳到 Popover 展示",
+          "type": "`{ count?: number; style?: CSSProperties; popover?: PopoverProps }`",
+          "default": "-"
+        },
+        {
           "section": "AvatarGroup Props",
           "name": "maxCount",
-          "description": "最多显示的头像数量",
+          "description": "最多显示的头像数量（已废弃，请用 `max.count`）",
           "type": "`number`",
           "default": "-"
         },
         {
           "section": "AvatarGroup Props",
           "name": "maxStyle",
-          "description": "多余头像样式",
+          "description": "多余头像样式（已废弃，请用 `max.style`）",
           "type": "`CSSProperties`",
           "default": "-"
         },
@@ -903,33 +944,7 @@
       ],
       "events": [],
       "slots": [],
-      "demos": [
-        {
-          "title": "基本用法",
-          "description": "简单的徽章展示，当 count 为 0 时，默认不显示。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 24px\">\n    <Badge :count=\"5\">\n      <div style=\"width: 42px; height: 42px; background: #eee; border-radius: 4px\" />\n    </Badge>\n    <Badge :count=\"0\" show-zero>\n      <div style=\"width: 42px; height: 42px; background: #eee; border-radius: 4px\" />\n    </Badge>\n    <Badge :count=\"99\">\n      <div style=\"width: 42px; height: 42px; background: #eee; border-radius: 4px\" />\n    </Badge>\n    <Badge :count=\"100\">\n      <div style=\"width: 42px; height: 42px; background: #eee; border-radius: 4px\" />\n    </Badge>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Badge } from '@hmfw/ant-design'\n</script>"
-        },
-        {
-          "title": "状态点",
-          "description": "用于表示状态的小圆点。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Badge status=\"success\" text=\"成功\" />\n    <Badge status=\"error\" text=\"错误\" />\n    <Badge status=\"default\" text=\"默认\" />\n    <Badge status=\"processing\" text=\"进行中\" />\n    <Badge status=\"warning\" text=\"警告\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Badge } from '@hmfw/ant-design'\n</script>"
-        },
-        {
-          "title": "自定义颜色",
-          "description": "可以自定义徽标的颜色。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 24px\">\n    <Badge color=\"#f50\" :count=\"5\">\n      <div style=\"width: 42px; height: 42px; background: #eee; border-radius: 4px\" />\n    </Badge>\n    <Badge color=\"#2db7f5\" :count=\"5\">\n      <div style=\"width: 42px; height: 42px; background: #eee; border-radius: 4px\" />\n    </Badge>\n    <Badge color=\"#87d068\" :count=\"5\">\n      <div style=\"width: 42px; height: 42px; background: #eee; border-radius: 4px\" />\n    </Badge>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Badge } from '@hmfw/ant-design'\n</script>"
-        },
-        {
-          "title": "缎带",
-          "description": "使用 `Badge.Ribbon` 展示缎带样式标记。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 32px; flex-wrap: wrap\">\n    <Badge.Ribbon text=\"Hippies\">\n      <div class=\"ribbon-card\">缎带在右侧（默认）</div>\n    </Badge.Ribbon>\n\n    <Badge.Ribbon text=\"Pies\" color=\"green\" placement=\"start\">\n      <div class=\"ribbon-card\">缎带在左侧 + 预设色</div>\n    </Badge.Ribbon>\n\n    <Badge.Ribbon text=\"Custom\" color=\"#2db7f5\">\n      <div class=\"ribbon-card\">自定义颜色</div>\n    </Badge.Ribbon>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Badge } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n.ribbon-card {\n  width: 180px;\n  height: 64px;\n  padding: 12px;\n  background: #f5f5f5;\n  border-radius: 6px;\n}\n</style>"
-        },
-        {
-          "title": "细粒度样式控制",
-          "description": "通过 `classNames` / `styles` 对 root、indicator、dot、text 等子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义数字徽标 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义数字徽标样式：</div>\n      <Badge :count=\"5\" :class-names=\"{ indicator: 'custom-indicator' }\">\n        <div style=\"width: 42px; height: 42px; background: #f0f0f0; border-radius: 4px\"></div>\n      </Badge>\n    </div>\n\n    <!-- 场景 2：自定义状态点 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义状态点样式：</div>\n      <div style=\"display: flex; gap: 16px\">\n        <Badge status=\"success\" text=\"成功\" :class-names=\"{ dot: 'custom-dot-success', text: 'custom-text' }\" />\n        <Badge status=\"processing\" text=\"进行中\" :class-names=\"{ dot: 'custom-dot-processing', text: 'custom-text' }\" />\n        <Badge status=\"error\" text=\"错误\" :class-names=\"{ dot: 'custom-dot-error', text: 'custom-text' }\" />\n      </div>\n    </div>\n\n    <!-- 场景 3：自定义根容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器样式：</div>\n      <Badge :count=\"99\" :class-names=\"{ root: 'custom-root', indicator: 'custom-indicator-large' }\">\n        <div style=\"width: 42px; height: 42px; background: #f0f0f0; border-radius: 4px\"></div>\n      </Badge>\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Badge\n        :count=\"12\"\n        :styles=\"{\n          indicator: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', fontSize: '14px' },\n        }\"\n      >\n        <div style=\"width: 42px; height: 42px; background: #f0f0f0; border-radius: 4px\"></div>\n      </Badge>\n    </div>\n\n    <!-- 场景 5：组合自定义（dot 模式） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义（dot 模式）：</div>\n      <Badge dot :class-names=\"{ indicator: 'custom-dot-badge' }\">\n        <div style=\"width: 42px; height: 42px; background: #f0f0f0; border-radius: 4px\"></div>\n      </Badge>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Badge } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n:deep(.custom-indicator) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);\n  font-weight: bold;\n  transition: all 0.3s;\n}\n\n:deep(.custom-indicator:hover) {\n  transform: scale(1.1);\n  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);\n}\n\n:deep(.custom-indicator-large) {\n  background: linear-gradient(to right, #52c41a, #389e0d);\n  font-size: 16px;\n  padding: 0 8px;\n  min-width: 28px;\n  height: 28px;\n  line-height: 28px;\n  border-radius: 14px;\n}\n\n:deep(.custom-dot-success) {\n  width: 12px;\n  height: 12px;\n  border-radius: 50%;\n  box-shadow: 0 0 8px rgba(82, 196, 26, 0.6);\n  animation: pulse-success 1.5s ease-in-out infinite;\n}\n\n:deep(.custom-dot-processing) {\n  width: 12px;\n  height: 12px;\n  border-radius: 50%;\n  box-shadow: 0 0 8px rgba(22, 119, 255, 0.6);\n  animation: pulse-processing 1.5s ease-in-out infinite;\n}\n\n:deep(.custom-dot-error) {\n  width: 12px;\n  height: 12px;\n  border-radius: 50%;\n  box-shadow: 0 0 8px rgba(255, 77, 79, 0.6);\n  animation: pulse-error 1.5s ease-in-out infinite;\n}\n\n:deep(.custom-text) {\n  font-weight: 600;\n  font-size: 14px;\n}\n\n:deep(.custom-root) {\n  display: inline-block;\n  padding: 4px;\n  border-radius: 8px;\n  background: #f0f5ff;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  background: #e6f4ff;\n  transform: translateY(-2px);\n}\n\n:deep(.custom-dot-badge) {\n  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);\n  width: 12px;\n  height: 12px;\n  box-shadow: 0 0 12px rgba(255, 107, 107, 0.8);\n  animation: pulse-custom 1.5s ease-in-out infinite;\n}\n\n@keyframes pulse-success {\n  0%,\n  100% {\n    box-shadow: 0 0 8px rgba(82, 196, 26, 0.6);\n  }\n  50% {\n    box-shadow: 0 0 16px rgba(82, 196, 26, 1);\n  }\n}\n\n@keyframes pulse-processing {\n  0%,\n  100% {\n    box-shadow: 0 0 8px rgba(22, 119, 255, 0.6);\n  }\n  50% {\n    box-shadow: 0 0 16px rgba(22, 119, 255, 1);\n  }\n}\n\n@keyframes pulse-error {\n  0%,\n  100% {\n    box-shadow: 0 0 8px rgba(255, 77, 79, 0.6);\n  }\n  50% {\n    box-shadow: 0 0 16px rgba(255, 77, 79, 1);\n  }\n}\n\n@keyframes pulse-custom {\n  0%,\n  100% {\n    box-shadow: 0 0 12px rgba(255, 107, 107, 0.8);\n    transform: scale(1);\n  }\n  50% {\n    box-shadow: 0 0 20px rgba(255, 107, 107, 1);\n    transform: scale(1.1);\n  }\n}\n</style>"
-        }
-      ],
+      "demos": [],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/badge"
     },
     {
@@ -2615,9 +2630,39 @@
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div>\n      <p style=\"margin-bottom: 8px\">水平排列：</p>\n      <CheckboxGroup v-model:value=\"selectedFruits\" :options=\"fruitOptions\" />\n    </div>\n    <div>\n      <p style=\"margin-bottom: 8px\">垂直排列（通过 style 控制）：</p>\n      <CheckboxGroup\n        v-model:value=\"selectedColors\"\n        :options=\"colorOptions\"\n        :style=\"{ display: 'flex', flexDirection: 'column', gap: '8px' }\"\n      />\n    </div>\n    <p>水果：{{ selectedFruits }}，颜色：{{ selectedColors }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { CheckboxGroup } from '@hmfw/ant-design'\n\nconst selectedFruits = ref<string[]>(['apple'])\nconst selectedColors = ref<string[]>([])\n\nconst fruitOptions = [\n  { label: '苹果', value: 'apple' },\n  { label: '香蕉', value: 'banana' },\n  { label: '橙子', value: 'orange' },\n  { label: '葡萄', value: 'grape', disabled: true },\n]\n\nconst colorOptions = [\n  { label: '红色', value: 'red' },\n  { label: '绿色', value: 'green' },\n  { label: '蓝色', value: 'blue' },\n]\n</script>"
         },
         {
+          "title": "受控与非受控",
+          "description": "展示受控模式（v-model:checked）和非受控模式（defaultChecked）的区别和使用场景。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 非受控模式 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">非受控模式（defaultChecked）</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 12px\">使用 defaultChecked 设置初始值，组件内部管理状态</p>\n      <div style=\"display: flex; flex-direction: column; gap: 8px\">\n        <Checkbox :default-checked=\"true\"> 默认选中（defaultChecked=true） </Checkbox>\n        <Checkbox :default-checked=\"false\"> 默认未选中（defaultChecked=false） </Checkbox>\n        <p style=\"color: #999; font-size: 12px\">\n          💡 非受控模式下，状态由组件内部管理，defaultChecked 仅在首次渲染时生效\n        </p>\n      </div>\n    </section>\n\n    <!-- 受控模式 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">受控模式（v-model:checked）</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 12px\">\n        使用 v-model:checked 或 :checked 绑定状态，外部完全控制\n      </p>\n      <div style=\"display: flex; flex-direction: column; gap: 8px\">\n        <Checkbox v-model:checked=\"controlledValue1\"> 受控复选框 1 </Checkbox>\n        <Checkbox v-model:checked=\"controlledValue2\"> 受控复选框 2 </Checkbox>\n        <div style=\"margin-top: 8px; display: flex; gap: 8px\">\n          <button @click=\"toggleAll\">全选/取消</button>\n          <button @click=\"resetAll\">重置</button>\n        </div>\n        <p style=\"color: #666; font-size: 12px\">\n          状态：checked1={{ controlledValue1 }}, checked2={{ controlledValue2 }}\n        </p>\n      </div>\n    </section>\n\n    <!-- CheckboxGroup 受控/非受控 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">CheckboxGroup 受控/非受控</h4>\n      <div style=\"display: flex; gap: 24px\">\n        <div style=\"flex: 1\">\n          <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">非受控（defaultValue）</p>\n          <CheckboxGroup :default-value=\"['A']\" :options=\"groupOptions\" />\n        </div>\n        <div style=\"flex: 1\">\n          <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">受控（v-model:value）</p>\n          <CheckboxGroup v-model:value=\"groupValue\" :options=\"groupOptions\" />\n          <button style=\"margin-top: 8px\" @click=\"groupValue = ['A', 'C']\">选中 A & C</button>\n          <p style=\"color: #666; font-size: 12px; margin-top: 4px\">已选：{{ groupValue }}</p>\n        </div>\n      </div>\n    </section>\n\n    <!-- 说明 -->\n    <section style=\"background: #f5f5f5; padding: 12px; border-radius: 4px\">\n      <h4 style=\"margin-bottom: 8px\">使用建议</h4>\n      <ul style=\"margin: 0; padding-left: 20px; font-size: 13px; color: #666\">\n        <li><strong>非受控模式</strong>：适合简单场景，组件内部管理状态</li>\n        <li><strong>受控模式</strong>：适合需要外部控制、联动逻辑的场景</li>\n        <li>不要同时使用 defaultChecked 和 checked，后者优先级更高</li>\n        <li>CheckboxGroup 同理：defaultValue vs v-model:value</li>\n      </ul>\n    </section>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Checkbox, CheckboxGroup } from '@hmfw/ant-design'\n\n// 受控模式\nconst controlledValue1 = ref(false)\nconst controlledValue2 = ref(true)\n\nconst toggleAll = () => {\n  const allChecked = controlledValue1.value && controlledValue2.value\n  controlledValue1.value = !allChecked\n  controlledValue2.value = !allChecked\n}\n\nconst resetAll = () => {\n  controlledValue1.value = false\n  controlledValue2.value = false\n}\n\n// CheckboxGroup 受控模式\nconst groupValue = ref<string[]>(['B'])\nconst groupOptions = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n]\n</script>"
+        },
+        {
           "title": "全选",
           "description": "在实现全选效果时，你可能会用到 `indeterminate` 属性。",
           "code": "<template>\n  <div>\n    <div style=\"border-bottom: 1px solid #e8e8e8; padding-bottom: 8px; margin-bottom: 8px\">\n      <Checkbox v-model:checked=\"checkAll\" :indeterminate=\"indeterminate\" @change=\"handleCheckAllChange\">\n        全选\n      </Checkbox>\n    </div>\n    <CheckboxGroup v-model:value=\"checkedList\" :options=\"options\" @change=\"handleGroupChange\" />\n    <p style=\"margin-top: 8px\">已选：{{ checkedList }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Checkbox, CheckboxGroup } from '@hmfw/ant-design'\nimport type { CheckboxChangeEvent } from '@hmfw/ant-design'\n\nconst options = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n  { label: '选项 D', value: 'D' },\n]\n\nconst checkedList = ref<string[]>(['A', 'B'])\nconst checkAll = ref(false)\nconst indeterminate = ref(true)\n\nconst handleCheckAllChange = (e: CheckboxChangeEvent) => {\n  checkedList.value = e.target.checked ? options.map((o) => o.value) : []\n  indeterminate.value = false\n}\n\nconst handleGroupChange = (list: string[]) => {\n  indeterminate.value = !!list.length && list.length < options.length\n  checkAll.value = list.length === options.length\n}\n</script>"
+        },
+        {
+          "title": "CheckboxGroup 禁用状态",
+          "description": "演示 CheckboxGroup 的禁用功能，包括整组禁用、单项禁用、禁用优先级等。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 整组禁用 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">整组禁用（disabled）</h4>\n      <CheckboxGroup v-model:value=\"groupValue1\" :options=\"plainOptions\" disabled />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ groupValue1 }}（整组禁用后无法更改）</p>\n    </section>\n\n    <!-- 单项禁用 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">单项禁用</h4>\n      <CheckboxGroup v-model:value=\"groupValue2\" :options=\"optionsWithDisabled\" />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ groupValue2 }}</p>\n    </section>\n\n    <!-- 选项级 disabled 覆盖组级 disabled -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">选项级 disabled 覆盖组级</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">\n        当 CheckboxGroup 设置 disabled=true 时，选项可以通过 disabled=false 覆盖\n      </p>\n      <CheckboxGroup v-model:value=\"groupValue3\" :options=\"optionsWithOverride\" disabled />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">\n        已选：{{ groupValue3 }}（选项 B 设置了 disabled=false，可以选中）\n      </p>\n    </section>\n\n    <!-- 嵌套 Checkbox 的禁用 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">嵌套 Checkbox 的禁用</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">\n        在 CheckboxGroup 内直接使用 Checkbox 组件时的禁用行为\n      </p>\n      <CheckboxGroup v-model:value=\"groupValue4\" disabled>\n        <Checkbox value=\"a\"> A（继承组的 disabled） </Checkbox>\n        <Checkbox value=\"b\" :disabled=\"false\"> B（覆盖为 disabled=false） </Checkbox>\n        <Checkbox value=\"c\" disabled> C（显式设置 disabled=true） </Checkbox>\n      </CheckboxGroup>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ groupValue4 }}</p>\n    </section>\n\n    <!-- 动态切换禁用状态 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">动态切换禁用状态</h4>\n      <div style=\"margin-bottom: 8px\">\n        <button @click=\"groupDisabled = !groupDisabled\">{{ groupDisabled ? '启用' : '禁用' }}整组</button>\n      </div>\n      <CheckboxGroup v-model:value=\"groupValue5\" :options=\"plainOptions\" :disabled=\"groupDisabled\" />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">\n        已选：{{ groupValue5 }}（当前状态：{{ groupDisabled ? '禁用' : '启用' }}）\n      </p>\n    </section>\n\n    <!-- 说明 -->\n    <section style=\"background: #f5f5f5; padding: 12px; border-radius: 4px\">\n      <h4 style=\"margin-bottom: 8px\">禁用优先级</h4>\n      <ol style=\"margin: 0; padding-left: 20px; font-size: 13px; color: #666\">\n        <li>选项级 disabled 优先级高于组级 disabled</li>\n        <li>选项 disabled=false 可以覆盖组的 disabled=true</li>\n        <li>选项 disabled=true 无法被组的 disabled=false 覆盖</li>\n        <li>嵌套 Checkbox 继承组的 disabled，但可以显式覆盖</li>\n      </ol>\n    </section>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Checkbox, CheckboxGroup } from '@hmfw/ant-design'\n\nconst plainOptions = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n]\n\nconst optionsWithDisabled = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B（禁用）', value: 'B', disabled: true },\n  { label: '选项 C', value: 'C' },\n  { label: '选项 D（禁用）', value: 'D', disabled: true },\n]\n\nconst optionsWithOverride = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B（可选）', value: 'B', disabled: false },\n  { label: '选项 C', value: 'C' },\n]\n\nconst groupValue1 = ref(['A', 'B'])\nconst groupValue2 = ref(['A'])\nconst groupValue3 = ref(['B'])\nconst groupValue4 = ref<string[]>([])\nconst groupValue5 = ref(['B'])\nconst groupDisabled = ref(false)\n</script>"
+        },
+        {
+          "title": "CheckboxGroup 布局",
+          "description": "通过 style 属性控制 CheckboxGroup 的布局方式：水平、垂直、网格等。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 水平布局（默认） -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">水平布局（默认）</h4>\n      <CheckboxGroup v-model:value=\"value1\" :options=\"options\" />\n    </section>\n\n    <!-- 垂直布局 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">垂直布局</h4>\n      <CheckboxGroup\n        v-model:value=\"value2\"\n        :options=\"options\"\n        :style=\"{ display: 'flex', flexDirection: 'column', gap: '8px' }\"\n      />\n    </section>\n\n    <!-- 网格布局 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">网格布局（2 列）</h4>\n      <CheckboxGroup\n        v-model:value=\"value3\"\n        :options=\"moreOptions\"\n        :style=\"{\n          display: 'grid',\n          gridTemplateColumns: 'repeat(2, 1fr)',\n          gap: '8px',\n        }\"\n      />\n    </section>\n\n    <!-- 响应式网格布局 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">响应式网格布局</h4>\n      <CheckboxGroup v-model:value=\"value4\" :options=\"moreOptions\" class=\"responsive-grid\" />\n    </section>\n\n    <!-- 自定义间距 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">自定义间距</h4>\n      <CheckboxGroup v-model:value=\"value5\" :options=\"options\" :style=\"{ gap: '24px' }\" />\n    </section>\n\n    <!-- 嵌套布局（复杂场景） -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">嵌套布局（复杂场景）</h4>\n      <div style=\"display: flex; flex-direction: column; gap: 16px\">\n        <div>\n          <p style=\"font-weight: 500; margin-bottom: 8px\">水果类</p>\n          <CheckboxGroup v-model:value=\"fruits\" :options=\"fruitOptions\" />\n        </div>\n        <div>\n          <p style=\"font-weight: 500; margin-bottom: 8px\">蔬菜类</p>\n          <CheckboxGroup\n            v-model:value=\"vegetables\"\n            :options=\"vegetableOptions\"\n            :style=\"{ display: 'flex', flexDirection: 'column', gap: '8px' }\"\n          />\n        </div>\n      </div>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">水果：{{ fruits }}，蔬菜：{{ vegetables }}</p>\n    </section>\n\n    <!-- 使用 Flex 的行内布局 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">行内对齐布局</h4>\n      <div style=\"display: flex; align-items: center; gap: 16px\">\n        <span style=\"font-weight: 500\">请选择：</span>\n        <CheckboxGroup v-model:value=\"value6\" :options=\"options\" />\n      </div>\n    </section>\n\n    <!-- 说明 -->\n    <section style=\"background: #f5f5f5; padding: 12px; border-radius: 4px\">\n      <h4 style=\"margin-bottom: 8px\">布局方式</h4>\n      <ul style=\"margin: 0; padding-left: 20px; font-size: 13px; color: #666\">\n        <li>通过 <code>style</code> 属性控制 CheckboxGroup 的布局</li>\n        <li>使用 <code>flexDirection: 'column'</code> 实现垂直布局</li>\n        <li>使用 <code>display: 'grid'</code> 实现网格布局</li>\n        <li>通过 <code>gap</code> 属性控制项之间的间距</li>\n        <li>支持任意 CSS 布局方式（Flex、Grid、Float 等）</li>\n      </ul>\n    </section>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { CheckboxGroup } from '@hmfw/ant-design'\n\nconst options = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n]\n\nconst moreOptions = [\n  { label: '选项 1', value: '1' },\n  { label: '选项 2', value: '2' },\n  { label: '选项 3', value: '3' },\n  { label: '选项 4', value: '4' },\n  { label: '选项 5', value: '5' },\n  { label: '选项 6', value: '6' },\n]\n\nconst fruitOptions = [\n  { label: '苹果', value: 'apple' },\n  { label: '香蕉', value: 'banana' },\n  { label: '橙子', value: 'orange' },\n]\n\nconst vegetableOptions = [\n  { label: '番茄', value: 'tomato' },\n  { label: '黄瓜', value: 'cucumber' },\n  { label: '胡萝卜', value: 'carrot' },\n]\n\nconst value1 = ref<string[]>([])\nconst value2 = ref<string[]>([])\nconst value3 = ref<string[]>([])\nconst value4 = ref<string[]>([])\nconst value5 = ref<string[]>([])\nconst value6 = ref<string[]>([])\nconst fruits = ref<string[]>([])\nconst vegetables = ref<string[]>([])\n</script>\n\n<style scoped>\n.responsive-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));\n  gap: 8px;\n}\n\n/* 响应式断点 */\n@media (max-width: 768px) {\n  .responsive-grid {\n    grid-template-columns: repeat(2, 1fr);\n  }\n}\n\n@media (max-width: 480px) {\n  .responsive-grid {\n    grid-template-columns: 1fr;\n  }\n}\n\ncode {\n  background: #fff;\n  padding: 2px 6px;\n  border-radius: 3px;\n  font-family: 'Courier New', monospace;\n  font-size: 12px;\n}\n</style>"
+        },
+        {
+          "title": "CheckboxGroup 嵌套用法",
+          "description": "不使用 options 属性，直接在 CheckboxGroup 内嵌套 Checkbox 组件，实现复杂自定义布局。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 基础嵌套用法 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">基础用法：嵌套 Checkbox</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">\n        不使用 options，直接在 CheckboxGroup 内嵌套 Checkbox 组件\n      </p>\n      <CheckboxGroup v-model:value=\"value1\">\n        <Checkbox value=\"apple\"> 苹果 </Checkbox>\n        <Checkbox value=\"banana\"> 香蕉 </Checkbox>\n        <Checkbox value=\"orange\"> 橙子 </Checkbox>\n      </CheckboxGroup>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value1 }}</p>\n    </section>\n\n    <!-- 自定义布局 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">自定义布局</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">嵌套方式可以完全自定义布局和样式</p>\n      <CheckboxGroup v-model:value=\"value2\">\n        <div style=\"display: flex; flex-direction: column; gap: 12px\">\n          <div style=\"padding: 8px; background: #f5f5f5; border-radius: 4px\">\n            <Checkbox value=\"basic\"> 基础版（免费） </Checkbox>\n          </div>\n          <div style=\"padding: 8px; background: #e6f4ff; border-radius: 4px\">\n            <Checkbox value=\"pro\"> 专业版（¥99/月） </Checkbox>\n          </div>\n          <div style=\"padding: 8px; background: #fff7e6; border-radius: 4px\">\n            <Checkbox value=\"enterprise\"> 企业版（¥999/月） </Checkbox>\n          </div>\n        </div>\n      </CheckboxGroup>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value2 }}</p>\n    </section>\n\n    <!-- 混合使用：options + 嵌套 Checkbox -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">混合使用（不推荐）</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">\n        ⚠️ 当 CheckboxGroup 设置了 options 时，嵌套的 Checkbox 会被忽略\n      </p>\n      <CheckboxGroup v-model:value=\"value3\" :options=\"simpleOptions\">\n        <Checkbox value=\"d\"> D（会被忽略） </Checkbox>\n        <Checkbox value=\"e\"> E（会被忽略） </Checkbox>\n      </CheckboxGroup>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value3 }}（只有 options 中的选项生效）</p>\n    </section>\n\n    <!-- 嵌套 + 自定义内容 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">自定义复杂内容</h4>\n      <CheckboxGroup v-model:value=\"value4\">\n        <div style=\"display: flex; flex-direction: column; gap: 16px\">\n          <div\n            v-for=\"item in courses\"\n            :key=\"item.value\"\n            style=\"display: flex; align-items: start; padding: 12px; border: 1px solid #e8e8e8; border-radius: 6px\"\n          >\n            <Checkbox :value=\"item.value\" style=\"margin-top: 2px\" />\n            <div style=\"margin-left: 8px; flex: 1\">\n              <div style=\"font-weight: 500; margin-bottom: 4px\">{{ item.title }}</div>\n              <div style=\"font-size: 12px; color: #999\">{{ item.desc }}</div>\n              <div style=\"font-size: 12px; color: #1677ff; margin-top: 4px\">{{ item.price }}</div>\n            </div>\n          </div>\n        </div>\n      </CheckboxGroup>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value4 }}</p>\n    </section>\n\n    <!-- 网格布局嵌套 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">网格布局嵌套</h4>\n      <CheckboxGroup v-model:value=\"value5\">\n        <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px\">\n          <div\n            v-for=\"item in tags\"\n            :key=\"item.value\"\n            style=\"\n              padding: 8px 12px;\n              border: 1px solid #d9d9d9;\n              border-radius: 4px;\n              text-align: center;\n              cursor: pointer;\n            \"\n            :style=\"{ borderColor: value5.includes(item.value) ? '#1677ff' : '#d9d9d9' }\"\n          >\n            <Checkbox :value=\"item.value\"> {{ item.label }} </Checkbox>\n          </div>\n        </div>\n      </CheckboxGroup>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value5 }}</p>\n    </section>\n\n    <!-- 说明 -->\n    <section style=\"background: #f5f5f5; padding: 12px; border-radius: 4px\">\n      <h4 style=\"margin-bottom: 8px\">使用建议</h4>\n      <ul style=\"margin: 0; padding-left: 20px; font-size: 13px; color: #666\">\n        <li><strong>简单场景</strong>：使用 <code>options</code> 属性，配置简洁</li>\n        <li><strong>复杂布局</strong>：嵌套 <code>Checkbox</code>，灵活自定义</li>\n        <li><strong>不要混用</strong>：有 options 时，嵌套的 Checkbox 会被忽略</li>\n        <li>嵌套方式支持任意 HTML 结构和样式</li>\n        <li>每个 Checkbox 必须设置唯一的 <code>value</code> 属性</li>\n      </ul>\n    </section>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Checkbox, CheckboxGroup } from '@hmfw/ant-design'\n\nconst value1 = ref<string[]>([])\nconst value2 = ref(['basic'])\nconst value3 = ref<string[]>([])\nconst value4 = ref<string[]>([])\nconst value5 = ref<string[]>([])\n\nconst simpleOptions = [\n  { label: 'A', value: 'a' },\n  { label: 'B', value: 'b' },\n  { label: 'C', value: 'c' },\n]\n\nconst courses = [\n  {\n    value: 'vue',\n    title: 'Vue.js 从入门到精通',\n    desc: '系统学习 Vue3 + TypeScript + Composition API',\n    price: '¥199',\n  },\n  {\n    value: 'react',\n    title: 'React 核心进阶',\n    desc: 'Hooks、状态管理、性能优化全覆盖',\n    price: '¥299',\n  },\n  {\n    value: 'node',\n    title: 'Node.js 后端开发',\n    desc: 'Express、数据库、RESTful API 实战',\n    price: '¥249',\n  },\n]\n\nconst tags = [\n  { label: 'Vue', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Angular', value: 'angular' },\n  { label: 'Node.js', value: 'node' },\n  { label: 'TypeScript', value: 'ts' },\n  { label: 'Webpack', value: 'webpack' },\n]\n</script>\n\n<style scoped>\ncode {\n  background: #fff;\n  padding: 2px 6px;\n  border-radius: 3px;\n  font-family: 'Courier New', monospace;\n  font-size: 12px;\n}\n</style>"
+        },
+        {
+          "title": "事件监听",
+          "description": "展示 Checkbox 支持的所有事件：change、click、focus、blur、mouseenter、mouseleave 等。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- change 事件 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">change 事件</h4>\n      <Checkbox v-model:checked=\"checked1\" @change=\"handleChange\"> 点击触发 change 事件 </Checkbox>\n      <div style=\"margin-top: 8px; padding: 8px; background: #f5f5f5; border-radius: 4px; font-size: 12px\">\n        <div>事件触发次数：{{ changeCount }}</div>\n        <div>最后一次事件：{{ lastChangeEvent }}</div>\n      </div>\n    </section>\n\n    <!-- click 事件 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">click 事件</h4>\n      <Checkbox v-model:checked=\"checked2\" @click=\"handleClick\"> 点击触发 click 事件 </Checkbox>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">\n        click 触发次数：{{ clickCount }}（在 label 上点击也会触发）\n      </p>\n    </section>\n\n    <!-- focus 和 blur 事件 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">focus / blur 事件</h4>\n      <Checkbox v-model:checked=\"checked3\" @focus=\"handleFocus\" @blur=\"handleBlur\"> Tab 键切换焦点（或点击） </Checkbox>\n      <div style=\"margin-top: 8px; padding: 8px; background: #f5f5f5; border-radius: 4px; font-size: 12px\">\n        <div>当前状态：{{ focusStatus }}</div>\n        <div>focus 次数：{{ focusCount }}，blur 次数：{{ blurCount }}</div>\n      </div>\n    </section>\n\n    <!-- mouseenter 和 mouseleave 事件 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">mouseenter / mouseleave 事件</h4>\n      <Checkbox\n        v-model:checked=\"checked4\"\n        :styles=\"{\n          root: {\n            padding: '8px',\n            border: isHover ? '1px solid #1677ff' : '1px solid transparent',\n            borderRadius: '4px',\n            transition: 'border-color 0.2s',\n          },\n        }\"\n        @mouseenter=\"handleMouseEnter\"\n        @mouseleave=\"handleMouseLeave\"\n      >\n        鼠标悬停显示边框\n      </Checkbox>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">悬停状态：{{ isHover ? '是' : '否' }}</p>\n    </section>\n\n    <!-- keypress 和 keydown 事件 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">keypress / keydown 事件</h4>\n      <Checkbox v-model:checked=\"checked5\" @keypress=\"handleKeyPress\" @keydown=\"handleKeyDown\">\n        聚焦后按键（Space 切换状态）\n      </Checkbox>\n      <div style=\"margin-top: 8px; padding: 8px; background: #f5f5f5; border-radius: 4px; font-size: 12px\">\n        <div>keypress 次数：{{ keyPressCount }}</div>\n        <div>keydown 次数：{{ keyDownCount }}</div>\n        <div>最后按键：{{ lastKey }}</div>\n      </div>\n    </section>\n\n    <!-- CheckboxGroup 的 change 事件 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">CheckboxGroup 的 change 事件</h4>\n      <CheckboxGroup v-model:value=\"groupValue\" :options=\"groupOptions\" @change=\"handleGroupChange\" />\n      <div style=\"margin-top: 8px; padding: 8px; background: #f5f5f5; border-radius: 4px; font-size: 12px\">\n        <div>当前值：{{ groupValue }}</div>\n        <div>change 触发次数：{{ groupChangeCount }}</div>\n        <div>最后变更：{{ lastGroupChange }}</div>\n      </div>\n    </section>\n\n    <!-- 综合示例：表单验证 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">综合示例：表单验证</h4>\n      <div style=\"border: 1px solid #d9d9d9; padding: 16px; border-radius: 4px\">\n        <Checkbox v-model:checked=\"agreed\" :styles=\"{ root: { marginBottom: '8px' } }\" @change=\"handleAgreeChange\">\n          我已阅读并同意\n          <a href=\"#\" @click.prevent>《用户协议》</a>\n          和\n          <a href=\"#\" @click.prevent>《隐私政策》</a>\n        </Checkbox>\n        <button\n          :disabled=\"!agreed\"\n          :style=\"{\n            padding: '4px 16px',\n            background: agreed ? '#1677ff' : '#d9d9d9',\n            color: '#fff',\n            border: 'none',\n            borderRadius: '4px',\n            cursor: agreed ? 'pointer' : 'not-allowed',\n          }\"\n        >\n          提交注册\n        </button>\n      </div>\n      <p v-if=\"showWarning\" style=\"color: #ff4d4f; font-size: 12px; margin-top: 8px\">⚠️ 请先同意用户协议和隐私政策</p>\n    </section>\n\n    <!-- 说明 -->\n    <section style=\"background: #f5f5f5; padding: 12px; border-radius: 4px\">\n      <h4 style=\"margin-bottom: 8px\">事件说明</h4>\n      <ul style=\"margin: 0; padding-left: 20px; font-size: 13px; color: #666\">\n        <li>\n          <strong>change</strong>：状态改变时触发，参数为\n          <code>CheckboxChangeEvent</code>\n        </li>\n        <li><strong>click</strong>：点击时触发（包括 label）</li>\n        <li><strong>focus / blur</strong>：聚焦/失焦时触发</li>\n        <li><strong>mouseenter / mouseleave</strong>：鼠标进入/离开时触发</li>\n        <li><strong>keypress / keydown</strong>：按键时触发</li>\n        <li><strong>CheckboxGroup change</strong>：组内任意项改变时触发，参数为完整的 <code>value</code> 数组</li>\n      </ul>\n    </section>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Checkbox, CheckboxGroup } from '@hmfw/ant-design'\nimport type { CheckboxChangeEvent } from '@hmfw/ant-design'\n\n// change 事件\nconst checked1 = ref(false)\nconst changeCount = ref(0)\nconst lastChangeEvent = ref('')\n\nconst handleChange = (e: CheckboxChangeEvent) => {\n  changeCount.value++\n  lastChangeEvent.value = `checked=${e.target.checked}, value=${e.target.value}`\n}\n\n// click 事件\nconst checked2 = ref(false)\nconst clickCount = ref(0)\n\nconst handleClick = () => {\n  clickCount.value++\n}\n\n// focus / blur 事件\nconst checked3 = ref(false)\nconst focusStatus = ref('未聚焦')\nconst focusCount = ref(0)\nconst blurCount = ref(0)\n\nconst handleFocus = () => {\n  focusStatus.value = '已聚焦'\n  focusCount.value++\n}\n\nconst handleBlur = () => {\n  focusStatus.value = '未聚焦'\n  blurCount.value++\n}\n\n// mouseenter / mouseleave 事件\nconst checked4 = ref(false)\nconst isHover = ref(false)\n\nconst handleMouseEnter = () => {\n  isHover.value = true\n}\n\nconst handleMouseLeave = () => {\n  isHover.value = false\n}\n\n// keypress / keydown 事件\nconst checked5 = ref(false)\nconst keyPressCount = ref(0)\nconst keyDownCount = ref(0)\nconst lastKey = ref('')\n\nconst handleKeyPress = (e: KeyboardEvent) => {\n  keyPressCount.value++\n  lastKey.value = e.key\n}\n\nconst handleKeyDown = (e: KeyboardEvent) => {\n  keyDownCount.value++\n  lastKey.value = e.key\n}\n\n// CheckboxGroup 事件\nconst groupValue = ref<string[]>([])\nconst groupOptions = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n]\nconst groupChangeCount = ref(0)\nconst lastGroupChange = ref('')\n\nconst handleGroupChange = (value: (string | number | boolean)[]) => {\n  groupChangeCount.value++\n  lastGroupChange.value = JSON.stringify(value)\n}\n\n// 表单验证示例\nconst agreed = ref(false)\nconst showWarning = ref(false)\n\nconst handleAgreeChange = (e: CheckboxChangeEvent) => {\n  if (!e.target.checked) {\n    showWarning.value = true\n    setTimeout(() => {\n      showWarning.value = false\n    }, 3000)\n  } else {\n    showWarning.value = false\n  }\n}\n</script>\n\n<style scoped>\ncode {\n  background: #fff;\n  padding: 2px 6px;\n  border-radius: 3px;\n  font-family: 'Courier New', monospace;\n  font-size: 12px;\n}\n\na {\n  color: #1677ff;\n  text-decoration: none;\n}\n\na:hover {\n  text-decoration: underline;\n}\n</style>"
+        },
+        {
+          "title": "CheckboxOptionType 完整配置",
+          "description": "展示 CheckboxOptionType 的所有可用属性：label、value、disabled、style、className、title、id、required。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 基础属性 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">基础属性：label 和 value</h4>\n      <CheckboxGroup v-model:value=\"value1\" :options=\"basicOptions\" />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value1 }}</p>\n    </section>\n\n    <!-- disabled 属性 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">disabled 属性</h4>\n      <CheckboxGroup v-model:value=\"value2\" :options=\"disabledOptions\" />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value2 }}</p>\n    </section>\n\n    <!-- style 和 className 属性 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">style 和 className 属性</h4>\n      <CheckboxGroup v-model:value=\"value3\" :options=\"styledOptions\" />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value3 }}</p>\n    </section>\n\n    <!-- title 属性（鼠标悬停提示） -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">title 属性（悬停查看提示）</h4>\n      <CheckboxGroup v-model:value=\"value4\" :options=\"titleOptions\" />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value4 }}</p>\n    </section>\n\n    <!-- id 属性 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">id 属性</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">每个选项可以设置独立的 id，配合 label[for] 使用</p>\n      <CheckboxGroup v-model:value=\"value5\" :options=\"idOptions\" />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value5 }}</p>\n    </section>\n\n    <!-- required 属性 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">required 属性</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">设置 required 后，表单提交时浏览器会进行原生验证</p>\n      <form style=\"display: flex; flex-direction: column; gap: 8px\" @submit.prevent=\"handleSubmit\">\n        <CheckboxGroup v-model:value=\"value6\" :options=\"requiredOptions\" />\n        <button\n          type=\"submit\"\n          style=\"padding: 4px 16px; background: #1677ff; color: #fff; border: none; border-radius: 4px; width: 100px\"\n        >\n          提交\n        </button>\n      </form>\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value6 }}（至少选一项才能提交）</p>\n    </section>\n\n    <!-- 完整配置示例 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">完整配置示例</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">展示所有可用属性的综合应用</p>\n      <CheckboxGroup v-model:value=\"value7\" :options=\"fullOptions\" />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value7 }}</p>\n    </section>\n\n    <!-- 动态配置示例 -->\n    <section>\n      <h4 style=\"margin-bottom: 8px\">动态配置示例</h4>\n      <p style=\"color: #666; font-size: 13px; margin-bottom: 8px\">根据用户角色动态调整选项配置</p>\n      <div style=\"margin-bottom: 8px\">\n        <label>\n          <input v-model=\"isAdmin\" type=\"checkbox\" />\n          管理员模式\n        </label>\n      </div>\n      <CheckboxGroup v-model:value=\"value8\" :options=\"dynamicOptions\" />\n      <p style=\"color: #666; font-size: 12px; margin-top: 8px\">已选：{{ value8 }}</p>\n    </section>\n\n    <!-- 说明 -->\n    <section style=\"background: #f5f5f5; padding: 12px; border-radius: 4px\">\n      <h4 style=\"margin-bottom: 8px\">CheckboxOptionType 属性</h4>\n      <table style=\"width: 100%; font-size: 13px; border-collapse: collapse\">\n        <thead>\n          <tr style=\"border-bottom: 1px solid #d9d9d9\">\n            <th style=\"text-align: left; padding: 4px\">属性</th>\n            <th style=\"text-align: left; padding: 4px\">说明</th>\n            <th style=\"text-align: left; padding: 4px\">类型</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr>\n            <td style=\"padding: 4px\"><code>label</code></td>\n            <td style=\"padding: 4px\">显示文本</td>\n            <td style=\"padding: 4px\">string</td>\n          </tr>\n          <tr>\n            <td style=\"padding: 4px\"><code>value</code></td>\n            <td style=\"padding: 4px\">选项值（必需）</td>\n            <td style=\"padding: 4px\">string | number | boolean</td>\n          </tr>\n          <tr>\n            <td style=\"padding: 4px\"><code>disabled</code></td>\n            <td style=\"padding: 4px\">是否禁用</td>\n            <td style=\"padding: 4px\">boolean</td>\n          </tr>\n          <tr>\n            <td style=\"padding: 4px\"><code>style</code></td>\n            <td style=\"padding: 4px\">自定义样式</td>\n            <td style=\"padding: 4px\">CSSProperties</td>\n          </tr>\n          <tr>\n            <td style=\"padding: 4px\"><code>className</code></td>\n            <td style=\"padding: 4px\">自定义类名</td>\n            <td style=\"padding: 4px\">string</td>\n          </tr>\n          <tr>\n            <td style=\"padding: 4px\"><code>title</code></td>\n            <td style=\"padding: 4px\">鼠标悬停提示</td>\n            <td style=\"padding: 4px\">string</td>\n          </tr>\n          <tr>\n            <td style=\"padding: 4px\"><code>id</code></td>\n            <td style=\"padding: 4px\">input 元素 id</td>\n            <td style=\"padding: 4px\">string</td>\n          </tr>\n          <tr>\n            <td style=\"padding: 4px\"><code>required</code></td>\n            <td style=\"padding: 4px\">是否必选</td>\n            <td style=\"padding: 4px\">boolean</td>\n          </tr>\n        </tbody>\n      </table>\n    </section>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue'\nimport { CheckboxGroup } from '@hmfw/ant-design'\nimport type { CheckboxOptionType } from '@hmfw/ant-design'\n\nconst basicOptions: CheckboxOptionType[] = [\n  { label: '选项 A', value: 'A' },\n  { label: '选项 B', value: 'B' },\n  { label: '选项 C', value: 'C' },\n]\n\nconst disabledOptions: CheckboxOptionType[] = [\n  { label: '正常选项', value: '1' },\n  { label: '禁用选项', value: '2', disabled: true },\n  { label: '禁用且选中', value: '3', disabled: true },\n]\n\nconst styledOptions: CheckboxOptionType[] = [\n  { label: '默认样式', value: '1' },\n  {\n    label: '蓝色背景',\n    value: '2',\n    style: { background: '#e6f4ff', padding: '4px 8px', borderRadius: '4px' },\n  },\n  {\n    label: '红色字体',\n    value: '3',\n    style: { color: '#ff4d4f', fontWeight: 'bold' },\n    className: 'custom-checkbox',\n  },\n]\n\nconst titleOptions: CheckboxOptionType[] = [\n  { label: 'Vue.js', value: 'vue', title: '渐进式 JavaScript 框架' },\n  { label: 'React', value: 'react', title: '用于构建用户界面的 JavaScript 库' },\n  { label: 'Angular', value: 'angular', title: '现代 Web 开发平台' },\n]\n\nconst idOptions: CheckboxOptionType[] = [\n  { label: '选项 1', value: '1', id: 'option-1' },\n  { label: '选项 2', value: '2', id: 'option-2' },\n  { label: '选项 3', value: '3', id: 'option-3' },\n]\n\nconst requiredOptions: CheckboxOptionType[] = [\n  { label: '选项 1（必选）', value: '1', required: true },\n  { label: '选项 2', value: '2' },\n  { label: '选项 3', value: '3' },\n]\n\nconst fullOptions: CheckboxOptionType[] = [\n  {\n    label: '完整配置 1',\n    value: 'full1',\n    disabled: false,\n    style: { background: '#f0f0f0', padding: '6px 12px', borderRadius: '4px' },\n    className: 'full-option',\n    title: '这是一个完整配置的选项',\n    id: 'full-option-1',\n    required: false,\n  },\n  {\n    label: '完整配置 2（禁用）',\n    value: 'full2',\n    disabled: true,\n    style: { opacity: 0.6 },\n    title: '该选项已禁用',\n    id: 'full-option-2',\n  },\n]\n\nconst isAdmin = ref(false)\nconst dynamicOptions = computed<CheckboxOptionType[]>(() => [\n  { label: '基础权限', value: 'basic' },\n  { label: '编辑权限', value: 'edit', disabled: !isAdmin.value },\n  { label: '删除权限', value: 'delete', disabled: !isAdmin.value },\n  { label: '管理权限', value: 'admin', disabled: !isAdmin.value },\n])\n\nconst value1 = ref<string[]>([])\nconst value2 = ref(['3'])\nconst value3 = ref<string[]>([])\nconst value4 = ref<string[]>([])\nconst value5 = ref<string[]>([])\nconst value6 = ref<string[]>([])\nconst value7 = ref<string[]>([])\nconst value8 = ref(['basic'])\n\nconst handleSubmit = () => {\n  if (value6.value.length === 0) {\n    alert('请至少选择一项')\n  } else {\n    alert(`提交成功：${value6.value.join(', ')}`)\n  }\n}\n</script>\n\n<style scoped>\ncode {\n  background: #fff;\n  padding: 2px 6px;\n  border-radius: 3px;\n  font-family: 'Courier New', monospace;\n  font-size: 12px;\n}\n\n:deep(.custom-checkbox) {\n  font-style: italic;\n}\n\n:deep(.full-option) {\n  transition: all 0.2s;\n}\n\n:deep(.full-option:hover) {\n  transform: translateY(-2px);\n}\n</style>"
         },
         {
           "title": "skipGroup 属性",
@@ -2909,6 +2954,16 @@
           "code": "<template>\n  <Collapse v-model:active-key=\"activeKey\" :bordered=\"false\">\n    <CollapsePanel key=\"1\" header=\"面板标题 1\">\n      <p>面板内容 1</p>\n    </CollapsePanel>\n    <CollapsePanel key=\"2\" header=\"面板标题 2\">\n      <p>面板内容 2</p>\n    </CollapsePanel>\n  </Collapse>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Collapse, CollapsePanel } from '@hmfw/ant-design'\n\nconst activeKey = ref(['1'])\n</script>"
         },
         {
+          "title": "幽灵模式",
+          "description": "幽灵模式使折叠面板透明且无边框，适合嵌入有背景色的容器中使用。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Collapse ghost :default-active-key=\"['1']\" :items=\"items\" />\n    <Collapse ghost :default-active-key=\"['1']\">\n      <CollapsePanel key=\"1\" header=\"幽灵模式（插槽）\">\n        <p>通过 ghost 属性使折叠面板透明且无边框。</p>\n      </CollapsePanel>\n      <CollapsePanel key=\"2\" header=\"面板 2\">\n        <p>适合嵌入到有背景色的容器中使用。</p>\n      </CollapsePanel>\n    </Collapse>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Collapse, CollapsePanel } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    key: '1',\n    label: '幽灵模式（items）',\n    children: '通过 ghost 属性使折叠面板透明且无边框，适合嵌入有背景色的卡片或容器中。',\n  },\n  { key: '2', label: '面板 2', children: '每个面板之间也没有分割线。' },\n]\n</script>"
+        },
+        {
+          "title": "图标位置",
+          "description": "通过 `expandIconPosition` 可以设置展开图标的位置，支持 `start`（默认）和 `end`。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">expandIconPosition=\"start\"（默认）：</div>\n      <Collapse :default-active-key=\"['1']\" :items=\"items\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">expandIconPosition=\"end\"：</div>\n      <Collapse expand-icon-position=\"end\" :default-active-key=\"['2']\" :items=\"items\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Collapse } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: '图标在左侧', children: '默认图标位置在标题左侧。' },\n  {\n    key: '2',\n    label: '图标在右侧',\n    children: '设置 expandIconPosition=\"end\" 将图标移到右侧。当有 extra 内容时，图标在右侧、extra 在左侧。',\n  },\n]\n</script>"
+        },
+        {
           "title": "可折叠触发区域",
           "description": "通过 `collapsible` 属性，可以设置面板的可折叠触发区域。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Collapse collapsible=\"header\" :default-active-key=\"['1']\" :items=\"headerItems\" />\n    <Collapse collapsible=\"icon\" :default-active-key=\"['1']\" :items=\"iconItems\" />\n    <Collapse collapsible=\"disabled\" :items=\"disabledItems\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Collapse } from '@hmfw/ant-design'\n\nconst text = '这个面板可以通过点击文本或图标来折叠'\n\nconst headerItems = [\n  {\n    key: '1',\n    label: '点击文本或图标可折叠',\n    children: text,\n  },\n]\n\nconst iconItems = [\n  {\n    key: '1',\n    label: '只能点击图标折叠',\n    children: '这个面板只能通过点击图标来折叠',\n  },\n]\n\nconst disabledItems = [\n  {\n    key: '1',\n    label: '无法折叠',\n    children: '这个面板无法被折叠',\n  },\n]\n</script>"
@@ -2925,13 +2980,23 @@
         },
         {
           "title": "不同尺寸",
-          "description": "提供三种尺寸：small、middle（默认）、large。",
+          "description": "折叠面板支持 `small`、`middle`（默认）、`large` 三种尺寸。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Collapse :items=\"items\" size=\"small\" />\n    <Collapse :items=\"items\" size=\"middle\" />\n    <Collapse :items=\"items\" size=\"large\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Collapse } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    key: '1',\n    label: '面板标题',\n    children: '这是面板内容',\n  },\n]\n</script>"
+        },
+        {
+          "title": "销毁未激活面板",
+          "description": "通过 `destroyInactivePanel` 可在面板收起时销毁 DOM，配合 `forceRender` 可为特定面板保留 DOM。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">destroyInactivePanel（销毁未激活面板）：</div>\n      <Collapse destroy-inactive-panel :items=\"destroyItems\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">destroyInactivePanel + forceRender（强制保留指定面板）：</div>\n      <Collapse destroy-inactive-panel :items=\"forceRenderItems\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Collapse } from '@hmfw/ant-design'\n\nconst destroyItems = [\n  {\n    key: '1',\n    label: '面板 1（展开查看内容）',\n    children: '该面板收起时 DOM 将被销毁。如果面板内部有复杂组件或大量数据，销毁可以释放内存。',\n  },\n  { key: '2', label: '面板 2', children: '收起后面板 2 的内容也会从 DOM 中移除。' },\n]\n\nconst forceRenderItems = [\n  { key: '1', label: '普通面板（会被销毁）', children: '收起时 DOM 被移除。' },\n  {\n    key: '2',\n    label: 'forceRender 面板（始终保留）',\n    children: '即使收起，DOM 结构也始终保留（通过 height:0 + opacity:0 隐藏），适合需要保持内部状态的场景。',\n    forceRender: true,\n  },\n]\n</script>"
         },
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
           "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义头部样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义头部渐变背景：</div>\n      <Collapse\n        :default-active-key=\"['1']\"\n        :class-names=\"{\n          header: 'custom-header',\n          icon: 'custom-icon',\n        }\"\n      >\n        <CollapsePanel key=\"1\" header=\"渐变头部面板\">\n          <p>通过 classNames.header 自定义头部背景色，使用渐变效果。</p>\n          <p>通过 classNames.icon 控制图标样式。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n\n    <!-- 场景 2：自定义内容区域 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义内容区域样式：</div>\n      <Collapse\n        :default-active-key=\"['2']\"\n        :class-names=\"{\n          body: 'custom-body',\n          content: 'custom-content',\n        }\"\n      >\n        <CollapsePanel key=\"2\" header=\"自定义内容面板\">\n          <p>通过 classNames.body 控制实际内容容器。</p>\n          <p>通过 classNames.content 控制外层动画容器。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n\n    <!-- 场景 3：高级组合定制 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合多个语义节点：</div>\n      <Collapse\n        :default-active-key=\"['3']\"\n        :class-names=\"{\n          item: 'custom-item',\n          header: 'custom-header-combined',\n          headerText: 'custom-header-text',\n          icon: 'custom-icon-combined',\n          body: 'custom-body-combined',\n        }\"\n      >\n        <CollapsePanel key=\"3\" header=\"完整定制面板\" extra=\"标签\">\n          <p>同时自定义多个语义节点的样式。</p>\n          <p>包括面板项、头部、头部文本、图标和内容。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Collapse\n        :default-active-key=\"['4']\"\n        :styles=\"{\n          header: {\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            color: 'white',\n            borderRadius: '8px',\n            padding: '12px 16px',\n          },\n          icon: { color: 'white', fontSize: '16px' },\n          body: { backgroundColor: '#f0f5ff', padding: '16px', borderRadius: '0 0 8px 8px' },\n        }\"\n      >\n        <CollapsePanel key=\"4\" header=\"内联样式面板\">\n          <p>通过 styles 属性直接应用内联样式。</p>\n          <p>styles 优先级高于 classNames。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n\n    <!-- 场景 5：悬停效果与动画 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">悬停效果与动画：</div>\n      <Collapse\n        :default-active-key=\"['5']\"\n        :class-names=\"{\n          item: 'hover-item',\n          header: 'hover-header',\n          icon: 'hover-icon',\n        }\"\n      >\n        <CollapsePanel key=\"5\" header=\"悬停效果面板\">\n          <p>通过 CSS 为头部添加悬停动画效果。</p>\n          <p>图标旋转和头部阴影变化。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Collapse, CollapsePanel } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n/* 场景 1：渐变头部 */\n:deep(.custom-header) {\n  background: linear-gradient(to right, #52c41a, #389e0d);\n  color: white;\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-header:hover) {\n  transform: translateX(4px);\n}\n\n:deep(.custom-icon) {\n  color: white;\n  font-size: 16px;\n}\n\n/* 场景 2：内容区域 */\n:deep(.custom-body) {\n  background-color: #f6ffed;\n  border-left: 3px solid #52c41a;\n  padding: 16px;\n}\n\n:deep(.custom-content) {\n  border-radius: 0 0 6px 6px;\n  overflow: hidden;\n}\n\n/* 场景 3：组合定制 */\n:deep(.custom-item) {\n  border: 2px solid #1890ff;\n  border-radius: 8px;\n  margin-bottom: 8px;\n  overflow: hidden;\n}\n\n:deep(.custom-header-combined) {\n  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);\n  color: white;\n}\n\n:deep(.custom-header-text) {\n  font-weight: 600;\n  font-size: 16px;\n}\n\n:deep(.custom-icon-combined) {\n  color: #fadb14;\n  font-size: 18px;\n}\n\n:deep(.custom-body-combined) {\n  background: #e6f7ff;\n  padding: 20px;\n}\n\n/* 场景 5：悬停效果 */\n:deep(.hover-item) {\n  transition: all 0.3s;\n  border-radius: 6px;\n}\n\n:deep(.hover-header) {\n  transition: all 0.3s;\n}\n\n:deep(.hover-header:hover) {\n  background-color: #fafafa;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);\n}\n\n:deep(.hover-icon) {\n  transition: transform 0.3s;\n}\n\n:deep(.hover-header:hover .hover-icon) {\n  transform: scale(1.2);\n}\n</style>"
+        },
+        {
+          "title": "面板级别定制",
+          "description": "Item/Panel 级别的 `classNames`、`styles`、`collapsible`、`disabled` 等属性优先级高于 Collapse 级别。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <!-- 场景 1：Item/Panel 级别 classNames/styles 覆盖 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">Item 级别 classNames/styles（单独定制某个面板）：</div>\n      <Collapse :default-active-key=\"['1', '3']\" :class-names=\"{ header: 'global-header' }\" :items=\"customStyleItems\" />\n    </div>\n\n    <!-- 场景 2：Item 级别 collapsible 覆盖 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">Item 级别 collapsible 覆盖：</div>\n      <Collapse collapsible=\"header\" :default-active-key=\"['1']\" :items=\"collapsibleOverrideItems\" />\n    </div>\n\n    <!-- 场景 3：Panel 级别 classNames/styles + disabled -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">Panel 插槽级别定制：</div>\n      <Collapse :default-active-key=\"['1', '2']\" :class-names=\"{ header: 'base-header' }\">\n        <CollapsePanel key=\"1\" header=\"默认样式面板\">\n          <p>使用 Collapse 级别的 classNames。</p>\n        </CollapsePanel>\n        <CollapsePanel\n          key=\"2\"\n          header=\"单独定制面板\"\n          :class-names=\"{ header: 'panel-custom-header', body: 'panel-custom-body' }\"\n          :styles=\"{ header: { fontWeight: 600 } }\"\n        >\n          <p>Panel 的 classNames/styles 会覆盖 Collapse 传递的值。</p>\n        </CollapsePanel>\n        <CollapsePanel key=\"3\" header=\"禁用面板\" disabled>\n          <p>该面板被禁用，不可展开。</p>\n        </CollapsePanel>\n      </Collapse>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Collapse, CollapsePanel } from '@hmfw/ant-design'\nimport type { CollapseItem } from '@hmfw/ant-design'\n\nconst customStyleItems: CollapseItem[] = [\n  {\n    key: '1',\n    label: '默认样式面板',\n    children: '该面板使用全局 classNames。',\n  },\n  {\n    key: '2',\n    label: 'Item 级定制面板',\n    children: '该面板通过 item.classNames 单独定制了 header 样式。',\n    classNames: { header: 'item-custom-header' },\n    styles: { header: { fontWeight: 600 } },\n  },\n  {\n    key: '3',\n    label: 'Item 级 style 面板',\n    children: '该面板通过 item.style 设置了额外的内联样式（蓝色边框）。',\n    style: { borderLeft: '3px solid #1890ff' },\n  },\n]\n\nconst collapsibleOverrideItems: CollapseItem[] = [\n  {\n    key: '1',\n    label: '全局 collapsible=\"header\"',\n    children: '点击标题或图标均可折叠。',\n  },\n  {\n    key: '2',\n    label: 'Item 覆盖为 collapsible=\"icon\"',\n    children: '该面板覆盖为只能点击图标折叠，标题点击无效。',\n    collapsible: 'icon' as const,\n  },\n]\n</script>\n\n<style scoped>\n/* 场景 1：全局 header */\n:deep(.global-header) {\n  background: #fafafa;\n}\n\n:deep(.item-custom-header) {\n  background: linear-gradient(to right, #e6f7ff, #bae7ff);\n  border-left: 3px solid #1890ff;\n}\n\n/* 场景 3：Panel 级别定制 */\n:deep(.base-header) {\n  background: #fafafa;\n}\n\n:deep(.panel-custom-header) {\n  background: linear-gradient(to right, #fff7e6, #ffd591);\n  border-left: 3px solid #fa8c16;\n}\n\n:deep(.panel-custom-body) {\n  background: #fffbe6;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/collapse"
@@ -3496,6 +3561,11 @@
           "code": "<template>\n  <Descriptions title=\"用户信息\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Descriptions } from '@hmfw/ant-design'\n\nconst items = [\n  { label: '用户名', children: 'Zhou Maomao' },\n  { label: '手机号', children: '1810000000' },\n  { label: '居住地', children: '杭州市' },\n  { label: '备注', children: '学校' },\n  { label: '联系地址', children: '浙江省杭州市西湖区古翠路', span: 2 },\n]\n</script>"
         },
         {
+          "title": "使用子组件语法",
+          "description": "支持使用 `<DescriptionsItem>` 子组件语法，适用于 JSX/TSX 场景或需要更灵活的内容定义。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">使用子组件语法（推荐用于 JSX/TSX）：</div>\n      <Descriptions title=\"用户信息\">\n        <DescriptionsItem label=\"用户名\">Zhou Maomao</DescriptionsItem>\n        <DescriptionsItem label=\"手机号\">1810000000</DescriptionsItem>\n        <DescriptionsItem label=\"居住地\">杭州市</DescriptionsItem>\n        <DescriptionsItem label=\"备注\">学校</DescriptionsItem>\n        <DescriptionsItem label=\"联系地址\" :span=\"2\"> 浙江省杭州市西湖区古翠路 </DescriptionsItem>\n      </Descriptions>\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">等价的 items prop 语法（推荐用于模板）：</div>\n      <Descriptions title=\"用户信息\" :items=\"items\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Descriptions, DescriptionsItem } from '@hmfw/ant-design'\n\nconst items = [\n  { label: '用户名', children: 'Zhou Maomao' },\n  { label: '手机号', children: '1810000000' },\n  { label: '居住地', children: '杭州市' },\n  { label: '备注', children: '学校' },\n  { label: '联系地址', children: '浙江省杭州市西湖区古翠路', span: 2 },\n]\n</script>"
+        },
+        {
           "title": "带边框",
           "description": "带边框和背景颜色列表。",
           "code": "<template>\n  <Descriptions title=\"用户信息\" bordered :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Descriptions } from '@hmfw/ant-design'\n\nconst items = [\n  { label: '产品', children: 'Cloud Database' },\n  { label: '计费方式', children: '预付费' },\n  { label: '自动续费', children: '已开通' },\n  { label: '订单时间', children: '2018-04-24 18:00:00' },\n  { label: '使用时长', children: '2年' },\n  { label: '到期时间', children: '2020-04-24 18:00:00' },\n  { label: '配置信息', children: '2核 4GB 80GB SSD', span: 3 },\n]\n</script>"
@@ -3512,13 +3582,18 @@
         },
         {
           "title": "响应式列数",
-          "description": "支持响应式的列数配置，窗口大小变化时自动调整列数布局。",
-          "code": "<template>\n  <Descriptions title=\"响应式列数\" :column=\"{ xs: 1, sm: 2, md: 3 }\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Descriptions } from '@hmfw/ant-design'\n\nconst items = [\n  { label: '产品', children: 'Cloud Database' },\n  { label: '计费', children: '预付费' },\n  { label: '时间', children: '18:00:00' },\n  { label: '金额', children: '$80.00' },\n  { label: '折扣', children: '$20.00' },\n  { label: '实付', children: '$60.00' },\n]\n</script>"
+          "description": "支持响应式的列数配置，窗口大小变化时自动调整列数布局。同时支持响应式 `span` 属性，实现单个项目在不同屏幕尺寸下的跨列控制。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">响应式列数（xs: 1列，sm: 2列，md: 3列）：</div>\n      <Descriptions title=\"响应式列数\" :column=\"{ xs: 1, sm: 2, md: 3 }\" :items=\"items\" />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">\n        响应式跨列（地址在移动端占 1 列，桌面端占 2 列）：\n      </div>\n      <Descriptions title=\"响应式跨列\" :column=\"{ xs: 1, sm: 2, md: 3 }\" :items=\"itemsWithResponsiveSpan\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Descriptions } from '@hmfw/ant-design'\n\nconst items = [\n  { label: '产品', children: 'Cloud Database' },\n  { label: '计费', children: '预付费' },\n  { label: '时间', children: '18:00:00' },\n  { label: '金额', children: '$80.00' },\n  { label: '折扣', children: '$20.00' },\n  { label: '实付', children: '$60.00' },\n]\n\nconst itemsWithResponsiveSpan = [\n  { label: '用户名', children: 'Zhou Maomao' },\n  { label: '手机号', children: '1810000000' },\n  { label: '居住地', children: '杭州市' },\n  {\n    label: '联系地址',\n    children: '浙江省杭州市西湖区古翠路',\n    span: { xs: 1, sm: 2, md: 2 }, // 响应式跨列\n  },\n]\n</script>"
         },
         {
           "title": "不同尺寸",
-          "description": "支持 default、middle、small 三种尺寸。",
+          "description": "描述列表支持 `small`、`middle`（默认）、`large` 三种尺寸。",
           "code": "<template>\n  <Descriptions title=\"尺寸示例\" :column=\"3\" :items=\"items\" />\n  <br />\n  <Descriptions title=\"中等尺寸\" size=\"middle\" :column=\"3\" :items=\"items\" />\n  <br />\n  <Descriptions title=\"小尺寸\" size=\"small\" :column=\"3\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Descriptions } from '@hmfw/ant-design'\n\nconst items = [\n  { label: '产品', children: 'Cloud Database' },\n  { label: '计费', children: '预付费' },\n  { label: '时间', children: '18:00:00' },\n]\n</script>"
+        },
+        {
+          "title": "隐藏冒号",
+          "description": "通过设置 `colon={false}` 可以隐藏标签后的冒号，适用于简洁风格或特定语言界面。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">默认显示冒号（colon={true}）：</div>\n      <Descriptions title=\"产品信息\" :colon=\"true\" :items=\"items\" />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 13px\">\n        隐藏冒号（colon={false}），适用于简洁风格或特定语言界面：\n      </div>\n      <Descriptions title=\"产品信息\" :colon=\"false\" :items=\"items\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Descriptions } from '@hmfw/ant-design'\n\nconst items = [\n  { label: '产品', children: 'Cloud Database' },\n  { label: '计费方式', children: '预付费' },\n  { label: '自动续费', children: '已开通' },\n  { label: '订单时间', children: '2018-04-24 18:00:00' },\n  { label: '使用时长', children: '2年' },\n  { label: '到期时间', children: '2020-04-24 18:00:00' },\n]\n</script>"
         },
         {
           "title": "Span 填充",
@@ -4250,6 +4325,16 @@
           "title": "底部操作",
           "description": "带有操作按钮的空状态。",
           "code": "<template>\n  <Empty description=\"暂无数据\">\n    <Button @click=\"onCreate\">立即创建</Button>\n  </Empty>\n</template>\n\n<script setup lang=\"ts\">\nimport { Empty, Button } from '@hmfw/ant-design'\n\nfunction onCreate() {\n  console.log('创建')\n}\n</script>"
+        },
+        {
+          "title": "自定义图片",
+          "description": "通过 `image` 传入图片 URL，或使用 `#image` 插槽自定义任意节点；`image={false}` 可隐藏图片。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 48px; align-items: flex-end; flex-wrap: wrap\">\n    <!-- 传入图片 URL -->\n    <Empty\n      image=\"https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg\"\n      :image-style=\"{ height: '60px' }\"\n      description=\"自定义图片 URL\"\n    />\n\n    <!-- 通过 #image 插槽自定义任意节点 -->\n    <Empty description=\"自定义图片插槽\">\n      <template #image>\n        <SmileOutlined style=\"font-size: 48px; color: #1677ff\" />\n      </template>\n    </Empty>\n\n    <!-- image=false 隐藏图片，仅保留文字 -->\n    <Empty :image=\"false\" description=\"不显示图片\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Empty } from '@hmfw/ant-design'\nimport { SmileOutlined } from '@hmfw/icons'\n</script>"
+        },
+        {
+          "title": "描述控制",
+          "description": "`description={false}` 隐藏描述，`#description` 插槽可自定义富文本描述；插槽优先级高于 `description={false}`。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 48px; align-items: flex-end; flex-wrap: wrap\">\n    <!-- description=false 隐藏描述，仅保留插画 -->\n    <Empty :description=\"false\" />\n\n    <!-- #description 插槽自定义富文本描述 -->\n    <Empty>\n      <template #description>\n        <span>还没有任何数据，<a href=\"#\" @click.prevent>去创建</a></span>\n      </template>\n    </Empty>\n\n    <!-- 插槽优先级高于 description=false：即使设为 false，插槽仍会展示 -->\n    <Empty :description=\"false\">\n      <template #description>\n        <span style=\"color: #fa8c16\">插槽覆盖 description=false</span>\n      </template>\n    </Empty>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Empty } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "简约模式",
@@ -5580,7 +5665,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器与图片 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义根容器与图片样式：</div>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :preview=\"false\"\n        :class-names=\"{\n          root: 'custom-root',\n          img: 'custom-img',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义 hover 遮罩 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义 hover 遮罩与遮罩文本：</div>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :class-names=\"{\n          mask: 'custom-mask',\n          maskInfo: 'custom-mask-info',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义预览弹层 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义预览弹层样式（点击图片预览）：</div>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :class-names=\"{\n          preview: 'custom-preview',\n          previewMask: 'custom-preview-mask',\n          operations: 'custom-operations',\n          operationBtn: 'custom-operation-btn',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：自定义占位与错误状态 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义占位与错误状态：</div>\n      <div style=\"display: flex; gap: 16px\">\n        <Image\n          src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n          width=\"200\"\n          :placeholder=\"true\"\n          :class-names=\"{\n            placeholder: 'custom-placeholder',\n          }\"\n        />\n        <Image\n          src=\"invalid-url\"\n          width=\"200\"\n          :class-names=\"{\n            error: 'custom-error',\n          }\"\n        />\n      </div>\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">使用内联样式对象：</div>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :styles=\"{\n          root: {\n            borderRadius: '16px',\n            overflow: 'hidden',\n            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',\n          },\n          img: {\n            transition: 'transform 0.3s',\n          },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Image } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n/* 场景 1：根容器与图片 */\n:deep(.custom-root) {\n  border: 3px solid transparent;\n  border-radius: 12px;\n  background:\n    linear-gradient(white, white) padding-box,\n    linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;\n  overflow: hidden;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-4px);\n  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.custom-img) {\n  transition: transform 0.5s ease;\n}\n\n:deep(.custom-root:hover .custom-img) {\n  transform: scale(1.05);\n}\n\n/* 场景 2：hover 遮罩 */\n:deep(.custom-mask) {\n  background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%);\n  backdrop-filter: blur(4px);\n}\n\n:deep(.custom-mask-info) {\n  font-size: 16px;\n  font-weight: 600;\n  color: #fff;\n  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);\n}\n\n/* 场景 3：预览弹层（使用 :global() 因为预览挂载到 body） */\n:global(.custom-preview) {\n  background: rgba(0, 0, 0, 0.92);\n}\n\n:global(.custom-preview-mask) {\n  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);\n}\n\n:global(.custom-operations) {\n  background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);\n  backdrop-filter: blur(10px);\n  border-radius: 24px;\n  padding: 8px 16px;\n}\n\n:global(.custom-operation-btn) {\n  color: #fff;\n  transition: all 0.3s;\n}\n\n:global(.custom-operation-btn:hover) {\n  transform: scale(1.2);\n  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));\n}\n\n/* 场景 4：占位与错误 */\n:deep(.custom-placeholder) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f7ff 100%);\n  border: 2px dashed #91d5ff;\n}\n\n:deep(.custom-error) {\n  background: linear-gradient(135deg, #fff2e8 0%, #ffece0 100%);\n  border: 2px dashed #ffbb96;\n}\n\n:deep(.custom-error .hmfw-image-error-icon) {\n  color: #ff7a45;\n  font-size: 32px;\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器与图片 -->\n    <div>\n      <h4 style=\"margin-top: 0\">自定义根容器与图片样式：</h4>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :preview=\"false\"\n        :class-names=\"{\n          root: 'custom-root',\n          img: 'custom-img',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义 hover 遮罩 -->\n    <div>\n      <h4 style=\"margin-top: 0\">自定义 hover 遮罩与遮罩文本：</h4>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :class-names=\"{\n          mask: 'custom-mask',\n          maskInfo: 'custom-mask-info',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义预览弹层 -->\n    <div>\n      <h4 style=\"margin-top: 0\">自定义预览弹层样式（点击图片预览）：</h4>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :class-names=\"{\n          preview: 'custom-preview',\n          previewMask: 'custom-preview-mask',\n          operations: 'custom-operations',\n          operationBtn: 'custom-operation-btn',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：自定义占位与错误状态 -->\n    <div>\n      <h4 style=\"margin-top: 0\">自定义占位与错误状态：</h4>\n      <div style=\"display: flex; gap: 16px\">\n        <Image\n          src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n          width=\"200\"\n          :placeholder=\"true\"\n          :class-names=\"{\n            placeholder: 'custom-placeholder',\n          }\"\n        />\n        <Image\n          src=\"invalid-url\"\n          width=\"200\"\n          :class-names=\"{\n            error: 'custom-error',\n          }\"\n        />\n      </div>\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <h4 style=\"margin-top: 0\">使用内联样式对象：</h4>\n      <Image\n        src=\"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png\"\n        width=\"200\"\n        :styles=\"{\n          root: {\n            borderRadius: '16px',\n            overflow: 'hidden',\n            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',\n          },\n          img: {\n            transition: 'transform 0.3s',\n          },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Image } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n/* 场景 1：根容器与图片 */\n:deep(.custom-root) {\n  border: 3px solid transparent;\n  border-radius: 12px;\n  background:\n    linear-gradient(white, white) padding-box,\n    linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;\n  overflow: hidden;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  transform: translateY(-4px);\n  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);\n}\n\n:deep(.custom-img) {\n  transition: transform 0.5s ease;\n}\n\n:deep(.custom-root:hover .custom-img) {\n  transform: scale(1.05);\n}\n\n/* 场景 2：hover 遮罩 */\n:deep(.custom-mask) {\n  background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%);\n  backdrop-filter: blur(4px);\n}\n\n:deep(.custom-mask-info) {\n  font-size: 16px;\n  font-weight: 600;\n  color: #fff;\n  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);\n}\n\n/* 场景 3：预览弹层（使用 :global() 因为预览挂载到 body） */\n:global(.custom-preview) {\n  background: rgba(0, 0, 0, 0.92);\n}\n\n:global(.custom-preview-mask) {\n  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);\n}\n\n:global(.custom-operations) {\n  background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);\n  backdrop-filter: blur(10px);\n  border-radius: 24px;\n  padding: 8px 16px;\n}\n\n:global(.custom-operation-btn) {\n  color: #fff;\n  transition: all 0.3s;\n}\n\n:global(.custom-operation-btn:hover) {\n  transform: scale(1.2);\n  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));\n}\n\n/* 场景 4：占位与错误 */\n:deep(.custom-placeholder) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f7ff 100%);\n  border: 2px dashed #91d5ff;\n}\n\n:deep(.custom-error) {\n  background: linear-gradient(135deg, #fff2e8 0%, #ffece0 100%);\n  border: 2px dashed #ffbb96;\n}\n\n:deep(.custom-error .hmfw-image-error-icon) {\n  color: #ff7a45;\n  font-size: 32px;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/image"
@@ -5596,7 +5681,14 @@
         {
           "section": "Input Props",
           "name": "value(v-model)",
-          "description": "输入框内容",
+          "description": "输入框内容（受控值，传入后转为受控模式）",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "Input Props",
+          "name": "defaultValue",
+          "description": "非受控模式下的初始值（未传 `value` 时生效）",
           "type": "`string`",
           "default": "-"
         },
@@ -8206,7 +8298,7 @@
         {
           "title": "不同位置",
           "description": "位置有十二个方向。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n    <Popconfirm\n      v-for=\"placement in placements\"\n      :key=\"placement\"\n      :placement=\"placement\"\n      title=\"确定要执行此操作吗？\"\n      @confirm=\"() => console.log(placement)\"\n    >\n      <Button>{{ placement }}</Button>\n    </Popconfirm>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Popconfirm, Button } from '@hmfw/ant-design'\n\nconst placements = [\n  'topLeft',\n  'top',\n  'topRight',\n  'leftTop',\n  'left',\n  'leftBottom',\n  'rightTop',\n  'right',\n  'rightBottom',\n  'bottomLeft',\n  'bottom',\n  'bottomRight',\n]\n</script>"
+          "code": "<template>\n  <div>\n    <Flex justify=\"center\" align=\"center\" gap=\"middle\">\n      <Popconfirm placement=\"topLeft\" title=\"确定要执行此操作吗？\">\n        <Button style=\"width: 100px\"> topLeft </Button>\n      </Popconfirm>\n      <Popconfirm placement=\"top\" title=\"确定要执行此操作吗？\">\n        <Button style=\"width: 100px\"> top </Button>\n      </Popconfirm>\n      <Popconfirm placement=\"topRight\" title=\"确定要执行此操作吗？\">\n        <Button style=\"width: 100px\"> topRight </Button>\n      </Popconfirm>\n    </Flex>\n    <Flex justify=\"center\" align=\"center\">\n      <Flex vertical align=\"center\" gap=\"middle\">\n        <Popconfirm placement=\"leftTop\" title=\"确定要执行此操作吗？\">\n          <Button style=\"width: 100px; height: 48px\"> leftTop </Button>\n        </Popconfirm>\n        <Popconfirm placement=\"left\" title=\"确定要执行此操作吗？\">\n          <Button style=\"width: 100px; height: 48px\"> left </Button>\n        </Popconfirm>\n        <Popconfirm placement=\"leftBottom\" title=\"确定要执行此操作吗？\">\n          <Button style=\"width: 100px; height: 48px\"> leftBottom </Button>\n        </Popconfirm>\n      </Flex>\n      <div style=\"width: 332px\"></div>\n      <Flex vertical align=\"center\" gap=\"middle\">\n        <Popconfirm placement=\"rightTop\" title=\"确定要执行此操作吗？\">\n          <Button style=\"width: 100px; height: 48px\"> rightTop </Button>\n        </Popconfirm>\n        <Popconfirm placement=\"right\" title=\"确定要执行此操作吗？\">\n          <Button style=\"width: 100px; height: 48px\"> right </Button>\n        </Popconfirm>\n        <Popconfirm placement=\"rightBottom\" title=\"确定要执行此操作吗？\">\n          <Button style=\"width: 100px; height: 48px\"> rightBottom </Button>\n        </Popconfirm>\n      </Flex>\n    </Flex>\n    <Flex justify=\"center\" align=\"center\" gap=\"middle\">\n      <Popconfirm placement=\"bottomLeft\" title=\"确定要执行此操作吗？\">\n        <Button style=\"width: 100px\"> bottomLeft </Button>\n      </Popconfirm>\n      <Popconfirm placement=\"bottom\" title=\"确定要执行此操作吗？\">\n        <Button style=\"width: 100px\"> bottom </Button>\n      </Popconfirm>\n      <Popconfirm placement=\"bottomRight\" title=\"确定要执行此操作吗？\">\n        <Button style=\"width: 100px\"> bottomRight </Button>\n      </Popconfirm>\n    </Flex>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Popconfirm, Button, Flex } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "自定义图标",
@@ -8423,7 +8515,7 @@
         {
           "title": "十二个方向",
           "description": "位置有十二个方向。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n    <Popover v-for=\"placement in placements\" :key=\"placement\" :placement=\"placement\" title=\"标题\" content=\"内容\">\n      <Button>{{ placement }}</Button>\n    </Popover>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Popover, Button } from '@hmfw/ant-design'\n\nconst placements = [\n  'topLeft',\n  'top',\n  'topRight',\n  'leftTop',\n  'left',\n  'leftBottom',\n  'rightTop',\n  'right',\n  'rightBottom',\n  'bottomLeft',\n  'bottom',\n  'bottomRight',\n]\n</script>"
+          "code": "<template>\n  <div>\n    <Flex justify=\"center\" align=\"center\" gap=\"middle\">\n      <Popover placement=\"topLeft\" title=\"标题\" content=\"内容\">\n        <Button style=\"width: 100px\"> topLeft </Button>\n      </Popover>\n      <Popover placement=\"top\" title=\"标题\" content=\"内容\">\n        <Button style=\"width: 100px\"> top </Button>\n      </Popover>\n      <Popover placement=\"topRight\" title=\"标题\" content=\"内容\">\n        <Button style=\"width: 100px\"> topRight </Button>\n      </Popover>\n    </Flex>\n    <Flex justify=\"center\" align=\"center\">\n      <Flex vertical align=\"center\" gap=\"middle\">\n        <Popover placement=\"leftTop\" title=\"标题\" content=\"内容\">\n          <Button style=\"width: 100px; height: 48px\"> leftTop </Button>\n        </Popover>\n        <Popover placement=\"left\" title=\"标题\" content=\"内容\">\n          <Button style=\"width: 100px; height: 48px\"> left </Button>\n        </Popover>\n        <Popover placement=\"leftBottom\" title=\"标题\" content=\"内容\">\n          <Button style=\"width: 100px; height: 48px\"> leftBottom </Button>\n        </Popover>\n      </Flex>\n      <div style=\"width: 332px\"></div>\n      <Flex vertical align=\"center\" gap=\"middle\">\n        <Popover placement=\"rightTop\" title=\"标题\" content=\"内容\">\n          <Button style=\"width: 100px; height: 48px\"> rightTop </Button>\n        </Popover>\n        <Popover placement=\"right\" title=\"标题\" content=\"内容\">\n          <Button style=\"width: 100px; height: 48px\"> right </Button>\n        </Popover>\n        <Popover placement=\"rightBottom\" title=\"标题\" content=\"内容\">\n          <Button style=\"width: 100px; height: 48px\"> rightBottom </Button>\n        </Popover>\n      </Flex>\n    </Flex>\n    <Flex justify=\"center\" align=\"center\" gap=\"middle\">\n      <Popover placement=\"bottomLeft\" title=\"标题\" content=\"内容\">\n        <Button style=\"width: 100px\"> bottomLeft </Button>\n      </Popover>\n      <Popover placement=\"bottom\" title=\"标题\" content=\"内容\">\n        <Button style=\"width: 100px\"> bottom </Button>\n      </Popover>\n      <Popover placement=\"bottomRight\" title=\"标题\" content=\"内容\">\n        <Button style=\"width: 100px\"> bottomRight </Button>\n      </Popover>\n    </Flex>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Popover, Button, Flex } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "纯展示面板",
@@ -9570,6 +9662,11 @@
           "code": "<template>\n  <Segmented v-model:value=\"value\" :options=\"options\" />\n  <p>当前选中：{{ value }}</p>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\n\nconst value = ref('Daily')\nconst options = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']\n</script>"
         },
         {
+          "title": "受控模式",
+          "description": "通过 `value` + `change` 完全受控。选中项由父级 `value` 决定，点击仅派发事件；父级更新 `value` 后选中态与滑块才跟随，避免视觉与真实值不一致。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <!-- 纯受控：不使用 v-model，通过 :value + @change 手动维护状态 -->\n    <Segmented :value=\"value\" :options=\"options\" @change=\"onChange\" />\n\n    <div style=\"display: flex; gap: 8px; align-items: center\">\n      <span>关联内容：</span>\n      <strong>{{ contentMap[value] }}</strong>\n    </div>\n\n    <div style=\"display: flex; gap: 8px\">\n      <Button size=\"small\" @click=\"value = 'Map'\">跳到「地图」</Button>\n      <Button size=\"small\" @click=\"value = 'List'\">跳到「列表」</Button>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Segmented, Button } from '@hmfw/ant-design'\nimport type { SegmentedValue } from '@hmfw/ant-design'\n\nconst value = ref<SegmentedValue>('Map')\nconst options = ['Map', 'Transit', 'List']\n\nconst contentMap: Record<string, string> = {\n  Map: '🗺️ 地图视图',\n  Transit: '🚇 交通视图',\n  List: '📋 列表视图',\n}\n\n// 受控模式下需在 change 回调中显式更新 value，滑块随受控值移动\nconst onChange = (val: SegmentedValue) => {\n  value.value = val\n}\n</script>"
+        },
+        {
           "title": "Block 模式",
           "description": "block 属性使其适合父元素宽度。",
           "code": "<template>\n  <Segmented v-model:value=\"value\" :options=\"options\" block />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\n\nconst value = ref('Map')\nconst options = ['Map', 'Transit', 'Satellite']\n</script>"
@@ -9612,7 +9709,12 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对 root、group、thumb、item 等子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器和滑块 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器与动画滑块：</div>\n      <Segmented\n        v-model:value=\"value1\"\n        :options=\"['选项一', '选项二', '选项三']\"\n        :class-names=\"{\n          root: 'custom-root',\n          thumb: 'custom-thumb',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义选项样式（选中/禁用状态） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选项与状态样式：</div>\n      <Segmented\n        v-model:value=\"value2\"\n        :options=\"options2\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemDisabled: 'custom-item-disabled',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义图标和文本 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标与文本样式：</div>\n      <Segmented\n        v-model:value=\"value3\"\n        :options=\"options3\"\n        :class-names=\"{\n          itemIcon: 'custom-icon',\n          itemText: 'custom-text',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Segmented\n        v-model:value=\"value4\"\n        :options=\"['Morning', 'Afternoon', 'Evening']\"\n        :styles=\"{\n          root: {\n            borderRadius: '16px',\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            border: 'none',\n            padding: '4px',\n          },\n          thumb: { borderRadius: '12px', background: '#ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },\n          itemText: { color: '#ffffff', fontWeight: 500 },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用（垂直模式）：</div>\n      <Segmented\n        v-model:value=\"value5\"\n        :options=\"options5\"\n        vertical\n        :class-names=\"{\n          root: 'custom-vertical-root',\n          item: 'custom-vertical-item',\n        }\"\n        :styles=\"{\n          itemIcon: { fontSize: '20px' },\n          itemLabel: { padding: '8px 16px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\nimport { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/icons'\n\nconst value1 = ref('选项一')\n\nconst value2 = ref('option1')\nconst options2 = [\n  { value: 'option1', label: '启用选项' },\n  { value: 'option2', label: '另一选项' },\n  { value: 'option3', label: '禁用选项', disabled: true },\n]\n\nconst value3 = ref('list')\nconst options3 = [\n  { value: 'list', label: '列表', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },\n  { value: 'grid', label: '网格', icon: h(UserOutlined, { class: 'hmfw-icon' }) },\n]\n\nconst value4 = ref('Morning')\n\nconst value5 = ref('home')\nconst options5 = [\n  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },\n  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }) },\n  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }) },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border: 2px solid #1677ff;\n  padding: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.2);\n}\n\n:deep(.custom-thumb) {\n  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);\n  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.3);\n}\n\n:deep(.custom-item) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  transform: translateY(-1px);\n}\n\n:deep(.custom-item-selected) {\n  color: #ffffff;\n  font-weight: 600;\n}\n\n:deep(.custom-item-disabled) {\n  opacity: 0.4;\n  text-decoration: line-through;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  filter: drop-shadow(0 0 2px rgba(22, 119, 255, 0.4));\n}\n\n:deep(.custom-text) {\n  font-weight: 500;\n  letter-spacing: 0.5px;\n}\n\n:deep(.custom-vertical-root) {\n  background: #f6ffed;\n  border: 2px solid #52c41a;\n  padding: 4px;\n  border-radius: 12px;\n}\n\n:deep(.custom-vertical-item) {\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-vertical-item:hover) {\n  background: rgba(82, 196, 26, 0.1);\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <!-- 场景 1：自定义根容器和滑块 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器与动画滑块：</div>\n      <Segmented\n        v-model:value=\"value1\"\n        :options=\"['选项一', '选项二', '选项三']\"\n        :class-names=\"{\n          root: 'custom-root',\n          thumb: 'custom-thumb',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 2：自定义选项样式（选中/禁用状态） -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义选项与状态样式：</div>\n      <Segmented\n        v-model:value=\"value2\"\n        :options=\"options2\"\n        :class-names=\"{\n          item: 'custom-item',\n          itemSelected: 'custom-item-selected',\n          itemDisabled: 'custom-item-disabled',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义图标和文本 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图标与文本样式：</div>\n      <Segmented\n        v-model:value=\"value3\"\n        :options=\"options3\"\n        :class-names=\"{\n          itemIcon: 'custom-icon',\n          itemText: 'custom-text',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Segmented\n        v-model:value=\"value4\"\n        :options=\"['Morning', 'Afternoon', 'Evening']\"\n        :styles=\"{\n          root: {\n            borderRadius: '16px',\n            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',\n            border: 'none',\n            padding: '4px',\n          },\n          thumb: { borderRadius: '12px', background: '#ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },\n          itemText: { color: '#ffffff', fontWeight: 500 },\n          itemSelected: { color: '#1677ff' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：组合使用 classNames 和 styles -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合使用（垂直模式）：</div>\n      <Segmented\n        v-model:value=\"value5\"\n        :options=\"options5\"\n        vertical\n        :class-names=\"{\n          root: 'custom-vertical-root',\n          item: 'custom-vertical-item',\n        }\"\n        :styles=\"{\n          itemIcon: { fontSize: '20px' },\n          itemLabel: { padding: '8px 16px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Segmented } from '@hmfw/ant-design'\nimport { HomeOutlined, UserOutlined, SettingOutlined } from '@hmfw/icons'\n\nconst value1 = ref('选项一')\n\nconst value2 = ref('option1')\nconst options2 = [\n  { value: 'option1', label: '启用选项' },\n  { value: 'option2', label: '另一选项' },\n  { value: 'option3', label: '禁用选项', disabled: true },\n]\n\nconst value3 = ref('list')\nconst options3 = [\n  { value: 'list', label: '列表', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },\n  { value: 'grid', label: '网格', icon: h(UserOutlined, { class: 'hmfw-icon' }) },\n]\n\nconst value4 = ref('Morning')\n\nconst value5 = ref('home')\nconst options5 = [\n  { value: 'home', icon: h(HomeOutlined, { class: 'hmfw-icon' }) },\n  { value: 'user', icon: h(UserOutlined, { class: 'hmfw-icon' }) },\n  { value: 'settings', icon: h(SettingOutlined, { class: 'hmfw-icon' }) },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);\n  border: 2px solid #1677ff;\n  padding: 4px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-root:hover) {\n  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.2);\n}\n\n:deep(.custom-thumb) {\n  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);\n  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.3);\n}\n\n:deep(.custom-item) {\n  transition: all 0.3s;\n}\n\n:deep(.custom-item:hover) {\n  transform: translateY(-1px);\n}\n\n:deep(.custom-item-selected) {\n  color: #1677ff;\n  font-weight: 600;\n}\n\n:deep(.custom-item-disabled) {\n  opacity: 0.4;\n  text-decoration: line-through;\n}\n\n:deep(.custom-icon) {\n  font-size: 18px;\n  filter: drop-shadow(0 0 2px rgba(22, 119, 255, 0.4));\n}\n\n:deep(.custom-text) {\n  font-weight: 500;\n  letter-spacing: 0.5px;\n}\n\n:deep(.custom-vertical-root) {\n  background: #f6ffed;\n  border: 2px solid #52c41a;\n  padding: 4px;\n  border-radius: 12px;\n}\n\n:deep(.custom-vertical-item) {\n  border-radius: 8px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-vertical-item:hover) {\n  background: rgba(82, 196, 26, 0.1);\n}\n</style>"
+        },
+        {
+          "title": "动态选项",
+          "description": "异步或动态增删选项。选项为空时不渲染，加载完成后自动选中首项。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; align-items: flex-start\">\n    <div style=\"display: flex; gap: 8px\">\n      <Button size=\"small\" @click=\"addOption\">增加选项</Button>\n      <Button size=\"small\" :disabled=\"options.length <= 1\" @click=\"removeOption\">删除末项</Button>\n      <Button size=\"small\" @click=\"loadAsync\">模拟异步加载</Button>\n    </div>\n    <!-- 选项动态增删 / 异步填充时，首项会自动兜底选中 -->\n    <Segmented v-model:value=\"value\" :options=\"options\" />\n    <p>当前选中：{{ value ?? '（无）' }}</p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Segmented, Button } from '@hmfw/ant-design'\n\nconst options = ref(['选项 1', '选项 2', '选项 3'])\nconst value = ref('选项 1')\nlet counter = options.value.length\n\nconst addOption = () => {\n  counter += 1\n  options.value = [...options.value, `选项 ${counter}`]\n}\n\nconst removeOption = () => {\n  const next = options.value.slice(0, -1)\n  options.value = next\n  // 若删掉的正是当前选中项，将选中值移到新的末项，避免孤儿值\n  if (!next.includes(value.value)) value.value = next[next.length - 1]\n}\n\n// 模拟异步：先清空（加载中滑块自动隐藏），填充新数据后把选中值重置到首项\nconst loadAsync = () => {\n  options.value = []\n  setTimeout(() => {\n    counter = 4\n    const next = ['每日', '每周', '每月', '每季']\n    options.value = next\n    value.value = next[0]\n  }, 600)\n}\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/segmented"
@@ -9628,7 +9730,14 @@
         {
           "section": "Select Props",
           "name": "value(v-model)",
-          "description": "指定当前选中的条目",
+          "description": "指定当前选中的条目（受控值，传入后转为受控模式）",
+          "type": "`string | number | (string | number)[] | LabeledValue | LabeledValue[]`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "defaultValue",
+          "description": "非受控模式下的初始值（未传 `value` 时生效）",
           "type": "`string | number | (string | number)[] | LabeledValue | LabeledValue[]`",
           "default": "-"
         },
@@ -9713,6 +9822,13 @@
           "section": "Select Props",
           "name": "open",
           "description": "是否展开下拉菜单",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "Select Props",
+          "name": "defaultOpen",
+          "description": "非受控模式下的初始展开状态（未传 `open` 时生效）",
           "type": "`boolean`",
           "default": "-"
         },
@@ -10333,6 +10449,21 @@
           "title": "图片/节点骨架",
           "description": "独立的图片和自定义节点骨架。",
           "code": "<template>\n  <div style=\"display: flex; gap: 16px\">\n    <Skeleton.Image active />\n    <Skeleton.Node active>\n      <div\n        style=\"width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; color: #bfbfbf\"\n      >\n        Node\n      </div>\n    </Skeleton.Node>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Skeleton } from '@hmfw/ant-design'\n</script>"
+        },
+        {
+          "title": "高级配置",
+          "description": "灵活控制标题、段落、圆角等配置项。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">仅标题（无段落）</div>\n      <Skeleton :paragraph=\"false\" />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">仅段落（无标题）</div>\n      <Skeleton :title=\"false\" :paragraph=\"{ rows: 4 }\" />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">圆角样式</div>\n      <Skeleton round active avatar :paragraph=\"{ rows: 3 }\" />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">自定义标题宽度（200px）</div>\n      <Skeleton :title=\"{ width: 200 }\" :paragraph=\"{ rows: 2 }\" />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">完整配置组合</div>\n      <Skeleton\n        round\n        active\n        :avatar=\"{ size: 'large', shape: 'square' }\"\n        :title=\"{ width: '60%' }\"\n        :paragraph=\"{ rows: 3, width: ['100%', '100%', '80%'] }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Skeleton } from '@hmfw/ant-design'\n</script>"
+        },
+        {
+          "title": "段落配置",
+          "description": "自定义段落行数和宽度，支持数组形式精确控制每行宽度。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">自定义行数（5 行）</div>\n      <Skeleton :paragraph=\"{ rows: 5 }\" />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">自定义最后一行宽度（70%）</div>\n      <Skeleton :paragraph=\"{ rows: 3, width: '70%' }\" />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">数组形式指定每行宽度</div>\n      <Skeleton :paragraph=\"{ rows: 4, width: ['100%', '100%', '80%', '60%'] }\" />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">带头像的段落配置</div>\n      <Skeleton avatar :paragraph=\"{ rows: 4, width: ['100%', '100%', '90%', '75%'] }\" active />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Skeleton } from '@hmfw/ant-design'\n</script>"
+        },
+        {
+          "title": "自定义尺寸",
+          "description": "使用数字像素值自定义 Avatar 尺寸，适配各种设计需求。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 24px\">\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">自定义 Avatar 尺寸（数字像素值）</div>\n      <div style=\"display: flex; gap: 16px; align-items: center\">\n        <Skeleton.Avatar :size=\"48\" active />\n        <Skeleton.Avatar :size=\"64\" active />\n        <Skeleton.Avatar :size=\"80\" shape=\"square\" active />\n      </div>\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">Avatar 尺寸对比（预设 + 自定义）</div>\n      <div style=\"display: flex; gap: 16px; align-items: center; flex-wrap: wrap\">\n        <div style=\"text-align: center\">\n          <Skeleton.Avatar size=\"small\" active />\n          <div style=\"margin-top: 8px; font-size: 12px; color: #999\">small (24px)</div>\n        </div>\n        <div style=\"text-align: center\">\n          <Skeleton.Avatar size=\"default\" active />\n          <div style=\"margin-top: 8px; font-size: 12px; color: #999\">default (32px)</div>\n        </div>\n        <div style=\"text-align: center\">\n          <Skeleton.Avatar size=\"large\" active />\n          <div style=\"margin-top: 8px; font-size: 12px; color: #999\">large (40px)</div>\n        </div>\n        <div style=\"text-align: center\">\n          <Skeleton.Avatar :size=\"56\" active />\n          <div style=\"margin-top: 8px; font-size: 12px; color: #999\">56px</div>\n        </div>\n        <div style=\"text-align: center\">\n          <Skeleton.Avatar :size=\"72\" active />\n          <div style=\"margin-top: 8px; font-size: 12px; color: #999\">72px</div>\n        </div>\n      </div>\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">组合配置（自定义 Avatar 尺寸 + 段落配置）</div>\n      <Skeleton\n        :avatar=\"{ size: 56, shape: 'square' }\"\n        :title=\"{ width: '60%' }\"\n        :paragraph=\"{ rows: 3, width: ['100%', '100%', '70%'] }\"\n        active\n      />\n    </div>\n\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666; font-size: 14px\">大尺寸组合（适合用户资料卡）</div>\n      <Skeleton :avatar=\"{ size: 96, shape: 'circle' }\" :title=\"{ width: 240 }\" :paragraph=\"{ rows: 4 }\" active round />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Skeleton } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "细粒度样式控制",
@@ -10956,8 +11087,8 @@
           "section": "Steps Props",
           "name": "size",
           "description": "指定大小",
-          "type": "`'default' | 'small'`",
-          "default": "`'default'`"
+          "type": "`'small' | 'middle' | 'large'`",
+          "default": "`'middle'`"
         },
         {
           "section": "Steps Props",
@@ -11100,9 +11231,9 @@
           "code": "<template>\n  <Steps orientation=\"vertical\" :current=\"1\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    title: '已完成',\n    content: '这是一段描述文字。',\n  },\n  {\n    title: '进行中',\n    content: '这是一段描述文字。',\n  },\n  {\n    title: '待处理',\n    content: '这是一段描述文字。',\n  },\n]\n</script>"
         },
         {
-          "title": "点状步骤条",
-          "description": "通过 `type=\"dot\"` 或 `progress-dot` 属性设置点状步骤条。",
-          "code": "<template>\n  <Steps progress-dot :current=\"1\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst items = [\n  { title: '已完成', content: '2024-01-01' },\n  { title: '进行中', content: '2024-01-02' },\n  { title: '待处理', content: '2024-01-03' },\n  { title: '待处理', content: '2024-01-04' },\n]\n</script>"
+          "title": "步骤条类型",
+          "description": "通过 `type` 属性设置步骤条类型，支持 `default`（默认）、`dot`（点状）、`inline`（内联）三种。",
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 100%\" size=\"large\">\n    <div>\n      <h4 style=\"margin-top: 0\"><code>type=\"default\"</code>（默认）</h4>\n      <Steps type=\"default\" :current=\"1\" :items=\"items\" />\n    </div>\n    <div>\n      <h4 style=\"margin-top: 0\"><code>type=\"dot\"</code></h4>\n      <Steps type=\"dot\" :current=\"1\" :items=\"items\" />\n    </div>\n    <div>\n      <h4 style=\"margin-top: 0\"><code>type=\"inline\"</code></h4>\n      <Steps type=\"inline\" :current=\"1\" :items=\"items\" />\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps, Space } from '@hmfw/ant-design'\n\nconst items = [\n  { title: 'Step 1', content: 'First step description' },\n  { title: 'Step 2', content: 'Second step description' },\n  { title: 'Step 3', content: 'Third step description' },\n  { title: 'Step 4', content: 'Fourth step description' },\n]\n</script>"
         },
         {
           "title": "错误状态",
@@ -11110,19 +11241,29 @@
           "code": "<template>\n  <Steps :current=\"1\" status=\"error\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst items = [\n  { title: '已完成', content: '操作成功' },\n  { title: '处理中', content: '操作失败', status: 'error' },\n  { title: '待处理', content: '等待处理' },\n]\n</script>"
         },
         {
-          "title": "小型步骤条",
-          "description": "通过 `size=\"small\"` 设置小型步骤条。",
-          "code": "<template>\n  <Steps size=\"small\" :current=\"1\" :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst items = [{ title: '第一步' }, { title: '第二步' }, { title: '第三步' }]\n</script>"
+          "title": "不同尺寸",
+          "description": "通过 `size` 属性设置步骤条尺寸，支持 `small`、`middle`（默认）、`large` 三种。",
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 100%\" size=\"large\">\n    <div>\n      <h4 style=\"margin-top: 0\"><code>size=\"small\"</code></h4>\n      <Steps size=\"small\" :current=\"1\" :items=\"items\" />\n    </div>\n    <div>\n      <h4 style=\"margin-top: 0\"><code>size=\"middle\"</code>（默认）</h4>\n      <Steps size=\"middle\" :current=\"1\" :items=\"items\" />\n    </div>\n    <div>\n      <h4 style=\"margin-top: 0\"><code>size=\"large\"</code></h4>\n      <Steps size=\"large\" :current=\"1\" :items=\"items\" />\n    </div>\n    <div>\n      <h4 style=\"margin-top: 0\"><code>size=\"small\"</code> + <code>titlePlacement=\"vertical\"</code></h4>\n      <Steps size=\"small\" :current=\"1\" :items=\"items\" title-placement=\"vertical\" />\n    </div>\n    <div>\n      <h4 style=\"margin-top: 0\"><code>size=\"middle\"</code> + <code>titlePlacement=\"vertical\"</code>（默认）</h4>\n      <Steps size=\"middle\" :current=\"1\" :items=\"items\" title-placement=\"vertical\" />\n    </div>\n    <div>\n      <h4 style=\"margin-top: 0\"><code>size=\"large\"</code> + <code>titlePlacement=\"vertical\"</code></h4>\n      <Steps size=\"large\" :current=\"1\" :items=\"items\" title-placement=\"vertical\" />\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps, Space } from '@hmfw/ant-design'\n\nconst items = [\n  { title: '已完成', content: '这是一段描述文字。' },\n  { title: '进行中', content: '这是一段描述文字。' },\n  { title: '待处理', content: '这是一段描述文字。' },\n]\n</script>"
         },
         {
-          "title": "内联型步骤条",
-          "description": "通过 `type=\"inline\"` 设置内联型步骤条。",
-          "code": "<template>\n  <div style=\"padding: 20px\">\n    <Steps :items=\"items\" type=\"inline\" :current=\"1\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst items = [\n  { title: 'Step 1', content: 'First step' },\n  { title: 'Step 2', content: 'Second step' },\n  { title: 'Step 3', content: 'Third step' },\n  { title: 'Step 4', content: 'Fourth step' },\n]\n</script>"
+          "title": "样式变体",
+          "description": "通过 `variant` 切换步骤条的视觉变体：`filled`（实心填充，默认）与 `outlined`（描边样式）。",
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 100%\" size=\"large\">\n    <!-- 默认：filled 变体 -->\n    <div>\n      <h4 style=\"margin-top: 0\">默认变体 <code>variant=\"filled\"</code>（实心填充）</h4>\n      <Steps :current=\"1\" :items=\"items\" variant=\"filled\" />\n    </div>\n\n    <!-- outlined 变体 -->\n    <div>\n      <h4 style=\"margin-top: 0\"><code>variant=\"outlined\"</code>（描边样式）</h4>\n      <Steps :current=\"1\" :items=\"items\" variant=\"outlined\" />\n    </div>\n\n    <!-- outlined + small -->\n    <div>\n      <h4 style=\"margin-top: 0\"><code>variant=\"outlined\"</code> + <code>size=\"small\"</code></h4>\n      <Steps :current=\"1\" :items=\"items\" variant=\"outlined\" size=\"small\" />\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps, Space } from '@hmfw/ant-design'\n\nconst items = [\n  { title: 'Finished', subTitle: 'This is a subtitle', content: 'This is a description.' },\n  { title: 'In Progress', subTitle: 'Left 00:00:08', content: 'This is a description.' },\n  { title: 'Waiting', subTitle: 'Waiting for action', content: 'This is a description.' },\n]\n</script>"
+        },
+        {
+          "title": "标签垂直放置",
+          "description": "通过 `titlePlacement=\"vertical\"` 将标签放置在图标下方，配合 `ellipsis` 可省略过长文本。",
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 100%\" size=\"large\">\n    <!-- 默认：标签水平放置（标题在图标右侧） -->\n    <div>\n      <h4 style=\"margin-top: 0\">默认标签水平放置：<code>titlePlacement=\"horizontal\"</code>（默认值）</h4>\n      <Steps :current=\"1\" :items=\"items\" />\n    </div>\n\n    <!-- 标签垂直放置（标题在图标下方） -->\n    <div>\n      <h4 style=\"margin-top: 0\">\n        标签垂直放置：<code>titlePlacement=\"vertical\"</code>，配合 <code>ellipsis</code> 省略过长文本\n      </h4>\n      <Steps :current=\"1\" :items=\"items\" title-placement=\"vertical\" ellipsis />\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps, Space } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    title: 'Finished',\n    subTitle: 'This is a subtitle',\n    content: 'This is a description.',\n  },\n  {\n    title: 'In Progress',\n    subTitle: 'This is a longer subtitle text',\n    content: 'This is a description of the current step.',\n  },\n  {\n    title: 'Waiting',\n    subTitle: 'Waiting for action',\n    content: 'This step is waiting to be processed.',\n  },\n]\n</script>"
+        },
+        {
+          "title": "自定义图标",
+          "description": "通过 `StepItem.icon` 为每个步骤设置自定义图标，或使用 `iconRender` 全局控制图标渲染逻辑。",
+          "code": "<template>\n  <Space direction=\"vertical\" style=\"width: 100%\" size=\"large\">\n    <!-- 场景 1：通过 icon 属性为每个步骤设置自定义图标 -->\n    <div>\n      <h4 style=\"margin-top: 0\">自定义图标：通过 <code>StepItem.icon</code> 为每步设置自定义图标</h4>\n      <Steps :current=\"1\" :items=\"itemsWithIcon\" />\n    </div>\n\n    <!-- 场景 2：通过 iconRender 全局自定义图标渲染 -->\n    <div>\n      <h4 style=\"margin-top: 0\">自定义渲染：通过 <code>iconRender</code> 全局控制步骤图标</h4>\n      <Steps :current=\"1\" :items=\"basicItems\" :icon-render=\"customIconRender\" />\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { h, type VNode } from 'vue'\nimport { Steps, Space } from '@hmfw/ant-design'\nimport { UserOutlined, SolutionOutlined, LoadingOutlined, SmileOutlined, HomeOutlined } from '@hmfw/icons'\nimport type { IconRenderInfo } from '../types'\n\nconst basicItems = [\n  { title: '第一步', content: '填写基本信息' },\n  { title: '第二步', content: '验证邮箱地址' },\n  { title: '第三步', content: '完成注册' },\n]\n\n// 场景 1：通过 StepItem.icon 自定义每步图标\nconst itemsWithIcon = [\n  {\n    title: '登录',\n    content: '输入账号密码',\n    icon: h(UserOutlined, { class: 'hmfw-icon' }),\n  },\n  {\n    title: '验证',\n    content: '短信验证码',\n    icon: h(SolutionOutlined, { class: 'hmfw-icon' }),\n  },\n  {\n    title: '支付',\n    content: '确认订单金额',\n    icon: h(LoadingOutlined, { class: 'hmfw-icon' }),\n  },\n  {\n    title: '完成',\n    content: '购买成功',\n    icon: h(SmileOutlined, { class: 'hmfw-icon' }),\n  },\n]\n\n// 场景 2：通过 iconRender 自定义渲染逻辑\nconst customIconRender = (oriNode: VNode, info: IconRenderInfo): VNode => {\n  // 当前激活步骤使用不同的图标\n  if (info.active) {\n    return h(HomeOutlined, {\n      class: 'hmfw-icon',\n      style: { fontSize: '20px' },\n    })\n  }\n  // 已完成步骤保留原图标，其余使用默认\n  return oriNode\n}\n</script>"
         },
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器背景 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义根容器背景：</div>\n      <Steps :current=\"1\" :items=\"basicItems\" :class-names=\"{ root: 'custom-root' }\" />\n    </div>\n\n    <!-- 场景 2：自定义图标和标题样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义图标与标题：</div>\n      <Steps\n        :current=\"1\"\n        :items=\"basicItems\"\n        :class-names=\"{\n          icon: 'custom-icon',\n          title: 'custom-title',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义连接线样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">自定义连接线：</div>\n      <Steps\n        :current=\"1\"\n        :items=\"itemsWithDescription\"\n        :class-names=\"{\n          tail: 'custom-tail',\n          description: 'custom-description',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">使用内联样式：</div>\n      <Steps\n        :current=\"2\"\n        :items=\"basicItems\"\n        :styles=\"{\n          root: { padding: '20px', backgroundColor: '#fafafa', borderRadius: '8px' },\n          icon: { fontSize: '20px' },\n          title: { fontWeight: 600, color: '#1677ff' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：垂直步骤条组合定制 -->\n    <div>\n      <div style=\"margin-bottom: 12px; color: #666\">垂直步骤条组合定制：</div>\n      <Steps\n        orientation=\"vertical\"\n        :current=\"1\"\n        :items=\"itemsWithDescription\"\n        :class-names=\"{\n          item: 'custom-vertical-item',\n          container: 'custom-container',\n          content: 'custom-content',\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst basicItems = [\n  { title: '已完成', content: '这是第一步的描述' },\n  { title: '进行中', content: '这是第二步的描述' },\n  { title: '待处理', content: '这是第三步的描述' },\n]\n\nconst itemsWithDescription = [\n  { title: '注册账号', content: '填写基本信息并验证邮箱' },\n  { title: '完善资料', content: '上传头像并填写个人详情' },\n  { title: '开始使用', content: '探索产品功能' },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(to right, #f0f5ff, #e6f4ff);\n  padding: 16px;\n  border-radius: 8px;\n}\n\n:deep(.custom-icon) {\n  transform: scale(1.2);\n  transition: all 0.3s;\n}\n\n:deep(.custom-icon:hover) {\n  transform: scale(1.3) rotate(360deg);\n  transition: all 0.5s;\n}\n\n:deep(.custom-title) {\n  font-weight: 600;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n}\n\n:deep(.custom-tail) {\n  background: linear-gradient(to bottom, #1677ff 0%, #722ed1 100%) !important;\n  height: 3px !important;\n}\n\n:deep(.custom-description) {\n  color: #722ed1;\n  font-style: italic;\n}\n\n:deep(.custom-vertical-item) {\n  padding: 12px;\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-vertical-item:hover) {\n  background-color: #f0f5ff;\n  transform: translateX(4px);\n}\n\n:deep(.custom-container) {\n  padding-left: 8px;\n}\n\n:deep(.custom-content) {\n  margin-top: 4px;\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器背景 -->\n    <div>\n      <h4 style=\"margin-top: 0\">自定义根容器背景：</h4>\n      <Steps :current=\"1\" :items=\"basicItems\" :class-names=\"{ root: 'custom-root' }\" />\n    </div>\n\n    <!-- 场景 2：自定义图标和标题样式 -->\n    <div>\n      <h4 style=\"margin-top: 0\">自定义图标与标题：</h4>\n      <Steps\n        :current=\"1\"\n        :items=\"basicItems\"\n        :class-names=\"{\n          icon: 'custom-icon',\n          title: 'custom-title',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 3：自定义连接线样式 -->\n    <div>\n      <h4 style=\"margin-top: 0\">自定义连接线：</h4>\n      <Steps\n        :current=\"1\"\n        :items=\"itemsWithDescription\"\n        :class-names=\"{\n          tail: 'custom-tail',\n          description: 'custom-description',\n        }\"\n      />\n    </div>\n\n    <!-- 场景 4：使用 styles 内联样式 -->\n    <div>\n      <h4 style=\"margin-top: 0\">使用内联样式：</h4>\n      <Steps\n        :current=\"2\"\n        :items=\"basicItems\"\n        :styles=\"{\n          root: { padding: '20px', backgroundColor: '#fafafa', borderRadius: '8px' },\n          icon: { fontSize: '20px' },\n          title: { fontWeight: 600, color: '#1677ff' },\n        }\"\n      />\n    </div>\n\n    <!-- 场景 5：垂直步骤条组合定制 -->\n    <div>\n      <h4 style=\"margin-top: 0\">垂直步骤条组合定制：</h4>\n      <Steps\n        orientation=\"vertical\"\n        :current=\"1\"\n        :items=\"itemsWithDescription\"\n        :class-names=\"{\n          item: 'custom-vertical-item',\n          content: 'custom-content',\n        }\"\n        :styles=\"{\n          tail: { left: '27.5px', top: '54px', bottom: '-12px' },\n        }\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Steps } from '@hmfw/ant-design'\n\nconst basicItems = [\n  { title: '已完成', content: '这是第一步的描述' },\n  { title: '进行中', content: '这是第二步的描述' },\n  { title: '待处理', content: '这是第三步的描述' },\n]\n\nconst itemsWithDescription = [\n  { title: '注册账号', content: '填写基本信息并验证邮箱' },\n  { title: '完善资料', content: '上传头像并填写个人详情' },\n  { title: '开始使用', content: '探索产品功能' },\n]\n</script>\n\n<style scoped>\n:deep(.custom-root) {\n  background: linear-gradient(to right, #f0f5ff, #e6f4ff);\n  padding: 16px;\n  border-radius: 8px;\n}\n\n:deep(.custom-icon) {\n  transform: scale(1.2);\n  transition: all 0.3s;\n}\n\n:deep(.custom-icon:hover) {\n  transform: scale(1.3) rotate(360deg);\n  transition: all 0.5s;\n}\n\n:deep(.custom-title) {\n  font-weight: 600;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n}\n\n:deep(.custom-tail) {\n  background: linear-gradient(to bottom, #1677ff 0%, #722ed1 100%) !important;\n  height: 3px !important;\n}\n\n:deep(.custom-description) {\n  color: #722ed1;\n  font-style: italic;\n}\n\n:deep(.custom-vertical-item) {\n  padding: 12px;\n  border-radius: 6px;\n  transition: all 0.3s;\n}\n\n:deep(.custom-vertical-item:hover) {\n  background-color: #f0f5ff;\n  transform: translateX(4px);\n}\n\n:deep(.custom-content) {\n  margin-top: 4px;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/steps"
@@ -11771,13 +11912,6 @@
           "name": "activeKey(v-model)",
           "description": "当前激活 tab 面板的 key",
           "type": "string",
-          "default": "-"
-        },
-        {
-          "section": "Tabs",
-          "name": "defaultActiveKey",
-          "description": "初始化选中面板的 key，如果没有设置 activeKey",
-          "type": "string",
           "default": "第一个面板"
         },
         {
@@ -11790,7 +11924,7 @@
         {
           "section": "Tabs",
           "name": "size",
-          "description": "大小，提供 `large` 和 `small` 两种大小",
+          "description": "大小，提供 `small`、`middle` 和 `large` 三种大小",
           "type": "string",
           "default": "-"
         },
@@ -11984,17 +12118,17 @@
         {
           "title": "居中",
           "description": "标签居中展示。",
-          "code": "<template>\n  <Tabs :items=\"items\" centered />\n</template>\n\n<script setup lang=\"ts\">\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n</script>"
+          "code": "<template>\n  <Tabs :items=\"items\" centered />\n</template>\n\n<script setup lang=\"ts\">\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '11', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '22', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '33', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n</script>"
         },
         {
-          "title": "大小",
-          "description": "大中小三种大小的标签页，提供了 large 和 small 两个尺寸。",
-          "code": "<template>\n  <div>\n    <Tabs :items=\"items\" size=\"small\" style=\"margin-bottom: 16px\" />\n    <Tabs :items=\"items\" style=\"margin-bottom: 16px\" />\n    <Tabs :items=\"items\" size=\"large\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n</script>"
+          "title": "不同尺寸",
+          "description": "标签页支持 `small`、`middle`（默认）、`large` 三种尺寸。",
+          "code": "<template>\n  <div>\n    <Tabs :items=\"items\" size=\"small\" style=\"margin-bottom: 16px\" />\n    <Tabs :items=\"items\" size=\"middle\" style=\"margin-bottom: 16px\" />\n    <Tabs :items=\"items\" size=\"large\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n</script>"
         },
         {
           "title": "位置",
           "description": "有四个位置，tabPosition=top|bottom|left|right。",
-          "code": "<template>\n  <div>\n    <div style=\"margin-bottom: 16px\">\n      <span style=\"margin-right: 8px\">Tab Position: </span>\n      <Select v-model:value=\"tabPosition\" :options=\"positionOptions\" style=\"width: 120px\" />\n    </div>\n    <Tabs :items=\"items\" :tab-position=\"tabPosition\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tabs, Select } from '@hmfw/ant-design'\nimport type { TabsPosition } from '@hmfw/ant-design'\n\nconst tabPosition = ref<TabsPosition>('top')\n\nconst positionOptions = [\n  { value: 'top', label: 'top' },\n  { value: 'bottom', label: 'bottom' },\n  { value: 'left', label: 'left' },\n  { value: 'right', label: 'right' },\n]\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n</script>"
+          "code": "<template>\n  <div>\n    <div style=\"margin-bottom: 16px\">\n      <span style=\"margin-right: 8px\">Tab Position: </span>\n      <RadioGroup v-model:value=\"tabPosition\" :options=\"positionOptions\" option-type=\"button\" button-style=\"outline\" />\n    </div>\n    <Tabs :items=\"items\" :tab-position=\"tabPosition\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tabs, RadioGroup } from '@hmfw/ant-design'\nimport type { TabsPosition } from '@hmfw/ant-design'\n\nconst tabPosition = ref<TabsPosition>('top')\n\nconst positionOptions = [\n  { value: 'top', label: 'top' },\n  { value: 'bottom', label: 'bottom' },\n  { value: 'left', label: 'left' },\n  { value: 'right', label: 'right' },\n]\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n</script>"
         },
         {
           "title": "卡片式页签",
@@ -12015,6 +12149,51 @@
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
           "code": "<template>\n  <div class=\"demo-tabs-classnames\">\n    <!-- 场景 1: 自定义根节点 -->\n    <section class=\"demo-section\">\n      <h3>1. 自定义根节点样式</h3>\n      <Tabs :items=\"items\" :class-names=\"{ root: 'custom-root' }\" />\n    </section>\n\n    <!-- 场景 2: 自定义标签栏 -->\n    <section class=\"demo-section\">\n      <h3>2. 自定义标签栏样式</h3>\n      <Tabs :items=\"items\" :class-names=\"{ nav: 'custom-nav' }\" />\n    </section>\n\n    <!-- 场景 3: 自定义标签项与激活态 -->\n    <section class=\"demo-section\">\n      <h3>3. 自定义标签项与激活态</h3>\n      <Tabs :items=\"items\" :class-names=\"{ tab: 'custom-tab', tabActive: 'custom-tab-active' }\" />\n    </section>\n\n    <!-- 场景 4: 自定义墨条 -->\n    <section class=\"demo-section\">\n      <h3>4. 自定义墨条样式</h3>\n      <Tabs :items=\"items\" :class-names=\"{ inkBar: 'custom-inkbar' }\" />\n    </section>\n\n    <!-- 场景 5: 自定义内容区域 -->\n    <section class=\"demo-section\">\n      <h3>5. 自定义内容区域样式</h3>\n      <Tabs :items=\"items\" :class-names=\"{ content: 'custom-content', tabpane: 'custom-tabpane' }\" />\n    </section>\n\n    <!-- 场景 6: 组合使用多个 classNames -->\n    <section class=\"demo-section\">\n      <h3>6. 组合使用多个 classNames</h3>\n      <Tabs\n        :items=\"items\"\n        :class-names=\"{\n          root: 'combined-root',\n          nav: 'combined-nav',\n          tab: 'combined-tab',\n          tabActive: 'combined-tab-active',\n          inkBar: 'combined-inkbar',\n          content: 'combined-content',\n        }\"\n      />\n    </section>\n\n    <!-- 场景 7: 使用 styles prop -->\n    <section class=\"demo-section\">\n      <h3>7. 使用 styles 动态样式</h3>\n      <Tabs\n        :items=\"items\"\n        :styles=\"{\n          root: { border: '2px solid #1890ff', borderRadius: '12px', padding: '12px' },\n          nav: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '8px' },\n          content: { padding: '16px', background: '#f0f2f5', borderRadius: '8px', marginTop: '12px' },\n        }\"\n      />\n    </section>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: '标签一', children: '这是标签一的内容面板' },\n  { key: '2', label: '标签二', children: '这是标签二的内容面板' },\n  { key: '3', label: '标签三', children: '这是标签三的内容面板' },\n]\n</script>\n\n<style scoped>\n.demo-tabs-classnames {\n  display: flex;\n  flex-direction: column;\n  gap: 32px;\n}\n\n.demo-section {\n  padding: 16px;\n  background: #fafafa;\n  border-radius: 8px;\n}\n\n.demo-section h3 {\n  margin: 0 0 16px 0;\n  font-size: 14px;\n  color: #666;\n}\n\n/* 场景 1: 自定义根节点 */\n:deep(.custom-root) {\n  border: 2px dashed #722ed1;\n  border-radius: 12px;\n  padding: 12px;\n  background: #f9f0ff;\n}\n\n/* 场景 2: 自定义标签栏 */\n:deep(.custom-nav) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 8px;\n  padding: 4px 8px;\n}\n\n:deep(.custom-nav .hmfw-tabs-tab) {\n  color: rgba(255, 255, 255, 0.75);\n}\n\n:deep(.custom-nav .hmfw-tabs-tab-active) {\n  color: white;\n}\n\n/* 场景 3: 自定义标签项与激活态 */\n:deep(.custom-tab) {\n  border-radius: 6px 6px 0 0;\n  transition: all 0.3s ease;\n}\n\n:deep(.custom-tab:hover) {\n  background: #e6f7ff;\n}\n\n:deep(.custom-tab-active) {\n  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);\n  color: white !important;\n  font-weight: 600;\n}\n\n/* 场景 4: 自定义墨条 */\n:deep(.custom-inkbar) {\n  height: 4px !important;\n  background: linear-gradient(to right, #52c41a, #389e0d) !important;\n  border-radius: 2px;\n}\n\n/* 场景 5: 自定义内容区域 */\n:deep(.custom-content) {\n  background: #fff7e6;\n  border-radius: 8px;\n  margin-top: 8px;\n}\n\n:deep(.custom-tabpane) {\n  padding: 16px;\n  color: #d4380d;\n  font-weight: 500;\n}\n\n/* 场景 6: 组合样式 */\n:deep(.combined-root) {\n  border: 2px solid #13c2c2;\n  border-radius: 12px;\n  padding: 12px;\n  background: #e6fffb;\n}\n\n:deep(.combined-nav) {\n  background: #13c2c2;\n  border-radius: 8px;\n  padding: 4px 8px;\n}\n\n:deep(.combined-tab) {\n  color: rgba(255, 255, 255, 0.75);\n  border-radius: 6px 6px 0 0;\n}\n\n:deep(.combined-tab-active) {\n  color: white !important;\n  font-weight: 600;\n}\n\n:deep(.combined-inkbar) {\n  background: #fff !important;\n  height: 3px !important;\n}\n\n:deep(.combined-content) {\n  background: white;\n  border-radius: 8px;\n  margin-top: 8px;\n  padding: 16px;\n}\n</style>"
+        },
+        {
+          "title": "禁用选项",
+          "description": "禁用指定的 tab 页签。",
+          "code": "<template>\n  <Tabs :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3', disabled: true },\n]\n</script>"
+        },
+        {
+          "title": "动画配置",
+          "description": "通过 animated 属性控制墨条和内容切换的动画效果。",
+          "code": "<template>\n  <div>\n    <h4 style=\"margin-bottom: 8px\">默认动画（inkBar + tabPane）</h4>\n    <Tabs :items=\"items\" style=\"margin-bottom: 24px\" />\n\n    <h4 style=\"margin-bottom: 8px\">禁用动画</h4>\n    <Tabs :items=\"items\" :animated=\"false\" style=\"margin-bottom: 24px\" />\n\n    <h4 style=\"margin-bottom: 8px\">仅墨条动画</h4>\n    <Tabs :items=\"items\" :animated=\"{ inkBar: true, tabPane: false }\" style=\"margin-bottom: 24px\" />\n\n    <h4 style=\"margin-bottom: 8px\">仅内容动画</h4>\n    <Tabs :items=\"items\" :animated=\"{ inkBar: false, tabPane: true }\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab Pane 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab Pane 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab Pane 3' },\n]\n</script>"
+        },
+        {
+          "title": "左右附加内容",
+          "description": "通过 `tabBarExtraContent` 的对象形式在标签栏左右两侧放置额外元素。",
+          "code": "<template>\n  <Tabs :items=\"items\" :tab-bar-extra-content=\"extra\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Button, Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n\nconst extra = {\n  left: h(Button, { size: 'small' }, () => 'Left Action'),\n  right: h(Button, { type: 'primary', size: 'small' }, () => 'Right Action'),\n}\n</script>"
+        },
+        {
+          "title": "自定义图标",
+          "description": "自定义添加/删除按钮的图标。",
+          "code": "<template>\n  <div>\n    <h4 style=\"margin-bottom: 8px\">自定义添加按钮图标</h4>\n    <Tabs\n      v-model:active-key=\"activeKey1\"\n      type=\"editable-card\"\n      :items=\"items1\"\n      :add-icon=\"addIcon\"\n      style=\"margin-bottom: 24px\"\n      @edit=\"onEdit1\"\n    />\n\n    <h4 style=\"margin-bottom: 8px\">自定义关闭按钮图标</h4>\n    <Tabs\n      v-model:active-key=\"activeKey2\"\n      type=\"editable-card\"\n      :items=\"items2\"\n      :remove-icon=\"removeIcon\"\n      @edit=\"onEdit2\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Tabs } from '@hmfw/ant-design'\nimport { PlusCircleOutlined, MinusCircleOutlined } from '@hmfw/icons'\n\nconst activeKey1 = ref('1')\nconst items1 = ref([\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n])\n\nconst addIcon = h(PlusCircleOutlined, { class: 'hmfw-icon' })\n\nlet newTabIndex = 0\nconst onEdit1 = (targetKey: string | MouseEvent, action: 'add' | 'remove') => {\n  if (action === 'add') {\n    const newKey = `newTab${newTabIndex++}`\n    items1.value.push({ key: newKey, label: 'New Tab', children: 'Content of new Tab' })\n    activeKey1.value = newKey\n  } else {\n    items1.value = items1.value.filter((item) => item.key !== targetKey)\n  }\n}\n\nconst activeKey2 = ref('1')\nconst items2 = ref([\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n])\n\nconst removeIcon = h(MinusCircleOutlined, { class: 'hmfw-icon' })\n\nconst onEdit2 = (_targetKey: string | MouseEvent, action: 'add' | 'remove') => {\n  if (action === 'remove') {\n    items2.value = items2.value.slice(0, -1)\n  }\n}\n</script>"
+        },
+        {
+          "title": "强制渲染与销毁",
+          "description": "通过 `forceRender` 和 `destroyInactiveTabPane` 控制非激活 tab 的 DOM 行为。",
+          "code": "<template>\n  <div>\n    <h4 style=\"margin-bottom: 8px\">forceRender — 隐藏时保留 DOM</h4>\n    <Tabs :items=\"itemsForce\" style=\"margin-bottom: 24px\" />\n\n    <h4 style=\"margin-bottom: 8px\">destroyInactiveTabPane — 隐藏时销毁 DOM</h4>\n    <Tabs :items=\"itemsDestroy\" destroy-inactive-tab-pane />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tabs } from '@hmfw/ant-design'\n\nconst itemsForce = [\n  { key: '1', label: 'Tab 1 (保留 DOM)', children: 'Content of Tab 1' },\n  {\n    key: '2',\n    label: 'Tab 2 (forceRender)',\n    children: 'Content of Tab 2 — 即使未激活也会渲染到 DOM 中',\n    forceRender: true,\n  },\n  { key: '3', label: 'Tab 3 (正常)', children: 'Content of Tab 3' },\n]\n\nconst itemsDestroy = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  {\n    key: '2',\n    label: 'Tab 2 (离开即销毁)',\n    children: 'Content of Tab 2 — 切换离开后即从 DOM 中移除',\n    destroyInactiveTabPane: true,\n  },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n]\n</script>"
+        },
+        {
+          "title": "间距与样式",
+          "description": "通过 `tabBarGutter`、`tabBarStyle`、`hideAdd` 精细控制标签栏布局。",
+          "code": "<template>\n  <div>\n    <h4 style=\"margin-bottom: 8px\">自定义标签间距 + 样式 + 隐藏添加按钮</h4>\n    <Tabs\n      type=\"editable-card\"\n      :items=\"items\"\n      :tab-bar-gutter=\"24\"\n      :tab-bar-style=\"{ background: '#f5f5f5', padding: '8px', borderRadius: '8px' }\"\n      hide-add\n      @edit=\"onEdit\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = ref([\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n])\n\nconst onEdit = (targetKey: string | MouseEvent, action: 'add' | 'remove') => {\n  if (action === 'remove') {\n    items.value = items.value.filter((item) => item.key !== targetKey)\n  }\n}\n</script>"
+        },
+        {
+          "title": "受控模式",
+          "description": "通过 `v-model:activeKey` 实现完全受控的标签页，适用于需要外部管理激活状态的场景。",
+          "code": "<template>\n  <div>\n    <Tabs v-model:active-key=\"activeKey\" type=\"editable-card\" :items=\"items\" @edit=\"onEdit\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Tabs } from '@hmfw/ant-design'\nimport { PlusOutlined } from '@hmfw/icons'\n\nconst activeKey = ref('1')\nlet newTabIndex = 0\n\nconst items = ref([\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n])\n\nconst onEdit = (targetKey: string | MouseEvent, action: 'add' | 'remove') => {\n  if (action === 'add') {\n    const newKey = `newTab${newTabIndex++}`\n    items.value.push({ key: newKey, label: 'New Tab', children: 'Content of new Tab' })\n    activeKey.value = newKey\n  } else {\n    const targetIndex = items.value.findIndex((item) => item.key === targetKey)\n    const newItems = items.value.filter((item) => item.key !== targetKey)\n    if (newItems.length && targetKey === activeKey.value) {\n      activeKey.value = newItems[targetIndex === newItems.length ? targetIndex - 1 : targetIndex].key\n    }\n    items.value = newItems\n  }\n}\n</script>"
+        },
+        {
+          "title": "额外操作",
+          "description": "在标签栏右侧添加操作按钮，常用于批量操作或更多功能入口。",
+          "code": "<template>\n  <div>\n    <Tabs :items=\"items\" type=\"card\" :tab-bar-extra-content=\"extra\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Tabs, Button, Dropdown } from '@hmfw/ant-design'\n\nconst items = [\n  { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },\n  { key: '2', label: 'Tab 2', children: 'Content of Tab 2' },\n  { key: '3', label: 'Tab 3', children: 'Content of Tab 3' },\n  { key: '4', label: 'Tab 4', children: 'Content of Tab 4' },\n  { key: '5', label: 'Tab 5', children: 'Content of Tab 5' },\n  { key: '6', label: 'Tab 6', children: 'Content of Tab 6' },\n]\n\nconst extra = {\n  right: h(Button, { size: 'small' }, () => '操作'),\n}\n</script>"
+        },
+        {
+          "title": "嵌套标签页",
+          "description": "在 Tab 内容中嵌套使用 Tabs 组件，实现多层级内容组织。",
+          "code": "<template>\n  <Tabs :items=\"items\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Tabs } from '@hmfw/ant-design'\n\nconst items = [\n  {\n    key: '1',\n    label: 'Tab 1',\n    children: h(Tabs, {\n      size: 'small',\n      items: [\n        { key: '1-1', label: '子 Tab 1', children: '子内容 1-1' },\n        { key: '1-2', label: '子 Tab 2', children: '子内容 1-2' },\n      ],\n    }),\n  },\n  {\n    key: '2',\n    label: 'Tab 2',\n    children: h(Tabs, {\n      size: 'small',\n      type: 'card',\n      items: [\n        { key: '2-1', label: '子 Tab A', children: '子内容 2-1' },\n        { key: '2-2', label: '子 Tab B', children: '子内容 2-2' },\n      ],\n    }),\n  },\n  { key: '3', label: 'Tab 3', children: '普通内容 3' },\n]\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/tabs"
@@ -12025,14 +12204,21 @@
       "title": "Tag 标签",
       "description": "进行标记和分类的小标签。",
       "whenToUse": "",
-      "import": "import { Tag, CheckableTag } from '@hmfw/ant-design'",
+      "import": "import { Tag, CheckableTag, CheckableTagGroup } from '@hmfw/ant-design'",
       "props": [
         {
           "section": "Tag Props",
           "name": "color",
-          "description": "标签色（预设色或自定义色值）",
+          "description": "标签色（预设色、状态色或自定义色值）",
           "type": "`string`",
           "default": "-"
+        },
+        {
+          "section": "Tag Props",
+          "name": "variant",
+          "description": "变体样式",
+          "type": "`'outlined' | 'filled' | 'solid'`",
+          "default": "`'outlined'`"
         },
         {
           "section": "Tag Props",
@@ -12044,21 +12230,21 @@
         {
           "section": "Tag Props",
           "name": "closeIcon",
-          "description": "自定义关闭图标组件",
-          "type": "`Component`",
+          "description": "自定义关闭图标，`false` 隐藏关闭按钮",
+          "type": "`boolean | Component | () => VNode`",
           "default": "-"
         },
         {
           "section": "Tag Props",
           "name": "icon",
-          "description": "标签图标组件",
+          "description": "标签前置图标组件",
           "type": "`Component`",
           "default": "-"
         },
         {
           "section": "Tag Props",
           "name": "bordered",
-          "description": "是否有边框",
+          "description": "是否有边框（`false` 等价 `variant=\"filled\"`）",
           "type": "`boolean`",
           "default": "`true`"
         },
@@ -12084,9 +12270,72 @@
           "default": "`false`"
         },
         {
+          "section": "Tag Props",
+          "name": "classNames",
+          "description": "语义化 className（`root` / `icon` / `content` / `closeIcon`）",
+          "type": "`object`",
+          "default": "-"
+        },
+        {
+          "section": "Tag Props",
+          "name": "styles",
+          "description": "语义化 style（同上）",
+          "type": "`object`",
+          "default": "-"
+        },
+        {
           "section": "CheckableTag Props",
           "name": "checked",
           "description": "设置标签的选中状态",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "CheckableTag Props",
+          "name": "icon",
+          "description": "前置图标组件",
+          "type": "`Component`",
+          "default": "-"
+        },
+        {
+          "section": "CheckableTag Props",
+          "name": "disabled",
+          "description": "禁用状态",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "CheckableTagGroup Props",
+          "name": "options",
+          "description": "选项列表（对象或原始值）",
+          "type": "`(CheckableTagOption | string | number)[]`",
+          "default": "-"
+        },
+        {
+          "section": "CheckableTagGroup Props",
+          "name": "value",
+          "description": "当前选中值（配合 `v-model:value`）",
+          "type": "`Value | Value[] | null`",
+          "default": "-"
+        },
+        {
+          "section": "CheckableTagGroup Props",
+          "name": "defaultValue",
+          "description": "非受控默认值",
+          "type": "`Value | Value[] | null`",
+          "default": "-"
+        },
+        {
+          "section": "CheckableTagGroup Props",
+          "name": "multiple",
+          "description": "是否多选",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "CheckableTagGroup Props",
+          "name": "disabled",
+          "description": "整组禁用",
           "type": "`boolean`",
           "default": "`false`"
         }
@@ -12103,9 +12352,28 @@
           "name": "change",
           "description": "点击标签时触发的回调",
           "params": "`(checked: boolean) => void`"
+        },
+        {
+          "section": "CheckableTagGroup Events",
+          "name": "change",
+          "description": "选中值变化时触发",
+          "params": "`(value: Value | Value[] | null)`"
         }
       ],
-      "slots": [],
+      "slots": [
+        {
+          "name": "default",
+          "description": "标签内容"
+        },
+        {
+          "name": "icon",
+          "description": "前置图标"
+        },
+        {
+          "name": "closeIcon",
+          "description": "自定义关闭图标"
+        }
+      ],
       "demos": [
         {
           "title": "基础用法",
@@ -12123,9 +12391,24 @@
           "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n    <Tag color=\"#f50\"> #f50 </Tag>\n    <Tag color=\"#2db7f5\"> #2db7f5 </Tag>\n    <Tag color=\"#87d068\"> #87d068 </Tag>\n    <Tag color=\"#108ee9\"> #108ee9 </Tag>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tag } from '@hmfw/ant-design'\n</script>"
         },
         {
+          "title": "变体",
+          "description": "通过 `variant` 控制标签样式：`outlined`（描边，默认）、`filled`（填充）、`solid`（实色）。`bordered={false}` 等价于 `variant=\"filled\"`。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 12px\">\n    <div style=\"display: flex; gap: 8px; align-items: center; flex-wrap: wrap\">\n      <span style=\"width: 64px\">outlined</span>\n      <Tag color=\"blue\" variant=\"outlined\">预设色</Tag>\n      <Tag color=\"#f50\" variant=\"outlined\">自定义色</Tag>\n    </div>\n    <div style=\"display: flex; gap: 8px; align-items: center; flex-wrap: wrap\">\n      <span style=\"width: 64px\">filled</span>\n      <Tag color=\"blue\" variant=\"filled\">预设色</Tag>\n      <Tag color=\"#f50\" variant=\"filled\">自定义色</Tag>\n    </div>\n    <div style=\"display: flex; gap: 8px; align-items: center; flex-wrap: wrap\">\n      <span style=\"width: 64px\">solid</span>\n      <Tag color=\"blue\" variant=\"solid\">预设色</Tag>\n      <Tag color=\"#f50\" variant=\"solid\">自定义色</Tag>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tag } from '@hmfw/ant-design'\n</script>"
+        },
+        {
+          "title": "图标与自定义关闭",
+          "description": "通过 `icon` 插槽添加前置图标，通过 `closeIcon` 插槽/属性自定义关闭图标，`:closeIcon=\"false\"` 可隐藏关闭按钮。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 8px; align-items: center; flex-wrap: wrap\">\n    <Tag color=\"blue\">\n      <template #icon><TwitterOutlined /></template>\n      Twitter\n    </Tag>\n    <Tag color=\"cyan\">\n      <template #icon><YoutubeOutlined /></template>\n      Youtube\n    </Tag>\n    <Tag closable>\n      <template #closeIcon><DeleteOutlined /></template>\n      自定义关闭图标\n    </Tag>\n    <Tag closable :close-icon=\"false\"> 不可关闭 </Tag>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tag } from '@hmfw/ant-design'\nimport { TwitterOutlined, YoutubeOutlined, DeleteOutlined } from '@hmfw/icons'\n</script>"
+        },
+        {
           "title": "可选中标签",
           "description": "可通过 CheckableTag 实现类似 Checkbox 的效果。",
           "code": "<template>\n  <div style=\"display: flex; gap: 8px\">\n    <CheckableTag\n      v-for=\"tag in tags\"\n      :key=\"tag\"\n      :checked=\"selectedTags.includes(tag)\"\n      @change=\"(checked) => handleChange(tag, checked)\"\n    >\n      {{ tag }}\n    </CheckableTag>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { CheckableTag } from '@hmfw/ant-design'\n\nconst tags = ['Movies', 'Books', 'Music', 'Sports']\nconst selectedTags = ref<string[]>(['Books'])\n\nfunction handleChange(tag: string, checked: boolean) {\n  if (checked) {\n    selectedTags.value = [...selectedTags.value, tag]\n  } else {\n    selectedTags.value = selectedTags.value.filter((t) => t !== tag)\n  }\n}\n</script>"
+        },
+        {
+          "title": "标签选择组",
+          "description": "通过 CheckableTagGroup 快速构建单选/多选的标签组，支持 `v-model:value`。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 12px\">\n    <div>\n      <div style=\"margin-bottom: 8px\">单选：{{ single ?? '无' }}</div>\n      <CheckableTagGroup v-model:value=\"single\" :options=\"options\" />\n    </div>\n    <div>\n      <div style=\"margin-bottom: 8px\">多选：{{ multiple.join(', ') || '无' }}</div>\n      <CheckableTagGroup v-model:value=\"multiple\" multiple :options=\"options\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { CheckableTagGroup } from '@hmfw/ant-design'\n\nconst options = ['Movies', 'Books', 'Music', 'Sports']\nconst single = ref<string | null>('Books')\nconst multiple = ref<string[]>(['Movies', 'Music'])\n</script>"
         },
         {
           "title": "链接与禁用",
@@ -12716,7 +12999,7 @@
         {
           "title": "十二个方向",
           "description": "位置有十二个方向。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 8px; flex-wrap: wrap\">\n    <Tooltip v-for=\"placement in placements\" :key=\"placement\" :placement=\"placement\" title=\"提示文字\">\n      <Button style=\"width: 100px\">\n        {{ placement }}\n      </Button>\n    </Tooltip>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tooltip, Button } from '@hmfw/ant-design'\n\nconst placements = [\n  'topLeft',\n  'top',\n  'topRight',\n  'leftTop',\n  'left',\n  'leftBottom',\n  'rightTop',\n  'right',\n  'rightBottom',\n  'bottomLeft',\n  'bottom',\n  'bottomRight',\n]\n</script>"
+          "code": "<template>\n  <div>\n    <Flex justify=\"center\" align=\"center\" gap=\"middle\">\n      <Tooltip placement=\"topLeft\" title=\"提示文字\">\n        <Button style=\"width: 100px\"> topLeft </Button>\n      </Tooltip>\n      <Tooltip placement=\"top\" title=\"提示文字\">\n        <Button style=\"width: 100px\"> top </Button>\n      </Tooltip>\n      <Tooltip placement=\"topRight\" title=\"提示文字\">\n        <Button style=\"width: 100px\"> topRight </Button>\n      </Tooltip>\n    </Flex>\n    <Flex justify=\"center\" align=\"center\">\n      <Flex vertical align=\"center\" gap=\"middle\">\n        <Tooltip placement=\"leftTop\" title=\"提示文字\">\n          <Button style=\"width: 100px; height: 48px\"> leftTop </Button>\n        </Tooltip>\n        <Tooltip placement=\"left\" title=\"提示文字\">\n          <Button style=\"width: 100px; height: 48px\"> left </Button>\n        </Tooltip>\n        <Tooltip placement=\"leftBottom\" title=\"提示文字\">\n          <Button style=\"width: 100px; height: 48px\"> leftBottom </Button>\n        </Tooltip>\n      </Flex>\n      <div style=\"width: 332px\"></div>\n      <Flex vertical align=\"center\" gap=\"middle\">\n        <Tooltip placement=\"rightTop\" title=\"提示文字\">\n          <Button style=\"width: 100px; height: 48px\"> rightTop </Button>\n        </Tooltip>\n        <Tooltip placement=\"right\" title=\"提示文字\">\n          <Button style=\"width: 100px; height: 48px\"> right </Button>\n        </Tooltip>\n        <Tooltip placement=\"rightBottom\" title=\"提示文字\">\n          <Button style=\"width: 100px; height: 48px\"> rightBottom </Button>\n        </Tooltip>\n      </Flex>\n    </Flex>\n    <Flex justify=\"center\" align=\"center\" gap=\"middle\">\n      <Tooltip placement=\"bottomLeft\" title=\"提示文字\">\n        <Button style=\"width: 100px\"> bottomLeft </Button>\n      </Tooltip>\n      <Tooltip placement=\"bottom\" title=\"提示文字\">\n        <Button style=\"width: 100px\"> bottom </Button>\n      </Tooltip>\n      <Tooltip placement=\"bottomRight\" title=\"提示文字\">\n        <Button style=\"width: 100px\"> bottomRight </Button>\n      </Tooltip>\n    </Flex>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Tooltip, Button, Flex } from '@hmfw/ant-design'\n</script>"
         },
         {
           "title": "自定义颜色",
@@ -13644,7 +13927,7 @@
         {
           "title": "可拖拽",
           "description": "设置 `draggable` 后节点可拖动，拖放时触发 `drop` 事件。",
-          "code": "<template>\n  <div>\n    <p style=\"margin-bottom: 12px; color: #666\">\n      拖动节点可重新排列。已内置边界检查：节点不能拖到自身或自己的后代上（防止循环引用）。\n    </p>\n    <Tree\n      draggable\n      block-node\n      :tree-data=\"treeData\"\n      :default-expand-all=\"true\"\n      :allow-drop=\"allowDrop\"\n      @drop=\"onDrop\"\n    />\n    <p style=\"margin-top: 12px; color: #999; font-size: 12px\">\n      本示例通过 allowDrop 额外限制：叶子节点不能作为放置目标。\n    </p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree } from '@hmfw/ant-design'\n\nconst treeData = ref([\n  {\n    title: '父节点 1',\n    key: '0-0',\n    children: [\n      { title: '子节点 1-1', key: '0-0-0' },\n      { title: '子节点 1-2', key: '0-0-1' },\n    ],\n  },\n  {\n    title: '父节点 2',\n    key: '0-1',\n    children: [{ title: '子节点 2-1', key: '0-1-0' }],\n  },\n])\n\n// 额外限制：不允许放到叶子节点上（仅容器节点可接收）\nconst allowDrop = ({ dropNode }: any) => {\n  return Array.isArray(dropNode.children) && dropNode.children.length > 0\n}\n\n// 在树中查找并移除某个 key 的节点，返回被移除的节点\nconst findAndRemove = (nodes: any[], key: string): any => {\n  for (let i = 0; i < nodes.length; i++) {\n    if (nodes[i].key === key) {\n      return nodes.splice(i, 1)[0]\n    }\n    if (nodes[i].children) {\n      const found = findAndRemove(nodes[i].children, key)\n      if (found) return found\n    }\n  }\n  return null\n}\n\n// 将节点插入到目标节点的子级\nconst insertInto = (nodes: any[], targetKey: string, dragNode: any): boolean => {\n  for (const node of nodes) {\n    if (node.key === targetKey) {\n      if (!node.children) node.children = []\n      node.children.push(dragNode)\n      return true\n    }\n    if (node.children && insertInto(node.children, targetKey, dragNode)) {\n      return true\n    }\n  }\n  return false\n}\n\nconst onDrop = (info: any) => {\n  const data = JSON.parse(JSON.stringify(treeData.value))\n  const dragNode = findAndRemove(data, info.dragNode.key)\n  if (dragNode) {\n    insertInto(data, info.node.key, dragNode)\n    treeData.value = data\n  }\n}\n</script>"
+          "code": "<template>\n  <div>\n    <h4 style=\"margin-top: 0\">拖动节点可重新排列。已内置边界检查：节点不能拖到自身或自己的后代上（防止循环引用）。</h4>\n    <Tree\n      draggable\n      block-node\n      :tree-data=\"treeData\"\n      :default-expand-all=\"true\"\n      :allow-drop=\"allowDrop\"\n      @drop=\"onDrop\"\n    />\n    <p style=\"margin-top: 12px; color: #999; font-size: 12px\">\n      本示例通过 allowDrop 额外限制：叶子节点不能作为放置目标。\n    </p>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tree } from '@hmfw/ant-design'\n\nconst treeData = ref([\n  {\n    title: '父节点 1',\n    key: '0-0',\n    children: [\n      { title: '子节点 1-1', key: '0-0-0' },\n      { title: '子节点 1-2', key: '0-0-1' },\n    ],\n  },\n  {\n    title: '父节点 2',\n    key: '0-1',\n    children: [{ title: '子节点 2-1', key: '0-1-0' }],\n  },\n])\n\n// 额外限制：不允许放到叶子节点上（仅容器节点可接收）\nconst allowDrop = ({ dropNode }: any) => {\n  return Array.isArray(dropNode.children) && dropNode.children.length > 0\n}\n\n// 在树中查找并移除某个 key 的节点，返回被移除的节点\nconst findAndRemove = (nodes: any[], key: string): any => {\n  for (let i = 0; i < nodes.length; i++) {\n    if (nodes[i].key === key) {\n      return nodes.splice(i, 1)[0]\n    }\n    if (nodes[i].children) {\n      const found = findAndRemove(nodes[i].children, key)\n      if (found) return found\n    }\n  }\n  return null\n}\n\n// 将节点插入到目标节点的子级\nconst insertInto = (nodes: any[], targetKey: string, dragNode: any): boolean => {\n  for (const node of nodes) {\n    if (node.key === targetKey) {\n      if (!node.children) node.children = []\n      node.children.push(dragNode)\n      return true\n    }\n    if (node.children && insertInto(node.children, targetKey, dragNode)) {\n      return true\n    }\n  }\n  return false\n}\n\nconst onDrop = (info: any) => {\n  const data = JSON.parse(JSON.stringify(treeData.value))\n  const dragNode = findAndRemove(data, info.dragNode.key)\n  if (dragNode) {\n    insertInto(data, info.node.key, dragNode)\n    treeData.value = data\n  }\n}\n</script>"
         },
         {
           "title": "搜索高亮",
