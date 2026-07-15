@@ -1,6 +1,8 @@
 <template>
   <div class="demo-fresh">
-    <p>fresh 属性用于强制重新计算浮层位置，trackPosition 属性用于持续跟踪触发元素位置变化。</p>
+    <h4 style="margin-top: 0">
+      <code>fresh</code> 属性用于强制重新计算浮层位置，<code>trackPosition</code> 属性用于持续跟踪触发元素位置变化。
+    </h4>
     <div class="moving-container" :style="{ marginLeft: offset + 'px' }">
       <Tooltip :open="open" title="我会跟随按钮移动" trigger="click" track-position>
         <Button>点击查看提示</Button>

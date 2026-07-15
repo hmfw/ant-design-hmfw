@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Button @click="loading = !loading">切换加载状态</Button>
+    <Button style="margin-bottom: 16px" @click="loading = !loading">切换加载状态</Button>
     <Skeleton :loading="loading" active avatar>
       <div style="display: flex; gap: 12px; margin-top: 16px">
         <img

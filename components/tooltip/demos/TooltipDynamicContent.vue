@@ -1,6 +1,8 @@
 <template>
   <div class="demo-dynamic-content">
-    <p>当浮层内容动态变化时，Tooltip 会通过 ResizeObserver 自动重新计算位置，确保浮层不会溢出视口。</p>
+    <h4 style="margin-top: 0">
+      当浮层内容动态变化时，Tooltip 会通过 ResizeObserver 自动重新计算位置，确保浮层不会溢出视口。
+    </h4>
 
     <div style="display: flex; gap: 20px; margin-top: 20px">
       <Tooltip :title="tooltipContent" placement="top" :open="open">
@@ -33,9 +35,3 @@ const toggleContent = () => {
   isLongContent.value = !isLongContent.value
 }
 </script>
-
-<style scoped>
-.demo-dynamic-content {
-  padding: 20px;
-}
-</style>

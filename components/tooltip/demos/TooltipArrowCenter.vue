@@ -1,6 +1,6 @@
 <template>
   <div class="demo-arrow-center">
-    <p>设置 <code>arrow.pointAtCenter</code> 可以让箭头始终指向触发元素的中心。</p>
+    <h4 style="margin-top: 0">设置 <code>arrow.pointAtCenter</code> 可以让箭头始终指向触发元素的中心。</h4>
     <div class="demo-row">
       <div class="demo-item">
         <h4>默认箭头位置</h4>
@@ -15,7 +15,7 @@
         </Tooltip>
       </div>
     </div>
-    <div class="demo-row" style="margin-top: 80px">
+    <div class="demo-row" style="margin-top: 40px">
       <div class="demo-item">
         <Tooltip title="bottomRight 默认" placement="bottomRight">
           <Button style="width: 200px">bottomRight - 默认</Button>
@@ -35,9 +35,6 @@ import { Tooltip, Button } from '@hmfw/ant-design'
 </script>
 
 <style scoped>
-.demo-arrow-center {
-  padding: 20px;
-}
 .demo-row {
   display: flex;
   gap: 40px;
