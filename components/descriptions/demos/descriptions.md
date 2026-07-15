@@ -16,6 +16,14 @@
   <DescriptionsBasic />
 </DemoBlock>
 
+### 使用子组件语法
+
+支持使用 `<DescriptionsItem>` 子组件语法，适用于 JSX/TSX 场景或需要更灵活的内容定义。
+
+<DemoBlock title="使用子组件语法" :source="DescriptionsSlotSource">
+  <DescriptionsSlot />
+</DemoBlock>
+
 ### 带边框
 
 带边框和背景颜色列表。
@@ -42,7 +50,7 @@
 
 ### 响应式列数
 
-支持响应式的列数配置，窗口大小变化时自动调整列数布局。
+支持响应式的列数配置，窗口大小变化时自动调整列数布局。同时支持响应式 `span` 属性，实现单个项目在不同屏幕尺寸下的跨列控制。
 
 <DemoBlock title="响应式列数" :source="DescriptionsResponsiveSource">
   <DescriptionsResponsive />
@@ -54,6 +62,14 @@
 
 <DemoBlock title="不同尺寸" :source="DescriptionsSizesSource">
   <DescriptionsSizes />
+</DemoBlock>
+
+### 隐藏冒号
+
+通过设置 `colon={false}` 可以隐藏标签后的冒号，适用于简洁风格或特定语言界面。
+
+<DemoBlock title="隐藏冒号" :source="DescriptionsNoColonSource">
+  <DescriptionsNoColon />
 </DemoBlock>
 
 ### Span 填充
