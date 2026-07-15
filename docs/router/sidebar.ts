@@ -114,7 +114,6 @@ export const componentGroups: ComponentGroup[] = [
     children: [
       { name: 'alert', title: 'Alert 警告提示' },
       { name: 'drawer', title: 'Drawer 抽屉' },
-      { name: 'float-button', title: 'FloatButton 悬浮按钮' },
       { name: 'message', title: 'Message 全局提示' },
       { name: 'modal', title: 'Modal 对话框' },
       { name: 'notification', title: 'Notification 通知提醒框' },
