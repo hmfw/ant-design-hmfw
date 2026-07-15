@@ -10,6 +10,26 @@
 
 ## 最近版本
 
+## [0.25.0] - 2026-07-15
+
+[查看完整内容](./changelogs/v0.25.0.md)
+
+### ✨ 新特性
+
+- **Tooltip 跟踪定位**：新增 `trackPosition` 属性支持弹层持续跟踪触发元素位置
+
+### 🔧 重构
+
+- **Drawer 语义化 API 统一**：规范类型与 Token（Breaking Change）
+- **Image 模块拆分**：提升代码可维护性
+- **Tooltip 类型规范**：事件类型导出、样式 Token 优化
+
+### 🐛 修复
+
+- **Popover/Descriptions**：修复规范问题和 slot children 显示
+
+---
+
 ## [0.24.0] - 2026-07-14
 
 [查看完整内容](./changelogs/v0.24.0.md)
