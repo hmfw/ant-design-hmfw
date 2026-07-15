@@ -19,12 +19,28 @@
   <ImageBasic />
 </DemoBlock>
 
+### 加载失败与容错
+
+`fallback` 提供加载失败时的替代图片；若替代图片也失败，则显示错误占位。`onError` 在每次加载失败时触发。
+
+<DemoBlock title="加载失败与容错" :source="ImageErrorHandlingSource">
+  <ImageErrorHandling />
+</DemoBlock>
+
 ### 图片组预览
 
 多张图片共享一个预览弹层，支持键盘左右键切换、Esc 关闭。
 
 <DemoBlock title="图片组预览" :source="ImagePreviewGroupSource">
   <ImagePreviewGroup />
+</DemoBlock>
+
+### 受控图片组
+
+通过 `current` + `onChange` 受控当前预览索引，预览内切换时外部状态同步更新。
+
+<DemoBlock title="受控图片组" :source="ImageControlledGroupSource">
+  <ImageControlledGroup />
 </DemoBlock>
 
 ### 渐进式加载
@@ -41,6 +57,14 @@
 
 <DemoBlock title="自定义预览" :source="ImageCustomPreviewSource">
   <ImageCustomPreview />
+</DemoBlock>
+
+### 受控预览
+
+通过 `preview.open` 与 `preview.onOpenChange` 从外部控制预览的打开与关闭。
+
+<DemoBlock title="受控预览" :source="ImageControlledPreviewSource">
+  <ImageControlledPreview />
 </DemoBlock>
 
 ### 自定义工具栏与预览内容
