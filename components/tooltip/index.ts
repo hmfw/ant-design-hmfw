@@ -7,4 +7,7 @@ export type {
   TooltipTitle,
   TooltipClassNames,
   TooltipStyles,
+  TooltipOpenChangeInfo,
+  TooltipOpenChangeHandler,
+  TooltipAfterOpenChangeHandler,
 } from './types'

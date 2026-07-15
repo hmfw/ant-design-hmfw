@@ -11,6 +11,7 @@ import type {
   TooltipTitle,
   TooltipClassNames,
   TooltipStyles,
+  TooltipOpenChangeInfo,
 } from './types'
 
 const tooltipProps = {
@@ -168,7 +169,7 @@ export const Tooltip = defineComponent({
           popupStyle={popupStyleMerged}
           hiddenClass={`${prefixCls.value}-hidden`}
           onUpdate:open={(v: boolean) => emit('update:open', v)}
-          onOpenChange={(v: boolean, info: any) => emit('openChange', v, info)}
+          onOpenChange={(v: boolean, info: TooltipOpenChangeInfo) => emit('openChange', v, info)}
           onAfterOpenChange={(v: boolean) => emit('afterOpenChange', v)}
         >
           {{

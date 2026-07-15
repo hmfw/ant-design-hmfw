@@ -22,6 +22,18 @@ export type TooltipArrow = boolean | { pointAtCenter?: boolean }
 /** 标题可为纯文本、VNode 或渲染函数（对齐 AntD 的 `RenderFunction`）。 */
 export type TooltipTitle = string | number | VNode | (() => VNode | string | number)
 
+/** `openChange` 回调的附带信息，说明本次显隐由何处触发。 */
+export interface TooltipOpenChangeInfo {
+  /** `trigger` 表示由触发器交互引起，`popup` 表示由浮层内部交互引起。 */
+  source: 'trigger' | 'popup'
+}
+
+/** `openChange` 事件回调签名。 */
+export type TooltipOpenChangeHandler = (open: boolean, info: TooltipOpenChangeInfo) => void
+
+/** `afterOpenChange` 事件回调签名（浮层显隐动画结束后触发）。 */
+export type TooltipAfterOpenChangeHandler = (open: boolean) => void
+
 /** Tooltip 语义化类名 */
 export interface TooltipClassNames {
   /** 最外层弹层容器 */

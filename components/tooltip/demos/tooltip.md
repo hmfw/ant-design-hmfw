@@ -16,12 +16,36 @@
   <TooltipBasic />
 </DemoBlock>
 
+### 触发方式
+
+支持 `hover`、`click`、`focus`、`contextMenu` 四种触发方式，也可传数组组合多种触发。
+
+<DemoBlock title="触发方式" :source="TooltipTriggerSource">
+  <TooltipTrigger />
+</DemoBlock>
+
+### 受控显隐
+
+通过 `v-model:open` 手动控制浮层显隐，`openChange` 回调的第二个参数 `info.source` 标识本次显隐由触发器（`trigger`）还是浮层（`popup`）引起。
+
+<DemoBlock title="受控显隐" :source="TooltipControlledSource">
+  <TooltipControlled />
+</DemoBlock>
+
 ### 十二个方向
 
 位置有十二个方向。
 
 <DemoBlock title="十二个方向" :source="TooltipPlacementSource">
   <TooltipPlacement />
+</DemoBlock>
+
+### 无箭头
+
+设置 `arrow={false}` 可隐藏箭头。
+
+<DemoBlock title="无箭头" :source="TooltipNoArrowSource">
+  <TooltipNoArrow />
 </DemoBlock>
 
 ### 自定义颜色
@@ -91,11 +115,13 @@
 
 ### Tooltip Events
 
-| 事件名          | 说明                      | 回调参数                  |
-| --------------- | ------------------------- | ------------------------- |
-| update:open     | 显示隐藏的回调（v-model） | `(open: boolean) => void` |
-| openChange      | 显示隐藏的回调            | `(open: boolean) => void` |
-| afterOpenChange | 浮层动画结束时触发        | `(open: boolean) => void` |
+| 事件名          | 说明                      | 回调参数                                                          |
+| --------------- | ------------------------- | ----------------------------------------------------------------- |
+| update:open     | 显示隐藏的回调（v-model） | `(open: boolean) => void`                                         |
+| openChange      | 显示隐藏的回调            | `(open: boolean, info: { source: 'trigger' \| 'popup' }) => void` |
+| afterOpenChange | 浮层动画结束时触发        | `(open: boolean) => void`                                         |
+
+事件回调类型可从包中导入：`TooltipOpenChangeHandler`、`TooltipOpenChangeInfo`、`TooltipAfterOpenChangeHandler`。
 
 ### Tooltip Slots
 
@@ -258,4 +284,4 @@ interface TooltipStyles {
 
 ## 设计 Token
 
-背景色由 CSS 变量 `--tooltip-bg` 控制，默认取暗色浮层 Token `--hmfw-color-bg-spotlight`（`rgba(0, 0, 0, 0.85)`），会随主题（暗色/自定义）变化。传入 `color` prop 时由组件内联覆盖 `--tooltip-bg`。文字固定为白色，其余尺寸/圆角/阴影暂以硬编码实现，后续会进一步接入 Token 系统。
+背景色由 CSS 变量 `--tooltip-bg` 控制，默认取暗色浮层 Token `--hmfw-color-bg-spotlight`（`rgba(0, 0, 0, 0.85)`），会随主题（暗色/自定义）变化。传入 `color` prop 时由组件内联覆盖 `--tooltip-bg`。字号、文字色、圆角、阴影分别消费 `--hmfw-font-size`、`--hmfw-color-text-light-solid`、`--hmfw-border-radius`、`--hmfw-box-shadow-secondary`，均支持通过 `ConfigProvider` 主题覆盖。
