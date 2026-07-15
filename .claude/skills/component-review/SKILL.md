@@ -102,12 +102,27 @@ const componentProps = {
 
 组件对外暴露的事件（`emits`）及其回调参数类型，必须从 `types.ts` 导出、并在 `index.ts` 一并 re-export，供使用方在 TS 中标注处理函数。仅在组件内声明 `emits` 而不导出类型，会导致用户无法获得事件参数的类型提示。
 
+#### emits 声明规范
+
+**使用数组形式**（项目统一风格）：
+
 ```typescript
-// ❌ 错误 - 事件参数类型内联在组件里，外部无法引用
-// Select.tsx
+// ❌ 错误 - 使用对象形式带验证函数
 emits: {
   change: (value: string, option: SelectOption) => true,
+  'update:value': (value: string) => true,
 }
+
+// ✅ 正确 - 使用数组形式，简洁且与项目一致
+emits: ['change', 'update:value']
+```
+
+#### 完整示例
+
+```typescript
+// ❌ 错误 - 事件参数类型未导出，使用方无法引用
+// Select.tsx
+emits: ['change', 'update:value']  // 仅声明事件名，没有类型导出
 
 // ✅ 正确 - types.ts 定义并导出事件类型
 // types.ts
@@ -115,6 +130,9 @@ export interface SelectChangeInfo {
   option: SelectOption
 }
 export type SelectChangeHandler = (value: string, info: SelectChangeInfo) => void
+
+// Select.tsx - 组件内使用数组形式声明
+emits: ['change', 'update:value']
 
 // index.ts —— 与 Props 类型一同 re-export
 export type {
@@ -126,6 +144,7 @@ export type {
 
 审查要点：
 
+- **emits 声明风格**：必须使用数组形式 `emits: ['event1', 'event2']`，不使用对象形式带验证函数（与项目所有组件保持一致）
 - **有 `emits` 就要有导出类型**：每个对外事件的回调签名应有具名类型（`XxxHandler` / `XxxInfo`），从 `types.ts` 导出
 - **`index.ts` 补齐 re-export**：新增的事件/参数类型必须在组件 `index.ts` 的 `export type { ... }` 中出现，否则用户 `import type` 不到
 - **命名一致**：事件参数聚合对象用 `XxxInfo`，回调函数类型用 `XxxHandler`，与现有组件保持一致
