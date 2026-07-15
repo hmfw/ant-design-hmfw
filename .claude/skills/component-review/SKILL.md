@@ -98,6 +98,38 @@ const componentProps = {
 } satisfies Record<keyof ComponentProps, any>
 ```
 
+### 事件类型导出
+
+组件对外暴露的事件（`emits`）及其回调参数类型，必须从 `types.ts` 导出、并在 `index.ts` 一并 re-export，供使用方在 TS 中标注处理函数。仅在组件内声明 `emits` 而不导出类型，会导致用户无法获得事件参数的类型提示。
+
+```typescript
+// ❌ 错误 - 事件参数类型内联在组件里，外部无法引用
+// Select.tsx
+emits: {
+  change: (value: string, option: SelectOption) => true,
+}
+
+// ✅ 正确 - types.ts 定义并导出事件类型
+// types.ts
+export interface SelectChangeInfo {
+  option: SelectOption
+}
+export type SelectChangeHandler = (value: string, info: SelectChangeInfo) => void
+
+// index.ts —— 与 Props 类型一同 re-export
+export type {
+  SelectProps,
+  SelectChangeInfo,
+  SelectChangeHandler,
+} from './types'
+```
+
+审查要点：
+
+- **有 `emits` 就要有导出类型**：每个对外事件的回调签名应有具名类型（`XxxHandler` / `XxxInfo`），从 `types.ts` 导出
+- **`index.ts` 补齐 re-export**：新增的事件/参数类型必须在组件 `index.ts` 的 `export type { ... }` 中出现，否则用户 `import type` 不到
+- **命名一致**：事件参数聚合对象用 `XxxInfo`，回调函数类型用 `XxxHandler`，与现有组件保持一致
+
 ### 边界条件防御
 
 ```typescript
@@ -308,6 +340,12 @@ pnpm typecheck              # 类型检查
 复杂逻辑没有中文注释。
 
 **解决**: 为关键步骤添加详细注释
+
+### 事件类型未导出
+
+组件声明了 `emits`，但回调参数类型内联在组件内部，未从 `types.ts` 导出，也未在 `index.ts` re-export，使用方无法在 TS 中标注事件处理函数。
+
+**解决**: 在 `types.ts` 定义具名事件类型（`XxxInfo` 聚合参数、`XxxHandler` 回调签名），并在 `index.ts` 的 `export type { ... }` 中一并导出
 
 ### 巨型文件 / 多职责混居
 
