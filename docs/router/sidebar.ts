@@ -1,126 +1,175 @@
-export interface SidebarItem {
-  text: string
-  link: string
+import type { RouteRecordRaw } from 'vue-router'
+
+/** 分组通用形状：title 为分组标题，children 为分组下的条目 */
+export interface Group<T> {
+  title: string
+  children: T[]
 }
 
-export interface SidebarGroup {
-  text: string
-  items: SidebarItem[]
+/** 导航条目：title 为显示标签，path 为导航路径 */
+export interface NavItem {
+  title: string
+  path: string
 }
 
-export const componentsSidebar: SidebarGroup[] = [
+/** 组件清单项：name 为组件目录名，title 为侧边栏/文档标题 */
+export interface ComponentMeta {
+  name: string
+  title: string
+}
+
+/** 导航分组（侧边栏渲染用） */
+export type NavGroup = Group<NavItem>
+
+/** 组件分组（单一数据源用） */
+export type ComponentGroup = Group<ComponentMeta>
+
+// ============================================================
+// 单一数据源：组件分组清单
+// 新增组件时，只需在对应分组按字母序添加一项 { name, title }，
+// 侧边栏与 demo 路由会自动派生。
+// ============================================================
+export const componentGroups: ComponentGroup[] = [
   {
-    text: '通用',
-    items: [
-      { text: 'Button 按钮', link: '/components/button' },
-      { text: 'FloatButton 悬浮按钮', link: '/components/float-button' },
-      { text: 'Icon 图标', link: '/components/icon' },
-      { text: 'Typography 排版', link: '/components/typography' },
+    title: '通用',
+    children: [
+      { name: 'button', title: 'Button 按钮' },
+      { name: 'float-button', title: 'FloatButton 悬浮按钮' },
+      { name: 'icon', title: 'Icon 图标' },
+      { name: 'typography', title: 'Typography 排版' },
     ],
   },
   {
-    text: '布局',
-    items: [
-      { text: 'Divider 分割线', link: '/components/divider' },
-      { text: 'Flex 弹性布局', link: '/components/flex' },
-      { text: 'Grid 栅格', link: '/components/grid' },
-      { text: 'Layout 布局', link: '/components/layout' },
-      { text: 'Space 间距', link: '/components/space' },
+    title: '布局',
+    children: [
+      { name: 'divider', title: 'Divider 分割线' },
+      { name: 'flex', title: 'Flex 弹性布局' },
+      { name: 'grid', title: 'Grid 栅格' },
+      { name: 'layout', title: 'Layout 布局' },
+      { name: 'space', title: 'Space 间距' },
     ],
   },
   {
-    text: '导航',
-    items: [
-      { text: 'Anchor 锚点', link: '/components/anchor' },
-      { text: 'Breadcrumb 面包屑', link: '/components/breadcrumb' },
-      { text: 'Dropdown 下拉菜单', link: '/components/dropdown' },
-      { text: 'Menu 导航菜单', link: '/components/menu' },
-      { text: 'Pagination 分页', link: '/components/pagination' },
-      { text: 'Steps 步骤条', link: '/components/steps' },
-      { text: 'Tabs 标签页', link: '/components/tabs' },
+    title: '导航',
+    children: [
+      { name: 'anchor', title: 'Anchor 锚点' },
+      { name: 'breadcrumb', title: 'Breadcrumb 面包屑' },
+      { name: 'dropdown', title: 'Dropdown 下拉菜单' },
+      { name: 'menu', title: 'Menu 导航菜单' },
+      { name: 'pagination', title: 'Pagination 分页' },
+      { name: 'steps', title: 'Steps 步骤条' },
+      { name: 'tabs', title: 'Tabs 标签页' },
     ],
   },
   {
-    text: '数据录入',
-    items: [
-      { text: 'AutoComplete 自动完成', link: '/components/auto-complete' },
-      { text: 'Cascader 级联选择', link: '/components/cascader' },
-      { text: 'Checkbox 多选框', link: '/components/checkbox' },
-      { text: 'DatePicker 日期选择框', link: '/components/date-picker' },
-      { text: 'Form 表单', link: '/components/form' },
-      { text: 'Input 输入框', link: '/components/input' },
-      { text: 'InputNumber 数字输入框', link: '/components/input-number' },
-      { text: 'Radio 单选框', link: '/components/radio' },
-      { text: 'RangePicker 日期范围选择', link: '/components/range-picker' },
-      { text: 'Rate 评分', link: '/components/rate' },
-      { text: 'Select 选择器', link: '/components/select' },
-      { text: 'Slider 滑动输入条', link: '/components/slider' },
-      { text: 'Switch 开关', link: '/components/switch' },
-      { text: 'TimePicker 时间选择框', link: '/components/time-picker' },
-      { text: 'Transfer 穿梭框', link: '/components/transfer' },
-      { text: 'TreeSelect 树形选择', link: '/components/tree-select' },
-      { text: 'Upload 上传', link: '/components/upload' },
+    title: '数据录入',
+    children: [
+      { name: 'auto-complete', title: 'AutoComplete 自动完成' },
+      { name: 'cascader', title: 'Cascader 级联选择' },
+      { name: 'checkbox', title: 'Checkbox 多选框' },
+      { name: 'color-picker', title: 'ColorPicker 颜色选择器' },
+      { name: 'date-picker', title: 'DatePicker 日期选择框' },
+      { name: 'form', title: 'Form 表单' },
+      { name: 'input', title: 'Input 输入框' },
+      { name: 'input-number', title: 'InputNumber 数字输入框' },
+      { name: 'radio', title: 'Radio 单选框' },
+      { name: 'range-picker', title: 'RangePicker 日期范围选择' },
+      { name: 'rate', title: 'Rate 评分' },
+      { name: 'select', title: 'Select 选择器' },
+      { name: 'slider', title: 'Slider 滑动输入条' },
+      { name: 'switch', title: 'Switch 开关' },
+      { name: 'time-picker', title: 'TimePicker 时间选择框' },
+      { name: 'transfer', title: 'Transfer 穿梭框' },
+      { name: 'tree-select', title: 'TreeSelect 树形选择' },
+      { name: 'upload', title: 'Upload 上传' },
     ],
   },
   {
-    text: '数据展示',
-    items: [
-      { text: 'Avatar 头像', link: '/components/avatar' },
-      { text: 'Badge 徽标数', link: '/components/badge' },
-      { text: 'Calendar 日历', link: '/components/calendar' },
-      { text: 'Card 卡片', link: '/components/card' },
-      { text: 'Carousel 走马灯', link: '/components/carousel' },
-      { text: 'Collapse 折叠面板', link: '/components/collapse' },
-      { text: 'Descriptions 描述列表', link: '/components/descriptions' },
-      { text: 'Empty 空状态', link: '/components/empty' },
-      { text: 'Image 图片', link: '/components/image' },
-      { text: 'List 列表', link: '/components/list' },
-      { text: 'QRCode 二维码', link: '/components/qrcode' },
-      { text: 'Result 结果', link: '/components/result' },
-      { text: 'Segmented 分段控制器', link: '/components/segmented' },
-      { text: 'Skeleton 骨架屏', link: '/components/skeleton' },
-      { text: 'Statistic 统计数值', link: '/components/statistic' },
-      { text: 'Table 表格', link: '/components/table' },
-      { text: 'Tag 标签', link: '/components/tag' },
-      { text: 'Timeline 时间轴', link: '/components/timeline' },
-      { text: 'Tree 树形控件', link: '/components/tree' },
-      { text: 'Watermark 水印', link: '/components/watermark' },
+    title: '数据展示',
+    children: [
+      { name: 'avatar', title: 'Avatar 头像' },
+      { name: 'badge', title: 'Badge 徽标数' },
+      { name: 'calendar', title: 'Calendar 日历' },
+      { name: 'card', title: 'Card 卡片' },
+      { name: 'carousel', title: 'Carousel 走马灯' },
+      { name: 'collapse', title: 'Collapse 折叠面板' },
+      { name: 'descriptions', title: 'Descriptions 描述列表' },
+      { name: 'empty', title: 'Empty 空状态' },
+      { name: 'image', title: 'Image 图片' },
+      { name: 'list', title: 'List 列表' },
+      { name: 'qrcode', title: 'QRCode 二维码' },
+      { name: 'result', title: 'Result 结果' },
+      { name: 'segmented', title: 'Segmented 分段控制器' },
+      { name: 'skeleton', title: 'Skeleton 骨架屏' },
+      { name: 'statistic', title: 'Statistic 统计数值' },
+      { name: 'table', title: 'Table 表格' },
+      { name: 'tag', title: 'Tag 标签' },
+      { name: 'timeline', title: 'Timeline 时间轴' },
+      { name: 'tree', title: 'Tree 树形控件' },
+      { name: 'watermark', title: 'Watermark 水印' },
     ],
   },
   {
-    text: '反馈',
-    items: [
-      { text: 'Alert 警告提示', link: '/components/alert' },
-      { text: 'Drawer 抽屉', link: '/components/drawer' },
-      { text: 'FloatButton 悬浮按钮', link: '/components/float-button' },
-      { text: 'Message 全局提示', link: '/components/message' },
-      { text: 'Modal 对话框', link: '/components/modal' },
-      { text: 'Notification 通知提醒框', link: '/components/notification' },
-      { text: 'Popconfirm 气泡确认框', link: '/components/popconfirm' },
-      { text: 'Popover 气泡卡片', link: '/components/popover' },
-      { text: 'Progress 进度条', link: '/components/progress' },
-      { text: 'Spin 加载中', link: '/components/spin' },
-      { text: 'Tooltip 文字提示', link: '/components/tooltip' },
+    title: '反馈',
+    children: [
+      { name: 'alert', title: 'Alert 警告提示' },
+      { name: 'drawer', title: 'Drawer 抽屉' },
+      { name: 'float-button', title: 'FloatButton 悬浮按钮' },
+      { name: 'message', title: 'Message 全局提示' },
+      { name: 'modal', title: 'Modal 对话框' },
+      { name: 'notification', title: 'Notification 通知提醒框' },
+      { name: 'popconfirm', title: 'Popconfirm 气泡确认框' },
+      { name: 'popover', title: 'Popover 气泡卡片' },
+      { name: 'progress', title: 'Progress 进度条' },
+      { name: 'spin', title: 'Spin 加载中' },
+      { name: 'tooltip', title: 'Tooltip 文字提示' },
     ],
   },
   {
-    text: '其他',
-    items: [
-      { text: 'App 包裹组件', link: '/components/app' },
-      { text: 'ConfigProvider 全局配置', link: '/components/config-provider' },
-      { text: 'Tour 漫游引导', link: '/components/tour' },
+    title: '其他',
+    children: [
+      { name: 'app', title: 'App 包裹组件' },
+      { name: 'config-provider', title: 'ConfigProvider 全局配置' },
+      { name: 'tour', title: 'Tour 漫游引导' },
     ],
   },
 ]
+// 预加载所有组件 demo 的 markdown（懒加载）
+const demoModules = import.meta.glob('../../components/*/demos/*.md')
 
-export const guideSidebar: SidebarGroup[] = [
+/** 由 componentGroups 派生的组件侧边栏 */
+export const componentsSidebar: NavGroup[] = componentGroups.map((group) => ({
+  title: group.title,
+  children: group.children.map((item) => ({
+    title: item.title,
+    path: `/components/${item.name}`,
+  })),
+}))
+
+/** 由 componentGroups 派生的组件 demo 路由（按组件名去重） */
+export const demoRoutes: RouteRecordRaw[] = Array.from(
+  new Map(componentGroups.flatMap((group) => group.children).map((item) => [item.name, item] as const)).values(),
+).map((item) => {
+  const component = demoModules[`../../components/${item.name}/demos/${item.name}.md`]
+  if (!component) {
+    throw new Error(`未找到组件 demo 文件：components/${item.name}/demos/${item.name}.md`)
+  }
+  return {
+    path: `/components/${item.name}`,
+    component,
+    meta: { title: item.title },
+  }
+})
+
+/** 指南侧边栏（无组件派生，直接维护） */
+export const guideSidebar: NavGroup[] = [
   {
-    text: '指南',
-    items: [
-      { text: '快速上手', link: '/guide/getting-started' },
-      { text: '主题定制', link: '/guide/theming' },
-      { text: '国际化', link: '/guide/i18n' },
-      { text: '更新日志', link: '/guide/changelog' },
+    title: '指南',
+    children: [
+      { title: '快速上手', path: '/guide/getting-started' },
+      { title: '主题定制', path: '/guide/theming' },
+      { title: '国际化', path: '/guide/i18n' },
+      { title: '更新日志', path: '/guide/changelog' },
     ],
   },
 ]

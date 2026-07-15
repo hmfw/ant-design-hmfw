@@ -1,12 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '../views/AppLayout.vue'
 import HomePage from '../views/HomePage.vue'
-import { demoRoutes } from './demo-routes.gen'
-
-const componentRoutes = Object.entries(demoRoutes).map(([name, component]) => ({
-  path: `components/${name}`,
-  component,
-}))
+import { demoRoutes } from './sidebar'
 
 export const router = createRouter({
   history: createWebHistory('/ant-design-hmfw/'),
@@ -20,13 +15,13 @@ export const router = createRouter({
       component: AppLayout,
       children: [
         {
-          path: 'guide/getting-started',
+          path: '/guide/getting-started',
           component: () => import('../views/GettingStarted.vue'),
         },
-        { path: 'guide/theming', component: () => import('../views/Theming.vue') },
-        { path: 'guide/i18n', component: () => import('../views/I18n.vue') },
-        { path: 'guide/changelog', component: () => import('../../CHANGELOG.md') },
-        ...componentRoutes,
+        { path: '/guide/theming', component: () => import('../views/Theming.vue') },
+        { path: '/guide/i18n', component: () => import('../views/I18n.vue') },
+        { path: '/guide/changelog', component: () => import('../../CHANGELOG.md') },
+        ...demoRoutes,
       ],
     },
     { path: '/:pathMatch(.*)*', redirect: '/' },
@@ -34,6 +29,13 @@ export const router = createRouter({
   scrollBehavior() {
     return { top: 0 }
   },
+})
+
+// 根据路由 meta.title 更新文档标题
+const BASE_TITLE = '@hmfw/ant-design'
+router.afterEach((to) => {
+  const title = to.meta.title as string | undefined
+  document.title = title ? `${title} - ${BASE_TITLE}` : BASE_TITLE
 })
 
 // 恢复从 404.html 重定向过来的路径

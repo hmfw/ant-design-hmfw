@@ -153,8 +153,7 @@ export default defineComponent({
 4. **添加文档**:
    - `components/my-component/demos/my-component.md` - 组件文档
    - `components/my-component/demos/MyComponentBasic.vue` - demo 文件
-   - `docs/router/sidebar.ts` - 添加侧边栏条目
-   - 运行 `pnpm gen:demo-routes` 更新路由
+   - `docs/router/sidebar.ts` - 在 `componentGroups` 对应分组按字母序添加一项 `{ name: 'my-component', title: 'MyComponent 我的组件' }`（侧边栏与 demo 路由会自动派生，无需另改路由）
 5. **编写测试**: 单元测试（必需）+ E2E 测试（可选）
 
 ## 测试
