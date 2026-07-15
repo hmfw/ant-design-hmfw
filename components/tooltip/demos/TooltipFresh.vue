@@ -1,33 +1,28 @@
 <template>
   <div class="demo-fresh">
-    <p>fresh 属性用于强制重新计算浮层位置，适用于触发元素位置动态变化的场景。</p>
+    <p>fresh 属性用于强制重新计算浮层位置，trackPosition 属性用于持续跟踪触发元素位置变化。</p>
     <div class="moving-container" :style="{ marginLeft: offset + 'px' }">
-      <Tooltip title="我会跟随按钮移动" :fresh="fresh">
-        <Button>悬停查看提示</Button>
+      <Tooltip :open="open" title="我会跟随按钮移动" trigger="click" track-position>
+        <Button>点击查看提示</Button>
       </Tooltip>
     </div>
-    <Button style="margin-top: 20px" @click="moveButton">移动按钮</Button>
+    <Button style="margin-left: 20px" @click="moveButton">移动按钮</Button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { Tooltip, Button } from '@hmfw/ant-design'
 
-const offset = ref(0)
-const fresh = ref(0)
+const offset = shallowRef(0)
+const open = shallowRef(true)
 
 const moveButton = () => {
   offset.value = offset.value === 0 ? 100 : 0
-  // 触发 fresh 变化，强制重新计算位置
-  fresh.value++
 }
 </script>
 
 <style scoped>
-.demo-fresh {
-  padding: 20px;
-}
 .moving-container {
   transition: margin-left 0.3s;
   display: inline-block;

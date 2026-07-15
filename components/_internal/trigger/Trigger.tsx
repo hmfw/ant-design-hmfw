@@ -49,6 +49,8 @@ const triggerProps = {
   observePopupResize: { type: Boolean, default: false },
   /** 变化时强制重新定位（Tooltip 的 fresh）。 */
   fresh: { type: [Boolean, Number] as PropType<boolean | number>, default: undefined },
+  /** 持续跟踪触发元素位置变化，每帧自动重新定位（适用于触发元素有动画/过渡的场景）。 */
+  trackPosition: { type: Boolean, default: false },
   /** 触发器外层 wrapper 的 display，默认 inline-block。 */
   triggerDisplay: { type: String, default: 'inline-block' },
   /**
@@ -90,6 +92,7 @@ export const Trigger = defineComponent({
       const t = props.trigger
       return Array.isArray(t) ? t : [t]
     })
+    let positionTrackingFrame: number | null = null
 
     // ================================================================
     // 2. Props → 内部状态同步
@@ -156,10 +159,35 @@ export const Trigger = defineComponent({
         if (props.observePopupResize && resizeObserver && popupRef.value) {
           resizeObserver.observe(popupRef.value)
         }
+        // 启动持续位置跟踪循环（仅在 trackPosition 为 true 时）
+        if (props.trackPosition) {
+          startPositionTracking()
+        }
       } else {
         if (resizeObserver) resizeObserver.disconnect()
+        // 停止位置跟踪
+        stopPositionTracking()
       }
     })
+
+    // 持续位置跟踪：弹层可见时每帧检查并更新位置
+    const startPositionTracking = () => {
+      stopPositionTracking() // 先清理旧循环
+      const trackLoop = () => {
+        if (visible.value) {
+          updatePosition()
+          positionTrackingFrame = requestAnimationFrame(trackLoop)
+        }
+      }
+      positionTrackingFrame = requestAnimationFrame(trackLoop)
+    }
+
+    const stopPositionTracking = () => {
+      if (positionTrackingFrame !== null) {
+        cancelAnimationFrame(positionTrackingFrame)
+        positionTrackingFrame = null
+      }
+    }
 
     // fresh 变化时强制重新定位
     watch(
@@ -178,6 +206,18 @@ export const Trigger = defineComponent({
           resizeObserver.observe(popupRef.value)
         } else if (!v) {
           resizeObserver.disconnect()
+        }
+      },
+    )
+
+    // trackPosition 动态变更时同步位置跟踪状态
+    watch(
+      () => props.trackPosition,
+      (v) => {
+        if (v && visible.value) {
+          startPositionTracking()
+        } else if (!v) {
+          stopPositionTracking()
         }
       },
     )
@@ -265,7 +305,13 @@ export const Trigger = defineComponent({
 
       // defaultOpen 或 open 为 true 时，弹层初始即可见，需在挂载后立即计算位置
       if (visible.value) {
-        nextTick(() => updatePosition())
+        nextTick(() => {
+          updatePosition()
+          // 如果启用了 trackPosition，启动位置跟踪
+          if (props.trackPosition) {
+            startPositionTracking()
+          }
+        })
       }
     })
 
@@ -274,6 +320,7 @@ export const Trigger = defineComponent({
       if (enterTimer) clearTimeout(enterTimer)
       if (leaveTimer) clearTimeout(leaveTimer)
       if (resizeObserver) resizeObserver.disconnect()
+      stopPositionTracking()
     })
 
     // ================================================================

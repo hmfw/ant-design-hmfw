@@ -53,6 +53,8 @@ const tooltipProps = {
     default: undefined,
   },
   fresh: { type: [Boolean, Number] as PropType<boolean | number>, default: undefined },
+  /** 持续跟踪触发元素位置变化，每帧自动重新定位（适用于触发元素有动画/过渡的场景）。 */
+  trackPosition: { type: Boolean, default: false },
   /** Override the default `hmfw-tooltip` prefix (used by Popover/Popconfirm wrappers). */
   customPrefixCls: { type: String, default: undefined },
   /** 触发器外层 wrapper 的 display，默认 inline-block。用于不破坏宿主布局（如菜单项可设为 `contents`）。 */
@@ -164,6 +166,7 @@ export const Tooltip = defineComponent({
           zIndex={props.zIndex ?? 1070}
           observePopupResize
           fresh={props.fresh}
+          trackPosition={props.trackPosition}
           triggerDisplay={props.triggerDisplay}
           popupClass={popupClass.value}
           popupStyle={popupStyleMerged}

@@ -81,6 +81,8 @@ export interface TooltipProps {
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
   /** 强制重新计算位置的标记，当该值变化时触发位置更新（适用于触发元素位置动态变化的场景）。 */
   fresh?: boolean | number
+  /** 持续跟踪触发元素位置变化，每帧自动重新定位（适用于触发元素有动画/过渡的场景）。 */
+  trackPosition?: boolean
   /** 触发器外层 wrapper 的 display，默认 inline-block。用于不破坏宿主布局（如菜单项可设为 `contents`）。 */
   triggerDisplay?: string
   /** @internal 覆盖默认的 `hmfw-tooltip` 前缀（供 Popover/Popconfirm 等封装组件复用）。 */
