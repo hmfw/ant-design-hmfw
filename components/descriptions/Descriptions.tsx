@@ -1,4 +1,13 @@
-import { defineComponent, computed, ref, onMounted, onUnmounted, type PropType, type VNode } from 'vue'
+import {
+  defineComponent,
+  computed,
+  ref,
+  onMounted,
+  onUnmounted,
+  type PropType,
+  type VNode,
+  type CSSProperties,
+} from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls, debounce } from '../_utils'
 import type { DescriptionsItemProps, Breakpoint } from './types'
@@ -50,7 +59,7 @@ function useBreakpoint() {
 
   // 返回响应式的断点状态
   return computed(() => ({
-    xs: windowWidth.value >= 0,
+    xs: true, // xs 永远激活（mobile-first）
     sm: windowWidth.value >= 576,
     md: windowWidth.value >= 768,
     lg: windowWidth.value >= 992,
@@ -59,7 +68,17 @@ function useBreakpoint() {
   }))
 }
 
-// Match screen breakpoints (mobile-first cascade)
+/**
+ * 匹配当前屏幕断点配置（desktop-first 策略）
+ *
+ * 从大屏到小屏查找第一个匹配的断点配置。
+ * 例如：屏幕宽度 1400px 同时激活 xxl/xl/lg/md/sm/xs，
+ * 但返回 xxl 的配置（最具体的匹配）。
+ *
+ * @param screens - 当前激活的断点集合
+ * @param map - 断点到值的映射
+ * @returns 匹配的值，未找到返回 undefined
+ */
 function matchScreen<T>(
   screens: Partial<Record<Breakpoint, boolean>>,
   map?: Partial<Record<Breakpoint, T>>,
@@ -74,28 +93,30 @@ function matchScreen<T>(
   return undefined
 }
 
+const descriptionsProps = {
+  title: { type: [String, Object] as PropType<string | VNode>, default: undefined },
+  extra: { type: [String, Object] as PropType<string | VNode>, default: undefined },
+  bordered: { type: Boolean, default: false },
+  column: {
+    type: [Number, Object] as PropType<number | Partial<Record<Breakpoint, number>>>,
+    default: 3,
+  },
+  size: {
+    type: String as PropType<'default' | 'middle' | 'small' | 'medium'>,
+    default: 'default',
+  },
+  layout: { type: String as PropType<'horizontal' | 'vertical'>, default: 'horizontal' },
+  colon: { type: Boolean, default: true },
+  items: { type: Array as PropType<DescriptionsItemProps[]>, default: undefined },
+  labelStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  contentStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  classNames: { type: Object as PropType<import('./types').DescriptionsClassNames>, default: undefined },
+  styles: { type: Object as PropType<import('./types').DescriptionsStyles>, default: undefined },
+} satisfies Record<keyof import('./types').DescriptionsProps, any>
+
 export const Descriptions = defineComponent({
   name: 'Descriptions',
-  props: {
-    title: [String, Object],
-    extra: [String, Object],
-    bordered: Boolean,
-    column: {
-      type: [Number, Object] as PropType<number | Partial<Record<Breakpoint, number>>>,
-      default: 3,
-    },
-    size: {
-      type: String as PropType<'default' | 'middle' | 'small' | 'medium'>,
-      default: 'default',
-    },
-    layout: { type: String as PropType<'horizontal' | 'vertical'>, default: 'horizontal' },
-    colon: { type: Boolean, default: true },
-    items: Array as PropType<DescriptionsItemProps[]>,
-    labelStyle: Object,
-    contentStyle: Object,
-    classNames: Object as PropType<import('./types').DescriptionsClassNames>,
-    styles: Object as PropType<import('./types').DescriptionsStyles>,
-  },
+  props: descriptionsProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('descriptions')
     const config = useConfig()
@@ -106,10 +127,14 @@ export const Descriptions = defineComponent({
     // Compute responsive column count
     const mergedColumn = computed(() => {
       const screens = breakpointStates.value
+      let col: number
       if (typeof props.column === 'number') {
-        return props.column
+        col = props.column
+      } else {
+        col = matchScreen(screens, props.column) ?? matchScreen(screens, DEFAULT_COLUMN_MAP) ?? 3
       }
-      return matchScreen(screens, props.column) ?? matchScreen(screens, DEFAULT_COLUMN_MAP) ?? 3
+      // 防御：确保列数至少为 1
+      return Math.max(1, col)
     })
 
     // Convert children to items (support both items prop and slot children)
@@ -123,7 +148,10 @@ export const Descriptions = defineComponent({
       // Extract from slot children (Descriptions.Item components)
       const children = slots.default?.() || []
       return children
-        .filter((vnode: VNode) => vnode.type && typeof vnode.type === 'object')
+        .filter((vnode: VNode) => {
+          // 保留组件 VNode，排除文本节点和注释节点
+          return vnode.type && (typeof vnode.type === 'object' || typeof vnode.type === 'function')
+        })
         .map((vnode: VNode, index: number) => ({
           ...(vnode.props || {}),
           children: vnode.children,
@@ -154,8 +182,8 @@ export const Descriptions = defineComponent({
       let currentSpan = 0
 
       for (const item of items) {
+        // 处理 filled 项：填充剩余列并强制换行
         if (item.filled) {
-          // filled: fill remaining columns in current row, then start new row
           const remainingSpan = column - currentSpan
           currentRow.push({ ...item, computedSpan: remainingSpan })
           result.push(currentRow)
@@ -167,15 +195,15 @@ export const Descriptions = defineComponent({
         const span = item.computedSpan ?? 1
         const restSpan = column - currentSpan
 
+        // 当前行已满且有内容时，推入结果并开始新行
         if (currentSpan + span > column && currentRow.length > 0) {
-          // Exceed column, push current row and start new
           result.push(currentRow)
           currentRow = []
           currentSpan = 0
         }
 
+        // 处理超宽项：限制为剩余空间
         if (currentSpan + span > column) {
-          // Item span exceeds remaining space, clamp it
           currentRow.push({ ...item, computedSpan: restSpan })
           currentSpan = column
         } else {
@@ -183,6 +211,7 @@ export const Descriptions = defineComponent({
           currentSpan += span
         }
 
+        // 当前行已满，推入结果
         if (currentSpan >= column) {
           result.push(currentRow)
           currentRow = []
@@ -190,11 +219,12 @@ export const Descriptions = defineComponent({
         }
       }
 
+      // 保留未满的最后一行
       if (currentRow.length > 0) {
         result.push(currentRow)
       }
 
-      // Auto-fill last item span to fill row
+      // 自动扩展最后一项填满行
       return result.map((row) => {
         const totalSpan = row.reduce((sum, item) => sum + (item.computedSpan ?? 1), 0)
         if (totalSpan < column && row.length > 0) {
@@ -217,12 +247,22 @@ export const Descriptions = defineComponent({
 
       const renderLabel = (item: InternalDescriptionsItem) => {
         const mergedLabelStyle = { ...props.labelStyle, ...item.labelStyle }
-        return <span style={mergedLabelStyle}>{item.label}</span>
+        const hasStyle = Object.keys(mergedLabelStyle).length > 0
+        // 仅在需要应用样式时才包裹 span
+        if (hasStyle) {
+          return <span style={mergedLabelStyle}>{item.label}</span>
+        }
+        return item.label
       }
 
       const renderContent = (item: InternalDescriptionsItem) => {
         const mergedContentStyle = { ...props.contentStyle, ...item.contentStyle }
-        return <span style={mergedContentStyle}>{item.children as any}</span>
+        const hasStyle = Object.keys(mergedContentStyle).length > 0
+        // 仅在需要应用样式时才包裹 span
+        if (hasStyle) {
+          return <span style={mergedContentStyle}>{item.children as any}</span>
+        }
+        return item.children as any
       }
 
       return (
