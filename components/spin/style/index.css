@@ -2,7 +2,7 @@
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--hmfw-margin-xs);
 }
 
 .hmfw-spin-dot-holder {
@@ -159,11 +159,11 @@
 .hmfw-spin-fullscreen {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: var(--hmfw-z-index-popup);
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--hmfw-color-bg-mask);
 }
 
 .hmfw-spin-fullscreen-show {
@@ -171,9 +171,9 @@
 }
 
 .hmfw-spin-fullscreen .hmfw-spin-dot-item {
-  background: #fff;
+  background: var(--hmfw-color-white);
 }
 
 .hmfw-spin-fullscreen .hmfw-spin-description {
-  color: #fff;
+  color: var(--hmfw-color-white);
 }

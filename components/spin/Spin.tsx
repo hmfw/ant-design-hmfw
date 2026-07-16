@@ -1,7 +1,7 @@
 import { defineComponent, ref, watch, onBeforeUnmount, onMounted, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { SpinClassNames, SpinStyles } from './types'
+import type { SpinClassNames, SpinStyles, SpinProps } from './types'
 import type { ComponentSize } from '../config-provider'
 
 // percent='auto' 时模拟递增的参数（与 AntD v6 usePercent 对齐）
@@ -12,21 +12,24 @@ const STEP_BUCKETS: [limit: number, stepPtg: number][] = [
   [96, 0.01],
 ]
 
+// 用 satisfies 强制 props 的 key 集合与 SpinProps 接口完全一致，杜绝双源头漂移
+const spinProps = {
+  spinning: { type: Boolean, default: true },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
+  tip: { type: String, default: undefined },
+  // description 为 tip 的新名（与 AntD v6 对齐）
+  description: { type: String, default: undefined },
+  delay: { type: Number, default: 0 },
+  fullscreen: { type: Boolean, default: false },
+  // percent：number 受控 / 'auto' 自动模拟递增（与 AntD v6 对齐）
+  percent: { type: [Number, String] as PropType<number | 'auto'>, default: undefined },
+  classNames: { type: Object as PropType<SpinClassNames>, default: undefined },
+  styles: { type: Object as PropType<SpinStyles>, default: undefined },
+} satisfies Record<keyof SpinProps, any>
+
 export const Spin = defineComponent({
   name: 'Spin',
-  props: {
-    spinning: { type: Boolean, default: true },
-    size: { type: String as PropType<ComponentSize>, default: 'middle' },
-    tip: String,
-    // description 为 tip 的新名（与 AntD v6 对齐）
-    description: String,
-    delay: { type: Number, default: 0 },
-    fullscreen: Boolean,
-    // percent：number 受控 / 'auto' 自动模拟递增（与 AntD v6 对齐）
-    percent: { type: [Number, String] as PropType<number | 'auto'>, default: undefined },
-    classNames: Object as PropType<SpinClassNames>,
-    styles: Object as PropType<SpinStyles>,
-  },
+  props: spinProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('spin')
 

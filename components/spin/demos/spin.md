@@ -40,6 +40,22 @@
   <SpinDelay />
 </DemoBlock>
 
+### 自定义指示符
+
+使用 `indicator` 插槽自定义加载指示符，例如替换为旋转的图标。
+
+<DemoBlock title="自定义指示符" :source="SpinIndicatorSource">
+  <SpinIndicator />
+</DemoBlock>
+
+### 全屏加载
+
+使用 `fullscreen` 展示覆盖整个视口的加载遮罩，适合页面级异步操作。
+
+<DemoBlock title="全屏加载" :source="SpinFullscreenSource">
+  <SpinFullscreen />
+</DemoBlock>
+
 ### 进度
 
 通过 `percent` 展示环形进度指示器。传入 `number` 为受控进度，传入 `'auto'` 时在 `spinning` 期间自动模拟递增。
@@ -60,15 +76,17 @@
 
 ### Spin Props
 
-| 参数       | 说明                                                                             | 类型                              | 默认值      |
-| ---------- | -------------------------------------------------------------------------------- | --------------------------------- | ----------- |
-| spinning   | 是否为加载中状态                                                                 | `boolean`                         | `true`      |
-| size       | 组件大小                                                                         | `'small' \| 'default' \| 'large'` | `'default'` |
-| tip        | 当作为包裹元素时，可以自定义描述文案                                             | `string`                          | -           |
-| delay      | 延迟显示加载效果的时间（防止闪烁），单位：毫秒                                   | `number`                          | -           |
-| percent    | 进度百分比；为 `'auto'` 时在 `spinning` 期间自动模拟递增                         | `number \| 'auto'`                | -           |
-| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpinClassNames`                  | -           |
-| styles     | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpinStyles`                      | -           |
+| 参数        | 说明                                                                             | 类型                             | 默认值     |
+| ----------- | -------------------------------------------------------------------------------- | -------------------------------- | ---------- |
+| spinning    | 是否为加载中状态                                                                 | `boolean`                        | `true`     |
+| size        | 组件大小                                                                         | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| tip         | 当作为包裹元素时，可以自定义描述文案                                             | `string`                         | -          |
+| description | tip 的新名（与 AntD v6 对齐），优先级高于 tip                                    | `string`                         | -          |
+| delay       | 延迟显示加载效果的时间（防止闪烁），单位：毫秒                                   | `number`                         | `0`        |
+| fullscreen  | 是否为全屏加载，展示背景遮罩覆盖整个视口                                         | `boolean`                        | `false`    |
+| percent     | 进度百分比；为 `'auto'` 时在 `spinning` 期间自动模拟递增                         | `number \| 'auto'`               | -          |
+| classNames  | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpinClassNames`                 | -          |
+| styles      | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpinStyles`                     | -          |
 
 ### Spin Slots
 
