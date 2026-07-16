@@ -7,8 +7,8 @@
         :items="basicItems"
         :class-names="{
           root: 'custom-timeline-root',
-          tail: 'custom-tail',
-          dot: 'custom-dot',
+          itemRail: 'custom-tail',
+          itemIcon: 'custom-dot',
         }"
       />
     </div>
@@ -20,8 +20,8 @@
         mode="alternate"
         :items="labeledItems"
         :class-names="{
-          label: 'custom-label',
-          content: 'custom-content',
+          itemTitle: 'custom-label',
+          itemContent: 'custom-content',
         }"
       />
     </div>
@@ -33,8 +33,8 @@
         :items="colorItems"
         :styles="{
           root: { padding: '16px', backgroundColor: '#f0f5ff', borderRadius: '8px' },
-          dot: { transform: 'scale(1.2)' },
-          content: { fontSize: '15px', fontWeight: 500 },
+          itemIcon: { transform: 'scale(1.2)' },
+          itemContent: { fontSize: '15px', fontWeight: 500 },
         }"
       />
     </div>
@@ -48,10 +48,10 @@
         :class-names="{
           root: 'timeline-fancy',
           item: 'timeline-fancy-item',
-          label: 'timeline-fancy-label',
-          tail: 'timeline-fancy-tail',
-          dot: 'timeline-fancy-dot',
-          content: 'timeline-fancy-content',
+          itemTitle: 'timeline-fancy-label',
+          itemRail: 'timeline-fancy-tail',
+          itemIcon: 'timeline-fancy-dot',
+          itemContent: 'timeline-fancy-content',
         }"
       />
     </div>
@@ -64,8 +64,8 @@
         :items="horizontalItems"
         :class-names="{
           root: 'horizontal-timeline',
-          dot: 'horizontal-dot',
-          content: 'horizontal-content',
+          itemIcon: 'horizontal-dot',
+          itemContent: 'horizontal-content',
         }"
       />
     </div>

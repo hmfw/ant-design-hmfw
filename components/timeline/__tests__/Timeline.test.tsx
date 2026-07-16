@@ -29,16 +29,16 @@ describe('Timeline', () => {
 
   it('renders color classes', () => {
     const wrapper = mount(Timeline, { props: { items } })
-    const heads = wrapper.findAll('.hmfw-timeline-item-head')
-    expect(heads[0].classes()).toContain('hmfw-timeline-item-head-blue')
-    expect(heads[1].classes()).toContain('hmfw-timeline-item-head-green')
-    expect(heads[2].classes()).toContain('hmfw-timeline-item-head-red')
+    const icons = wrapper.findAll('.hmfw-timeline-item-icon')
+    expect(icons[0].classes()).toContain('hmfw-timeline-item-color-blue')
+    expect(icons[1].classes()).toContain('hmfw-timeline-item-color-green')
+    expect(icons[2].classes()).toContain('hmfw-timeline-item-color-red')
   })
 
   it('renders title', () => {
     const titleItems = [{ title: '2024-01-01', content: 'Event' }]
     const wrapper = mount(Timeline, { props: { items: titleItems } })
-    expect(wrapper.find('.hmfw-timeline-item-label').text()).toBe('2024-01-01')
+    expect(wrapper.find('.hmfw-timeline-item-title').text()).toBe('2024-01-01')
   })
 
   it('applies reverse class and reverses items', () => {
@@ -48,26 +48,30 @@ describe('Timeline', () => {
     expect(contents[0].text()).toBe('Event 3')
   })
 
-  it('applies alternate mode class', () => {
+  it('applies alternate layout class', () => {
     const wrapper = mount(Timeline, { props: { items, mode: 'alternate' } })
-    expect(wrapper.classes()).toContain('hmfw-timeline-alternate')
+    expect(wrapper.classes()).toContain('hmfw-timeline-layout-alternate')
   })
 
-  it('applies end mode class', () => {
+  it('applies placement-end to all items in end mode', () => {
     const wrapper = mount(Timeline, { props: { items, mode: 'end' } })
-    expect(wrapper.classes()).toContain('hmfw-timeline-end')
+    const itemsEl = wrapper.findAll('.hmfw-timeline-item')
+    itemsEl.forEach((el) => {
+      expect(el.classes()).toContain('hmfw-timeline-item-placement-end')
+    })
   })
 
-  it('normalizes left mode to start', () => {
+  it('normalizes left mode to start (placement-start)', () => {
     const wrapper = mount(Timeline, { props: { items, mode: 'left' } })
-    // left → start, and start is the default, so no class added
-    expect(wrapper.classes()).not.toContain('hmfw-timeline-left')
-    expect(wrapper.classes()).not.toContain('hmfw-timeline-start')
+    const itemsEl = wrapper.findAll('.hmfw-timeline-item')
+    expect(itemsEl[0].classes()).toContain('hmfw-timeline-item-placement-start')
+    expect(itemsEl[0].classes()).not.toContain('hmfw-timeline-item-placement-end')
   })
 
-  it('normalizes right mode to end', () => {
+  it('normalizes right mode to end (placement-end)', () => {
     const wrapper = mount(Timeline, { props: { items, mode: 'right' } })
-    expect(wrapper.classes()).toContain('hmfw-timeline-end')
+    const itemsEl = wrapper.findAll('.hmfw-timeline-item')
+    expect(itemsEl[0].classes()).toContain('hmfw-timeline-item-placement-end')
   })
 
   it('applies horizontal orientation class', () => {
@@ -83,8 +87,8 @@ describe('Timeline', () => {
   it('renders custom color with inline style', () => {
     const customItems = [{ content: 'Event', color: '#ff00ff' }]
     const wrapper = mount(Timeline, { props: { items: customItems } })
-    const head = wrapper.find('.hmfw-timeline-item-head')
-    const style = head.attributes('style') || ''
+    const icon = wrapper.find('.hmfw-timeline-item-icon')
+    const style = icon.attributes('style') || ''
     // Browser converts hex to rgb, so check for rgb(255, 0, 255)
     expect(style).toMatch(/rgb\(255,\s*0,\s*255\)|#ff00ff/)
   })
@@ -103,8 +107,8 @@ describe('Timeline', () => {
     ]
     const wrapper = mount(Timeline, { props: { items: placementItems } })
     const itemsEl = wrapper.findAll('.hmfw-timeline-item')
-    expect(itemsEl[0].classes()).not.toContain('hmfw-timeline-item-end')
-    expect(itemsEl[1].classes()).toContain('hmfw-timeline-item-end')
+    expect(itemsEl[0].classes()).toContain('hmfw-timeline-item-placement-start')
+    expect(itemsEl[1].classes()).toContain('hmfw-timeline-item-placement-end')
   })
 
   it('renders Timeline.Item children', () => {

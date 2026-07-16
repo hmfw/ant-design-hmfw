@@ -25,12 +25,36 @@
   <TimelineAlternate />
 </DemoBlock>
 
+### 布局模式
+
+通过 `mode` 控制节点位置：`start`（默认左侧）、`end`（右侧）、`alternate`（交替）。
+
+<DemoBlock title="布局模式" :source="TimelineModeSource">
+  <TimelineMode />
+</DemoBlock>
+
+### 组件式用法
+
+除 `items` 数组外，也可使用 `Timeline.Item` 子组件形式声明节点。
+
+<DemoBlock title="组件式用法" :source="TimelineSlotSource">
+  <TimelineSlot />
+</DemoBlock>
+
 ### 自定义颜色
 
 可以设置为 red、green、blue、gray，或者自定义颜色。
 
 <DemoBlock title="自定义颜色" :source="TimelineCustomColorSource">
   <TimelineCustomColor />
+</DemoBlock>
+
+### 自定义图标
+
+通过 `icon` 属性为每个节点设置自定义图标。
+
+<DemoBlock title="自定义图标" :source="TimelineCustomIconSource">
+  <TimelineCustomIcon />
 </DemoBlock>
 
 ### 等待中
@@ -63,6 +87,22 @@
 
 <DemoBlock title="水平布局" :source="TimelineHorizontalSource">
   <TimelineHorizontal />
+</DemoBlock>
+
+### 倒序展示
+
+设置 `reverse` 属性倒序排列节点（最新事件在顶部）。
+
+<DemoBlock title="倒序展示" :source="TimelineReverseSource">
+  <TimelineReverse />
+</DemoBlock>
+
+### 标题宽度
+
+通过 `titleSpan` 自定义标题区域宽度，支持数值（px）与字符串（如百分比）。
+
+<DemoBlock title="标题宽度" :source="TimelineTitleSpanSource">
+  <TimelineTitleSpan />
 </DemoBlock>
 
 ### 细粒度样式控制
@@ -116,19 +156,19 @@ import type { CSSProperties } from 'vue'
 interface TimelineClassNames {
   root?: string // 时间轴根容器 ul.hmfw-timeline
   item?: string // 时间轴项 li.hmfw-timeline-item
-  label?: string // 标题/标签 div.hmfw-timeline-item-label
-  tail?: string // 连接线 div.hmfw-timeline-item-tail
-  dot?: string // 时间节点/圆点 div.hmfw-timeline-item-head
-  content?: string // 内容区域 div.hmfw-timeline-item-content
+  itemTitle?: string // 节点标题 div.hmfw-timeline-item-title
+  itemRail?: string // 连接线 div.hmfw-timeline-item-rail
+  itemIcon?: string // 节点图标/圆点 div.hmfw-timeline-item-icon
+  itemContent?: string // 节点内容 div.hmfw-timeline-item-content
 }
 
 interface TimelineStyles {
   root?: CSSProperties
   item?: CSSProperties
-  label?: CSSProperties
-  tail?: CSSProperties
-  dot?: CSSProperties
-  content?: CSSProperties
+  itemTitle?: CSSProperties
+  itemRail?: CSSProperties
+  itemIcon?: CSSProperties
+  itemContent?: CSSProperties
 }
 ```
 
@@ -137,21 +177,21 @@ interface TimelineStyles {
 ```html
 <ul class="hmfw-timeline">
   <!-- ↑ classNames.root / styles.root 应用于此 -->
-  <li class="hmfw-timeline-item">
+  <li class="hmfw-timeline-item hmfw-timeline-item-placement-start">
     <!-- ↑ classNames.item / styles.item 应用于此 -->
-    <div class="hmfw-timeline-item-label">
-      <!-- ↑ classNames.label / styles.label 应用于此 -->
+    <div class="hmfw-timeline-item-title">
+      <!-- ↑ classNames.itemTitle / styles.itemTitle 应用于此 -->
       标题
     </div>
-    <div class="hmfw-timeline-item-tail">
-      <!-- ↑ classNames.tail / styles.tail 应用于此 -->
+    <div class="hmfw-timeline-item-rail">
+      <!-- ↑ classNames.itemRail / styles.itemRail 应用于此 -->
     </div>
-    <div class="hmfw-timeline-item-head">
-      <!-- ↑ classNames.dot / styles.dot 应用于此 -->
+    <div class="hmfw-timeline-item-icon hmfw-timeline-item-color-blue">
+      <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
       节点图标
     </div>
     <div class="hmfw-timeline-item-content">
-      <!-- ↑ classNames.content / styles.content 应用于此 -->
+      <!-- ↑ classNames.itemContent / styles.itemContent 应用于此 -->
       内容
     </div>
   </li>
@@ -168,8 +208,8 @@ interface TimelineStyles {
   <Timeline
     :items="items"
     :class-names="{
-      tail: 'custom-tail',
-      dot: 'custom-dot',
+      itemRail: 'custom-tail',
+      itemIcon: 'custom-dot',
     }"
   />
 
@@ -178,8 +218,8 @@ interface TimelineStyles {
     mode="alternate"
     :items="labeledItems"
     :class-names="{
-      label: 'custom-label',
-      content: 'custom-content',
+      itemTitle: 'custom-label',
+      itemContent: 'custom-content',
     }"
   />
 
@@ -189,10 +229,10 @@ interface TimelineStyles {
     :class-names="{
       root: 'timeline-fancy',
       item: 'timeline-fancy-item',
-      label: 'timeline-fancy-label',
-      tail: 'timeline-fancy-tail',
-      dot: 'timeline-fancy-dot',
-      content: 'timeline-fancy-content',
+      itemTitle: 'timeline-fancy-label',
+      itemRail: 'timeline-fancy-tail',
+      itemIcon: 'timeline-fancy-dot',
+      itemContent: 'timeline-fancy-content',
     }"
   />
 </template>
@@ -252,8 +292,8 @@ interface TimelineStyles {
     :items="items"
     :styles="{
       root: { padding: '16px', backgroundColor: '#f0f5ff', borderRadius: '8px' },
-      dot: { transform: 'scale(1.2)' },
-      content: { fontSize: '15px', fontWeight: 500 },
+      itemIcon: { transform: 'scale(1.2)' },
+      itemContent: { fontSize: '15px', fontWeight: 500 },
     }"
   />
 
@@ -261,8 +301,8 @@ interface TimelineStyles {
   <Timeline
     :items="items"
     :styles="{
-      tail: { borderLeftWidth: '3px', borderLeftStyle: 'dashed' },
-      label: { fontWeight: 600, color: '#1890ff' },
+      itemRail: { borderLeftWidth: '3px', borderLeftStyle: 'dashed' },
+      itemTitle: { fontWeight: 600, color: '#1890ff' },
     }"
   />
 
@@ -272,8 +312,8 @@ interface TimelineStyles {
     :items="items"
     :styles="{
       root: { padding: '24px', backgroundColor: '#f6ffed', borderRadius: '12px' },
-      dot: { transform: 'scale(1.3)', boxShadow: '0 0 12px rgba(82, 196, 26, 0.5)' },
-      content: { padding: '8px 16px', fontWeight: 500 },
+      itemIcon: { transform: 'scale(1.3)', boxShadow: '0 0 12px rgba(82, 196, 26, 0.5)' },
+      itemContent: { padding: '8px 16px', fontWeight: 500 },
     }"
   />
 </template>
@@ -283,9 +323,9 @@ interface TimelineStyles {
 
 - `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
 - `classNames.item` / `styles.item` 应用于每个时间轴节点，会与 `items[i].className` / `items[i].style` 合并
-- `classNames.label` / `styles.label` 仅在设置了 `title` 属性的项上生效
-- `classNames.dot` / `styles.dot` 会与 `items[i].style` 合并应用到节点圆点上
-- `classNames.tail` 作用于连接线，可用于自定义线型（虚线、点线）、颜色、粗细
+- `classNames.itemTitle` / `styles.itemTitle` 仅在设置了 `title` 属性的项上生效
+- `classNames.itemIcon` / `styles.itemIcon` 会与 `items[i].style` 合并应用到节点圆点上
+- `classNames.itemRail` 作用于连接线，可用于自定义线型（虚线、点线）、颜色、粗细
 - 水平布局（`orientation="horizontal"`）和垂直布局的 DOM 结构相同，但样式应用效果不同，需分别调试
 
 ## 设计 Token
