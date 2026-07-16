@@ -18,12 +18,14 @@ import { Button } from '../button'
 import { CloseOutlined } from '@hmfw/icons'
 import type { TourStep, TourProps, TourButtonProps } from './types'
 import type { TooltipPlacement } from '../tooltip/types'
+import { omit } from 'components/_utils/function'
 
 /** 剥离 children/onClick 后再透传给 Button，避免只读 children 属性透传到 DOM 触发告警 */
 function omitButtonProps(buttonProps?: TourButtonProps) {
   if (!buttonProps) return undefined
-  const { children, onClick, ...rest } = buttonProps
-  return rest
+  return omit(buttonProps, ['children', 'onClick'])
+  // const { children, onClick, ...rest } = buttonProps
+  // return rest
 }
 
 function getTargetEl(target: TourStep['target']): HTMLElement | null {

@@ -213,7 +213,7 @@ export const Rate = defineComponent({
     const renderStar = (index: number) => {
       const { status, isFocused } = getStarStatus(index)
       const tooltipItem = props.tooltips?.[index]
-      const starValue = index + 1
+      // const starValue = index + 1
       const isActive = status === 'half' || status === 'full'
 
       const starNode = (

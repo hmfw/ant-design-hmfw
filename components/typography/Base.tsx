@@ -218,7 +218,7 @@ export function useEllipsisDetect(el: Ref<HTMLElement | null>, props: BaseTypogr
     }
     const node = el.value
     if (!node) return
-    let truncated = false
+    let truncated: boolean
     if (rows.value <= 1) {
       truncated = node.scrollWidth > node.clientWidth + 1
     } else {

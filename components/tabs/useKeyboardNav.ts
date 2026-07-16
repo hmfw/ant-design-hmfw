@@ -37,7 +37,7 @@ export function useKeyboardNav(options: UseKeyboardNavOptions): UseKeyboardNavRe
    */
   const handleKeyDown = (key: string, event: KeyboardEvent, index: number) => {
     const tabItems = items()
-    let targetIndex = index
+    let targetIndex: number
 
     if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       event.preventDefault()

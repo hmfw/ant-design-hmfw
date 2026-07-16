@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <Tabs :items="items" type="card" :tab-bar-extra-content="extra" />
-  </div>
+  <Tabs :items="items" type="card" :tab-bar-extra-content="extra" />
 </template>
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Tabs, Button, Dropdown } from '@hmfw/ant-design'
+import { Tabs, Button } from '@hmfw/ant-design'
 
 const items = [
   { key: '1', label: 'Tab 1', children: 'Content of Tab 1' },

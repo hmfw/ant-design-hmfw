@@ -224,7 +224,6 @@ export const Table = defineComponent({
     // ----------------------------------------------------------------
     const {
       startIndex,
-      endIndex,
       visibleData: virtualVisibleData,
       offsetY,
       totalHeight,

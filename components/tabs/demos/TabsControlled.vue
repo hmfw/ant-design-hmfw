@@ -5,9 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { ref } from 'vue'
 import { Tabs } from '@hmfw/ant-design'
-import { PlusOutlined } from '@hmfw/icons'
 
 const activeKey = ref('1')
 let newTabIndex = 0

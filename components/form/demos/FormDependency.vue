@@ -130,7 +130,8 @@ const handleSubmit = async () => {
   try {
     await formRef.value?.validate()
     result.value = '✅ 提交成功！\n' + JSON.stringify(formState, null, 2)
-  } catch (e) {
+  } catch (error) {
+    console.log(error)
     result.value = '❌ 验证失败，请检查表单'
   }
 }

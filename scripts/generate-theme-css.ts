@@ -26,6 +26,6 @@ try {
   execSync(`prettier --write "${outputPath}"`, { cwd: ROOT, stdio: 'inherit' })
   console.log('✅ theme CSS generated & formatted → components/_theme/style/index.css')
 } catch (error) {
-  console.log('✅ theme CSS generated → components/_theme/style/index.css')
+  console.log('✅ theme CSS generated → components/_theme/style/index.css', error)
   console.warn('⚠️  Prettier formatting failed, file generated but not formatted')
 }

@@ -328,7 +328,7 @@ describe('Menu', () => {
 
   it('handles Enter key to activate focused item', async () => {
     const wrapper = mount(Menu, { props: { items } })
-    const root = wrapper.find('ul[role="menu"]')
+    // const root = wrapper.find('ul[role="menu"]')
     const firstItem = wrapper.find('[data-menu-key="1"]')
 
     // 聚焦第一个元素

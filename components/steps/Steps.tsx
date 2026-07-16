@@ -76,7 +76,7 @@ export const Steps = defineComponent({
      */
     const renderIcon = (index: number, status: StepStatus, item: StepItem): VNode => {
       const itemIconCls = `${prefixCls}-item-icon`
-      let iconContent: VNode | null = null
+      let iconContent: VNode
 
       // 1. dot 模式或自定义 icon
       if (isDot.value || item.icon) {

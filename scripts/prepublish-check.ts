@@ -99,7 +99,7 @@ try {
     warnings.push('peerDependencies 未配置')
   }
 } catch (error) {
-  console.log(`   ❌ package.json 解析失败: ${error.message}`)
+  console.log(`   ❌ package.json 解析失败: ${error}`)
   hasErrors = true
 }
 
@@ -110,7 +110,7 @@ try {
   execSync('pnpm test', { stdio: 'pipe', cwd: rootDir })
   console.log('   ✅ 所有单元测试通过')
 } catch (error) {
-  console.log('   ❌ 单元测试失败！')
+  console.log('   ❌ 单元测试失败！', error)
   hasErrors = true
 }
 
@@ -121,7 +121,7 @@ try {
   execSync('pnpm typecheck', { stdio: 'pipe', cwd: rootDir })
   console.log('   ✅ 类型检查通过')
 } catch (error) {
-  console.log('   ❌ 类型检查失败！')
+  console.log('   ❌ 类型检查失败！', error)
   hasErrors = true
 }
 
@@ -132,7 +132,7 @@ try {
   execSync('pnpm e2e', { stdio: 'inherit', cwd: rootDir })
   console.log('   ✅ 所有 E2E 测试通过')
 } catch (error) {
-  console.log('   ❌ E2E 测试失败！')
+  console.log('   ❌ E2E 测试失败！', error)
   hasErrors = true
 }
 
@@ -164,7 +164,7 @@ try {
     console.log('   ✅ Git 工作区干净')
   }
 } catch (error) {
-  console.log('   ⚠️  无法检查 Git 状态')
+  console.log('   ⚠️  无法检查 Git 状态', error)
 }
 
 // 总结

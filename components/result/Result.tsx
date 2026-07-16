@@ -55,7 +55,7 @@ export const Result = defineComponent({
       const status = props.status
       const isException = EXCEPTION_STATUS.includes(status)
 
-      let iconNode: unknown = null
+      let iconNode: VNode | null
       if (isException) {
         // 异常状态：始终渲染插画，不受 icon=false 影响（对齐 AntD）
         const Img = exceptionMap[status]

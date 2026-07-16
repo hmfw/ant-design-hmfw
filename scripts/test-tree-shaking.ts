@@ -9,7 +9,7 @@
  */
 
 import { execSync } from 'child_process'
-import { writeFileSync, readFileSync, mkdirSync, rmSync, statSync } from 'fs'
+import { writeFileSync, mkdirSync, rmSync, statSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -59,7 +59,7 @@ for (const testCase of testCases) {
     results.push({ name: testCase.name, size, readable: (size / 1024).toFixed(2) + ' KB' })
     console.log(`✅ ${testCase.name}: ${(size / 1024).toFixed(2)} KB`)
   } catch (error) {
-    console.error(`❌ ${testCase.name} 打包失败:`, error.message)
+    console.error(`❌ ${testCase.name} 打包失败:`, error)
     process.exitCode = 1
   }
 }

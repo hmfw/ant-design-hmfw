@@ -176,7 +176,7 @@ export const Slider = defineComponent({
           : (currentValue.value as [number, number])[1]
         : (currentValue.value as number)
 
-      let delta = 0
+      let delta: number
       const stepSize = props.step === null ? 1 : props.step
 
       switch (e.key) {

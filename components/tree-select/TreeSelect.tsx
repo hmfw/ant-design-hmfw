@@ -672,7 +672,7 @@ export const TreeSelect = defineComponent({
                 )}
               </>
             ),
-            popup: ({ placement }: { placement: Placement }) => renderDropdownContent(checkedSet, halfSet),
+            popup: () => renderDropdownContent(checkedSet, halfSet),
           }}
         </Trigger>
       )

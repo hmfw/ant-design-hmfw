@@ -18,3 +18,12 @@ export function debounce<T extends (...args: any[]) => any>(fn: T, delay: number
     }, delay)
   }
 }
+
+// 自定义 omit 函数
+export function omit<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
+  const result = { ...obj }
+  keys.forEach((key) => {
+    delete result[key]
+  })
+  return result
+}

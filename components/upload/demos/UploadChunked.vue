@@ -76,6 +76,7 @@ function uploadChunk(name: string, index: number, total: number, chunk: Blob) {
 
 /** 模拟合并请求：fetch('/api/merge-chunks', { method: 'POST', body: JSON.stringify({ name, total }) })。 */
 function mergeChunks(_name: string, _total: number) {
+  console.log(_name, _total)
   return new Promise<void>((resolve) => {
     setTimeout(() => resolve(), 400)
   })
