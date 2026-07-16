@@ -1,11 +1,13 @@
 <template>
   <Space :size="16">
-    <LoadingOutlined class="hmfw-icon-spin" style="font-size: 24px" />
-    <SettingOutlined class="hmfw-icon-spin" style="font-size: 24px" />
+    <LoadingOutlined spin style="font-size: 24px" />
+    <SettingOutlined spin style="font-size: 24px" />
+    <SmileOutlined style="font-size: 24px" />
+    <SmileOutlined :rotate="180" style="font-size: 24px" />
   </Space>
 </template>
 
 <script setup lang="ts">
-import { LoadingOutlined, SettingOutlined } from '@hmfw/icons'
+import { LoadingOutlined, SettingOutlined, SmileOutlined } from '@hmfw/icons'
 import { Space } from '@hmfw/ant-design'
 </script>

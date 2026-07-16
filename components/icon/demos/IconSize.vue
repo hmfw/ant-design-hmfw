@@ -1,10 +1,10 @@
 <template>
   <Space :size="16" align="center">
-    <HomeOutlined class="hmfw-icon" style="font-size: 12px" />
-    <HomeOutlined class="hmfw-icon" style="font-size: 16px" />
-    <HomeOutlined class="hmfw-icon" style="font-size: 24px" />
-    <HomeOutlined class="hmfw-icon" style="font-size: 32px" />
-    <HomeOutlined class="hmfw-icon" style="font-size: 48px" />
+    <HomeOutlined style="font-size: 12px" />
+    <HomeOutlined style="font-size: 16px" />
+    <HomeOutlined style="font-size: 24px" />
+    <HomeOutlined style="font-size: 32px" />
+    <HomeOutlined style="font-size: 48px" />
   </Space>
 </template>
 

@@ -97,7 +97,7 @@ describe('Timeline', () => {
     const loadingItems = [{ content: 'Loading', loading: true }]
     const wrapper = mount(Timeline, { props: { items: loadingItems } })
     expect(wrapper.find('.hmfw-timeline-item-loading').exists()).toBe(true)
-    expect(wrapper.find('.hmfw-icon').exists()).toBe(true)
+    expect(wrapper.find('.anticon-loading').exists()).toBe(true)
   })
 
   it('supports placement prop', () => {

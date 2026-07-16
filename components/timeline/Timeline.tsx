@@ -164,7 +164,7 @@ export const Timeline = defineComponent({
 
             // Handle loading state
             if (item.loading && !icon) {
-              icon = <LoadingOutlined class="hmfw-icon hmfw-icon-spin" />
+              icon = <LoadingOutlined spin />
             }
 
             const color = item.color ?? 'blue'
@@ -217,7 +217,7 @@ export const Timeline = defineComponent({
                   class={cls(`${prefixCls}-item-content`, props.classNames?.itemContent)}
                   style={props.styles?.itemContent}
                 >
-                  {content as any}
+                  {content}
                 </div>
               </li>
             )

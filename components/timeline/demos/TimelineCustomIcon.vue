@@ -16,7 +16,7 @@ const items = [
   {
     content: '处理中',
     color: 'blue',
-    icon: h(SyncOutlined, { class: 'hmfw-icon-spin', style: { fontSize: '16px' } }),
+    icon: h(SyncOutlined, { spin: true, style: { fontSize: '16px' } }),
   },
   {
     content: '等待中',
