@@ -14,7 +14,6 @@ export type {
   ProgressFormatReturn,
   ProgressStepsConfig,
   GapPlacement,
-  GapPosition,
   StringGradients,
   FromToGradients,
 } from './types'

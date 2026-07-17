@@ -6,6 +6,7 @@ import { Tooltip } from '../tooltip'
 import { cls } from '../_utils'
 import { CheckCircleFilled, CloseCircleFilled, CheckOutlined, CloseOutlined } from '@hmfw/icons'
 import type {
+  ProgressProps,
   ProgressType,
   ProgressStatus,
   ProgressSize,
@@ -26,44 +27,49 @@ import {
   handleGradient,
   isLightColor,
   pickFirstColor,
-  getSuccessStrokeColor,
   getCircleGradientStops,
 } from './utils'
 
 const ProgressStatusList: ProgressStatus[] = ['normal', 'exception', 'active', 'success']
 
+// props 定义：用 satisfies 强制 key 集合与 ProgressProps 接口完全一致，杜绝运行时/类型双源头漂移
+const progressProps = {
+  prefixCls: { type: String, default: undefined },
+  classNames: { type: Object as PropType<ProgressClassNames>, default: undefined },
+  styles: { type: Object as PropType<ProgressStyles>, default: undefined },
+  percent: { type: Number, default: 0 },
+  type: { type: String as PropType<ProgressType>, default: 'line' },
+  status: { type: String as PropType<ProgressStatus>, default: undefined },
+  showInfo: { type: Boolean, default: true },
+  strokeWidth: { type: Number, default: undefined },
+  strokeColor: {
+    type: [String, Array, Object] as PropType<string | string[] | ProgressGradient>,
+    default: undefined,
+  },
+  railColor: { type: String, default: undefined },
+  size: {
+    type: [String, Number, Object, Array] as PropType<
+      ProgressSize | number | [number | string, number] | { width?: number; height?: number }
+    >,
+    default: 'medium',
+  },
+  format: { type: Function as PropType<ProgressFormat>, default: undefined },
+  strokeLinecap: { type: String as PropType<StrokeLinecap>, default: 'round' },
+  success: { type: Object as PropType<SuccessProps>, default: undefined },
+  steps: { type: [Number, Object] as PropType<number | ProgressStepsConfig>, default: undefined },
+  gapDegree: { type: Number, default: undefined },
+  gapPlacement: { type: String as PropType<GapPlacement>, default: undefined },
+  percentPosition: {
+    type: Object as PropType<PercentPositionType>,
+    default: () => ({}),
+  },
+  rounding: { type: Function as PropType<(step: number) => number>, default: undefined },
+} satisfies Record<keyof ProgressProps, any>
+
 export const Progress = defineComponent({
   name: 'Progress',
   inheritAttrs: false,
-  props: {
-    prefixCls: String,
-    classNames: Object as PropType<ProgressClassNames>,
-    styles: Object as PropType<ProgressStyles>,
-    percent: { type: Number, default: 0 },
-    type: { type: String as PropType<ProgressType>, default: 'line' },
-    status: String as PropType<ProgressStatus>,
-    showInfo: { type: Boolean, default: true },
-    strokeWidth: Number,
-    strokeColor: [String, Array, Object] as PropType<string | string[] | ProgressGradient>,
-    railColor: String,
-    size: {
-      type: [String, Number, Object, Array] as PropType<
-        ProgressSize | number | [number | string, number] | { width?: number; height?: number }
-      >,
-      default: 'medium',
-    },
-    format: Function as PropType<ProgressFormat>,
-    strokeLinecap: { type: String as PropType<StrokeLinecap>, default: 'round' },
-    success: Object as PropType<SuccessProps>,
-    steps: [Number, Object] as PropType<number | ProgressStepsConfig>,
-    gapDegree: Number,
-    gapPlacement: String as PropType<GapPlacement>,
-    percentPosition: {
-      type: Object as PropType<PercentPositionType>,
-      default: () => ({}),
-    },
-    rounding: Function as PropType<(step: number) => number>,
-  },
+  props: progressProps,
   setup(props, { attrs }) {
     const prefixCls = usePrefixCls('progress')
     const config = useConfig()
@@ -318,6 +324,21 @@ export const Progress = defineComponent({
         pathStroke = sc
       }
 
+      // 圆形/仪表盘的颜色必须走内联 style，不能用 SVG presentation 属性（stroke=...）：
+      // presentation 属性在 CSS 级联中优先级低于样式表规则，会被组件自身的
+      // `.hmfw-progress-circle-path{stroke:var(--hmfw-color-primary)}` 覆盖，
+      // 导致渐变、自定义 strokeColor / railColor 全部失效。内联 style 优先级高于样式表，可正确生效。
+      // 仅在用户显式提供颜色时才内联，未提供时留给 CSS（含 status 派生色）处理。
+      const railStyle: CSSProperties = { ...props.styles?.rail }
+      if (mergedRailColor.value) railStyle.stroke = mergedRailColor.value
+
+      const pathStyle: CSSProperties = { ...props.styles?.track }
+      if (pathStroke) pathStyle.stroke = pathStroke
+
+      // 仅在用户显式提供 success.strokeColor 时内联，否则留给 CSS token（可被 ConfigProvider 主题覆盖）
+      const successPathStyle: CSSProperties = { ...props.styles?.track }
+      if (props.success?.strokeColor) successPathStyle.stroke = props.success.strokeColor
+
       const indicator = props.showInfo && renderIndicator()
       const smallCircle = size <= 20
 
@@ -366,26 +387,24 @@ export const Progress = defineComponent({
               cx={size / 2}
               cy={size / 2}
               r={radius}
-              stroke={mergedRailColor.value ?? '#f5f5f5'}
               stroke-width={strokeW}
               fill="none"
               stroke-dasharray={`${totalArc}px ${circumference}px`}
               transform={`rotate(${rotation} ${size / 2} ${size / 2})`}
-              style={props.styles?.rail}
+              style={railStyle}
             />
             <circle
               class={cls(`${prefixCls}-circle-path`, props.classNames?.track)}
               cx={size / 2}
               cy={size / 2}
               r={radius}
-              stroke={pathStroke}
               stroke-width={strokeW}
               fill="none"
               stroke-dasharray={`${totalArc}px ${circumference}px`}
               stroke-dashoffset={`${offset}px`}
               stroke-linecap={props.strokeLinecap}
               transform={`rotate(${rotation} ${size / 2} ${size / 2})`}
-              style={props.styles?.track}
+              style={pathStyle}
             />
             {successOffset !== null && (
               <circle
@@ -393,13 +412,13 @@ export const Progress = defineComponent({
                 cx={size / 2}
                 cy={size / 2}
                 r={radius}
-                stroke={getSuccessStrokeColor(props.success)}
                 stroke-width={strokeW}
                 fill="none"
                 stroke-dasharray={`${totalArc}px ${circumference}px`}
                 stroke-dashoffset={`${successOffset}px`}
                 stroke-linecap={props.strokeLinecap}
                 transform={`rotate(${rotation} ${size / 2} ${size / 2})`}
+                style={successPathStyle}
               />
             )}
           </svg>

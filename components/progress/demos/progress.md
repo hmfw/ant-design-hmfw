@@ -74,12 +74,20 @@
   <ProgressGapPlacement />
 </DemoBlock>
 
-### v6 新特性
+### 进阶用法
 
 `size` 数组形式、`steps` 对象形式、`rounding` 自定义舍入、小圆形（≤20px）自动套 Tooltip 等。
 
-<DemoBlock title="v6 新特性" :source="ProgressV6Source">
-  <ProgressV6 />
+<DemoBlock title="进阶用法" :source="ProgressAdvancedSource">
+  <ProgressAdvanced />
+</DemoBlock>
+
+### 进度文字位置
+
+通过 `percentPosition` 控制进度文字的位置（`inner` 内部 / `outer` 外部）与对齐方式（`start` / `center` / `end`）。内部模式下，浅色进度条会自动将文字翻转为深色以保证可读性。
+
+<DemoBlock title="进度文字位置" :source="ProgressPercentPositionSource">
+  <ProgressPercentPosition />
 </DemoBlock>
 
 ### 细粒度样式控制
@@ -314,7 +322,7 @@ interface ProgressStyles {
 
 ### 注意事项
 
-- `size` 默认值由 v5 的 `'default'` 改为 v6 的 `'medium'`，二者行为等价；`'default'` 会保留兼容。
+- `size` 默认值为 `'medium'`，与 `'default'` 行为等价；`'default'` 作为别名保留兼容。
 - 圆形 `strokeColor` 渐变通过 `<linearGradient>` 实现，支持 `from/to` 与 `0%/50%/100%` 等百分比 stop；百分比 stop 会按数值升序排序。圆形/仪表盘使用 `userSpaceOnUse` + `gradientTransform` 抵消缺口旋转，渐变方向在屏幕空间内保持水平（RTL 下自动反向）。
 - 圆形 `size <= 20` 时自动添加 `inline-circle` class，并将 indicator 包入 `Tooltip` 显示（小圆形容纳不下文字）。
 - `aria-label` 默认为 `"${percent}%"`，可通过 attr 透传覆盖。

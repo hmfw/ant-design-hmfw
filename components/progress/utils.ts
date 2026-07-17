@@ -1,4 +1,4 @@
-import type { ProgressGradient, ProgressProps, SuccessProps } from './types'
+import type { ProgressGradient, ProgressProps } from './types'
 
 /** 裁剪百分比到 [0, 100] */
 export function validProgress(progress?: number): number {
@@ -27,7 +27,7 @@ export function getSize(
   extra?: { steps?: number; strokeWidth?: number },
 ): [number, number] {
   let width = -1
-  let height = -1
+  let height: number
 
   if (type === 'step') {
     const steps = extra!.steps!
@@ -100,9 +100,9 @@ export function handleGradient(strokeColor: ProgressGradient, isRTL = false): st
  */
 export function isLightColor(color?: string): boolean {
   if (!color) return false
-  let r = 0
-  let g = 0
-  let b = 0
+  let r: number
+  let g: number
+  let b: number
   const hex = color.trim()
 
   if (hex.startsWith('#')) {
@@ -171,12 +171,4 @@ export function getCircleGradientStops(gradient: ProgressGradient): { offset: st
     { offset: '0%', color: from || '#1677ff' },
     { offset: '100%', color: to || '#1677ff' },
   ]
-}
-
-/** circle 默认 success 描边色 */
-export const PRESET_SUCCESS_COLOR = '#52c41a'
-
-/** 获取 success 段（圆形 / 线形）实际颜色 */
-export function getSuccessStrokeColor(success?: SuccessProps): string {
-  return success?.strokeColor || PRESET_SUCCESS_COLOR
 }

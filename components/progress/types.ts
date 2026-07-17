@@ -6,7 +6,6 @@ export type ProgressStatus = 'normal' | 'exception' | 'active' | 'success'
 export type ProgressSize = 'small' | 'medium' | 'default'
 export type StrokeLinecap = 'round' | 'butt' | 'square'
 export type GapPlacement = 'top' | 'bottom' | 'start' | 'end'
-export type GapPosition = 'top' | 'bottom' | 'left' | 'right'
 
 export interface SuccessProps {
   percent?: number

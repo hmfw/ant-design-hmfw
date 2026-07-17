@@ -253,9 +253,9 @@ describe('Progress', () => {
     })
     expect(wrapper.find('linearGradient').exists()).toBe(true)
     expect(wrapper.findAll('stop')).toHaveLength(2)
-    // path 引用 url(#...)
+    // path 通过内联 style.stroke 引用 url(#...)（presentation 属性会被样式表覆盖，故必须走 style）
     const path = wrapper.find('.hmfw-progress-circle-path')
-    expect(path.attributes('stroke')).toMatch(/^url\(#/)
+    expect(path.attributes('style')).toMatch(/stroke:\s*url\(["']?#/)
   })
 
   it('adds inline-circle class when circle size <= 20', () => {
@@ -387,7 +387,7 @@ describe('Progress', () => {
     // gradientTransform 抵消 path 的 rotate
     expect(grad.attributes('gradientTransform')).toMatch(/^rotate\(/)
     const path = wrapper.find('.hmfw-progress-circle-path')
-    expect(path.attributes('stroke')).toMatch(/^url\(#/)
+    expect(path.attributes('style')).toMatch(/stroke:\s*url\(["']?#/)
   })
 
   it('sorts gradient stops numerically (out-of-order keys)', () => {
@@ -430,10 +430,11 @@ describe('Progress', () => {
       },
     })
     const idBefore = wrapper.find('linearGradient').attributes('id')
-    const strokeBefore = wrapper.find('.hmfw-progress-circle-path').attributes('stroke')
+    const styleBefore = wrapper.find('.hmfw-progress-circle-path').attributes('style')
+    expect(styleBefore).toMatch(/stroke:\s*url\(["']?#/)
     await wrapper.setProps({ percent: 80 })
     expect(wrapper.find('linearGradient').attributes('id')).toBe(idBefore)
-    expect(wrapper.find('.hmfw-progress-circle-path').attributes('stroke')).toBe(strokeBefore)
+    expect(wrapper.find('.hmfw-progress-circle-path').attributes('style')).toBe(styleBefore)
   })
 
   it('gives different gradient ids to different instances', () => {
@@ -444,6 +445,46 @@ describe('Progress', () => {
       props: { percent: 50, type: 'circle', strokeColor: { from: '#000', to: '#fff' } },
     })
     expect(w1.find('linearGradient').attributes('id')).not.toBe(w2.find('linearGradient').attributes('id'))
+  })
+
+  // 回归：circle/dashboard 颜色必须走内联 style，避免被样式表 stroke 规则覆盖
+  it('applies circle string strokeColor via inline style (not overridable presentation attr)', () => {
+    const wrapper = mount(Progress, {
+      props: { percent: 50, type: 'circle', strokeColor: '#ff00ff' },
+    })
+    const path = wrapper.find('.hmfw-progress-circle-path')
+    expect(path.attributes('style')).toContain('stroke:')
+    expect(path.attributes('style')).toMatch(/ff00ff|255,\s*0,\s*255/)
+    // 不应再使用 presentation 属性（会被样式表覆盖）
+    expect(path.attributes('stroke')).toBeUndefined()
+  })
+
+  it('applies circle railColor via inline style', () => {
+    const wrapper = mount(Progress, {
+      props: { percent: 50, type: 'circle', railColor: '#123456' },
+    })
+    const rail = wrapper.find('.hmfw-progress-circle-rail')
+    expect(rail.attributes('style')).toContain('stroke:')
+    expect(rail.attributes('stroke')).toBeUndefined()
+  })
+
+  it('applies circle success strokeColor via inline style', () => {
+    const wrapper = mount(Progress, {
+      props: { percent: 60, type: 'circle', success: { percent: 30, strokeColor: '#abcdef' } },
+    })
+    const successPath = wrapper.find('.hmfw-progress-circle-path-success')
+    expect(successPath.exists()).toBe(true)
+    expect(successPath.attributes('style')).toContain('stroke:')
+    expect(successPath.attributes('stroke')).toBeUndefined()
+  })
+
+  it('leaves circle rail/path stroke to CSS when no custom color given', () => {
+    const wrapper = mount(Progress, { props: { percent: 50, type: 'circle' } })
+    // 未提供自定义色时不内联 stroke，交给 CSS token（可被主题覆盖）
+    const rail = wrapper.find('.hmfw-progress-circle-rail')
+    const path = wrapper.find('.hmfw-progress-circle-path')
+    expect(rail.attributes('style') ?? '').not.toContain('stroke:')
+    expect(path.attributes('style') ?? '').not.toContain('stroke:')
   })
 
   it('reverses gradient direction for RTL circle', async () => {
