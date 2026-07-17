@@ -335,7 +335,11 @@ export const Carousel = defineComponent({
     watch(
       () => props.autoplay,
       (enabled) => {
-        enabled ? startAutoplay() : stopAutoplay()
+        if (enabled) {
+          startAutoplay()
+        } else {
+          stopAutoplay()
+        }
       },
     )
 

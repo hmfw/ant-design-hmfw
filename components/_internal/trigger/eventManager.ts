@@ -9,7 +9,6 @@
  * 当没有任何订阅者时自动解绑，零开销。
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EventCallback = (...args: any[]) => void
 
 interface Entry {

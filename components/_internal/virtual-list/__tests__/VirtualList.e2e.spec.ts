@@ -8,24 +8,24 @@
  * 4. 滚动帧率可接受（无明显卡顿）
  * 5. 大数据量不导致页面崩溃
  */
-import { test, expect } from '@playwright/test'
+import { test, expect, Page } from '@playwright/test'
 
 // ============================================================
 // 辅助方法
 // ============================================================
 
 /** 等待 VirtualList 渲染完成 */
-async function waitForVirtualList(page: import('@playwright/test').Page, nth = 0) {
-  const container = page.locator('.hmfw-virtual-list').nth(nth)
-  await container.scrollIntoViewIfNeeded()
-  await container.waitFor({ state: 'visible' })
-  await page.waitForTimeout(300) // 等待初始渲染
-  return container
-}
+// async function waitForVirtualList(page: Page, nth = 0) {
+//   const container = page.locator('.hmfw-virtual-list').nth(nth)
+//   await container.scrollIntoViewIfNeeded()
+//   await container.waitFor({ state: 'visible' })
+//   await page.waitForTimeout(300) // 等待初始渲染
+//   return container
+// }
 
 /** 在容器内执行平滑滚动并返回帧性能数据 */
 async function measureScrollPerformance(
-  container: ReturnType<(typeof import('@playwright/test').Page)['locator']>,
+  container: ReturnType<Page['locator']>,
   scrollDistance: number,
   durationMs: number,
 ): Promise<{ avgFPS: number; minFPS: number; jankFrames: number; totalFrames: number }> {
@@ -34,7 +34,7 @@ async function measureScrollPerformance(
       return new Promise((resolve) => {
         const frameDeltas: number[] = []
         let lastTime = performance.now()
-        let rafId: number
+        let _rafId: number
         const startScrollTop = el.scrollTop
         const startTime = performance.now()
         let frameCount = 0
@@ -52,7 +52,7 @@ async function measureScrollPerformance(
           el.scrollTop = startScrollTop + distance * eased
 
           if (progress < 1) {
-            rafId = requestAnimationFrame(step)
+            _rafId = requestAnimationFrame(step)
           } else {
             const totalTime = frameDeltas.reduce((a, b) => a + b, 0)
             const avgFPS = totalTime > 0 ? (frameCount / totalTime) * 1000 : 60
@@ -69,7 +69,7 @@ async function measureScrollPerformance(
           }
         }
 
-        rafId = requestAnimationFrame(step)
+        _rafId = requestAnimationFrame(step)
       })
     },
     { distance: scrollDistance, duration: durationMs },

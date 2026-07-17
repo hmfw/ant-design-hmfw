@@ -120,11 +120,11 @@ export const ColorPicker = defineComponent({
       document.removeEventListener('mouseup', onHueMouseUp)
     })
 
-    function toggleOpen() {
-      if (props.disabled) return
-      open.value = !open.value
-      emit('openChange', open.value)
-    }
+    // function toggleOpen() {
+    //   if (props.disabled) return
+    //   open.value = !open.value
+    //   emit('openChange', open.value)
+    // }
 
     const sbCursorStyle = computed(() => ({
       left: `${hsb.value.s}%`,
@@ -318,7 +318,7 @@ export const ColorPicker = defineComponent({
               )}
             </div>
           ),
-          popup: ({ placement }: { placement: Placement }) => renderPanel(),
+          popup: () => renderPanel(),
         }}
       </Trigger>
     )

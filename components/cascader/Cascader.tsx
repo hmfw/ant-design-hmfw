@@ -653,7 +653,7 @@ export const Cascader = defineComponent({
               </span>
             </div>
           ),
-          popup: ({ placement }: { placement: Placement }) => renderDropdownContent(),
+          popup: () => renderDropdownContent(),
         }}
       </Trigger>
     )

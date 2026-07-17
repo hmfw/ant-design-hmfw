@@ -1,6 +1,7 @@
+import { nextTick, h } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { nextTick, h, defineComponent, ref } from 'vue'
+
 import { Trigger } from '../Trigger'
 
 const popupSlot = () => h('div', { class: 'my-popup' }, 'Popup Content')

@@ -177,8 +177,14 @@ async function runRules(value: unknown, rules: FormRule[]): Promise<string | nul
       try {
         await rule.validator(rule, value)
       } catch (e: unknown) {
-        const msg = (e as { message?: string })?.message ?? String(e) ?? '验证失败'
-        return msg
+        // 优先使用 Error.message，其次转为字符串，最后使用默认消息
+        if (e instanceof Error) {
+          return e.message || '验证失败'
+        }
+        if (typeof e === 'string') {
+          return e || '验证失败'
+        }
+        return '验证失败'
       }
     }
   }

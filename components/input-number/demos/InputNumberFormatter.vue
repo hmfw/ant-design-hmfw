@@ -25,7 +25,7 @@ import { InputNumber } from '@hmfw/ant-design'
 const value1 = ref<number>(1000)
 const value2 = ref<number>(50)
 
-const formatter1 = (value: number, _info: { userTyping: boolean; input: string }) => {
+const formatter1 = (value: number) => {
   const [start, end] = `${value}`.split('.') || []
   const v = `${start}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   return `$ ${end ? `${v}.${end}` : `${v}`}`

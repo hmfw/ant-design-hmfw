@@ -155,7 +155,9 @@ export const Mentions = defineComponent({
       if (props.filterOption === false) return props.options
 
       if (typeof props.filterOption === 'function') {
-        return props.options.filter((opt) => (props.filterOption as Function)(searchText.value, opt))
+        return props.options.filter((opt) =>
+          (props.filterOption as (input: string, option: MentionOption) => boolean)(searchText.value, opt),
+        )
       }
 
       return props.options.filter((opt) => {

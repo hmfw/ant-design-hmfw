@@ -56,7 +56,6 @@ const collapseMotion = {
     const element = el as HTMLElement
     const height = element.scrollHeight
     // 强制浏览器重排以应用初始状态
-    element.offsetHeight
     element.style.height = `${height}px`
     element.style.opacity = OPEN_OPACITY
   },
@@ -73,7 +72,6 @@ const collapseMotion = {
   onLeave(el: Element) {
     const element = el as HTMLElement
     // 强制浏览器重排以应用初始高度
-    element.offsetHeight
     element.style.height = CLOSED_HEIGHT
     element.style.opacity = CLOSED_OPACITY
   },
