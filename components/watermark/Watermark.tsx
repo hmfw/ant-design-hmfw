@@ -7,12 +7,14 @@ import {
   onBeforeUnmount,
   provide,
   inject,
+  nextTick,
   type PropType,
   type CSSProperties,
   type InjectionKey,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import type { WatermarkFont } from './types'
+import type { WatermarkFont, WatermarkProps } from './types'
+import { WatermarkContextKey } from './context'
 
 /** 多行文本行间距（px） */
 const FontGap = 3
@@ -25,8 +27,6 @@ interface WatermarkContext {
   add: (ele: HTMLElement) => void
   remove: (ele: HTMLElement) => void
 }
-
-const WatermarkContextKey: InjectionKey<WatermarkContext> = Symbol('WatermarkContext')
 
 // 容器固定样式，被外部篡改后需要还原
 const fixedStyle: Record<string, string> = {
@@ -172,25 +172,27 @@ function getClips(
   return [fCanvas.toDataURL(), filledWidth / ratio, filledHeight / ratio]
 }
 
+const watermarkProps = {
+  content: { type: [String, Array] as PropType<string | string[]>, default: undefined },
+  width: { type: Number, default: undefined },
+  height: { type: Number, default: undefined },
+  rotate: { type: Number, default: -22 },
+  zIndex: { type: Number, default: undefined },
+  image: { type: String, default: undefined },
+  font: { type: Object as PropType<WatermarkFont>, default: undefined },
+  gap: {
+    type: Array as unknown as PropType<[number, number]>,
+    default: () => [DEFAULT_GAP_X, DEFAULT_GAP_Y],
+  },
+  offset: { type: Array as unknown as PropType<[number, number]>, default: undefined },
+  inherit: { type: Boolean, default: true },
+  onRemove: { type: Function as PropType<() => void>, default: undefined },
+} satisfies Record<keyof WatermarkProps, any>
+
 export const Watermark = defineComponent({
   name: 'Watermark',
   inheritAttrs: false,
-  props: {
-    content: [String, Array] as PropType<string | string[]>,
-    width: Number,
-    height: Number,
-    rotate: { type: Number, default: -22 },
-    zIndex: Number,
-    image: String,
-    font: Object as PropType<WatermarkFont>,
-    gap: {
-      type: Array as unknown as PropType<[number, number]>,
-      default: () => [DEFAULT_GAP_X, DEFAULT_GAP_Y],
-    },
-    offset: Array as unknown as PropType<[number, number]>,
-    inherit: { type: Boolean, default: true },
-    onRemove: Function as PropType<() => void>,
-  },
+  props: watermarkProps,
   setup(props, { slots, attrs }) {
     const prefixCls = usePrefixCls('watermark')
     const containerRef = ref<HTMLDivElement>()
@@ -207,7 +209,7 @@ export const Watermark = defineComponent({
     const subElements = ref(new Set<HTMLElement>())
     const observers = new Map<HTMLElement, MutationObserver>()
 
-    const parentContext = inject(WatermarkContextKey, null)
+    const parentContext = inject<WatermarkContext | null>(WatermarkContextKey, null)
 
     // gap / offset 通过 computed 保持响应性
     const gapX = computed(() => props.gap?.[0] ?? DEFAULT_GAP_X)
@@ -388,7 +390,23 @@ export const Watermark = defineComponent({
       }
     }
 
-    watch(targetElements, renderAll)
+    // 目标容器集合变化时，挂载/卸载对应的观察器，然后渲染水印
+    watch(
+      targetElements,
+      (next, prev) => {
+        const prevList = prev ?? []
+        prevList.forEach((el) => {
+          if (!next.includes(el)) {
+            observers.get(el)?.disconnect()
+            observers.delete(el)
+          }
+        })
+        next.forEach(observeTarget)
+        // 在设置完 observer 后再渲染
+        renderAll()
+      },
+      { flush: 'post' },
+    )
 
     watch(
       () => [
@@ -499,9 +517,12 @@ export const Watermark = defineComponent({
 
     const context: WatermarkContext = {
       add: (ele: HTMLElement) => {
-        const clone = new Set(subElements.value)
-        clone.add(ele)
-        subElements.value = clone
+        // 使用 nextTick 延迟更新，避免在组件渲染过程中立即触发响应式更新
+        nextTick(() => {
+          const clone = new Set(subElements.value)
+          clone.add(ele)
+          subElements.value = clone
+        })
       },
       remove: (ele: HTMLElement) => {
         removeWatermark(ele)

@@ -49,6 +49,22 @@
   <WatermarkOffset />
 </DemoBlock>
 
+### Modal 与 Drawer
+
+通过 inherit 属性控制水印是否传导到弹出组件（如 Modal、Drawer）。
+
+<DemoBlock title="Modal 与 Drawer" :source="WatermarkPortalSource">
+  <WatermarkPortal />
+</DemoBlock>
+
+### 层级控制
+
+通过 zIndex 设置水印元素的 z-index，控制与其他定位元素的层叠关系。
+
+<DemoBlock title="层级控制" :source="WatermarkZIndexSource">
+  <WatermarkZIndex />
+</DemoBlock>
+
 ## API
 
 ### Watermark Props
@@ -83,3 +99,18 @@
 | 名称    | 说明             |
 | ------- | ---------------- |
 | default | 被水印覆盖的内容 |
+
+## 设计 Token
+
+Watermark 组件的水印样式通过 Canvas 动态生成，不依赖 CSS 设计 Token。
+
+组件容器仅使用固定的结构样式（`position: relative`、`overflow: hidden`），无可定制的设计变量。
+
+水印外观通过以下 props 控制：
+
+- `font` - 文字样式（颜色、字号、字重等）
+- `rotate` - 旋转角度
+- `gap` - 水印之间的间距
+- `offset` - 水印距离容器左上角的偏移量
+- `image` - 图片源（优先级高于文字）
+- `width`/`height` - 水印尺寸

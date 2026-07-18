@@ -14,6 +14,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
+import { usePanelRef } from '../watermark'
 import type { IconComponent } from '@hmfw/icons'
 import { drawerManager } from './manager'
 import type {
@@ -140,6 +141,13 @@ export const Drawer = defineComponent({
     const drawerRef = ref<HTMLElement | null>(null)
     let cleanupTrap: (() => void) | null = null
     let didLock = false
+
+    // 集成 Watermark Context - 使水印传导到 Drawer
+    const watermarkPanelRef = usePanelRef()
+    const mergedDrawerRef = (el: any) => {
+      drawerRef.value = el as HTMLElement | null
+      watermarkPanelRef(el as HTMLElement | null)
+    }
 
     // 注册到全局 DrawerManager
     const drawerUid = drawerManager.register()
@@ -325,7 +333,7 @@ export const Drawer = defineComponent({
                   />
                 )}
                 <div
-                  ref={drawerRef}
+                  ref={mergedDrawerRef}
                   class={cls(
                     `${prefixCls}-content-wrapper`,
                     `${prefixCls}-${props.placement}`,

@@ -14,6 +14,7 @@ import { cls } from '../_utils'
 import { Button } from '../button'
 import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
+import { usePanelRef } from '../watermark'
 import type { ButtonProps } from '../button/types'
 import type { IconComponent } from '@hmfw/icons'
 import type { ModalContent, ModalWidth, LegacyButtonType, GetContainer, ModalClassNames, ModalStyles } from './types'
@@ -128,6 +129,13 @@ export const Modal = defineComponent({
     const innerOpen = ref(props.defaultOpen ?? false)
     const dialogRef = ref<HTMLElement | null>(null)
     let cleanupTrap: (() => void) | null = null
+
+    // 集成 Watermark Context - 使水印传导到 Modal
+    const watermarkPanelRef = usePanelRef()
+    const mergedDialogRef = (el: any) => {
+      dialogRef.value = el as HTMLElement | null
+      watermarkPanelRef(el as HTMLElement | null)
+    }
 
     watch(
       () => props.open,
@@ -245,7 +253,7 @@ export const Modal = defineComponent({
       // 构建对话框内容节点
       const dialogContent = (
         <div
-          ref={dialogRef}
+          ref={mergedDialogRef}
           class={cls(prefixCls, props.classNames?.content)}
           style={{ width: widthStyle, ...props.styles?.content }}
           role="dialog"
