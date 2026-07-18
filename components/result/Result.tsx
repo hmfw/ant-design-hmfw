@@ -2,9 +2,25 @@ import { defineComponent, type PropType, type VNode, type VNodeChild } from 'vue
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, WarningFilled } from '@hmfw/icons'
-import type { ResultClassNames, ResultStatus, ResultStyles } from './types'
+import type { ResultClassNames, ResultProps, ResultStatus, ResultStyles } from './types'
 
 export type { ResultStatus } from './types'
+
+// props 对象：用 satisfies 强制 key 集合与 ResultProps 接口完全一致，杜绝双源头漂移
+const resultProps = {
+  status: { type: String as PropType<ResultStatus>, default: 'info' },
+  title: { type: String, default: undefined },
+  subTitle: { type: String, default: undefined },
+  // 额外操作区：支持字符串、VNode、数组，亦可用 extra slot
+  extra: { type: [String, Object, Array, Function] as PropType<VNodeChild>, default: undefined },
+  // icon 为 false/null 时隐藏图标（异常状态插画不受影响，对齐 AntD）
+  icon: {
+    type: [String, Object, Array, Function, Boolean] as PropType<VNodeChild | false>,
+    default: undefined,
+  },
+  classNames: { type: Object as PropType<ResultClassNames>, default: undefined },
+  styles: { type: Object as PropType<ResultStyles>, default: undefined },
+} satisfies Record<keyof ResultProps, any>
 
 // 对齐 AntD：四种状态各自对应一个 Filled 图标组件
 const iconMap: Record<string, () => VNode> = {
@@ -19,8 +35,16 @@ const EXCEPTION_STATUS = ['404', '403', '500']
 // 简化版异常插画（对应 AntD 的 noFound/unauthorized/serverError，原版各 200+ 行）
 const ExceptionImage = (text: string) => () => (
   <svg width="252" height="160" viewBox="0 0 252 160" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="126" cy="140" rx="110" ry="14" fill="#f5f5f5" />
-    <text x="126" y="96" font-size="84" font-weight="700" fill="#bfbfbf" text-anchor="middle" font-family="sans-serif">
+    <ellipse class="hmfw-result-img-shadow" cx="126" cy="140" rx="110" ry="14" />
+    <text
+      class="hmfw-result-img-text"
+      x="126"
+      y="96"
+      font-size="84"
+      font-weight="700"
+      text-anchor="middle"
+      font-family="sans-serif"
+    >
       {text}
     </text>
   </svg>
@@ -34,20 +58,7 @@ const exceptionMap: Record<string, () => VNode> = {
 
 export const Result = defineComponent({
   name: 'Result',
-  props: {
-    status: { type: String as PropType<ResultStatus>, default: 'info' },
-    title: String,
-    subTitle: String,
-    // 额外操作区：支持字符串、VNode、数组，亦可用 extra slot
-    extra: [String, Object, Array, Function] as PropType<VNodeChild>,
-    // icon 为 false/null 时隐藏图标（异常状态插画不受影响，对齐 AntD）
-    icon: {
-      type: [String, Object, Array, Function, Boolean] as PropType<VNodeChild | false>,
-      default: undefined,
-    },
-    classNames: Object as PropType<ResultClassNames>,
-    styles: Object as PropType<ResultStyles>,
-  },
+  props: resultProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('result')
 

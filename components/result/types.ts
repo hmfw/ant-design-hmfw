@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNodeChild } from 'vue'
 
 export type ResultStatus = 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500'
 
@@ -36,4 +36,24 @@ export interface ResultStyles {
   extra?: CSSProperties
   /** 内容主体 div.hmfw-result-body（default slot） */
   content?: CSSProperties
+}
+
+/**
+ * Result 组件 Props —— 单一类型来源
+ */
+export interface ResultProps {
+  /** 结果状态，决定图标与颜色；`404/403/500` 渲染为异常插画 */
+  status?: ResultStatus
+  /** 标题 */
+  title?: string
+  /** 副标题 */
+  subTitle?: string
+  /** 操作区内容（`extra` 插槽优先级更高） */
+  extra?: VNodeChild
+  /** 自定义图标；设为 `false` 时隐藏图标（异常状态插画不受影响） */
+  icon?: VNodeChild | false
+  /** 各部分语义化 className */
+  classNames?: ResultClassNames
+  /** 各部分语义化 style */
+  styles?: ResultStyles
 }
