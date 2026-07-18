@@ -17,6 +17,22 @@
   <AlertTypes />
 </DemoBlock>
 
+### 显示图标
+
+通过 `show-icon` 显示辅助图标，帮助用户快速识别警告提示的类型。
+
+<DemoBlock title="显示图标" :source="AlertShowIconSource">
+  <AlertShowIcon />
+</DemoBlock>
+
+### 自定义图标
+
+通过 `icon` 插槽可以自定义图标，替换默认的状态图标。
+
+<DemoBlock title="自定义图标" :source="AlertCustomIconSource">
+  <AlertCustomIcon />
+</DemoBlock>
+
 ### 带描述
 
 含有辅助性文字介绍的警告提示。
@@ -212,4 +228,57 @@ interface AlertStyles {
 
 ## 设计 Token
 
-Alert 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。
+Alert 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+### 全局 Token
+
+| Token 名称                      | 说明           | 默认值             |
+| ------------------------------- | -------------- | ------------------ |
+| `--hmfw-color-success`          | 成功状态主色   | `#52c41a`          |
+| `--hmfw-color-success-bg`       | 成功状态背景色 | `#eef9e8`          |
+| `--hmfw-color-success-bg-hover` | 成功填充背景色 | `#dcf3d1`          |
+| `--hmfw-color-success-border`   | 成功状态边框色 | `#a9e28d`          |
+| `--hmfw-color-info`             | 信息状态主色   | `#1677ff`          |
+| `--hmfw-color-info-bg`          | 信息状态背景色 | `#e8f1ff`          |
+| `--hmfw-color-info-bg-hover`    | 信息填充背景色 | `#d0e4ff`          |
+| `--hmfw-color-info-border`      | 信息状态边框色 | `#8bbbff`          |
+| `--hmfw-color-warning`          | 警告状态主色   | `#faad14`          |
+| `--hmfw-color-warning-bg`       | 警告状态背景色 | `#fff7e8`          |
+| `--hmfw-color-warning-bg-hover` | 警告填充背景色 | `#feefd0`          |
+| `--hmfw-color-warning-border`   | 警告状态边框色 | `#fdd68a`          |
+| `--hmfw-color-error`            | 错误状态主色   | `#ff4d4f`          |
+| `--hmfw-color-error-bg`         | 错误状态背景色 | `#ffeded`          |
+| `--hmfw-color-error-bg-hover`   | 错误填充背景色 | `#ffdbdc`          |
+| `--hmfw-color-error-border`     | 错误状态边框色 | `#ffa6a7`          |
+| `--hmfw-color-text-heading`     | 标题文本颜色   | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-text-secondary`   | 次要文本颜色   | `rgba(0,0,0,0.65)` |
+| `--hmfw-color-text-tertiary`    | 三级文本颜色   | `rgba(0,0,0,0.45)` |
+| `--hmfw-padding-xs`             | 极小内边距     | `8px`              |
+| `--hmfw-padding`                | 标准内边距     | `12px`             |
+| `--hmfw-padding-md`             | 中等内边距     | `16px`             |
+| `--hmfw-padding-lg`             | 大内边距       | `24px`             |
+| `--hmfw-margin-xs`              | 极小外边距     | `8px`              |
+| `--hmfw-margin-sm`              | 小外边距       | `12px`             |
+| `--hmfw-border-radius`          | 圆角大小       | `6px`              |
+| `--hmfw-font-size`              | 标准字号       | `14px`             |
+| `--hmfw-font-size-lg`           | 大字号         | `16px`             |
+| `--hmfw-font-size-heading-3`    | 三级标题字号   | `24px`             |
+| `--hmfw-line-height`            | 行高           | `1.5714`           |
+| `--hmfw-motion-duration-mid`    | 中等动画时长   | `0.2s`             |
+| `--hmfw-motion-duration-slow`   | 慢速动画时长   | `0.3s`             |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-alert` 上，可直接覆盖以定制单个组件的尺寸。
+
+| Token 名称                         | 说明               | 默认值                                   |
+| ---------------------------------- | ------------------ | ---------------------------------------- |
+| `--hmfw-alert-icon-size`           | 默认图标尺寸       | `16px`                                   |
+| `--hmfw-alert-icon-size-with-desc` | 带描述时的图标尺寸 | `var(--hmfw-font-size-heading-3)` (24px) |
+
+**说明**：
+
+- **outlined 变体**（默认）：使用 `colorXxxBg` 作为背景色，`colorXxxBorder` 作为边框色
+- **filled 变体**：使用 `colorXxxBgHover` 作为更深的背景色，边框透明
+- **图标颜色**：直接使用状态主色（`colorSuccess` / `colorInfo` / `colorWarning` / `colorError`）
+- **组件级 Token**：带描述时的图标尺寸派生自 `fontSizeHeading3`，与 AntD v6 的 `prepareComponentToken` 规则一致

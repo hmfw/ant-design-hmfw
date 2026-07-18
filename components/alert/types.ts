@@ -35,6 +35,12 @@ export interface AlertClosableConfig {
 
 export type AlertClosable = boolean | AlertClosableConfig
 
+/** 关闭事件回调 */
+export type AlertCloseHandler = (e: MouseEvent) => void
+
+/** 关闭动画结束后的回调 */
+export type AlertAfterCloseHandler = () => void
+
 export interface AlertProps {
   type?: AlertType
   /**

@@ -129,6 +129,7 @@ export interface MapTokens extends SeedTokens {
 
   // Color success variants
   colorSuccessBg: string
+  colorSuccessBgHover: string
   colorSuccessBorder: string
   colorSuccessText: string
   colorSuccessHover: string
@@ -136,6 +137,7 @@ export interface MapTokens extends SeedTokens {
 
   // Color warning variants
   colorWarningBg: string
+  colorWarningBgHover: string
   colorWarningBorder: string
   colorWarningText: string
   colorWarningHover: string
@@ -143,6 +145,7 @@ export interface MapTokens extends SeedTokens {
 
   // Color error variants
   colorErrorBg: string
+  colorErrorBgHover: string
   colorErrorBorder: string
   colorErrorText: string
   colorErrorHover: string
@@ -150,6 +153,7 @@ export interface MapTokens extends SeedTokens {
 
   // Color info variants
   colorInfoBg: string
+  colorInfoBgHover: string
   colorInfoBorder: string
   colorInfoText: string
   colorInfoHover: string
@@ -353,6 +357,7 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
 
     // Success 变体
     colorSuccessBg: lighten(seed.colorSuccess, 0.9),
+    colorSuccessBgHover: lighten(seed.colorSuccess, 0.8),
     colorSuccessBorder: lighten(seed.colorSuccess, 0.5),
     colorSuccessText: seed.colorSuccess,
     colorSuccessHover: lighten(seed.colorSuccess, 0.2),
@@ -360,6 +365,7 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
 
     // Warning 变体
     colorWarningBg: lighten(seed.colorWarning, 0.9),
+    colorWarningBgHover: lighten(seed.colorWarning, 0.8),
     colorWarningBorder: lighten(seed.colorWarning, 0.5),
     colorWarningText: seed.colorWarning,
     colorWarningHover: lighten(seed.colorWarning, 0.2),
@@ -367,6 +373,7 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
 
     // Error 变体
     colorErrorBg: lighten(seed.colorError, 0.9),
+    colorErrorBgHover: lighten(seed.colorError, 0.8),
     colorErrorBorder: lighten(seed.colorError, 0.5),
     colorErrorText: seed.colorError,
     colorErrorHover: lighten(seed.colorError, 0.2),
@@ -374,6 +381,7 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
 
     // Info 变体
     colorInfoBg: lighten(seed.colorInfo, 0.9),
+    colorInfoBgHover: lighten(seed.colorInfo, 0.8),
     colorInfoBorder: lighten(seed.colorInfo, 0.5),
     colorInfoText: seed.colorInfo,
     colorInfoHover: lighten(seed.colorInfo, 0.2),

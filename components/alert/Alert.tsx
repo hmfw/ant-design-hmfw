@@ -8,7 +8,7 @@ import {
   CloseCircleFilled,
   CloseOutlined,
 } from '@hmfw/icons'
-import type { AlertType, AlertVariant, AlertClosable, AlertClassNames, AlertStyles } from './types'
+import type { AlertProps, AlertType, AlertVariant, AlertClosable, AlertClassNames, AlertStyles } from './types'
 
 // 与 AntD v6 对齐：使用 Filled 状态图标
 const iconMap: Record<AlertType, typeof CheckCircleFilled> = {
@@ -22,38 +22,39 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
   return Object.prototype.toString.call(v) === '[object Object]'
 }
 
+const alertProps = {
+  type: {
+    type: String as PropType<AlertType>,
+    default: undefined,
+  },
+  variant: {
+    type: String as PropType<AlertVariant>,
+    default: 'outlined',
+  },
+  title: { type: String, default: undefined },
+  description: { type: String, default: undefined },
+  showIcon: {
+    type: Boolean,
+    default: undefined,
+  },
+  closable: {
+    type: [Boolean, Object] as PropType<AlertClosable>,
+    default: undefined,
+  },
+  icon: { type: [String, Object, Array, Function] as PropType<VNodeChild>, default: undefined },
+  banner: { type: Boolean, default: false },
+  action: { type: [String, Object, Array, Function] as PropType<VNodeChild>, default: undefined },
+  role: {
+    type: String,
+    default: 'alert',
+  },
+  classNames: { type: Object as PropType<AlertClassNames>, default: undefined },
+  styles: { type: Object as PropType<AlertStyles>, default: undefined },
+} satisfies Record<keyof AlertProps, any>
+
 export const Alert = defineComponent({
   name: 'Alert',
-  props: {
-    type: {
-      type: String as PropType<AlertType>,
-      default: undefined,
-    },
-    variant: {
-      type: String as PropType<AlertVariant>,
-      default: 'outlined',
-    },
-    /** 标题内容（与 AntD v6 对齐） */
-    title: String,
-    description: String,
-    showIcon: {
-      type: Boolean,
-      default: undefined,
-    },
-    closable: {
-      type: [Boolean, Object] as PropType<AlertClosable>,
-      default: undefined,
-    },
-    icon: [String, Object, Array, Function] as PropType<VNodeChild>,
-    banner: Boolean,
-    action: [String, Object, Array, Function] as PropType<VNodeChild>,
-    role: {
-      type: String,
-      default: 'alert',
-    },
-    classNames: Object as PropType<AlertClassNames>,
-    styles: Object as PropType<AlertStyles>,
-  },
+  props: alertProps,
   emits: ['close', 'afterClose'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('alert')
