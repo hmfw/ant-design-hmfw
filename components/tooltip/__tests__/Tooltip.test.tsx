@@ -377,11 +377,13 @@ describe('Tooltip', () => {
     // 模拟 ResizeObserver
     const observeMock = vi.fn()
     const disconnectMock = vi.fn()
-    global.ResizeObserver = vi.fn().mockImplementation((_callback) => ({
-      observe: observeMock,
-      disconnect: disconnectMock,
-      unobserve: vi.fn(),
-    }))
+    global.ResizeObserver = vi.fn().mockImplementation(function (_callback) {
+      return {
+        observe: observeMock,
+        disconnect: disconnectMock,
+        unobserve: vi.fn(),
+      }
+    })
 
     const wrapper = mount(Tooltip, {
       props: { title: 'tip', open: false },

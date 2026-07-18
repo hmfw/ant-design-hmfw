@@ -569,11 +569,13 @@ describe('Trigger', () => {
     const observeMock = vi.fn()
     const disconnectMock = vi.fn()
     const origObserver = (global as any).ResizeObserver
-    ;(global as any).ResizeObserver = vi.fn().mockImplementation(() => ({
-      observe: observeMock,
-      disconnect: disconnectMock,
-      unobserve: vi.fn(),
-    }))
+    ;(global as any).ResizeObserver = vi.fn().mockImplementation(function () {
+      return {
+        observe: observeMock,
+        disconnect: disconnectMock,
+        unobserve: vi.fn(),
+      }
+    })
 
     try {
       const wrapper = mountTrigger({ observePopupResize: true })
@@ -589,11 +591,13 @@ describe('Trigger', () => {
     const observeMock = vi.fn()
     const disconnectMock = vi.fn()
     const origObserver = (global as any).ResizeObserver
-    ;(global as any).ResizeObserver = vi.fn().mockImplementation(() => ({
-      observe: observeMock,
-      disconnect: disconnectMock,
-      unobserve: vi.fn(),
-    }))
+    ;(global as any).ResizeObserver = vi.fn().mockImplementation(function () {
+      return {
+        observe: observeMock,
+        disconnect: disconnectMock,
+        unobserve: vi.fn(),
+      }
+    })
 
     try {
       const wrapper = mountTrigger({ observePopupResize: true, trigger: 'click' })
@@ -610,11 +614,13 @@ describe('Trigger', () => {
     const observeMock = vi.fn()
     const disconnectMock = vi.fn()
     const origObserver = (global as any).ResizeObserver
-    ;(global as any).ResizeObserver = vi.fn().mockImplementation(() => ({
-      observe: observeMock,
-      disconnect: disconnectMock,
-      unobserve: vi.fn(),
-    }))
+    ;(global as any).ResizeObserver = vi.fn().mockImplementation(function () {
+      return {
+        observe: observeMock,
+        disconnect: disconnectMock,
+        unobserve: vi.fn(),
+      }
+    })
 
     try {
       const wrapper = mountTrigger({ observePopupResize: true, trigger: 'click', mouseLeaveDelay: 0 })
@@ -634,11 +640,13 @@ describe('Trigger', () => {
     const observeMock = vi.fn()
     const disconnectMock = vi.fn()
     const origObserver = (global as any).ResizeObserver
-    ;(global as any).ResizeObserver = vi.fn().mockImplementation(() => ({
-      observe: observeMock,
-      disconnect: disconnectMock,
-      unobserve: vi.fn(),
-    }))
+    ;(global as any).ResizeObserver = vi.fn().mockImplementation(function () {
+      return {
+        observe: observeMock,
+        disconnect: disconnectMock,
+        unobserve: vi.fn(),
+      }
+    })
 
     try {
       // 先挂载等 onMounted 创建 observer，再打开弹层触发 observe

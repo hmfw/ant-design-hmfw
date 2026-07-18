@@ -49,7 +49,8 @@ describe('Grid', () => {
         props: { gutter: '20px' },
       })
       const style = wrapper.attributes('style')
-      expect(style).toContain('margin-inline: calc(20px / -2)')
+      // jsdom 会将 calc(20px / -2) 归一化为等价的 calc(-10px)
+      expect(style).toContain('margin-inline: calc(-10px)')
     })
 
     it('handles align', () => {

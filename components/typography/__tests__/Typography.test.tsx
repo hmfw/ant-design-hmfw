@@ -524,7 +524,9 @@ describe('Typography', () => {
       const observeSpy = vi.fn()
       vi.stubGlobal(
         'ResizeObserver',
-        vi.fn(() => ({ observe: observeSpy, disconnect: disconnectSpy, unobserve: vi.fn() })),
+        vi.fn(function () {
+          return { observe: observeSpy, disconnect: disconnectSpy, unobserve: vi.fn() }
+        }),
       )
 
       const wrapper = mount(Text, {
@@ -548,7 +550,9 @@ describe('Typography', () => {
       // 注入 ResizeObserver stub 触发 observer 路径
       const observeSpy = vi.fn()
       const disconnectSpy = vi.fn()
-      const RO = vi.fn((_cb: () => void) => ({ observe: observeSpy, disconnect: disconnectSpy, unobserve: vi.fn() }))
+      const RO = vi.fn(function (_cb?: () => void) {
+        return { observe: observeSpy, disconnect: disconnectSpy, unobserve: vi.fn() }
+      })
       vi.stubGlobal('ResizeObserver', RO)
 
       const onEllipsis = vi.fn()
