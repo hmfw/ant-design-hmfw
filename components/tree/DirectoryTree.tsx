@@ -1,18 +1,21 @@
 import { defineComponent, type PropType } from 'vue'
 import { Tree } from './Tree'
 import { FolderOutlined, FolderOpenOutlined, FileOutlined } from '@hmfw/icons'
-import type { TreeDataNode, ExpandAction } from './types'
+import type { TreeDataNode, ExpandAction, DirectoryTreeProps } from './types'
 
 /**
  * 目录树：在 Tree 基础上默认 blockNode + showIcon，并提供文件夹/文件图标。
  * 文件夹依据展开态切换 Folder/FolderOpen，叶子节点用 File。
  */
+
+const directoryTreeProps = {
+  expandAction: { type: [Boolean, String] as PropType<ExpandAction>, default: 'click' },
+  showIcon: { type: Boolean, default: true },
+} satisfies Record<keyof Pick<DirectoryTreeProps, 'expandAction' | 'showIcon'>, any>
+
 export const DirectoryTree = defineComponent({
   name: 'DirectoryTree',
-  props: {
-    expandAction: { type: [Boolean, String] as PropType<ExpandAction>, default: 'click' },
-    showIcon: { type: Boolean, default: true },
-  },
+  props: directoryTreeProps,
   setup(props, { attrs, slots }) {
     const folderIcon = (node: TreeDataNode, ctx?: { expanded: boolean; isLeaf: boolean }) => {
       // 节点自定义 icon 优先

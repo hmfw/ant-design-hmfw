@@ -25,6 +25,14 @@
   <TreeCheckable />
 </DemoBlock>
 
+### 受控操作
+
+通过 `v-model:expandedKeys` / `v-model:selectedKeys` / `v-model:checkedKeys` 可完全受控地操作展开、选中与勾选，配合外部按钮实现展开全部、全选等批量操作。
+
+<DemoBlock title="受控操作" :source="TreeControlledSource">
+  <TreeControlled />
+</DemoBlock>
+
 ### 显示连接线
 
 使用 `showLine` 属性可以显示连接线。
@@ -71,6 +79,14 @@
 
 <DemoBlock title="自定义字段" :source="TreeFieldNamesSource">
   <TreeFieldNames />
+</DemoBlock>
+
+### 自定义图标
+
+设置 `showIcon` 后，通过 `icon` 属性（渲染函数形式）可根据节点数据动态渲染不同图标与颜色。
+
+<DemoBlock title="自定义图标" :source="TreeIconSource">
+  <TreeIcon />
 </DemoBlock>
 
 ### 虚拟滚动
@@ -163,7 +179,7 @@
 | dblclick                                               | 双击节点            | `(event, node) => void`                                                                |
 | rightClick                                             | 右键节点            | `({ event, node }) => void`                                                            |
 | dragstart / dragenter / dragover / dragleave / dragend | 拖拽过程事件        | `({ event, node, ... }) => void`                                                       |
-| drop                                                   | 拖拽释放            | `({ node, dragNode, dragNodesKeys, dropPosition, dropToGap, nativeEvent }) => void`    |
+| drop                                                   | 拖拽释放            | `({ event, node, dragNode, dragNodesKeys, dropPosition, dropToGap }) => void`          |
 
 ### 键盘支持
 
@@ -433,14 +449,26 @@ const treeData = [
 
 ## 设计 Token
 
-| Token 名称                     | 说明           | 默认值             |
-| ------------------------------ | -------------- | ------------------ |
-| `--hmfw-color-text`            | 主文本色       | `rgba(0,0,0,0.88)` |
-| `--hmfw-color-text-secondary`  | 次要文本色     | `rgba(0,0,0,0.65)` |
-| `--hmfw-color-text-disabled`   | 禁用文本色     | `rgba(0,0,0,0.25)` |
-| `--hmfw-color-text-quaternary` | 四级文本色     | `rgba(0,0,0,0.25)` |
-| `--hmfw-color-primary`         | 主题色         | `#1677ff`          |
-| `--hmfw-color-primary-bg`      | 主题色背景     | `#e6f4ff`          |
-| `--hmfw-color-primary-border`  | 主题色边框     | `#91caff`          |
-| `--hmfw-color-bg-text-hover`   | 文本悬停背景色 | `rgba(0,0,0,0.06)` |
-| `--hmfw-color-border`          | 边框色         | `#d9d9d9`          |
+Tree 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+### 全局 Token
+
+| Token 名称                      | 说明                   | 默认值             |
+| ------------------------------- | ---------------------- | ------------------ |
+| `--hmfw-font-size`              | 节点字号               | `14px`             |
+| `--hmfw-border-radius`          | 节点圆角               | `6px`              |
+| `--hmfw-border-radius-xs`       | showLine 开关圆角      | `4px`              |
+| `--hmfw-padding-xs`             | 节点内容水平内边距     | `8px`              |
+| `--hmfw-margin-xs`              | 复选框右间距           | `8px`              |
+| `--hmfw-margin-xxs`             | 图标右间距             | `4px`              |
+| `--hmfw-color-text`             | 主文本色               | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-text-secondary`   | 展开开关色             | `rgba(0,0,0,0.65)` |
+| `--hmfw-color-text-disabled`    | 禁用文本色             | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-text-quaternary`  | 拖拽把手色             | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-text-light-solid` | 目录树选中文本色（白） | `#fff`             |
+| `--hmfw-color-primary`          | 主题色                 | `#1677ff`          |
+| `--hmfw-color-primary-bg`       | 选中/悬停背景          | `#e6f4ff`          |
+| `--hmfw-color-primary-border`   | 焦点环色               | `#91caff`          |
+| `--hmfw-color-bg-text-hover`    | 节点悬停背景色         | `rgba(0,0,0,0.06)` |
+| `--hmfw-color-bg-container`     | showLine 开关背景      | `#ffffff`          |
+| `--hmfw-color-border`           | 边框色                 | `#d9d9d9`          |

@@ -22,6 +22,14 @@ export type {
   DirectoryTreeProps,
   ExpandAction,
   Key,
+  TreeExpandHandler,
+  TreeSelectHandler,
+  TreeCheckHandler,
+  TreeDblClickHandler,
+  TreeRightClickHandler,
+  TreeDragHandler,
+  TreeDragEnterHandler,
+  TreeDropHandler,
 } from './types'
 
 // 挂载静态成员 Tree.DirectoryTree

@@ -60,27 +60,27 @@ export interface TreeCheckInfo {
   nativeEvent?: Event
 }
 
-/** 节点鼠标/键盘事件 info */
+/** 节点鼠标/键盘事件 info（rightClick / dragstart / dragover / dragleave / dragend） */
 export interface TreeNodeMouseInfo {
+  event: Event
   node: TreeDataNode
-  nativeEvent: Event
 }
 
 /** 拖拽 drop 事件 info */
 export interface TreeDropInfo {
+  event: DragEvent
   node: TreeDataNode
   dragNode: TreeDataNode
   dragNodesKeys: Key[]
   dropPosition: number
   dropToGap: boolean
-  nativeEvent?: DragEvent
 }
 
 /** 拖拽 dragenter 事件 info */
 export interface TreeDragEnterInfo {
+  event: DragEvent
   node: TreeDataNode
   expandedKeys: Key[]
-  nativeEvent?: DragEvent
 }
 
 /** showLine 配置 */
@@ -151,6 +151,12 @@ export interface TreeProps {
   /** 自定义节点标题渲染 */
   titleRender?: (node: TreeDataNode) => VNodeChild
   fieldNames?: FieldNames
+  /** 是否开启虚拟滚动 */
+  virtual?: boolean
+  /** 虚拟滚动容器高度（开启 virtual 时必需） */
+  height?: number | string
+  /** 虚拟滚动每项高度 */
+  itemHeight?: number
   classNames?: TreeSemanticClassNames
   styles?: TreeSemanticStyles
 }
@@ -161,3 +167,22 @@ export type ExpandAction = false | 'click' | 'doubleClick'
 export interface DirectoryTreeProps extends TreeProps {
   expandAction?: ExpandAction
 }
+
+// ============ 事件回调类型 ============
+
+/** expand 事件回调 */
+export type TreeExpandHandler = (keys: Key[], info: TreeExpandInfo) => void
+/** select 事件回调 */
+export type TreeSelectHandler = (keys: Key[], info: TreeSelectInfo) => void
+/** check 事件回调 */
+export type TreeCheckHandler = (keys: Key[] | CheckedKeysObject, info: TreeCheckInfo) => void
+/** dblclick 事件回调 */
+export type TreeDblClickHandler = (event: Event, node: TreeDataNode) => void
+/** rightClick 事件回调 */
+export type TreeRightClickHandler = (info: TreeNodeMouseInfo) => void
+/** 拖拽过程事件回调（dragstart/dragover/dragleave/dragend） */
+export type TreeDragHandler = (info: TreeNodeMouseInfo) => void
+/** dragenter 事件回调 */
+export type TreeDragEnterHandler = (info: TreeDragEnterInfo) => void
+/** drop 事件回调 */
+export type TreeDropHandler = (info: TreeDropInfo) => void

@@ -17,6 +17,7 @@ import type {
   AllowDropOptions,
   TreeSemanticClassNames,
   TreeSemanticStyles,
+  TreeProps,
   Key,
 } from './types'
 
@@ -34,6 +35,8 @@ interface FlatNode {
   level: number
   hasChildren: boolean
   pos: string
+  /** 每层祖先是否为其父的最后一个子节点，用于 showLine 竖线是否延续（索引 0 = 最外层） */
+  isEnd: boolean[]
 }
 
 /** 节点图标上下文（传给自定义 icon 函数） */
@@ -44,51 +47,63 @@ interface IconCtx {
 
 /** 按名称渲染库内图标组件；找不到时返回原始内容 */
 function renderIcon(
-  icon: string | ((node: any, ctx?: IconCtx) => VNodeChild) | undefined,
+  icon: string | ((node: TreeDataNode, ctx?: IconCtx) => VNodeChild) | undefined,
   node: TreeDataNode,
   ctx?: IconCtx,
 ): VNodeChild {
   if (!icon) return null
   if (typeof icon === 'function') return icon(node, ctx)
-  const Comp = (Icons as Record<string, unknown>)[icon] as ((p: any) => VNodeChild) | undefined
+  const Comp = (Icons as Record<string, unknown>)[icon] as ((props: Record<string, unknown>) => VNodeChild) | undefined
   return Comp ? Comp({}) : icon
 }
+
+/**
+ * Tree 对外 props —— 用 satisfies 强制 key 集合与 TreeProps 接口完全一致，杜绝类型漂移。
+ * 可选且无默认值的属性必须显式 default: undefined。
+ */
+const treeProps = {
+  treeData: { type: Array as PropType<TreeDataNode[]>, default: () => [] },
+  expandedKeys: { type: Array as PropType<TreeExpandedKeys>, default: undefined },
+  defaultExpandedKeys: { type: Array as PropType<TreeExpandedKeys>, default: () => [] },
+  defaultExpandAll: { type: Boolean, default: false },
+  defaultExpandParent: { type: Boolean, default: true },
+  autoExpandParent: { type: Boolean, default: false },
+  selectedKeys: { type: Array as PropType<TreeSelectedKeys>, default: undefined },
+  defaultSelectedKeys: { type: Array as PropType<TreeSelectedKeys>, default: () => [] },
+  checkedKeys: { type: [Array, Object] as PropType<TreeCheckedKeys | CheckedKeysObject>, default: undefined },
+  defaultCheckedKeys: { type: Array as PropType<TreeCheckedKeys>, default: () => [] },
+  checkable: { type: Boolean, default: false },
+  checkStrictly: { type: Boolean, default: false },
+  multiple: { type: Boolean, default: false },
+  selectable: { type: Boolean, default: true },
+  disabled: { type: Boolean, default: false },
+  draggable: { type: [Boolean, Function, Object] as PropType<DraggableConfig>, default: undefined },
+  allowDrop: { type: Function as PropType<(options: AllowDropOptions) => boolean>, default: undefined },
+  showLine: { type: [Boolean, Object] as PropType<ShowLineConfig>, default: undefined },
+  showIcon: { type: Boolean, default: false },
+  blockNode: { type: Boolean, default: false },
+  indent: { type: Number, default: 24 },
+  filterTreeNode: { type: Function as PropType<(node: TreeDataNode) => boolean>, default: undefined },
+  icon: { type: [String, Function] as PropType<string | ((node: TreeDataNode) => VNodeChild)>, default: undefined },
+  switcherIcon: {
+    type: [String, Function] as PropType<string | ((s: { expanded: boolean; isLeaf: boolean }) => VNodeChild)>,
+    default: undefined,
+  },
+  titleRender: { type: Function as PropType<(node: TreeDataNode) => VNodeChild>, default: undefined },
+  fieldNames: { type: Object as PropType<FieldNames>, default: undefined },
+  // 对齐 AntD：默认开启虚拟滚动，仅在设置 height 后实际生效（设为 false 可显式关闭）
+  virtual: { type: Boolean, default: true },
+  height: { type: [Number, String] as PropType<number | string>, default: undefined },
+  itemHeight: { type: Number, default: 28 },
+  classNames: { type: Object as PropType<TreeSemanticClassNames>, default: undefined },
+  styles: { type: Object as PropType<TreeSemanticStyles>, default: undefined },
+} satisfies Record<keyof TreeProps, any>
 
 export const Tree = defineComponent({
   name: 'Tree',
   props: {
-    treeData: { type: Array as PropType<TreeDataNode[]>, default: () => [] },
-    expandedKeys: Array as PropType<TreeExpandedKeys>,
-    defaultExpandedKeys: { type: Array as PropType<TreeExpandedKeys>, default: () => [] },
-    defaultExpandAll: Boolean,
-    defaultExpandParent: { type: Boolean, default: true },
-    autoExpandParent: Boolean,
-    selectedKeys: Array as PropType<TreeSelectedKeys>,
-    defaultSelectedKeys: { type: Array as PropType<TreeSelectedKeys>, default: () => [] },
-    checkedKeys: [Array, Object] as PropType<TreeCheckedKeys | CheckedKeysObject>,
-    defaultCheckedKeys: { type: Array as PropType<TreeCheckedKeys>, default: () => [] },
-    checkable: Boolean,
-    checkStrictly: Boolean,
-    multiple: Boolean,
-    selectable: { type: Boolean, default: true },
-    disabled: Boolean,
-    draggable: [Boolean, Function, Object] as PropType<DraggableConfig>,
-    allowDrop: Function as PropType<(options: AllowDropOptions) => boolean>,
-    showLine: [Boolean, Object] as PropType<ShowLineConfig>,
-    showIcon: Boolean,
-    blockNode: Boolean,
-    indent: { type: Number, default: 24 },
-    filterTreeNode: Function as PropType<(node: TreeDataNode) => boolean>,
-    icon: [String, Function] as PropType<string | ((node: TreeDataNode) => VNodeChild)>,
-    switcherIcon: [String, Function] as PropType<string | ((s: { expanded: boolean; isLeaf: boolean }) => VNodeChild)>,
-    titleRender: Function as PropType<(node: TreeDataNode) => VNodeChild>,
-    fieldNames: Object as PropType<FieldNames>,
-    virtual: Boolean,
-    height: [Number, String] as PropType<number | string>,
-    itemHeight: { type: Number, default: 28 },
-    classNames: Object as PropType<TreeSemanticClassNames>,
-    styles: Object as PropType<TreeSemanticStyles>,
-    /** DirectoryTree 用：展开触发方式 */
+    ...treeProps,
+    /** DirectoryTree 内部透传：展开触发方式（非对外 TreeProps API） */
     expandAction: {
       type: [Boolean, String] as PropType<false | 'click' | 'doubleClick'>,
       default: undefined,
@@ -212,32 +227,42 @@ export const Tree = defineComponent({
     )
 
     // ============ 半选计算（checkStrictly 关闭时） ============
-    const halfCheckedKeys = computed<Set<Key>>(() => {
+    /**
+     * 给定 checked 集合，自底向上一次遍历推算半选集合。
+     * 按 pos 降序排列（越深的节点越靠前）保证子节点先于父节点处理，
+     * 用 hasCheckedDescendant 缓存传递「后代含选中」标记，复杂度 O(n log n)。
+     */
+    const computeHalfChecked = (checked: Iterable<Key>): Set<Key> => {
       const result = new Set<Key>()
       if (props.checkStrictly) return result
-      const checkedSet = new Set(checkedKeys.value)
-      // 自身未选中，但后代中有被选中的 -> 半选
-      for (const [key] of keyEntities.value) {
-        if (checkedSet.has(key)) continue
-        const descendants = getDescendantKeys(key)
-        if (descendants.length && descendants.some((d) => checkedSet.has(d))) {
-          result.add(key)
-        }
+      const checkedSet = new Set(checked)
+      const entries = Array.from(keyEntities.value.entries()).sort((a, b) => b[1].pos.localeCompare(a[1].pos))
+      // 标记每个节点「自身或后代中是否含选中项」，供其父节点复用
+      const hasCheckedDescendant = new Map<Key, boolean>()
+      for (const [key, entity] of entries) {
+        const childHit = entity.childrenKeys.some((c) => checkedSet.has(c) || hasCheckedDescendant.get(c))
+        hasCheckedDescendant.set(key, checkedSet.has(key) || childHit)
+        // 自身未选中但后代有选中 -> 半选
+        if (!checkedSet.has(key) && childHit) result.add(key)
       }
       return result
-    })
+    }
+
+    const halfCheckedKeys = computed<Set<Key>>(() => computeHalfChecked(checkedKeys.value))
     // __FLATTEN__
 
     // ============ 扁平化可见节点 ============
-    const flattenNodes = (nodes: TreeDataNode[], level = 0, parentPos = '0'): FlatNode[] =>
+    const flattenNodes = (nodes: TreeDataNode[], level = 0, parentPos = '0', parentIsEnd: boolean[] = []): FlatNode[] =>
       nodes.flatMap((node, i) => {
         const key = getKey(node)
         const children = getChildren(node)
         const pos = `${parentPos}-${i}`
         const hasChildren = !!children?.length
-        const result: FlatNode[] = [{ node, level, hasChildren, pos }]
+        // 本节点这一列是否为末位（父的最后一个子）
+        const isEnd = [...parentIsEnd, i === nodes.length - 1]
+        const result: FlatNode[] = [{ node, level, hasChildren, pos, isEnd }]
         if (hasChildren && expandedKeys.value.includes(key)) {
-          result.push(...flattenNodes(children!, level + 1, pos))
+          result.push(...flattenNodes(children!, level + 1, pos, isEnd))
         }
         return result
       })
@@ -316,7 +341,7 @@ export const Tree = defineComponent({
       }
 
       innerChecked.value = next
-      const half = Array.from(halfCheckedKeysFor(next))
+      const half = Array.from(computeHalfChecked(next))
       emit('update:checkedKeys', props.checkStrictly ? { checked: next, halfChecked: half } : next)
       emit('check', next, {
         event: 'check',
@@ -326,19 +351,6 @@ export const Tree = defineComponent({
         halfCheckedKeys: half,
         nativeEvent,
       })
-    }
-
-    // 给定 checked 数组，推算半选集合（供事件回调用）
-    const halfCheckedKeysFor = (checked: Key[]): Set<Key> => {
-      const result = new Set<Key>()
-      if (props.checkStrictly) return result
-      const checkedSet = new Set(checked)
-      for (const [key] of keyEntities.value) {
-        if (checkedSet.has(key)) continue
-        const descendants = getDescendantKeys(key)
-        if (descendants.length && descendants.some((d) => checkedSet.has(d))) result.add(key)
-      }
-      return result
     }
     // __INTERACTION__
 
@@ -478,12 +490,12 @@ export const Tree = defineComponent({
       const dragNode = dragKey.value != null ? keyEntities.value.get(dragKey.value)?.node : undefined
       const dropEntity = keyEntities.value.get(key)
       emit('drop', {
+        event: e,
         node,
         dragNode,
         dragNodesKeys: dragKey.value != null ? [dragKey.value, ...getDescendantKeys(dragKey.value)] : [],
         dropPosition: dropEntity?.index ?? 0,
         dropToGap: false,
-        nativeEvent: e,
       })
       dragKey.value = null
       dragOverKey.value = null
@@ -516,13 +528,17 @@ export const Tree = defineComponent({
             : renderIcon(props.switcherIcon, node)
         if (custom) return custom
       }
-      if (!hasChildren) return null
+      if (!hasChildren) {
+        // showLine 模式下，叶子节点的 switcher 位画一条连接线（└/├ 形状由 CSS 绘制）
+        if (showLineEnabled.value) return <span class={`${prefixCls}-switcher-leaf-line`} />
+        return null
+      }
       return isExpanded ? <CaretDownFilled class="hmfw-icon" /> : <CaretRightFilled class="hmfw-icon" />
     }
 
     // 渲染单个树节点
     const renderTreeNode = (flatNode: FlatNode, _index: number) => {
-      const { node, level, hasChildren } = flatNode
+      const { node, level, hasChildren, isEnd } = flatNode
       const key = getKey(node)
       const isExpanded = expandedKeys.value.includes(key)
       const isSelected = selectedKeys.value.includes(key)
@@ -542,6 +558,7 @@ export const Tree = defineComponent({
             [`${prefixCls}-treenode-selected`]: isSelected,
             [`${prefixCls}-treenode-disabled`]: isDisabled,
             [`${prefixCls}-treenode-leaf`]: !hasChildren,
+            [`${prefixCls}-treenode-leaf-last`]: !hasChildren && isEnd[isEnd.length - 1],
             [`${prefixCls}-treenode-active`]: isActive,
             [`${prefixCls}-treenode-draggable`]: draggableNode,
             [`${prefixCls}-treenode-drag-over`]: dragOverKey.value === key,
@@ -553,7 +570,7 @@ export const Tree = defineComponent({
           aria-selected={props.selectable ? isSelected : undefined}
           aria-checked={props.checkable ? isChecked : undefined}
           aria-disabled={isDisabled || undefined}
-          style={{ paddingLeft: `${level * props.indent}px`, ...ss('item') }}
+          style={ss('item')}
           draggable={draggableNode || undefined}
           onFocus={() => {
             activeKey.value = key
@@ -567,6 +584,19 @@ export const Tree = defineComponent({
           onDragend={props.draggable ? (e: DragEvent) => handleDragEnd(e, node) : undefined}
           onDrop={props.draggable ? (e: DragEvent) => handleDrop(e, key, node) : undefined}
         >
+          {/* 缩进单元格：每层祖先一个 unit，showLine 时其 ::before 画竖线；
+              末位祖先（其后无兄弟）对应列不再延续竖线，标记 indent-unit-end */}
+          <span class={`${prefixCls}-indent`} aria-hidden="true">
+            {isEnd.slice(0, level).map((end, i) => (
+              <span
+                key={i}
+                class={cls(`${prefixCls}-indent-unit`, {
+                  [`${prefixCls}-indent-unit-end`]: end,
+                })}
+              />
+            ))}
+          </span>
+
           {/* 拖拽把手 */}
           {draggableNode && dragIcon.value && <span class={`${prefixCls}-draggable-icon`}>⋮⋮</span>}
 
@@ -643,7 +673,7 @@ export const Tree = defineComponent({
             [`${prefixCls}-icon-hide`]: !props.showIcon,
             [`${prefixCls}-unselectable`]: !props.selectable,
           })}
-          style={ss('root')}
+          style={{ '--hmfw-tree-indent-size': `${props.indent}px`, ...ss('root') }}
           role="tree"
           aria-multiselectable={props.multiple || undefined}
         >

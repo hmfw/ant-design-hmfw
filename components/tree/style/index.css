@@ -1,87 +1,139 @@
 .hmfw-tree {
-  font-size: 14px;
+  /* 尺寸模型（对齐 AntD v6 Tree token） */
+  --hmfw-tree-title-height: 24px;
+  --hmfw-tree-switcher-size: 24px;
+  --hmfw-tree-node-gap: 4px; /* AntD: padding-xs / 2 */
+  --hmfw-tree-interactive-size: 16px; /* AntD: controlInteractiveSize（checkbox 内框尺寸） */
+  --hmfw-tree-indent-size: 24px; /* 单层缩进宽度，组件按 indent prop 注入 */
+
+  font-size: var(--hmfw-font-size);
+  line-height: var(--hmfw-line-height);
   color: var(--hmfw-color-text);
   user-select: none;
 }
 
+/* ============ 行节点 ============ */
 .hmfw-tree-treenode {
   display: flex;
-  align-items: center;
-  padding: 2px 0;
+  align-items: flex-start;
+  margin-bottom: var(--hmfw-tree-node-gap);
+  padding: 0;
+  line-height: var(--hmfw-tree-title-height);
+  position: relative;
   cursor: default;
-  border-radius: 6px;
-  transition: background 0.2s;
-}
-
-.hmfw-tree-treenode:hover {
-  background: var(--hmfw-color-bg-text-hover);
-}
-
-.hmfw-tree-treenode-selected {
-  background: var(--hmfw-color-primary-bg);
-}
-
-.hmfw-tree-treenode-disabled {
-  color: var(--hmfw-color-text-disabled);
-  cursor: not-allowed;
 }
 
 .hmfw-tree-block-node .hmfw-tree-treenode {
   width: 100%;
 }
 
+.hmfw-tree-treenode-disabled .hmfw-tree-node-content-wrapper {
+  color: var(--hmfw-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.hmfw-tree-treenode-disabled .hmfw-tree-node-content-wrapper:hover {
+  background: transparent;
+}
+
+/* ============ 缩进 ============ */
+.hmfw-tree-indent {
+  align-self: stretch;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.hmfw-tree-indent-unit {
+  display: inline-block;
+  width: var(--hmfw-tree-indent-size);
+}
+
+/* ============ Switcher（展开/收起箭头） ============ */
 .hmfw-tree-switcher {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  font-size: 12px;
+  flex: none;
+  align-self: stretch;
+  width: var(--hmfw-tree-switcher-size);
+  /* 与右侧内容的间距：(switcher-size - interactive-size) / 2 */
+  margin-inline-end: calc((var(--hmfw-tree-switcher-size) - var(--hmfw-tree-interactive-size)) / 2);
+  font-size: 10px;
   color: var(--hmfw-color-text-secondary);
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform var(--hmfw-motion-duration-slow);
 }
 
 .hmfw-tree-switcher-noop {
   cursor: default;
 }
 
-/* Checkbox 单元格（复用库内 Checkbox 组件） */
+/* switcher hover 背景块（仅非叶子可点击时） */
+.hmfw-tree-switcher::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--hmfw-border-radius);
+  transition: background-color var(--hmfw-motion-duration-slow);
+  pointer-events: none;
+}
+
+.hmfw-tree-switcher:not(.hmfw-tree-switcher-noop):hover::before {
+  background-color: var(--hmfw-color-bg-text-hover);
+}
+
+/* ============ Checkbox 单元格 ============ */
 .hmfw-tree-checkbox-cell {
   display: inline-flex;
   align-items: center;
-  margin-right: 8px;
+  align-self: flex-start;
+  height: var(--hmfw-tree-title-height);
+  /* 与右侧内容的间距，与 switcher 一致：(switcher-size - interactive-size) / 2 */
+  margin-inline-end: calc((var(--hmfw-tree-switcher-size) - var(--hmfw-tree-interactive-size)) / 2);
   flex-shrink: 0;
 }
 
-/* 节点图标 */
+/* ============ 节点图标 ============ */
 .hmfw-tree-iconEle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  margin-right: 4px;
+  width: var(--hmfw-tree-switcher-size);
+  height: var(--hmfw-tree-title-height);
   flex-shrink: 0;
+  vertical-align: top;
+}
+
+.hmfw-tree-iconEle:empty {
+  display: none;
 }
 
 .hmfw-tree-icon-hide .hmfw-tree-iconEle {
   display: none;
 }
 
-/* Node content */
+/* ============ 节点内容 ============ */
 .hmfw-tree-node-content-wrapper {
-  padding: 2px 8px;
-  border-radius: 6px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--hmfw-tree-title-height);
+  padding: 0 var(--hmfw-padding-xs);
+  background: transparent;
+  border-radius: var(--hmfw-border-radius);
   cursor: pointer;
-  transition: background 0.2s;
-  flex: 1;
-  min-width: 0;
+  transition:
+    color var(--hmfw-motion-duration-mid),
+    background-color var(--hmfw-motion-duration-mid);
 }
 
-.hmfw-tree-node-selected {
-  background: var(--hmfw-color-primary-bg);
-  color: var(--hmfw-color-primary);
+.hmfw-tree-node-content-wrapper:hover {
+  background-color: var(--hmfw-color-bg-text-hover);
+}
+
+.hmfw-tree-node-content-wrapper.hmfw-tree-node-selected {
+  background-color: var(--hmfw-color-primary-bg);
 }
 
 .hmfw-tree-title {
@@ -90,35 +142,91 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-/* Show line */
-.hmfw-tree-show-line .hmfw-tree-treenode {
-  position: relative;
-}
-
+/* ============ Show line（连接线） ============ */
 .hmfw-tree-show-line .hmfw-tree-switcher {
-  border: 1px solid var(--hmfw-color-border);
-  border-radius: 2px;
-  background: #fff;
+  background: transparent;
 }
 
-/* 键盘焦点环 */
+/* 每层缩进列的竖线：画在 unit 右侧中线，向下延伸盖住行间距 */
+.hmfw-tree-show-line .hmfw-tree-indent-unit {
+  position: relative;
+  height: 100%;
+}
+
+.hmfw-tree-show-line .hmfw-tree-indent-unit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline-end: calc(var(--hmfw-tree-switcher-size) / 2);
+  bottom: calc(var(--hmfw-tree-node-gap) * -1);
+  border-inline-end: 1px solid var(--hmfw-color-border);
+}
+
+/* 末位列（其后无兄弟）不再延续竖线 */
+.hmfw-tree-show-line .hmfw-tree-indent-unit-end::before {
+  display: none;
+}
+
+/* 叶子节点 switcher 位的连接线：竖线 + 横线组成 ├／└ */
+.hmfw-tree-switcher-leaf-line {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 竖线段 */
+.hmfw-tree-switcher-leaf-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: calc(var(--hmfw-tree-node-gap) * -1);
+  inset-inline-end: calc(var(--hmfw-tree-switcher-size) / 2);
+  margin-inline-start: -1px;
+  border-inline-end: 1px solid var(--hmfw-color-border);
+}
+
+/* 横线段（从竖线转折点向右伸向标题）：左缘对齐竖线中线，高度半行使底边落在行中线 */
+.hmfw-tree-switcher-leaf-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline-start: calc(var(--hmfw-tree-switcher-size) / 2);
+  width: calc(var(--hmfw-tree-switcher-size) / 2 * 0.8);
+  height: calc(var(--hmfw-tree-title-height) / 2);
+  border-bottom: 1px solid var(--hmfw-color-border);
+}
+
+/* 整棵树最后一个叶子：竖线只画上半段，形成 └ */
+.hmfw-tree-treenode-leaf-last .hmfw-tree-switcher-leaf-line::before {
+  top: 0;
+  bottom: auto;
+  height: calc(var(--hmfw-tree-title-height) / 2);
+}
+
+/* ============ 键盘焦点环 ============ */
 .hmfw-tree-treenode:focus,
 .hmfw-tree-treenode:focus-visible {
   outline: none;
 }
 
 .hmfw-tree-treenode-active > .hmfw-tree-node-content-wrapper {
-  box-shadow: 0 0 0 2px var(--hmfw-color-primary-border);
+  background-color: var(--hmfw-color-bg-text-hover);
 }
 
-/* 过滤命中高亮 */
-.hmfw-tree-node-content-wrapper-matched .hmfw-tree-title {
+.hmfw-tree-treenode-active:focus-visible > .hmfw-tree-node-content-wrapper {
+  outline: var(--hmfw-line-width-bold) solid var(--hmfw-color-primary-border);
+  outline-offset: 1px;
+}
+
+/* ============ 过滤命中高亮 ============ */
+.hmfw-tree-treenode:not(.hmfw-tree-treenode-disabled) .hmfw-tree-node-content-wrapper-matched .hmfw-tree-title {
   color: var(--hmfw-color-primary);
-  font-weight: 600;
+  font-weight: var(--hmfw-font-weight-strong);
 }
 
-/* 拖拽 */
+/* ============ 拖拽 ============ */
 .hmfw-tree-treenode-draggable {
   cursor: grab;
 }
@@ -127,12 +235,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
+  width: var(--hmfw-tree-switcher-size);
+  height: var(--hmfw-tree-title-height);
   flex-shrink: 0;
   color: var(--hmfw-color-text-quaternary);
   cursor: grab;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-tree-treenode-draggable:hover .hmfw-tree-draggable-icon {
@@ -143,17 +252,70 @@
   background: var(--hmfw-color-primary-bg);
   box-shadow: inset 0 0 0 1px var(--hmfw-color-primary);
 }
-
-/* 目录树 */
+/* ============ 目录树 —— 背景遮罩画在 wrapper 的 ::before 上，铺满整行 ============ */
 .hmfw-tree-directory .hmfw-tree-treenode {
   position: relative;
 }
 
+/* wrapper 设 static，::before 以 treenode 为定位基准铺满整行 */
 .hmfw-tree-directory .hmfw-tree-node-content-wrapper {
+  position: static;
   flex: 1;
 }
 
-.hmfw-tree-directory .hmfw-tree-treenode-selected .hmfw-tree-node-content-wrapper {
+/* wrapper 内容浮在遮罩层之上 */
+.hmfw-tree-directory .hmfw-tree-node-content-wrapper > * {
+  position: relative;
+}
+
+.hmfw-tree-directory .hmfw-tree-node-content-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--hmfw-border-radius);
+  transition: background-color var(--hmfw-motion-duration-mid);
+}
+
+/* switcher / checkbox / 拖拽图标浮在遮罩之上 */
+.hmfw-tree-directory .hmfw-tree-switcher,
+.hmfw-tree-directory .hmfw-tree-checkbox-cell,
+.hmfw-tree-directory .hmfw-tree-draggable-icon {
+  z-index: 1;
+}
+
+/* hover：背景不画在 wrapper 自身，改画在 ::before */
+.hmfw-tree-directory .hmfw-tree-node-content-wrapper:hover {
+  background: transparent;
+}
+
+.hmfw-tree-directory
+  .hmfw-tree-treenode:not(.hmfw-tree-treenode-disabled)
+  .hmfw-tree-node-content-wrapper:hover::before {
+  background: var(--hmfw-control-item-bg-hover);
+}
+
+/* active（键盘导航）态遮罩 */
+.hmfw-tree-directory .hmfw-tree-treenode-active .hmfw-tree-node-content-wrapper::before {
+  background: var(--hmfw-control-item-bg-hover);
+}
+
+/* 选中：整行深色背景 + 文字反白，hover 时保持一致 */
+.hmfw-tree-directory .hmfw-tree-treenode-selected {
+  border-radius: var(--hmfw-border-radius);
+}
+
+.hmfw-tree-directory .hmfw-tree-treenode-selected .hmfw-tree-node-content-wrapper,
+.hmfw-tree-directory .hmfw-tree-treenode-selected .hmfw-tree-node-content-wrapper:hover {
+  color: var(--hmfw-color-text-light-solid);
+  background: transparent;
+}
+
+.hmfw-tree-directory .hmfw-tree-treenode-selected .hmfw-tree-switcher,
+.hmfw-tree-directory .hmfw-tree-treenode-selected .hmfw-tree-iconEle {
+  color: var(--hmfw-color-text-light-solid);
+}
+
+.hmfw-tree-directory .hmfw-tree-treenode-selected .hmfw-tree-node-content-wrapper::before,
+.hmfw-tree-directory .hmfw-tree-treenode-selected .hmfw-tree-node-content-wrapper:hover::before {
   background: var(--hmfw-color-primary);
-  color: #fff;
 }
