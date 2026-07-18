@@ -262,6 +262,8 @@ message.info({
 
 Message 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
 
+### 全局 Token
+
 | Token 名称                    | 说明         | 默认值                                                                                            |
 | ----------------------------- | ------------ | ------------------------------------------------------------------------------------------------- |
 | `--hmfw-color-bg-elevated`    | 浮层背景色   | `#ffffff`                                                                                         |
@@ -273,6 +275,19 @@ Message 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 
 | `--hmfw-font-size-base`       | 标准字号     | `14px`                                                                                            |
 | `--hmfw-font-size-lg`         | 大号字号     | `16px`                                                                                            |
 | `--hmfw-line-height`          | 标准行高     | `1.5714285714285714`                                                                              |
+| `--hmfw-control-height-lg`    | 大号控件高度 | `40px`                                                                                            |
+| `--hmfw-padding-sm`           | 小号内边距   | `12px`                                                                                            |
+| `--hmfw-margin-xs`            | 超小外边距   | `8px`                                                                                             |
 | `--hmfw-border-radius-lg`     | 大号圆角     | `8px`                                                                                             |
 | `--hmfw-box-shadow-secondary` | 次级浮层阴影 | `0 6px 16px 0 rgba(0,0,0,0.08), 0 3px 6px -4px rgba(0,0,0,0.12), 0 9px 28px 8px rgba(0,0,0,0.05)` |
 | `--hmfw-z-index-popup`        | 浮层层级     | `1010`                                                                                            |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-message` 上，派生自基础 Token（对齐 Ant Design `prepareComponentToken` 的派生规则），可直接覆盖以定制单条提示的内边距与间距。
+
+| Token 名称                                  | 说明                                                  | 默认值 |
+| ------------------------------------------- | ----------------------------------------------------- | ------ |
+| `--hmfw-message-content-padding-vertical`   | 卡片垂直内边距，派生自 `(控件高度 − 字号 × 行高) ÷ 2` | `9px`  |
+| `--hmfw-message-content-padding-horizontal` | 卡片水平内边距，派生自 `padding-sm`                   | `12px` |
+| `--hmfw-message-gap`                        | 多条提示之间的垂直间距，派生自 `margin-xs`            | `8px`  |

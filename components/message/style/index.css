@@ -1,6 +1,16 @@
 .hmfw-message {
+  /* 组件级 Token：对齐 AntD prepareComponentToken 的派生规则 */
+  /* 垂直内边距 = (controlHeightLG − fontSize × lineHeight) / 2 */
+  --hmfw-message-content-padding-vertical: calc(
+    (var(--hmfw-control-height-lg) - var(--hmfw-font-size-base) * var(--hmfw-line-height)) / 2
+  );
+  /* 水平内边距 = paddingSM */
+  --hmfw-message-content-padding-horizontal: var(--hmfw-padding-sm);
+  /* 提示之间的间距 = marginXS */
+  --hmfw-message-gap: var(--hmfw-margin-xs);
+
   position: fixed;
-  top: 8px;
+  top: var(--hmfw-margin-xs);
   left: 0;
   right: 0;
   z-index: var(--hmfw-z-index-popup);
@@ -12,7 +22,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--hmfw-message-gap);
 }
 
 .hmfw-message-notice-wrapper {
@@ -30,7 +40,7 @@
 
 .hmfw-message-notice {
   display: inline-block;
-  padding: 9px 12px;
+  padding: var(--hmfw-message-content-padding-vertical) var(--hmfw-message-content-padding-horizontal);
   background: var(--hmfw-color-bg-elevated);
   border-radius: var(--hmfw-border-radius-lg);
   box-shadow: var(--hmfw-box-shadow-secondary);
@@ -43,7 +53,7 @@
 .hmfw-message-notice-content {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--hmfw-margin-xs);
 }
 
 .hmfw-message-notice-icon {
@@ -88,7 +98,8 @@
   to {
     opacity: 0;
     max-height: 0;
-    margin-bottom: -8px;
+    /* 抵消列表 gap，使离场时相邻提示平滑上移 */
+    margin-bottom: calc(-1 * var(--hmfw-message-gap));
     overflow: hidden;
   }
 }
