@@ -304,4 +304,44 @@ interface PopconfirmStyles {
 
 ## 设计 Token
 
-Popconfirm 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。
+Popconfirm 组件已接入设计 Token 系统，所有颜色、尺寸、间距均使用 CSS 变量。通过 `ConfigProvider` 的 `theme` 属性可全局定制，也可通过覆盖 CSS 变量实现局部主题。
+
+### 使用的全局 Token
+
+| Token                         | 说明               | 默认值                |
+| ----------------------------- | ------------------ | --------------------- |
+| `--hmfw-color-bg-elevated`    | 浮层背景色         | `#ffffff`             |
+| `--hmfw-color-text`           | 主文本颜色         | `rgba(0, 0, 0, 0.88)` |
+| `--hmfw-color-text-secondary` | 次要文本颜色       | `rgba(0, 0, 0, 0.65)` |
+| `--hmfw-color-warning`        | 警告色（默认图标） | `#faad14`             |
+| `--hmfw-border-radius-lg`     | 大圆角             | `8px`                 |
+| `--hmfw-box-shadow-secondary` | 次级阴影           | -                     |
+| `--hmfw-font-size`            | 基础字号           | `14px`                |
+| `--hmfw-padding`              | 基础内边距         | `16px`                |
+| `--hmfw-padding-sm`           | 小内边距           | `12px`                |
+| `--hmfw-margin-xs`            | 超小外边距         | `8px`                 |
+
+### 组件专属 Token
+
+通过 CSS 变量可覆盖组件专属样式：
+
+| Token                         | 说明         | 默认值  |
+| ----------------------------- | ------------ | ------- |
+| `--hmfw-popconfirm-max-width` | 浮层最大宽度 | `300px` |
+| `--hmfw-popconfirm-min-width` | 浮层最小宽度 | `180px` |
+
+### 自定义示例
+
+```css
+/* 全局覆盖 */
+:root {
+  --hmfw-popconfirm-max-width: 400px;
+  --hmfw-color-warning: #ff4d4f; /* 修改图标颜色为红色 */
+}
+
+/* 局部覆盖 */
+.my-custom-popconfirm {
+  --hmfw-popconfirm-max-width: 350px;
+  --hmfw-border-radius-lg: 12px;
+}
+```

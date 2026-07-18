@@ -5,10 +5,10 @@
 .hmfw-popconfirm {
   position: absolute;
   z-index: 1070;
-  max-width: 300px;
+  max-width: var(--hmfw-popconfirm-max-width, 300px);
   pointer-events: none;
-  /* 箭头背景色（白色浮层） */
-  --hmfw-arrow-bg: #fff;
+  /* 箭头背景色（浮层背景） */
+  --hmfw-arrow-bg: var(--hmfw-color-bg-elevated);
   /* 覆盖 hmfw-trigger-popup 的基础样式，视觉容器是 -inner */
   background: transparent;
   border-radius: 0;
@@ -28,22 +28,22 @@
   border-radius: var(--hmfw-border-radius-lg);
   box-shadow: var(--hmfw-box-shadow-secondary);
   pointer-events: auto;
-  padding: 12px 16px;
-  min-width: 180px;
+  padding: var(--hmfw-padding-sm) var(--hmfw-padding);
+  min-width: var(--hmfw-popconfirm-min-width, 180px);
 }
 
 .hmfw-popconfirm-message {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 8px;
-  color: rgba(0, 0, 0, 0.88);
-  font-size: 14px;
+  gap: var(--hmfw-margin-xs);
+  margin-bottom: var(--hmfw-margin-xs);
+  color: var(--hmfw-color-text);
+  font-size: var(--hmfw-font-size);
 }
 
 .hmfw-popconfirm-message-icon {
-  font-size: 14px;
-  color: #faad14;
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-warning);
   flex-shrink: 0;
   margin-top: 1px;
 }
@@ -53,16 +53,16 @@
 }
 
 .hmfw-popconfirm-description {
-  color: rgba(0, 0, 0, 0.65);
-  font-size: 14px;
-  margin-bottom: 8px;
-  padding-left: 22px;
+  color: var(--hmfw-color-text-secondary);
+  font-size: var(--hmfw-font-size);
+  margin-bottom: var(--hmfw-margin-xs);
+  padding-left: calc(var(--hmfw-font-size) + var(--hmfw-margin-xs) + 8px);
 }
 
 .hmfw-popconfirm-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--hmfw-margin-xs);
 }
 
 /* 组件专属箭头类（空壳，供用户通过 classNames.arrow / styles.arrow 自定义） */

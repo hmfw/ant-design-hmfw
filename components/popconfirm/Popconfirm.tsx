@@ -5,7 +5,13 @@ import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import type { ButtonProps } from '../button/types'
 import type { TooltipPlacement, TooltipTrigger, TooltipArrow } from '../tooltip/types'
-import type { PopconfirmContent, PopconfirmOkType, PopconfirmClassNames, PopconfirmStyles } from './types'
+import type {
+  PopconfirmContent,
+  PopconfirmOkType,
+  PopconfirmClassNames,
+  PopconfirmStyles,
+  PopconfirmProps,
+} from './types'
 
 /**
  * Popconfirm delegates to Tooltip directly (skipping Popover) because we want
@@ -13,39 +19,42 @@ import type { PopconfirmContent, PopconfirmOkType, PopconfirmClassNames, Popconf
  * rather than Popover's title/content split. We use Tooltip's `customPrefixCls`
  * wrapper interface so the popup root carries `.hmfw-popconfirm` classes.
  */
+
+const popconfirmProps = {
+  title: { type: [String, Number, Object, Function] as PropType<PopconfirmContent>, default: undefined },
+  description: { type: [String, Number, Object, Function] as PropType<PopconfirmContent>, default: undefined },
+  icon: { type: [String, Number, Object, Function] as PropType<PopconfirmContent>, default: '⚠' },
+  okText: { type: String, default: undefined },
+  cancelText: { type: String, default: undefined },
+  okType: { type: String as PropType<PopconfirmOkType>, default: 'primary' },
+  okButtonProps: { type: Object as PropType<ButtonProps>, default: undefined },
+  cancelButtonProps: { type: Object as PropType<ButtonProps>, default: undefined },
+  showCancel: { type: Boolean, default: true },
+  trigger: {
+    type: [String, Array] as PropType<TooltipTrigger | TooltipTrigger[]>,
+    default: 'click',
+  },
+  placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
+  open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  arrow: { type: [Boolean, Object] as PropType<TooltipArrow>, default: true },
+  mouseEnterDelay: { type: Number, default: 0.1 },
+  mouseLeaveDelay: { type: Number, default: 0.1 },
+  autoAdjustOverflow: { type: Boolean, default: true },
+  zIndex: { type: Number, default: undefined },
+  destroyOnHidden: { type: Boolean, default: false },
+  getPopupContainer: { type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>, default: undefined },
+  overlayStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
+  overlayInnerStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
+  classNames: { type: Object as PropType<PopconfirmClassNames>, default: undefined },
+  styles: { type: Object as PropType<PopconfirmStyles>, default: undefined },
+} satisfies Record<keyof PopconfirmProps, any>
+
 export const Popconfirm = defineComponent({
   name: 'Popconfirm',
   inheritAttrs: false,
-  props: {
-    title: [String, Number, Object, Function] as PropType<PopconfirmContent>,
-    description: [String, Number, Object, Function] as PropType<PopconfirmContent>,
-    icon: { type: [String, Number, Object, Function] as PropType<PopconfirmContent>, default: '⚠' },
-    okText: String,
-    cancelText: String,
-    okType: { type: String as PropType<PopconfirmOkType>, default: 'primary' },
-    okButtonProps: Object as PropType<ButtonProps>,
-    cancelButtonProps: Object as PropType<ButtonProps>,
-    showCancel: { type: Boolean, default: true },
-    trigger: {
-      type: [String, Array] as PropType<TooltipTrigger | TooltipTrigger[]>,
-      default: 'click',
-    },
-    placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
-    open: { type: Boolean, default: undefined },
-    defaultOpen: Boolean,
-    disabled: Boolean,
-    arrow: { type: [Boolean, Object] as PropType<TooltipArrow>, default: true },
-    mouseEnterDelay: { type: Number, default: 0.1 },
-    mouseLeaveDelay: { type: Number, default: 0.1 },
-    autoAdjustOverflow: { type: Boolean, default: true },
-    zIndex: Number,
-    destroyOnHidden: Boolean,
-    getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
-    overlayStyle: Object as PropType<Record<string, string>>,
-    overlayInnerStyle: Object as PropType<Record<string, string>>,
-    classNames: Object as PropType<PopconfirmClassNames>,
-    styles: Object as PropType<PopconfirmStyles>,
-  },
+  props: popconfirmProps,
   emits: ['update:open', 'openChange', 'afterOpenChange', 'confirm', 'cancel'],
   setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('popconfirm')
