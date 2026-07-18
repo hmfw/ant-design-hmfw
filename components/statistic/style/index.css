@@ -10,17 +10,17 @@
 }
 
 .hmfw-statistic-title {
-  margin-bottom: 4px;
-  color: var(--hmfw-color-text-secondary);
+  margin-bottom: var(--hmfw-margin-xxs);
+  color: var(--hmfw-color-text-description);
   font-size: var(--hmfw-font-size);
   line-height: var(--hmfw-line-height);
 }
 
 .hmfw-statistic-content {
   color: var(--hmfw-color-text-heading);
-  font-size: 24px;
+  font-size: var(--hmfw-font-size-heading-3);
   font-family: var(--hmfw-font-family);
-  line-height: 1.35;
+  line-height: var(--hmfw-line-height-heading-3);
 }
 
 .hmfw-statistic-content-value {
@@ -34,11 +34,11 @@
 }
 
 .hmfw-statistic-content-prefix {
-  margin-inline-end: 4px;
+  margin-inline-end: var(--hmfw-margin-xxs);
 }
 
 .hmfw-statistic-content-suffix {
-  margin-inline-start: 4px;
+  margin-inline-start: var(--hmfw-margin-xxs);
 }
 
 /* RTL 支持 */
@@ -48,10 +48,10 @@
 
 .hmfw-statistic-rtl .hmfw-statistic-content-prefix {
   margin-inline-end: 0;
-  margin-inline-start: 4px;
+  margin-inline-start: var(--hmfw-margin-xxs);
 }
 
 .hmfw-statistic-rtl .hmfw-statistic-content-suffix {
   margin-inline-start: 0;
-  margin-inline-end: 4px;
+  margin-inline-end: var(--hmfw-margin-xxs);
 }

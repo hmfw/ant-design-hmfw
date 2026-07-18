@@ -2,7 +2,7 @@ import { defineComponent, type PropType, type CSSProperties, type VNode, ref, on
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Skeleton } from '../skeleton'
-import type { StatisticClassNames, StatisticStyles } from './types'
+import type { CountdownProps, StatisticClassNames, StatisticStyles } from './types'
 
 /**
  * 格式化时间，支持多种占位符
@@ -41,22 +41,23 @@ function formatCountdown(milliseconds: number, format = 'HH:mm:ss'): string {
   })
 }
 
+const countdownProps = {
+  title: { type: [String, Object] as PropType<string | VNode>, default: undefined },
+  value: { type: [Number, Date] as PropType<number | Date>, default: undefined },
+  format: { type: String, default: 'HH:mm:ss' },
+  prefix: { type: [String, Object] as PropType<string | VNode>, default: undefined },
+  suffix: { type: [String, Object] as PropType<string | VNode>, default: undefined },
+  valueStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  loading: { type: Boolean, default: false },
+  valueRender: { type: Function as PropType<(value: string) => VNode>, default: undefined },
+  classNames: { type: Object as PropType<StatisticClassNames>, default: undefined },
+  styles: { type: Object as PropType<StatisticStyles>, default: undefined },
+} satisfies Record<keyof CountdownProps, any>
+
 export const Countdown = defineComponent({
   name: 'Countdown',
-  props: {
-    title: [String, Object] as PropType<string | VNode>,
-    value: [Number, Date] as PropType<number | Date>,
-    format: { type: String, default: 'HH:mm:ss' },
-    prefix: [String, Object] as PropType<string | VNode>,
-    suffix: [String, Object] as PropType<string | VNode>,
-    valueStyle: Object as PropType<CSSProperties>,
-    loading: Boolean,
-    valueRender: Function as PropType<(value: string) => VNode>,
-    classNames: Object as PropType<StatisticClassNames>,
-    styles: Object as PropType<StatisticStyles>,
-    onFinish: Function as PropType<() => void>,
-    onChange: Function as PropType<(value: number) => void>,
-  },
+  props: countdownProps,
+  emits: ['finish', 'change'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('statistic')
     const config = useConfig()
@@ -81,9 +82,9 @@ export const Countdown = defineComponent({
       const remaining = calculateRemaining()
       remainingTime.value = remaining
 
-      // 触发 onChange 回调
-      if (props.onChange && remaining !== lastTime) {
-        props.onChange(remaining)
+      // 触发 change 事件：仅在剩余时间实际变化时
+      if (remaining !== lastTime) {
+        emit('change', remaining)
         lastTime = remaining
       }
 
@@ -93,7 +94,6 @@ export const Countdown = defineComponent({
           cancelAnimationFrame(rafId)
           rafId = null
         }
-        props.onFinish?.()
         emit('finish')
         return
       }

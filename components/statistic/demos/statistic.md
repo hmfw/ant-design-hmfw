@@ -33,6 +33,14 @@
 
 倒计时组件，支持多种时间格式和倒计时结束回调。
 
+### 倒计时事件
+
+<DemoBlock title="倒计时事件" :source="StatisticEventSource">
+  <StatisticEvent />
+</DemoBlock>
+
+通过 `finish` 事件监听倒计时结束，通过 `change` 事件监听剩余时间变化（参数为剩余毫秒数）。
+
 ### 加载状态
 
 <DemoBlock title="加载状态" :source="StatisticLoadingSource">
@@ -284,11 +292,14 @@ interface StatisticStyles {
 
 Statistic 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
 
-| Token 名称                    | 说明       | 默认值                                                       |
-| ----------------------------- | ---------- | ------------------------------------------------------------ |
-| `--hmfw-color-text`           | 主文本色   | `rgba(0,0,0,0.88)`                                           |
-| `--hmfw-color-text-heading`   | 标题文本色 | `rgba(0,0,0,0.88)`                                           |
-| `--hmfw-color-text-secondary` | 次级文本色 | `rgba(0,0,0,0.65)`                                           |
-| `--hmfw-font-family`          | 字体族     | `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, ...` |
-| `--hmfw-font-size`            | 标准字号   | `14px`                                                       |
-| `--hmfw-line-height`          | 标准行高   | `1.5714285714285714`                                         |
+| Token 名称                      | 说明                   | 默认值                                                       |
+| ------------------------------- | ---------------------- | ------------------------------------------------------------ |
+| `--hmfw-color-text`             | 根容器文本色           | `rgba(0,0,0,0.88)`                                           |
+| `--hmfw-color-text-heading`     | 数值内容文本色         | `rgba(0,0,0,0.88)`                                           |
+| `--hmfw-color-text-description` | 标题文本色             | `rgba(0,0,0,0.45)`                                           |
+| `--hmfw-font-family`            | 字体族                 | `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, ...` |
+| `--hmfw-font-size`              | 标题字号               | `14px`                                                       |
+| `--hmfw-line-height`            | 标题行高               | `1.5714285714285714`                                         |
+| `--hmfw-font-size-heading-3`    | 数值内容字号           | `24px`                                                       |
+| `--hmfw-line-height-heading-3`  | 数值内容行高           | `1.3333333333333333`                                         |
+| `--hmfw-margin-xxs`             | 标题下间距、前后缀间距 | `4px`                                                        |

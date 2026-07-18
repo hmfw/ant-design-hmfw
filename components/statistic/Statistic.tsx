@@ -2,7 +2,7 @@ import { defineComponent, type PropType, type CSSProperties, type VNode } from '
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Skeleton } from '../skeleton'
-import type { StatisticClassNames, StatisticStyles } from './types'
+import type { StatisticProps, StatisticClassNames, StatisticStyles } from './types'
 
 /**
  * 格式化数字，添加千分位分隔符和精度控制
@@ -37,22 +37,24 @@ function formatNumber(
   return decimalPart !== undefined ? `${formattedInteger}${decimalSeparator}${decimalPart}` : formattedInteger
 }
 
+const statisticProps = {
+  title: { type: [String, Object] as PropType<string | VNode>, default: undefined },
+  value: { type: [String, Number] as PropType<string | number>, default: undefined },
+  precision: { type: Number, default: undefined },
+  prefix: { type: [String, Object] as PropType<string | VNode>, default: undefined },
+  suffix: { type: [String, Object] as PropType<string | VNode>, default: undefined },
+  valueStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  groupSeparator: { type: String, default: ',' },
+  decimalSeparator: { type: String, default: '.' },
+  loading: { type: Boolean, default: false },
+  valueRender: { type: Function as PropType<(value: string) => VNode>, default: undefined },
+  classNames: { type: Object as PropType<StatisticClassNames>, default: undefined },
+  styles: { type: Object as PropType<StatisticStyles>, default: undefined },
+} satisfies Record<keyof StatisticProps, any>
+
 export const Statistic = defineComponent({
   name: 'Statistic',
-  props: {
-    title: [String, Object] as PropType<string | VNode>,
-    value: [String, Number] as PropType<string | number>,
-    precision: Number,
-    prefix: [String, Object] as PropType<string | VNode>,
-    suffix: [String, Object] as PropType<string | VNode>,
-    valueStyle: Object as PropType<CSSProperties>,
-    groupSeparator: { type: String, default: ',' },
-    decimalSeparator: { type: String, default: '.' },
-    loading: Boolean,
-    valueRender: Function as PropType<(value: string) => VNode>,
-    classNames: Object as PropType<StatisticClassNames>,
-    styles: Object as PropType<StatisticStyles>,
-  },
+  props: statisticProps,
   setup(props) {
     const prefixCls = usePrefixCls('statistic')
     const config = useConfig()

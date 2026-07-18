@@ -59,13 +59,17 @@ export interface StatisticProps {
   styles?: StatisticStyles
 }
 
-export interface CountdownProps extends Omit<StatisticProps, 'value'> {
+export interface CountdownProps extends Omit<
+  StatisticProps,
+  'value' | 'precision' | 'groupSeparator' | 'decimalSeparator'
+> {
   /** 目标时间（时间戳或 Date） */
   value?: number | Date
   /** 时间格式 */
   format?: string
-  /** 倒计时完成回调 */
-  onFinish?: () => void
-  /** 倒计时变化回调 */
-  onChange?: (value: number) => void
 }
+
+/** 倒计时完成事件回调 */
+export type CountdownFinishHandler = () => void
+/** 倒计时变化事件回调，参数为剩余毫秒数 */
+export type CountdownChangeHandler = (value: number) => void
