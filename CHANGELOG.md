@@ -10,6 +10,31 @@
 
 ## 最近版本
 
+## [0.26.0] - 2026-07-18
+
+[查看完整内容](./changelogs/v0.26.0.md)
+
+### ✨ 新特性
+
+- **Tree showLine**：实现连接线，全面对齐 AntD v6
+- **Watermark inherit**：新增继承层级控制属性
+- **Notification**：新增 `showProgress` 进度条与 `rtl` 方向支持
+
+### 🔧 重构
+
+- **PopConfirm / Message / Alert / Statistic / Result / Spin**：规范 props 约束并 token 化样式
+- **Timeline**：类名与语义化 API 对齐 AntD v6，修复交替布局
+
+### 🐛 修复
+
+- **Progress**：修复圆形/仪表盘颜色被样式表覆盖
+
+### 🔨 构建
+
+- ESLint 迁移至 v10 flat config，升级 @hmfw/icons 至 1.1.2
+
+---
+
 ## [0.25.0] - 2026-07-15
 
 [查看完整内容](./changelogs/v0.25.0.md)
