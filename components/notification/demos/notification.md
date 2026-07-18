@@ -34,6 +34,22 @@
   <NotificationPlacement />
 </DemoBlock>
 
+### 自定义图标
+
+通过 `icon` 属性自定义通知左侧图标，覆盖默认的类型图标。
+
+<DemoBlock title="自定义图标" :source="NotificationCustomIconSource">
+  <NotificationCustomIcon />
+</DemoBlock>
+
+### 带操作按钮
+
+通过 `btn` 属性在通知内添加自定义操作按钮，常配合 `duration: 0` 与 `key` 实现「操作后手动关闭」。
+
+<DemoBlock title="带操作按钮" :source="NotificationBtnSource">
+  <NotificationBtn />
+</DemoBlock>
+
 ### 更新消息内容和全局配置
 
 可以通过唯一的 `key` 来更新内容。也可以通过 `notification.config()` 设置全局配置。
@@ -249,19 +265,46 @@ notification.error({
 
 ## 设计 Token
 
-| Token 名称                     | 说明                       | 默认值                                                                                            |
-| ------------------------------ | -------------------------- | ------------------------------------------------------------------------------------------------- |
-| `--hmfw-color-bg-elevated`     | 通知背景色                 | `#ffffff`                                                                                         |
-| `--hmfw-color-error`           | 错误状态图标颜色           | `#ff4d4f`                                                                                         |
-| `--hmfw-color-fill-quaternary` | 关闭按钮 hover 背景色      | `rgba(0,0,0,0.02)`                                                                                |
-| `--hmfw-color-info`            | 信息状态图标颜色           | `#1677ff`                                                                                         |
-| `--hmfw-color-primary`         | 进度条颜色                 | `#1677ff`                                                                                         |
-| `--hmfw-color-success`         | 成功状态图标颜色           | `#52c41a`                                                                                         |
-| `--hmfw-color-text`            | 标题文字颜色               | `rgba(0,0,0,0.88)`                                                                                |
-| `--hmfw-color-text-secondary`  | 描述文字 / 关闭 hover 颜色 | `rgba(0,0,0,0.65)`                                                                                |
-| `--hmfw-color-text-tertiary`   | 关闭图标颜色               | `rgba(0,0,0,0.45)`                                                                                |
-| `--hmfw-color-warning`         | 警告状态图标颜色           | `#faad14`                                                                                         |
-| `--hmfw-border-radius`         | 通知圆角                   | `6px`                                                                                             |
-| `--hmfw-border-radius-sm`      | 关闭按钮圆角               | `4px`                                                                                             |
-| `--hmfw-box-shadow-secondary`  | 通知阴影                   | `0 6px 16px 0 rgba(0,0,0,0.08), 0 3px 6px -4px rgba(0,0,0,0.12), 0 9px 28px 8px rgba(0,0,0,0.05)` |
-| `--hmfw-z-index-popup`         | 通知层级                   | `1010`                                                                                            |
+Notification 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+### 全局 Token
+
+| Token 名称                          | 说明                       | 默认值                                                                                            |
+| ----------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------- |
+| `--hmfw-color-bg-elevated`          | 通知背景色                 | `#ffffff`                                                                                         |
+| `--hmfw-color-error`                | 错误状态图标颜色           | `#ff4d4f`                                                                                         |
+| `--hmfw-color-fill-quaternary`      | 关闭按钮 hover 背景色      | `rgba(0,0,0,0.02)`                                                                                |
+| `--hmfw-color-info`                 | 信息状态图标颜色           | `#1677ff`                                                                                         |
+| `--hmfw-color-primary`              | 进度条渐变终点色           | `#1677ff`                                                                                         |
+| `--hmfw-color-primary-border-hover` | 进度条渐变起点色           | `#73adff`                                                                                         |
+| `--hmfw-color-success`              | 成功状态图标颜色           | `#52c41a`                                                                                         |
+| `--hmfw-color-text`                 | 标题文字颜色               | `rgba(0,0,0,0.88)`                                                                                |
+| `--hmfw-color-text-secondary`       | 描述文字 / 关闭 hover 颜色 | `rgba(0,0,0,0.65)`                                                                                |
+| `--hmfw-color-text-tertiary`        | 关闭图标颜色               | `rgba(0,0,0,0.45)`                                                                                |
+| `--hmfw-color-warning`              | 警告状态图标颜色           | `#faad14`                                                                                         |
+| `--hmfw-font-size`                  | 描述 / 关闭图标字号        | `14px`                                                                                            |
+| `--hmfw-font-size-lg`               | 标题字号                   | `16px`                                                                                            |
+| `--hmfw-font-weight-strong`         | 标题字重                   | `600`                                                                                             |
+| `--hmfw-line-height`                | 文本行高                   | `1.5714285714285714`                                                                              |
+| `--hmfw-padding`                    | 通知纵向内边距 / 间距      | `16px`                                                                                            |
+| `--hmfw-padding-lg`                 | 通知横向内边距             | `24px`                                                                                            |
+| `--hmfw-margin`                     | 通知间距 / 按钮上边距      | `16px`                                                                                            |
+| `--hmfw-margin-sm`                  | 图标与文本间距             | `12px`                                                                                            |
+| `--hmfw-margin-xs`                  | 标题与描述间距             | `8px`                                                                                             |
+| `--hmfw-margin-lg`                  | 距屏幕边缘偏移             | `24px`                                                                                            |
+| `--hmfw-border-radius-lg`           | 通知圆角                   | `8px`                                                                                             |
+| `--hmfw-border-radius-sm`           | 关闭按钮圆角               | `4px`                                                                                             |
+| `--hmfw-box-shadow-secondary`       | 通知阴影                   | `0 6px 16px 0 rgba(0,0,0,0.08), 0 3px 6px -4px rgba(0,0,0,0.12), 0 9px 28px 8px rgba(0,0,0,0.05)` |
+| `--hmfw-z-index-popup`              | 通知层级                   | `1010`                                                                                            |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-notification` 上，派生自基础主题 Token，可直接覆盖以定制单个组件的尺寸与样式。
+
+| Token 名称                            | 说明                                                     | 默认值                      |
+| ------------------------------------- | -------------------------------------------------------- | --------------------------- |
+| `--hmfw-notification-width`           | 通知容器宽度                                             | `384px`                     |
+| `--hmfw-notification-icon-size`       | 图标尺寸，派生自 `font-size-lg × line-height-lg`         | `calc(16px × 1.5)`          |
+| `--hmfw-notification-close-size`      | 关闭按钮尺寸，派生自 `control-height-lg × 0.55`          | `calc(40px × 0.55)`         |
+| `--hmfw-notification-progress-height` | 进度条高度                                               | `2px`                       |
+| `--hmfw-notification-progress-bg`     | 进度条背景，派生自 `primary-border-hover → primary` 渐变 | `linear-gradient(90deg, …)` |

@@ -1,17 +1,34 @@
 .hmfw-notification {
+  /* 组件级 Token：对齐 AntD prepareComponentToken / prepareNotificationToken 派生规则 */
+  /* 容器宽度 = width(384) */
+  --hmfw-notification-width: 384px;
+  /* 图标尺寸 = fontSizeLG × lineHeightLG */
+  --hmfw-notification-icon-size: calc(var(--hmfw-font-size-lg) * var(--hmfw-line-height-lg));
+  /* 关闭按钮尺寸 = controlHeightLG × 0.55 */
+  --hmfw-notification-close-size: calc(var(--hmfw-control-height-lg) * 0.55);
+  /* 进度条高度 = notificationProgressHeight(2) */
+  --hmfw-notification-progress-height: 2px;
+  /* 进度条背景 = linear-gradient(90deg, colorPrimaryBorderHover, colorPrimary) */
+  --hmfw-notification-progress-bg: linear-gradient(
+    90deg,
+    var(--hmfw-color-primary-border-hover),
+    var(--hmfw-color-primary)
+  );
+
   position: fixed;
   z-index: var(--hmfw-z-index-popup);
-  margin-right: 24px;
 }
 
 .hmfw-notification-notice {
   position: relative;
   display: flex;
   align-items: flex-start;
-  padding: 16px 24px;
-  margin-bottom: 16px;
+  /* 内边距：纵向 padding(16) / 横向 paddingLG(24) */
+  padding: var(--hmfw-padding) var(--hmfw-padding-lg);
+  margin-bottom: var(--hmfw-margin);
   background: var(--hmfw-color-bg-elevated);
-  border-radius: var(--hmfw-border-radius);
+  /* 圆角对齐 AntD borderRadiusLG */
+  border-radius: var(--hmfw-border-radius-lg);
   box-shadow: var(--hmfw-box-shadow-secondary);
   cursor: pointer;
   opacity: 1;
@@ -45,11 +62,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  font-size: 24px;
-  line-height: 24px;
-  margin-inline-end: 12px;
+  width: var(--hmfw-notification-icon-size);
+  height: var(--hmfw-notification-icon-size);
+  font-size: var(--hmfw-notification-icon-size);
+  line-height: var(--hmfw-notification-icon-size);
+  margin-inline-end: var(--hmfw-margin-sm);
   flex-shrink: 0;
 }
 
@@ -75,44 +92,44 @@
 }
 
 .hmfw-notification-notice-message {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--hmfw-font-size-lg);
+  font-weight: var(--hmfw-font-weight-strong);
   color: var(--hmfw-color-text);
-  line-height: 1.5;
+  line-height: var(--hmfw-line-height);
   margin-bottom: 0;
   word-wrap: break-word;
 }
 
 .hmfw-notification-notice-message:has(+ .hmfw-notification-notice-description) {
-  margin-bottom: 8px;
+  margin-bottom: var(--hmfw-margin-xs);
 }
 
 .hmfw-notification-notice-description {
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text-secondary);
   line-height: var(--hmfw-line-height);
   word-wrap: break-word;
 }
 
 .hmfw-notification-notice-btn {
-  margin-top: 16px;
+  margin-top: var(--hmfw-margin);
 }
 
 .hmfw-notification-notice-close {
   position: absolute;
-  top: 16px;
-  inset-inline-end: 22px;
+  top: var(--hmfw-padding);
+  inset-inline-end: var(--hmfw-padding-lg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: var(--hmfw-notification-close-size);
+  height: var(--hmfw-notification-close-size);
   padding: 0;
   background: transparent;
   border: none;
   cursor: pointer;
   color: var(--hmfw-color-text-tertiary);
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   line-height: 1;
   flex-shrink: 0;
   transition:
@@ -126,13 +143,24 @@
   background-color: var(--hmfw-color-fill-quaternary);
 }
 
-/* Progress bar (when showProgress is enabled) */
+/* 进度条（showProgress 开启时展示），宽度由 100% 收缩至 0 表示倒计时 */
 .hmfw-notification-notice-progress {
   position: absolute;
   bottom: 0;
-  left: 0;
+  inset-inline-start: 0;
   width: 100%;
-  height: 2px;
-  background: var(--hmfw-color-primary);
-  opacity: 0.4;
+  height: var(--hmfw-notification-progress-height);
+  background: var(--hmfw-notification-progress-bg);
+  animation-name: hmfw-notification-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes hmfw-notification-progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
 }

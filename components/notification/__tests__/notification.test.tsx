@@ -315,4 +315,71 @@ describe('Notification', () => {
     const notice = document.querySelector('.hmfw-notification-notice')
     expect(notice?.getAttribute('role')).toBe('alert')
   })
+
+  it('renders progress bar when showProgress is enabled', async () => {
+    notification.open({ message: 'With progress', showProgress: true, duration: 3 })
+    await flushAll()
+
+    const progress = document.querySelector('.hmfw-notification-notice-progress') as HTMLElement
+    expect(progress).not.toBeNull()
+    expect(progress.style.animationDuration).toBe('3s')
+  })
+
+  it('does not render progress bar when duration is 0', async () => {
+    notification.open({ message: 'No progress', showProgress: true, duration: 0 })
+    await flushAll()
+
+    expect(document.querySelector('.hmfw-notification-notice-progress')).toBeNull()
+  })
+
+  it('does not render progress bar when showProgress is not set', async () => {
+    notification.open({ message: 'Plain', duration: 3 })
+    await flushAll()
+
+    expect(document.querySelector('.hmfw-notification-notice-progress')).toBeNull()
+  })
+
+  it('pauses progress animation on hover', async () => {
+    notification.open({ message: 'Hover progress', showProgress: true, duration: 3 })
+    await flushAll()
+
+    const notice = document.querySelector('.hmfw-notification-notice') as HTMLElement
+    notice.dispatchEvent(new MouseEvent('mouseenter'))
+    await flushAll()
+
+    const progress = document.querySelector('.hmfw-notification-notice-progress') as HTMLElement
+    expect(progress.style.animationPlayState).toBe('paused')
+
+    notice.dispatchEvent(new MouseEvent('mouseleave'))
+    await flushAll()
+    expect(progress.style.animationPlayState).toBe('running')
+  })
+
+  it('applies rtl class and direction when rtl is enabled', async () => {
+    notification.config({ rtl: true })
+    notification.open({ message: 'RTL', duration: 0 })
+    await flushAll()
+
+    const container = document.querySelector('.hmfw-notification') as HTMLElement
+    expect(container.classList.contains('hmfw-notification-rtl')).toBe(true)
+    expect(container.style.direction).toBe('rtl')
+
+    // 复位配置
+    notification.config({ rtl: false })
+  })
+
+  it('reacts to config() placement offset changes without remount', async () => {
+    notification.open({ message: 'Reactive top', duration: 0, placement: 'topRight' })
+    await flushAll()
+
+    const container = document.querySelector('.hmfw-notification') as HTMLElement
+    expect(container.style.top).toBe('24px')
+
+    // 已挂载容器上更新 top，reactive globalConfig 应触发 computed 重算
+    notification.config({ top: 88 })
+    await flushAll()
+    expect(container.style.top).toBe('88px')
+
+    notification.config({ top: 24 })
+  })
 })

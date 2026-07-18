@@ -1,4 +1,4 @@
-import { createApp, defineComponent, ref, computed, h, isVNode, type VNode } from 'vue'
+import { createApp, defineComponent, ref, reactive, computed, h, isVNode, type VNode } from 'vue'
 import { cls } from '../_utils'
 import {
   CheckCircleFilled,
@@ -12,6 +12,10 @@ import type { ArgsProps, ConfigOptions, NotificationPlacement, NotificationType,
 interface NoticeItem extends ArgsProps {
   id: string
   leaving: boolean
+  // 进度条与定时器暂停状态（pauseOnHover 时置为 true）
+  paused: boolean
+  // 实际生效的自动关闭时长（秒），用于驱动进度条动画时长
+  resolvedDuration: number
 }
 
 // Icon map for each notification type
@@ -65,19 +69,25 @@ const NotificationContainer = defineComponent({
     const add = (config: ArgsProps) => {
       const mergedKey = config.key ?? `notice-${Date.now()}-${Math.random()}`
       const id = String(mergedKey)
+      const duration = config.duration ?? globalConfig.duration ?? 4.5
 
       // Update existing notice with the same key
       const existingIndex = notices.value.findIndex((n) => n.id === id)
       if (existingIndex >= 0) {
         clearTimer(id)
-        notices.value.splice(existingIndex, 1, { ...config, id, leaving: false })
-        const duration = config.duration ?? globalConfig.duration ?? 4.5
+        notices.value.splice(existingIndex, 1, {
+          ...config,
+          id,
+          leaving: false,
+          paused: false,
+          resolvedDuration: duration,
+        })
         startTimer(id, duration)
         return
       }
 
       // Add new notice
-      notices.value.push({ ...config, id, leaving: false })
+      notices.value.push({ ...config, id, leaving: false, paused: false, resolvedDuration: duration })
 
       // Check maxCount
       const maxCount = globalConfig.maxCount
@@ -86,7 +96,6 @@ const NotificationContainer = defineComponent({
         overflow.forEach((item) => removeNotice(item.id))
       }
 
-      const duration = config.duration ?? globalConfig.duration ?? 4.5
       startTimer(id, duration)
     }
 
@@ -116,14 +125,15 @@ const NotificationContainer = defineComponent({
       const pauseOnHover = item.pauseOnHover ?? globalConfig.pauseOnHover ?? true
       if (pauseOnHover) {
         clearTimer(item.id)
+        item.paused = true
       }
     }
 
     const handleMouseLeave = (item: NoticeItem) => {
       const pauseOnHover = item.pauseOnHover ?? globalConfig.pauseOnHover ?? true
       if (pauseOnHover) {
-        const duration = item.duration ?? globalConfig.duration ?? 4.5
-        startTimer(item.id, duration)
+        item.paused = false
+        startTimer(item.id, item.resolvedDuration)
       }
     }
 
@@ -140,22 +150,33 @@ const NotificationContainer = defineComponent({
       return '24px'
     })
 
+    const isRtl = computed(() => globalConfig.rtl ?? false)
+
     const positionStyle = computed(() => {
       const p = props.placement
+      const rtl = isRtl.value
       const style: Record<string, string> = {
         position: 'fixed',
         zIndex: 'var(--hmfw-z-index-popup, 1010)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '16px',
-        maxWidth: '384px',
-        width: '384px',
+        // 通知之间的间距，对齐 AntD notificationMarginBottom = margin
+        gap: 'var(--hmfw-margin)',
+        // 容器宽度，对齐 AntD width = 384
+        maxWidth: 'var(--hmfw-notification-width, 384px)',
+        width: 'var(--hmfw-notification-width, 384px)',
+        direction: rtl ? 'rtl' : 'ltr',
       }
-      if (p === 'topRight' || p === 'bottomRight') {
-        style.right = '24px'
+      // 距边缘的偏移，对齐 AntD notificationMarginEdge = marginLG
+      const edge = 'var(--hmfw-margin-lg)'
+      // RTL 下 right/left 语义互换，使 topRight 仍贴靠视觉右侧
+      const nearRight = p === 'topRight' || p === 'bottomRight'
+      const nearLeft = p === 'topLeft' || p === 'bottomLeft'
+      if (nearRight) {
+        style[rtl ? 'left' : 'right'] = edge
       }
-      if (p === 'topLeft' || p === 'bottomLeft') {
-        style.left = '24px'
+      if (nearLeft) {
+        style[rtl ? 'right' : 'left'] = edge
       }
       if (p === 'top' || p === 'bottom') {
         style.left = '50%'
@@ -176,6 +197,7 @@ const NotificationContainer = defineComponent({
       removeNotice,
       clear,
       positionStyle,
+      isRtl,
       renderContent,
       getIconNode,
       handleMouseEnter,
@@ -184,7 +206,7 @@ const NotificationContainer = defineComponent({
   },
   render() {
     return (
-      <div class="hmfw-notification" style={this.positionStyle}>
+      <div class={cls('hmfw-notification', this.isRtl ? 'hmfw-notification-rtl' : '')} style={this.positionStyle}>
         {this.notices.map((notice) => {
           const iconNode = this.getIconNode(notice)
           const hasIcon = iconNode !== null
@@ -193,6 +215,9 @@ const NotificationContainer = defineComponent({
               ? notice.closeIcon()
               : notice.closeIcon
             : h(CloseOutlined, { class: 'hmfw-icon' })
+          // 进度条：仅在开启 showProgress 且会自动关闭（duration>0）时展示
+          const showProgress =
+            (notice.showProgress ?? globalConfig.showProgress ?? false) && notice.resolvedDuration > 0
 
           return (
             <div
@@ -259,6 +284,16 @@ const NotificationContainer = defineComponent({
               >
                 {closeIconNode}
               </button>
+              {showProgress && (
+                <div
+                  class="hmfw-notification-notice-progress"
+                  style={{
+                    // 动画时长 = 实际自动关闭时长；hover 暂停时冻结动画
+                    animationDuration: `${notice.resolvedDuration}s`,
+                    animationPlayState: notice.paused ? 'paused' : 'running',
+                  }}
+                />
+              )}
             </div>
           )
         })}
@@ -277,12 +312,13 @@ interface ContainerEntry {
 
 const containers = new Map<NotificationPlacement, ContainerEntry>()
 
-const globalConfig: ConfigOptions = {
+// 使用 reactive 使容器内 computed（定位、rtl）能在 notification.config() 更新后自动重算
+const globalConfig: ConfigOptions = reactive({
   top: 24,
   bottom: 24,
   duration: 4.5,
   pauseOnHover: true,
-}
+})
 
 function getContainer(placement: NotificationPlacement) {
   if (containers.has(placement)) return containers.get(placement)!.instance
@@ -318,15 +354,8 @@ function destroy(key?: string) {
 }
 
 function config(options: ConfigOptions) {
+  // globalConfig 为 reactive，赋值后容器内依赖它的 computed（定位、rtl）会自动重算
   Object.assign(globalConfig, options)
-
-  // Update existing containers' top/bottom positioning
-  containers.forEach(({ instance }, placement) => {
-    if (placement) {
-      // Force re-render by updating the container (Vue reactivity will handle it)
-      instance.$forceUpdate?.()
-    }
-  })
 }
 
 export const notification = {
