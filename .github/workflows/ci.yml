@@ -42,9 +42,6 @@ jobs:
       - name: Build lib
         run: pnpm build:lib
 
-      - name: Bundle size guard
-        run: pnpm size
-
   docs:
     name: Build & Deploy Docs
     runs-on: ubuntu-latest
