@@ -3,6 +3,15 @@ export type UploadType = 'select' | 'drag'
 
 import type { VNode } from 'vue'
 
+export interface UploadLocale {
+  uploading?: string
+  removeFile?: string
+  uploadError?: string
+  previewFile?: string
+  downloadFile?: string
+  uploadText?: string
+}
+
 export interface UploadFile {
   uid: string
   name: string
@@ -24,9 +33,12 @@ export interface UploadChangeParam {
 }
 
 export interface ShowUploadListInterface {
-  showRemoveIcon?: boolean
-  showPreviewIcon?: boolean
-  showDownloadIcon?: boolean
+  showRemoveIcon?: boolean | ((file: UploadFile) => boolean)
+  showPreviewIcon?: boolean | ((file: UploadFile) => boolean)
+  showDownloadIcon?: boolean | ((file: UploadFile) => boolean)
+  removeIcon?: VNode | ((file: UploadFile) => VNode)
+  downloadIcon?: VNode | ((file: UploadFile) => VNode)
+  previewIcon?: VNode | ((file: UploadFile) => VNode)
 }
 
 /** Result of beforeUpload — `false` cancels; `File/Blob` replaces the upload target. */
@@ -113,6 +125,8 @@ export interface UploadProps {
   isImageUrl?: (file: UploadFile) => boolean
   /** 自定义文件列表项渲染。 */
   itemRender?: (originNode: VNode, file: UploadFile, fileList: UploadFile[], actions: ItemRenderActions) => VNode
+  /** 国际化配置，优先级高于 ConfigProvider。 */
+  locale?: UploadLocale
   classNames?: UploadClassNames
   styles?: UploadStyles
 }

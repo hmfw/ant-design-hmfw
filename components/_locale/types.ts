@@ -92,6 +92,7 @@ export interface Locale {
     uploadError: string
     previewFile: string
     downloadFile: string
+    uploadText: string
   }
   Empty: {
     description: string

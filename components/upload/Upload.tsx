@@ -1,5 +1,5 @@
-import { defineComponent, ref, computed, TransitionGroup, type PropType } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { defineComponent, ref, computed, TransitionGroup, type PropType, type VNode } from 'vue'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Image } from '../image'
 import { EyeOutlined, DownloadOutlined, DeleteOutlined } from '@hmfw/icons'
@@ -14,6 +14,7 @@ import type {
   ItemRenderActions,
   UploadClassNames,
   UploadStyles,
+  UploadLocale,
 } from './types'
 
 let uidCounter = 0
@@ -62,40 +63,46 @@ async function resolveData(data: UploadProps['data'], file: UploadFile): Promise
   return data ?? {}
 }
 
+const uploadProps = {
+  accept: { type: String, default: undefined },
+  action: { type: [String, Function] as PropType<UploadProps['action']>, default: undefined },
+  directory: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  fileList: { type: Array as PropType<UploadFile[]>, default: undefined },
+  defaultFileList: { type: Array as PropType<UploadFile[]>, default: undefined },
+  listType: { type: String as PropType<UploadListType>, default: 'text' },
+  type: { type: String as PropType<UploadType>, default: 'select' },
+  maxCount: { type: Number, default: undefined },
+  multiple: { type: Boolean, default: false },
+  name: { type: String, default: 'file' },
+  showUploadList: {
+    type: [Boolean, Object] as PropType<boolean | ShowUploadListInterface>,
+    default: true,
+  },
+  beforeUpload: { type: Function as PropType<UploadProps['beforeUpload']>, default: undefined },
+  customRequest: { type: Function as PropType<UploadProps['customRequest']>, default: undefined },
+  headers: { type: Object as PropType<Record<string, string>>, default: undefined },
+  data: { type: [Object, Function] as PropType<UploadProps['data']>, default: undefined },
+  withCredentials: { type: Boolean, default: false },
+  openFileDialogOnClick: { type: Boolean, default: true },
+  method: { type: String, default: 'post' },
+  onRemove: { type: Function as PropType<UploadProps['onRemove']>, default: undefined },
+  isImageUrl: { type: Function as PropType<UploadProps['isImageUrl']>, default: undefined },
+  itemRender: { type: Function as PropType<UploadProps['itemRender']>, default: undefined },
+  locale: { type: Object as PropType<UploadLocale>, default: undefined },
+  classNames: { type: Object as PropType<UploadClassNames>, default: undefined },
+  styles: { type: Object as PropType<UploadStyles>, default: undefined },
+} satisfies Record<keyof UploadProps, any>
+
 export const Upload = defineComponent({
   name: 'Upload',
-  props: {
-    accept: String,
-    action: [String, Function] as PropType<UploadProps['action']>,
-    directory: Boolean,
-    disabled: Boolean,
-    fileList: Array as PropType<UploadFile[]>,
-    defaultFileList: Array as PropType<UploadFile[]>,
-    listType: { type: String as PropType<UploadListType>, default: 'text' },
-    type: { type: String as PropType<UploadType>, default: 'select' },
-    maxCount: Number,
-    multiple: Boolean,
-    name: { type: String, default: 'file' },
-    showUploadList: {
-      type: [Boolean, Object] as PropType<boolean | ShowUploadListInterface>,
-      default: true,
-    },
-    beforeUpload: Function as PropType<UploadProps['beforeUpload']>,
-    customRequest: Function as PropType<UploadProps['customRequest']>,
-    headers: Object as PropType<Record<string, string>>,
-    data: [Object, Function] as PropType<UploadProps['data']>,
-    withCredentials: Boolean,
-    openFileDialogOnClick: { type: Boolean, default: true },
-    method: { type: String, default: 'post' },
-    onRemove: Function as PropType<UploadProps['onRemove']>,
-    isImageUrl: Function as PropType<UploadProps['isImageUrl']>,
-    itemRender: Function as PropType<UploadProps['itemRender']>,
-    classNames: Object as PropType<UploadClassNames>,
-    styles: Object as PropType<UploadStyles>,
-  },
+  props: uploadProps,
   emits: ['update:fileList', 'change', 'remove', 'preview', 'download', 'drop'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('upload')
+    const contextLocale = useLocale()
+    const mergedLocale = computed(() => ({ ...contextLocale.value.Upload, ...props.locale }))
+
     const inputRef = ref<HTMLInputElement>()
     const innerFileList = ref<UploadFile[]>(props.defaultFileList ?? [])
     /** Track drag-enter depth so child elements don't toggle hover off. */
@@ -299,18 +306,28 @@ export const Upload = defineComponent({
 
     /** Resolve `showUploadList` (boolean | object). */
     const showList = computed(() => props.showUploadList !== false)
-    const showRemove = computed(() => {
-      if (typeof props.showUploadList === 'object') return props.showUploadList.showRemoveIcon !== false
-      return true
-    })
-    const showPreview = computed(() => {
-      if (typeof props.showUploadList === 'object') return props.showUploadList.showPreviewIcon !== false
-      return true
-    })
-    const showDownload = computed(() => {
-      if (typeof props.showUploadList === 'object') return !!props.showUploadList.showDownloadIcon
-      return false
-    })
+
+    /** 辅助函数：根据配置计算某个图标是否显示（支持函数形式） */
+    const shouldShowIcon = (
+      iconKey: 'showRemoveIcon' | 'showPreviewIcon' | 'showDownloadIcon',
+      file: UploadFile,
+      defaultValue: boolean,
+    ): boolean => {
+      if (typeof props.showUploadList !== 'object') return defaultValue
+      const value = props.showUploadList[iconKey]
+      if (value === undefined) return defaultValue
+      if (typeof value === 'function') return value(file)
+      return value
+    }
+
+    /** 辅助函数：获取自定义图标（支持函数形式） */
+    const getCustomIcon = (iconKey: 'removeIcon' | 'downloadIcon' | 'previewIcon', file: UploadFile): VNode | null => {
+      if (typeof props.showUploadList !== 'object') return null
+      const icon = props.showUploadList[iconKey]
+      if (!icon) return null
+      if (typeof icon === 'function') return icon(file)
+      return icon
+    }
 
     /** 检查文件是否应展示图片缩略图 —— 优先使用 props.isImageUrl 覆盖。 */
     const checkImageUrl = (file: UploadFile): boolean => {
@@ -368,31 +385,31 @@ export const Upload = defineComponent({
                 class={cls(`${prefixCls}-list-item-card-actions`, props.classNames?.cardActions)}
                 style={props.styles?.cardActions}
               >
-                {(file.url || file.thumbUrl) && showPreview.value && (
+                {(file.url || file.thumbUrl) && shouldShowIcon('showPreviewIcon', file, true) && (
                   <button
                     class={cls(`${prefixCls}-list-item-action`, props.classNames?.itemAction)}
                     style={props.styles?.itemAction}
                     onClick={() => handlePreview(file)}
                   >
-                    <EyeOutlined />
+                    {getCustomIcon('previewIcon', file) || <EyeOutlined />}
                   </button>
                 )}
-                {showDownload.value && file.url && (
+                {shouldShowIcon('showDownloadIcon', file, false) && file.url && (
                   <button
                     class={cls(`${prefixCls}-list-item-action`, props.classNames?.itemAction)}
                     style={props.styles?.itemAction}
                     onClick={() => emit('download', file)}
                   >
-                    <DownloadOutlined />
+                    {getCustomIcon('downloadIcon', file) || <DownloadOutlined />}
                   </button>
                 )}
-                {showRemove.value && (
+                {shouldShowIcon('showRemoveIcon', file, true) && (
                   <button
                     class={cls(`${prefixCls}-list-item-action`, props.classNames?.itemAction)}
                     style={props.styles?.itemAction}
                     onClick={() => handleRemove(file)}
                   >
-                    <DeleteOutlined />
+                    {getCustomIcon('removeIcon', file) || <DeleteOutlined />}
                   </button>
                 )}
               </div>
@@ -428,7 +445,7 @@ export const Upload = defineComponent({
                   />
                 </div>
               )}
-              {showDownload.value && file.url && (
+              {shouldShowIcon('showDownloadIcon', file, false) && file.url && (
                 <button
                   class={cls(
                     `${prefixCls}-list-item-action`,
@@ -438,10 +455,10 @@ export const Upload = defineComponent({
                   style={props.styles?.itemAction}
                   onClick={() => emit('download', file)}
                 >
-                  ⬇
+                  {getCustomIcon('downloadIcon', file) || '⬇'}
                 </button>
               )}
-              {showRemove.value && (
+              {shouldShowIcon('showRemoveIcon', file, true) && (
                 <button
                   class={cls(
                     `${prefixCls}-list-item-action`,
@@ -451,7 +468,7 @@ export const Upload = defineComponent({
                   style={props.styles?.itemAction}
                   onClick={() => handleRemove(file)}
                 >
-                  ✕
+                  {getCustomIcon('removeIcon', file) || '✕'}
                 </button>
               )}
             </div>
@@ -542,7 +559,7 @@ export const Upload = defineComponent({
                   class={cls(`${prefixCls}-select-text`, props.classNames?.selectText)}
                   style={props.styles?.selectText}
                 >
-                  上传
+                  {mergedLocale.value.uploadText}
                 </span>
               </div>
             )}

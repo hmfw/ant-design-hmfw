@@ -94,6 +94,7 @@ const zhCN: Locale = {
     uploadError: '上传错误',
     previewFile: '预览文件',
     downloadFile: '下载文件',
+    uploadText: '上传',
   },
   Empty: {
     description: '暂无数据',

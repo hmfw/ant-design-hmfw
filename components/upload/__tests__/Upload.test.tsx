@@ -242,6 +242,51 @@ describe('Upload', () => {
     expect(wrapper.find('.hmfw-upload-list-item-remove').exists()).toBe(false)
   })
 
+  it('showUploadList supports function form for icon visibility', () => {
+    const wrapper = mount(Upload, {
+      props: {
+        fileList: [
+          { uid: '1', name: 'uploading.png', status: 'uploading' as const },
+          { uid: '2', name: 'done.png', status: 'done' as const },
+        ],
+        showUploadList: {
+          showRemoveIcon: (file) => file.status !== 'uploading',
+        },
+      },
+    })
+    const items = wrapper.findAll('.hmfw-upload-list-item-remove')
+    // 只有 done 状态的文件有删除按钮
+    expect(items.length).toBe(1)
+  })
+
+  it('showUploadList supports custom icons', () => {
+    const customRemoveIcon = h('span', { class: 'custom-remove' }, 'X')
+    const wrapper = mount(Upload, {
+      props: {
+        fileList: [{ uid: '1', name: 'x.png', status: 'done' as const }],
+        showUploadList: {
+          removeIcon: customRemoveIcon,
+        },
+      },
+    })
+    expect(wrapper.find('.custom-remove').exists()).toBe(true)
+  })
+
+  it('showUploadList supports custom icon functions', () => {
+    const removeIconFn = vi.fn((file) => h('span', { class: 'dynamic-icon' }, file.status))
+    const wrapper = mount(Upload, {
+      props: {
+        fileList: [{ uid: '1', name: 'x.png', status: 'done' as const }],
+        showUploadList: {
+          removeIcon: removeIconFn,
+        },
+      },
+    })
+    expect(removeIconFn).toHaveBeenCalled()
+    expect(wrapper.find('.dynamic-icon').exists()).toBe(true)
+    expect(wrapper.find('.dynamic-icon').text()).toBe('done')
+  })
+
   // ============ isImageUrl ============
   describe('isImageUrl', () => {
     it('returns true when thumbUrl is present', () => {

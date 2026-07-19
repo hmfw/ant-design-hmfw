@@ -94,6 +94,7 @@ const enUS: Locale = {
     uploadError: 'Upload error',
     previewFile: 'Preview file',
     downloadFile: 'Download file',
+    uploadText: 'Upload',
   },
   Empty: {
     description: 'No data',
