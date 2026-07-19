@@ -24,12 +24,28 @@
   <CalendarMini />
 </DemoBlock>
 
-### 切换模式
+### 自定义渲染
 
-支持在月视图和年视图之间切换。
+通过 `cellRender` 自定义单元格内容，可以实现通知事项日历、徽标显示等功能。
 
-<DemoBlock title="切换模式" :source="CalendarModeSource">
-  <CalendarMode />
+<DemoBlock title="自定义渲染" :source="CalendarCellRenderSource">
+  <CalendarCellRender />
+</DemoBlock>
+
+### 禁用日期
+
+通过 `disabledDate` 限制可选择的日期，支持禁用过去日期、周末、特定日期等。
+
+<DemoBlock title="禁用日期" :source="CalendarDisabledSource">
+  <CalendarDisabled />
+</DemoBlock>
+
+### 范围选择
+
+通过 `range` 开启范围选择模式，可用于选择日期区间（如请假时间、活动周期）。
+
+<DemoBlock title="范围选择" :source="CalendarRangeSource">
+  <CalendarRange />
 </DemoBlock>
 
 ### 细粒度样式控制

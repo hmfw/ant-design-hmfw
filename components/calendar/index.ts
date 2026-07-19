@@ -11,4 +11,12 @@ export type {
   DateCellRenderInfo,
   CalendarClassNames,
   CalendarStyles,
+  CalendarProps,
+  DateRange,
+  DateRangeString,
+  CalendarSelectInfo,
+  CalendarChangeHandler,
+  CalendarSelectHandler,
+  CalendarPanelChangeHandler,
+  CalendarRangeChangeHandler,
 } from './types'

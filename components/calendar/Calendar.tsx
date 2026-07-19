@@ -13,6 +13,8 @@ import type {
   DateRangeString,
   CalendarClassNames,
   CalendarStyles,
+  CalendarProps,
+  ValidRange,
 } from './types'
 
 // 日期工具函数
@@ -56,13 +58,25 @@ function getFirstDayOfWeek(year: number, month: number) {
   return new Date(year, month, 1).getDay()
 }
 
+/**
+ * 构建日历矩阵（6 周 × 7 天 = 42 个格子）
+ *
+ * 算法：
+ * 1. 计算当月 1 号是星期几（firstDay），向前补齐上月末尾日期
+ * 2. 填充当月所有日期（1 ~ daysInMonth）
+ * 3. 向后补齐下月开头日期，凑满 42 格（6 行 7 列标准日历布局）
+ *
+ * @param year 年份
+ * @param month 月份（0-11）
+ * @returns 42 个日期对象，包含 date 和 inCurrentMonth 标记
+ */
 function buildCalendar(year: number, month: number) {
   const days: Array<{ date: Date; inCurrentMonth: boolean }> = []
   const firstDay = getFirstDayOfWeek(year, month)
   const daysInMonth = getDaysInMonth(year, month)
   const prevMonthDays = getDaysInMonth(year, month - 1)
 
-  // 填充上月末尾日期
+  // 1. 填充上月末尾日期（补齐第一周）
   for (let i = firstDay - 1; i >= 0; i--) {
     days.push({
       date: new Date(year, month - 1, prevMonthDays - i),
@@ -70,7 +84,7 @@ function buildCalendar(year: number, month: number) {
     })
   }
 
-  // 当月日期
+  // 2. 当月日期
   for (let i = 1; i <= daysInMonth; i++) {
     days.push({
       date: new Date(year, month, i),
@@ -78,7 +92,7 @@ function buildCalendar(year: number, month: number) {
     })
   }
 
-  // 填充下月开始日期
+  // 3. 填充下月开头日期（补齐最后一周）
   const remaining = 42 - days.length
   for (let i = 1; i <= remaining; i++) {
     days.push({
@@ -90,37 +104,28 @@ function buildCalendar(year: number, month: number) {
   return days
 }
 
+// Props 定义（使用 satisfies 确保与 CalendarProps 接口同步）
+const calendarProps = {
+  value: { type: [String, Date] as PropType<string | Date>, default: undefined },
+  defaultValue: { type: [String, Date] as PropType<string | Date>, default: undefined },
+  mode: { type: String as PropType<CalendarMode>, default: 'month' },
+  fullscreen: { type: Boolean, default: true },
+  disabledDate: { type: Function as PropType<(date: Date) => boolean>, default: undefined },
+  validRange: { type: Array as unknown as PropType<ValidRange>, default: undefined },
+  cellRender: { type: Function as PropType<CellRender>, default: undefined },
+  dateCellRender: { type: Function as PropType<DateCellRender>, default: undefined },
+  monthCellRender: { type: Function as PropType<MonthCellRender>, default: undefined },
+  headerRender: { type: Function as PropType<HeaderRender>, default: undefined },
+  range: { type: Boolean, default: false },
+  rangeValue: { type: Array as unknown as PropType<DateRange>, default: undefined },
+  defaultRangeValue: { type: Array as unknown as PropType<DateRange>, default: undefined },
+  classNames: { type: Object as PropType<CalendarClassNames>, default: undefined },
+  styles: { type: Object as PropType<CalendarStyles>, default: undefined },
+} satisfies Record<keyof CalendarProps, any>
+
 export const Calendar = defineComponent({
   name: 'Calendar',
-  props: {
-    value: [String, Date] as PropType<string | Date>,
-    defaultValue: [String, Date] as PropType<string | Date>,
-    mode: {
-      type: String as PropType<CalendarMode>,
-      default: 'month',
-    },
-    fullscreen: {
-      type: Boolean,
-      default: true,
-    },
-    disabledDate: Function as PropType<(date: Date) => boolean>,
-    validRange: Array as unknown as PropType<[Date, Date]>,
-    cellRender: Function as PropType<CellRender>,
-    // Legacy API (向后兼容)
-    dateCellRender: Function as PropType<DateCellRender>,
-    monthCellRender: Function as PropType<MonthCellRender>,
-    headerRender: Function as PropType<HeaderRender>,
-    // 范围选择模式
-    range: {
-      type: Boolean,
-      default: false,
-    },
-    rangeValue: Array as unknown as PropType<DateRange>,
-    defaultRangeValue: Array as unknown as PropType<DateRange>,
-    // 语义化 API
-    classNames: Object as PropType<CalendarClassNames>,
-    styles: Object as PropType<CalendarStyles>,
-  },
+  props: calendarProps,
   emits: ['update:value', 'change', 'select', 'panelChange', 'update:rangeValue', 'rangeChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('calendar')
@@ -222,15 +227,19 @@ export const Calendar = defineComponent({
         } else {
           // 选择结束日期
           const [start] = currentRangeValue.value
-          if (start) {
-            const end = date
-            // 确保 start <= end
-            const range: DateRange = start <= end ? [start, end] : [end, start]
-            innerRangeValue.value = range
-            const rangeStr: DateRangeString = [formatDate(range[0]!, 'YYYY-MM-DD'), formatDate(range[1]!, 'YYYY-MM-DD')]
-            emit('update:rangeValue', range)
-            emit('rangeChange', rangeStr, range)
+          // 防御：start 可能为 null（异常状态兜底，重新开始选择）
+          if (!start) {
+            innerRangeValue.value = [date, null]
+            rangeSelectingStart.value = false
+            return
           }
+          const end = date
+          // 确保 start <= end
+          const range: DateRange = start <= end ? [start, end] : [end, start]
+          innerRangeValue.value = range
+          const rangeStr: DateRangeString = [formatDate(range[0]!, 'YYYY-MM-DD'), formatDate(range[1]!, 'YYYY-MM-DD')]
+          emit('update:rangeValue', range)
+          emit('rangeChange', rangeStr, range)
           rangeSelectingStart.value = true
         }
       } else {
@@ -274,68 +283,76 @@ export const Calendar = defineComponent({
     const renderDefaultHeader = () => {
       return (
         <div class={cls(`${prefixCls}-header`, props.classNames?.header)} style={props.styles?.header}>
-          <div class={`${prefixCls}-header-left`}>
+          <Select
+            class={cls(`${prefixCls}-year-select`)}
+            value={viewYear.value}
+            options={yearOptions.value}
+            size={props.fullscreen ? 'middle' : 'small'}
+            onChange={(val) => {
+              viewYear.value = val as number
+              emit('panelChange', null, innerMode.value)
+            }}
+          />
+          {innerMode.value === 'month' && (
             <Select
-              value={viewYear.value}
-              options={yearOptions.value}
+              class={cls(`${prefixCls}-month-select`)}
+              value={viewMonth.value}
+              options={monthOptions.value}
               size={props.fullscreen ? 'middle' : 'small'}
               onChange={(val) => {
-                viewYear.value = val as number
+                viewMonth.value = val as number
                 emit('panelChange', null, innerMode.value)
               }}
-              style={{ width: '100px' }}
             />
-            {innerMode.value === 'month' && (
-              <Select
-                value={viewMonth.value}
-                options={monthOptions.value}
-                size={props.fullscreen ? 'middle' : 'small'}
-                onChange={(val) => {
-                  viewMonth.value = val as number
-                  emit('panelChange', null, innerMode.value)
-                }}
-                style={{ width: '80px', marginLeft: '8px' }}
-              />
-            )}
-          </div>
-          <div class={`${prefixCls}-header-right`}>
-            <RadioGroup
-              value={innerMode.value}
-              onChange={(e) => onModeChange(e.target.value as CalendarMode)}
-              size={props.fullscreen ? 'middle' : 'small'}
-            >
-              <Radio value="month">{locale.value.Calendar?.month ?? '月'}</Radio>
-              <Radio value="year">{locale.value.Calendar?.year ?? '年'}</Radio>
-            </RadioGroup>
-          </div>
+          )}
+          <RadioGroup
+            value={innerMode.value}
+            option-type="button"
+            onChange={(e) => onModeChange(e.target.value as CalendarMode)}
+            size={props.fullscreen ? 'middle' : 'small'}
+          >
+            <Radio value="month">{locale.value.Calendar?.month ?? '月'}</Radio>
+            <Radio value="year">{locale.value.Calendar?.year ?? '年'}</Radio>
+          </RadioGroup>
         </div>
       )
     }
 
-    // 渲染日期单元格内容
+    // 渲染日期单元格内容（返回 date-value 和 date-content 的数组）
     const renderDateCell = (date: Date, _inCurrentMonth: boolean) => {
-      const originNode = h(
+      // 日期值节点（只显示数字）
+      const dateValueNode = h(
         'div',
-        { class: cls(`${prefixCls}-date`, props.classNames?.date), style: props.styles?.date },
+        { class: cls(`${prefixCls}-date-value`, props.classNames?.date), style: props.styles?.date },
         date.getDate(),
       )
 
+      // 日期内容节点（用于显示自定义内容）
+      let dateContentNode = null
+
       // 优先使用新 API cellRender
       if (props.cellRender) {
-        return props.cellRender(date, {
-          originNode,
+        const customContent = props.cellRender(date, {
+          originNode: dateValueNode,
           today: now,
           type: 'month',
           locale: locale.value,
         })
+        // cellRender 返回的内容放在 date-content 中
+        if (customContent && customContent !== dateValueNode) {
+          dateContentNode = h('div', { class: `${prefixCls}-date-content` }, customContent)
+        }
       }
-
       // 向后兼容：dateCellRender
-      if (props.dateCellRender) {
-        return props.dateCellRender(date, { originNode, today: now })
+      else if (props.dateCellRender) {
+        const customContent = props.dateCellRender(date, { originNode: dateValueNode, today: now })
+        if (customContent && customContent !== dateValueNode) {
+          dateContentNode = h('div', { class: `${prefixCls}-date-content` }, customContent)
+        }
       }
 
-      return originNode
+      // 返回 date-value 和 date-content（不包裹额外层级）
+      return [dateValueNode, dateContentNode].filter(Boolean)
     }
 
     // 渲染月份单元格内容
@@ -418,7 +435,7 @@ export const Calendar = defineComponent({
                 onClick={() => !isDisabled && selectDate(date)}
               >
                 <div
-                  class={cls(`${prefixCls}-cell-inner`, props.classNames?.cellInner)}
+                  class={cls(`${prefixCls}-cell-inner`, `${prefixCls}-date`, props.classNames?.cellInner)}
                   style={props.styles?.cellInner}
                 >
                   {renderDateCell(date, inCurrentMonth)}

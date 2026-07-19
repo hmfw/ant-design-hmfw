@@ -98,3 +98,32 @@ export type ValidRange = [Date, Date]
 // 范围选择相关类型
 export type DateRange = [Date | null, Date | null]
 export type DateRangeString = [string | null, string | null]
+
+// 事件类型
+export interface CalendarSelectInfo {
+  source: 'year' | 'month' | 'date' | 'customize'
+}
+
+export type CalendarChangeHandler = (dateStr: string, date: Date) => void
+export type CalendarSelectHandler = (dateStr: string, date: Date, info?: CalendarSelectInfo) => void
+export type CalendarPanelChangeHandler = (date: string | null, mode: CalendarMode) => void
+export type CalendarRangeChangeHandler = (range: DateRangeString, dates: DateRange) => void
+
+// Props 接口
+export interface CalendarProps {
+  value?: string | Date
+  defaultValue?: string | Date
+  mode?: CalendarMode
+  fullscreen?: boolean
+  disabledDate?: (date: Date) => boolean
+  validRange?: ValidRange
+  cellRender?: CellRender
+  dateCellRender?: DateCellRender
+  monthCellRender?: MonthCellRender
+  headerRender?: HeaderRender
+  range?: boolean
+  rangeValue?: DateRange
+  defaultRangeValue?: DateRange
+  classNames?: CalendarClassNames
+  styles?: CalendarStyles
+}
