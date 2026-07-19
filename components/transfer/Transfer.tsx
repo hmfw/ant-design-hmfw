@@ -5,6 +5,7 @@ import { Button } from '../button'
 import { LeftOutlined, RightOutlined } from '@hmfw/icons'
 import { TransferList } from './TransferList'
 import type {
+  TransferProps,
   TransferItem,
   TransferKey,
   TransferDirection,
@@ -20,45 +21,48 @@ import type {
   TransferSemanticStyles,
 } from './types'
 
+const transferProps = {
+  dataSource: { type: Array as PropType<TransferItem[]>, default: () => [] },
+  targetKeys: { type: Array as PropType<TransferKey[]>, default: undefined },
+  defaultTargetKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
+  selectedKeys: { type: Array as PropType<TransferKey[]>, default: undefined },
+  defaultSelectedKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
+  titles: { type: Array as PropType<(VNode | string)[]>, default: () => ['', ''] },
+  actions: { type: Array as PropType<(VNode | string)[]>, default: () => [] },
+  render: { type: Function as PropType<(item: TransferItem) => RenderResult>, default: undefined },
+  rowKey: { type: Function as PropType<(record: TransferItem) => TransferKey>, default: undefined },
+  showSearch: {
+    type: [Boolean, Object] as PropType<boolean | TransferSearchOption>,
+    default: false,
+  },
+  filterOption: {
+    type: Function as PropType<(input: string, item: TransferItem, direction: TransferDirection) => boolean>,
+    default: undefined,
+  },
+  footer: { type: Function as PropType<(info: TransferListContext) => VNode | string | null>, default: undefined },
+  listStyle: {
+    type: [Object, Function] as PropType<CSSProperties | ((info: { direction: TransferDirection }) => CSSProperties)>,
+    default: () => ({}),
+  },
+  disabled: { type: Boolean, default: false },
+  showSelectAll: { type: Boolean, default: true },
+  selectAllLabels: { type: Array as PropType<SelectAllLabel[]>, default: () => [] },
+  oneWay: { type: Boolean, default: false },
+  draggable: { type: Boolean, default: false },
+  pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
+  status: { type: String as PropType<InputStatus>, default: undefined },
+  locale: { type: Object as PropType<Partial<TransferLocale>>, default: () => ({}) },
+  classNames: { type: Object as PropType<TransferSemanticClassNames>, default: () => ({}) },
+  styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
+  virtual: { type: Boolean, default: false },
+  listHeight: { type: Number, default: 400 },
+  listItemHeight: { type: Number, default: 40 },
+  onReorder: { type: Function as PropType<(info: TransferReorderInfo) => void>, default: undefined },
+} satisfies Record<keyof TransferProps, any>
+
 export const Transfer = defineComponent({
   name: 'Transfer',
-  props: {
-    dataSource: { type: Array as PropType<TransferItem[]>, default: () => [] },
-    targetKeys: Array as PropType<TransferKey[]>,
-    defaultTargetKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
-    selectedKeys: Array as PropType<TransferKey[]>,
-    defaultSelectedKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
-    titles: { type: Array as PropType<(VNode | string)[]>, default: () => ['', ''] },
-    /** 操作按钮文案 [左→右, 右→左] */
-    actions: { type: Array as PropType<(VNode | string)[]>, default: () => [] },
-    render: Function as PropType<(item: TransferItem) => RenderResult>,
-    rowKey: Function as PropType<(record: TransferItem) => TransferKey>,
-    showSearch: {
-      type: [Boolean, Object] as PropType<boolean | TransferSearchOption>,
-      default: false,
-    },
-    filterOption: Function as PropType<(input: string, item: TransferItem, direction: TransferDirection) => boolean>,
-    footer: Function as PropType<(info: TransferListContext) => VNode | string | null>,
-    listStyle: {
-      type: [Object, Function] as PropType<CSSProperties | ((info: { direction: TransferDirection }) => CSSProperties)>,
-      default: () => ({}),
-    },
-    disabled: Boolean,
-    showSelectAll: { type: Boolean, default: true },
-    selectAllLabels: { type: Array as PropType<SelectAllLabel[]>, default: () => [] },
-    oneWay: Boolean,
-    draggable: Boolean,
-    pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
-    status: String as PropType<InputStatus>,
-    locale: { type: Object as PropType<Partial<TransferLocale>>, default: () => ({}) },
-    classNames: { type: Object as PropType<TransferSemanticClassNames>, default: () => ({}) },
-    styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
-
-    // 虚拟滚动
-    virtual: { type: Boolean, default: false },
-    listHeight: { type: Number, default: 400 },
-    listItemHeight: { type: Number, default: 40 },
-  },
+  props: transferProps,
   emits: ['update:targetKeys', 'change', 'update:selectedKeys', 'selectChange', 'search', 'scroll', 'reorder'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('transfer')

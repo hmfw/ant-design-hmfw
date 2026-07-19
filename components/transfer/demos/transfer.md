@@ -6,6 +6,9 @@
 
 - 需要在两个集合之间进行选择，且需要直观展示两个集合的内容时
 - 用于将可选项在两个列表之间移动
+- 权限分配、角色配置等需要批量选择和管理的场景
+- 需要对已选项进行排序（配合 `draggable` 使用）
+- 大数据量场景（1000+ 项），配合虚拟滚动优化性能
 
 ## 代码演示
 
@@ -57,6 +60,38 @@
   <TransferDraggable />
 </DemoBlock>
 
+### 虚拟滚动
+
+大数据量场景（1000+ 项）使用虚拟滚动优化性能，仅渲染可见区域。
+
+<DemoBlock title="虚拟滚动" :source="TransferVirtualSource">
+  <TransferVirtual />
+</DemoBlock>
+
+### 底部渲染
+
+通过 `footer` 属性自定义列表底部内容。
+
+<DemoBlock title="底部渲染" :source="TransferFooterSource">
+  <TransferFooter />
+</DemoBlock>
+
+### 状态展示
+
+支持 `disabled`、`status="error"` 和 `status="warning"` 状态。
+
+<DemoBlock title="状态展示" :source="TransferStatusSource">
+  <TransferStatus />
+</DemoBlock>
+
+### 高级用法
+
+展示 `selectAllLabels`、`filterOption`、`rowKey` 等高级配置。
+
+<DemoBlock title="高级用法" :source="TransferAdvancedSource">
+  <TransferAdvanced />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对列表、列表项、头部、操作按钮等子元素做细粒度样式控制。
@@ -90,6 +125,9 @@
 | pagination             | 分页配置                                                                         | `boolean \| PaginationType`                                                    | -          |
 | status                 | 校验状态                                                                         | `'error' \| 'warning'`                                                         | -          |
 | locale                 | 文案配置                                                                         | `Partial<TransferLocale>`                                                      | -          |
+| virtual                | 是否启用虚拟滚动（大数据量时开启，与 pagination 互斥）                           | `boolean`                                                                      | `false`    |
+| listHeight             | 虚拟滚动列表容器高度（px）                                                       | `number`                                                                       | `400`      |
+| listItemHeight         | 虚拟滚动列表项高度（px）                                                         | `number`                                                                       | `40`       |
 | classNames             | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticClassNames`                                                   | -          |
 | styles                 | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticStyles`                                                       | -          |
 
@@ -101,7 +139,7 @@
 | selectChange | 选中项变化时触发               | `(sourceSelectedKeys: TransferKey[], targetSelectedKeys: TransferKey[])`             |
 | search       | 搜索框内容变化时触发           | `(direction: TransferDirection, value: string)`                                      |
 | scroll       | 列表滚动时触发                 | `(direction: TransferDirection, e: Event)`                                           |
-| reorder      | 右侧列表通过拖拽重新排序后触发 | `(info: TransferReorderInfo)`                                                        |
+| reorder      | 右侧列表通过拖拽重新排序后触发 | `(info: TransferReorderInfo)`，详见下方 [TransferReorderInfo](#transferreorderinfo)  |
 
 ### TransferItem
 
@@ -174,6 +212,22 @@ interface TransferReorderInfo {
 ### 拖拽排序
 
 设置 `draggable` 后，右侧目标列表的每一项变为可拖拽元素（基于 HTML5 Drag and Drop）。拖拽并释放后会触发 `update:targetKeys` 与 `reorder` 事件，`reorder` 回调携带旧/新 `targetKeys` 顺序、被拖拽项 `activeKey` 以及 `fromIndex` / `toIndex`。禁用项不可拖拽。
+
+### 虚拟滚动
+
+数据量大时（1000+ 项），可以设置 `virtual` 为 `true` 启用虚拟滚动。虚拟滚动仅渲染可见区域的列表项，显著提升性能。
+
+**配置项**：
+
+- `virtual`：是否启用虚拟滚动（默认 `false`）
+- `listHeight`：列表容器高度（px，默认 `400`）
+- `listItemHeight`：列表项高度（px，默认 `40`）
+
+**注意事项**：
+
+- 虚拟滚动与 `pagination` 互斥，启用分页时虚拟滚动自动禁用
+- 所有列表项应保持统一高度，否则可能出现滚动异常
+- 适用于 1000+ 项的大数据量场景
 
 ### Shift 多选
 

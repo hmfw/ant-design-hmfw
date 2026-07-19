@@ -18,6 +18,7 @@ import type {
   TransferSearchOption,
   TransferSemanticClassNames,
   TransferSemanticStyles,
+  TransferListProps,
 } from './types'
 
 interface RenderedItem {
@@ -48,53 +49,56 @@ function getEnabledItemKeys(items: TransferItem[]): TransferKey[] {
  * 列表区（对齐 AntD `Section`）：
  * 头部（全选框 + selections 下拉 + 已选计数 + 标题）、搜索框、内容列表、底部、分页。
  */
+
+const transferListProps = {
+  prefixCls: { type: String, required: true },
+  direction: { type: String as PropType<TransferDirection>, required: true },
+  titleText: { type: [String, Object] as PropType<VNode | string>, default: '' },
+  dataSource: { type: Array as PropType<TransferItem[]>, default: () => [] },
+  checkedKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
+  disabled: { type: Boolean, default: false },
+  showSearch: {
+    type: [Boolean, Object] as PropType<boolean | TransferSearchOption>,
+    default: false,
+  },
+  showSelectAll: { type: Boolean, default: true },
+  showRemove: { type: Boolean, default: false },
+  draggable: { type: Boolean, default: false },
+  pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
+  selectAllLabel: {
+    type: [String, Object, Function] as PropType<SelectAllLabel>,
+    default: undefined,
+  },
+  render: { type: Function as PropType<(item: TransferItem) => RenderResult>, default: undefined },
+  filterOption: {
+    type: Function as PropType<(input: string, item: TransferItem, direction: TransferDirection) => boolean>,
+    default: undefined,
+  },
+  footer: { type: Function as PropType<(info: any) => VNode | string | null>, default: undefined },
+  listStyle: { type: Object as PropType<CSSProperties>, default: () => ({}) },
+  classNames: { type: Object as PropType<TransferSemanticClassNames>, default: () => ({}) },
+  styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
+  virtual: { type: Boolean, default: false },
+  listHeight: { type: Number, default: 400 },
+  listItemHeight: { type: Number, default: 40 },
+  searchPlaceholder: { type: String, default: '请输入搜索内容' },
+  notFoundContent: {
+    type: [String, Object, Array] as PropType<VNode | string | (VNode | string)[]>,
+    default: undefined,
+  },
+  itemUnit: { type: String, default: '项' },
+  itemsUnit: { type: String, default: '项' },
+  selectAll: { type: String, default: '全选所有' },
+  deselectAll: { type: String, default: '取消全选' },
+  selectCurrent: { type: String, default: '全选当页' },
+  selectInvert: { type: String, default: '反选当页' },
+  removeAll: { type: String, default: '删除全部' },
+  removeCurrent: { type: String, default: '删除当页' },
+} satisfies Record<keyof TransferListProps, any>
+
 export const TransferList = defineComponent({
   name: 'TransferList',
-  props: {
-    prefixCls: { type: String, required: true },
-    direction: { type: String as PropType<TransferDirection>, required: true },
-    titleText: { type: [String, Object] as PropType<VNode | string>, default: '' },
-    dataSource: { type: Array as PropType<TransferItem[]>, default: () => [] },
-    checkedKeys: { type: Array as PropType<TransferKey[]>, default: () => [] },
-    disabled: Boolean,
-    showSearch: {
-      type: [Boolean, Object] as PropType<boolean | TransferSearchOption>,
-      default: false,
-    },
-    showSelectAll: { type: Boolean, default: true },
-    showRemove: Boolean,
-    draggable: Boolean,
-    pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
-    selectAllLabel: {
-      type: [String, Object, Function] as PropType<SelectAllLabel>,
-      default: undefined,
-    },
-    render: Function as PropType<(item: TransferItem) => RenderResult>,
-    filterOption: Function as PropType<(input: string, item: TransferItem, direction: TransferDirection) => boolean>,
-    footer: Function as PropType<(info: any) => VNode | string | null>,
-    listStyle: { type: Object as PropType<CSSProperties>, default: () => ({}) },
-    classNames: { type: Object as PropType<TransferSemanticClassNames>, default: () => ({}) },
-    styles: { type: Object as PropType<TransferSemanticStyles>, default: () => ({}) },
-
-    // 虚拟滚动
-    virtual: { type: Boolean, default: false },
-    listHeight: { type: Number, default: 400 },
-    listItemHeight: { type: Number, default: 40 },
-    // locale
-    searchPlaceholder: { type: String, default: '请输入搜索内容' },
-    notFoundContent: {
-      type: [String, Object, Array] as PropType<VNode | string | (VNode | string)[]>,
-      default: undefined,
-    },
-    itemUnit: { type: String, default: '项' },
-    itemsUnit: { type: String, default: '项' },
-    selectAll: { type: String, default: '全选所有' },
-    deselectAll: { type: String, default: '取消全选' },
-    selectCurrent: { type: String, default: '全选当页' },
-    selectInvert: { type: String, default: '反选当页' },
-    removeAll: { type: String, default: '删除全部' },
-    removeCurrent: { type: String, default: '删除当页' },
-  },
+  props: transferListProps,
   emits: ['itemSelect', 'itemSelectAll', 'itemRemove', 'reorder', 'filter', 'scroll'],
   setup(props, { emit }) {
     const listPrefixCls = computed(() => `${props.prefixCls}-list`)
@@ -133,7 +137,7 @@ export const TransferList = defineComponent({
     }
 
     function matchFilter(text: string, item: TransferItem): boolean {
-      if (props.filterOption) return props.filterOption(filterValue.value, item, props.direction)
+      if (props.filterOption) return props.filterOption(filterValue.value, item, props.direction!)
       return text.toLowerCase().includes(filterValue.value.toLowerCase())
     }
 

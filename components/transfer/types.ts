@@ -115,6 +115,41 @@ export interface TransferReorderInfo {
   toIndex: number
 }
 
+/** TransferList 内部组件 Props（用于 satisfies 约束） */
+export interface TransferListProps {
+  prefixCls: string
+  direction: TransferDirection
+  titleText?: VNode | string
+  dataSource?: TransferItem[]
+  checkedKeys?: TransferKey[]
+  disabled?: boolean
+  showSearch?: boolean | TransferSearchOption
+  showSelectAll?: boolean
+  showRemove?: boolean
+  draggable?: boolean
+  pagination?: PaginationType
+  selectAllLabel?: SelectAllLabel
+  render?: (item: TransferItem) => RenderResult
+  filterOption?: (input: string, item: TransferItem, direction: TransferDirection) => boolean
+  footer?: (info: TransferListContext) => VNode | string | null
+  listStyle?: CSSProperties
+  classNames?: TransferSemanticClassNames
+  styles?: TransferSemanticStyles
+  virtual?: boolean
+  listHeight?: number
+  listItemHeight?: number
+  searchPlaceholder?: string
+  notFoundContent?: VNode | string | (VNode | string)[]
+  itemUnit?: string
+  itemsUnit?: string
+  selectAll?: string
+  deselectAll?: string
+  selectCurrent?: string
+  selectInvert?: string
+  removeAll?: string
+  removeCurrent?: string
+}
+
 export interface TransferProps {
   dataSource?: TransferItem[]
   /** 右侧列表 key 集合（v-model:targetKeys） */
