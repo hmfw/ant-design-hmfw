@@ -32,6 +32,62 @@
   <TreeSelectSearch />
 </DemoBlock>
 
+### 禁用
+
+支持整体禁用（`disabled`）以及节点级禁用（`node.disabled`）、不可选（`node.selectable: false`）、禁用勾选框（`node.disableCheckbox`）。
+
+<DemoBlock title="禁用" :source="TreeSelectDisabledSource">
+  <TreeSelectDisabled />
+</DemoBlock>
+
+### 三种尺寸
+
+通过 `size` 设置 `small` / `middle` / `large` 三种尺寸。
+
+<DemoBlock title="三种尺寸" :source="TreeSelectSizeSource">
+  <TreeSelectSize />
+</DemoBlock>
+
+### 校验状态
+
+通过 `status` 设置 `error` / `warning` 校验状态。
+
+<DemoBlock title="校验状态" :source="TreeSelectStatusSource">
+  <TreeSelectStatus />
+</DemoBlock>
+
+### 最大选中数量
+
+通过 `maxCount` 限制多选模式下最多可选中的数量。
+
+<DemoBlock title="最大选中数量" :source="TreeSelectMaxCountSource">
+  <TreeSelectMaxCount />
+</DemoBlock>
+
+### 回填策略
+
+`treeCheckable` 模式下通过 `showCheckedStrategy` 控制选中项的回填方式。
+
+<DemoBlock title="回填策略" :source="TreeSelectStrategySource">
+  <TreeSelectStrategy />
+</DemoBlock>
+
+### 标签展示
+
+多选时通过 `maxTagCount`、`maxTagPlaceholder`、`maxTagTextLength` 控制标签的显示数量与文本长度。
+
+<DemoBlock title="标签展示" :source="TreeSelectTagsSource">
+  <TreeSelectTags />
+</DemoBlock>
+
+### 事件
+
+演示 `change`、`select`、`search`、`treeExpand`、`openChange`、`clear` 等事件。
+
+<DemoBlock title="事件" :source="TreeSelectEventsSource">
+  <TreeSelectEvents />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
@@ -71,15 +127,14 @@
 
 ### TreeSelect Events
 
-| 事件名                | 说明                                | 回调参数             |
-| --------------------- | ----------------------------------- | -------------------- |
-| change                | 选中树节点时调用                    | `(value, labels)`    |
-| select                | 被选中时调用                        | `(value, node)`      |
-| search                | 搜索框值变化时调用                  | `(value: string)`    |
-| treeExpand            | 展开节点时调用                      | `(expandedKeys)`     |
-| openChange            | 展开下拉菜单的回调                  | `(open: boolean)`    |
-| dropdownVisibleChange | 展开下拉菜单的回调（同 openChange） | `(visible: boolean)` |
-| clear                 | 清除时调用                          | `()`                 |
+| 事件名     | 说明               | 回调参数          |
+| ---------- | ------------------ | ----------------- |
+| change     | 选中树节点时调用   | `(value, labels)` |
+| select     | 被选中时调用       | `(value, node)`   |
+| search     | 搜索框值变化时调用 | `(value: string)` |
+| treeExpand | 展开节点时调用     | `(expandedKeys)`  |
+| openChange | 展开下拉菜单的回调 | `(open: boolean)` |
+| clear      | 清除时调用         | `()`              |
 
 ### TreeSelectNode
 
@@ -247,9 +302,39 @@ interface TreeSelectStyles {
 
 ## 设计 Token
 
-| Token 名称             | 说明     | 默认值    |
-| ---------------------- | -------- | --------- |
-| `--hmfw-color-primary` | 主题色   | `#1677ff` |
-| `--hmfw-color-error`   | 错误色   | `#ff4d4f` |
-| `--hmfw-color-warning` | 警告色   | `#faad14` |
-| `--hmfw-color-border`  | 边框颜色 | `#d9d9d9` |
+TreeSelect 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。组件已全面 Token 化，无硬编码设计值，支持主题定制与暗黑模式。
+
+### 全局 Token
+
+| Token 名称                      | 说明                               | 默认值             |
+| ------------------------------- | ---------------------------------- | ------------------ |
+| `--hmfw-color-primary`          | 主题色（选中态、聚焦框）           | `#1677ff`          |
+| `--hmfw-color-primary-bg`       | 选中节点背景 / 聚焦框              | `#e8f1ff`          |
+| `--hmfw-color-error`            | 错误校验色                         | `#ff4d4f`          |
+| `--hmfw-color-error-bg`         | 错误态聚焦框背景                   | `#ffeded`          |
+| `--hmfw-color-warning`          | 警告校验色                         | `#faad14`          |
+| `--hmfw-color-warning-bg`       | 警告态聚焦框背景                   | `#fff7e8`          |
+| `--hmfw-color-border`           | 边框颜色                           | `#d9d9d9`          |
+| `--hmfw-color-border-secondary` | 标签边框颜色                       | `#f0f0f0`          |
+| `--hmfw-color-text`             | 主文本颜色                         | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-text-secondary`   | 次要文本（图标、移除键）           | `rgba(0,0,0,0.65)` |
+| `--hmfw-color-text-tertiary`    | 三级文本（箭头、清除键）           | `rgba(0,0,0,0.45)` |
+| `--hmfw-color-text-placeholder` | 占位符颜色                         | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-text-disabled`    | 禁用/空状态文本                    | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-bg-container`     | 容器背景（选择器、清除键、复选框） | `#ffffff`          |
+| `--hmfw-color-fill-secondary`   | 标签/折叠项填充背景                | `rgba(0,0,0,0.06)` |
+| `--hmfw-control-item-bg-hover`  | 树节点 hover 背景                  | `rgba(0,0,0,0.04)` |
+| `--hmfw-control-height`         | 标准控件高度                       | `32px`             |
+| `--hmfw-control-height-sm`      | 小尺寸控件高度                     | `24px`             |
+| `--hmfw-control-height-lg`      | 大尺寸控件高度                     | `40px`             |
+| `--hmfw-font-size`              | 标准字号                           | `14px`             |
+| `--hmfw-font-size-sm`           | 小字号（标签、小尺寸）             | `12px`             |
+| `--hmfw-font-size-lg`           | 大字号（大尺寸）                   | `16px`             |
+| `--hmfw-border-radius`          | 标准圆角（选择器）                 | `6px`              |
+| `--hmfw-border-radius-sm`       | 小圆角（标签）                     | `4px`              |
+| `--hmfw-border-radius-xs`       | 超小圆角（复选框）                 | `4px`              |
+| `--hmfw-padding-xs`             | 内边距（选择器、节点）             | `8px`              |
+| `--hmfw-padding-sm`             | 空状态上下内边距                   | `12px`             |
+| `--hmfw-motion-duration-mid`    | 过渡动画时长                       | `0.2s`             |
+
+> 组件未定义专属组件级 Token，所有样式均消费全局 Design Token。禁用态透明度（`opacity: 0.65`）与焦点阴影结构为固定值，与 Select 组件保持一致。修改 `ConfigProvider` 的 `theme` 属性即可整体定制外观。

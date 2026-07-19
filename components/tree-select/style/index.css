@@ -3,8 +3,8 @@
   display: inline-block;
   width: 100%;
   cursor: pointer;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-text);
 }
 
 .hmfw-tree-select-disabled {
@@ -18,12 +18,12 @@
   flex: 1;
   flex-wrap: wrap;
   align-items: center;
-  min-height: 32px;
-  padding: 0 11px;
-  background: #fff;
+  min-height: var(--hmfw-control-height);
+  padding: 0 var(--hmfw-padding-xs);
+  background: var(--hmfw-color-bg-container);
   border: 1px solid var(--hmfw-color-border);
-  border-radius: 6px;
-  transition: all 0.2s;
+  border-radius: var(--hmfw-border-radius);
+  transition: all var(--hmfw-motion-duration-mid);
   overflow: hidden;
   gap: 4px;
 }
@@ -34,7 +34,7 @@
 
 .hmfw-tree-select-open .hmfw-tree-select-selector {
   border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--hmfw-color-primary-bg);
 }
 
 .hmfw-tree-select-status-error .hmfw-tree-select-selector {
@@ -42,7 +42,7 @@
 }
 
 .hmfw-tree-select-status-error.hmfw-tree-select-open .hmfw-tree-select-selector {
-  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
+  box-shadow: 0 0 0 2px var(--hmfw-color-error-bg);
 }
 
 .hmfw-tree-select-status-warning .hmfw-tree-select-selector {
@@ -50,34 +50,34 @@
 }
 
 .hmfw-tree-select-status-warning.hmfw-tree-select-open .hmfw-tree-select-selector {
-  box-shadow: 0 0 0 2px rgba(250, 173, 20, 0.1);
+  box-shadow: 0 0 0 2px var(--hmfw-color-warning-bg);
 }
 
 .hmfw-tree-select-small .hmfw-tree-select-selector {
-  min-height: 24px;
-  padding: 0 7px;
-  font-size: 12px;
+  min-height: var(--hmfw-control-height-sm);
+  padding: 0 var(--hmfw-padding-xs);
+  font-size: var(--hmfw-font-size-sm);
 }
 
 .hmfw-tree-select-large .hmfw-tree-select-selector {
-  min-height: 40px;
-  font-size: 16px;
+  min-height: var(--hmfw-control-height-lg);
+  font-size: var(--hmfw-font-size-lg);
 }
 
 .hmfw-tree-select-selection-placeholder {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--hmfw-color-text-placeholder);
   pointer-events: none;
 }
 
 .hmfw-tree-select-selection-item {
   display: inline-flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  padding: 0 4px 0 8px;
+  background: var(--hmfw-color-fill-secondary);
+  border: 1px solid var(--hmfw-color-border-secondary);
+  border-radius: var(--hmfw-border-radius-sm);
+  padding: 0 4px 0 var(--hmfw-padding-xs);
   gap: 4px;
-  font-size: 12px;
+  font-size: var(--hmfw-font-size-sm);
   height: 22px;
 }
 
@@ -89,13 +89,13 @@
 
 .hmfw-tree-select-selection-item-remove {
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.45);
-  font-size: 14px;
-  transition: color 0.2s;
+  color: var(--hmfw-color-text-secondary);
+  font-size: var(--hmfw-font-size);
+  transition: color var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-tree-select-selection-item-remove:hover {
-  color: rgba(0, 0, 0, 0.75);
+  color: var(--hmfw-color-text);
 }
 
 .hmfw-tree-select-selection-search {
@@ -108,21 +108,21 @@
 
 .hmfw-tree-select-arrow {
   position: absolute;
-  right: 11px;
+  right: var(--hmfw-padding-xs);
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  color: rgba(0, 0, 0, 0.25);
-  font-size: 12px;
+  color: var(--hmfw-color-text-tertiary);
+  font-size: var(--hmfw-font-size-sm);
   line-height: 1;
 }
 
 .hmfw-tree-select-arrow-icon {
   display: inline-block;
-  transition: transform 0.2s;
+  transition: transform var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-tree-select-arrow-icon-open {
@@ -131,7 +131,7 @@
 
 .hmfw-tree-select-clear {
   position: absolute;
-  right: 11px;
+  right: var(--hmfw-padding-xs);
   top: 50%;
   transform: translateY(-50%);
   display: none;
@@ -139,13 +139,13 @@
   justify-content: center;
   width: 16px;
   height: 16px;
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   border-radius: 50%;
-  color: rgba(0, 0, 0, 0.25);
-  font-size: 14px;
+  color: var(--hmfw-color-text-tertiary);
+  font-size: var(--hmfw-font-size);
   cursor: pointer;
   z-index: 1;
-  transition: color 0.2s;
+  transition: color var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-tree-select:has(.hmfw-tree-select-clear):hover .hmfw-tree-select-clear {
@@ -174,7 +174,7 @@
 }
 
 .hmfw-tree-select-dropdown-empty {
-  padding: 10px 12px;
+  padding: var(--hmfw-padding-sm) var(--hmfw-padding-xs);
   color: var(--hmfw-color-text-disabled);
   text-align: center;
 }
@@ -187,20 +187,20 @@
   height: 18px;
   margin-right: 4px;
   flex-shrink: 0;
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--hmfw-color-text-secondary);
 }
 
 .hmfw-tree-select-selection-overflow {
-  background: rgba(0, 0, 0, 0.06);
-  color: rgba(0, 0, 0, 0.65);
-  padding: 0 8px;
+  background: var(--hmfw-color-fill-secondary);
+  color: var(--hmfw-color-text-secondary);
+  padding: 0 var(--hmfw-padding-xs);
 }
 
 /* Tree nodes in dropdown */
 .hmfw-tree-select-tree-node {
   display: flex;
   align-items: center;
-  padding: 5px 8px 5px 0;
+  padding: 5px var(--hmfw-padding-xs) 5px 0;
   cursor: pointer;
   transition: background var(--hmfw-motion-duration-mid);
   font-size: var(--hmfw-font-size);
@@ -231,7 +231,7 @@
   height: 20px;
   flex-shrink: 0;
   font-size: 11px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-secondary);
   cursor: pointer;
 }
 
@@ -254,10 +254,10 @@
   width: 16px;
   height: 16px;
   border: 1px solid var(--hmfw-color-border);
-  border-radius: 2px;
-  background: #fff;
+  border-radius: var(--hmfw-border-radius-xs);
+  background: var(--hmfw-color-bg-container);
   display: block;
-  transition: all 0.2s;
+  transition: all var(--hmfw-motion-duration-mid);
   position: relative;
 }
 
@@ -273,7 +273,7 @@
   left: 4px;
   width: 5px;
   height: 8px;
-  border: 2px solid #fff;
+  border: 2px solid var(--hmfw-color-bg-container);
   border-top: none;
   border-left: none;
   transform: rotate(45deg);
@@ -291,7 +291,7 @@
   left: 50%;
   width: 8px;
   height: 2px;
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   transform: translate(-50%, -50%);
 }
 

@@ -5,10 +5,21 @@ import { CaretRightFilled, CaretDownFilled, DownOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { VirtualList } from '../_internal/virtual-list'
-import type { TreeSelectNode, ShowCheckedStrategy, TreeSelectValue, TreeIcon, MaxTagPlaceholder } from './types'
+import type {
+  TreeSelectNode,
+  ShowCheckedStrategy,
+  TreeSelectValue,
+  TreeIcon,
+  MaxTagPlaceholder,
+  TreeSelectProps,
+} from './types'
 import type { ComponentSize } from '../config-provider'
 
 type Key = string | number
+
+// 树节点缩进与布局常量
+const TREE_INDENT_SIZE = 20 // 每层缩进像素
+const TREE_BASE_PADDING = 8 // 基础左侧内边距
 
 interface FlatNode {
   node: TreeSelectNode
@@ -20,51 +31,43 @@ interface FlatNode {
   forceExpand: boolean
 }
 
+const treeSelectProps = {
+  value: { type: [String, Number, Array] as PropType<TreeSelectValue>, default: undefined },
+  defaultValue: { type: [String, Number, Array] as PropType<TreeSelectValue>, default: undefined },
+  treeData: { type: Array as PropType<TreeSelectNode[]>, default: () => [] },
+  multiple: { type: Boolean, default: false },
+  treeCheckable: { type: Boolean, default: false },
+  treeCheckStrictly: { type: Boolean, default: false },
+  showCheckedStrategy: { type: String as PropType<ShowCheckedStrategy>, default: 'SHOW_CHILD' },
+  showSearch: { type: Boolean, default: false },
+  autoClearSearchValue: { type: Boolean, default: true },
+  allowClear: { type: Boolean, default: false },
+  placeholder: { type: String, default: '请选择' },
+  disabled: { type: Boolean, default: false },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
+  status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
+  maxCount: { type: Number, default: undefined },
+  notFoundContent: { type: String, default: '暂无数据' },
+  treeDefaultExpandAll: { type: Boolean, default: false },
+  treeDefaultExpandedKeys: { type: Array as PropType<Key[]>, default: () => [] },
+  open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: false },
+  fieldNames: { type: Object as PropType<{ label?: string; value?: string; children?: string }>, default: undefined },
+  virtual: { type: Boolean, default: true },
+  listHeight: { type: Number, default: 256 },
+  itemHeight: { type: Number, default: 28 },
+  treeIcon: { type: [Boolean, Object, String, Function] as PropType<TreeIcon>, default: undefined },
+  maxTagCount: { type: [Number, String] as PropType<number | 'responsive'>, default: undefined },
+  maxTagPlaceholder: { type: [String, Function] as PropType<MaxTagPlaceholder>, default: undefined },
+  maxTagTextLength: { type: Number, default: undefined },
+  classNames: { type: Object as PropType<import('./types').TreeSelectClassNames>, default: undefined },
+  styles: { type: Object as PropType<import('./types').TreeSelectStyles>, default: undefined },
+} satisfies Record<keyof TreeSelectProps, any>
+
 export const TreeSelect = defineComponent({
   name: 'TreeSelect',
-  props: {
-    value: [String, Number, Array] as PropType<TreeSelectValue>,
-    defaultValue: [String, Number, Array] as PropType<TreeSelectValue>,
-    treeData: { type: Array as PropType<TreeSelectNode[]>, default: () => [] },
-    multiple: Boolean,
-    treeCheckable: Boolean,
-    treeCheckStrictly: Boolean,
-    showCheckedStrategy: { type: String as PropType<ShowCheckedStrategy>, default: 'SHOW_CHILD' },
-    showSearch: Boolean,
-    autoClearSearchValue: { type: Boolean, default: true },
-    allowClear: Boolean,
-    placeholder: { type: String, default: '请选择' },
-    disabled: Boolean,
-    size: { type: String as PropType<ComponentSize>, default: 'middle' },
-    status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
-    maxCount: Number,
-    notFoundContent: { type: String, default: '暂无数据' },
-    treeDefaultExpandAll: Boolean,
-    treeDefaultExpandedKeys: { type: Array as PropType<Key[]>, default: () => [] },
-    open: { type: Boolean, default: undefined },
-    defaultOpen: Boolean,
-    fieldNames: Object as PropType<{ label?: string; value?: string; children?: string }>,
-    virtual: { type: Boolean, default: true },
-    listHeight: { type: Number, default: 256 },
-    itemHeight: { type: Number, default: 28 },
-    treeIcon: [Boolean, Object, String, Function] as PropType<TreeIcon>,
-    maxTagCount: [Number, String] as PropType<number | 'responsive'>,
-    maxTagPlaceholder: [String, Function] as PropType<MaxTagPlaceholder>,
-    maxTagTextLength: Number,
-    classNames: Object as PropType<import('./types').TreeSelectClassNames>,
-    styles: Object as PropType<import('./types').TreeSelectStyles>,
-  },
-  emits: [
-    'update:value',
-    'update:open',
-    'change',
-    'search',
-    'select',
-    'treeExpand',
-    'dropdownVisibleChange',
-    'openChange',
-    'clear',
-  ],
+  props: treeSelectProps,
+  emits: ['update:value', 'update:open', 'change', 'search', 'select', 'treeExpand', 'openChange', 'clear'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tree-select')
     const selectorRef = ref<HTMLElement | null>(null)
@@ -307,7 +310,6 @@ export const TreeSelect = defineComponent({
       if (props.disabled) return
       innerOpen.value = true
       emit('update:open', true)
-      emit('dropdownVisibleChange', true)
       emit('openChange', true)
     }
 
@@ -315,8 +317,29 @@ export const TreeSelect = defineComponent({
       innerOpen.value = false
       searchText.value = ''
       emit('update:open', false)
-      emit('dropdownVisibleChange', false)
       emit('openChange', false)
+    }
+
+    // 键盘无障碍：Enter/Space/Down 打开下拉，Esc 关闭
+    function onSelectorKeydown(e: KeyboardEvent) {
+      if (props.disabled) return
+      const { key } = e
+      if (key === 'Escape') {
+        if (isOpen.value) {
+          e.preventDefault()
+          closeDropdown()
+        }
+        return
+      }
+      if (key === 'ArrowDown' || key === 'Enter' || key === ' ' || key === 'Spacebar') {
+        // 已打开时避免 Space/Enter 误触发页面滚动或表单提交
+        if (!isOpen.value) {
+          e.preventDefault()
+          openDropdown()
+        } else if (key === 'ArrowDown') {
+          e.preventDefault()
+        }
+      }
     }
 
     function toggleExpand(key: Key) {
@@ -442,12 +465,17 @@ export const TreeSelect = defineComponent({
       return (
         <div
           key={valueKey}
+          role="treeitem"
+          aria-selected={isSelected}
+          aria-expanded={hasChildren ? isExpanded : undefined}
+          aria-disabled={node.disabled || undefined}
+          aria-checked={props.treeCheckable ? (isHalf ? 'mixed' : isChecked) : undefined}
           class={cls(`${prefixCls}-tree-node`, props.classNames?.treeNode, {
             [`${prefixCls}-tree-node-selected`]: isSelected,
             [`${prefixCls}-tree-node-disabled`]: node.disabled,
           })}
           style={{
-            paddingLeft: `${level * 20 + 8}px`,
+            paddingLeft: `${level * TREE_INDENT_SIZE + TREE_BASE_PADDING}px`,
             height: useVirtual.value ? `${props.itemHeight}px` : undefined,
             minHeight: useVirtual.value ? `${props.itemHeight}px` : undefined,
             ...props.styles?.treeNode,
@@ -511,7 +539,7 @@ export const TreeSelect = defineComponent({
       }
 
       return (
-        <div class={`${prefixCls}-dropdown-list`}>
+        <div class={`${prefixCls}-dropdown-list`} role="tree" aria-multiselectable={isMultiple.value || undefined}>
           {useVirtual.value ? (
             <VirtualList
               data={flatNodes.value}
@@ -574,6 +602,12 @@ export const TreeSelect = defineComponent({
                   ref={selectorRef}
                   class={cls(`${prefixCls}-selector`, props.classNames?.selector)}
                   style={props.styles?.selector}
+                  role="combobox"
+                  aria-expanded={isOpen.value}
+                  aria-haspopup="tree"
+                  aria-disabled={props.disabled || undefined}
+                  tabindex={props.disabled ? undefined : 0}
+                  onKeydown={onSelectorKeydown}
                 >
                   {isMultiple.value ? (
                     <>

@@ -146,3 +146,21 @@ export interface TreeSelectProps {
   /** 语义化 style */
   styles?: TreeSelectStyles
 }
+
+/** change 事件回调参数 */
+export type TreeSelectChangeHandler = (value: TreeSelectValue | undefined, labels: string[]) => void
+
+/** select 事件回调参数 */
+export type TreeSelectSelectHandler = (value: string | number, node: TreeSelectNode) => void
+
+/** search 事件回调参数 */
+export type TreeSelectSearchHandler = (value: string) => void
+
+/** treeExpand 事件回调参数 */
+export type TreeSelectTreeExpandHandler = (expandedKeys: (string | number)[]) => void
+
+/** openChange 事件回调参数 */
+export type TreeSelectOpenChangeHandler = (open: boolean) => void
+
+/** clear 事件回调参数 */
+export type TreeSelectClearHandler = () => void
