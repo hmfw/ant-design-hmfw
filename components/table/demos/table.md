@@ -126,6 +126,7 @@
 | summary      | 总结栏                                                     | `(pageData: any[]) => VNode`                                  | -           |
 | title        | 表格标题                                                   | `string \| ((data: any[]) => VNode)`                          | -           |
 | footer       | 表格页脚                                                   | `string \| ((data: any[]) => VNode)`                          | -           |
+| rowClassName | 表格行的类名                                               | `string \| ((record: any, index: number) => string)`          | -           |
 | locale       | 国际化配置                                                 | `{ emptyText?: string }`                                      | -           |
 | onChange     | 分页、排序、筛选变化时触发                                 | `(pagination, filters, sorter, extra) => void`                | -           |
 | onRow        | 设置行属性                                                 | `(record, index) => object`                                   | -           |

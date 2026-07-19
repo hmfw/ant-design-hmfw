@@ -493,4 +493,44 @@ describe('Table', () => {
       expect(rows.length).toBeLessThanOrEqual(10)
     })
   })
+
+  describe('rowClassName', () => {
+    it('applies string rowClassName to all rows', () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, rowClassName: 'custom-row' },
+      })
+      const rows = wrapper.findAll('tbody tr.hmfw-table-row')
+      rows.forEach((row) => {
+        expect(row.classes()).toContain('custom-row')
+      })
+    })
+
+    it('applies function rowClassName with record and index', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource,
+          rowClassName: (record: any, index: number) => (index % 2 === 0 ? 'even-row' : 'odd-row'),
+        },
+      })
+      const rows = wrapper.findAll('tbody tr.hmfw-table-row')
+      expect(rows[0].classes()).toContain('even-row')
+      expect(rows[1].classes()).toContain('odd-row')
+      expect(rows[2].classes()).toContain('even-row')
+    })
+
+    it('rowClassName works with selected rows', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource,
+          rowClassName: 'custom-row',
+          rowSelection: { selectedRowKeys: ['1'] },
+        },
+      })
+      const firstRow = wrapper.find('tbody tr.hmfw-table-row')
+      expect(firstRow.classes()).toContain('custom-row')
+      expect(firstRow.classes()).toContain('hmfw-table-row-selected')
+    })
+  })
 })

@@ -189,6 +189,7 @@ export interface TableProps<T = any> {
   // Custom rendering
   title?: (data: T[]) => VNode | string
   footer?: (data: T[]) => VNode | string
+  rowClassName?: string | ((record: T, index: number) => string)
 
   // Semantic
   classNames?: TableSemanticClassNames

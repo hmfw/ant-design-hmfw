@@ -19,6 +19,9 @@ import type {
   SorterResult,
   TableCurrentDataSource,
   ExpandableConfig,
+  TableProps,
+  TableSemanticClassNames,
+  TableSemanticStyles,
 } from './interface'
 
 export type { TableColumn, TableProps } from './interface'
@@ -33,42 +36,58 @@ const BREAKPOINTS: Record<string, number> = {
   xxl: 1600,
 }
 
-export const Table = defineComponent({
-  name: 'Table',
-  props: {
-    dataSource: { type: Array as PropType<any[]>, default: () => [] },
-    columns: { type: Array as PropType<TableColumn[]>, default: () => [] },
-    rowKey: [String, Function] as PropType<string | ((record: any) => Key)>,
-    loading: Boolean,
-    bordered: Boolean,
-    size: { type: String as PropType<ComponentSize>, default: 'middle' },
-    scroll: Object as PropType<{
+const tableProps = {
+  dataSource: { type: Array as PropType<any[]>, default: () => [] },
+  columns: { type: Array as PropType<TableColumn[]>, default: () => [] },
+  rowKey: { type: [String, Function] as PropType<string | ((record: any) => Key)>, default: undefined },
+  loading: { type: Boolean, default: false },
+  bordered: { type: Boolean, default: false },
+  size: { type: String as PropType<ComponentSize>, default: 'default' },
+  scroll: {
+    type: Object as PropType<{
       x?: number | string
       y?: number | string
       scrollToFirstRowOnChange?: boolean
     }>,
-    pagination: {
-      type: [Boolean, Object] as PropType<false | TablePaginationConfig>,
-      default: undefined,
-    },
-    rowSelection: Object as PropType<TableRowSelection<any>>,
-    expandable: Object as PropType<ExpandableConfig<any>>,
-    locale: Object as PropType<{ emptyText?: string }>,
-    showHeader: { type: Boolean, default: true },
-    sticky: [Boolean, Object] as PropType<
+    default: undefined,
+  },
+  pagination: {
+    type: [Boolean, Object] as PropType<false | TablePaginationConfig>,
+    default: undefined,
+  },
+  rowSelection: { type: Object as PropType<TableRowSelection<any>>, default: undefined },
+  expandable: { type: Object as PropType<ExpandableConfig<any>>, default: undefined },
+  locale: { type: Object as PropType<{ emptyText?: string }>, default: undefined },
+  showHeader: { type: Boolean, default: true },
+  sticky: {
+    type: [Boolean, Object] as PropType<
       boolean | { offsetHeader?: number; offsetScroll?: number; getContainer?: () => HTMLElement }
     >,
-    summary: Function as PropType<(pageData: any[]) => any>,
-    title: [String, Function] as PropType<string | ((currentData: any[]) => any)>,
-    footer: [String, Function] as PropType<string | ((currentData: any[]) => any)>,
-    onRow: Function as PropType<(record: any, index: number) => Record<string, any>>,
-    onHeaderRow: Function as PropType<(columns: TableColumn[], index: number) => Record<string, any>>,
-    onChange: Function as PropType<
-      (pagination: any, filters: any, sorter: any, extra?: TableCurrentDataSource) => void
-    >,
-    classNames: Object as PropType<import('./interface').TableSemanticClassNames>,
-    styles: Object as PropType<import('./interface').TableSemanticStyles>,
+    default: undefined,
   },
+  summary: { type: Function as PropType<(pageData: any[]) => any>, default: undefined },
+  title: { type: [String, Function] as PropType<string | ((currentData: any[]) => any)>, default: undefined },
+  footer: { type: [String, Function] as PropType<string | ((currentData: any[]) => any)>, default: undefined },
+  rowClassName: {
+    type: [String, Function] as PropType<string | ((record: any, index: number) => string)>,
+    default: undefined,
+  },
+  onRow: { type: Function as PropType<(record: any, index: number) => Record<string, any>>, default: undefined },
+  onHeaderRow: {
+    type: Function as PropType<(columns: TableColumn[], index: number) => Record<string, any>>,
+    default: undefined,
+  },
+  onChange: {
+    type: Function as PropType<(pagination: any, filters: any, sorter: any, extra?: TableCurrentDataSource) => void>,
+    default: undefined,
+  },
+  classNames: { type: Object as PropType<TableSemanticClassNames>, default: undefined },
+  styles: { type: Object as PropType<TableSemanticStyles>, default: undefined },
+} satisfies Record<keyof TableProps, any>
+
+export const Table = defineComponent({
+  name: 'Table',
+  props: tableProps,
   emits: ['change'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('table')
@@ -619,6 +638,12 @@ export const Table = defineComponent({
                           const isSelected = selectedKeys.value.includes(rowKey)
                           const isExpanded = expandedKeys.value.includes(rowKey)
 
+                          // 计算自定义行 className
+                          const customRowClassName =
+                            typeof props.rowClassName === 'function'
+                              ? props.rowClassName(record, rowIndex)
+                              : props.rowClassName
+
                           const rows = [
                             <tr
                               key={rowKey}
@@ -630,6 +655,7 @@ export const Table = defineComponent({
                                 {
                                   [`${prefixCls}-row-selected`]: isSelected,
                                 },
+                                customRowClassName,
                                 props.classNames?.row,
                               )}
                               style={props.styles?.row}
