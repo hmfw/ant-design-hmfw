@@ -117,8 +117,8 @@ const highlightedCode = computed(() => {
 function highlightVueSFC(source: string): string {
   const sections: { tag: string; content: string; attrs: string; start: number; end: number }[] = []
 
-  // 匹配三种标签
-  const tagRegex = /<(template|script|style)([^>]*)>([\s\S]*?)<\/\1>/g
+  // 匹配三种标签 - 改用贪婪匹配避免嵌套标签干扰
+  const tagRegex = /<(template|script|style)([^>]*)>([\s\S]*)<\/\1>/g
   let match: RegExpExecArray | null
 
   while ((match = tagRegex.exec(source)) !== null) {
