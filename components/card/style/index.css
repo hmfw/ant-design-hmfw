@@ -1,13 +1,16 @@
 .hmfw-card {
+  /* 组件级 Token：悬浮阴影，对齐 AntD cardShadow = boxShadowCard */
+  --hmfw-card-shadow:
+    0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09);
   position: relative;
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   border-radius: var(--hmfw-border-radius-lg);
   font-size: var(--hmfw-font-size-base);
   color: var(--hmfw-color-text);
 }
 
 .hmfw-card-bordered {
-  border: 1px solid var(--hmfw-color-border);
+  border: 1px solid var(--hmfw-color-border-secondary);
 }
 
 .hmfw-card-hoverable {
@@ -19,10 +22,7 @@
 
 .hmfw-card-hoverable:hover {
   border-color: transparent;
-  box-shadow:
-    0 1px 2px -2px rgba(0, 0, 0, 0.16),
-    0 3px 6px 0 rgba(0, 0, 0, 0.12),
-    0 5px 12px 4px rgba(0, 0, 0, 0.09);
+  box-shadow: var(--hmfw-card-shadow);
 }
 
 .hmfw-card-head {
@@ -30,8 +30,8 @@
   padding: 0 24px;
   color: var(--hmfw-color-text);
   font-weight: 600;
-  font-size: 16px;
-  border-bottom: 1px solid var(--hmfw-color-border);
+  font-size: var(--hmfw-font-size-lg);
+  border-bottom: 1px solid var(--hmfw-color-border-secondary);
   border-radius: var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg) 0 0;
 }
 
@@ -66,25 +66,29 @@
   padding: 0;
 }
 
+/* 非 loading 时，body 向上/向左偏移 1px，让首行/首列 grid 的外层
+   box-shadow 边框与卡片自身边框重叠，避免上/左出现双边框 */
+.hmfw-card-contain-grid:not(.hmfw-card-loading) .hmfw-card-body {
+  margin-block-start: -1px;
+  margin-inline-start: -1px;
+}
+
 .hmfw-card-grid {
   width: 33.33%;
   padding: 24px;
   box-shadow:
-    1px 0 0 0 #f0f0f0,
-    0 1px 0 0 #f0f0f0,
-    1px 1px 0 0 #f0f0f0,
-    1px 0 0 0 #f0f0f0 inset,
-    0 1px 0 0 #f0f0f0 inset;
+    1px 0 0 0 var(--hmfw-color-border-secondary),
+    0 1px 0 0 var(--hmfw-color-border-secondary),
+    1px 1px 0 0 var(--hmfw-color-border-secondary),
+    1px 0 0 0 var(--hmfw-color-border-secondary) inset,
+    0 1px 0 0 var(--hmfw-color-border-secondary) inset;
   transition: all 0.3s;
 }
 
 .hmfw-card-grid-hoverable:hover {
   position: relative;
   z-index: 1;
-  box-shadow:
-    0 1px 2px -2px rgba(0, 0, 0, 0.16),
-    0 3px 6px 0 rgba(0, 0, 0, 0.12),
-    0 5px 12px 4px rgba(0, 0, 0, 0.09);
+  box-shadow: var(--hmfw-card-shadow);
 }
 
 /* type=inner 内部卡片 */
@@ -132,7 +136,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--hmfw-color-border);
+  border-top: 1px solid var(--hmfw-color-border-secondary);
 }
 
 .hmfw-card-actions > li {
@@ -145,7 +149,7 @@
 }
 
 .hmfw-card-actions > li:not(:last-child) {
-  border-right: 1px solid var(--hmfw-color-border);
+  border-right: 1px solid var(--hmfw-color-border-secondary);
 }
 
 .hmfw-card-actions > li:hover {
@@ -234,7 +238,7 @@
   overflow: hidden;
   color: var(--hmfw-color-text);
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--hmfw-font-size-lg);
   white-space: nowrap;
   text-overflow: ellipsis;
 }

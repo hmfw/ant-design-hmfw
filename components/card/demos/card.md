@@ -11,10 +11,26 @@
 
 ### 基础卡片
 
-包含标题、内容、操作区域。
+包含标题、内容、操作区域，并演示 `size="small"` 小尺寸。
 
 <DemoBlock title="基础卡片" :source="CardBasicSource">
   <CardBasic />
+</DemoBlock>
+
+### 简洁卡片
+
+不设置标题的最简卡片，仅承载内容。
+
+<DemoBlock title="简洁卡片" :source="CardSimpleSource">
+  <CardSimple />
+</DemoBlock>
+
+### 无边框
+
+通过 `variant="borderless"` 去除卡片边框，常用于有背景色的页面。
+
+<DemoBlock title="无边框" :source="CardBorderlessSource">
+  <CardBorderless />
 </DemoBlock>
 
 ### 带封面
@@ -23,6 +39,14 @@
 
 <DemoBlock title="带封面" :source="CardCoverSource">
   <CardCover />
+</DemoBlock>
+
+### 底部操作组
+
+通过 `actions` 插槽在卡片底部提供一组操作。
+
+<DemoBlock title="底部操作组" :source="CardActionsSource">
+  <CardActions />
 </DemoBlock>
 
 ### 加载中
@@ -144,6 +168,7 @@ interface CardClassNames {
   extra?: string // 右侧扩展 div.hmfw-card-extra
   body?: string // 主体内容 div.hmfw-card-body
   actions?: string // 底部操作 ul.hmfw-card-actions
+  cover?: string // 封面容器 div.hmfw-card-cover
 }
 
 interface CardStyles {
@@ -153,6 +178,7 @@ interface CardStyles {
   extra?: CSSProperties // 右侧扩展 div.hmfw-card-extra
   body?: CSSProperties // 主体内容 div.hmfw-card-body
   actions?: CSSProperties // 底部操作 ul.hmfw-card-actions
+  cover?: CSSProperties // 封面容器 div.hmfw-card-cover
 }
 ```
 
@@ -249,13 +275,27 @@ interface CardStyles {
 
 ## 设计 Token
 
-| Token 名称                    | 说明       | 默认值             |
-| ----------------------------- | ---------- | ------------------ |
-| `--hmfw-color-border`         | 边框色     | `#d9d9d9`          |
-| `--hmfw-color-fill-alter`     | 替代填充色 | `rgba(0,0,0,0.02)` |
-| `--hmfw-color-primary`        | 主题色     | `#1677ff`          |
-| `--hmfw-color-text`           | 主文本色   | `rgba(0,0,0,0.88)` |
-| `--hmfw-color-text-disabled`  | 禁用文本色 | `rgba(0,0,0,0.25)` |
-| `--hmfw-color-text-secondary` | 次要文本色 | `rgba(0,0,0,0.65)` |
-| `--hmfw-font-size-base`       | 基础字号   | `14px`             |
-| `--hmfw-border-radius-lg`     | 大号圆角   | `8px`              |
+Card 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+### 全局 Token
+
+| Token 名称                      | 说明             | 默认值             |
+| ------------------------------- | ---------------- | ------------------ |
+| `--hmfw-color-bg-container`     | 卡片背景色       | `#ffffff`          |
+| `--hmfw-color-border-secondary` | 分割线/边框色    | `#f0f0f0`          |
+| `--hmfw-color-fill-alter`       | 内部卡片头部背景 | `rgba(0,0,0,0.02)` |
+| `--hmfw-color-primary`          | 标签页激活色     | `#1677ff`          |
+| `--hmfw-color-text`             | 主文本色         | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-text-secondary`   | 次要文本色       | `rgba(0,0,0,0.65)` |
+| `--hmfw-color-text-disabled`    | 禁用标签色       | `rgba(0,0,0,0.25)` |
+| `--hmfw-font-size-base`         | 基础字号         | `14px`             |
+| `--hmfw-font-size-lg`           | 标题字号         | `16px`             |
+| `--hmfw-border-radius-lg`       | 卡片圆角         | `8px`              |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-card` 上，可直接覆盖以定制单个卡片样式。
+
+| Token 名称           | 说明                                                                   | 默认值                                                                                           |
+| -------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `--hmfw-card-shadow` | 悬浮/网格 hover 阴影，对齐 AntD `cardShadow`（派生自 `boxShadowCard`） | `0 1px 2px -2px rgba(0,0,0,0.16), 0 3px 6px 0 rgba(0,0,0,0.12), 0 5px 12px 4px rgba(0,0,0,0.09)` |

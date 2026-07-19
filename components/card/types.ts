@@ -19,6 +19,9 @@ export interface TabItem {
   disabled?: boolean
 }
 
+/** 标签切换回调 */
+export type CardTabChangeHandler = (key: string) => void
+
 /**
  * Card 各部分的语义化 className
  */
@@ -35,6 +38,8 @@ export interface CardClassNames {
   body?: string
   /** 底部操作 ul.hmfw-card-actions */
   actions?: string
+  /** 封面容器 div.hmfw-card-cover */
+  cover?: string
 }
 
 /**
@@ -53,18 +58,18 @@ export interface CardStyles {
   body?: CSSProperties
   /** 底部操作 ul.hmfw-card-actions */
   actions?: CSSProperties
+  /** 封面容器 div.hmfw-card-cover */
+  cover?: CSSProperties
 }
 
 export interface CardProps {
   title?: string
-  extra?: unknown
   bordered?: boolean
   variant?: CardVariant
   hoverable?: boolean
   loading?: boolean | CardLoadingConfig
   size?: 'default' | 'small'
   type?: CardType
-  cover?: unknown
   bodyStyle?: Record<string, string>
   headStyle?: Record<string, string>
   /** 标签页列表 */
@@ -73,10 +78,8 @@ export interface CardProps {
   activeTabKey?: string
   /** 默认激活标签的 key */
   defaultActiveTabKey?: string
-  /** 标签栏额外内容 */
-  tabBarExtraContent?: unknown
   /** 标签切换回调 */
-  onTabChange?: (key: string) => void
+  onTabChange?: CardTabChangeHandler
   /** 语义化 className */
   classNames?: CardClassNames
   /** 语义化 style */
@@ -88,7 +91,6 @@ export interface CardGridProps {
 }
 
 export interface CardMetaProps {
-  avatar?: unknown
   title?: string
   description?: string
 }
