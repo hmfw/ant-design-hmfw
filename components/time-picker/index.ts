@@ -5,4 +5,6 @@ export type {
   DisabledTimeConfig,
   TimePickerClassNames,
   TimePickerStyles,
+  TimePickerChangeHandler,
+  TimePickerOpenChangeHandler,
 } from './types'

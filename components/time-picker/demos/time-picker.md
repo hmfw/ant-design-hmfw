@@ -16,6 +16,14 @@
   <TimePickerBasic />
 </DemoBlock>
 
+### 三种大小
+
+通过 `size` 设置输入框大小，支持 `small`、`middle`、`large` 三种尺寸。
+
+<DemoBlock title="三种大小" :source="TimePickerSizeSource">
+  <TimePickerSize />
+</DemoBlock>
+
 ### 步进
 
 通过 `hour-step`、`minute-step`、`second-step` 设置时间步长。
@@ -46,6 +54,22 @@
 
 <DemoBlock title="确认模式" :source="TimePickerConfirmSource">
   <TimePickerConfirm />
+</DemoBlock>
+
+### 自定义状态
+
+通过 `status` 设置校验状态，支持 `error` 和 `warning`。
+
+<DemoBlock title="自定义状态" :source="TimePickerStatusSource">
+  <TimePickerStatus />
+</DemoBlock>
+
+### 附加内容
+
+通过 `renderExtraFooter` 在面板底部渲染额外的内容。
+
+<DemoBlock title="附加内容" :source="TimePickerAddonSource">
+  <TimePickerAddon />
 </DemoBlock>
 
 ### 变体
@@ -86,7 +110,7 @@
 | use12Hours          | 使用 12 小时制，为 true 时 format 默认为 h:mm:ss a                               | `boolean`                                                  | `false`        |
 | status              | 设置校验状态                                                                     | `'error' \| 'warning'`                                     | -              |
 | open                | 控制浮层显隐                                                                     | `boolean`                                                  | -              |
-| needConfirm         | 需要点击确定按钮才触发值变化                                                     | `boolean`                                                  | `false`        |
+| needConfirm         | 需要点击确定按钮才触发值变化                                                     | `boolean`                                                  | `true`         |
 | changeOnScroll      | 滚动时立即触发选择                                                               | `boolean`                                                  | `false`        |
 | renderExtraFooter   | 在面板底部渲染额外的内容                                                         | `() => VNodeChild`                                         | -              |
 | variant             | 输入框变体                                                                       | `'outlined' \| 'borderless' \| 'filled' \| 'underlined'`   | `'outlined'`   |
@@ -286,21 +310,84 @@ interface TimePickerStyles {
 
 ## 设计 Token
 
-| Token 名称                           | 说明           | 默认值             |
-| ------------------------------------ | -------------- | ------------------ |
-| `--hmfw-color-primary`               | 主题色         | `#1677ff`          |
-| `--hmfw-color-primary-bg`            | 主题色背景     | `#e6f4ff`          |
-| `--hmfw-color-primary-hover`         | 主题色悬停     | `#4096ff`          |
-| `--hmfw-color-error`                 | 错误状态颜色   | `#ff4d4f`          |
-| `--hmfw-color-warning`               | 警告状态颜色   | `#faad14`          |
-| `--hmfw-color-text`                  | 主文本颜色     | `rgba(0,0,0,0.88)` |
-| `--hmfw-color-text-secondary`        | 次要文本颜色   | `rgba(0,0,0,0.65)` |
-| `--hmfw-color-text-disabled`         | 禁用文本颜色   | `rgba(0,0,0,0.25)` |
-| `--hmfw-color-text-placeholder`      | 占位符文本颜色 | `rgba(0,0,0,0.25)` |
-| `--hmfw-color-border`                | 边框颜色       | `#d9d9d9`          |
-| `--hmfw-color-border-secondary`      | 次要边框颜色   | `#f0f0f0`          |
-| `--hmfw-color-fill-secondary`        | 次要填充颜色   | `rgba(0,0,0,0.06)` |
-| `--hmfw-color-fill-tertiary`         | 三级填充颜色   | `rgba(0,0,0,0.04)` |
-| `--hmfw-color-bg-container-disabled` | 禁用容器背景   | `rgba(0,0,0,0.04)` |
-| `--hmfw-color-bg-text-hover`         | 文本悬停背景   | `rgba(0,0,0,0.06)` |
-| `--hmfw-border-radius`               | 基础圆角       | `6px`              |
+TimePicker 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+### 全局 Token
+
+| Token 名称                           | 说明                           | 默认值             |
+| ------------------------------------ | ------------------------------ | ------------------ |
+| `--hmfw-color-primary`               | 主题色（边框、选中态）         | `#1677ff`          |
+| `--hmfw-color-primary-bg`            | 主题色背景（选中单元格背景）   | `#e6f4ff`          |
+| `--hmfw-color-primary-hover`         | 主题色悬停（确定按钮悬停）     | `#4096ff`          |
+| `--hmfw-color-error`                 | 错误状态边框色                 | `#ff4d4f`          |
+| `--hmfw-color-warning`               | 警告状态边框色                 | `#faad14`          |
+| `--hmfw-color-text`                  | 主文本颜色（输入文字、单元格） | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-text-secondary`        | 次要文本颜色（清除按钮悬停）   | `rgba(0,0,0,0.65)` |
+| `--hmfw-color-text-disabled`         | 禁用文本颜色（禁用单元格）     | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-text-placeholder`      | 占位符文本颜色（后缀图标）     | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-border`                | 基础边框色（输入框边框）       | `#d9d9d9`          |
+| `--hmfw-color-border-secondary`      | 次要边框色（面板分隔线）       | `#f0f0f0`          |
+| `--hmfw-color-fill-secondary`        | 次要填充颜色（filled 变体）    | `rgba(0,0,0,0.06)` |
+| `--hmfw-color-fill-tertiary`         | 三级填充颜色（filled 变体）    | `rgba(0,0,0,0.04)` |
+| `--hmfw-color-bg-container-disabled` | 禁用容器背景                   | `rgba(0,0,0,0.04)` |
+| `--hmfw-color-bg-text-hover`         | 文本悬停背景（单元格、变体）   | `rgba(0,0,0,0.06)` |
+| `--hmfw-border-radius`               | 基础圆角（输入框圆角）         | `6px`              |
+| `--hmfw-line-height`                 | 行高（输入框文字）             | `1.5714`           |
+
+**注意**：
+
+- TimePicker 目前无组件级专属 Token，所有样式均消费全局 Token
+- 若需定制单个 TimePicker 实例，可通过 `styles` 属性覆盖内联样式
+- 部分硬编码值（白色背景、字号、内间距）正在 Token 化改造中（详见代码审查报告）
+
+### 主题定制示例
+
+通过 ConfigProvider 修改全局主题色：
+
+```vue
+<template>
+  <ConfigProvider :theme="{ colorPrimary: '#52c41a' }">
+    <TimePicker v-model:value="time" />
+  </ConfigProvider>
+</template>
+```
+
+通过 CSS 变量覆盖单个组件：
+
+```vue
+<template>
+  <TimePicker
+    v-model:value="time"
+    :styles="{
+      root: {
+        '--hmfw-color-primary': '#722ed1',
+        '--hmfw-border-radius': '12px',
+      },
+    }"
+  />
+</template>
+```
+
+<script setup>
+import TimePickerBasic from './TimePickerBasic.vue'
+import TimePickerSize from './TimePickerSize.vue'
+import TimePickerStep from './TimePickerStep.vue'
+import TimePickerFormat from './TimePickerFormat.vue'
+import TimePickerDisabled from './TimePickerDisabled.vue'
+import TimePickerConfirm from './TimePickerConfirm.vue'
+import TimePickerStatus from './TimePickerStatus.vue'
+import TimePickerAddon from './TimePickerAddon.vue'
+import TimePickerVariant from './TimePickerVariant.vue'
+import TimePickerClassNames from './TimePickerClassNames.vue'
+
+import TimePickerBasicSource from './TimePickerBasic.vue?raw'
+import TimePickerSizeSource from './TimePickerSize.vue?raw'
+import TimePickerStepSource from './TimePickerStep.vue?raw'
+import TimePickerFormatSource from './TimePickerFormat.vue?raw'
+import TimePickerDisabledSource from './TimePickerDisabled.vue?raw'
+import TimePickerConfirmSource from './TimePickerConfirm.vue?raw'
+import TimePickerStatusSource from './TimePickerStatus.vue?raw'
+import TimePickerAddonSource from './TimePickerAddon.vue?raw'
+import TimePickerVariantSource from './TimePickerVariant.vue?raw'
+import TimePickerClassNamesSource from './TimePickerClassNames.vue?raw'
+</script>

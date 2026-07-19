@@ -4,26 +4,28 @@ import { cls } from '../_utils'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { ClockCircleOutlined, CloseCircleFilled } from '@hmfw/icons'
-import type { TimePickerClassNames, TimePickerStyles } from './types'
+import type { TimePickerProps, TimePickerClassNames, TimePickerStyles, DisabledTimeConfig } from './types'
 import type { ComponentSize } from '../config-provider'
 
 type Variant = 'outlined' | 'borderless' | 'filled' | 'underlined'
-
-export interface DisabledTimeConfig {
-  disabledHours?: () => number[]
-  disabledMinutes?: (selectedHour: number) => number[]
-  disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]
-}
 
 function pad(n: number) {
   return String(n).padStart(2, '0')
 }
 
+/**
+ * 解析时间字符串为 {h, m, s} 对象
+ * 支持 24 小时制（HH:mm:ss）与 12 小时制（hh:mm:ss a/A）
+ * @param val - 时间字符串，如 "14:30:00" 或 "2:30:00 PM"
+ * @returns 解析后的时分秒对象，24 小时制
+ */
 function parseTime(val?: string) {
   if (!val) return { h: 0, m: 0, s: 0 }
+  // 提取 AM/PM 标记（大小写不敏感）
   const lower = val.toLowerCase()
   const isPM = lower.includes('pm')
   const isAM = lower.includes('am')
+  // 提取数字部分，按冒号分割为 [时, 分, 秒]
   const parts = val
     .replace(/[^\d:]/g, '')
     .split(':')
@@ -31,36 +33,50 @@ function parseTime(val?: string) {
   let h = parts[0] || 0
   const m = parts[1] || 0
   const s = parts[2] || 0
-  if (isPM && h < 12) h += 12
-  if (isAM && h === 12) h = 0
+  // 12 小时制转换为 24 小时制
+  if (isPM && h < 12) h += 12 // PM 下午：1 PM → 13, 11 PM → 23
+  if (isAM && h === 12) h = 0 // AM 午夜：12 AM → 0
   return { h, m, s }
 }
 
+/**
+ * 格式化时间为指定格式的字符串
+ * @param h - 小时（24 小时制，0-23）
+ * @param m - 分钟（0-59）
+ * @param s - 秒（0-59）
+ * @param fmt - 格式字符串，支持 Token：
+ *   - HH/H: 24 小时制时（HH 补零，H 不补零）
+ *   - hh/h: 12 小时制时（hh 补零，h 不补零，0 显示为 12）
+ *   - mm/m: 分钟（mm 补零，m 不补零）
+ *   - ss/s: 秒（ss 补零，s 不补零）
+ *   - A/a: AM/PM 标记（A 大写，a 小写）
+ * @returns 格式化后的时间字符串
+ */
 function formatTime(h: number, m: number, s: number, fmt: string) {
   const isPM = h >= 12
-  const h12 = h % 12 === 0 ? 12 : h % 12
+  const h12 = h % 12 === 0 ? 12 : h % 12 // 24 小时制 → 12 小时制（0 → 12, 13 → 1）
   return fmt.replace(/HH|H|hh|h|mm|m|ss|s|A|a/g, (token) => {
     switch (token) {
       case 'HH':
-        return pad(h)
+        return pad(h) // 24 小时制，补零：00-23
       case 'H':
-        return String(h)
+        return String(h) // 24 小时制，不补零：0-23
       case 'hh':
-        return pad(h12)
+        return pad(h12) // 12 小时制，补零：01-12
       case 'h':
-        return String(h12)
+        return String(h12) // 12 小时制，不补零：1-12
       case 'mm':
-        return pad(m)
+        return pad(m) // 分钟，补零：00-59
       case 'm':
-        return String(m)
+        return String(m) // 分钟，不补零：0-59
       case 'ss':
-        return pad(s)
+        return pad(s) // 秒，补零：00-59
       case 's':
-        return String(s)
+        return String(s) // 秒，不补零：0-59
       case 'A':
-        return isPM ? 'PM' : 'AM'
+        return isPM ? 'PM' : 'AM' // AM/PM 大写
       case 'a':
-        return isPM ? 'pm' : 'am'
+        return isPM ? 'pm' : 'am' // am/pm 小写
       default:
         return token
     }
@@ -71,33 +87,35 @@ function hasSeconds(fmt: string) {
   return /s/.test(fmt)
 }
 
+const timePickerProps = {
+  value: { type: String, default: undefined },
+  defaultValue: { type: String, default: undefined },
+  format: { type: String, default: 'HH:mm:ss' },
+  disabled: { type: Boolean, default: false },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
+  placeholder: { type: String, default: '请选择时间' },
+  allowClear: { type: Boolean, default: true },
+  hourStep: { type: Number, default: 1 },
+  minuteStep: { type: Number, default: 1 },
+  secondStep: { type: Number, default: 1 },
+  disabledTime: { type: Function as PropType<() => DisabledTimeConfig>, default: undefined },
+  hideDisabledOptions: { type: Boolean, default: false },
+  showNow: { type: Boolean, default: true },
+  use12Hours: { type: Boolean, default: false },
+  status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
+  open: { type: Boolean, default: undefined },
+  needConfirm: { type: Boolean, default: true },
+  changeOnScroll: { type: Boolean, default: false },
+  renderExtraFooter: { type: Function as PropType<() => VNodeChild>, default: undefined },
+  variant: { type: String as PropType<Variant>, default: 'outlined' },
+  placement: { type: String as PropType<Placement>, default: 'bottomLeft' },
+  classNames: { type: Object as PropType<TimePickerClassNames>, default: undefined },
+  styles: { type: Object as PropType<TimePickerStyles>, default: undefined },
+} satisfies Record<keyof TimePickerProps, any>
+
 export const TimePicker = defineComponent({
   name: 'TimePicker',
-  props: {
-    value: String,
-    defaultValue: String,
-    format: { type: String, default: 'HH:mm:ss' },
-    disabled: Boolean,
-    size: { type: String as PropType<ComponentSize>, default: 'middle' },
-    placeholder: { type: String, default: '请选择时间' },
-    allowClear: { type: Boolean, default: true },
-    hourStep: { type: Number, default: 1 },
-    minuteStep: { type: Number, default: 1 },
-    secondStep: { type: Number, default: 1 },
-    disabledTime: Function as PropType<() => DisabledTimeConfig>,
-    hideDisabledOptions: Boolean,
-    showNow: { type: Boolean, default: true },
-    use12Hours: Boolean,
-    status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
-    open: { type: Boolean, default: undefined },
-    needConfirm: { type: Boolean, default: true }, // 默认值改为 true
-    changeOnScroll: Boolean,
-    renderExtraFooter: Function as PropType<() => VNodeChild>,
-    variant: { type: String as PropType<Variant>, default: 'outlined' },
-    placement: { type: String as PropType<Placement>, default: 'bottomLeft' },
-    classNames: Object as PropType<TimePickerClassNames>,
-    styles: Object as PropType<TimePickerStyles>,
-  },
+  props: timePickerProps,
   emits: ['update:value', 'change', 'openChange', 'focus', 'blur'],
   setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('time-picker')
@@ -286,10 +304,18 @@ export const TimePicker = defineComponent({
 
     const showSec = computed(() => hasSeconds(props.format))
 
-    // 性能优化：使用 scrollTop 实现容器内滚动，避免影响页面滚动
+    // 性能优化：滚动列到指定值，使用 RAF 节流 + 缓存避免重复滚动
     const scrollRafIds = ref<Record<string, number>>({})
     const lastScrolledValue = ref<Record<string, number | string>>({})
 
+    /**
+     * 将时间列滚动到指定值的位置（使目标单元格可见）
+     * 性能优化：RAF 节流 + 值缓存避免密集重复滚动
+     * @param colRef - 列容器的 DOM 元素
+     * @param value - 目标值（小时/分钟/秒数值或 AM/PM 字符串）
+     * @param cacheKey - 缓存键（'h'/'m'/'s'/'p'），每列独立缓存
+     * @param immediate - true=立即跳转（无动画），用于面板首次打开；false=平滑滚动
+     */
     const scrollColumnToValue = (
       colRef: HTMLElement | undefined,
       value: number | string,
@@ -297,7 +323,7 @@ export const TimePicker = defineComponent({
       immediate = false, // 是否立即滚动（无动画）
     ) => {
       if (!colRef) return
-      // immediate=true 跳过缓存，避免面板打开时的缓存命中导致不滚动
+      // 缓存检查：避免相同值重复滚动（immediate 模式跳过缓存，确保面板打开时必滚动）
       if (!immediate && lastScrolledValue.value[cacheKey] === value) return
       lastScrolledValue.value[cacheKey] = value
 
@@ -327,7 +353,7 @@ export const TimePicker = defineComponent({
         // 立即模式：同步执行，不使用 RAF
         doScroll()
       } else {
-        // 平滑模式：使用 RAF 节流（每列独立的 RAF ID）
+        // 平滑模式：使用 RAF 节流（每列独立的 RAF ID，避免多列滚动相互干扰）
         if (scrollRafIds.value[cacheKey]) {
           cancelAnimationFrame(scrollRafIds.value[cacheKey])
         }

@@ -104,3 +104,13 @@ export interface TimePickerProps {
   /** 语义化 style */
   styles?: TimePickerStyles
 }
+
+/**
+ * TimePicker change 事件的回调函数类型
+ */
+export type TimePickerChangeHandler = (value: string | undefined, timeString: string) => void
+
+/**
+ * TimePicker openChange 事件的回调函数类型
+ */
+export type TimePickerOpenChangeHandler = (open: boolean) => void

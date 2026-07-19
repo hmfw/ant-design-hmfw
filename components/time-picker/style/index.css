@@ -5,7 +5,7 @@
   padding: 4px 11px;
   border: 1px solid var(--hmfw-color-border);
   border-radius: var(--hmfw-border-radius);
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   cursor: pointer;
   transition: all 0.2s;
   position: relative;
@@ -17,7 +17,7 @@
 
 .hmfw-time-picker-open {
   border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--hmfw-color-primary-bg);
 }
 
 .hmfw-time-picker-disabled {
@@ -39,13 +39,13 @@
 }
 
 .hmfw-time-picker-small {
-  padding: 0 7px;
-  font-size: 12px;
+  padding: 0 var(--hmfw-padding-xs);
+  font-size: var(--hmfw-font-size-sm);
 }
 
 .hmfw-time-picker-large {
   padding: 6px 11px;
-  font-size: 16px;
+  font-size: var(--hmfw-font-size-lg);
 }
 
 /* Variants */
@@ -108,20 +108,20 @@
   display: inline-flex;
   align-items: center;
   color: var(--hmfw-color-text-placeholder);
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   transition: opacity 0.2s;
 }
 
 /* clear 叠加在 suffix 同位置，picker hover 时显示并遮挡 suffix。
-   字号需与 suffix 一致（14px），否则两个 SVG 宽度不同，右对齐时会露出 suffix 边缘 */
+   字号需与 suffix 一致（--hmfw-font-size），否则两个 SVG 宽度不同，右对齐时会露出 suffix 边缘 */
 .hmfw-time-picker-clear {
   position: absolute;
   right: 11px;
   display: inline-flex;
   align-items: center;
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   color: var(--hmfw-color-text-placeholder);
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
@@ -144,7 +144,7 @@
 }
 
 .hmfw-time-picker-small .hmfw-time-picker-clear {
-  right: 7px;
+  right: var(--hmfw-padding-xs);
 }
 
 .hmfw-time-picker-borderless .hmfw-time-picker-clear,
@@ -195,7 +195,7 @@
   padding: 4px 0;
   text-align: center;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text);
   transition:
     background 0.2s,
@@ -244,9 +244,9 @@
 }
 
 .hmfw-time-picker-panel-footer-btn {
-  padding: 0 8px;
+  padding: 0 var(--hmfw-padding-xs);
   height: 24px;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -256,8 +256,8 @@
 .hmfw-time-picker-panel-footer-ok {
   padding: 0 14px;
   background: var(--hmfw-color-primary);
-  color: #fff;
-  border-radius: 4px;
+  color: var(--hmfw-color-text-light-solid);
+  border-radius: var(--hmfw-border-radius-sm);
 }
 
 .hmfw-time-picker-panel-footer-ok:hover {
