@@ -8,6 +8,11 @@ import type { ComponentSize } from '../config-provider'
 export type SwitchChangeEventHandler = (checked: boolean, event: MouseEvent) => void | Promise<void>
 
 /**
+ * onClick 处理器：点击时回调，参数与 change 一致（当前选中态 + 原生事件）
+ */
+export type SwitchClickEventHandler = (checked: boolean, event: MouseEvent) => void
+
+/**
  * Switch 各部分的语义化 className
  * 对齐 Ant Design v6 的语义化命名
  */

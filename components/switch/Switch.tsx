@@ -1,31 +1,34 @@
 import { defineComponent, ref, watch, computed, onMounted, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { SwitchChangeEventHandler, SwitchClassNames, SwitchStyles } from './types'
+import type { SwitchChangeEventHandler, SwitchClassNames, SwitchStyles, SwitchProps } from './types'
 import type { ComponentSize } from '../config-provider'
+
+// props 对象与 SwitchProps 接口通过 satisfies 强制同步，杜绝双源头漂移
+const switchProps = {
+  checked: { type: Boolean, default: undefined },
+  /** value 是 checked 的别名，提升表单库兼容性 */
+  value: { type: Boolean, default: undefined },
+  defaultChecked: { type: Boolean, default: undefined },
+  disabled: { type: Boolean, default: undefined },
+  loading: { type: Boolean, default: undefined },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
+  checkedChildren: { type: null, default: undefined },
+  unCheckedChildren: { type: null, default: undefined },
+  autoFocus: { type: Boolean, default: undefined },
+  id: { type: String, default: undefined },
+  title: { type: String, default: undefined },
+  tabIndex: { type: Number, default: undefined },
+  className: { type: String, default: undefined },
+  style: { type: [String, Object] as PropType<string | CSSProperties>, default: undefined },
+  onChange: { type: Function as PropType<SwitchChangeEventHandler>, default: undefined },
+  classNames: { type: Object as PropType<SwitchClassNames>, default: undefined },
+  styles: { type: Object as PropType<SwitchStyles>, default: undefined },
+} satisfies Record<keyof SwitchProps, any>
 
 export const Switch = defineComponent({
   name: 'Switch',
-  props: {
-    checked: { type: Boolean, default: undefined },
-    /** value 是 checked 的别名，提升表单库兼容性 */
-    value: { type: Boolean, default: undefined },
-    defaultChecked: Boolean,
-    disabled: Boolean,
-    loading: Boolean,
-    size: { type: String as PropType<ComponentSize>, default: 'middle' },
-    checkedChildren: null,
-    unCheckedChildren: null,
-    autoFocus: Boolean,
-    id: String,
-    title: String,
-    tabIndex: Number,
-    className: String,
-    style: [String, Object] as PropType<string | CSSProperties>,
-    onChange: Function as PropType<SwitchChangeEventHandler>,
-    classNames: Object as PropType<SwitchClassNames>,
-    styles: Object as PropType<SwitchStyles>,
-  },
+  props: switchProps,
   emits: ['update:checked', 'change', 'click', 'focus', 'blur'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('switch')

@@ -1,2 +1,8 @@
 export { Switch } from './Switch'
-export type { SwitchProps, SwitchClassNames, SwitchStyles } from './types'
+export type {
+  SwitchProps,
+  SwitchClassNames,
+  SwitchStyles,
+  SwitchChangeEventHandler,
+  SwitchClickEventHandler,
+} from './types'

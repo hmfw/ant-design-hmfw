@@ -6,19 +6,19 @@
       <Switch v-model:checked="checked1" :class-names="{ root: 'gradient-switch' }" />
     </div>
 
-    <!-- 场景 2：自定义手柄样式 -->
+    <!-- 场景 2：自定义手柄样式（indicator 对应 .hmfw-switch-handle） -->
     <div>
       <div style="margin-bottom: 8px; color: #666">自定义手柄样式：</div>
       <Switch
         v-model:checked="checked2"
         :class-names="{
           root: 'custom-root',
-          handle: 'custom-handle',
+          indicator: 'custom-handle',
         }"
       />
     </div>
 
-    <!-- 场景 3：自定义内部文字样式 -->
+    <!-- 场景 3：自定义内部文字样式（content 对应 .hmfw-switch-inner） -->
     <div>
       <div style="margin-bottom: 8px; color: #666">自定义内部文字样式：</div>
       <Switch
@@ -26,20 +26,14 @@
         checked-children="开"
         un-checked-children="关"
         :class-names="{
-          inner: 'custom-inner',
+          content: 'custom-inner',
           checked: 'custom-checked',
           unchecked: 'custom-unchecked',
         }"
       />
     </div>
 
-    <!-- 场景 4：自定义加载图标 -->
-    <div>
-      <div style="margin-bottom: 8px; color: #666">自定义加载图标：</div>
-      <Switch loading :class-names="{ loadingIcon: 'custom-loading' }" />
-    </div>
-
-    <!-- 场景 5：使用 styles 内联样式 -->
+    <!-- 场景 4：使用 styles 内联样式 -->
     <div>
       <div style="margin-bottom: 8px; color: #666">使用内联样式：</div>
       <Switch
@@ -48,8 +42,8 @@
         un-checked-children="OFF"
         :styles="{
           root: { minWidth: '60px', height: '28px', borderRadius: '14px' },
-          handle: { width: '24px', height: '24px' },
-          inner: { fontSize: '13px', fontWeight: 'bold' },
+          indicator: { width: '24px', height: '24px' },
+          content: { fontSize: '13px', fontWeight: 'bold' },
         }"
       />
     </div>
@@ -112,12 +106,5 @@ const checked4 = ref(true)
 
 :deep(.custom-unchecked) {
   color: #ffa940;
-}
-
-:deep(.custom-loading) {
-  width: 12px;
-  height: 12px;
-  border-width: 2.5px;
-  border-top-color: #ff4d4f;
 }
 </style>

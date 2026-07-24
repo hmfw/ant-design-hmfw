@@ -1,22 +1,22 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px">
+  <Space direction="vertical" size="middle">
     <Switch v-model:checked="checked1">
       <template #checkedChildren>
-        <CheckOutlined class="hmfw-icon" />
+        <CheckOutlined />
       </template>
       <template #unCheckedChildren>
-        <CloseOutlined class="hmfw-icon" />
+        <CloseOutlined />
       </template>
     </Switch>
     <Switch v-model:checked="checked2" checked-children="✓" un-checked-children="✗" />
-  </div>
+  </Space>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { CheckOutlined, CloseOutlined } from '@hmfw/icons'
-import { Switch } from '@hmfw/ant-design'
+import { Switch, Space } from '@hmfw/ant-design'
 
-const checked1 = ref(true)
-const checked2 = ref(false)
+const checked1 = shallowRef(true)
+const checked2 = shallowRef(false)
 </script>

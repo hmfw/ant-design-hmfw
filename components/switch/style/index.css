@@ -1,6 +1,8 @@
 .hmfw-switch {
-  --hmfw-switch-handle-bg: #fff;
+  --hmfw-switch-handle-bg: var(--hmfw-color-text-light-solid);
   --hmfw-switch-handle-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
+  /* loading 圈非选中态边框色，无全局语义 token，组件专属 */
+  --hmfw-switch-loading-icon-border: rgba(0, 0, 0, 0.2);
   --hmfw-switch-handle-size: 18px;
   --hmfw-switch-handle-size-sm: 12px;
   --hmfw-switch-inner-max-margin: 24px;
@@ -19,7 +21,7 @@
   min-width: var(--hmfw-switch-track-min-width);
   height: var(--hmfw-switch-track-height);
   padding: 0;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--hmfw-color-text-quaternary);
   border: 0;
   border-radius: 100px;
   cursor: pointer;
@@ -108,12 +110,14 @@
 
 .hmfw-switch-inner-checked,
 .hmfw-switch-inner-unchecked {
-  display: block;
-  color: #fff;
-  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hmfw-color-text-light-solid);
+  font-size: var(--hmfw-font-size-sm);
   pointer-events: none;
 
-  line-height: var(--hmfw-switch-track-height);
+  min-height: var(--hmfw-switch-track-height);
   transition:
     margin-inline-start var(--hmfw-motion-duration-mid) ease-in-out,
     margin-inline-end var(--hmfw-motion-duration-mid) ease-in-out;
@@ -189,7 +193,7 @@
 
 .hmfw-switch-small .hmfw-switch-inner-checked,
 .hmfw-switch-small .hmfw-switch-inner-unchecked {
-  line-height: var(--hmfw-switch-track-height-sm);
+  min-height: var(--hmfw-switch-track-height-sm);
 }
 
 .hmfw-switch-small .hmfw-switch-inner-checked {
@@ -229,7 +233,7 @@
   display: inline-block;
   width: 10px;
   height: 10px;
-  border: 2px solid rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--hmfw-switch-loading-icon-border);
   border-top-color: var(--hmfw-color-primary);
   border-radius: 50%;
   animation: hmfw-switch-spin 0.6s linear infinite;
