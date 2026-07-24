@@ -10,6 +10,21 @@
 
 ## 最近版本
 
+## [0.27.0] - 2026-07-24
+
+[查看完整内容](./changelogs/v0.27.0.md)
+
+### 🔧 重构
+
+- **Calendar / TreeSelect / Transfer / TimePicker / Switch / Slider / Upload**：系统性强化类型约束、Token 化样式与边界防御
+
+### 📊 质量提升
+
+- 覆盖 7 个组件，全部使用 `satisfies Record<keyof XProps, any>` 模式确保类型安全
+- 硬编码样式迁移到 CSS 变量，支持主题定制
+
+---
+
 ## [0.26.0] - 2026-07-18
 
 [查看完整内容](./changelogs/v0.26.0.md)
@@ -244,6 +259,8 @@
 
 | 版本                              | 日期       | 重点变更                                   |
 | --------------------------------- | ---------- | ------------------------------------------ |
+| [0.27.0](./changelogs/v0.27.0.md) | 2026-07-24 | 7 个组件类型约束强化、Token 化样式         |
+| [0.26.0](./changelogs/v0.26.0.md) | 2026-07-18 | Tree showLine、Watermark inherit、组件重构 |
 | [0.24.0](./changelogs/v0.24.0.md) | 2026-07-14 | Collapse 全面重构、渲染去重、键盘无障碍    |
 | [0.16.1](./changelogs/v0.16.1.md) | 2026-07-12 | ComponentSize 统一、Tabs ink bar 数据驱动  |
 | [0.16.0](./changelogs/v0.16.0.md) | 2026-07-12 | Tabs 受控化、ink bar 抽取 composable       |
