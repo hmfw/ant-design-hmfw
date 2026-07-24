@@ -242,6 +242,31 @@ describe('Slider', () => {
     expect(wrapper.emitted('change')?.[0]).toEqual([[50, 80]])
   })
 
+  // 边界防御：除零 / 非法 step
+  describe('Boundary defense', () => {
+    it('does not produce NaN% when max === min', () => {
+      const wrapper = mount(Slider, { props: { value: 50, min: 50, max: 50 } })
+      const track = wrapper.find('.hmfw-slider-track')
+      // span 为 0 时退化为 0%，不应出现 NaN
+      expect(track.attributes('style')).not.toContain('NaN')
+      expect(track.attributes('style')).toContain('0%')
+    })
+
+    it('does not crash keyboard nav when max === min', async () => {
+      const wrapper = mount(Slider, { props: { value: 50, min: 50, max: 50, step: 10 } })
+      const handle = wrapper.find('[role="slider"]')
+      await handle.trigger('keydown', { key: 'ArrowRight' })
+      expect(wrapper.emitted('change')?.[0]).toEqual([50])
+    })
+
+    it('degrades gracefully when step <= 0', () => {
+      const wrapper = mount(Slider, { props: { value: 42, min: 0, max: 100, step: 0 } })
+      const handle = wrapper.find('[role="slider"]')
+      // step<=0 时不吸附，仅做范围收敛，值保持不变
+      expect(handle.attributes('aria-valuenow')).toBe('42')
+    })
+  })
+
   // 范围越界修复测试
   describe('Value normalization (out of bounds)', () => {
     it('clamps single value below min', () => {

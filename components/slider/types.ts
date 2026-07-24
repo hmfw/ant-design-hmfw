@@ -1,6 +1,11 @@
 import type { CSSProperties, VNodeChild } from 'vue'
 
 /**
+ * Slider 取值类型：单值或 [起, 止] 范围
+ */
+export type SliderValue = number | [number, number]
+
+/**
  * 刻度标记值类型
  */
 export type SliderMarkValue = string | { label: string | VNodeChild; style?: CSSProperties }
@@ -71,9 +76,9 @@ export interface SliderStyles {
  */
 export interface SliderProps {
   /** 当前值（受控模式） */
-  value?: number | [number, number]
+  value?: SliderValue
   /** 默认值（非受控模式） */
-  defaultValue?: number | [number, number]
+  defaultValue?: SliderValue
   /** 最小值 */
   min?: number
   /** 最大值 */
@@ -105,13 +110,23 @@ export interface SliderProps {
 }
 
 /**
+ * Slider 值变化回调（change / update:value）
+ */
+export type SliderChangeHandler = (value: SliderValue) => void
+
+/**
+ * Slider 拖拽结束回调（afterChange）
+ */
+export type SliderAfterChangeHandler = (value: SliderValue) => void
+
+/**
  * Slider 事件
  */
 export interface SliderEmits {
   /** 值变化时触发（受控模式下同步更新） */
-  (e: 'update:value', value: number | [number, number]): void
+  (e: 'update:value', value: SliderValue): void
   /** 值变化时触发 */
-  (e: 'change', value: number | [number, number]): void
+  (e: 'change', value: SliderValue): void
   /** 拖拽结束时触发 */
-  (e: 'afterChange', value: number | [number, number]): void
+  (e: 'afterChange', value: SliderValue): void
 }

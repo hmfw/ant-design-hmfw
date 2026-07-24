@@ -227,7 +227,17 @@ export { Rate } from './rate'
 export type { RateProps, RateCharacterRenderContext, RateClassNames, RateStyles } from './rate'
 
 export { Slider } from './slider'
-export type { SliderProps, SliderMarks, SliderTooltipProps, SliderClassNames, SliderStyles } from './slider'
+export type {
+  SliderProps,
+  SliderValue,
+  SliderMarks,
+  SliderMarkValue,
+  SliderTooltipProps,
+  SliderChangeHandler,
+  SliderAfterChangeHandler,
+  SliderClassNames,
+  SliderStyles,
+} from './slider'
 
 export { Timeline, TimelineItem } from './timeline'
 export type {

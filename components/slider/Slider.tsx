@@ -1,28 +1,31 @@
 import { defineComponent, ref, computed, watch, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls, KEYS } from '../_utils'
-import type { SliderMarks, SliderTooltipProps, SliderClassNames, SliderStyles } from './types'
+import type { SliderProps, SliderValue, SliderMarks, SliderTooltipProps, SliderClassNames, SliderStyles } from './types'
+
+// props 对象：用 satisfies 强制 key 集合与 SliderProps 接口完全一致，杜绝双源头漂移
+const sliderProps = {
+  value: { type: [Number, Array] as PropType<SliderValue>, default: undefined },
+  defaultValue: { type: [Number, Array] as PropType<SliderValue>, default: undefined },
+  min: { type: Number, default: 0 },
+  max: { type: Number, default: 100 },
+  step: { type: Number as PropType<number | null>, default: 1 },
+  disabled: { type: Boolean, default: false },
+  range: { type: Boolean, default: false },
+  vertical: { type: Boolean, default: false },
+  reverse: { type: Boolean, default: false },
+  marks: { type: Object as PropType<SliderMarks>, default: undefined },
+  tooltip: { type: Object as PropType<SliderTooltipProps>, default: undefined },
+  included: { type: Boolean, default: true },
+  dots: { type: Boolean, default: false },
+  keyboard: { type: Boolean, default: true },
+  classNames: { type: Object as PropType<SliderClassNames>, default: undefined },
+  styles: { type: Object as PropType<SliderStyles>, default: undefined },
+} satisfies Record<keyof SliderProps, any>
 
 export const Slider = defineComponent({
   name: 'Slider',
-  props: {
-    value: [Number, Array] as PropType<number | [number, number]>,
-    defaultValue: [Number, Array] as PropType<number | [number, number]>,
-    min: { type: Number, default: 0 },
-    max: { type: Number, default: 100 },
-    step: { type: Number as PropType<number | null>, default: 1 },
-    disabled: Boolean,
-    range: Boolean,
-    vertical: Boolean,
-    reverse: Boolean,
-    marks: Object as PropType<SliderMarks>,
-    tooltip: { type: Object as PropType<SliderTooltipProps> },
-    included: { type: Boolean, default: true },
-    dots: Boolean,
-    keyboard: { type: Boolean, default: true },
-    classNames: Object as PropType<SliderClassNames>,
-    styles: Object as PropType<SliderStyles>,
-  },
+  props: sliderProps,
   emits: ['update:value', 'change', 'afterChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('slider')
@@ -72,18 +75,25 @@ export const Slider = defineComponent({
     }
 
     const snapToStep = (v: number) => {
-      // When step is null, only snap to marks, min, and max
+      // step 为 null 时，仅吸附到 marks、min、max
       if (props.step === null) {
         const markPoints = getMarkPoints()
         const validPoints = [props.min, ...markPoints, props.max]
         const closest = validPoints.reduce((prev, curr) => (Math.abs(curr - v) < Math.abs(prev - v) ? curr : prev))
         return closest
       }
+      // 防御非法 step（<=0）：退化为不吸附，仅做范围收敛，避免 Math.round(x/0) 得 NaN
+      if (props.step <= 0) return clamp(v)
       const steps = Math.round((v - props.min) / props.step)
       return clamp(props.min + steps * props.step)
     }
 
-    const getPercent = (v: number) => ((v - props.min) / (props.max - props.min)) * 100
+    // 防御 max === min：分母为 0 会得到 NaN%，此处退化为 0%
+    const getPercent = (v: number) => {
+      const span = props.max - props.min
+      if (span <= 0) return 0
+      return ((v - props.min) / span) * 100
+    }
 
     const getValueFromEvent = (e: MouseEvent | TouchEvent) => {
       if (!trackRef.value) return 0

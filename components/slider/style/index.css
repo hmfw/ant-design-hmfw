@@ -1,9 +1,16 @@
 .hmfw-slider {
+  /* 组件级 Token：Slider 专属尺寸，派生自 AntD prepareComponentToken 规则 */
+  --hmfw-slider-rail-size: 4px; /* AntD railSize = 4 */
+  --hmfw-slider-handle-size: 14px; /* 滑块手柄尺寸 */
+  --hmfw-slider-dot-size: 8px; /* AntD dotSize = 8 */
+  /* 手柄聚焦光晕：主题色 12% 透明度，无全局语义 token */
+  --hmfw-slider-handle-active-outline: rgba(22, 119, 255, 0.12);
+
   position: relative;
   width: 100%;
   height: 12px;
   padding: 4px 0;
-  border-radius: 6px;
+  border-radius: var(--hmfw-border-radius);
   touch-action: none;
   box-sizing: border-box;
 }
@@ -21,9 +28,9 @@
 .hmfw-slider-rail {
   position: relative;
   width: 100%;
-  height: 4px;
-  background-color: rgba(0, 0, 0, 0.06);
-  border-radius: 6px;
+  height: var(--hmfw-slider-rail-size);
+  background-color: var(--hmfw-color-fill-secondary);
+  border-radius: var(--hmfw-border-radius);
   cursor: pointer;
 }
 
@@ -34,24 +41,24 @@
 /* Track */
 .hmfw-slider-track {
   position: absolute;
-  height: 4px;
+  height: var(--hmfw-slider-rail-size);
   background-color: var(--hmfw-color-primary);
-  border-radius: 6px;
+  border-radius: var(--hmfw-border-radius);
   transition: background-color 0.3s;
 }
 
 .hmfw-slider-disabled .hmfw-slider-track {
-  background-color: rgba(0, 0, 0, 0.25);
+  background-color: var(--hmfw-color-text-disabled);
 }
 
 /* Handle */
 .hmfw-slider-handle {
   position: absolute;
   top: 50%;
-  width: 14px;
-  height: 14px;
-  margin-top: -7px;
-  background-color: #fff;
+  width: var(--hmfw-slider-handle-size);
+  height: var(--hmfw-slider-handle-size);
+  margin-top: calc(var(--hmfw-slider-handle-size) / -2);
+  background-color: var(--hmfw-color-bg-container);
   border: 2px solid var(--hmfw-color-primary);
   border-radius: 50%;
   cursor: grab;
@@ -65,7 +72,7 @@
 .hmfw-slider-handle:hover,
 .hmfw-slider-handle-dragging {
   border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 5px rgba(22, 119, 255, 0.12);
+  box-shadow: 0 0 0 5px var(--hmfw-slider-handle-active-outline);
 }
 
 .hmfw-slider-handle-dragging {
@@ -74,7 +81,7 @@
 
 .hmfw-slider-disabled .hmfw-slider-handle {
   cursor: not-allowed;
-  border-color: rgba(0, 0, 0, 0.25);
+  border-color: var(--hmfw-color-text-disabled);
 }
 
 /* Tooltip */
@@ -84,10 +91,10 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 4px 8px;
-  background: rgba(0, 0, 0, 0.85);
-  color: #fff;
-  border-radius: 4px;
-  font-size: 12px;
+  background: var(--hmfw-color-bg-spotlight);
+  color: var(--hmfw-color-text-light-solid);
+  border-radius: var(--hmfw-border-radius-sm);
+  font-size: var(--hmfw-font-size-sm);
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;
@@ -97,11 +104,11 @@
 .hmfw-slider-dot {
   position: absolute;
   top: 50%;
-  width: 8px;
-  height: 8px;
-  margin-top: -4px;
-  background-color: #fff;
-  border: 2px solid rgba(0, 0, 0, 0.06);
+  width: var(--hmfw-slider-dot-size);
+  height: var(--hmfw-slider-dot-size);
+  margin-top: calc(var(--hmfw-slider-dot-size) / -2);
+  background-color: var(--hmfw-color-bg-container);
+  border: 2px solid var(--hmfw-color-fill-secondary);
   border-radius: 50%;
   transform: translateX(-50%);
   cursor: pointer;
@@ -118,13 +125,13 @@
   top: 14px;
   left: 0;
   width: 100%;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
 }
 
 .hmfw-slider-mark-text {
   position: absolute;
   display: inline-block;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-description);
   text-align: center;
   word-break: keep-all;
   cursor: pointer;
@@ -133,7 +140,7 @@
 }
 
 .hmfw-slider-mark-text-active {
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--hmfw-color-text);
 }
 
 /* Vertical */
@@ -144,12 +151,12 @@
 }
 
 .hmfw-slider-vertical .hmfw-slider-rail {
-  width: 4px;
+  width: var(--hmfw-slider-rail-size);
   height: 100%;
 }
 
 .hmfw-slider-vertical .hmfw-slider-track {
-  width: 4px;
+  width: var(--hmfw-slider-rail-size);
   height: auto;
 }
 

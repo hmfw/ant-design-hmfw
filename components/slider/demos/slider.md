@@ -58,6 +58,22 @@
   <SliderDots />
 </DemoBlock>
 
+### 反向坐标轴
+
+通过 `reverse` 属性反转坐标轴方向。
+
+<DemoBlock title="反向" :source="SliderReverseSource">
+  <SliderReverse />
+</DemoBlock>
+
+### 事件
+
+`change` 在拖动过程中实时触发，`afterChange` 在拖拽/按键结束时触发（对齐 `mouseup` / `keyup` 时机）。
+
+<DemoBlock title="事件" :source="SliderEventSource">
+  <SliderEvent />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对各子元素做细粒度样式控制。
@@ -290,9 +306,33 @@ interface SliderStyles {
 
 Slider 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
 
-| Token 名称             | 说明   | 默认值    |
-| ---------------------- | ------ | --------- |
-| `--hmfw-color-primary` | 主题色 | `#1677ff` |
+### 全局 Token
+
+| Token 名称                      | 说明                       | 默认值             |
+| ------------------------------- | -------------------------- | ------------------ |
+| `--hmfw-color-primary`          | 轨道填充 / 手柄 / 激活刻度 | `#1677ff`          |
+| `--hmfw-color-fill-secondary`   | 轨道背景 / 刻度点边框      | `rgba(0,0,0,0.06)` |
+| `--hmfw-color-bg-container`     | 手柄 / 刻度点背景          | `#ffffff`          |
+| `--hmfw-color-text-disabled`    | 禁用态轨道 / 手柄边框      | `rgba(0,0,0,0.25)` |
+| `--hmfw-color-bg-spotlight`     | Tooltip 背景               | `rgba(0,0,0,0.85)` |
+| `--hmfw-color-text-light-solid` | Tooltip 文本               | `#ffffff`          |
+| `--hmfw-color-text-description` | 刻度标签文本               | `rgba(0,0,0,0.45)` |
+| `--hmfw-color-text`             | 激活刻度标签文本           | `rgba(0,0,0,0.88)` |
+| `--hmfw-border-radius`          | 轨道 / 填充圆角            | `6px`              |
+| `--hmfw-border-radius-sm`       | Tooltip 圆角               | `4px`              |
+| `--hmfw-font-size`              | 刻度标签字号               | `14px`             |
+| `--hmfw-font-size-sm`           | Tooltip 字号               | `12px`             |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-slider` 上，可直接覆盖以定制单个 Slider 的尺寸与样式。
+
+| Token 名称                            | 说明                            | 默认值                  |
+| ------------------------------------- | ------------------------------- | ----------------------- |
+| `--hmfw-slider-rail-size`             | 轨道厚度（对齐 AntD railSize）  | `4px`                   |
+| `--hmfw-slider-handle-size`           | 滑块手柄尺寸                    | `14px`                  |
+| `--hmfw-slider-dot-size`              | 刻度点尺寸（对齐 AntD dotSize） | `8px`                   |
+| `--hmfw-slider-handle-active-outline` | 手柄聚焦光晕（主题色 12%）      | `rgba(22,119,255,0.12)` |
 
 ## 键盘操作
 
