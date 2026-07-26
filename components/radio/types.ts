@@ -9,6 +9,8 @@ export interface RadioChangeEvent {
     value?: RadioValueType
   }
   nativeEvent: Event
+  stopPropagation: () => void
+  preventDefault: () => void
 }
 
 /**
@@ -43,6 +45,46 @@ export interface RadioStyles {
   label?: CSSProperties
 }
 
+/**
+ * RadioButton 各部分的语义化 className
+ */
+export interface RadioButtonClassNames {
+  /** 根节点 label.hmfw-radio-button-wrapper */
+  root?: string
+  /** 原生 input 元素 input.hmfw-radio-button-input */
+  input?: string
+  /** 文本标签 span.hmfw-radio-button-label */
+  label?: string
+}
+
+/**
+ * RadioButton 各部分的语义化 style
+ */
+export interface RadioButtonStyles {
+  /** 根节点 label.hmfw-radio-button-wrapper */
+  root?: CSSProperties
+  /** 原生 input 元素 input.hmfw-radio-button-input */
+  input?: CSSProperties
+  /** 文本标签 span.hmfw-radio-button-label */
+  label?: CSSProperties
+}
+
+/**
+ * RadioGroup 各部分的语义化 className
+ */
+export interface RadioGroupClassNames {
+  /** 根节点 div.hmfw-radio-group */
+  root?: string
+}
+
+/**
+ * RadioGroup 各部分的语义化 style
+ */
+export interface RadioGroupStyles {
+  /** 根节点 div.hmfw-radio-group */
+  root?: CSSProperties
+}
+
 export interface RadioProps {
   checked?: boolean
   defaultChecked?: boolean
@@ -56,6 +98,19 @@ export interface RadioProps {
   styles?: RadioStyles
 }
 
+export interface RadioButtonProps {
+  checked?: boolean
+  defaultChecked?: boolean
+  disabled?: boolean
+  value?: RadioValueType
+  name?: string
+  id?: string
+  /** 语义化 className */
+  classNames?: RadioButtonClassNames
+  /** 语义化 style */
+  styles?: RadioButtonStyles
+}
+
 export interface RadioGroupProps {
   value?: RadioValueType
   defaultValue?: RadioValueType
@@ -65,6 +120,11 @@ export interface RadioGroupProps {
   size?: ComponentSize
   name?: string
   block?: boolean
+  direction?: 'horizontal' | 'vertical'
+  /** 语义化 className */
+  classNames?: RadioGroupClassNames
+  /** 语义化 style */
+  styles?: RadioGroupStyles
   options?: Array<
     | RadioValueType
     | {

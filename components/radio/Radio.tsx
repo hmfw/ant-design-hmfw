@@ -15,18 +15,20 @@ interface RadioGroupContext {
   onChange: (val: RadioValueType, e: Event) => void
 }
 
+const radioProps = {
+  checked: { type: Boolean, default: undefined },
+  defaultChecked: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  value: { type: [String, Number, Boolean] as PropType<RadioValueType>, default: undefined },
+  name: { type: String, default: undefined },
+  id: { type: String, default: undefined },
+  classNames: { type: Object as PropType<import('./types').RadioClassNames>, default: undefined },
+  styles: { type: Object as PropType<import('./types').RadioStyles>, default: undefined },
+} satisfies Record<keyof import('./types').RadioProps, any>
+
 export const Radio = defineComponent({
   name: 'Radio',
-  props: {
-    checked: { type: Boolean, default: undefined },
-    defaultChecked: Boolean,
-    disabled: Boolean,
-    value: [String, Number, Boolean] as PropType<RadioValueType>,
-    name: String,
-    id: String,
-    classNames: Object as PropType<import('./types').RadioClassNames>,
-    styles: Object as PropType<import('./types').RadioStyles>,
-  },
+  props: radioProps,
   emits: ['update:checked', 'change'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('radio')
@@ -62,6 +64,8 @@ export const Radio = defineComponent({
           value: props.value,
         },
         nativeEvent: e,
+        stopPropagation: () => e.stopPropagation(),
+        preventDefault: () => e.preventDefault(),
       }
 
       if (groupContext && props.value !== undefined) {
@@ -148,41 +152,113 @@ export const Radio = defineComponent({
   },
 })
 
+const radioButtonProps = {
+  checked: { type: Boolean, default: undefined },
+  defaultChecked: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  value: { type: [String, Number, Boolean] as PropType<RadioValueType>, default: undefined },
+  name: { type: String, default: undefined },
+  id: { type: String, default: undefined },
+  classNames: { type: Object as PropType<import('./types').RadioButtonClassNames>, default: undefined },
+  styles: { type: Object as PropType<import('./types').RadioButtonStyles>, default: undefined },
+} satisfies Record<keyof import('./types').RadioButtonProps, any>
+
 export const RadioButton = defineComponent({
   name: 'RadioButton',
-  props: {
-    checked: { type: Boolean, default: undefined },
-    defaultChecked: Boolean,
-    disabled: Boolean,
-    value: [String, Number, Boolean] as PropType<RadioValueType>,
-    name: String,
-    id: String,
-  },
+  props: radioButtonProps,
   emits: ['update:checked', 'change'],
   setup(props, { slots, emit }) {
+    const prefixCls = usePrefixCls('radio-button')
+    const groupContext = inject<RadioGroupContext | null>(RADIO_GROUP_KEY, null)
+
+    const innerChecked = ref(props.defaultChecked ?? false)
+    watch(
+      () => props.checked,
+      (v) => {
+        if (v !== undefined) innerChecked.value = v
+      },
+    )
+
+    const isChecked = computed(() => {
+      if (groupContext) {
+        return groupContext.value.value === props.value
+      }
+      return props.checked !== undefined ? props.checked : innerChecked.value
+    })
+
+    const isDisabled = computed(() => props.disabled || (groupContext?.disabled.value ?? false))
+    const isBlock = computed(() => groupContext?.block.value ?? false)
+
+    const handleChange = (e: Event) => {
+      if (isDisabled.value) return
+
+      const changeEvent: RadioChangeEvent = {
+        target: {
+          checked: true,
+          value: props.value,
+        },
+        nativeEvent: e,
+        stopPropagation: () => e.stopPropagation(),
+        preventDefault: () => e.preventDefault(),
+      }
+
+      if (groupContext && props.value !== undefined) {
+        groupContext.onChange(props.value, e)
+      } else {
+        innerChecked.value = true
+        emit('update:checked', true)
+        emit('change', changeEvent)
+      }
+    }
+
+    const radioName = computed(() => props.name || groupContext?.name.value)
+
     return () => (
-      <Radio
-        {...props}
-        v-slots={slots}
-        onUpdate:checked={(v: boolean) => emit('update:checked', v)}
-        onChange={(e: RadioChangeEvent) => emit('change', e)}
-      />
+      <label
+        class={cls(
+          `${prefixCls}-wrapper`,
+          {
+            [`${prefixCls}-wrapper-checked`]: isChecked.value,
+            [`${prefixCls}-wrapper-disabled`]: isDisabled.value,
+            [`${prefixCls}-wrapper-block`]: isBlock.value,
+          },
+          props.classNames?.root,
+        )}
+        style={props.styles?.root}
+      >
+        <input
+          type="radio"
+          class={cls(`${prefixCls}-input`, props.classNames?.input)}
+          style={props.styles?.input}
+          checked={isChecked.value}
+          disabled={isDisabled.value}
+          name={radioName.value}
+          value={props.value as any}
+          id={props.id}
+          onChange={handleChange}
+        />
+        <span class={cls(`${prefixCls}-label`, props.classNames?.label)} style={props.styles?.label}>
+          {slots.default?.()}
+        </span>
+      </label>
     )
   },
 })
 
-export const RadioGroup = defineComponent({
-  name: 'RadioGroup',
-  props: {
-    value: { type: [String, Number, Boolean] as PropType<RadioValueType>, default: undefined },
-    defaultValue: { type: [String, Number, Boolean] as PropType<RadioValueType>, default: undefined },
-    disabled: Boolean,
-    buttonStyle: { type: String as PropType<'outline' | 'solid'>, default: 'outline' },
-    optionType: { type: String as PropType<'default' | 'button'>, default: 'default' },
-    size: { type: String as PropType<ComponentSize>, default: 'middle' },
-    name: String,
-    block: Boolean,
-    options: Array as PropType<
+const radioGroupProps = {
+  value: { type: [String, Number, Boolean] as PropType<RadioValueType>, default: undefined },
+  defaultValue: { type: [String, Number, Boolean] as PropType<RadioValueType>, default: undefined },
+  disabled: { type: Boolean, default: false },
+  buttonStyle: { type: String as PropType<'outline' | 'solid'>, default: 'outline' },
+  optionType: { type: String as PropType<'default' | 'button'>, default: 'default' },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
+  name: { type: String, default: undefined },
+  block: { type: Boolean, default: false },
+  direction: { type: String as PropType<'horizontal' | 'vertical'>, default: 'horizontal' },
+  classNames: { type: Object as PropType<import('./types').RadioGroupClassNames>, default: undefined },
+  styles: { type: Object as PropType<import('./types').RadioGroupStyles>, default: undefined },
+  options: {
+    type: Array as PropType<
       Array<
         | RadioValueType
         | {
@@ -193,7 +269,13 @@ export const RadioGroup = defineComponent({
           }
       >
     >,
+    default: undefined,
   },
+} satisfies Record<keyof import('./types').RadioGroupProps, any>
+
+export const RadioGroup = defineComponent({
+  name: 'RadioGroup',
+  props: radioGroupProps,
   emits: ['update:value', 'change'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('radio')
@@ -223,6 +305,8 @@ export const RadioGroup = defineComponent({
             value: val,
           },
           nativeEvent: e,
+          stopPropagation: () => e.stopPropagation(),
+          preventDefault: () => e.preventDefault(),
         }
         emit('change', changeEvent)
       }
@@ -241,16 +325,22 @@ export const RadioGroup = defineComponent({
     provide(RADIO_GROUP_KEY, context)
 
     const groupCls = computed(() =>
-      cls(`${prefixCls}-group`, `${prefixCls}-group-${props.size}`, {
-        [`${prefixCls}-group-${props.buttonStyle}`]: props.optionType === 'button',
-        [`${prefixCls}-group-block`]: props.block,
-      }),
+      cls(
+        `${prefixCls}-group`,
+        `${prefixCls}-group-${props.size}`,
+        `${prefixCls}-group-${props.direction}`,
+        {
+          [`${prefixCls}-group-${props.buttonStyle}`]: props.optionType === 'button',
+          [`${prefixCls}-group-block`]: props.block,
+        },
+        props.classNames?.root,
+      ),
     )
 
     return () => {
       if (props.options) {
         return (
-          <div class={groupCls.value}>
+          <div class={groupCls.value} style={props.styles?.root}>
             {props.options.map((opt) => {
               const item =
                 typeof opt === 'object' && opt !== null && 'value' in opt
@@ -261,16 +351,21 @@ export const RadioGroup = defineComponent({
                       id?: string
                     })
                   : { label: String(opt), value: opt as RadioValueType }
+              const Component = props.optionType === 'button' ? RadioButton : Radio
               return (
-                <Radio key={String(item.value)} value={item.value} disabled={item.disabled} id={item.id}>
+                <Component key={String(item.value)} value={item.value} disabled={item.disabled} id={item.id}>
                   {item.label}
-                </Radio>
+                </Component>
               )
             })}
           </div>
         )
       }
-      return <div class={groupCls.value}>{slots.default?.()}</div>
+      return (
+        <div class={groupCls.value} style={props.styles?.root}>
+          {slots.default?.()}
+        </div>
+      )
     }
   },
 })

@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { Radio, RadioGroup, RadioButton } from '../Radio'
 
@@ -80,6 +80,30 @@ describe('RadioButton', () => {
   it('supports id prop', () => {
     const wrapper = mount(RadioButton, { props: { id: 'test-button-id' } })
     expect(wrapper.find('input').attributes('id')).toBe('test-button-id')
+  })
+
+  it('supports classNames for RadioButton', () => {
+    const wrapper = mount(RadioButton, {
+      props: {
+        value: 'btn1',
+        classNames: { root: 'custom-button', label: 'custom-label' },
+      },
+      slots: { default: 'Button' },
+    })
+    expect(wrapper.classes()).toContain('custom-button')
+    expect(wrapper.find('.hmfw-radio-button-label').classes()).toContain('custom-label')
+  })
+
+  it('supports styles for RadioButton', () => {
+    const wrapper = mount(RadioButton, {
+      props: {
+        value: 'btn1',
+        styles: { root: { padding: '20px' }, label: { color: 'red' } },
+      },
+      slots: { default: 'Button' },
+    })
+    expect(wrapper.attributes('style')).toContain('padding: 20px')
+    expect(wrapper.find('.hmfw-radio-button-label').attributes('style')).toContain('color: red')
   })
 })
 
@@ -202,5 +226,51 @@ describe('RadioGroup', () => {
     await nextTick()
     const radios = wrapper.findAll('.hmfw-radio')
     expect(radios[1].classes()).toContain('hmfw-radio-checked')
+  })
+
+  it('applies direction class', () => {
+    const wrapper = mount(RadioGroup, {
+      props: { options: ['A', 'B'], direction: 'vertical' },
+    })
+    expect(wrapper.classes()).toContain('hmfw-radio-group-vertical')
+  })
+
+  it('applies horizontal direction by default', () => {
+    const wrapper = mount(RadioGroup, {
+      props: { options: ['A', 'B'] },
+    })
+    expect(wrapper.classes()).toContain('hmfw-radio-group-horizontal')
+  })
+
+  it('supports classNames for RadioGroup', () => {
+    const wrapper = mount(RadioGroup, {
+      props: {
+        options: ['A', 'B'],
+        classNames: { root: 'custom-group' },
+      },
+    })
+    expect(wrapper.classes()).toContain('custom-group')
+  })
+
+  it('supports styles for RadioGroup', () => {
+    const wrapper = mount(RadioGroup, {
+      props: {
+        options: ['A', 'B'],
+        styles: { root: { padding: '10px' } },
+      },
+    })
+    expect(wrapper.attributes('style')).toContain('padding: 10px')
+  })
+
+  it('event has stopPropagation and preventDefault methods', async () => {
+    const onChange = vi.fn()
+    const wrapper = mount(Radio, {
+      props: { value: 'test', onChange },
+    })
+    await wrapper.find('input').trigger('change')
+    expect(onChange).toHaveBeenCalled()
+    const event = onChange.mock.calls[0][0]
+    expect(typeof event.stopPropagation).toBe('function')
+    expect(typeof event.preventDefault).toBe('function')
   })
 })

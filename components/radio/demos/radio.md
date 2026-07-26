@@ -64,16 +64,29 @@ id 属性会自动绑定到原生 input 元素，方便配合 label 使用。
 
 ### RadioGroup Props
 
-| 参数           | 说明                                             | 类型                                                                    | 默认值         |
-| -------------- | ------------------------------------------------ | ----------------------------------------------------------------------- | -------------- |
-| value(v-model) | 用于设置当前选中的值                             | `string \| number`                                                      | -              |
-| defaultValue   | 默认选中的值                                     | `string \| number`                                                      | -              |
-| options        | 以配置形式设置子元素                             | `Array<{ label: string; value: string \| number; disabled?: boolean }>` | `[]`           |
-| disabled       | 禁选所有子单选器                                 | `boolean`                                                               | `false`        |
-| direction      | 排列方向                                         | `'horizontal' \| 'vertical'`                                            | `'horizontal'` |
-| optionType     | 用于设置 Radio options 类型                      | `'default' \| 'button'`                                                 | `'default'`    |
-| buttonStyle    | RadioButton 的风格样式，目前有描边和填色两种风格 | `'outline' \| 'solid'`                                                  | `'outline'`    |
-| size           | 大小，只对按钮样式生效                           | `'small' \| 'middle' \| 'large'`                                        | `'middle'`     |
+| 参数           | 说明                                                       | 类型                                                                    | 默认值         |
+| -------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------- | -------------- |
+| value(v-model) | 用于设置当前选中的值                                       | `string \| number`                                                      | -              |
+| defaultValue   | 默认选中的值                                               | `string \| number`                                                      | -              |
+| options        | 以配置形式设置子元素                                       | `Array<{ label: string; value: string \| number; disabled?: boolean }>` | `[]`           |
+| disabled       | 禁选所有子单选器                                           | `boolean`                                                               | `false`        |
+| direction      | 排列方向                                                   | `'horizontal' \| 'vertical'`                                            | `'horizontal'` |
+| optionType     | 用于设置 Radio options 类型                                | `'default' \| 'button'`                                                 | `'default'`    |
+| buttonStyle    | RadioButton 的风格样式，目前有描边和填色两种风格           | `'outline' \| 'solid'`                                                  | `'outline'`    |
+| size           | 大小，只对按钮样式生效                                     | `'small' \| 'middle' \| 'large'`                                        | `'middle'`     |
+| classNames     | 语义化 className（[详见下方](#语义化-classname-与-style)） | `RadioGroupClassNames`                                                  | -              |
+| styles         | 语义化 style（[详见下方](#语义化-classname-与-style)）     | `RadioGroupStyles`                                                      | -              |
+
+### RadioButton Props
+
+| 参数             | 说明                                                       | 类型                    | 默认值  |
+| ---------------- | ---------------------------------------------------------- | ----------------------- | ------- |
+| checked(v-model) | 指定当前是否选中                                           | `boolean`               | `false` |
+| defaultChecked   | 初始是否选中                                               | `boolean`               | `false` |
+| disabled         | 禁用 RadioButton                                           | `boolean`               | `false` |
+| value            | 根据 value 进行比较，判断是否选中                          | `string \| number`      | -       |
+| classNames       | 语义化 className（[详见下方](#语义化-classname-与-style)） | `RadioButtonClassNames` | -       |
+| styles           | 语义化 style（[详见下方](#语义化-classname-与-style)）     | `RadioButtonStyles`     | -       |
 
 ### Radio Events
 
@@ -101,6 +114,8 @@ id 属性会自动绑定到原生 input 元素，方便配合 label 使用。
 
 ### 类型定义
 
+#### Radio
+
 ```typescript
 interface RadioClassNames {
   root?: string // 根节点 label.hmfw-radio-wrapper
@@ -116,6 +131,34 @@ interface RadioStyles {
   input?: CSSProperties // 原生 input 元素 input.hmfw-radio-input
   inner?: CSSProperties // 视觉圆形选择框 span.hmfw-radio-inner
   label?: CSSProperties // 文本标签 span.hmfw-radio-label
+}
+```
+
+#### RadioButton
+
+```typescript
+interface RadioButtonClassNames {
+  root?: string // 根节点 label.hmfw-radio-button-wrapper
+  input?: string // 原生 input 元素 input.hmfw-radio-button-input
+  label?: string // 文本标签 span.hmfw-radio-button-label
+}
+
+interface RadioButtonStyles {
+  root?: CSSProperties // 根节点 label.hmfw-radio-button-wrapper
+  input?: CSSProperties // 原生 input 元素 input.hmfw-radio-button-input
+  label?: CSSProperties // 文本标签 span.hmfw-radio-button-label
+}
+```
+
+#### RadioGroup
+
+```typescript
+interface RadioGroupClassNames {
+  root?: string // 根节点 div.hmfw-radio-group
+}
+
+interface RadioGroupStyles {
+  root?: CSSProperties // 根节点 div.hmfw-radio-group
 }
 ```
 
