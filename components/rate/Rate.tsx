@@ -2,30 +2,32 @@ import { defineComponent, ref, computed, watch, onMounted, type PropType } from 
 import { usePrefixCls, useConfig } from '../config-provider'
 import { cls } from '../_utils'
 import { Tooltip } from '../tooltip'
-import type { RateCharacterRenderContext, RateClassNames, RateStyles } from './types'
+import type { RateProps, RateCharacterRenderContext, RateClassNames, RateStyles } from './types'
 import type { ComponentSize } from '../config-provider'
 import type { TooltipProps } from '../tooltip'
 
+const rateProps = {
+  value: { type: Number, default: undefined },
+  defaultValue: { type: Number, default: 0 },
+  count: { type: Number, default: 5 },
+  allowHalf: { type: Boolean, default: false },
+  allowClear: { type: Boolean, default: true },
+  disabled: { type: Boolean, default: false },
+  character: {
+    type: [String, Function] as PropType<string | ((ctx: RateCharacterRenderContext) => any)>,
+    default: '★',
+  },
+  tooltips: { type: Array as PropType<(string | TooltipProps)[]>, default: undefined },
+  size: { type: String as PropType<ComponentSize>, default: undefined },
+  keyboard: { type: Boolean, default: true },
+  autoFocus: { type: Boolean, default: false },
+  classNames: { type: Object as PropType<RateClassNames>, default: undefined },
+  styles: { type: Object as PropType<RateStyles>, default: undefined },
+} satisfies Record<keyof RateProps, any>
+
 export const Rate = defineComponent({
   name: 'Rate',
-  props: {
-    value: Number,
-    defaultValue: { type: Number, default: 0 },
-    count: { type: Number, default: 5 },
-    allowHalf: Boolean,
-    allowClear: { type: Boolean, default: true },
-    disabled: Boolean,
-    character: {
-      type: [String, Function] as PropType<string | ((ctx: RateCharacterRenderContext) => any)>,
-      default: '★',
-    },
-    tooltips: Array as PropType<(string | TooltipProps)[]>,
-    size: String as PropType<ComponentSize>,
-    keyboard: { type: Boolean, default: true },
-    autoFocus: Boolean,
-    classNames: Object as PropType<RateClassNames>,
-    styles: Object as PropType<RateStyles>,
-  },
+  props: rateProps,
   emits: ['update:value', 'change', 'hoverChange', 'focus', 'blur', 'keydown'],
   setup(props, { slots, emit, expose }) {
     const prefixCls = usePrefixCls('rate')
@@ -213,7 +215,6 @@ export const Rate = defineComponent({
     const renderStar = (index: number) => {
       const { status, isFocused } = getStarStatus(index)
       const tooltipItem = props.tooltips?.[index]
-      // const starValue = index + 1
       const isActive = status === 'half' || status === 'full'
 
       const starNode = (

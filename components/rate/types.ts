@@ -6,7 +6,9 @@ import type { TooltipProps } from '../tooltip'
  * 自定义字符渲染上下文
  * - index: 当前星星的索引（从 0 开始）
  * - value: 当前评分值
- * - isHalf: 是否为半星渲染（star-first 区块）；非半星渲染（star-second 区块）时为 false
+ * - isHalf: 当前渲染的是否为半星区域
+ *   - true: 渲染左半部分（.hmfw-rate-star-first）
+ *   - false: 渲染右半部分（.hmfw-rate-star-second）
  */
 export interface RateCharacterRenderContext {
   index: number
@@ -14,7 +16,11 @@ export interface RateCharacterRenderContext {
   isHalf: boolean
 }
 
+export type RateChangeHandler = (value: number) => void
 export type RateHoverChangeHandler = (value: number | undefined) => void
+export type RateFocusHandler = () => void
+export type RateBlurHandler = () => void
+export type RateKeyDownHandler = (event: KeyboardEvent) => void
 
 /**
  * Rate 各部分的语义化 className

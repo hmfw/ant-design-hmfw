@@ -41,6 +41,14 @@
   <RateTooltip />
 </DemoBlock>
 
+### 文案展现
+
+给评分组件加上文案展示。
+
+<DemoBlock title="文案展现" :source="RateTextSource">
+  <RateText />
+</DemoBlock>
+
 ### 尺寸
 
 通过 `size` 属性设置评分组件的尺寸，支持 `small`、`middle`（默认）、`large` 三种尺寸。
@@ -85,21 +93,21 @@
 
 ### Rate Props
 
-| 参数           | 说明                                                                             | 类型                                                   | 默认值     |
-| -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------ | ---------- |
-| value(v-model) | 当前数，受控值                                                                   | `number`                                               | -          |
-| defaultValue   | 默认值                                                                           | `number`                                               | `0`        |
-| count          | star 总数                                                                        | `number`                                               | `5`        |
-| allowHalf      | 是否允许半选                                                                     | `boolean`                                              | `false`    |
-| allowClear     | 是否允许再次点击后清除                                                           | `boolean`                                              | `true`     |
-| disabled       | 只读，无法进行交互                                                               | `boolean`                                              | `false`    |
-| character      | 自定义字符                                                                       | `string \| ((ctx: RateCharacterRenderContext) => any)` | `'★'`      |
-| tooltips       | 自定义每项的提示信息                                                             | `(string \| TooltipProps)[]`                           | -          |
-| size           | 组件尺寸                                                                         | `'small' \| 'middle' \| 'large'`                       | `'middle'` |
-| keyboard       | 是否支持键盘操作                                                                 | `boolean`                                              | `true`     |
-| autoFocus      | 自动获取焦点                                                                     | `boolean`                                              | `false`    |
-| classNames     | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RateClassNames`                                       | -          |
-| styles         | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RateStyles`                                           | -          |
+| 参数           | 说明                                                                             | 类型                                                   | 默认值                              |
+| -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------- |
+| value(v-model) | 当前数，受控值                                                                   | `number`                                               | -                                   |
+| defaultValue   | 默认值                                                                           | `number`                                               | `0`                                 |
+| count          | star 总数                                                                        | `number`                                               | `5`                                 |
+| allowHalf      | 是否允许半选                                                                     | `boolean`                                              | `false`                             |
+| allowClear     | 是否允许再次点击后清除                                                           | `boolean`                                              | `true`                              |
+| disabled       | 只读，无法进行交互                                                               | `boolean`                                              | `false`                             |
+| character      | 自定义字符                                                                       | `string \| ((ctx: RateCharacterRenderContext) => any)` | `'★'`                               |
+| tooltips       | 自定义每项的提示信息                                                             | `(string \| TooltipProps)[]`                           | -                                   |
+| size           | 组件尺寸                                                                         | `'small' \| 'middle' \| 'large'`                       | `'middle'`（继承自 ConfigProvider） |
+| keyboard       | 是否支持键盘操作                                                                 | `boolean`                                              | `true`                              |
+| autoFocus      | 自动获取焦点                                                                     | `boolean`                                              | `false`                             |
+| classNames     | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RateClassNames`                                       | -                                   |
+| styles         | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RateStyles`                                           | -                                   |
 
 ### Rate Events
 
