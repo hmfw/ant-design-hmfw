@@ -42,24 +42,23 @@
 
 ### RangePicker Props
 
-| 参数            | 说明                                                                             | 类型                                                             | 默认值                  |
-| --------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------------------- |
-| value (v-model) | 日期范围                                                                         | `[string \| null, string \| null]`                               | -                       |
-| defaultValue    | 默认日期范围                                                                     | `[string \| null, string \| null]`                               | -                       |
-| format          | 日期格式                                                                         | `string`                                                         | `'YYYY-MM-DD'`          |
-| disabled        | 是否禁用，可分别禁用起止                                                         | `boolean \| [boolean, boolean]`                                  | `false`                 |
-| placeholder     | 占位文本，缺省时使用当前语言包                                                   | `[string, string]`                                               | locale.rangePlaceholder |
-| allowClear      | 是否允许清除                                                                     | `boolean`                                                        | `true`                  |
-| allowEmpty      | 允许起止留空                                                                     | `[boolean, boolean]`                                             | -                       |
-| order           | 自动排序起止日期                                                                 | `boolean`                                                        | `true`                  |
-| separator       | 起止输入框之间的分隔符                                                           | `string`                                                         | `'→'`                   |
-| presets         | 预设范围快捷选项                                                                 | `{ label: string, value: RangeValue \| (() => RangeValue) }[]`   | -                       |
-| size            | 尺寸                                                                             | `'small' \| 'middle' \| 'large'`                                 | `'middle'`              |
-| disabledDate    | 不可选日期                                                                       | `(date: Date, info?: { from?: Date, type?: string }) => boolean` | -                       |
-| status          | 校验状态                                                                         | `'error' \| 'warning' \| ''`                                     | `''`                    |
-| open            | 受控的弹层显隐                                                                   | `boolean`                                                        | -                       |
-| classNames      | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RangePickerClassNames`                                          | -                       |
-| styles          | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RangePickerStyles`                                              | -                       |
+| 参数            | 说明                                                                                            | 类型                                                             | 默认值                  |
+| --------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------------------- |
+| value (v-model) | 日期范围                                                                                        | `[string \| null, string \| null]`                               | -                       |
+| defaultValue    | 默认日期范围                                                                                    | `[string \| null, string \| null]`                               | -                       |
+| format          | 日期格式                                                                                        | `string`                                                         | `'YYYY-MM-DD'`          |
+| disabled        | 是否禁用，可分别禁用起止                                                                        | `boolean \| [boolean, boolean]`                                  | `false`                 |
+| placeholder     | 占位文本，缺省时使用当前语言包                                                                  | `[string, string]`                                               | locale.rangePlaceholder |
+| allowClear      | 是否允许清除                                                                                    | `boolean`                                                        | `true`                  |
+| order           | 自动排序起止日期                                                                                | `boolean`                                                        | `true`                  |
+| separator       | 起止输入框之间的分隔符                                                                          | `string`                                                         | `'→'`                   |
+| presets         | 预设范围快捷选项                                                                                | `{ label: string, value: RangeValue \| (() => RangeValue) }[]`   | -                       |
+| size            | 尺寸                                                                                            | `'small' \| 'middle' \| 'large'`                                 | `'middle'`              |
+| disabledDate    | 不可选日期函数。`info.from` 为已选的开始日期（选择结束日期时传入），`info.type` 固定为 `'date'` | `(date: Date, info?: { from?: Date, type?: string }) => boolean` | -                       |
+| status          | 校验状态                                                                                        | `'error' \| 'warning' \| ''`                                     | `''`                    |
+| open            | 受控的弹层显隐                                                                                  | `boolean`                                                        | -                       |
+| classNames      | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)                | `RangePickerClassNames`                                          | -                       |
+| styles          | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)                | `RangePickerStyles`                                              | -                       |
 
 ### RangePicker Events
 

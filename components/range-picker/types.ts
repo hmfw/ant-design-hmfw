@@ -137,8 +137,6 @@ export interface RangePickerProps {
   disabled?: boolean | [boolean, boolean]
   placeholder?: [string, string]
   allowClear?: boolean
-  /** Allow start or end input to be left empty, as `[start, end]`. */
-  allowEmpty?: [boolean, boolean]
   /** Auto order the two selected dates. Defaults to `true`. */
   order?: boolean
   /** Custom separator between the two inputs. */

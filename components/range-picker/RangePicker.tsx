@@ -1,78 +1,37 @@
 import { defineComponent, ref, computed, watch, type PropType } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
+import { formatDate, parseDate, isSameDay, buildCalendar } from '../_utils/date'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
-import type { RangeValue, RangePreset, RangePickerClassNames, RangePickerStyles } from './types'
+import type { RangeValue, RangePreset, RangePickerClassNames, RangePickerStyles, RangePickerProps } from './types'
 import type { ComponentSize } from '../config-provider'
 
-function pad(n: number) {
-  return String(n).padStart(2, '0')
-}
+const rangePickerProps = {
+  value: { type: Array as unknown as PropType<RangeValue>, default: undefined },
+  defaultValue: { type: Array as unknown as PropType<RangeValue>, default: undefined },
+  format: { type: String, default: 'YYYY-MM-DD' },
+  disabled: { type: [Boolean, Array] as PropType<boolean | [boolean, boolean]>, default: false },
+  placeholder: { type: Array as unknown as PropType<[string, string]>, default: undefined },
+  allowClear: { type: Boolean, default: true },
+  order: { type: Boolean, default: true },
+  separator: { type: String, default: '→' },
+  presets: { type: Array as PropType<RangePreset[]>, default: undefined },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
+  disabledDate: {
+    type: Function as PropType<(d: Date, info?: { from?: Date; type?: string }) => boolean>,
+    default: undefined,
+  },
+  status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
+  open: { type: Boolean, default: undefined },
+  classNames: { type: Object as PropType<RangePickerClassNames>, default: undefined },
+  styles: { type: Object as PropType<RangePickerStyles>, default: undefined },
+} satisfies Record<keyof RangePickerProps, any>
 
-function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
-  return fmt
-    .replace('YYYY', String(d.getFullYear()))
-    .replace('MM', pad(d.getMonth() + 1))
-    .replace('DD', pad(d.getDate()))
-}
-
-function parseDate(val: string | null | undefined): Date | null {
-  if (!val) return null
-  const d = new Date(val)
-  return isNaN(d.getTime()) ? null : d
-}
-
-function isSameDay(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
-}
-
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate()
-}
-
-function getFirstDayOfWeek(year: number, month: number) {
-  return new Date(year, month, 1).getDay()
-}
-
-function buildCalendar(year: number, month: number) {
-  const days: Array<{ date: Date; inCurrentMonth: boolean }> = []
-  const firstDay = getFirstDayOfWeek(year, month)
-  const daysInMonth = getDaysInMonth(year, month)
-  const prevMonthDays = getDaysInMonth(year, month - 1)
-  for (let i = firstDay - 1; i >= 0; i--) {
-    days.push({ date: new Date(year, month - 1, prevMonthDays - i), inCurrentMonth: false })
-  }
-  for (let i = 1; i <= daysInMonth; i++) {
-    days.push({ date: new Date(year, month, i), inCurrentMonth: true })
-  }
-  const remaining = 42 - days.length
-  for (let i = 1; i <= remaining; i++) {
-    days.push({ date: new Date(year, month + 1, i), inCurrentMonth: false })
-  }
-  return days
-}
 export const RangePicker = defineComponent({
   name: 'RangePicker',
-  props: {
-    value: Array as unknown as PropType<RangeValue>,
-    defaultValue: Array as unknown as PropType<RangeValue>,
-    format: { type: String, default: 'YYYY-MM-DD' },
-    disabled: { type: [Boolean, Array] as PropType<boolean | [boolean, boolean]>, default: false },
-    placeholder: { type: Array as unknown as PropType<[string, string]> },
-    allowClear: { type: Boolean, default: true },
-    allowEmpty: { type: Array as unknown as PropType<[boolean, boolean]> },
-    order: { type: Boolean, default: true },
-    separator: { type: String, default: '→' },
-    presets: { type: Array as PropType<RangePreset[]> },
-    size: { type: String as PropType<ComponentSize>, default: 'middle' },
-    disabledDate: Function as PropType<(d: Date, info?: { from?: Date; type?: string }) => boolean>,
-    status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
-    open: { type: Boolean, default: undefined },
-    classNames: Object as PropType<RangePickerClassNames>,
-    styles: Object as PropType<RangePickerStyles>,
-  },
+  props: rangePickerProps,
   emits: ['update:value', 'change', 'openChange', 'calendarChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('date-picker')
@@ -258,7 +217,9 @@ export const RangePicker = defineComponent({
               class={cls(`${prefixCls}-panel-header-title`, props.classNames?.panelHeaderTitle)}
               style={props.styles?.panelHeaderTitle}
             >
-              {year}年 {locale.value.DatePicker.months[month]}
+              {locale.value.locale === 'zh-CN'
+                ? `${year}年 ${locale.value.DatePicker.months[month]}`
+                : `${locale.value.DatePicker.months[month]} ${year}`}
             </span>
             {side === 'right' && (
               <button
