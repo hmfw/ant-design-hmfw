@@ -20,6 +20,10 @@ export default defineComponent({
       type: String as PropType<'small' | 'middle' | 'large'>,
       default: 'middle',
     },
+    componentDisabled: {
+      type: Boolean,
+      default: false,
+    },
     direction: {
       type: String as PropType<'ltr' | 'rtl'>,
       default: 'ltr',
@@ -45,6 +49,7 @@ export default defineComponent({
       locale: props.locale ?? zhCN,
       theme: mergedTheme.value,
       componentSize: props.componentSize,
+      componentDisabled: props.componentDisabled,
       direction: props.direction,
       prefixCls: props.prefixCls,
       getPopupContainer: props.getPopupContainer,

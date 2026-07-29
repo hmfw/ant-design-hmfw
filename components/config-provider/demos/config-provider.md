@@ -53,13 +53,14 @@
 
 ### ConfigProvider Props
 
-| 参数          | 说明             | 类型                             | 默认值     |
-| ------------- | ---------------- | -------------------------------- | ---------- |
-| theme         | 设置主题 Token   | `Partial<SeedTokens>`            | -          |
-| locale        | 语言包配置       | `zhCN \| enUS`                   | `zhCN`     |
-| prefixCls     | 设置统一样式前缀 | `string`                         | `'hmfw'`   |
-| componentSize | 设置组件大小     | `'small' \| 'middle' \| 'large'` | `'middle'` |
-| direction     | 设置布局方向     | `'ltr' \| 'rtl'`                 | `'ltr'`    |
+| 参数              | 说明                                 | 类型                             | 默认值     |
+| ----------------- | ------------------------------------ | -------------------------------- | ---------- |
+| theme             | 设置主题 Token                       | `Partial<SeedTokens>`            | -          |
+| locale            | 语言包配置                           | `zhCN \| enUS`                   | `zhCN`     |
+| prefixCls         | 设置统一样式前缀                     | `string`                         | `'hmfw'`   |
+| componentSize     | 设置组件大小                         | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| componentDisabled | 统一禁用内部控件，控件无法单独反禁用 | `boolean`                        | `false`    |
+| direction         | 设置布局方向                         | `'ltr' \| 'rtl'`                 | `'ltr'`    |
 
 ### Theme Token（SeedTokens）
 
