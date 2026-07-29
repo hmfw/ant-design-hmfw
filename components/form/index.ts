@@ -1,2 +1,21 @@
 export { Form, FormItem, useForm } from './Form'
-export type { FormProps, FormItemProps, FormRule, NamePath, ValidateStatus } from './Form'
+export type {
+  FormProps,
+  FormItemProps,
+  FormRule,
+  NamePath,
+  ValidateStatus,
+  FormValidateTrigger,
+  FormColConfig,
+  FormFieldError,
+  FormClassNames,
+  FormStyles,
+  FormItemClassNames,
+  FormItemStyles,
+  FormFinishInfo,
+  FormFinishFailedInfo,
+  FormValuesChangeInfo,
+  FormFinishHandler,
+  FormFinishFailedHandler,
+  FormValuesChangeHandler,
+} from './types'

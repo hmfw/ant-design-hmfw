@@ -1,12 +1,12 @@
 .hmfw-form {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-text);
 }
 
 .hmfw-form-item {
   display: flex;
   flex-direction: column;
-  margin-bottom: 24px;
+  margin-bottom: var(--hmfw-margin-lg);
 }
 
 /* Horizontal layout */
@@ -17,8 +17,17 @@
 
 .hmfw-form-horizontal .hmfw-form-item-label {
   flex: 0 0 auto;
-  padding-right: 8px;
+  padding-right: var(--hmfw-padding-xs);
   padding-top: 5px;
+  text-align: right;
+}
+
+/* Label align */
+.hmfw-form-label-left.hmfw-form-horizontal .hmfw-form-item-label {
+  text-align: left;
+}
+
+.hmfw-form-label-right.hmfw-form-horizontal .hmfw-form-item-label {
   text-align: right;
 }
 
@@ -44,26 +53,32 @@
 .hmfw-form-item-label {
   display: flex;
   align-items: center;
-  min-height: 32px;
-  padding-bottom: 8px;
+  min-height: var(--hmfw-control-height);
+  padding-bottom: var(--hmfw-padding-xs);
 }
 
 .hmfw-form-item-label > label {
-  color: rgba(0, 0, 0, 0.88);
-  font-size: 14px;
-  height: 32px;
+  color: var(--hmfw-color-text);
+  font-size: var(--hmfw-font-size);
+  height: var(--hmfw-control-height);
   display: inline-flex;
   align-items: center;
 }
 
-.hmfw-form-item-required > label::before {
+/* label 包在 .hmfw-form-item-label 里，需用后代选择器而非直接子代 */
+.hmfw-form-item-required .hmfw-form-item-label > label::before {
   display: inline-block;
-  margin-inline-end: 4px;
-  color: #ff4d4f;
-  font-size: 14px;
+  margin-inline-end: var(--hmfw-margin-xxs);
+  color: var(--hmfw-color-error);
+  font-size: var(--hmfw-font-size);
   font-family: SimSun, sans-serif;
   line-height: 1;
   content: '*';
+}
+
+/* optional 模式：必填星号让位于非必填项的「可选」标注 */
+.hmfw-form-item-required-mark-optional .hmfw-form-item-label > label::before {
+  display: none;
 }
 
 /* Control */
@@ -71,51 +86,94 @@
   position: relative;
 }
 
+/* hasFeedback：图标浮在控件右侧内缩处，content 占满剩余宽度 */
+.hmfw-form-item-control-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.hmfw-form-item-control-input-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 给控件让出图标宽度，避免长文本排到图标下方 */
+.hmfw-form-item-control-input:has(.hmfw-form-item-feedback-icon) :where(input, textarea, .hmfw-select-selector) {
+  padding-inline-end: calc(var(--hmfw-padding-sm) + var(--hmfw-font-size) + var(--hmfw-padding-xs));
+}
+
+.hmfw-form-item-feedback-icon {
+  position: absolute;
+  inset-inline-end: var(--hmfw-padding-sm);
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--hmfw-font-size);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.hmfw-form-item-feedback-icon-success {
+  color: var(--hmfw-color-success);
+}
+
+.hmfw-form-item-feedback-icon-warning {
+  color: var(--hmfw-color-warning);
+}
+
+.hmfw-form-item-feedback-icon-error {
+  color: var(--hmfw-color-error);
+}
+
+.hmfw-form-item-feedback-icon-validating {
+  color: var(--hmfw-color-primary);
+}
+
 /* Explain / Help */
 .hmfw-form-item-explain {
-  font-size: 14px;
-  min-height: 24px;
+  font-size: var(--hmfw-font-size);
+  min-height: var(--hmfw-control-height-sm);
   padding-top: 2px;
   line-height: var(--hmfw-line-height);
   transition: color 0.3s;
 }
 
 .hmfw-form-item-explain-error {
-  color: #ff4d4f;
+  color: var(--hmfw-color-error);
 }
 
 .hmfw-form-item-explain-warning {
-  color: #faad14;
+  color: var(--hmfw-color-warning);
 }
 
 .hmfw-form-item-explain-success {
-  color: #52c41a;
+  color: var(--hmfw-color-success);
 }
 
 /* Validate status */
 .hmfw-form-item-has-error .hmfw-input,
 .hmfw-form-item-has-error .hmfw-input-number,
 .hmfw-form-item-has-error .hmfw-select-selector {
-  border-color: #ff4d4f;
+  border-color: var(--hmfw-color-error);
 }
 
 .hmfw-form-item-has-warning .hmfw-input,
 .hmfw-form-item-has-warning .hmfw-input-number,
 .hmfw-form-item-has-warning .hmfw-select-selector {
-  border-color: #faad14;
+  border-color: var(--hmfw-color-warning);
 }
 
 .hmfw-form-item-has-success .hmfw-input,
 .hmfw-form-item-has-success .hmfw-input-number,
 .hmfw-form-item-has-success .hmfw-select-selector {
-  border-color: #52c41a;
+  border-color: var(--hmfw-color-success);
 }
 
 /* Extra */
 .hmfw-form-item-extra {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.45);
-  min-height: 24px;
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-text-secondary);
+  min-height: var(--hmfw-control-height-sm);
   padding-top: 2px;
   line-height: var(--hmfw-line-height);
 }

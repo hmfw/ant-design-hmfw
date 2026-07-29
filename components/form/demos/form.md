@@ -33,6 +33,38 @@ Form 组件提供了表单验证的功能，只需为 FormItem 设置 `rules` �
   <FormInline />
 </DemoBlock>
 
+### 三种尺寸
+
+通过 `size` 设置表单内控件的尺寸，可选 `small` / `middle` / `large`。
+
+<DemoBlock title="三种尺寸" :source="FormSizeSource">
+  <FormSize />
+</DemoBlock>
+
+### 表单禁用
+
+通过 `disabled` 统一禁用表单内的所有控件。
+
+<DemoBlock title="表单禁用" :source="FormDisabledSource">
+  <FormDisabled />
+</DemoBlock>
+
+### 校验触发时机
+
+通过 `validateTrigger` 控制何时触发校验，支持 `change`、`blur` 或两者组合。单条规则也可通过 `rule.trigger` 单独指定，优先级高于 Form / FormItem。
+
+<DemoBlock title="校验触发时机" :source="FormValidateTriggerSource">
+  <FormValidateTrigger />
+</DemoBlock>
+
+### 主题定制
+
+Form 的样式消费全局设计 Token，通过 `ConfigProvider` 修改主题后会自动跟随。
+
+<DemoBlock title="主题定制" :source="FormTokenSource">
+  <FormToken />
+</DemoBlock>
+
 ### 高级 API 演示
 
 展示 Form 的高级查询 API：`getFieldsError`、`isFieldsTouched` 等批量查询方法。
@@ -47,6 +79,54 @@ Form 组件提供了表单验证的功能，只需为 FormItem 设置 `rules` �
 
 <DemoBlock title="表单联动" :source="FormDependencySource">
   <FormDependency />
+</DemoBlock>
+
+### 垂直布局
+
+设置 `layout="vertical"`，标签独占一行显示在控件上方，此时 `labelCol` / `wrapperCol` 不再生效。
+
+<DemoBlock title="垂直布局" :source="FormVerticalSource">
+  <FormVertical />
+</DemoBlock>
+
+### 必填标记
+
+通过 `requiredMark` 控制必填标记的展现：`true` 为默认的红色星号，`false` 隐藏全部标记，`'optional'` 则反向标注，改为在非必填项后标注「可选」。
+
+<DemoBlock title="必填标记" :source="FormRequiredMarkSource">
+  <FormRequiredMark />
+</DemoBlock>
+
+### 复杂控件绑定
+
+各类控件都能作为字段使用，注意 v-model 的参数名并不统一：Input / Select / DatePicker / Rate / RadioGroup 用 `v-model:value`，Checkbox / Switch 用 `v-model:checked`。非文本控件同样支持 `rules` 校验。
+
+<DemoBlock title="复杂控件绑定" :source="FormComplexControlsSource">
+  <FormComplexControls />
+</DemoBlock>
+
+### 嵌套字段
+
+`name` 传数组即可绑定深层字段，中间层对象按需自动创建。需要注意 `rules` 的键要写成点号形式（如 `'user.address.city'`），才能与数组 `name` 对应上。
+
+<DemoBlock title="嵌套字段" :source="FormNestedSource">
+  <FormNested />
+</DemoBlock>
+
+### Modal 内表单
+
+在对话框中使用表单，确认时先 `await validate()`，校验未通过则保持弹窗打开。
+
+<DemoBlock title="Modal 内表单" :source="FormInModalSource">
+  <FormInModal />
+</DemoBlock>
+
+### 反馈图标
+
+`hasFeedback` 会在控件右侧渲染校验状态图标：成功、警告、错误各用对应色的实心图标，`validating` 用转圈图标。
+
+<DemoBlock title="反馈图标" :source="FormFeedbackIconSource">
+  <FormFeedbackIcon />
 </DemoBlock>
 
 ### 细粒度样式控制
@@ -90,6 +170,7 @@ Form 组件提供了表单验证的功能，只需为 FormItem 设置 `rules` �
 | validateStatus  | 校验状态                                                                         | `'success' \| 'warning' \| 'error' \| 'validating' \| ''` | -           |
 | help            | 提示信息，如不设置，则会根据校验规则自动生成                                     | `string`                                                  | -           |
 | extra           | 额外的提示信息                                                                   | `string`                                                  | -           |
+| hasFeedback     | 展示校验状态图标，见 [反馈图标](#反馈图标)                                       | `boolean`                                                 | `false`     |
 | labelCol        | label 标签布局，优先级高于 Form 的 labelCol                                      | `{ span?: number; offset?: number }`                      | -           |
 | wrapperCol      | 输入控件布局样式，优先级高于 Form 的 wrapperCol                                  | `{ span?: number; offset?: number }`                      | -           |
 | validateTrigger | 设置字段校验的时机                                                               | `'blur' \| 'change' \| ('blur' \| 'change')[]`            | 继承自 Form |
