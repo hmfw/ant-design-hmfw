@@ -5,13 +5,14 @@ import {
   onBeforeUnmount,
   watchEffect,
   nextTick,
+  toRef,
   type PropType,
   type VNode,
   type ButtonHTMLAttributes,
   type AnchorHTMLAttributes,
   type Ref,
 } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils'
 import { LoadingOutlined } from '@hmfw/icons'
 import type { IconComponent } from '@hmfw/icons'
@@ -135,7 +136,8 @@ export default defineComponent({
       }
     })
 
-    const isDisabled = computed(() => props.disabled || innerLoading.value)
+    const ctxDisabled = useMergedDisabled(toRef(props, 'disabled'))
+    const isDisabled = computed(() => ctxDisabled.value || innerLoading.value)
 
     const classes = computed(() =>
       cls(
@@ -145,7 +147,7 @@ export default defineComponent({
         {
           [`${prefixCls}-${props.shape}`]: props.shape !== 'default',
           [`${prefixCls}-loading`]: innerLoading.value,
-          [`${prefixCls}-disabled`]: props.disabled,
+          [`${prefixCls}-disabled`]: ctxDisabled.value,
           [`${prefixCls}-dangerous`]: props.danger,
           [`${prefixCls}-block`]: props.block,
           [`${prefixCls}-background-ghost`]: props.ghost,

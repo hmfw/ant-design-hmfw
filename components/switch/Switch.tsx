@@ -1,5 +1,5 @@
-import { defineComponent, ref, watch, computed, onMounted, type PropType, type CSSProperties } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { defineComponent, ref, watch, computed, toRef, onMounted, type PropType, type CSSProperties } from 'vue'
+import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils'
 import type { SwitchChangeEventHandler, SwitchClassNames, SwitchStyles, SwitchProps } from './types'
 import type { ComponentSize } from '../config-provider'
@@ -53,7 +53,8 @@ export const Switch = defineComponent({
 
     // 综合 props.loading 与 onChange Promise 触发的内部 loading
     const isLoading = computed(() => props.loading || innerLoading.value)
-    const isDisabled = computed(() => props.disabled || isLoading.value)
+    const ctxDisabled = useMergedDisabled(toRef(props, 'disabled'))
+    const isDisabled = computed(() => ctxDisabled.value || isLoading.value)
 
     onMounted(() => {
       if (props.autoFocus && buttonRef.value) {

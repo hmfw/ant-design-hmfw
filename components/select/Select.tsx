@@ -1,5 +1,5 @@
-import { defineComponent, ref, computed, watch, nextTick, type PropType, h, VNode } from 'vue'
-import { usePrefixCls, useLocale } from '../config-provider'
+import { defineComponent, ref, computed, watch, nextTick, toRef, type PropType, h, VNode } from 'vue'
+import { usePrefixCls, useLocale, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils'
 import { VirtualList } from '../_internal/virtual-list'
 import { DownOutlined, LoadingOutlined } from '@hmfw/icons'
@@ -74,6 +74,8 @@ export const Select = defineComponent({
   emits: ['update:value', 'change', 'search', 'select', 'deselect', 'clear', 'dropdownVisibleChange', 'focus', 'blur'],
   setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('select')
+    // 合并上层 Form / ConfigProvider 下发的禁用态
+    const mergedDisabled = useMergedDisabled(toRef(props, 'disabled'))
     const locale = useLocale()
     const selectorRef = ref<HTMLElement | null>(null)
     const searchRef = ref<HTMLInputElement | null>(null)
@@ -272,7 +274,7 @@ export const Select = defineComponent({
     }
 
     const openDropdown = async () => {
-      if (props.disabled) return
+      if (mergedDisabled.value) return
       innerOpen.value = true
       emit('dropdownVisibleChange', true)
       await nextTick()
@@ -579,7 +581,7 @@ export const Select = defineComponent({
 
     return () => {
       const hasValue = selectedValues.value.length > 0
-      const showClear = props.allowClear && hasValue && !props.disabled
+      const showClear = props.allowClear && hasValue && !mergedDisabled.value
 
       const displayTags = isMultiple.value
         ? props.maxTagCount !== undefined
@@ -598,13 +600,13 @@ export const Select = defineComponent({
         const onClose = () => removeTag(val, new MouseEvent('click'))
 
         if (props.tagRender) {
-          return props.tagRender({ label, value: val, closable: !props.disabled, onClose })
+          return props.tagRender({ label, value: val, closable: !mergedDisabled.value, onClose })
         }
 
         return (
           <span key={val} class={`${prefixCls}-selection-item`}>
             <span class={`${prefixCls}-selection-item-content`}>{label}</span>
-            {!props.disabled && (
+            {!mergedDisabled.value && (
               <span class={`${prefixCls}-selection-item-remove`} onClick={(e) => removeTag(val, e)}>
                 ×
               </span>
@@ -682,8 +684,8 @@ export const Select = defineComponent({
             role="combobox"
             aria-expanded={isOpen.value}
             aria-haspopup="listbox"
-            aria-disabled={props.disabled || undefined}
-            tabindex={props.disabled ? -1 : 0}
+            aria-disabled={mergedDisabled.value || undefined}
+            tabindex={mergedDisabled.value ? -1 : 0}
             onKeydown={handleKeydown}
             onFocus={() => emit('focus')}
             onBlur={() => emit('blur')}
@@ -716,7 +718,7 @@ export const Select = defineComponent({
           open={isOpen.value}
           trigger="click"
           placement={'bottomLeft' as Placement}
-          disabled={props.disabled}
+          disabled={mergedDisabled.value}
           destroyOnHidden
           matchWidth={props.dropdownMatchSelectWidth}
           triggerClass={cls(
@@ -724,7 +726,7 @@ export const Select = defineComponent({
             `${prefixCls}-${props.size}`,
             {
               [`${prefixCls}-open`]: isOpen.value,
-              [`${prefixCls}-disabled`]: props.disabled,
+              [`${prefixCls}-disabled`]: mergedDisabled.value,
               [`${prefixCls}-loading`]: props.loading,
               [`${prefixCls}-multiple`]: isMultiple.value,
               [`${prefixCls}-status-${props.status}`]: !!props.status,

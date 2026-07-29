@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, toRef, type PropType } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils'
 import { SearchOutlined, LoadingOutlined } from '@hmfw/icons'
 import type { InputSize, InputStatus, InputAffix, InputSearchProps } from './types'
@@ -33,7 +33,8 @@ export const InputSearch = defineComponent({
     const inputRef = ref<HTMLInputElement>()
 
     const mergedSize = useMergedSize(toRef(props, 'size'))
-    const wrapperCls = useAffixWrapperCls(prefixCls, props, mergedSize, `${prefixCls}-search`)
+    const mergedDisabled = useMergedDisabled(toRef(props, 'disabled'))
+    const wrapperCls = useAffixWrapperCls(prefixCls, props, mergedSize, mergedDisabled, `${prefixCls}-search`)
 
     // Expose focus/blur methods
     expose({ ...useFocusExpose(inputRef), input: inputRef })
@@ -46,7 +47,7 @@ export const InputSearch = defineComponent({
       emit('change', e)
     }
 
-    const isSearchDisabled = computed(() => props.disabled || props.loading)
+    const isSearchDisabled = computed(() => mergedDisabled.value || props.loading)
 
     const handleSearch = (e: Event) => {
       if (isSearchDisabled.value) return
@@ -76,7 +77,7 @@ export const InputSearch = defineComponent({
             type="search"
             value={innerValue.value}
             placeholder={props.placeholder}
-            disabled={props.disabled}
+            disabled={mergedDisabled.value}
             readonly={props.readOnly}
             id={props.id}
             aria-invalid={props.status === 'error' || undefined}

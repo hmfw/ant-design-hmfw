@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, toRef, type PropType } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils'
 import { CloseOutlined } from '@hmfw/icons'
 import type {
@@ -55,16 +55,18 @@ export const Input = defineComponent({
     const inputRef = ref<HTMLInputElement>()
 
     const mergedSize = useMergedSize(toRef(props, 'size'))
+    // 合并上层 Form / ConfigProvider 下发的禁用态
+    const mergedDisabled = useMergedDisabled(toRef(props, 'disabled'))
     const allowClearConfig = useAllowClear(toRef(props, 'allowClear'))
 
     // Expose focus/blur methods
     expose({ ...useFocusExpose(inputRef), input: inputRef })
 
-    const wrapperCls = useAffixWrapperCls(prefixCls, props, mergedSize)
+    const wrapperCls = useAffixWrapperCls(prefixCls, props, mergedSize, mergedDisabled)
 
     const inputCls = computed(() =>
       cls(prefixCls, {
-        [`${prefixCls}-disabled`]: props.disabled,
+        [`${prefixCls}-disabled`]: mergedDisabled.value,
         [`${prefixCls}-lg`]: mergedSize.value === 'large',
         [`${prefixCls}-sm`]: mergedSize.value === 'small',
         [`${prefixCls}-status-error`]: props.status === 'error',
@@ -114,7 +116,7 @@ export const Input = defineComponent({
           type={props.type}
           value={innerValue.value}
           placeholder={props.placeholder}
-          disabled={props.disabled}
+          disabled={mergedDisabled.value}
           readonly={props.readOnly}
           maxlength={props.maxLength}
           id={props.id}

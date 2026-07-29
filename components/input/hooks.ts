@@ -82,11 +82,13 @@ export function useAffixWrapperCls(
   prefixCls: string,
   state: AffixWrapperState,
   mergedSize: Ref<InputSize>,
+  /** 合并后的禁用态；省略时回退到 `state.disabled` */
+  mergedDisabled?: Ref<boolean>,
   ...extra: string[]
 ) {
   return computed(() =>
     cls(`${prefixCls}-affix-wrapper`, ...extra, {
-      [`${prefixCls}-affix-wrapper-disabled`]: state.disabled,
+      [`${prefixCls}-affix-wrapper-disabled`]: mergedDisabled ? mergedDisabled.value : state.disabled,
       [`${prefixCls}-affix-wrapper-lg`]: mergedSize.value === 'large',
       [`${prefixCls}-affix-wrapper-sm`]: mergedSize.value === 'small',
       [`${prefixCls}-affix-wrapper-status-error`]: state.status === 'error',

@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, watch, toRef, type PropType, type VNode } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { EyeOutlined, EyeInvisibleOutlined } from '@hmfw/icons'
 import type { InputSize, InputStatus, InputPasswordProps, VisibilityToggleConfig } from './types'
 import { useMergedValue, useFocusExpose, useMergedSize, useAffixWrapperCls } from './hooks'
@@ -36,6 +36,7 @@ export const InputPassword = defineComponent({
     const inputRef = ref<HTMLInputElement>()
 
     const mergedSize = useMergedSize(toRef(props, 'size'))
+    const mergedDisabled = useMergedDisabled(toRef(props, 'disabled'))
 
     // 受控可见性：仅当 visibilityToggle 为对象且显式给出 visible 字段
     const visibilityControlled = computed(
@@ -56,7 +57,7 @@ export const InputPassword = defineComponent({
     // Expose focus/blur methods
     expose({ ...useFocusExpose(inputRef), input: inputRef })
 
-    const wrapperCls = useAffixWrapperCls(prefixCls, props, mergedSize, `${prefixCls}-password`)
+    const wrapperCls = useAffixWrapperCls(prefixCls, props, mergedSize, mergedDisabled, `${prefixCls}-password`)
 
     const handleInput = (e: Event) => {
       const val = (e.target as HTMLInputElement).value
@@ -68,7 +69,7 @@ export const InputPassword = defineComponent({
 
     // 切换到指定可见状态；受控模式下只上报、不自行改内部 state（交由父组件驱动）
     const setVisible = (next: boolean) => {
-      if (props.disabled) return
+      if (mergedDisabled.value) return
       if (!visibilityControlled.value) visible.value = next
       if (typeof props.visibilityToggle === 'object') {
         props.visibilityToggle.onVisibleChange?.(next)
@@ -98,7 +99,7 @@ export const InputPassword = defineComponent({
             type={visible.value ? 'text' : 'password'}
             value={innerValue.value}
             placeholder={props.placeholder}
-            disabled={props.disabled}
+            disabled={mergedDisabled.value}
             readonly={props.readOnly}
             maxlength={props.maxLength}
             id={props.id}
@@ -111,7 +112,7 @@ export const InputPassword = defineComponent({
             <span
               class={`${prefixCls}-suffix ${prefixCls}-password-icon`}
               {...triggerHandlers}
-              style={{ cursor: props.disabled ? 'not-allowed' : 'pointer' }}
+              style={{ cursor: mergedDisabled.value ? 'not-allowed' : 'pointer' }}
             >
               {icon}
             </span>

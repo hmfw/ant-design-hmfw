@@ -1,5 +1,5 @@
-import { defineComponent, ref, watch, inject, computed, provide, type PropType, type ComputedRef } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { defineComponent, ref, watch, inject, computed, provide, toRef, type PropType, type ComputedRef } from 'vue'
+import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils'
 import type { RadioValueType, RadioChangeEvent } from './types'
 import type { ComponentSize } from '../config-provider'
@@ -49,7 +49,8 @@ export const Radio = defineComponent({
       return props.checked !== undefined ? props.checked : innerChecked.value
     })
 
-    const isDisabled = computed(() => props.disabled || (groupContext?.disabled.value ?? false))
+    const ctxDisabled = useMergedDisabled(toRef(props, 'disabled'))
+    const isDisabled = computed(() => ctxDisabled.value || (groupContext?.disabled.value ?? false))
     const isButton = computed(() => groupContext?.optionType.value === 'button')
     const isBlock = computed(() => groupContext?.block.value ?? false)
 
@@ -186,7 +187,8 @@ export const RadioButton = defineComponent({
       return props.checked !== undefined ? props.checked : innerChecked.value
     })
 
-    const isDisabled = computed(() => props.disabled || (groupContext?.disabled.value ?? false))
+    const ctxDisabled = useMergedDisabled(toRef(props, 'disabled'))
+    const isDisabled = computed(() => ctxDisabled.value || (groupContext?.disabled.value ?? false))
     const isBlock = computed(() => groupContext?.block.value ?? false)
 
     const handleChange = (e: Event) => {
@@ -313,9 +315,10 @@ export const RadioGroup = defineComponent({
     }
 
     // Provide reactive context with computed refs
+    const groupDisabled = useMergedDisabled(toRef(props, 'disabled'))
     const context: RadioGroupContext = {
       value: currentValue,
-      disabled: computed(() => props.disabled ?? false),
+      disabled: groupDisabled,
       name: computed(() => props.name),
       optionType: computed(() => props.optionType),
       block: computed(() => props.block),

@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, watch, toRef, nextTick, onMounted, type PropType, type VNode } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils'
 import { CloseOutlined } from '@hmfw/icons'
 import type {
@@ -109,9 +109,12 @@ export const TextArea = defineComponent({
       return !!max && valueLength.value > max
     })
 
+    // 合并上层 Form / ConfigProvider 下发的禁用态
+    const mergedDisabled = useMergedDisabled(toRef(props, 'disabled'))
+
     const textareaCls = computed(() =>
       cls(prefixCls, `${prefixCls}-textarea`, {
-        [`${prefixCls}-disabled`]: props.disabled,
+        [`${prefixCls}-disabled`]: mergedDisabled.value,
         [`${prefixCls}-status-error`]: props.status === 'error',
         [`${prefixCls}-status-warning`]: props.status === 'warning',
       }),
@@ -158,7 +161,7 @@ export const TextArea = defineComponent({
           style={mergedTextareaStyle}
           value={innerValue.value}
           placeholder={props.placeholder}
-          disabled={props.disabled}
+          disabled={mergedDisabled.value}
           readonly={props.readOnly}
           rows={props.autoSize ? undefined : props.rows}
           maxlength={props.maxLength}

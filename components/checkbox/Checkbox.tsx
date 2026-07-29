@@ -1,5 +1,5 @@
-import { defineComponent, ref, watch, inject, computed, type PropType, onMounted, onBeforeUnmount } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { defineComponent, ref, watch, inject, computed, toRef, type PropType, onMounted, onBeforeUnmount } from 'vue'
+import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils'
 import type { CheckboxValueType, CheckboxChangeEvent, CheckboxProps, CheckboxClassNames, CheckboxStyles } from './types'
 import { CHECKBOX_GROUP_KEY, type CheckboxGroupContext } from './context'
@@ -51,7 +51,8 @@ export const Checkbox = defineComponent({
       return props.checked !== undefined ? props.checked : innerChecked.value
     })
 
-    const isDisabled = computed(() => props.disabled || (!props.skipGroup && group?.disabled) || false)
+    const ctxDisabled = useMergedDisabled(toRef(props, 'disabled'))
+    const isDisabled = computed(() => ctxDisabled.value || (!props.skipGroup && group?.disabled) || false)
 
     // Register/unregister with group
     onMounted(() => {

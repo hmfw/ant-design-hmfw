@@ -1,5 +1,5 @@
-import { defineComponent, ref, watch, computed, provide, type PropType } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { defineComponent, ref, watch, computed, provide, toRef, type PropType } from 'vue'
+import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils'
 import type { CheckboxValueType, CheckboxOptionType, CheckboxGroupProps } from './types'
 import { Checkbox } from './Checkbox'
@@ -60,12 +60,15 @@ export const CheckboxGroup = defineComponent({
       emit('change', filteredNext)
     }
 
+    // 合并上层 Form / ConfigProvider 下发的禁用态
+    const groupDisabled = useMergedDisabled(toRef(props, 'disabled'))
+
     provide<CheckboxGroupContext>(CHECKBOX_GROUP_KEY, {
       get value() {
         return currentValue.value
       },
       get disabled() {
-        return props.disabled ?? false
+        return groupDisabled.value
       },
       get name() {
         return props.name
@@ -92,7 +95,7 @@ export const CheckboxGroup = defineComponent({
         return (
           <div class={groupClass} style={props.style}>
             {normalizedOptions.value.map((opt) => {
-              const itemDisabled = opt.disabled !== undefined ? opt.disabled : props.disabled
+              const itemDisabled = opt.disabled !== undefined ? opt.disabled : groupDisabled.value
               return (
                 <Checkbox
                   key={String(opt.value)}
