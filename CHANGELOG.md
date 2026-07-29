@@ -10,6 +10,33 @@
 
 ## 最近版本
 
+## [0.29.0] - 2026-07-29
+
+[查看完整内容](./changelogs/v0.29.0.md)
+
+### ✨ 新增功能
+
+- **ConfigProvider**：新增 `componentDisabled` 全局禁用态，抽出 `useMergedDisabled` 共享 hook
+- **Form**：实现 `hasFeedback` 四态校验图标（此前仅有接口声明）
+- **10 个控件**接入容器禁用态，Form 的 `disabled` 与 ConfigProvider 的 `componentDisabled` 现可真正作用于内部控件
+
+### 🐛 缺陷修复
+
+- **Form**：必填星号因 CSS 选择器层级错误而从未渲染，已修复
+- **Form**：`requiredMark="optional"` 语义错误，应隐藏星号并标注「可选」
+- **Form**：3 个 Demo 误按布尔值使用 `validate()`，该方法实际在校验失败时 throw
+
+### 📖 文档与 Demo
+
+- Form Demo 6 → 16，补齐 size/disabled/validateTrigger/Token/vertical 等 10 个场景
+- 移除顶层一次性审查文档，结论沉淀至 commit message
+
+### ⚠️ 已知限制
+
+- Form `preserve` 仍为空壳，需引入内部值存储层方可实现，另行立项
+
+---
+
 ## [0.28.0] - 2026-07-26
 
 [查看完整内容](./changelogs/v0.28.0.md)
