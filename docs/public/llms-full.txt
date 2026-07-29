@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.24.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.28.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -61,13 +61,16 @@ import { Alert } from '@hmfw/ant-design'
 </script>
 ```
 
-带描述 — 含有辅助性文字介绍的警告提示。
+显示图标 — 通过 `show-icon` 显示辅助图标，帮助用户快速识别警告提示的类型。
 
 ```vue
 <template>
   <div style="display: flex; flex-direction: column; gap: 12px">
-    <Alert title="成功提示" description="详细的成功描述和对此次成功的说明。" type="success" show-icon />
-    <Alert title="错误提示" description="详细的错误描述和对此次错误的说明。" type="error" show-icon />
+    <Alert title="不显示图标（默认）" type="info" />
+    <Alert title="显示图标" type="info" show-icon />
+    <Alert title="成功提示" type="success" show-icon />
+    <Alert title="警告提示" type="warning" show-icon />
+    <Alert title="错误提示" type="error" show-icon />
   </div>
 </template>
 
@@ -875,11 +878,34 @@ import { Card, CardGrid, CardMeta } from '@hmfw/ant-design'
 
 ### 示例
 
-基础卡片 — 包含标题、内容、操作区域。
+基础卡片 — 包含标题、内容、操作区域，并演示 `size="small"` 小尺寸。
 
 ```vue
 <template>
-  <Card title="卡片标题" style="width: 300px">
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <Card title="卡片标题" style="width: 300px">
+      <p>卡片内容</p>
+      <p>卡片内容</p>
+      <p>卡片内容</p>
+    </Card>
+    <Card size="small" title="小尺寸卡片" style="width: 300px">
+      <p>卡片内容</p>
+      <p>卡片内容</p>
+      <p>卡片内容</p>
+    </Card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { Card } from '@hmfw/ant-design'
+</script>
+```
+
+简洁卡片 — 不设置标题的最简卡片，仅承载内容。
+
+```vue
+<template>
+  <Card style="width: 300px">
     <p>卡片内容</p>
     <p>卡片内容</p>
     <p>卡片内容</p>
@@ -888,27 +914,6 @@ import { Card, CardGrid, CardMeta } from '@hmfw/ant-design'
 
 <script setup lang="ts">
 import { Card } from '@hmfw/ant-design'
-</script>
-```
-
-带封面 — 可以配合 cover 插槽展示封面图片。
-
-```vue
-<template>
-  <Card style="width: 300px">
-    <template #cover>
-      <img
-        alt="example"
-        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-        style="width: 100%"
-      />
-    </template>
-    <CardMeta title="卡片标题" description="这是卡片的描述信息" />
-  </Card>
-</template>
-
-<script setup lang="ts">
-import { Card, CardMeta } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -1554,6 +1559,7 @@ import { ConfigProvider, useConfig, usePrefixCls, useLocale } from '@hmfw/ant-de
 | locale | 语言包配置 | `zhCN \| enUS` | `zhCN` |
 | prefixCls | 设置统一样式前缀 | `string` | `'hmfw'` |
 | componentSize | 设置组件大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| componentDisabled | 统一禁用内部控件，控件无法单独反禁用 | `boolean` | `false` |
 | direction | 设置布局方向 | `'ltr' \| 'rtl'` | `'ltr'` |
 
 ### 示例
@@ -2503,6 +2509,7 @@ import { Form, FormItem, useForm } from '@hmfw/ant-design'
 | validateStatus | 校验状态 | `'success' \| 'warning' \| 'error' \| 'validating' \| ''` | - |
 | help | 提示信息，如不设置，则会根据校验规则自动生成 | `string` | - |
 | extra | 额外的提示信息 | `string` | - |
+| hasFeedback | 展示校验状态图标，见 [反馈图标](#反馈图标) | `boolean` | `false` |
 | labelCol | label 标签布局，优先级高于 Form 的 labelCol | `{ span?: number; offset?: number }` | - |
 | wrapperCol | 输入控件布局样式，优先级高于 Form 的 wrapperCol | `{ span?: number; offset?: number }` | - |
 | validateTrigger | 设置字段校验的时机 | `'blur' \| 'change' \| ('blur' \| 'change')[]` | 继承自 Form |
@@ -2826,24 +2833,24 @@ import { Icon } from '@hmfw/ant-design'
 ```vue
 <template>
   <Space :size="16" wrap>
-    <SearchOutlined class="hmfw-icon" />
-    <CloseOutlined class="hmfw-icon" />
-    <CheckOutlined class="hmfw-icon" />
-    <WarningOutlined class="hmfw-icon" />
-    <InfoCircleOutlined class="hmfw-icon" />
-    <LoadingOutlined class="hmfw-icon" />
-    <UpOutlined class="hmfw-icon" />
-    <DownOutlined class="hmfw-icon" />
-    <LeftOutlined class="hmfw-icon" />
-    <RightOutlined class="hmfw-icon" />
-    <PlusOutlined class="hmfw-icon" />
-    <MinusOutlined class="hmfw-icon" />
-    <EditOutlined class="hmfw-icon" />
-    <DeleteOutlined class="hmfw-icon" />
-    <EyeOutlined class="hmfw-icon" />
-    <HomeOutlined class="hmfw-icon" />
-    <UserOutlined class="hmfw-icon" />
-    <SettingOutlined class="hmfw-icon" />
+    <SearchOutlined />
+    <CloseOutlined />
+    <CheckOutlined />
+    <WarningOutlined />
+    <InfoCircleOutlined />
+    <LoadingOutlined />
+    <UpOutlined />
+    <DownOutlined />
+    <LeftOutlined />
+    <RightOutlined />
+    <PlusOutlined />
+    <MinusOutlined />
+    <EditOutlined />
+    <DeleteOutlined />
+    <EyeOutlined />
+    <HomeOutlined />
+    <UserOutlined />
+    <SettingOutlined />
   </Space>
 </template>
 
@@ -2877,11 +2884,11 @@ import {
 ```vue
 <template>
   <Space :size="16" align="center">
-    <HomeOutlined class="hmfw-icon" style="font-size: 12px" />
-    <HomeOutlined class="hmfw-icon" style="font-size: 16px" />
-    <HomeOutlined class="hmfw-icon" style="font-size: 24px" />
-    <HomeOutlined class="hmfw-icon" style="font-size: 32px" />
-    <HomeOutlined class="hmfw-icon" style="font-size: 48px" />
+    <HomeOutlined style="font-size: 12px" />
+    <HomeOutlined style="font-size: 16px" />
+    <HomeOutlined style="font-size: 24px" />
+    <HomeOutlined style="font-size: 32px" />
+    <HomeOutlined style="font-size: 48px" />
   </Space>
 </template>
 
@@ -3813,7 +3820,7 @@ import { Modal } from '@hmfw/ant-design'
 | okText / cancelText / okType | 同 Modal Props | - | - |
 | okButtonProps / cancelButtonProps | 同 Modal Props | - | - |
 | centered / width / mask / maskClosable / keyboard / closable / zIndex | 同 Modal Props | - | - |
-| className | 应用到 `.hmfw-modal-root` 的 class | `string` | - |
+| className | 应用到 `.hmfw-modal` 的 class | `string` | - |
 | wrapClassName | 应用到 `.hmfw-modal-wrap` 的 class | `string` | - |
 | onOk | 点击 OK；返回 Promise 时按钮 loading 直到 resolve | `() => any \| Promise<any>` | - |
 | onCancel | 点击 Cancel | `() => void` | - |
@@ -4277,8 +4284,8 @@ import { Popover, PopoverPurePanel } from '@hmfw/ant-design'
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | update:open | 显示隐藏的回调（v-model） | `(open: boolean) => void` |
-| openChange | 显示隐藏的回调 | `(open: boolean) => void` |
-| afterOpenChange | 浮层动画结束时触发 | `(open: boolean) => void` |
+| openChange | 显示隐藏的回调，附带触发来源信息 | `(open: boolean, info: PopoverOpenChangeInfo) => void` |
+| afterOpenChange | 浮层显隐动画结束时触发 | `(open: boolean) => void` |
 
 ### 示例
 
@@ -4498,6 +4505,19 @@ import { Radio, RadioGroup, RadioButton } from '@hmfw/ant-design'
 | optionType | 用于设置 Radio options 类型 | `'default' \| 'button'` | `'default'` |
 | buttonStyle | RadioButton 的风格样式，目前有描边和填色两种风格 | `'outline' \| 'solid'` | `'outline'` |
 | size | 大小，只对按钮样式生效 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| classNames | 语义化 className（[详见下方](#语义化-classname-与-style)） | `RadioGroupClassNames` | - |
+| styles | 语义化 style（[详见下方](#语义化-classname-与-style)） | `RadioGroupStyles` | - |
+
+**RadioButton Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| checked(v-model) | 指定当前是否选中 | `boolean` | `false` |
+| defaultChecked | 初始是否选中 | `boolean` | `false` |
+| disabled | 禁用 RadioButton | `boolean` | `false` |
+| value | 根据 value 进行比较，判断是否选中 | `string \| number` | - |
+| classNames | 语义化 className（[详见下方](#语义化-classname-与-style)） | `RadioButtonClassNames` | - |
+| styles | 语义化 style（[详见下方](#语义化-classname-与-style)） | `RadioButtonStyles` | - |
 
 ### Events
 
@@ -4595,12 +4615,11 @@ import { RangePicker } from '@hmfw/ant-design'
 | disabled | 是否禁用，可分别禁用起止 | `boolean \| [boolean, boolean]` | `false` |
 | placeholder | 占位文本，缺省时使用当前语言包 | `[string, string]` | locale.rangePlaceholder |
 | allowClear | 是否允许清除 | `boolean` | `true` |
-| allowEmpty | 允许起止留空 | `[boolean, boolean]` | - |
 | order | 自动排序起止日期 | `boolean` | `true` |
 | separator | 起止输入框之间的分隔符 | `string` | `'→'` |
 | presets | 预设范围快捷选项 | `{ label: string, value: RangeValue \| (() => RangeValue) }[]` | - |
 | size | 尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
-| disabledDate | 不可选日期 | `(date: Date, info?: { from?: Date, type?: string }) => boolean` | - |
+| disabledDate | 不可选日期函数。`info.from` 为已选的开始日期（选择结束日期时传入），`info.type` 固定为 `'date'` | `(date: Date, info?: { from?: Date, type?: string }) => boolean` | - |
 | status | 校验状态 | `'error' \| 'warning' \| ''` | `''` |
 | open | 受控的弹层显隐 | `boolean` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RangePickerClassNames` | - |
@@ -4695,7 +4714,7 @@ import { Rate } from '@hmfw/ant-design'
 | disabled | 只读，无法进行交互 | `boolean` | `false` |
 | character | 自定义字符 | `string \| ((ctx: RateCharacterRenderContext) => any)` | `'★'` |
 | tooltips | 自定义每项的提示信息 | `(string \| TooltipProps)[]` | - |
-| size | 组件尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| size | 组件尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'`（继承自 ConfigProvider） |
 | keyboard | 是否支持键盘操作 | `boolean` | `true` |
 | autoFocus | 自动获取焦点 | `boolean` | `false` |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `RateClassNames` | - |
@@ -4782,8 +4801,10 @@ import { Result } from '@hmfw/ant-design'
 | status | 结果的状态，决定图标和颜色；`404/403/500` 渲染为异常插画 | `'success' \| 'error' \| 'warning' \| 'info' \| '404' \| '403' \| '500'` | `'info'` |
 | title | 标题 | `string` | - |
 | subTitle | 副标题 | `string` | - |
-| icon | 自定义图标字符；设为 `false` 时隐藏图标（异常状态插画不受影响） | `string \| false` | - |
-| extra | 操作区内容（`extra` 插槽优先级更高） | `string` | - |
+| icon | 自定义图标；设为 `false` 时隐藏图标（异常状态插画不受影响） | `VNodeChild \| false` | - |
+| extra | 操作区内容（`extra` 插槽优先级更高） | `VNodeChild` | - |
+| classNames | 各部分语义化 className（root/icon/title/subtitle/extra/content） | `ResultClassNames` | - |
+| styles | 各部分语义化 style（root/icon/title/subtitle/extra/content） | `ResultStyles` | - |
 
 ### 示例
 
@@ -5402,9 +5423,11 @@ import { Spin } from '@hmfw/ant-design'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | spinning | 是否为加载中状态 | `boolean` | `true` |
-| size | 组件大小 | `'small' \| 'default' \| 'large'` | `'default'` |
+| size | 组件大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | tip | 当作为包裹元素时，可以自定义描述文案 | `string` | - |
-| delay | 延迟显示加载效果的时间（防止闪烁），单位：毫秒 | `number` | - |
+| description | tip 的新名（与 AntD v6 对齐），优先级高于 tip | `string` | - |
+| delay | 延迟显示加载效果的时间（防止闪烁），单位：毫秒 | `number` | `0` |
+| fullscreen | 是否为全屏加载，展示背景遮罩覆盖整个视口 | `boolean` | `false` |
 | percent | 进度百分比；为 `'auto'` 时在 `spinning` 期间自动模拟递增 | `number \| 'auto'` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpinClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpinStyles` | - |
@@ -5673,7 +5696,7 @@ import { Switch } from '@hmfw/ant-design'
 | defaultChecked | 初始是否选中 | `boolean` | `false` |
 | disabled | 是否禁用 | `boolean` | `false` |
 | loading | 加载中的开关 | `boolean` | `false` |
-| size | 开关大小 | `'default' \| 'small'` | `'default'` |
+| size | 开关大小 | `'small' \| 'middle'` | `'middle'` |
 | checkedChildren | 选中时的内容 | `string \| VNode` | - |
 | unCheckedChildren | 非选中时的内容 | `string \| VNode` | - |
 | autoFocus | 组件自动获取焦点 | `boolean` | `false` |
@@ -5727,7 +5750,7 @@ const checked2 = ref(true)
 </script>
 ```
 
-文字和图标 — 带有文字和图标的开关。
+文字 — 带有文字的开关。
 
 ```vue
 <template>
@@ -5781,6 +5804,7 @@ import { Table } from '@hmfw/ant-design'
 | summary | 总结栏 | `(pageData: any[]) => VNode` | - |
 | title | 表格标题 | `string \| ((data: any[]) => VNode)` | - |
 | footer | 表格页脚 | `string \| ((data: any[]) => VNode)` | - |
+| rowClassName | 表格行的类名 | `string \| ((record: any, index: number) => string)` | - |
 | locale | 国际化配置 | `{ emptyText?: string }` | - |
 | onChange | 分页、排序、筛选变化时触发 | `(pagination, filters, sorter, extra) => void` | - |
 | onRow | 设置行属性 | `(record, index) => object` | - |
@@ -6157,7 +6181,7 @@ import { TimePicker } from '@hmfw/ant-design'
 | use12Hours | 使用 12 小时制，为 true 时 format 默认为 h:mm:ss a | `boolean` | `false` |
 | status | 设置校验状态 | `'error' \| 'warning'` | - |
 | open | 控制浮层显隐 | `boolean` | - |
-| needConfirm | 需要点击确定按钮才触发值变化 | `boolean` | `false` |
+| needConfirm | 需要点击确定按钮才触发值变化 | `boolean` | `true` |
 | changeOnScroll | 滚动时立即触发选择 | `boolean` | `false` |
 | renderExtraFooter | 在面板底部渲染额外的内容 | `() => VNodeChild` | - |
 | variant | 输入框变体 | `'outlined' \| 'borderless' \| 'filled' \| 'underlined'` | `'outlined'` |
@@ -6201,22 +6225,22 @@ const handleChange = (value: string) => {
 </script>
 ```
 
-步进 — 通过 `hour-step`、`minute-step`、`second-step` 设置时间步长。
+三种大小 — 通过 `size` 设置输入框大小，支持 `small`、`middle`、`large` 三种尺寸。
 
 ```vue
 <template>
   <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
     <div>
-      <p style="margin-bottom: 4px">小时步长 2：</p>
-      <TimePicker v-model:value="time1" :hour-step="2" placeholder="小时步长 2" />
+      <p style="margin-bottom: 4px">Small：</p>
+      <TimePicker v-model:value="time1" size="small" placeholder="Small" />
     </div>
     <div>
-      <p style="margin-bottom: 4px">分钟步长 15：</p>
-      <TimePicker v-model:value="time2" :minute-step="15" placeholder="分钟步长 15" />
+      <p style="margin-bottom: 4px">Middle（默认）：</p>
+      <TimePicker v-model:value="time2" size="middle" placeholder="Middle（默认）" />
     </div>
     <div>
-      <p style="margin-bottom: 4px">秒步长 30：</p>
-      <TimePicker v-model:value="time3" :second-step="30" placeholder="秒步长 30" />
+      <p style="margin-bottom: 4px">Large：</p>
+      <TimePicker v-model:value="time3" size="large" placeholder="Large" />
     </div>
   </div>
 </template>
@@ -6354,7 +6378,7 @@ import { Tooltip } from '@hmfw/ant-design'
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | update:open | 显示隐藏的回调（v-model） | `(open: boolean) => void` |
-| openChange | 显示隐藏的回调 | `(open: boolean) => void` |
+| openChange | 显示隐藏的回调 | `(open: boolean, info: { source: 'trigger' \| 'popup' }) => void` |
 | afterOpenChange | 浮层动画结束时触发 | `(open: boolean) => void` |
 
 ### 示例
@@ -6373,63 +6397,31 @@ import { Tooltip, Button } from '@hmfw/ant-design'
 </script>
 ```
 
-十二个方向 — 位置有十二个方向。
+触发方式 — 支持 `hover`、`click`、`focus`、`contextMenu` 四种触发方式，也可传数组组合多种触发。
 
 ```vue
 <template>
-  <div>
-    <Flex justify="center" align="center" gap="middle">
-      <Tooltip placement="topLeft" title="提示文字">
-        <Button style="width: 100px"> topLeft </Button>
-      </Tooltip>
-      <Tooltip placement="top" title="提示文字">
-        <Button style="width: 100px"> top </Button>
-      </Tooltip>
-      <Tooltip placement="topRight" title="提示文字">
-        <Button style="width: 100px"> topRight </Button>
-      </Tooltip>
-    </Flex>
-    <Flex justify="center" align="center">
-      <Flex vertical align="center" gap="middle">
-        <Tooltip placement="leftTop" title="提示文字">
-          <Button style="width: 100px; height: 48px"> leftTop </Button>
-        </Tooltip>
-        <Tooltip placement="left" title="提示文字">
-          <Button style="width: 100px; height: 48px"> left </Button>
-        </Tooltip>
-        <Tooltip placement="leftBottom" title="提示文字">
-          <Button style="width: 100px; height: 48px"> leftBottom </Button>
-        </Tooltip>
-      </Flex>
-      <div style="width: 332px"></div>
-      <Flex vertical align="center" gap="middle">
-        <Tooltip placement="rightTop" title="提示文字">
-          <Button style="width: 100px; height: 48px"> rightTop </Button>
-        </Tooltip>
-        <Tooltip placement="right" title="提示文字">
-          <Button style="width: 100px; height: 48px"> right </Button>
-        </Tooltip>
-        <Tooltip placement="rightBottom" title="提示文字">
-          <Button style="width: 100px; height: 48px"> rightBottom </Button>
-        </Tooltip>
-      </Flex>
-    </Flex>
-    <Flex justify="center" align="center" gap="middle">
-      <Tooltip placement="bottomLeft" title="提示文字">
-        <Button style="width: 100px"> bottomLeft </Button>
-      </Tooltip>
-      <Tooltip placement="bottom" title="提示文字">
-        <Button style="width: 100px"> bottom </Button>
-      </Tooltip>
-      <Tooltip placement="bottomRight" title="提示文字">
-        <Button style="width: 100px"> bottomRight </Button>
-      </Tooltip>
-    </Flex>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <Tooltip title="鼠标移入触发" trigger="hover">
+      <Button>hover</Button>
+    </Tooltip>
+    <Tooltip title="点击触发" trigger="click">
+      <Button>click</Button>
+    </Tooltip>
+    <Tooltip title="聚焦触发" trigger="focus">
+      <Button>focus</Button>
+    </Tooltip>
+    <Tooltip title="右键触发" trigger="contextMenu">
+      <Button>contextMenu</Button>
+    </Tooltip>
+    <Tooltip title="hover 或 click 均可触发" :trigger="['hover', 'click']">
+      <Button>hover + click</Button>
+    </Tooltip>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Tooltip, Button, Flex } from '@hmfw/ant-design'
+import { Tooltip, Button } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -6628,6 +6620,9 @@ import { Transfer } from '@hmfw/ant-design'
 | pagination | 分页配置 | `boolean \| PaginationType` | - |
 | status | 校验状态 | `'error' \| 'warning'` | - |
 | locale | 文案配置 | `Partial<TransferLocale>` | - |
+| virtual | 是否启用虚拟滚动（大数据量时开启，与 pagination 互斥） | `boolean` | `false` |
+| listHeight | 虚拟滚动列表容器高度（px） | `number` | `400` |
+| listItemHeight | 虚拟滚动列表项高度（px） | `number` | `40` |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TransferSemanticStyles` | - |
 
@@ -6648,7 +6643,7 @@ import { Transfer } from '@hmfw/ant-design'
 | selectChange | 选中项变化时触发 | `(sourceSelectedKeys: TransferKey[], targetSelectedKeys: TransferKey[])` |
 | search | 搜索框内容变化时触发 | `(direction: TransferDirection, value: string)` |
 | scroll | 列表滚动时触发 | `(direction: TransferDirection, e: Event)` |
-| reorder | 右侧列表通过拖拽重新排序后触发 | `(info: TransferReorderInfo)` |
+| reorder | 右侧列表通过拖拽重新排序后触发 | `(info: TransferReorderInfo)`，详见下方 [TransferReorderInfo](#transferreorderinfo) |
 
 ### 示例
 
@@ -6782,7 +6777,7 @@ import { Tree, DirectoryTree } from '@hmfw/ant-design'
 | dblclick | 双击节点 | `(event, node) => void` |
 | rightClick | 右键节点 | `({ event, node }) => void` |
 | dragstart / dragenter / dragover / dragleave / dragend | 拖拽过程事件 | `({ event, node, ... }) => void` |
-| drop | 拖拽释放 | `({ node, dragNode, dragNodesKeys, dropPosition, dropToGap, nativeEvent }) => void` |
+| drop | 拖拽释放 | `({ event, node, dragNode, dragNodesKeys, dropPosition, dropToGap }) => void` |
 
 ### 示例
 
@@ -6919,7 +6914,6 @@ import { TreeSelect } from '@hmfw/ant-design'
 | search | 搜索框值变化时调用 | `(value: string)` |
 | treeExpand | 展开节点时调用 | `(expandedKeys)` |
 | openChange | 展开下拉菜单的回调 | `(open: boolean)` |
-| dropdownVisibleChange | 展开下拉菜单的回调（同 openChange） | `(visible: boolean)` |
 | clear | 清除时调用 | `()` |
 
 ### 示例
