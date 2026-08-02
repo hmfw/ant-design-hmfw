@@ -118,6 +118,11 @@ const zhCN: Locale = {
     expand: '展开',
     collapse: '收起',
   },
+  Tour: {
+    next: '下一步',
+    previous: '上一步',
+    finish: '完成',
+  },
   Calendar: {
     month: '月',
     year: '年',

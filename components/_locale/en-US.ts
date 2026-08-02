@@ -118,6 +118,11 @@ const enUS: Locale = {
     expand: 'Expand',
     collapse: 'Collapse',
   },
+  Tour: {
+    next: 'Next',
+    previous: 'Previous',
+    finish: 'Finish',
+  },
   Calendar: {
     month: 'Month',
     year: 'Year',

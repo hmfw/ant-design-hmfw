@@ -18,12 +18,44 @@
   <TourBasic />
 </DemoBlock>
 
+### 定位与方位
+
+通过 `target` 属性指向页面元素，通过 `placement` 设置引导卡片的显示位置。
+
+<DemoBlock title="定位与方位" :source="TourPlacementSource">
+  <TourPlacement />
+</DemoBlock>
+
 ### 不同类型
 
 Tour 有两种类型：`default` 和 `primary`。
 
 <DemoBlock title="不同类型" :source="TourTypeSource">
   <TourType />
+</DemoBlock>
+
+### 非模态模式
+
+设置 `mask={false}` 可以关闭遮罩层，用户可以直接操作页面元素。
+
+<DemoBlock title="非模态模式" :source="TourNonModalSource">
+  <TourNonModal />
+</DemoBlock>
+
+### 自定义指示器
+
+通过 `indicatorsRender` 自定义指示器的渲染方式。
+
+<DemoBlock title="自定义指示器" :source="TourIndicatorSource">
+  <TourIndicator />
+</DemoBlock>
+
+### 带封面的引导
+
+通过 `cover` 属性为引导步骤添加封面图片。
+
+<DemoBlock title="带封面的引导" :source="TourCoverSource">
+  <TourCover />
 </DemoBlock>
 
 ### 细粒度样式控制

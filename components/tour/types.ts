@@ -12,7 +12,7 @@ export interface TourButtonProps extends Omit<ButtonProps, 'onClick'> {
 export interface TourStep {
   title?: string | VNode | (() => VNode)
   description?: string | VNode | (() => VNode)
-  target?: string | (() => HTMLElement | null)
+  target?: string | HTMLElement | (() => HTMLElement | null)
   placement?: TourPlacement
   nextButtonProps?: TourButtonProps
   prevButtonProps?: TourButtonProps
@@ -92,6 +92,21 @@ export interface TourStyles {
   nextBtn?: CSSProperties
 }
 
+/**
+ * 步骤改变事件回调
+ */
+export type TourChangeHandler = (current: number) => void
+
+/**
+ * 关闭事件回调
+ */
+export type TourCloseHandler = () => void
+
+/**
+ * 完成事件回调（最后一步点击下一步时触发）
+ */
+export type TourFinishHandler = () => void
+
 export interface TourProps {
   open?: boolean
   defaultOpen?: boolean
@@ -107,6 +122,8 @@ export interface TourProps {
   gap?: { offset?: number | [number, number]; radius?: number }
   indicatorsRender?: (current: number, total: number) => VNode
   closeIcon?: VNode | (() => VNode) | false
+  keyboard?: boolean
+  getPopupContainer?: () => HTMLElement
   /** 语义化 className */
   classNames?: TourClassNames
   /** 语义化 style */

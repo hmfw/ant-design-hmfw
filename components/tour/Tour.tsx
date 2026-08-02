@@ -12,7 +12,7 @@ import {
   type PropType,
   type VNode,
 } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Button } from '../button'
 import { CloseOutlined } from '@hmfw/icons'
@@ -31,7 +31,8 @@ function omitButtonProps(buttonProps?: TourButtonProps) {
 function getTargetEl(target: TourStep['target']): HTMLElement | null {
   if (!target) return null
   if (typeof target === 'function') return target()
-  return document.querySelector<HTMLElement>(target)
+  if (typeof target === 'string') return document.querySelector<HTMLElement>(target)
+  return target // HTMLElement
 }
 
 interface Rect {
@@ -114,43 +115,51 @@ function renderContent(content: string | VNode | (() => VNode) | undefined) {
   return String(content)
 }
 
+const tourProps = {
+  open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: false },
+  current: { type: Number, default: undefined },
+  defaultCurrent: { type: Number, default: 0 },
+  steps: { type: Array as PropType<TourStep[]>, default: () => [] },
+  arrow: { type: [Boolean, Object] as PropType<TourProps['arrow']>, default: true },
+  placement: { type: String as PropType<TooltipPlacement>, default: undefined },
+  mask: { type: [Boolean, Object] as PropType<TourProps['mask']>, default: true },
+  type: { type: String as PropType<'default' | 'primary'>, default: 'default' },
+  scrollIntoViewOptions: {
+    type: [Boolean, Object] as PropType<boolean | ScrollIntoViewOptions>,
+    default: true,
+  },
+  zIndex: { type: Number, default: 1001 },
+  gap: { type: Object as PropType<TourProps['gap']>, default: undefined },
+  indicatorsRender: {
+    type: Function as PropType<TourProps['indicatorsRender']>,
+    default: undefined,
+  },
+  closeIcon: {
+    type: [Object, Function, Boolean] as PropType<TourProps['closeIcon']>,
+    default: undefined,
+  },
+  keyboard: { type: Boolean, default: true },
+  getPopupContainer: { type: Function as PropType<() => HTMLElement>, default: undefined },
+  classNames: { type: Object as PropType<TourProps['classNames']>, default: undefined },
+  styles: { type: Object as PropType<TourProps['styles']>, default: undefined },
+} satisfies Record<keyof TourProps, any>
+
 export const Tour = defineComponent({
   name: 'Tour',
-  props: {
-    open: { type: Boolean, default: undefined },
-    defaultOpen: { type: Boolean, default: false },
-    current: { type: Number, default: undefined },
-    defaultCurrent: { type: Number, default: 0 },
-    steps: { type: Array as PropType<TourStep[]>, default: () => [] },
-    arrow: { type: [Boolean, Object] as PropType<TourProps['arrow']>, default: true },
-    placement: { type: String as PropType<TooltipPlacement>, default: undefined },
-    mask: { type: [Boolean, Object] as PropType<TourProps['mask']>, default: true },
-    type: { type: String as PropType<'default' | 'primary'>, default: 'default' },
-    scrollIntoViewOptions: {
-      type: [Boolean, Object] as PropType<boolean | ScrollIntoViewOptions>,
-      default: true,
-    },
-    zIndex: { type: Number, default: 1001 },
-    gap: { type: Object as PropType<TourProps['gap']>, default: undefined },
-    indicatorsRender: {
-      type: Function as PropType<TourProps['indicatorsRender']>,
-      default: undefined,
-    },
-    closeIcon: {
-      type: [Object, Function, Boolean] as PropType<TourProps['closeIcon']>,
-      default: undefined,
-    },
-    classNames: { type: Object as PropType<TourProps['classNames']>, default: undefined },
-    styles: { type: Object as PropType<TourProps['styles']>, default: undefined },
-  },
+  props: tourProps,
   emits: ['update:open', 'update:current', 'change', 'close', 'finish'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tour')
+    const locale = useLocale()
     const innerOpen = ref(props.defaultOpen)
     const innerCurrent = ref(props.defaultCurrent)
     const popoverRef = ref<HTMLElement | null>(null)
     const popoverPos = ref({ top: 100, left: 100 })
     const targetRect = ref<Rect | null>(null)
+    const maskId = `tour-mask-${Math.random().toString(36).slice(2, 9)}`
+
+    const popupContainer = computed(() => props.getPopupContainer?.() ?? document.body)
 
     const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
     const currentStep = computed(() => (props.current !== undefined ? props.current : innerCurrent.value))
@@ -185,7 +194,7 @@ export const Tour = defineComponent({
 
       if (scrollOptions) {
         const options: ScrollIntoViewOptions =
-          typeof scrollOptions === 'boolean' ? { block: 'center', behavior: 'smooth' } : scrollOptions
+          typeof scrollOptions === 'boolean' ? { block: 'nearest', behavior: 'smooth' } : scrollOptions
         el.scrollIntoView(options)
       }
     }
@@ -198,7 +207,8 @@ export const Tour = defineComponent({
       if (popoverRef.value) {
         const placement = step.value?.placement ?? props.placement ?? 'bottom'
         const gapValue = props.gap?.offset ?? 12
-        const gap = typeof gapValue === 'number' ? gapValue : gapValue[0]
+        const isHorizontal = placement.startsWith('left') || placement.startsWith('right')
+        const gap = typeof gapValue === 'number' ? gapValue : isHorizontal ? gapValue[0] : gapValue[1]
         popoverPos.value = calcPopoverPos(targetRect.value, popoverRef.value, placement, gap)
       }
     }
@@ -217,11 +227,38 @@ export const Tour = defineComponent({
     onMounted(() => {
       window.addEventListener('resize', updatePos)
       window.addEventListener('scroll', updatePos, true)
+
+      // 键盘快捷键支持
+      if (props.keyboard) {
+        window.addEventListener('keydown', handleKeyDown)
+      }
     })
     onBeforeUnmount(() => {
       window.removeEventListener('resize', updatePos)
       window.removeEventListener('scroll', updatePos, true)
+      if (props.keyboard) {
+        window.removeEventListener('keydown', handleKeyDown)
+      }
     })
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (!isOpen.value) return
+
+      switch (e.key) {
+        case 'Escape':
+          e.preventDefault()
+          close()
+          break
+        case 'ArrowLeft':
+          e.preventDefault()
+          prev()
+          break
+        case 'ArrowRight':
+          e.preventDefault()
+          next()
+          break
+      }
+    }
 
     function close() {
       innerOpen.value = false
@@ -270,7 +307,7 @@ export const Tour = defineComponent({
 
       const closeIcon = getCloseIcon()
 
-      return h(Teleport, { to: 'body' }, [
+      return h(Teleport, { to: popupContainer.value }, [
         h(
           'div',
           {
@@ -297,7 +334,7 @@ export const Tour = defineComponent({
                         },
                         [
                           h('defs', [
-                            h('mask', { id: 'tour-mask' }, [
+                            h('mask', { id: maskId }, [
                               h('rect', { width: '100%', height: '100%', fill: 'white' }),
                               h('rect', {
                                 x: targetRect.value.left - 4,
@@ -313,7 +350,7 @@ export const Tour = defineComponent({
                             width: '100%',
                             height: '100%',
                             fill: maskColor,
-                            mask: 'url(#tour-mask)',
+                            mask: `url(#${maskId})`,
                           }),
                         ],
                       )
@@ -455,7 +492,7 @@ export const Tour = defineComponent({
                                   ...omitButtonProps(step.value.prevButtonProps),
                                 },
                                 {
-                                  default: () => step.value?.prevButtonProps?.children ?? '上一步',
+                                  default: () => step.value?.prevButtonProps?.children ?? locale.value.Tour.previous,
                                 },
                               ),
                             h(
@@ -473,7 +510,9 @@ export const Tour = defineComponent({
                                 ...omitButtonProps(step.value.nextButtonProps),
                               },
                               {
-                                default: () => step.value?.nextButtonProps?.children ?? (isLast ? '完成' : '下一步'),
+                                default: () =>
+                                  step.value?.nextButtonProps?.children ??
+                                  (isLast ? locale.value.Tour.finish : locale.value.Tour.next),
                               },
                             ),
                           ],

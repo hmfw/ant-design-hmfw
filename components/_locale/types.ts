@@ -116,6 +116,11 @@ export interface Locale {
     expand: string
     collapse: string
   }
+  Tour: {
+    next: string
+    previous: string
+    finish: string
+  }
   Calendar: {
     month: string
     year: string

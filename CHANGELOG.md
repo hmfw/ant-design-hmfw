@@ -10,6 +10,37 @@
 
 ## 最近版本
 
+## [0.32.0] - 2026-08-02
+
+[查看完整内容](./changelogs/v0.32.0.md)
+
+Tour 组件全面优化与功能增强。
+
+### ✨ 新增功能
+
+- **Tour**：新增 `keyboard` 属性支持键盘快捷键操作（Esc 关闭，← 上一步，→ 下一步）
+- **Tour**：新增 `getPopupContainer` 属性支持自定义挂载节点
+- **Tour**：`target` 属性现支持直接传入 HTMLElement（原仅支持 CSS 选择器或函数）
+- **Tour**：接入国际化系统，按钮文本支持中英文切换（上一步/下一步/完成）
+- **Tour**：导出事件类型定义 `TourChangeHandler`、`TourCloseHandler`、`TourFinishHandler`
+
+### 🐛 缺陷修复
+
+- **Tour**：修复 SVG mask ID 硬编码导致多实例冲突问题，改为动态生成唯一 ID
+- **Tour**：修复 `gap.offset` 数组形式 `[x, y]` 处理逻辑，水平/垂直方向正确取值
+- **Tour**：优化 `scrollIntoViewOptions` 默认值从 `block: 'center'` 改为 `block: 'nearest'`，减少不必要的页面大幅滚动
+
+### 📖 文档与 Demo
+
+- **Tour**：新增 TourPlacement.vue（定位与方位演示）
+- **Tour**：新增 TourNonModal.vue（非模态模式演示）
+- **Tour**：新增 TourIndicator.vue（自定义指示器演示）
+- **Tour**：新增 TourCover.vue（带封面引导演示）
+
+### 🔨 代码质量
+
+- **Tour**：添加 props 类型约束 `satisfies Record<keyof TourProps, any>`，确保类型安全
+
 ## [0.31.0] - 2026-08-02
 
 [查看完整内容](./changelogs/v0.31.0.md)
