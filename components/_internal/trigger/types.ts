@@ -79,7 +79,10 @@ export interface TriggerProps {
   fresh?: boolean | number
   /** 持续跟踪触发元素位置变化，每帧自动重新定位（适用于触发元素有动画/过渡的场景）。 */
   trackPosition?: boolean
-  /** 触发器外层 wrapper 的 display，默认 inline-block。 */
+  /**
+   * 触发器外层 wrapper 的 display。不传时不写行内样式，
+   * 由基础类 `:where(.hmfw-trigger)` 提供 inline-block 默认值，宿主根类可直接覆盖。
+   */
   triggerDisplay?: string
   /** 弹层 wrapper 的 class，支持字符串或接收实际方位返回字符串的函数。 */
   popupClass?: string | ((placement: Placement) => string)

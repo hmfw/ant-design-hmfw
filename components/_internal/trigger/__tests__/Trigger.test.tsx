@@ -476,10 +476,12 @@ describe('Trigger', () => {
 
   // ============================== triggerDisplay ==============================
 
-  it('default trigger wrapper display is inline-block', async () => {
+  it('不传 triggerDisplay 时不写行内 display，改由基础类 hmfw-trigger 提供默认值', async () => {
+    // 行内 display 会压过宿主根类（如 .hmfw-select 的 inline-flex），故默认不写行内样式
     const wrapper = mountTrigger()
     const div = wrapper.find('div')
-    expect((div.element as HTMLElement).style.display).toBe('inline-block')
+    expect((div.element as HTMLElement).style.display).toBe('')
+    expect(div.classes()).toContain('hmfw-trigger')
     wrapper.unmount()
   })
 
