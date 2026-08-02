@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.29.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.30.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -1555,12 +1555,13 @@ import { ConfigProvider, useConfig, usePrefixCls, useLocale } from '@hmfw/ant-de
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| theme | 设置主题 Token | `Partial<SeedTokens>` | - |
+| theme | 设置主题 Token，未列出的字段继承上层 ConfigProvider | `Partial<SeedTokens>` | - |
 | locale | 语言包配置 | `zhCN \| enUS` | `zhCN` |
 | prefixCls | 设置统一样式前缀 | `string` | `'hmfw'` |
 | componentSize | 设置组件大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | componentDisabled | 统一禁用内部控件，控件无法单独反禁用 | `boolean` | `false` |
 | direction | 设置布局方向 | `'ltr' \| 'rtl'` | `'ltr'` |
+| getPopupContainer | 弹层（Tooltip / Dropdown / Popover 等）默认挂载节点 | `(triggerNode?: HTMLElement) => HTMLElement` | `body` |
 
 ### 示例
 

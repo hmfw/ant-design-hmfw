@@ -10,6 +10,7 @@ import {
   type PropType,
 } from 'vue'
 import { cls } from '../../_utils'
+import { useConfig } from '../../config-provider/context'
 import { computePosition } from './computePosition'
 import { subscribeGlobal } from './eventManager'
 import type { Placement, TriggerAction, TriggerProps } from './types'
@@ -80,6 +81,8 @@ export const Trigger = defineComponent({
     // ================================================================
     // 1. 响应式状态
     // ================================================================
+    // 供 getContainer 在自身 prop 缺省时回退到全局 getPopupContainer
+    const config = useConfig()
     const triggerRef = ref<HTMLElement | null>(null)
     const popupRef = ref<HTMLElement | null>(null)
     const innerOpen = ref(props.defaultOpen ?? false)
@@ -331,11 +334,11 @@ export const Trigger = defineComponent({
     // ================================================================
     // 7. 工具方法
     // ================================================================
+    // 容器优先级：组件自身 prop > ConfigProvider 的全局 getPopupContainer > body
     const getContainer = (): HTMLElement | 'body' => {
-      if (props.getPopupContainer && triggerRef.value) {
-        return props.getPopupContainer(triggerRef.value)
-      }
-      return 'body'
+      if (!triggerRef.value) return 'body'
+      const resolve = props.getPopupContainer ?? config.value.getPopupContainer
+      return resolve?.(triggerRef.value) ?? 'body'
     }
 
     // ================================================================

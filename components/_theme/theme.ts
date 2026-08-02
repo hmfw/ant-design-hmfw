@@ -503,16 +503,25 @@ function toKebab(key: string): string {
     .replace(/^-/, '')
 }
 
-export function tokensToCssVars(tokens: MapTokens, prefix = 'hmfw'): string {
-  const entries: string[] = []
+/**
+ * 将 token 转为 CSS 变量键值对记录（纯函数，不触碰 DOM）。
+ * 供 `tokensToCssVars` 与需要把变量作为 inline style 绑定的场景（如 ConfigProvider
+ * 嵌套时的局部主题作用域）共用，避免 kebab 转换与单位补全逻辑出现第二份实现。
+ */
+export function tokensToCssVarRecord(tokens: Partial<MapTokens>, prefix = 'hmfw'): Record<string, string> {
+  const record: Record<string, string> = {}
 
   for (const [key, value] of Object.entries(tokens)) {
     if (typeof value === 'string' || typeof value === 'number') {
-      const cssKey = `--${prefix}-${toKebab(key)}`
-      const cssValue = toCssValue(key, value)
-      entries.push(`  ${cssKey}: ${cssValue};`)
+      record[`--${prefix}-${toKebab(key)}`] = toCssValue(key, value)
     }
   }
+
+  return record
+}
+
+export function tokensToCssVars(tokens: MapTokens, prefix = 'hmfw'): string {
+  const entries = Object.entries(tokensToCssVarRecord(tokens, prefix)).map(([k, v]) => `  ${k}: ${v};`)
 
   return `:root {\n${entries.join('\n')}\n}`
 }
@@ -535,11 +544,7 @@ export function injectCssVars(tokens: MapTokens, prefix = 'hmfw'): void {
  * 公开 API，供需要局部主题隔离的高级场景使用。
  */
 export function injectScopedCssVars(el: HTMLElement, tokens: Partial<MapTokens>, prefix = 'hmfw'): void {
-  for (const [key, value] of Object.entries(tokens)) {
-    if (typeof value === 'string' || typeof value === 'number') {
-      const cssKey = `--${prefix}-${toKebab(key)}`
-      const cssValue = toCssValue(key, value)
-      el.style.setProperty(cssKey, cssValue)
-    }
+  for (const [cssKey, cssValue] of Object.entries(tokensToCssVarRecord(tokens, prefix))) {
+    el.style.setProperty(cssKey, cssValue)
   }
 }

@@ -5,6 +5,11 @@ import { zhCN } from '../_locale'
 
 export const CONFIG_PROVIDER_KEY: InjectionKey<ComputedRef<ConfigContext>> = Symbol('ConfigProvider')
 
+/**
+ * 根层默认配置。ConfigProvider 的 props 一律不写默认值（全部 `undefined`），
+ * 缺省语义统一由这里承载 —— 这样嵌套时才能用 `??` 区分「未传」与「传了值」，
+ * 逐项回退到父级配置而非被重置为默认值。
+ */
 export const defaultConfig: ConfigContext = {
   locale: zhCN,
   theme: defaultSeedTokens,
@@ -12,7 +17,9 @@ export const defaultConfig: ConfigContext = {
   componentDisabled: false,
   direction: 'ltr',
   prefixCls: 'hmfw',
-  getPopupContainer: () => document.body,
+  // 不兜底 `() => document.body`：保留 undefined 让弹层组件自行兜底，
+  // 既能区分「未配置」与「配置为 body」，也避免 SSR 环境访问 document。
+  getPopupContainer: undefined,
 }
 
 const defaultConfigRef = computed(() => defaultConfig)

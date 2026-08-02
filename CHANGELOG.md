@@ -10,6 +10,38 @@
 
 ## 最近版本
 
+## [0.30.0] - 2026-08-02
+
+[查看完整内容](./changelogs/v0.30.0.md)
+
+ConfigProvider 专项审查与修复。
+
+### 💥 行为变更
+
+- **嵌套 ConfigProvider 现在继承父级配置**：此前内层从库默认值构建上下文，会静默重置外层的 `componentSize` / `locale` / `direction` / `prefixCls`；`theme` 现为部分覆盖语义。若此前依赖「内层重置为默认值」，需在内层显式声明
+
+### 🐛 缺陷修复
+
+- **ConfigProvider**：嵌套 theme 注入 `:root` 导致全站串色（文档站暗色 Demo 会把整个站点变暗）。现根 Provider 注入 `:root` 且不产生 DOM，嵌套 Provider 用 `display: contents` 作用域节点承载局部变量
+- **ConfigProvider**：`getPopupContainer` 被声明却无人消费，配置等于没配。现 Trigger 按「组件 prop → 全局配置 → body」回退
+- **ConfigProvider**：嵌套节点未输出 `dir`，浏览器原生双向文本算法与 `:dir()` 无法生效
+- **ConfigProvider**：移除死字段 `theme.prefix`
+
+### 📖 文档与 Demo
+
+- **Demo 5 → 7**：新增嵌套主题、全局禁用、布局方向；移除与 ConfigProvider 无关的「紧凑间距」；重写「国际化」（原 Demo 只打印语言代码，看不出语言包作用）
+- API 表补 `getPopupContainer`；SeedTokens 表 16 → 23 项补齐；MapTokens 数量修正为 115
+- 新增「嵌套行为说明」与「Hooks」章节；明确 `prefixCls` 不支持运行时切换
+
+### 📊 质量提升
+
+- ConfigProvider 单测 12 → 30（原 CSS 变量注入用例是伪断言）；总数 2382 → 2400
+- props 补 `satisfies` 约束并复用共享 `ComponentSize`；`theme.ts` 抽出 `tokensToCssVarRecord` 复用
+
+### ⚠️ 已知限制
+
+- `componentSize` 仅 6/26 个组件生效（Button、Select 等因 `size` 硬编码默认值无法回退），`direction` 仅 6 个组件响应，`locale` 不支持部分覆盖 —— 均已在 Demo 与文档中标注
+
 ## [0.29.0] - 2026-07-29
 
 [查看完整内容](./changelogs/v0.29.0.md)

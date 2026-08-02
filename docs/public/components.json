@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.29.0",
+  "version": "0.30.0",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 67 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -3159,7 +3159,7 @@
         {
           "section": "ConfigProvider Props",
           "name": "theme",
-          "description": "设置主题 Token",
+          "description": "设置主题 Token，未列出的字段继承上层 ConfigProvider",
           "type": "`Partial<SeedTokens>`",
           "default": "-"
         },
@@ -3197,6 +3197,13 @@
           "description": "设置布局方向",
           "type": "`'ltr' | 'rtl'`",
           "default": "`'ltr'`"
+        },
+        {
+          "section": "ConfigProvider Props",
+          "name": "getPopupContainer",
+          "description": "弹层（Tooltip / Dropdown / Popover 等）默认挂载节点",
+          "type": "`(triggerNode?: HTMLElement) => HTMLElement`",
+          "default": "`body`"
         }
       ],
       "events": [],
@@ -3213,19 +3220,29 @@
           "code": "<template>\n  <Space align=\"start\">\n    <Button :type=\"toggle ? 'default' : 'primary'\" @click=\"toggle = !toggle\">\n      {{ toggle ? '浅色模式' : '暗色模式' }}\n    </Button>\n    <ConfigProvider :theme=\"toggle ? {} : { colorTextBase: '#ffffff', colorBgBase: '#000000' }\">\n      <Card :title=\"toggle ? '浅色主题' : '暗色主题'\">\n        <Text> 这段文字的颜色从 colorTextBase 派生 </Text>\n        <br />\n        <Text type=\"secondary\">辅助文字 · 占位符 · 禁用态 — 全部自动派生</Text>\n        <br />\n        <Text type=\"secondary\">\n          <Text delete>删除线文字</Text>\n          {' '}·{' '}\n          <Text disabled>禁用文字</Text>\n        </Text>\n        <div style=\"margin-top: 12px\">\n          <Space>\n            <Button type=\"primary\">主按钮</Button>\n            <Button>默认</Button>\n            <Button type=\"dashed\">虚线</Button>\n          </Space>\n        </div>\n      </Card>\n    </ConfigProvider>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ConfigProvider, Button, Card, Space, Text } from '@hmfw/ant-design'\n\nconst toggle = ref(true)\n</script>"
         },
         {
-          "title": "紧凑间距",
-          "description": "展示默认与紧凑两种尺寸的布局和间距差异。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px\">\n    <Space>\n      <Button\n        v-for=\"s in sizes\"\n        :key=\"s.value\"\n        :size=\"s.value\"\n        :type=\"current === s.value ? 'primary' : 'default'\"\n        @click=\"current = s.value\"\n      >\n        {{ s.label }}\n      </Button>\n    </Space>\n    <Space align=\"center\" wrap>\n      <Button type=\"primary\" :size=\"current\">Primary</Button>\n      <Button :size=\"current\">Default</Button>\n      <Button type=\"dashed\" :size=\"current\">Dashed</Button>\n      <Input :size=\"current\" placeholder=\"输入框\" style=\"width: 160px\" />\n      <Select\n        :size=\"current\"\n        :options=\"[\n          { value: '1', label: '选项一' },\n          { value: '2', label: '选项二' },\n        ]\"\n        placeholder=\"选择器\"\n        style=\"width: 140px\"\n      />\n    </Space>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Button, Input, Select, Space } from '@hmfw/ant-design'\n\ntype DemoSize = 'middle' | 'small' | 'large'\n\nconst current = ref<DemoSize>('middle')\nconst sizes: { label: string; value: DemoSize }[] = [\n  { label: 'Small', value: 'small' },\n  { label: '默认', value: 'middle' },\n  { label: 'Large', value: 'large' },\n]\n</script>"
-        },
-        {
-          "title": "国际化",
-          "description": "通过 locale 属性配置国际化语言。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 12px; margin-bottom: 16px\">\n    <Button @click=\"locale = zhCN\">中文</Button>\n    <Button @click=\"locale = enUS\">English</Button>\n  </div>\n  <ConfigProvider :locale=\"locale\">\n    <p>当前语言：{{ locale.locale }}</p>\n  </ConfigProvider>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ConfigProvider, Button, zhCN, enUS } from '@hmfw/ant-design'\n\nconst locale = ref(zhCN)\n</script>"
+          "title": "嵌套与局部主题",
+          "description": "ConfigProvider 可以嵌套。**内层只需声明要改的项，其余配置继承外层**，且内层主题被限定在自己的子树内，不会泄漏到外层或其他兄弟节点。",
+          "code": "<template>\n  <ConfigProvider :theme=\"{ colorPrimary: '#00b96b', borderRadius: 2 }\" component-size=\"large\">\n    <div :style=\"panelStyle\">\n      <p :style=\"labelStyle\">外层：绿色主题 · 圆角 2 · large 输入框</p>\n      <Space wrap>\n        <Button type=\"primary\">外层按钮</Button>\n        <Input placeholder=\"外层输入框\" style=\"width: 150px\" />\n      </Space>\n\n      <ConfigProvider :theme=\"{ colorPrimary: '#ff6b00' }\">\n        <div :style=\"nestedStyle\">\n          <p :style=\"labelStyle\">内层：只改主色为橙色</p>\n          <Space wrap>\n            <Button type=\"primary\">内层按钮</Button>\n            <Input placeholder=\"内层输入框\" style=\"width: 150px\" />\n          </Space>\n          <p :style=\"hintStyle\">\n            内层只声明了主色：圆角 2 与 large 输入框尺寸继承自外层，未被重置为默认值； 橙色主题也没有泄漏到外层。\n          </p>\n        </div>\n      </ConfigProvider>\n    </div>\n  </ConfigProvider>\n</template>\n\n<script setup lang=\"ts\">\nimport type { CSSProperties } from 'vue'\nimport { ConfigProvider, Button, Input, Space } from '@hmfw/ant-design'\n\nconst panelStyle: CSSProperties = {\n  display: 'flex',\n  flexDirection: 'column',\n  gap: '12px',\n  padding: '16px',\n  background: 'var(--hmfw-color-bg-layout)',\n  borderRadius: 'var(--hmfw-border-radius)',\n}\n\nconst nestedStyle: CSSProperties = {\n  display: 'flex',\n  flexDirection: 'column',\n  gap: '12px',\n  padding: '16px',\n  background: 'var(--hmfw-color-bg-container)',\n  border: '1px solid var(--hmfw-color-border)',\n  borderRadius: 'var(--hmfw-border-radius)',\n}\n\nconst labelStyle: CSSProperties = {\n  margin: 0,\n  fontSize: '13px',\n  color: 'var(--hmfw-color-text-secondary)',\n}\n\nconst hintStyle: CSSProperties = {\n  margin: 0,\n  fontSize: '12px',\n  color: 'var(--hmfw-color-text-tertiary)',\n}\n</script>"
         },
         {
           "title": "全局尺寸",
-          "description": "通过 componentSize 属性统一配置组件尺寸。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 12px; margin-bottom: 16px\">\n    <Button @click=\"size = 'small'\">小</Button>\n    <Button @click=\"size = 'middle'\">中</Button>\n    <Button @click=\"size = 'large'\">大</Button>\n  </div>\n  <ConfigProvider :component-size=\"size\">\n    <div style=\"display: flex; flex-direction: column; gap: 12px\">\n      <Input placeholder=\"输入框\" />\n      <Button>按钮</Button>\n    </div>\n  </ConfigProvider>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ConfigProvider, Button, Input } from '@hmfw/ant-design'\n\nconst size = ref<'small' | 'middle' | 'large'>('middle')\n</script>"
+          "description": "通过 `componentSize` 属性统一配置组件尺寸。控件自身的 `size` 优先级更高，可单独覆盖全局配置。",
+          "code": "<template>\n  <Space direction=\"vertical\" size=\"large\" style=\"width: 100%\">\n    <Segmented v-model:value=\"size\" :options=\"options\" />\n\n    <ConfigProvider :component-size=\"size\">\n      <div :style=\"panelStyle\">\n        <Space wrap align=\"center\">\n          <Input placeholder=\"输入框\" style=\"width: 150px\" />\n          <AutoComplete :options=\"[{ value: '选项一' }]\" placeholder=\"自动完成\" style=\"width: 150px\" />\n          <Segmented :options=\"['日', '周', '月']\" />\n        </Space>\n        <Space wrap align=\"center\">\n          <Rate :value=\"3\" />\n          <!-- 控件自身 size 优先级高于全局配置 -->\n          <Input size=\"large\" placeholder=\"size=large 覆盖全局\" style=\"width: 200px\" />\n        </Space>\n      </div>\n    </ConfigProvider>\n\n    <p :style=\"hintStyle\">\n      当前响应 componentSize 的组件：Input 系列、AutoComplete、Segmented、Rate、Skeleton。 Button、Select 等组件的 size\n      有自身默认值，暂不回退到全局配置。\n    </p>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport type { CSSProperties } from 'vue'\nimport { ConfigProvider, Input, AutoComplete, Segmented, Rate, Space } from '@hmfw/ant-design'\n\nconst size = ref<'small' | 'middle' | 'large'>('middle')\nconst options = [\n  { label: 'Small', value: 'small' },\n  { label: 'Middle 默认', value: 'middle' },\n  { label: 'Large', value: 'large' },\n]\n\nconst panelStyle: CSSProperties = {\n  display: 'flex',\n  flexDirection: 'column',\n  gap: '16px',\n  padding: '16px',\n  background: 'var(--hmfw-color-bg-layout)',\n  borderRadius: 'var(--hmfw-border-radius)',\n}\n\nconst hintStyle: CSSProperties = {\n  margin: 0,\n  fontSize: '12px',\n  color: 'var(--hmfw-color-text-tertiary)',\n}\n</script>"
+        },
+        {
+          "title": "全局禁用",
+          "description": "通过 `componentDisabled` 统一下发禁用态。与控件自身 `disabled` 取「或」，因此容器禁用时**控件无法单独反禁用**（与 Ant Design 的 DisabledContext 行为一致）。",
+          "code": "<template>\n  <Space direction=\"vertical\" size=\"large\" style=\"width: 100%\">\n    <Space align=\"center\">\n      <Switch v-model:checked=\"disabled\" />\n      <span>componentDisabled: {{ disabled }}</span>\n    </Space>\n\n    <ConfigProvider :component-disabled=\"disabled\">\n      <Space direction=\"vertical\" size=\"middle\" style=\"width: 100%\">\n        <Space wrap align=\"center\">\n          <Button type=\"primary\">主按钮</Button>\n          <Input placeholder=\"输入框\" style=\"width: 140px\" />\n          <Select\n            :options=\"[\n              { value: '1', label: '选项一' },\n              { value: '2', label: '选项二' },\n            ]\"\n            placeholder=\"选择器\"\n            style=\"width: 130px\"\n          />\n        </Space>\n        <Space wrap align=\"center\">\n          <Checkbox>复选框</Checkbox>\n          <Radio>单选框</Radio>\n          <Switch />\n          <Rate :value=\"3\" />\n        </Space>\n        <Space align=\"center\">\n          <span style=\"color: var(--hmfw-color-text-secondary); font-size: 13px\">\n            控件自身 disabled={{ false }} 也无法反禁用：\n          </span>\n          <Button :disabled=\"false\">仍被禁用</Button>\n        </Space>\n      </Space>\n    </ConfigProvider>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ConfigProvider, Button, Input, Select, Checkbox, Radio, Switch, Rate, Space } from '@hmfw/ant-design'\n\nconst disabled = ref(true)\n</script>"
+        },
+        {
+          "title": "国际化",
+          "description": "通过 `locale` 属性配置语言包，统一驱动组件内置文案（占位符、空状态、确认框按钮等）。",
+          "code": "<template>\n  <Space direction=\"vertical\" size=\"large\" style=\"width: 100%\">\n    <Segmented v-model:value=\"lang\" :options=\"options\" />\n\n    <ConfigProvider :locale=\"lang === 'zh' ? zhCN : enUS\">\n      <div :style=\"panelStyle\">\n        <Space wrap align=\"start\">\n          <!-- 占位符与「无匹配项」文案来自语言包 -->\n          <Select :options=\"[]\" style=\"width: 200px\" />\n          <Popconfirm title=\"Delete this item?\">\n            <Button danger>Popconfirm 按钮文案</Button>\n          </Popconfirm>\n        </Space>\n        <!-- 空状态描述文案来自语言包 -->\n        <Empty />\n      </div>\n    </ConfigProvider>\n\n    <p :style=\"hintStyle\">语言包统一驱动组件内置文案（占位符、空状态、确认框按钮等），无需逐个组件传文案。</p>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport type { CSSProperties } from 'vue'\nimport { ConfigProvider, Button, Select, Empty, Popconfirm, Segmented, Space, zhCN, enUS } from '@hmfw/ant-design'\n\nconst lang = ref<'zh' | 'en'>('zh')\nconst options = [\n  { label: '简体中文', value: 'zh' },\n  { label: 'English', value: 'en' },\n]\n\nconst panelStyle: CSSProperties = {\n  display: 'flex',\n  flexDirection: 'column',\n  gap: '16px',\n  padding: '16px',\n  background: 'var(--hmfw-color-bg-layout)',\n  borderRadius: 'var(--hmfw-border-radius)',\n}\n\nconst hintStyle: CSSProperties = {\n  margin: 0,\n  fontSize: '12px',\n  color: 'var(--hmfw-color-text-tertiary)',\n}\n</script>"
+        },
+        {
+          "title": "布局方向",
+          "description": "通过 `direction` 设置文本方向。目前支持 RTL 的组件为 Rate、Progress、Statistic、Descriptions、Segmented、Skeleton，其余组件暂不响应。",
+          "code": "<template>\n  <Space direction=\"vertical\" size=\"large\" style=\"width: 100%\">\n    <Segmented v-model:value=\"direction\" :options=\"options\" />\n\n    <ConfigProvider :direction=\"direction\">\n      <div :style=\"panelStyle\">\n        <Rate :value=\"3\" />\n        <Progress :percent=\"60\" />\n        <Statistic title=\"活跃用户\" :value=\"112893\" />\n        <Descriptions :items=\"items\" bordered :column=\"1\" />\n      </div>\n    </ConfigProvider>\n\n    <p :style=\"hintStyle\">\n      当前支持 RTL 的组件：Rate、Progress、Statistic、Descriptions、Segmented、Skeleton。 其余组件暂不响应 direction。\n    </p>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport type { CSSProperties } from 'vue'\nimport { ConfigProvider, Rate, Progress, Statistic, Descriptions, Segmented, Space } from '@hmfw/ant-design'\n\nconst direction = ref<'ltr' | 'rtl'>('rtl')\nconst options = [\n  { label: 'LTR 从左到右', value: 'ltr' },\n  { label: 'RTL 从右到左', value: 'rtl' },\n]\n\nconst items = [\n  { label: '姓名', children: 'Zhou Maomao' },\n  { label: '电话', children: '1810000000' },\n]\n\nconst panelStyle: CSSProperties = {\n  display: 'flex',\n  flexDirection: 'column',\n  gap: '16px',\n  padding: '16px',\n  background: 'var(--hmfw-color-bg-layout)',\n  borderRadius: 'var(--hmfw-border-radius)',\n}\n\nconst hintStyle: CSSProperties = {\n  margin: 0,\n  fontSize: '12px',\n  color: 'var(--hmfw-color-text-tertiary)',\n}\n</script>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/config-provider"
