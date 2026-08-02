@@ -1,6 +1,7 @@
 import { defineComponent, ref, provide, inject, computed, watch, onMounted, onBeforeUnmount, type PropType } from 'vue'
 import { usePrefixCls, useConfig, CONFIG_PROVIDER_KEY } from '../config-provider'
 import type { ComponentSize } from '../config-provider'
+import type { Locale } from '../_locale'
 import { cls } from '../_utils'
 import { CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, LoadingOutlined } from '@hmfw/icons'
 import type {
@@ -117,23 +118,24 @@ function cloneDeep<T>(value: T): T {
   }
 }
 
-async function runRules(value: unknown, rules: FormRule[]): Promise<string | null> {
+/** 缺省校验文案来自语言包，由调用方注入（此函数在组件外层，无法自行 inject） */
+async function runRules(value: unknown, rules: FormRule[], locale: Locale['Form']): Promise<string | null> {
   for (const rule of rules) {
     if (rule.required && (value === undefined || value === null || value === '')) {
-      return rule.message ?? '此字段为必填项'
+      return rule.message ?? locale.required
     }
     if (rule.min !== undefined && typeof value === 'string' && value.length < rule.min) {
-      return rule.message ?? `最少 ${rule.min} 个字符`
+      return rule.message ?? locale.min(rule.min)
     }
     if (rule.max !== undefined && typeof value === 'string' && value.length > rule.max) {
-      return rule.message ?? `最多 ${rule.max} 个字符`
+      return rule.message ?? locale.max(rule.max)
     }
     if (rule.pattern && !rule.pattern.test(String(value ?? ''))) {
-      return rule.message ?? '格式不正确'
+      return rule.message ?? locale.pattern
     }
     if (rule.type === 'email' && value) {
       const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailReg.test(String(value))) return rule.message ?? '请输入有效的邮箱地址'
+      if (!emailReg.test(String(value))) return rule.message ?? locale.email
     }
     if (rule.validator) {
       try {
@@ -141,12 +143,12 @@ async function runRules(value: unknown, rules: FormRule[]): Promise<string | nul
       } catch (e: unknown) {
         // 优先使用 Error.message，其次转为字符串，最后使用默认消息
         if (e instanceof Error) {
-          return e.message || '验证失败'
+          return e.message || locale.validateFailed
         }
         if (typeof e === 'string') {
-          return e || '验证失败'
+          return e || locale.validateFailed
         }
-        return '验证失败'
+        return locale.validateFailed
       }
     }
   }
@@ -332,7 +334,7 @@ export const Form = defineComponent({
       // Allow nested name keys ('a.b' or array path).
       const namePath: NamePath = name.includes('.') ? name.split('.') : name
       const value = getValueByPath(props.model, namePath)
-      const error = await runRules(value, rulesArr)
+      const error = await runRules(value, rulesArr, parentConfig.value.locale.Form)
       if (error) {
         errors.value = { ...errors.value, [name]: error }
         return false

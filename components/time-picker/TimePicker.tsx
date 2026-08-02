@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, watch, nextTick, type PropType, type VNodeChild } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
@@ -93,7 +93,8 @@ const timePickerProps = {
   format: { type: String, default: 'HH:mm:ss' },
   disabled: { type: Boolean, default: false },
   size: { type: String as PropType<ComponentSize>, default: 'middle' },
-  placeholder: { type: String, default: '请选择时间' },
+  // 缺省文案来自语言包，故不写字面量默认值
+  placeholder: { type: String, default: undefined },
   allowClear: { type: Boolean, default: true },
   hourStep: { type: Number, default: 1 },
   minuteStep: { type: Number, default: 1 },
@@ -119,6 +120,8 @@ export const TimePicker = defineComponent({
   emits: ['update:value', 'change', 'openChange', 'focus', 'blur'],
   setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('time-picker')
+    const locale = useLocale()
+    const mergedPlaceholder = computed(() => props.placeholder ?? locale.value.TimePicker.placeholder)
     const parsed = parseTime(props.defaultValue ?? props.value)
 
     // 已确认值（提交后的值）
@@ -594,7 +597,7 @@ export const TimePicker = defineComponent({
               <input
                 ref={inputRef}
                 readonly
-                placeholder={props.placeholder}
+                placeholder={mergedPlaceholder.value}
                 value={displayValue.value}
                 disabled={props.disabled}
                 class={`${prefixCls}-input-inner`}

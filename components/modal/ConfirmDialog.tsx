@@ -45,10 +45,12 @@ export const ConfirmDialog = defineComponent({
       return (cfg.value.icon as IconComponent) ?? ICON_MAP[type.value]
     })
 
+    // config.locale 优先于 inject（静态方法独立挂载时 inject 拿不到 ConfigProvider 的 locale）
+    const modalLocale = computed(() => cfg.value.locale?.Modal ?? locale.value.Modal)
     const okText = computed(
-      () => cfg.value.okText ?? (okCancel.value ? locale.value.Modal.okText : locale.value.Modal.justOkText),
+      () => cfg.value.okText ?? (okCancel.value ? modalLocale.value.okText : modalLocale.value.justOkText),
     )
-    const cancelText = computed(() => cfg.value.cancelText ?? locale.value.Modal.cancelText)
+    const cancelText = computed(() => cfg.value.cancelText ?? modalLocale.value.cancelText)
 
     const handleOk = async (e: MouseEvent) => {
       const ret = cfg.value.onOk?.(e)

@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { DownOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
@@ -26,7 +26,8 @@ export const Cascader = defineComponent({
     },
     options: { type: Array as PropType<CascaderOption[]>, default: () => [] },
     disabled: Boolean,
-    placeholder: { type: String, default: '请选择' },
+    // 缺省文案来自语言包，故不写字面量默认值
+    placeholder: { type: String, default: undefined },
     allowClear: { type: Boolean, default: true },
     size: { type: String as PropType<ComponentSize>, default: 'middle' },
     status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
@@ -38,7 +39,7 @@ export const Cascader = defineComponent({
     fieldNames: Object as PropType<{ label?: string; value?: string; children?: string }>,
     open: { type: Boolean, default: undefined },
     defaultOpen: Boolean,
-    notFoundContent: { type: String, default: '无匹配结果' },
+    notFoundContent: { type: String, default: undefined },
     loadData: Function as PropType<(selectedOptions: CascaderOption[]) => void>,
     showCheckedStrategy: {
       type: String as PropType<CascaderShowCheckedStrategy>,
@@ -58,6 +59,10 @@ export const Cascader = defineComponent({
   emits: ['update:value', 'update:open', 'change', 'search', 'focus', 'blur', 'clear'],
   setup(props, { emit, attrs, expose }) {
     const prefixCls = usePrefixCls('cascader')
+    const locale = useLocale()
+    // 复用 Select 段文案：Cascader 的占位符与空状态语义与 Select 一致
+    const mergedPlaceholder = computed(() => props.placeholder ?? locale.value.Select.placeholder)
+    const mergedNotFoundContent = computed(() => props.notFoundContent ?? locale.value.Select.notFoundContent)
 
     const labelField = computed(() => props.fieldNames?.label ?? 'label')
     const valueField = computed(() => props.fieldNames?.value ?? 'value')
@@ -361,7 +366,7 @@ export const Cascader = defineComponent({
                 class={cls(`${prefixCls}-menu-item-empty`, props.classNames?.menuItemEmpty)}
                 style={props.styles?.menuItemEmpty}
               >
-                {props.notFoundContent}
+                {mergedNotFoundContent.value}
               </div>
             ) : props.virtual ? (
               <VirtualList
@@ -575,7 +580,7 @@ export const Cascader = defineComponent({
                         class={cls(`${prefixCls}-search-input`, props.classNames?.searchInput)}
                         style={props.styles?.searchInput}
                         value={searchText.value}
-                        placeholder={currentValue.value.length === 0 ? props.placeholder : ''}
+                        placeholder={currentValue.value.length === 0 ? mergedPlaceholder.value : ''}
                         onInput={(e) => {
                           searchText.value = (e.target as HTMLInputElement).value
                           emit('search', searchText.value)
@@ -589,7 +594,7 @@ export const Cascader = defineComponent({
                         class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.selectionPlaceholder)}
                         style={props.styles?.selectionPlaceholder}
                       >
-                        {props.placeholder}
+                        {mergedPlaceholder.value}
                       </span>
                     )}
                   </>
@@ -603,8 +608,8 @@ export const Cascader = defineComponent({
                         value={searchText.value}
                         placeholder={
                           typeof displayText.value === 'string'
-                            ? displayText.value || props.placeholder
-                            : props.placeholder
+                            ? displayText.value || mergedPlaceholder.value
+                            : mergedPlaceholder.value
                         }
                         onInput={(e) => {
                           searchText.value = (e.target as HTMLInputElement).value
@@ -624,7 +629,7 @@ export const Cascader = defineComponent({
                         )}
                         style={props.styles?.selectionItem}
                       >
-                        {displayText.value || props.placeholder}
+                        {displayText.value || mergedPlaceholder.value}
                       </span>
                     )}
                   </>

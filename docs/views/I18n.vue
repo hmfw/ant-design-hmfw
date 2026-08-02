@@ -37,11 +37,16 @@ const toggleLocale = () => {
     <ul>
       <li><strong>Pagination</strong>：上一页、下一页、跳转等</li>
       <li><strong>DatePicker / TimePicker</strong>：确定、今天、此刻等</li>
-      <li><strong>Modal</strong>：确定、取消等</li>
-      <li><strong>Popconfirm</strong>：确定、取消等</li>
-      <li><strong>Table</strong>：筛选、重置等</li>
+      <li><strong>Modal / Popconfirm</strong>：确定、取消等</li>
+      <li><strong>Table</strong>：筛选、重置、空状态等</li>
       <li><strong>Upload</strong>：上传文件等</li>
       <li><strong>Empty</strong>：暂无数据等</li>
+      <li><strong>Select / TreeSelect / Cascader</strong>：占位符、无匹配结果等</li>
+      <li><strong>Form</strong>：必填、格式校验等提示文案</li>
+      <li><strong>Alert</strong>：关闭按钮文案</li>
+      <li><strong>Slider</strong>：滑块最小值、最大值等</li>
+      <li><strong>Carousel</strong>：走马灯导航按钮</li>
+      <li><strong>Transfer / Tag / Typography / Tour / Calendar</strong></li>
     </ul>
 
     <h2>自定义语言包</h2>
@@ -54,8 +59,8 @@ const myLocale = {
   ...zhCN,
   Pagination: {
     ...zhCN.Pagination,
-    prev_page: '上一页',
-    next_page: '下一页',
+    prevPage: '上一页',
+    nextPage: '下一页',
   },
 }</code></pre>
   </div>

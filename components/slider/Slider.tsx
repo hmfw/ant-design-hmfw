@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, watch, type PropType } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls, KEYS } from '../_utils'
 import type { SliderProps, SliderValue, SliderMarks, SliderTooltipProps, SliderClassNames, SliderStyles } from './types'
 
@@ -29,6 +29,8 @@ export const Slider = defineComponent({
   emits: ['update:value', 'change', 'afterChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('slider')
+    const globalLocale = useLocale()
+    const locale = computed(() => globalLocale.value.Slider)
     const trackRef = ref<HTMLElement | null>(null)
     const dragging = ref<null | 'start' | 'end'>(null)
     const tooltipVisible = ref<null | 'start' | 'end'>(null)
@@ -355,7 +357,7 @@ export const Slider = defineComponent({
                   ...props.styles?.handle,
                 }}
                 role="slider"
-                aria-label="最小值"
+                aria-label={locale.value.min}
                 aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
                 aria-valuemin={props.min}
                 aria-valuemax={endVal}
@@ -396,7 +398,7 @@ export const Slider = defineComponent({
                 ...props.styles?.handle,
               }}
               role="slider"
-              aria-label={props.range ? '最大值' : '滑块'}
+              aria-label={props.range ? locale.value.max : locale.value.handle}
               aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
               aria-valuemin={props.range ? startVal : props.min}
               aria-valuemax={props.max}

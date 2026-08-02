@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import type { PropType, VNode, CSSProperties } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { LeftOutlined, RightOutlined } from '@hmfw/icons'
 import type {
@@ -84,6 +84,8 @@ export const Carousel = defineComponent({
   },
   setup(props, { slots, emit, expose }) {
     const prefixCls = usePrefixCls('carousel')
+    const globalLocale = useLocale()
+    const locale = computed(() => globalLocale.value.Carousel)
 
     // ---- 状态 ----
     const current = ref(props.initialSlide)
@@ -386,7 +388,7 @@ export const Carousel = defineComponent({
           type="button"
           onClick={isPrev ? prevPage : nextPage}
           disabled={atBoundary || (props.waitForAnimate && transitioning.value)}
-          aria-label={isPrev ? '上一页' : '下一页'}
+          aria-label={isPrev ? locale.value.prev : locale.value.next}
         >
           <IconComp />
         </button>
@@ -442,7 +444,7 @@ export const Carousel = defineComponent({
           style={slideStyle}
           role="group"
           aria-roledescription="slide"
-          aria-label={`${slideIndex + 1} / ${count.value}`}
+          aria-label={locale.value.slide(slideIndex + 1, count.value)}
           aria-hidden={!isActive}
         >
           {slide}
@@ -508,7 +510,7 @@ export const Carousel = defineComponent({
         }
         return (
           <li key={pageIndex} class={dotCls} style={dotStyle} onClick={() => goToPage(pageIndex)}>
-            <button aria-label={`跳转到第 ${pageIndex + 1} 页`} />
+            <button aria-label={locale.value.goTo(pageIndex + 1)} />
           </li>
         )
       })
@@ -540,7 +542,7 @@ export const Carousel = defineComponent({
           style={{ ...props.styles?.root }}
           role="region"
           aria-roledescription="carousel"
-          aria-label="走马灯"
+          aria-label={locale.value.label}
         >
           {renderTrack()}
           {hasArrows && (

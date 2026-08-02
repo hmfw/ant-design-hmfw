@@ -1,6 +1,7 @@
 import type { CSSProperties, VNode } from 'vue'
 import type { ButtonProps, ButtonType } from '../button/types'
 import type { IconComponent } from '@hmfw/icons'
+import type { Locale } from '../_locale'
 
 export type ModalWidth = number | string
 
@@ -88,6 +89,9 @@ export interface ModalFuncProps {
   className?: string
   wrapClassName?: string
   autoFocusButton?: null | 'ok' | 'cancel'
+  /** 语言包。Modal.confirm 等静态方法独立挂载在 ConfigProvider 树之外，
+   *  无法通过 inject 获取，需调用方显式传入 */
+  locale?: Locale
   getContainer?: GetContainer
   onOk?: (...args: any[]) => any
   onCancel?: (...args: any[]) => any

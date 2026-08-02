@@ -3,6 +3,7 @@ import {
   computed,
   ref,
   onBeforeUnmount,
+  onUpdated,
   watchEffect,
   nextTick,
   toRef,
@@ -116,24 +117,25 @@ export default defineComponent({
       }
     })
 
-    // 计算是否为两个中文字符（响应式计算，避免 watch 过度触发）
+    // slotText 是按钮文字内容的响应式镜像。
+    // 初始渲染时 slotText 尚未赋值（为 ''），回退读 DOM textContent 保证首帧正确；
+    // locale 切换后 onUpdated 同步 slotText，触发 hasTwoCNChar 重新求值，确保 class 正确移除/添加。
+    const slotText = ref('')
     const hasTwoCNChar = computed(() => {
       if (!buttonRef.value || !props.autoInsertSpace) {
         return false
       }
-      const text = buttonRef.value.textContent || ''
       const needInserted = !props.icon && !innerLoading.value
+      const text = slotText.value || buttonRef.value.textContent || ''
       return needInserted && isTwoCNChar(text.trim())
     })
 
-    // 在 DOM 更新后重新计算（确保 textContent 最新）
-    watchEffect(() => {
-      if (buttonRef.value) {
-        nextTick(() => {
-          // 触发 hasTwoCNChar 重新计算
-          void buttonRef.value?.textContent
-        })
-      }
+    // 每次 DOM 更新后同步 slotText（watchEffect 仅追踪 buttonRef 引用变化，
+    // 无法感知 slot 内容变化如 locale 切换）
+    onUpdated(() => {
+      nextTick(() => {
+        slotText.value = buttonRef.value?.textContent || ''
+      })
     })
 
     const ctxDisabled = useMergedDisabled(toRef(props, 'disabled'))

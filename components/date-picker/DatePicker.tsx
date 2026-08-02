@@ -414,7 +414,7 @@ export const DatePicker = defineComponent({
                     emit('panelChange', null, 'year')
                   }}
                 >
-                  {viewYear.value}年
+                  {locale.value.DatePicker.yearFormat(viewYear.value)}
                 </button>
                 <button
                   class={`${prefixCls}-panel-header-title-btn`}
@@ -563,7 +563,7 @@ export const DatePicker = defineComponent({
                 emit('panelChange', null, 'year')
               }}
             >
-              {viewYear.value}年
+              {locale.value.DatePicker.yearFormat(viewYear.value)}
             </button>
           </span>
           <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>
@@ -614,7 +614,8 @@ export const DatePicker = defineComponent({
             «
           </button>
           <span class={`${prefixCls}-panel-header-title`}>
-            {yearRange.value[0]}年 - {yearRange.value[yearRange.value.length - 1]}年
+            {locale.value.DatePicker.yearFormat(yearRange.value[0])} -{' '}
+            {locale.value.DatePicker.yearFormat(yearRange.value[yearRange.value.length - 1])}
           </span>
           <button
             class={`${prefixCls}-panel-header-btn`}
@@ -647,7 +648,7 @@ export const DatePicker = defineComponent({
                     }
                   }}
                 >
-                  {y}年
+                  {locale.value.DatePicker.yearFormat(y)}
                 </button>
               )
             })}
@@ -662,7 +663,7 @@ export const DatePicker = defineComponent({
           <button class={`${prefixCls}-panel-header-btn`} onClick={prevYear}>
             «
           </button>
-          <span class={`${prefixCls}-panel-header-title`}>{viewYear.value}年</span>
+          <span class={`${prefixCls}-panel-header-title`}>{locale.value.DatePicker.yearFormat(viewYear.value)}</span>
           <button class={`${prefixCls}-panel-header-btn`} onClick={nextYear}>
             »
           </button>

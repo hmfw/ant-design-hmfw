@@ -34,6 +34,8 @@ const enUS: Locale = {
     yearPlaceholder: 'Select year',
     monthPlaceholder: 'Select month',
     rangePlaceholder: ['Start date', 'End date'],
+    yearFormat: (year: number) => String(year),
+    monthYearFormat: (monthLabel: string, year: number) => `${monthLabel} ${year}`,
     today: 'Today',
     now: 'Now',
     backToToday: 'Back to today',
@@ -49,6 +51,7 @@ const enUS: Locale = {
     nextDecade: 'Next decade',
     previousCentury: 'Last century',
     nextCentury: 'Next century',
+    firstDayOfWeek: 0,
     weekdays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
     months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   },
@@ -65,6 +68,8 @@ const enUS: Locale = {
     prevFive: 'Previous 5 pages',
     nextFive: 'Next 5 pages',
     totalItems: (total: number) => `Total ${total} items`,
+    navLabel: 'Pagination',
+    pageLabel: (page: number) => `Page ${page}`,
   },
   Table: {
     filterTitle: 'Filter menu',
@@ -129,6 +134,29 @@ const enUS: Locale = {
     today: 'Today',
     selectDate: 'Select date',
     selectMonth: 'Select month',
+  },
+  Alert: {
+    close: 'Close',
+  },
+  Form: {
+    required: 'This field is required',
+    min: (min: number) => `Must be at least ${min} characters`,
+    max: (max: number) => `Must be at most ${max} characters`,
+    pattern: 'Invalid format',
+    email: 'Please enter a valid email address',
+    validateFailed: 'Validation failed',
+  },
+  Slider: {
+    min: 'Minimum',
+    max: 'Maximum',
+    handle: 'Slider handle',
+  },
+  Carousel: {
+    label: 'Carousel',
+    prev: 'Previous slide',
+    next: 'Next slide',
+    slide: (current: number, total: number) => `${current} / ${total}`,
+    goTo: (page: number) => `Go to slide ${page}`,
   },
 }
 

@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, type PropType, type Ref, type VNode } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { LeftOutlined, RightOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@hmfw/icons'
 import { Select } from '../select'
@@ -51,6 +51,8 @@ export const Pagination = defineComponent({
   emits: ['update:current', 'update:pageSize', 'change', 'showSizeChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('pagination')
+    const globalLocale = useLocale()
+    const locale = computed(() => globalLocale.value.Pagination)
     // simple 模式页码框与 normal 模式 quick-jumper 语义不同（前者回显当前页，后者纯输入），
     // 且二者互斥渲染，故各用独立 ref，避免隐式耦合。
     const simpleJumpValue = ref('')
@@ -128,7 +130,7 @@ export const Pagination = defineComponent({
           class={prevCls}
           style={props.styles?.prev}
           onClick={() => goTo(props.current - 1)}
-          aria-label="Previous"
+          aria-label={locale.value.prevPage}
         >
           <button type="button" disabled={props.current <= 1 || props.disabled} tabindex={-1}>
             <LeftOutlined class="hmfw-icon" />
@@ -146,7 +148,7 @@ export const Pagination = defineComponent({
           class={cls(`${prefixCls}-jump-prev`, props.classNames?.jumpPrev)}
           style={props.styles?.jumpPrev}
           onClick={() => goTo(Math.max(1, props.current - JUMP_SIZE))}
-          aria-label={`向前 ${JUMP_SIZE} 页`}
+          aria-label={locale.value.prevFive}
         >
           <button type="button" class={`${prefixCls}-item-link`} tabindex={-1}>
             <div class={`${prefixCls}-item-container`}>
@@ -175,7 +177,7 @@ export const Pagination = defineComponent({
           class={nextCls}
           style={props.styles?.next}
           onClick={() => goTo(props.current + 1)}
-          aria-label="Next"
+          aria-label={locale.value.nextPage}
         >
           <button type="button" disabled={props.current >= total || props.disabled} tabindex={-1}>
             <RightOutlined class="hmfw-icon" />
@@ -194,7 +196,7 @@ export const Pagination = defineComponent({
           class={cls(`${prefixCls}-jump-next`, props.classNames?.jumpNext)}
           style={props.styles?.jumpNext}
           onClick={() => goTo(Math.min(total, props.current + JUMP_SIZE))}
-          aria-label={`向后 ${JUMP_SIZE} 页`}
+          aria-label={locale.value.nextFive}
         >
           <button type="button" class={`${prefixCls}-item-link`} tabindex={-1}>
             <div class={`${prefixCls}-item-container`}>
@@ -224,7 +226,7 @@ export const Pagination = defineComponent({
         <li key={`page-${page}`} class={pageItemCls} style={pageItemStyle} onClick={() => goTo(page)}>
           <button
             type="button"
-            aria-label={`第 ${page} 页`}
+            aria-label={locale.value.pageLabel(page)}
             aria-current={page === props.current ? 'page' : undefined}
             tabindex={page === props.current ? 0 : -1}
           >
@@ -276,7 +278,7 @@ export const Pagination = defineComponent({
           class={cls(`${prefixCls}-options-quick-jumper`, props.classNames?.quickJumper)}
           style={props.styles?.quickJumper}
         >
-          跳至
+          {locale.value.jumpTo}
           <input
             type="text"
             value={quickJumpValue.value}
@@ -287,7 +289,7 @@ export const Pagination = defineComponent({
             onBlur={() => handleJump(quickJumpValue)}
             disabled={props.disabled}
           />
-          页
+          {locale.value.page}
         </li>
       )
     }
@@ -296,7 +298,7 @@ export const Pagination = defineComponent({
     const sizeOptions = computed(() =>
       props.pageSizeOptions.map((size) => ({
         value: size,
-        label: `${size} 条/页`,
+        label: `${size} ${locale.value.itemsPerPage}`,
       })),
     )
 
@@ -334,7 +336,7 @@ export const Pagination = defineComponent({
       )
 
       return (
-        <ul class={simpleCls} style={props.styles?.root} role="navigation" aria-label="分页">
+        <ul class={simpleCls} style={props.styles?.root} role="navigation" aria-label={locale.value.navLabel}>
           {renderPrevButton()}
           {renderSimplePager()}
           {renderNextButton()}
@@ -354,7 +356,7 @@ export const Pagination = defineComponent({
       )
 
       return (
-        <ul class={normalCls} style={props.styles?.root} role="navigation" aria-label="分页">
+        <ul class={normalCls} style={props.styles?.root} role="navigation" aria-label={locale.value.navLabel}>
           {props.showTotal && (
             <li key="total" class={cls(`${prefixCls}-total-text`, props.classNames?.total)} style={props.styles?.total}>
               {props.showTotal(props.total, range.value)}

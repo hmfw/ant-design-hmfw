@@ -173,7 +173,8 @@ export const List = defineComponent({
       } else if (isEmpty) {
         childrenContent = (
           <div class={cls(`${prefixCls}-empty-text`, props.classNames?.empty)} style={props.styles?.empty}>
-            {props.locale?.emptyText || <Empty description="暂无数据" />}
+            {/* 不传 description，让 Empty 自行从语言包取缺省文案 */}
+            {props.locale?.emptyText || <Empty />}
           </div>
         )
       }

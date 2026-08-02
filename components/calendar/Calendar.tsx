@@ -260,7 +260,7 @@ export const Calendar = defineComponent({
       const currentYear = now.getFullYear()
       const years = []
       for (let i = currentYear - 100; i <= currentYear + 50; i++) {
-        years.push({ label: `${i}年`, value: i })
+        years.push({ label: locale.value.DatePicker.yearFormat(i), value: i })
       }
       return years
     })

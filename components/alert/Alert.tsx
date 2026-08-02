@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, type PropType, type VNodeChild } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import {
   CheckCircleFilled,
@@ -58,6 +58,7 @@ export const Alert = defineComponent({
   emits: ['close', 'afterClose'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('alert')
+    const locale = useLocale()
     const closed = ref(false)
     const closing = ref(false)
 
@@ -95,7 +96,7 @@ export const Alert = defineComponent({
       if (isPlainObject(closable) && typeof closable['aria-label'] === 'string') {
         return closable['aria-label'] as string
       }
-      return '关闭'
+      return locale.value.Alert.close
     })
 
     const handleClose = (e: MouseEvent) => {

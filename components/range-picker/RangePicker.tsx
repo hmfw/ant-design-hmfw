@@ -217,9 +217,7 @@ export const RangePicker = defineComponent({
               class={cls(`${prefixCls}-panel-header-title`, props.classNames?.panelHeaderTitle)}
               style={props.styles?.panelHeaderTitle}
             >
-              {locale.value.locale === 'zh-CN'
-                ? `${year}年 ${locale.value.DatePicker.months[month]}`
-                : `${locale.value.DatePicker.months[month]} ${year}`}
+              {locale.value.DatePicker.monthYearFormat(locale.value.DatePicker.months[month], year)}
             </span>
             {side === 'right' && (
               <button

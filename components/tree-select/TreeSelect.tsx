@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { CaretRightFilled, CaretDownFilled, DownOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
@@ -42,12 +42,13 @@ const treeSelectProps = {
   showSearch: { type: Boolean, default: false },
   autoClearSearchValue: { type: Boolean, default: true },
   allowClear: { type: Boolean, default: false },
-  placeholder: { type: String, default: '请选择' },
+  // 缺省文案来自语言包，故不写字面量默认值
+  placeholder: { type: String, default: undefined },
   disabled: { type: Boolean, default: false },
   size: { type: String as PropType<ComponentSize>, default: 'middle' },
   status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
   maxCount: { type: Number, default: undefined },
-  notFoundContent: { type: String, default: '暂无数据' },
+  notFoundContent: { type: String, default: undefined },
   treeDefaultExpandAll: { type: Boolean, default: false },
   treeDefaultExpandedKeys: { type: Array as PropType<Key[]>, default: () => [] },
   open: { type: Boolean, default: undefined },
@@ -70,6 +71,10 @@ export const TreeSelect = defineComponent({
   emits: ['update:value', 'update:open', 'change', 'search', 'select', 'treeExpand', 'openChange', 'clear'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tree-select')
+    const locale = useLocale()
+    // 复用 Select 段文案：TreeSelect 的占位符与空状态语义与 Select 一致
+    const mergedPlaceholder = computed(() => props.placeholder ?? locale.value.Select.placeholder)
+    const mergedNotFoundContent = computed(() => props.notFoundContent ?? locale.value.Select.notFoundContent)
     const selectorRef = ref<HTMLElement | null>(null)
     const innerOpen = ref(!!props.defaultOpen)
     const searchText = ref('')
@@ -533,7 +538,7 @@ export const TreeSelect = defineComponent({
             class={cls(`${prefixCls}-dropdown-empty`, props.classNames?.dropdownEmpty)}
             style={props.styles?.dropdownEmpty}
           >
-            {props.notFoundContent}
+            {mergedNotFoundContent.value}
           </div>
         )
       }
@@ -650,7 +655,7 @@ export const TreeSelect = defineComponent({
                           class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
                           style={props.styles?.placeholder}
                         >
-                          {props.placeholder}
+                          {mergedPlaceholder.value}
                         </span>
                       )}
                     </>
@@ -668,7 +673,7 @@ export const TreeSelect = defineComponent({
                           class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
                           style={props.styles?.placeholder}
                         >
-                          {props.placeholder}
+                          {mergedPlaceholder.value}
                         </span>
                       )}
                       {props.showSearch && isOpen.value && (

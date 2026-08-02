@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, watch, nextTick, type PropType, type VNode } from 'vue'
-import { usePrefixCls } from '../config-provider'
+import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
@@ -33,7 +33,8 @@ export const Mentions = defineComponent({
     autoSize: { type: [Boolean, Object] as PropType<boolean | { minRows?: number; maxRows?: number }>, default: false },
     rows: { type: Number, default: 1 },
     loading: Boolean,
-    notFoundContent: { type: [String, Object] as PropType<string | VNode>, default: '无匹配结果' },
+    // 缺省文案来自语言包，故不写字面量默认值
+    notFoundContent: { type: [String, Object] as PropType<string | VNode>, default: undefined },
     filterOption: {
       type: [Boolean, Function] as PropType<false | ((input: string, option: MentionOption) => boolean)>,
       default: undefined,
@@ -63,6 +64,12 @@ export const Mentions = defineComponent({
   setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('mentions')
     const inputPfx = usePrefixCls('input')
+    const locale = useLocale()
+    // 复用 Select 段文案。显式判 undefined 而非 `??`：传 null 是「不渲染空状态」的语义，
+    // 需与「未传、走语言包缺省」区分开。
+    const mergedNotFoundContent = computed(() =>
+      props.notFoundContent === undefined ? locale.value.Select.notFoundContent : props.notFoundContent,
+    )
 
     const innerValue = ref(props.value ?? props.defaultValue ?? '')
     const textareaRef = ref<HTMLTextAreaElement>()
@@ -166,7 +173,7 @@ export const Mentions = defineComponent({
       })
     })
 
-    const hasContent = computed(() => filteredOptions.value.length > 0 || props.notFoundContent != null)
+    const hasContent = computed(() => filteredOptions.value.length > 0 || mergedNotFoundContent.value != null)
     const firstEnabledIndex = computed(() => filteredOptions.value.findIndex((o) => !o.disabled))
 
     // ----------------------------------------------------------------
@@ -312,7 +319,7 @@ export const Mentions = defineComponent({
       if (filteredOptions.value.length === 0) {
         return (
           <div class={cls(`${prefixCls}-dropdown-empty`, props.classNames?.empty)} style={props.styles?.empty}>
-            {props.notFoundContent}
+            {mergedNotFoundContent.value}
           </div>
         )
       }

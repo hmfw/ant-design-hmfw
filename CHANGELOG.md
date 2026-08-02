@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.33.0] - 2026-08-02
+
+[查看完整内容](./changelogs/v0.33.0.md)
+
+国际化全面接线：Pagination / TimePicker / Alert / TreeSelect / Cascader / Mentions / Carousel / Slider / Form 校验等 9 个组件接入语言包，新增 Alert / Form / Slider / Carousel 四个语言包段落，修复 Modal.confirm 英文按钮中文残留和 Popconfirm 字间距残留。
+
 ## [0.32.0] - 2026-08-02
 
 [查看完整内容](./changelogs/v0.32.0.md)
