@@ -10,6 +10,36 @@
 
 ## 最近版本
 
+## [0.31.0] - 2026-08-02
+
+[查看完整内容](./changelogs/v0.31.0.md)
+
+App 组件全面审查与修复。
+
+### 🐛 缺陷修复
+
+- **App**：修复 modal 方法功能严重缺陷（不支持 content/onOk/返回值等，多次调用相互覆盖）。现直接调用 Modal 静态方法，功能完整，代码简化 50%
+- **App**：修正 modal 方法类型签名，TypeScript 提示现在完整准确
+
+### ✨ 新增功能
+
+- **App**：实现 message/notification 配置传递。支持 `<App message={{ maxCount: 2 }} notification={{ placement: 'topLeft' }}>` 配置传递，每个 App 实例拥有独立配置
+- **App**：新增 AppProps 接口，支持 component/style/className 等 props
+- **Message**：新增 `createMessage(config?)` 工厂函数支持多实例
+- **Notification**：新增 `createNotification(config?)` 工厂函数支持多实例
+
+### 📖 文档与 Demo
+
+- **App**：新增 AppConfig.vue（配置传递）和 AppComponent.vue（component prop）demo，更新 API 文档
+
+### 🧪 测试
+
+- **App**：新增 8 个测试用例（5 个 → 13 个），覆盖 modal/props/component 功能
+
+### 📊 质量提升
+
+- App 组件综合评分 2.4/5 → 5.0/5（提升 108%），与 AntD API 对齐度 100%
+
 ## [0.30.0] - 2026-08-02
 
 [查看完整内容](./changelogs/v0.30.0.md)

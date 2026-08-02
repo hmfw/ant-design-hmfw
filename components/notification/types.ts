@@ -68,3 +68,6 @@ export interface NotificationInstance {
   destroy: (key?: string) => void
   config: (options: ConfigOptions) => void
 }
+
+/** NotificationApi 是 NotificationInstance 的别名 */
+export type NotificationApi = NotificationInstance

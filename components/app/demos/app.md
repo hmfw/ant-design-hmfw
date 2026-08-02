@@ -17,13 +17,34 @@
   <AppBasic />
 </DemoBlock>
 
+### 配置传递
+
+通过 App props 配置 message/notification 行为，子组件通过 `useApp()` 获取的实例会自动应用这些配置。
+
+<DemoBlock title="配置传递" :source="AppConfigSource">
+  <AppConfig />
+</DemoBlock>
+
+### 自定义渲染元素
+
+通过 `component` prop 控制容器元素。设置为 `false` 时不创建额外 DOM 节点。
+
+<DemoBlock title="自定义渲染元素" :source="AppComponentSource">
+  <AppComponent />
+</DemoBlock>
+
 ## API
 
 ### App Props
 
-| 参数 | 说明                           | 类型 | 默认值 |
-| ---- | ------------------------------ | ---- | ------ |
-| —    | 无额外 props，仅作为上下文容器 | —    | —      |
+| 参数          | 说明                                       | 类型                 | 默认值  |
+| ------------- | ------------------------------------------ | -------------------- | ------- |
+| message       | App 内 Message 的全局配置                  | `MessageConfig`      | —       |
+| notification  | App 内 Notification 的全局配置             | `NotificationConfig` | —       |
+| component     | 设置渲染元素，为 `false` 则不创建 DOM 节点 | `string \| false`    | `'div'` |
+| style         | 容器内联样式                               | `CSSProperties`      | —       |
+| className     | 容器 class                                 | `string`             | —       |
+| rootClassName | 根容器 class                               | `string`             | —       |
 
 ### useApp()
 
