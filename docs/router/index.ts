@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '../views/AppLayout.vue'
 import HomePage from '../views/HomePage.vue'
+import ChangelogView from '../views/ChangelogView.vue'
 import { demoRoutes } from './sidebar'
 
 export const router = createRouter({
@@ -21,6 +22,10 @@ export const router = createRouter({
         { path: '/guide/theming', component: () => import('../views/Theming.vue') },
         { path: '/guide/i18n', component: () => import('../views/I18n.vue') },
         { path: '/guide/changelog', component: () => import('../../CHANGELOG.md') },
+        {
+          path: '/guide/changelogs/:version',
+          component: ChangelogView,
+        },
         ...demoRoutes,
       ],
     },
