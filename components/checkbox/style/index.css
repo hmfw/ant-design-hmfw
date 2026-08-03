@@ -40,7 +40,7 @@
   height: 16px;
   border: 1px solid var(--hmfw-color-border);
   border-radius: var(--hmfw-border-radius-sm);
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   transition: all 0.2s;
   position: relative;
 }
@@ -51,8 +51,9 @@
   top: 50%;
   left: 50%;
   width: 5px;
+  /* 勾选标记画在 primary 实底上，明暗两套都应为白，故用 light-solid 而非 bg-container */
   height: 8px;
-  border: 2px solid #fff;
+  border: 2px solid var(--hmfw-color-text-light-solid);
   border-top: 0;
   border-left: 0;
   transform: translate(-50%, -60%) rotate(45deg) scale(0);
@@ -77,7 +78,8 @@
   width: 8px;
   height: 2px;
   border: none;
-  background: #fff;
+  /* 半选横条同为 primary 实底上的前景 */
+  background: var(--hmfw-color-text-light-solid);
   transform: translate(-50%, -50%) scale(1);
   top: 50%;
   left: 50%;

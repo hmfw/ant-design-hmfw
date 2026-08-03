@@ -57,13 +57,13 @@ const features = [
 .home__hero {
   padding: 96px 24px 64px;
   text-align: center;
-  background: linear-gradient(180deg, rgba(22, 119, 255, 0.04) 0%, transparent 100%);
+  background: linear-gradient(180deg, var(--doc-c-brand-soft) 0%, transparent 100%);
 }
 
 .home__name {
   font-size: 56px;
   font-weight: 700;
-  color: #1677ff;
+  color: var(--doc-c-brand);
   margin: 0 0 8px;
   line-height: 1.2;
 }
@@ -105,13 +105,13 @@ const features = [
 }
 
 .home__btn--brand {
-  background: #1677ff;
-  color: #fff;
+  background: var(--doc-c-brand);
+  color: var(--hmfw-color-text-light-solid, #fff);
 }
 
 .home__btn--brand:hover {
   opacity: 0.88;
-  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.3);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--doc-c-brand) 30%, transparent);
 }
 
 .home__btn--alt {
@@ -121,8 +121,8 @@ const features = [
 }
 
 .home__btn--alt:hover {
-  border-color: #1677ff;
-  color: #1677ff;
+  border-color: var(--doc-c-brand);
+  color: var(--doc-c-brand);
 }
 
 .home__features {
@@ -144,8 +144,8 @@ const features = [
 }
 
 .home__feature:hover {
-  border-color: #1677ff;
-  box-shadow: 0 4px 16px rgba(22, 119, 255, 0.12);
+  border-color: var(--doc-c-brand);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--doc-c-brand) 12%, transparent);
 }
 
 .home__feature-icon {

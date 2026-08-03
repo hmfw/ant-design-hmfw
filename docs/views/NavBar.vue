@@ -79,7 +79,7 @@ const themeMenu = computed(() => ({
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--doc-c-border);
   flex-shrink: 0;
 }
 </style>

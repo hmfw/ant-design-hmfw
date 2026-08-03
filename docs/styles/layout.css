@@ -171,13 +171,13 @@ body,
 
 .sidebar__link:hover {
   color: var(--doc-c-brand);
-  background: rgba(22, 119, 255, 0.04);
+  background: var(--doc-c-brand-soft);
 }
 
 .sidebar__link.router-link-exact-active {
   color: var(--doc-c-brand);
   font-weight: 500;
-  background: rgba(22, 119, 255, 0.06);
+  background: var(--doc-c-brand-soft-hover);
 }
 
 /* ---- Content area ---- */

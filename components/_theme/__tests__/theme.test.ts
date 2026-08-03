@@ -103,16 +103,26 @@ describe('generateMapTokens', () => {
       expect(tokens.colorBgMask).toBe('rgba(0,0,0,0.45)')
     })
 
-    it('derives border from bg base', () => {
-      expect(tokens.colorBorder).toBe('#d9d9d9')
-      expect(tokens.colorBorderSecondary).toBe('#f0f0f0')
+    // 边框改由 colorTextBase 派生（半透明），浅色下叠白底与旧的 darken(colorBgBase) 等值：
+    // rgba(0,0,0,0.15) over #fff = #d9d9d9，rgba(0,0,0,0.06) over #fff = #f0f0f0
+    it('derives border from text base as alpha', () => {
+      expect(tokens.colorBorder).toBe('rgba(0,0,0,0.15)')
+      expect(tokens.colorBorderSecondary).toBe('rgba(0,0,0,0.06)')
     })
 
     it('handles black bg base', () => {
       const t = generateMapTokens({ ...defaultSeedTokens, colorBgBase: '#000000', colorTextBase: '#ffffff' })
       expect(t.colorBgContainer).toBe('#000000')
       expect(t.colorBgLayout).toBe('#000000')
-      expect(t.colorBorder).toBe('#000000')
+      // 关键回归点：纯黑底下边框必须仍然可见（半透明白），而非塌成黑色
+      expect(t.colorBorder).toBe('rgba(255,255,255,0.15)')
+      expect(t.colorBorderSecondary).toBe('rgba(255,255,255,0.06)')
+    })
+
+    // 遮罩固定深色，不随 colorTextBase 反转
+    it('keeps mask dark on black bg base', () => {
+      const t = generateMapTokens({ ...defaultSeedTokens, colorBgBase: '#000000', colorTextBase: '#ffffff' })
+      expect(t.colorBgMask).toBe('rgba(0,0,0,0.45)')
     })
   })
 
@@ -203,7 +213,7 @@ describe('generateMapTokens', () => {
     })
 
     it('colorSplit mirrors colorBorderSecondary', () => {
-      expect(tokens.colorSplit).toBe('#f0f0f0')
+      expect(tokens.colorSplit).toBe('rgba(0,0,0,0.06)')
       expect(tokens.colorSplit).toBe(tokens.colorBorderSecondary)
     })
 

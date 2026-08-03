@@ -7,7 +7,7 @@
   color: var(--hmfw-color-text);
   font-size: var(--hmfw-font-size-base);
   line-height: var(--hmfw-line-height);
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   border: 1px solid var(--hmfw-color-border);
   border-radius: var(--hmfw-border-radius);
   transition: all 0.2s;
@@ -25,7 +25,7 @@
 
 .hmfw-input:focus {
   border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+  box-shadow: 0 0 0 2px var(--hmfw-control-outline);
 }
 
 .hmfw-input-disabled,
@@ -55,7 +55,7 @@
 }
 
 .hmfw-input-status-error:focus {
-  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+  box-shadow: 0 0 0 2px var(--hmfw-color-error-outline);
 }
 
 .hmfw-input-status-warning {
@@ -63,7 +63,7 @@
 }
 
 .hmfw-input-status-warning:focus {
-  box-shadow: 0 0 0 2px rgba(250, 173, 20, 0.2);
+  box-shadow: 0 0 0 2px var(--hmfw-color-warning-outline);
 }
 
 /* Affix wrapper */
@@ -73,7 +73,7 @@
   width: 100%;
   height: var(--hmfw-control-height);
   padding: var(--hmfw-padding-xxs) var(--hmfw-padding-sm);
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   border: 1px solid var(--hmfw-color-border);
   border-radius: var(--hmfw-border-radius);
   transition: all 0.2s;
@@ -86,7 +86,7 @@
 
 .hmfw-input-affix-wrapper:focus-within {
   border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+  box-shadow: 0 0 0 2px var(--hmfw-control-outline);
 }
 
 .hmfw-input-affix-wrapper-disabled {

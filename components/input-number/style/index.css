@@ -5,10 +5,10 @@
   width: 90px;
   min-width: 0;
   padding: 0;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--hmfw-color-text);
   font-size: 14px;
-  background-color: #fff;
-  border: 1px solid #d9d9d9;
+  background-color: var(--hmfw-color-bg-container);
+  border: 1px solid var(--hmfw-color-border);
   border-radius: 6px;
   transition: all 0.2s;
   overflow: hidden;
@@ -20,27 +20,27 @@
 
 .hmfw-input-number-focused {
   border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--hmfw-control-outline);
   outline: 0;
 }
 
 .hmfw-input-number-disabled {
-  color: rgba(0, 0, 0, 0.25);
-  background-color: rgba(0, 0, 0, 0.04);
-  border-color: #d9d9d9;
+  color: var(--hmfw-color-text-disabled);
+  background-color: var(--hmfw-color-bg-container-disabled);
+  border-color: var(--hmfw-color-border);
   cursor: not-allowed;
 }
 
 .hmfw-input-number-disabled:hover {
-  border-color: #d9d9d9;
+  border-color: var(--hmfw-color-border);
 }
 
 .hmfw-input-number-status-error {
-  border-color: #ff4d4f;
+  border-color: var(--hmfw-color-error);
 }
 
 .hmfw-input-number-status-warning {
-  border-color: #faad14;
+  border-color: var(--hmfw-color-warning);
 }
 
 /* Sizes */
@@ -88,7 +88,7 @@
   display: inline-flex;
   align-items: center;
   padding: 0 11px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-description);
 }
 
 .hmfw-input-number-prefix {
@@ -115,7 +115,7 @@
   width: 22px;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid #d9d9d9;
+  border-left: 1px solid var(--hmfw-color-border);
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -135,7 +135,7 @@
   justify-content: center;
   flex: 1;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-description);
   font-size: 7px;
   transition: all 0.1s;
   user-select: none;
@@ -143,22 +143,22 @@
 
 .hmfw-input-number-handler:hover {
   color: var(--hmfw-color-primary);
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--hmfw-color-fill-alter);
 }
 
 .hmfw-input-number-handler-up {
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid var(--hmfw-color-border);
 }
 
 .hmfw-input-number-handler-up-disabled,
 .hmfw-input-number-handler-down-disabled {
   cursor: not-allowed;
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--hmfw-color-text-disabled);
 }
 
 .hmfw-input-number-handler-up-disabled:hover,
 .hmfw-input-number-handler-down-disabled:hover {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--hmfw-color-text-disabled);
   background: transparent;
 }
 
@@ -178,17 +178,17 @@
   width: 40px;
   align-self: stretch;
   font-size: 16px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--hmfw-color-text);
   border: 0;
 }
 
 .hmfw-input-number-spinner .hmfw-input-number-handler-down {
-  border-right: 1px solid #d9d9d9;
+  border-right: 1px solid var(--hmfw-color-border);
 }
 
 .hmfw-input-number-spinner .hmfw-input-number-handler-up {
   border-bottom: 0;
-  border-left: 1px solid #d9d9d9;
+  border-left: 1px solid var(--hmfw-color-border);
 }
 
 .hmfw-input-number-spinner.hmfw-input-number-small .hmfw-input-number-handler {

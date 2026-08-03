@@ -236,7 +236,8 @@
 }
 
 .hmfw-skeleton-image-path {
-  fill: #bfbfbf;
+  /* 随主题反转；浅色下 text-quaternary 叠白底 = #bfbfbf，与原写死值一致 */
+  fill: var(--hmfw-color-text-quaternary);
 }
 
 /* Node */
@@ -271,24 +272,8 @@
   }
 }
 
-/* 暗黑模式适配 - 提升背景色与高亮色对比度 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --hmfw-skeleton-color-base: rgba(255, 255, 255, 0.08);
-    --hmfw-skeleton-color-highlight: rgba(255, 255, 255, 0.18);
-  }
-
-  .hmfw-skeleton-avatar,
-  .hmfw-skeleton-title,
-  .hmfw-skeleton-paragraph li,
-  .hmfw-skeleton-button,
-  .hmfw-skeleton-input,
-  .hmfw-skeleton-image,
-  .hmfw-skeleton-node {
-    background: var(--hmfw-skeleton-color-base);
-  }
-
-  .hmfw-skeleton-image-path {
-    fill: rgba(255, 255, 255, 0.2);
-  }
-}
+/* 暗黑模式无需单独适配：skeletonColorBase / skeletonColorHighlight 是全局 map token
+   （由 colorFillSecondary / colorFill 派生），已随 ConfigProvider 主题反转。
+   原先这里有一段 prefers-color-scheme 媒体查询直接覆写 :root 上的这两个变量，
+   与主题 CSS 同为 :root 特异性，会在"系统暗色 + 应用浅色"时反向污染全局 token，
+   使骨架屏与页面配色脱节，故移除。 */

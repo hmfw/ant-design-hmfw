@@ -14,27 +14,30 @@
   --hmfw-menu-item-icon-size: 14px;
   --hmfw-menu-item-icon-margin-end: 10px;
 
-  /* 颜色 */
-  --hmfw-menu-item-color: rgba(0, 0, 0, 0.88);
-  --hmfw-menu-item-hover-bg: rgba(0, 0, 0, 0.06);
-  --hmfw-menu-item-hover-color: rgba(0, 0, 0, 0.88);
-  --hmfw-menu-item-active-bg: #e6f4ff;
+  /* 颜色 —— 一律派生自全局 Token，随 ConfigProvider 主题切换。
+     不可写死浅色值：Menu 被 Dropdown/Select 等弹层复用，弹层背景取
+     `--hmfw-color-bg-elevated`，暗色预设下为黑色，写死的深色文字会不可见。 */
+  --hmfw-menu-item-color: var(--hmfw-color-text);
+  --hmfw-menu-item-hover-bg: var(--hmfw-control-item-bg-hover);
+  --hmfw-menu-item-hover-color: var(--hmfw-color-text);
+  --hmfw-menu-item-active-bg: var(--hmfw-color-primary-bg);
   --hmfw-menu-item-selected-color: var(--hmfw-color-primary);
-  --hmfw-menu-item-selected-bg: #e6f4ff;
-  --hmfw-menu-item-disabled-color: rgba(0, 0, 0, 0.25);
+  --hmfw-menu-item-selected-bg: var(--hmfw-color-primary-bg);
+  --hmfw-menu-item-disabled-color: var(--hmfw-color-text-disabled);
 
-  /* 分割线 */
-  --hmfw-menu-divider-color: rgba(5, 5, 5, 0.06);
+  /* 分割线：用半透明 fill 而非 colorSplit——后者由 darken(colorBgBase) 派生，
+     纯黑底会塌成黑色而不可见；fill 随 colorTextBase 反转，明暗两套都成立。
+     浅色下 rgba(0,0,0,0.06) 叠白底 = #f0f0f0，与原值一致。 */
+  --hmfw-menu-divider-color: var(--hmfw-color-fill-secondary);
 
   /* 分组标题 */
-  --hmfw-menu-group-title-color: rgba(0, 0, 0, 0.45);
+  --hmfw-menu-group-title-color: var(--hmfw-color-text-description);
   --hmfw-menu-group-title-font-size: 12px;
 
   /* 子菜单弹出层 */
-  --hmfw-menu-popup-bg: #fff;
+  --hmfw-menu-popup-bg: var(--hmfw-color-bg-elevated);
   --hmfw-menu-popup-border-radius: 8px;
-  --hmfw-menu-popup-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  --hmfw-menu-popup-shadow: var(--hmfw-box-shadow-secondary);
   --hmfw-menu-popup-min-width: 160px;
   --hmfw-menu-popup-z-index: 1050;
 
@@ -86,7 +89,7 @@
 .hmfw-menu-horizontal {
   display: flex;
   flex-direction: row;
-  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+  border-bottom: 1px solid var(--hmfw-color-fill-secondary);
   line-height: var(--hmfw-menu-horizontal-line-height);
   width: 100%;
 }
@@ -230,21 +233,21 @@
 
 /* ---- Item Danger ---- */
 .hmfw-menu-item-danger {
-  color: #ff4d4f;
+  color: var(--hmfw-color-error);
 }
 
 .hmfw-menu-item-danger:not(.hmfw-menu-item-selected):hover {
-  background: #fff2f0;
-  color: #ff4d4f;
+  background: var(--hmfw-color-error-bg);
+  color: var(--hmfw-color-error);
 }
 
 .hmfw-menu-item-danger.hmfw-menu-item-selected {
-  background: #fff2f0;
-  color: #ff4d4f;
+  background: var(--hmfw-color-error-bg);
+  color: var(--hmfw-color-error);
 }
 
 .hmfw-menu-item-danger.hmfw-menu-item-selected::after {
-  border-inline-end-color: #ff4d4f;
+  border-inline-end-color: var(--hmfw-color-error);
 }
 
 /* ---- Icon ---- */
@@ -282,7 +285,7 @@
   flex: none;
   margin-inline-start: auto;
   padding-inline-start: 16px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-description);
   font-size: 12px;
 }
 
@@ -415,7 +418,8 @@
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  background: rgba(0, 0, 0, 0.02);
+  /* 内嵌子菜单的浅底：quaternary fill 随文字色反转，暗色下自动变半透明白 */
+  background: var(--hmfw-color-fill-quaternary);
 }
 
 /* ---- Divider ---- */
@@ -614,7 +618,7 @@
   justify-content: center;
   font-size: 14px;
   letter-spacing: 2px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-description);
 }
 
 /* ---- 子菜单弹出位置 ---- */

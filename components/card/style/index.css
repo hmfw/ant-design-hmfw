@@ -166,7 +166,12 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.06) 25%, rgba(0, 0, 0, 0.15) 37%, rgba(0, 0, 0, 0.06) 63%);
+  background: linear-gradient(
+    90deg,
+    var(--hmfw-skeleton-color-base) 25%,
+    var(--hmfw-skeleton-color-highlight) 37%,
+    var(--hmfw-skeleton-color-base) 63%
+  );
   background-size: 400% 100%;
   animation: hmfw-card-loading 1.4s ease infinite;
   flex-shrink: 0;
@@ -181,7 +186,12 @@
 
 .hmfw-card-loading-block {
   height: 14px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.06) 25%, rgba(0, 0, 0, 0.15) 37%, rgba(0, 0, 0, 0.06) 63%);
+  background: linear-gradient(
+    90deg,
+    var(--hmfw-skeleton-color-base) 25%,
+    var(--hmfw-skeleton-color-highlight) 37%,
+    var(--hmfw-skeleton-color-base) 63%
+  );
   background-size: 400% 100%;
   border-radius: 4px;
   animation: hmfw-card-loading 1.4s ease infinite;

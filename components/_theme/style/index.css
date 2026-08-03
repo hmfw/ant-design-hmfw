@@ -43,8 +43,8 @@
   --hmfw-color-bg-layout: #f5f5f5;
   --hmfw-color-bg-spotlight: rgba(0, 0, 0, 0.85);
   --hmfw-color-bg-mask: rgba(0, 0, 0, 0.45);
-  --hmfw-color-border: #d9d9d9;
-  --hmfw-color-border-secondary: #f0f0f0;
+  --hmfw-color-border: rgba(0, 0, 0, 0.15);
+  --hmfw-color-border-secondary: rgba(0, 0, 0, 0.06);
   --hmfw-color-fill: rgba(0, 0, 0, 0.15);
   --hmfw-color-fill-secondary: rgba(0, 0, 0, 0.06);
   --hmfw-color-fill-tertiary: rgba(0, 0, 0, 0.04);
@@ -130,8 +130,11 @@
   --hmfw-arrow-bg: #ffffff;
   --hmfw-border-radius-xs: 4px;
   --hmfw-color-fill-alter: rgba(0, 0, 0, 0.02);
-  --hmfw-color-split: #f0f0f0;
+  --hmfw-color-split: rgba(0, 0, 0, 0.06);
   --hmfw-control-item-bg-hover: rgba(0, 0, 0, 0.04);
+  --hmfw-control-outline: rgba(22, 119, 255, 0.1);
+  --hmfw-color-error-outline: rgba(255, 77, 79, 0.1);
+  --hmfw-color-warning-outline: rgba(250, 173, 20, 0.1);
   --hmfw-control-padding-horizontal: 12px;
   --hmfw-control-padding-horizontal-sm: 8px;
   --hmfw-line-width-bold: 2px;

@@ -11,7 +11,7 @@
   border: 1px solid var(--hmfw-color-border);
   border-radius: 6px;
   cursor: pointer;
-  background: #fff;
+  background: var(--hmfw-color-bg-container);
   transition: border-color 0.2s;
   min-width: 32px;
   min-height: 32px;
@@ -31,7 +31,8 @@
   width: 16px;
   height: 16px;
   border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--hmfw-color-border);
+  /* 透明棋盘格固定浅灰：它表示"无颜色"，是约定俗成的图示而非主题表面 */
   background-image:
     linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%);
@@ -54,7 +55,7 @@
 
 .hmfw-color-picker-text {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--hmfw-color-text);
   min-width: 60px;
 }
 
@@ -87,6 +88,8 @@
   margin-bottom: 12px;
 }
 
+/* 以下饱和度/明度画布的黑白渐变、以及游标的白环+黑描边，
+   都是 HSV 色彩空间本身的绘制，必须固定；随主题反转会导致取色结果错误。 */
 .hmfw-color-picker-sb-white {
   position: absolute;
   inset: 0;
@@ -162,7 +165,7 @@
   width: 24px;
   height: 24px;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--hmfw-color-border);
   flex-shrink: 0;
 }
 
@@ -184,7 +187,7 @@
 
 .hmfw-color-picker-format-label {
   font-size: 11px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-description);
   width: 28px;
   text-align: center;
 }
@@ -202,7 +205,7 @@
 
 .hmfw-color-picker-preset-label {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-description);
   margin-bottom: 6px;
 }
 
@@ -217,7 +220,7 @@
   height: 20px;
   border-radius: 4px;
   cursor: pointer;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--hmfw-color-border);
   transition:
     transform 0.15s,
     box-shadow 0.15s;
@@ -235,7 +238,7 @@
 .hmfw-color-picker-clear-btn {
   text-align: center;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-description);
   cursor: pointer;
   padding: 4px 0;
   border-top: 1px solid var(--hmfw-color-border);

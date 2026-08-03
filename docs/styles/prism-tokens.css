@@ -1,0 +1,96 @@
+/**
+ * Prism 语法高亮的主题接线 —— 覆盖 prismjs/themes/prism.css 的硬编码颜色。
+ *
+ * 默认主题写死了 `color: black` + `text-shadow: 0 1px white` + `background: #f5f2f0`，
+ * 暗色预设下会变成黑字压黑底、白色描边糊成一片。这里把所有 token 色改为语义 Token 派生，
+ * 随 ConfigProvider 的主题切换实时生效。
+ *
+ * 必须在 `prismjs/themes/prism.css` 之后导入（见 docs/main.ts）。
+ */
+
+code[class*='language-'],
+pre[class*='language-'] {
+  color: var(--doc-c-text-1);
+  /* 描边在暗色下会糊掉可读性，统一去掉 */
+  text-shadow: none;
+  font-family: var(--doc-font-mono);
+  tab-size: 2;
+}
+
+:not(pre) > code[class*='language-'],
+pre[class*='language-'] {
+  background: var(--doc-c-bg-soft);
+}
+
+pre[class*='language-']::selection,
+pre[class*='language-'] ::selection,
+code[class*='language-']::selection,
+code[class*='language-'] ::selection {
+  text-shadow: none;
+  background: color-mix(in srgb, var(--doc-c-brand) 24%, transparent);
+}
+
+/* ---- Token 配色：一律走语义 Token ---- */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--doc-c-text-2);
+}
+
+/* 默认主题给 operator / url / css-string 加了 `background: #ffffff80`（浅色底提亮用），
+   暗色下会变成一块块白斑，统一清掉。 */
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  background: transparent;
+}
+
+.token.punctuation,
+.token.operator,
+.token.entity,
+.token.url {
+  color: var(--doc-c-text-2);
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted,
+.token.keyword {
+  color: var(--hmfw-color-error-text, #d4380d);
+}
+
+.token.boolean,
+.token.number {
+  color: var(--hmfw-color-warning-text, #d46b08);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted,
+/* 同上：需与默认主题的 `.language-css .token.string` 同特异性才能覆盖颜色 */
+.language-css .token.string,
+.style .token.string {
+  color: var(--hmfw-color-success-text, #389e0d);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name,
+.token.variable,
+.token.regex,
+.token.important {
+  color: var(--doc-c-brand);
+}
+
+.token.namespace {
+  opacity: 0.7;
+}

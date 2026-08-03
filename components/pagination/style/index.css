@@ -197,7 +197,7 @@
 .hmfw-pagination-options-quick-jumper input:focus {
   outline: none;
   border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--hmfw-control-outline);
 }
 
 .hmfw-pagination-options-quick-jumper input:disabled {
@@ -234,7 +234,7 @@
 .hmfw-pagination-simple-pager input:focus {
   outline: none;
   border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--hmfw-control-outline);
 }
 
 .hmfw-pagination-simple-pager input:disabled {

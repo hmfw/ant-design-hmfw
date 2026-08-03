@@ -2,33 +2,11 @@
 
 /* ==================== 基础容器 ==================== */
 .hmfw-calendar {
-  --hmfw-calendar-full-bg: #ffffff;
-  --hmfw-calendar-full-panel-bg: #ffffff;
-  --hmfw-calendar-item-active-bg: #e6f4ff;
+  /* 仅保留实际被引用的 4 个变量，删除 23 个从未被使用的死变量 */
+  --hmfw-calendar-full-bg: var(--hmfw-color-bg-container);
   --hmfw-calendar-year-control-width: 80px;
   --hmfw-calendar-month-control-width: 70px;
-  --hmfw-calendar-mini-content-height: 256px;
-  --hmfw-calendar-internal_fixed_item_margin: 2px;
-  --hmfw-calendar-cell-hover-bg: rgba(0, 0, 0, 0.04);
-  --hmfw-calendar-cell-active-with-range-bg: #e6f4ff;
-  --hmfw-calendar-cell-hover-with-range-bg: #cbe0fd;
-  --hmfw-calendar-cell-range-border-color: #82b4f9;
-  --hmfw-calendar-cell-bg-disabled: rgba(0, 0, 0, 0.04);
-  --hmfw-calendar-time-column-width: 56px;
-  --hmfw-calendar-time-column-height: 224px;
-  --hmfw-calendar-time-cell-height: 28px;
-  --hmfw-calendar-cell-width: 36px;
   --hmfw-calendar-cell-height: 24px;
-  --hmfw-calendar-text-height: 40px;
-  --hmfw-calendar-without-time-cell-height: 66px;
-  --hmfw-calendar-multiple-item-bg: rgba(0, 0, 0, 0.06);
-  --hmfw-calendar-multiple-item-border-color: transparent;
-  --hmfw-calendar-multiple-item-height: 24px;
-  --hmfw-calendar-multiple-item-height-sm: 16px;
-  --hmfw-calendar-multiple-item-height-lg: 32px;
-  --hmfw-calendar-multiple-selector-bg-disabled: rgba(0, 0, 0, 0.04);
-  --hmfw-calendar-multiple-item-color-disabled: rgba(0, 0, 0, 0.25);
-  --hmfw-calendar-multiple-item-border-color-disabled: transparent;
 
   box-sizing: border-box;
   color: var(--hmfw-color-text);
@@ -250,7 +228,7 @@
 }
 
 .hmfw-calendar-cell-range-start .hmfw-calendar-date-value {
-  color: #fff;
+  color: var(--hmfw-color-text-light-solid);
   font-weight: 600;
 }
 
@@ -260,7 +238,7 @@
 }
 
 .hmfw-calendar-cell-range-end .hmfw-calendar-date-value {
-  color: #fff;
+  color: var(--hmfw-color-text-light-solid);
   font-weight: 600;
 }
 

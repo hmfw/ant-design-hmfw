@@ -1,6 +1,9 @@
 .hmfw-rate {
   --hmfw-rate-star-color: #fadb14; /* Rate 专用：星星颜色，对应 Ant Design 的 yellow */
-  --hmfw-rate-star-bg: var(--hmfw-color-fill-content); /* Rate 专用：星星背景色 */
+  /* Rate 专用：未选中星的底色。
+     不用 fill-content(0.06)——空星是细线图形，0.06 在暗底上几乎不可见；
+     取 fill(0.15) 这一档，浅色下叠白底 = #d9d9d9，暗色下 = rgba(255,255,255,0.15)。 */
+  --hmfw-rate-star-bg: var(--hmfw-color-fill);
   --hmfw-rate-star-size: calc(var(--hmfw-control-height) * 0.625); /* Rate 专用：星星尺寸 */
   --hmfw-rate-star-size-sm: calc(var(--hmfw-control-height-sm) * 0.625); /* Rate 专用：小星星尺寸 */
   --hmfw-rate-star-size-lg: calc(var(--hmfw-control-height-lg) * 0.625); /* Rate 专用：大星星尺寸 */

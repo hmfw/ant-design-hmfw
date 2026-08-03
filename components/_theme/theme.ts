@@ -220,6 +220,12 @@ export interface MapTokens extends SeedTokens {
   colorFillAlter: string
   colorSplit: string
   controlItemBgHover: string
+  /** 聚焦环颜色，由 colorPrimary 派生，随品牌色定制 */
+  controlOutline: string
+  /** 错误态聚焦环 */
+  colorErrorOutline: string
+  /** 警告态聚焦环 */
+  colorWarningOutline: string
   controlPaddingHorizontal: number
   controlPaddingHorizontalSM: number
   lineWidthBold: number
@@ -279,6 +285,25 @@ function darken(hex: string, amount: number): string {
   return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`
 }
 
+/**
+ * 计算相对亮度（WCAG 2.0 标准）
+ * https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+ */
+function getLuminance(hex: string): number {
+  if (!isValidHex(hex)) return 0.5
+  const num = parseInt(hex.slice(1), 16)
+  const r = (num >> 16) / 255
+  const g = ((num >> 8) & 0xff) / 255
+  const b = (num & 0xff) / 255
+  const [rs, gs, bs] = [r, g, b].map((c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)))
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs
+}
+
+/** 判断背景是否为暗色（相对亮度 < 0.5） */
+function isDark(bgHex: string): boolean {
+  return getLuminance(bgHex) < 0.5
+}
+
 // ============================================================================
 // generateMapTokens — 从 Seed 派生完整 Map
 // ============================================================================
@@ -308,8 +333,11 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
   const colorFill = alpha(colorTextBase, 0.15)
   const colorFillSecondary = alpha(colorTextBase, 0.06)
   const colorFillTertiary = alpha(colorTextBase, 0.04)
-  const colorBorder = darken(colorBgBase, 0.15)
-  const colorBorderSecondary = darken(colorBgBase, 0.06)
+  // 边框由 colorTextBase 派生（半透明）而非 darken(colorBgBase)：
+  // 后者在纯黑底下 darken 恒为黑，边框会完全隐形；前者随文字色反转，明暗两套都成立。
+  // 浅色下 rgba(0,0,0,0.15) 叠白底 = #d9d9d9、0.06 = #f0f0f0，与原实现逐位一致。
+  const colorBorder = alpha(colorTextBase, 0.15)
+  const colorBorderSecondary = alpha(colorTextBase, 0.06)
 
   return {
     ...seed,
@@ -330,7 +358,9 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     colorBgElevated: colorBgBase,
     colorBgLayout: darken(colorBgBase, 0.04),
     colorBgSpotlight: alpha(colorTextBase, 0.85),
-    colorBgMask: alpha(colorTextBase, 0.45),
+    // 遮罩固定为深色：明暗两套主题下弹窗蒙层都应压暗底层内容。
+    // 若随 colorTextBase 派生，暗色下会变成半透明白，蒙层反而提亮页面。
+    colorBgMask: 'rgba(0,0,0,0.45)',
 
     // 边框色
     colorBorder,
@@ -344,40 +374,77 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     colorFillContent: colorFillSecondary,
     colorFillContentHover: colorFill,
 
-    // Primary 变体
-    colorPrimaryHover: lighten(seed.colorPrimary, 0.2),
-    colorPrimaryActive: darken(seed.colorPrimary, 0.1),
-    colorPrimaryBg: lighten(seed.colorPrimary, 0.9),
-    colorPrimaryBgHover: lighten(seed.colorPrimary, 0.8),
-    colorPrimaryBorder: lighten(seed.colorPrimary, 0.6),
-    colorPrimaryBorderHover: lighten(seed.colorPrimary, 0.4),
-    colorPrimaryText: seed.colorPrimary,
-    colorPrimaryTextHover: lighten(seed.colorPrimary, 0.2),
-    colorPrimaryTextActive: darken(seed.colorPrimary, 0.1),
+    // Primary / Success / Warning / Error 变体：暗色背景下改用 darken 生成深色调
+    // 浅色（明底）：lighten 生成浅色块（如 #e6f4ff），与暗文字形成对比
+    // 暗色（暗底）：darken 生成深色块（如 #111a2c），与浅文字形成对比
+    // 判断依据：colorBgBase 的相对亮度 < 0.5 视为暗底
+    ...(isDark(colorBgBase)
+      ? {
+          // 暗色模式：primary / success / warning / error 背景和边框用 darken
+          colorPrimaryHover: lighten(seed.colorPrimary, 0.2),
+          colorPrimaryActive: darken(seed.colorPrimary, 0.1),
+          colorPrimaryBg: darken(seed.colorPrimary, 0.7),
+          colorPrimaryBgHover: darken(seed.colorPrimary, 0.6),
+          colorPrimaryBorder: darken(seed.colorPrimary, 0.4),
+          colorPrimaryBorderHover: darken(seed.colorPrimary, 0.3),
+          colorPrimaryText: seed.colorPrimary,
+          colorPrimaryTextHover: lighten(seed.colorPrimary, 0.2),
+          colorPrimaryTextActive: darken(seed.colorPrimary, 0.1),
 
-    // Success 变体
-    colorSuccessBg: lighten(seed.colorSuccess, 0.9),
-    colorSuccessBgHover: lighten(seed.colorSuccess, 0.8),
-    colorSuccessBorder: lighten(seed.colorSuccess, 0.5),
-    colorSuccessText: seed.colorSuccess,
-    colorSuccessHover: lighten(seed.colorSuccess, 0.2),
-    colorSuccessActive: darken(seed.colorSuccess, 0.1),
+          colorSuccessBg: darken(seed.colorSuccess, 0.7),
+          colorSuccessBgHover: darken(seed.colorSuccess, 0.6),
+          colorSuccessBorder: darken(seed.colorSuccess, 0.4),
+          colorSuccessText: seed.colorSuccess,
+          colorSuccessHover: lighten(seed.colorSuccess, 0.2),
+          colorSuccessActive: darken(seed.colorSuccess, 0.1),
 
-    // Warning 变体
-    colorWarningBg: lighten(seed.colorWarning, 0.9),
-    colorWarningBgHover: lighten(seed.colorWarning, 0.8),
-    colorWarningBorder: lighten(seed.colorWarning, 0.5),
-    colorWarningText: seed.colorWarning,
-    colorWarningHover: lighten(seed.colorWarning, 0.2),
-    colorWarningActive: darken(seed.colorWarning, 0.1),
+          colorWarningBg: darken(seed.colorWarning, 0.7),
+          colorWarningBgHover: darken(seed.colorWarning, 0.6),
+          colorWarningBorder: darken(seed.colorWarning, 0.4),
+          colorWarningText: seed.colorWarning,
+          colorWarningHover: lighten(seed.colorWarning, 0.2),
+          colorWarningActive: darken(seed.colorWarning, 0.1),
 
-    // Error 变体
-    colorErrorBg: lighten(seed.colorError, 0.9),
-    colorErrorBgHover: lighten(seed.colorError, 0.8),
-    colorErrorBorder: lighten(seed.colorError, 0.5),
-    colorErrorText: seed.colorError,
-    colorErrorHover: lighten(seed.colorError, 0.2),
-    colorErrorActive: darken(seed.colorError, 0.1),
+          colorErrorBg: darken(seed.colorError, 0.7),
+          colorErrorBgHover: darken(seed.colorError, 0.6),
+          colorErrorBorder: darken(seed.colorError, 0.4),
+          colorErrorText: seed.colorError,
+          colorErrorHover: lighten(seed.colorError, 0.2),
+          colorErrorActive: darken(seed.colorError, 0.1),
+        }
+      : {
+          // 浅色模式：保持原 lighten 逻辑
+          colorPrimaryHover: lighten(seed.colorPrimary, 0.2),
+          colorPrimaryActive: darken(seed.colorPrimary, 0.1),
+          colorPrimaryBg: lighten(seed.colorPrimary, 0.9),
+          colorPrimaryBgHover: lighten(seed.colorPrimary, 0.8),
+          colorPrimaryBorder: lighten(seed.colorPrimary, 0.6),
+          colorPrimaryBorderHover: lighten(seed.colorPrimary, 0.4),
+          colorPrimaryText: seed.colorPrimary,
+          colorPrimaryTextHover: lighten(seed.colorPrimary, 0.2),
+          colorPrimaryTextActive: darken(seed.colorPrimary, 0.1),
+
+          colorSuccessBg: lighten(seed.colorSuccess, 0.9),
+          colorSuccessBgHover: lighten(seed.colorSuccess, 0.8),
+          colorSuccessBorder: lighten(seed.colorSuccess, 0.5),
+          colorSuccessText: seed.colorSuccess,
+          colorSuccessHover: lighten(seed.colorSuccess, 0.2),
+          colorSuccessActive: darken(seed.colorSuccess, 0.1),
+
+          colorWarningBg: lighten(seed.colorWarning, 0.9),
+          colorWarningBgHover: lighten(seed.colorWarning, 0.8),
+          colorWarningBorder: lighten(seed.colorWarning, 0.5),
+          colorWarningText: seed.colorWarning,
+          colorWarningHover: lighten(seed.colorWarning, 0.2),
+          colorWarningActive: darken(seed.colorWarning, 0.1),
+
+          colorErrorBg: lighten(seed.colorError, 0.9),
+          colorErrorBgHover: lighten(seed.colorError, 0.8),
+          colorErrorBorder: lighten(seed.colorError, 0.5),
+          colorErrorText: seed.colorError,
+          colorErrorHover: lighten(seed.colorError, 0.2),
+          colorErrorActive: darken(seed.colorError, 0.1),
+        }),
 
     // Info 变体
     colorInfoBg: lighten(seed.colorInfo, 0.9),
@@ -448,6 +515,12 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     colorFillAlter: alpha(colorTextBase, 0.02),
     colorSplit: colorBorderSecondary,
     controlItemBgHover: alpha(colorTextBase, 0.04),
+    // 聚焦环：由各状态色派生，替代组件里写死的 rgba(22,119,255,0.1) 等字面量，
+    // 使其随 ConfigProvider 的 colorPrimary/colorError/colorWarning 定制而变化。
+    // 取 0.1 与 Ant Design 的 controlOutline 一致，也是库内多数组件的现值。
+    controlOutline: alpha(seed.colorPrimary, 0.1),
+    colorErrorOutline: alpha(seed.colorError, 0.1),
+    colorWarningOutline: alpha(seed.colorWarning, 0.1),
     // 控件内边距使用固定值，不与间距系统绑定（Ant Design 中为独立设计常量）
     controlPaddingHorizontal: 12,
     controlPaddingHorizontalSM: 8,

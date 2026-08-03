@@ -3,8 +3,8 @@
   --hmfw-slider-rail-size: 4px; /* AntD railSize = 4 */
   --hmfw-slider-handle-size: 14px; /* 滑块手柄尺寸 */
   --hmfw-slider-dot-size: 8px; /* AntD dotSize = 8 */
-  /* 手柄聚焦光晕：主题色 12% 透明度，无全局语义 token */
-  --hmfw-slider-handle-active-outline: rgba(22, 119, 255, 0.12);
+  /* 手柄聚焦光晕：走全局聚焦环 token，随 colorPrimary 定制（原为写死的主题色 12%） */
+  --hmfw-slider-handle-active-outline: var(--hmfw-control-outline);
 
   position: relative;
   width: 100%;

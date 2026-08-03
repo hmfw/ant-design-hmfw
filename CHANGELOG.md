@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.34.0] - 2026-08-03
+
+[查看完整内容](./changelogs/v0.34.0.md)
+
+暗色主题全面适配：Empty / Result / Skeleton 脱离系统配色改为 ConfigProvider 响应式、Layout 白底白字修复、Card 骨架渐变统一、Calendar / Typography 接入 Token 体系、四色语义色阶（primary / success / warning / error）实现暗色算法、Rate 星底对比度提升。
+
 ## [0.33.0] - 2026-08-02
 
 [查看完整内容](./changelogs/v0.33.0.md)

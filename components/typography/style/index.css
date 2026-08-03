@@ -84,8 +84,10 @@ p.hmfw-typography {
   margin: 0 0.2em;
   padding: 0.2em 0.1em;
   font-size: 85%;
-  background: rgba(150, 150, 150, 0.1);
-  border: 1px solid rgba(100, 100, 100, 0.2);
+  /* 原为 rgba(150,150,150,.1) 中性灰：明暗底都能看见但绕过了 Token 体系，
+     改为随主题反转的填充色与边框色 */
+  background: var(--hmfw-color-fill-tertiary);
+  border: 1px solid var(--hmfw-color-border);
   border-radius: 3px;
 }
 
@@ -93,8 +95,8 @@ p.hmfw-typography {
   margin: 0 0.2em;
   padding: 0.15em 0.4em;
   font-size: 90%;
-  background: rgba(150, 150, 150, 0.06);
-  border: 1px solid rgba(100, 100, 100, 0.2);
+  background: var(--hmfw-color-fill-quaternary);
+  border: 1px solid var(--hmfw-color-border);
   border-bottom-width: 2px;
   border-radius: 3px;
 }

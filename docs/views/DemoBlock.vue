@@ -191,7 +191,7 @@ async function copyCode() {
 
 <style scoped>
 .demo-block {
-  border: 1px solid rgba(5, 5, 5, 0.06);
+  border: 1px solid var(--doc-c-divider);
   border-radius: 8px;
   overflow: hidden;
   margin: 16px 0;
@@ -199,12 +199,12 @@ async function copyCode() {
 }
 
 .demo-block:hover {
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 8px var(--doc-c-divider);
 }
 
 .demo-block__preview {
   padding: 24px;
-  background: #fff;
+  background: var(--doc-c-bg);
   min-height: 60px;
 }
 
@@ -213,7 +213,7 @@ async function copyCode() {
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
-  border-top: 1px dashed rgba(5, 5, 5, 0.1);
+  border-top: 1px dashed var(--doc-c-border);
   background: var(--vp-c-bg-soft, var(--doc-c-bg-soft));
   gap: 8px;
 }
@@ -247,12 +247,12 @@ async function copyCode() {
 }
 
 .demo-block__icon-btn:hover {
-  background: rgba(22, 119, 255, 0.06);
-  color: #1677ff;
+  background: var(--doc-c-brand-soft-hover);
+  color: var(--doc-c-brand);
 }
 
 .demo-block__code {
-  border-top: 1px solid rgba(5, 5, 5, 0.06);
+  border-top: 1px solid var(--doc-c-divider);
 }
 
 .demo-block__pre {

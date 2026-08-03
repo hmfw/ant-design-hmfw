@@ -1,28 +1,60 @@
+/**
+ * 文档站变量层 —— 全部派生自组件库的 `--hmfw-*` Token。
+ *
+ * ConfigProvider（docs/App.vue）在根节点把整套 map token 注入 `:root`，
+ * 因此这里的 `var(--hmfw-*)` 会随主题切换实时重算，文档外壳与 demo 内的组件保持一致。
+ * 每项都带兜底值，保证 ConfigProvider 挂载前（首屏）也有可用样式。
+ *
+ * 注意：暗色预设下 `colorBorder` / `colorBgLayout` 由 `darken(colorBgBase)` 派生，
+ * 纯黑底会塌成黑色而不可见，所以文档外壳的分割线、弱背景一律取
+ * 由 `colorTextBase` 派生的半透明 fill token —— 它们随文字色反转，明暗两套都成立。
+ */
 :root {
-  --doc-c-brand: #1677ff;
-  --doc-c-brand-hover: #4096ff;
-  --doc-c-brand-dark: #0958d9;
-  --doc-c-brand-soft: rgba(22, 119, 255, 0.06);
+  /* ---- 品牌色 ---- */
+  --doc-c-brand: var(--hmfw-color-primary, #1677ff);
+  --doc-c-brand-hover: var(--hmfw-color-primary-hover, #4096ff);
+  --doc-c-brand-dark: var(--hmfw-color-primary-active, #0958d9);
+  /* 半透明品牌底：叠在任意背景上都成立，不受明暗影响 */
+  --doc-c-brand-soft: color-mix(in srgb, var(--doc-c-brand) 6%, transparent);
+  --doc-c-brand-soft-hover: color-mix(in srgb, var(--doc-c-brand) 10%, transparent);
 
-  --doc-c-bg: #ffffff;
-  --doc-c-bg-soft: #fafafa;
-  --doc-c-bg-alt: #f5f5f5;
+  /* ---- 背景色 ---- */
+  --doc-c-bg: var(--hmfw-color-bg-container, #ffffff);
+  --doc-c-bg-soft: var(--hmfw-color-fill-tertiary, rgba(0, 0, 0, 0.04));
+  --doc-c-bg-alt: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
 
-  --doc-c-text-1: rgba(0, 0, 0, 0.88);
-  --doc-c-text-2: rgba(0, 0, 0, 0.45);
-  --doc-c-text-3: rgba(0, 0, 0, 0.25);
+  /* ---- 文字色 ---- */
+  --doc-c-text-1: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
+  --doc-c-text-2: var(--hmfw-color-text-tertiary, rgba(0, 0, 0, 0.45));
+  --doc-c-text-3: var(--hmfw-color-text-quaternary, rgba(0, 0, 0, 0.25));
 
-  --doc-c-divider: rgba(5, 5, 5, 0.06);
-  --doc-c-border: rgba(5, 5, 5, 0.15);
+  /* ---- 线条 ---- */
+  --doc-c-divider: var(--hmfw-color-fill-secondary, rgba(5, 5, 5, 0.06));
+  --doc-c-border: var(--hmfw-color-fill, rgba(5, 5, 5, 0.15));
 
-  --doc-code-color: #1677ff;
-  --doc-code-bg: rgba(22, 119, 255, 0.06);
+  /* ---- 行内代码 ---- */
+  --doc-code-color: var(--doc-c-brand);
+  --doc-code-bg: var(--doc-c-brand-soft);
 
-  --doc-font-base:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  /* ---- 字体 ---- */
+  --doc-font-base: var(
+    --hmfw-font-family,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    'Noto Sans',
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji'
+  );
   --doc-font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 
+  /* ---- 布局尺寸（与主题无关） ---- */
   --doc-nav-height: 64px;
   --doc-sidebar-width: 260px;
   --doc-content-max-w: 960px;

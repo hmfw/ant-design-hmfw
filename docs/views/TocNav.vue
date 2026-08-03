@@ -160,7 +160,7 @@ watch(() => route.path, updateAnchors)
 
 .toc__link:hover {
   color: var(--doc-c-brand);
-  background: rgba(22, 119, 255, 0.04);
+  background: var(--doc-c-brand-soft);
 }
 
 .toc__item--active .toc__link {
