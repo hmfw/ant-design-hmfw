@@ -81,5 +81,10 @@ const themeMenu = computed(() => ({
   border-radius: 50%;
   border: 1px solid var(--doc-c-border);
   flex-shrink: 0;
+  transition: var(--doc-t-transform);
+}
+
+.theme-dot:hover {
+  transform: scale(1.15);
 }
 </style>

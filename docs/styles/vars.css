@@ -17,11 +17,13 @@
   /* 半透明品牌底：叠在任意背景上都成立，不受明暗影响 */
   --doc-c-brand-soft: color-mix(in srgb, var(--doc-c-brand) 6%, transparent);
   --doc-c-brand-soft-hover: color-mix(in srgb, var(--doc-c-brand) 10%, transparent);
+  --doc-c-brand-muted: color-mix(in srgb, var(--doc-c-brand) 15%, transparent);
 
   /* ---- 背景色 ---- */
   --doc-c-bg: var(--hmfw-color-bg-container, #ffffff);
   --doc-c-bg-soft: var(--hmfw-color-fill-tertiary, rgba(0, 0, 0, 0.04));
   --doc-c-bg-alt: var(--hmfw-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  --doc-c-bg-elevated: var(--hmfw-color-bg-container, #ffffff);
 
   /* ---- 文字色 ---- */
   --doc-c-text-1: var(--hmfw-color-text, rgba(0, 0, 0, 0.88));
@@ -31,6 +33,12 @@
   /* ---- 线条 ---- */
   --doc-c-divider: var(--hmfw-color-fill-secondary, rgba(5, 5, 5, 0.06));
   --doc-c-border: var(--hmfw-color-fill, rgba(5, 5, 5, 0.15));
+
+  /* ---- 阴影 ---- */
+  --doc-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --doc-shadow-2: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --doc-shadow-3: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --doc-shadow-nav: 0 2px 8px rgba(0, 0, 0, 0.05);
 
   /* ---- 行内代码 ---- */
   --doc-code-color: var(--doc-c-brand);
@@ -57,6 +65,11 @@
   /* ---- 布局尺寸（与主题无关） ---- */
   --doc-nav-height: 64px;
   --doc-sidebar-width: 260px;
-  --doc-content-max-w: 960px;
-  --doc-content-padding: 32px 48px 96px;
+  --doc-content-padding: 40px 40px 64px;
+
+  /* ---- 过渡动效 ---- */
+  --doc-t-color: color 0.2s ease;
+  --doc-t-transform: transform 0.2s ease;
+  --doc-t-bg: background-color 0.2s ease;
+  --doc-t-all: all 0.2s ease;
 }

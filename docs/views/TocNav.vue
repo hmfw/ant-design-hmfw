@@ -114,10 +114,12 @@ watch(() => route.path, updateAnchors)
   align-self: flex-start;
   max-height: calc(100vh - var(--doc-nav-height) - 64px);
   overflow-y: auto;
-  font-size: 13px;
-  padding: 0 16px 0 0;
+  font-size: 12px;
+  padding: 12px;
   scrollbar-width: thin;
   scrollbar-color: var(--doc-c-border) transparent;
+  background: transparent;
+  border-left: 1px solid var(--doc-c-divider);
 }
 
 .toc::-webkit-scrollbar {
@@ -145,22 +147,34 @@ watch(() => route.path, updateAnchors)
 
 .toc__link {
   display: block;
-  padding: 3px 8px;
-  color: var(--doc-c-text-2);
+  padding: 4px 8px;
+  color: var(--doc-c-text-3);
   text-decoration: none;
   border-radius: 4px;
-  transition:
-    color 0.2s,
-    background 0.2s;
+  transition: var(--doc-t-all);
   line-height: 1.5;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: relative;
+  font-size: 13px;
+}
+
+.toc__link::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 0;
+  background: var(--doc-c-brand);
+  transition: height 0.2s ease;
 }
 
 .toc__link:hover {
-  color: var(--doc-c-brand);
-  background: var(--doc-c-brand-soft);
+  color: var(--doc-c-text-2);
+  background: var(--doc-c-bg-soft);
 }
 
 .toc__item--active .toc__link {
@@ -168,7 +182,12 @@ watch(() => route.path, updateAnchors)
   font-weight: 500;
 }
 
-@media (max-width: 1280px) {
+.toc__item--active .toc__link::before {
+  height: 16px;
+}
+
+/* 更大的屏幕才显示右侧目录 */
+@media (max-width: 1440px) {
   .toc {
     display: none;
   }

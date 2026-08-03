@@ -15,6 +15,18 @@ body,
   color: var(--doc-c-text-1);
   background: var(--doc-c-bg);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 选择文本样式 */
+::selection {
+  background: var(--doc-c-brand-muted);
+  color: var(--doc-c-brand-dark);
 }
 
 /* ---- Navbar ---- */
@@ -25,29 +37,60 @@ body,
   right: 0;
   z-index: 100;
   height: var(--doc-nav-height);
-  background: var(--doc-c-bg);
+  background: var(--doc-c-bg-elevated);
   border-bottom: 1px solid var(--doc-c-divider);
+  box-shadow: var(--doc-shadow-nav);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 32px;
   gap: 0;
+  transition: var(--doc-t-all);
 }
 
 .navbar__brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
   color: var(--doc-c-text-1);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   white-space: nowrap;
-  margin-right: 32px;
+  margin-right: 48px;
+  transition: var(--doc-t-color);
+  position: relative;
+}
+
+.navbar__brand:hover {
+  color: var(--doc-c-brand);
+}
+
+.navbar__brand::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--doc-c-brand), var(--doc-c-brand-hover));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  border-radius: 2px;
+}
+
+.navbar__brand:hover::after {
+  transform: scaleX(1);
 }
 
 .navbar__brand-logo {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
+  transition: var(--doc-t-transform);
+}
+
+.navbar__brand:hover .navbar__brand-logo {
+  transform: scale(1.05) rotate(-5deg);
 }
 
 .navbar__nav {
@@ -58,18 +101,37 @@ body,
 }
 
 .navbar__nav-link {
-  padding: 4px 12px;
+  padding: 6px 16px;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--doc-c-text-1);
   text-decoration: none;
-  border-radius: 4px;
-  transition: color 0.2s;
+  border-radius: 6px;
+  transition: var(--doc-t-all);
+  position: relative;
 }
 
-.navbar__nav-link:hover,
+.navbar__nav-link:hover {
+  color: var(--doc-c-brand);
+  background: var(--doc-c-brand-soft);
+}
+
 .navbar__nav-link.is-active {
   color: var(--doc-c-brand);
+  background: var(--doc-c-brand-soft-hover);
+  font-weight: 600;
+}
+
+.navbar__nav-link.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: var(--doc-c-brand);
+  border-radius: 2px 2px 0 0;
 }
 
 .navbar__social {
@@ -81,12 +143,18 @@ body,
 .navbar__github {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
   color: var(--doc-c-text-2);
-  transition: color 0.2s;
+  border-radius: 6px;
+  transition: var(--doc-t-all);
 }
 
 .navbar__github:hover {
   color: var(--doc-c-text-1);
+  background: var(--doc-c-bg-soft);
+  transform: translateY(-2px);
 }
 
 /* ---- App layout shell ---- */
@@ -108,18 +176,27 @@ body,
   border-right: 1px solid var(--doc-c-divider);
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px 0 32px;
+  padding: 24px 0 32px;
   scrollbar-width: thin;
   scrollbar-color: var(--doc-c-border) transparent;
 }
 
 .sidebar::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
   background: var(--doc-c-border);
-  border-radius: 2px;
+  border-radius: 3px;
+  transition: var(--doc-t-bg);
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--doc-c-text-3);
 }
 
 .sidebar__group {
@@ -127,22 +204,23 @@ body,
 }
 
 .sidebar__group-title {
-  padding: 16px 24px 6px;
-  font-size: 14px;
-  font-weight: 600;
+  padding: 20px 24px 8px;
+  font-size: 12px;
+  font-weight: 700;
   color: var(--doc-c-text-2);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 12px;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  position: relative;
 }
 
 .sidebar__group-title::after {
-  position: relative;
-  top: 12px;
-  display: block;
-  width: calc(100% - 20px);
+  position: absolute;
+  bottom: 0;
+  left: 24px;
+  right: 24px;
   height: 1px;
-  background: var(--doc-c-divider);
+  background: linear-gradient(90deg, var(--doc-c-divider) 0%, var(--doc-c-divider) 50%, transparent 100%);
   content: '';
 }
 
@@ -154,19 +232,18 @@ body,
 
 .sidebar__link {
   display: block;
-  padding: 5px 16px;
+  padding: 7px 16px;
   font-size: 14px;
   font-weight: 400;
   color: var(--doc-c-text-1);
   text-decoration: none;
-  border-radius: 4px;
-  margin: 4px 8px;
-  transition:
-    color 0.2s,
-    background 0.2s;
+  border-radius: 6px;
+  margin: 2px 12px;
+  transition: var(--doc-t-all);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: relative;
 }
 
 .sidebar__link:hover {
@@ -176,8 +253,8 @@ body,
 
 .sidebar__link.router-link-exact-active {
   color: var(--doc-c-brand);
-  font-weight: 500;
-  background: var(--doc-c-brand-soft-hover);
+  font-weight: 600;
+  background: var(--doc-c-brand-muted);
 }
 
 /* ---- Content area ---- */
@@ -186,14 +263,30 @@ body,
   flex: 1;
   min-width: 0;
   padding: var(--doc-content-padding);
+  position: relative;
+}
+
+/* 内容区域装饰性背景 */
+.app-layout__content::before {
+  content: '';
+  position: fixed;
+  top: var(--doc-nav-height);
+  left: var(--doc-sidebar-width);
+  right: 0;
+  height: 200px;
+  background: linear-gradient(180deg, var(--doc-c-brand-soft) 0%, transparent 100%);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* ---- Responsive ---- */
 @media (max-width: 960px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform 0.25s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 90;
+    box-shadow: var(--doc-shadow-3);
   }
 
   .sidebar.is-open {
@@ -204,10 +297,28 @@ body,
     margin-left: 0;
     padding: 24px 20px 64px;
   }
+
+  .app-layout__content::before {
+    left: 0;
+  }
 }
 
 @media (max-width: 640px) {
   .navbar {
     padding: 0 16px;
+  }
+
+  .navbar__brand {
+    font-size: 15px;
+    margin-right: 24px;
+  }
+
+  .navbar__brand-logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  :root {
+    --doc-nav-height: 56px;
   }
 }

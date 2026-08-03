@@ -15,6 +15,8 @@ import './styles/vars.css'
 import './styles/layout.css'
 import './styles/markdown.css'
 import './styles/demo-block.css'
+import './styles/animations.css'
+import './styles/scrollbar.css'
 import 'prismjs/themes/prism.css'
 // 必须在 prism.css 之后：把语法高亮的硬编码颜色改为主题 Token 派生
 import './styles/prism-tokens.css'

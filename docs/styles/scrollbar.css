@@ -1,0 +1,45 @@
+/* 全局滚动条样式美化 */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--doc-c-border) transparent;
+}
+
+/* Webkit 浏览器 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--doc-c-border);
+  border-radius: 4px;
+  transition: var(--doc-t-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--doc-c-text-3);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 代码块滚动条 */
+pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: var(--doc-c-brand-soft-hover);
+  border-radius: 3px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: var(--doc-c-brand);
+}
