@@ -1,14 +1,29 @@
 .hmfw-tour-root {
+  /* 组件级 Token：派生自基础主题 Token，可单独覆盖而不影响全局 */
+  --hmfw-tour-width: 300px;
+  --hmfw-tour-padding: var(--hmfw-padding-lg);
+  /* 对齐 AntD closeBtnSize = fontSize × lineHeight */
+  --hmfw-tour-close-btn-size: calc(var(--hmfw-font-size) * var(--hmfw-line-height));
+  --hmfw-tour-title-font-size: var(--hmfw-font-size-lg);
+  --hmfw-tour-indicator-size: 6px;
+  --hmfw-tour-indicator-active-width: 16px;
+  --hmfw-tour-arrow-size: 8px;
+  --hmfw-tour-mask-color: rgba(0, 0, 0, 0.45);
+  /* primary 态白色系：卡片底色为主题色，其上文字/描边需用不同透明度的白 */
+  --hmfw-tour-primary-close-color: rgba(255, 255, 255, 0.65);
+  --hmfw-tour-primary-desc-color: rgba(255, 255, 255, 0.85);
+  --hmfw-tour-primary-hover-bg: rgba(255, 255, 255, 0.12);
+  --hmfw-tour-primary-indicator-bg: rgba(255, 255, 255, 0.3);
+  --hmfw-tour-primary-indicator-hover-bg: rgba(255, 255, 255, 0.5);
+
   position: fixed;
   inset: 0;
-  z-index: 1001;
   pointer-events: none;
 }
 
 .hmfw-tour-mask {
   position: fixed;
   inset: 0;
-  pointer-events: auto;
 }
 
 .hmfw-tour-mask-svg {
@@ -18,15 +33,15 @@
   height: 100%;
 }
 
-.hmfw-tour-mask-fill {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+.hmfw-tour-popover {
+  position: absolute;
+  pointer-events: auto;
+  width: var(--hmfw-tour-width);
 }
 
-.hmfw-tour-popover {
-  pointer-events: auto;
-  width: 300px;
+.hmfw-tour-popover:focus-visible {
+  outline: 2px solid var(--hmfw-color-primary);
+  outline-offset: 2px;
 }
 
 .hmfw-tour-popover-inner {
@@ -34,7 +49,7 @@
   background: var(--hmfw-color-bg-elevated);
   border-radius: var(--hmfw-border-radius);
   box-shadow: var(--hmfw-box-shadow-secondary);
-  padding: 20px 20px 16px;
+  padding: var(--hmfw-tour-padding) var(--hmfw-tour-padding) var(--hmfw-padding);
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-popover-inner {
@@ -42,26 +57,55 @@
   color: var(--hmfw-color-white);
 }
 
+/* ========================= 箭头 ========================= */
+
+.hmfw-tour-arrow {
+  position: absolute;
+  width: var(--hmfw-tour-arrow-size);
+  height: var(--hmfw-tour-arrow-size);
+  background: var(--hmfw-color-bg-elevated);
+  transform: rotate(45deg);
+  border-radius: 0 0 2px 0;
+  pointer-events: none;
+}
+
+.hmfw-tour-popover-primary .hmfw-tour-arrow {
+  background: var(--hmfw-color-primary);
+}
+
+/* 箭头贴靠边：沿主轴外移半个身位，交叉轴由行内 style 提供偏移后再回拉半身 */
+.hmfw-tour-arrow-top,
+.hmfw-tour-arrow-bottom {
+  margin-left: calc(var(--hmfw-tour-arrow-size) / -2);
+}
+
+.hmfw-tour-arrow-left,
+.hmfw-tour-arrow-right {
+  margin-top: calc(var(--hmfw-tour-arrow-size) / -2);
+}
+
+/* ========================= 关闭按钮 ========================= */
+
 .hmfw-tour-close {
   position: absolute;
-  top: 12px;
-  inset-inline-end: 12px;
+  top: var(--hmfw-padding-sm);
+  inset-inline-end: var(--hmfw-padding-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: var(--hmfw-tour-close-btn-size);
+  height: var(--hmfw-tour-close-btn-size);
   padding: 0;
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text-tertiary);
   line-height: 1;
   border-radius: var(--hmfw-border-radius-sm);
   transition:
-    color 0.2s,
-    background-color 0.2s;
+    color var(--hmfw-motion-duration-mid),
+    background-color var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-tour-close:hover {
@@ -69,17 +113,24 @@
   background-color: var(--hmfw-color-fill-quaternary);
 }
 
+.hmfw-tour-close:focus-visible {
+  outline: 2px solid var(--hmfw-color-primary);
+  outline-offset: 1px;
+}
+
 .hmfw-tour-popover-primary .hmfw-tour-close {
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--hmfw-tour-primary-close-color);
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-close:hover {
   color: var(--hmfw-color-white);
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: var(--hmfw-tour-primary-hover-bg);
 }
 
+/* ========================= 内容 ========================= */
+
 .hmfw-tour-cover {
-  margin: -20px -20px 16px;
+  margin: calc(var(--hmfw-tour-padding) * -1) calc(var(--hmfw-tour-padding) * -1) var(--hmfw-margin);
   overflow: hidden;
   border-radius: var(--hmfw-border-radius) var(--hmfw-border-radius) 0 0;
 }
@@ -90,12 +141,12 @@
 }
 
 .hmfw-tour-title {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--hmfw-tour-title-font-size);
+  font-weight: var(--hmfw-font-weight-strong);
   color: var(--hmfw-color-text);
-  margin-bottom: 8px;
-  padding-right: 24px;
-  line-height: 1.5;
+  margin-bottom: var(--hmfw-margin-xs);
+  padding-inline-end: var(--hmfw-padding-lg);
+  line-height: var(--hmfw-line-height-heading-4);
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-title {
@@ -103,57 +154,69 @@
 }
 
 .hmfw-tour-description {
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text-secondary);
   line-height: var(--hmfw-line-height);
-  margin-bottom: 16px;
+  margin-bottom: var(--hmfw-margin);
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-description {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--hmfw-tour-primary-desc-color);
 }
+
+/* ========================= 底部 ========================= */
 
 .hmfw-tour-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--hmfw-margin-xs);
 }
 
 .hmfw-tour-indicators {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: var(--hmfw-margin-xxs);
   flex: 1;
 }
 
 .hmfw-tour-indicator {
+  /* 指示器可点击跳步，用 button 保证可聚焦与键盘可达，此处重置原生外观 */
+  appearance: none;
+  padding: 0;
+  border: none;
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: var(--hmfw-tour-indicator-size);
+  height: var(--hmfw-tour-indicator-size);
   border-radius: 50%;
   background: var(--hmfw-color-fill-tertiary);
   cursor: pointer;
   transition:
-    background 0.2s,
-    width 0.2s;
+    background var(--hmfw-motion-duration-mid),
+    width var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-tour-indicator:hover {
   background: var(--hmfw-color-fill-secondary);
 }
 
+.hmfw-tour-indicator:focus-visible {
+  outline: 2px solid var(--hmfw-color-primary);
+  outline-offset: 2px;
+}
+
 .hmfw-tour-indicator-active {
   background: var(--hmfw-color-primary);
-  width: 16px;
-  border-radius: 3px;
+  width: var(--hmfw-tour-indicator-active-width);
+  border-radius: calc(var(--hmfw-tour-indicator-size) / 2);
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-indicator {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--hmfw-tour-primary-indicator-bg);
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-indicator:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--hmfw-tour-primary-indicator-hover-bg);
 }
 
 .hmfw-tour-popover-primary .hmfw-tour-indicator-active {
@@ -162,19 +225,21 @@
 
 .hmfw-tour-buttons {
   display: flex;
-  gap: 8px;
+  gap: var(--hmfw-margin-xs);
   flex-shrink: 0;
 }
 
-/* Ghost button style for primary type */
-.hmfw-tour-popover-primary .hmfw-btn-default {
+/* primary 卡片内的次要按钮：底色已是主题色，需改用白色描边保证对比度 */
+.hmfw-tour-popover-primary .hmfw-tour-prev-btn,
+.hmfw-tour-popover-primary .hmfw-tour-next-btn {
   color: var(--hmfw-color-white);
   border-color: var(--hmfw-color-white);
   background: transparent;
 }
 
-.hmfw-tour-popover-primary .hmfw-btn-default:hover {
+.hmfw-tour-popover-primary .hmfw-tour-prev-btn:hover,
+.hmfw-tour-popover-primary .hmfw-tour-next-btn:hover {
   color: var(--hmfw-color-white);
   border-color: var(--hmfw-color-white);
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--hmfw-tour-primary-hover-bg);
 }

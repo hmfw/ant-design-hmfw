@@ -485,4 +485,36 @@ describe('Button', () => {
     expect(loadingEl.classes()).toContain('custom-icon')
     expect(loadingEl.classes()).toContain('custom-loading')
   })
+
+  // 回归：attrs 曾在 class/style 之后展开，导致外部透传值整体覆盖组件自身样式
+  it('外部 class 与内置 class 合并而非覆盖', () => {
+    const wrapper = mount(Button, { attrs: { class: 'my-cls' }, slots: { default: () => 'x' } })
+    const classes = wrapper.find('button').classes()
+    expect(classes).toContain('my-cls')
+    expect(classes).toContain('hmfw-btn')
+    expect(classes).toContain('hmfw-btn-default')
+  })
+
+  it('外部 style 与 styles.root 合并而非覆盖', () => {
+    const wrapper = mount(Button, {
+      attrs: { style: 'margin-top: 4px' },
+      props: { styles: { root: { color: 'rgb(1, 2, 3)' } } },
+      slots: { default: () => 'x' },
+    })
+    const style = wrapper.find('button').attributes('style')
+    expect(style).toContain('margin-top: 4px')
+    expect(style).toContain('color: rgb(1, 2, 3)')
+  })
+
+  it('href 模式下外部 class 同样合并', () => {
+    const wrapper = mount(Button, {
+      attrs: { class: 'my-link' },
+      props: { href: 'https://example.com', type: 'primary' },
+      slots: { default: () => 'x' },
+    })
+    const classes = wrapper.find('a').classes()
+    expect(classes).toContain('my-link')
+    expect(classes).toContain('hmfw-btn')
+    expect(classes).toContain('hmfw-btn-primary')
+  })
 })

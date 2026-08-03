@@ -58,6 +58,14 @@ Tour 有两种类型：`default` 和 `primary`。
   <TourCover />
 </DemoBlock>
 
+### 高亮交互与 gap
+
+默认高亮区域内的元素仍可点击，遮罩只拦截高亮之外的交互；设置 `disabledInteraction` 可完全禁用。`gap` 控制高亮区域相对目标元素的外扩边距与圆角。
+
+<DemoBlock title="高亮交互与 gap" :source="TourInteractionSource">
+  <TourInteraction />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对遮罩、卡片、标题、描述、指示器、按钮等子元素做细粒度样式控制。
@@ -70,39 +78,47 @@ Tour 有两种类型：`default` 和 `primary`。
 
 ### Tour Props
 
-| 参数                  | 说明                                                                             | 类型                                                       | 默认值                      |
-| --------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------- | --------------------------- |
-| open (v-model)        | 是否显示                                                                         | `boolean`                                                  | `false`                     |
-| current (v-model)     | 当前步骤                                                                         | `number`                                                   | `0`                         |
-| steps                 | 步骤配置                                                                         | `TourStep[]`                                               | `[]`                        |
-| arrow                 | 是否显示箭头                                                                     | `boolean \| { pointAtCenter?: boolean }`                   | `true`                      |
-| placement             | 引导卡片相对于目标元素的位置                                                     | `TooltipPlacement`                                         | `'bottom'`                  |
-| mask                  | 是否显示遮罩                                                                     | `boolean \| { style?: CSSProperties; color?: string }`     | `true`                      |
-| type                  | 类型，影响底色与文字颜色                                                         | `'default' \| 'primary'`                                   | `'default'`                 |
-| scrollIntoViewOptions | 是否滚动到目标元素，支持传入滚动选项                                             | `boolean \| ScrollIntoViewOptions`                         | `true`                      |
-| zIndex                | Tour 的 z-index                                                                  | `number`                                                   | `1001`                      |
-| gap                   | 引导卡片与目标元素的距离和箭头偏移                                               | `{ offset?: number \| [number, number]; radius?: number }` | `{ offset: 12, radius: 4 }` |
-| indicatorsRender      | 自定义指示器渲染                                                                 | `(current: number, total: number) => VNode`                | -                           |
-| closeIcon             | 自定义关闭图标，设置为 `false` 时隐藏关闭按钮                                    | `VNode \| (() => VNode) \| false`                          | `<CloseOutlined />`         |
-| classNames            | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TourClassNames`                                           | -                           |
-| styles                | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TourStyles`                                               | -                           |
+| 参数                  | 说明                                                                             | 类型                                                            | 默认值                     |
+| --------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------- |
+| open (v-model)        | 是否显示                                                                         | `boolean`                                                       | `false`                    |
+| current (v-model)     | 当前步骤                                                                         | `number`                                                        | `0`                        |
+| steps                 | 步骤配置                                                                         | `TourStep[]`                                                    | `[]`                       |
+| arrow                 | 是否显示箭头，`pointAtCenter` 控制是否始终指向目标中心                           | `boolean \| { pointAtCenter?: boolean }`                        | `true`                     |
+| placement             | 引导卡片相对于目标元素的位置，`center` 为视口居中                                | `TourPlacement`                                                 | `'bottom'`                 |
+| mask                  | 是否显示遮罩                                                                     | `boolean \| { style?: CSSProperties; color?: string }`          | `true`                     |
+| type                  | 类型，影响底色与文字颜色                                                         | `'default' \| 'primary'`                                        | `'default'`                |
+| scrollIntoViewOptions | 目标元素不在视口内时是否滚动到目标，支持传入滚动选项                             | `boolean \| ScrollIntoViewOptions`                              | `true`                     |
+| zIndex                | Tour 的 z-index                                                                  | `number`                                                        | `1001`                     |
+| gap                   | 高亮区域的外扩边距与圆角，`offset` 支持 `[x, y]` 分别指定水平/垂直               | `{ offset?: number \| [number, number]; radius?: number }`      | `{ offset: 6, radius: 2 }` |
+| disabledInteraction   | 是否禁用高亮区域的交互。默认高亮元素可正常点击                                   | `boolean`                                                       | `false`                    |
+| keyboard              | 是否启用键盘导航（`←` `→` 切换步骤，`Esc` 关闭）                                 | `boolean`                                                       | `true`                     |
+| indicatorsRender      | 自定义指示器渲染                                                                 | `(current: number, total: number) => VNode \| string \| number` | -                          |
+| closeIcon             | 自定义关闭图标，设置为 `false` 时隐藏关闭按钮                                    | `VNode \| (() => VNode) \| false`                               | `<CloseOutlined />`        |
+| getPopupContainer     | 指定挂载容器，默认挂载到 `body`。未设置时回退到 ConfigProvider 的同名配置        | `(triggerNode?: HTMLElement) => HTMLElement`                    | `() => document.body`      |
+| classNames            | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TourClassNames`                                                | -                          |
+| styles                | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TourStyles`                                                    | -                          |
 
 ### TourStep
 
-| 参数                  | 说明                                   | 类型                                                   | 默认值 |
-| --------------------- | -------------------------------------- | ------------------------------------------------------ | ------ |
-| title                 | 标题                                   | `string \| VNode \| (() => VNode)`                     | -      |
-| description           | 描述                                   | `string \| VNode \| (() => VNode)`                     | -      |
-| target                | 目标元素（CSS 选择器或返回元素的函数） | `string \| (() => HTMLElement \| null)`                | -      |
-| placement             | 弹出位置                               | `TooltipPlacement`                                     | -      |
-| cover                 | 封面图片或自定义内容                   | `string \| VNode`                                      | -      |
-| type                  | 类型，优先级高于 Tour 的 type          | `'default' \| 'primary'`                               | -      |
-| mask                  | 是否显示遮罩，优先级高于 Tour 的 mask  | `boolean \| { style?: CSSProperties; color?: string }` | -      |
-| style                 | 自定义样式                             | `CSSProperties`                                        | -      |
-| className             | 自定义类名                             | `string`                                               | -      |
-| nextButtonProps       | 下一步按钮的属性                       | `TourButtonProps`                                      | -      |
-| prevButtonProps       | 上一步按钮的属性                       | `TourButtonProps`                                      | -      |
-| scrollIntoViewOptions | 是否滚动到目标元素                     | `boolean \| ScrollIntoViewOptions`                     | -      |
+| 参数                  | 说明                                                                                      | 类型                                                   | 默认值 |
+| --------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------ |
+| title                 | 标题                                                                                      | `TourRenderable`                                       | -      |
+| description           | 描述                                                                                      | `TourRenderable`                                       | -      |
+| target                | 目标元素。支持 CSS 选择器、DOM 节点、Vue 组件实例，或返回上述值的函数；为空时卡片居中展示 | `string \| HTMLElement \| (() => HTMLElement \| null)` | -      |
+| placement             | 弹出位置，优先级高于 Tour 的 placement                                                    | `TourPlacement`                                        | -      |
+| arrow                 | 是否显示箭头，优先级高于 Tour 的 arrow                                                    | `boolean \| { pointAtCenter?: boolean }`               | -      |
+| cover                 | 封面图片或自定义内容。字符串按图片地址处理                                                | `TourRenderable`                                       | -      |
+| type                  | 类型，优先级高于 Tour 的 type                                                             | `'default' \| 'primary'`                               | -      |
+| mask                  | 是否显示遮罩，优先级高于 Tour 的 mask                                                     | `boolean \| { style?: CSSProperties; color?: string }` | -      |
+| style                 | 自定义样式                                                                                | `CSSProperties`                                        | -      |
+| className             | 自定义类名                                                                                | `string`                                               | -      |
+| nextButtonProps       | 下一步按钮的属性                                                                          | `TourButtonProps`                                      | -      |
+| prevButtonProps       | 上一步按钮的属性                                                                          | `TourButtonProps`                                      | -      |
+| scrollIntoViewOptions | 是否滚动到目标元素                                                                        | `boolean \| ScrollIntoViewOptions`                     | -      |
+
+> `TourRenderable` = `string | number | VNode | (() => VNode | string | number)`
+>
+> `TourPlacement` = `TooltipPlacement | 'center'`
 
 ### TourButtonProps
 
@@ -114,11 +130,33 @@ Tour 有两种类型：`default` 和 `primary`。
 
 ### Tour Events
 
-| 事件名 | 说明                         | 回调参数                    |
-| ------ | ---------------------------- | --------------------------- |
-| change | 步骤改变时                   | `(current: number) => void` |
-| close  | 关闭时                       | `() => void`                |
-| finish | 完成时（最后一步点击下一步） | `() => void`                |
+| 事件名         | 说明                                        | 回调参数                    |
+| -------------- | ------------------------------------------- | --------------------------- |
+| change         | 步骤改变时                                  | `(current: number) => void` |
+| close          | 关闭时                                      | `() => void`                |
+| finish         | 完成时（最后一步点击下一步）                | `() => void`                |
+| update:open    | 显示状态变化时，配合 `v-model:open` 使用    | `(open: boolean) => void`   |
+| update:current | 当前步骤变化时，配合 `v-model:current` 使用 | `(current: number) => void` |
+
+### 键盘交互
+
+`keyboard` 默认开启，引导展示期间支持：
+
+| 按键  | 行为                 |
+| ----- | -------------------- |
+| `→`   | 下一步（末步不响应） |
+| `←`   | 上一步（首步不响应） |
+| `Esc` | 关闭引导             |
+
+焦点位于输入框、文本域、下拉框或 `contenteditable` 元素内时不触发切换，避免与文本编辑冲突。
+
+### 无障碍
+
+- 引导卡片为 `role="dialog"`，有遮罩时附加 `aria-modal="true"`
+- 卡片通过 `aria-labelledby` / `aria-describedby` 关联标题与描述
+- 打开时焦点移入卡片，关闭后归还给触发元素
+- 指示器为可聚焦的 `button`，带 `aria-label`（如 `2 / 3`）与 `aria-current`
+- 关闭按钮的 `aria-label` 取自当前语言包，随 ConfigProvider 的 `locale` 切换
 
 ---
 
@@ -136,13 +174,14 @@ interface TourClassNames {
   mask?: string // 遮罩层 div.hmfw-tour-mask
   popover?: string // 弹出卡片 div.hmfw-tour-popover
   popoverInner?: string // 卡片内层 div.hmfw-tour-popover-inner
+  arrow?: string // 箭头 div.hmfw-tour-arrow
   close?: string // 关闭按钮 button.hmfw-tour-close
   cover?: string // 封面图片区域 div.hmfw-tour-cover
   title?: string // 标题 div.hmfw-tour-title
   description?: string // 描述文本 div.hmfw-tour-description
   footer?: string // 底部区域 div.hmfw-tour-footer
   indicators?: string // 指示器容器 div.hmfw-tour-indicators
-  indicator?: string // 单个指示器点 span.hmfw-tour-indicator
+  indicator?: string // 单个指示器点 button.hmfw-tour-indicator
   buttons?: string // 按钮组 div.hmfw-tour-buttons
   prevBtn?: string // 上一步按钮 button.hmfw-tour-prev-btn
   nextBtn?: string // 下一步/完成按钮 button.hmfw-tour-next-btn
@@ -153,6 +192,7 @@ interface TourStyles {
   mask?: CSSProperties
   popover?: CSSProperties
   popoverInner?: CSSProperties
+  arrow?: CSSProperties
   close?: CSSProperties
   cover?: CSSProperties
   title?: CSSProperties
@@ -371,3 +411,27 @@ Tour 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全
 | `--hmfw-border-radius`         | 卡片与封面圆角                          | `6px`                                                               |
 | `--hmfw-border-radius-sm`      | 关闭按钮圆角                            | `4px`                                                               |
 | `--hmfw-box-shadow-secondary`  | 卡片阴影                                | `0 6px 16px 0 rgba(0,0,0,0.08), 0 3px 6px -4px rgba(0,0,0,0.12), …` |
+
+### 组件级 Token
+
+以下 Token 定义在 `.hmfw-tour-root` 上，可单独覆盖而不影响其他组件。
+
+| Token 名称                           | 说明           | 默认值                          |
+| ------------------------------------ | -------------- | ------------------------------- |
+| `--hmfw-tour-width`                  | 卡片宽度       | `300px`                         |
+| `--hmfw-tour-padding`                | 卡片内边距     | `var(--hmfw-padding-lg)`        |
+| `--hmfw-tour-close-btn-size`         | 关闭按钮尺寸   | `calc(font-size × line-height)` |
+| `--hmfw-tour-title-font-size`        | 标题字号       | `var(--hmfw-font-size-lg)`      |
+| `--hmfw-tour-indicator-size`         | 指示器点直径   | `6px`                           |
+| `--hmfw-tour-indicator-active-width` | 激活指示器宽度 | `16px`                          |
+| `--hmfw-tour-arrow-size`             | 箭头尺寸       | `8px`                           |
+| `--hmfw-tour-mask-color`             | 遮罩填充色     | `rgba(0, 0, 0, 0.45)`           |
+
+覆盖示例：
+
+```css
+.hmfw-tour-root {
+  --hmfw-tour-width: 360px;
+  --hmfw-tour-arrow-size: 10px;
+}
+```

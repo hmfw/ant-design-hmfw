@@ -2,7 +2,27 @@ import type { VNode, CSSProperties } from 'vue'
 import type { TooltipPlacement } from '../tooltip/types'
 import type { ButtonProps } from '../button/types'
 
-export type TourPlacement = TooltipPlacement
+/** 引导卡片方位。`center` 用于无目标元素时居中展示（对齐 AntD）。 */
+export type TourPlacement = TooltipPlacement | 'center'
+
+/** 可渲染内容：纯文本、数字、VNode 或返回上述内容的渲染函数 */
+export type TourRenderable = string | number | VNode | (() => VNode | string | number)
+
+/** 箭头配置。`boolean` 控制显隐，对象形式用于 `pointAtCenter`。 */
+export type TourArrow = boolean | { pointAtCenter?: boolean }
+
+/** 遮罩配置。`boolean` 控制显隐，对象形式用于自定义填充色与样式。 */
+export type TourMask = boolean | { style?: CSSProperties; color?: string }
+
+/**
+ * 高亮区域配置。
+ * - `offset`：高亮区域相对目标元素的外扩边距，`number` 为四向统一，`[x, y]` 分别指定水平/垂直，默认 `6`
+ * - `radius`：高亮区域圆角，默认 `2`
+ */
+export interface TourGap {
+  offset?: number | [number, number]
+  radius?: number
+}
 
 export interface TourButtonProps extends Omit<ButtonProps, 'onClick'> {
   children?: string | VNode
@@ -10,15 +30,18 @@ export interface TourButtonProps extends Omit<ButtonProps, 'onClick'> {
 }
 
 export interface TourStep {
-  title?: string | VNode | (() => VNode)
-  description?: string | VNode | (() => VNode)
-  target?: string | HTMLElement | (() => HTMLElement | null)
+  title?: TourRenderable
+  description?: TourRenderable
+  /** 目标元素：CSS 选择器、DOM 节点、Vue 组件实例，或返回上述值的函数。为空时卡片居中展示。 */
+  target?: string | HTMLElement | (() => HTMLElement | null | undefined | any)
   placement?: TourPlacement
+  /** 是否显示箭头，优先级高于 Tour 的 `arrow` */
+  arrow?: TourArrow
   nextButtonProps?: TourButtonProps
   prevButtonProps?: TourButtonProps
-  cover?: string | VNode
+  cover?: TourRenderable
   type?: 'default' | 'primary'
-  mask?: boolean | { style?: CSSProperties; color?: string }
+  mask?: TourMask
   style?: CSSProperties
   className?: string
   scrollIntoViewOptions?: boolean | ScrollIntoViewOptions
@@ -36,6 +59,8 @@ export interface TourClassNames {
   popover?: string
   /** 卡片内层 div.hmfw-tour-popover-inner */
   popoverInner?: string
+  /** 箭头 div.hmfw-tour-arrow */
+  arrow?: string
   /** 关闭按钮 button.hmfw-tour-close */
   close?: string
   /** 封面图片区域 div.hmfw-tour-cover */
@@ -70,6 +95,8 @@ export interface TourStyles {
   popover?: CSSProperties
   /** 卡片内层 div.hmfw-tour-popover-inner */
   popoverInner?: CSSProperties
+  /** 箭头 div.hmfw-tour-arrow */
+  arrow?: CSSProperties
   /** 关闭按钮 button.hmfw-tour-close */
   close?: CSSProperties
   /** 封面图片区域 div.hmfw-tour-cover */
@@ -113,17 +140,19 @@ export interface TourProps {
   current?: number
   defaultCurrent?: number
   steps?: TourStep[]
-  arrow?: boolean | { pointAtCenter?: boolean }
+  arrow?: TourArrow
   placement?: TourPlacement
-  mask?: boolean | { style?: CSSProperties; color?: string }
+  mask?: TourMask
   type?: 'default' | 'primary'
   scrollIntoViewOptions?: boolean | ScrollIntoViewOptions
   zIndex?: number
-  gap?: { offset?: number | [number, number]; radius?: number }
-  indicatorsRender?: (current: number, total: number) => VNode
+  gap?: TourGap
+  /** 禁用高亮区域的交互。默认 `false` —— 高亮元素可正常点击（对齐 AntD） */
+  disabledInteraction?: boolean
+  indicatorsRender?: (current: number, total: number) => VNode | string | number
   closeIcon?: VNode | (() => VNode) | false
   keyboard?: boolean
-  getPopupContainer?: () => HTMLElement
+  getPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement
   /** 语义化 className */
   classNames?: TourClassNames
   /** 语义化 style */

@@ -214,6 +214,10 @@ export default defineComponent({
         </>
       )
 
+      // class / style 不参与下方的 attrs 展开：Vue 的隐式 attrs 继承会自动把外部透传的
+      // class / style 合并到根元素上。若在此手动展开，外部值会整体覆盖组件自身的 class
+      // （丢掉 hmfw-btn 基类，按钮退化为浏览器默认样式）与 styles.root。
+      const { class: _attrsClass, style: _attrsStyle, ...restAttrs } = attrs as Record<string, unknown>
       const buttonClasses = cls(classes.value, { [`${prefixCls}-icon-only`]: hasIcon })
       const rootStyle = props.styles?.root
 
@@ -222,14 +226,14 @@ export default defineComponent({
         const linkAttrs: LinkAttrs = {
           ref: buttonRef,
           role: 'button',
-          class: buttonClasses,
-          style: rootStyle,
           href: isDisabled.value ? undefined : props.href,
           target: props.target,
           'aria-disabled': isDisabled.value || undefined,
           tabindex: isDisabled.value ? -1 : undefined,
           onClick: handleClick,
-          ...attrs,
+          class: buttonClasses,
+          style: rootStyle,
+          ...restAttrs,
         }
         return <a {...linkAttrs}>{content}</a>
       }
@@ -237,13 +241,13 @@ export default defineComponent({
       const buttonAttrs: ButtonAttrs = {
         ref: buttonRef,
         type: props.htmlType,
-        class: buttonClasses,
-        style: rootStyle,
         disabled: isDisabled.value,
         'aria-busy': innerLoading.value || undefined,
         'aria-disabled': isDisabled.value || undefined,
         onClick: handleClick,
-        ...attrs,
+        class: buttonClasses,
+        style: rootStyle,
+        ...restAttrs,
       }
       return <button {...buttonAttrs}>{content}</button>
     }

@@ -5,21 +5,23 @@
     <Space>
       <Button ref="btn1Ref">操作 1</Button>
       <Button ref="btn2Ref" type="primary">操作 2</Button>
-      <Button ref="btn3Ref" icon="ellipsis" />
+      <Button ref="btn3Ref" :icon="EllipsisOutlined" />
     </Space>
     <Tour v-model:open="open" :mask="false" type="primary" :steps="steps" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, type ComponentPublicInstance } from 'vue'
 import { Tour, Button, Space, Divider } from '@hmfw/ant-design'
+import { EllipsisOutlined } from '@hmfw/icons'
 import type { TourProps } from '@hmfw/ant-design'
 
 const open = ref(false)
-const btn1Ref = ref<HTMLElement>()
-const btn2Ref = ref<HTMLElement>()
-const btn3Ref = ref<HTMLElement>()
+// ref 挂在组件上拿到的是组件实例，Tour 会自动解包出根元素，无需手动取 $el
+const btn1Ref = ref<ComponentPublicInstance>()
+const btn2Ref = ref<ComponentPublicInstance>()
+const btn3Ref = ref<ComponentPublicInstance>()
 
 const steps: TourProps['steps'] = [
   {

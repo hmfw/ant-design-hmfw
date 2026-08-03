@@ -1,128 +1,30 @@
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  nextTick,
-  onMounted,
-  onBeforeUnmount,
-  Teleport,
-  h,
-  isVNode,
-  type PropType,
-  type VNode,
-} from 'vue'
-import { usePrefixCls, useLocale } from '../config-provider'
+import { defineComponent, ref, computed, watch, nextTick, onBeforeUnmount, Teleport, h, type PropType } from 'vue'
+import { usePrefixCls, useLocale, useConfig } from '../config-provider'
 import { cls } from '../_utils'
-import { Button } from '../button'
 import { CloseOutlined } from '@hmfw/icons'
-import type { TourStep, TourProps, TourButtonProps } from './types'
-import type { TooltipPlacement } from '../tooltip/types'
-import { omit } from '../_utils/function'
-
-/** 剥离 children/onClick 后再透传给 Button，避免只读 children 属性透传到 DOM 触发告警 */
-function omitButtonProps(buttonProps?: TourButtonProps) {
-  if (!buttonProps) return undefined
-  return omit(buttonProps, ['children', 'onClick'])
-  // const { children, onClick, ...rest } = buttonProps
-  // return rest
-}
-
-function getTargetEl(target: TourStep['target']): HTMLElement | null {
-  if (!target) return null
-  if (typeof target === 'function') return target()
-  if (typeof target === 'string') return document.querySelector<HTMLElement>(target)
-  return target // HTMLElement
-}
-
-interface Rect {
-  top: number
-  left: number
-  width: number
-  height: number
-}
-
-function getRect(el: HTMLElement | null): Rect | null {
-  if (!el) return null
-  const r = el.getBoundingClientRect()
-  return {
-    top: r.top + window.scrollY,
-    left: r.left + window.scrollX,
-    width: r.width,
-    height: r.height,
-  }
-}
-
-function calcPopoverPos(
-  targetRect: Rect | null,
-  popoverEl: HTMLElement | null,
-  placement: TooltipPlacement = 'bottom',
-  gap = 12,
-): { top: number; left: number } {
-  if (!targetRect || !popoverEl) return { top: 100, left: 100 }
-  const pw = popoverEl.offsetWidth || 300
-  const ph = popoverEl.offsetHeight || 200
-  const cx = targetRect.left + targetRect.width / 2
-  const cy = targetRect.top + targetRect.height / 2
-
-  if (placement.startsWith('bottom')) {
-    const top = targetRect.top + targetRect.height + gap
-    const left =
-      placement === 'bottom'
-        ? cx - pw / 2
-        : placement === 'bottomLeft'
-          ? targetRect.left
-          : targetRect.left + targetRect.width - pw
-    return { top, left }
-  }
-  if (placement.startsWith('top')) {
-    const top = targetRect.top - ph - gap
-    const left =
-      placement === 'top'
-        ? cx - pw / 2
-        : placement === 'topLeft'
-          ? targetRect.left
-          : targetRect.left + targetRect.width - pw
-    return { top, left }
-  }
-  if (placement.startsWith('right')) {
-    const left = targetRect.left + targetRect.width + gap
-    const top =
-      placement === 'right'
-        ? cy - ph / 2
-        : placement === 'rightTop'
-          ? targetRect.top
-          : targetRect.top + targetRect.height - ph
-    return { top, left }
-  }
-  if (placement.startsWith('left')) {
-    const left = targetRect.left - pw - gap
-    const top =
-      placement === 'left'
-        ? cy - ph / 2
-        : placement === 'leftTop'
-          ? targetRect.top
-          : targetRect.top + targetRect.height - ph
-    return { top, left }
-  }
-  return { top: targetRect.top + targetRect.height + gap, left: cx - pw / 2 }
-}
-
-function renderContent(content: string | VNode | (() => VNode) | undefined) {
-  if (content === undefined || content === null) return null
-  if (typeof content === 'function') return content()
-  if (isVNode(content)) return content
-  return String(content)
-}
+import type { TourProps, TourPlacement } from './types'
+import { TourMask } from './TourMask'
+import { TourPanel } from './TourPanel'
+import {
+  ARROW_SIZE,
+  calcPopoverPos,
+  genMaskId,
+  getHoleRect,
+  getRect,
+  getTargetEl,
+  isEditableTarget,
+  type PopoverPosition,
+  type Rect,
+} from './utils'
 
 const tourProps = {
   open: { type: Boolean, default: undefined },
   defaultOpen: { type: Boolean, default: false },
   current: { type: Number, default: undefined },
   defaultCurrent: { type: Number, default: 0 },
-  steps: { type: Array as PropType<TourStep[]>, default: () => [] },
+  steps: { type: Array as PropType<TourProps['steps']>, default: () => [] },
   arrow: { type: [Boolean, Object] as PropType<TourProps['arrow']>, default: true },
-  placement: { type: String as PropType<TooltipPlacement>, default: undefined },
+  placement: { type: String as PropType<TourPlacement>, default: undefined },
   mask: { type: [Boolean, Object] as PropType<TourProps['mask']>, default: true },
   type: { type: String as PropType<'default' | 'primary'>, default: 'default' },
   scrollIntoViewOptions: {
@@ -131,6 +33,7 @@ const tourProps = {
   },
   zIndex: { type: Number, default: 1001 },
   gap: { type: Object as PropType<TourProps['gap']>, default: undefined },
+  disabledInteraction: { type: Boolean, default: false },
   indicatorsRender: {
     type: Function as PropType<TourProps['indicatorsRender']>,
     default: undefined,
@@ -140,7 +43,7 @@ const tourProps = {
     default: undefined,
   },
   keyboard: { type: Boolean, default: true },
-  getPopupContainer: { type: Function as PropType<() => HTMLElement>, default: undefined },
+  getPopupContainer: { type: Function as PropType<TourProps['getPopupContainer']>, default: undefined },
   classNames: { type: Object as PropType<TourProps['classNames']>, default: undefined },
   styles: { type: Object as PropType<TourProps['styles']>, default: undefined },
 } satisfies Record<keyof TourProps, any>
@@ -152,26 +55,57 @@ export const Tour = defineComponent({
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tour')
     const locale = useLocale()
+    const config = useConfig()
     const innerOpen = ref(props.defaultOpen)
     const innerCurrent = ref(props.defaultCurrent)
     const popoverRef = ref<HTMLElement | null>(null)
-    const popoverPos = ref({ top: 100, left: 100 })
     const targetRect = ref<Rect | null>(null)
-    const maskId = `tour-mask-${Math.random().toString(36).slice(2, 9)}`
+    const viewport = ref({ width: 0, height: 0 })
+    const popoverPos = ref<PopoverPosition>({
+      top: 0,
+      left: 0,
+      arrowSide: null,
+      arrowOffset: 0,
+      arrowOffsetSelf: 0,
+      center: true,
+    })
+    const maskId = genMaskId(prefixCls)
+    const idPrefix = maskId.replace('-mask-', '-panel-')
+    /** 打开前的焦点元素，关闭后归还焦点 */
+    const prevActiveEl = ref<HTMLElement | null>(null)
 
-    const popupContainer = computed(() => props.getPopupContainer?.() ?? document.body)
+    // 组件自身配置优先于 ConfigProvider 下发的容器；SSR 下无 document，返回 undefined 交由渲染短路
+    const popupContainer = computed(() => {
+      if (typeof document === 'undefined') return undefined
+      return props.getPopupContainer?.() ?? config.value.getPopupContainer?.() ?? document.body
+    })
 
     const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
     const currentStep = computed(() => (props.current !== undefined ? props.current : innerCurrent.value))
-    const step = computed(() => props.steps[currentStep.value] ?? null)
-    const total = computed(() => props.steps.length)
+    const step = computed(() => props.steps?.[currentStep.value] ?? null)
+    const total = computed(() => props.steps?.length ?? 0)
 
-    const mergedMask = computed(() => {
-      const stepMask = step.value?.mask
-      return stepMask !== undefined ? stepMask : props.mask
+    const mergedMask = computed(() => step.value?.mask ?? props.mask)
+    const mergedType = computed(() => step.value?.type ?? props.type)
+    const mergedPlacement = computed<TourPlacement>(() => step.value?.placement ?? props.placement ?? 'bottom')
+
+    /** 高亮区域 = 目标矩形按 gap.offset 外扩，无目标时为 null */
+    const holeRect = computed(() => getHoleRect(targetRect.value, props.gap))
+
+    /**
+     * 箭头是否显示：无目标元素（居中展示）时一律不显示，
+     * 其余情况步骤级 `arrow` 优先于 Tour 级（对齐 rc-tour）。
+     */
+    const mergedArrow = computed(() => {
+      if (!targetRect.value) return false
+      const arrow = step.value?.arrow ?? props.arrow
+      return arrow !== false
     })
 
-    const mergedType = computed(() => step.value?.type ?? props.type)
+    const arrowPointAtCenter = computed(() => {
+      const arrow = step.value?.arrow ?? props.arrow
+      return typeof arrow === 'object' ? arrow.pointAtCenter !== false : true
+    })
 
     watch(
       () => props.open,
@@ -186,63 +120,57 @@ export const Tour = defineComponent({
       },
     )
 
-    async function scrollToTarget() {
+    /** 目标不在视口内时才滚动，避免每次切步都强制滚动页面（对齐 rc-tour） */
+    function scrollToTarget() {
       const el = step.value ? getTargetEl(step.value.target) : null
       if (!el) return
 
       const scrollOptions = step.value?.scrollIntoViewOptions ?? props.scrollIntoViewOptions ?? true
+      if (!scrollOptions) return
 
-      if (scrollOptions) {
-        const options: ScrollIntoViewOptions =
-          typeof scrollOptions === 'boolean' ? { block: 'nearest', behavior: 'smooth' } : scrollOptions
-        el.scrollIntoView(options)
+      const r = el.getBoundingClientRect()
+      const inViewport =
+        r.top >= 0 &&
+        r.left >= 0 &&
+        r.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        r.right <= (window.innerWidth || document.documentElement.clientWidth)
+      if (inViewport) return
+
+      el.scrollIntoView(typeof scrollOptions === 'boolean' ? { block: 'center', behavior: 'smooth' } : scrollOptions)
+    }
+
+    function measure() {
+      viewport.value = {
+        width: window.innerWidth || document.documentElement.clientWidth,
+        height: window.innerHeight || document.documentElement.clientHeight,
       }
+      const el = step.value ? getTargetEl(step.value.target) : null
+      targetRect.value = getRect(el)
+      popoverPos.value = calcPopoverPos(holeRect.value, popoverRef.value, mergedPlacement.value, viewport.value)
     }
 
     async function updatePos() {
       await nextTick()
-      const el = step.value ? getTargetEl(step.value.target) : null
-      targetRect.value = getRect(el)
-
-      if (popoverRef.value) {
-        const placement = step.value?.placement ?? props.placement ?? 'bottom'
-        const gapValue = props.gap?.offset ?? 12
-        const isHorizontal = placement.startsWith('left') || placement.startsWith('right')
-        const gap = typeof gapValue === 'number' ? gapValue : isHorizontal ? gapValue[0] : gapValue[1]
-        popoverPos.value = calcPopoverPos(targetRect.value, popoverRef.value, placement, gap)
-      }
+      measure()
+      // 首帧卡片尺寸可能尚未稳定（字体/图片），再量一次校正
+      await nextTick()
+      measure()
     }
 
-    watch(
-      [isOpen, currentStep],
-      async ([open]) => {
-        if (open) {
-          await scrollToTarget()
-          await updatePos()
-        }
-      },
-      { immediate: true },
-    )
-
-    onMounted(() => {
-      window.addEventListener('resize', updatePos)
-      window.addEventListener('scroll', updatePos, true)
-
-      // 键盘快捷键支持
-      if (props.keyboard) {
-        window.addEventListener('keydown', handleKeyDown)
-      }
-    })
-    onBeforeUnmount(() => {
-      window.removeEventListener('resize', updatePos)
-      window.removeEventListener('scroll', updatePos, true)
-      if (props.keyboard) {
-        window.removeEventListener('keydown', handleKeyDown)
-      }
-    })
+    // rAF 合帧节流：scroll 走捕获阶段，页面内任意滚动容器都会触发，不节流会高频抖动
+    let rafId: number | null = null
+    function schedulePos() {
+      if (rafId !== null) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        measure()
+      })
+    }
 
     function handleKeyDown(e: KeyboardEvent) {
-      if (!isOpen.value) return
+      if (!isOpen.value || !props.keyboard) return
+      // 输入类元素内的方向键属于文本编辑，不应切换引导步骤
+      if (isEditableTarget(e)) return
 
       switch (e.key) {
         case 'Escape':
@@ -250,15 +178,71 @@ export const Tour = defineComponent({
           close()
           break
         case 'ArrowLeft':
-          e.preventDefault()
-          prev()
+          if (currentStep.value > 0) {
+            e.preventDefault()
+            prev()
+          }
           break
         case 'ArrowRight':
-          e.preventDefault()
-          next()
+          if (currentStep.value < total.value - 1) {
+            e.preventDefault()
+            next()
+          }
           break
       }
     }
+
+    function bindGlobalListeners() {
+      window.addEventListener('resize', schedulePos)
+      window.addEventListener('scroll', schedulePos, true)
+      window.addEventListener('keydown', handleKeyDown)
+    }
+
+    function unbindGlobalListeners() {
+      window.removeEventListener('resize', schedulePos)
+      window.removeEventListener('scroll', schedulePos, true)
+      window.removeEventListener('keydown', handleKeyDown)
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+        rafId = null
+      }
+    }
+
+    // 仅在打开期间挂全局监听（对齐 rc-tour），关闭后不留残留监听
+    watch(
+      isOpen,
+      async (open, wasOpen) => {
+        if (open) {
+          prevActiveEl.value = (document.activeElement as HTMLElement) ?? null
+          bindGlobalListeners()
+          scrollToTarget()
+          await updatePos()
+          // 打开后把焦点移入卡片，便于键盘用户直接操作
+          popoverRef.value?.focus?.({ preventScroll: true })
+        } else {
+          unbindGlobalListeners()
+          if (wasOpen) {
+            prevActiveEl.value?.focus?.({ preventScroll: true })
+            prevActiveEl.value = null
+          }
+        }
+      },
+      { immediate: true },
+    )
+
+    // 切换步骤时重新滚动定位（打开状态才有意义）
+    watch(currentStep, async () => {
+      if (!isOpen.value) return
+      scrollToTarget()
+      await updatePos()
+    })
+
+    // 目标或方位配置变化时重算，避免动态 steps 场景下位置滞后
+    watch([() => step.value?.target, mergedPlacement, () => props.gap], async () => {
+      if (isOpen.value) await updatePos()
+    })
+
+    onBeforeUnmount(unbindGlobalListeners)
 
     function close() {
       innerOpen.value = false
@@ -285,27 +269,37 @@ export const Tour = defineComponent({
       }
     }
 
-    const getCloseIcon = () => {
+    function resolveCloseIcon() {
       if (props.closeIcon === false) return null
-      if (props.closeIcon === undefined) {
-        return h(CloseOutlined, { class: 'hmfw-icon' })
-      }
-      if (typeof props.closeIcon === 'function') {
-        return props.closeIcon()
-      }
+      if (props.closeIcon === undefined) return h(CloseOutlined, { class: 'hmfw-icon' })
+      if (typeof props.closeIcon === 'function') return props.closeIcon()
       return props.closeIcon
     }
 
+    /**
+     * 箭头绝对定位样式：贴靠朝向目标的那一边，沿该边偏移。
+     * `pointAtCenter: true`（默认）指向目标中心；`false` 则对齐卡片自身中心。
+     */
+    function getArrowStyle() {
+      const { arrowSide, arrowOffset, arrowOffsetSelf } = popoverPos.value
+      if (!arrowSide) return undefined
+
+      const offset = arrowPointAtCenter.value ? arrowOffset : arrowOffsetSelf
+      const isVertical = arrowSide === 'top' || arrowSide === 'bottom'
+      return {
+        [arrowSide]: `${-ARROW_SIZE / 2}px`,
+        ...(isVertical ? { left: `${offset}px` } : { top: `${offset}px` }),
+      } as Record<string, string>
+    }
+
     return () => {
-      if (!isOpen.value || !step.value) return null
+      if (!isOpen.value || !step.value || !popupContainer.value) return null
 
       const isPrimary = mergedType.value === 'primary'
-      const isLast = currentStep.value === total.value - 1
       const showMask = mergedMask.value !== false
-      const maskStyle = typeof mergedMask.value === 'object' ? mergedMask.value.style : undefined
-      const maskColor = typeof mergedMask.value === 'object' ? mergedMask.value.color : 'rgba(0,0,0,0.45)'
-
-      const closeIcon = getCloseIcon()
+      const maskConfig = typeof mergedMask.value === 'object' ? mergedMask.value : undefined
+      const closeIcon = resolveCloseIcon()
+      const { arrowSide } = popoverPos.value
 
       return h(Teleport, { to: popupContainer.value }, [
         h(
@@ -315,50 +309,19 @@ export const Tour = defineComponent({
             style: { zIndex: props.zIndex, ...props.styles?.root },
           },
           [
-            // Mask layer
             showMask &&
-              h(
-                'div',
-                {
-                  class: cls(`${prefixCls}-mask`, props.classNames?.mask),
-                  style: { ...maskStyle, ...props.styles?.mask },
-                },
-                [
-                  targetRect.value
-                    ? h(
-                        'svg',
-                        {
-                          class: `${prefixCls}-mask-svg`,
-                          width: '100%',
-                          height: '100%',
-                        },
-                        [
-                          h('defs', [
-                            h('mask', { id: maskId }, [
-                              h('rect', { width: '100%', height: '100%', fill: 'white' }),
-                              h('rect', {
-                                x: targetRect.value.left - 4,
-                                y: targetRect.value.top - 4,
-                                width: targetRect.value.width + 8,
-                                height: targetRect.value.height + 8,
-                                rx: props.gap?.radius ?? 4,
-                                fill: 'black',
-                              }),
-                            ]),
-                          ]),
-                          h('rect', {
-                            width: '100%',
-                            height: '100%',
-                            fill: maskColor,
-                            mask: `url(#${maskId})`,
-                          }),
-                        ],
-                      )
-                    : h('div', { class: `${prefixCls}-mask-fill`, style: { background: maskColor } }),
-                ],
-              ),
+              h(TourMask, {
+                prefixCls,
+                maskId,
+                hole: holeRect.value,
+                // 未显式指定 mask.color 时交由组件级 Token 决定，支持整体换肤
+                fill: maskConfig?.color ?? 'var(--hmfw-tour-mask-color)',
+                viewport: viewport.value,
+                disabledInteraction: props.disabledInteraction,
+                maskStyle: { ...maskConfig?.style, ...props.styles?.mask },
+                maskClass: props.classNames?.mask,
+              }),
 
-            // Popover
             h(
               'div',
               {
@@ -367,6 +330,7 @@ export const Tour = defineComponent({
                   `${prefixCls}-popover`,
                   {
                     [`${prefixCls}-popover-primary`]: isPrimary,
+                    [`${prefixCls}-popover-center`]: popoverPos.value.center,
                   },
                   step.value.className,
                   props.classNames?.popover,
@@ -379,148 +343,38 @@ export const Tour = defineComponent({
                   ...step.value.style,
                   ...props.styles?.popover,
                 },
+                // 引导卡片语义上是对话框：关联标题与描述，便于屏幕阅读器播报
+                role: 'dialog',
+                'aria-modal': showMask ? 'true' : undefined,
+                'aria-labelledby': step.value.title ? `${idPrefix}-title` : undefined,
+                'aria-describedby': step.value.description ? `${idPrefix}-description` : undefined,
+                tabindex: -1,
               },
               [
-                h(
-                  'div',
-                  {
-                    class: cls(`${prefixCls}-popover-inner`, props.classNames?.popoverInner),
-                    style: props.styles?.popoverInner,
-                  },
-                  [
-                    // Close button
-                    closeIcon !== null &&
-                      h(
-                        'button',
-                        {
-                          type: 'button',
-                          class: cls(`${prefixCls}-close`, props.classNames?.close),
-                          style: props.styles?.close,
-                          onClick: close,
-                          'aria-label': 'Close',
-                        },
-                        [closeIcon],
-                      ),
+                mergedArrow.value &&
+                  arrowSide &&
+                  h('div', {
+                    class: cls(`${prefixCls}-arrow`, `${prefixCls}-arrow-${arrowSide}`, props.classNames?.arrow),
+                    style: { ...getArrowStyle(), ...props.styles?.arrow },
+                  }),
 
-                    // Cover
-                    step.value.cover &&
-                      h(
-                        'div',
-                        { class: cls(`${prefixCls}-cover`, props.classNames?.cover), style: props.styles?.cover },
-                        [
-                          typeof step.value.cover === 'string'
-                            ? h('img', { src: step.value.cover, alt: '' })
-                            : renderContent(step.value.cover as any),
-                        ],
-                      ),
-
-                    // Title
-                    step.value.title &&
-                      h(
-                        'div',
-                        { class: cls(`${prefixCls}-title`, props.classNames?.title), style: props.styles?.title },
-                        [renderContent(step.value.title)],
-                      ),
-
-                    // Description
-                    step.value.description &&
-                      h(
-                        'div',
-                        {
-                          class: cls(`${prefixCls}-description`, props.classNames?.description),
-                          style: props.styles?.description,
-                        },
-                        [renderContent(step.value.description)],
-                      ),
-
-                    // Footer
-                    h(
-                      'div',
-                      { class: cls(`${prefixCls}-footer`, props.classNames?.footer), style: props.styles?.footer },
-                      [
-                        // Indicators
-                        total.value > 1 &&
-                          h(
-                            'div',
-                            {
-                              class: cls(`${prefixCls}-indicators`, props.classNames?.indicators),
-                              style: props.styles?.indicators,
-                            },
-                            [
-                              props.indicatorsRender
-                                ? props.indicatorsRender(currentStep.value, total.value)
-                                : props.steps.map((_, i) =>
-                                    h('span', {
-                                      key: i,
-                                      class: cls(
-                                        `${prefixCls}-indicator`,
-                                        {
-                                          [`${prefixCls}-indicator-active`]: i === currentStep.value,
-                                        },
-                                        props.classNames?.indicator,
-                                      ),
-                                      style: props.styles?.indicator,
-                                      onClick: () => goTo(i),
-                                    }),
-                                  ),
-                            ],
-                          ),
-
-                        // Buttons
-                        h(
-                          'div',
-                          {
-                            class: cls(`${prefixCls}-buttons`, props.classNames?.buttons),
-                            style: props.styles?.buttons,
-                          },
-                          [
-                            currentStep.value > 0 &&
-                              h(
-                                Button,
-                                {
-                                  size: 'small',
-                                  type: isPrimary ? 'default' : 'default',
-                                  ghost: isPrimary,
-                                  class: cls(`${prefixCls}-prev-btn`, props.classNames?.prevBtn),
-                                  style: props.styles?.prevBtn,
-                                  onClick: () => {
-                                    step.value?.prevButtonProps?.onClick?.()
-                                    prev()
-                                  },
-                                  // 排除 children/onClick：前者由插槽渲染，后者已包裹处理，
-                                  // 透传到 DOM <button> 会触发 Vue 设置只读 children 属性的告警
-                                  ...omitButtonProps(step.value.prevButtonProps),
-                                },
-                                {
-                                  default: () => step.value?.prevButtonProps?.children ?? locale.value.Tour.previous,
-                                },
-                              ),
-                            h(
-                              Button,
-                              {
-                                size: 'small',
-                                type: isPrimary ? 'default' : 'primary',
-                                ghost: isPrimary,
-                                class: cls(`${prefixCls}-next-btn`, props.classNames?.nextBtn),
-                                style: props.styles?.nextBtn,
-                                onClick: () => {
-                                  step.value?.nextButtonProps?.onClick?.()
-                                  next()
-                                },
-                                ...omitButtonProps(step.value.nextButtonProps),
-                              },
-                              {
-                                default: () =>
-                                  step.value?.nextButtonProps?.children ??
-                                  (isLast ? locale.value.Tour.finish : locale.value.Tour.next),
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                h(TourPanel, {
+                  prefixCls,
+                  step: step.value,
+                  current: currentStep.value,
+                  total: total.value,
+                  isPrimary,
+                  closeIcon,
+                  indicatorsRender: props.indicatorsRender,
+                  locale: locale.value,
+                  idPrefix,
+                  panelClassNames: props.classNames,
+                  panelStyles: props.styles,
+                  onClose: close,
+                  onPrev: prev,
+                  onNext: next,
+                  onGoTo: goTo,
+                }),
               ],
             ),
           ],
@@ -529,3 +383,5 @@ export const Tour = defineComponent({
     }
   },
 })
+
+export default Tour

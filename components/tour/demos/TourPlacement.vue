@@ -3,7 +3,7 @@
     <Space>
       <Button ref="uploadRef" type="primary">上传</Button>
       <Button ref="saveRef">保存</Button>
-      <Button ref="moreRef" icon="ellipsis">更多</Button>
+      <Button ref="moreRef" :icon="EllipsisOutlined">更多</Button>
     </Space>
     <Divider />
     <Button type="primary" @click="open = true">开始引导</Button>
@@ -12,14 +12,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, type ComponentPublicInstance } from 'vue'
 import { Tour, Button, Space, Divider } from '@hmfw/ant-design'
+import { EllipsisOutlined } from '@hmfw/icons'
 import type { TourProps } from '@hmfw/ant-design'
 
 const open = ref(false)
-const uploadRef = ref<HTMLElement>()
-const saveRef = ref<HTMLElement>()
-const moreRef = ref<HTMLElement>()
+// ref 挂在组件上拿到的是组件实例，Tour 会自动解包出根元素，无需手动取 $el
+const uploadRef = ref<ComponentPublicInstance>()
+const saveRef = ref<ComponentPublicInstance>()
+const moreRef = ref<ComponentPublicInstance>()
 
 const steps: TourProps['steps'] = [
   {
