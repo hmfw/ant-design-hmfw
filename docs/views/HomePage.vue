@@ -201,7 +201,7 @@ const features = [
   gap: 16px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 32px 32px;
+  padding: 0 32px 64px;
   animation: fadeIn 0.8s ease-out 0.6s both;
 }
 
