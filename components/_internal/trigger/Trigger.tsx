@@ -12,8 +12,8 @@ import {
 import { cls } from '../../_utils'
 import { useConfig } from '../../config-provider/context'
 import { computePosition } from './computePosition'
-import { subscribeGlobal } from './eventManager'
-import type { Placement, TriggerAction, TriggerProps } from './types'
+import { subscribeGlobal, pushOpenStack, removeFromOpenStack, isTopOfOpenStack } from './eventManager'
+import type { Placement, TriggerAction, TriggerOpenSource, TriggerProps } from './types'
 
 /**
  * 通用弹层触发器原语（内部组件，不对外导出）。
@@ -43,7 +43,11 @@ const triggerProps = {
   /** 弹层宽度与触发器宽度一致（Select 的 dropdownMatchSelectWidth）。 */
   matchWidth: { type: [Boolean, Number] as PropType<boolean | number>, default: false },
   gap: { type: Number, default: 4 },
-  zIndex: { type: Number, default: 1050 },
+  /**
+   * 弹层层级。不传时回退到主题 Token `--hmfw-z-index-popup`（默认 1050），
+   * 使层级可随主题统一调整；传数值则直接生效。
+   */
+  zIndex: { type: Number, default: undefined },
   closeOnEscape: { type: Boolean, default: true },
   closeOnOutsideClick: { type: Boolean, default: true },
   /** 监听弹层内容尺寸变化并自动重新定位（Tooltip 的 ResizeObserver）。 */
@@ -91,6 +95,8 @@ export const Trigger = defineComponent({
     const actualPlacement = ref<Placement>(props.placement)
     let enterTimer: ReturnType<typeof setTimeout> | null = null
     let leaveTimer: ReturnType<typeof setTimeout> | null = null
+    // afterOpenChange 的宏任务句柄，需在卸载时清理，避免已销毁实例上的延迟 emit
+    let afterOpenTimer: ReturnType<typeof setTimeout> | null = null
     let resizeObserver: ResizeObserver | null = null
     const unsubs: (() => void)[] = []
 
@@ -101,6 +107,12 @@ export const Trigger = defineComponent({
       return Array.isArray(t) ? t : [t]
     })
     let positionTrackingFrame: number | null = null
+    // scroll/resize 重定位的 rAF 合并句柄
+    let repositionFrame: number | null = null
+    // 本实例在全局弹层栈中的身份标识，用于 Esc 只关最内层
+    const stackToken = Symbol('trigger')
+    const pushStack = () => pushOpenStack(stackToken)
+    const popStack = () => removeFromOpenStack(stackToken)
 
     // ================================================================
     // 2. Props → 内部状态同步
@@ -111,24 +123,52 @@ export const Trigger = defineComponent({
         if (v !== undefined) innerOpen.value = v
       },
     )
+    // placement 变更需同时更新方位类与坐标：只改 actualPlacement 会让箭头方向
+    // （由方位类驱动）与弹层实际位置错配，必须在可见时重新测量定位。
     watch(
       () => props.placement,
       (v) => {
         actualPlacement.value = v
+        if (visible.value) nextTick(() => updatePosition())
+      },
+    )
+
+    // disabled 变 true 时强制收起已打开的弹层。
+    // 否则弹层保持可见，且后续 Esc / 外点 / mouseleave 全被 setOpen 的 disabled 守卫
+    // 拦截，用户无从关闭；因此这里用 force 绕过该守卫。
+    watch(
+      () => props.disabled,
+      (v) => {
+        if (v && visible.value) setOpen(false, 'trigger', true)
       },
     )
 
     // ================================================================
     // 3. 核心方法
     // ================================================================
-    const setOpen = (v: boolean, source: 'trigger' | 'popup' = 'trigger') => {
-      if (props.disabled) return
+    /**
+     * 切换弹层开关状态。
+     *
+     * @param v 目标状态
+     * @param source 事件来源，随 openChange 回传给宿主
+     * @param force 绕过 disabled 守卫（仅用于 disabled 变 true 时强制收起已打开的弹层）
+     */
+    const setOpen = (v: boolean, source: TriggerOpenSource = 'trigger', force = false) => {
+      if (props.disabled && !force) return
+      // 状态未变化时不 emit：
+      //  - hover 从触发器移入弹层会连续触发 mouseleave + mouseenter，否则重复 emit(true)
+      //  - mouseEnterDelay 未到即移出时弹层从未打开，否则会 emit 一次虚假的 (false)
+      if (v === visible.value) return
       if (!isControlled.value) innerOpen.value = v
       emit('update:open', v)
       emit('openChange', v, { source })
       // afterOpenChange 在下一个宏任务触发，此时 DOM 已更新但 CSS 过渡未完成。
       // 若宿主组件有入场/出场动画，应自行监听 transitionend/animationend 确定动画结束时机。
-      setTimeout(() => emit('afterOpenChange', v), 0)
+      if (afterOpenTimer) clearTimeout(afterOpenTimer)
+      afterOpenTimer = setTimeout(() => {
+        afterOpenTimer = null
+        emit('afterOpenChange', v)
+      }, 0)
     }
 
     const updatePosition = () => {
@@ -152,10 +192,26 @@ export const Trigger = defineComponent({
       if (props.matchWidth === true) popupWidth.value = triggerRect.width
     }
 
+    /**
+     * 按需创建 ResizeObserver（惰性、幂等）。
+     * @returns 是否可用（环境不支持 ResizeObserver 时返回 false）
+     */
+    const ensureResizeObserver = (): boolean => {
+      if (resizeObserver) return true
+      if (typeof ResizeObserver === 'undefined') return false
+      resizeObserver = new ResizeObserver(() => {
+        if (visible.value) nextTick(() => updatePosition())
+      })
+      return true
+    }
+
     // ================================================================
     // 4. 副作用 Watch
     // ================================================================
     watch(visible, async (v) => {
+      // 维护全局弹层栈：后打开的在栈顶，Esc 只作用于栈顶实例
+      if (v) pushStack()
+      else popStack()
       if (v) {
         await nextTick()
         updatePosition()
@@ -164,8 +220,8 @@ export const Trigger = defineComponent({
           await nextTick()
           updatePosition()
         }
-        if (props.observePopupResize && resizeObserver && popupRef.value) {
-          resizeObserver.observe(popupRef.value)
+        if (props.observePopupResize && popupRef.value && ensureResizeObserver()) {
+          resizeObserver!.observe(popupRef.value)
         }
         // 启动持续位置跟踪循环（仅在 trackPosition 为 true 时）
         if (props.trackPosition) {
@@ -205,15 +261,18 @@ export const Trigger = defineComponent({
       },
     )
 
-    // observePopupResize 动态变更时同步 ResizeObserver 状态
+    // observePopupResize 动态变更时同步 ResizeObserver 状态。
+    // observer 惰性创建：若挂载时该 prop 为 false、之后才切到 true，
+    // 也要能在此刻补建（早期实现只在 onMounted 创建，导致 false→true 永久失效）。
     watch(
       () => props.observePopupResize,
       (v) => {
-        if (!resizeObserver) return
-        if (v && visible.value && popupRef.value) {
-          resizeObserver.observe(popupRef.value)
-        } else if (!v) {
-          resizeObserver.disconnect()
+        if (v) {
+          if (visible.value && popupRef.value && ensureResizeObserver()) {
+            resizeObserver!.observe(popupRef.value)
+          }
+        } else {
+          resizeObserver?.disconnect()
         }
       },
     )
@@ -233,26 +292,60 @@ export const Trigger = defineComponent({
     // ================================================================
     // 5. 事件处理
     // ================================================================
+    // scroll 用 capture 监听，任意可滚动祖先滚动都会命中本回调；而 updatePosition
+    // 读 2 次 getBoundingClientRect 再同步写 style，构成读-写-读的强制重排链。
+    // 用 rAF 把同一帧内的多次请求合并为一次，惯性滚动下从「每事件一次」降为「每帧一次」。
     const onScrollOrResize = () => {
-      if (visible.value) updatePosition()
+      if (!visible.value || repositionFrame !== null) return
+      repositionFrame = requestAnimationFrame(() => {
+        repositionFrame = null
+        if (visible.value) updatePosition()
+      })
     }
 
-    const handleMouseEnter = () => {
-      if (!triggers.value.includes('hover')) return
-      if (leaveTimer) {
-        clearTimeout(leaveTimer)
-        leaveTimer = null
+    const cancelPendingReposition = () => {
+      if (repositionFrame !== null) {
+        cancelAnimationFrame(repositionFrame)
+        repositionFrame = null
       }
-      enterTimer = setTimeout(() => setOpen(true), props.mouseEnterDelay * 1000)
     }
 
-    const handleMouseLeave = () => {
-      if (!triggers.value.includes('hover')) return
+    const clearHoverTimers = () => {
       if (enterTimer) {
         clearTimeout(enterTimer)
         enterTimer = null
       }
-      leaveTimer = setTimeout(() => setOpen(false), props.mouseLeaveDelay * 1000)
+      if (leaveTimer) {
+        clearTimeout(leaveTimer)
+        leaveTimer = null
+      }
+    }
+
+    // 进入/离开都先清空两个 hover 定时器再排新的：
+    // 只清对侧会让同侧的旧句柄被覆盖后失联（连续 N 次 mouseenter 堆积 N 个待执行定时器，
+    // 卸载时只能清掉最后一个）。负延迟按 0 处理。
+    const handleMouseEnter = () => {
+      if (!triggers.value.includes('hover')) return
+      clearHoverTimers()
+      enterTimer = setTimeout(
+        () => {
+          enterTimer = null
+          setOpen(true)
+        },
+        Math.max(0, props.mouseEnterDelay) * 1000,
+      )
+    }
+
+    const handleMouseLeave = () => {
+      if (!triggers.value.includes('hover')) return
+      clearHoverTimers()
+      leaveTimer = setTimeout(
+        () => {
+          leaveTimer = null
+          setOpen(false)
+        },
+        Math.max(0, props.mouseLeaveDelay) * 1000,
+      )
     }
 
     const handleClick = () => {
@@ -285,11 +378,12 @@ export const Trigger = defineComponent({
       setOpen(false)
     }
 
+    // Esc 只关闭最内层弹层：keydown 是全局广播，不做栈顶判断会让嵌套弹层整层塌陷。
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (props.closeOnEscape && e.key === 'Escape' && visible.value) {
-        setOpen(false)
-        e.preventDefault()
-      }
+      if (!props.closeOnEscape || e.key !== 'Escape' || !visible.value) return
+      if (!isTopOfOpenStack(stackToken)) return
+      setOpen(false)
+      e.preventDefault()
     }
 
     // ================================================================
@@ -303,16 +397,12 @@ export const Trigger = defineComponent({
       // scroll 使用 capture 阶段以捕获所有可滚动祖先的滚动事件
       unsubs.push(subscribeGlobal(window, 'scroll', onScrollOrResize, { capture: true }))
 
-      if (props.observePopupResize && typeof ResizeObserver !== 'undefined') {
-        resizeObserver = new ResizeObserver(() => {
-          if (visible.value) {
-            nextTick(() => updatePosition())
-          }
-        })
-      }
+      if (props.observePopupResize) ensureResizeObserver()
 
-      // defaultOpen 或 open 为 true 时，弹层初始即可见，需在挂载后立即计算位置
+      // defaultOpen 或 open 为 true 时，弹层初始即可见，需在挂载后立即计算位置。
+      // visible watch 不会为初始值触发，故此处也要补入栈。
       if (visible.value) {
+        pushStack()
         nextTick(() => {
           updatePosition()
           // 如果启用了 trackPosition，启动位置跟踪
@@ -325,10 +415,13 @@ export const Trigger = defineComponent({
 
     onBeforeUnmount(() => {
       unsubs.forEach((fn) => fn())
-      if (enterTimer) clearTimeout(enterTimer)
-      if (leaveTimer) clearTimeout(leaveTimer)
+      clearHoverTimers()
+      if (afterOpenTimer) clearTimeout(afterOpenTimer)
       if (resizeObserver) resizeObserver.disconnect()
       stopPositionTracking()
+      cancelPendingReposition()
+      // 从 Esc 栈中移除，避免已卸载实例继续占据栈顶导致 Esc 失效
+      popStack()
     })
 
     // ================================================================
@@ -362,11 +455,12 @@ export const Trigger = defineComponent({
         position: 'absolute',
         top: `${position.value.top}px`,
         left: `${position.value.left}px`,
-        zIndex: props.zIndex,
+        zIndex: props.zIndex ?? 'var(--hmfw-z-index-popup)',
+        // 负值会生成非法的 min-width 被浏览器静默丢弃，钳到 0 使行为可预期
         ...(typeof props.matchWidth === 'number'
-          ? { minWidth: `${props.matchWidth}px` }
+          ? { minWidth: `${Math.max(0, props.matchWidth)}px` }
           : props.matchWidth === true && popupWidth.value != null
-            ? { minWidth: `${popupWidth.value}px` }
+            ? { minWidth: `${Math.max(0, popupWidth.value)}px` }
             : null),
         ...props.popupStyle,
       }

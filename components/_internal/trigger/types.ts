@@ -70,6 +70,7 @@ export interface TriggerProps {
   /** 弹层最小宽度匹配触发器宽度（Select 的 dropdownMatchSelectWidth）。true 使用触发器宽度，number 指定固定最小宽度。 */
   matchWidth?: boolean | number
   gap?: number
+  /** 弹层层级。不传时回退到主题 Token `--hmfw-z-index-popup`（默认 1050）。 */
   zIndex?: number
   closeOnEscape?: boolean
   closeOnOutsideClick?: boolean
@@ -93,6 +94,24 @@ export interface TriggerProps {
   popupStyle?: CSSProperties
   triggerStyle?: CSSProperties
 }
+
+/**
+ * 开关状态变化的来源。
+ * - `trigger`：由触发器自身的交互引起（hover / click / focus / contextMenu / Esc / 外点）
+ * - `popup`：由弹层内部主动关闭（如 Dropdown 点击菜单项后收起）
+ */
+export type TriggerOpenSource = 'trigger' | 'popup'
+
+/** openChange 事件的第二个参数。 */
+export interface TriggerOpenChangeInfo {
+  source: TriggerOpenSource
+}
+
+/** openChange 事件的回调签名。 */
+export type TriggerOpenChangeHandler = (open: boolean, info: TriggerOpenChangeInfo) => void
+
+/** afterOpenChange 事件的回调签名（DOM 已更新，CSS 过渡未必完成）。 */
+export type TriggerAfterOpenChangeHandler = (open: boolean) => void
 
 /** popup 插槽回传的上下文。 */
 export interface PopupSlotContext {

@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.36.0] - 2026-08-04
+
+[查看完整内容](./changelogs/v0.36.0.md)
+
+Trigger 内部原语全面修复：解决事件幂等性（hover 重复 emit、虚假 false 事件）、定位同步（placement 变更不重定位）、资源泄漏（timer 堆积与卸载残留）、键盘交互（嵌套弹层 Esc 全关）、动态 prop 响应（observePopupResize / disabled）、性能优化（scroll/resize rAF 节流）等 11 个缺陷。新增 12 个单元测试（67→79），修复 1 个 E2E 选择器干扰，全体 2490 单元测试通过。箭头尺寸与 zIndex 默认值改为 Token 化。影响 Dropdown / Tooltip / Select / Popover / Cascader / DatePicker / SubMenu 等全体消费组件的稳定性与体验一致性。
+
 ## [0.35.0] - 2026-08-03
 
 [查看完整内容](./changelogs/v0.35.0.md)

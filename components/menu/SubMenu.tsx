@@ -227,7 +227,7 @@ export const SubMenu = defineComponent({
             closeOnEscape
             triggerDisplay="block"
             disabled={itemDisabled}
-            zIndex={1050}
+            // 不传 zIndex，由 Trigger 回退到主题 Token --hmfw-z-index-popup（1050）
             popupClass={prefixCls}
             popupStyle={
               itemPopupOffset ? { left: `${itemPopupOffset[0]}px`, top: `${itemPopupOffset[1]}px` } : undefined

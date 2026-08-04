@@ -21,6 +21,34 @@ interface Entry {
 
 const entries: Entry[] = []
 
+/**
+ * 打开中的弹层栈（后进先出）。
+ *
+ * keydown 是全局广播事件，若每个实例各自处理 Escape，嵌套弹层
+ * （Dropdown 内嵌 Select、Modal 内的 DatePicker 等）按一次 Esc 会整层塌陷。
+ * 借这个栈让 Esc 只作用于最内层——与 Ant Design 行为一致。
+ *
+ * 用不透明的 token 而非组件实例，避免模块持有实例引用妨碍回收。
+ */
+const openStack: symbol[] = []
+
+/** 弹层打开时入栈；重复入栈会先移除旧位置，保证栈内唯一且顺序反映最近打开顺序。 */
+export function pushOpenStack(token: symbol): void {
+  removeFromOpenStack(token)
+  openStack.push(token)
+}
+
+/** 弹层关闭或实例卸载时出栈。 */
+export function removeFromOpenStack(token: symbol): void {
+  const idx = openStack.indexOf(token)
+  if (idx !== -1) openStack.splice(idx, 1)
+}
+
+/** 判断给定 token 是否位于栈顶（即最内层弹层）。 */
+export function isTopOfOpenStack(token: symbol): boolean {
+  return openStack.length > 0 && openStack[openStack.length - 1] === token
+}
+
 function entryKey(source: EventTarget, type: string, options?: AddEventListenerOptions): string {
   const capture = options?.capture ?? false
   return `${type}::${capture}::${source === document ? 'doc' : 'win'}`

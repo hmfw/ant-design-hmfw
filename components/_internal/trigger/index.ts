@@ -7,6 +7,10 @@ export type {
   ComputeOptions,
   ComputeResult,
   TriggerProps,
+  TriggerOpenSource,
+  TriggerOpenChangeInfo,
+  TriggerOpenChangeHandler,
+  TriggerAfterOpenChangeHandler,
   PopupSlotContext,
   PopupRender,
 } from './types'

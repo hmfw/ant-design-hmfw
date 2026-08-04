@@ -147,8 +147,11 @@ test.describe('焦点管理', () => {
     await searchSelect.click()
     await page.waitForTimeout(300)
 
-    const popup = page.locator('.hmfw-trigger-popup').first()
-    await expect(popup).toBeVisible()
+    // 必须限定为 Select 的下拉且排除隐藏态：文档站导航栏的主题 Dropdown 也会
+    // 把弹层 teleport 到 body 且位于 DOM 更靠前的位置，裸用 .first() 会命中它
+    // （那个弹层始终 hidden，断言必然失败）。
+    const popup = page.locator('.hmfw-select-dropdown:not(.hmfw-dropdown-hidden)').first()
+    await expect(popup).toBeVisible({ timeout: 5000 })
 
     // 输入搜索关键词 — 焦点在 input 中，弹层应保持打开
     await searchSelect.fill('北京')

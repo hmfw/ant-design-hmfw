@@ -183,6 +183,8 @@ describe('Dropdown', () => {
     stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
     stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
     window.dispatchEvent(new Event('resize'))
+    // Trigger 的 resize 重定位经 rAF 合并，需推进定时器让帧回调执行
+    vi.advanceTimersByTime(20)
     await nextTick()
     const left1 = (document.querySelector('.hmfw-dropdown') as HTMLElement).style.left
     expect(left1).toBe('50px')
@@ -193,6 +195,7 @@ describe('Dropdown', () => {
     stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
     stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
     window.dispatchEvent(new Event('resize'))
+    vi.advanceTimersByTime(20)
     await nextTick()
     const left2 = (document.querySelector('.hmfw-dropdown') as HTMLElement).style.left
     expect(left2).toBe('40px')
@@ -224,6 +227,8 @@ describe('Dropdown', () => {
     stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
     stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
     window.dispatchEvent(new Event('resize'))
+    // Trigger 的 resize 重定位经 rAF 合并，需推进定时器让帧回调执行
+    vi.advanceTimersByTime(20)
     await nextTick()
 
     const dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement

@@ -3,7 +3,7 @@ import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Menu } from '../menu'
 import { Trigger } from '../_internal/trigger'
-import type { Placement } from '../_internal/trigger'
+import type { Placement, TriggerOpenChangeInfo, TriggerOpenSource } from '../_internal/trigger'
 import type { DropdownProps, DropdownPlacement, DropdownTrigger, DropdownArrowOptions } from './types'
 
 // satisfies 强制 props key 集合与 DropdownProps 接口一致，增删属性时编译报错。
@@ -53,11 +53,11 @@ export const Dropdown = defineComponent({
     // Trigger 内部维护 open 状态（非受控）或跟随 props.open（受控）。
     // 菜单项点击时需要主动关闭弹层，通过 ref 回调获取 Trigger 暴露的 setOpen 方法。
     // 注意：不能改用 ref<T> 响应式包装——Trigger 的 expose 在挂载时赋值，ref 无法感知变化。
-    let triggerSetOpen: ((v: boolean, source?: 'trigger' | 'popup') => void) | null = null
+    let triggerSetOpen: ((v: boolean, source?: TriggerOpenSource) => void) | null = null
 
     // 仅 emit openChange（含 source 信息）；update:open 由 onUpdate:open 回调负责，
     // 避免与 Trigger 的 update:open 重复 emit 导致父组件收到两次事件。
-    const handleOpenChange = (v: boolean, info: { source: 'trigger' | 'popup' }) => {
+    const handleOpenChange = (v: boolean, info: TriggerOpenChangeInfo) => {
       innerOpen.value = v
       emit('openChange', v, info)
     }

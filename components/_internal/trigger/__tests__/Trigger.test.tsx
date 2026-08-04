@@ -107,6 +107,46 @@ describe('Trigger', () => {
     wrapper.unmount()
   })
 
+  it('连续 mouseenter 不堆积定时器', async () => {
+    const onOpenChange = vi.fn()
+    const wrapper = mountTrigger({ mouseEnterDelay: 0.5, onOpenChange })
+    const div = wrapper.find('div')
+    const before = vi.getTimerCount()
+    await div.trigger('mouseenter')
+    await div.trigger('mouseenter')
+    await div.trigger('mouseenter')
+    // 每次进入都会清掉上一个 enter timer，故只新增 1 个待执行定时器
+    expect(vi.getTimerCount()).toBe(before + 1)
+    vi.advanceTimersByTime(600)
+    await nextTick()
+    expect(onOpenChange).toHaveBeenCalledTimes(1)
+    wrapper.unmount()
+  })
+
+  it('连续 mouseleave 不堆积定时器', async () => {
+    const wrapper = mountTrigger({ mouseEnterDelay: 0, mouseLeaveDelay: 0.5 })
+    const div = wrapper.find('div')
+    await div.trigger('mouseenter')
+    vi.runAllTimers()
+    await nextTick()
+    const before = vi.getTimerCount()
+    await div.trigger('mouseleave')
+    await div.trigger('mouseleave')
+    await div.trigger('mouseleave')
+    expect(vi.getTimerCount()).toBe(before + 1)
+    wrapper.unmount()
+  })
+
+  it('卸载后残留的 hover 定时器不再 emit', async () => {
+    const onOpenChange = vi.fn()
+    const wrapper = mountTrigger({ mouseEnterDelay: 0.5, onOpenChange })
+    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('div').trigger('mouseenter')
+    wrapper.unmount()
+    vi.advanceTimersByTime(1000)
+    expect(onOpenChange).not.toHaveBeenCalled()
+  })
+
   // ============================== click 触发 ==============================
 
   it('opens on click trigger', async () => {
@@ -266,6 +306,55 @@ describe('Trigger', () => {
     wrapper.unmount()
   })
 
+  // ============================== 事件幂等性 ==============================
+
+  it('鼠标从触发器移入弹层时不重复 emit openChange(true)', async () => {
+    const onOpenChange = vi.fn()
+    const wrapper = mountTrigger({ mouseEnterDelay: 0.1, mouseLeaveDelay: 0.1, onOpenChange })
+    await wrapper.find('div').trigger('mouseenter')
+    vi.advanceTimersByTime(200)
+    await nextTick()
+    // 移出触发器同时移入弹层：leave timer 被取消，且不应再 emit 一次 (true)
+    const popup = document.querySelector('.hmfw-trigger-popup')!
+    await wrapper.find('div').trigger('mouseleave')
+    popup.dispatchEvent(new MouseEvent('mouseenter'))
+    vi.advanceTimersByTime(200)
+    await nextTick()
+    expect(onOpenChange.mock.calls).toEqual([[true, { source: 'trigger' }]])
+    wrapper.unmount()
+  })
+
+  it('mouseEnterDelay 未到即移出时不 emit 虚假的 openChange(false)', async () => {
+    const onOpenChange = vi.fn()
+    const onUpdateOpen = vi.fn()
+    const wrapper = mountTrigger({
+      mouseEnterDelay: 0.5,
+      mouseLeaveDelay: 0,
+      onOpenChange,
+      'onUpdate:open': onUpdateOpen,
+    })
+    await wrapper.find('div').trigger('mouseenter')
+    vi.advanceTimersByTime(100) // 未达 500ms，弹层从未打开
+    await wrapper.find('div').trigger('mouseleave')
+    vi.advanceTimersByTime(100)
+    await nextTick()
+    expect(onOpenChange).not.toHaveBeenCalled()
+    expect(onUpdateOpen).not.toHaveBeenCalled()
+    wrapper.unmount()
+  })
+
+  it('重复 focusin 只 emit 一次 openChange', async () => {
+    const onOpenChange = vi.fn()
+    const wrapper = mountTrigger({ trigger: 'focus', onOpenChange })
+    const div = wrapper.find('div')
+    await div.trigger('focusin')
+    await nextTick()
+    await div.trigger('focusin')
+    await nextTick()
+    expect(onOpenChange).toHaveBeenCalledTimes(1)
+    wrapper.unmount()
+  })
+
   // ============================== disabled ==============================
 
   it('does not open when disabled', async () => {
@@ -274,6 +363,21 @@ describe('Trigger', () => {
     await nextTick()
     const popup = document.querySelector('.my-popup')
     if (popup) expect(document.querySelector('.hmfw-trigger-popup-hidden')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('disabled 变 true 时收起已打开的弹层', async () => {
+    const onOpenChange = vi.fn()
+    const wrapper = mountTrigger({ trigger: 'click', onOpenChange })
+    await wrapper.find('div').trigger('click')
+    await nextTick()
+    expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
+
+    await wrapper.setProps({ disabled: true })
+    await nextTick()
+    // 否则弹层会保持可见，且后续 Esc / 外点全被 disabled 守卫拦截，用户无从关闭
+    expect(document.querySelector('.hmfw-trigger-popup-hidden')).not.toBeNull()
+    expect(onOpenChange).toHaveBeenLastCalledWith(false, { source: 'trigger' })
     wrapper.unmount()
   })
 
@@ -366,6 +470,45 @@ describe('Trigger', () => {
     wrapper.unmount()
   })
 
+  it('placement 动态变更时同步重新定位（方位类与坐标不错配）', async () => {
+    const origGetBoundingClientRect = Element.prototype.getBoundingClientRect
+    Element.prototype.getBoundingClientRect = function (this: Element) {
+      const isPopup = this.classList.contains('hmfw-trigger-popup')
+      return {
+        top: 300,
+        left: 300,
+        width: isPopup ? 120 : 80,
+        height: isPopup ? 40 : 30,
+        right: isPopup ? 420 : 380,
+        bottom: isPopup ? 340 : 330,
+        x: 300,
+        y: 300,
+        toJSON: () => '',
+      }
+    }
+
+    try {
+      const wrapper = mountTrigger({ open: true, gap: 0, placement: 'bottomLeft' })
+      await nextTick()
+      await nextTick()
+      const popup = document.querySelector('.hmfw-trigger-popup') as HTMLElement
+      // bottomLeft：触发器底 330，左缘 300
+      expect(popup.style.top).toBe('330px')
+      expect(popup.style.left).toBe('300px')
+
+      await wrapper.setProps({ placement: 'topRight' })
+      await nextTick()
+      await nextTick()
+      // topRight：触发器顶 300 - 弹层高 40 = 260；右缘 380 - 弹层宽 120 = 260
+      expect(popup.className).toContain('hmfw-trigger-placement-topRight')
+      expect(popup.style.top).toBe('260px')
+      expect(popup.style.left).toBe('260px')
+      wrapper.unmount()
+    } finally {
+      Element.prototype.getBoundingClientRect = origGetBoundingClientRect
+    }
+  })
+
   // ============================== autoAdjustOverflow / arrowPointAtCenter ==============================
 
   it('applies arrow-point-at-center class', async () => {
@@ -406,6 +549,15 @@ describe('Trigger', () => {
     wrapper.unmount()
   })
 
+  it('matchWidth 为负数时钳到 0，不生成非法 min-width', async () => {
+    const wrapper = mountTrigger({ open: true, matchWidth: -100 })
+    await nextTick()
+    const popup = document.querySelector('.hmfw-trigger-popup') as HTMLElement
+    // 未钳制时会写出 min-width: -100px，被浏览器静默丢弃（style.minWidth 读为空串）
+    expect(popup?.style.minWidth).toBe('0px')
+    wrapper.unmount()
+  })
+
   // ============================== gap / zIndex / popupStyle / triggerClass / triggerStyle ==============================
 
   it('applies zIndex on popup', async () => {
@@ -413,6 +565,15 @@ describe('Trigger', () => {
     await nextTick()
     const popup = document.querySelector('.hmfw-trigger-popup') as HTMLElement
     expect(popup?.style.zIndex).toBe('9999')
+    wrapper.unmount()
+  })
+
+  it('未传 zIndex 时回退到主题 Token --hmfw-z-index-popup', async () => {
+    const wrapper = mountTrigger({ open: true })
+    await nextTick()
+    const popup = document.querySelector('.hmfw-trigger-popup') as HTMLElement
+    // 写 var() 而非硬编码 1050，使层级可随主题统一调整
+    expect(popup?.style.zIndex).toBe('var(--hmfw-z-index-popup)')
     wrapper.unmount()
   })
 
@@ -669,6 +830,31 @@ describe('Trigger', () => {
     }
   })
 
+  it('observePopupResize 由 false 动态改 true 时惰性创建 observer', async () => {
+    const observeMock = vi.fn()
+    const origObserver = (global as any).ResizeObserver
+    const ctor = vi.fn().mockImplementation(function () {
+      return { observe: observeMock, disconnect: vi.fn(), unobserve: vi.fn() }
+    })
+    ;(global as any).ResizeObserver = ctor
+
+    try {
+      // 挂载时为 false → 不创建；早期实现只在 onMounted 创建，导致此后永久失效
+      const wrapper = mountTrigger({ open: true, observePopupResize: false })
+      await nextTick()
+      await nextTick()
+      expect(ctor).not.toHaveBeenCalled()
+
+      await wrapper.setProps({ observePopupResize: true })
+      await nextTick()
+      expect(ctor).toHaveBeenCalled()
+      expect(observeMock).toHaveBeenCalled()
+      wrapper.unmount()
+    } finally {
+      ;(global as any).ResizeObserver = origObserver
+    }
+  })
+
   // ============================== expose ==============================
 
   it('exposes updatePosition, actualPlacement, setOpen', () => {
@@ -707,11 +893,14 @@ describe('Trigger', () => {
     const popups = document.querySelectorAll('.hmfw-trigger-popup')
     expect(popups.length).toBeGreaterThanOrEqual(2)
 
-    // Escape 应关闭所有
+    // Escape 逐层关闭：每次只关最后打开的那个（栈顶），而非一次性全关
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
     await nextTick()
-    const hiddenPopups = document.querySelectorAll('.hmfw-trigger-popup-hidden')
-    expect(hiddenPopups.length).toBeGreaterThanOrEqual(2)
+    expect(document.querySelectorAll('.hmfw-trigger-popup-hidden').length).toBe(1)
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await nextTick()
+    expect(document.querySelectorAll('.hmfw-trigger-popup-hidden').length).toBe(2)
 
     wrapper1.unmount()
     wrapper2.unmount()
@@ -739,15 +928,20 @@ describe('Trigger', () => {
 
     try {
       const wrapper = mountTrigger({ open: true, gap: 0 })
+      // 等挂载时的初次定位落定，否则 oldTop 读到的是初始 "0px"，
+      // 之后的变化其实来自挂载定位而非 scroll，断言会假通过
+      await nextTick()
       await nextTick()
       const popup = document.querySelector('.hmfw-trigger-popup') as HTMLElement
       const oldTop = popup?.style.top
+      expect(oldTop).toBe('132px')
 
       topValue = 300
       window.dispatchEvent(new Event('scroll'))
+      // 重定位经 rAF 合并，需推进定时器让帧回调执行
+      vi.advanceTimersByTime(20)
       await nextTick()
-      const newTop = popup?.style.top
-      expect(newTop).not.toBe(oldTop)
+      expect(popup?.style.top).toBe('332px')
       wrapper.unmount()
     } finally {
       Element.prototype.getBoundingClientRect = origGetBoundingClientRect
@@ -774,15 +968,56 @@ describe('Trigger', () => {
 
     try {
       const wrapper = mountTrigger({ open: true, gap: 0 })
+      // 同 scroll 用例：先让挂载定位落定，避免断言假通过
+      await nextTick()
       await nextTick()
       const popup = document.querySelector('.hmfw-trigger-popup') as HTMLElement
-      const oldTop = popup?.style.top
+      expect(popup?.style.top).toBe('132px')
 
       topValue = 400
       window.dispatchEvent(new Event('resize'))
+      // 重定位经 rAF 合并，需推进定时器让帧回调执行
+      vi.advanceTimersByTime(20)
       await nextTick()
-      const newTop = popup?.style.top
-      expect(newTop).not.toBe(oldTop)
+      expect(popup?.style.top).toBe('432px')
+      wrapper.unmount()
+    } finally {
+      Element.prototype.getBoundingClientRect = origGetBoundingClientRect
+    }
+  })
+
+  it('同一帧内多次 scroll 只重定位一次（rAF 合并）', async () => {
+    const origGetBoundingClientRect = Element.prototype.getBoundingClientRect
+    let rectCalls = 0
+    Element.prototype.getBoundingClientRect = function (this: Element) {
+      rectCalls++
+      const isPopup = this.classList.contains('hmfw-trigger-popup')
+      return {
+        top: 100,
+        left: 0,
+        width: 80,
+        height: isPopup ? 40 : 32,
+        right: 80,
+        bottom: isPopup ? 140 : 132,
+        x: 0,
+        y: 100,
+        toJSON: () => '',
+      }
+    }
+
+    try {
+      const wrapper = mountTrigger({ open: true, gap: 0 })
+      await nextTick()
+      await nextTick()
+      rectCalls = 0
+
+      // scroll 用 capture 监听，任意祖先滚动都会命中；不节流则每个事件同步读写一次，
+      // 构成强制重排。每次 updatePosition 读 2 个 rect，故合并后应恰为 2 次。
+      for (let i = 0; i < 10; i++) window.dispatchEvent(new Event('scroll'))
+      expect(rectCalls).toBe(0) // 帧回调未执行前不应有任何测量
+      vi.advanceTimersByTime(20)
+      await nextTick()
+      expect(rectCalls).toBe(2)
       wrapper.unmount()
     } finally {
       Element.prototype.getBoundingClientRect = origGetBoundingClientRect
