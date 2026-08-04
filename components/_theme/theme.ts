@@ -411,6 +411,12 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
           colorErrorText: seed.colorError,
           colorErrorHover: lighten(seed.colorError, 0.2),
           colorErrorActive: darken(seed.colorError, 0.1),
+
+          // 暗色模式：阴影改用白色基调，黑色阴影在深色背景上无对比度
+          boxShadow: `0 1px 2px 0 rgba(255,255,255,0.03), 0 1px 6px -1px rgba(255,255,255,0.02), 0 2px 4px 0 rgba(255,255,255,0.02)`,
+          boxShadowSecondary: `0 6px 16px 0 rgba(255,255,255,0.08), 0 3px 6px -4px rgba(255,255,255,0.12), 0 9px 28px 8px rgba(255,255,255,0.05)`,
+          boxShadowTertiary: `0 1px 2px 0 rgba(255,255,255,0.03), 0 1px 6px -1px rgba(255,255,255,0.02), 0 2px 4px 0 rgba(255,255,255,0.02)`,
+          boxShadowPopoverArrow: `2px 2px 5px rgba(255,255,255,0.05)`,
         }
       : {
           // 浅色模式：保持原 lighten 逻辑

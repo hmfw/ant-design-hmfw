@@ -12,11 +12,6 @@
   transition: var(--doc-t-all);
 }
 
-.demo-block:hover {
-  box-shadow: var(--doc-shadow-3);
-  transform: translateY(-2px);
-}
-
 .md-content .demo-block {
   margin: 20px 0;
 }

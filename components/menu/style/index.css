@@ -80,11 +80,6 @@
   width: 100%;
 }
 
-.hmfw-menu-root.hmfw-menu-vertical,
-.hmfw-menu-root.hmfw-menu-inline {
-  box-shadow: none;
-}
-
 /* ---- Horizontal ---- */
 .hmfw-menu-horizontal {
   display: flex;
@@ -103,7 +98,7 @@
 }
 
 .hmfw-menu-horizontal > .hmfw-menu-item,
-.hmfw-menu-horizontal > .hmfw-menu-submenu .hmfw-menu-submenu-title {
+.hmfw-menu-horizontal > .hmfw-menu-submenu > .hmfw-menu-submenu-title {
   padding: 0 16px;
 }
 
@@ -155,9 +150,6 @@
     background-color var(--hmfw-menu-transition-duration),
     color var(--hmfw-menu-transition-duration),
     padding var(--hmfw-menu-transition-duration) var(--hmfw-menu-transition-timing);
-  /* overflow: hidden; */
-  white-space: nowrap;
-  text-overflow: ellipsis;
   border-radius: var(--hmfw-menu-item-border-radius);
   padding: 0 var(--hmfw-menu-item-padding-inline);
   color: var(--hmfw-menu-item-color);
@@ -171,7 +163,6 @@
 
 /* 子菜单标题：仅保留水平方向缩进，纵向间距由父级 <li> 控制 */
 .hmfw-menu-submenu-title {
-  margin-block: 0;
   margin-inline: var(--hmfw-menu-item-margin-inline);
 }
 
@@ -314,7 +305,7 @@
 }
 
 /* horizontal 模式覆盖，使用相同 padding */
-.hmfw-menu-horizontal > .hmfw-menu-submenu .hmfw-menu-submenu-title {
+.hmfw-menu-horizontal > .hmfw-menu-submenu > .hmfw-menu-submenu-title {
   padding-inline-end: 16px;
 }
 
@@ -405,9 +396,12 @@
   padding: 4px 0;
 }
 
-.hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-item,
-.hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-submenu-title {
+.hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-item {
   margin: 0;
+  border-radius: 0;
+}
+
+.hmfw-menu-sub.hmfw-menu-vertical .hmfw-menu-submenu-title {
   border-radius: 0;
 }
 
@@ -441,7 +435,7 @@
   padding: 8px 16px 4px;
   color: var(--hmfw-menu-group-title-color);
   font-size: var(--hmfw-menu-group-title-font-size);
-  transition: all var(--hmfw-menu-transition-duration);
+  transition: color var(--hmfw-menu-transition-duration);
 }
 
 .hmfw-menu-item-group-list {
@@ -535,9 +529,6 @@
 
 .hmfw-menu-inline-collapsed .hmfw-menu-item-icon + .hmfw-menu-title-content {
   display: inline-block;
-  width: 0;
-  opacity: 0;
-  overflow: hidden;
   margin-inline-start: 0;
 }
 
