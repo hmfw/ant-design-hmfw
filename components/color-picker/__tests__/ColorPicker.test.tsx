@@ -108,4 +108,60 @@ describe('ColorPicker', () => {
     expect(document.querySelectorAll('.hmfw-color-picker-preset-color').length).toBe(3)
     wrapper.unmount()
   })
+
+  // 回归：popupClass 曾同时挂到 Trigger 外层 wrapper 与内层 div，
+  // 导致 .hmfw-color-picker-panel 及 classNames.panel 各出现两次
+  it('panel 类与 classNames.panel 只应用一次', async () => {
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#ff0000', classNames: { panel: 'my-panel' } },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-color-picker-trigger').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(document.querySelectorAll('.hmfw-color-picker-panel').length).toBe(1)
+    expect(document.querySelectorAll('.my-panel').length).toBe(1)
+    wrapper.unmount()
+  })
+
+  // 面板目前只实现 HEX 输入，标签固定为 HEX 以反映输入框真实格式，
+  // 不跟随 format prop（否则 format="rgb" 会出现 RGB 标签配 hex 输入框的误导）
+  it('format 标签固定显示 HEX', async () => {
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#ff0000', format: 'rgb' },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-color-picker-trigger').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(document.querySelector('.hmfw-color-picker-format-label')?.textContent).toBe('HEX')
+    wrapper.unmount()
+  })
+
+  it('allowClear 清除后 emit clear 且 value 为 undefined', async () => {
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#ff0000', allowClear: true },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-color-picker-trigger').trigger('click')
+    await wrapper.vm.$nextTick()
+    const clearBtn = document.querySelector<HTMLElement>('.hmfw-color-picker-clear-btn')
+    expect(clearBtn).not.toBeNull()
+    // 无障碍属性
+    expect(clearBtn?.getAttribute('role')).toBe('button')
+    expect(clearBtn?.getAttribute('tabindex')).toBe('0')
+    clearBtn?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('clear')).toBeTruthy()
+    expect(wrapper.emitted('update:value')?.at(-1)).toEqual([undefined])
+    wrapper.unmount()
+  })
+
+  it('disabled 时触发器带 aria-disabled', () => {
+    const wrapper = mount(ColorPicker, { props: { disabled: true } })
+    expect(wrapper.find('.hmfw-color-picker-trigger').attributes('aria-disabled')).toBe('true')
+  })
+
+  it('未禁用时不输出 aria-disabled', () => {
+    const wrapper = mount(ColorPicker, { props: { disabled: false } })
+    expect(wrapper.find('.hmfw-color-picker-trigger').attributes('aria-disabled')).toBeUndefined()
+  })
 })

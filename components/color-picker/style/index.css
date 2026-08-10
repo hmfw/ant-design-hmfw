@@ -1,4 +1,20 @@
+/* ====== 组件级 Token ======
+   ColorPicker 专属几何尺寸，无对应全局语义 Token，可覆盖以定制单个实例。
+   派生规则参考 AntD prepareComponentToken，差异已逐项注明。
+
+   重要：面板由 Trigger 通过 Teleport 挂到 body，不在 .hmfw-color-picker 子树内，
+   拿不到定义在触发器根节点上的变量。因此按消费位置分两处定义：
+   触发器内消费的定义在 .hmfw-color-picker，面板内消费的定义在 .hmfw-color-picker-panel。
+   （与 Trigger 把 --hmfw-trigger-arrow-* 定义在 .hmfw-trigger-popup 上的做法一致） */
+
 .hmfw-color-picker {
+  /* 触发器内色块尺寸 */
+  --hmfw-color-picker-block-size: 16px;
+  /* showText 文本最小宽度，避免颜色切换时触发器宽度跳动 */
+  --hmfw-color-picker-text-min-width: 60px;
+  /* 透明棋盘格灰：表示「无颜色」的约定俗成图示，而非主题表面色 */
+  --hmfw-color-picker-trans-bg: #ccc;
+
   display: inline-flex;
   align-items: center;
 }
@@ -6,17 +22,16 @@
 .hmfw-color-picker-trigger {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 8px;
+  gap: var(--hmfw-margin-xs);
+  padding: var(--hmfw-padding-xxs) var(--hmfw-padding-xs);
   border: 1px solid var(--hmfw-color-border);
-  border-radius: 6px;
+  border-radius: var(--hmfw-border-radius);
   cursor: pointer;
   background: var(--hmfw-color-bg-container);
-  transition: border-color 0.2s;
-  min-width: 32px;
-  min-height: 32px;
+  transition: border-color var(--hmfw-motion-duration-mid);
+  min-width: var(--hmfw-control-height);
+  min-height: var(--hmfw-control-height);
 }
-
 .hmfw-color-picker-trigger:hover,
 .hmfw-color-picker-trigger-open {
   border-color: var(--hmfw-color-primary);
@@ -28,14 +43,16 @@
 }
 
 .hmfw-color-picker-color-block {
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
+  width: var(--hmfw-color-picker-block-size);
+  height: var(--hmfw-color-picker-block-size);
+  border-radius: var(--hmfw-border-radius-sm);
   border: 1px solid var(--hmfw-color-border);
-  /* 透明棋盘格固定浅灰：它表示"无颜色"，是约定俗成的图示而非主题表面 */
+  /* 透明棋盘格：表示「无颜色」的固定图示，不随主题反转 */
   background-image:
-    linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    linear-gradient(45deg, var(--hmfw-color-picker-trans-bg) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--hmfw-color-picker-trans-bg) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--hmfw-color-picker-trans-bg) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--hmfw-color-picker-trans-bg) 75%);
   background-size: 8px 8px;
   background-position:
     0 0,
@@ -54,42 +71,71 @@
 }
 
 .hmfw-color-picker-text {
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text);
-  min-width: 60px;
+  min-width: var(--hmfw-color-picker-text-min-width);
 }
-
-/* Sizes */
+/* ====== 尺寸变体 ======
+   middle 为默认态（无 modifier 类），small / large 覆盖控件高度与内边距 */
 .hmfw-color-picker-small .hmfw-color-picker-trigger {
-  min-height: 24px;
-  padding: 2px 6px;
+  min-width: var(--hmfw-control-height-sm);
+  min-height: var(--hmfw-control-height-sm);
+  padding: 2px var(--hmfw-padding-xxs);
 }
 
 .hmfw-color-picker-large .hmfw-color-picker-trigger {
-  min-height: 40px;
-  padding: 6px 10px;
+  min-width: var(--hmfw-control-height-lg);
+  min-height: var(--hmfw-control-height-lg);
+  padding: var(--hmfw-padding-xxs) var(--hmfw-padding-sm);
 }
 
-/* Panel（bg/radius/shadow 由 hmfw-trigger-popup 统一提供） */
+/* ====== 面板 ======
+   bg / radius / shadow 由外层 hmfw-trigger-popup 统一提供，此处仅补面板自身尺寸 */
 .hmfw-color-picker-panel {
-  padding: 12px;
-  width: 234px;
+  /* 面板内消费的组件级 Token：定义在面板自身，Teleport 后仍可解析 */
+
+  /* 面板宽度，对齐 AntD colorPickerWidth = 234 */
+  --hmfw-color-picker-width: 234px;
+  /* 饱和度/明度取色画布高度 */
+  --hmfw-color-picker-sb-height: 160px;
+  /* 色相滑块高度（AntD colorPickerSliderHeight = 8，本项目取 12 便于触摸操作） */
+  --hmfw-color-picker-slider-height: 12px;
+  /* 色相游标尺寸（AntD colorPickerHandlerSize = 16） */
+  --hmfw-color-picker-handler-size: 14px;
+  /* 取色画布游标尺寸，对齐 AntD colorPickerHandlerSizeSM = 12 */
+  --hmfw-color-picker-handler-size-sm: 12px;
+  /* 输入区预览色块尺寸（AntD colorPickerPreviewSize = sliderHeight×2 + marginSM） */
+  --hmfw-color-picker-preview-size: 24px;
+  /* 预设色块尺寸（AntD colorPickerPresetColorSize = 24） */
+  --hmfw-color-picker-preset-color-size: 20px;
+  /* HEX 输入框宽高 */
+  --hmfw-color-picker-input-width: 120px;
+  --hmfw-color-picker-input-height: 28px;
+  /* 格式标签（HEX）列宽 */
+  --hmfw-color-picker-format-label-width: 28px;
+  /* 游标白环与外描边：HSV 取色器的固定图示，随主题反转会导致游标不可见 */
+  --hmfw-color-picker-cursor-ring: #fff;
+  --hmfw-color-picker-cursor-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+
+  padding: var(--hmfw-padding-sm);
+  width: var(--hmfw-color-picker-width);
   user-select: none;
 }
 
-/* Saturation/Brightness */
+/* ====== 饱和度 / 明度取色画布 ====== */
 .hmfw-color-picker-sb {
   position: relative;
   width: 100%;
-  height: 160px;
-  border-radius: 4px;
+  height: var(--hmfw-color-picker-sb-height);
+  border-radius: var(--hmfw-border-radius-sm);
   cursor: crosshair;
   overflow: hidden;
-  margin-bottom: 12px;
+  margin-bottom: var(--hmfw-margin-sm);
+  touch-action: none;
 }
 
-/* 以下饱和度/明度画布的黑白渐变、以及游标的白环+黑描边，
-   都是 HSV 色彩空间本身的绘制，必须固定；随主题反转会导致取色结果错误。 */
+/* 画布的黑白渐变与游标的白环 + 黑描边，都是 HSV 色彩空间本身的绘制，必须固定；
+   随主题反转会导致取色结果错误或游标不可见。 */
 .hmfw-color-picker-sb-white {
   position: absolute;
   inset: 0;
@@ -104,24 +150,24 @@
 
 .hmfw-color-picker-sb-cursor {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: var(--hmfw-color-picker-handler-size-sm);
+  height: var(--hmfw-color-picker-handler-size-sm);
   border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--hmfw-color-picker-cursor-ring);
+  box-shadow: var(--hmfw-color-picker-cursor-shadow);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
-
-/* Sliders */
+/* ====== 色相滑块 ====== */
 .hmfw-color-picker-sliders {
-  margin-bottom: 12px;
+  margin-bottom: var(--hmfw-margin-sm);
 }
 
 .hmfw-color-picker-hue {
   position: relative;
-  height: 12px;
-  border-radius: 6px;
+  height: var(--hmfw-color-picker-slider-height);
+  border-radius: calc(var(--hmfw-color-picker-slider-height) / 2);
+  /* 完整色相环渐变，属 HSV 色彩空间绘制，固定不变 */
   background: linear-gradient(
     to right,
     hsl(0, 100%, 50%),
@@ -139,46 +185,46 @@
     hsl(360, 100%, 50%)
   );
   cursor: pointer;
+  touch-action: none;
 }
 
 .hmfw-color-picker-hue-cursor {
   position: absolute;
   top: 50%;
-  width: 14px;
-  height: 14px;
+  width: var(--hmfw-color-picker-handler-size);
+  height: var(--hmfw-color-picker-handler-size);
   border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--hmfw-color-picker-cursor-ring);
+  box-shadow: var(--hmfw-color-picker-cursor-shadow);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
-/* Input */
+/* ====== HEX 输入区 ====== */
 .hmfw-color-picker-input-container {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: var(--hmfw-margin-xs);
+  margin-bottom: var(--hmfw-margin-xs);
 }
 
 .hmfw-color-picker-preview {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
+  width: var(--hmfw-color-picker-preview-size);
+  height: var(--hmfw-color-picker-preview-size);
+  border-radius: var(--hmfw-border-radius-sm);
   border: 1px solid var(--hmfw-color-border);
   flex-shrink: 0;
 }
-
 .hmfw-color-picker-hex-input {
-  flex: 1;
-  height: 28px;
-  padding: 0 8px;
+  width: var(--hmfw-color-picker-input-width);
+  height: var(--hmfw-color-picker-input-height);
+  padding: 0 var(--hmfw-padding-xs);
   border: 1px solid var(--hmfw-color-border);
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: var(--hmfw-border-radius-sm);
+  font-size: var(--hmfw-font-size-sm);
   font-family: monospace;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-color-picker-hex-input:focus {
@@ -186,44 +232,44 @@
 }
 
 .hmfw-color-picker-format-label {
-  font-size: 11px;
+  font-size: var(--hmfw-font-size-sm);
   color: var(--hmfw-color-text-description);
-  width: 28px;
+  width: var(--hmfw-color-picker-format-label-width);
   text-align: center;
 }
 
-/* Presets */
+/* ====== 预设颜色 ====== */
 .hmfw-color-picker-presets {
   border-top: 1px solid var(--hmfw-color-border);
-  padding-top: 8px;
-  margin-top: 4px;
+  padding-top: var(--hmfw-padding-xs);
+  margin-top: var(--hmfw-margin-xxs);
 }
 
 .hmfw-color-picker-preset-group {
-  margin-bottom: 8px;
+  margin-bottom: var(--hmfw-margin-xs);
 }
 
 .hmfw-color-picker-preset-label {
-  font-size: 12px;
+  font-size: var(--hmfw-font-size-sm);
   color: var(--hmfw-color-text-description);
-  margin-bottom: 6px;
+  margin-bottom: var(--hmfw-margin-xxs);
 }
 
 .hmfw-color-picker-preset-colors {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--hmfw-margin-xxs);
 }
 
 .hmfw-color-picker-preset-color {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
+  width: var(--hmfw-color-picker-preset-color-size);
+  height: var(--hmfw-color-picker-preset-color-size);
+  border-radius: var(--hmfw-border-radius-sm);
   cursor: pointer;
   border: 1px solid var(--hmfw-color-border);
   transition:
-    transform 0.15s,
-    box-shadow 0.15s;
+    transform var(--hmfw-motion-duration-fast),
+    box-shadow var(--hmfw-motion-duration-fast);
 }
 
 .hmfw-color-picker-preset-color:hover {
@@ -231,21 +277,22 @@
 }
 
 .hmfw-color-picker-preset-color-active {
-  box-shadow: 0 0 0 2px var(--hmfw-color-primary);
+  box-shadow: 0 0 0 var(--hmfw-line-width-bold) var(--hmfw-color-primary);
 }
 
-/* Clear */
+/* ====== 清除按钮 ====== */
 .hmfw-color-picker-clear-btn {
   text-align: center;
-  font-size: 12px;
+  font-size: var(--hmfw-font-size-sm);
   color: var(--hmfw-color-text-description);
   cursor: pointer;
-  padding: 4px 0;
+  padding: var(--hmfw-padding-xxs) 0;
   border-top: 1px solid var(--hmfw-color-border);
-  margin-top: 4px;
-  transition: color 0.2s;
+  margin-top: var(--hmfw-margin-xxs);
+  transition: color var(--hmfw-motion-duration-mid);
 }
 
-.hmfw-color-picker-clear-btn:hover {
+.hmfw-color-picker-clear-btn:hover,
+.hmfw-color-picker-clear-btn:focus-visible {
   color: var(--hmfw-color-primary);
 }

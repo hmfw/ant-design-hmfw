@@ -56,6 +56,7 @@ export interface ColorPickerStyles {
 export interface ColorPickerProps {
   value?: string
   defaultValue?: string
+  /** 当前仅支持 'hex' 格式 */
   format?: ColorFormat
   disabled?: boolean
   size?: ComponentSize
@@ -65,3 +66,12 @@ export interface ColorPickerProps {
   classNames?: ColorPickerClassNames
   styles?: ColorPickerStyles
 }
+
+/** 颜色变化事件回调 */
+export type ColorPickerChangeHandler = (value: string) => void
+
+/** 清除颜色事件回调 */
+export type ColorPickerClearHandler = () => void
+
+/** 面板显示/隐藏事件回调 */
+export type ColorPickerOpenChangeHandler = (open: boolean) => void
