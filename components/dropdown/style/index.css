@@ -83,7 +83,3 @@
 .hmfw-dropdown-button .hmfw-dropdown-button-left.hmfw-btn-primary:not(:last-child) {
   border-right-color: rgba(255, 255, 255, 0.2);
 }
-
-.hmfw-dropdown-trigger {
-  display: inline-block;
-}

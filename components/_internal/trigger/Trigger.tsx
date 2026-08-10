@@ -7,6 +7,13 @@ import {
   onBeforeUnmount,
   nextTick,
   Teleport,
+  Fragment,
+  Comment,
+  Text,
+  cloneVNode,
+  isVNode,
+  type VNode,
+  type ComponentPublicInstance,
   type PropType,
 } from 'vue'
 import { cls } from '../../_utils'
@@ -22,8 +29,17 @@ import type { Placement, TriggerAction, TriggerOpenSource, TriggerProps } from '
  * Teleport、触发器事件（hover/click/focus/contextMenu）、外点关闭、Esc 关闭、
  * 受控/非受控 open 状态、matchWidth、getPopupContainer。
  *
+ * **本组件自身不产生任何 DOM 节点**（对齐 `@rc-component/trigger` v3）：
+ * 通过 `cloneVNode` 把 ref 与事件合并到 default 插槽的子节点上，渲染结果为
+ * `[子节点, Teleport(弹层)]`。因此 default 插槽**必须是单个元素或组件 vnode**，
+ * 否则 dev 告警并渲染 null —— 宿主负责保证这一点（如 Tooltip 对文本子节点包 span）。
+ *
+ * 子节点是组件 vnode 时，按 `nativeElement` → `$el` 顺序解析 DOM 节点。
+ * 该组件若是 `inheritAttrs: false` 或多根组件，合并的事件不会落到 DOM 上而静默失效，
+ * 这与 rc-trigger 在 React 下的固有限制一致。
+ *
  * 插槽：
- *  - default：触发器元素
+ *  - default：触发器元素（单个 vnode）
  *  - popup({ placement })：弹层内容，回传翻转后实际方位供箭头方向使用
  */
 const triggerProps = {
@@ -57,13 +73,6 @@ const triggerProps = {
   /** 持续跟踪触发元素位置变化，每帧自动重新定位（适用于触发元素有动画/过渡的场景）。 */
   trackPosition: { type: Boolean, default: false },
   /**
-   * 触发器外层 wrapper 的 display。不传时不写行内样式，
-   * 由基础类 `:where(.hmfw-trigger)` 提供 inline-block 默认值，
-   * 宿主可用自身根类（如 .hmfw-select）直接覆盖。
-   * 仅在宿主无根类可挂载、又需要特定 display（如 Menu 的 contents）时才显式传入。
-   */
-  triggerDisplay: { type: String, default: undefined },
-  /**
    * 弹层 wrapper 的 class。可为字符串，或接收实际方位返回字符串的函数
    * （宿主据此拼出 placement 类，使 wrapper 自身即组件根节点，避免双层嵌套）。
    */
@@ -75,6 +84,64 @@ const triggerProps = {
   triggerClass: { type: String, default: undefined },
   triggerStyle: { type: Object as PropType<Record<string, any>>, default: undefined },
 } satisfies Record<keyof TriggerProps, any>
+
+const isDev = process.env.NODE_ENV !== 'production'
+
+/** 已告警过的原因集合，避免同一问题在每次 render 重复刷屏。 */
+const warned = new Set<string>()
+const warnOnce = (reason: string, message: string) => {
+  if (!isDev || warned.has(reason)) return
+  warned.add(reason)
+  console.warn(`[Trigger] ${message}`)
+}
+
+/**
+ * 清空告警去重集合。仅供测试使用 —— warnOnce 按进程去重，
+ * 否则同一 reason 的第二个用例观察不到 console.warn。
+ * @internal
+ */
+export const __resetTriggerWarnings = () => warned.clear()
+
+/**
+ * 展平 slot 返回值，剔除注释节点（`v-if` 落空）与纯空白文本节点，
+ * 用于判断「实际渲染的子节点」是否唯一。
+ */
+const flattenChildren = (nodes: unknown[]): VNode[] => {
+  const out: VNode[] = []
+  for (const n of nodes) {
+    if (!isVNode(n)) continue
+    if (n.type === Fragment) {
+      out.push(...flattenChildren(Array.isArray(n.children) ? n.children : []))
+      continue
+    }
+    if (n.type === Comment) continue
+    if (n.type === Text && typeof n.children === 'string' && n.children.trim() === '') continue
+    out.push(n)
+  }
+  return out
+}
+
+/**
+ * 判断 vnode 能否承载合并的 ref / 事件 / class。
+ *
+ * 原生元素（type 为字符串）与组件 vnode 均接受 —— 组件的 attrs 能否落到 DOM
+ * 取决于其 inheritAttrs 与根节点数量，无法静态判定，交由运行时的 ref 解析告警
+ * （与 rc-trigger 的 `getDOM()` 协议一致）。仅拒绝无法承载属性的文本 / 注释节点。
+ */
+const canCloneTarget = (vnode: VNode): boolean => vnode.type !== Text && vnode.type !== Comment
+
+/**
+ * ref 回调回传值 → DOM 元素，等价于 rc-trigger 依赖的 `@rc-component/util` 的 `getDOM()`：
+ * 优先取组件自行暴露的 `nativeElement`，其次 `$el`，最后是元素本身。
+ * 多根 / Fragment 根组件的 `$el` 是锚点注释节点，此处返回 null 并由调用方告警。
+ */
+const resolveElement = (value: Element | ComponentPublicInstance | null): HTMLElement | null => {
+  if (!value) return null
+  if (value instanceof HTMLElement) return value
+  const inst = value as ComponentPublicInstance & { nativeElement?: unknown }
+  const candidate = inst.nativeElement ?? inst.$el
+  return candidate instanceof HTMLElement ? candidate : null
+}
 
 export const Trigger = defineComponent({
   name: 'Trigger',
@@ -174,13 +241,7 @@ export const Trigger = defineComponent({
     const updatePosition = () => {
       // 弹层不可见时 getBoundingClientRect 返回零值，跳过以避免错误坐标
       if (!visible.value || !triggerRef.value || !popupRef.value) return
-      // 当 triggerDisplay 为 contents 时，wrapper 自身不生成盒模型，
-      // getBoundingClientRect 返回全零值，需回退到第一个子元素计算位置
-      let triggerEl: HTMLElement = triggerRef.value
-      if (props.triggerDisplay === 'contents' && triggerRef.value.firstElementChild) {
-        triggerEl = triggerRef.value.firstElementChild as HTMLElement
-      }
-      const triggerRect = triggerEl.getBoundingClientRect()
+      const triggerRect = triggerRef.value.getBoundingClientRect()
       const popupRect = popupRef.value.getBoundingClientRect()
       const r = computePosition(triggerRect, popupRect, props.placement, {
         gap: props.gap,
@@ -434,6 +495,17 @@ export const Trigger = defineComponent({
       return resolve?.(triggerRef.value) ?? 'body'
     }
 
+    // cloneChild 模式下子节点的 ref 回调：把回传值（元素或组件实例）归一化成 HTMLElement。
+    // 定义在 setup 作用域内以保持函数身份稳定，避免每次 render 生成新 ref 触发重复调用。
+    // 卸载时 Vue 以 null 调用，resolveElement 返回 null，无需额外分支。
+    const setTriggerEl = (value: unknown) => {
+      const el = resolveElement(value as Element | ComponentPublicInstance | null)
+      if (value && !el) {
+        warnOnce('clone-ref-unresolved', 'cloneChild 无法从子节点解析出 HTMLElement，弹层定位将失效。')
+      }
+      triggerRef.value = el
+    }
+
     // ================================================================
     // 8. 暴露 API
     // ================================================================
@@ -446,6 +518,27 @@ export const Trigger = defineComponent({
     return () => {
       const children = slots.default?.()
       if (!children || (Array.isArray(children) && children.length === 0)) return null
+
+      // 校验：只有「唯一的原生元素 / 组件 vnode」才能承载合并，
+      // 其余情形（多节点 / Fragment / 文本 / 注释）dev 告警并跳过渲染。
+      const flat = flattenChildren(Array.isArray(children) ? children : [children])
+      let cloneTarget: VNode | null = null
+
+      if (flat.length === 0) {
+        warnOnce('clone-no-child', 'Trigger 需要提供子节点，已跳过渲染。')
+      } else if (flat.length !== 1) {
+        warnOnce(
+          'clone-not-single',
+          `Trigger 需要单个子节点，实际收到 ${flat.length} 个（Fragment 已展平）。已跳过渲染。`,
+        )
+      } else if (!canCloneTarget(flat[0])) {
+        warnOnce(
+          'clone-not-element',
+          'Trigger 子节点需为元素或组件 vnode，文本 / 注释节点无法承载事件与 ref。已跳过渲染。',
+        )
+      } else {
+        cloneTarget = flat[0]
+      }
 
       const shouldRender = visible.value || !props.destroyOnHidden || props.forceRender
 
@@ -477,16 +570,6 @@ export const Trigger = defineComponent({
         },
       )
 
-      // 基础类 hmfw-trigger 提供零特异性的 display 默认值，宿主根类可直接覆盖。
-      const triggerCls = cls('hmfw-trigger', props.triggerClass, attrs.class as string | undefined)
-      // display 只在显式传入 triggerDisplay 时写行内样式，否则交给 CSS，
-      // 避免行内样式压过宿主根类中声明的 display。
-      const triggerSty = {
-        ...(props.triggerDisplay ? { display: props.triggerDisplay } : null),
-        ...(attrs.style as Record<string, any> | undefined),
-        ...props.triggerStyle,
-      }
-
       const triggerEvents = {
         onMouseenter: handleMouseEnter,
         onMouseleave: handleMouseLeave,
@@ -502,11 +585,27 @@ export const Trigger = defineComponent({
         onMouseleave: handleMouseLeave,
       }
 
+      // triggerClass 与 attrs.class 仍然合并过去，由 mergeProps 与子节点自身 class 拼接。
+      // mergeRef=true：子节点自带 ref 时拼成数组而非覆盖，宿主原有 ref 不丢。
+      const triggerNode = cloneTarget
+        ? cloneVNode(
+            cloneTarget,
+            {
+              ref: setTriggerEl,
+              class: cls(props.triggerClass, attrs.class as string | undefined),
+              style: {
+                ...(attrs.style as Record<string, any> | undefined),
+                ...props.triggerStyle,
+              },
+              ...triggerEvents,
+            },
+            true,
+          )
+        : null
+
       return (
         <>
-          <div ref={triggerRef} class={triggerCls} style={triggerSty} {...triggerEvents}>
-            {children}
-          </div>
+          {triggerNode}
           {shouldRender && (
             <Teleport to={getContainer()}>
               <div ref={popupRef} class={popupCls} style={popupStyle} {...popupEvents}>

@@ -80,7 +80,6 @@ export const FloatButtonGroup = defineComponent({
           closeOnEscape
           mouseEnterDelay={0}
           mouseLeaveDelay={0}
-          triggerDisplay="block"
           popupStyle={{ display: 'none' }}
           onUpdate:open={handleOpenChange}
         >

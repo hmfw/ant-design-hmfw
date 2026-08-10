@@ -104,7 +104,9 @@ export const MenuItem = defineComponent({
         </li>
       )
 
-      // 折叠态第一级菜单项：包裹 Tooltip
+      // 折叠态第一级菜单项：包裹 Tooltip。
+      // 子节点是上面构造的单个 <li>（原生元素），Trigger 直接把 ref/事件
+      // 合并到该 li 上，保持 ul > li 的合法结构与 aria 语义。
       if (context.inlineCollapsed && props.isFirstLevel && props.depth === 0 && context.mode === 'inline') {
         return (
           <Tooltip
@@ -112,7 +114,6 @@ export const MenuItem = defineComponent({
             title={itemTitle ?? itemLabel ?? ''}
             placement="right"
             mouseEnterDelay={0.5}
-            triggerDisplay="contents"
             {...(typeof context.tooltip === 'object' ? context.tooltip : {})}
           >
             {menuItemContent}

@@ -1,8 +1,8 @@
-import { nextTick, h } from 'vue'
+import { nextTick, h, ref, defineComponent, createCommentVNode } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-import { Trigger } from '../Trigger'
+import { Trigger, __resetTriggerWarnings } from '../Trigger'
 
 const popupSlot = () => h('div', { class: 'my-popup' }, 'Popup Content')
 
@@ -36,7 +36,7 @@ describe('Trigger', () => {
 
   it('opens on hover by default', async () => {
     const wrapper = mountTrigger({ mouseEnterDelay: 0 })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     const popup = document.querySelector('.my-popup')
@@ -47,10 +47,10 @@ describe('Trigger', () => {
 
   it('closes on mouseleave', async () => {
     const wrapper = mountTrigger({ mouseEnterDelay: 0, mouseLeaveDelay: 0 })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     vi.runAllTimers()
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).not.toBeNull()
@@ -60,7 +60,7 @@ describe('Trigger', () => {
   it('respects mouseEnterDelay', async () => {
     // 用 destroyOnHidden 确保关闭态完全移除 DOM，避免误判隐藏态节点为"已打开"
     const wrapper = mountTrigger({ mouseEnterDelay: 0.5, destroyOnHidden: true }) // 500ms
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     // 未到延迟时间，不应打开
     vi.advanceTimersByTime(300)
     await nextTick()
@@ -75,12 +75,12 @@ describe('Trigger', () => {
   it('respects mouseLeaveDelay', async () => {
     const wrapper = mountTrigger({ mouseEnterDelay: 0, mouseLeaveDelay: 0.5 })
     // 先打开
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
     // 离开，但延迟未到
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     vi.advanceTimersByTime(300)
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
@@ -93,13 +93,13 @@ describe('Trigger', () => {
 
   it('cancels leave timer when mouse re-enters', async () => {
     const wrapper = mountTrigger({ mouseEnterDelay: 0, mouseLeaveDelay: 0.5 })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     // 离开
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     // 立即重新进入（在 leaveDelay 内）
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.advanceTimersByTime(600)
     await nextTick()
     // 应保持打开
@@ -110,7 +110,7 @@ describe('Trigger', () => {
   it('连续 mouseenter 不堆积定时器', async () => {
     const onOpenChange = vi.fn()
     const wrapper = mountTrigger({ mouseEnterDelay: 0.5, onOpenChange })
-    const div = wrapper.find('div')
+    const div = wrapper.find('button')
     const before = vi.getTimerCount()
     await div.trigger('mouseenter')
     await div.trigger('mouseenter')
@@ -125,7 +125,7 @@ describe('Trigger', () => {
 
   it('连续 mouseleave 不堆积定时器', async () => {
     const wrapper = mountTrigger({ mouseEnterDelay: 0, mouseLeaveDelay: 0.5 })
-    const div = wrapper.find('div')
+    const div = wrapper.find('button')
     await div.trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
@@ -140,8 +140,8 @@ describe('Trigger', () => {
   it('卸载后残留的 hover 定时器不再 emit', async () => {
     const onOpenChange = vi.fn()
     const wrapper = mountTrigger({ mouseEnterDelay: 0.5, onOpenChange })
-    await wrapper.find('div').trigger('mouseenter')
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     wrapper.unmount()
     vi.advanceTimersByTime(1000)
     expect(onOpenChange).not.toHaveBeenCalled()
@@ -151,7 +151,7 @@ describe('Trigger', () => {
 
   it('opens on click trigger', async () => {
     const wrapper = mountTrigger({ trigger: 'click' })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
     wrapper.unmount()
@@ -159,10 +159,10 @@ describe('Trigger', () => {
 
   it('toggles on click', async () => {
     const wrapper = mountTrigger({ trigger: 'click' })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).not.toBeNull()
     wrapper.unmount()
@@ -172,7 +172,7 @@ describe('Trigger', () => {
 
   it('opens on contextmenu', async () => {
     const wrapper = mountTrigger({ trigger: 'contextMenu' })
-    await wrapper.find('div').trigger('contextmenu')
+    await wrapper.find('button').trigger('contextmenu')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
     wrapper.unmount()
@@ -181,7 +181,7 @@ describe('Trigger', () => {
   it('contextmenu prevents default', async () => {
     const wrapper = mountTrigger({ trigger: 'contextMenu' })
     const preventDefault = vi.fn()
-    await wrapper.find('div').trigger('contextmenu', { preventDefault })
+    await wrapper.find('button').trigger('contextmenu', { preventDefault })
     await nextTick()
     expect(preventDefault).toHaveBeenCalled()
     wrapper.unmount()
@@ -191,10 +191,10 @@ describe('Trigger', () => {
 
   it('supports focus trigger', async () => {
     const wrapper = mountTrigger({ trigger: 'focus' })
-    await wrapper.find('div').trigger('focusin')
+    await wrapper.find('button').trigger('focusin')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
-    await wrapper.find('div').trigger('focusout')
+    await wrapper.find('button').trigger('focusout')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).not.toBeNull()
     wrapper.unmount()
@@ -202,14 +202,14 @@ describe('Trigger', () => {
 
   it('does not close on focusout when focus moves into popup', async () => {
     const wrapper = mountTrigger({ trigger: 'focus' })
-    await wrapper.find('div').trigger('focusin')
+    await wrapper.find('button').trigger('focusin')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
 
     // 模拟焦点从触发器移入弹层内部
     const popupEl = document.querySelector('.my-popup')!.parentElement!
     // 触发 focusout，relatedTarget 指向 popup 内部元素
-    await wrapper.find('div').trigger('focusout', {
+    await wrapper.find('button').trigger('focusout', {
       relatedTarget: popupEl,
     })
     await nextTick()
@@ -220,10 +220,10 @@ describe('Trigger', () => {
 
   it('closes on focusout when focus moves outside', async () => {
     const wrapper = mountTrigger({ trigger: 'focus' })
-    await wrapper.find('div').trigger('focusin')
+    await wrapper.find('button').trigger('focusin')
     await nextTick()
     // focusout 到完全不相关的元素
-    await wrapper.find('div').trigger('focusout', {
+    await wrapper.find('button').trigger('focusout', {
       relatedTarget: document.body,
     })
     await nextTick()
@@ -235,7 +235,7 @@ describe('Trigger', () => {
 
   it('supports click trigger in combination', async () => {
     const wrapper = mountTrigger({ trigger: ['click'] })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
     wrapper.unmount()
@@ -244,12 +244,12 @@ describe('Trigger', () => {
   it('supports hover+click combination', async () => {
     const wrapper = mountTrigger({ trigger: ['hover', 'click'], mouseEnterDelay: 0 })
     // hover 打开
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
     // click 关闭
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).not.toBeNull()
     wrapper.unmount()
@@ -278,7 +278,7 @@ describe('Trigger', () => {
     const onUpdateOpen = vi.fn()
     const wrapper = mountTrigger({ open: true, 'onUpdate:open': onUpdateOpen, trigger: 'click' })
     await nextTick()
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     // 受控模式下，外部应收到事件但不内部修改状态
     expect(onUpdateOpen).toHaveBeenCalledWith(false)
@@ -290,7 +290,7 @@ describe('Trigger', () => {
   it('emits openChange with source', async () => {
     const onOpenChange = vi.fn()
     const wrapper = mountTrigger({ trigger: 'click', onOpenChange })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(onOpenChange).toHaveBeenCalledWith(true, { source: 'trigger' })
     wrapper.unmount()
@@ -299,7 +299,7 @@ describe('Trigger', () => {
   it('emits afterOpenChange', async () => {
     const onAfterOpenChange = vi.fn()
     const wrapper = mountTrigger({ trigger: 'click', onAfterOpenChange })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     vi.runAllTimers()
     expect(onAfterOpenChange).toHaveBeenCalledWith(true)
@@ -311,12 +311,12 @@ describe('Trigger', () => {
   it('鼠标从触发器移入弹层时不重复 emit openChange(true)', async () => {
     const onOpenChange = vi.fn()
     const wrapper = mountTrigger({ mouseEnterDelay: 0.1, mouseLeaveDelay: 0.1, onOpenChange })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.advanceTimersByTime(200)
     await nextTick()
     // 移出触发器同时移入弹层：leave timer 被取消，且不应再 emit 一次 (true)
     const popup = document.querySelector('.hmfw-trigger-popup')!
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     popup.dispatchEvent(new MouseEvent('mouseenter'))
     vi.advanceTimersByTime(200)
     await nextTick()
@@ -333,9 +333,9 @@ describe('Trigger', () => {
       onOpenChange,
       'onUpdate:open': onUpdateOpen,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.advanceTimersByTime(100) // 未达 500ms，弹层从未打开
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     vi.advanceTimersByTime(100)
     await nextTick()
     expect(onOpenChange).not.toHaveBeenCalled()
@@ -346,7 +346,7 @@ describe('Trigger', () => {
   it('重复 focusin 只 emit 一次 openChange', async () => {
     const onOpenChange = vi.fn()
     const wrapper = mountTrigger({ trigger: 'focus', onOpenChange })
-    const div = wrapper.find('div')
+    const div = wrapper.find('button')
     await div.trigger('focusin')
     await nextTick()
     await div.trigger('focusin')
@@ -359,7 +359,7 @@ describe('Trigger', () => {
 
   it('does not open when disabled', async () => {
     const wrapper = mountTrigger({ trigger: 'click', disabled: true })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     const popup = document.querySelector('.my-popup')
     if (popup) expect(document.querySelector('.hmfw-trigger-popup-hidden')).not.toBeNull()
@@ -369,7 +369,7 @@ describe('Trigger', () => {
   it('disabled 变 true 时收起已打开的弹层', async () => {
     const onOpenChange = vi.fn()
     const wrapper = mountTrigger({ trigger: 'click', onOpenChange })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
 
@@ -402,7 +402,7 @@ describe('Trigger', () => {
 
   it('closes on Escape', async () => {
     const wrapper = mountTrigger({ trigger: 'click' })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
     await nextTick()
@@ -412,7 +412,7 @@ describe('Trigger', () => {
 
   it('closeOnEscape=false keeps popup open', async () => {
     const wrapper = mountTrigger({ trigger: 'click', closeOnEscape: false })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
     await nextTick()
@@ -422,7 +422,7 @@ describe('Trigger', () => {
 
   it('closes on outside mousedown', async () => {
     const wrapper = mountTrigger({ trigger: 'click' })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
     // 点击外部区域
@@ -434,7 +434,7 @@ describe('Trigger', () => {
 
   it('closeOnOutsideClick=false keeps popup open', async () => {
     const wrapper = mountTrigger({ trigger: 'click', closeOnOutsideClick: false })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
     await nextTick()
@@ -594,7 +594,7 @@ describe('Trigger', () => {
 
   it('applies triggerStyle on trigger wrapper', async () => {
     const wrapper = mountTrigger({ triggerStyle: { marginRight: '12px' } })
-    const triggerDiv = wrapper.find('div')
+    const triggerDiv = wrapper.find('button')
     expect((triggerDiv.element as HTMLElement).style.marginRight).toBe('12px')
     wrapper.unmount()
   })
@@ -632,38 +632,6 @@ describe('Trigger', () => {
     await nextTick()
     expect(document.querySelector('.my-hidden')).not.toBeNull()
     expect(document.querySelector('.hmfw-trigger-popup-hidden')).toBeNull()
-    wrapper.unmount()
-  })
-
-  // ============================== triggerDisplay ==============================
-
-  it('不传 triggerDisplay 时不写行内 display，改由基础类 hmfw-trigger 提供默认值', async () => {
-    // 行内 display 会压过宿主根类（如 .hmfw-select 的 inline-flex），故默认不写行内样式
-    const wrapper = mountTrigger()
-    const div = wrapper.find('div')
-    expect((div.element as HTMLElement).style.display).toBe('')
-    expect(div.classes()).toContain('hmfw-trigger')
-    wrapper.unmount()
-  })
-
-  it('supports triggerDisplay block', async () => {
-    const wrapper = mountTrigger({ triggerDisplay: 'block' })
-    const div = wrapper.find('div')
-    expect((div.element as HTMLElement).style.display).toBe('block')
-    wrapper.unmount()
-  })
-
-  it('triggerDisplay "contents" renders without error and positions popup', async () => {
-    // contents 模式的回退到 firstElementChild 行为需真实视口验证（e2e），
-    // 此处验证组件不崩溃且弹层正常渲染。
-    const wrapper = mountTrigger({ triggerDisplay: 'contents', open: false, gap: 0 })
-    await nextTick()
-    await wrapper.setProps({ open: true })
-    await nextTick()
-    const popup = document.querySelector('.hmfw-trigger-popup')
-    expect(popup).not.toBeNull()
-    // 弹层已渲染（定位值由 jsdom 决定，不做强断言）
-    expect((popup as HTMLElement)?.style.top).toBeDefined()
     wrapper.unmount()
   })
 
@@ -764,7 +732,7 @@ describe('Trigger', () => {
 
     try {
       const wrapper = mountTrigger({ observePopupResize: true, trigger: 'click' })
-      await wrapper.find('div').trigger('click')
+      await wrapper.find('button').trigger('click')
       await nextTick()
       expect(observeMock).toHaveBeenCalled()
       wrapper.unmount()
@@ -787,10 +755,10 @@ describe('Trigger', () => {
 
     try {
       const wrapper = mountTrigger({ observePopupResize: true, trigger: 'click', mouseLeaveDelay: 0 })
-      await wrapper.find('div').trigger('click')
+      await wrapper.find('button').trigger('click')
       await nextTick()
       expect(observeMock).toHaveBeenCalled()
-      await wrapper.find('div').trigger('click')
+      await wrapper.find('button').trigger('click')
       await nextTick()
       expect(disconnectMock).toHaveBeenCalled()
       wrapper.unmount()
@@ -885,9 +853,9 @@ describe('Trigger', () => {
     const wrapper2 = mountTrigger({ trigger: 'click' })
 
     // 两个实例都打开
-    await wrapper1.find('div').trigger('click')
+    await wrapper1.find('button').trigger('click')
     await nextTick()
-    await wrapper2.find('div').trigger('click')
+    await wrapper2.find('button').trigger('click')
     await nextTick()
 
     const popups = document.querySelectorAll('.hmfw-trigger-popup')
@@ -1053,7 +1021,9 @@ describe('Trigger', () => {
       },
       attachTo: document.body,
     })
-    expect(wrapper.find('div').exists()).toBe(false)
+    expect(wrapper.find('button').exists()).toBe(false)
     wrapper.unmount()
   })
+
+  // ============================== cloneChild ==============================
 })

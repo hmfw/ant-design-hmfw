@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.37.0] - 2026-08-04
+
+[查看完整内容](./changelogs/v0.37.0.md)
+
+**💥 破坏性变更**：Trigger 内部原语架构重构，移除 `cloneChild` 和 `triggerDisplay` 两个复杂 API，简化实现并提升稳定性。8 个宿主组件（Select / TreeSelect / TimePicker / RangePicker / ColorPicker / Tooltip / Dropdown / FloatButtonGroup）完成适配，自建根元素或宿主侧兜底。修复 SubMenu onClick 双触发问题。删除 11 个 cloneChild 测试用例，改写 100+ 处测试断言。高层组件 API 完全不变，用户代码无需修改。全体 2489 单元测试通过。
+
 ## [0.36.0] - 2026-08-04
 
 [查看完整内容](./changelogs/v0.36.0.md)

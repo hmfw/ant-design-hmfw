@@ -586,13 +586,6 @@ export const TreeSelect = defineComponent({
           disabled={props.disabled}
           destroyOnHidden
           matchWidth
-          triggerClass={cls(prefixCls, `${prefixCls}-${props.size}`, props.classNames?.root, {
-            [`${prefixCls}-open`]: isOpen.value,
-            [`${prefixCls}-disabled`]: props.disabled,
-            [`${prefixCls}-status-error`]: props.status === 'error',
-            [`${prefixCls}-status-warning`]: props.status === 'warning',
-          })}
-          triggerStyle={props.styles?.root}
           popupClass={cls(`${prefixCls}-dropdown`, props.classNames?.dropdown)}
           popupStyle={props.styles?.dropdown}
           onOpenChange={(v: boolean) => {
@@ -602,7 +595,15 @@ export const TreeSelect = defineComponent({
         >
           {{
             default: () => (
-              <>
+              <div
+                class={cls(prefixCls, `${prefixCls}-${props.size}`, props.classNames?.root, {
+                  [`${prefixCls}-open`]: isOpen.value,
+                  [`${prefixCls}-disabled`]: props.disabled,
+                  [`${prefixCls}-status-error`]: props.status === 'error',
+                  [`${prefixCls}-status-warning`]: props.status === 'warning',
+                })}
+                style={props.styles?.root}
+              >
                 <div
                   ref={selectorRef}
                   class={cls(`${prefixCls}-selector`, props.classNames?.selector)}
@@ -709,7 +710,7 @@ export const TreeSelect = defineComponent({
                     ×
                   </span>
                 )}
-              </>
+              </div>
             ),
             popup: () => renderDropdownContent(checkedSet, halfSet),
           }}

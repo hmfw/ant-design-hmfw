@@ -225,7 +225,6 @@ export const SubMenu = defineComponent({
             autoAdjustOverflow
             closeOnOutsideClick={!shouldTriggerOnHover}
             closeOnEscape
-            triggerDisplay="block"
             disabled={itemDisabled}
             // 不传 zIndex，由 Trigger 回退到主题 Token --hmfw-z-index-popup（1050）
             popupClass={prefixCls}
@@ -247,11 +246,12 @@ export const SubMenu = defineComponent({
                   data-menu-key={itemKey}
                   data-menu-label={itemLabel}
                   onClick={(e: MouseEvent) => {
+                    // hover 模式下 Trigger 不绑 click，此处只处理键盘激活（Enter 产生 detail=0 的 click）
                     if (itemDisabled) return
-                    if (!shouldTriggerOnHover || e.detail === 0) {
-                      e.stopPropagation()
+                    if (shouldTriggerOnHover && e.detail === 0) {
                       context.onOpenChange(itemKey, !open)
                     }
+                    // click 模式已由 Trigger 处理，此处不再调用 onOpenChange 避免双触发
                   }}
                 >
                   {renderIcon()}

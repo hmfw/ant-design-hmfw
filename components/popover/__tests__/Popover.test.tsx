@@ -26,7 +26,7 @@ describe('Popover', () => {
       slots: { default: '<button>hover me</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     const popover = document.querySelector('.hmfw-popover')
@@ -40,10 +40,10 @@ describe('Popover', () => {
       slots: { default: '<button>hover me</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     vi.runAllTimers()
     await nextTick()
     const popover = document.querySelector('.hmfw-popover')
@@ -85,7 +85,7 @@ describe('Popover', () => {
       slots: { default: '<button>click me</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     const popover = document.querySelector('.hmfw-popover')
     expect(popover?.classList.contains('hmfw-popover-hidden')).toBe(false)
@@ -98,7 +98,7 @@ describe('Popover', () => {
       slots: { default: '<button>hover me</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     const popover = document.querySelector('.hmfw-popover')
@@ -112,7 +112,7 @@ describe('Popover', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     expect(document.querySelector('.hmfw-popover')).toBeNull()
@@ -175,7 +175,7 @@ describe('Popover', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     expect(wrapper.emitted('afterOpenChange')).toBeTruthy()
@@ -335,7 +335,7 @@ describe('Popover', () => {
       attachTo: document.body,
     })
     // hover opens
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     const popup = document.querySelector('.hmfw-popover')
@@ -349,7 +349,7 @@ describe('Popover', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('contextmenu')
+    await wrapper.find('button').trigger('contextmenu')
     await nextTick()
     const popup = document.querySelector('.hmfw-popover')
     expect(popup?.classList.contains('hmfw-popover-hidden')).toBe(false)
@@ -370,11 +370,11 @@ describe('Popover', () => {
     })
     // closed initially -> no popup in DOM
     expect(document.querySelector('.hmfw-popover')).toBeNull()
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     expect(document.querySelector('.hmfw-popover')).not.toBeNull()
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     vi.runAllTimers()
     await nextTick()
     expect(document.querySelector('.hmfw-popover')).toBeNull()
@@ -387,7 +387,7 @@ describe('Popover', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(wrapper.emitted('update:open')?.[0]).toEqual([true])
     expect(wrapper.emitted('openChange')?.[0]).toEqual([true, { source: 'trigger' }])

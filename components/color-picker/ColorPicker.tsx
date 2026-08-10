@@ -278,15 +278,6 @@ export const ColorPicker = defineComponent({
         placement={'bottomLeft' as Placement}
         disabled={props.disabled}
         destroyOnHidden
-        triggerClass={cls(
-          prefixCls,
-          `${prefixCls}-${props.size}`,
-          {
-            [`${prefixCls}-disabled`]: props.disabled,
-          },
-          props.classNames?.root,
-        )}
-        triggerStyle={props.styles?.root}
         popupClass={cls(`${prefixCls}-panel`, props.classNames?.panel)}
         popupStyle={props.styles?.panel}
         onOpenChange={(v: boolean) => {
@@ -298,24 +289,36 @@ export const ColorPicker = defineComponent({
           default: () => (
             <div
               class={cls(
-                `${prefixCls}-trigger`,
-                { [`${prefixCls}-trigger-open`]: open.value },
-                props.classNames?.trigger,
+                prefixCls,
+                `${prefixCls}-${props.size}`,
+                {
+                  [`${prefixCls}-disabled`]: props.disabled,
+                },
+                props.classNames?.root,
               )}
-              style={props.styles?.trigger}
-              role="button"
-              aria-haspopup="true"
-              aria-expanded={open.value}
+              style={props.styles?.root}
             >
               <div
-                class={cls(`${prefixCls}-color-block`, props.classNames?.colorBlock)}
-                style={{ background: innerValue.value || 'transparent', ...props.styles?.colorBlock }}
-              />
-              {props.showText && (
-                <span class={cls(`${prefixCls}-text`, props.classNames?.text)} style={props.styles?.text}>
-                  {innerValue.value || '—'}
-                </span>
-              )}
+                class={cls(
+                  `${prefixCls}-trigger`,
+                  { [`${prefixCls}-trigger-open`]: open.value },
+                  props.classNames?.trigger,
+                )}
+                style={props.styles?.trigger}
+                role="button"
+                aria-haspopup="true"
+                aria-expanded={open.value}
+              >
+                <div
+                  class={cls(`${prefixCls}-color-block`, props.classNames?.colorBlock)}
+                  style={{ background: innerValue.value || 'transparent', ...props.styles?.colorBlock }}
+                />
+                {props.showText && (
+                  <span class={cls(`${prefixCls}-text`, props.classNames?.text)} style={props.styles?.text}>
+                    {innerValue.value || '—'}
+                  </span>
+                )}
+              </div>
             </div>
           ),
           popup: () => renderPanel(),

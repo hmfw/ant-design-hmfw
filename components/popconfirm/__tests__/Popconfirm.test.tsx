@@ -30,7 +30,7 @@ describe('Popconfirm', () => {
       slots: { default: '<button>Delete</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     const pop = document.querySelector('.hmfw-popconfirm')
     expect(pop?.classList.contains('hmfw-popconfirm-hidden')).toBe(false)
@@ -115,7 +115,7 @@ describe('Popconfirm', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(document.querySelector('.hmfw-popconfirm')).toBeNull()
     wrapper.unmount()
@@ -127,7 +127,7 @@ describe('Popconfirm', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(document.querySelector('.hmfw-popconfirm')).toBeNull()
     wrapper.unmount()
@@ -178,7 +178,7 @@ describe('Popconfirm', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     const popup = document.querySelector('.hmfw-popconfirm')
@@ -272,7 +272,7 @@ describe('Popconfirm', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     vi.runAllTimers()
     await nextTick()
     expect(wrapper.emitted('afterOpenChange')).toBeTruthy()

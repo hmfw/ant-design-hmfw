@@ -1,4 +1,4 @@
-import { defineComponent, computed, useId, cloneVNode, isVNode, type PropType, type VNode } from 'vue'
+import { defineComponent, computed, useId, cloneVNode, isVNode, Text, Comment, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Trigger } from '../_internal/trigger'
@@ -57,8 +57,6 @@ const tooltipProps = {
   trackPosition: { type: Boolean, default: false },
   /** Override the default `hmfw-tooltip` prefix (used by Popover/Popconfirm wrappers). */
   customPrefixCls: { type: String, default: undefined },
-  /** 触发器外层 wrapper 的 display，默认 inline-block。用于不破坏宿主布局（如菜单项可设为 `contents`）。 */
-  triggerDisplay: { type: String, default: undefined },
   /** Extra inline style merged onto the popup element (used by wrappers for `overlayStyle`). */
   popupStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
   classNames: { type: Object as PropType<TooltipClassNames>, default: undefined },
@@ -136,9 +134,15 @@ export const Tooltip = defineComponent({
       // Don't open when title is empty (AntD v6 noTitle guard)
       const canOpen = hasTitle.value
 
+      // 宿主侧兜底：Trigger 要求子节点是单个元素或组件 vnode，文本/注释节点无法承载
+      // ref 与事件。这里对非 vnode（undefined/文本/数字）或 Text/Comment vnode 包一层 span。
+      const needsWrapper = !isVNode(rawChild) || rawChild.type === Text || rawChild.type === Comment
+      const wrappedChild = needsWrapper ? <span>{rawChild}</span> : rawChild
+
       // 将 aria-describedby 关联到触发器元素，使屏幕阅读器能把 tooltip 内容与触发器绑定。
       // 仅在有内容且子节点是可承载属性的元素/组件 vnode 时克隆附加。
-      const child = canOpen && isVNode(rawChild) ? cloneVNode(rawChild, { 'aria-describedby': tooltipId }) : rawChild
+      const child =
+        canOpen && !needsWrapper ? cloneVNode(wrappedChild, { 'aria-describedby': tooltipId }) : wrappedChild
 
       // 无标题时强制 destroyOnHidden，确保 DOM 不渲染
       const shouldDestroy = canOpen ? mergedDestroyOnHidden.value : true
@@ -167,7 +171,6 @@ export const Tooltip = defineComponent({
           observePopupResize
           fresh={props.fresh}
           trackPosition={props.trackPosition}
-          triggerDisplay={props.triggerDisplay}
           popupClass={popupClass.value}
           popupStyle={popupStyleMerged}
           hiddenClass={`${prefixCls.value}-hidden`}

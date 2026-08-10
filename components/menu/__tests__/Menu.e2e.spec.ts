@@ -82,4 +82,44 @@ test.describe('Menu', () => {
 
     await expect(userItem).toHaveClass(/hmfw-menu-item-selected/)
   })
+
+  // 折叠态菜单项走 Trigger 的 cloneChild：不插入 wrapper，事件与 ref 直接合并到 li 上。
+  // 布局与定位必须在真实视口验证 —— 此前 triggerDisplay="contents" 就是为了让 wrapper
+  // 不生成盒模型，改用 cloneChild 后需确认几何未发生变化。
+  test('折叠态菜单项：无 wrapper，布局与 Tooltip 定位不变', async ({ page }) => {
+    // MenuCollapsed demo 初始为展开态，点按钮折叠
+    const toggle = page.getByRole('button', { name: '折叠' }).first()
+    await toggle.scrollIntoViewIfNeeded()
+    await toggle.click()
+
+    const menu = page.locator('.hmfw-menu-inline-collapsed').first()
+    await expect(menu).toBeVisible()
+    const item = menu.locator('.hmfw-menu-item').first()
+    await expect(item).toBeVisible()
+
+    // li 直接挂在 ul 下，祖先链上没有 Trigger wrapper
+    expect(await item.evaluate((el) => el.parentElement?.tagName)).toBe('UL')
+    expect(await item.evaluate((el) => !!el.closest('.hmfw-trigger'))).toBe(false)
+
+    // 外层容器有 0.2s width 过渡，需等稳定后再测几何
+    await expect.poll(async () => Math.round((await menu.boundingBox())!.width), { timeout: 2000 }).toBe(80)
+
+    // 折叠态布局：item 铺满菜单内容宽度（80px 菜单 - 左右各 4px 内边距 = 72px）
+    const menuBox = (await menu.boundingBox())!
+    const itemBox = (await item.boundingBox())!
+    expect(itemBox.width).toBeGreaterThanOrEqual(menuBox.width - 10)
+    expect(itemBox.height).toBeGreaterThan(20)
+
+    // hover 弹出 Tooltip，定位在 item 右侧并垂直居中（定位基准正确解析到 li 本身）
+    await item.hover()
+    const tip = page.locator('.hmfw-tooltip').first()
+    await expect(tip).toBeVisible({ timeout: 3000 })
+    const tipBox = (await tip.boundingBox())!
+    expect(tipBox.x).toBeGreaterThanOrEqual(itemBox.x + itemBox.width)
+    expect(Math.abs(tipBox.y + tipBox.height / 2 - (itemBox.y + itemBox.height / 2))).toBeLessThan(30)
+
+    // 事件合并未顶掉菜单项原有 onClick
+    await item.click()
+    await expect(item).toHaveClass(/hmfw-menu-item-selected/)
+  })
 })

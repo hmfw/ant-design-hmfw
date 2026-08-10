@@ -30,7 +30,7 @@ describe('Tooltip', () => {
       slots: { default: '<button>hover me</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     const tooltip = document.querySelector('.hmfw-tooltip')
@@ -44,10 +44,10 @@ describe('Tooltip', () => {
       slots: { default: '<button>hover me</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     vi.runAllTimers()
     await nextTick()
     const tooltip = document.querySelector('.hmfw-tooltip')
@@ -73,7 +73,7 @@ describe('Tooltip', () => {
       slots: { default: '<button>hover me</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     const tooltip = document.querySelector('.hmfw-tooltip')
@@ -87,7 +87,7 @@ describe('Tooltip', () => {
       slots: { default: '<button>click me</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     const tooltip = document.querySelector('.hmfw-tooltip')
     expect(tooltip?.classList.contains('hmfw-tooltip-hidden')).toBe(false)
@@ -127,7 +127,7 @@ describe('Tooltip', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     expect(document.querySelector('.hmfw-tooltip')).toBeNull()
@@ -205,7 +205,7 @@ describe('Tooltip', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     expect(wrapper.emitted('afterOpenChange')).toBeTruthy()
@@ -254,7 +254,7 @@ describe('Tooltip', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('contextmenu')
+    await wrapper.find('button').trigger('contextmenu')
     await nextTick()
     const popup = document.querySelector('.hmfw-tooltip')
     expect(popup?.classList.contains('hmfw-tooltip-hidden')).toBe(false)
@@ -267,15 +267,15 @@ describe('Tooltip', () => {
       slots: { default: '<button>x</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     let popup = document.querySelector('.hmfw-tooltip')
     expect(popup?.classList.contains('hmfw-tooltip-hidden')).toBe(false)
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     vi.runAllTimers()
     await nextTick()
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     popup = document.querySelector('.hmfw-tooltip')
     expect(popup?.classList.contains('hmfw-tooltip-hidden')).toBe(false)
@@ -338,7 +338,7 @@ describe('Tooltip', () => {
     let content = document.querySelector('.hmfw-tooltip-content')
     expect(content?.getAttribute('aria-hidden')).toBe('true')
 
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
 

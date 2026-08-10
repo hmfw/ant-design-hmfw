@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, type PropType, type VNode } from 'vue'
+import { defineComponent, ref, computed, isVNode, Text, Comment, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { Menu } from '../menu'
@@ -82,8 +82,13 @@ export const Dropdown = defineComponent({
     }
 
     return () => {
-      const child = slots.default?.()?.[0]
-      if (!child) return null
+      const rawChild = slots.default?.()?.[0]
+      if (!rawChild) return null
+
+      // 宿主侧兜底：Trigger 要求子节点是单个元素或组件 vnode，文本/注释节点无法承载
+      // ref 与事件。这里对非 vnode（undefined/文本/数字）或 Text/Comment vnode 包一层 span。
+      const needsWrapper = !isVNode(rawChild) || rawChild.type === Text || rawChild.type === Comment
+      const child = needsWrapper ? <span>{rawChild}</span> : rawChild
 
       const triggerClasses = cls(
         props.openClassName && isOpen.value ? props.openClassName : null,
@@ -126,7 +131,6 @@ export const Dropdown = defineComponent({
           forceRender={props.forceRender}
           matchWidth={props.matchWidth}
           gap={gap.value}
-          triggerDisplay="inline-flex"
           triggerClass={triggerClasses}
           triggerStyle={{ ...(attrs.style as any), ...props.styles?.trigger }}
           popupClass={popupClass}

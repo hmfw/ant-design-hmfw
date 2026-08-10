@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { h } from 'vue'
+import { h, nextTick } from 'vue'
 import { describe, it, expect, vi } from 'vitest'
 import { Menu } from '../Menu'
 import { MenuItem } from '../MenuItem'
@@ -149,6 +149,49 @@ describe('Menu', () => {
   it('shows title content when not collapsed', () => {
     const wrapper = mount(Menu, { props: { items, mode: 'inline' } })
     expect(wrapper.find('.hmfw-menu-title-content').exists()).toBe(true)
+  })
+
+  // 折叠态菜单项由 Tooltip 包裹，走 cloneChild：Trigger 不插入 wrapper，
+  // li 仍是 ul 的直接子节点，保持合法的列表结构与 aria 语义。
+  it('折叠态菜单项不被 Trigger wrapper 包裹，li 仍是 ul 的直接子节点', () => {
+    const wrapper = mount(Menu, {
+      props: { items, mode: 'inline', inlineCollapsed: true },
+      attachTo: document.body,
+    })
+
+    const firstItem = wrapper.find('.hmfw-menu-item')
+    expect(firstItem.exists()).toBe(true)
+    expect(firstItem.element.tagName).toBe('LI')
+    // li 的直接父节点是 ul，中间没有 Trigger 插入的 wrapper
+    expect((firstItem.element.parentElement as HTMLElement).tagName).toBe('UL')
+    // 注意：SubMenu 自身仍走 wrapper 模式，故不能断言整棵树无 .hmfw-trigger，
+    // 只断言折叠菜单项的祖先链上没有
+    expect(firstItem.element.closest('.hmfw-trigger')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('折叠态菜单项 hover 弹出 Tooltip，且点击仍能选中', async () => {
+    vi.useFakeTimers()
+    try {
+      const wrapper = mount(Menu, {
+        props: { items, mode: 'inline', inlineCollapsed: true },
+        attachTo: document.body,
+      })
+
+      const firstItem = wrapper.find('.hmfw-menu-item')
+      // 事件合并到 li 自身：Trigger 的 mouseenter 与菜单项原有 onClick 共存
+      await firstItem.trigger('mouseenter')
+      vi.advanceTimersByTime(600)
+      await nextTick()
+      expect(document.querySelector('.hmfw-tooltip')).not.toBeNull()
+
+      await firstItem.trigger('click')
+      expect(wrapper.emitted('select')).toBeTruthy()
+      wrapper.unmount()
+    } finally {
+      vi.useRealTimers()
+      document.body.innerHTML = ''
+    }
   })
 
   it('emits openChange when submenu toggles', async () => {

@@ -37,7 +37,7 @@ describe('Dropdown', () => {
       slots: { default: '<button>Hover</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     const dropdown = document.querySelector('.hmfw-dropdown')
@@ -51,10 +51,10 @@ describe('Dropdown', () => {
       slots: { default: '<button>Hover</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     vi.runAllTimers()
     await nextTick()
     const dropdown = document.querySelector('.hmfw-dropdown')
@@ -68,7 +68,7 @@ describe('Dropdown', () => {
       slots: { default: '<button>Click</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     const dropdown = document.querySelector('.hmfw-dropdown')
     expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
@@ -111,7 +111,7 @@ describe('Dropdown', () => {
       slots: { default: '<button>Click</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(onOpenChange).toHaveBeenCalledWith(true, { source: 'trigger' })
     wrapper.unmount()
@@ -180,7 +180,7 @@ describe('Dropdown', () => {
 
     // 默认：左缘对齐触发器左缘 → left = 50
     const w1 = makeWrapper(true)
-    stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
+    stub(document.querySelector('button'), triggerRect)
     stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
     window.dispatchEvent(new Event('resize'))
     // Trigger 的 resize 重定位经 rAF 合并，需推进定时器让帧回调执行
@@ -192,7 +192,7 @@ describe('Dropdown', () => {
 
     // pointAtCenter：弹层居中于触发器中心(100) → left = 100 - 120/2 = 40
     const w2 = makeWrapper({ pointAtCenter: true })
-    stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
+    stub(document.querySelector('button'), triggerRect)
     stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
     window.dispatchEvent(new Event('resize'))
     vi.advanceTimersByTime(20)
@@ -224,7 +224,7 @@ describe('Dropdown', () => {
     const stub = (el: Element | null, rect: any) => {
       if (el) (el as HTMLElement).getBoundingClientRect = () => rect as DOMRect
     }
-    stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
+    stub(document.querySelector('button'), triggerRect)
     stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
     window.dispatchEvent(new Event('resize'))
     // Trigger 的 resize 重定位经 rAF 合并，需推进定时器让帧回调执行
@@ -279,7 +279,7 @@ describe('Dropdown', () => {
       slots: { default: '<button>Click</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     const dropdown = document.querySelector('.hmfw-dropdown')
     expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(true)
@@ -294,19 +294,19 @@ describe('Dropdown', () => {
     })
 
     // Test hover
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
     let dropdown = document.querySelector('.hmfw-dropdown')
     expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
 
     // Close it
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     vi.runAllTimers()
     await nextTick()
 
     // Test click
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     dropdown = document.querySelector('.hmfw-dropdown')
     expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
@@ -321,7 +321,7 @@ describe('Dropdown', () => {
       attachTo: document.body,
     })
     const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true })
-    await wrapper.find('div').element.dispatchEvent(event)
+    await wrapper.find('button').element.dispatchEvent(event)
     await nextTick()
     const dropdown = document.querySelector('.hmfw-dropdown')
     expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
@@ -338,7 +338,7 @@ describe('Dropdown', () => {
       attachTo: document.body,
     })
     await nextTick()
-    expect(wrapper.find('div').classes()).toContain('trigger-open')
+    expect(wrapper.find('button').classes()).toContain('trigger-open')
     wrapper.unmount()
   })
 
@@ -349,7 +349,7 @@ describe('Dropdown', () => {
       attachTo: document.body,
     })
     await nextTick()
-    expect(wrapper.find('div').classes()).not.toContain('trigger-open')
+    expect(wrapper.find('button').classes()).not.toContain('trigger-open')
     wrapper.unmount()
   })
 
@@ -359,10 +359,10 @@ describe('Dropdown', () => {
       slots: { default: '<button>Hover</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
-    expect(wrapper.find('div').classes()).toContain('trigger-open')
+    expect(wrapper.find('button').classes()).toContain('trigger-open')
     wrapper.unmount()
   })
 
@@ -454,7 +454,7 @@ describe('Dropdown', () => {
       attachTo: document.body,
     })
     await nextTick()
-    expect(wrapper.find('div.custom-trigger').exists()).toBe(true)
+    expect(wrapper.find('.custom-trigger').exists()).toBe(true)
     expect(document.querySelector('.custom-dropdown')).not.toBeNull()
     expect(document.querySelector('.custom-arrow')).not.toBeNull()
     expect(document.querySelector('.custom-content')).not.toBeNull()
@@ -492,7 +492,7 @@ describe('Dropdown', () => {
       attachTo: document.body,
     })
     await nextTick()
-    expect(wrapper.find('div').attributes('style')).toContain('margin')
+    expect(wrapper.find('button').attributes('style')).toContain('margin')
     wrapper.unmount()
   })
 
@@ -539,7 +539,7 @@ describe('Dropdown', () => {
       slots: { default: '<button>Click</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     expect(onOpenChange).toHaveBeenCalledWith(true, { source: 'trigger' })
 
@@ -561,7 +561,7 @@ describe('Dropdown', () => {
       slots: { default: '<button>Click</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('click')
+    await wrapper.find('button').trigger('click')
     await nextTick()
     const openCallCount = onOpenChange.mock.calls.length
 
@@ -600,7 +600,7 @@ describe('Dropdown', () => {
       slots: { default: '<button>Hover</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     await nextTick()
     let dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
     expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(true)
@@ -618,11 +618,11 @@ describe('Dropdown', () => {
       slots: { default: '<button>Hover</button>' },
       attachTo: document.body,
     })
-    await wrapper.find('div').trigger('mouseenter')
+    await wrapper.find('button').trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
 
-    await wrapper.find('div').trigger('mouseleave')
+    await wrapper.find('button').trigger('mouseleave')
     await nextTick()
     let dropdown = document.querySelector('.hmfw-dropdown') as HTMLElement
     expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
@@ -651,7 +651,7 @@ describe('Dropdown', () => {
     const stub = (el: Element | null, rect: any) => {
       if (el) (el as HTMLElement).getBoundingClientRect = () => rect as DOMRect
     }
-    stub(document.querySelector('button')?.parentElement ?? null, triggerRect)
+    stub(document.querySelector('button'), triggerRect)
     stub(document.querySelector('.hmfw-dropdown'), dropdownRect)
     window.dispatchEvent(new Event('resize'))
     await nextTick()
@@ -752,17 +752,15 @@ describe('DropdownButton', () => {
     const dropdownWrapper = wrapper.findComponent(Dropdown)
     expect(dropdownWrapper.props('trigger')).toBe('hover')
 
-    // Dropdown 触发区域是 .hmfw-dropdown-button 下的 div（左按钮是 button，不是 div）
-    const triggerDiv = document.querySelector('.hmfw-dropdown-button > div') as HTMLElement
-    expect(triggerDiv).not.toBeNull()
-
-    // 悬停触发区域应该打开下拉菜单
-    await triggerDiv.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    // Dropdown 内的 button（右侧按钮）是触发区域
+    const dropdownButtons = wrapper.findAll('button')
+    const rightButton = dropdownButtons[dropdownButtons.length - 1]
+    await rightButton.trigger('mouseenter')
     vi.runAllTimers()
     await nextTick()
 
-    const dropdown = document.querySelector('.hmfw-dropdown')
-    expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
+    const dropdownPopup = document.querySelector('.hmfw-dropdown-content')
+    expect(dropdownPopup?.parentElement?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
 
     wrapper.unmount()
   })
@@ -777,14 +775,14 @@ describe('DropdownButton', () => {
     const dropdownWrapper = wrapper.findComponent(Dropdown)
     expect(dropdownWrapper.props('trigger')).toBe('click')
 
-    // 点击触发区域应该打开下拉菜单
-    const triggerDiv = document.querySelector('.hmfw-dropdown-button > div') as HTMLElement
-    expect(triggerDiv).not.toBeNull()
-    await triggerDiv.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    // 点击 Dropdown 内的 button（右侧按钮）应该打开下拉菜单
+    const dropdownButtons = wrapper.findAll('button')
+    const rightButton = dropdownButtons[dropdownButtons.length - 1]
+    await rightButton.trigger('click')
     await nextTick()
 
-    const dropdown = document.querySelector('.hmfw-dropdown')
-    expect(dropdown?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
+    const dropdownPopup = document.querySelector('.hmfw-dropdown-content')
+    expect(dropdownPopup?.parentElement?.classList.contains('hmfw-dropdown-hidden')).toBe(false)
 
     wrapper.unmount()
   })

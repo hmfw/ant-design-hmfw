@@ -163,8 +163,8 @@ describe('FloatButtonGroup', () => {
       attachTo: document.body,
     })
     expect(wrapper.find('.hmfw-float-btn-group-wrap').exists()).toBe(false)
-    // mouseenter 不冒泡，需触发在 Trigger 创建的 wrapper div 上（FloatButtonGroup 根元素）
-    const triggerEl = wrapper.find('.hmfw-float-btn-group').element.parentElement!
+    // mouseenter 不冒泡，需触发在 FloatButtonGroup 根元素上
+    const triggerEl = wrapper.find('.hmfw-float-btn-group').element
     triggerEl.dispatchEvent(new MouseEvent('mouseenter', { bubbles: false }))
     await wrapper.vm.$nextTick()
     // 等待 Trigger 的 setTimeout(setOpen, 0) 宏任务

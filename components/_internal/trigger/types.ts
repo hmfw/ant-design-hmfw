@@ -81,18 +81,19 @@ export interface TriggerProps {
   /** 持续跟踪触发元素位置变化，每帧自动重新定位（适用于触发元素有动画/过渡的场景）。 */
   trackPosition?: boolean
   /**
-   * 触发器外层 wrapper 的 display。不传时不写行内样式，
-   * 由基础类 `:where(.hmfw-trigger)` 提供 inline-block 默认值，宿主根类可直接覆盖。
+   * 触发器根元素的额外类名（合并到子节点上）
    */
-  triggerDisplay?: string
+  triggerClass?: string
+  /**
+   * 触发器根元素的行内样式（合并到子节点上）
+   */
+  triggerStyle?: CSSProperties
   /** 弹层 wrapper 的 class，支持字符串或接收实际方位返回字符串的函数。 */
   popupClass?: string | ((placement: Placement) => string)
   /** 隐藏态 class，默认 hmfw-trigger-popup-hidden。 */
   hiddenClass?: string
-  /** 触发器外层 wrapper 的 class。 */
-  triggerClass?: string
+  /** 弹层 wrapper 的行内样式。 */
   popupStyle?: CSSProperties
-  triggerStyle?: CSSProperties
 }
 
 /**

@@ -676,7 +676,22 @@ export const Select = defineComponent({
 
       // Trigger default 插槽：选择器 + 后缀箭头/loading + 清除按钮
       const renderSelector = () => (
-        <>
+        <div
+          class={cls(
+            prefixCls,
+            `${prefixCls}-${props.size}`,
+            {
+              [`${prefixCls}-open`]: isOpen.value,
+              [`${prefixCls}-disabled`]: mergedDisabled.value,
+              [`${prefixCls}-loading`]: props.loading,
+              [`${prefixCls}-multiple`]: isMultiple.value,
+              [`${prefixCls}-status-${props.status}`]: !!props.status,
+              [`${prefixCls}-allow-clear`]: props.allowClear,
+            },
+            props.classNames?.root,
+          )}
+          style={props.styles?.root}
+        >
           <div
             ref={selectorRef}
             class={cls(`${prefixCls}-selector`, props.classNames?.selector)}
@@ -710,7 +725,7 @@ export const Select = defineComponent({
               ×
             </span>
           )}
-        </>
+        </div>
       )
 
       return (
@@ -721,20 +736,6 @@ export const Select = defineComponent({
           disabled={mergedDisabled.value}
           destroyOnHidden
           matchWidth={props.dropdownMatchSelectWidth}
-          triggerClass={cls(
-            prefixCls,
-            `${prefixCls}-${props.size}`,
-            {
-              [`${prefixCls}-open`]: isOpen.value,
-              [`${prefixCls}-disabled`]: mergedDisabled.value,
-              [`${prefixCls}-loading`]: props.loading,
-              [`${prefixCls}-multiple`]: isMultiple.value,
-              [`${prefixCls}-status-${props.status}`]: !!props.status,
-              [`${prefixCls}-allow-clear`]: props.allowClear,
-            },
-            props.classNames?.root,
-          )}
-          triggerStyle={props.styles?.root}
           popupClass={cls(`${prefixCls}-dropdown`, `${prefixCls}-dropdown-${props.size}`, props.classNames?.dropdown)}
           popupStyle={props.styles?.dropdown}
           onOpenChange={(v: boolean) => {
