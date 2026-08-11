@@ -250,11 +250,11 @@ interface ButtonStyles {
   </span>
 </button>
 
-<!-- 两个汉字：root 上追加 hmfw-btn-two-chinese-chars，字间距由内层节点承载 -->
-<button type="button" class="hmfw-btn hmfw-btn-default hmfw-btn-middle hmfw-btn-two-chinese-chars">
+<!-- 两个汉字：autoInsertSpace 直接在两字之间插入空格，不额外产生节点或类名 -->
+<button type="button" class="hmfw-btn hmfw-btn-default hmfw-btn-middle">
   <span class="hmfw-btn-content">
     <!-- ↑ classNames.content / styles.content 应用于此 -->
-    <span class="hmfw-btn-two-chinese-chars-content">按钮</span>
+    按 钮
   </span>
 </button>
 
@@ -352,7 +352,7 @@ interface ButtonStyles {
 - 加载状态时，`styles.loading` 与 `styles.icon` 会**合并**应用，`styles.loading` 优先
 - `classNames.root` 会与组件内置的状态类名（如 `.hmfw-btn-loading`）合并
 - `content` 节点仅在按钮有子节点时渲染，纯图标按钮上 `classNames.content` / `styles.content` 无效
-- 两个汉字的字距由 `content` 内层的 `.hmfw-btn-two-chinese-chars-content` 承载，如需覆盖需针对该节点
+- 两个汉字的间距由 `autoInsertSpace` 在文本中直接插入空格实现，不再有额外的包裹节点与类名
 
 ## 设计 Token
 

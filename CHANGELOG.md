@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.41.0] - 2026-08-11
+
+[查看完整内容](./changelogs/v0.41.0.md)
+
+**💥 破坏性变更**：Button 两字间距实现重写，`.hmfw-btn-two-chinese-chars` 与 `.hmfw-btn-two-chinese-chars-content` 两个类名移除。原方案靠 `slotText` 响应式镜像 + `onUpdated` 回读 `textContent` 驱动 root 类名，再由内层节点用 `letter-spacing: 0.34em` 配负 margin 撑开字距；新方案在 render 内判定 slot 为单一纯文本 vnode 后直接把两字拆开用空格连接，移除四处状态、一层包裹节点和对应 CSS，两字按钮的 DOM 与普通按钮完全一致。同时修复 v0.40.0 记录的 Modal 类名冲突——根节点与内层 dialog 都渲染成 `hmfw-modal`，导致 `classNames.root` 与 `classNames.content` 指向无法区分、样式表重复声明语义冲突、4 条 E2E strict mode violation，现根节点改为 `hmfw-modal-root`。删除已并入其他用例的 Anchor 滚动动画 E2E，8 个组件的测试选择器同步适配。全体 2497 单元测试通过。
+
 ## [0.40.0] - 2026-08-11
 
 [查看完整内容](./changelogs/v0.40.0.md)
