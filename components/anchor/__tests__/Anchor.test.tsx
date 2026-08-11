@@ -307,8 +307,8 @@ describe('Anchor', () => {
       },
     })
     const anchorLink = wrapper.findComponent(AnchorLink)
-    // Link itself doesn't have replace, so it inherits from Anchor context
-    expect(anchorLink.props('replace')).toBe(false)
+    // Link itself doesn't have replace, so it defaults to undefined
+    expect(anchorLink.props('replace')).toBeUndefined()
     // But the Anchor has replace: true
     expect(wrapper.props('replace')).toBe(true)
   })
@@ -373,13 +373,13 @@ describe('Anchor', () => {
     const addSpy = vi.spyOn(container, 'addEventListener')
     const getContainer = () => container
     mount(Anchor, { props: { items, getContainer } })
-    expect(addSpy).toHaveBeenCalledWith('scroll', expect.any(Function))
+    expect(addSpy).toHaveBeenCalledWith('scroll', expect.any(Function), { passive: true })
   })
 
   it('uses window as default scroll container', () => {
     const addSpy = vi.spyOn(window, 'addEventListener')
     mount(Anchor, { props: { items } })
-    expect(addSpy).toHaveBeenCalledWith('scroll', expect.any(Function))
+    expect(addSpy).toHaveBeenCalledWith('scroll', expect.any(Function), { passive: true })
     addSpy.mockRestore()
   })
 

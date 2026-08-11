@@ -12,24 +12,27 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
-import type { AnchorLinkItem, AnchorClassNames, AnchorStyles } from './types'
+import type { AnchorProps, AnchorLinkItem, AnchorClassNames, AnchorStyles } from './types'
 import { provideAnchorContext } from './context'
 import { AnchorLink } from './AnchorLink'
 
+const anchorProps = {
+  items: { type: Array as PropType<AnchorLinkItem[]>, default: () => [] },
+  affix: { type: Boolean, default: true },
+  offsetTop: { type: Number, default: 0 },
+  bounds: { type: Number, default: 5 },
+  direction: { type: String as PropType<'vertical' | 'horizontal'>, default: 'vertical' },
+  replace: { type: Boolean, default: undefined },
+  targetOffset: { type: Number, default: undefined },
+  getCurrentAnchor: { type: Function as PropType<(activeLink: string) => string>, default: undefined },
+  getContainer: { type: Function as PropType<() => HTMLElement | Window>, default: undefined },
+  classNames: { type: Object as PropType<AnchorClassNames>, default: undefined },
+  styles: { type: Object as PropType<AnchorStyles>, default: undefined },
+} satisfies Record<keyof AnchorProps, any>
+
 export const Anchor = defineComponent({
   name: 'Anchor',
-  props: {
-    items: { type: Array as PropType<AnchorLinkItem[]>, default: () => [] },
-    affix: { type: Boolean, default: true },
-    offsetTop: { type: Number, default: 0 },
-    bounds: { type: Number, default: 5 },
-    direction: { type: String as PropType<'vertical' | 'horizontal'>, default: 'vertical' },
-    replace: Boolean,
-    getCurrentAnchor: Function as PropType<(activeLink: string) => string>,
-    getContainer: Function as PropType<() => HTMLElement | Window>,
-    classNames: Object as PropType<AnchorClassNames>,
-    styles: Object as PropType<AnchorStyles>,
-  },
+  props: anchorProps,
   emits: ['change', 'click'],
   setup(props, { emit, slots }) {
     const prefixCls = usePrefixCls('anchor')
@@ -41,7 +44,6 @@ export const Anchor = defineComponent({
     const animating = ref(false)
     let scrollTimer: number | null = null
     let scrollContainer: HTMLElement | Window
-    let scrollRAFId: number | null = null
 
     const getScrollContainer = () => {
       return props.getContainer ? props.getContainer() : window
@@ -159,28 +161,20 @@ export const Anchor = defineComponent({
       setCurrentActiveLink(currentActiveLink)
     }
 
-    const handleScrollThrottled = () => {
-      if (scrollRAFId !== null) {
+    const scrollTo = (link: string, targetOffsetParam?: number) => {
+      const previousActiveLink = activeLink.value
+
+      const match = /#(.+)$/.exec(link)
+      if (!match) {
         return
       }
 
-      scrollRAFId = requestAnimationFrame(() => {
-        scrollRAFId = null
-        handleScroll()
-      })
-    }
-
-    const scrollTo = (link: string, targetOffsetParam?: number) => {
-      const previousActiveLink = activeLink.value
-      setCurrentActiveLink(link)
-
-      const match = /#(.+)$/.exec(link)
-      if (!match) return
-
       const targetElement = document.getElementById(match[1])
-      if (!targetElement) return
+      if (!targetElement) {
+        return
+      }
 
-      if (animating.value && previousActiveLink === link) {
+      if (previousActiveLink === link) {
         return
       }
 
@@ -197,18 +191,22 @@ export const Anchor = defineComponent({
       const finalTargetOffset = targetOffsetParam ?? props.offsetTop ?? 0
       y -= finalTargetOffset
 
+      // Set animating flag to block scroll event handlers
       animating.value = true
 
-      // Simple scroll animation
+      // Scroll animation with easeOutCubic
       const startTime = Date.now()
       const duration = 450
 
       const scroll = () => {
         const elapsed = Date.now() - startTime
         const progress = Math.min(elapsed / duration, 1)
-        const easeInOut = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress
 
-        const currentY = scrollTop + (y - scrollTop) * easeInOut
+        // easeOutCubic: fast start, smooth deceleration (1 - (1-t)^3)
+        // 快速启动，平滑减速，避免 easeInOutCubic 的慢启动问题
+        const easeProgress = 1 - Math.pow(1 - progress, 3)
+
+        const currentY = scrollTop + (y - scrollTop) * easeProgress
 
         if (container === window) {
           window.scrollTo(0, currentY)
@@ -220,6 +218,11 @@ export const Anchor = defineComponent({
           scrollTimer = requestAnimationFrame(scroll)
         } else {
           animating.value = false
+          // Update active link and ink after animation completes
+          setCurrentActiveLink(link)
+          nextTick(() => {
+            updateInk()
+          })
         }
       }
 
@@ -245,19 +248,16 @@ export const Anchor = defineComponent({
 
     onMounted(() => {
       scrollContainer = getScrollContainer()
-      scrollContainer.addEventListener('scroll', handleScrollThrottled)
-      window.addEventListener('resize', handleScrollThrottled)
+      scrollContainer.addEventListener('scroll', handleScroll, { passive: true })
+      window.addEventListener('resize', handleScroll, { passive: true })
       handleScroll()
     })
 
     onUnmounted(() => {
-      scrollContainer.removeEventListener('scroll', handleScrollThrottled)
-      window.removeEventListener('resize', handleScrollThrottled)
+      scrollContainer.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
       if (scrollTimer !== null) {
         cancelAnimationFrame(scrollTimer)
-      }
-      if (scrollRAFId !== null) {
-        cancelAnimationFrame(scrollRAFId)
       }
     })
 
@@ -279,6 +279,10 @@ export const Anchor = defineComponent({
     watch(
       () => activeLink.value,
       () => {
+        // Defer updateInk during animation to avoid performance issues
+        if (animating.value) {
+          return
+        }
         nextTick(() => {
           updateInk()
         })

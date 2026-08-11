@@ -33,6 +33,7 @@ export interface AnchorProps {
   items?: AnchorLinkItem[]
   affix?: boolean
   offsetTop?: number
+  targetOffset?: number
   bounds?: number
   direction?: 'vertical' | 'horizontal'
   replace?: boolean

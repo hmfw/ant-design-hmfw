@@ -73,6 +73,14 @@
   <AnchorReplace />
 </DemoBlock>
 
+### 自定义点击事件
+
+通过 `@click` 事件监听锚点点击，可用于埋点统计、权限验证或自定义跳转逻辑。
+
+<DemoBlock title="自定义点击事件" :source="AnchorOnClickSource">
+  <AnchorOnClick />
+</DemoBlock>
+
 ### 自定义高亮锚点
 
 通过 `getCurrentAnchor` 自定义激活锚点的判定逻辑。
@@ -106,6 +114,7 @@
 | items            | 数据化配置选项内容                                                               | `AnchorLinkItem[]`               | `[]`           |
 | affix            | 固定模式                                                                         | `boolean`                        | `true`         |
 | offsetTop        | 距离窗口顶部达到指定偏移量后触发，影响滚动定位、高亮判定和 wrapper 高度          | `number`                         | `0`            |
+| targetOffset     | 锚点滚动偏移量，默认与 offsetTop 相同，[例子](#自定义目标偏移)                   | `number`                         | -              |
 | direction        | 锚点方向                                                                         | `'vertical' \| 'horizontal'`     | `'vertical'`   |
 | bounds           | 锚点区域边界                                                                     | `number`                         | `5`            |
 | replace          | 是否替换浏览器历史记录                                                           | `boolean`                        | `false`        |
@@ -325,3 +334,86 @@ Anchor 组件使用以下 Design Token 控制样式，可通过 ConfigProvider �
 | `--hmfw-motion-duration-slow` | 慢速动画时长 | `0.3s`                |
 | `--hmfw-padding`              | 标准内边距   | `12px`                |
 | `--hmfw-padding-xxs`          | 超小内边距   | `2px`                 |
+
+---
+
+## 常见问题
+
+### offsetTop 和 targetOffset 有什么区别？
+
+- **offsetTop**: 影响**三个方面**
+  1. 滚动定位时距离顶部的偏移量
+  2. 激活状态判定的基准线
+  3. wrapper 的最大高度计算（`max-height: calc(100vh - offsetTop)`）
+
+- **targetOffset**: 仅影响**滚动定位**时的偏移量，不影响高亮判定和容器高度
+
+**使用建议**:
+
+- 大多数场景使用 `offsetTop`（如固定顶栏高度为 64px）
+- 仅在需要"滚动位置"与"高亮判定"使用不同偏移时才设置 `targetOffset`
+
+### 为什么水平模式不支持嵌套子节点？
+
+水平布局中，所有锚点项排列在一行内，嵌套子节点会破坏布局结构。Ant Design v6 和本组件库均不支持水平模式下的 `children` 属性。
+
+如需层级结构，请使用垂直模式（`direction="vertical"`）。
+
+### replace 属性与 Vue Router 的关系？
+
+`replace` 属性控制**原生浏览器历史记录**（`window.history.pushState/replaceState`），不影响 Vue Router。
+
+如需集成 Vue Router：
+
+```vue
+<Anchor :items="items" @click="handleClick" />
+
+<script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const handleClick = (e, link) => {
+  e.preventDefault()
+  router.push(link.href)
+}
+</script>
+```
+
+### affix={false} 时墨水条为什么不显示？
+
+为避免在非固定模式下墨水条与页面滚动的视觉冲突，`affix={false}` 时默认隐藏墨水条。
+
+如需强制显示，可通过 `classNames.ink` 覆盖样式：
+
+```vue
+<Anchor :affix="false" :class-names="{ ink: 'force-visible-ink' }" />
+
+<style>
+:deep(.force-visible-ink) {
+  display: inline-block !important;
+}
+</style>
+```
+
+### 如何实现平滑滚动到锚点？
+
+组件已内置平滑滚动动画（450ms 缓动效果）。如需自定义动画时长，当前不支持 prop 配置，可通过以下方式：
+
+1. 监听 `@click` 事件并 `e.preventDefault()`
+2. 使用自定义滚动逻辑（如 `element.scrollIntoView({ behavior: 'smooth' })`）
+
+```vue
+<Anchor :items="items" @click="handleCustomScroll" />
+
+<script setup>
+const handleCustomScroll = (e, link) => {
+  e.preventDefault()
+  const targetId = link.href.replace(/^#/, '')
+  const targetEl = document.getElementById(targetId)
+  if (targetEl) {
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
+</script>
+```

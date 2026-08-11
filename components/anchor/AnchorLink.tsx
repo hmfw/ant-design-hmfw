@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, onUnmounted, computed } from 'vue'
+import { defineComponent, onMounted, onUnmounted, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { useAnchorContext } from './context'
@@ -11,15 +11,17 @@ export interface AnchorLinkProps {
   targetOffset?: number
 }
 
+const anchorLinkProps = {
+  href: { type: String, required: true as const },
+  title: { type: String, required: true as const },
+  target: { type: String, default: undefined },
+  replace: { type: Boolean, default: undefined },
+  targetOffset: { type: Number, default: undefined },
+} satisfies Record<keyof AnchorLinkProps, any>
+
 export const AnchorLink = defineComponent({
   name: 'AnchorLink',
-  props: {
-    href: { type: String, required: true },
-    title: { type: String, required: true },
-    target: String,
-    replace: Boolean,
-    targetOffset: Number,
-  },
+  props: anchorLinkProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('anchor')
     const context = useAnchorContext()

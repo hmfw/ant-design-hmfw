@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.39.0] - 2026-08-11
+
+[查看完整内容](./changelogs/v0.39.0.md)
+
+Anchor 锚点滚动动画体验优化。将缓动函数从 `easeInOutCubic` 改为 `easeOutCubic`，解决"先慢后快"的卡顿问题，前 100ms 滚动进度从 4.3% 提升到 59.9%（**21.3 倍**）。删除文档站全局 `scroll-behavior: smooth` 消除 CSS/JS 冲突。新增滚动性能 E2E 测试，全体 2494 单元测试通过。本优化是对 Ant Design 官方实现的体验增强（官方同样使用 easeInOutCubic 存在慢启动问题）。
+
 ## [0.38.0] - 2026-08-10
 
 [查看完整内容](./changelogs/v0.38.0.md)
