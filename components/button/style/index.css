@@ -45,12 +45,6 @@
   order: 1;
 }
 
-/* Two Chinese characters spacing */
-.hmfw-btn-two-chinese-chars .hmfw-btn-two-chinese-chars-content {
-  letter-spacing: 0.34em;
-  margin-right: -0.34em;
-}
-
 /* Sizes */
 .hmfw-btn-small {
   height: var(--hmfw-control-height-sm);

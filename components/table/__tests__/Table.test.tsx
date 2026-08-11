@@ -216,9 +216,9 @@ describe('Table', () => {
     firstCheckbox.click()
     await wrapper.vm.$nextTick()
 
-    // 点击「确定」
+    // 点击「确定」（注意：Button 组件会在两个中文字符间插入空格）
     const confirmBtn = Array.from(dropdown.querySelectorAll('.hmfw-table-dropdown-btns .hmfw-btn')).find((btn) =>
-      btn.textContent?.includes('确定'),
+      btn.textContent?.includes('确 定'),
     ) as HTMLElement
     expect(confirmBtn).toBeTruthy()
     confirmBtn.click()

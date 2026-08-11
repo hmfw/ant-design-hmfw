@@ -325,9 +325,10 @@ describe('Button', () => {
       attachTo: document.body,
     })
     await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick() // 等待 watchEffect
-    expect(wrapper.classes()).toContain('hmfw-btn-two-chinese-chars')
-    expect(wrapper.find('.hmfw-btn-two-chinese-chars-content').exists()).toBe(true)
+    // 新实现：直接在文本中插入空格，不再添加 class 和嵌套 span
+    const contentSpan = wrapper.find('.hmfw-btn-content')
+    expect(contentSpan.exists()).toBe(true)
+    expect(contentSpan.text()).toBe('按 钮') // 字符间应该有空格
     wrapper.unmount()
   })
 
@@ -338,9 +339,9 @@ describe('Button', () => {
       attachTo: document.body,
     })
     await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.classes()).not.toContain('hmfw-btn-two-chinese-chars')
-    expect(wrapper.find('.hmfw-btn-two-chinese-chars-content').exists()).toBe(false)
+    const contentSpan = wrapper.find('.hmfw-btn-content')
+    expect(contentSpan.exists()).toBe(true)
+    expect(contentSpan.text()).toBe('按钮') // 不应该有空格
     wrapper.unmount()
   })
 
@@ -351,8 +352,8 @@ describe('Button', () => {
       attachTo: document.body,
     })
     await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.classes()).not.toContain('hmfw-btn-two-chinese-chars')
+    const contentSpan = wrapper.find('.hmfw-btn-content')
+    expect(contentSpan.text()).toBe('确认按钮') // 不应该有空格
     wrapper.unmount()
   })
 

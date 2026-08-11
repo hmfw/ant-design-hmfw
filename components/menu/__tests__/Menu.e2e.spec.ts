@@ -87,12 +87,19 @@ test.describe('Menu', () => {
   // 布局与定位必须在真实视口验证 —— 此前 triggerDisplay="contents" 就是为了让 wrapper
   // 不生成盒模型，改用 cloneChild 后需确认几何未发生变化。
   test('折叠态菜单项：无 wrapper，布局与 Tooltip 定位不变', async ({ page }) => {
-    // MenuCollapsed demo 初始为展开态，点按钮折叠
-    const toggle = page.getByRole('button', { name: '折叠' }).first()
-    await toggle.scrollIntoViewIfNeeded()
+    // 找到"折叠菜单" demo 标题，定位到该演示区域
+    const demoHeading = page.locator('h3', { hasText: '折叠菜单' })
+    await demoHeading.scrollIntoViewIfNeeded()
+
+    // 在该 demo 区域内找按钮（注意：按钮文本可能包含空格 "折 叠"）
+    const toggle = page.getByRole('button', { name: /折\s*叠/ }).first()
     await toggle.click()
 
-    const menu = page.locator('.hmfw-menu-inline-collapsed').first()
+    // 等待折叠动画完成（0.2s transition）
+    await page.waitForTimeout(300)
+
+    // 折叠后菜单应该同时有 hmfw-menu-root、hmfw-menu-inline 和 hmfw-menu-inline-collapsed 类
+    const menu = page.locator('.hmfw-menu-root.hmfw-menu-inline.hmfw-menu-inline-collapsed').first()
     await expect(menu).toBeVisible()
     const item = menu.locator('.hmfw-menu-item').first()
     await expect(item).toBeVisible()

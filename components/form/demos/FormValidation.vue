@@ -17,8 +17,8 @@
       <InputNumber v-model:value="formState.age" :min="1" :max="120" placeholder="请输入年龄" style="width: 100%" />
     </FormItem>
     <FormItem :wrapper-col="{ offset: 5, span: 19 }">
-      <Button type="primary" @click="handleValidate"> 校验 </Button>
-      <Button style="margin-left: 8px" @click="handleClear"> 清除校验 </Button>
+      <Button type="primary" @click="handleValidate">校验</Button>
+      <Button style="margin-left: 8px" @click="handleClear">清除校验</Button>
     </FormItem>
   </Form>
 </template>

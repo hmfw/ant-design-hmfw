@@ -46,7 +46,7 @@ test.describe('Tour 漫游引导', () => {
 
     // 最后一步按钮文本为「完成」，点击后关闭
     const finishBtn = popover.locator('.hmfw-tour-next-btn')
-    await expect(finishBtn).toContainText('完成')
+    await expect(finishBtn).toContainText(/^完\s*成$/)
     await finishBtn.click()
 
     await expect(page.locator('.hmfw-tour-popover')).toHaveCount(0)
@@ -62,7 +62,10 @@ test.describe('Tour 漫游引导', () => {
     const scrollY = await page.evaluate(() => window.scrollY)
     expect(scrollY).toBeGreaterThan(0)
 
-    const targetBox = (await page.getByRole('button', { name: '上传' }).first().boundingBox())!
+    const targetBox = (await page
+      .getByRole('button', { name: /^上\s*传$/ })
+      .first()
+      .boundingBox())!
     await startBtn.click()
 
     const popover = page.locator('.hmfw-tour-popover').first()
@@ -107,7 +110,7 @@ test.describe('Tour 漫游引导', () => {
     await expect(page.locator('.hmfw-tour-popover').first()).toBeVisible()
 
     // 高亮元素（第一步的目标「上传」按钮）可命中点击
-    const target = page.getByRole('button', { name: '上传' }).first()
+    const target = page.getByRole('button', { name: /^上\s*传$/ }).first()
     const box = (await target.boundingBox())!
     const hitTarget = await page.evaluate(
       ({ x, y }) => {
@@ -116,7 +119,7 @@ test.describe('Tour 漫游引导', () => {
       },
       { x: box.x + box.width / 2, y: box.y + box.height / 2 },
     )
-    expect(hitTarget).toContain('上传')
+    expect(hitTarget).toContain('上 传')
 
     // 高亮区域之外由 blocker 接管，命中的是遮罩而非页面元素
     const hitOutside = await page.evaluate(() => {

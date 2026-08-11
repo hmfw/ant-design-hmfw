@@ -290,7 +290,8 @@ describe('Tour', () => {
       attachTo: document.body,
     })
     await wrapper.vm.$nextTick()
-    expect(document.querySelector('.hmfw-tour-prev-btn')?.textContent).toBe('返回')
+    // Button 组件会在两个中文字符间插入空格
+    expect(document.querySelector('.hmfw-tour-prev-btn')?.textContent).toBe('返 回')
     wrapper.unmount()
   })
 

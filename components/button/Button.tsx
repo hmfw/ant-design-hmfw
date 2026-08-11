@@ -3,9 +3,7 @@ import {
   computed,
   ref,
   onBeforeUnmount,
-  onUpdated,
   watchEffect,
-  nextTick,
   toRef,
   type PropType,
   type VNode,
@@ -117,27 +115,6 @@ export default defineComponent({
       }
     })
 
-    // slotText 是按钮文字内容的响应式镜像。
-    // 初始渲染时 slotText 尚未赋值（为 ''），回退读 DOM textContent 保证首帧正确；
-    // locale 切换后 onUpdated 同步 slotText，触发 hasTwoCNChar 重新求值，确保 class 正确移除/添加。
-    const slotText = ref('')
-    const hasTwoCNChar = computed(() => {
-      if (!buttonRef.value || !props.autoInsertSpace) {
-        return false
-      }
-      const needInserted = !props.icon && !innerLoading.value
-      const text = slotText.value || buttonRef.value.textContent || ''
-      return needInserted && isTwoCNChar(text.trim())
-    })
-
-    // 每次 DOM 更新后同步 slotText（watchEffect 仅追踪 buttonRef 引用变化，
-    // 无法感知 slot 内容变化如 locale 切换）
-    onUpdated(() => {
-      nextTick(() => {
-        slotText.value = buttonRef.value?.textContent || ''
-      })
-    })
-
     const ctxDisabled = useMergedDisabled(toRef(props, 'disabled'))
     const isDisabled = computed(() => ctxDisabled.value || innerLoading.value)
 
@@ -153,7 +130,6 @@ export default defineComponent({
           [`${prefixCls}-dangerous`]: props.danger,
           [`${prefixCls}-block`]: props.block,
           [`${prefixCls}-background-ghost`]: props.ghost,
-          [`${prefixCls}-two-chinese-chars`]: hasTwoCNChar.value,
           [`${prefixCls}-icon-end`]: props.iconPosition === 'end',
         },
         props.classNames?.root,
@@ -200,10 +176,24 @@ export default defineComponent({
       const hasSlotContent = !!slotContent?.length
       const hasIcon = !hasSlotContent && !!(props.icon || innerLoading.value)
 
-      // 在两个中文字符之间插入空格
-      let children = slotContent
-      if (hasTwoCNChar.value) {
-        children = [<span class={`${prefixCls}-two-chinese-chars-content`}>{slotContent}</span>]
+      // 处理两个中文字符：判断是否需要插入空格
+      let children: any = slotContent
+
+      // 只在首次渲染或 slot 内容确实是纯文本时才处理两字间距
+      if (
+        hasSlotContent &&
+        props.autoInsertSpace &&
+        !props.icon &&
+        !innerLoading.value &&
+        slotContent &&
+        slotContent.length === 1 &&
+        typeof slotContent[0].children === 'string'
+      ) {
+        const text = slotContent[0].children as string
+        if (isTwoCNChar(text.trim())) {
+          // 如果是两个中文字符，将文本拆分并用空格连接
+          children = text.trim().split('').join(' ')
+        }
       }
 
       // content 是文本内容的语义化容器；无子节点时（如纯图标按钮）不渲染

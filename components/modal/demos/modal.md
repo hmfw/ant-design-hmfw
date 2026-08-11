@@ -176,7 +176,9 @@ interface ModalStyles {
 ### DOM 结构与 className 映射
 
 ```html
-<div class="hmfw-modal">
+<div class="hmfw-modal-root">
+  <!-- ↑ classNames.root / styles.root 应用于此 -->
+
   <!-- 遮罩层 -->
   <div class="hmfw-modal-mask">
     <!-- ↑ classNames.mask / styles.mask 应用于此 -->
