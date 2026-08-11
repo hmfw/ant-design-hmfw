@@ -1,0 +1,23 @@
+/**
+ * 图标通用样式。
+ *
+ * 组件把图标包成 `<IconComp class="hmfw-icon ..." />` 时，`@hmfw/icons` 的
+ * `inheritAttrs: false` + attrs 后置展开会让外部 class 顶掉包内的 `anticon` 基类，
+ * 连同包内运行时注入的 `.anticon-spin` 动画一起失效。
+ * 因此旋转动画在这里独立定义一份 —— 不依赖图标包的运行时注入，
+ * `.hmfw-icon-spin`（Button / Select / message）与
+ * `.hmfw-icon-loading`（Input）都由本文件兜住。
+ */
+.hmfw-icon-spin,
+.hmfw-icon-loading {
+  animation: hmfw-icon-spin 1s infinite linear;
+}
+
+@keyframes hmfw-icon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

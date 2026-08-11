@@ -194,13 +194,13 @@ interface PopconfirmStyles {
   </div>
   <div class="hmfw-popconfirm-buttons">
     <!-- ↑ classNames.buttons / styles.buttons 应用于此 -->
-    <button class="hmfw-button">
+    <button class="hmfw-btn hmfw-btn-default hmfw-btn-small">
       <!-- ↑ classNames.cancelBtn / styles.cancelBtn 通过 Button 的 classNames.root / styles.root 应用 -->
-      取消
+      <span class="hmfw-btn-content">取消</span>
     </button>
-    <button class="hmfw-button hmfw-button-primary">
+    <button class="hmfw-btn hmfw-btn-primary hmfw-btn-small">
       <!-- ↑ classNames.okBtn / styles.okBtn 通过 Button 的 classNames.root / styles.root 应用 -->
-      确定
+      <span class="hmfw-btn-content">确定</span>
     </button>
   </div>
 </div>

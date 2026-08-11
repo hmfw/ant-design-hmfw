@@ -246,6 +246,33 @@ describe('Button', () => {
     expect(iconEl.attributes('style')).toContain('font-size')
   })
 
+  // ===== content 语义节点（对齐 AntD v6 的 root / icon / content） =====
+  it('wraps text content in a content element', () => {
+    const wrapper = mount(Button, { slots: { default: 'Button' } })
+    const contentEl = wrapper.find('.hmfw-btn-content')
+    expect(contentEl.exists()).toBe(true)
+    expect(contentEl.text()).toBe('Button')
+  })
+
+  it('applies classNames.content and styles.content to content element', () => {
+    const wrapper = mount(Button, {
+      props: {
+        classNames: { content: 'custom-content' },
+        styles: { content: { fontWeight: '700' } },
+      },
+      slots: { default: 'Button' },
+    })
+    const contentEl = wrapper.find('.hmfw-btn-content')
+    expect(contentEl.classes()).toContain('custom-content')
+    expect(contentEl.attributes('style')).toContain('font-weight')
+  })
+
+  it('does not render content element when there is no children', () => {
+    const wrapper = mount(Button, { props: { icon: () => <span>i</span> } })
+    expect(wrapper.find('.hmfw-btn-content').exists()).toBe(false)
+    expect(wrapper.classes()).toContain('hmfw-btn-icon-only')
+  })
+
   // ===== P2 优化功能：iconPosition 为 end 时图标位置 =====
   it('renders icon after text when iconPosition is end', () => {
     const wrapper = mount(Button, {

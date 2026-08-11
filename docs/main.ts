@@ -3,6 +3,7 @@ import { router } from './router'
 import App from './App.vue'
 import { ConfigProvider } from '@hmfw/ant-design'
 import DemoBlock from './views/DemoBlock.vue'
+import SemanticPreview from './views/SemanticPreview.vue'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-bash'
 import 'prismjs/components/prism-typescript'
@@ -26,6 +27,7 @@ const app = createApp(App)
 app.use(router)
 app.component('ConfigProvider', ConfigProvider)
 app.component('DemoBlock', DemoBlock)
+app.component('SemanticPreview', SemanticPreview)
 
 // v-highlight 指令：对元素内所有 <pre><code> 代码块做运行时 Prism 高亮
 // language-vue 使用自定义 SFC 高亮（拆分 template/script/style 分别处理）

@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.30.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.39.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -100,6 +100,7 @@ import { Anchor, AnchorLink } from '@hmfw/ant-design'
 | items | 数据化配置选项内容 | `AnchorLinkItem[]` | `[]` |
 | affix | 固定模式 | `boolean` | `true` |
 | offsetTop | 距离窗口顶部达到指定偏移量后触发，影响滚动定位、高亮判定和 wrapper 高度 | `number` | `0` |
+| targetOffset | 锚点滚动偏移量，默认与 offsetTop 相同，[例子](#自定义目标偏移) | `number` | - |
 | direction | 锚点方向 | `'vertical' \| 'horizontal'` | `'vertical'` |
 | bounds | 锚点区域边界 | `number` | `5` |
 | replace | 是否替换浏览器历史记录 | `boolean` | `false` |
@@ -262,7 +263,12 @@ import { App, useApp } from '@hmfw/ant-design'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| — | 无额外 props，仅作为上下文容器 | — | — |
+| message | App 内 Message 的全局配置 | `MessageConfig` | — |
+| notification | App 内 Notification 的全局配置 | `NotificationConfig` | — |
+| component | 设置渲染元素，为 `false` 则不创建 DOM 节点 | `string \| false` | `'div'` |
+| style | 容器内联样式 | `CSSProperties` | — |
+| className | 容器 class | `string` | — |
+| rootClassName | 根容器 class | `string` | — |
 
 ### 示例
 
@@ -313,6 +319,93 @@ const AppActions = defineComponent({
   },
 })
 </script>
+```
+
+配置传递 — 通过 App props 配置 message/notification 行为，子组件通过 `useApp()` 获取的实例会自动应用这些配置。
+
+```vue
+<template>
+  <div class="demo-container">
+    <h4>配置传递示例</h4>
+    <p style="margin-bottom: 16px; color: rgba(0, 0, 0, 0.65)">
+      通过 App props 配置 message/notification 行为，子组件通过 useApp() 获取的实例会应用这些配置。
+    </p>
+
+    <App :message="{ duration: 5, maxCount: 2 }" :notification="{ placement: 'topLeft', duration: 3 }">
+      <div class="button-group">
+        <Button type="primary" @click="showMessage">显示 Message（5秒，最多2条）</Button>
+        <Button @click="showNotification">显示 Notification（左上角，3秒）</Button>
+      </div>
+    </App>
+
+    <div style="margin-top: 24px; padding: 16px; background: #fafafa; border-radius: 4px">
+      <h5 style="margin: 0 0 8px 0">配置说明：</h5>
+      <ul style="margin: 0; padding-left: 20px">
+        <li>
+          <code>message=&#123;&#123; duration: 5, maxCount: 2 &#125;&#125;</code> - 每条 message 显示 5 秒，最多显示 2
+          条
+        </li>
+        <li>
+          <code>notification=&#123;&#123; placement: 'topLeft', duration: 3 &#125;&#125;</code> - notification
+          在左上角显示，持续 3 秒
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { App, useApp, Button } from '@hmfw/ant-design'
+
+const { message, notification } = useApp()
+
+let count = 0
+
+const showMessage = () => {
+  count++
+  message.success(`这是第 ${count} 条消息（5秒，最多2条）`)
+}
+
+const showNotification = () => {
+  notification.info({
+    message: '配置生效',
+    description: '这条通知在左上角显示，持续 3 秒。',
+  })
+}
+</script>
+
+<style scoped>
+.demo-container h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+}
+
+code {
+  padding: 2px 6px;
+  background: #f5f5f5;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+}
+
+h5 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+li {
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.85);
+}
+</style>
 ```
 
 
@@ -1479,6 +1572,7 @@ import { ColorPicker } from '@hmfw/ant-design'
 | --- | --- | --- | --- |
 | value (v-model) | 颜色值（HEX 格式） | `string` | `'#1677ff'` |
 | defaultValue | 默认颜色值 | `string` | `'#1677ff'` |
+| format | 颜色格式。**当前仅实现 `hex`**，面板始终渲染 HEX 输入框，传入 `rgb`/`hsb` 暂无效果 | `'hex' \| 'rgb' \| 'hsb'` | `'hex'` |
 | disabled | 是否禁用 | `boolean` | `false` |
 | size | 尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | showText | 是否显示颜色文本 | `boolean` | `false` |
@@ -1515,26 +1609,45 @@ const color = ref('#1677ff')
 </script>
 ```
 
-预设颜色 — 通过 presets 提供预设颜色快速选择。
+三种尺寸 — 通过 `size` 设置触发器大小，可选 `small`、`middle`、`large`。
 
 ```vue
 <template>
-  <ColorPicker v-model:value="color" show-text :presets="presets" />
+  <Space wrap align="center" :size="24">
+    <div class="size-item">
+      <div class="size-label">small</div>
+      <ColorPicker v-model:value="color" size="small" show-text />
+    </div>
+    <div class="size-item">
+      <div class="size-label">middle（默认）</div>
+      <ColorPicker v-model:value="color" size="middle" show-text />
+    </div>
+    <div class="size-item">
+      <div class="size-label">large</div>
+      <ColorPicker v-model:value="color" size="large" show-text />
+    </div>
+  </Space>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ColorPicker } from '@hmfw/ant-design'
+import { ColorPicker, Space } from '@hmfw/ant-design'
 
 const color = ref('#1677ff')
-
-const presets = [
-  {
-    label: '推荐',
-    colors: ['#1677ff', '#52c41a', '#faad14', '#ff4d4f', '#722ed1', '#13c2c2'],
-  },
-]
 </script>
+
+<style scoped>
+.size-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.size-label {
+  font-size: 12px;
+  color: #888;
+}
+</style>
 ```
 
 
@@ -6447,15 +6560,18 @@ import { Tour } from '@hmfw/ant-design'
 | open (v-model) | 是否显示 | `boolean` | `false` |
 | current (v-model) | 当前步骤 | `number` | `0` |
 | steps | 步骤配置 | `TourStep[]` | `[]` |
-| arrow | 是否显示箭头 | `boolean \| { pointAtCenter?: boolean }` | `true` |
-| placement | 引导卡片相对于目标元素的位置 | `TooltipPlacement` | `'bottom'` |
+| arrow | 是否显示箭头，`pointAtCenter` 控制是否始终指向目标中心 | `boolean \| { pointAtCenter?: boolean }` | `true` |
+| placement | 引导卡片相对于目标元素的位置，`center` 为视口居中 | `TourPlacement` | `'bottom'` |
 | mask | 是否显示遮罩 | `boolean \| { style?: CSSProperties; color?: string }` | `true` |
 | type | 类型，影响底色与文字颜色 | `'default' \| 'primary'` | `'default'` |
-| scrollIntoViewOptions | 是否滚动到目标元素，支持传入滚动选项 | `boolean \| ScrollIntoViewOptions` | `true` |
+| scrollIntoViewOptions | 目标元素不在视口内时是否滚动到目标，支持传入滚动选项 | `boolean \| ScrollIntoViewOptions` | `true` |
 | zIndex | Tour 的 z-index | `number` | `1001` |
-| gap | 引导卡片与目标元素的距离和箭头偏移 | `{ offset?: number \| [number, number]; radius?: number }` | `{ offset: 12, radius: 4 }` |
-| indicatorsRender | 自定义指示器渲染 | `(current: number, total: number) => VNode` | - |
+| gap | 高亮区域的外扩边距与圆角，`offset` 支持 `[x, y]` 分别指定水平/垂直 | `{ offset?: number \| [number, number]; radius?: number }` | `{ offset: 6, radius: 2 }` |
+| disabledInteraction | 是否禁用高亮区域的交互。默认高亮元素可正常点击 | `boolean` | `false` |
+| keyboard | 是否启用键盘导航（`←` `→` 切换步骤，`Esc` 关闭） | `boolean` | `true` |
+| indicatorsRender | 自定义指示器渲染 | `(current: number, total: number) => VNode \| string \| number` | - |
 | closeIcon | 自定义关闭图标，设置为 `false` 时隐藏关闭按钮 | `VNode \| (() => VNode) \| false` | `<CloseOutlined />` |
+| getPopupContainer | 指定挂载容器，默认挂载到 `body`。未设置时回退到 ConfigProvider 的同名配置 | `(triggerNode?: HTMLElement) => HTMLElement` | `() => document.body` |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TourClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `TourStyles` | - |
 
@@ -6463,11 +6579,12 @@ import { Tour } from '@hmfw/ant-design'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 标题 | `string \| VNode \| (() => VNode)` | - |
-| description | 描述 | `string \| VNode \| (() => VNode)` | - |
-| target | 目标元素（CSS 选择器或返回元素的函数） | `string \| (() => HTMLElement \| null)` | - |
-| placement | 弹出位置 | `TooltipPlacement` | - |
-| cover | 封面图片或自定义内容 | `string \| VNode` | - |
+| title | 标题 | `TourRenderable` | - |
+| description | 描述 | `TourRenderable` | - |
+| target | 目标元素。支持 CSS 选择器、DOM 节点、Vue 组件实例，或返回上述值的函数；为空时卡片居中展示 | `string \| HTMLElement \| (() => HTMLElement \| null)` | - |
+| placement | 弹出位置，优先级高于 Tour 的 placement | `TourPlacement` | - |
+| arrow | 是否显示箭头，优先级高于 Tour 的 arrow | `boolean \| { pointAtCenter?: boolean }` | - |
+| cover | 封面图片或自定义内容。字符串按图片地址处理 | `TourRenderable` | - |
 | type | 类型，优先级高于 Tour 的 type | `'default' \| 'primary'` | - |
 | mask | 是否显示遮罩，优先级高于 Tour 的 mask | `boolean \| { style?: CSSProperties; color?: string }` | - |
 | style | 自定义样式 | `CSSProperties` | - |
@@ -6491,6 +6608,8 @@ import { Tour } from '@hmfw/ant-design'
 | change | 步骤改变时 | `(current: number) => void` |
 | close | 关闭时 | `() => void` |
 | finish | 完成时（最后一步点击下一步） | `() => void` |
+| update:open | 显示状态变化时，配合 `v-model:open` 使用 | `(open: boolean) => void` |
+| update:current | 当前步骤变化时，配合 `v-model:current` 使用 | `(current: number) => void` |
 
 ### 示例
 
@@ -6530,57 +6649,54 @@ const steps: TourStep[] = [
 </script>
 ```
 
-不同类型 — Tour 有两种类型：`default` 和 `primary`。
+定位与方位 — 通过 `target` 属性指向页面元素，通过 `placement` 设置引导卡片的显示位置。
 
 ```vue
 <template>
   <div>
     <Space>
-      <Button type="primary" @click="openDefault"> 默认样式 </Button>
-      <Button type="primary" @click="openPrimary"> 主题样式 </Button>
+      <Button ref="uploadRef" type="primary">上传</Button>
+      <Button ref="saveRef">保存</Button>
+      <Button ref="moreRef" :icon="EllipsisOutlined">更多</Button>
     </Space>
-    <Tour v-model:open="defaultOpen" :steps="defaultSteps" @finish="defaultOpen = false" />
-    <Tour v-model:open="primaryOpen" type="primary" :steps="primarySteps" @finish="primaryOpen = false" />
+    <Divider />
+    <Button type="primary" @click="open = true">开始引导</Button>
+    <Tour v-model:open="open" :steps="steps" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Tour, Button, Space } from '@hmfw/ant-design'
-import type { TourStep } from '@hmfw/ant-design'
+import { ref, type ComponentPublicInstance } from 'vue'
+import { Tour, Button, Space, Divider } from '@hmfw/ant-design'
+import { EllipsisOutlined } from '@hmfw/icons'
+import type { TourProps } from '@hmfw/ant-design'
 
-const defaultOpen = ref(false)
-const primaryOpen = ref(false)
+const open = ref(false)
+// ref 挂在组件上拿到的是组件实例，Tour 会自动解包出根元素，无需手动取 $el
+const uploadRef = ref<ComponentPublicInstance>()
+const saveRef = ref<ComponentPublicInstance>()
+const moreRef = ref<ComponentPublicInstance>()
 
-const defaultSteps: TourStep[] = [
+const steps: TourProps['steps'] = [
   {
-    title: '默认样式',
-    description: '这是默认样式的引导，白色背景。',
+    title: '上传文件',
+    description: '点击此处上传您的文件。支持拖拽上传和批量上传。',
+    target: () => uploadRef.value!,
+    placement: 'bottom',
   },
   {
-    title: '第二步',
-    description: '继续介绍功能...',
+    title: '保存修改',
+    description: '完成编辑后，点击保存按钮保存您的修改。',
+    target: () => saveRef.value!,
+    placement: 'bottom',
+  },
+  {
+    title: '更多操作',
+    description: '点击查看更多功能选项，包括导出、分享等。',
+    target: () => moreRef.value!,
+    placement: 'right',
   },
 ]
-
-const primarySteps: TourStep[] = [
-  {
-    title: '主题样式',
-    description: '这是主题样式的引导，蓝色背景。',
-  },
-  {
-    title: '第二步',
-    description: '继续介绍功能...',
-  },
-]
-
-function openDefault() {
-  defaultOpen.value = true
-}
-
-function openPrimary() {
-  primaryOpen.value = true
-}
 </script>
 ```
 

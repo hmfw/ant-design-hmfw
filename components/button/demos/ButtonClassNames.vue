@@ -14,6 +14,10 @@
     </Button>
 
     <Button loading :class-names="{ loading: 'demo-loading-emphasis' }"> 加载中 </Button>
+
+    <Button :class-names="{ content: 'demo-spaced-content' }" :styles="{ content: { fontWeight: 600 } }">
+      自定义文本节点
+    </Button>
   </div>
 </template>
 
@@ -28,5 +32,8 @@ import { Button } from '@hmfw/ant-design'
 }
 :deep(.demo-loading-emphasis) {
   font-size: 16px;
+}
+:deep(.demo-spaced-content) {
+  letter-spacing: 0.1em;
 }
 </style>

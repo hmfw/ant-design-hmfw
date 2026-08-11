@@ -206,10 +206,17 @@ export default defineComponent({
         children = [<span class={`${prefixCls}-two-chinese-chars-content`}>{slotContent}</span>]
       }
 
+      // content 是文本内容的语义化容器；无子节点时（如纯图标按钮）不渲染
+      const contentNode = hasSlotContent ? (
+        <span class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
+          {children}
+        </span>
+      ) : null
+
       const content = (
         <>
           {props.iconPosition === 'start' && iconNode}
-          {hasSlotContent && <span>{children}</span>}
+          {contentNode}
           {props.iconPosition === 'end' && iconNode}
         </>
       )

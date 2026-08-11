@@ -91,12 +91,12 @@ ConfigProvider 可以嵌套。**内层只需声明要改的项，其余配置继
 
 以下 hooks 从包内直接导出，供自定义组件消费全局配置：
 
-| Hook                     | 返回值                       | 说明                                                            |
-| ------------------------ | ---------------------------- | --------------------------------------------------------------- |
-| `useConfig()`            | `ComputedRef<ConfigContext>` | 获取完整配置上下文；无 ConfigProvider 时返回默认配置            |
-| `usePrefixCls(name)`     | `string`                     | 拼接组件类名前缀，如 `usePrefixCls('button')` → `'hmfw-button'` |
-| `useLocale()`            | `ComputedRef<Locale>`        | 获取当前语言包                                                  |
-| `useMergedDisabled(ref)` | `ComputedRef<boolean>`       | 合并控件自身 `disabled` 与上下文禁用态（取「或」）              |
+| Hook                     | 返回值                       | 说明                                                      |
+| ------------------------ | ---------------------------- | --------------------------------------------------------- |
+| `useConfig()`            | `ComputedRef<ConfigContext>` | 获取完整配置上下文；无 ConfigProvider 时返回默认配置      |
+| `usePrefixCls(name)`     | `string`                     | 拼接组件类名前缀，如 `usePrefixCls('btn')` → `'hmfw-btn'` |
+| `useLocale()`            | `ComputedRef<Locale>`        | 获取当前语言包                                            |
+| `useMergedDisabled(ref)` | `ComputedRef<boolean>`       | 合并控件自身 `disabled` 与上下文禁用态（取「或」）        |
 
 ### Theme Token（SeedTokens）
 

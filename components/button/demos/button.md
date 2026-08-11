@@ -186,49 +186,82 @@ import type { CSSProperties } from 'vue'
 interface ButtonClassNames {
   root?: string // 按钮根节点（<button> 或 <a>）
   icon?: string // 图标容器
+  content?: string // 文本内容容器（纯图标按钮时不渲染）
   loading?: string // 加载状态图标容器（与 icon 叠加）
 }
 
 interface ButtonStyles {
   root?: CSSProperties
   icon?: CSSProperties
+  content?: CSSProperties
   loading?: CSSProperties
 }
 ```
+
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的用法示例。
+
+<ButtonSemantic />
 
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 基础按钮 -->
-<button class="hmfw-button hmfw-button-default hmfw-button-middle">
+<button type="button" class="hmfw-btn hmfw-btn-default hmfw-btn-middle">
   <!-- ↑ classNames.root / styles.root 应用于此 -->
-  <span>按钮文字</span>
+  <span class="hmfw-btn-content">
+    <!-- ↑ classNames.content / styles.content 应用于此 -->
+    按钮文字
+  </span>
 </button>
 
 <!-- 带图标按钮 -->
-<button class="hmfw-button hmfw-button-primary hmfw-button-middle">
+<button type="button" class="hmfw-btn hmfw-btn-primary hmfw-btn-middle">
   <!-- ↑ classNames.root / styles.root 应用于此 -->
-  <span class="hmfw-button-icon">
+  <span class="hmfw-btn-icon">
     <!-- ↑ classNames.icon / styles.icon 应用于此 -->
-    <span class="hmfw-icon">
+    <span role="img" aria-label="search" class="hmfw-icon">
       <svg>...</svg>
     </span>
   </span>
-  <span>搜索</span>
+  <span class="hmfw-btn-content">搜索</span>
 </button>
 
-<!-- 加载状态 -->
-<button class="hmfw-button hmfw-button-primary hmfw-button-middle hmfw-button-loading">
+<!-- 加载状态：root 上追加 hmfw-btn-loading，按钮同时被禁用 -->
+<button type="button" disabled aria-busy="true" class="hmfw-btn hmfw-btn-primary hmfw-btn-middle hmfw-btn-loading">
   <!-- ↑ classNames.root / styles.root 应用于此 -->
-  <span class="hmfw-button-icon hmfw-button-loading-icon">
+  <span class="hmfw-btn-icon hmfw-btn-loading-icon">
     <!-- ↑ classNames.icon + classNames.loading 叠加应用 -->
     <!-- ↑ styles.icon + styles.loading 合并应用 -->
-    <span class="hmfw-icon hmfw-icon-spin">
+    <span role="img" aria-label="loading" class="hmfw-icon hmfw-icon-spin">
       <svg>...</svg>
     </span>
   </span>
-  <span>提交中</span>
+  <span class="hmfw-btn-content">提交中</span>
 </button>
+
+<!-- 纯图标按钮：无子节点，不渲染 content，root 上追加 hmfw-btn-icon-only -->
+<button type="button" class="hmfw-btn hmfw-btn-default hmfw-btn-middle hmfw-btn-circle hmfw-btn-icon-only">
+  <span class="hmfw-btn-icon">
+    <span role="img" aria-label="search" class="hmfw-icon">
+      <svg>...</svg>
+    </span>
+  </span>
+</button>
+
+<!-- 两个汉字：root 上追加 hmfw-btn-two-chinese-chars，字间距由内层节点承载 -->
+<button type="button" class="hmfw-btn hmfw-btn-default hmfw-btn-middle hmfw-btn-two-chinese-chars">
+  <span class="hmfw-btn-content">
+    <!-- ↑ classNames.content / styles.content 应用于此 -->
+    <span class="hmfw-btn-two-chinese-chars-content">按钮</span>
+  </span>
+</button>
+
+<!-- 链接按钮：设置 href 后 root 变为 <a> -->
+<a role="button" href="https://example.com" class="hmfw-btn hmfw-btn-link hmfw-btn-middle">
+  <span class="hmfw-btn-content">链接</span>
+</a>
 ```
 
 ### 使用 classNames
@@ -245,6 +278,9 @@ interface ButtonStyles {
 
   <!-- 自定义根节点样式 -->
   <Button :class-names="{ root: 'my-button-root' }"> 自定义按钮 </Button>
+
+  <!-- 自定义文本节点 -->
+  <Button :class-names="{ content: 'my-button-content' }"> 加宽字距 </Button>
 </template>
 
 <style scoped>
@@ -259,6 +295,10 @@ interface ButtonStyles {
 
 :deep(.my-button-root) {
   border-radius: 16px;
+}
+
+:deep(.my-button-content) {
+  letter-spacing: 0.1em;
 }
 </style>
 ```
@@ -297,6 +337,7 @@ interface ButtonStyles {
     :styles="{
       root: { borderRadius: '16px' },
       icon: { fontSize: '20px' },
+      content: { fontWeight: 600 },
     }"
   >
     组合样式
@@ -309,7 +350,9 @@ interface ButtonStyles {
 - `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
 - 加载状态时，`classNames.loading` 与 `classNames.icon` 会**叠加**应用在同一个 `<span>` 上
 - 加载状态时，`styles.loading` 与 `styles.icon` 会**合并**应用，`styles.loading` 优先
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-button-loading`）合并
+- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-btn-loading`）合并
+- `content` 节点仅在按钮有子节点时渲染，纯图标按钮上 `classNames.content` / `styles.content` 无效
+- 两个汉字的字距由 `content` 内层的 `.hmfw-btn-two-chinese-chars-content` 承载，如需覆盖需针对该节点
 
 ## 设计 Token
 

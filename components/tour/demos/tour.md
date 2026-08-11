@@ -265,13 +265,13 @@ interface TourStyles {
         <!-- 按钮组 -->
         <div class="hmfw-tour-buttons">
           <!-- ↑ classNames.buttons / styles.buttons 应用于此 -->
-          <button class="hmfw-button hmfw-tour-prev-btn">
+          <button class="hmfw-btn hmfw-btn-default hmfw-btn-small hmfw-tour-prev-btn">
             <!-- ↑ classNames.prevBtn / styles.prevBtn 应用于此 -->
-            上一步
+            <span class="hmfw-btn-content">上一步</span>
           </button>
-          <button class="hmfw-button hmfw-button-primary hmfw-tour-next-btn">
+          <button class="hmfw-btn hmfw-btn-primary hmfw-btn-small hmfw-tour-next-btn">
             <!-- ↑ classNames.nextBtn / styles.nextBtn 应用于此 -->
-            下一步
+            <span class="hmfw-btn-content">下一步</span>
           </button>
         </div>
       </div>

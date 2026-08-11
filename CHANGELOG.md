@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.40.0] - 2026-08-11
+
+[查看完整内容](./changelogs/v0.40.0.md)
+
+新增交互式语义化 DOM 预览组件（移植 Ant Design v6 `SemanticPreview`，React `cloneElement` 改用作用域插槽实现），支持 hover 实时框选 DOM 节点、图钉固定高亮、弹出用法示例。Button 补齐 `content` 语义节点对齐 AntD v6 的 `root` / `icon` / `content` 结构。修复 **loading 图标不旋转**——根因是 `@hmfw/icons` 的 `inheritAttrs: false` + attrs 后置展开会让外部 `class` 顶掉包内 `anticon` 基类，连带包内注入的旋转动画失效，新增独立 keyframes 兜底。修正多处从未生效的 `hmfw-button-*` 类名（实际前缀为 `hmfw-btn`），其中 Empty Demo 的两条是完全命不中的死 CSS。全体 2497 单元测试通过。
+
 ## [0.39.0] - 2026-08-11
 
 [查看完整内容](./changelogs/v0.39.0.md)

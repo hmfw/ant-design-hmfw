@@ -129,7 +129,7 @@ import { Empty, Button } from '@hmfw/ant-design'
   margin-top: 24px;
 }
 
-:deep(.custom-combined-footer .hmfw-button) {
+:deep(.custom-combined-footer .hmfw-btn) {
   background: white;
   color: #fa709a;
   border: none;
@@ -137,7 +137,7 @@ import { Empty, Button } from '@hmfw/ant-design'
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
 }
 
-:deep(.custom-combined-footer .hmfw-button:hover) {
+:deep(.custom-combined-footer .hmfw-btn:hover) {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(255, 255, 255, 0.4);
 }

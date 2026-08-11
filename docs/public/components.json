@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.30.0",
+  "version": "0.39.0",
   "description": "基于 Ant Design v6 的 Vue3 组件库 - A Vue3 UI component library based on Ant Design, featuring 67 high-quality components with TypeScript support",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -192,6 +192,13 @@
         },
         {
           "section": "Anchor Props",
+          "name": "targetOffset",
+          "description": "锚点滚动偏移量，默认与 offsetTop 相同，[例子](#自定义目标偏移)",
+          "type": "`number`",
+          "default": "-"
+        },
+        {
+          "section": "Anchor Props",
           "name": "direction",
           "description": "锚点方向",
           "type": "`'vertical' | 'horizontal'`",
@@ -374,6 +381,11 @@
           "code": "<template>\n  <div style=\"display: flex; gap: 24px\">\n    <div style=\"flex: 1\">\n      <h3>replace 属性控制浏览器历史记录行为</h3>\n      <p style=\"color: #666; margin-bottom: 16px\">\n        点击锚点时观察浏览器地址栏：replace=false 使用 pushState（添加历史记录），replace=true 使用\n        replaceState（替换当前记录）。\n      </p>\n      <div id=\"r-section-1\" style=\"height: 200px; background: #e6f4ff; padding: 16px; margin-bottom: 16px\">\n        <h3>章节 1</h3>\n      </div>\n      <div id=\"r-section-2\" style=\"height: 200px; background: #f6ffed; padding: 16px; margin-bottom: 16px\">\n        <h3>章节 2</h3>\n      </div>\n      <div id=\"r-section-3\" style=\"height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px\">\n        <h3>章节 3</h3>\n      </div>\n    </div>\n    <div style=\"display: flex; flex-direction: column; gap: 16px\">\n      <div>\n        <div style=\"margin-bottom: 4px; font-size: 12px; color: #999\">replace=false (默认 pushState)</div>\n        <Anchor :items=\"items\" style=\"width: 160px\" />\n      </div>\n      <div>\n        <div style=\"margin-bottom: 4px; font-size: 12px; color: #999\">replace=true (使用 replaceState)</div>\n        <Anchor :items=\"items\" :replace=\"true\" style=\"width: 160px\" />\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Anchor } from '@hmfw/ant-design'\n\nconst items = [\n  { href: '#r-section-1', title: '章节 1' },\n  { href: '#r-section-2', title: '章节 2' },\n  { href: '#r-section-3', title: '章节 3' },\n]\n</script>"
         },
         {
+          "title": "自定义点击事件",
+          "description": "通过 `@click` 事件监听锚点点击，可用于埋点统计、权限验证或自定义跳转逻辑。",
+          "code": "<template>\n  <div style=\"display: flex; gap: 24px\">\n    <!-- 内容区域 -->\n    <div style=\"flex: 1\">\n      <div id=\"click-part-1\" style=\"height: 180px; background: #e6f4ff; padding: 16px; margin-bottom: 16px\">\n        <h3>第一部分</h3>\n        <p>这是第一部分的内容。点击锚点会触发自定义事件。</p>\n      </div>\n      <div id=\"click-part-2\" style=\"height: 180px; background: #f6ffed; padding: 16px; margin-bottom: 16px\">\n        <h3>第二部分</h3>\n        <p>这是第二部分的内容。</p>\n      </div>\n      <div id=\"click-part-3\" style=\"height: 180px; background: #fff7e6; padding: 16px; margin-bottom: 16px\">\n        <h3>第三部分</h3>\n        <p>这是第三部分的内容。</p>\n      </div>\n    </div>\n\n    <!-- 锚点导航 -->\n    <div style=\"width: 200px\">\n      <Anchor :items=\"items\" @click=\"handleClick\" />\n\n      <!-- 点击反馈 -->\n      <div\n        v-if=\"clickInfo\"\n        style=\"\n          margin-top: 16px;\n          padding: 12px;\n          background: #f0f5ff;\n          border: 1px solid #adc6ff;\n          border-radius: 4px;\n          font-size: 13px;\n        \"\n      >\n        <div style=\"font-weight: 600; margin-bottom: 4px\">最近点击：</div>\n        <div style=\"color: #595959\">标题: {{ clickInfo.title }}</div>\n        <div style=\"color: #595959\">链接: {{ clickInfo.href }}</div>\n        <div style=\"color: #8c8c8c; font-size: 12px; margin-top: 4px\">时间: {{ clickInfo.time }}</div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Anchor } from '@hmfw/ant-design'\n\nconst items = [\n  { href: '#click-part-1', title: '第一部分' },\n  { href: '#click-part-2', title: '第二部分' },\n  { href: '#click-part-3', title: '第三部分' },\n]\n\ninterface ClickInfo {\n  title: string\n  href: string\n  time: string\n}\n\nconst clickInfo = ref<ClickInfo | null>(null)\n\nconst handleClick = (e: MouseEvent, link: { title: string; href: string }) => {\n  const now = new Date()\n  clickInfo.value = {\n    title: link.title,\n    href: link.href,\n    time: now.toLocaleTimeString(),\n  }\n\n  // 可在此处添加自定义逻辑，如埋点统计\n  console.log('锚点点击:', link)\n\n  // 如需阻止默认跳转，可使用：\n  // e.preventDefault()\n}\n</script>"
+        },
+        {
           "title": "自定义高亮锚点",
           "description": "通过 `getCurrentAnchor` 自定义激活锚点的判定逻辑。",
           "code": "<template>\n  <div style=\"display: flex; gap: 24px\">\n    <div style=\"flex: 1\">\n      <div id=\"custom-a\" style=\"height: 200px; background: #e6f4ff; padding: 16px; margin-bottom: 16px\">\n        <h3>区域 A</h3>\n      </div>\n      <div id=\"custom-b\" style=\"height: 200px; background: #f6ffed; padding: 16px; margin-bottom: 16px\">\n        <h3>区域 B</h3>\n      </div>\n      <div id=\"custom-c\" style=\"height: 200px; background: #fff7e6; padding: 16px; margin-bottom: 16px\">\n        <h3>区域 C</h3>\n      </div>\n    </div>\n    <div>\n      <p style=\"font-size: 12px; color: #999; margin-bottom: 8px\">\n        getCurrentAnchor 自定义高亮逻辑。当前激活：<strong>{{ currentActive }}</strong>\n      </p>\n      <Anchor :items=\"items\" :get-current-anchor=\"getCurrentAnchor\" style=\"width: 200px\" @change=\"onChange\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Anchor } from '@hmfw/ant-design'\n\nconst currentActive = ref('')\n\nconst items = [\n  { href: '#custom-a', title: '区域 A' },\n  { href: '#custom-b', title: '区域 B' },\n  { href: '#custom-c', title: '区域 C' },\n]\n\nconst getCurrentAnchor = (activeLink: string) => {\n  // 自定义高亮逻辑：可以在这里对激活链接做转换处理\n  // 例如添加前缀、映射到其他链接等\n  return activeLink\n}\n\nconst onChange = (link: string) => {\n  currentActive.value = link\n}\n</script>"
@@ -401,9 +413,44 @@
       "props": [
         {
           "section": "App Props",
-          "name": "—",
-          "description": "无额外 props，仅作为上下文容器",
-          "type": "—",
+          "name": "message",
+          "description": "App 内 Message 的全局配置",
+          "type": "`MessageConfig`",
+          "default": "—"
+        },
+        {
+          "section": "App Props",
+          "name": "notification",
+          "description": "App 内 Notification 的全局配置",
+          "type": "`NotificationConfig`",
+          "default": "—"
+        },
+        {
+          "section": "App Props",
+          "name": "component",
+          "description": "设置渲染元素，为 `false` 则不创建 DOM 节点",
+          "type": "`string | false`",
+          "default": "`'div'`"
+        },
+        {
+          "section": "App Props",
+          "name": "style",
+          "description": "容器内联样式",
+          "type": "`CSSProperties`",
+          "default": "—"
+        },
+        {
+          "section": "App Props",
+          "name": "className",
+          "description": "容器 class",
+          "type": "`string`",
+          "default": "—"
+        },
+        {
+          "section": "App Props",
+          "name": "rootClassName",
+          "description": "根容器 class",
+          "type": "`string`",
           "default": "—"
         }
       ],
@@ -414,6 +461,16 @@
           "title": "基础用法",
           "description": "在应用根部包裹 `<App>`，子组件内通过 `useApp()` 获取 `message`、`notification`、`modal` 实例。",
           "code": "<template>\n  <App>\n    <AppActions />\n  </App>\n</template>\n\n<script setup lang=\"ts\">\nimport { defineComponent, h } from 'vue'\nimport { App, useApp, Button, Space } from '@hmfw/ant-design'\n\n// useApp() 在 App 子组件内调用，获取 message/notification/modal 实例\nconst AppActions = defineComponent({\n  setup() {\n    const { message, notification, modal } = useApp()\n\n    function showMessage() {\n      message.success('操作成功！')\n    }\n\n    function showNotification() {\n      notification.info({\n        message: '系统通知',\n        description: '这是通过 useApp() 触发的通知。',\n      })\n    }\n\n    function showModal() {\n      modal.info({\n        title: '提示',\n        content: '这是通过 useApp() 触发的对话框。',\n      })\n    }\n\n    return () =>\n      h(Space, null, {\n        default: () => [\n          h(Button, { type: 'primary', onClick: showMessage }, { default: () => 'Message' }),\n          h(Button, { onClick: showNotification }, { default: () => 'Notification' }),\n          h(Button, { onClick: showModal }, { default: () => 'Modal' }),\n        ],\n      })\n  },\n})\n</script>"
+        },
+        {
+          "title": "配置传递",
+          "description": "通过 App props 配置 message/notification 行为，子组件通过 `useApp()` 获取的实例会自动应用这些配置。",
+          "code": "<template>\n  <div class=\"demo-container\">\n    <h4>配置传递示例</h4>\n    <p style=\"margin-bottom: 16px; color: rgba(0, 0, 0, 0.65)\">\n      通过 App props 配置 message/notification 行为，子组件通过 useApp() 获取的实例会应用这些配置。\n    </p>\n\n    <App :message=\"{ duration: 5, maxCount: 2 }\" :notification=\"{ placement: 'topLeft', duration: 3 }\">\n      <div class=\"button-group\">\n        <Button type=\"primary\" @click=\"showMessage\">显示 Message（5秒，最多2条）</Button>\n        <Button @click=\"showNotification\">显示 Notification（左上角，3秒）</Button>\n      </div>\n    </App>\n\n    <div style=\"margin-top: 24px; padding: 16px; background: #fafafa; border-radius: 4px\">\n      <h5 style=\"margin: 0 0 8px 0\">配置说明：</h5>\n      <ul style=\"margin: 0; padding-left: 20px\">\n        <li>\n          <code>message=&#123;&#123; duration: 5, maxCount: 2 &#125;&#125;</code> - 每条 message 显示 5 秒，最多显示 2\n          条\n        </li>\n        <li>\n          <code>notification=&#123;&#123; placement: 'topLeft', duration: 3 &#125;&#125;</code> - notification\n          在左上角显示，持续 3 秒\n        </li>\n      </ul>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { App, useApp, Button } from '@hmfw/ant-design'\n\nconst { message, notification } = useApp()\n\nlet count = 0\n\nconst showMessage = () => {\n  count++\n  message.success(`这是第 ${count} 条消息（5秒，最多2条）`)\n}\n\nconst showNotification = () => {\n  notification.info({\n    message: '配置生效',\n    description: '这条通知在左上角显示，持续 3 秒。',\n  })\n}\n</script>\n\n<style scoped>\n.demo-container h4 {\n  margin: 0 0 8px 0;\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.button-group {\n  display: flex;\n  gap: 12px;\n}\n\ncode {\n  padding: 2px 6px;\n  background: #f5f5f5;\n  border: 1px solid #d9d9d9;\n  border-radius: 3px;\n  font-family: 'Courier New', monospace;\n  font-size: 13px;\n}\n\nh5 {\n  font-size: 14px;\n  font-weight: 500;\n}\n\nli {\n  margin-bottom: 4px;\n  font-size: 14px;\n  color: rgba(0, 0, 0, 0.85);\n}\n</style>"
+        },
+        {
+          "title": "自定义渲染元素",
+          "description": "通过 `component` prop 控制容器元素。设置为 `false` 时不创建额外 DOM 节点。",
+          "code": "<template>\n  <div class=\"demo-container\">\n    <div class=\"demo-item\">\n      <h4>默认（div 容器）</h4>\n      <App style=\"border: 1px solid #d9d9d9; padding: 16px; border-radius: 4px\">\n        <p style=\"margin: 0\">默认渲染为 div 元素</p>\n      </App>\n    </div>\n\n    <div class=\"demo-item\">\n      <h4>自定义（section 容器）</h4>\n      <App component=\"section\" style=\"border: 1px solid #1677ff; padding: 16px; border-radius: 4px\">\n        <p style=\"margin: 0\">渲染为 section 元素</p>\n      </App>\n    </div>\n\n    <div class=\"demo-item\">\n      <h4>无包裹（component={false}）</h4>\n      <App :component=\"false\">\n        <p style=\"border: 1px solid #52c41a; padding: 16px; margin: 0; border-radius: 4px\">\n          不创建额外 DOM 节点，直接渲染子元素（Fragment）\n        </p>\n      </App>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { App } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n.demo-container {\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n\n.demo-item h4 {\n  margin: 0 0 8px 0;\n  font-size: 14px;\n  color: rgba(0, 0, 0, 0.65);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/app"
@@ -1397,7 +1454,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对 root、icon、loading 等子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; gap: 12px; flex-wrap: wrap\">\n    <Button\n      type=\"primary\"\n      :icon=\"SearchOutlined\"\n      :class-names=\"{ icon: 'demo-tinted-icon' }\"\n      :styles=\"{ icon: { color: '#fadb14' } }\"\n    >\n      自定义图标颜色\n    </Button>\n\n    <Button :icon=\"SearchOutlined\" icon-position=\"end\" :styles=\"{ root: { borderColor: '#722ed1', color: '#722ed1' } }\">\n      尾部图标 + 自定义边框\n    </Button>\n\n    <Button loading :class-names=\"{ loading: 'demo-loading-emphasis' }\"> 加载中 </Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { SearchOutlined } from '@hmfw/icons'\nimport { Button } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n:deep(.demo-tinted-icon) {\n  filter: drop-shadow(0 0 2px rgba(250, 219, 20, 0.6));\n}\n:deep(.demo-loading-emphasis) {\n  font-size: 16px;\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; gap: 12px; flex-wrap: wrap\">\n    <Button\n      type=\"primary\"\n      :icon=\"SearchOutlined\"\n      :class-names=\"{ icon: 'demo-tinted-icon' }\"\n      :styles=\"{ icon: { color: '#fadb14' } }\"\n    >\n      自定义图标颜色\n    </Button>\n\n    <Button :icon=\"SearchOutlined\" icon-position=\"end\" :styles=\"{ root: { borderColor: '#722ed1', color: '#722ed1' } }\">\n      尾部图标 + 自定义边框\n    </Button>\n\n    <Button loading :class-names=\"{ loading: 'demo-loading-emphasis' }\"> 加载中 </Button>\n\n    <Button :class-names=\"{ content: 'demo-spaced-content' }\" :styles=\"{ content: { fontWeight: 600 } }\">\n      自定义文本节点\n    </Button>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { SearchOutlined } from '@hmfw/icons'\nimport { Button } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n:deep(.demo-tinted-icon) {\n  filter: drop-shadow(0 0 2px rgba(250, 219, 20, 0.6));\n}\n:deep(.demo-loading-emphasis) {\n  font-size: 16px;\n}\n:deep(.demo-spaced-content) {\n  letter-spacing: 0.1em;\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/button"
@@ -3060,6 +3117,13 @@
         },
         {
           "section": "ColorPicker Props",
+          "name": "format",
+          "description": "颜色格式。**当前仅实现 `hex`**，面板始终渲染 HEX 输入框，传入 `rgb`/`hsb` 暂无效果",
+          "type": "`'hex' | 'rgb' | 'hsb'`",
+          "default": "`'hex'`"
+        },
+        {
+          "section": "ColorPicker Props",
           "name": "disabled",
           "description": "是否禁用",
           "type": "`boolean`",
@@ -3136,9 +3200,24 @@
           "code": "<template>\n  <Space wrap align=\"center\">\n    <ColorPicker v-model:value=\"color\" show-text />\n    <span>当前颜色：{{ color }}</span>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ColorPicker, Space } from '@hmfw/ant-design'\n\nconst color = ref('#1677ff')\n</script>"
         },
         {
+          "title": "三种尺寸",
+          "description": "通过 `size` 设置触发器大小，可选 `small`、`middle`、`large`。",
+          "code": "<template>\n  <Space wrap align=\"center\" :size=\"24\">\n    <div class=\"size-item\">\n      <div class=\"size-label\">small</div>\n      <ColorPicker v-model:value=\"color\" size=\"small\" show-text />\n    </div>\n    <div class=\"size-item\">\n      <div class=\"size-label\">middle（默认）</div>\n      <ColorPicker v-model:value=\"color\" size=\"middle\" show-text />\n    </div>\n    <div class=\"size-item\">\n      <div class=\"size-label\">large</div>\n      <ColorPicker v-model:value=\"color\" size=\"large\" show-text />\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ColorPicker, Space } from '@hmfw/ant-design'\n\nconst color = ref('#1677ff')\n</script>\n\n<style scoped>\n.size-item {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n}\n\n.size-label {\n  font-size: 12px;\n  color: #888;\n}\n</style>"
+        },
+        {
+          "title": "禁用状态",
+          "description": "设置 `disabled` 后触发器不可交互，面板无法打开。",
+          "code": "<template>\n  <Space wrap align=\"center\" :size=\"24\">\n    <div class=\"demo-item\">\n      <div class=\"demo-label\">正常</div>\n      <ColorPicker v-model:value=\"color\" show-text />\n    </div>\n    <div class=\"demo-item\">\n      <div class=\"demo-label\">禁用</div>\n      <ColorPicker v-model:value=\"color\" show-text disabled />\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ColorPicker, Space } from '@hmfw/ant-design'\n\nconst color = ref('#722ed1')\n</script>\n\n<style scoped>\n.demo-item {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n}\n\n.demo-label {\n  font-size: 12px;\n  color: #888;\n}\n</style>"
+        },
+        {
           "title": "预设颜色",
           "description": "通过 presets 提供预设颜色快速选择。",
           "code": "<template>\n  <ColorPicker v-model:value=\"color\" show-text :presets=\"presets\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ColorPicker } from '@hmfw/ant-design'\n\nconst color = ref('#1677ff')\n\nconst presets = [\n  {\n    label: '推荐',\n    colors: ['#1677ff', '#52c41a', '#faad14', '#ff4d4f', '#722ed1', '#13c2c2'],\n  },\n]\n</script>"
+        },
+        {
+          "title": "清除颜色",
+          "description": "设置 `allowClear` 后面板底部出现清除按钮，清除后 `value` 变为 `undefined` 并触发 `clear` 事件。",
+          "code": "<template>\n  <Space direction=\"vertical\" :size=\"16\">\n    <ColorPicker v-model:value=\"color\" show-text allow-clear @clear=\"onClear\" />\n    <div class=\"tip\">\n      当前值：<code>{{ color || '(已清除)' }}</code>\n      <span v-if=\"clearCount > 0\" class=\"count\">清除次数：{{ clearCount }}</span>\n    </div>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { ColorPicker, Space } from '@hmfw/ant-design'\n\nconst color = ref<string | undefined>('#52c41a')\nconst clearCount = ref(0)\n\nfunction onClear() {\n  clearCount.value += 1\n}\n</script>\n\n<style scoped>\n.tip {\n  font-size: 13px;\n  color: #666;\n}\n\n.tip code {\n  padding: 2px 6px;\n  background: rgba(0, 0, 0, 0.06);\n  border-radius: 4px;\n  font-family: monospace;\n}\n\n.count {\n  margin-left: 12px;\n  color: #999;\n}\n</style>"
         },
         {
           "title": "细粒度样式控制",
@@ -3237,7 +3316,7 @@
         {
           "title": "国际化",
           "description": "通过 `locale` 属性配置语言包，统一驱动组件内置文案（占位符、空状态、确认框按钮等）。",
-          "code": "<template>\n  <Space direction=\"vertical\" size=\"large\" style=\"width: 100%\">\n    <Segmented v-model:value=\"lang\" :options=\"options\" />\n\n    <ConfigProvider :locale=\"lang === 'zh' ? zhCN : enUS\">\n      <div :style=\"panelStyle\">\n        <Space wrap align=\"start\">\n          <!-- 占位符与「无匹配项」文案来自语言包 -->\n          <Select :options=\"[]\" style=\"width: 200px\" />\n          <Popconfirm title=\"Delete this item?\">\n            <Button danger>Popconfirm 按钮文案</Button>\n          </Popconfirm>\n        </Space>\n        <!-- 空状态描述文案来自语言包 -->\n        <Empty />\n      </div>\n    </ConfigProvider>\n\n    <p :style=\"hintStyle\">语言包统一驱动组件内置文案（占位符、空状态、确认框按钮等），无需逐个组件传文案。</p>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport type { CSSProperties } from 'vue'\nimport { ConfigProvider, Button, Select, Empty, Popconfirm, Segmented, Space, zhCN, enUS } from '@hmfw/ant-design'\n\nconst lang = ref<'zh' | 'en'>('zh')\nconst options = [\n  { label: '简体中文', value: 'zh' },\n  { label: 'English', value: 'en' },\n]\n\nconst panelStyle: CSSProperties = {\n  display: 'flex',\n  flexDirection: 'column',\n  gap: '16px',\n  padding: '16px',\n  background: 'var(--hmfw-color-bg-layout)',\n  borderRadius: 'var(--hmfw-border-radius)',\n}\n\nconst hintStyle: CSSProperties = {\n  margin: 0,\n  fontSize: '12px',\n  color: 'var(--hmfw-color-text-tertiary)',\n}\n</script>"
+          "code": "<template>\n  <Space direction=\"vertical\" size=\"large\" style=\"width: 100%\">\n    <Segmented v-model:value=\"lang\" :options=\"options\" />\n\n    <ConfigProvider :locale=\"lang === 'zh' ? zhCN : enUS\">\n      <div :style=\"panelStyle\">\n        <!-- 选择器占位符 & 空状态 -->\n        <Space wrap>\n          <Select :options=\"[]\" style=\"width: 200px\" />\n          <DatePicker style=\"width: 200px\" />\n          <TimePicker style=\"width: 200px\" />\n        </Space>\n\n        <!-- 分页：导航、跳转、页码全部由语言包驱动 -->\n        <div style=\"display: flex; justify-content: center\">\n          <Pagination :total=\"85\" show-size-changer show-quick-jumper :page-size-options=\"[10, 20, 50]\" />\n        </div>\n\n        <!-- 表格：筛选 / 排序 / 空状态文案来自语言包 -->\n        <Table\n          :columns=\"columns\"\n          :data-source=\"data\"\n          :pagination=\"{ pageSize: 3 }\"\n          bordered\n          size=\"small\"\n          style=\"width: 100%\"\n        />\n\n        <!-- 弹出层按钮 & 空状态 & 可关闭消息 -->\n        <Space wrap align=\"start\">\n          <Popconfirm title=\"Delete this item?\">\n            <Button danger>Popconfirm</Button>\n          </Popconfirm>\n          <Button @click=\"showModal\">Modal.confirm</Button>\n          <Empty />\n          <Alert title=\"This is a closable alert\" type=\"info\" closable />\n        </Space>\n\n        <!-- 表单校验：所有缺省文案来自语言包 -->\n        <Form :model=\"form\" :label-col=\"{ span: 4 }\" style=\"max-width: 480px\">\n          <FormItem label=\"Name\" name=\"name\" :rules=\"[{ required: true }, { min: 2 }, { max: 10 }]\">\n            <Input v-model:value=\"form.name\" />\n          </FormItem>\n          <FormItem label=\"Email\" name=\"email\" :rules=\"[{ required: true, type: 'email' }]\">\n            <Input v-model:value=\"form.email\" />\n          </FormItem>\n          <FormItem :wrapper-col=\"{ offset: 4 }\">\n            <Button type=\"primary\" html-type=\"submit\">Validate</Button>\n          </FormItem>\n        </Form>\n      </div>\n    </ConfigProvider>\n\n    <p :style=\"hintStyle\">\n      语言包统一驱动组件内置文案（占位符、空状态、分页、校验提示等）， 无需逐个组件传 <code>placeholder</code> 或\n      <code>locale</code> prop。\n    </p>\n  </Space>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport type { CSSProperties } from 'vue'\nimport {\n  ConfigProvider,\n  Button,\n  Select,\n  DatePicker,\n  TimePicker,\n  Pagination,\n  Table,\n  Empty,\n  Alert,\n  Popconfirm,\n  Segmented,\n  Space,\n  Form,\n  FormItem,\n  Input,\n  Modal,\n  zhCN,\n  enUS,\n} from '@hmfw/ant-design'\nimport type { TableColumn } from '@hmfw/ant-design'\n\nconst lang = ref<'zh' | 'en'>('zh')\nconst options = [\n  { label: '简体中文', value: 'zh' },\n  { label: 'English', value: 'en' },\n]\n\nconst form = ref({ name: '', email: '' })\n\nconst columns: TableColumn[] = [\n  {\n    title: 'Name',\n    dataIndex: 'name',\n    key: 'name',\n    sorter: true,\n    filters: [{ text: 'A', value: 'A' }],\n    onFilter: () => true,\n  },\n  { title: 'Age', dataIndex: 'age', key: 'age', sorter: true },\n  { title: 'Address', dataIndex: 'address', key: 'address' },\n]\nconst data = [\n  { key: '1', name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park' },\n  { key: '2', name: 'Jim Green', age: 42, address: 'London No. 1 Lake Park' },\n  { key: '3', name: 'Joe Black', age: 32, address: 'Sidney No. 1 Lake Park' },\n  { key: '4', name: 'Jim Red', age: 32, address: 'London No. 2 Lake Park' },\n]\n\n// 弹出 Modal 展示 OK / Cancel 按钮文案\n// Modal.confirm 独立挂载在 ConfigProvider 树之外，需显式传入 locale\nconst showModal = () => {\n  Modal.confirm({\n    title: 'Do you want to delete these items?',\n    content: 'This action cannot be undone.',\n    locale: lang.value === 'zh' ? zhCN : enUS,\n  })\n}\n\nconst panelStyle: CSSProperties = {\n  display: 'flex',\n  flexDirection: 'column',\n  gap: '16px',\n  padding: '16px',\n  background: 'var(--hmfw-color-bg-layout)',\n  borderRadius: 'var(--hmfw-border-radius)',\n}\n\nconst hintStyle: CSSProperties = {\n  margin: 0,\n  fontSize: '12px',\n  color: 'var(--hmfw-color-text-tertiary)',\n}\n</script>"
         },
         {
           "title": "布局方向",
@@ -4376,7 +4455,7 @@
         {
           "title": "细粒度样式控制",
           "description": "通过 `classNames` / `styles` 对各子元素做细粒度样式控制。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器背景与圆角：</div>\n      <Empty :class-names=\"{ root: 'custom-root' }\" description=\"精美卡片样式\" />\n    </div>\n\n    <!-- 场景 2：自定义图片容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图片容器（渐变背景 + 动画）：</div>\n      <Empty :class-names=\"{ image: 'custom-image' }\" description=\"图片增强效果\" />\n    </div>\n\n    <!-- 场景 3：自定义描述文本样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义描述文本样式：</div>\n      <Empty :class-names=\"{ description: 'custom-description' }\" description=\"醒目的提示文字\" />\n    </div>\n\n    <!-- 场景 4：组合使用多个 key -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义多个节点：</div>\n      <Empty\n        :class-names=\"{\n          root: 'custom-combined-root',\n          image: 'custom-combined-image',\n          description: 'custom-combined-description',\n          footer: 'custom-combined-footer',\n        }\"\n        description=\"完整定制体验\"\n      >\n        <template #default>\n          <Button type=\"primary\">立即创建</Button>\n        </template>\n      </Empty>\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Empty\n        :styles=\"{\n          root: { padding: '48px 24px', background: '#f0f5ff', borderRadius: '12px' },\n          image: { height: '120px', opacity: '0.8' },\n          description: { fontSize: '16px', color: '#1677ff', fontWeight: '500' },\n        }\"\n        description=\"内联样式控制\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Empty, Button } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n/* 场景 1：根容器样式 */\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 48px 32px;\n  border-radius: 16px;\n  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);\n  color: white;\n}\n\n:deep(.custom-root .hmfw-empty-description) {\n  color: rgba(255, 255, 255, 0.9);\n}\n\n/* 场景 2：图片容器样式 */\n:deep(.custom-image) {\n  padding: 24px;\n  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);\n  border-radius: 50%;\n  transition: all 0.3s;\n}\n\n:deep(.custom-image:hover) {\n  transform: scale(1.1) rotate(5deg);\n  box-shadow: 0 8px 20px rgba(252, 182, 159, 0.4);\n}\n\n/* 场景 3：描述文本样式 */\n:deep(.custom-description) {\n  font-size: 18px;\n  font-weight: 600;\n  color: #ff4d4f;\n  text-shadow: 0 2px 4px rgba(255, 77, 79, 0.2);\n  animation: pulse 2s ease-in-out infinite;\n}\n\n@keyframes pulse {\n  0%,\n  100% {\n    opacity: 1;\n  }\n  50% {\n    opacity: 0.7;\n  }\n}\n\n/* 场景 4：组合样式 */\n:deep(.custom-combined-root) {\n  background: linear-gradient(to right, #fa709a 0%, #fee140 100%);\n  padding: 56px 40px;\n  border-radius: 20px;\n  box-shadow: 0 8px 24px rgba(250, 112, 154, 0.3);\n}\n\n:deep(.custom-combined-image) {\n  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));\n  transition: transform 0.3s;\n}\n\n:deep(.custom-combined-root:hover .custom-combined-image) {\n  transform: translateY(-8px);\n}\n\n:deep(.custom-combined-description) {\n  color: #fff;\n  font-size: 20px;\n  font-weight: bold;\n  letter-spacing: 1px;\n}\n\n:deep(.custom-combined-footer) {\n  margin-top: 24px;\n}\n\n:deep(.custom-combined-footer .hmfw-button) {\n  background: white;\n  color: #fa709a;\n  border: none;\n  font-weight: 600;\n  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);\n}\n\n:deep(.custom-combined-footer .hmfw-button:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.4);\n}\n</style>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 32px\">\n    <!-- 场景 1：自定义根容器样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义根容器背景与圆角：</div>\n      <Empty :class-names=\"{ root: 'custom-root' }\" description=\"精美卡片样式\" />\n    </div>\n\n    <!-- 场景 2：自定义图片容器 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义图片容器（渐变背景 + 动画）：</div>\n      <Empty :class-names=\"{ image: 'custom-image' }\" description=\"图片增强效果\" />\n    </div>\n\n    <!-- 场景 3：自定义描述文本样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">自定义描述文本样式：</div>\n      <Empty :class-names=\"{ description: 'custom-description' }\" description=\"醒目的提示文字\" />\n    </div>\n\n    <!-- 场景 4：组合使用多个 key -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">组合自定义多个节点：</div>\n      <Empty\n        :class-names=\"{\n          root: 'custom-combined-root',\n          image: 'custom-combined-image',\n          description: 'custom-combined-description',\n          footer: 'custom-combined-footer',\n        }\"\n        description=\"完整定制体验\"\n      >\n        <template #default>\n          <Button type=\"primary\">立即创建</Button>\n        </template>\n      </Empty>\n    </div>\n\n    <!-- 场景 5：使用 styles 内联样式 -->\n    <div>\n      <div style=\"margin-bottom: 8px; color: #666\">使用内联样式：</div>\n      <Empty\n        :styles=\"{\n          root: { padding: '48px 24px', background: '#f0f5ff', borderRadius: '12px' },\n          image: { height: '120px', opacity: '0.8' },\n          description: { fontSize: '16px', color: '#1677ff', fontWeight: '500' },\n        }\"\n        description=\"内联样式控制\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Empty, Button } from '@hmfw/ant-design'\n</script>\n\n<style scoped>\n/* 场景 1：根容器样式 */\n:deep(.custom-root) {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 48px 32px;\n  border-radius: 16px;\n  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);\n  color: white;\n}\n\n:deep(.custom-root .hmfw-empty-description) {\n  color: rgba(255, 255, 255, 0.9);\n}\n\n/* 场景 2：图片容器样式 */\n:deep(.custom-image) {\n  padding: 24px;\n  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);\n  border-radius: 50%;\n  transition: all 0.3s;\n}\n\n:deep(.custom-image:hover) {\n  transform: scale(1.1) rotate(5deg);\n  box-shadow: 0 8px 20px rgba(252, 182, 159, 0.4);\n}\n\n/* 场景 3：描述文本样式 */\n:deep(.custom-description) {\n  font-size: 18px;\n  font-weight: 600;\n  color: #ff4d4f;\n  text-shadow: 0 2px 4px rgba(255, 77, 79, 0.2);\n  animation: pulse 2s ease-in-out infinite;\n}\n\n@keyframes pulse {\n  0%,\n  100% {\n    opacity: 1;\n  }\n  50% {\n    opacity: 0.7;\n  }\n}\n\n/* 场景 4：组合样式 */\n:deep(.custom-combined-root) {\n  background: linear-gradient(to right, #fa709a 0%, #fee140 100%);\n  padding: 56px 40px;\n  border-radius: 20px;\n  box-shadow: 0 8px 24px rgba(250, 112, 154, 0.3);\n}\n\n:deep(.custom-combined-image) {\n  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));\n  transition: transform 0.3s;\n}\n\n:deep(.custom-combined-root:hover .custom-combined-image) {\n  transform: translateY(-8px);\n}\n\n:deep(.custom-combined-description) {\n  color: #fff;\n  font-size: 20px;\n  font-weight: bold;\n  letter-spacing: 1px;\n}\n\n:deep(.custom-combined-footer) {\n  margin-top: 24px;\n}\n\n:deep(.custom-combined-footer .hmfw-btn) {\n  background: white;\n  color: #fa709a;\n  border: none;\n  font-weight: 600;\n  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);\n}\n\n:deep(.custom-combined-footer .hmfw-btn:hover) {\n  transform: translateY(-2px);\n  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.4);\n}\n</style>"
         }
       ],
       "docUrl": "https://hmfw.github.io/ant-design-hmfw/components/empty"
@@ -13379,15 +13458,15 @@
         {
           "section": "Tour Props",
           "name": "arrow",
-          "description": "是否显示箭头",
+          "description": "是否显示箭头，`pointAtCenter` 控制是否始终指向目标中心",
           "type": "`boolean | { pointAtCenter?: boolean }`",
           "default": "`true`"
         },
         {
           "section": "Tour Props",
           "name": "placement",
-          "description": "引导卡片相对于目标元素的位置",
-          "type": "`TooltipPlacement`",
+          "description": "引导卡片相对于目标元素的位置，`center` 为视口居中",
+          "type": "`TourPlacement`",
           "default": "`'bottom'`"
         },
         {
@@ -13407,7 +13486,7 @@
         {
           "section": "Tour Props",
           "name": "scrollIntoViewOptions",
-          "description": "是否滚动到目标元素，支持传入滚动选项",
+          "description": "目标元素不在视口内时是否滚动到目标，支持传入滚动选项",
           "type": "`boolean | ScrollIntoViewOptions`",
           "default": "`true`"
         },
@@ -13421,15 +13500,29 @@
         {
           "section": "Tour Props",
           "name": "gap",
-          "description": "引导卡片与目标元素的距离和箭头偏移",
+          "description": "高亮区域的外扩边距与圆角，`offset` 支持 `[x, y]` 分别指定水平/垂直",
           "type": "`{ offset?: number | [number, number]; radius?: number }`",
-          "default": "`{ offset: 12, radius: 4 }`"
+          "default": "`{ offset: 6, radius: 2 }`"
+        },
+        {
+          "section": "Tour Props",
+          "name": "disabledInteraction",
+          "description": "是否禁用高亮区域的交互。默认高亮元素可正常点击",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "Tour Props",
+          "name": "keyboard",
+          "description": "是否启用键盘导航（`←` `→` 切换步骤，`Esc` 关闭）",
+          "type": "`boolean`",
+          "default": "`true`"
         },
         {
           "section": "Tour Props",
           "name": "indicatorsRender",
           "description": "自定义指示器渲染",
-          "type": "`(current: number, total: number) => VNode`",
+          "type": "`(current: number, total: number) => VNode | string | number`",
           "default": "-"
         },
         {
@@ -13438,6 +13531,13 @@
           "description": "自定义关闭图标，设置为 `false` 时隐藏关闭按钮",
           "type": "`VNode | (() => VNode) | false`",
           "default": "`<CloseOutlined />`"
+        },
+        {
+          "section": "Tour Props",
+          "name": "getPopupContainer",
+          "description": "指定挂载容器，默认挂载到 `body`。未设置时回退到 ConfigProvider 的同名配置",
+          "type": "`(triggerNode?: HTMLElement) => HTMLElement`",
+          "default": "`() => document.body`"
         },
         {
           "section": "Tour Props",
@@ -13457,35 +13557,42 @@
           "section": "TourStep",
           "name": "title",
           "description": "标题",
-          "type": "`string | VNode | (() => VNode)`",
+          "type": "`TourRenderable`",
           "default": "-"
         },
         {
           "section": "TourStep",
           "name": "description",
           "description": "描述",
-          "type": "`string | VNode | (() => VNode)`",
+          "type": "`TourRenderable`",
           "default": "-"
         },
         {
           "section": "TourStep",
           "name": "target",
-          "description": "目标元素（CSS 选择器或返回元素的函数）",
-          "type": "`string | (() => HTMLElement | null)`",
+          "description": "目标元素。支持 CSS 选择器、DOM 节点、Vue 组件实例，或返回上述值的函数；为空时卡片居中展示",
+          "type": "`string | HTMLElement | (() => HTMLElement | null)`",
           "default": "-"
         },
         {
           "section": "TourStep",
           "name": "placement",
-          "description": "弹出位置",
-          "type": "`TooltipPlacement`",
+          "description": "弹出位置，优先级高于 Tour 的 placement",
+          "type": "`TourPlacement`",
+          "default": "-"
+        },
+        {
+          "section": "TourStep",
+          "name": "arrow",
+          "description": "是否显示箭头，优先级高于 Tour 的 arrow",
+          "type": "`boolean | { pointAtCenter?: boolean }`",
           "default": "-"
         },
         {
           "section": "TourStep",
           "name": "cover",
-          "description": "封面图片或自定义内容",
-          "type": "`string | VNode`",
+          "description": "封面图片或自定义内容。字符串按图片地址处理",
+          "type": "`TourRenderable`",
           "default": "-"
         },
         {
@@ -13577,6 +13684,18 @@
           "name": "finish",
           "description": "完成时（最后一步点击下一步）",
           "params": "`() => void`"
+        },
+        {
+          "section": "Tour Events",
+          "name": "update:open",
+          "description": "显示状态变化时，配合 `v-model:open` 使用",
+          "params": "`(open: boolean) => void`"
+        },
+        {
+          "section": "Tour Events",
+          "name": "update:current",
+          "description": "当前步骤变化时，配合 `v-model:current` 使用",
+          "params": "`(current: number) => void`"
         }
       ],
       "slots": [],
@@ -13587,9 +13706,34 @@
           "code": "<template>\n  <div>\n    <Space>\n      <Button ref=\"btnRef\" type=\"primary\" @click=\"open = true\"> 开始引导 </Button>\n    </Space>\n    <Tour v-model:open=\"open\" :steps=\"steps\" @finish=\"open = false\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tour, Button, Space } from '@hmfw/ant-design'\nimport type { TourStep } from '@hmfw/ant-design'\n\nconst open = ref(false)\n\nconst steps: TourStep[] = [\n  {\n    title: '第一步',\n    description: '这是漫游引导的第一步，介绍页面的主要功能。',\n  },\n  {\n    title: '第二步',\n    description: '这是第二步，继续介绍其他功能。',\n  },\n  {\n    title: '完成',\n    description: '引导完成！现在你已经了解了所有功能。',\n  },\n]\n</script>"
         },
         {
+          "title": "定位与方位",
+          "description": "通过 `target` 属性指向页面元素，通过 `placement` 设置引导卡片的显示位置。",
+          "code": "<template>\n  <div>\n    <Space>\n      <Button ref=\"uploadRef\" type=\"primary\">上传</Button>\n      <Button ref=\"saveRef\">保存</Button>\n      <Button ref=\"moreRef\" :icon=\"EllipsisOutlined\">更多</Button>\n    </Space>\n    <Divider />\n    <Button type=\"primary\" @click=\"open = true\">开始引导</Button>\n    <Tour v-model:open=\"open\" :steps=\"steps\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, type ComponentPublicInstance } from 'vue'\nimport { Tour, Button, Space, Divider } from '@hmfw/ant-design'\nimport { EllipsisOutlined } from '@hmfw/icons'\nimport type { TourProps } from '@hmfw/ant-design'\n\nconst open = ref(false)\n// ref 挂在组件上拿到的是组件实例，Tour 会自动解包出根元素，无需手动取 $el\nconst uploadRef = ref<ComponentPublicInstance>()\nconst saveRef = ref<ComponentPublicInstance>()\nconst moreRef = ref<ComponentPublicInstance>()\n\nconst steps: TourProps['steps'] = [\n  {\n    title: '上传文件',\n    description: '点击此处上传您的文件。支持拖拽上传和批量上传。',\n    target: () => uploadRef.value!,\n    placement: 'bottom',\n  },\n  {\n    title: '保存修改',\n    description: '完成编辑后，点击保存按钮保存您的修改。',\n    target: () => saveRef.value!,\n    placement: 'bottom',\n  },\n  {\n    title: '更多操作',\n    description: '点击查看更多功能选项，包括导出、分享等。',\n    target: () => moreRef.value!,\n    placement: 'right',\n  },\n]\n</script>"
+        },
+        {
           "title": "不同类型",
           "description": "Tour 有两种类型：`default` 和 `primary`。",
           "code": "<template>\n  <div>\n    <Space>\n      <Button type=\"primary\" @click=\"openDefault\"> 默认样式 </Button>\n      <Button type=\"primary\" @click=\"openPrimary\"> 主题样式 </Button>\n    </Space>\n    <Tour v-model:open=\"defaultOpen\" :steps=\"defaultSteps\" @finish=\"defaultOpen = false\" />\n    <Tour v-model:open=\"primaryOpen\" type=\"primary\" :steps=\"primarySteps\" @finish=\"primaryOpen = false\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tour, Button, Space } from '@hmfw/ant-design'\nimport type { TourStep } from '@hmfw/ant-design'\n\nconst defaultOpen = ref(false)\nconst primaryOpen = ref(false)\n\nconst defaultSteps: TourStep[] = [\n  {\n    title: '默认样式',\n    description: '这是默认样式的引导，白色背景。',\n  },\n  {\n    title: '第二步',\n    description: '继续介绍功能...',\n  },\n]\n\nconst primarySteps: TourStep[] = [\n  {\n    title: '主题样式',\n    description: '这是主题样式的引导，蓝色背景。',\n  },\n  {\n    title: '第二步',\n    description: '继续介绍功能...',\n  },\n]\n\nfunction openDefault() {\n  defaultOpen.value = true\n}\n\nfunction openPrimary() {\n  primaryOpen.value = true\n}\n</script>"
+        },
+        {
+          "title": "非模态模式",
+          "description": "设置 `mask={false}` 可以关闭遮罩层，用户可以直接操作页面元素。",
+          "code": "<template>\n  <div>\n    <Button type=\"primary\" @click=\"open = true\">开始非模态引导</Button>\n    <Divider />\n    <Space>\n      <Button ref=\"btn1Ref\">操作 1</Button>\n      <Button ref=\"btn2Ref\" type=\"primary\">操作 2</Button>\n      <Button ref=\"btn3Ref\" :icon=\"EllipsisOutlined\" />\n    </Space>\n    <Tour v-model:open=\"open\" :mask=\"false\" type=\"primary\" :steps=\"steps\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, type ComponentPublicInstance } from 'vue'\nimport { Tour, Button, Space, Divider } from '@hmfw/ant-design'\nimport { EllipsisOutlined } from '@hmfw/icons'\nimport type { TourProps } from '@hmfw/ant-design'\n\nconst open = ref(false)\n// ref 挂在组件上拿到的是组件实例，Tour 会自动解包出根元素，无需手动取 $el\nconst btn1Ref = ref<ComponentPublicInstance>()\nconst btn2Ref = ref<ComponentPublicInstance>()\nconst btn3Ref = ref<ComponentPublicInstance>()\n\nconst steps: TourProps['steps'] = [\n  {\n    title: '第一步',\n    description: '这是第一个操作按钮。',\n    target: () => btn1Ref.value!,\n  },\n  {\n    title: '第二步',\n    description: '这是主要操作按钮。',\n    target: () => btn2Ref.value!,\n  },\n  {\n    title: '第三步',\n    description: '点击查看更多操作。',\n    target: () => btn3Ref.value!,\n  },\n]\n</script>"
+        },
+        {
+          "title": "自定义指示器",
+          "description": "通过 `indicatorsRender` 自定义指示器的渲染方式。",
+          "code": "<template>\n  <div>\n    <Button type=\"primary\" @click=\"open = true\">自定义指示器</Button>\n    <Tour v-model:open=\"open\" :steps=\"steps\" :indicators-render=\"indicatorsRender\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, h } from 'vue'\nimport { Tour, Button } from '@hmfw/ant-design'\nimport type { TourProps } from '@hmfw/ant-design'\n\nconst open = ref(false)\n\nconst steps: TourProps['steps'] = [\n  {\n    title: '第一步',\n    description: '这是引导的第一步，向您介绍产品的基本功能。',\n  },\n  {\n    title: '第二步',\n    description: '接下来我们将介绍如何使用高级功能。',\n  },\n  {\n    title: '第三步',\n    description: '最后，让我们看看如何自定义您的设置。',\n  },\n]\n\n// 自定义指示器渲染函数：显示 \"1/3\" 格式\nconst indicatorsRender = (current: number, total: number) =>\n  h(\n    'span',\n    { style: { color: 'var(--hmfw-color-primary)', fontSize: '14px', fontWeight: 600 } },\n    `${current + 1} / ${total}`,\n  )\n</script>"
+        },
+        {
+          "title": "带封面的引导",
+          "description": "通过 `cover` 属性为引导步骤添加封面图片。",
+          "code": "<template>\n  <div>\n    <Button type=\"primary\" @click=\"open = true\">带封面的引导</Button>\n    <Tour v-model:open=\"open\" :steps=\"steps\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Tour, Button } from '@hmfw/ant-design'\nimport type { TourProps } from '@hmfw/ant-design'\n\nconst open = ref(false)\n\nconst steps: TourProps['steps'] = [\n  {\n    title: '欢迎使用',\n    description: '让我们开始快速入门引导，了解产品的核心功能。',\n    cover: 'https://user-images.githubusercontent.com/5378891/197385811-55df8480-7ff4-44bd-9d43-a7dade598d70.png',\n  },\n  {\n    title: '强大的功能',\n    description: '我们提供了丰富的功能来满足您的各种需求。',\n    cover: 'https://gw.alipayobjects.com/zos/antfincdn/cV16ZqzMjW/photo-1473091540282-9b846e7965e3.webp',\n  },\n  {\n    title: '开始使用',\n    description: '现在您已经了解了基本功能，可以开始使用了！',\n    cover: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',\n  },\n]\n</script>"
+        },
+        {
+          "title": "高亮交互与 gap",
+          "description": "默认高亮区域内的元素仍可点击，遮罩只拦截高亮之外的交互；设置 `disabledInteraction` 可完全禁用。`gap` 控制高亮区域相对目标元素的外扩边距与圆角。",
+          "code": "<template>\n  <div>\n    <Space>\n      <Button type=\"primary\" @click=\"openInteractive\">可交互高亮</Button>\n      <Button @click=\"openDisabled\">禁用交互</Button>\n      <Button @click=\"openWideGap\">自定义 gap</Button>\n    </Space>\n    <Divider />\n    <Space>\n      <Button ref=\"counterRef\" @click=\"count++\">已点击 {{ count }} 次</Button>\n      <span class=\"tour-hint\">引导期间点击上方按钮，观察计数是否变化</span>\n    </Space>\n\n    <!-- 默认 disabledInteraction=false：高亮元素可正常点击 -->\n    <Tour v-model:open=\"interactiveOpen\" :steps=\"interactiveSteps\" />\n\n    <!-- disabledInteraction=true：高亮元素也被遮罩拦截 -->\n    <Tour v-model:open=\"disabledOpen\" disabled-interaction :steps=\"disabledSteps\" />\n\n    <!-- gap.offset 控制高亮区域外扩，gap.radius 控制高亮圆角 -->\n    <Tour v-model:open=\"wideGapOpen\" :gap=\"{ offset: [20, 10], radius: 12 }\" :steps=\"gapSteps\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, type ComponentPublicInstance } from 'vue'\nimport { Tour, Button, Space, Divider } from '@hmfw/ant-design'\nimport type { TourStep } from '@hmfw/ant-design'\n\nconst count = ref(0)\nconst interactiveOpen = ref(false)\nconst disabledOpen = ref(false)\nconst wideGapOpen = ref(false)\n// ref 挂在组件上拿到的是组件实例，Tour 会自动解包出根元素\nconst counterRef = ref<ComponentPublicInstance>()\n\nconst target = () => counterRef.value\n\nconst interactiveSteps: TourStep[] = [\n  {\n    title: '高亮区域可交互',\n    description: '默认情况下高亮的元素仍可点击，试试点击计数按钮，数字会正常增加。',\n    target,\n  },\n]\n\nconst disabledSteps: TourStep[] = [\n  {\n    title: '禁用高亮交互',\n    description: '设置 disabledInteraction 后，遮罩会拦截全部点击，计数按钮不再响应。',\n    target,\n  },\n]\n\nconst gapSteps: TourStep[] = [\n  {\n    title: '自定义高亮区域',\n    description: 'gap.offset 支持 [x, y] 分别控制水平与垂直外扩，gap.radius 控制高亮框圆角。',\n    target,\n  },\n]\n\nfunction openInteractive() {\n  count.value = 0\n  interactiveOpen.value = true\n}\n\nfunction openDisabled() {\n  count.value = 0\n  disabledOpen.value = true\n}\n\nfunction openWideGap() {\n  wideGapOpen.value = true\n}\n</script>\n\n<style scoped>\n.tour-hint {\n  color: var(--hmfw-color-text-tertiary);\n  font-size: var(--hmfw-font-size-sm);\n}\n</style>"
         },
         {
           "title": "细粒度样式控制",
