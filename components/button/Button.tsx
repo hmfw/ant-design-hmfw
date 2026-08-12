@@ -155,15 +155,10 @@ export default defineComponent({
         `${prefixCls}-icon`,
         innerLoading.value && `${prefixCls}-loading-icon`,
         props.classNames?.icon,
-        innerLoading.value && props.classNames?.loading,
       )
-      const iconStyles = {
-        ...(props.styles?.icon || {}),
-        ...(innerLoading.value ? props.styles?.loading || {} : {}),
-      }
 
       return (
-        <span class={iconClasses} style={iconStyles}>
+        <span class={iconClasses} style={props.styles?.icon}>
           <IconComp class={cls('hmfw-icon', innerLoading.value && 'hmfw-icon-spin')} />
         </span>
       )

@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.42.0] - 2026-08-12
+
+[查看完整内容](./changelogs/v0.42.0.md)
+
+**💥 破坏性变更**：Button 语义化 API 移除 `loading` 键，语义节点收敛为 `root` / `icon` / `content`，与 Ant Design v6 的 `ButtonSemanticType` 完全一致。`loading` 从来不是独立 DOM 节点——它被叠加到 `icon` 那个 `<span>` 上（class 并列、style 合并且优先），本质是节点的状态修饰键而非语义节点，且与同名 prop `loading` 撞车易误读；加载图标容器上已有内置类 `.hmfw-btn-loading-icon`，纯 CSS 定制路径不受影响。AntD v6 处理状态样式走的是 `classNames` 的函数形式，并未新增语义键。`renderIcon` 中的 class 叠加与 style 合并逻辑一并删除。同时删除 `.hmfw-btn-icon-end` 空规则块（无任何声明，对渲染零影响），类名仍由组件输出并作为 `order: 1` 的选择器。全体 2497 单元测试通过。
+
 ## [0.41.0] - 2026-08-11
 
 [查看完整内容](./changelogs/v0.41.0.md)

@@ -131,7 +131,7 @@
 
 ### 细粒度样式控制
 
-通过 `classNames` / `styles` 对 root、icon、loading 等子元素做细粒度样式控制。
+通过 `classNames` / `styles` 对 root、icon、content 三个子元素做细粒度样式控制。
 
 <DemoBlock title="语义化 className 与 style" :source="ButtonClassNamesSource">
   <ButtonClassNames />
@@ -185,16 +185,14 @@ import type { CSSProperties } from 'vue'
 
 interface ButtonClassNames {
   root?: string // 按钮根节点（<button> 或 <a>）
-  icon?: string // 图标容器
+  icon?: string // 图标容器（loading 状态下复用同一节点）
   content?: string // 文本内容容器（纯图标按钮时不渲染）
-  loading?: string // 加载状态图标容器（与 icon 叠加）
 }
 
 interface ButtonStyles {
   root?: CSSProperties
   icon?: CSSProperties
   content?: CSSProperties
-  loading?: CSSProperties
 }
 ```
 
@@ -232,8 +230,8 @@ interface ButtonStyles {
 <button type="button" disabled aria-busy="true" class="hmfw-btn hmfw-btn-primary hmfw-btn-middle hmfw-btn-loading">
   <!-- ↑ classNames.root / styles.root 应用于此 -->
   <span class="hmfw-btn-icon hmfw-btn-loading-icon">
-    <!-- ↑ classNames.icon + classNames.loading 叠加应用 -->
-    <!-- ↑ styles.icon + styles.loading 合并应用 -->
+    <!-- ↑ 与图标按钮共用同一节点，classNames.icon / styles.icon 应用于此 -->
+    <!-- ↑ 只想影响加载态时，用内置类 .hmfw-btn-loading-icon 作为 CSS 选择器 -->
     <span role="img" aria-label="loading" class="hmfw-icon hmfw-icon-spin">
       <svg>...</svg>
     </span>
@@ -273,8 +271,8 @@ interface ButtonStyles {
   <!-- 自定义图标样式 -->
   <Button type="primary" :icon="SearchOutlined" :class-names="{ icon: 'my-icon-wrapper' }"> 搜索 </Button>
 
-  <!-- 自定义加载动画 -->
-  <Button loading :class-names="{ loading: 'my-loading-emphasis' }"> 加载中 </Button>
+  <!-- 自定义加载图标：loading 状态复用 icon 节点 -->
+  <Button loading :class-names="{ icon: 'my-loading-emphasis' }"> 加载中 </Button>
 
   <!-- 自定义根节点样式 -->
   <Button :class-names="{ root: 'my-button-root' }"> 自定义按钮 </Button>
@@ -348,8 +346,9 @@ interface ButtonStyles {
 ### 注意事项
 
 - `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 加载状态时，`classNames.loading` 与 `classNames.icon` 会**叠加**应用在同一个 `<span>` 上
-- 加载状态时，`styles.loading` 与 `styles.icon` 会**合并**应用，`styles.loading` 优先
+- 语义节点与 Ant Design v6 一致，只有 `root` / `icon` / `content` 三个
+- 加载状态不额外产生节点：加载图标复用 `icon` 容器，`classNames.icon` / `styles.icon` 同样生效
+- 若只想影响加载状态，用内置类名 `.hmfw-btn-loading-icon`（图标容器）或 `.hmfw-btn-loading`（根节点）编写 CSS
 - `classNames.root` 会与组件内置的状态类名（如 `.hmfw-btn-loading`）合并
 - `content` 节点仅在按钮有子节点时渲染，纯图标按钮上 `classNames.content` / `styles.content` 无效
 - 两个汉字的间距由 `autoInsertSpace` 在文本中直接插入空格实现，不再有额外的包裹节点与类名

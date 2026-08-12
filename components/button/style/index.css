@@ -6,7 +6,6 @@
   gap: var(--hmfw-margin-xs);
   font-weight: 400;
   white-space: nowrap;
-  text-align: center;
   cursor: pointer;
   user-select: none;
   touch-action: manipulation;
@@ -36,11 +35,9 @@
   line-height: 0;
 }
 
-/* Icon 位置 - 通过 flex order 翻转，避免 row-reverse 影响 gap 与子节点间距 */
-.hmfw-btn-icon-end {
-  /* 保持正向布局，使用 order 调整图标位置，间距由 gap 统一控制 */
-}
-
+/* Icon 位置 - 保持正向布局，用 order 把图标移到末尾；
+  不用 row-reverse，避免它影响 gap 与子节点的间距计算
+*/
 .hmfw-btn-icon-end .hmfw-btn-icon {
   order: 1;
 }

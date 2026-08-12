@@ -13,7 +13,7 @@
       尾部图标 + 自定义边框
     </Button>
 
-    <Button loading :class-names="{ loading: 'demo-loading-emphasis' }"> 加载中 </Button>
+    <Button loading :class-names="{ icon: 'demo-loading-emphasis' }"> 加载中 </Button>
 
     <Button :class-names="{ content: 'demo-spaced-content' }" :styles="{ content: { fontWeight: 600 } }">
       自定义文本节点

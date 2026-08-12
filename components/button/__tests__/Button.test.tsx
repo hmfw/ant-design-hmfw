@@ -213,17 +213,17 @@ describe('Button', () => {
     expect(iconEl.classes()).toContain('custom-icon')
   })
 
-  it('applies classNames.loading to loading icon wrapper', () => {
+  it('applies classNames.icon to loading icon wrapper', () => {
     const wrapper = mount(Button, {
       props: {
         loading: true,
-        classNames: { loading: 'custom-loading' },
+        classNames: { icon: 'custom-icon' },
       },
       slots: { default: 'Button' },
     })
     const loadingEl = wrapper.find('.hmfw-btn-loading-icon')
     expect(loadingEl.exists()).toBe(true)
-    expect(loadingEl.classes()).toContain('custom-loading')
+    expect(loadingEl.classes()).toContain('custom-icon')
   })
 
   it('applies styles.root to root element', () => {
@@ -478,14 +478,13 @@ describe('Button', () => {
     }).not.toThrow()
   })
 
-  // ===== styles 合并测试 =====
-  it('merges styles.icon and styles.loading when loading', () => {
+  // ===== loading 状态下的 icon 语义节点 =====
+  it('applies styles.icon to loading icon wrapper', () => {
     const wrapper = mount(Button, {
       props: {
         loading: true,
         styles: {
-          icon: { fontSize: '16px' },
-          loading: { color: 'red' },
+          icon: { fontSize: '16px', color: 'red' },
         },
       },
       slots: { default: 'Button' },
@@ -497,21 +496,20 @@ describe('Button', () => {
     expect(style).toContain('color')
   })
 
-  it('applies both classNames.icon and classNames.loading when loading', () => {
+  it('keeps built-in loading-icon class alongside classNames.icon', () => {
     const wrapper = mount(Button, {
       props: {
         loading: true,
         classNames: {
           icon: 'custom-icon',
-          loading: 'custom-loading',
         },
       },
       slots: { default: 'Button' },
     })
     const loadingEl = wrapper.find('.hmfw-btn-loading-icon')
     expect(loadingEl.exists()).toBe(true)
+    expect(loadingEl.classes()).toContain('hmfw-btn-icon')
     expect(loadingEl.classes()).toContain('custom-icon')
-    expect(loadingEl.classes()).toContain('custom-loading')
   })
 
   // 回归：attrs 曾在 class/style 之后展开，导致外部透传值整体覆盖组件自身样式

@@ -13,15 +13,13 @@ export interface LoadingConfig {
 /**
  * Button 语义化结构 className 配置
  * - root: 根元素（`<button>` 或 `href` 存在时的 `<a>`）
- * - icon: 图标容器
+ * - icon: 图标容器（loading 状态下复用同一节点，额外带 `.hmfw-btn-loading-icon`）
  * - content: 文本内容容器（无子节点时不渲染，如纯图标按钮）
- * - loading: 加载图标容器（loading 状态下与 icon 叠加）
  */
 export interface ButtonClassNames {
   root?: string
   icon?: string
   content?: string
-  loading?: string
 }
 
 /**
@@ -31,7 +29,6 @@ export interface ButtonStyles {
   root?: CSSProperties
   icon?: CSSProperties
   content?: CSSProperties
-  loading?: CSSProperties
 }
 
 export interface ButtonProps {

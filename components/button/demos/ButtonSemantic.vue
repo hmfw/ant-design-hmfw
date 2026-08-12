@@ -19,15 +19,11 @@ const semantics = [
   },
   {
     name: 'icon',
-    desc: '图标容器。控制图标的字号、颜色继承与居中对齐，图标位置由 iconPosition 决定。',
+    desc: '图标容器。控制图标的字号、颜色继承与居中对齐，图标位置由 iconPosition 决定。loading 状态下复用同一节点，额外带内置类 .hmfw-btn-loading-icon。',
   },
   {
     name: 'content',
     desc: '文本内容容器。纯图标按钮（无子节点）时不渲染。两个汉字的间距优化作用在其内层节点上。',
-  },
-  {
-    name: 'loading',
-    desc: '加载图标容器。loading 状态下与 icon 叠加在同一节点上，styles.loading 优先级高于 styles.icon。',
   },
 ]
 </script>
