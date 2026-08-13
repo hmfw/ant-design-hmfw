@@ -25,6 +25,14 @@
   <DividerWithText />
 </DemoBlock>
 
+### 正文样式文字
+
+`plain` 属性使分割线中的文字以正文样式（普通字重、基础字号）显示，而非默认的标题样式（500 字重、大字号）。
+
+<DemoBlock title="正文样式文字" :source="DividerPlainSource">
+  <DividerPlain />
+</DemoBlock>
+
 ### 带边距的文字分割线
 
 通过 `orientationMargin` 配合 `orientation="left" | "right"` 控制文字与分割线边框的距离。
@@ -100,12 +108,14 @@ import type { CSSProperties } from 'vue'
 
 interface DividerClassNames {
   root?: string // 分割线根容器
-  text?: string // 分割线中的文字容器
+  rail?: string // 文字两侧的线条
+  content?: string // 分割线中的文字容器
 }
 
 interface DividerStyles {
   root?: CSSProperties
-  text?: CSSProperties
+  rail?: CSSProperties
+  content?: CSSProperties
 }
 ```
 
@@ -114,10 +124,16 @@ interface DividerStyles {
 ```html
 <div class="hmfw-divider">
   <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <div class="hmfw-divider-rail hmfw-divider-rail-start">
+    <!-- ↑ classNames.rail / styles.rail 应用于此 -->
+  </div>
   <span class="hmfw-divider-inner-text">
-    <!-- ↑ classNames.text / styles.text 应用于此 -->
+    <!-- ↑ classNames.content / styles.content 应用于此 -->
     文字内容
   </span>
+  <div class="hmfw-divider-rail hmfw-divider-rail-end">
+    <!-- ↑ classNames.rail / styles.rail 应用于此 -->
+  </div>
 </div>
 ```
 
@@ -127,7 +143,9 @@ interface DividerStyles {
 <template>
   <div>
     <p>内容上方</p>
-    <Divider :class-names="{ root: 'custom-divider', text: 'custom-text' }"> 自定义文字 </Divider>
+    <Divider :class-names="{ root: 'custom-divider', rail: 'custom-rail', content: 'custom-text' }">
+      自定义文字
+    </Divider>
     <p>内容下方</p>
   </div>
 </template>
@@ -137,6 +155,10 @@ interface DividerStyles {
   border-top: 2px solid transparent;
   border-image: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   border-image-slice: 1;
+}
+
+:deep(.custom-rail) {
+  border-block-start-color: #764ba2;
 }
 
 :deep(.custom-text) {
@@ -157,7 +179,8 @@ interface DividerStyles {
     <Divider
       :styles="{
         root: { borderColor: '#1890ff', borderWidth: '2px', margin: '32px 0' },
-        text: { fontSize: '16px', color: '#1890ff', fontWeight: 'bold' },
+        rail: { opacity: 0.6 },
+        content: { fontSize: '16px', color: '#1890ff', fontWeight: 'bold' },
       }"
     >
       动态样式文字
@@ -170,26 +193,29 @@ interface DividerStyles {
 ### 注意事项
 
 - `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `text` 只在分割线有内容（通过默认插槽传入）时生效
-- 垂直分割线（`type="vertical"`）不支持文字内容，因此 `text` 样式不生效
+- `rail` 和 `content` 只在分割线有文字内容（通过默认插槽传入）时生效
+- `rail` 会同时作用于文字左右两侧的线条
+- 垂直分割线（`type="vertical"`）不支持文字内容，因此仅 `root` 生效
 
 ---
 
 ## 设计 Token
 
-Divider 组件消费以下 Design Token，可通过 `ConfigProvider` 的 `theme` 属性全局覆盖：
+Divider 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
 
-| Token                         | 默认值             | 用途                      |
-| ----------------------------- | ------------------ | ------------------------- |
-| `--hmfw-color-text`           | `rgba(0,0,0,0.88)` | 分割线文字颜色            |
-| `--hmfw-color-fill-secondary` | `rgba(0,0,0,0.06)` | 分割线边框颜色            |
-| `--hmfw-font-size`            | `14px`             | 基础文字大小              |
-| `--hmfw-font-size-lg`         | `16px`             | 带文字分割线的文字大小    |
-| `--hmfw-font-family`          | 系统字体栈         | 字体                      |
-| `--hmfw-line-height`          | `1.5714`           | 行高                      |
-| `--hmfw-margin-lg`            | `24px`             | 默认水平分割线间距        |
-| `--hmfw-margin`               | `16px`             | 中间距 / 带文字分割线间距 |
-| `--hmfw-margin-xs`            | `8px`              | 小间距 / 垂直分割线间距   |
+### 全局 Token
+
+| Token 名称                    | 说明                        | 默认值             |
+| ----------------------------- | --------------------------- | ------------------ |
+| `--hmfw-color-text`           | 分割线文字颜色              | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-fill-secondary` | 分割线边框颜色              | `rgba(0,0,0,0.06)` |
+| `--hmfw-font-size`            | 基础文字大小                | `14px`             |
+| `--hmfw-font-size-lg`         | 带文字分割线的文字大小      | `16px`             |
+| `--hmfw-font-family`          | 字体                        | 系统字体栈         |
+| `--hmfw-line-height`          | 行高                        | `1.5714`           |
+| `--hmfw-margin-lg`            | 默认水平分割线上下间距      | `24px`             |
+| `--hmfw-margin`               | 中间距 / 带文字分割线间距   | `16px`             |
+| `--hmfw-margin-xs`            | 小间距 / 垂直分割线水平间距 | `8px`              |
 
 自定义示例：
 

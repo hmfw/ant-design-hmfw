@@ -130,7 +130,7 @@ describe('Divider', () => {
       },
     })
     const innerText = wrapper.find('.hmfw-divider-inner-text')
-    expect(innerText.attributes('style')).toContain('margin-left: 20px')
+    expect(innerText.attributes('style')).toContain('margin-inline-start: 20px')
   })
 
   it('applies orientation margin for right', () => {
@@ -144,7 +144,7 @@ describe('Divider', () => {
       },
     })
     const innerText = wrapper.find('.hmfw-divider-inner-text')
-    expect(innerText.attributes('style')).toContain('margin-right: 30px')
+    expect(innerText.attributes('style')).toContain('margin-inline-end: 30px')
   })
 
   it('has role separator', () => {
@@ -174,10 +174,10 @@ describe('Divider', () => {
     expect(wrapper.classes()).toContain('hmfw-divider')
   })
 
-  it('applies classNames.text to inner text element', () => {
+  it('applies classNames.content to inner text element', () => {
     const wrapper = mount(Divider, {
       props: {
-        classNames: { text: 'custom-text-class' },
+        classNames: { content: 'custom-text-class' },
       },
       slots: {
         default: () => 'Text',
@@ -188,20 +188,34 @@ describe('Divider', () => {
     expect(innerText.classes()).toContain('custom-text-class')
   })
 
-  it('classNames.text does not render when no children', () => {
+  it('classNames.content does not render when no children', () => {
     const wrapper = mount(Divider, {
       props: {
-        classNames: { text: 'custom-text-class' },
+        classNames: { content: 'custom-text-class' },
       },
     })
     const innerText = wrapper.find('.hmfw-divider-inner-text')
     expect(innerText.exists()).toBe(false)
   })
 
-  it('applies both classNames.root and classNames.text together', () => {
+  it('applies classNames.rail to both rail elements', () => {
     const wrapper = mount(Divider, {
       props: {
-        classNames: { root: 'root-cls', text: 'text-cls' },
+        classNames: { rail: 'custom-rail-class' },
+      },
+      slots: {
+        default: () => 'Text',
+      },
+    })
+    const rails = wrapper.findAll('.hmfw-divider-rail')
+    expect(rails.length).toBe(2)
+    rails.forEach((rail) => expect(rail.classes()).toContain('custom-rail-class'))
+  })
+
+  it('applies both classNames.root and classNames.content together', () => {
+    const wrapper = mount(Divider, {
+      props: {
+        classNames: { root: 'root-cls', content: 'text-cls' },
       },
       slots: {
         default: () => 'Combined',
@@ -224,10 +238,10 @@ describe('Divider', () => {
     expect(wrapper.attributes('style')).toContain('border-color: red')
   })
 
-  it('applies styles.text to inner text element', () => {
+  it('applies styles.content to inner text element', () => {
     const wrapper = mount(Divider, {
       props: {
-        styles: { text: { fontSize: '20px', color: 'blue' } },
+        styles: { content: { fontSize: '20px', color: 'blue' } },
       },
       slots: {
         default: () => 'Text',
@@ -238,12 +252,26 @@ describe('Divider', () => {
     expect(innerText.attributes('style')).toContain('color: blue')
   })
 
-  it('applies both styles.root and styles.text together', () => {
+  it('applies styles.rail to both rail elements', () => {
+    const wrapper = mount(Divider, {
+      props: {
+        styles: { rail: { opacity: '0.5' } },
+      },
+      slots: {
+        default: () => 'Text',
+      },
+    })
+    const rails = wrapper.findAll('.hmfw-divider-rail')
+    expect(rails.length).toBe(2)
+    rails.forEach((rail) => expect(rail.attributes('style')).toContain('opacity: 0.5'))
+  })
+
+  it('applies both styles.root and styles.content together', () => {
     const wrapper = mount(Divider, {
       props: {
         styles: {
           root: { margin: '50px 0' },
-          text: { fontWeight: 'bold' },
+          content: { fontWeight: 'bold' },
         },
       },
       slots: {

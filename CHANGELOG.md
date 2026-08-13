@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.43.0] - 2026-08-13
+
+[查看完整内容](./changelogs/v0.43.0.md)
+
+**💥 破坏性变更**：Divider 语义节点 `text` 移除，改为 `content` 对齐 Ant Design v6；新增 `rail` 节点支持文字两侧线条独立定制。Props 补齐 `satisfies Record<keyof DividerProps, any>` 类型约束；`orientationMargin` 改用逻辑属性 `marginInlineStart/End`。新增 `DividerPlain.vue` demo，设计 Token 文档格式规范化。全体 2499 单元测试通过。
+
 ## [0.42.0] - 2026-08-12
 
 [查看完整内容](./changelogs/v0.42.0.md)

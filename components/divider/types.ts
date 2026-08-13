@@ -7,13 +7,15 @@ export type DividerVariant = 'dashed' | 'dotted' | 'solid'
 /** 语义化 className */
 export interface DividerClassNames {
   root?: string // 分割线根容器
-  text?: string // 分割线中的文字容器
+  rail?: string // 文字两侧的线条；无文字时作用于根容器
+  content?: string // 分割线中的文字容器
 }
 
 /** 语义化 style */
 export interface DividerStyles {
   root?: CSSProperties
-  text?: CSSProperties
+  rail?: CSSProperties
+  content?: CSSProperties
 }
 
 export interface DividerProps {
