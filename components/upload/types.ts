@@ -1,7 +1,7 @@
 export type UploadListType = 'text' | 'picture' | 'picture-card' | 'picture-circle'
 export type UploadType = 'select' | 'drag'
 
-import type { VNode } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 
 export interface UploadLocale {
   uploading?: string
@@ -74,25 +74,25 @@ export interface UploadClassNames {
 }
 
 export interface UploadStyles {
-  root?: import('vue').CSSProperties
-  select?: import('vue').CSSProperties
-  selectIcon?: import('vue').CSSProperties
-  selectText?: import('vue').CSSProperties
-  drag?: import('vue').CSSProperties
-  dragContainer?: import('vue').CSSProperties
-  list?: import('vue').CSSProperties
-  listItem?: import('vue').CSSProperties
-  listItemContainer?: import('vue').CSSProperties
-  thumbnail?: import('vue').CSSProperties
-  itemInfo?: import('vue').CSSProperties
-  itemIcon?: import('vue').CSSProperties
-  itemName?: import('vue').CSSProperties
-  itemSize?: import('vue').CSSProperties
-  itemCard?: import('vue').CSSProperties
-  cardActions?: import('vue').CSSProperties
-  itemAction?: import('vue').CSSProperties
-  progress?: import('vue').CSSProperties
-  progressBar?: import('vue').CSSProperties
+  root?: CSSProperties
+  select?: CSSProperties
+  selectIcon?: CSSProperties
+  selectText?: CSSProperties
+  drag?: CSSProperties
+  dragContainer?: CSSProperties
+  list?: CSSProperties
+  listItem?: CSSProperties
+  listItemContainer?: CSSProperties
+  thumbnail?: CSSProperties
+  itemInfo?: CSSProperties
+  itemIcon?: CSSProperties
+  itemName?: CSSProperties
+  itemSize?: CSSProperties
+  itemCard?: CSSProperties
+  cardActions?: CSSProperties
+  itemAction?: CSSProperties
+  progress?: CSSProperties
+  progressBar?: CSSProperties
 }
 
 export interface UploadProps {
