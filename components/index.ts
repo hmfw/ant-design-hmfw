@@ -453,10 +453,11 @@ export type {
   MonthCellRender as CalendarMonthCellRender,
   ValidRange as CalendarValidRange,
   CalendarHeaderConfig,
-  CellRenderInfo as CalendarCellRenderInfo,
-  DateCellRenderInfo as CalendarDateCellRenderInfo,
+  CellRenderInfo,
+  DateCellRenderInfo,
   CalendarClassNames,
   CalendarStyles,
+  DateRange,
 } from './calendar'
 
 // Install function for Vue.use()

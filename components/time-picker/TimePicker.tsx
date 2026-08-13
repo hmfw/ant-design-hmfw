@@ -621,7 +621,7 @@ export const TimePicker = defineComponent({
               </span>
             </div>
           ),
-          popup: ({ placement: _placement }: { placement: Placement }) => renderPanel(),
+          popup: renderPanel,
         }}
       </Trigger>
     )

@@ -430,7 +430,7 @@ export const RangePicker = defineComponent({
               </span>
             </div>
           ),
-          popup: () => renderPopup(),
+          popup: renderPopup,
         }}
       </Trigger>
     )

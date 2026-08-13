@@ -23,31 +23,16 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
 }
 
 const alertProps = {
-  type: {
-    type: String as PropType<AlertType>,
-    default: undefined,
-  },
-  variant: {
-    type: String as PropType<AlertVariant>,
-    default: 'outlined',
-  },
+  type: { type: String as PropType<AlertType>, default: undefined },
+  variant: { type: String as PropType<AlertVariant>, default: 'outlined' },
   title: { type: String, default: undefined },
   description: { type: String, default: undefined },
-  showIcon: {
-    type: Boolean,
-    default: undefined,
-  },
-  closable: {
-    type: [Boolean, Object] as PropType<AlertClosable>,
-    default: undefined,
-  },
+  showIcon: { type: Boolean, default: undefined },
+  closable: { type: [Boolean, Object] as PropType<AlertClosable>, default: undefined },
   icon: { type: [String, Object, Array, Function] as PropType<VNodeChild>, default: undefined },
   banner: { type: Boolean, default: false },
   action: { type: [String, Object, Array, Function] as PropType<VNodeChild>, default: undefined },
-  role: {
-    type: String,
-    default: 'alert',
-  },
+  role: { type: String, default: 'alert' },
   classNames: { type: Object as PropType<AlertClassNames>, default: undefined },
   styles: { type: Object as PropType<AlertStyles>, default: undefined },
 } satisfies Record<keyof AlertProps, any>
@@ -121,23 +106,25 @@ export const Alert = defineComponent({
       const titleNode = slots.title?.() ?? mergedTitle.value
       const actionNode = props.action ?? slots.action?.()
 
+      const alertCls = cls(
+        prefixCls,
+        `${prefixCls}-${type}`,
+        `${prefixCls}-${props.variant}`,
+        {
+          [`${prefixCls}-with-description`]: hasDesc,
+          [`${prefixCls}-banner`]: props.banner,
+          [`${prefixCls}-closing`]: closing.value,
+          [`${prefixCls}-no-icon`]: !isShowIcon.value,
+        },
+        props.classNames?.root,
+      )
+
       return (
         <div
           role={props.role}
           aria-live={type === 'error' || type === 'warning' ? 'assertive' : 'polite'}
           data-show={!closed.value}
-          class={cls(
-            prefixCls,
-            `${prefixCls}-${type}`,
-            `${prefixCls}-${props.variant}`,
-            {
-              [`${prefixCls}-with-description`]: hasDesc,
-              [`${prefixCls}-banner`]: props.banner,
-              [`${prefixCls}-closing`]: closing.value,
-              [`${prefixCls}-no-icon`]: !isShowIcon.value,
-            },
-            props.classNames?.root,
-          )}
+          class={alertCls}
           style={props.styles?.root}
         >
           {isShowIcon.value && (

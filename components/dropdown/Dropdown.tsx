@@ -144,7 +144,7 @@ export const Dropdown = defineComponent({
         >
           {{
             default: () => child,
-            popup: () => renderPopup(),
+            popup: renderPopup,
           }}
         </Trigger>
       )

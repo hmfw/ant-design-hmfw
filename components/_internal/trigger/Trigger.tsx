@@ -15,6 +15,7 @@ import {
   type VNode,
   type ComponentPublicInstance,
   type PropType,
+  type CSSProperties,
 } from 'vue'
 import { cls } from '../../_utils'
 import { useConfig } from '../../config-provider/context'
@@ -594,7 +595,7 @@ export const Trigger = defineComponent({
               ref: setTriggerEl,
               class: cls(props.triggerClass, attrs.class as string | undefined),
               style: {
-                ...(attrs.style as Record<string, any> | undefined),
+                ...(attrs.style as CSSProperties),
                 ...props.triggerStyle,
               },
               ...triggerEvents,

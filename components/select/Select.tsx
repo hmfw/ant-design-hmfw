@@ -745,7 +745,7 @@ export const Select = defineComponent({
         >
           {{
             default: renderSelector,
-            popup: () => renderDropdownContent(),
+            popup: renderDropdownContent,
           }}
         </Trigger>
       )

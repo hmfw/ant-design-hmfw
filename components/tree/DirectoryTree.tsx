@@ -26,7 +26,7 @@ export const DirectoryTree = defineComponent({
 
     return () => (
       <Tree
-        {...(attrs as Record<string, unknown>)}
+        {...attrs}
         class="hmfw-tree-directory"
         blockNode
         showIcon={props.showIcon}

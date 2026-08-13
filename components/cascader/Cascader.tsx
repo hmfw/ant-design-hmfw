@@ -517,7 +517,7 @@ export const Cascader = defineComponent({
                 props.classNames?.root,
                 attrs.class as any,
               )}
-              style={{ ...props.styles?.root, ...(attrs.style as any) }}
+              style={[props.styles?.root, attrs.style]}
             >
               <span class={cls(`${prefixCls}-selector`, props.classNames?.selector)} style={props.styles?.selector}>
                 {props.multiple ? (
@@ -658,7 +658,7 @@ export const Cascader = defineComponent({
               </span>
             </div>
           ),
-          popup: () => renderDropdownContent(),
+          popup: renderDropdownContent,
         }}
       </Trigger>
     )

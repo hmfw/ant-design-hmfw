@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, onUnmounted, computed, type PropType } from 'vue'
+import { defineComponent, onMounted, onUnmounted, computed } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils'
 import { useAnchorContext } from './context'

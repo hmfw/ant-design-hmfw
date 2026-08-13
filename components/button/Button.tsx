@@ -209,7 +209,7 @@ export default defineComponent({
       // class / style 不参与下方的 attrs 展开：Vue 的隐式 attrs 继承会自动把外部透传的
       // class / style 合并到根元素上。若在此手动展开，外部值会整体覆盖组件自身的 class
       // （丢掉 hmfw-btn 基类，按钮退化为浏览器默认样式）与 styles.root。
-      const { class: _attrsClass, style: _attrsStyle, ...restAttrs } = attrs as Record<string, unknown>
+      const { class: _attrsClass, style: _attrsStyle, ...restAttrs } = attrs
       const buttonClasses = cls(classes.value, { [`${prefixCls}-icon-only`]: hasIcon })
       const rootStyle = props.styles?.root
 

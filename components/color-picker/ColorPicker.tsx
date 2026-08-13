@@ -363,7 +363,7 @@ export const ColorPicker = defineComponent({
               </div>
             </div>
           ),
-          popup: () => renderPanel(),
+          popup: renderPanel,
         }}
       </Trigger>
     )

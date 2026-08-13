@@ -35,17 +35,11 @@ const autoCompleteProps = {
   // default 必须为 undefined，未传时才能在 mergedSize 中回退到 ConfigProvider 的 componentSize
   size: { type: String as PropType<ComponentSize>, default: undefined },
   status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
-  filterOption: {
-    type: [Boolean, Function] as PropType<AutoCompleteFilterOption>,
-    default: true,
-  },
+  filterOption: { type: [Boolean, Function] as PropType<AutoCompleteFilterOption>, default: true },
   optionFilterProp: { type: String as PropType<AutoCompleteFilterProp>, default: 'value' },
   backfill: { type: Boolean, default: false },
   defaultActiveFirstOption: { type: Boolean, default: true },
-  notFoundContent: {
-    type: [String, Number, Object, Array] as PropType<VNodeChild>,
-    default: undefined,
-  },
+  notFoundContent: { type: [String, Number, Object, Array] as PropType<VNodeChild>, default: undefined },
   open: { type: Boolean, default: undefined },
   defaultOpen: { type: Boolean, default: undefined },
   autoFocus: { type: Boolean, default: false },
@@ -288,61 +282,62 @@ export const AutoComplete = defineComponent({
       return <>{opts.map((opt, i) => renderOption(opt, i))}</>
     }
 
-    const renderInput = () => (
-      <div
-        class={cls(
-          prefixCls,
-          `${inputPfx}-affix-wrapper`,
-          sfx.value && `${inputPfx}-affix-wrapper-${sfx.value}`,
-          {
-            [`${inputPfx}-affix-wrapper-disabled`]: props.disabled,
-            [`${inputPfx}-affix-wrapper-status-error`]: props.status === 'error',
-            [`${inputPfx}-affix-wrapper-status-warning`]: props.status === 'warning',
-            [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
-          },
-          props.classNames?.root,
-        )}
-        style={{ ...(attrs.style as any), ...props.styles?.root }}
-      >
-        {slots.prefix && (
-          <span class={cls(`${inputPfx}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
-            {slots.prefix()}
-          </span>
-        )}
-        <input
-          ref={inputRef}
-          id={props.id}
-          class={cls(inputPfx, sfx.value && `${inputPfx}-${sfx.value}`, props.classNames?.input)}
-          style={props.styles?.input}
-          value={inputValue.value}
-          disabled={props.disabled}
-          placeholder={props.placeholder}
-          onInput={handleInput}
-          onFocus={(e) => {
-            setOpen(true)
-            resetActive()
-            emit('focus', e)
-          }}
-          onBlur={(e) => emit('blur', e)}
-          onKeydown={handleKeydown}
-          autocomplete="off"
-        />
-        {!!props.allowClear && inputValue.value && !props.disabled && (
-          <span
-            class={cls(`${inputPfx}-clear-icon`, props.classNames?.clear)}
-            style={props.styles?.clear}
-            onMousedown={handleClear}
-          >
-            {renderClearIcon()}
-          </span>
-        )}
-        {slots.suffix && (
-          <span class={cls(`${inputPfx}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-            {slots.suffix()}
-          </span>
-        )}
-      </div>
-    )
+    const renderInput = () => {
+      const autoCompleteCls = cls(
+        prefixCls,
+        `${inputPfx}-affix-wrapper`,
+        sfx.value && `${inputPfx}-affix-wrapper-${sfx.value}`,
+        {
+          [`${inputPfx}-affix-wrapper-disabled`]: props.disabled,
+          [`${inputPfx}-affix-wrapper-status-error`]: props.status === 'error',
+          [`${inputPfx}-affix-wrapper-status-warning`]: props.status === 'warning',
+          [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
+        },
+        props.classNames?.root,
+      )
+
+      return (
+        <div class={autoCompleteCls} style={[props.styles?.root, attrs.style]}>
+          {slots.prefix && (
+            <span class={cls(`${inputPfx}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
+              {slots.prefix()}
+            </span>
+          )}
+          <input
+            ref={inputRef}
+            id={props.id}
+            class={cls(inputPfx, sfx.value && `${inputPfx}-${sfx.value}`, props.classNames?.input)}
+            style={props.styles?.input}
+            value={inputValue.value}
+            disabled={props.disabled}
+            placeholder={props.placeholder}
+            onInput={handleInput}
+            onFocus={(e) => {
+              setOpen(true)
+              resetActive()
+              emit('focus', e)
+            }}
+            onBlur={(e) => emit('blur', e)}
+            onKeydown={handleKeydown}
+            autocomplete="off"
+          />
+          {!!props.allowClear && inputValue.value && !props.disabled && (
+            <span
+              class={cls(`${inputPfx}-clear-icon`, props.classNames?.clear)}
+              style={props.styles?.clear}
+              onMousedown={handleClear}
+            >
+              {renderClearIcon()}
+            </span>
+          )}
+          {slots.suffix && (
+            <span class={cls(`${inputPfx}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              {slots.suffix()}
+            </span>
+          )}
+        </div>
+      )
+    }
 
     return () => (
       <Trigger
@@ -356,10 +351,7 @@ export const AutoComplete = defineComponent({
         popupStyle={props.styles?.dropdown}
         onOpenChange={(v: boolean) => setOpen(v)}
       >
-        {{
-          default: renderInput,
-          popup: renderPopup,
-        }}
+        {{ default: renderInput, popup: renderPopup }}
       </Trigger>
     )
   },

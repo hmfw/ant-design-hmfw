@@ -9,8 +9,6 @@ import {
   inject,
   nextTick,
   type PropType,
-  type CSSProperties,
-  type InjectionKey,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import type { WatermarkFont, WatermarkProps } from './types'
@@ -537,7 +535,7 @@ export const Watermark = defineComponent({
     }
 
     return () => {
-      const { class: attrClass, style: attrStyle, ...restAttrs } = attrs as Record<string, unknown>
+      const { class: attrClass, ...restAttrs } = attrs
 
       // inherit=true 时容器跟随父元素自适应尺寸
       const inheritStyle: Record<string, string> = props.inherit ? { width: '100%', height: '100%' } : {}
@@ -547,7 +545,7 @@ export const Watermark = defineComponent({
           {...restAttrs}
           ref={containerRef}
           class={[prefixCls, attrClass]}
-          style={[{ ...fixedStyle, ...inheritStyle } as CSSProperties, attrStyle as CSSProperties]}
+          style={[fixedStyle, inheritStyle, attrs.style]}
         >
           {slots.default?.()}
         </div>

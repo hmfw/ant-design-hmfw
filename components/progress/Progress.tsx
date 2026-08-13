@@ -469,7 +469,7 @@ export const Progress = defineComponent({
         <div
           {...restAttrs}
           class={rootClass}
-          style={{ ...(props.styles?.root || {}), ...((attrs.style as CSSProperties) || {}) }}
+          style={[props.styles?.root, attrs.style]}
           role="progressbar"
           aria-valuenow={percentNumber.value}
           aria-valuemin={0}

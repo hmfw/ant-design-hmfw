@@ -159,7 +159,7 @@ export const Image = defineComponent({
           },
           props.classNames?.root,
         )}
-        style={[rootStyle.value, attrs.style as any, props.styles?.root]}
+        style={[rootStyle.value, props.styles?.root, attrs.style]}
       >
         {status.value === 'loading' && renderPlaceholder()}
         {status.value === 'error' && (!props.fallback || fallbackFailed.value) ? (
