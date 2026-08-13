@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, nextTick, type PropType } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls, formatDate } from '../_utils'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
@@ -10,16 +10,6 @@ import type { ComponentSize } from '../config-provider'
 // --- Date utilities ---
 function pad(n: number) {
   return String(n).padStart(2, '0')
-}
-
-function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
-  return fmt
-    .replace('YYYY', String(d.getFullYear()))
-    .replace('MM', pad(d.getMonth() + 1))
-    .replace('DD', pad(d.getDate()))
-    .replace('HH', pad(d.getHours()))
-    .replace('mm', pad(d.getMinutes()))
-    .replace('ss', pad(d.getSeconds()))
 }
 
 function parseDate(val: string | undefined): Date | null {
@@ -761,7 +751,7 @@ export const DatePicker = defineComponent({
               </span>
             </div>
           ),
-          popup: ({ placement: _placement }: { placement: Placement }) => renderPopup(),
+          popup: renderPopup,
         }}
       </Trigger>
     )

@@ -13,7 +13,7 @@ export { defaultSeedTokens, generateMapTokens } from './_theme'
 export type { SeedTokens, MapTokens } from './_theme'
 
 // Utils
-export { cls, isClient, getScrollParent, getOffset, contains, on, once, KEYS } from './_utils'
+export { cls, isClient, getScrollParent, getOffset, contains, on, once, KEYS, formatDate } from './_utils'
 
 // Components
 export { Button } from './button'

@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import { shallowRef } from 'vue'
-import { Calendar } from '@hmfw/ant-design'
+import { Calendar, formatDate } from '@hmfw/ant-design'
 
 const value1 = shallowRef<string>()
 const value2 = shallowRef<string>()
@@ -89,13 +89,5 @@ const disableHolidays = (date: Date): boolean => {
 // 组合条件：禁用过去日期和周末
 const disablePastAndWeekends = (date: Date): boolean => {
   return disablePastDates(date) || disableWeekends(date)
-}
-
-// 格式化日期为 YYYY-MM-DD
-function formatDate(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
 }
 </script>

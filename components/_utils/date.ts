@@ -16,13 +16,33 @@ export function pad(n: number): string {
  * @param fmt 格式字符串，支持 YYYY-MM-DD HH:mm:ss
  */
 export function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
-  return fmt
-    .replace('YYYY', String(d.getFullYear()))
-    .replace('MM', pad(d.getMonth() + 1))
-    .replace('DD', pad(d.getDate()))
-    .replace('HH', pad(d.getHours()))
-    .replace('mm', pad(d.getMinutes()))
-    .replace('ss', pad(d.getSeconds()))
+  const tokens = {
+    YYYY: d.getFullYear(),
+    YY: String(d.getFullYear()).slice(-2),
+    M: d.getMonth() + 1,
+    MM: pad(d.getMonth() + 1),
+    D: d.getDate(),
+    DD: pad(d.getDate()),
+    H: d.getHours(),
+    HH: pad(d.getHours()),
+    h: d.getHours() % 12 || 12,
+    hh: pad(d.getHours() % 12 || 12),
+    m: d.getMinutes(),
+    mm: pad(d.getMinutes()),
+    s: d.getSeconds(),
+    ss: pad(d.getSeconds()),
+    A: d.getHours() >= 12 ? 'PM' : 'AM',
+    a: d.getHours() >= 12 ? 'pm' : 'am',
+  }
+
+  // 按长度降序排列，避免'YYYY'被'YY'误匹配
+  const keys = Object.keys(tokens).sort((a, b) => b.length - a.length)
+  const pattern = new RegExp(keys.join('|'), 'g')
+
+  return fmt.replace(pattern, (match) => {
+    const val = tokens[match as keyof typeof tokens]
+    return typeof val === 'number' ? String(val) : val
+  })
 }
 
 /**

@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { Calendar } from '@hmfw/ant-design'
+import { Calendar, formatDate } from '@hmfw/ant-design'
 import type { CellRenderInfo } from '@hmfw/ant-design'
 
 // 模拟事项数据
@@ -149,13 +149,5 @@ const cellRenderMonth = (current: Date, { originNode, type }: CellRenderInfo) =>
       `${data.count} 个${data.label}`,
     ),
   ])
-}
-
-// 格式化日期为 YYYY-MM-DD
-function formatDate(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
 }
 </script>

@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, type PropType, h } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls, formatDate } from '../_utils'
 import { Select } from '../select'
 import { Radio, RadioGroup } from '../radio'
 import type {
@@ -16,18 +16,6 @@ import type {
   CalendarProps,
   ValidRange,
 } from './types'
-
-// 日期工具函数
-function pad(n: number) {
-  return String(n).padStart(2, '0')
-}
-
-function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
-  return fmt
-    .replace('YYYY', String(d.getFullYear()))
-    .replace('MM', pad(d.getMonth() + 1))
-    .replace('DD', pad(d.getDate()))
-}
 
 function parseDate(val: string | Date | undefined): Date | null {
   if (!val) return null
