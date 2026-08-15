@@ -1,6 +1,6 @@
-import { defineComponent, computed, type PropType } from 'vue'
+import { defineComponent, computed, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { ScrollNumber } from './ScrollNumber'
 import { PRESET_COLORS } from './types'
 import type { BadgeStatus, BadgeClassNames, BadgeStyles, BadgeProps } from './types'
@@ -90,8 +90,8 @@ export const Badge = defineComponent({
      * 计算徽标的样式
      * 包括：offset 偏移、自定义颜色
      */
-    const indicatorStyle = computed(() => {
-      const style: Record<string, string> = {}
+    const indicatorStyle = computed<CSSProperties>(() => {
+      const style: CSSProperties = {}
 
       // 应用 offset 偏移（需要边界检查）
       if (props.offset && Array.isArray(props.offset) && props.offset.length === 2) {
@@ -168,7 +168,7 @@ export const Badge = defineComponent({
       const badgeIndicator = !isHidden.value && (
         <sup
           class={cls(indicatorCls, props.classNames?.indicator)}
-          style={{ ...indicatorStyle.value, ...props.styles?.indicator }}
+          style={[indicatorStyle.value, props.styles?.indicator]}
           title={props.title ?? String(props.count ?? '')}
         >
           {!props.dot && <ScrollNumber count={displayCount.value ?? 0} />}

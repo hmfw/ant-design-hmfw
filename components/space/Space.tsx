@@ -1,6 +1,6 @@
-import { defineComponent, computed, Fragment, Comment, Text, type PropType, type VNode } from 'vue'
+import { defineComponent, computed, Fragment, Comment, Text, type PropType, type VNode, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { SpaceSize, SpaceDirection, SpaceAlign, SpaceClassNames, SpaceStyles } from './types'
 
 const spaceSize = {
@@ -107,7 +107,7 @@ export default defineComponent({
 
     const containerStyle = computed(() => {
       const [horizontalSize, verticalSize] = sizes.value
-      const style: Record<string, string> = {
+      const style: CSSProperties = {
         columnGap: `${horizontalSize}px`,
         rowGap: `${verticalSize}px`,
       }

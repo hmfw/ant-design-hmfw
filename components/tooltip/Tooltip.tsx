@@ -1,6 +1,17 @@
-import { defineComponent, computed, useId, cloneVNode, isVNode, Text, Comment, type PropType, type VNode } from 'vue'
+import {
+  defineComponent,
+  computed,
+  useId,
+  cloneVNode,
+  isVNode,
+  Text,
+  Comment,
+  type PropType,
+  type VNode,
+  type CSSProperties,
+} from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import type {
@@ -58,7 +69,7 @@ const tooltipProps = {
   /** Override the default `hmfw-tooltip` prefix (used by Popover/Popconfirm wrappers). */
   customPrefixCls: { type: String, default: undefined },
   /** Extra inline style merged onto the popup element (used by wrappers for `overlayStyle`). */
-  popupStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
+  popupStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   classNames: { type: Object as PropType<TooltipClassNames>, default: undefined },
   styles: { type: Object as PropType<TooltipStyles>, default: undefined },
 } satisfies Record<keyof TooltipProps, any>

@@ -1,5 +1,5 @@
-import { createApp, defineComponent, ref, reactive, computed, h, isVNode, type VNode } from 'vue'
-import { cls } from '../_utils'
+import { createApp, defineComponent, ref, reactive, computed, h, isVNode, type VNode, type CSSProperties } from 'vue'
+import { cls } from '../_utils/cls'
 import {
   CheckCircleFilled,
   CloseCircleFilled,
@@ -159,7 +159,7 @@ const NotificationContainer = defineComponent({
     const positionStyle = computed(() => {
       const p = props.placement
       const rtl = isRtl.value
-      const style: Record<string, string> = {
+      const style: CSSProperties = {
         position: 'fixed',
         zIndex: 'var(--hmfw-z-index-popup, 1010)',
         display: 'flex',

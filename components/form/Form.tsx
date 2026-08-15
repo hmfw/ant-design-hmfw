@@ -1,8 +1,19 @@
-import { defineComponent, ref, provide, inject, computed, watch, onMounted, onBeforeUnmount, type PropType } from 'vue'
+import {
+  defineComponent,
+  ref,
+  provide,
+  inject,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  type PropType,
+  type CSSProperties,
+} from 'vue'
 import { usePrefixCls, useConfig, CONFIG_PROVIDER_KEY } from '../config-provider'
 import type { ComponentSize } from '../config-provider'
 import type { Locale } from '../_locale'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, LoadingOutlined } from '@hmfw/icons'
 import type {
   FormClassNames,
@@ -543,7 +554,7 @@ export const Form = defineComponent({
 /** Flatten {span, offset} into a CSS flex-basis percentage; matches AntD 24-col grid math. */
 function colToStyle(col?: FormColConfig) {
   if (!col) return undefined
-  const style: Record<string, string> = {}
+  const style: CSSProperties = {}
   if (col.span !== undefined) style.flex = `0 0 ${(col.span / 24) * 100}%`
   if (col.offset !== undefined) style.marginLeft = `${(col.offset / 24) * 100}%`
   return style

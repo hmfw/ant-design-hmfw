@@ -7,7 +7,7 @@ export type CollapseType = 'clickTrigger' | 'responsive'
 export interface LayoutProps {
   hasSider?: boolean
   class?: string
-  style?: string | Record<string, string>
+  style?: string | CSSProperties
 }
 
 export interface SiderProps {

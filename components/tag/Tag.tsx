@@ -1,7 +1,7 @@
-import { defineComponent, computed, ref, isVNode, type PropType, type VNode } from 'vue'
+import { defineComponent, computed, ref, isVNode, type PropType, type VNode, type CSSProperties } from 'vue'
 import { CloseOutlined } from '@hmfw/icons'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { TagColor, TagVariant, TagCloseIcon, TagClassNames, TagStyles, TagProps, CheckableTagProps } from './types'
 
 const PRESET_COLORS = [
@@ -93,7 +93,7 @@ export const Tag = defineComponent({
     )
 
     // 自定义颜色（非预设/状态色）的内联样式，与 AntD v6 变体行为对齐
-    const customColorStyle = computed<Record<string, string>>(() => {
+    const customColorStyle = computed<CSSProperties>(() => {
       const color = props.color
       if (!color || isInternalColor.value || props.disabled) return {}
       const variant = mergedVariant.value
@@ -101,7 +101,7 @@ export const Tag = defineComponent({
         return { backgroundColor: color, color: '#fff' }
       }
       // filled / outlined：浅底 + 彩字
-      const style: Record<string, string> = {
+      const style: CSSProperties = {
         color,
         backgroundColor: isValidHex(color) ? toLightBg(color) : color,
       }

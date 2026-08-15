@@ -70,8 +70,8 @@ export interface CardProps {
   loading?: boolean | CardLoadingConfig
   size?: 'default' | 'small'
   type?: CardType
-  bodyStyle?: Record<string, string>
-  headStyle?: Record<string, string>
+  bodyStyle?: CSSProperties
+  headStyle?: CSSProperties
   /** 标签页列表 */
   tabList?: TabItem[]
   /** 当前激活标签的 key */

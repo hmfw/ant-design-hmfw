@@ -1,4 +1,4 @@
-import { defineComponent, computed, h, type PropType, type VNode } from 'vue'
+import { defineComponent, computed, h, type PropType, type VNode, type CSSProperties } from 'vue'
 import { Tooltip } from '../tooltip'
 import { usePrefixCls } from '../config-provider'
 import type { TooltipPlacement, TooltipTrigger, TooltipArrow, TooltipOpenChangeInfo } from '../tooltip/types'
@@ -25,8 +25,8 @@ const popoverProps = {
   mouseEnterDelay: { type: Number, default: 0.1 },
   mouseLeaveDelay: { type: Number, default: 0.1 },
   disabled: { type: Boolean, default: false },
-  overlayStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
-  overlayInnerStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
+  overlayStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  overlayInnerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   autoAdjustOverflow: { type: Boolean, default: true },
   zIndex: { type: Number, default: undefined },
   destroyOnHidden: { type: Boolean, default: false },

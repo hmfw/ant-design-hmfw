@@ -86,7 +86,7 @@ export interface TooltipProps {
   /** @internal 覆盖默认的 `hmfw-tooltip` 前缀（供 Popover/Popconfirm 等封装组件复用）。 */
   customPrefixCls?: string
   /** @internal 合并到弹层元素上的额外内联样式（供封装组件透传 `overlayStyle`）。 */
-  popupStyle?: Record<string, string>
+  popupStyle?: CSSProperties
   /** 语义化类名 */
   classNames?: TooltipClassNames
   /** 语义化样式 */

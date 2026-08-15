@@ -1,6 +1,6 @@
-import { defineComponent, computed, ref, watch, type PropType, Fragment, type VNode } from 'vue'
+import { defineComponent, computed, ref, watch, type PropType, Fragment, type VNode, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type {
   CardType,
   CardVariant,
@@ -48,8 +48,8 @@ const cardProps = {
     type: String as PropType<CardType>,
     default: undefined,
   },
-  bodyStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
-  headStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
+  bodyStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  headStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   tabList: { type: Array as PropType<TabItem[]>, default: undefined },
   activeTabKey: { type: String, default: undefined },
   defaultActiveTabKey: { type: String, default: undefined },
