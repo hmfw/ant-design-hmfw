@@ -439,7 +439,13 @@ export type {
 
 // TreeSelect
 export { TreeSelect } from './tree-select'
-export type { TreeSelectProps, TreeSelectNode, TreeSelectClassNames, TreeSelectStyles } from './tree-select'
+export type {
+  TreeSelectProps,
+  TreeSelectNode,
+  TreeSelectClassNames,
+  TreeSelectStyles,
+  TreeSelectValue,
+} from './tree-select'
 
 export { Statistic, Countdown } from './statistic'
 export type { StatisticProps, CountdownProps, StatisticClassNames, StatisticStyles } from './statistic'
