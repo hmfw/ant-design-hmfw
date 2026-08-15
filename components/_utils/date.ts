@@ -1,6 +1,6 @@
 /**
  * 日期工具函数
- * DatePicker 和 RangePicker 共享
+ * Calendar 、DatePicker 和 RangePicker 共享
  */
 
 /**
@@ -50,8 +50,16 @@ export function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
  * @param val 日期字符串
  * @returns Date 对象或 null
  */
-export function parseDate(val: string | null | undefined): Date | null {
-  if (!val) return null
+export function parseDate(val: string | Date | null | undefined): Date | null {
+  // 1. 处理 null/undefined
+  if (val == null) return null
+
+  // 2. 处理 Date 对象（包括无效日期）
+  if (val instanceof Date) {
+    return isNaN(val.getTime()) ? null : val
+  }
+
+  // 3. 处理字符串
   const d = new Date(val)
   return isNaN(d.getTime()) ? null : d
 }
@@ -92,7 +100,16 @@ export function getFirstDayOfWeek(year: number, month: number): number {
 }
 
 /**
- * 构建日历数据（42格，6周）
+ * 构建日历矩阵（6 周 × 7 天 = 42 个格子）
+ *
+ * 算法：
+ * 1. 计算当月 1 号是星期几（firstDay），向前补齐上月末尾日期
+ * 2. 填充当月所有日期（1 ~ daysInMonth）
+ * 3. 向后补齐下月开头日期，凑满 42 格（6 行 7 列标准日历布局）
+ *
+ * @param year 年份
+ * @param month 月份（0-11）
+ * @returns 42 个日期对象，包含 date 和 inCurrentMonth 标记
  */
 export function buildCalendar(year: number, month: number): Array<{ date: Date; inCurrentMonth: boolean }> {
   const days: Array<{ date: Date; inCurrentMonth: boolean }> = []

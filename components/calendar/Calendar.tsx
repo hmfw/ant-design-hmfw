@@ -1,6 +1,7 @@
 import { defineComponent, ref, computed, watch, type PropType, h } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls, formatDate } from '../_utils'
+import { cls } from '../_utils/cls'
+import { buildCalendar, formatDate, isSameDay, isSameMonth, parseDate } from '../_utils/date'
 import { Select } from '../select'
 import { Radio, RadioGroup } from '../radio'
 import type {
@@ -17,79 +18,10 @@ import type {
   ValidRange,
 } from './types'
 
-function parseDate(val: string | Date | undefined): Date | null {
-  if (!val) return null
-  if (val instanceof Date) return val
-  const d = new Date(val)
-  return isNaN(d.getTime()) ? null : d
-}
-
-function isSameDay(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
-}
-
-function isSameMonth(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()
-}
-
 function isInRange(date: Date, start: Date | null, end: Date | null): boolean {
   if (!start || !end) return false
   const time = date.getTime()
   return time >= start.getTime() && time <= end.getTime()
-}
-
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate()
-}
-
-function getFirstDayOfWeek(year: number, month: number) {
-  return new Date(year, month, 1).getDay()
-}
-
-/**
- * 构建日历矩阵（6 周 × 7 天 = 42 个格子）
- *
- * 算法：
- * 1. 计算当月 1 号是星期几（firstDay），向前补齐上月末尾日期
- * 2. 填充当月所有日期（1 ~ daysInMonth）
- * 3. 向后补齐下月开头日期，凑满 42 格（6 行 7 列标准日历布局）
- *
- * @param year 年份
- * @param month 月份（0-11）
- * @returns 42 个日期对象，包含 date 和 inCurrentMonth 标记
- */
-function buildCalendar(year: number, month: number) {
-  const days: Array<{ date: Date; inCurrentMonth: boolean }> = []
-  const firstDay = getFirstDayOfWeek(year, month)
-  const daysInMonth = getDaysInMonth(year, month)
-  const prevMonthDays = getDaysInMonth(year, month - 1)
-
-  // 1. 填充上月末尾日期（补齐第一周）
-  for (let i = firstDay - 1; i >= 0; i--) {
-    days.push({
-      date: new Date(year, month - 1, prevMonthDays - i),
-      inCurrentMonth: false,
-    })
-  }
-
-  // 2. 当月日期
-  for (let i = 1; i <= daysInMonth; i++) {
-    days.push({
-      date: new Date(year, month, i),
-      inCurrentMonth: true,
-    })
-  }
-
-  // 3. 填充下月开头日期（补齐最后一周）
-  const remaining = 42 - days.length
-  for (let i = 1; i <= remaining; i++) {
-    days.push({
-      date: new Date(year, month + 1, i),
-      inCurrentMonth: false,
-    })
-  }
-
-  return days
 }
 
 // Props 定义（使用 satisfies 确保与 CalendarProps 接口同步）

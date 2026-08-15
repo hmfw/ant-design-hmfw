@@ -1,62 +1,12 @@
 import { defineComponent, ref, computed, watch, nextTick, type PropType } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls, formatDate } from '../_utils'
+import { cls } from '../_utils/cls'
+import { buildCalendar, formatDate, isSameDay, isSameMonth, isSameYear, pad, parseDate } from '../_utils/date'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
 import type { DatePickerMode, PresetItem, ShowTimeConfig, DatePickerClassNames, DatePickerStyles } from './types'
 import type { ComponentSize } from '../config-provider'
-
-// --- Date utilities ---
-function pad(n: number) {
-  return String(n).padStart(2, '0')
-}
-
-function parseDate(val: string | undefined): Date | null {
-  if (!val) return null
-  const d = new Date(val)
-  return isNaN(d.getTime()) ? null : d
-}
-
-function isSameDay(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
-}
-
-function isSameMonth(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()
-}
-
-function isSameYear(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear()
-}
-
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate()
-}
-
-function getFirstDayOfWeek(year: number, month: number) {
-  return new Date(year, month, 1).getDay()
-}
-
-// --- Date panel ---
-function buildCalendar(year: number, month: number) {
-  const days: Array<{ date: Date; inCurrentMonth: boolean }> = []
-  const firstDay = getFirstDayOfWeek(year, month)
-  const daysInMonth = getDaysInMonth(year, month)
-  const prevMonthDays = getDaysInMonth(year, month - 1)
-
-  for (let i = firstDay - 1; i >= 0; i--) {
-    days.push({ date: new Date(year, month - 1, prevMonthDays - i), inCurrentMonth: false })
-  }
-  for (let i = 1; i <= daysInMonth; i++) {
-    days.push({ date: new Date(year, month, i), inCurrentMonth: true })
-  }
-  const remaining = 42 - days.length
-  for (let i = 1; i <= remaining; i++) {
-    days.push({ date: new Date(year, month + 1, i), inCurrentMonth: false })
-  }
-  return days
-}
 
 export const DatePicker = defineComponent({
   name: 'DatePicker',
