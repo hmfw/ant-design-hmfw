@@ -1,4 +1,4 @@
-import { inject, onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
+import { inject, ref, type Ref } from 'vue'
 
 interface WatermarkContext {
   add: (ele: HTMLElement) => void

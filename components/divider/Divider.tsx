@@ -1,6 +1,6 @@
 import { defineComponent, computed, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { ComponentSize } from '../config-provider'
 import type {
   DividerProps,
@@ -43,7 +43,7 @@ export default defineComponent({
       return props.dashed ? 'dashed' : 'solid'
     })
 
-    const classes = computed(() =>
+    const dividerCls = computed(() =>
       cls(
         prefixCls,
         `${prefixCls}-${props.type}`,
@@ -80,12 +80,12 @@ export default defineComponent({
       const children = slots.default?.()
 
       if (props.type === 'vertical') {
-        return <div class={classes.value} style={props.styles?.root} role="separator" />
+        return <div class={dividerCls.value} style={props.styles?.root} role="separator" />
       }
 
       if (isHorizontalWithText.value) {
         return (
-          <div class={classes.value} style={props.styles?.root} role="separator">
+          <div class={dividerCls.value} style={props.styles?.root} role="separator">
             <div
               class={cls(`${prefixCls}-rail`, `${prefixCls}-rail-start`, props.classNames?.rail)}
               style={props.styles?.rail}
@@ -104,7 +104,7 @@ export default defineComponent({
         )
       }
 
-      return <div class={classes.value} style={props.styles?.root} role="separator" />
+      return <div class={dividerCls.value} style={props.styles?.root} role="separator" />
     }
   },
 })

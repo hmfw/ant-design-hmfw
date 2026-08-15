@@ -109,7 +109,7 @@ watch(() => route.path, updateAnchors)
 .toc {
   position: sticky;
   top: calc(var(--doc-nav-height) + 32px);
-  width: 200px;
+  width: 210px;
   flex-shrink: 0;
   align-self: flex-start;
   max-height: calc(100vh - var(--doc-nav-height) - 64px);

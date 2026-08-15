@@ -18,7 +18,7 @@
     <div
       style="max-height: 160px; overflow: auto; padding: 8px; background: #fafafa; border-radius: 6px; font-size: 12px"
     >
-      <div v-for="(log, i) in logs" :key="i">{{ log }}</div>
+      <div v-for="(item, i) in logs" :key="i">{{ item }}</div>
       <div v-if="logs.length === 0" style="color: #999">暂无事件</div>
     </div>
   </Space>
