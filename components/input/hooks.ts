@@ -1,6 +1,6 @@
 import { ref, computed, watch, type Ref } from 'vue'
 import { useConfig } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { InputSize, InputStatus, AllowClearConfig } from './types'
 
 // ─── 受控 / 非受控值 ─────────────────────────────────────────────────────────

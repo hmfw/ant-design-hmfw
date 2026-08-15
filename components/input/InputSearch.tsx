@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, toRef, type PropType } from 'vue'
 import { usePrefixCls, useMergedDisabled } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { SearchOutlined, LoadingOutlined } from '@hmfw/icons'
 import type { InputSize, InputStatus, InputAffix, InputSearchProps } from './types'
 import { useMergedValue, useFocusExpose, useMergedSize, useAffixWrapperCls } from './hooks'

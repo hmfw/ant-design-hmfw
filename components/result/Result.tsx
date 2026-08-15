@@ -1,6 +1,6 @@
 import { defineComponent, type PropType, type VNode, type VNodeChild } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, WarningFilled } from '@hmfw/icons'
 import type { ResultClassNames, ResultProps, ResultStatus, ResultStyles } from './types'
 

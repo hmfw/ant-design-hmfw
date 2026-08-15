@@ -11,7 +11,7 @@ import {
   type CSSProperties,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { LeftOutlined, RightOutlined, MinusOutlined } from '@hmfw/icons'
 import type { LayoutBreakpoint, CollapseType } from './types'
 

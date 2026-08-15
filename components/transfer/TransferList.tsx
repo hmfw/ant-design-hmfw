@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, watch, type PropType, type VNode, type CSSProperties } from 'vue'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Checkbox } from '../checkbox'
 import { Input } from '../input'
 import { Empty } from '../empty'

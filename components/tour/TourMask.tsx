@@ -1,5 +1,5 @@
 import { defineComponent, h, type PropType, type CSSProperties } from 'vue'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { Rect } from './utils'
 
 /** 四周 blocker 的公共属性：透明但接收命中测试，用于拦截高亮区域之外的交互 */

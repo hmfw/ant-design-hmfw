@@ -1,6 +1,6 @@
 import { defineComponent, computed, type PropType, type VNode, h } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { CheckOutlined, CloseOutlined } from '@hmfw/icons'
 import type {
   StepItem,

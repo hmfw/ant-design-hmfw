@@ -1,6 +1,6 @@
 import { defineComponent, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { FileTextOutlined } from '@hmfw/icons'
 import { Tooltip } from '../tooltip'
 import type { TooltipProps } from '../tooltip/types'

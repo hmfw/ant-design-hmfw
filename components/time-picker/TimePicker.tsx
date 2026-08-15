@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, nextTick, type PropType, type VNodeChild } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { ClockCircleOutlined, CloseCircleFilled } from '@hmfw/icons'

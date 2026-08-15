@@ -1,6 +1,6 @@
 import { defineComponent, computed, ref, watch, type PropType, type VNode, Fragment } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Spin } from '../spin'
 import { Empty } from '../empty'
 import { Pagination } from '../pagination'

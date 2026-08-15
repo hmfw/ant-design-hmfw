@@ -1,6 +1,6 @@
 import { defineComponent, ref, watch, onBeforeUnmount, onMounted, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { SpinClassNames, SpinStyles, SpinProps } from './types'
 import type { ComponentSize } from '../config-provider'
 

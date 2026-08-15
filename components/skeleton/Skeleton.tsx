@@ -1,6 +1,6 @@
 import { defineComponent, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type {
   SkeletonProps,
   SkeletonAvatarProps,

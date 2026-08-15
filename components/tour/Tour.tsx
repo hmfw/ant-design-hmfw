@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, nextTick, onBeforeUnmount, Teleport, h, type PropType } from 'vue'
 import { usePrefixCls, useLocale, useConfig } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { CloseOutlined } from '@hmfw/icons'
 import type { TourProps, TourPlacement } from './types'
 import { TourMask } from './TourMask'

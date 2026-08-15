@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { inputNumberProps, type InputNumberProps } from './types'
 
 export const InputNumber = defineComponent({

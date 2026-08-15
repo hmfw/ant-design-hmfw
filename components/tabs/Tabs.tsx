@@ -1,6 +1,6 @@
 import { defineComponent, ref, watch, computed, isVNode, type PropType, type VNode, CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { PlusOutlined, CloseOutlined } from '@hmfw/icons'
 import type { ComponentSize } from '../config-provider'
 import type {

@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, TransitionGroup, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Image } from '../image'
 import { EyeOutlined, DownloadOutlined, DeleteOutlined } from '@hmfw/icons'
 import type {

@@ -1,6 +1,6 @@
 import { defineComponent, computed, inject, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { RightOutlined } from '@hmfw/icons'
 import type { CollapsibleType, CollapseClassNames, CollapseStyles } from './types'
 import { COLLAPSE_CONTEXT_KEY, deriveCollapsibleState, renderPanelNode, type CollapseContext } from './Collapse'

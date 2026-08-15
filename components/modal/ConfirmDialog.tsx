@@ -3,7 +3,7 @@ import { Modal } from './Modal'
 import { Button } from '../button'
 import { InfoCircleFilled, CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled } from '@hmfw/icons'
 import { useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { IconComponent } from '@hmfw/icons'
 import type { ModalFuncProps, ModalContent } from './types'
 

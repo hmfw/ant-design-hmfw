@@ -1,6 +1,6 @@
 import { defineComponent, onMounted, onUnmounted, computed } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { useAnchorContext } from './context'
 
 export interface AnchorLinkProps {

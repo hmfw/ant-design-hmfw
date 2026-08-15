@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, Transition, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { CloseOutlined, PlusOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { TooltipProps } from '../tooltip/types'

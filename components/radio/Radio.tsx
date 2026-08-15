@@ -1,6 +1,6 @@
 import { defineComponent, ref, watch, inject, computed, provide, toRef, type PropType, type ComputedRef } from 'vue'
 import { usePrefixCls, useMergedDisabled } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { RadioValueType, RadioChangeEvent } from './types'
 import type { ComponentSize } from '../config-provider'
 

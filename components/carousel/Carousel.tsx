@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import type { PropType, VNode, CSSProperties } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { LeftOutlined, RightOutlined } from '@hmfw/icons'
 import type {
   CarouselDotPlacement,

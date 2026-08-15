@@ -1,6 +1,6 @@
 import { defineComponent, computed, inject, type PropType, type CSSProperties, type ComputedRef } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { ColSpan, ColSize, FlexType } from './types'
 import { RowContextKey } from './Row'
 

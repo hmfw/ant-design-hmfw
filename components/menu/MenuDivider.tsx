@@ -1,5 +1,5 @@
 import { defineComponent, inject } from 'vue'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { MENU_CONTEXT_KEY, type MenuContext } from './types'
 import type { MenuDividerType } from './types'
 

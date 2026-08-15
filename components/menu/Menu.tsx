@@ -1,6 +1,6 @@
 import { defineComponent, ref, toRef, computed, provide, inject, Transition, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 
 import { LAYOUT_SIDER_KEY, type LayoutSiderContext } from '../layout'
 import type {

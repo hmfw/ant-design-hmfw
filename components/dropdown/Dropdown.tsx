@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, isVNode, Text, Comment, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Menu } from '../menu'
 import { Trigger } from '../_internal/trigger'
 import type { Placement, TriggerOpenChangeInfo, TriggerOpenSource } from '../_internal/trigger'

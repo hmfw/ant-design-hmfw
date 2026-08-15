@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Button } from '../button'
 import { DownOutlined } from '@hmfw/icons'
 import { Dropdown } from './Dropdown'

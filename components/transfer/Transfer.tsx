@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, type PropType, type VNode, type CSSProperties } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Button } from '../button'
 import { LeftOutlined, RightOutlined } from '@hmfw/icons'
 import { TransferList } from './TransferList'

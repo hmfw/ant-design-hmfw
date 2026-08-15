@@ -1,5 +1,5 @@
 import { defineComponent, inject, Transition, type PropType, type VNode, type CSSProperties } from 'vue'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Trigger } from '../_internal/trigger'
 import { MENU_CONTEXT_KEY, type MenuContext } from './types'
 import type { SubMenuType, MenuItemType } from './types'

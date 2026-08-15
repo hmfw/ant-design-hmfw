@@ -1,6 +1,6 @@
 import { defineComponent, computed, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Col } from '../grid'
 import { useListContext } from './context'
 import type { ListItemClassNames, ListItemStyles } from './types'

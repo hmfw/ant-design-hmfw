@@ -11,7 +11,7 @@ import {
   type VNode,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { AnchorProps, AnchorLinkItem, AnchorClassNames, AnchorStyles } from './types'
 import { provideAnchorContext } from './context'
 import { AnchorLink } from './AnchorLink'

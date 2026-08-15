@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, inject, watch, onBeforeUnmount, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { ZoomInOutlined } from '@hmfw/icons'
 import type { ImageProps, PreviewConfig, ImageContent, ImgInfo, ImageClassNames, ImageStyles } from './types'
 import { normalizePreview, resolveMask, renderContent } from './utils'

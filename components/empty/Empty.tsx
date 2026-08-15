@@ -1,6 +1,6 @@
 import { defineComponent, type PropType, type CSSProperties, type VNode } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { EmptyProps, EmptyClassNames, EmptyStyles } from './types'
 
 // 预设图片标识（与 AntD 的 PRESENTED_IMAGE_DEFAULT / PRESENTED_IMAGE_SIMPLE 对应）

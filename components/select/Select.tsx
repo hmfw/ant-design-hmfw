@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, nextTick, toRef, type PropType, h, VNode } from 'vue'
 import { usePrefixCls, useLocale, useMergedDisabled } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { VirtualList } from '../_internal/virtual-list'
 import { DownOutlined, LoadingOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'

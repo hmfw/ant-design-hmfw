@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, onBeforeUnmount, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { hexToHsb, hsbToHex, isValidHex, type HSB } from './color-utils'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'

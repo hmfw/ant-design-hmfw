@@ -1,7 +1,7 @@
 import { defineComponent, ref, type PropType } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { Tooltip } from '../tooltip'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import {
   baseTypographyProps,
   getTypographyClass,

@@ -1,5 +1,5 @@
 import { defineComponent, inject, type PropType, type VNode, type CSSProperties } from 'vue'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Tooltip } from '../tooltip'
 import { MENU_CONTEXT_KEY, type MenuContext } from './types'
 import type { MenuItemType } from './types'

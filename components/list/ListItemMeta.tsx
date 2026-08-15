@@ -1,6 +1,6 @@
 import { defineComponent, type PropType, type VNode } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { ListItemMetaClassNames, ListItemMetaStyles } from './types'
 
 export const ListItemMeta = defineComponent({

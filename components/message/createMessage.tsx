@@ -1,5 +1,5 @@
 import { createApp, ref, isVNode, type App, type VNodeChild } from 'vue'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import {
   CheckCircleFilled,
   CloseCircleFilled,

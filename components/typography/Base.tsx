@@ -11,7 +11,7 @@ import {
   type CSSProperties,
 } from 'vue'
 import { CheckOutlined, CopyOutlined } from '@hmfw/icons'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { useLocale } from '../config-provider'
 import { Tooltip } from '../tooltip'
 import type { TooltipProps } from '../tooltip/types'

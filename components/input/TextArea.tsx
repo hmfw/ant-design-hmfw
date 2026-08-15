@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, toRef, nextTick, onMounted, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useMergedDisabled } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { CloseOutlined } from '@hmfw/icons'
 import type {
   InputStatus,

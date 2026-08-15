@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, type PropType, type VNodeChild } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import {
   CheckCircleFilled,
   InfoCircleFilled,

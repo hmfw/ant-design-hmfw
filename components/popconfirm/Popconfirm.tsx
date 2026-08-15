@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, h, type PropType, type VNode } from 'vu
 import { Tooltip } from '../tooltip'
 import { Button } from '../button'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { ButtonProps } from '../button/types'
 import type { TooltipPlacement, TooltipTrigger, TooltipArrow } from '../tooltip/types'
 import type {

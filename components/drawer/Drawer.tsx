@@ -11,7 +11,7 @@ import {
   type CSSProperties,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
 import { usePanelRef } from '../watermark'

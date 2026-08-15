@@ -1,6 +1,6 @@
 import { defineComponent, type PropType, type CSSProperties, type VNode, ref, onMounted, onUnmounted, watch } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Skeleton } from '../skeleton'
 import type { CountdownProps, StatisticClassNames, StatisticStyles } from './types'
 

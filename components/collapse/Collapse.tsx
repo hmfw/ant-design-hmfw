@@ -13,7 +13,7 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import type { ComponentSize } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { RightOutlined } from '@hmfw/icons'
 import type { CollapseItem, CollapsibleType, ExpandIconProps, CollapseClassNames, CollapseStyles } from './types'
 

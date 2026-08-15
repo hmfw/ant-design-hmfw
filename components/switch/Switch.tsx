@@ -1,6 +1,6 @@
 import { defineComponent, ref, watch, computed, toRef, onMounted, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls, useMergedDisabled } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { SwitchChangeEventHandler, SwitchClassNames, SwitchStyles, SwitchProps } from './types'
 import type { ComponentSize } from '../config-provider'
 

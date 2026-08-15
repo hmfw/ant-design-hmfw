@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, onMounted, onBeforeUnmount, nextTick, useId, type PropType } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Tooltip } from '../tooltip'
 import type {
   SegmentedOption,

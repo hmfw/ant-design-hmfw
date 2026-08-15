@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, type PropType, type Ref, type VNode } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { LeftOutlined, RightOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@hmfw/icons'
 import { Select } from '../select'
 import { useBreakpoint } from '../grid/hooks/useBreakpoint'

@@ -4,7 +4,7 @@
 
 import { defineComponent, ref, onMounted, watch, computed, type PropType, h as createElement } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Spin } from '../spin'
 import { LoadingOutlined } from '@hmfw/icons'
 import type {

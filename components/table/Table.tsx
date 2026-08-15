@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, onMounted, onUnmounted, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import type { ComponentSize } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Spin } from '../spin'
 import { Empty } from '../empty'
 import { Pagination } from '../pagination'

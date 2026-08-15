@@ -1,6 +1,6 @@
 import { defineComponent, type PropType, type VNode, Fragment, Comment } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { LoadingOutlined } from '@hmfw/icons'
 import type {
   TimelineItemProps,

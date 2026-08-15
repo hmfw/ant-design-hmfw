@@ -1,6 +1,6 @@
 import { defineComponent, ref, watch, inject, computed, toRef, type PropType, onMounted, onBeforeUnmount } from 'vue'
 import { usePrefixCls, useMergedDisabled } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { CheckboxValueType, CheckboxChangeEvent, CheckboxProps, CheckboxClassNames, CheckboxStyles } from './types'
 import { CHECKBOX_GROUP_KEY, type CheckboxGroupContext } from './context'
 

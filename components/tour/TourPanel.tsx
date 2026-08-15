@@ -1,5 +1,5 @@
 import { defineComponent, h, type PropType, type VNode } from 'vue'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Button } from '../button'
 import type { Locale } from '../_locale/types'
 import type { TourClassNames, TourStep, TourStyles, TourProps } from './types'

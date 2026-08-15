@@ -10,7 +10,7 @@ import {
   type VNode,
 } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Button } from '../button'
 import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'

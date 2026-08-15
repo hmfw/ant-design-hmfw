@@ -1,6 +1,6 @@
 import { defineComponent, computed, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import type { FlexAlign, FlexJustify, FlexWrap, FlexGap } from './types'
 
 /**

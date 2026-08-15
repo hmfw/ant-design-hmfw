@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, nextTick, type PropType, type VNodeChild } from 'vue'
 import { usePrefixCls } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Checkbox } from '../checkbox'
 import { VirtualList } from '../_internal/virtual-list'
 import * as Icons from '@hmfw/icons'

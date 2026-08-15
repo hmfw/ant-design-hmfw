@@ -3,7 +3,7 @@ import { defineComponent, computed, type PropType, type CSSProperties, type VNod
 let circleGradientSeed = 0
 import { useConfig, usePrefixCls } from '../config-provider'
 import { Tooltip } from '../tooltip'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { CheckCircleFilled, CloseCircleFilled, CheckOutlined, CloseOutlined } from '@hmfw/icons'
 import type {
   ProgressProps,

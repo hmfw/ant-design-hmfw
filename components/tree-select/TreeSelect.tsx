@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { CaretRightFilled, CaretDownFilled, DownOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'

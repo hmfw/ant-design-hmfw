@@ -12,7 +12,7 @@ import {
   type Ref,
 } from 'vue'
 import { usePrefixCls, useMergedDisabled } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { LoadingOutlined } from '@hmfw/icons'
 import type { IconComponent } from '@hmfw/icons'
 import type {

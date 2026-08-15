@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed, watch, onMounted, type PropType } from 'vue'
 import { usePrefixCls, useConfig } from '../config-provider'
-import { cls } from '../_utils'
+import { cls } from '../_utils/cls'
 import { Tooltip } from '../tooltip'
 import type { RateProps, RateCharacterRenderContext, RateClassNames, RateStyles } from './types'
 import type { ComponentSize } from '../config-provider'
