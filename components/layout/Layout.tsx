@@ -13,7 +13,7 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils/cls'
 import { LeftOutlined, RightOutlined, MinusOutlined } from '@hmfw/icons'
-import type { LayoutBreakpoint, CollapseType } from './types'
+import type { LayoutBreakpoint, CollapseType, LayoutProps, SiderProps } from './types'
 
 export const LAYOUT_SIDER_KEY = Symbol('layout-sider')
 
@@ -23,12 +23,15 @@ export interface LayoutSiderContext {
   siderCollapsed: boolean
 }
 
+// Props 定义（使用 satisfies 确保与 LayoutProps 类型一致）
+const layoutProps = {
+  hasSider: { type: Boolean, default: false },
+} satisfies Record<keyof LayoutProps, any>
+
 // Layout
 export const Layout = defineComponent({
   name: 'Layout',
-  props: {
-    hasSider: Boolean,
-  },
+  props: layoutProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('layout')
     const siderCount = ref(0)
@@ -87,46 +90,47 @@ const BREAKPOINTS: Record<LayoutBreakpoint, string> = {
   xxxl: '1839.98px',
 }
 
+// Props 定义（使用 satisfies 确保与 SiderProps 类型一致）
+const siderProps = {
+  width: {
+    type: [Number, String] as PropType<number | string>,
+    default: 200,
+  },
+  collapsedWidth: {
+    type: [Number, String] as PropType<number | string>,
+    default: 80,
+  },
+  collapsed: {
+    type: Boolean,
+    default: undefined,
+  },
+  defaultCollapsed: { type: Boolean, default: false },
+  collapsible: { type: Boolean, default: false },
+  reverseArrow: { type: Boolean, default: false },
+  breakpoint: { type: String as PropType<LayoutBreakpoint>, default: undefined },
+  theme: {
+    type: String as PropType<'light' | 'dark'>,
+    default: 'dark',
+  },
+  trigger: {
+    type: [Object, null] as PropType<VNode | null>,
+    default: undefined,
+  },
+  zeroWidthTriggerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  classNames: { type: Object as PropType<SiderProps['classNames']>, default: undefined },
+  styles: { type: Object as PropType<SiderProps['styles']>, default: undefined },
+} satisfies Record<keyof SiderProps, any>
+
 // Sider
 export const Sider = defineComponent({
   name: 'Sider',
-  props: {
-    width: {
-      type: [Number, String] as PropType<number | string>,
-      default: 200,
-    },
-    collapsedWidth: {
-      type: [Number, String] as PropType<number | string>,
-      default: 80,
-    },
-    collapsed: {
-      type: Boolean,
-      default: undefined,
-    },
-    defaultCollapsed: Boolean,
-    collapsible: Boolean,
-    reverseArrow: Boolean,
-    breakpoint: String as PropType<LayoutBreakpoint>,
-    theme: {
-      type: String as PropType<'light' | 'dark'>,
-      default: 'dark',
-    },
-    trigger: {
-      type: [Object, null] as PropType<VNode | null>,
-      default: undefined,
-    },
-    zeroWidthTriggerStyle: Object as PropType<CSSProperties>,
-    onCollapse: Function as PropType<(collapsed: boolean, type: CollapseType) => void>,
-    onBreakpoint: Function as PropType<(broken: boolean) => void>,
-  },
+  props: siderProps,
   emits: ['collapse', 'update:collapsed', 'breakpoint'],
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('layout')
     const siderPrefixCls = `${prefixCls}-sider`
 
     const parentContext = inject<LayoutSiderContext | null>(LAYOUT_SIDER_KEY, null)
-    onMounted(() => parentContext?.addSider())
-    onUnmounted(() => parentContext?.removeSider())
 
     const internalCollapsed = ref(props.defaultCollapsed ?? false)
     const below = ref(false)
@@ -148,7 +152,6 @@ export const Sider = defineComponent({
       }
       emit('update:collapsed', value)
       emit('collapse', value, type)
-      props.onCollapse?.(value, type)
     }
 
     const toggle = () => {
@@ -161,7 +164,6 @@ export const Sider = defineComponent({
       const broken = e.matches
       below.value = broken
       emit('breakpoint', broken)
-      props.onBreakpoint?.(broken)
 
       if (isCollapsed.value !== broken) {
         handleSetCollapsed(broken, 'responsive')
@@ -169,15 +171,21 @@ export const Sider = defineComponent({
     }
 
     onMounted(() => {
+      parentContext?.addSider()
+
       if (props.breakpoint && typeof window !== 'undefined') {
         const maxWidth = BREAKPOINTS[props.breakpoint]
         mql = window.matchMedia(`screen and (max-width: ${maxWidth})`)
-        mql.addEventListener('change', handleBreakpoint)
+        // 旧版 Safari 不支持 MediaQueryList.addEventListener，需防御
+        if (typeof mql.addEventListener === 'function') {
+          mql.addEventListener('change', handleBreakpoint)
+        }
         handleBreakpoint(mql)
       }
     })
 
     onUnmounted(() => {
+      parentContext?.removeSider()
       mql?.removeEventListener('change', handleBreakpoint)
     })
 
@@ -193,7 +201,7 @@ export const Sider = defineComponent({
     const isZeroWidth = computed(() => Number.parseFloat(String(props.collapsedWidth || 0)) === 0)
 
     const classes = computed(() =>
-      cls(siderPrefixCls, `${siderPrefixCls}-${props.theme}`, {
+      cls(siderPrefixCls, `${siderPrefixCls}-${props.theme}`, props.classNames?.root, {
         [`${siderPrefixCls}-collapsed`]: isCollapsed.value,
         [`${siderPrefixCls}-has-trigger`]: props.collapsible && props.trigger !== null && !isZeroWidth.value,
         [`${siderPrefixCls}-below`]: below.value,
@@ -201,38 +209,42 @@ export const Sider = defineComponent({
       }),
     )
 
+    // 默认触发器图标：展开时显示左箭头（点击收起），折叠时显示右箭头（点击展开）；reverseArrow 时翻转
+    const defaultTrigger = isCollapsed.value ? (
+      props.reverseArrow ? (
+        <LeftOutlined class="hmfw-icon" />
+      ) : (
+        <RightOutlined class="hmfw-icon" />
+      )
+    ) : props.reverseArrow ? (
+      <RightOutlined class="hmfw-icon" />
+    ) : (
+      <LeftOutlined class="hmfw-icon" />
+    )
+
     return () => {
       const width = siderWidth.value
 
-      // Zero-width trigger (floating button when collapsedWidth === 0)
-      const zeroWidthTrigger =
-        isZeroWidth.value && isCollapsed.value ? (
-          <span
-            onClick={toggle}
-            class={cls(
-              `${siderPrefixCls}-zero-width-trigger`,
-              `${siderPrefixCls}-zero-width-trigger-${props.reverseArrow ? 'right' : 'left'}`,
-            )}
-            style={props.zeroWidthTriggerStyle}
-          >
-            {props.trigger !== undefined ? props.trigger : <MinusOutlined class="hmfw-icon" />}
-          </span>
-        ) : null
-
-      // Default trigger icons
-      const defaultTrigger = () => {
-        if (isCollapsed.value) {
-          return props.reverseArrow ? <LeftOutlined class="hmfw-icon" /> : <RightOutlined class="hmfw-icon" />
-        }
-        return props.reverseArrow ? <RightOutlined class="hmfw-icon" /> : <LeftOutlined class="hmfw-icon" />
-      }
+      // Zero-width trigger：collapsedWidth 为 0 时无论展开/折叠均使用浮动按钮（对齐 AntD）
+      const zeroWidthTrigger = isZeroWidth.value ? (
+        <span
+          onClick={toggle}
+          class={cls(
+            `${siderPrefixCls}-zero-width-trigger`,
+            `${siderPrefixCls}-zero-width-trigger-${props.reverseArrow ? 'right' : 'left'}`,
+          )}
+          style={props.zeroWidthTriggerStyle}
+        >
+          {props.trigger !== undefined ? props.trigger : <MinusOutlined class="hmfw-icon" />}
+        </span>
+      ) : null
 
       // Regular trigger (bottom bar)
       const triggerDom =
         props.trigger !== null
           ? zeroWidthTrigger || (
               <div class={`${siderPrefixCls}-trigger`} onClick={toggle} style={{ width }}>
-                {props.trigger !== undefined ? props.trigger : defaultTrigger()}
+                {props.trigger !== undefined ? props.trigger : defaultTrigger}
               </div>
             )
           : null
@@ -245,8 +257,10 @@ export const Sider = defineComponent({
       }
 
       return (
-        <aside class={classes.value} style={divStyle}>
-          <div class={`${siderPrefixCls}-children`}>{slots.default?.()}</div>
+        <aside class={classes.value} style={{ ...divStyle, ...props.styles?.root }}>
+          <div class={cls(`${siderPrefixCls}-children`, props.classNames?.body)} style={props.styles?.body}>
+            {slots.default?.()}
+          </div>
           {props.collapsible || (below.value && zeroWidthTrigger) ? triggerDom : null}
         </aside>
       )

@@ -28,15 +28,22 @@
 }
 
 .hmfw-layout-header {
-  height: 64px;
-  padding: 0 50px;
+  /* headerHeight = controlHeight × 2，headerPadding = controlHeightLG × 1.25（对齐 AntD prepareComponentToken） */
+  height: calc(var(--hmfw-control-height) * 2);
+  padding: 0 calc(var(--hmfw-control-height-lg) * 1.25);
   color: var(--hmfw-color-text-light-solid);
-  line-height: 64px;
+  line-height: calc(var(--hmfw-control-height) * 2);
   background: var(--hmfw-color-bg-header);
 }
 
+/* Header 内嵌水平 Menu 时继承行高，保证菜单项垂直居中（对齐 AntD） */
+.hmfw-layout-header .hmfw-menu {
+  line-height: inherit;
+}
+
 .hmfw-layout-footer {
-  padding: 24px 50px;
+  /* footerPadding = controlHeightSM + paddingInline（对齐 AntD prepareComponentToken） */
+  padding: var(--hmfw-control-height-sm) calc(var(--hmfw-control-height-lg) * 1.25);
   color: var(--hmfw-color-text);
   font-size: var(--hmfw-font-size-base);
   background: var(--hmfw-color-bg-layout);
@@ -53,15 +60,18 @@
   position: relative;
   min-width: 0;
   background: var(--hmfw-color-bg-header);
+  /* 组件专属文字色：深色侧边栏次级文本（无对应全局语义 token） */
+  --hmfw-layout-sider-dark-text: rgba(255, 255, 255, 0.65);
   transition:
-    all 0.2s,
-    background-color 0.3s ease,
-    color 0.3s ease,
-    box-shadow 0.3s ease;
+    all var(--hmfw-motion-duration-mid),
+    background-color var(--hmfw-motion-duration-slow) ease,
+    color var(--hmfw-motion-duration-slow) ease,
+    box-shadow var(--hmfw-motion-duration-slow) ease;
 }
 
 .hmfw-layout-sider-has-trigger {
-  padding-bottom: 48px;
+  /* triggerHeight = controlHeightLG + marginXXS × 2（对齐 AntD prepareComponentToken） */
+  padding-bottom: calc(var(--hmfw-control-height-lg) + var(--hmfw-margin-xxs) * 2);
 }
 
 .hmfw-layout-sider-right {
@@ -70,13 +80,12 @@
 
 .hmfw-layout-sider-dark {
   background: var(--hmfw-color-bg-header);
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--hmfw-layout-sider-dark-text);
 }
 
 .hmfw-layout-sider-light {
   background: var(--hmfw-color-bg-container);
   color: var(--hmfw-color-text);
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
 }
 
 .hmfw-layout-sider-children {
@@ -89,29 +98,21 @@
   overflow: hidden;
 }
 
-.hmfw-layout-sider-collapsed {
-  /* Width is controlled by inline style */
-}
-
-.hmfw-layout-sider-zero-width {
-  /* Width is controlled by inline style */
-}
-
 .hmfw-layout-sider-trigger {
   position: absolute;
   bottom: 0;
   z-index: 1;
-  height: 48px;
+  height: calc(var(--hmfw-control-height-lg) + var(--hmfw-margin-xxs) * 2);
   color: var(--hmfw-color-text-light-solid);
-  line-height: 48px;
+  line-height: calc(var(--hmfw-control-height-lg) + var(--hmfw-margin-xxs) * 2);
   text-align: center;
   background: var(--hmfw-color-bg-header);
   cursor: pointer;
   transition:
-    all 0.2s,
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
+    all var(--hmfw-motion-duration-mid),
+    background-color var(--hmfw-motion-duration-slow) ease,
+    color var(--hmfw-motion-duration-slow) ease,
+    border-color var(--hmfw-motion-duration-slow) ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,27 +126,28 @@
 
 .hmfw-layout-sider-zero-width-trigger {
   position: absolute;
-  top: 64px;
-  right: -36px;
+  /* top = headerHeight；尺寸 = controlHeightLG（对齐 AntD prepareComponentToken 的 zeroTriggerWidth/Height） */
+  top: calc(var(--hmfw-control-height) * 2);
+  right: calc(var(--hmfw-control-height-lg) * -1);
   z-index: 1;
-  width: 36px;
-  height: 42px;
+  width: var(--hmfw-control-height-lg);
+  height: var(--hmfw-control-height-lg);
   color: var(--hmfw-color-text-light-solid);
-  font-size: 18px;
+  font-size: var(--hmfw-font-size-xl);
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--hmfw-color-bg-header);
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--hmfw-border-radius-lg) var(--hmfw-border-radius-lg) 0;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--hmfw-motion-duration-slow) ease;
 }
 
 .hmfw-layout-sider-zero-width-trigger::after {
   position: absolute;
   inset: 0;
   background: transparent;
-  transition: all 0.3s;
+  transition: all var(--hmfw-motion-duration-slow);
   content: '';
 }
 
@@ -154,9 +156,9 @@
 }
 
 .hmfw-layout-sider-zero-width-trigger-right {
-  left: -36px;
+  left: calc(var(--hmfw-control-height-lg) * -1);
   right: auto;
-  border-radius: 8px 0 0 8px;
+  border-radius: var(--hmfw-border-radius-lg) 0 0 var(--hmfw-border-radius-lg);
 }
 
 .hmfw-layout-sider-light .hmfw-layout-sider-zero-width-trigger {

@@ -66,6 +66,30 @@
   <LayoutTheme />
 </DemoBlock>
 
+### 语义化 API
+
+通过 `classNames` / `styles` 精细化控制 Sider 根容器与内容包装容器的样式，支持按折叠状态动态切换。
+
+<DemoBlock title="语义化 API" :source="LayoutSemanticSource">
+  <LayoutSemantic />
+</DemoBlock>
+
+### 顶部-侧边布局
+
+顶部水平导航 + 侧边栏垂直导航 + 面包屑的经典企业后台布局。
+
+<DemoBlock title="顶部-侧边布局" :source="LayoutTopSideSource">
+  <LayoutTopSide />
+</DemoBlock>
+
+### 固定头部
+
+Header 使用 sticky 定位，内容区滚动时头部保持固定在顶部。
+
+<DemoBlock title="固定头部" :source="LayoutFixedSource">
+  <LayoutFixed />
+</DemoBlock>
+
 ## API
 
 ### Layout Props
@@ -88,6 +112,8 @@
 | trigger               | 自定义 trigger，设为 null 时隐藏 trigger。**注意：`trigger` 为 VNode prop 而非 slot**，需通过 `h()` 或 JSX 传入 | `VNode \| null`                                           | -        |
 | reverseArrow          | 翻转折叠提示箭头的方向                                                                                          | `boolean`                                                 | `false`  |
 | zeroWidthTriggerStyle | 指定当 collapsedWidth 为 0 时出现的特殊 trigger 的样式                                                          | `CSSProperties`                                           | -        |
+| classNames            | 语义化结构 className                                                                                            | `{ root?, body? }`                                        | -        |
+| styles                | 语义化结构 style                                                                                                | `{ root?: CSSProperties, body?: CSSProperties }`          | -        |
 
 ### Layout Slots
 
@@ -97,10 +123,13 @@
 
 ### Sider Events
 
-| 事件名     | 说明                     | 回调参数                                                             |
-| ---------- | ------------------------ | -------------------------------------------------------------------- |
-| collapse   | 展开/收起时触发          | `(collapsed: boolean, type: 'clickTrigger' \| 'responsive') => void` |
-| breakpoint | 触发响应式布局断点时触发 | `(broken: boolean) => void`                                          |
+| 事件名           | 说明                     | 回调参数                                                             |
+| ---------------- | ------------------------ | -------------------------------------------------------------------- |
+| collapse         | 展开/收起时触发          | `(collapsed: boolean, type: 'clickTrigger' \| 'responsive') => void` |
+| update:collapsed | 折叠状态变化（v-model）  | `(collapsed: boolean) => void`                                       |
+| breakpoint       | 触发响应式布局断点时触发 | `(broken: boolean) => void`                                          |
+
+事件回调类型 `SiderCollapseHandler` / `SiderBreakpointHandler` 可从 `@hmfw/ant-design` 导入。
 
 ### Sider Slots
 
@@ -128,11 +157,30 @@ Layout 系列组件（Layout/Header/Footer/Content/Sider）多为单元素透传
 
 Layout 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
 
-| Token 名称                      | 说明             | 默认值             |
-| ------------------------------- | ---------------- | ------------------ |
-| `--hmfw-color-bg-header`        | Header 背景色    | `#001529`          |
-| `--hmfw-color-bg-layout`        | Layout 背景色    | `#f5f5f5`          |
-| `--hmfw-color-border`           | 边框色           | `#d9d9d9`          |
-| `--hmfw-color-text`             | 主文本色         | `rgba(0,0,0,0.88)` |
-| `--hmfw-color-text-light-solid` | 浅色文本（白色） | `#ffffff`          |
-| `--hmfw-font-size-base`         | 基础字号         | `14px`             |
+### 全局 Token
+
+| Token 名称                      | 说明                                                               | 默认值             |
+| ------------------------------- | ------------------------------------------------------------------ | ------------------ |
+| `--hmfw-color-bg-header`        | Header/Sider（dark）背景色                                         | `#001529`          |
+| `--hmfw-color-bg-layout`        | Layout/Footer 背景色                                               | `#f5f5f5`          |
+| `--hmfw-color-bg-container`     | Sider（light）/Trigger（light）背景色                              | `#ffffff`          |
+| `--hmfw-color-border`           | light 主题边框色                                                   | `#d9d9d9`          |
+| `--hmfw-color-text`             | 主文本色                                                           | `rgba(0,0,0,0.88)` |
+| `--hmfw-color-text-light-solid` | 浅色文本（白色）                                                   | `#ffffff`          |
+| `--hmfw-font-size-base`         | Footer 字号                                                        | `14px`             |
+| `--hmfw-font-size-xl`           | 零宽触发器字号                                                     | `18px`             |
+| `--hmfw-control-height`         | Header 高度基准（派生：`× 2` = 64px）                              | `32px`             |
+| `--hmfw-control-height-sm`      | Footer 上下内边距（24px）                                          | `24px`             |
+| `--hmfw-control-height-lg`      | Header 左右内边距（派生：`× 1.25` = 50px）、触发器与零宽触发器尺寸 | `40px`             |
+| `--hmfw-margin-xxs`             | 触发器高度派生（`control-height-lg + × 2` = 48px）                 | `4px`              |
+| `--hmfw-border-radius-lg`       | 零宽触发器圆角                                                     | `8px`              |
+| `--hmfw-motion-duration-mid`    | 宽度等快速过渡时长（0.2s）                                         | `0.2s`             |
+| `--hmfw-motion-duration-slow`   | 颜色等平滑过渡时长（0.3s）                                         | `0.3s`             |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-layout-sider` 上，可直接覆盖以定制单个组件的样式。
+
+| Token 名称                      | 说明                 | 默认值                      |
+| ------------------------------- | -------------------- | --------------------------- |
+| `--hmfw-layout-sider-dark-text` | 深色侧边栏次级文字色 | `rgba(255, 255, 255, 0.65)` |

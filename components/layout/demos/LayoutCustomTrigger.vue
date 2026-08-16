@@ -25,7 +25,6 @@
 import { ref } from 'vue'
 import { Layout, Header, Content, Sider, Button } from '@hmfw/ant-design'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@hmfw/icons'
-// <MenuFoldOutlined class="hmfw-icon" />
-// <MenuUnfoldOutlined class="hmfw-icon" />
+
 const collapsed = ref(false)
 </script>

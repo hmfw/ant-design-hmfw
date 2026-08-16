@@ -113,12 +113,24 @@ describe('Sider', () => {
   })
 
   it('emits collapse event with type', async () => {
-    const onCollapse = vi.fn()
     const wrapper = mount(Sider, {
-      props: { collapsible: true, onCollapse },
+      props: { collapsible: true },
     })
 
     await wrapper.find('.hmfw-layout-sider-trigger').trigger('click')
+    expect(wrapper.emitted('collapse')?.[0]).toEqual([true, 'clickTrigger'])
+  })
+
+  it('does not double-call collapse listener via @collapse binding', async () => {
+    // 回归测试：props 与 emits 曾并存导致 @collapse 回调双重触发
+    const onCollapse = vi.fn()
+    const wrapper = mount(Sider, {
+      props: { collapsible: true },
+      attrs: { onCollapse },
+    })
+
+    await wrapper.find('.hmfw-layout-sider-trigger').trigger('click')
+    expect(onCollapse).toHaveBeenCalledTimes(1)
     expect(onCollapse).toHaveBeenCalledWith(true, 'clickTrigger')
   })
 
@@ -145,6 +157,31 @@ describe('Sider', () => {
     })
     expect(wrapper.find('.hmfw-layout-sider-zero-width-trigger').exists()).toBe(true)
     expect(wrapper.classes()).toContain('hmfw-layout-sider-zero-width')
+  })
+
+  it('shows zero-width trigger even when expanded (collapsedWidth=0, 对齐 AntD)', () => {
+    const wrapper = mount(Sider, {
+      props: { collapsed: false, collapsedWidth: 0, collapsible: true },
+    })
+    // 展开态也使用浮动按钮，而非底部 trigger 条
+    expect(wrapper.find('.hmfw-layout-sider-zero-width-trigger').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-layout-sider-trigger').exists()).toBe(false)
+  })
+
+  it('applies classNames root and body', () => {
+    const wrapper = mount(Sider, {
+      props: { classNames: { root: 'custom-root', body: 'custom-body' } },
+    })
+    expect(wrapper.classes()).toContain('custom-root')
+    expect(wrapper.find('.hmfw-layout-sider-children').classes()).toContain('custom-body')
+  })
+
+  it('applies styles root and body', () => {
+    const wrapper = mount(Sider, {
+      props: { styles: { root: { background: 'red' }, body: { padding: '10px' } } },
+    })
+    expect(wrapper.attributes('style')).toContain('background')
+    expect(wrapper.find('.hmfw-layout-sider-children').attributes('style')).toContain('padding')
   })
 
   it('applies zeroWidthTriggerStyle', () => {
@@ -217,15 +254,15 @@ describe('Sider', () => {
       expect(matchMediaMock).toHaveBeenCalledWith('screen and (max-width: 767.98px)')
     })
 
-    it('triggers onBreakpoint callback when breakpoint matches', async () => {
-      const onBreakpoint = vi.fn()
-      mount(Sider, { props: { breakpoint: 'md', onBreakpoint } })
+    it('emits breakpoint event when breakpoint matches', async () => {
+      const wrapper = mount(Sider, { props: { breakpoint: 'md' } })
 
       // 模拟断点匹配
       listeners.forEach((handler) => handler({ matches: true }))
       await flushPromises()
 
-      expect(onBreakpoint).toHaveBeenCalledWith(true)
+      const events = wrapper.emitted('breakpoint') as any[]
+      expect(events[events.length - 1]).toEqual([true])
     })
 
     it('emits breakpoint event when breakpoint matches', async () => {
@@ -243,9 +280,8 @@ describe('Sider', () => {
     })
 
     it('auto-collapses when breakpoint is triggered', async () => {
-      const onCollapse = vi.fn()
       const wrapper = mount(Sider, {
-        props: { breakpoint: 'md', collapsible: true, onCollapse },
+        props: { breakpoint: 'md', collapsible: true },
       })
 
       expect(wrapper.classes()).not.toContain('hmfw-layout-sider-collapsed')
@@ -255,13 +291,12 @@ describe('Sider', () => {
       await flushPromises()
 
       expect(wrapper.classes()).toContain('hmfw-layout-sider-collapsed')
-      expect(onCollapse).toHaveBeenCalledWith(true, 'responsive')
+      expect(wrapper.emitted('collapse')).toContainEqual([true, 'responsive'])
     })
 
     it('auto-expands when breakpoint is no longer matched', async () => {
-      const onCollapse = vi.fn()
       const wrapper = mount(Sider, {
-        props: { breakpoint: 'md', collapsible: true, defaultCollapsed: true, onCollapse },
+        props: { breakpoint: 'md', collapsible: true, defaultCollapsed: true },
       })
 
       expect(wrapper.classes()).toContain('hmfw-layout-sider-collapsed')
@@ -271,7 +306,7 @@ describe('Sider', () => {
       await flushPromises()
 
       expect(wrapper.classes()).not.toContain('hmfw-layout-sider-collapsed')
-      expect(onCollapse).toHaveBeenCalledWith(false, 'responsive')
+      expect(wrapper.emitted('collapse')).toContainEqual([false, 'responsive'])
     })
 
     it('cleans up breakpoint listener on unmount', () => {
