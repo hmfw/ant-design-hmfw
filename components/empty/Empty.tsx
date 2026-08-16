@@ -46,26 +46,14 @@ const SimpleEmptyImage = () => (
 // props 单一真值源：用 satisfies 强制 key 集合与 EmptyProps 接口完全一致
 // 接口中增/删属性 → 此处编译报错，杜绝双源头漂移
 const emptyProps = {
-  image: {
-    type: [String, Boolean] as PropType<string | false>,
-    default: undefined,
-  },
+  image: { type: [String, Boolean] as PropType<string | false>, default: undefined },
   imageStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   // 图片宽度，便于在不传整个 imageStyle 的情况下控制默认图片尺寸
   // 支持数字（按 px 处理）或带单位的字符串
-  imageWidth: {
-    type: [Number, String] as PropType<number | string>,
-    default: undefined,
-  },
+  imageWidth: { type: [Number, String] as PropType<number | string>, default: undefined },
   // 图片高度，同 imageWidth
-  imageHeight: {
-    type: [Number, String] as PropType<number | string>,
-    default: undefined,
-  },
-  description: {
-    type: [String, Boolean] as PropType<string | false>,
-    default: undefined,
-  },
+  imageHeight: { type: [Number, String] as PropType<number | string>, default: undefined },
+  description: { type: [String, Boolean] as PropType<string | false>, default: undefined },
   classNames: { type: Object as PropType<EmptyClassNames>, default: undefined },
   styles: { type: Object as PropType<EmptyStyles>, default: undefined },
 } satisfies Record<keyof EmptyProps, any>
