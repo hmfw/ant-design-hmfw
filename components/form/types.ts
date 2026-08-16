@@ -1,6 +1,13 @@
 import type { CSSProperties } from 'vue'
 import type { ComponentSize } from '../config-provider'
 
+export type FormLayout = 'horizontal' | 'vertical' | 'inline'
+export type NamePath = string | number | (string | number)[]
+export type ValidateStatus = '' | 'success' | 'warning' | 'error' | 'validating'
+
+/** 校验触发时机 */
+export type FormValidateTrigger = 'blur' | 'change' | ('blur' | 'change')[]
+
 export interface FormRule {
   required?: boolean
   message?: string
@@ -15,12 +22,6 @@ export interface FormRule {
   /** Validation trigger; falls back to FormItem/Form `validateTrigger`. */
   trigger?: 'blur' | 'change' | ('blur' | 'change')[]
 }
-
-export type NamePath = string | number | (string | number)[]
-export type ValidateStatus = '' | 'success' | 'warning' | 'error' | 'validating'
-
-/** 校验触发时机 */
-export type FormValidateTrigger = 'blur' | 'change' | ('blur' | 'change')[]
 
 /** 栅格配置（同 Col 组件的 span / offset） */
 export interface FormColConfig {
@@ -126,7 +127,7 @@ export interface FormItemStyles {
 export interface FormProps {
   model?: Record<string, unknown>
   rules?: Record<string, FormRule | FormRule[]>
-  layout?: 'horizontal' | 'vertical' | 'inline'
+  layout?: FormLayout
   labelCol?: FormColConfig
   wrapperCol?: FormColConfig
   colon?: boolean

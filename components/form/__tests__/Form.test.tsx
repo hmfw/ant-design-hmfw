@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import { Form, FormItem, useForm } from '../Form'
+import { Form, useForm } from '../Form'
+import { FormItem } from '../FormItem'
 import { Input } from '../../input'
 import { Checkbox } from '../../checkbox'
 import { Switch } from '../../switch'

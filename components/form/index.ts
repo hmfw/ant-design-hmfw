@@ -1,4 +1,6 @@
-export { Form, FormItem, useForm } from './Form'
+export { Form, useForm } from './Form'
+export { FormItem } from './FormItem'
+
 export type {
   FormProps,
   FormItemProps,
