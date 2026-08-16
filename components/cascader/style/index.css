@@ -17,15 +17,15 @@
   /* checkbox 圆角：AntD checkbox 内部固定 2px，无全局语义 token */
   --hmfw-cascader-checkbox-border-radius: 2px;
   /* 多选标签内边距（AntD select 多选同源值） */
-  --hmfw-cascader-multiple-padding: 2px var(--hmfw-padding-xxs);
+  --hmfw-cascader-multiple-padding: 2px var(--hmfw-control-padding-horizontal) 2px var(--hmfw-padding-xxs);
 }
 
 .hmfw-cascader {
   display: inline-flex;
   align-items: center;
   min-width: var(--hmfw-cascader-control-width);
-  height: var(--hmfw-control-height);
-  padding: 0 var(--hmfw-control-padding-horizontal);
+  line-height: var(--hmfw-line-height);
+  padding: var(--hmfw-padding-xxs) var(--hmfw-control-padding-horizontal);
   border: 1px solid var(--hmfw-color-border);
   border-radius: var(--hmfw-border-radius);
   background: var(--hmfw-color-bg-container);
@@ -71,9 +71,8 @@
   min-height: var(--hmfw-control-height-sm);
 }
 .hmfw-cascader-large {
-  height: var(--hmfw-control-height-lg);
   font-size: var(--hmfw-font-size-lg);
-  padding: 0 var(--hmfw-control-padding-horizontal);
+  padding: var(--hmfw-padding-xs) var(--hmfw-control-padding-horizontal);
 }
 .hmfw-cascader-large.hmfw-cascader-multiple {
   min-height: var(--hmfw-control-height-lg);
@@ -181,12 +180,6 @@
   color: var(--hmfw-color-text-secondary);
 }
 
-/* Dropdown（bg/radius/shadow 由 hmfw-trigger-popup 统一提供） */
-.hmfw-cascader-dropdown {
-  border: 1px solid var(--hmfw-color-border-secondary);
-  overflow: hidden;
-}
-
 .hmfw-cascader-menus {
   display: flex;
 }
@@ -194,7 +187,7 @@
 .hmfw-cascader-menu {
   list-style: none;
   margin: 0;
-  padding: var(--hmfw-padding-xxs) 0;
+  padding: var(--hmfw-padding-xxs);
   min-width: var(--hmfw-cascader-control-item-width);
   max-height: var(--hmfw-cascader-dropdown-height);
   overflow-y: auto;
@@ -221,6 +214,7 @@
   color: var(--hmfw-color-text);
   cursor: pointer;
   transition: background var(--hmfw-motion-duration-fast);
+  border-radius: var(--hmfw-border-radius-sm);
   white-space: nowrap;
   min-height: var(--hmfw-control-height);
 }
