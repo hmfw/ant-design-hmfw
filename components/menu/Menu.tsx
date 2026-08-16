@@ -64,6 +64,20 @@ export const Menu = defineComponent({
       return siderContext?.siderCollapsed ?? false
     })
 
+    const menuCls = computed(() =>
+      cls(
+        prefixCls,
+        `${prefixCls}-root`,
+        `${prefixCls}-${props.mode}`,
+        `${prefixCls}-${props.theme}`,
+        {
+          [`${prefixCls}-inline-collapsed`]: mergedInlineCollapsed.value,
+          [`${prefixCls}-overflow`]: showOverflow.value,
+        },
+        props.classNames?.root,
+      ),
+    )
+
     const mode = toRef(props, 'mode')
 
     // ---- 选中状态 (Composable) ----
@@ -202,24 +216,19 @@ export const Menu = defineComponent({
 
     // ====================== 渲染根元素 ======================
     return () => {
-      const menuCls = cls(
-        prefixCls,
-        `${prefixCls}-root`,
-        `${prefixCls}-${props.mode}`,
-        `${prefixCls}-${props.theme}`,
-        {
-          [`${prefixCls}-inline-collapsed`]: mergedInlineCollapsed.value,
-          [`${prefixCls}-overflow`]: showOverflow.value,
-        },
-        props.classNames?.root,
-      )
-
       // 内容渲染：优先 slot，否则 items prop
       const slotChildren = slots.default?.()
       const hasSlotContent = slotChildren && slotChildren.length > 0
 
       return (
-        <ul ref={rootRef} class={menuCls} style={props.styles?.root} role="menu" tabindex={0} onKeydown={handleKeyDown}>
+        <ul
+          ref={rootRef}
+          class={menuCls.value}
+          style={props.styles?.root}
+          role="menu"
+          tabindex={0}
+          onKeydown={handleKeyDown}
+        >
           {hasSlotContent ? slotChildren : renderItems(visibleItems.value)}
 
           {!hasSlotContent && showOverflow.value && renderOverflowIndicator()}

@@ -1,4 +1,4 @@
-import { defineComponent, inject } from 'vue'
+import { computed, defineComponent, inject } from 'vue'
 import { cls } from '../_utils/cls'
 import { MENU_CONTEXT_KEY, type MenuContext } from './types'
 import type { MenuDividerType } from './types'
@@ -15,14 +15,15 @@ export const MenuDivider = defineComponent({
   setup(props) {
     const context = inject<MenuContext>(MENU_CONTEXT_KEY)!
 
-    return () => {
+    const dividerCls = computed(() => {
       const dashed = props.item?.dashed ?? props.dashed
-      const dividerCls = cls(
+      return cls(
         `${context.prefixCls}-item-divider`,
         { [`${context.prefixCls}-item-divider-dashed`]: dashed },
         context.classNames?.divider,
       )
-      return <li class={dividerCls} style={context.styles?.divider} role="separator" />
-    }
+    })
+
+    return () => <li class={dividerCls.value} style={context.styles?.divider} role="separator" />
   },
 })
