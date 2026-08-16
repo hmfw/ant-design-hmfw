@@ -13,7 +13,7 @@
         value="https://ant.design"
         status="expired"
         :class-names="{ cover: 'custom-cover' }"
-        :on-refresh="() => {}"
+        @refresh="() => {}"
       />
     </div>
 
@@ -51,7 +51,7 @@
         value="https://ant.design"
         :status="currentStatus"
         :class-names="{ root: 'custom-dynamic', cover: 'custom-dynamic-cover' }"
-        :on-refresh="handleRefresh"
+        @refresh="handleRefresh"
       />
       <div style="margin-top: 8px">
         <button style="margin-right: 8px" @click="currentStatus = 'active'">激活</button>

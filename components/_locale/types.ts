@@ -161,4 +161,9 @@ export interface Locale {
     slide: (current: number, total: number) => string
     goTo: (page: number) => string
   }
+  QRCode: {
+    expired: string
+    refresh: string
+    scanned: string
+  }
 }

@@ -158,6 +158,11 @@ const enUS: Locale = {
     slide: (current: number, total: number) => `${current} / ${total}`,
     goTo: (page: number) => `Go to slide ${page}`,
   },
+  QRCode: {
+    expired: 'QR code expired',
+    refresh: 'Refresh',
+    scanned: 'Scanned',
+  },
 }
 
 export default enUS

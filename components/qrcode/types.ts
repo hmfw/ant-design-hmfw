@@ -1,12 +1,18 @@
 import type { VNode, CSSProperties } from 'vue'
+import type { Locale } from '../_locale'
 
 export type QRCodeStatus = 'active' | 'expired' | 'loading' | 'scanned'
 export type QRCodeErrorLevel = 'L' | 'M' | 'Q' | 'H'
 export type QRCodeType = 'canvas' | 'svg'
 
+/** refresh 事件回调 */
+export type QRCodeRefreshHandler = () => void
+
 export interface StatusRenderInfo {
   status: Exclude<QRCodeStatus, 'active'>
-  onRefresh?: () => void
+  /** 当前语言包，供自定义状态渲染使用 */
+  locale: Locale['QRCode']
+  onRefresh?: QRCodeRefreshHandler
 }
 
 /**
@@ -42,7 +48,6 @@ export interface QRCodeProps {
   bordered?: boolean
   statusRender?: (info: StatusRenderInfo) => VNode | null
   marginSize?: number
-  onRefresh?: () => void
   /** 语义化 className，用于定制各子节点的 class */
   classNames?: QRCodeClassNames
   /** 语义化 style，用于定制各子节点的内联样式 */

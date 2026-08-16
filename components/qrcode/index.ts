@@ -4,6 +4,7 @@ export type {
   QRCodeStatus,
   QRCodeErrorLevel,
   QRCodeType,
+  QRCodeRefreshHandler,
   StatusRenderInfo,
   QRCodeClassNames,
   QRCodeStyles,

@@ -3,11 +3,18 @@
   justify-content: center;
   align-items: center;
   padding: var(--hmfw-padding-sm);
-  background-color: var(--hmfw-color-bg-container);
   border-radius: var(--hmfw-border-radius-lg);
   border: 1px solid var(--hmfw-color-border);
   position: relative;
   overflow: hidden;
+  /* 遮罩背景：派生自容器背景色 @ 96%（对齐 AntD QRCodeCoverBackgroundColor = colorBgContainer × 0.96） */
+  --hmfw-qrcode-cover-bg: rgba(255, 255, 255, 0.96);
+}
+
+/* 暗黑主题下遮罩背景随容器背景色反转 */
+.hmfw-theme-dark .hmfw-qrcode,
+[data-theme='dark'] .hmfw-qrcode {
+  --hmfw-qrcode-cover-bg: rgba(20, 20, 20, 0.96);
 }
 
 .hmfw-qrcode-borderless {
@@ -16,11 +23,17 @@
   border-radius: 0;
 }
 
-.hmfw-qrcode canvas,
-.hmfw-qrcode svg {
+.hmfw-qrcode canvas {
   align-self: stretch;
   flex: auto;
   min-width: 0;
+}
+
+/* SVG 用 100% 尺寸 + preserveAspectRatio 居中保持比例，
+   避免 flex 拉伸破坏宽高比导致内容偏移、被容器裁剪 */
+.hmfw-qrcode svg {
+  width: 100%;
+  height: 100%;
 }
 
 .hmfw-qrcode-cover {
@@ -35,7 +48,7 @@
   height: 100%;
   color: var(--hmfw-color-text);
   line-height: var(--hmfw-line-height);
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--hmfw-qrcode-cover-bg);
   text-align: center;
 }
 
@@ -49,15 +62,15 @@
 .hmfw-qrcode-refresh {
   display: inline-flex;
   align-items: center;
-  margin-top: 8px;
-  padding: 4px 15px;
+  margin-top: var(--hmfw-margin-xs);
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding);
   color: var(--hmfw-color-primary);
   background: transparent;
   border: none;
   cursor: pointer;
   font-size: var(--hmfw-font-size-base);
   line-height: var(--hmfw-line-height);
-  transition: color 0.3s;
+  transition: color var(--hmfw-motion-duration-slow);
 }
 
 .hmfw-qrcode-refresh:hover {

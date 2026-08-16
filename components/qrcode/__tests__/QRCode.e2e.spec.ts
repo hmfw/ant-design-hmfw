@@ -163,4 +163,107 @@ test.describe('QRCode 二维码', () => {
     const relevantErrors = errors.filter((e) => !e.includes('ERR_BLOCKED_BY_RESPONSE') && !e.includes('net::ERR_'))
     expect(relevantErrors).toEqual([])
   })
+
+  // ===== 解码验证（BarcodeDetector API） =====
+  // 验证生成的二维码可被浏览器标准解码器识别 —— 编码器正确性的端到端兜底
+
+  const decodeCanvas = (page: import('@playwright/test').Page, canvas: import('@playwright/test').Locator) =>
+    canvas.evaluate(async (el) => {
+      const BarcodeDetectorCtor = (window as any).BarcodeDetector
+      if (!BarcodeDetectorCtor) return { supported: false as const }
+      try {
+        // bgColor 默认 transparent：浅色模块为透明像素，BarcodeDetector 会把透明当作黑色。
+        // 复制到白底画布上模拟真实扫描环境（页面白底）再解码。
+        const off = document.createElement('canvas')
+        off.width = (el as HTMLCanvasElement).width
+        off.height = (el as HTMLCanvasElement).height
+        const octx = off.getContext('2d')!
+        octx.fillStyle = '#ffffff'
+        octx.fillRect(0, 0, off.width, off.height)
+        octx.drawImage(el as HTMLCanvasElement, 0, 0)
+        const detector = new BarcodeDetectorCtor({ formats: ['qr_code'] })
+        const codes = await detector.detect(off)
+        return { supported: true as const, values: codes.map((c: any) => c.rawValue) }
+      } catch {
+        return { supported: false as const }
+      }
+    })
+
+  test('短文本二维码可被标准解码器识别（基础用法 canvas）', async ({ page }) => {
+    const canvas = page.locator('.hmfw-qrcode canvas').first()
+    await expect(canvas).toBeVisible()
+    await page.waitForTimeout(300) // 等待 canvas 绘制完成
+    const result = await decodeCanvas(page, canvas)
+    test.skip(!result.supported, '当前浏览器不支持 BarcodeDetector API')
+    expect(result.values).toContain('https://ant.design')
+  })
+
+  test('长文本二维码（多块版本）可被标准解码器识别', async ({ page }) => {
+    // QRCodeVersion demo：通过锚点类名定位版本 8 长文本（多块交错编码）
+    const canvas = page.locator('.version-v8 canvas')
+    await expect(canvas.first()).toBeVisible()
+    await page.waitForTimeout(500) // 等待 canvas 绘制完成
+    const longValue = `https://example.com/long?data=${'x'.repeat(150)}`
+    const supported = await decodeCanvas(page, canvas.first())
+    test.skip(!supported.supported, '当前浏览器不支持 BarcodeDetector API')
+    expect(supported.values).toContain(longValue)
+  })
+
+  test('SVG 模式 marginSize 留白生效', async ({ page }) => {
+    // 直接子元素选择器排除遮罩内的图标 SVG
+    const svgs = page.locator('.hmfw-qrcode > svg')
+    const count = await svgs.count()
+    test.skip(count < 3, '未找到 QRCodeMargin demo')
+    // 页面 svg 顺序：QRCodeType demo（margin 默认）→ QRCodeMargin demo 的默认与 marginSize=4
+    const defaultViewBox = await svgs.nth(1).getAttribute('viewBox')
+    const marginViewBox = await svgs.nth(2).getAttribute('viewBox')
+    expect(defaultViewBox).toBeTruthy()
+    expect(marginViewBox).toBeTruthy()
+    const defaultSize = Number(defaultViewBox!.split(' ')[2])
+    const marginSize = Number(marginViewBox!.split(' ')[2])
+    // marginSize=4 的 viewBox 应比默认多 8 个模块（左右各 4）
+    expect(marginSize - defaultSize).toBe(8)
+  })
+
+  test('SVG 渲染尺寸保持宽高比（无偏移溢出）', async ({ page }) => {
+    const svg = page.locator('.hmfw-qrcode > svg').first()
+    await expect(svg).toBeVisible()
+    const box = await svg.boundingBox()
+    expect(box).toBeTruthy()
+    // 修复前 svg 被 flex 拉伸为 134×160（破坏比例、底部被裁剪），修复后应接近 1:1
+    expect(Math.abs(box!.width - box!.height)).toBeLessThanOrEqual(1)
+  })
+
+  test('H 级二维码叠加 40px 图标仍可被解码（图标遮挡靠纠错恢复）', async ({ page }) => {
+    const canvas = page.locator('.errorlevel-h canvas')
+    await expect(canvas.first()).toBeVisible()
+    await page.waitForTimeout(300)
+    const result = await canvas.first().evaluate(async (el) => {
+      const BarcodeDetectorCtor = (window as any).BarcodeDetector
+      if (!BarcodeDetectorCtor) return { supported: false as const }
+      try {
+        // 模拟组件行为：白底 + 二维码 + 挖白 + 实心方块图标（最坏遮挡情况）
+        const off = document.createElement('canvas')
+        off.width = (el as HTMLCanvasElement).width
+        off.height = (el as HTMLCanvasElement).height
+        const octx = off.getContext('2d')!
+        octx.fillStyle = '#ffffff'
+        octx.fillRect(0, 0, off.width, off.height)
+        octx.drawImage(el as HTMLCanvasElement, 0, 0)
+        const x = (off.width - 40) / 2
+        const y = (off.height - 40) / 2
+        octx.fillStyle = '#ffffff'
+        octx.fillRect(x - 2, y - 2, 44, 44)
+        octx.fillStyle = '#1677ff'
+        octx.fillRect(x, y, 40, 40)
+        const detector = new BarcodeDetectorCtor({ formats: ['qr_code'] })
+        const codes = await detector.detect(off)
+        return { supported: true as const, values: codes.map((c: any) => c.rawValue) }
+      } catch {
+        return { supported: false as const }
+      }
+    })
+    test.skip(!result.supported, '当前浏览器不支持 BarcodeDetector API')
+    expect(result.values).toContain('https://ant.design')
+  })
 })

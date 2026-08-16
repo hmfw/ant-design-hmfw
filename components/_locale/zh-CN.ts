@@ -158,6 +158,11 @@ const zhCN: Locale = {
     slide: (current: number, total: number) => `${current} / ${total}`,
     goTo: (page: number) => `跳转到第 ${page} 页`,
   },
+  QRCode: {
+    expired: '二维码过期',
+    refresh: '点击刷新',
+    scanned: '已扫描',
+  },
 }
 
 export default zhCN
