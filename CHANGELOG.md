@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.45.0] - 2026-08-16
+
+[查看完整内容](./changelogs/v0.45.0.md)
+
+**✨ 功能增强**：Grid 响应式体系升级——`useBreakpoint` 重构为模块级共享单例（对齐 AntD `responsiveObserver`，所有使用方共享一份 matchMedia 监听，引用计数归零时释放），新增 xxxl 断点（1920px），Col 的 span/offset/order/pull/push 类型放宽为 `ColSpan`，`useBreakpoint` / `ScreenMap` 从入口导出，新增 3 个示例。Cascader 补全多选能力——勾选传导（父选联动后代、子全选父自动勾选、部分勾选半选态）、`showCheckedStrategy` 折叠策略、`fieldNames` 字段映射、`change` / `search` / `clear` 事件，新增 6 个示例。Layout Sider 新增 `reverseArrow` 反向箭头、零宽触发逻辑与语义化 API（`SiderClassNames` / `SiderStyles`），新增 3 个示例。Menu 补全 `ItemType` 类型导出。全体 2546 单元测试通过。
+
 ## [0.44.0] - 2026-08-16
 
 [查看完整内容](./changelogs/v0.44.0.md)
