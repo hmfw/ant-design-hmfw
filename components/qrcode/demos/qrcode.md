@@ -32,12 +32,28 @@
   <QRCodeCustomColor />
 </DemoBlock>
 
+### 自定义尺寸
+
+通过 `size` 定制二维码大小，支持响应式调整；`iconSize` 支持对象形式分别指定宽高。
+
+<DemoBlock title="自定义尺寸" :source="QRCodeCustomSizeSource">
+  <QRCodeCustomSize />
+</DemoBlock>
+
 ### 带图标
 
 二维码中间可以显示图标。
 
 <DemoBlock title="带图标" :source="QRCodeIconSource">
   <QRCodeIcon />
+</DemoBlock>
+
+### 纠错等级
+
+L/M/Q/H 四级纠错能力对比，等级越高抗遮挡能力越强但容量越小。
+
+<DemoBlock title="纠错等级" :source="QRCodeErrorLevelSource">
+  <QRCodeErrorLevel />
 </DemoBlock>
 
 ### 状态展示
@@ -54,6 +70,38 @@
 
 <DemoBlock title="自定义状态渲染" :source="QRCodeCustomStatusRenderSource">
   <QRCodeCustomStatusRender />
+</DemoBlock>
+
+### 边框开关
+
+`bordered` 控制边框与内边距。
+
+<DemoBlock title="边框开关" :source="QRCodeBorderedSource">
+  <QRCodeBordered />
+</DemoBlock>
+
+### 留白（安静区）
+
+`marginSize` 以模块数为单位设置二维码四周留白，canvas 与 svg 渲染均支持。
+
+<DemoBlock title="留白（安静区）" :source="QRCodeMarginSource">
+  <QRCodeMargin />
+</DemoBlock>
+
+### 版本提升
+
+文本越长自动提升 QR 版本（矩阵尺寸 21 → 25 → … → 57），最高支持版本 10。
+
+<DemoBlock title="版本提升" :source="QRCodeVersionSource">
+  <QRCodeVersion />
+</DemoBlock>
+
+### 下载二维码
+
+canvas 渲染模式下通过 `toDataURL` 导出 PNG 图片。
+
+<DemoBlock title="下载二维码" :source="QRCodeDownloadSource">
+  <QRCodeDownload />
 </DemoBlock>
 
 ### 细粒度样式控制
@@ -80,18 +128,26 @@
 | icon         | 二维码中图片的地址                                                               | `string`                                          | -               |
 | iconSize     | 二维码中图片的大小                                                               | `number \| { width: number; height: number }`     | `40`            |
 | bordered     | 是否有边框                                                                       | `boolean`                                         | `true`          |
-| marginSize   | SVG 类型二维码的边距                                                             | `number`                                          | -               |
+| marginSize   | 留白（安静区）大小（单位为模块数），`0` 表示无留白                               | `number`                                          | `0`             |
 | statusRender | 自定义状态渲染函数                                                               | `(info: StatusRenderInfo) => VNode \| null`       | -               |
-| onRefresh    | 点击刷新的回调                                                                   | `() => void`                                      | -               |
 | classNames   | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `QRCodeClassNames`                                | -               |
 | styles       | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `QRCodeStyles`                                    | -               |
 
+### QRCode 事件
+
+| 事件名  | 说明           | 类型         |
+| ------- | -------------- | ------------ |
+| refresh | 点击刷新的回调 | `() => void` |
+
+> 仅在监听 `refresh` 事件时，过期状态的遮罩中才会渲染刷新按钮。
+
 ### StatusRenderInfo
 
-| 参数      | 说明     | 类型                                  |
-| --------- | -------- | ------------------------------------- |
-| status    | 当前状态 | `'expired' \| 'loading' \| 'scanned'` |
-| onRefresh | 刷新回调 | `() => void \| undefined`             |
+| 参数      | 说明       | 类型                                  |
+| --------- | ---------- | ------------------------------------- |
+| status    | 当前状态   | `'expired' \| 'loading' \| 'scanned'` |
+| locale    | 当前语言包 | `Locale['QRCode']`                    |
+| onRefresh | 刷新回调   | `() => void \| undefined`             |
 
 ---
 
@@ -141,12 +197,7 @@ interface QRCodeStyles {
   <QRCode value="https://ant.design" :class-names="{ root: 'my-qrcode' }" />
 
   <!-- 自定义状态遮罩 -->
-  <QRCode
-    value="https://ant.design"
-    status="expired"
-    :class-names="{ cover: 'my-cover' }"
-    :on-refresh="handleRefresh"
-  />
+  <QRCode value="https://ant.design" status="expired" :class-names="{ cover: 'my-cover' }" @refresh="handleRefresh" />
 
   <!-- 组合使用 -->
   <QRCode
@@ -208,7 +259,7 @@ interface QRCodeStyles {
         color: 'white',
       },
     }"
-    :on-refresh="handleRefresh"
+    @refresh="handleRefresh"
   />
 
   <!-- 组合使用 -->
@@ -234,14 +285,29 @@ interface QRCodeStyles {
 
 QRCode 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
 
-| Token 名称                   | 说明         | 默认值               |
-| ---------------------------- | ------------ | -------------------- |
-| `--hmfw-color-bg-container`  | 容器背景色   | `#ffffff`            |
-| `--hmfw-color-border`        | 边框色       | `#d9d9d9`            |
-| `--hmfw-color-primary`       | 主题色       | `#1677ff`            |
-| `--hmfw-color-primary-hover` | 主题色悬停态 | `#4096ff`            |
-| `--hmfw-color-text`          | 主文本色     | `rgba(0,0,0,0.88)`   |
-| `--hmfw-font-size-base`      | 基础字号     | `14px`               |
-| `--hmfw-line-height`         | 标准行高     | `1.5714285714285714` |
-| `--hmfw-border-radius-lg`    | 大号圆角     | `8px`                |
-| `--hmfw-padding-sm`          | 小号内边距   | `8px`                |
+### 全局 Token
+
+| Token 名称                    | 说明         | 默认值               |
+| ----------------------------- | ------------ | -------------------- |
+| `--hmfw-color-border`         | 边框色       | `#d9d9d9`            |
+| `--hmfw-color-primary`        | 主题色       | `#1677ff`            |
+| `--hmfw-color-primary-hover`  | 主题色悬停态 | `#4096ff`            |
+| `--hmfw-color-text`           | 主文本色     | `rgba(0,0,0,0.88)`   |
+| `--hmfw-font-size-base`       | 基础字号     | `14px`               |
+| `--hmfw-line-height`          | 标准行高     | `1.5714285714285714` |
+| `--hmfw-border-radius-lg`     | 大号圆角     | `8px`                |
+| `--hmfw-padding-sm`           | 小号内边距   | `12px`               |
+| `--hmfw-padding-xs`           | 特小号内边距 | `8px`                |
+| `--hmfw-padding`              | 标准内边距   | `16px`               |
+| `--hmfw-margin-xs`            | 特小号外边距 | `8px`                |
+| `--hmfw-motion-duration-slow` | 慢速动效时长 | `0.3s`               |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-qrcode` 上，可直接覆盖以定制遮罩配色。
+
+| Token 名称               | 说明           | 默认值                                                                                                          |
+| ------------------------ | -------------- | --------------------------------------------------------------------------------------------------------------- |
+| `--hmfw-qrcode-cover-bg` | 状态遮罩背景色 | `rgba(255, 255, 255, 0.96)`（派生自 `color-bg-container` × 96% 透明度，对齐 AntD `QRCodeCoverBackgroundColor`） |
+
+暗黑主题（`.hmfw-theme-dark` / `[data-theme='dark']`）下该变量自动切换为 `rgba(20, 20, 20, 0.96)`。
