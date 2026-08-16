@@ -386,8 +386,13 @@ export type {
   CascaderOption,
   CascaderValue,
   CascaderExpandTrigger,
+  CascaderShowCheckedStrategy,
+  CascaderFieldNames,
   CascaderClassNames,
   CascaderStyles,
+  CascaderChangeHandler,
+  CascaderSearchHandler,
+  CascaderClearHandler,
 } from './cascader'
 
 // App

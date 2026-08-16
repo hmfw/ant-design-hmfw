@@ -14,6 +14,12 @@ export type CascaderValue = (string | number)[]
 export type CascaderExpandTrigger = 'click' | 'hover'
 export type CascaderShowCheckedStrategy = 'SHOW_PARENT' | 'SHOW_CHILD'
 
+export interface CascaderFieldNames {
+  label?: string
+  value?: string
+  children?: string
+}
+
 /**
  * Cascader 组件各部分的自定义 className
  */
@@ -116,7 +122,7 @@ export interface CascaderProps {
   showSearch?: boolean
   changeOnSelect?: boolean
   displayRender?: (labels: string[], selectedOptions?: CascaderOption[]) => string | VNode
-  fieldNames?: { label?: string; value?: string; children?: string }
+  fieldNames?: CascaderFieldNames
   open?: boolean
   defaultOpen?: boolean
   notFoundContent?: string
@@ -136,8 +142,22 @@ export interface CascaderProps {
 
   /** 是否启用虚拟滚动（默认 false，大数据量时开启以提升性能） */
   virtual?: boolean
-  /** 下拉菜单容器高度（px），默认 256 */
+  /** 下拉菜单容器高度（px），默认 180（对齐 AntD dropdownHeight） */
   listHeight?: number
   /** 菜单项高度（px），默认 32 */
   listItemHeight?: number
 }
+
+// ----------------------------------------------------------------
+// 事件类型
+// ----------------------------------------------------------------
+
+/** change 事件回调：单选时为单个路径，多选时为路径数组 */
+export type CascaderChangeHandler = (
+  value: CascaderValue | CascaderValue[],
+  selectedOptions: CascaderOption[] | CascaderOption[][],
+) => void
+/** search 事件回调 */
+export type CascaderSearchHandler = (value: string) => void
+/** clear 事件回调 */
+export type CascaderClearHandler = () => void

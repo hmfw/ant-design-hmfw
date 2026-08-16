@@ -44,7 +44,7 @@
 
 ### 多选
 
-通过 `multiple` 属性开启多选模式。
+通过 `multiple` 属性开启多选模式。多选支持父子联动（对齐 AntD）：勾选父节点会联动勾选全部后代；某节点的所有子节点勾选后父节点自动勾选（部分勾选时父节点为半选态）。
 
 <DemoBlock title="多选" :source="CascaderMultipleSource">
   <CascaderMultiple />
@@ -66,36 +66,87 @@
   <CascaderClassNames />
 </DemoBlock>
 
+### 默认值
+
+通过 `defaultValue` 指定初始选中项（非受控），与受控 `value` 形成对比。
+
+<DemoBlock title="默认值" :source="CascaderDefaultValueSource">
+  <CascaderDefaultValue />
+</DemoBlock>
+
+### 禁用选项
+
+通过 `CascaderOption.disabled` 禁用指定选项，被禁用的节点不可点选也不可展开。
+
+<DemoBlock title="禁用选项" :source="CascaderDisabledOptionSource">
+  <CascaderDisabledOption />
+</DemoBlock>
+
+### 尺寸
+
+提供 `small` / `middle` / `large` 三种尺寸。
+
+<DemoBlock title="尺寸" :source="CascaderSizeSource">
+  <CascaderSize />
+</DemoBlock>
+
+### 动态加载选项
+
+通过 `loadData` 在点击节点时异步加载子选项，配合 `isLeaf` 标记叶子节点。
+
+<DemoBlock title="动态加载选项" :source="CascaderLazySource">
+  <CascaderLazy />
+</DemoBlock>
+
+### 自定义字段名
+
+通过 `fieldNames` 对接后端 `id` / `name` 等字段结构，无需前端转换数据。
+
+<DemoBlock title="自定义字段名" :source="CascaderFieldNamesSource">
+  <CascaderFieldNames />
+</DemoBlock>
+
+### 校验状态
+
+通过 `status` 设置 `error` / `warning` 校验状态。
+
+<DemoBlock title="校验状态" :source="CascaderStatusSource">
+  <CascaderStatus />
+</DemoBlock>
+
 ## API
 
 ### Cascader Props
 
-| 参数                | 说明                                                                             | 类型                                                                        | 默认值                                                     |
-| ------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| value(v-model)      | 指定选中项                                                                       | `string[]` \| `string[][]` (multiple)                                       | -                                                          |
-| defaultValue        | 默认的选中项                                                                     | `string[]` \| `string[][]` (multiple)                                       | `[]`                                                       |
-| options             | 可选项数据源                                                                     | `CascaderOption[]`                                                          | `[]`                                                       |
-| disabled            | 禁用                                                                             | `boolean`                                                                   | `false`                                                    |
-| placeholder         | 输入框占位文本                                                                   | `string`                                                                    | `'请选择'`                                                 |
-| allowClear          | 是否支持清除                                                                     | `boolean`                                                                   | `true`                                                     |
-| size                | 输入框大小                                                                       | `'small' \| 'middle' \| 'large'`                                            | `'middle'`                                                 |
-| status              | 设置校验状态                                                                     | `'error' \| 'warning'`                                                      | -                                                          |
-| expandTrigger       | 次级菜单的展开方式                                                               | `'click' \| 'hover'`                                                        | `'click'`                                                  |
-| multiple            | 支持多选                                                                         | `boolean`                                                                   | `false`                                                    |
-| showSearch          | 在选择框中显示搜索框                                                             | `boolean`                                                                   | `false`                                                    |
-| changeOnSelect      | 当此项为 true 时，点选每级菜单选项值都会发生变化                                 | `boolean`                                                                   | `false`                                                    |
-| displayRender       | 选择后展示的渲染函数                                                             | `(labels: string[], selectedOptions?: CascaderOption[]) => string \| VNode` | -                                                          |
-| fieldNames          | 自定义 options 中 label value children 的字段                                    | `{ label?: string; value?: string; children?: string }`                     | `{ label: 'label', value: 'value', children: 'children' }` |
-| open(v-model)       | 控制浮层显隐                                                                     | `boolean`                                                                   | -                                                          |
-| defaultOpen         | 默认展开浮层                                                                     | `boolean`                                                                   | `false`                                                    |
-| notFoundContent     | 当下拉列表为空时显示的内容                                                       | `string`                                                                    | `'无匹配结果'`                                             |
-| loadData            | 用于动态加载选项                                                                 | `(selectedOptions: CascaderOption[]) => void`                               | -                                                          |
-| showCheckedStrategy | 多选时的选中策略                                                                 | `'SHOW_PARENT' \| 'SHOW_CHILD'`                                             | `'SHOW_PARENT'`                                            |
-| maxTagCount         | 最多显示多少个 tag                                                               | `number`                                                                    | -                                                          |
-| maxTagPlaceholder   | 隐藏 tag 时显示的内容                                                            | `string \| ((omittedValues: string[][]) => string)`                         | -                                                          |
-| maxTagTextLength    | 最大显示的 tag 文本长度                                                          | `number`                                                                    | -                                                          |
-| classNames          | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CascaderClassNames`                                                        | -                                                          |
-| styles              | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CascaderStyles`                                                            | -                                                          |
+| 参数                | 说明                                                                                                                                                                                               | 类型                                                                        | 默认值                                                     |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| value(v-model)      | 指定选中项                                                                                                                                                                                         | `(string \| number)[]` \| `(string \| number)[][]` (multiple)               | -                                                          |
+| defaultValue        | 默认的选中项                                                                                                                                                                                       | `(string \| number)[]` \| `(string \| number)[][]` (multiple)               | `[]`                                                       |
+| options             | 可选项数据源                                                                                                                                                                                       | `CascaderOption[]`                                                          | `[]`                                                       |
+| disabled            | 禁用                                                                                                                                                                                               | `boolean`                                                                   | `false`                                                    |
+| placeholder         | 输入框占位文本                                                                                                                                                                                     | `string`                                                                    | `'请选择'`                                                 |
+| allowClear          | 是否支持清除                                                                                                                                                                                       | `boolean`                                                                   | `true`                                                     |
+| size                | 输入框大小                                                                                                                                                                                         | `'small' \| 'middle' \| 'large'`                                            | `'middle'`                                                 |
+| status              | 设置校验状态                                                                                                                                                                                       | `'error' \| 'warning' \| ''`                                                | `''`                                                       |
+| expandTrigger       | 次级菜单的展开方式                                                                                                                                                                                 | `'click' \| 'hover'`                                                        | `'click'`                                                  |
+| multiple            | 支持多选                                                                                                                                                                                           | `boolean`                                                                   | `false`                                                    |
+| showSearch          | 在选择框中显示搜索框                                                                                                                                                                               | `boolean`                                                                   | `false`                                                    |
+| changeOnSelect      | 当此项为 true 时，点选每级菜单选项值都会发生变化                                                                                                                                                   | `boolean`                                                                   | `false`                                                    |
+| displayRender       | 选择后展示的渲染函数                                                                                                                                                                               | `(labels: string[], selectedOptions?: CascaderOption[]) => string \| VNode` | -                                                          |
+| fieldNames          | 自定义 options 中 label value children 的字段                                                                                                                                                      | `{ label?: string; value?: string; children?: string }`                     | `{ label: 'label', value: 'value', children: 'children' }` |
+| open(v-model)       | 控制浮层显隐                                                                                                                                                                                       | `boolean`                                                                   | -                                                          |
+| defaultOpen         | 默认展开浮层                                                                                                                                                                                       | `boolean`                                                                   | `false`                                                    |
+| notFoundContent     | 当下拉列表为空时显示的内容                                                                                                                                                                         | `string`                                                                    | `'无匹配结果'`                                             |
+| loadData            | 用于动态加载选项                                                                                                                                                                                   | `(selectedOptions: CascaderOption[]) => void`                               | -                                                          |
+| showCheckedStrategy | 多选时勾选值的折叠策略（对齐 AntD：`value` 存储按策略去重后的勾选集，面板勾选状态渲染时再传导补齐）。`SHOW_PARENT`：父路径被选中或某节点所有子节点选中时折叠为父路径；`SHOW_CHILD`：仅保留叶子路径 | `'SHOW_PARENT' \| 'SHOW_CHILD'`                                             | `'SHOW_PARENT'`                                            |
+| maxTagCount         | 最多显示多少个 tag                                                                                                                                                                                 | `number`                                                                    | -                                                          |
+| maxTagPlaceholder   | 隐藏 tag 时显示的内容                                                                                                                                                                              | `string \| ((omittedValues: string[][]) => string)`                         | -                                                          |
+| maxTagTextLength    | 最大显示的 tag 文本长度                                                                                                                                                                            | `number`                                                                    | -                                                          |
+| classNames          | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)                                                                                                                   | `CascaderClassNames`                                                        | -                                                          |
+| styles              | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)                                                                                                                   | `CascaderStyles`                                                            | -                                                          |
+| virtual             | 是否启用虚拟滚动（大数据量时开启以提升性能）                                                                                                                                                       | `boolean`                                                                   | `false`                                                    |
+| listHeight          | 下拉菜单容器高度（px）                                                                                                                                                                             | `number`                                                                    | `180`                                                      |
+| listItemHeight      | 菜单项高度（px）                                                                                                                                                                                   | `number`                                                                    | `32`                                                       |
 
 ### CascaderOption
 
@@ -305,20 +356,56 @@ interface CascaderStyles {
 
 ## 设计 Token
 
-| Token 名称                           | 说明           | 默认值             |
-| ------------------------------------ | -------------- | ------------------ |
-| `--hmfw-border-radius`               | 基础圆角       | `6px`              |
-| `--hmfw-color-bg-container-disabled` | 禁用背景色     | `rgba(0,0,0,0.04)` |
-| `--hmfw-color-bg-text-hover`         | 文本悬浮背景色 | `rgba(0,0,0,0.06)` |
-| `--hmfw-color-border`                | 边框颜色       | `#d9d9d9`          |
-| `--hmfw-color-border-secondary`      | 次要边框颜色   | `#f0f0f0`          |
-| `--hmfw-color-error`                 | 错误状态颜色   | `#ff4d4f`          |
-| `--hmfw-color-error-bg`              | 错误背景色     | `#fff2f0`          |
-| `--hmfw-color-fill-secondary`        | 次要填充色     | `rgba(0,0,0,0.06)` |
-| `--hmfw-color-primary`               | 主题色         | `#1677ff`          |
-| `--hmfw-color-primary-bg`            | 主题背景色     | `#e6f4ff`          |
-| `--hmfw-color-text`                  | 主文本颜色     | `rgba(0,0,0,0.88)` |
-| `--hmfw-color-text-disabled`         | 禁用文本颜色   | `rgba(0,0,0,0.25)` |
-| `--hmfw-color-text-placeholder`      | 占位符文本颜色 | `rgba(0,0,0,0.25)` |
-| `--hmfw-color-text-secondary`        | 次要文本颜色   | `rgba(0,0,0,0.65)` |
-| `--hmfw-color-warning`               | 警告状态颜色   | `#faad14`          |
+Cascader 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+### 全局 Token
+
+| Token 名称                             | 说明                                        | 默认值                 |
+| -------------------------------------- | ------------------------------------------- | ---------------------- |
+| `--hmfw-color-primary`                 | 主题色（悬停边框、选中项、checkbox 选中态） | `#1677ff`              |
+| `--hmfw-color-bg-container`            | 容器背景色                                  | `#ffffff`              |
+| `--hmfw-color-bg-container-disabled`   | 禁用背景色                                  | `rgba(0,0,0,0.04)`     |
+| `--hmfw-color-border`                  | 边框颜色                                    | `#d9d9d9`              |
+| `--hmfw-color-border-secondary`        | 次要边框颜色（列分隔线、dropdown 边框）     | `#f0f0f0`              |
+| `--hmfw-color-error`                   | 错误状态颜色（status、搜索高亮）            | `#ff4d4f`              |
+| `--hmfw-color-error-bg`                | 错误背景色（搜索高亮背景）                  | `#fff2f0`              |
+| `--hmfw-color-fill-secondary`          | 次要填充色（多选标签背景）                  | `rgba(0,0,0,0.06)`     |
+| `--hmfw-color-primary-bg`              | 主题背景色（选中菜单项背景）                | `#e6f4ff`              |
+| `--hmfw-color-text`                    | 主文本颜色                                  | `rgba(0,0,0,0.88)`     |
+| `--hmfw-color-text-secondary`          | 次要文本颜色                                | `rgba(0,0,0,0.65)`     |
+| `--hmfw-color-text-disabled`           | 禁用文本颜色                                | `rgba(0,0,0,0.25)`     |
+| `--hmfw-color-text-placeholder`        | 占位符文本颜色                              | `rgba(0,0,0,0.25)`     |
+| `--hmfw-color-text-light-solid`        | 反色文字（checkbox 选中勾号）               | `#ffffff`              |
+| `--hmfw-color-warning`                 | 警告状态颜色                                | `#faad14`              |
+| `--hmfw-control-outline`               | 聚焦外发光                                  | `rgba(22,119,255,0.1)` |
+| `--hmfw-control-item-bg-hover`         | 菜单项悬浮背景                              | `rgba(0,0,0,0.04)`     |
+| `--hmfw-control-height`                | 控件高度（middle）                          | `32px`                 |
+| `--hmfw-control-height-sm`             | 控件高度（small）                           | `24px`                 |
+| `--hmfw-control-height-lg`             | 控件高度（large）                           | `40px`                 |
+| `--hmfw-control-padding-horizontal`    | 控件水平内边距                              | `12px`                 |
+| `--hmfw-control-padding-horizontal-sm` | 控件水平内边距（small）                     | `8px`                  |
+| `--hmfw-font-size`                     | 基础字号                                    | `14px`                 |
+| `--hmfw-font-size-sm`                  | 小字号                                      | `12px`                 |
+| `--hmfw-font-size-lg`                  | 大字号                                      | `16px`                 |
+| `--hmfw-border-radius`                 | 基础圆角                                    | `6px`                  |
+| `--hmfw-border-radius-sm`              | 小圆角（多选标签）                          | `4px`                  |
+| `--hmfw-padding-xxs`                   | 极小间距（菜单上下内边距）                  | `4px`                  |
+| `--hmfw-padding-xs`                    | 小间距（多选标签水平内边距）                | `8px`                  |
+| `--hmfw-padding-sm`                    | 小中间距（菜单项水平内边距）                | `12px`                 |
+| `--hmfw-margin-xxs`                    | 极小外边距（标签间距、清除按钮间距）        | `4px`                  |
+| `--hmfw-margin-xs`                     | 小外边距（checkbox、展开图标间距）          | `8px`                  |
+| `--hmfw-motion-duration-fast`          | 快速过渡时长                                | `0.1s`                 |
+| `--hmfw-motion-duration-mid`           | 中速过渡时长                                | `0.2s`                 |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-cascader` 与 `.hmfw-cascader-dropdown` 上（弹层经 Teleport 渲染到 body，与根节点平级，需在两处同时定义才能被弹层内元素继承），可直接覆盖以定制单个组件的尺寸与样式。默认值对齐 Ant Design v6 的 `prepareComponentToken` 派生规则。
+
+| Token 名称                               | 说明                 | 默认值                                                                 |
+| ---------------------------------------- | -------------------- | ---------------------------------------------------------------------- |
+| `--hmfw-cascader-control-width`          | 根控件宽度           | `184px`（对齐 AntD controlWidth）                                      |
+| `--hmfw-cascader-control-item-width`     | 单列菜单宽度         | `111px`（对齐 AntD controlItemWidth）                                  |
+| `--hmfw-cascader-dropdown-height`        | 下拉菜单高度         | `180px`（对齐 AntD dropdownHeight）                                    |
+| `--hmfw-cascader-option-padding`         | 菜单项内边距         | 派生自 `(control-height − font-size × line-height) / 2` + `padding-sm` |
+| `--hmfw-cascader-checkbox-border-radius` | 多选 checkbox 圆角   | `2px`（对齐 AntD checkbox 内部值）                                     |
+| `--hmfw-cascader-multiple-padding`       | 多选模式选择器内边距 | `2px var(--hmfw-padding-xxs)`                                          |
