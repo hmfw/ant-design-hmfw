@@ -102,10 +102,7 @@ function toCssSize(v: number | string): string {
 const drawerProps = {
   open: { type: Boolean, default: undefined },
   defaultOpen: Boolean,
-  title: {
-    type: [String, Number, Object, Function] as PropType<DrawerContent>,
-    default: undefined,
-  },
+  title: { type: [String, Number, Object, Function] as PropType<DrawerContent>, default: undefined },
   placement: { type: String as PropType<DrawerPlacement>, default: 'right' },
   size: { type: [String, Number] as PropType<DrawerSize>, default: undefined },
   width: { type: [Number, String], default: DEFAULT_SIZE },
@@ -121,10 +118,7 @@ const drawerProps = {
   destroyOnHidden: { type: Boolean, default: undefined },
   forceRender: Boolean,
   focusTriggerAfterClose: { type: Boolean, default: true },
-  getContainer: {
-    type: [String, Object, Function, Boolean] as PropType<DrawerGetContainer>,
-    default: undefined,
-  },
+  getContainer: { type: [String, Object, Function, Boolean] as PropType<DrawerGetContainer>, default: undefined },
   classNames: { type: Object as PropType<DrawerClassNames>, default: undefined },
   styles: { type: Object as PropType<DrawerStyles>, default: undefined },
 } satisfies Record<keyof DrawerProps, any>
@@ -256,17 +250,16 @@ export const Drawer = defineComponent({
       const hasTitle = titleNode != null && titleNode !== ''
       // no header at all when nothing to show
       if (!hasTitle && !props.closable && !extraNode) return null
+      const headerCls = cls(
+        `${prefixCls}-header`,
+        {
+          [`${prefixCls}-header-close-only`]: props.closable && !hasTitle && !extraNode,
+        },
+        props.classNames?.header,
+      )
+
       return (
-        <div
-          class={cls(
-            `${prefixCls}-header`,
-            {
-              [`${prefixCls}-header-close-only`]: props.closable && !hasTitle && !extraNode,
-            },
-            props.classNames?.header,
-          )}
-          style={props.styles?.header}
-        >
+        <div class={headerCls} style={props.styles?.header}>
           <div class={`${prefixCls}-header-title`}>
             {renderCloseIcon()}
             {hasTitle && (
@@ -310,21 +303,25 @@ export const Drawer = defineComponent({
       const rootStyle: CSSProperties = { zIndex: computedZIndex.value, ...props.styles?.root }
       const teleportDisabled = props.getContainer === false
 
+      const drawerCls = cls(
+        `${prefixCls}`,
+        {
+          [`${prefixCls}-no-mask`]: !props.mask,
+        },
+        props.classNames?.root,
+      )
+
+      const contentCls = cls(
+        `${prefixCls}-content-wrapper`,
+        `${prefixCls}-${props.placement}`,
+        props.classNames?.wrapper,
+      )
+
       return (
         <Teleport to={getContainer.value} disabled={teleportDisabled}>
           <Transition name={`hmfw-drawer-${props.placement}`} appear>
             {(isOpen.value || props.forceRender) && (
-              <div
-                class={cls(
-                  `${prefixCls}`,
-                  {
-                    [`${prefixCls}-no-mask`]: !props.mask,
-                  },
-                  props.classNames?.root,
-                )}
-                style={{ ...rootStyle }}
-                onKeydown={handleKeydown}
-              >
+              <div class={drawerCls} style={rootStyle} onKeydown={handleKeydown}>
                 {props.mask && (
                   <div
                     class={cls(`${prefixCls}-mask`, props.classNames?.mask)}
@@ -334,11 +331,7 @@ export const Drawer = defineComponent({
                 )}
                 <div
                   ref={mergedDrawerRef}
-                  class={cls(
-                    `${prefixCls}-content-wrapper`,
-                    `${prefixCls}-${props.placement}`,
-                    props.classNames?.wrapper,
-                  )}
+                  class={contentCls}
                   style={{ ...sizeStyle.value, ...props.styles?.wrapper }}
                   role="dialog"
                   aria-modal="true"

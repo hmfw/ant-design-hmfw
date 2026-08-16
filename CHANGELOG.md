@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.44.0] - 2026-08-16
+
+[查看完整内容](./changelogs/v0.44.0.md)
+
+**🐛 重大修复**：QRCode 编码器全面重写——原实现存在掩码破坏定位图案、多块缺少交错、格式信息位序颠倒等规范 bug，生成的二维码完全不可扫描。新编码器与权威实现逐位交叉验证（v1-v10 × L/M/Q/H 共 67 组用例一致），并修复 SVG 偏移裁剪、icon 挖白透点、type 切换空白，`onRefresh` 改为 emits、接入国际化、样式 Token 化，新增 6 个文档示例。Form（FormItem/上下文）与 Card（Grid/Meta）完成文件拆分，Menu class 计算提取为 computed 优化渲染，Drawer/Modal/Empty/Notification 完成 class 提取与 props 格式精简。全体 2518 单元测试通过。
+
 ## [0.43.0] - 2026-08-13
 
 [查看完整内容](./changelogs/v0.43.0.md)

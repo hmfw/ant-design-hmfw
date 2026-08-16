@@ -87,10 +87,7 @@ export const Modal = defineComponent({
   props: {
     open: { type: Boolean, default: undefined },
     defaultOpen: Boolean,
-    title: {
-      type: [String, Number, Object, Function] as PropType<ModalContent>,
-      default: undefined,
-    },
+    title: { type: [String, Number, Object, Function] as PropType<ModalContent>, default: undefined },
     width: { type: [Number, String] as PropType<ModalWidth>, default: 520 },
     centered: Boolean,
     closable: { type: Boolean, default: true },
@@ -110,10 +107,7 @@ export const Modal = defineComponent({
     destroyOnHidden: { type: Boolean, default: undefined },
     forceRender: Boolean,
     zIndex: { type: Number, default: 1000 },
-    getContainer: {
-      type: [String, Object, Function, Boolean] as PropType<GetContainer>,
-      default: undefined,
-    },
+    getContainer: { type: [String, Object, Function, Boolean] as PropType<GetContainer>, default: undefined },
     wrapClassName: { type: String, default: undefined },
     focusTriggerAfterClose: { type: Boolean, default: true },
     bodyStyle: { type: Object, default: undefined },
@@ -287,6 +281,10 @@ export const Modal = defineComponent({
       // 如果有 modalRender，应用自定义渲染
       const renderedDialog = props.modalRender ? props.modalRender(dialogContent) : dialogContent
 
+      const wrapCls = cls(`${prefixCls}-wrap`, props.wrapClassName, props.classNames?.wrapper, {
+        [`${prefixCls}-centered`]: props.centered,
+      })
+
       return (
         <Teleport to="body">
           <Transition name="hmfw-zoom" onAfterLeave={onAfterLeave}>
@@ -302,13 +300,7 @@ export const Modal = defineComponent({
                     style={{ ...props.maskStyle, ...props.styles?.mask }}
                   />
                 )}
-                <div
-                  class={cls(`${prefixCls}-wrap`, props.wrapClassName, props.classNames?.wrapper, {
-                    [`${prefixCls}-centered`]: props.centered,
-                  })}
-                  style={props.styles?.wrapper}
-                  onClick={handleMaskClick}
-                >
+                <div class={wrapCls} style={props.styles?.wrapper} onClick={handleMaskClick}>
                   {renderedDialog}
                 </div>
               </div>

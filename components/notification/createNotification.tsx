@@ -29,14 +29,8 @@ const TypeIcon: Record<NotificationType, VNode> = {
 const NotificationContainer = defineComponent({
   name: 'NotificationContainer',
   props: {
-    placement: {
-      type: String as () => NotificationPlacement,
-      required: true,
-    },
-    instanceConfig: {
-      type: Object as () => ConfigOptions,
-      required: true,
-    },
+    placement: { type: String as () => NotificationPlacement, required: true },
+    instanceConfig: { type: Object as () => ConfigOptions, required: true },
   },
   setup(props) {
     const notices = ref<NoticeItem[]>([])
