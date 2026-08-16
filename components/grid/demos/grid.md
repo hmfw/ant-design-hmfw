@@ -52,7 +52,7 @@
 
 ### 响应式布局
 
-通过 `xs`、`sm`、`md`、`lg`、`xl`、`xxl` 属性设置不同断点下的列宽。
+通过 `xs`、`sm`、`md`、`lg`、`xl`、`xxl`、`xxxl` 属性设置不同断点下的列宽（随视口变宽逐级增加列数）。
 
 <DemoBlock title="响应式布局" :source="GridResponsiveSource">
   <GridResponsive />
@@ -64,6 +64,30 @@
 
 <DemoBlock title="Flex 布局" :source="GridFlexSource">
   <GridFlex />
+</DemoBlock>
+
+### Flex 拉伸
+
+通过 `align="stretch"` 让列拉伸至等高（flex 布局的默认行为）。
+
+<DemoBlock title="Flex 拉伸" :source="GridFlexStretchSource">
+  <GridFlexStretch />
+</DemoBlock>
+
+### 响应式 Flex 与断点重置
+
+响应式对象支持 `flex` 字段在不同断点切换 flex 取值；`offset`、`order`、`pull`、`push` 传 `0` 可重置上级断点的对应设置。
+
+<DemoBlock title="响应式 Flex" :source="GridResponsiveFlexSource">
+  <GridResponsiveFlex />
+</DemoBlock>
+
+### 断点监听
+
+`useBreakpoint()` 返回响应式断点表，可在 JS 中获取当前命中的断点，配合响应式 props 使用。
+
+<DemoBlock title="断点监听" :source="GridUseBreakpointSource">
+  <GridUseBreakpoint />
 </DemoBlock>
 
 ## API
@@ -79,20 +103,27 @@
 
 ### Col Props
 
-| 参数   | 说明                   | 类型                                                                                                          | 默认值 |
-| ------ | ---------------------- | ------------------------------------------------------------------------------------------------------------- | ------ |
-| flex   | flex 布局属性          | `number \| 'auto' \| 'none' \| string`                                                                        | -      |
-| span   | 栅格占位格数，0 时隐藏 | `number \| string`                                                                                            | -      |
-| offset | 栅格左侧的间隔格数     | `number`                                                                                                      | `0`    |
-| order  | 栅格顺序               | `number`                                                                                                      | `0`    |
-| push   | 栅格向右移动格数       | `number`                                                                                                      | `0`    |
-| pull   | 栅格向左移动格数       | `number`                                                                                                      | `0`    |
-| xs     | `<576px` 响应式栅格    | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
-| sm     | `≥576px` 响应式栅格    | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
-| md     | `≥768px` 响应式栅格    | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
-| lg     | `≥992px` 响应式栅格    | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
-| xl     | `≥1200px` 响应式栅格   | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
-| xxl    | `≥1600px` 响应式栅格   | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | -      |
+| 参数   | 说明                   | 类型                                                                                                                                                            | 默认值 |
+| ------ | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| flex   | flex 布局属性          | `number \| 'auto' \| 'none' \| string`                                                                                                                          | -      |
+| span   | 栅格占位格数，0 时隐藏 | `number \| string`                                                                                                                                              | -      |
+| offset | 栅格左侧的间隔格数     | `number \| string`                                                                                                                                              | `0`    |
+| order  | 栅格顺序               | `number \| string`                                                                                                                                              | `0`    |
+| push   | 栅格向右移动格数       | `number \| string`                                                                                                                                              | `0`    |
+| pull   | 栅格向左移动格数       | `number \| string`                                                                                                                                              | `0`    |
+| xs     | `<576px` 响应式栅格    | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | -      |
+| sm     | `≥576px` 响应式栅格    | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | -      |
+| md     | `≥768px` 响应式栅格    | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | -      |
+| lg     | `≥992px` 响应式栅格    | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | -      |
+| xl     | `≥1200px` 响应式栅格   | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | -      |
+| xxl    | `≥1600px` 响应式栅格   | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | -      |
+| xxxl   | `≥1920px` 响应式栅格   | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | -      |
+
+### useBreakpoint
+
+| 名称          | 说明                                                            | 类型                   |
+| ------------- | --------------------------------------------------------------- | ---------------------- |
+| useBreakpoint | 返回响应式断点表，`{ xs, sm, md, lg, xl, xxl, xxxl } → boolean` | `() => Ref<ScreenMap>` |
 
 ---
 
@@ -100,4 +131,4 @@
 
 ## 设计 Token
 
-Grid 组件目前未直接消费 Design Token，样式以硬编码方式实现。后续会接入 Token 系统，主题切换需通过自定义 CSS 变量覆盖默认 className 实现。
+Grid 为纯布局组件：全部样式均为结构性值（flex 百分比、媒体查询断点），不消费颜色、圆角、间距等设计 Token，因此无需主题定制。如需调整栅格样式，直接通过原生 `class` / `style` 覆盖即可。

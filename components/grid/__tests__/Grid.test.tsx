@@ -1,8 +1,12 @@
-import { mount } from '@vue/test-utils'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { mount, enableAutoUnmount } from '@vue/test-utils'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import Row from '../Row'
 import Col from '../Col'
-import { h } from 'vue'
+import { h, defineComponent, type Ref } from 'vue'
+import { useBreakpoint, type ScreenMap } from '../hooks/useBreakpoint'
+
+// 每个测试后自动卸载 wrapper，确保 useBreakpoint 单例引用计数归零、测试间互不影响
+enableAutoUnmount(afterEach)
 
 // Mock matchMedia
 beforeEach(() => {
@@ -198,6 +202,39 @@ describe('Grid', () => {
 
     // ==================== 扩展场景 ====================
 
+    it('handles flex=0', () => {
+      const wrapper = mount(Col, {
+        props: { flex: 0 },
+      })
+      expect(wrapper.attributes('style')).toContain('flex: 0 0 auto')
+    })
+
+    it('handles responsive flex via CSS variable', () => {
+      const wrapper = mount(Col, {
+        props: {
+          xs: { span: 24 },
+          md: { span: 12, flex: '200px' },
+        },
+      })
+      expect(wrapper.classes()).toContain('hmfw-col-md-12')
+      expect(wrapper.classes()).toContain('hmfw-col-md-flex')
+      expect(wrapper.attributes('style')).toContain('--hmfw-col-md-flex: 0 0 200px')
+    })
+
+    it('handles xxxl breakpoint', () => {
+      const wrapper = mount(Col, {
+        props: { xxxl: 6 },
+      })
+      expect(wrapper.classes()).toContain('hmfw-col-xxxl-6')
+    })
+
+    it('handles offset 24', () => {
+      const wrapper = mount(Col, {
+        props: { offset: 24 },
+      })
+      expect(wrapper.classes()).toContain('hmfw-col-offset-24')
+    })
+
     it('handles flex=none as string pass-through', () => {
       const wrapper = mount(Col, {
         props: { flex: 'none' },
@@ -280,6 +317,32 @@ describe('Grid', () => {
         props: { gutter: { xs: 8, sm: 16 } },
       })
       expect(wrapper.classes()).toContain('hmfw-row')
+    })
+
+    it('responsive gutter falls back to all-matched screens when matchMedia unavailable', () => {
+      // SSR/旧环境无 matchMedia：断点表为空时回退全匹配，响应式 gutter 取最大的已定义断点（lg:24）的值
+      const originalMatchMedia = window.matchMedia
+      Object.defineProperty(window, 'matchMedia', { writable: true, value: undefined })
+      const wrapper = mount(Row, {
+        props: { gutter: { xs: 8, lg: 24 } },
+      })
+      expect(wrapper.attributes('style')).toContain('margin-inline: -12px')
+      Object.defineProperty(window, 'matchMedia', { writable: true, value: originalMatchMedia })
+    })
+  })
+
+  describe('useBreakpoint', () => {
+    it('shares breakpoint state across instances', () => {
+      const refs: Ref<ScreenMap>[] = []
+      const Probe = defineComponent({
+        setup() {
+          refs.push(useBreakpoint())
+          return () => h('div')
+        },
+      })
+      mount(Probe)
+      mount(Probe)
+      expect(refs[0]).toBe(refs[1])
     })
   })
 })

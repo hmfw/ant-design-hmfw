@@ -1,13 +1,27 @@
-import { defineComponent, computed, inject, type PropType, type CSSProperties, type ComputedRef } from 'vue'
+import { defineComponent, computed, inject, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils/cls'
-import type { ColSpan, ColSize, FlexType } from './types'
-import { RowContextKey } from './Row'
+import type { ColProps, ColSize, FlexType } from './types'
+import { RowContextKey } from './context'
+import type { RowContext } from './context'
 
-interface RowContext {
-  gutter: ComputedRef<[number | string, number | string]>
-  wrap: ComputedRef<boolean>
-}
+const colProps = {
+  flex: { type: [Number, String] as PropType<FlexType>, default: undefined },
+  span: { type: [Number, String] as PropType<ColProps['span']>, default: undefined },
+  offset: { type: [Number, String] as PropType<ColProps['offset']>, default: 0 },
+  order: { type: [Number, String] as PropType<ColProps['order']>, default: 0 },
+  pull: { type: [Number, String] as PropType<ColProps['pull']>, default: 0 },
+  push: { type: [Number, String] as PropType<ColProps['push']>, default: 0 },
+  xs: { type: [Number, Object] as PropType<ColSize>, default: undefined },
+  sm: { type: [Number, Object] as PropType<ColSize>, default: undefined },
+  md: { type: [Number, Object] as PropType<ColSize>, default: undefined },
+  lg: { type: [Number, Object] as PropType<ColSize>, default: undefined },
+  xl: { type: [Number, Object] as PropType<ColSize>, default: undefined },
+  xxl: { type: [Number, Object] as PropType<ColSize>, default: undefined },
+  xxxl: { type: [Number, Object] as PropType<ColSize>, default: undefined },
+} satisfies Record<keyof ColProps, any>
+
+const sizes = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'] as const
 
 function parseFlex(flex: FlexType): string {
   if (flex === 'auto') {
@@ -24,56 +38,7 @@ function parseFlex(flex: FlexType): string {
 
 export default defineComponent({
   name: 'Col',
-  props: {
-    flex: {
-      type: [Number, String] as PropType<FlexType>,
-      default: undefined,
-    },
-    span: {
-      type: [Number, String] as PropType<ColSpan>,
-      default: undefined,
-    },
-    offset: {
-      type: Number,
-      default: 0,
-    },
-    order: {
-      type: Number,
-      default: 0,
-    },
-    pull: {
-      type: Number,
-      default: 0,
-    },
-    push: {
-      type: Number,
-      default: 0,
-    },
-    xs: {
-      type: [Number, Object] as PropType<ColSize>,
-      default: undefined,
-    },
-    sm: {
-      type: [Number, Object] as PropType<ColSize>,
-      default: undefined,
-    },
-    md: {
-      type: [Number, Object] as PropType<ColSize>,
-      default: undefined,
-    },
-    lg: {
-      type: [Number, Object] as PropType<ColSize>,
-      default: undefined,
-    },
-    xl: {
-      type: [Number, Object] as PropType<ColSize>,
-      default: undefined,
-    },
-    xxl: {
-      type: [Number, Object] as PropType<ColSize>,
-      default: undefined,
-    },
-  },
+  props: colProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('col')
     const rowContext = inject<RowContext | null>(RowContextKey, null)
@@ -81,7 +46,7 @@ export default defineComponent({
     const classes = computed(() => {
       const classNames: string[] = [prefixCls]
 
-      // Span
+      // Span（0 时由 .hmfw-col-0 display:none 隐藏）
       if (props.span !== undefined) {
         classNames.push(`${prefixCls}-${props.span}`)
       }
@@ -107,7 +72,6 @@ export default defineComponent({
       }
 
       // Responsive sizes
-      const sizes = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const
       sizes.forEach((size) => {
         const sizeProps = props[size]
         if (typeof sizeProps === 'number') {
@@ -129,6 +93,10 @@ export default defineComponent({
           if (sizeProps.push !== undefined) {
             classNames.push(`${prefixCls}-${size}-push-${sizeProps.push}`)
           }
+          // 响应式 flex：类名控制断点生效时机，CSS 变量传递取值（对齐 AntD v6）
+          if (sizeProps.flex !== undefined) {
+            classNames.push(`${prefixCls}-${size}-flex`)
+          }
         }
       })
 
@@ -137,6 +105,8 @@ export default defineComponent({
 
     const colStyle = computed(() => {
       const style: CSSProperties = {}
+      // 响应式 flex 的 CSS 变量（由 .hmfw-col-{size}-flex 类消费）
+      const flexVars: Record<string, string> = {}
 
       if (rowContext) {
         const [horizontalGutter] = rowContext.gutter.value
@@ -147,7 +117,8 @@ export default defineComponent({
         }
       }
 
-      if (props.flex) {
+      // flex=0 为合法值（对齐 AntD flex || flex === 0），故用 !== undefined 判定
+      if (props.flex !== undefined) {
         style.flex = parseFlex(props.flex)
         // Hack for Firefox to avoid size issue
         if (rowContext && !rowContext.wrap.value && !style.minWidth) {
@@ -155,7 +126,14 @@ export default defineComponent({
         }
       }
 
-      return style
+      sizes.forEach((size) => {
+        const sizeProps = props[size]
+        if (typeof sizeProps === 'object' && sizeProps !== null && sizeProps.flex !== undefined) {
+          flexVars[`--hmfw-col-${size}-flex`] = parseFlex(sizeProps.flex)
+        }
+      })
+
+      return { ...style, ...flexVars }
     })
 
     return () => (

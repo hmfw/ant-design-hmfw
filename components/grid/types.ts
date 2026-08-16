@@ -1,4 +1,4 @@
-export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'
 export type Gutter = number | string | Partial<Record<Breakpoint, number>>
 export type Align = 'top' | 'middle' | 'bottom' | 'stretch'
 export type Justify = 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly'
@@ -19,24 +19,25 @@ export type ColSize =
   | number
   | {
       flex?: FlexType
-      span?: number
-      offset?: number
-      order?: number
-      pull?: number
-      push?: number
+      span?: ColSpan
+      offset?: ColSpan
+      order?: ColSpan
+      pull?: ColSpan
+      push?: ColSpan
     }
 
 export interface ColProps {
   flex?: FlexType
   span?: ColSpan
-  offset?: number
-  order?: number
-  pull?: number
-  push?: number
+  offset?: ColSpan
+  order?: ColSpan
+  pull?: ColSpan
+  push?: ColSpan
   xs?: ColSize
   sm?: ColSize
   md?: ColSize
   lg?: ColSize
   xl?: ColSize
   xxl?: ColSize
+  xxxl?: ColSize
 }

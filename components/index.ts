@@ -25,8 +25,21 @@ export type { SpaceProps, SpaceSize, SpaceDirection, SpaceAlign } from './space'
 export { Divider } from './divider'
 export type { DividerProps, DividerType, DividerOrientation } from './divider'
 
-export { Row, Col } from './grid'
-export type { RowProps, ColProps, Gutter, Align, Justify, ColSpan, ColSize } from './grid'
+export { Row, Col, useBreakpoint } from './grid'
+export type {
+  RowProps,
+  ColProps,
+  Gutter,
+  Align,
+  Justify,
+  ResponsiveAlign,
+  ResponsiveJustify,
+  ColSpan,
+  ColSize,
+  FlexType,
+  Breakpoint,
+  ScreenMap,
+} from './grid'
 
 export { Text, Title, Paragraph, Link } from './typography'
 export type {

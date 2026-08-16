@@ -1,10 +1,20 @@
 import { defineComponent, computed, provide, type PropType, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils/cls'
-import type { Gutter, ResponsiveAlign, ResponsiveJustify } from './types'
+import type { RowProps, Gutter, ResponsiveAlign, ResponsiveJustify } from './types'
 import { useBreakpoint, responsiveArray, type ScreenMap } from './hooks/useBreakpoint'
+import { RowContextKey } from './context'
 
-const RowContextKey = Symbol('RowContext')
+const rowProps = {
+  gutter: { type: [Number, String, Array, Object] as PropType<RowProps['gutter']>, default: 0 },
+  align: { type: [String, Object] as PropType<ResponsiveAlign>, default: undefined },
+  justify: { type: [String, Object] as PropType<ResponsiveJustify>, default: undefined },
+  wrap: { type: Boolean, default: true },
+} satisfies Record<keyof RowProps, any>
+
+// 断点表未就绪（SSR 或 matchMedia 不可用）时的回退值：
+// 视为所有断点均匹配，响应式 gutter 首帧取最小断点的值而非 0（对齐 AntD useGutter）
+const fallbackScreens: ScreenMap = { xs: true, sm: true, md: true, lg: true, xl: true, xxl: true, xxxl: true }
 
 function getGutterValue(gutter: Gutter | undefined, screens: ScreenMap): number | string {
   if (typeof gutter === 'object' && gutter !== null) {
@@ -37,24 +47,7 @@ function getResponsiveValue<T extends string>(
 
 export default defineComponent({
   name: 'Row',
-  props: {
-    gutter: {
-      type: [Number, String, Array, Object] as PropType<Gutter | [Gutter, Gutter]>,
-      default: 0,
-    },
-    align: {
-      type: [String, Object] as PropType<ResponsiveAlign>,
-      default: undefined,
-    },
-    justify: {
-      type: [String, Object] as PropType<ResponsiveJustify>,
-      default: undefined,
-    },
-    wrap: {
-      type: Boolean,
-      default: true,
-    },
-  },
+  props: rowProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('row')
     const screens = useBreakpoint()
@@ -63,8 +56,11 @@ export default defineComponent({
       const results: [number | string, number | string] = [0, 0]
       const normalizedGutter = Array.isArray(props.gutter) ? props.gutter : [props.gutter, undefined]
 
-      results[0] = getGutterValue(normalizedGutter[0], screens.value)
-      results[1] = getGutterValue(normalizedGutter[1], screens.value)
+      // 断点表未就绪时回退全匹配，避免响应式 gutter 首帧闪 0
+      const effectiveScreens = Object.keys(screens.value).length > 0 ? screens.value : fallbackScreens
+
+      results[0] = getGutterValue(normalizedGutter[0], effectiveScreens)
+      results[1] = getGutterValue(normalizedGutter[1], effectiveScreens)
 
       return results
     })
@@ -110,5 +106,3 @@ export default defineComponent({
     )
   },
 })
-
-export { RowContextKey }

@@ -1,7 +1,11 @@
-import { mount } from '@vue/test-utils'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { mount, enableAutoUnmount } from '@vue/test-utils'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Pagination } from '../Pagination'
 import { h, nextTick } from 'vue'
+
+// 每个测试后自动卸载 wrapper，确保 useBreakpoint 单例引用计数归零：
+// 用例内重新 mock matchMedia 才能在下个用例生效（单例化后的测试隔离要求）
+enableAutoUnmount(afterEach)
 
 // 默认所有断点均不匹配；responsive 用例可通过 matchedQueries 指定命中的媒体查询。
 function mockMatchMedia(matchedQueries: string[] = []) {
