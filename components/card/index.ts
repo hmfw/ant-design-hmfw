@@ -1,4 +1,6 @@
-import { Card as InternalCard, CardGrid, CardMeta } from './Card'
+import { Card as InternalCard } from './Card'
+import { CardGrid } from './CardGrid'
+import { CardMeta } from './CardMeta'
 
 type CardType = typeof InternalCard & {
   Grid: typeof CardGrid

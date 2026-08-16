@@ -1,7 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { h } from 'vue'
-import { Card, CardGrid, CardMeta } from '../Card'
+import { Card } from '../Card'
+import { CardGrid } from '../CardGrid'
+import { CardMeta } from '../CardMeta'
 
 describe('Card', () => {
   it('renders correctly', () => {

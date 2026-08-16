@@ -7,8 +7,6 @@ import type {
   CardLoadingConfig,
   TabItem,
   CardProps,
-  CardGridProps,
-  CardMetaProps,
   CardClassNames,
   CardStyles,
   CardTabChangeHandler,
@@ -27,27 +25,12 @@ function containsGrid(children: VNode[]): boolean {
 
 const cardProps = {
   title: { type: String, default: undefined },
-  bordered: {
-    type: Boolean,
-    default: true,
-  },
-  variant: {
-    type: String as PropType<CardVariant>,
-    default: undefined,
-  },
+  bordered: { type: Boolean, default: true },
+  variant: { type: String as PropType<CardVariant>, default: undefined },
   hoverable: { type: Boolean, default: undefined },
-  loading: {
-    type: [Boolean, Object] as PropType<boolean | CardLoadingConfig>,
-    default: false,
-  },
-  size: {
-    type: String as PropType<'default' | 'small'>,
-    default: 'default',
-  },
-  type: {
-    type: String as PropType<CardType>,
-    default: undefined,
-  },
+  loading: { type: [Boolean, Object] as PropType<boolean | CardLoadingConfig>, default: false },
+  size: { type: String as PropType<'default' | 'small'>, default: 'default' },
+  type: { type: String as PropType<CardType>, default: undefined },
   bodyStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   headStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   tabList: { type: Array as PropType<TabItem[]>, default: undefined },
@@ -208,59 +191,5 @@ export const Card = defineComponent({
         </div>
       )
     }
-  },
-})
-
-const cardGridProps = {
-  hoverable: {
-    type: Boolean,
-    default: true,
-  },
-} satisfies Record<keyof CardGridProps, any>
-
-export const CardGrid = defineComponent({
-  name: 'CardGrid',
-  props: cardGridProps,
-  setup(props, { slots }) {
-    const prefixCls = usePrefixCls('card')
-    return () => (
-      <div
-        class={cls(`${prefixCls}-grid`, {
-          [`${prefixCls}-grid-hoverable`]: props.hoverable,
-        })}
-      >
-        {slots.default?.()}
-      </div>
-    )
-  },
-})
-
-const cardMetaProps = {
-  title: { type: String, default: undefined },
-  description: { type: String, default: undefined },
-} satisfies Record<keyof CardMetaProps, any>
-
-export const CardMeta = defineComponent({
-  name: 'CardMeta',
-  props: cardMetaProps,
-  setup(props, { slots }) {
-    const prefixCls = usePrefixCls('card')
-    const metaPrefixCls = `${prefixCls}-meta`
-
-    return () => (
-      <div class={metaPrefixCls}>
-        {slots.avatar && <div class={`${metaPrefixCls}-avatar`}>{slots.avatar()}</div>}
-        <div class={`${metaPrefixCls}-detail`}>
-          {(props.title || slots.title) && (
-            <div class={`${metaPrefixCls}-title`}>{slots.title ? slots.title() : props.title}</div>
-          )}
-          {(props.description || slots.description) && (
-            <div class={`${metaPrefixCls}-description`}>
-              {slots.description ? slots.description() : props.description}
-            </div>
-          )}
-        </div>
-      </div>
-    )
   },
 })
