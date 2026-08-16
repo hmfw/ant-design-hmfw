@@ -307,7 +307,7 @@ export { Table } from './table'
 export type { TableColumn, TableProps } from './table'
 
 export { Menu, MenuItem, SubMenu, MenuDivider, MenuItemGroup } from './menu'
-export type { MenuProps, MenuTheme, MenuMode, MenuClassNames, MenuStyles } from './menu'
+export type { MenuProps, MenuTheme, MenuMode, MenuClassNames, MenuStyles, ItemType } from './menu'
 
 export { Form, FormItem, useForm } from './form'
 export type { FormProps, FormItemProps, FormRule, NamePath, ValidateStatus } from './form'
