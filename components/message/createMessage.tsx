@@ -1,5 +1,6 @@
 import { createApp, ref, isVNode, type App, type VNodeChild } from 'vue'
 import { cls } from '../_utils/cls'
+import { renderContent as renderContentUtil } from '../_utils/renderContent'
 import {
   CheckCircleFilled,
   CloseCircleFilled,
@@ -57,14 +58,8 @@ export function createMessage(initialConfig?: ConfigOptions): MessageApi {
     ...initialConfig,
   }
 
-  function renderContent(node: MessageContent | undefined): VNodeChild {
-    if (node == null) return null
-    if (typeof node === 'function') return (node as () => VNodeChild)()
-    return node as VNodeChild
-  }
-
   function getIconNode(type?: NoticeType, icon?: MessageContent): VNodeChild {
-    if (icon != null) return renderContent(icon)
+    if (icon != null) return renderContentUtil(icon)
     if (type) {
       const IconComp = TYPE_ICONS[type]
       return <IconComp class={cls('hmfw-icon', type === 'loading' && 'hmfw-icon-spin')} />
@@ -156,7 +151,7 @@ export function createMessage(initialConfig?: ConfigOptions): MessageApi {
                           class={cls('hmfw-message-notice-title', item.classNames?.title)}
                           style={item.styles?.title}
                         >
-                          {renderContent(item.content)}
+                          {renderContentUtil(item.content)}
                         </span>
                       </div>
                     </div>

@@ -1,85 +1,16 @@
-import {
-  defineComponent,
-  ref,
-  watch,
-  computed,
-  onBeforeUnmount,
-  Teleport,
-  Transition,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { defineComponent, ref, watch, computed, Teleport, Transition, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils/cls'
+import { renderContent } from '../_utils/renderContent'
+import { useControlledState } from '../_utils/useControlledState'
 import { Button } from '../button'
 import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
 import { usePanelRef } from '../watermark'
+import { useFocusTrap, useScrollLock, useOverlayKeyboard } from '../_utils/overlay'
 import type { ButtonProps } from '../button/types'
 import type { IconComponent } from '@hmfw/icons'
 import type { ModalContent, ModalWidth, LegacyButtonType, GetContainer, ModalClassNames, ModalStyles } from './types'
-
-const FOCUSABLE =
-  'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
-
-function trapFocus(el: HTMLElement, focusTriggerAfterClose: boolean): () => void {
-  const prev = document.activeElement as HTMLElement | null
-  const nodes = () => Array.from(el.querySelectorAll<HTMLElement>(FOCUSABLE))
-  nodes()[0]?.focus()
-  const handler = (e: KeyboardEvent) => {
-    if (e.key !== 'Tab') return
-    const focusable = nodes()
-    if (!focusable.length) return
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
-    if (e.shiftKey) {
-      if (document.activeElement === first) {
-        e.preventDefault()
-        last.focus()
-      }
-    } else {
-      if (document.activeElement === last) {
-        e.preventDefault()
-        first.focus()
-      }
-    }
-  }
-  el.addEventListener('keydown', handler)
-  return () => {
-    el.removeEventListener('keydown', handler)
-    if (focusTriggerAfterClose) prev?.focus()
-  }
-}
-
-// Body scroll lock shared across all open modals (ref-counted)
-let lockCount = 0
-let cachedOverflow = ''
-function lockScroll() {
-  if (typeof document === 'undefined') return
-  if (lockCount === 0) {
-    cachedOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-  }
-  lockCount += 1
-}
-function unlockScroll() {
-  if (typeof document === 'undefined') return
-  lockCount = Math.max(0, lockCount - 1)
-  if (lockCount === 0) document.body.style.overflow = cachedOverflow
-}
-
-function renderContent(
-  content: ModalContent | undefined,
-  slot?: () => VNode[] | undefined,
-): VNode[] | VNode | string | number | undefined {
-  if (slot) {
-    const s = slot()
-    if (s && s.length) return s
-  }
-  if (content == null || content === '') return undefined
-  if (typeof content === 'function') return (content as () => VNode | string)()
-  return content as VNode | string | number
-}
 
 export const Modal = defineComponent({
   name: 'Modal',
@@ -120,9 +51,16 @@ export const Modal = defineComponent({
   setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('modal')
     const locale = useLocale()
-    const innerOpen = ref(props.defaultOpen ?? false)
     const dialogRef = ref<HTMLElement | null>(null)
-    let cleanupTrap: (() => void) | null = null
+
+    // 受控/非受控状态管理
+    const [innerOpen, setInnerOpen] = useControlledState(
+      () => props.open,
+      props.defaultOpen ?? false,
+      (value) => emit('update:open', value),
+    )
+
+    const isOpen = computed(() => innerOpen.value)
 
     // 集成 Watermark Context - 使水印传导到 Modal
     const watermarkPanelRef = usePanelRef()
@@ -131,27 +69,10 @@ export const Modal = defineComponent({
       watermarkPanelRef(el as HTMLElement | null)
     }
 
-    watch(
-      () => props.open,
-      (v) => {
-        if (v !== undefined) innerOpen.value = v
-      },
-    )
-
-    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
-
+    // afterOpenChange 触发
     watch(
       isOpen,
-      async (v) => {
-        if (v) {
-          lockScroll()
-          await Promise.resolve()
-          if (dialogRef.value) cleanupTrap = trapFocus(dialogRef.value, props.focusTriggerAfterClose)
-        } else {
-          cleanupTrap?.()
-          cleanupTrap = null
-          unlockScroll()
-        }
+      (v) => {
         // afterOpenChange fires once the transition would have settled; async so
         // fake-timer tests can intercept it too
         setTimeout(() => emit('afterOpenChange', v), 0)
@@ -159,17 +80,10 @@ export const Modal = defineComponent({
       { flush: 'post' },
     )
 
-    onBeforeUnmount(() => {
-      cleanupTrap?.()
-      cleanupTrap = null
-      if (isOpen.value) unlockScroll()
-    })
-
     const close = (e?: Event) => {
       // confirmLoading must block close via mask / Esc / close button too
       if (props.confirmLoading) return
-      if (props.open === undefined) innerOpen.value = false
-      emit('update:open', false)
+      setInnerOpen(false)
       emit('cancel', e)
     }
 
@@ -187,9 +101,13 @@ export const Modal = defineComponent({
       emit('afterClose')
     }
 
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && props.keyboard && isOpen.value) close(e)
-    }
+    // 使用公共 Hooks
+    useScrollLock(isOpen)
+    useFocusTrap(dialogRef, isOpen, props.focusTriggerAfterClose)
+    useOverlayKeyboard(isOpen, {
+      onClose: () => close(),
+      keyboard: computed(() => props.keyboard),
+    })
 
     const renderFooter = () => {
       // footer === false / null: no footer at all
@@ -289,11 +207,7 @@ export const Modal = defineComponent({
         <Teleport to="body">
           <Transition name="hmfw-zoom" onAfterLeave={onAfterLeave}>
             {(isOpen.value || props.forceRender) && (
-              <div
-                class={cls(`${prefixCls}-root`, props.classNames?.root)}
-                style={{ zIndex: props.zIndex }}
-                onKeydown={handleKeydown}
-              >
+              <div class={cls(`${prefixCls}-root`, props.classNames?.root)} style={{ zIndex: props.zIndex }}>
                 {props.mask && (
                   <div
                     class={cls(`${prefixCls}-mask`, props.classNames?.mask)}

@@ -1,22 +1,7 @@
 import type { VNode } from 'vue'
+import { isVNode } from 'vue'
+import { renderContent as renderContentUtil } from '../_utils/renderContent'
 import type { ImageContent, PreviewConfig, MaskType, TransformType } from './types'
-
-// ---- body scroll lock (引用计数，与 Modal 同策略) ----
-let lockCount = 0
-let cachedOverflow = ''
-export function lockScroll() {
-  if (typeof document === 'undefined') return
-  if (lockCount === 0) {
-    cachedOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-  }
-  lockCount += 1
-}
-export function unlockScroll() {
-  if (typeof document === 'undefined') return
-  lockCount = Math.max(0, lockCount - 1)
-  if (lockCount === 0) document.body.style.overflow = cachedOverflow
-}
 
 // ---- 预览配置默认值 ----
 export const DEFAULT_SCALE_STEP = 0.5
@@ -24,9 +9,22 @@ export const DEFAULT_MIN_SCALE = 1
 export const DEFAULT_MAX_SCALE = 50
 
 // ---- helpers ----
+/**
+ * @deprecated 使用公共的 renderContent 工具
+ * 为保持向后兼容，重新导出公共方法
+ */
 export function renderContent(content?: ImageContent): VNode | null {
-  if (content == null) return null
-  return typeof content === 'function' ? content() : content
+  const result = renderContentUtil(content)
+  // 只返回 VNode 类型
+  if (isVNode(result)) {
+    return result
+  }
+  // 如果是数组，返回第一个 VNode
+  if (Array.isArray(result)) {
+    const firstVNode = result.find((item) => isVNode(item))
+    return firstVNode || null
+  }
+  return null
 }
 
 /** 把 preview prop（boolean | PreviewConfig）规范成 config 或 null（禁用） */

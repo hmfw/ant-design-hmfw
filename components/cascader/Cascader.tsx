@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, h, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils/cls'
-import { DownOutlined } from '@hmfw/icons'
+import { DownOutlined, RightOutlined, CloseCircleFilled } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { VirtualList } from '../_internal/virtual-list'
@@ -662,14 +662,10 @@ export const Cascader = defineComponent({
             [getLabel(opt)],
           ),
           hasChildren &&
-            h(
-              'span',
-              {
-                class: cls(`${prefixCls}-menu-item-expand-icon`, props.classNames?.menuItemExpandIcon),
-                style: props.styles?.menuItemExpandIcon,
-              },
-              ['›'],
-            ),
+            h(RightOutlined, {
+              class: cls(`${prefixCls}-menu-item-expand-icon`, props.classNames?.menuItemExpandIcon),
+              style: props.styles?.menuItemExpandIcon,
+            }),
         ],
       )
     }
@@ -827,14 +823,12 @@ export const Cascader = defineComponent({
     const renderSuffix = () => (
       <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
         {props.allowClear && currentValue.value.length > 0 && !props.disabled ? (
-          <span
+          <CloseCircleFilled
             class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
             style={props.styles?.clear}
             onMousedown={handleClear}
             onClick={(e) => e.stopPropagation()}
-          >
-            ✕
-          </span>
+          />
         ) : (
           <DownOutlined
             class={cls(`${prefixCls}-arrow`, { [`${prefixCls}-arrow-open`]: isOpen.value }, props.classNames?.arrow)}

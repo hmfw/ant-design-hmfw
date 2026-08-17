@@ -21,10 +21,10 @@ import {
   ZoomOutOutlined,
   SwapOutlined,
 } from '@hmfw/icons'
+import { usePanelRef } from '../watermark'
+import { useScrollLock, useOverlayKeyboard } from '../_utils/overlay'
 import type { PreviewConfig, TransformType, TransformAction, ImgInfo, ImageClassNames, ImageStyles } from './types'
 import {
-  lockScroll,
-  unlockScroll,
   DEFAULT_SCALE_STEP,
   DEFAULT_MIN_SCALE,
   DEFAULT_MAX_SCALE,
@@ -55,8 +55,9 @@ export const ImagePreview = defineComponent({
   },
   setup(props) {
     const transform = ref<TransformType>(DEFAULT_TRANSFORM())
-    // 切换图片瞬间禁用过渡，避免从旧图的缩放/旋转状态“回弹”造成卡顿
+    // 切换图片瞬间禁用过渡，避免从旧图的缩放/旋转状态”回弹”造成卡顿
     const switching = ref(false)
+    const previewRootRef = ref<HTMLElement | null>(null)
 
     const scaleStep = computed(() => props.config.scaleStep ?? DEFAULT_SCALE_STEP)
     const minScale = computed(() => props.config.minScale ?? DEFAULT_MIN_SCALE)
@@ -72,17 +73,20 @@ export const ImagePreview = defineComponent({
       emitTransform('reset')
     }
 
-    watch(
-      () => props.visible,
-      (v) => {
-        if (v) {
-          transform.value = DEFAULT_TRANSFORM()
-          lockScroll()
-        } else {
-          unlockScroll()
-        }
-      },
-    )
+    // 集成 Watermark Context - 使水印传导到 ImagePreview
+    const watermarkPanelRef = usePanelRef()
+    const mergedPreviewRef = (el: any) => {
+      previewRootRef.value = el as HTMLElement | null
+      watermarkPanelRef(el as HTMLElement | null)
+    }
+
+    const isVisible = computed(() => props.visible)
+
+    watch(isVisible, (v) => {
+      if (v) {
+        transform.value = DEFAULT_TRANSFORM()
+      }
+    })
 
     // 切换图片时复位 transform。切换时关闭过渡，让新图直接以初始状态呈现，
     // 待下一帧再恢复过渡，避免 translate/scale/rotate 的回弹动画造成卡顿。
@@ -124,23 +128,12 @@ export const ImagePreview = defineComponent({
       emitTransform('flipY')
     }
 
-    // ---- 键盘：Esc 关闭 / 左右切换 ----
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (!props.visible) return
-      if (e.key === KEYS.ESCAPE) {
-        props.onClose()
-      } else if (e.key === KEYS.ARROW_LEFT && props.hasPrev) {
-        props.onPrev?.()
-      } else if (e.key === KEYS.ARROW_RIGHT && props.hasNext) {
-        props.onNext?.()
-      }
-    }
-    if (typeof window !== 'undefined') {
-      window.addEventListener('keydown', handleKeydown)
-      onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown))
-    }
-    onBeforeUnmount(() => {
-      if (props.visible) unlockScroll()
+    // 使用公共 Hooks
+    useScrollLock(isVisible)
+    useOverlayKeyboard(isVisible, {
+      onClose: () => props.onClose(),
+      onPrev: props.hasPrev ? () => props.onPrev?.() : undefined,
+      onNext: props.hasNext ? () => props.onNext?.() : undefined,
     })
 
     // ---- 滚轮缩放 ----
@@ -360,6 +353,7 @@ export const ImagePreview = defineComponent({
           <Transition name={`${previewCls}-fade`}>
             {props.visible && (
               <div
+                ref={mergedPreviewRef}
                 class={cls(`${previewCls}-root`, props.classNames?.preview)}
                 style={[
                   props.config.zIndex != null ? { zIndex: props.config.zIndex } : undefined,

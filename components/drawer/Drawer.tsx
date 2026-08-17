@@ -12,9 +12,12 @@ import {
 } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils/cls'
+import { renderContent } from '../_utils/renderContent'
+import { useControlledState } from '../_utils/useControlledState'
 import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
 import { usePanelRef } from '../watermark'
+import { useFocusTrap, useScrollLock, useOverlayKeyboard } from '../_utils/overlay'
 import type { IconComponent } from '@hmfw/icons'
 import { drawerManager } from './manager'
 import type {
@@ -27,72 +30,10 @@ import type {
   DrawerStyles,
 } from './types'
 
-const FOCUSABLE =
-  'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
-
-function trapFocus(el: HTMLElement, focusTriggerAfterClose: boolean): () => void {
-  const prev = document.activeElement as HTMLElement | null
-  const nodes = () => Array.from(el.querySelectorAll<HTMLElement>(FOCUSABLE))
-  nodes()[0]?.focus()
-  const handler = (e: KeyboardEvent) => {
-    if (e.key !== 'Tab') return
-    const focusable = nodes()
-    if (!focusable.length) return
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
-    if (e.shiftKey) {
-      if (document.activeElement === first) {
-        e.preventDefault()
-        last.focus()
-      }
-    } else {
-      if (document.activeElement === last) {
-        e.preventDefault()
-        first.focus()
-      }
-    }
-  }
-  el.addEventListener('keydown', handler)
-  return () => {
-    el.removeEventListener('keydown', handler)
-    if (focusTriggerAfterClose) prev?.focus()
-  }
-}
-
-// Body scroll lock shared across all open drawers (ref-counted)
-let lockCount = 0
-let cachedOverflow = ''
-function lockScroll() {
-  if (typeof document === 'undefined') return
-  if (lockCount === 0) {
-    cachedOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-  }
-  lockCount += 1
-}
-function unlockScroll() {
-  if (typeof document === 'undefined') return
-  lockCount = Math.max(0, lockCount - 1)
-  if (lockCount === 0) document.body.style.overflow = cachedOverflow
-}
-
 let uid = 0
 
 const DEFAULT_SIZE = 378
 const LARGE_SIZE = 736
-
-function renderContent(
-  content: DrawerContent | undefined,
-  slot?: () => VNode[] | undefined,
-): VNode[] | VNode | string | number | undefined {
-  if (slot) {
-    const s = slot()
-    if (s && s.length) return s
-  }
-  if (content == null || content === '') return undefined
-  if (typeof content === 'function') return (content as () => VNode | string)()
-  return content as VNode | string | number
-}
 
 function toCssSize(v: number | string): string {
   return typeof v === 'number' ? `${v}px` : v
@@ -131,10 +72,16 @@ export const Drawer = defineComponent({
   setup(props, { slots, emit, attrs }) {
     const prefixCls = usePrefixCls('drawer')
     const ariaId = `${prefixCls}-title-${(uid += 1)}`
-    const innerOpen = ref(props.defaultOpen ?? false)
     const drawerRef = ref<HTMLElement | null>(null)
-    let cleanupTrap: (() => void) | null = null
-    let didLock = false
+
+    // 受控/非受控状态管理
+    const [innerOpen, setInnerOpen] = useControlledState(
+      () => props.open,
+      props.defaultOpen ?? false,
+      (value) => emit('update:open', value),
+    )
+
+    const isOpen = computed(() => innerOpen.value)
 
     // 集成 Watermark Context - 使水印传导到 Drawer
     const watermarkPanelRef = usePanelRef()
@@ -149,33 +96,10 @@ export const Drawer = defineComponent({
     // 计算动态 zIndex
     const computedZIndex = computed(() => drawerManager.getZIndex(drawerUid, props.zIndex))
 
-    watch(
-      () => props.open,
-      (v) => {
-        if (v !== undefined) innerOpen.value = v
-      },
-    )
-
-    const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
-
+    // afterOpenChange 触发
     watch(
       isOpen,
-      async (v) => {
-        if (v) {
-          if (props.mask) {
-            lockScroll()
-            didLock = true
-          }
-          await Promise.resolve()
-          if (drawerRef.value) cleanupTrap = trapFocus(drawerRef.value, props.focusTriggerAfterClose)
-        } else {
-          cleanupTrap?.()
-          cleanupTrap = null
-          if (didLock) {
-            unlockScroll()
-            didLock = false
-          }
-        }
+      (v) => {
         // afterOpenChange fires once the transition would have settled; async so
         // fake-timer tests can intercept it too
         setTimeout(() => emit('afterOpenChange', v), 0)
@@ -184,18 +108,11 @@ export const Drawer = defineComponent({
     )
 
     onBeforeUnmount(() => {
-      cleanupTrap?.()
-      cleanupTrap = null
-      if (didLock) {
-        unlockScroll()
-        didLock = false
-      }
       drawerManager.unregister(drawerUid)
     })
 
     const close = (e?: Event) => {
-      if (props.open === undefined) innerOpen.value = false
-      emit('update:open', false)
+      setInnerOpen(false)
       emit('close', e)
     }
 
@@ -203,9 +120,14 @@ export const Drawer = defineComponent({
       if (props.mask && props.maskClosable) close(e)
     }
 
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && props.keyboard && isOpen.value) close(e)
-    }
+    // 使用公共 Hooks - 只在有 mask 时锁定滚动
+    const shouldLockScroll = computed(() => isOpen.value && props.mask)
+    useScrollLock(shouldLockScroll)
+    useFocusTrap(drawerRef, isOpen, props.focusTriggerAfterClose)
+    useOverlayKeyboard(isOpen, {
+      onClose: () => close(),
+      keyboard: computed(() => props.keyboard),
+    })
 
     const isHorizontal = computed(() => props.placement === 'left' || props.placement === 'right')
 
@@ -321,7 +243,7 @@ export const Drawer = defineComponent({
         <Teleport to={getContainer.value} disabled={teleportDisabled}>
           <Transition name={`hmfw-drawer-${props.placement}`} appear>
             {(isOpen.value || props.forceRender) && (
-              <div class={drawerCls} style={rootStyle} onKeydown={handleKeydown}>
+              <div class={drawerCls} style={rootStyle}>
                 {props.mask && (
                   <div
                     class={cls(`${prefixCls}-mask`, props.classNames?.mask)}

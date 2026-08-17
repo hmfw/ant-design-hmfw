@@ -1,4 +1,5 @@
 import { isVNode, type VNode } from 'vue'
+import { renderContent as renderContentUtil } from '../_utils/renderContent'
 import type { TourGap, TourPlacement, TourStep } from './types'
 import { omit } from '../_utils/function'
 import type { TourButtonProps } from './types'
@@ -183,12 +184,15 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max)
 }
 
-/** 渲染文本 / VNode / 渲染函数三种内容形态 */
+/**
+ * 渲染文本 / VNode / 渲染函数三种内容形态
+ * @deprecated 使用公共的 renderContent 工具
+ */
 export function renderContent(content: string | number | VNode | (() => VNode | string | number) | undefined | null) {
-  if (content === undefined || content === null) return null
-  if (typeof content === 'function') return content()
-  if (isVNode(content)) return content
-  return String(content)
+  const result = renderContentUtil(content)
+  // Tour 组件特殊处理：将数字转为字符串（保持原有行为）
+  if (typeof result === 'number') return String(result)
+  return result
 }
 
 /**

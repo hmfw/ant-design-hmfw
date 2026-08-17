@@ -172,6 +172,8 @@
 }
 
 .hmfw-cascader-clear {
+  display: flex;
+  align-items: center;
   cursor: pointer;
   font-size: var(--hmfw-font-size-sm);
 }
@@ -266,6 +268,8 @@
 }
 
 .hmfw-cascader-menu-item-expand-icon {
+  display: flex;
+  align-items: center;
   margin-left: var(--hmfw-margin-xs);
   font-size: var(--hmfw-font-size-sm);
   color: var(--hmfw-color-text-secondary);
