@@ -73,6 +73,7 @@ export const componentGroups: ComponentGroup[] = [
       { name: 'form', title: 'Form 表单' },
       { name: 'input', title: 'Input 输入框' },
       { name: 'input-number', title: 'InputNumber 数字输入框' },
+      { name: 'mentions', title: 'Mentions 提及' },
       { name: 'radio', title: 'Radio 单选框' },
       { name: 'range-picker', title: 'RangePicker 日期范围选择' },
       { name: 'rate', title: 'Rate 评分' },

@@ -10,6 +10,21 @@
 
 ## 最近版本
 
+## [0.48.1] - 2026-08-17
+
+**🐛 问题修复**：
+
+- **Mentions**: 修复键盘导航 ArrowDown 到达末尾后循环回第一项的问题
+- **Mentions**: 修复多行/autoSize 模式下边框高度不跟随内容变化的问题
+- **Mentions**: 修复清除按钮位置不正确的问题
+- **Mentions**: 修复输入框偏上、底部留有空白的问题
+
+**📝 文档优化**：
+
+- **Mentions**: 语义化 API 对齐 Ant Design v6，从 5 个节点（root/textarea/popup/option/empty）调整为 4 个节点（root/textarea/suffix/popup）
+- **Mentions**: 完善语义化文档，参考 Button 组件格式重构 mentions.md，包含详细的 DOM 结构映射、使用示例和注意事项
+- **Mentions**: 更新 MentionsSemantic.vue 交互式预览组件
+
 ## [0.48.0] - 2026-08-17
 
 [查看完整内容](./changelogs/v0.48.0.md)

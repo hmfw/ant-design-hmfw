@@ -1,6 +1,42 @@
 .hmfw-mentions {
   position: relative;
   display: inline-block;
+  width: 100%;
+}
+
+/* 包裹容器需要跟随 textarea 高度 */
+.hmfw-input-affix-wrapper.hmfw-mentions {
+  height: auto;
+  min-height: 32px;
+}
+
+.hmfw-input-affix-wrapper-lg.hmfw-mentions {
+  min-height: 40px;
+}
+
+.hmfw-input-affix-wrapper-sm.hmfw-mentions {
+  min-height: 24px;
+}
+
+/* 清除按钮定位 */
+.hmfw-mentions .hmfw-input-clear-icon {
+  position: absolute;
+  top: 8px;
+  right: 11px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  font-size: 12px;
+  color: var(--hmfw-color-text-quaternary);
+  cursor: pointer;
+  transition: color var(--hmfw-motion-duration-mid);
+}
+
+.hmfw-mentions .hmfw-input-clear-icon:hover {
+  color: var(--hmfw-color-text-tertiary);
 }
 
 /* textarea 样式嵌入在 input-affix-wrapper 内部 */
@@ -11,11 +47,15 @@
   resize: none;
   width: 100%;
   padding: 0;
-  line-height: 1.5715;
+  line-height: var(--hmfw-line-height);
   font-family: inherit;
   font-size: inherit;
   color: inherit;
   background: transparent;
+  display: block;
+  vertical-align: top;
+  min-height: 0;
+  max-height: none;
 }
 
 .hmfw-mentions textarea.hmfw-mentions:disabled {
@@ -24,27 +64,27 @@
 }
 
 .hmfw-mentions textarea.hmfw-mentions::placeholder {
-  color: var(--hmfw-color-text-disabled);
+  color: var(--hmfw-color-text-placeholder);
 }
 
 /* 下拉 */
 .hmfw-mentions-dropdown {
   min-width: 120px;
   background: var(--hmfw-color-bg-elevated);
-  border-radius: 8px;
+  border-radius: var(--hmfw-border-radius-lg);
   box-shadow: var(--hmfw-box-shadow-secondary);
-  padding: 4px 0;
+  padding: var(--hmfw-padding-xxs) 0;
 }
 
 .hmfw-mentions-dropdown-item {
   display: flex;
   align-items: center;
   min-height: 32px;
-  padding: 5px 12px;
-  font-size: 14px;
-  line-height: 22px;
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding-sm);
+  font-size: var(--hmfw-font-size);
+  line-height: var(--hmfw-line-height-sm);
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-mentions-dropdown-item:hover {
@@ -65,8 +105,8 @@
 }
 
 .hmfw-mentions-dropdown-empty {
-  padding: 8px 12px;
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding-sm);
   color: var(--hmfw-color-text-description);
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   text-align: center;
 }

@@ -13,24 +13,31 @@ export interface MentionOption {
 export interface MentionSemanticClassNames {
   root?: string
   textarea?: string
+  suffix?: string
   popup?: string
-  option?: string
-  empty?: string
 }
 
 /** 语义化 style */
 export interface MentionSemanticStyles {
   root?: CSSProperties
   textarea?: CSSProperties
+  suffix?: CSSProperties
   popup?: CSSProperties
-  option?: CSSProperties
-  empty?: CSSProperties
 }
 
 /** 选项渲染函数参数 */
 export interface MentionOptionRenderInfo {
   index: number
 }
+
+/** 事件类型 */
+export type MentionSelectHandler = (option: MentionOption, prefix: string) => void
+export type MentionSearchHandler = (text: string, prefix: string) => void
+export type MentionChangeHandler = (value: string) => void
+export type MentionOpenChangeHandler = (open: boolean) => void
+export type MentionFocusHandler = (e: FocusEvent) => void
+export type MentionBlurHandler = (e: FocusEvent) => void
+export type MentionClearHandler = () => void
 
 export interface MentionProps {
   /** v-model 双向绑定文本值 */
@@ -60,6 +67,9 @@ export interface MentionProps {
 
   /** textarea 行数 */
   rows?: number
+
+  /** 是否显示清除按钮 */
+  allowClear?: boolean
 
   /** 加载中 */
   loading?: boolean
@@ -120,6 +130,9 @@ export interface MentionProps {
 
   /** 失去焦点 */
   onBlur?: (e: FocusEvent) => void
+
+  /** 清除按钮点击回调 */
+  onClear?: () => void
 }
 
 /** 暴露的方法 */

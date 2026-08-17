@@ -5,4 +5,11 @@ export type {
   MentionInstance,
   MentionSemanticClassNames,
   MentionSemanticStyles,
+  MentionSelectHandler,
+  MentionSearchHandler,
+  MentionChangeHandler,
+  MentionOpenChangeHandler,
+  MentionFocusHandler,
+  MentionBlurHandler,
+  MentionClearHandler,
 } from './types'
