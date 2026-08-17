@@ -69,6 +69,7 @@
 @import './tree-select/style/index.css';
 @import './statistic/style/index.css';
 @import './calendar/style/index.css';
+@import './masonry/style/index.css';
 
 /* Global reset */
 * {

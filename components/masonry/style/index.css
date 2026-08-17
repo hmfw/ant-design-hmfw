@@ -1,0 +1,20 @@
+.hmfw-masonry {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.hmfw-masonry-item {
+  box-sizing: border-box;
+  transition:
+    left var(--hmfw-motion-duration-slow) var(--hmfw-motion-ease-out),
+    right var(--hmfw-motion-duration-slow) var(--hmfw-motion-ease-out),
+    top var(--hmfw-motion-duration-slow) var(--hmfw-motion-ease-out);
+}
+
+/* RTL 支持 */
+.hmfw-masonry-rtl {
+  direction: rtl;
+}

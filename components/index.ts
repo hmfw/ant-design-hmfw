@@ -294,6 +294,9 @@ export type {
   ScrollAlign,
 } from './listy'
 
+export { default as Masonry } from './masonry'
+export type { MasonryProps, MasonryRef, MasonryItemType, MasonryClassNames, MasonryStyles } from './masonry'
+
 export { Dropdown } from './dropdown'
 export type { DropdownProps } from './dropdown'
 

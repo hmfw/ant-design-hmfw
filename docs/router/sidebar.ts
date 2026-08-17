@@ -46,6 +46,7 @@ export const componentGroups: ComponentGroup[] = [
       { name: 'flex', title: 'Flex 弹性布局' },
       { name: 'grid', title: 'Grid 栅格' },
       { name: 'layout', title: 'Layout 布局' },
+      { name: 'masonry', title: 'Masonry 瀑布流' },
       { name: 'space', title: 'Space 间距' },
     ],
   },
