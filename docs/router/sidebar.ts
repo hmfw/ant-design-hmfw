@@ -48,6 +48,7 @@ export const componentGroups: ComponentGroup[] = [
       { name: 'layout', title: 'Layout 布局' },
       { name: 'masonry', title: 'Masonry 瀑布流' },
       { name: 'space', title: 'Space 间距' },
+      { name: 'splitter', title: 'Splitter 分割面板' },
     ],
   },
   {

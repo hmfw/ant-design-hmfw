@@ -1,0 +1,316 @@
+.hmfw-splitter {
+  /* 组件级 Token，派生规则对齐 AntD prepareComponentToken */
+  --hmfw-splitter-bar-size: 2px; /* 分隔线宽度（splitBarSize） */
+  --hmfw-splitter-trigger-size: 6px; /* 拖拽触发区域宽度（splitTriggerSize） */
+  --hmfw-splitter-bar-draggable-size: 20px; /* 拖拽标识长度（resizeSpinnerSize） */
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: stretch;
+  position: relative;
+}
+
+/* ======================== 分隔栏 ======================== */
+.hmfw-splitter > .hmfw-splitter-bar {
+  flex: none;
+  position: relative;
+  user-select: none;
+}
+
+/* ======================= 拖拽器 ======================= */
+.hmfw-splitter-bar-dragger {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.hmfw-splitter-bar-dragger::before {
+  content: '';
+  background: var(--hmfw-color-fill-quaternary);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hmfw-splitter-bar-dragger::after {
+  content: '';
+  background: var(--hmfw-color-border);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hmfw-splitter-bar-dragger:hover:not(.hmfw-splitter-bar-dragger-active)::before {
+  background: var(--hmfw-color-fill-tertiary);
+}
+
+.hmfw-splitter-bar-dragger-active {
+  z-index: 2;
+}
+
+.hmfw-splitter-bar-dragger-active::before {
+  background: var(--hmfw-color-fill-secondary);
+}
+
+.hmfw-splitter-bar-dragger-active.hmfw-splitter-bar-dragger-customize .hmfw-splitter-bar-dragger-icon {
+  color: var(--hmfw-color-primary);
+}
+
+.hmfw-splitter-bar-dragger-disabled.hmfw-splitter-bar-dragger {
+  z-index: 0;
+  cursor: default;
+}
+
+.hmfw-splitter-bar-dragger-disabled.hmfw-splitter-bar-dragger::before,
+.hmfw-splitter-bar-dragger-disabled.hmfw-splitter-bar-dragger:hover::before,
+.hmfw-splitter-bar-dragger-disabled.hmfw-splitter-bar-dragger-active::before {
+  background: var(--hmfw-color-fill-quaternary);
+}
+
+.hmfw-splitter-bar-dragger-disabled.hmfw-splitter-bar-dragger::after,
+.hmfw-splitter-bar-dragger-disabled.hmfw-splitter-bar-dragger .hmfw-splitter-bar-dragger-icon {
+  display: none;
+}
+
+/* 自定义拖拽图标 */
+.hmfw-splitter-bar-dragger-customize .hmfw-splitter-bar-dragger-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  color: var(--hmfw-color-border);
+}
+
+.hmfw-splitter-bar-dragger-customize::after {
+  display: none;
+}
+
+/* ======================= 折叠按钮 ======================= */
+.hmfw-splitter-bar-collapse-bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--hmfw-z-index-popup);
+  background: var(--hmfw-color-fill-quaternary);
+  font-size: var(--hmfw-font-size-sm);
+  border-radius: var(--hmfw-border-radius-xs);
+  color: var(--hmfw-color-text);
+  cursor: pointer;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--hmfw-motion-duration-mid);
+}
+
+.hmfw-splitter-bar-collapse-bar:focus-visible {
+  outline: 2px solid var(--hmfw-color-primary);
+  outline-offset: 2px;
+}
+
+.hmfw-splitter-bar-collapse-bar:hover:not(.hmfw-splitter-bar-collapse-bar-customize) {
+  background: var(--hmfw-color-fill-tertiary);
+}
+
+.hmfw-splitter-bar-collapse-bar:active:not(.hmfw-splitter-bar-collapse-bar-customize) {
+  background: var(--hmfw-color-fill-secondary);
+}
+
+.hmfw-splitter-bar-collapse-bar-customize {
+  background: transparent;
+}
+
+.hmfw-splitter-bar-collapse-icon {
+  display: flex;
+  align-items: center;
+}
+
+.hmfw-splitter-bar:hover .hmfw-splitter-bar-collapse-bar-hover-only,
+.hmfw-splitter-bar:active .hmfw-splitter-bar-collapse-bar-hover-only,
+.hmfw-splitter-bar:focus-within .hmfw-splitter-bar-collapse-bar-hover-only {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .hmfw-splitter-bar-collapse-bar-hover-only {
+    opacity: 1;
+  }
+}
+
+.hmfw-splitter-bar-collapse-bar-always-hidden {
+  display: none;
+}
+
+.hmfw-splitter-bar-collapse-bar-always-visible {
+  opacity: 1;
+}
+
+/* =========================== 遮罩 =========================== */
+.hmfw-splitter-mask {
+  position: fixed;
+  z-index: var(--hmfw-z-index-popup);
+  inset: 0;
+}
+
+.hmfw-splitter-mask-horizontal {
+  cursor: col-resize;
+}
+
+.hmfw-splitter-mask-vertical {
+  cursor: row-resize;
+}
+
+/* =========================== 水平布局 =========================== */
+.hmfw-splitter-horizontal {
+  flex-direction: row;
+}
+
+.hmfw-splitter-horizontal > .hmfw-splitter-bar {
+  width: 0;
+}
+
+/* 预览 */
+.hmfw-splitter-horizontal .hmfw-splitter-bar-preview {
+  position: absolute;
+  background: var(--hmfw-color-primary);
+  opacity: 0.2;
+  pointer-events: none;
+  transition: none;
+  z-index: 1;
+  display: none;
+  height: 100%;
+  width: var(--hmfw-splitter-bar-size);
+}
+
+.hmfw-splitter-horizontal .hmfw-splitter-bar-preview-active {
+  display: block;
+  transform: translate3d(var(--hmfw-splitter-bar-preview-offset), 0, 0);
+}
+
+/* 拖拽器 */
+.hmfw-splitter-horizontal .hmfw-splitter-bar-dragger {
+  cursor: col-resize;
+  height: 100%;
+  width: var(--hmfw-splitter-trigger-size);
+}
+
+.hmfw-splitter-horizontal .hmfw-splitter-bar-dragger::before {
+  height: 100%;
+  width: var(--hmfw-splitter-bar-size);
+}
+
+.hmfw-splitter-horizontal .hmfw-splitter-bar-dragger::after {
+  height: var(--hmfw-splitter-bar-draggable-size);
+  width: var(--hmfw-splitter-bar-size);
+}
+
+/* 折叠按钮 */
+.hmfw-splitter-horizontal .hmfw-splitter-bar-collapse-bar {
+  width: var(--hmfw-font-size-sm);
+  height: var(--hmfw-control-height-sm);
+}
+
+.hmfw-splitter-horizontal .hmfw-splitter-bar-collapse-bar-start {
+  left: auto;
+  right: calc(var(--hmfw-splitter-trigger-size) / 2);
+  transform: translateY(-50%);
+}
+
+.hmfw-splitter-horizontal .hmfw-splitter-bar-collapse-bar-end {
+  left: calc(var(--hmfw-splitter-trigger-size) / 2);
+  right: auto;
+  transform: translateY(-50%);
+}
+
+/* =========================== 垂直布局 =========================== */
+.hmfw-splitter-vertical {
+  flex-direction: column;
+}
+
+.hmfw-splitter-vertical > .hmfw-splitter-bar {
+  height: 0;
+}
+
+/* 预览 */
+.hmfw-splitter-vertical .hmfw-splitter-bar-preview {
+  position: absolute;
+  background: var(--hmfw-color-primary);
+  opacity: 0.2;
+  pointer-events: none;
+  transition: none;
+  z-index: 1;
+  display: none;
+  height: var(--hmfw-splitter-bar-size);
+  width: 100%;
+}
+
+.hmfw-splitter-vertical .hmfw-splitter-bar-preview-active {
+  display: block;
+  transform: translate3d(0, var(--hmfw-splitter-bar-preview-offset), 0);
+}
+
+/* 拖拽器 */
+.hmfw-splitter-vertical .hmfw-splitter-bar-dragger {
+  cursor: row-resize;
+  width: 100%;
+  height: var(--hmfw-splitter-trigger-size);
+}
+
+.hmfw-splitter-vertical .hmfw-splitter-bar-dragger::before {
+  width: 100%;
+  height: var(--hmfw-splitter-bar-size);
+}
+
+.hmfw-splitter-vertical .hmfw-splitter-bar-dragger::after {
+  width: var(--hmfw-splitter-bar-draggable-size);
+  height: var(--hmfw-splitter-bar-size);
+}
+
+/* 折叠按钮 */
+.hmfw-splitter-vertical .hmfw-splitter-bar-collapse-bar {
+  height: var(--hmfw-font-size-sm);
+  width: var(--hmfw-control-height-sm);
+}
+
+.hmfw-splitter-vertical .hmfw-splitter-bar-collapse-bar-start {
+  top: auto;
+  bottom: calc(var(--hmfw-splitter-trigger-size) / 2);
+  transform: translateX(-50%);
+}
+
+.hmfw-splitter-vertical .hmfw-splitter-bar-collapse-bar-end {
+  top: calc(var(--hmfw-splitter-trigger-size) / 2);
+  bottom: auto;
+  transform: translateX(-50%);
+}
+
+/* ========================= 面板 ========================= */
+.hmfw-splitter-panel {
+  overflow: auto;
+  scrollbar-width: thin;
+  box-sizing: border-box;
+}
+
+.hmfw-splitter-panel-hidden {
+  overflow: hidden;
+}
+
+.hmfw-splitter-panel:has(.hmfw-splitter:only-child) {
+  overflow: hidden;
+}
+
+.hmfw-splitter-panel-transition {
+  transition: flex-basis var(--hmfw-motion-duration-slow) var(--hmfw-motion-ease-in-out);
+}
+
+/* RTL */
+.hmfw-splitter-rtl {
+  direction: rtl;
+}

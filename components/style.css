@@ -70,6 +70,7 @@
 @import './statistic/style/index.css';
 @import './calendar/style/index.css';
 @import './masonry/style/index.css';
+@import './splitter/style/index.css';
 
 /* Global reset */
 * {

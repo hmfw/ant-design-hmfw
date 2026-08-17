@@ -501,6 +501,17 @@ export type {
   DateRange,
 } from './calendar'
 
+export { default as Splitter } from './splitter'
+export type {
+  SplitterProps,
+  PanelProps,
+  SplitterClassNames,
+  SplitterStyles,
+  SplitterResizeHandler,
+  SplitterCollapseHandler,
+  SplitterDraggerDoubleClickHandler,
+} from './splitter'
+
 // Install function for Vue.use()
 import { ConfigProvider } from './config-provider'
 import { Button } from './button'
@@ -568,6 +579,8 @@ import { Upload, UploadDragger } from './upload'
 import { Flex } from './flex'
 import { AutoComplete } from './auto-complete'
 import { Cascader } from './cascader'
+import Splitter from './splitter'
+import Masonry from './masonry'
 
 const components = [
   ConfigProvider,
@@ -674,6 +687,8 @@ const components = [
   Flex,
   AutoComplete,
   Cascader,
+  Splitter,
+  Masonry,
 ]
 
 export function install(app: VueApp): void {
