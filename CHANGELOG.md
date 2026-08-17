@@ -10,6 +10,20 @@
 
 ## 最近版本
 
+## [0.49.1] - 2026-08-17
+
+**🐛 问题修复**：
+
+- **Splitter**: 修复受控模式下双击重置无效的问题——当 `onDraggerDoubleClick` 回调将 `size` 从具体值重置为 `undefined` 时，面板应恢复到 `defaultSize`，而不是回退到拖拽期间写入 `innerSizes` 的旧 px 值，导致第一次双击重置失效
+
+**🧪 测试**：
+
+- **Splitter**: 新增「双击重置：受控 size 重置为 undefined 后应恢复默认尺寸」回归测试用例
+
+**🔨 代码优化**：
+
+- **Splitter**: 移除 `setup` 中未使用的 `attrs` 参数
+
 ## [0.49.0] - 2026-08-17
 
 [查看完整内容](./changelogs/v0.49.0.md)

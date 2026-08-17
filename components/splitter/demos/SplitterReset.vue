@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Alert message="提示：双击拖拽条可重置为默认尺寸" type="info" style="margin-bottom: 16px" />
+    <Alert title="提示：双击拖拽条可重置为默认尺寸" type="info" style="margin-bottom: 16px" />
     <Splitter
       style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)"
       @dragger-double-click="handleReset"
@@ -46,8 +46,8 @@ const Desc = defineComponent({
   },
   setup(props) {
     return () => (
-      <div style="display: flex; justify-content: center; align-items: center; height: 100%">
-        <h5 style="color: var(--hmfw-color-text-secondary); white-space: nowrap">{props.text}</h5>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <h5 style={{ color: 'var(--hmfw-color-text-secondary)', whiteSpace: 'nowrap' }}>{props.text}</h5>
       </div>
     )
   },

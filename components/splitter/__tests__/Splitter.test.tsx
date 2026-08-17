@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
+import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import Splitter from '../Splitter'
 import Panel from '../Panel'
@@ -181,6 +182,66 @@ describe('Splitter', () => {
     expect(resizeSizes.length).toBe(2)
     expect(resizeSizes[0]).toBeGreaterThan(resizeSizes[1])
     expect(resizeEndSizes.length).toBe(2)
+  })
+
+  it('双击重置：受控 size 重置为 undefined 后应恢复默认尺寸', async () => {
+    const sizes = ref<(number | undefined)[]>([undefined, undefined])
+    const wrapper = mount({
+      render() {
+        return (
+          <Splitter
+            onResize={(newSizes) => {
+              // 模拟受控模式：将拖拽产生的 px 尺寸写回 state
+              sizes.value = newSizes
+            }}
+            onDraggerDoubleClick={() => {
+              // 双击重置为默认尺寸（demo SplitterReset 的写法）
+              sizes.value = [undefined, undefined]
+            }}
+          >
+            <Panel size={sizes.value[0]} defaultSize="40%">
+              第一个面板
+            </Panel>
+            <Panel size={sizes.value[1]} defaultSize="60%">
+              第二个面板
+            </Panel>
+          </Splitter>
+        )
+      },
+    })
+
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    const getBases = () =>
+      wrapper.findAll('.hmfw-splitter-panel').map((p) => (p.element as HTMLElement).style.flexBasis)
+
+    // 初始为默认尺寸 40% / 60%（容器宽 800px）
+    expect(getBases()).toEqual(['320px', '480px'])
+
+    // 模拟拖拽 +100px，onResize 将 px 尺寸写回受控 state
+    const makeMouseEvent = (type: string, pageX: number, pageY: number) => {
+      const event = new MouseEvent(type)
+      Object.defineProperty(event, 'pageX', { value: pageX })
+      Object.defineProperty(event, 'pageY', { value: pageY })
+      return event
+    }
+    const dragger = wrapper.find('.hmfw-splitter-bar-dragger')
+    await dragger.element.dispatchEvent(makeMouseEvent('mousedown', 100, 100))
+    await wrapper.vm.$nextTick()
+    await window.dispatchEvent(makeMouseEvent('mousemove', 200, 100))
+    await window.dispatchEvent(makeMouseEvent('mouseup', 200, 100))
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    expect(getBases()).toEqual(['420px', '380px'])
+
+    // 双击重置：第一次即应恢复默认尺寸（回归：innerSizes 残留拖拽 px 导致首次无效）
+    await wrapper.find('.hmfw-splitter-bar-dragger').trigger('dblclick')
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    expect(getBases()).toEqual(['320px', '480px'])
   })
 
   it('根级 class 不应泄漏到面板', async () => {

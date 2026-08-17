@@ -39,6 +39,18 @@ export default function useSizes(items: Ref<PanelProps[]>, containerSize?: Ref<n
     { immediate: false },
   )
 
+  // 当从受控切换为非受控时（size 由具体值重置为 undefined），恢复默认尺寸
+  // 例如双击重置场景：用户回调将受控 size 重置为 undefined，面板应回到 defaultSize，
+  // 否则会回退到拖拽期间写入 innerSizes 的旧 px 值，导致第一次双击重置无效
+  watch(
+    () => propSizes.value.some(isNonNullable),
+    (controlled, prevControlled) => {
+      if (prevControlled && !controlled) {
+        innerSizes.value = items.value.map((item) => item.defaultSize)
+      }
+    },
+  )
+
   const sizes = computed(() => {
     // 如果任何面板通过 prop 传递了 size，使用 propSizes
     // 否则使用 innerSizes

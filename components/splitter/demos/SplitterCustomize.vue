@@ -70,8 +70,8 @@ const Desc = defineComponent({
   },
   setup(props) {
     return () => (
-      <div style="display: flex; justify-content: center; align-items: center; height: 100%">
-        <h5 style="color: var(--hmfw-color-text-secondary); white-space: nowrap">{props.text}</h5>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <h5 style={{ color: 'var(--hmfw-color-text-secondary)', whiteSpace: 'nowrap' }}>{props.text}</h5>
       </div>
     )
   },

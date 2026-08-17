@@ -33,7 +33,7 @@ const splitterProps = {
 export default defineComponent({
   name: 'Splitter',
   props: splitterProps,
-  setup(props, { slots, attrs }) {
+  setup(props, { slots }) {
     const prefixCls = usePrefixCls('splitter')
 
     // ======================== 方向 ========================
