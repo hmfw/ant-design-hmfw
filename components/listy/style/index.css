@@ -1,0 +1,47 @@
+.hmfw-listy {
+  position: relative;
+  color: var(--hmfw-color-text);
+  font-size: var(--hmfw-font-size);
+  line-height: var(--hmfw-line-height);
+}
+
+/* 列表项 */
+.hmfw-listy-item {
+  padding: var(--hmfw-padding-sm) var(--hmfw-padding);
+  border-bottom: var(--hmfw-line-width) var(--hmfw-line-type) var(--hmfw-color-split);
+  transition: background-color var(--hmfw-motion-duration-mid) var(--hmfw-motion-ease-in-out);
+}
+
+.hmfw-listy-item:hover {
+  background-color: var(--hmfw-control-item-bg-hover);
+}
+
+/* 分组标题 */
+.hmfw-listy-group-header {
+  box-sizing: border-box;
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding);
+  color: var(--hmfw-color-text-description);
+  font-weight: var(--hmfw-font-weight-strong);
+  background-color: var(--hmfw-color-bg-container);
+  background-image: linear-gradient(var(--hmfw-color-fill-alter), var(--hmfw-color-fill-alter));
+}
+
+.hmfw-listy-group-header-sticky {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+/* 空状态 */
+.hmfw-listy-empty {
+  padding: var(--hmfw-padding-lg);
+  text-align: center;
+  color: var(--hmfw-color-text-secondary);
+}
+
+/* RTL */
+.hmfw-listy-rtl {
+  direction: rtl;
+}

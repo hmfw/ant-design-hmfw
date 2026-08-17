@@ -97,6 +97,7 @@ export const componentGroups: ComponentGroup[] = [
       { name: 'empty', title: 'Empty 空状态' },
       { name: 'image', title: 'Image 图片' },
       { name: 'list', title: 'List 列表' },
+      { name: 'listy', title: 'Listy 虚拟列表' },
       { name: 'qrcode', title: 'QRCode 二维码' },
       { name: 'result', title: 'Result 结果' },
       { name: 'segmented', title: 'Segmented 分段控制器' },

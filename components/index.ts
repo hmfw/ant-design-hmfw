@@ -283,6 +283,17 @@ export type {
   ListItemMetaStyles,
 } from './list'
 
+export { Listy } from './listy'
+export type {
+  ListyProps,
+  ListyClassNames,
+  ListyStyles,
+  ListyGroupItem,
+  ListyRef,
+  ListyScrollToConfig,
+  ScrollAlign,
+} from './listy'
+
 export { Dropdown } from './dropdown'
 export type { DropdownProps } from './dropdown'
 
@@ -536,6 +547,7 @@ import { Rate } from './rate'
 import { Slider } from './slider'
 import { Timeline, TimelineItem } from './timeline'
 import { List, ListItem, ListItemMeta } from './list'
+import { Listy } from './listy'
 import { Dropdown } from './dropdown'
 import { Popconfirm } from './popconfirm'
 import { Segmented } from './segmented'
@@ -635,6 +647,7 @@ const components = [
   List,
   ListItem,
   ListItemMeta,
+  Listy,
   Dropdown,
   Popconfirm,
   Segmented,
