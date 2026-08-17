@@ -7,7 +7,6 @@ import {
   Teleport,
   Transition,
   type PropType,
-  type VNode,
   type CSSProperties,
 } from 'vue'
 import { usePrefixCls } from '../config-provider'

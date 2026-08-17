@@ -96,7 +96,7 @@ describe('Listy', () => {
           root: 'custom-root',
           item: 'custom-item',
         },
-        children: (item: any) => h('div', {}, 'Item'),
+        children: (_item: any) => h('div', {}, 'Item'),
       },
     })
 
@@ -113,7 +113,7 @@ describe('Listy', () => {
           root: { padding: '10px' },
           item: { margin: '5px' },
         },
-        children: (item: any) => h('div', {}, 'Item'),
+        children: (_item: any) => h('div', {}, 'Item'),
       },
     })
 
@@ -159,7 +159,7 @@ describe('Listy', () => {
         data: Array.from({ length: 100 }, (_, i) => ({ id: i })),
         height: 300,
         virtual: true,
-        children: (item: any) => h('div', {}, 'Item'),
+        children: (_item: any) => h('div', {}, 'Item'),
       },
     })
 
@@ -216,7 +216,7 @@ describe('Listy', () => {
       props: {
         groups,
         height: 300,
-        children: (item: any) => h('div', {}, 'Item'),
+        children: (_item: any) => h('div', {}, 'Item'),
       },
     })
 
@@ -244,7 +244,7 @@ describe('Listy', () => {
       props: {
         data: [{ id: 1 }],
         height: '200px',
-        children: (item: any) => h('div', {}, 'Item'),
+        children: (_item: any) => h('div', {}, 'Item'),
       },
     })
 
@@ -268,7 +268,7 @@ describe('Listy', () => {
       props: {
         groups,
         height: 300,
-        children: (item: any) => h('div', {}, 'Item'),
+        children: (_item: any) => h('div', {}, 'Item'),
       },
     })
 

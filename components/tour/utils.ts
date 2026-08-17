@@ -1,4 +1,4 @@
-import { isVNode, type VNode } from 'vue'
+import { type VNode } from 'vue'
 import { renderContent as renderContentUtil } from '../_utils/renderContent'
 import type { TourGap, TourPlacement, TourStep } from './types'
 import { omit } from '../_utils/function'

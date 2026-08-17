@@ -1,6 +1,7 @@
 import { defineComponent, ref, computed, type PropType, type VNodeChild } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils/cls'
+import { isPlainObject } from '../_utils/is'
 import {
   CheckCircleFilled,
   InfoCircleFilled,
@@ -16,10 +17,6 @@ const iconMap: Record<AlertType, typeof CheckCircleFilled> = {
   info: InfoCircleFilled,
   warning: ExclamationCircleFilled,
   error: CloseCircleFilled,
-}
-
-function isPlainObject(v: unknown): v is Record<string, unknown> {
-  return Object.prototype.toString.call(v) === '[object Object]'
 }
 
 const alertProps = {
