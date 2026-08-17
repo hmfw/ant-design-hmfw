@@ -191,3 +191,37 @@ export interface PreviewGroupProps {
   /** 切换预览图片回调 */
   onChange?: (current: number, prevCurrent: number) => void
 }
+
+/** ImagePreview 内部组件 Props（不对外暴露） */
+export interface ImagePreviewProps {
+  /** 类名前缀 */
+  prefixCls: string
+  /** 预览图片地址 */
+  src?: string
+  /** 图片描述 */
+  alt?: string
+  /** 预览配置对象 */
+  config?: PreviewConfig
+  /** 是否显示预览 */
+  visible?: boolean
+  /** 关闭回调 */
+  onClose: () => void
+  /** 上一张回调（PreviewGroup 场景） */
+  onPrev?: () => void
+  /** 下一张回调（PreviewGroup 场景） */
+  onNext?: () => void
+  /** 是否有上一张 */
+  hasPrev?: boolean
+  /** 是否有下一张 */
+  hasNext?: boolean
+  /** 当前索引（PreviewGroup 场景） */
+  current?: number
+  /** 图片总数（PreviewGroup 场景） */
+  total?: number
+  /** 自定义计数渲染 */
+  countRender?: (current: number, total: number) => VNode
+  /** 语义化 className */
+  classNames?: ImageClassNames
+  /** 语义化 style */
+  styles?: ImageStyles
+}

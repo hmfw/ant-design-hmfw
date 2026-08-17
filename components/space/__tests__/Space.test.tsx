@@ -188,4 +188,71 @@ describe('Space', () => {
     expect(splits).toHaveLength(1)
     expect(splits[0].find('.slot-sep').exists()).toBe(true)
   })
+
+  it('orientation takes precedence over direction and vertical', () => {
+    const wrapper = mount(Space, {
+      props: { orientation: 'vertical', direction: 'horizontal', vertical: false },
+      slots: {
+        default: () => [h('span', 'A'), h('span', 'B')],
+      },
+    })
+    expect(wrapper.classes()).toContain('hmfw-space-vertical')
+  })
+
+  it('vertical takes precedence over direction', () => {
+    const wrapper = mount(Space, {
+      props: { vertical: true, direction: 'horizontal' },
+      slots: {
+        default: () => [h('span', 'A'), h('span', 'B')],
+      },
+    })
+    expect(wrapper.classes()).toContain('hmfw-space-vertical')
+  })
+
+  it('returns null when no children', () => {
+    const wrapper = mount(Space, {
+      slots: {
+        default: () => [],
+      },
+    })
+    expect(wrapper.html()).toBe('')
+  })
+
+  it('applies custom classNames to all semantic nodes', () => {
+    const wrapper = mount(Space, {
+      props: {
+        separator: '|',
+        classNames: {
+          root: 'custom-root',
+          item: 'custom-item',
+          split: 'custom-split',
+        },
+      },
+      slots: {
+        default: () => [h('span', 'A'), h('span', 'B')],
+      },
+    })
+    expect(wrapper.classes()).toContain('custom-root')
+    expect(wrapper.find('.hmfw-space-item').classes()).toContain('custom-item')
+    expect(wrapper.find('.hmfw-space-item-split').classes()).toContain('custom-split')
+  })
+
+  it('applies custom styles to all semantic nodes', () => {
+    const wrapper = mount(Space, {
+      props: {
+        separator: '|',
+        styles: {
+          root: { padding: '10px' },
+          item: { margin: '5px' },
+          split: { color: 'red' },
+        },
+      },
+      slots: {
+        default: () => [h('span', 'A'), h('span', 'B')],
+      },
+    })
+    expect(wrapper.attributes('style')).toContain('padding: 10px')
+    expect(wrapper.find('.hmfw-space-item').attributes('style')).toContain('margin: 5px')
+    expect(wrapper.find('.hmfw-space-item-split').attributes('style')).toContain('color: red')
+  })
 })

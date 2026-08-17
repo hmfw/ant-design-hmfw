@@ -49,11 +49,11 @@
   <WatermarkOffset />
 </DemoBlock>
 
-### Modal 与 Drawer
+### Modal、Drawer 和 Image
 
 通过 inherit 属性控制水印是否传导到弹出组件（如 Modal、Drawer）。
 
-<DemoBlock title="Modal 与 Drawer" :source="WatermarkPortalSource">
+<DemoBlock title="Modal、Drawer 和 Image" :source="WatermarkPortalSource">
   <WatermarkPortal />
 </DemoBlock>
 

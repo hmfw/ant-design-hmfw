@@ -44,10 +44,7 @@ const tagProps = {
   color: { type: String as PropType<TagColor>, default: undefined },
   variant: { type: String as PropType<TagVariant>, default: undefined },
   closable: { type: Boolean, default: false },
-  closeIcon: {
-    type: [Object, Boolean, Function] as PropType<TagCloseIcon>,
-    default: undefined,
-  },
+  closeIcon: { type: [Object, Boolean, Function] as PropType<TagCloseIcon>, default: undefined },
   bordered: { type: Boolean, default: true },
   icon: { type: null, default: undefined },
   href: { type: String, default: undefined },

@@ -3,9 +3,10 @@
     <h4>inherit=true（默认）</h4>
     <p style="color: #666; margin-bottom: 16px">水印会传导到 Modal 和 Drawer</p>
     <Watermark content="Ant Design" :inherit="true">
-      <div style="height: 200px">
+      <div style="display: flex; align-items: flex-start; gap: 8px">
         <Button type="primary" @click="modalVisible = true">打开 Modal</Button>
-        <Button style="margin-left: 8px" @click="drawerVisible = true">打开 Drawer</Button>
+        <Button @click="drawerVisible = true">打开 Drawer</Button>
+        <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" width="200" />
       </div>
 
       <!-- Modal 和 Drawer 必须作为 Watermark 的子元素 -->
@@ -46,7 +47,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Watermark, Button, Modal, Drawer, Divider } from '@hmfw/ant-design'
+import { Watermark, Button, Image, Modal, Drawer, Divider } from '@hmfw/ant-design'
 
 const modalVisible = ref(false)
 const drawerVisible = ref(false)

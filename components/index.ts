@@ -161,6 +161,9 @@ export type {
   TooltipTitle,
   TooltipClassNames,
   TooltipStyles,
+  TooltipOpenChangeInfo,
+  TooltipOpenChangeHandler,
+  TooltipAfterOpenChangeHandler,
 } from './tooltip'
 
 export { Alert } from './alert'

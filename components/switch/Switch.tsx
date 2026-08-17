@@ -99,6 +99,17 @@ export const Switch = defineComponent({
 
     return () => {
       const rootStyle = [props.style, props.styles?.root].filter(Boolean)
+      const switchCls = cls(
+        prefixCls,
+        {
+          [`${prefixCls}-checked`]: isChecked.value,
+          [`${prefixCls}-disabled`]: isDisabled.value,
+          [`${prefixCls}-loading`]: isLoading.value,
+          [`${prefixCls}-small`]: props.size === 'small',
+        },
+        props.className,
+        props.classNames?.root,
+      )
 
       return (
         <button
@@ -110,17 +121,7 @@ export const Switch = defineComponent({
           title={props.title}
           tabindex={props.tabIndex}
           style={rootStyle}
-          class={cls(
-            prefixCls,
-            {
-              [`${prefixCls}-checked`]: isChecked.value,
-              [`${prefixCls}-disabled`]: isDisabled.value,
-              [`${prefixCls}-loading`]: isLoading.value,
-              [`${prefixCls}-small`]: props.size === 'small',
-            },
-            props.className,
-            props.classNames?.root,
-          )}
+          class={switchCls}
           onClick={handleClick}
           onFocus={handleFocus}
           onBlur={handleBlur}

@@ -29,40 +29,19 @@ const tooltipProps = {
   title: { type: [String, Number, Object, Function] as PropType<TooltipTitle>, default: undefined },
   /** AntD legacy alias for `title`. */
   overlay: { type: [String, Number, Object, Function] as PropType<TooltipTitle>, default: undefined },
-  placement: {
-    type: String as PropType<TooltipPlacement>,
-    default: 'top',
-  },
-  trigger: {
-    type: [String, Array] as PropType<TooltipTrigger | TooltipTrigger[]>,
-    default: 'hover',
-  },
-  open: {
-    type: Boolean,
-    default: undefined,
-  },
+  placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
+  trigger: { type: [String, Array] as PropType<TooltipTrigger | TooltipTrigger[]>, default: 'hover' },
+  open: { type: Boolean, default: undefined },
   defaultOpen: Boolean,
   color: { type: String, default: undefined },
-  arrow: {
-    type: [Boolean, Object] as PropType<TooltipArrow>,
-    default: true,
-  },
-  mouseEnterDelay: {
-    type: Number,
-    default: 0.1,
-  },
-  mouseLeaveDelay: {
-    type: Number,
-    default: 0.1,
-  },
+  arrow: { type: [Boolean, Object] as PropType<TooltipArrow>, default: true },
+  mouseEnterDelay: { type: Number, default: 0.1 },
+  mouseLeaveDelay: { type: Number, default: 0.1 },
   disabled: Boolean,
   destroyOnHidden: Boolean,
   autoAdjustOverflow: { type: Boolean, default: true },
   zIndex: { type: Number, default: undefined },
-  getPopupContainer: {
-    type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
-    default: undefined,
-  },
+  getPopupContainer: { type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>, default: undefined },
   fresh: { type: [Boolean, Number] as PropType<boolean | number>, default: undefined },
   /** 持续跟踪触发元素位置变化，每帧自动重新定位（适用于触发元素有动画/过渡的场景）。 */
   trackPosition: { type: Boolean, default: false },

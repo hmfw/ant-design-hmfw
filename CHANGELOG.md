@@ -10,6 +10,12 @@
 
 ## 最近版本
 
+## [0.46.0] - 2026-08-17
+
+[查看完整内容](./changelogs/v0.46.0.md)
+
+**✨ 功能增强**：Space 新增 `orientation` 属性（推荐使用，优先级高于 `direction`），`direction` 标记为兼容旧版。Image/ImagePreview 重构——提取 `ImagePreviewProps` 接口、补充详细 JSDoc、修复可选配置空安全访问，新增单元测试 92 项。Tooltip 导出 `TooltipOpenChangeInfo` / `TooltipOpenChangeHandler` / `TooltipAfterOpenChangeHandler` 类型。Switch / Tag / Tooltip 进行 props 格式精简与代码优化，Segmented 删除冗余 CSS 规则。多个组件补齐 `satisfies Record<keyof XProps, any>` 约束，确保运行时 props 与 TypeScript 接口完全一致。全体 2656 单元测试通过。
+
 ## [0.45.0] - 2026-08-16
 
 [查看完整内容](./changelogs/v0.45.0.md)

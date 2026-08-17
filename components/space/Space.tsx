@@ -1,7 +1,7 @@
 import { defineComponent, computed, Fragment, Comment, Text, type PropType, type VNode, type CSSProperties } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils/cls'
-import type { SpaceSize, SpaceDirection, SpaceAlign, SpaceClassNames, SpaceStyles } from './types'
+import type { SpaceProps, SpaceSize, SpaceDirection, SpaceAlign, SpaceClassNames, SpaceStyles } from './types'
 
 const spaceSize = {
   small: 8,
@@ -32,48 +32,61 @@ function flattenChildren(children: VNode[]): VNode[] {
   return result
 }
 
+const spaceProps = {
+  orientation: {
+    type: String as PropType<SpaceDirection>,
+    default: undefined,
+  },
+  direction: {
+    type: String as PropType<SpaceDirection>,
+    default: 'horizontal',
+  },
+  /** `orientation="vertical"` 的简写 */
+  vertical: {
+    type: Boolean,
+    default: false,
+  },
+  size: {
+    type: [String, Number, Array] as PropType<SpaceSize | [SpaceSize, SpaceSize]>,
+    default: 'small',
+  },
+  align: {
+    type: String as PropType<SpaceAlign>,
+    default: undefined,
+  },
+  wrap: {
+    type: Boolean,
+    default: false,
+  },
+  /** 分隔符（与 AntD v6 对齐） */
+  separator: {
+    type: [Object, String] as PropType<VNode | string>,
+    default: undefined,
+  },
+  classNames: {
+    type: Object as PropType<SpaceClassNames>,
+    default: undefined,
+  },
+  styles: {
+    type: Object as PropType<SpaceStyles>,
+    default: undefined,
+  },
+} satisfies Record<keyof SpaceProps, any>
+
 export default defineComponent({
   name: 'Space',
-  props: {
-    direction: {
-      type: String as PropType<SpaceDirection>,
-      default: 'horizontal',
-    },
-    /** `direction="vertical"` 的简写 */
-    vertical: {
-      type: Boolean,
-      default: false,
-    },
-    size: {
-      type: [String, Number, Array] as PropType<SpaceSize | [SpaceSize, SpaceSize]>,
-      default: 'small',
-    },
-    align: {
-      type: String as PropType<SpaceAlign>,
-      default: undefined,
-    },
-    wrap: {
-      type: Boolean,
-      default: false,
-    },
-    /** 分隔符（与 AntD v6 对齐） */
-    separator: {
-      type: [Object, String] as PropType<VNode | string>,
-      default: undefined,
-    },
-    classNames: {
-      type: Object as PropType<SpaceClassNames>,
-      default: undefined,
-    },
-    styles: {
-      type: Object as PropType<SpaceStyles>,
-      default: undefined,
-    },
-  },
+  props: spaceProps,
   setup(props, { slots }) {
     const prefixCls = usePrefixCls('space')
 
-    const mergedDirection = computed<SpaceDirection>(() => (props.vertical ? 'vertical' : props.direction))
+    const mergedDirection = computed<SpaceDirection>(() => {
+      // orientation 优先级最高（与 AntD v6 对齐）
+      if (props.orientation) return props.orientation
+      // vertical 简写次之
+      if (props.vertical) return 'vertical'
+      // direction 兜底
+      return props.direction
+    })
 
     // 优先级：slot > separator prop
     const mergedSeparator = computed(() => slots.split?.() ?? props.separator)

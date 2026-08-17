@@ -10,7 +10,7 @@ import {
   type PropType,
   type VNode,
 } from 'vue'
-import { cls, KEYS } from '../_utils'
+import { cls } from '../_utils/cls'
 import {
   CloseOutlined,
   LeftOutlined,
@@ -23,7 +23,15 @@ import {
 } from '@hmfw/icons'
 import { usePanelRef } from '../watermark'
 import { useScrollLock, useOverlayKeyboard } from '../_utils/overlay'
-import type { PreviewConfig, TransformType, TransformAction, ImgInfo, ImageClassNames, ImageStyles } from './types'
+import type {
+  PreviewConfig,
+  TransformType,
+  TransformAction,
+  ImgInfo,
+  ImageClassNames,
+  ImageStyles,
+  ImagePreviewProps,
+} from './types'
 import {
   DEFAULT_SCALE_STEP,
   DEFAULT_MIN_SCALE,
@@ -33,26 +41,43 @@ import {
   DEFAULT_TRANSFORM,
 } from './utils'
 
-// ---- Preview overlay ----
+/**
+ * ImagePreview 内部组件
+ *
+ * 图片预览浮层，提供缩放、旋转、翻转、拖拽等交互功能。
+ * 不对外导出，仅供 Image 和 PreviewGroup 组件内部使用。
+ *
+ * 核心功能：
+ * - 缩放：滚轮缩放、工具栏按钮缩放、双击缩放/重置
+ * - 旋转：左右旋转 90°
+ * - 翻转：水平/垂直翻转
+ * - 拖拽：按住图片拖动平移
+ * - 导航：上一张/下一张（PreviewGroup 场景）
+ * - 键盘：Esc 关闭、← → 切换
+ * - 性能优化：硬件加速、切换时禁用过渡避免卡顿
+ * - 水印集成：自动传导 Watermark Context
+ */
+const imagePreviewProps = {
+  prefixCls: { type: String, required: true },
+  src: { type: String, default: '' },
+  alt: { type: String, default: undefined },
+  config: { type: Object as PropType<PreviewConfig>, default: () => ({}) },
+  visible: { type: Boolean, default: false },
+  onClose: { type: Function as PropType<() => void>, required: true },
+  onPrev: { type: Function as PropType<() => void>, default: undefined },
+  onNext: { type: Function as PropType<() => void>, default: undefined },
+  hasPrev: { type: Boolean, default: false },
+  hasNext: { type: Boolean, default: false },
+  current: { type: Number, default: undefined },
+  total: { type: Number, default: undefined },
+  countRender: { type: Function as PropType<(current: number, total: number) => VNode>, default: undefined },
+  classNames: { type: Object as PropType<ImageClassNames>, default: undefined },
+  styles: { type: Object as PropType<ImageStyles>, default: undefined },
+} satisfies Record<keyof ImagePreviewProps, any>
+
 export const ImagePreview = defineComponent({
   name: 'ImagePreview',
-  props: {
-    prefixCls: { type: String, required: true },
-    src: { type: String, default: '' },
-    alt: String,
-    config: { type: Object as PropType<PreviewConfig>, default: () => ({}) },
-    visible: { type: Boolean, default: false },
-    onClose: { type: Function as PropType<() => void>, required: true },
-    onPrev: Function as PropType<() => void>,
-    onNext: Function as PropType<() => void>,
-    hasPrev: Boolean,
-    hasNext: Boolean,
-    current: Number,
-    total: Number,
-    countRender: Function as PropType<(current: number, total: number) => VNode>,
-    classNames: Object as PropType<ImageClassNames>,
-    styles: Object as PropType<ImageStyles>,
-  },
+  props: imagePreviewProps,
   setup(props) {
     const transform = ref<TransformType>(DEFAULT_TRANSFORM())
     // 切换图片瞬间禁用过渡，避免从旧图的缩放/旋转状态”回弹”造成卡顿
@@ -65,7 +90,7 @@ export const ImagePreview = defineComponent({
     const movable = computed(() => props.config.movable !== false)
 
     const emitTransform = (action: TransformAction) => {
-      props.config.onTransform?.({ transform: { ...transform.value }, action })
+      props.config?.onTransform?.({ transform: { ...transform.value }, action })
     }
 
     const reset = () => {
@@ -131,9 +156,9 @@ export const ImagePreview = defineComponent({
     // 使用公共 Hooks
     useScrollLock(isVisible)
     useOverlayKeyboard(isVisible, {
-      onClose: () => props.onClose(),
-      onPrev: props.hasPrev ? () => props.onPrev?.() : undefined,
-      onNext: props.hasNext ? () => props.onNext?.() : undefined,
+      onClose: () => props.onClose!(),
+      onPrev: props.hasPrev && props.onPrev ? () => props.onPrev!() : undefined,
+      onNext: props.hasNext && props.onNext ? () => props.onNext!() : undefined,
     })
 
     // ---- 滚轮缩放 ----
@@ -188,15 +213,15 @@ export const ImagePreview = defineComponent({
     }
 
     // ---- 关闭：遮罩可点性 ----
-    const maskInfo = computed(() => resolveMask(props.config))
+    const maskInfo = computed(() => resolveMask(props.config ?? {}))
     const handleMaskClick = (e: MouseEvent) => {
-      if (e.target === e.currentTarget && maskInfo.value.closable) props.onClose()
+      if (e.target === e.currentTarget && maskInfo.value.closable) props.onClose!()
     }
 
     const previewCls = `${props.prefixCls}-preview`
 
     const getCloseIcon = () => {
-      const ci = props.config.closeIcon
+      const ci = props.config?.closeIcon
       if (ci === false) return null
       if (ci) return renderContent(ci)
       return <CloseOutlined class="hmfw-icon" />
@@ -236,7 +261,7 @@ export const ImagePreview = defineComponent({
       onZoomOut: zoomOut,
       onZoomIn: zoomIn,
       onReset: reset,
-      onClose: props.onClose,
+      onClose: props.onClose as () => void,
       onActive,
     }
     const renderDefaultToolbar = (): VNode => (
@@ -244,11 +269,14 @@ export const ImagePreview = defineComponent({
         class={cls(`${previewCls}-operations`, props.classNames?.operations)}
         style={props.styles?.operations}
         onClick={(e: MouseEvent) => e.stopPropagation()}
+        role="toolbar"
+        aria-label="图片操作工具栏"
       >
         <button
           class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
           style={props.styles?.operationBtn}
           onClick={flipX}
+          aria-label="左右翻转"
           title="左右翻转"
         >
           <SwapOutlined class="hmfw-icon" />
@@ -257,14 +285,16 @@ export const ImagePreview = defineComponent({
           class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
           style={props.styles?.operationBtn}
           onClick={flipY}
+          aria-label="上下翻转"
           title="上下翻转"
         >
-          <SwapOutlined class="hmfw-icon" style="transform:rotate(90deg)" />
+          <SwapOutlined class="hmfw-icon" style={{ transform: 'rotate(90deg)' }} />
         </button>
         <button
           class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
           style={props.styles?.operationBtn}
           onClick={rotateLeft}
+          aria-label="向左旋转"
           title="向左旋转"
         >
           <RotateLeftOutlined class="hmfw-icon" />
@@ -273,6 +303,7 @@ export const ImagePreview = defineComponent({
           class={cls(`${previewCls}-op-btn`, props.classNames?.operationBtn)}
           style={props.styles?.operationBtn}
           onClick={rotateRight}
+          aria-label="向右旋转"
           title="向右旋转"
         >
           <RotateRightOutlined class="hmfw-icon" />
@@ -287,6 +318,8 @@ export const ImagePreview = defineComponent({
           )}
           style={props.styles?.operationBtn}
           onClick={zoomOut}
+          aria-label="缩小"
+          aria-disabled={transform.value.scale <= minScale.value}
           title="缩小"
         >
           <ZoomOutOutlined class="hmfw-icon" />
@@ -301,6 +334,8 @@ export const ImagePreview = defineComponent({
           )}
           style={props.styles?.operationBtn}
           onClick={zoomIn}
+          aria-label="放大"
+          aria-disabled={transform.value.scale >= maxScale.value}
           title="放大"
         >
           <ZoomInOutlined class="hmfw-icon" />
@@ -309,7 +344,7 @@ export const ImagePreview = defineComponent({
     )
     const renderToolbar = (): VNode => {
       const original = renderDefaultToolbar()
-      const render = props.config.toolbarRender
+      const render = props.config?.toolbarRender
       if (render) {
         return render(original, {
           transform: { ...transform.value },
@@ -335,7 +370,7 @@ export const ImagePreview = defineComponent({
           onClick={(e: MouseEvent) => e.stopPropagation()}
         />
       ) as VNode
-      if (props.config.imageRender) {
+      if (props.config?.imageRender) {
         return props.config.imageRender(original, {
           transform: { ...transform.value },
           current: props.current,
@@ -346,84 +381,111 @@ export const ImagePreview = defineComponent({
       return original
     }
 
+    // 解析 getContainer：字符串选择器 | HTMLElement | 函数 | false（原地渲染） | undefined（默认 body）
+    const getContainerElement = computed(() => {
+      const container = props.config?.getContainer
+      if (container === false) return false
+      if (container === undefined) return 'body'
+      if (typeof container === 'string') return container
+      if (typeof container === 'function') {
+        try {
+          return container()
+        } catch {
+          return 'body'
+        }
+      }
+      return container
+    })
+
     return () => {
       const showCount = props.total != null && props.total > 1
-      return (
-        <Teleport to="body">
-          <Transition name={`${previewCls}-fade`}>
-            {props.visible && (
+      const previewContent = (
+        <Transition name={`${previewCls}-fade`}>
+          {props.visible && (
+            <div
+              ref={mergedPreviewRef}
+              class={cls(`${previewCls}-root`, props.classNames?.preview)}
+              style={[props.config.zIndex != null ? { zIndex: props.config.zIndex } : undefined, props.styles?.preview]}
+              role="dialog"
+              aria-modal="true"
+              aria-label="图片预览"
+              onClick={handleMaskClick}
+            >
               <div
-                ref={mergedPreviewRef}
-                class={cls(`${previewCls}-root`, props.classNames?.preview)}
-                style={[
-                  props.config.zIndex != null ? { zIndex: props.config.zIndex } : undefined,
-                  props.styles?.preview,
-                ]}
-                onClick={handleMaskClick}
+                class={cls(
+                  `${previewCls}-mask`,
+                  {
+                    [`${previewCls}-mask-hidden`]: !maskInfo.value.enabled,
+                  },
+                  props.classNames?.previewMask,
+                )}
+                style={props.styles?.previewMask}
+                aria-hidden="true"
+              />
+              <button
+                class={cls(`${previewCls}-close`, props.classNames?.closeBtn)}
+                style={props.styles?.closeBtn}
+                onClick={props.onClose}
+                aria-label="关闭预览"
+                title="关闭"
               >
-                <div
-                  class={cls(
-                    `${previewCls}-mask`,
-                    {
-                      [`${previewCls}-mask-hidden`]: !maskInfo.value.enabled,
-                    },
-                    props.classNames?.previewMask,
-                  )}
-                  style={props.styles?.previewMask}
-                />
-                <button
-                  class={cls(`${previewCls}-close`, props.classNames?.closeBtn)}
-                  style={props.styles?.closeBtn}
-                  onClick={props.onClose}
-                  title="关闭"
-                >
-                  {getCloseIcon()}
-                </button>
-                <div
-                  class={cls(`${previewCls}-wrap`, props.classNames?.previewWrap)}
-                  style={props.styles?.previewWrap}
-                  onClick={handleMaskClick}
-                  onWheel={handleWheel}
-                >
-                  {renderImage()}
-                </div>
-                {renderToolbar()}
-                {showCount && (
-                  <div class={cls(`${previewCls}-count`, props.classNames?.count)} style={props.styles?.count}>
-                    {props.countRender
-                      ? props.countRender((props.current ?? 0) + 1, props.total!)
-                      : `${(props.current ?? 0) + 1} / ${props.total}`}
-                  </div>
-                )}
-                {props.hasPrev && (
-                  <button
-                    class={cls(`${previewCls}-switch`, `${previewCls}-switch-left`, props.classNames?.switchBtn)}
-                    style={props.styles?.switchBtn}
-                    onClick={(e: MouseEvent) => {
-                      e.stopPropagation()
-                      props.onPrev?.()
-                    }}
-                  >
-                    <LeftOutlined class="hmfw-icon" />
-                  </button>
-                )}
-                {props.hasNext && (
-                  <button
-                    class={cls(`${previewCls}-switch`, `${previewCls}-switch-right`, props.classNames?.switchBtn)}
-                    style={props.styles?.switchBtn}
-                    onClick={(e: MouseEvent) => {
-                      e.stopPropagation()
-                      props.onNext?.()
-                    }}
-                  >
-                    <RightOutlined class="hmfw-icon" />
-                  </button>
-                )}
+                {getCloseIcon()}
+              </button>
+              <div
+                class={cls(`${previewCls}-wrap`, props.classNames?.previewWrap)}
+                style={props.styles?.previewWrap}
+                onClick={handleMaskClick}
+                onWheel={handleWheel}
+              >
+                {renderImage()}
               </div>
-            )}
-          </Transition>
-        </Teleport>
+              {renderToolbar()}
+              {showCount && (
+                <div class={cls(`${previewCls}-count`, props.classNames?.count)} style={props.styles?.count}>
+                  {props.countRender
+                    ? props.countRender((props.current ?? 0) + 1, props.total!)
+                    : `${(props.current ?? 0) + 1} / ${props.total}`}
+                </div>
+              )}
+              {props.hasPrev && (
+                <button
+                  class={cls(`${previewCls}-switch`, `${previewCls}-switch-left`, props.classNames?.switchBtn)}
+                  style={props.styles?.switchBtn}
+                  onClick={(e: MouseEvent) => {
+                    e.stopPropagation()
+                    props.onPrev?.()
+                  }}
+                  aria-label="上一张"
+                  title="上一张"
+                >
+                  <LeftOutlined class="hmfw-icon" />
+                </button>
+              )}
+              {props.hasNext && (
+                <button
+                  class={cls(`${previewCls}-switch`, `${previewCls}-switch-right`, props.classNames?.switchBtn)}
+                  style={props.styles?.switchBtn}
+                  onClick={(e: MouseEvent) => {
+                    e.stopPropagation()
+                    props.onNext?.()
+                  }}
+                  aria-label="下一张"
+                  title="下一张"
+                >
+                  <RightOutlined class="hmfw-icon" />
+                </button>
+              )}
+            </div>
+          )}
+        </Transition>
       )
+
+      // getContainer === false 时原地渲染，否则使用 Teleport
+      const containerEl = getContainerElement.value
+      if (containerEl === false) {
+        return previewContent
+      }
+      return <Teleport to={containerEl}>{previewContent}</Teleport>
     }
   },
 })

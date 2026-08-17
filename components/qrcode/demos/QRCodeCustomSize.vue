@@ -10,7 +10,7 @@
         <div style="margin-top: 8px; color: #666">size=160（默认）</div>
       </div>
       <div style="text-align: center">
-        <QRCode :value="value" :size="240" :icon-size="{ width: 60, height: 48 }" :icon="iconUrl" error-level="H" />
+        <QRCode :value="value" :size="240" :icon-size="{ width: 48, height: 48 }" :icon="iconUrl" error-level="H" />
         <div style="margin-top: 8px; color: #666">size=240 + iconSize 对象形式</div>
       </div>
     </div>

@@ -17,7 +17,7 @@ import {
   type PropType,
   type CSSProperties,
 } from 'vue'
-import { cls } from '../../_utils'
+import { cls } from '../../_utils/cls'
 import { useConfig } from '../../config-provider/context'
 import { computePosition } from './computePosition'
 import { subscribeGlobal, pushOpenStack, removeFromOpenStack, isTopOfOpenStack } from './eventManager'
@@ -437,6 +437,7 @@ export const Trigger = defineComponent({
     const handleOutsideClick = (e: MouseEvent) => {
       if (!visible.value || !props.closeOnOutsideClick) return
       if (triggerRef.value?.contains(e.target as Node) || popupRef.value?.contains(e.target as Node)) return
+      console.log('handleOutsideClick')
       setOpen(false)
     }
 
@@ -444,6 +445,7 @@ export const Trigger = defineComponent({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!props.closeOnEscape || e.key !== 'Escape' || !visible.value) return
       if (!isTopOfOpenStack(stackToken)) return
+      console.log('handleKeyDown')
       setOpen(false)
       e.preventDefault()
     }

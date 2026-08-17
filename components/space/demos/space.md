@@ -36,10 +36,18 @@
 
 ### 分隔符
 
-通过 `separator` 属性设置分隔符。
+通过 `separator` 属性设置文本分隔符。
 
 <DemoBlock title="分隔符" :source="SpaceSplitSource">
   <SpaceSplit />
+</DemoBlock>
+
+### 分隔符插槽
+
+通过 `#split` 插槽设置自定义分隔符组件（优先级高于 `separator` 属性）。
+
+<DemoBlock title="分隔符插槽" :source="SpaceSplitSlotSource">
+  <SpaceSplitSlot />
 </DemoBlock>
 
 ### 自动换行
@@ -62,16 +70,17 @@
 
 ### Space Props
 
-| 参数       | 说明                                                                             | 类型                                                           | 默认值         |
-| ---------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------- | -------------- |
-| size       | 间距大小，数组形式表示 `[水平, 垂直]`                                            | `'small' \| 'middle' \| 'large' \| number \| [number, number]` | `'small'`      |
-| direction  | 间距方向                                                                         | `'horizontal' \| 'vertical'`                                   | `'horizontal'` |
-| vertical   | `direction="vertical"` 的简写                                                    | `boolean`                                                      | `false`        |
-| align      | 对齐方式                                                                         | `'start' \| 'end' \| 'center' \| 'baseline'`                   | -              |
-| wrap       | 是否自动换行，仅水平方向有效                                                     | `boolean`                                                      | `false`        |
-| separator  | 设置分隔符                                                                       | `VNode \| string`                                              | -              |
-| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceClassNames`                                              | -              |
-| styles     | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceStyles`                                                  | -              |
+| 参数        | 说明                                                                             | 类型                                                           | 默认值         |
+| ----------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------- | -------------- |
+| size        | 间距大小，数组形式表示 `[水平, 垂直]`                                            | `'small' \| 'middle' \| 'large' \| number \| [number, number]` | `'small'`      |
+| orientation | 间距方向（推荐使用，优先级高于 direction）                                       | `'horizontal' \| 'vertical'`                                   | `'horizontal'` |
+| direction   | 间距方向（兼容旧版，推荐使用 orientation）                                       | `'horizontal' \| 'vertical'`                                   | `'horizontal'` |
+| vertical    | `orientation="vertical"` 的简写                                                  | `boolean`                                                      | `false`        |
+| align       | 对齐方式                                                                         | `'start' \| 'end' \| 'center' \| 'baseline'`                   | -              |
+| wrap        | 是否自动换行，仅水平方向有效                                                     | `boolean`                                                      | `false`        |
+| separator   | 设置分隔符                                                                       | `VNode \| string`                                              | -              |
+| classNames  | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceClassNames`                                              | -              |
+| styles      | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SpaceStyles`                                                  | -              |
 
 ### Space Slots
 

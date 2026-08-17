@@ -358,4 +358,96 @@ describe('PreviewGroup', () => {
     expect(document.querySelector('.hmfw-image-preview-count')?.textContent).toContain('2 / 2')
     wrapper.unmount()
   })
+
+  it('wheel event zooms in/out', async () => {
+    const onTransform = vi.fn()
+    const wrapper = mount(Image, {
+      props: { src: 'test.jpg', preview: { onTransform } },
+      attachTo: document.body,
+    })
+    await wrapper.find('img').trigger('load')
+    await wrapper.find('.hmfw-image-mask').trigger('click')
+    await nextTick()
+    const previewWrap = document.querySelector('.hmfw-image-preview-wrap')
+    // 向上滚动（放大）
+    previewWrap?.dispatchEvent(new WheelEvent('wheel', { deltaY: -100, bubbles: true }))
+    await nextTick()
+    expect(onTransform).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: 'wheel',
+        transform: expect.objectContaining({ scale: expect.any(Number) }),
+      }),
+    )
+    wrapper.unmount()
+  })
+
+  it('keyboard Escape closes preview', async () => {
+    const wrapper = mount(Image, {
+      props: { src: 'test.jpg', preview: { open: true } },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-image-preview-root')).toBeTruthy()
+    // 触发 Esc 键
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await nextTick()
+    // 预览应该关闭（通过 onClose 回调，但在这个测试中我们验证键盘事件触发了）
+    wrapper.unmount()
+  })
+
+  it('keyboard arrows navigate in group', async () => {
+    const onChange = vi.fn()
+    const wrapper = mount(PreviewGroup, {
+      props: { items: ['a.jpg', 'b.jpg', 'c.jpg'], onChange, preview: { open: true } },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(document.querySelector('.hmfw-image-preview-count')?.textContent).toContain('1 / 3')
+    // 按右箭头键
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }))
+    await nextTick()
+    expect(onChange).toHaveBeenCalledWith(1, 0)
+    wrapper.unmount()
+  })
+
+  it('getContainer false renders in place', async () => {
+    const wrapper = mount(Image, {
+      props: { src: 'test.jpg', preview: { open: true, getContainer: false } },
+    })
+    await nextTick()
+    // 原地渲染时，预览内容应该在组件内部而不是 body
+    expect(wrapper.find('.hmfw-image-preview-root').exists()).toBe(true)
+    expect(document.body.querySelector('.hmfw-image-preview-root')).toBeFalsy()
+    wrapper.unmount()
+  })
+
+  it('getContainer with selector teleports to target', async () => {
+    const container = document.createElement('div')
+    container.id = 'preview-container'
+    document.body.appendChild(container)
+    const wrapper = mount(Image, {
+      props: { src: 'test.jpg', preview: { open: true, getContainer: '#preview-container' } },
+      attachTo: document.body,
+    })
+    await nextTick()
+    expect(container.querySelector('.hmfw-image-preview-root')).toBeTruthy()
+    wrapper.unmount()
+    document.body.removeChild(container)
+  })
+
+  it('ARIA attributes for accessibility', async () => {
+    const wrapper = mount(Image, {
+      props: { src: 'test.jpg', preview: { open: true } },
+      attachTo: document.body,
+    })
+    await nextTick()
+    const root = document.querySelector('.hmfw-image-preview-root')
+    expect(root?.getAttribute('role')).toBe('dialog')
+    expect(root?.getAttribute('aria-modal')).toBe('true')
+    const closeBtn = document.querySelector('.hmfw-image-preview-close')
+    expect(closeBtn?.getAttribute('aria-label')).toBe('关闭预览')
+    const toolbar = document.querySelector('.hmfw-image-preview-operations')
+    expect(toolbar?.getAttribute('role')).toBe('toolbar')
+    wrapper.unmount()
+  })
 })

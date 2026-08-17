@@ -157,15 +157,6 @@
   line-height: 1;
 }
 
-/* 图标与文本间距交由父级 gap 统一控制 */
-.hmfw-segmented-item-text {
-  display: inline-flex;
-  align-items: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 /* Hidden radio input for a11y */
 .hmfw-segmented-item-input {
   position: absolute;
