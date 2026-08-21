@@ -710,7 +710,7 @@ export const Select = defineComponent({
 
           <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow}>
             {props.loading
-              ? h(LoadingOutlined, { class: cls('hmfw-icon', 'hmfw-icon-spin', `${prefixCls}-loading-icon`) })
+              ? h(LoadingOutlined, { spin: true, class: cls(`${prefixCls}-loading-icon`) })
               : h(DownOutlined, {
                   class: cls(`${prefixCls}-suffix`, { [`${prefixCls}-suffix-open`]: isOpen.value }),
                 })}

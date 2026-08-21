@@ -159,7 +159,7 @@ export default defineComponent({
 
       return (
         <span class={iconClasses} style={props.styles?.icon}>
-          <IconComp class={cls('hmfw-icon', innerLoading.value && 'hmfw-icon-spin')} />
+          <IconComp spin={innerLoading.value} />
         </span>
       )
     }

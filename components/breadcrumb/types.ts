@@ -1,6 +1,5 @@
 import type { VNode, CSSProperties } from 'vue'
-import type { MenuProps } from '../menu'
-import type { DropdownProps } from '../dropdown'
+import type { DropdownMenuConfig, DropdownProps } from '../dropdown'
 
 /**
  * 面包屑下拉菜单项
@@ -24,7 +23,7 @@ export interface BreadcrumbMenuItem {
 /**
  * 面包屑下拉菜单配置
  */
-export interface BreadcrumbMenu extends Omit<MenuProps, 'items'> {
+export interface BreadcrumbMenu extends Omit<DropdownMenuConfig, 'items'> {
   items?: BreadcrumbMenuItem[]
 }
 

@@ -63,11 +63,7 @@ export const InputSearch = defineComponent({
     }
 
     return () => {
-      const icon = props.loading ? (
-        <LoadingOutlined class="hmfw-icon-loading" />
-      ) : (
-        renderAffix(props.searchIcon) || <SearchOutlined />
-      )
+      const icon = props.loading ? <LoadingOutlined spin /> : renderAffix(props.searchIcon) || <SearchOutlined />
 
       return (
         <span class={wrapperCls.value}>

@@ -23,17 +23,17 @@ const items: BreadcrumbItemType[] = [
         {
           key: 'app1',
           label: '应用一',
-          icon: h(AppstoreOutlined, { class: 'hmfw-icon' }),
+          icon: h(AppstoreOutlined),
         },
         {
           key: 'app2',
           label: '应用二',
-          icon: h(AppstoreOutlined, { class: 'hmfw-icon' }),
+          icon: h(AppstoreOutlined),
         },
         {
           key: 'app3',
           label: '应用三',
-          icon: h(AppstoreOutlined, { class: 'hmfw-icon' }),
+          icon: h(AppstoreOutlined),
         },
       ],
       onClick: (info) => {

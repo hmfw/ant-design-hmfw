@@ -45,7 +45,7 @@ const itemRenderWithIcon = (
   const iconComp = iconMap[item.title as string] || FileOutlined
 
   const content = h('span', { style: 'display: flex; align-items: center; gap: 4px;' }, [
-    h(iconComp, { class: 'hmfw-icon', style: 'font-size: 14px;' }),
+    h(iconComp, { style: 'font-size: 14px;' }),
     h('span', item.title as string),
   ])
 

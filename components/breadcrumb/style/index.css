@@ -8,7 +8,7 @@
   list-style: none;
 }
 
-.hmfw-breadcrumb .hmfw-icon {
+.hmfw-breadcrumb .anticon {
   font-size: var(--hmfw-font-size-base);
 }
 
@@ -60,8 +60,8 @@
 }
 
 /* 图标与相邻文本/链接的间距 */
-.hmfw-breadcrumb-link > .hmfw-icon + span,
-.hmfw-breadcrumb-link > .hmfw-icon + a {
+.hmfw-breadcrumb-link > .anticon + span,
+.hmfw-breadcrumb-link > .anticon + a {
   margin-inline-start: var(--hmfw-margin-xxs);
 }
 
@@ -74,7 +74,7 @@
   margin-inline: calc(-1 * var(--hmfw-margin-xxs));
 }
 
-.hmfw-breadcrumb-overlay-link > .hmfw-icon {
+.hmfw-breadcrumb-overlay-link > .anticon {
   margin-inline-start: var(--hmfw-margin-xxs);
   font-size: var(--hmfw-font-size-icon);
 }

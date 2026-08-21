@@ -10,6 +10,27 @@
 
 ## 最近版本
 
+## [0.49.2] - 2026-08-21
+
+**🔨 代码优化**：
+
+- **图标**: 升级 `@hmfw/icons` 至 `^1.1.3`，图标包运行时已自带 `.anticon` 基类与 `.anticon-spin` 动画注入，不再被外部 class 顶掉
+- **图标**: 移除 `components/_internal/icon/style/index.css` 兜底样式文件及其在 `components/style.css` 中的导入——旋转动画交回图标包原生 `spin` 属性
+- **Button / Select / Input.Search / message**: 加载图标从手写 `class="hmfw-icon hmfw-icon-spin"` 改为图标包原生 `spin` 属性
+- **Breadcrumb**: `dropdownIcon` 默认图标去掉冗余 `class="hmfw-icon"`；样式选择器由 `.hmfw-icon` 改为 `.anticon`
+- **Breadcrumb**: 下拉菜单类型来源由 `MenuProps` 改为 `DropdownMenuConfig`，与实际传给 `Dropdown` 的配置对齐
+
+**📝 文档优化**：
+
+- **Button**: 语义化 DOM 结构文档中的图标节点 class 同步为实际渲染值（`anticon anticon-search` / `anticon anticon-loading anticon-spin`）
+- **Breadcrumb**: demo 中的图标改用图标包原生渲染，`BreadcrumbIcon` 用 `Fragment` 替代多余 `span` 包裹；`BreadcrumbDropdownIcon` 类型导入更正为公开导出名 `BreadcrumbItem`
+
+**🧪 测试**：
+
+- **Breadcrumb / Input / message**: 图标断言由 `.hmfw-icon*` 更新为图标包实际输出的 `.anticon*`
+- **Progress**: `format` 回调测试签名改为 `(p?: number)`，与类型定义一致
+- **Input / Steps**: 补齐缺失的 `vi` 显式导入，不再依赖 vitest 全局注入
+
 ## [0.49.1] - 2026-08-17
 
 **🐛 问题修复**：

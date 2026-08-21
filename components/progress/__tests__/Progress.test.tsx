@@ -46,7 +46,7 @@ describe('Progress', () => {
 
   it('uses custom format', () => {
     const wrapper = mount(Progress, {
-      props: { percent: 50, format: (p: number) => `${p} done` },
+      props: { percent: 50, format: (p?: number) => `${p} done` },
     })
     expect(wrapper.find('.hmfw-progress-indicator').text()).toBe('50 done')
   })

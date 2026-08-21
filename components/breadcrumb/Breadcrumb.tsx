@@ -11,7 +11,7 @@ import type {
   BreadcrumbStyles,
   BreadcrumbItemRender,
 } from './types'
-import type { MenuProps } from '../menu'
+import type { DropdownMenuConfig } from '../dropdown'
 import { Dropdown } from '../dropdown'
 import { DownOutlined } from '@hmfw/icons'
 
@@ -76,7 +76,7 @@ const pickAttrs = (item: Record<string, any>) => {
  * - `path` 与当前项 href 拼接成 `<a>` 链接
  * - 缺省 key 时用索引兜底
  */
-const normalizeMenu = (menu: BreadcrumbMenu, href?: string): MenuProps => {
+const normalizeMenu = (menu: BreadcrumbMenu, href?: string): DropdownMenuConfig => {
   const { items, ...restMenu } = menu
   return {
     ...restMenu,
@@ -93,7 +93,7 @@ const normalizeMenu = (menu: BreadcrumbMenu, href?: string): MenuProps => {
         label: mergedLabel as any,
       }
     }),
-  } as MenuProps
+  } as DropdownMenuConfig
 }
 
 // Props 定义（使用 satisfies 确保与 BreadcrumbProps 类型一致）
@@ -124,7 +124,7 @@ export const Breadcrumb = defineComponent<BreadcrumbProps>({
         onClick,
       }
 
-      const dropdownIcon = props.dropdownIcon ?? <DownOutlined class="hmfw-icon" />
+      const dropdownIcon = props.dropdownIcon ?? <DownOutlined />
 
       // 如果有下拉菜单，包裹在 Dropdown 中
       if (menu && menu.items && menu.items.length > 0) {

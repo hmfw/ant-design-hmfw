@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { Input, InputPassword, TextArea, InputSearch } from '../index'
 import { SearchOutlined } from '@hmfw/icons'
 
@@ -500,7 +500,8 @@ describe('InputSearch', () => {
 
   it('shows loading icon when loading', () => {
     const wrapper = mount(InputSearch, { props: { loading: true } })
-    expect(wrapper.find('.hmfw-icon-loading').exists()).toBe(true)
+    // 检查 LoadingOutlined 图标（通过 anticon-loading class）
+    expect(wrapper.find('.anticon-loading').exists()).toBe(true)
   })
 
   it('disables search suffix when loading', () => {

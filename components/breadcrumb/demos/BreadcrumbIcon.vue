@@ -3,20 +3,17 @@
 </template>
 
 <script setup lang="ts">
-import { h } from 'vue'
+import { Fragment, h } from 'vue'
 import { HomeOutlined, UserOutlined } from '@hmfw/icons'
 import { Breadcrumb } from '@hmfw/ant-design'
 
 const items = [
   {
-    title: h(HomeOutlined, { class: 'hmfw-icon' }),
+    title: h(HomeOutlined),
     href: '/',
   },
   {
-    title: h('span', {}, [
-      h(UserOutlined, { class: 'hmfw-icon' }),
-      h('span', { style: { marginLeft: '4px' } }, '用户列表'),
-    ]),
+    title: h(Fragment, null, [h(UserOutlined), h('span', { style: { marginLeft: '4px' } }, '用户列表')]),
     href: '/users',
   },
   {

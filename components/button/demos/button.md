@@ -219,7 +219,7 @@ interface ButtonStyles {
   <!-- ↑ classNames.root / styles.root 应用于此 -->
   <span class="hmfw-btn-icon">
     <!-- ↑ classNames.icon / styles.icon 应用于此 -->
-    <span role="img" aria-label="search" class="hmfw-icon">
+    <span role="img" aria-label="search" class="anticon anticon-search">
       <svg>...</svg>
     </span>
   </span>
@@ -232,7 +232,7 @@ interface ButtonStyles {
   <span class="hmfw-btn-icon hmfw-btn-loading-icon">
     <!-- ↑ 与图标按钮共用同一节点，classNames.icon / styles.icon 应用于此 -->
     <!-- ↑ 只想影响加载态时，用内置类 .hmfw-btn-loading-icon 作为 CSS 选择器 -->
-    <span role="img" aria-label="loading" class="hmfw-icon hmfw-icon-spin">
+    <span role="img" aria-label="loading" class="anticon anticon-loading anticon-spin">
       <svg>...</svg>
     </span>
   </span>
@@ -242,7 +242,7 @@ interface ButtonStyles {
 <!-- 纯图标按钮：无子节点，不渲染 content，root 上追加 hmfw-btn-icon-only -->
 <button type="button" class="hmfw-btn hmfw-btn-default hmfw-btn-middle hmfw-btn-circle hmfw-btn-icon-only">
   <span class="hmfw-btn-icon">
-    <span role="img" aria-label="search" class="hmfw-icon">
+    <span role="img" aria-label="search" class="anticon anticon-search">
       <svg>...</svg>
     </span>
   </span>

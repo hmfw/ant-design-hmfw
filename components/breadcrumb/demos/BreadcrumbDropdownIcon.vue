@@ -18,10 +18,10 @@
 import { h } from 'vue'
 import { AppstoreOutlined, EllipsisOutlined } from '@hmfw/icons'
 import { Breadcrumb, Space } from '@hmfw/ant-design'
-import type { BreadcrumbItemType } from '@hmfw/ant-design'
+import type { BreadcrumbItem as BreadcrumbItemType } from '@hmfw/ant-design'
 
-const customIcon = h(EllipsisOutlined, { class: 'hmfw-icon' })
-const clickIcon = h(AppstoreOutlined, { class: 'hmfw-icon' })
+const customIcon = h(EllipsisOutlined)
+const clickIcon = h(AppstoreOutlined)
 
 const menuItems: BreadcrumbItemType[] = [
   { title: '首页', path: 'home' },

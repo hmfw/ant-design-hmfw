@@ -240,4 +240,4 @@
   justify-content: center;
 }
 
-/* Loading icon animation 见 _internal/icon/style/index.css */
+/* Loading icon 使用 @hmfw/icons 原生的 spin 属性 */

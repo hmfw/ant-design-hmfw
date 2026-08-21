@@ -62,7 +62,7 @@ export function createMessage(initialConfig?: ConfigOptions): MessageApi {
     if (icon != null) return renderContentUtil(icon)
     if (type) {
       const IconComp = TYPE_ICONS[type]
-      return <IconComp class={cls('hmfw-icon', type === 'loading' && 'hmfw-icon-spin')} />
+      return <IconComp spin={type === 'loading'} />
     }
     return null
   }

@@ -42,7 +42,8 @@ describe('message', () => {
   it('loading icon spins', async () => {
     message.loading('加载中')
     await flush()
-    expect(document.querySelector('.hmfw-message-notice-icon .hmfw-icon-spin')).not.toBeNull()
+    const loadingIcon = document.querySelector('.hmfw-message-notice-icon .anticon-loading')
+    expect(loadingIcon).not.toBeNull()
   })
 
   it('return value is callable (manual close) and thenable', async () => {
