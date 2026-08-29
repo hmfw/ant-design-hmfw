@@ -1,6 +1,7 @@
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import type { ComponentSize } from '../config-provider'
-import { CellRender } from '../calendar/types'
+import type { Placement } from '../_internal/trigger'
+import type { PickerVariant } from '../_internal/picker-input'
 
 export type DatePickerValue = string // YYYY-MM-DD
 
@@ -23,11 +24,28 @@ export interface ShowTimeConfig {
   secondStep?: number
 }
 
-/** DatePicker 各部分的自定义类名 */
+/** 单元格渲染类型（DatePicker/Calendar 共用） */
+export type CellRenderType = 'date' | 'month' | 'year' | 'quarter' | 'week'
+
+/** cellRender 回调参数 */
+export interface CellRenderInfo {
+  originNode: VNode
+  today: Date
+  type: CellRenderType
+  locale?: any
+}
+
+/** 自定义单元格渲染 */
+export type CellRender = (current: Date, info: CellRenderInfo) => VNode | null
+
+/** DatePicker 面板模式 */
+export type DatePickerPanelMode = 'date' | 'month' | 'year'
+
+/** DatePicker 各部分的语义化 className */
 export interface DatePickerClassNames {
   /** 根节点（触发器容器） */
   root?: string
-  /** 输入框容器 */
+  /** 内层输入框 input.hmfw-date-picker-input-inner */
   input?: string
   /** 清除按钮 */
   clear?: string
@@ -85,11 +103,11 @@ export interface DatePickerClassNames {
   ok?: string
 }
 
-/** DatePicker 各部分的自定义样式 */
+/** DatePicker 各部分的语义化 style */
 export interface DatePickerStyles {
   /** 根节点（触发器容器） */
   root?: CSSProperties
-  /** 输入框容器 */
+  /** 内层输入框 input.hmfw-date-picker-input-inner */
   input?: CSSProperties
   /** 清除按钮 */
   clear?: CSSProperties
@@ -155,22 +173,43 @@ export interface DatePickerProps {
   size?: ComponentSize
   placeholder?: string
   allowClear?: boolean
-  mode?: DatePickerMode
+  picker?: DatePickerMode
   showTime?: boolean | ShowTimeConfig
   showToday?: boolean
   showNow?: boolean
-  disabledDate?: (date: Date) => boolean
+  disabledDate?: (date: Date, info?: { from?: Date; type?: DatePickerMode }) => boolean
   status?: 'error' | 'warning' | ''
   open?: boolean
   defaultOpen?: boolean
-  picker?: DatePickerMode
   presets?: PresetItem[]
   minDate?: string
   maxDate?: string
   renderExtraFooter?: () => any
   cellRender?: CellRender
-  /** 自定义各部分类名 */
+  /** 弹层弹出位置 */
+  placement?: Placement
+  /** 形态变体 */
+  variant?: PickerVariant
+  /** 语义化 className */
   classNames?: DatePickerClassNames
-  /** 自定义各部分样式 */
+  /** 语义化 style */
   styles?: DatePickerStyles
 }
+
+/** v-model 更新事件的回调函数类型 */
+export type DatePickerUpdateHandler = (value: string | undefined) => void
+
+/** change 事件的回调函数类型 */
+export type DatePickerChangeHandler = (value: string | undefined, date: Date | null) => void
+
+/** openChange 事件的回调函数类型 */
+export type DatePickerOpenChangeHandler = (open: boolean) => void
+
+/** panelChange 事件的回调函数类型 */
+export type DatePickerPanelChangeHandler = (value: Date | null, mode: DatePickerPanelMode) => void
+
+/** focus 事件的回调函数类型 */
+export type DatePickerFocusHandler = () => void
+
+/** blur 事件的回调函数类型 */
+export type DatePickerBlurHandler = () => void

@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'vue'
 import type { ComponentSize } from '../config-provider'
+import type { PickerVariant } from '../_internal/picker-input'
 
 export type RangeValue = [string | null, string | null]
 
@@ -15,7 +16,7 @@ export interface RangePreset {
 export interface RangePickerClassNames {
   /** 根节点 div.hmfw-date-picker */
   root?: string
-  /** 输入框容器 span.hmfw-date-picker-input */
+  /** 内层输入框 input.hmfw-date-picker-input-inner（同时应用于两个输入框） */
   input?: string
   /** 开始日期输入框 input.hmfw-date-picker-input-inner */
   startInput?: string
@@ -75,7 +76,7 @@ export interface RangePickerClassNames {
 export interface RangePickerStyles {
   /** 根节点 div.hmfw-date-picker */
   root?: CSSProperties
-  /** 输入框容器 span.hmfw-date-picker-input */
+  /** 内层输入框 input.hmfw-date-picker-input-inner（同时应用于两个输入框） */
   input?: CSSProperties
   /** 开始日期输入框 input.hmfw-date-picker-input-inner */
   startInput?: CSSProperties
@@ -146,6 +147,8 @@ export interface RangePickerProps {
   size?: ComponentSize
   disabledDate?: (date: Date, info?: { from?: Date; type?: string }) => boolean
   status?: 'error' | 'warning' | ''
+  /** 形态变体（与 DatePicker/TimePicker 一致） */
+  variant?: PickerVariant
   /** Controlled open state. */
   open?: boolean
   /** 语义化 className */
@@ -153,3 +156,22 @@ export interface RangePickerProps {
   /** 语义化 style */
   styles?: RangePickerStyles
 }
+
+/** 范围日期对（Date 对象形式） */
+export type RangeDateValue = [Date | null, Date | null]
+
+/** v-model 更新事件的回调函数类型 */
+export type RangePickerUpdateHandler = (value: RangeValue) => void
+
+/** change 事件的回调函数类型 */
+export type RangePickerChangeHandler = (value: RangeValue, dates: RangeDateValue) => void
+
+/** openChange 事件的回调函数类型 */
+export type RangePickerOpenChangeHandler = (open: boolean) => void
+
+/** calendarChange 事件的回调函数类型（选择单边时触发，未 commit） */
+export type RangePickerCalendarChangeHandler = (
+  value: RangeValue,
+  dates: RangeDateValue,
+  info: { range: 'start' | 'end' },
+) => void

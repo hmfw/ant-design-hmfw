@@ -115,11 +115,11 @@ import { TimePicker } from '@hmfw/ant-design'
   box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
 }
 
-:deep(.gradient-trigger .hmfw-time-picker-input) {
+:deep(.gradient-trigger .hmfw-picker-input-inner) {
   color: white;
 }
 
-:deep(.gradient-trigger .hmfw-time-picker-suffix) {
+:deep(.gradient-trigger .hmfw-picker-suffix) {
   color: white;
 }
 

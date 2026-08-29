@@ -33,6 +33,7 @@ const enUS: Locale = {
     placeholder: 'Select date',
     yearPlaceholder: 'Select year',
     monthPlaceholder: 'Select month',
+    weekPlaceholder: 'Select week',
     rangePlaceholder: ['Start date', 'End date'],
     yearFormat: (year: number) => String(year),
     monthYearFormat: (monthLabel: string, year: number) => `${monthLabel} ${year}`,
@@ -57,6 +58,8 @@ const enUS: Locale = {
   },
   TimePicker: {
     placeholder: 'Select time',
+    now: 'Now',
+    ok: 'OK',
   },
   Pagination: {
     itemsPerPage: '/ page',

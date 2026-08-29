@@ -364,7 +364,17 @@ export type {
 } from './tree'
 
 export { TimePicker } from './time-picker'
-export type { TimePickerProps, TimePickerValue, TimePickerClassNames, TimePickerStyles } from './time-picker'
+export type {
+  TimePickerProps,
+  TimePickerValue,
+  DisabledTimeConfig,
+  TimePickerClassNames,
+  TimePickerStyles,
+  TimePickerChangeHandler,
+  TimePickerOpenChangeHandler,
+  TimePickerFocusHandler,
+  TimePickerBlurHandler,
+} from './time-picker'
 
 export { DatePicker } from './date-picker'
 export type {
@@ -372,8 +382,20 @@ export type {
   DatePickerMode,
   DatePickerValue,
   RangePickerValue,
+  PresetItem,
+  ShowTimeConfig,
   DatePickerClassNames,
   DatePickerStyles,
+  DatePickerPanelMode,
+  CellRender,
+  CellRenderInfo,
+  CellRenderType,
+  DatePickerUpdateHandler,
+  DatePickerChangeHandler,
+  DatePickerOpenChangeHandler,
+  DatePickerPanelChangeHandler,
+  DatePickerFocusHandler,
+  DatePickerBlurHandler,
 } from './date-picker'
 
 export { Upload, UploadDragger } from './upload'
@@ -468,8 +490,13 @@ export type {
   RangePickerProps,
   RangeValue,
   RangePreset,
+  RangeDateValue,
   RangePickerClassNames,
   RangePickerStyles,
+  RangePickerUpdateHandler,
+  RangePickerChangeHandler,
+  RangePickerOpenChangeHandler,
+  RangePickerCalendarChangeHandler,
 } from './range-picker'
 
 // TreeSelect
@@ -494,7 +521,7 @@ export type {
   MonthCellRender as CalendarMonthCellRender,
   ValidRange as CalendarValidRange,
   CalendarHeaderConfig,
-  CellRenderInfo,
+  CellRenderInfo as CalendarCellRenderInfo,
   DateCellRenderInfo,
   CalendarClassNames,
   CalendarStyles,

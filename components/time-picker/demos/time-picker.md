@@ -56,6 +56,14 @@
   <TimePickerConfirm />
 </DemoBlock>
 
+### 12 小时制
+
+通过 `use12Hours` 切换 12 小时制显示，配合 `format` 使用 `hh:mm:ss A` 格式。
+
+<DemoBlock title="12 小时制" :source="TimePickerUse12HoursSource">
+  <TimePickerUse12Hours />
+</DemoBlock>
+
 ### 自定义状态
 
 通过 `status` 设置校验状态，支持 `error` 和 `warning`。
@@ -314,31 +322,39 @@ TimePicker 组件使用以下 Design Token 控制样式，可通过 ConfigProvid
 
 ### 全局 Token
 
-| Token 名称                           | 说明                           | 默认值             |
-| ------------------------------------ | ------------------------------ | ------------------ |
-| `--hmfw-color-primary`               | 主题色（边框、选中态）         | `#1677ff`          |
-| `--hmfw-color-primary-bg`            | 主题色背景（选中单元格背景）   | `#e6f4ff`          |
-| `--hmfw-color-primary-hover`         | 主题色悬停（确定按钮悬停）     | `#4096ff`          |
-| `--hmfw-color-error`                 | 错误状态边框色                 | `#ff4d4f`          |
-| `--hmfw-color-warning`               | 警告状态边框色                 | `#faad14`          |
-| `--hmfw-color-text`                  | 主文本颜色（输入文字、单元格） | `rgba(0,0,0,0.88)` |
-| `--hmfw-color-text-secondary`        | 次要文本颜色（清除按钮悬停）   | `rgba(0,0,0,0.65)` |
-| `--hmfw-color-text-disabled`         | 禁用文本颜色（禁用单元格）     | `rgba(0,0,0,0.25)` |
-| `--hmfw-color-text-placeholder`      | 占位符文本颜色（后缀图标）     | `rgba(0,0,0,0.25)` |
-| `--hmfw-color-border`                | 基础边框色（输入框边框）       | `#d9d9d9`          |
-| `--hmfw-color-border-secondary`      | 次要边框色（面板分隔线）       | `#f0f0f0`          |
-| `--hmfw-color-fill-secondary`        | 次要填充颜色（filled 变体）    | `rgba(0,0,0,0.06)` |
-| `--hmfw-color-fill-tertiary`         | 三级填充颜色（filled 变体）    | `rgba(0,0,0,0.04)` |
-| `--hmfw-color-bg-container-disabled` | 禁用容器背景                   | `rgba(0,0,0,0.04)` |
-| `--hmfw-color-bg-text-hover`         | 文本悬停背景（单元格、变体）   | `rgba(0,0,0,0.06)` |
-| `--hmfw-border-radius`               | 基础圆角（输入框圆角）         | `6px`              |
-| `--hmfw-line-height`                 | 行高（输入框文字）             | `1.5714`           |
+| Token 名称                           | 说明                           | 默认值                |
+| ------------------------------------ | ------------------------------ | --------------------- |
+| `--hmfw-color-primary`               | 主题色（边框、选中态）         | `#1677ff`             |
+| `--hmfw-color-primary-bg`            | 主题色背景（选中单元格背景）   | `#e8f1ff`             |
+| `--hmfw-color-primary-hover`         | 主题色悬停（确定按钮悬停）     | `#4592ff`             |
+| `--hmfw-color-error`                 | 错误状态边框色                 | `#ff4d4f`             |
+| `--hmfw-color-warning`               | 警告状态边框色                 | `#faad14`             |
+| `--hmfw-color-text`                  | 主文本颜色（输入文字、单元格） | `rgba(0,0,0,0.88)`    |
+| `--hmfw-color-text-secondary`        | 次要文本颜色（清除按钮悬停）   | `rgba(0,0,0,0.65)`    |
+| `--hmfw-color-text-disabled`         | 禁用文本颜色（禁用单元格）     | `rgba(0,0,0,0.25)`    |
+| `--hmfw-color-text-placeholder`      | 占位符文本颜色（后缀图标）     | `rgba(0,0,0,0.25)`    |
+| `--hmfw-color-border`                | 基础边框色（输入框边框）       | `rgba(0, 0, 0, 0.15)` |
+| `--hmfw-color-border-secondary`      | 次要边框色（面板分隔线）       | `rgba(0, 0, 0, 0.06)` |
+| `--hmfw-color-fill-secondary`        | 次要填充颜色（filled 变体）    | `rgba(0,0,0,0.06)`    |
+| `--hmfw-color-fill-tertiary`         | 三级填充颜色（filled 变体）    | `rgba(0,0,0,0.04)`    |
+| `--hmfw-color-bg-container-disabled` | 禁用容器背景                   | `rgba(0,0,0,0.04)`    |
+| `--hmfw-color-bg-text-hover`         | 文本悬停背景（单元格、变体）   | `rgba(0,0,0,0.06)`    |
+| `--hmfw-border-radius`               | 基础圆角（输入框圆角）         | `6px`                 |
+| `--hmfw-line-height`                 | 行高（输入框文字）             | `1.5714`              |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-time-picker-panel` 上，可直接覆盖以定制面板尺寸：
+
+| Token 名称                               | 说明           | 默认值  |
+| ---------------------------------------- | -------------- | ------- |
+| `--hmfw-time-picker-time-content-height` | 时间列面板高度 | `224px` |
 
 **注意**：
 
-- TimePicker 目前无组件级专属 Token，所有样式均消费全局 Token
+- 输入框触发器样式由共享组件 PickerInput 提供（`.hmfw-picker-*` 基础类），与 DatePicker/RangePicker 一致
+- 时间列单元格样式由共享组件 TimeColumn 提供（`--hmfw-picker-time-cell-line-height: 28px`）
 - 若需定制单个 TimePicker 实例，可通过 `styles` 属性覆盖内联样式
-- 部分硬编码值（白色背景、字号、内间距）正在 Token 化改造中（详见代码审查报告）
 
 ### 主题定制示例
 

@@ -11,9 +11,60 @@ export function pad(n: number): string {
 }
 
 /**
+ * 获取日期在年内所属周数（以周日为一周第一天，与 weekdays[0] 一致）
+ * 第 1 周 = 包含 1 月 1 日的那一周（周日起始），与 parseWeek 互逆
+ */
+export function getWeekNumber(d: Date): number {
+  const firstDayOfYear = new Date(d.getFullYear(), 0, 1)
+  const dayOfYear = Math.floor((d.getTime() - firstDayOfYear.getTime()) / 86400000)
+  // 偏移 1 月 1 日的星期几（0=周日），使第 1 周从包含元旦的周日算起
+  return Math.floor((dayOfYear + firstDayOfYear.getDay()) / 7) + 1
+}
+
+/**
+ * 获取日期所在周的起始日（周日）
+ */
+export function weekStart(d: Date): Date {
+  const day = d.getDay() // 0 = 周日
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() - day)
+}
+
+/**
+ * 判断两个日期是否属于同一周
+ */
+export function isSameWeek(a: Date, b: Date): boolean {
+  return isSameDay(weekStart(a), weekStart(b))
+}
+
+/**
+ * 格式化日期为季度字符串（如 2026-Q3）
+ */
+export function formatQuarter(d: Date): string {
+  return `${d.getFullYear()}-Q${Math.floor(d.getMonth() / 3) + 1}`
+}
+
+/**
+ * 解析周字符串（如 '2026-35' / '2026-W35'）为该周起始日（周日）
+ * 第 1 周 = 包含 1 月 1 日的那一周，与 getWeekNumber 互逆
+ * @returns Date 对象或 null
+ */
+export function parseWeek(val: string): Date | null {
+  // 兼容 '2026-21'（formatDate 输出格式）与 '2026-W21'
+  const m = /^(\d{4})-?[wW]?(\d{1,2})$/.exec(val)
+  if (!m) return null
+  const year = Number(m[1])
+  const week = Number(m[2])
+  // 第 1 周起始 = 包含 1 月 1 日的那个周日（可能在上一年 12 月）
+  // new Date(year, 0, N) 的 N 为从 1 月 1 日起算的天数，负数自动回退到上一年
+  const jan1 = new Date(year, 0, 1)
+  const d = new Date(year, 0, 1 - jan1.getDay() + (week - 1) * 7)
+  return isNaN(d.getTime()) ? null : d
+}
+
+/**
  * 格式化日期
  * @param d 日期对象
- * @param fmt 格式字符串，支持 YYYY-MM-DD HH:mm:ss
+ * @param fmt 格式字符串，支持 YYYY-MM-DD HH:mm:ss、YYYY-ww（年内周数）
  */
 export function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
   const tokens = {
@@ -33,6 +84,8 @@ export function formatDate(d: Date, fmt = 'YYYY-MM-DD'): string {
     ss: pad(d.getSeconds()),
     A: d.getHours() >= 12 ? 'PM' : 'AM',
     a: d.getHours() >= 12 ? 'pm' : 'am',
+    ww: pad(getWeekNumber(d)),
+    w: getWeekNumber(d),
   }
 
   // 按长度降序排列，避免'YYYY'被'YY'误匹配

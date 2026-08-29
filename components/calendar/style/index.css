@@ -16,12 +16,6 @@
   background: var(--hmfw-calendar-full-bg);
 }
 
-/* 全屏模式 */
-/* .hmfw-calendar-fullscreen {
-  border: 1px solid var(--hmfw-color-border);
-  border-radius: var(--hmfw-border-radius);
-} */
-
 /* 迷你模式 */
 .hmfw-calendar-mini {
   border-radius: var(--hmfw-border-radius);
@@ -36,14 +30,9 @@
   padding: var(--hmfw-padding-sm) 0;
 }
 
-/* .hmfw-calendar-fullscreen .hmfw-calendar-header {
-  padding: var(--hmfw-padding) var(--hmfw-padding-lg);
-} */
-
 .hmfw-calendar-mini .hmfw-calendar-header {
   padding-inline-start: var(--hmfw-padding-sm);
   padding-inline-end: var(--hmfw-padding-sm);
-  /* padding: var(--hmfw-padding-xs) var(--hmfw-padding-sm); */
 }
 
 .hmfw-calendar-year-select {
@@ -54,16 +43,6 @@
   min-width: var(--hmfw-calendar-month-control-width);
   margin-inline-start: var(--hmfw-margin-xs);
 }
-/* .hmfw-calendar-header-left {
-  display: flex;
-  align-items: center;
-  gap: var(--hmfw-margin-xs);
-}
-
-.hmfw-calendar-header-right {
-  display: flex;
-  align-items: center;
-} */
 
 /* ==================== 内容区域 ==================== */
 .hmfw-calendar-content {
@@ -76,7 +55,6 @@
   text-align: end;
   background: var(--hmfw-calendar-full-bg);
   border: 0;
-  /* padding: var(--hmfw-padding) var(--hmfw-padding-lg); */
 }
 
 .hmfw-calendar-mini .hmfw-calendar-content {
@@ -98,23 +76,20 @@
 .hmfw-calendar-weekday-cell {
   padding-inline-end: var(--hmfw-padding-sm);
   padding-bottom: var(--hmfw-padding-xxs);
-  /* padding: var(--hmfw-padding-xs) 0; */
   color: var(--hmfw-color-text-secondary);
   font-weight: 500;
   font-size: var(--hmfw-font-size-sm);
-  /* text-align: center; */
 }
 
 .hmfw-calendar-mini .hmfw-calendar-weekday-cell {
   padding: var(--hmfw-padding-xxs) 0;
-  font-size: 12px;
+  font-size: var(--hmfw-font-size-sm);
 }
 
 /* ==================== 日期格子容器 ==================== */
 .hmfw-calendar-body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  /* gap: 0 8px; */
 }
 
 /* ==================== 日期单元格 ==================== */
@@ -147,26 +122,8 @@
   background: var(--hmfw-color-fill-tertiary);
 }
 
-/* .hmfw-calendar-date-value {
-  font-size: var(--hmfw-font-size);
-  line-height: 1.5;
-}
-
-.hmfw-calendar-mini .hmfw-calendar-date-value {
-  font-size: var(--hmfw-font-size-sm);
-}
-
-.hmfw-calendar-date-content {
-  flex: 1;
-  margin-top: var(--hmfw-margin-xxs);
-  font-size: var(--hmfw-font-size-sm);
-  line-height: var(--hmfw-line-height);
-  overflow-y: auto;
-} */
-
 .hmfw-calendar-mini .hmfw-calendar-date {
   min-height: 24px;
-  /* padding: var(--hmfw-padding-xxs) var(--hmfw-padding-xxs); */
 }
 
 .hmfw-calendar-cell-inner {
@@ -178,9 +135,6 @@
   border-radius: var(--hmfw-border-radius-sm);
   transition: background-color var(--hmfw-motion-duration-mid);
   display: inline-block;
-  position: relative;
-  /* width: 100%; */
-  /* height: 100%; */
 }
 
 .hmfw-calendar-fullscreen .hmfw-calendar-cell-inner {
@@ -190,7 +144,7 @@
   padding: calc(var(--hmfw-padding-xs) / 2) var(--hmfw-padding-xs) 0;
   border: 0;
   border-top: var(--hmfw-line-width-bold) solid var(--hmfw-color-split);
-  transition: background-color var(--ant-motion-duration-slow);
+  transition: background-color var(--hmfw-motion-duration-slow);
   border-radius: 0;
   display: block;
 }
@@ -263,7 +217,6 @@
   align-items: center;
   justify-content: center;
   min-height: 80px;
-  /* border-radius: var(--hmfw-border-radius); */
   font-size: var(--hmfw-font-size-lg);
 }
 

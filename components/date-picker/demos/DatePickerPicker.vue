@@ -1,6 +1,7 @@
 <template>
   <div style="display: flex; flex-direction: column; gap: 16px; width: 300px">
     <DatePicker v-model:value="date" picker="date" placeholder="选择日期" />
+    <DatePicker v-model:value="week" picker="week" placeholder="选择周" />
     <DatePicker v-model:value="month" picker="month" placeholder="选择月份" />
     <DatePicker v-model:value="quarter" picker="quarter" placeholder="选择季度" />
     <DatePicker v-model:value="year" picker="year" placeholder="选择年份" />
@@ -12,6 +13,7 @@ import { ref } from 'vue'
 import { DatePicker } from '@hmfw/ant-design'
 
 const date = ref('')
+const week = ref('')
 const month = ref('')
 const quarter = ref('')
 const year = ref('')

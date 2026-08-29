@@ -1,83 +1,19 @@
+/* 输入框触发器样式由共享组件 PickerInput 提供
+   （.hmfw-picker-root / .hmfw-picker-input 等，见 _internal/picker-input），
+   此处仅保留组件独有宽度与面板样式 */
+
 .hmfw-date-picker {
-  display: inline-flex;
-  align-items: center;
-  position: relative;
   width: 200px;
-  padding: 4px 11px;
-  border: 1px solid var(--hmfw-color-border);
-  border-radius: var(--hmfw-border-radius);
-  background: var(--hmfw-color-bg-container);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.hmfw-date-picker:hover {
-  border-color: var(--hmfw-color-primary);
-}
-
-.hmfw-date-picker-open {
-  border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px var(--hmfw-control-outline);
-}
-
-.hmfw-date-picker-disabled {
-  background: var(--hmfw-color-bg-container-disabled);
-  cursor: not-allowed;
-}
-
-.hmfw-date-picker-status-error {
-  border-color: var(--hmfw-color-error);
-}
-.hmfw-date-picker-status-warning {
-  border-color: var(--hmfw-color-warning);
-}
-.hmfw-date-picker-small {
-  padding: 0 7px;
-  font-size: 12px;
-}
-.hmfw-date-picker-large {
-  padding: 6px 11px;
-  font-size: 16px;
-}
-
-.hmfw-date-picker-input {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 4px;
-}
-
-.hmfw-date-picker-input-inner {
-  flex: 1;
-  margin: 0;
-  padding: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: inherit;
-  line-height: var(--hmfw-line-height);
-  color: var(--hmfw-color-text);
-  cursor: pointer;
-  min-width: 0;
-}
-
-.hmfw-date-picker-input-inner::placeholder {
-  color: var(--hmfw-color-text-placeholder);
-}
-
-.hmfw-date-picker-suffix {
-  display: inline-flex;
-  align-items: center;
-  color: var(--hmfw-color-text-placeholder);
-  font-size: var(--hmfw-font-size-icon);
-  transition: opacity var(--hmfw-motion-duration-mid) ease;
-}
-
-.hmfw-select-allow-clear:hover .hmfw-date-picker-suffix {
-  opacity: 0;
 }
 
 .hmfw-date-picker-panel {
+  /* 组件级 Token：派生自设计规范（AntD cellWidth=32 + padding），可单独覆盖
+     panelWidth 对齐 AntD 派生规则：cellSize × 7（日期面板固定 7 列） */
+  --hmfw-date-picker-cell-size: 36px;
+  --hmfw-date-picker-panel-width: calc(var(--hmfw-date-picker-cell-size) * 7);
+  --hmfw-date-picker-time-panel-width: 180px;
+  --hmfw-date-picker-time-content-height: 224px;
+
   /* bg/radius/shadow 由 hmfw-trigger-popup（popup wrapper）统一提供，
      此处继承 wrapper 的 border-radius 以确保 overflow 裁剪和 border 跟随圆角 */
   border-radius: inherit;
@@ -90,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding-sm);
   border-bottom: 1px solid var(--hmfw-color-border-secondary);
 }
 
@@ -98,13 +34,13 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 14px;
+  padding: var(--hmfw-padding-xxs) var(--hmfw-padding-xs);
+  border-radius: var(--hmfw-border-radius-sm);
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text-secondary);
   transition:
-    color 0.2s,
-    background 0.2s;
+    color var(--hmfw-motion-duration-mid),
+    background var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-date-picker-panel-header-btn:hover {
@@ -114,9 +50,9 @@
 
 .hmfw-date-picker-panel-header-title {
   display: flex;
-  gap: 4px;
+  gap: var(--hmfw-margin-xxs);
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
 }
 
 .hmfw-date-picker-panel-header-title-btn {
@@ -124,13 +60,13 @@
   border: none;
   cursor: pointer;
   padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: var(--hmfw-border-radius-sm);
+  font-size: var(--hmfw-font-size);
   font-weight: 700;
   color: var(--hmfw-color-text);
   transition:
-    color 0.2s,
-    background 0.2s;
+    color var(--hmfw-motion-duration-mid),
+    background var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-date-picker-panel-header-title-btn:hover {
@@ -140,46 +76,46 @@
 
 /* Panel body */
 .hmfw-date-picker-panel-body {
-  padding: 8px;
+  padding: var(--hmfw-padding-xs);
 }
 
 /* Weekdays */
 .hmfw-date-picker-weekdays {
   display: grid;
-  grid-template-columns: repeat(7, 36px);
-  margin-bottom: 4px;
+  grid-template-columns: repeat(7, var(--hmfw-date-picker-cell-size));
+  margin-bottom: var(--hmfw-margin-xxs);
 }
 
 .hmfw-date-picker-weekday {
-  width: 36px;
-  height: 36px;
+  width: var(--hmfw-date-picker-cell-size);
+  height: var(--hmfw-date-picker-cell-size);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text-secondary);
 }
 
 /* Days grid */
 .hmfw-date-picker-days {
   display: grid;
-  grid-template-columns: repeat(7, 36px);
+  grid-template-columns: repeat(7, var(--hmfw-date-picker-cell-size));
 }
 
 .hmfw-date-picker-day {
-  width: 36px;
-  height: 36px;
+  width: var(--hmfw-date-picker-cell-size);
+  height: var(--hmfw-date-picker-cell-size);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   border: none;
   background: none;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: var(--hmfw-border-radius-sm);
   color: var(--hmfw-color-text);
-  transition: all 0.2s;
+  transition: all var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-date-picker-day:hover:not(:disabled) {
@@ -199,7 +135,14 @@
 .hmfw-date-picker-day-selected {
   background: var(--hmfw-color-primary) !important;
   color: var(--hmfw-color-text-light-solid) !important;
-  border-radius: 4px;
+  border-radius: var(--hmfw-border-radius-sm);
+}
+
+/* week 模式：选中周整行高亮（浅色背景，文字主题色） */
+.hmfw-date-picker-day-week-selected {
+  background: var(--hmfw-color-primary-bg);
+  color: var(--hmfw-color-primary);
+  border-radius: 0;
 }
 
 .hmfw-date-picker-day-disabled {
@@ -211,20 +154,20 @@
 .hmfw-date-picker-months {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 8px 0;
-  width: 252px;
+  gap: var(--hmfw-margin-xs);
+  padding: var(--hmfw-padding-xs) 0;
+  width: var(--hmfw-date-picker-panel-width);
 }
 
 .hmfw-date-picker-month {
-  padding: 8px 0;
+  padding: var(--hmfw-padding-xs) 0;
   background: none;
   border: none;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: var(--hmfw-border-radius-sm);
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text);
-  transition: all 0.2s;
+  transition: all var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-date-picker-month:hover {
@@ -241,20 +184,20 @@
 .hmfw-date-picker-years {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 8px 0;
-  width: 252px;
+  gap: var(--hmfw-margin-xs);
+  padding: var(--hmfw-padding-xs) 0;
+  width: var(--hmfw-date-picker-panel-width);
 }
 
 .hmfw-date-picker-year {
-  padding: 8px 0;
+  padding: var(--hmfw-padding-xs) 0;
   background: none;
   border: none;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: var(--hmfw-border-radius-sm);
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text);
-  transition: all 0.2s;
+  transition: all var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-date-picker-year:hover {
@@ -271,20 +214,20 @@
 .hmfw-date-picker-quarters {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  padding: 8px 0;
-  width: 252px;
+  gap: var(--hmfw-margin-xs);
+  padding: var(--hmfw-padding-xs) 0;
+  width: var(--hmfw-date-picker-panel-width);
 }
 
 .hmfw-date-picker-quarter {
-  padding: 16px 0;
+  padding: var(--hmfw-padding) 0;
   background: none;
   border: none;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: var(--hmfw-border-radius-sm);
+  font-size: var(--hmfw-font-size);
   color: var(--hmfw-color-text);
-  transition: all 0.2s;
+  transition: all var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-date-picker-quarter:hover {
@@ -300,11 +243,11 @@
 /* Footer */
 .hmfw-date-picker-panel-footer {
   border-top: 1px solid var(--hmfw-color-border-secondary);
-  padding: 8px 12px;
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding-sm);
 }
 
 .hmfw-date-picker-panel-footer-extra {
-  margin-bottom: 8px;
+  margin-bottom: var(--hmfw-padding-xs);
 }
 
 .hmfw-date-picker-panel-footer-actions {
@@ -316,19 +259,19 @@
 .hmfw-date-picker-presets {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 8px;
+  gap: var(--hmfw-margin-xxs);
+  margin-bottom: var(--hmfw-padding-xs);
 }
 
 .hmfw-date-picker-preset-btn {
-  padding: 2px 8px;
+  padding: 2px var(--hmfw-padding-xs);
   background: none;
   border: 1px solid var(--hmfw-color-border);
-  border-radius: 4px;
+  border-radius: var(--hmfw-border-radius-sm);
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--hmfw-font-size-sm);
   color: var(--hmfw-color-text);
-  transition: all 0.2s;
+  transition: all var(--hmfw-motion-duration-mid);
 }
 
 .hmfw-date-picker-preset-btn:hover {
@@ -341,7 +284,7 @@
   border: none;
   cursor: pointer;
   color: var(--hmfw-color-primary);
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
   padding: 0;
 }
 
@@ -350,13 +293,13 @@
 }
 
 .hmfw-date-picker-panel-footer-ok {
-  padding: 2px 12px;
+  padding: 2px var(--hmfw-padding-sm);
   background: var(--hmfw-color-primary);
   color: var(--hmfw-color-text-light-solid);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--hmfw-border-radius-sm);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--hmfw-font-size);
 }
 
 .hmfw-date-picker-panel-footer-ok:hover {
@@ -382,58 +325,14 @@
 .hmfw-date-picker-time-panel {
   display: flex;
   flex-direction: column;
-  width: 180px;
+  width: var(--hmfw-date-picker-time-panel-width);
 }
 
 .hmfw-date-picker-time-content {
   display: flex;
-  height: 224px;
+  height: var(--hmfw-date-picker-time-content-height);
   padding: 0;
 }
 
-.hmfw-date-picker-time-column {
-  flex: 1;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  overflow-y: auto;
-  border-right: 1px solid var(--hmfw-color-border-secondary);
-  scrollbar-width: none;
-}
-
-.hmfw-date-picker-time-column:last-child {
-  border-right: none;
-}
-
-.hmfw-date-picker-time-column::-webkit-scrollbar {
-  display: none;
-}
-
-.hmfw-date-picker-time-cell {
-  padding: 4px 0;
-  text-align: center;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--hmfw-color-text);
-  transition: background 0.2s;
-  line-height: 28px;
-}
-
-.hmfw-date-picker-time-cell:hover {
-  background: var(--hmfw-color-bg-text-hover);
-}
-
-.hmfw-date-picker-time-cell-selected {
-  background: var(--hmfw-color-primary-bg);
-  color: var(--hmfw-color-primary);
-  font-weight: 600;
-}
-
-.hmfw-date-picker-time-cell-disabled {
-  color: var(--hmfw-color-text-disabled);
-  cursor: not-allowed;
-}
-
-.hmfw-date-picker-time-cell-disabled:hover {
-  background: transparent;
-}
+/* 时间列与单元格样式由共享组件 TimeColumn 提供
+   （.hmfw-picker-time-column / .hmfw-picker-time-cell，见 _internal/time-column） */

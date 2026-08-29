@@ -22,31 +22,31 @@ describe('TimePicker', () => {
 
   it('disabled state', () => {
     const wrapper = mount(TimePicker, { props: { disabled: true }, attachTo: document.body })
-    expect(wrapper.find('.hmfw-time-picker-disabled').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-disabled').exists()).toBe(true)
     wrapper.unmount()
   })
 
   it('small size', () => {
     const wrapper = mount(TimePicker, { props: { size: 'small' }, attachTo: document.body })
-    expect(wrapper.find('.hmfw-time-picker-small').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-small').exists()).toBe(true)
     wrapper.unmount()
   })
 
   it('large size', () => {
     const wrapper = mount(TimePicker, { props: { size: 'large' }, attachTo: document.body })
-    expect(wrapper.find('.hmfw-time-picker-large').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-large').exists()).toBe(true)
     wrapper.unmount()
   })
 
   it('error status', () => {
     const wrapper = mount(TimePicker, { props: { status: 'error' }, attachTo: document.body })
-    expect(wrapper.find('.hmfw-time-picker-status-error').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-status-error').exists()).toBe(true)
     wrapper.unmount()
   })
 
   it('warning status', () => {
     const wrapper = mount(TimePicker, { props: { status: 'warning' }, attachTo: document.body })
-    expect(wrapper.find('.hmfw-time-picker-status-warning').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-status-warning').exists()).toBe(true)
     wrapper.unmount()
   })
 
@@ -229,19 +229,19 @@ describe('TimePicker', () => {
 
   it('variant borderless applies correct class', () => {
     const wrapper = mount(TimePicker, { props: { variant: 'borderless' }, attachTo: document.body })
-    expect(wrapper.find('.hmfw-time-picker-borderless').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-variant-borderless').exists()).toBe(true)
     wrapper.unmount()
   })
 
   it('variant filled applies correct class', () => {
     const wrapper = mount(TimePicker, { props: { variant: 'filled' }, attachTo: document.body })
-    expect(wrapper.find('.hmfw-time-picker-filled').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-variant-filled').exists()).toBe(true)
     wrapper.unmount()
   })
 
   it('variant underlined applies correct class', () => {
     const wrapper = mount(TimePicker, { props: { variant: 'underlined' }, attachTo: document.body })
-    expect(wrapper.find('.hmfw-time-picker-underlined').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-variant-underlined').exists()).toBe(true)
     wrapper.unmount()
   })
 

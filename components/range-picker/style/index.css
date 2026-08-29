@@ -3,14 +3,8 @@
   width: auto;
 }
 
-.hmfw-date-picker-range .hmfw-date-picker-input {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
 .hmfw-date-picker-range-separator {
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--hmfw-color-text-tertiary);
   flex-shrink: 0;
 }
 
@@ -36,16 +30,16 @@
 
 .hmfw-date-picker-presets ul {
   margin: 0;
-  padding: 8px;
+  padding: var(--hmfw-padding-xs);
   list-style: none;
 }
 
 .hmfw-date-picker-preset {
   display: block;
-  margin: 4px 0;
-  padding: 0 8px;
-  line-height: 24px;
-  border-radius: 4px;
+  margin: var(--hmfw-margin-xxs) 0;
+  padding: 0 var(--hmfw-padding-xs);
+  line-height: var(--hmfw-control-height-sm);
+  border-radius: var(--hmfw-border-radius-sm);
   cursor: pointer;
   border: 1px solid transparent;
   white-space: nowrap;
@@ -70,13 +64,13 @@
 }
 
 .hmfw-date-picker-day-range-start {
-  border-radius: 4px 0 0 4px !important;
+  border-radius: var(--hmfw-border-radius-sm) 0 0 var(--hmfw-border-radius-sm) !important;
 }
 
 .hmfw-date-picker-day-range-end {
-  border-radius: 0 4px 4px 0 !important;
+  border-radius: 0 var(--hmfw-border-radius-sm) var(--hmfw-border-radius-sm) 0 !important;
 }
 
 .hmfw-date-picker-day-range-start.hmfw-date-picker-day-range-end {
-  border-radius: 4px !important;
+  border-radius: var(--hmfw-border-radius-sm) !important;
 }

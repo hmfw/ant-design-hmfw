@@ -7,4 +7,6 @@ export type {
   TimePickerStyles,
   TimePickerChangeHandler,
   TimePickerOpenChangeHandler,
+  TimePickerFocusHandler,
+  TimePickerBlurHandler,
 } from './types'

@@ -284,14 +284,18 @@ interface CalendarStyles {
 
 ## 设计 Token
 
+Calendar 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。
+
+### 全局 Token
+
 | Token 名称                      | 说明           | 默认值                |
 | ------------------------------- | -------------- | --------------------- |
 | `--hmfw-color-primary`          | 主题色         | `#1677ff`             |
-| `--hmfw-color-primary-bg`       | 主题色背景     | `#e6f4ff`             |
-| `--hmfw-color-primary-bg-hover` | 主题色背景悬停 | `#bae0ff`             |
-| `--hmfw-color-primary-border`   | 主题色边框     | `#91caff`             |
+| `--hmfw-color-primary-bg`       | 主题色背景     | `#e8f1ff`             |
+| `--hmfw-color-primary-bg-hover` | 主题色背景悬停 | `#d0e4ff`             |
+| `--hmfw-color-primary-border`   | 主题色边框     | `#a2c9ff`             |
 | `--hmfw-color-bg-container`     | 容器背景色     | `#ffffff`             |
-| `--hmfw-color-border`           | 边框颜色       | `#d9d9d9`             |
+| `--hmfw-color-border`           | 边框颜色       | `rgba(0, 0, 0, 0.15)` |
 | `--hmfw-color-fill-tertiary`    | 三级填充色     | `rgba(0, 0, 0, 0.04)` |
 | `--hmfw-color-fill-quaternary`  | 四级填充色     | `rgba(0, 0, 0, 0.02)` |
 | `--hmfw-color-text-secondary`   | 次要文本颜色   | `rgba(0, 0, 0, 0.65)` |
@@ -302,3 +306,14 @@ interface CalendarStyles {
 | `--hmfw-font-size-lg`           | 大号字号       | `16px`                |
 | `--hmfw-line-height`            | 标准行高       | `1.5714285714285714`  |
 | `--hmfw-border-radius`          | 基础圆角       | `6px`                 |
+
+### 组件 Token
+
+组件专属变量定义在 `.hmfw-calendar` 上，可直接覆盖以定制尺寸：
+
+| Token 名称                            | 说明                   | 默认值                      |
+| ------------------------------------- | ---------------------- | --------------------------- |
+| `--hmfw-calendar-full-bg`             | 面板背景色             | 派生自 `color-bg-container` |
+| `--hmfw-calendar-year-control-width`  | 头部年份选择器最小宽度 | `80px`                      |
+| `--hmfw-calendar-month-control-width` | 头部月份选择器最小宽度 | `70px`                      |
+| `--hmfw-calendar-cell-height`         | 单元格内部高度         | `24px`                      |

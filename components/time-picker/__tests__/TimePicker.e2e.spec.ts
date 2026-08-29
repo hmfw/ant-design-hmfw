@@ -13,7 +13,7 @@ test.describe('TimePicker 时间选择框', () => {
     const picker = page.locator('.hmfw-time-picker').first()
     await picker.locator('.hmfw-time-picker-input-inner').click()
 
-    await expect(picker).toHaveClass(/hmfw-time-picker-open/)
+    await expect(picker).toHaveClass(/hmfw-picker-open/)
     const panel = page.locator('.hmfw-time-picker-panel').first()
     await expect(panel).toBeVisible()
     // 时、分、秒三列
@@ -41,7 +41,7 @@ test.describe('TimePicker 时间选择框', () => {
     // 第二个 TimePicker 为禁用态
     const picker = page.locator('.hmfw-time-picker').nth(1)
     await picker.locator('.hmfw-time-picker-input-inner').click({ force: true })
-    await expect(picker).not.toHaveClass(/hmfw-time-picker-open/)
+    await expect(picker).not.toHaveClass(/hmfw-picker-open/)
   })
 
   test('时间列可以用鼠标滚轮自由滚动', async ({ page }) => {

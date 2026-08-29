@@ -1,5 +1,9 @@
 import type { CSSProperties, VNode } from 'vue'
 
+// CellRender 等单元格渲染类型定义于 date-picker（AntD 中 cellRender 源于 DatePicker API）
+import type { CellRender, CellRenderInfo } from '../date-picker/types'
+export type { CellRender, CellRenderInfo } from '../date-picker/types'
+
 export type CalendarMode = 'date' | 'month' | 'year'
 
 /**
@@ -72,15 +76,6 @@ export interface CalendarHeaderConfig {
   onChange: (date: Date) => void
   onTypeChange: (type: CalendarMode) => void
 }
-
-export interface CellRenderInfo {
-  originNode: VNode
-  today: Date
-  type: CalendarMode
-  locale?: any
-}
-
-export type CellRender = (current: Date, info: CellRenderInfo) => VNode | null
 
 export type HeaderRender = (config: CalendarHeaderConfig) => VNode | null
 

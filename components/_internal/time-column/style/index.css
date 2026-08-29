@@ -1,0 +1,58 @@
+/* 共享时间选择列（TimeColumn）基础样式
+   TimePicker 与 DatePicker(showTime) 共用，各组件前缀类仅作兼容锚点 */
+
+.hmfw-picker-time-column {
+  /* 组件级 Token：单元格行高（选中滚动定位依赖固定行高计算 offsetTop） */
+  --hmfw-picker-time-cell-line-height: 28px;
+
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--hmfw-color-border-secondary);
+  scrollbar-width: none;
+  contain: layout style;
+  will-change: scroll-position;
+}
+
+.hmfw-picker-time-column:last-child {
+  border-right: none;
+}
+
+.hmfw-picker-time-column::-webkit-scrollbar {
+  display: none;
+}
+
+.hmfw-picker-time-cell {
+  padding: var(--hmfw-padding-xxs) 0;
+  text-align: center;
+  cursor: pointer;
+  font-size: var(--hmfw-font-size);
+  color: var(--hmfw-color-text);
+  transition:
+    background var(--hmfw-motion-duration-mid),
+    color var(--hmfw-motion-duration-mid);
+  line-height: var(--hmfw-picker-time-cell-line-height);
+  /* 性能优化 */
+  contain: layout style;
+}
+
+.hmfw-picker-time-cell:hover {
+  background: var(--hmfw-color-bg-text-hover);
+}
+
+.hmfw-picker-time-cell-selected {
+  background: var(--hmfw-color-primary-bg);
+  color: var(--hmfw-color-primary);
+  font-weight: 600;
+}
+
+.hmfw-picker-time-cell-disabled {
+  color: var(--hmfw-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.hmfw-picker-time-cell-disabled:hover {
+  background: transparent;
+}

@@ -30,6 +30,14 @@
   <RangePickerDisabled />
 </DemoBlock>
 
+### 排序与分隔符
+
+通过 `order` 自动排序所选两个日期，`separator` 自定义分隔符。
+
+<DemoBlock title="排序与分隔符" :source="RangePickerOrderSource">
+  <RangePickerOrder />
+</DemoBlock>
+
 ### 细粒度样式控制
 
 通过 `classNames` / `styles` 对各子元素做细粒度样式控制。

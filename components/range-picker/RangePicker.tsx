@@ -3,7 +3,8 @@ import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils/cls'
 import { formatDate, parseDate, isSameDay, buildCalendar } from '../_utils/date'
 import { Trigger } from '../_internal/trigger'
-import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
+import { PickerInput, type PickerVariant } from '../_internal/picker-input'
+import { CalendarOutlined } from '@hmfw/icons'
 import type { RangeValue, RangePreset, RangePickerClassNames, RangePickerStyles, RangePickerProps } from './types'
 import type { ComponentSize } from '../config-provider'
 
@@ -23,6 +24,7 @@ const rangePickerProps = {
     default: undefined,
   },
   status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
+  variant: { type: String as PropType<PickerVariant>, default: 'outlined' },
   open: { type: Boolean, default: undefined },
   classNames: { type: Object as PropType<RangePickerClassNames>, default: undefined },
   styles: { type: Object as PropType<RangePickerStyles>, default: undefined },
@@ -34,7 +36,6 @@ export const RangePicker = defineComponent({
   emits: ['update:value', 'change', 'openChange', 'calendarChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('date-picker')
-    const selectPfx = usePrefixCls('select')
 
     const locale = useLocale()
     const now = new Date()
@@ -362,64 +363,70 @@ export const RangePicker = defineComponent({
       </div>
     )
 
-    const renderInput = () => {
-      const showClear = props.allowClear && hasValue.value && !isDisabled.value
-
-      const rangePickerCls = cls(
-        `${prefixCls}`,
-        `${prefixCls}-range`,
-        `${prefixCls}-${props.size}`,
-        {
-          [`${prefixCls}-open`]: isOpen.value,
-          [`${prefixCls}-disabled`]: isDisabled.value,
-          [`${prefixCls}-status-error`]: props.status === 'error',
-          [`${prefixCls}-status-warning`]: props.status === 'warning',
-          [`${selectPfx}-allow-clear`]: showClear,
-        },
-        props.classNames?.root,
-      )
-      return (
-        <div class={rangePickerCls} style={props.styles?.root}>
-          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
-            <input
-              readonly
-              value={displayStart.value}
-              placeholder={placeholders.value[0]}
-              disabled={startDisabled.value}
-              class={cls(`${prefixCls}-input-inner`, props.classNames?.startInput)}
-              style={props.styles?.startInput}
-            />
-            <span
-              class={cls(`${prefixCls}-range-separator`, props.classNames?.separator)}
-              style={props.styles?.separator}
-            >
-              {props.separator}
-            </span>
-            <input
-              readonly
-              value={displayEnd.value}
-              placeholder={placeholders.value[1]}
-              disabled={endDisabled.value}
-              class={cls(`${prefixCls}-input-inner`, props.classNames?.endInput)}
-              style={props.styles?.endInput}
-            />
-
-            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-              <CalendarOutlined />
-            </span>
-            {showClear && (
-              <button
-                class={cls(`${selectPfx}-clear`, props.classNames?.clear)}
-                style={props.styles?.clear}
-                onClick={handleClear}
+    const renderInput = () => (
+      <PickerInput
+        size={props.size}
+        status={props.status}
+        variant={props.variant}
+        disabled={isDisabled.value}
+        open={isOpen.value}
+        hasValue={hasValue.value}
+        allowClear={props.allowClear}
+        classNames={{
+          root: cls(prefixCls, `${prefixCls}-range`, props.classNames?.root),
+          input: cls(`${prefixCls}-input-inner`, props.classNames?.input),
+          clear: props.classNames?.clear,
+          suffix: props.classNames?.suffix,
+        }}
+        styles={{
+          root: props.styles?.root,
+          input: props.styles?.input,
+          clear: props.styles?.clear,
+          suffix: props.styles?.suffix,
+        }}
+        onClear={handleClear}
+      >
+        {{
+          default: () => (
+            <>
+              <input
+                readonly
+                value={displayStart.value}
+                placeholder={placeholders.value[0]}
+                disabled={startDisabled.value}
+                class={cls(
+                  'hmfw-picker-input-inner',
+                  `${prefixCls}-input-inner`,
+                  props.classNames?.input,
+                  props.classNames?.startInput,
+                )}
+                style={{ ...props.styles?.input, ...props.styles?.startInput }}
+              />
+              <span
+                class={cls(`${prefixCls}-range-separator`, props.classNames?.separator)}
+                style={props.styles?.separator}
               >
-                <CloseCircleFilled />
-              </button>
-            )}
-          </span>
-        </div>
-      )
-    }
+                {props.separator}
+              </span>
+              <input
+                readonly
+                value={displayEnd.value}
+                placeholder={placeholders.value[1]}
+                disabled={endDisabled.value}
+                class={cls(
+                  'hmfw-picker-input-inner',
+                  `${prefixCls}-input-inner`,
+                  props.classNames?.input,
+                  props.classNames?.endInput,
+                )}
+                style={{ ...props.styles?.input, ...props.styles?.endInput }}
+              />
+            </>
+          ),
+          suffix: () => <CalendarOutlined />,
+        }}
+      </PickerInput>
+    )
 
     return () => (
       <Trigger

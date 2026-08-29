@@ -36,7 +36,7 @@ describe('RangePicker', () => {
 
   it('applies disabled class when disabled', () => {
     const wrapper = mount(RangePicker, { props: { disabled: true } })
-    expect(wrapper.find('.hmfw-date-picker-disabled').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-disabled').exists()).toBe(true)
   })
 
   it('disables individual inputs with array disabled', () => {
@@ -45,7 +45,7 @@ describe('RangePicker', () => {
     expect((inputs[0].element as HTMLInputElement).disabled).toBe(true)
     expect((inputs[1].element as HTMLInputElement).disabled).toBe(false)
     // whole-picker disabled class should NOT be applied for partial disable
-    expect(wrapper.find('.hmfw-date-picker-disabled').exists()).toBe(false)
+    expect(wrapper.find('.hmfw-picker-disabled').exists()).toBe(false)
   })
 
   it('opens panel on click', async () => {
@@ -102,27 +102,27 @@ describe('RangePicker', () => {
     const wrapper = mount(RangePicker, {
       props: { value: ['2024-01-01', '2024-01-31'], allowClear: true },
     })
-    expect(wrapper.find('.hmfw-select-clear').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-clear').exists()).toBe(true)
   })
 
   it('shows clear button when only one side has value', () => {
     const wrapper = mount(RangePicker, {
       props: { value: ['2024-01-01', null], allowClear: true },
     })
-    expect(wrapper.find('.hmfw-select-clear').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-clear').exists()).toBe(true)
   })
 
   it('clears value on clear button click', async () => {
     const wrapper = mount(RangePicker, {
       props: { value: ['2024-01-01', '2024-01-31'], allowClear: true },
     })
-    await wrapper.find('.hmfw-select-clear').trigger('click')
+    await wrapper.find('.hmfw-picker-clear').trigger('click')
     expect(wrapper.emitted('change')?.[0]?.[0]).toEqual([null, null])
   })
 
   it('applies status-error class', () => {
     const wrapper = mount(RangePicker, { props: { status: 'error' } })
-    expect(wrapper.find('.hmfw-date-picker-status-error').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-status-error').exists()).toBe(true)
   })
 
   it('uses custom separator', () => {

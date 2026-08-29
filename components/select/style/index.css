@@ -189,7 +189,7 @@
 
 .hmfw-select-allow-clear:hover .hmfw-select-clear {
   opacity: 1;
-  background: var(--ant-color-bg-base);
+  background: var(--hmfw-color-bg-container);
   border-radius: 50%;
 }
 

@@ -10,6 +10,34 @@
 
 ## 最近版本
 
+## [0.50.0] - 2026-08-29
+
+[查看完整内容](./changelogs/v0.50.0.md)
+
+**✨ 新增功能**：
+
+- **DatePicker**: `picker` 新增 `'week'` 周选择模式（值格式 `'YYYY-ww'`，周日为一周起始，选中整周高亮）；新增 `placement`、`variant` 属性与 `focus` / `blur` 事件；`disabledDate` 回调新增 info 参数 `{ from, type }`
+- **TimePicker**: 面板新增「此刻」（`showNow`）与「确定」（`needConfirm`）按钮，语言包新增 `TimePicker.now` / `ok` 文案；新增 `focus` / `blur` 事件
+- **RangePicker**: 新增 `variant` 形态变体属性
+- **类型导出完善**: DatePicker / RangePicker / TimePicker 事件回调 Handler 类型、`CellRender` / `CellRenderInfo` / `CellRenderType`、`RangeDateValue` 等公开导出
+- **新增 6 个演示**: DatePicker 尺寸/状态/变体、自定义格式、定制单元格、额外页脚；RangePicker 排序与分隔符；TimePicker 12 小时制
+
+**🔨 代码重构**：
+
+- **新增共享内部组件 PickerInput**（`_internal/picker-input/`）: DatePicker / TimePicker / RangePicker 统一输入触发器（根容器 + 输入区 + 后缀图标 + 清除按钮），输出 `hmfw-picker-*` 共享类体系，三组件触发器样式大瘦身
+- **新增共享内部组件 TimeColumn**（`_internal/time-column/`）: TimePicker 与 DatePicker(showTime) 共用时间选择列，内置选中定位滚动，双类名兼容历史前缀类
+- **新增 `_utils/time.ts`**: `parseTime` / `formatTime` / `hasSeconds` / `generateTimeOptions` 时间工具共享
+- **CellRender 类型迁移**: 由 calendar 移至 date-picker（calendar re-export 保持兼容）；DatePicker props 改用 `satisfies` 模式强制与接口同步
+- **Select**: 清除按钮 hover 背景 token 修正为 `--hmfw-color-bg-container`；**Calendar**: 清理注释代码并修正 `--ant-` 前缀 token
+
+**📝 文档优化**：
+
+- **DatePicker / RangePicker / TimePicker**: 新增 6 个 demo，props 表同步更新（`picker` 增加 `week`、`placement` / `variant` / `cellRender`、`format` 默认值说明）；Calendar / TimePicker 文档补充 Design Token 说明
+
+**🧪 测试**：
+
+- **DatePicker**: 新增 week 模式回归测试 5 例；**TimePicker / RangePicker**: 状态/尺寸/清除/variant 断言统一更新为共享 `.hmfw-picker-*` 类名
+
 ## [0.49.3] - 2026-08-29
 
 **🔨 代码优化**：

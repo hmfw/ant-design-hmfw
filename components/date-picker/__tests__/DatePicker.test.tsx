@@ -15,22 +15,22 @@ describe('DatePicker', () => {
 
   it('disabled state', () => {
     const wrapper = mount(DatePicker, { props: { disabled: true } })
-    expect(wrapper.find('.hmfw-date-picker-disabled').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-disabled').exists()).toBe(true)
   })
 
   it('small size', () => {
     const wrapper = mount(DatePicker, { props: { size: 'small' } })
-    expect(wrapper.find('.hmfw-date-picker-small').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-small').exists()).toBe(true)
   })
 
   it('large size', () => {
     const wrapper = mount(DatePicker, { props: { size: 'large' } })
-    expect(wrapper.find('.hmfw-date-picker-large').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-large').exists()).toBe(true)
   })
 
   it('error status', () => {
     const wrapper = mount(DatePicker, { props: { status: 'error' } })
-    expect(wrapper.find('.hmfw-date-picker-status-error').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-status-error').exists()).toBe(true)
   })
 
   it('displays value', () => {
@@ -51,12 +51,12 @@ describe('DatePicker', () => {
 
   it('shows clear button when value set', () => {
     const wrapper = mount(DatePicker, { props: { value: '2026-05-24', allowClear: true } })
-    expect(wrapper.find('.hmfw-select-clear').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-clear').exists()).toBe(true)
   })
 
   it('warning status', () => {
     const wrapper = mount(DatePicker, { props: { status: 'warning' } })
-    expect(wrapper.find('.hmfw-date-picker-status-warning').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-picker-status-warning').exists()).toBe(true)
   })
 
   it('opens panel on click', async () => {
@@ -99,7 +99,7 @@ describe('DatePicker', () => {
 
   it('clears value on clear button click', async () => {
     const wrapper = mount(DatePicker, { props: { value: '2026-05-24', allowClear: true } })
-    await wrapper.find('.hmfw-select-clear').trigger('click')
+    await wrapper.find('.hmfw-picker-clear').trigger('click')
     expect(wrapper.emitted('update:value')?.[0]).toEqual([undefined])
   })
 
@@ -374,5 +374,58 @@ describe('DatePicker', () => {
     expect(columns[0].querySelectorAll('.hmfw-date-picker-time-cell').length).toBe(12)
     expect(columns[1].querySelectorAll('.hmfw-date-picker-time-cell').length).toBe(4)
     wrapper.unmount()
+  })
+
+  // ============ week picker ============
+  it('week picker shows date panel with week selection', async () => {
+    const wrapper = mount(DatePicker, { props: { picker: 'week' }, attachTo: document.body })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    // week 模式仍渲染日期网格面板
+    expect(document.querySelectorAll('.hmfw-date-picker-day').length).toBe(42)
+    wrapper.unmount()
+  })
+
+  it('week picker emits week string on select', async () => {
+    // defaultValue 固定面板在 2026-05，避免依赖系统当前月份
+    const wrapper = mount(DatePicker, {
+      props: { picker: 'week', defaultValue: '2026-05-20' },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    const days = document.querySelectorAll('.hmfw-date-picker-day')
+    const day20 = Array.from(days).find(
+      (d) => d.textContent === '20' && !d.classList.contains('hmfw-date-picker-day-other-month'),
+    ) as HTMLButtonElement
+    day20?.click()
+    await wrapper.vm.$nextTick()
+    // 2026-05-20 是周三，所在周周日为 2026-05-17，年内第 21 周
+    expect(wrapper.emitted('update:value')?.[0]).toEqual(['2026-21'])
+    expect(wrapper.emitted('change')?.[0]?.[0]).toBe('2026-21')
+    wrapper.unmount()
+  })
+
+  it('week picker highlights the whole selected week', async () => {
+    const wrapper = mount(DatePicker, {
+      props: { picker: 'week', value: '2026-21' },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-date-picker').trigger('click')
+    await wrapper.vm.$nextTick()
+    // 选中周高亮类出现在该周 7 天上
+    const weekCells = document.querySelectorAll('.hmfw-date-picker-day-week-selected')
+    expect(weekCells.length).toBe(7)
+    wrapper.unmount()
+  })
+
+  it('week picker displays week format value', () => {
+    const wrapper = mount(DatePicker, { props: { picker: 'week', value: '2026-21' } })
+    expect(wrapper.find('input').element.value).toBe('2026-21')
+  })
+
+  it('week picker default placeholder', () => {
+    const wrapper = mount(DatePicker, { props: { picker: 'week' } })
+    expect(wrapper.find('input').attributes('placeholder')).toBe('请选择周')
   })
 })

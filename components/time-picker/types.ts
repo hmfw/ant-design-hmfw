@@ -1,5 +1,6 @@
 import type { VNodeChild, CSSProperties } from 'vue'
 import type { ComponentSize } from '../config-provider'
+import type { PickerVariant } from '../_internal/picker-input'
 
 export type TimePickerValue = string // HH:mm:ss
 
@@ -15,11 +16,11 @@ export interface DisabledTimeConfig {
 export interface TimePickerClassNames {
   /** 根节点 div.hmfw-time-picker */
   root?: string
-  /** 输入区域 span.hmfw-time-picker-input */
+  /** 内层输入框 input.hmfw-time-picker-input-inner */
   input?: string
-  /** 清除按钮 span.hmfw-time-picker-clear */
+  /** 清除按钮 */
   clear?: string
-  /** 后缀图标 span.hmfw-time-picker-suffix */
+  /** 后缀图标 */
   suffix?: string
   /** 弹层容器 div.hmfw-time-picker-popup */
   popup?: string
@@ -49,11 +50,11 @@ export interface TimePickerClassNames {
 export interface TimePickerStyles {
   /** 根节点 div.hmfw-time-picker */
   root?: CSSProperties
-  /** 输入区域 span.hmfw-time-picker-input */
+  /** 内层输入框 input.hmfw-time-picker-input-inner */
   input?: CSSProperties
-  /** 清除按钮 span.hmfw-time-picker-clear */
+  /** 清除按钮 */
   clear?: CSSProperties
-  /** 后缀图标 span.hmfw-time-picker-suffix */
+  /** 后缀图标 */
   suffix?: CSSProperties
   /** 弹层容器 div.hmfw-time-picker-popup */
   popup?: CSSProperties
@@ -97,7 +98,7 @@ export interface TimePickerProps {
   needConfirm?: boolean // 默认 true，是否需要点击确定按钮才提交变更
   changeOnScroll?: boolean // 默认 false，是否滚动时即触发 change（与 needConfirm 互斥）
   renderExtraFooter?: () => VNodeChild
-  variant?: 'outlined' | 'borderless' | 'filled' | 'underlined'
+  variant?: PickerVariant
   placement?: 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
   /** 语义化 className */
   classNames?: TimePickerClassNames
@@ -114,3 +115,13 @@ export type TimePickerChangeHandler = (value: string | undefined, timeString: st
  * TimePicker openChange 事件的回调函数类型
  */
 export type TimePickerOpenChangeHandler = (open: boolean) => void
+
+/**
+ * TimePicker focus 事件的回调函数类型
+ */
+export type TimePickerFocusHandler = () => void
+
+/**
+ * TimePicker blur 事件的回调函数类型
+ */
+export type TimePickerBlurHandler = () => void

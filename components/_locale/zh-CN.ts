@@ -33,6 +33,7 @@ const zhCN: Locale = {
     placeholder: '请选择日期',
     yearPlaceholder: '请选择年份',
     monthPlaceholder: '请选择月份',
+    weekPlaceholder: '请选择周',
     rangePlaceholder: ['开始日期', '结束日期'],
     yearFormat: (year: number) => `${year}年`,
     monthYearFormat: (monthLabel: string, year: number) => `${year}年 ${monthLabel}`,
@@ -57,6 +58,8 @@ const zhCN: Locale = {
   },
   TimePicker: {
     placeholder: '请选择时间',
+    now: '此刻',
+    ok: '确定',
   },
   Pagination: {
     itemsPerPage: '条/页',

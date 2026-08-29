@@ -31,6 +31,7 @@ export interface Locale {
     placeholder: string
     yearPlaceholder: string
     monthPlaceholder: string
+    weekPlaceholder: string
     rangePlaceholder: [string, string]
     /** 年份显示格式，中文需带「年」后缀（`2026年`），英文直接输出数字 */
     yearFormat: (year: number) => string
@@ -58,6 +59,8 @@ export interface Locale {
   }
   TimePicker: {
     placeholder: string
+    now: string
+    ok: string
   }
   Pagination: {
     itemsPerPage: string

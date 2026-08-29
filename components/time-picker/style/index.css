@@ -1,133 +1,14 @@
+/* 输入框触发器样式由共享组件 PickerInput 提供
+   （.hmfw-picker-root / .hmfw-picker-input 等，见 _internal/picker-input），
+   此处仅保留组件独有宽度与面板样式 */
 .hmfw-time-picker {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
   width: 128px;
-  padding: 4px var(--hmfw-control-padding-horizontal);
-  border: 1px solid var(--hmfw-color-border);
-  border-radius: var(--hmfw-border-radius);
-  background: var(--hmfw-color-bg-container);
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-}
-
-.hmfw-time-picker:hover {
-  border-color: var(--hmfw-color-primary);
-}
-
-.hmfw-time-picker-open {
-  border-color: var(--hmfw-color-primary);
-  box-shadow: 0 0 0 2px var(--hmfw-color-primary-bg);
-}
-
-.hmfw-time-picker-disabled {
-  background: var(--hmfw-color-bg-container-disabled);
-  cursor: not-allowed;
-  border-color: var(--hmfw-color-border);
-}
-
-.hmfw-time-picker-disabled:hover {
-  border-color: var(--hmfw-color-border);
-}
-
-.hmfw-time-picker-status-error {
-  border-color: var(--hmfw-color-error);
-}
-
-.hmfw-time-picker-status-warning {
-  border-color: var(--hmfw-color-warning);
-}
-
-.hmfw-time-picker-small {
-  padding: 0 var(--hmfw-padding-xs);
-  font-size: var(--hmfw-font-size-sm);
-}
-
-.hmfw-time-picker-large {
-  padding: 6px 11px;
-  font-size: var(--hmfw-font-size-lg);
-}
-
-/* Variants */
-.hmfw-time-picker-borderless {
-  border-color: transparent;
-  background: transparent;
-}
-
-.hmfw-time-picker-borderless:hover {
-  background: var(--hmfw-color-bg-text-hover);
-}
-
-.hmfw-time-picker-filled {
-  background: var(--hmfw-color-fill-tertiary);
-  border-color: transparent;
-}
-
-.hmfw-time-picker-filled:hover {
-  background: var(--hmfw-color-fill-secondary);
-}
-
-.hmfw-time-picker-underlined {
-  border: none;
-  border-bottom: 1px solid var(--hmfw-color-border);
-  border-radius: 0;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.hmfw-time-picker-underlined:hover {
-  border-bottom-color: var(--hmfw-color-primary);
-}
-
-.hmfw-time-picker-input {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 4px;
-}
-
-.hmfw-time-picker-input-inner {
-  flex: 1;
-  margin: 0;
-  padding: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: inherit;
-  line-height: var(--hmfw-line-height);
-  color: var(--hmfw-color-text);
-  cursor: pointer;
-  min-width: 0;
-}
-
-.hmfw-time-picker-input-inner::placeholder {
-  color: var(--hmfw-color-text-placeholder);
-}
-
-.hmfw-time-picker-suffix {
-  display: inline-flex;
-  align-items: center;
-  color: var(--hmfw-color-text-placeholder);
-  font-size: var(--hmfw-font-size-icon);
-  transition: opacity var(--hmfw-motion-duration-mid) ease;
-}
-
-.hmfw-select-allow-clear:hover .hmfw-time-picker-suffix {
-  opacity: 0;
-}
-
-.hmfw-time-picker-borderless .hmfw-time-picker-clear,
-.hmfw-time-picker-filled .hmfw-time-picker-clear {
-  background: transparent;
-}
-
-.hmfw-time-picker-underlined .hmfw-time-picker-clear {
-  right: 0;
-  background: transparent;
 }
 
 .hmfw-time-picker-panel {
+  /* 组件级 Token：时间列面板高度，与 DatePicker(showTime) 保持一致 */
+  --hmfw-time-picker-time-content-height: 224px;
+
   /* bg/radius/shadow 由 hmfw-trigger-popup（popup wrapper）统一提供，
      此处继承 wrapper 的 border-radius 以确保 overflow 裁剪和 border 跟随圆角 */
   border-radius: inherit;
@@ -138,68 +19,18 @@
 
 .hmfw-time-picker-panel-inner {
   display: flex;
-  height: 224px;
+  height: var(--hmfw-time-picker-time-content-height);
 }
 
-.hmfw-time-picker-panel-column {
-  flex: 1;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  overflow-y: auto;
-  border-right: 1px solid var(--hmfw-color-border-secondary);
-  scrollbar-width: none;
-  contain: layout style;
-  will-change: scroll-position;
-}
-
-.hmfw-time-picker-panel-column:last-child {
-  border-right: none;
-}
-
-.hmfw-time-picker-panel-column::-webkit-scrollbar {
-  display: none;
-}
-
-.hmfw-time-picker-panel-cell {
-  padding: 4px 0;
-  text-align: center;
-  cursor: pointer;
-  font-size: var(--hmfw-font-size);
-  color: var(--hmfw-color-text);
-  transition:
-    background 0.2s,
-    color 0.2s;
-  line-height: 28px;
-  /* 性能优化 */
-  contain: layout style;
-}
-
-.hmfw-time-picker-panel-cell:hover {
-  background: var(--hmfw-color-bg-text-hover);
-}
-
-.hmfw-time-picker-panel-cell-selected {
-  background: var(--hmfw-color-primary-bg);
-  color: var(--hmfw-color-primary);
-  font-weight: 600;
-}
-
-.hmfw-time-picker-panel-cell-disabled {
-  color: var(--hmfw-color-text-disabled);
-  cursor: not-allowed;
-}
-
-.hmfw-time-picker-panel-cell-disabled:hover {
-  background: transparent;
-}
+/* 时间列与单元格样式由共享组件 TimeColumn 提供
+   （.hmfw-picker-time-column / .hmfw-picker-time-cell，见 _internal/time-column） */
 
 .hmfw-time-picker-panel-footer {
   border-top: 1px solid var(--hmfw-color-border-secondary);
-  padding: 8px 12px;
+  padding: var(--hmfw-padding-xs) var(--hmfw-padding-sm);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--hmfw-padding-xs);
 }
 
 .hmfw-time-picker-panel-footer-extra {
@@ -215,7 +46,7 @@
 
 .hmfw-time-picker-panel-footer-btn {
   padding: 0 var(--hmfw-padding-xs);
-  height: 24px;
+  height: var(--hmfw-control-height-sm);
   font-size: var(--hmfw-font-size);
   background: transparent;
   border: none;

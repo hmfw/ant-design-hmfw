@@ -1,44 +1,73 @@
-import { defineComponent, ref, computed, watch, nextTick, type PropType } from 'vue'
+import { defineComponent, ref, computed, watch, type PropType } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils/cls'
-import { buildCalendar, formatDate, isSameDay, isSameMonth, isSameYear, pad, parseDate } from '../_utils/date'
+import {
+  buildCalendar,
+  formatDate,
+  formatQuarter,
+  isSameDay,
+  isSameMonth,
+  isSameWeek,
+  isSameYear,
+  parseDate,
+  parseWeek,
+  weekStart,
+} from '../_utils/date'
+import { generateTimeOptions } from '../_utils/time'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
-import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
-import type { DatePickerMode, PresetItem, ShowTimeConfig, DatePickerClassNames, DatePickerStyles } from './types'
+import { TimeColumn } from '../_internal/time-column'
+import { PickerInput } from '../_internal/picker-input'
+import type { PickerVariant } from '../_internal/picker-input'
+import { CalendarOutlined } from '@hmfw/icons'
+import type {
+  DatePickerMode,
+  DatePickerProps,
+  PresetItem,
+  ShowTimeConfig,
+  DatePickerClassNames,
+  DatePickerStyles,
+} from './types'
 import type { ComponentSize } from '../config-provider'
-import { CellRender } from '../calendar/types'
+import type { CellRender } from './types'
+
+// Props 定义（使用 satisfies 确保与 DatePickerProps 接口同步）
+const datePickerProps = {
+  value: { type: String, default: undefined },
+  defaultValue: { type: String, default: undefined },
+  format: { type: String, default: undefined },
+  disabled: { type: Boolean, default: false },
+  size: { type: String as PropType<ComponentSize>, default: 'middle' },
+  placeholder: { type: String, default: undefined },
+  allowClear: { type: Boolean, default: true },
+  picker: { type: String as PropType<DatePickerMode>, default: 'date' },
+  showTime: { type: [Boolean, Object] as PropType<boolean | ShowTimeConfig>, default: undefined },
+  showToday: { type: Boolean, default: true },
+  showNow: { type: Boolean, default: false },
+  disabledDate: {
+    type: Function as PropType<(d: Date, info?: { from?: Date; type?: DatePickerMode }) => boolean>,
+    default: undefined,
+  },
+  status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
+  open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: false },
+  presets: { type: Array as PropType<PresetItem[]>, default: undefined },
+  minDate: { type: String, default: undefined },
+  maxDate: { type: String, default: undefined },
+  renderExtraFooter: { type: Function as PropType<() => any>, default: undefined },
+  cellRender: { type: Function as PropType<CellRender>, default: undefined },
+  placement: { type: String as PropType<Placement>, default: 'bottomLeft' },
+  variant: { type: String as PropType<PickerVariant>, default: 'outlined' },
+  classNames: { type: Object as PropType<DatePickerClassNames>, default: undefined },
+  styles: { type: Object as PropType<DatePickerStyles>, default: undefined },
+} satisfies Record<keyof DatePickerProps, any>
 
 export const DatePicker = defineComponent({
   name: 'DatePicker',
-  props: {
-    value: String,
-    defaultValue: String,
-    format: String,
-    disabled: Boolean,
-    size: { type: String as PropType<ComponentSize>, default: 'middle' },
-    placeholder: String,
-    allowClear: { type: Boolean, default: true },
-    picker: { type: String as PropType<DatePickerMode>, default: 'date' },
-    showTime: [Boolean, Object] as PropType<boolean | ShowTimeConfig>,
-    showToday: { type: Boolean, default: true },
-    showNow: Boolean,
-    disabledDate: Function as PropType<(d: Date) => boolean>,
-    status: { type: String as PropType<'error' | 'warning' | ''>, default: '' },
-    open: { type: Boolean, default: undefined },
-    defaultOpen: Boolean,
-    presets: Array as PropType<PresetItem[]>,
-    minDate: String,
-    maxDate: String,
-    renderExtraFooter: Function as PropType<() => any>,
-    cellRender: Function as PropType<CellRender>,
-    classNames: Object as PropType<DatePickerClassNames>,
-    styles: Object as PropType<DatePickerStyles>,
-  },
-  emits: ['update:value', 'change', 'openChange', 'panelChange'],
+  props: datePickerProps,
+  emits: ['update:value', 'change', 'openChange', 'panelChange', 'focus', 'blur'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('date-picker')
-    const selectPfx = usePrefixCls('select')
     const locale = useLocale()
     const now = new Date()
 
@@ -47,6 +76,7 @@ export const DatePicker = defineComponent({
       if (props.picker === 'year') return 'YYYY'
       if (props.picker === 'month') return 'YYYY-MM'
       if (props.picker === 'quarter') return 'YYYY-[Q]Q'
+      if (props.picker === 'week') return 'YYYY-ww'
       if (props.showTime) return 'YYYY-MM-DD HH:mm:ss'
       return 'YYYY-MM-DD'
     })
@@ -56,10 +86,17 @@ export const DatePicker = defineComponent({
       const dp = locale.value.DatePicker
       if (props.picker === 'year') return dp.yearPlaceholder
       if (props.picker === 'month') return dp.monthPlaceholder
+      if (props.picker === 'week') return dp.weekPlaceholder
       return dp.placeholder
     })
 
-    const innerValue = ref<Date | null>(parseDate(props.defaultValue ?? props.value))
+    // 按 picker 类型解析值：week 模式优先解析 'YYYY-ww' 周字符串，失败则回退标准日期解析
+    const parsePickerValue = (val: string | null | undefined): Date | null => {
+      if (!val) return null
+      return props.picker === 'week' ? (parseWeek(val) ?? parseDate(val)) : parseDate(val)
+    }
+
+    const innerValue = ref<Date | null>(parsePickerValue(props.defaultValue ?? props.value))
 
     // 时间选择状态（仅 showTime 时使用）
     const innerHour = ref(innerValue.value?.getHours() ?? 0)
@@ -80,12 +117,11 @@ export const DatePicker = defineComponent({
     const panelMode = ref<'date' | 'month' | 'year'>(
       props.picker === 'year' ? 'year' : props.picker === 'month' ? 'month' : 'date',
     )
-    const triggerRef = ref<HTMLElement>()
 
     const isOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
 
     const selectedDate = computed(() => {
-      if (props.value) return parseDate(props.value)
+      if (props.value) return parsePickerValue(props.value)
       return innerValue.value
     })
 
@@ -95,17 +131,14 @@ export const DatePicker = defineComponent({
     const displayText = computed(() => {
       const d = selectedDate.value
       if (!d) return ''
-      if (props.picker === 'quarter') {
-        const q = Math.floor(d.getMonth() / 3) + 1
-        return `${d.getFullYear()}-Q${q}`
-      }
+      if (props.picker === 'quarter') return formatQuarter(d)
       return formatDate(d, fmt.value)
     })
 
     watch(
       () => props.value,
       (v) => {
-        innerValue.value = parseDate(v)
+        innerValue.value = parsePickerValue(v)
       },
     )
 
@@ -131,16 +164,19 @@ export const DatePicker = defineComponent({
     }
 
     const selectDate = (d: Date) => {
-      if (props.disabledDate?.(d)) return
+      if (props.disabledDate?.(d, { type: props.picker })) return
       if (minDateObj.value && d < minDateObj.value) return
       if (maxDateObj.value && d > maxDateObj.value) return
+
+      // week 模式：值取所选日期所在周的周日
+      const value = props.picker === 'week' ? weekStart(d) : d
 
       // showTime 模式下，保留已选时间，合成完整日期时间
       if (hasShowTime.value) {
         const combined = new Date(
-          d.getFullYear(),
-          d.getMonth(),
-          d.getDate(),
+          value.getFullYear(),
+          value.getMonth(),
+          value.getDate(),
           innerHour.value,
           innerMinute.value,
           innerSecond.value,
@@ -151,13 +187,10 @@ export const DatePicker = defineComponent({
       }
 
       // 非 showTime 模式：选择日期后立即 emit 并关闭
-      innerValue.value = d
-      const str =
-        props.picker === 'quarter'
-          ? `${d.getFullYear()}-Q${Math.floor(d.getMonth() / 3) + 1}`
-          : formatDate(d, fmt.value)
+      innerValue.value = value
+      const str = props.picker === 'quarter' ? formatQuarter(value) : formatDate(value, fmt.value)
       emit('update:value', str)
-      emit('change', str, d)
+      emit('change', str, value)
       closePanel()
     }
 
@@ -202,7 +235,7 @@ export const DatePicker = defineComponent({
 
     const applyPreset = (preset: PresetItem) => {
       const val = typeof preset.value === 'function' ? preset.value() : preset.value
-      const d = parseDate(val)
+      const d = parsePickerValue(val)
       if (d) selectDate(d)
     }
 
@@ -245,21 +278,9 @@ export const DatePicker = defineComponent({
       return cfg && typeof cfg === 'object' && 'secondStep' in cfg && cfg.secondStep ? cfg.secondStep : 1
     })
 
-    const hours = computed(() => {
-      const list: number[] = []
-      for (let i = 0; i < 24; i += hourStep.value) list.push(i)
-      return list
-    })
-    const minutes = computed(() => {
-      const list: number[] = []
-      for (let i = 0; i < 60; i += minuteStep.value) list.push(i)
-      return list
-    })
-    const seconds = computed(() => {
-      const list: number[] = []
-      for (let i = 0; i < 60; i += secondStep.value) list.push(i)
-      return list
-    })
+    const hours = computed(() => generateTimeOptions(24, hourStep.value))
+    const minutes = computed(() => generateTimeOptions(60, minuteStep.value))
+    const seconds = computed(() => generateTimeOptions(60, secondStep.value))
 
     // 是否显示秒列（根据 format 判断）
     const showSecondColumn = computed(() => {
@@ -278,40 +299,18 @@ export const DatePicker = defineComponent({
       return Array.from({ length: 10 }, (_, i) => base + i)
     })
 
-    // 时间列滚动到选中项
-    const scrollToActiveTime = (el: HTMLElement | null, value: number) => {
-      if (!el) return
-      nextTick(() => {
-        const item = el.querySelector(`[data-value="${value}"]`) as HTMLElement
-        if (item && typeof item.scrollIntoView === 'function') {
-          item.scrollIntoView({ block: 'nearest' })
-        }
-      })
-    }
-
-    // 渲染时间列（复用逻辑，避免重复代码）
+    // 渲染时间列（复用共享 TimeColumn 组件，与 TimePicker 同构）
     const renderTimeColumn = (values: number[], selectedValue: number, onSelect: (v: number) => void) => (
-      <ul
-        class={cls(`${prefixCls}-time-column`, props.classNames?.timeColumn)}
+      <TimeColumn
+        colClass={cls(`${prefixCls}-time-column`, props.classNames?.timeColumn)}
+        cellClass={cls(`${prefixCls}-time-cell`, props.classNames?.timeCell)}
         style={props.styles?.timeColumn}
-        ref={(el) => scrollToActiveTime(el as HTMLElement, selectedValue)}
-      >
-        {values.map((v) => (
-          <li
-            key={v}
-            data-value={v}
-            class={cls(
-              `${prefixCls}-time-cell`,
-              { [`${prefixCls}-time-cell-selected`]: selectedValue === v },
-              props.classNames?.timeCell,
-            )}
-            style={props.styles?.timeCell}
-            onClick={() => onSelect(v)}
-          >
-            {pad(v)}
-          </li>
-        ))}
-      </ul>
+        cellStyle={props.styles?.timeCell}
+        items={values.map((v) => ({ value: v, disabled: false }))}
+        selectedValue={selectedValue}
+        onSelect={(v: number | string) => onSelect(v as number)}
+        active={isOpen.value}
+      />
     )
 
     const renderDatePanel = () => (
@@ -381,8 +380,13 @@ export const DatePicker = defineComponent({
               <div class={cls(`${prefixCls}-days`, props.classNames?.days)} style={props.styles?.days}>
                 {calendar.value.map(({ date, inCurrentMonth }, i) => {
                   const isToday = isSameDay(date, now)
-                  const isSelected = selectedDate.value ? isSameDay(date, selectedDate.value) : false
-                  const isDisabled = props.disabledDate?.(date) ?? false
+                  // week 模式：选中态按「同周」整行高亮；其他模式按「同日」
+                  const isSelected = selectedDate.value
+                    ? props.picker === 'week'
+                      ? isSameWeek(date, selectedDate.value)
+                      : isSameDay(date, selectedDate.value)
+                    : false
+                  const isDisabled = props.disabledDate?.(date, { type: props.picker }) ?? false
 
                   const originNode = <span>{date.getDate()}</span>
                   const cellContent = props.cellRender
@@ -398,6 +402,7 @@ export const DatePicker = defineComponent({
                           [`${prefixCls}-day-other-month`]: !inCurrentMonth,
                           [`${prefixCls}-day-today`]: isToday,
                           [`${prefixCls}-day-selected`]: isSelected,
+                          [`${prefixCls}-day-week-selected`]: props.picker === 'week' && isSelected,
                           [`${prefixCls}-day-disabled`]: isDisabled,
                         },
                         props.classNames?.day,
@@ -639,52 +644,44 @@ export const DatePicker = defineComponent({
       </>
     )
 
-    const renderInput = () => {
-      const showClear = props.allowClear && !!displayText.value && !props.disabled
-      const datePickerCls = cls(
-        prefixCls,
-        `${prefixCls}-${props.size}`,
-        {
-          [`${prefixCls}-open`]: isOpen.value,
-          [`${prefixCls}-disabled`]: props.disabled,
-          [`${prefixCls}-status-error`]: props.status === 'error',
-          [`${prefixCls}-status-warning`]: props.status === 'warning',
-          [`${selectPfx}-allow-clear`]: showClear,
-        },
-        props.classNames?.root,
-      )
-      return (
-        <div ref={triggerRef} class={datePickerCls} style={props.styles?.root}>
-          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
-            <input
-              readonly
-              value={displayText.value}
-              placeholder={placeholder.value}
-              disabled={props.disabled}
-              class={`${prefixCls}-input-inner`}
-            />
-            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-              <CalendarOutlined />
-            </span>
-            {showClear && (
-              <button
-                class={cls(`${selectPfx}-clear`, props.classNames?.clear)}
-                style={props.styles?.clear}
-                onClick={handleClear}
-              >
-                <CloseCircleFilled />
-              </button>
-            )}
-          </span>
-        </div>
-      )
-    }
+    const renderInput = () => (
+      <PickerInput
+        size={props.size}
+        status={props.status}
+        variant={props.variant}
+        disabled={props.disabled}
+        open={isOpen.value}
+        hasValue={!!displayText.value}
+        allowClear={props.allowClear}
+        value={displayText.value}
+        placeholder={placeholder.value}
+        onFocus={() => emit('focus')}
+        onBlur={() => emit('blur')}
+        classNames={{
+          root: cls(prefixCls, props.classNames?.root),
+          input: cls(`${prefixCls}-input-inner`, props.classNames?.input),
+          clear: props.classNames?.clear,
+          suffix: props.classNames?.suffix,
+        }}
+        styles={{
+          root: props.styles?.root,
+          input: props.styles?.input,
+          clear: props.styles?.clear,
+          suffix: props.styles?.suffix,
+        }}
+        onClear={handleClear}
+      >
+        {{
+          suffix: () => <CalendarOutlined />,
+        }}
+      </PickerInput>
+    )
 
     return () => (
       <Trigger
         open={isOpen.value}
         trigger="click"
-        placement={'bottomLeft' as Placement}
+        placement={props.placement}
         disabled={props.disabled}
         destroyOnHidden
         popupClass={cls(`${prefixCls}-popup`, props.classNames?.popup)}
