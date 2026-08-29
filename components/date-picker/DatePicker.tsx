@@ -7,6 +7,7 @@ import type { Placement } from '../_internal/trigger'
 import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
 import type { DatePickerMode, PresetItem, ShowTimeConfig, DatePickerClassNames, DatePickerStyles } from './types'
 import type { ComponentSize } from '../config-provider'
+import { CellRender } from '../calendar/types'
 
 export const DatePicker = defineComponent({
   name: 'DatePicker',
@@ -30,23 +31,14 @@ export const DatePicker = defineComponent({
     minDate: String,
     maxDate: String,
     renderExtraFooter: Function as PropType<() => any>,
-    cellRender: Function as PropType<
-      (
-        current: Date,
-        info: {
-          originNode: any
-          today: Date
-          range?: 'start' | 'end'
-          type: 'date' | 'month' | 'year'
-        },
-      ) => any
-    >,
+    cellRender: Function as PropType<CellRender>,
     classNames: Object as PropType<DatePickerClassNames>,
     styles: Object as PropType<DatePickerStyles>,
   },
   emits: ['update:value', 'change', 'openChange', 'panelChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('date-picker')
+    const selectPfx = usePrefixCls('select')
     const locale = useLocale()
     const now = new Date()
 
@@ -201,7 +193,7 @@ export const DatePicker = defineComponent({
       closePanel()
     }
 
-    const clearValue = (e: MouseEvent) => {
+    const handleClear = (e: MouseEvent) => {
       e.stopPropagation()
       innerValue.value = null
       emit('update:value', undefined)
@@ -647,6 +639,47 @@ export const DatePicker = defineComponent({
       </>
     )
 
+    const renderInput = () => {
+      const showClear = props.allowClear && !!displayText.value && !props.disabled
+      const datePickerCls = cls(
+        prefixCls,
+        `${prefixCls}-${props.size}`,
+        {
+          [`${prefixCls}-open`]: isOpen.value,
+          [`${prefixCls}-disabled`]: props.disabled,
+          [`${prefixCls}-status-error`]: props.status === 'error',
+          [`${prefixCls}-status-warning`]: props.status === 'warning',
+          [`${selectPfx}-allow-clear`]: showClear,
+        },
+        props.classNames?.root,
+      )
+      return (
+        <div ref={triggerRef} class={datePickerCls} style={props.styles?.root}>
+          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
+            <input
+              readonly
+              value={displayText.value}
+              placeholder={placeholder.value}
+              disabled={props.disabled}
+              class={`${prefixCls}-input-inner`}
+            />
+            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              <CalendarOutlined />
+            </span>
+            {showClear && (
+              <button
+                class={cls(`${selectPfx}-clear`, props.classNames?.clear)}
+                style={props.styles?.clear}
+                onClick={handleClear}
+              >
+                <CloseCircleFilled />
+              </button>
+            )}
+          </span>
+        </div>
+      )
+    }
+
     return () => (
       <Trigger
         open={isOpen.value}
@@ -662,45 +695,7 @@ export const DatePicker = defineComponent({
         }}
       >
         {{
-          default: () => (
-            <div
-              ref={triggerRef}
-              class={cls(
-                prefixCls,
-                `${prefixCls}-${props.size}`,
-                {
-                  [`${prefixCls}-open`]: isOpen.value,
-                  [`${prefixCls}-disabled`]: props.disabled,
-                  [`${prefixCls}-status-error`]: props.status === 'error',
-                  [`${prefixCls}-status-warning`]: props.status === 'warning',
-                },
-                props.classNames?.root,
-              )}
-              style={props.styles?.root}
-            >
-              <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
-                <input
-                  readonly
-                  value={displayText.value}
-                  placeholder={placeholder.value}
-                  disabled={props.disabled}
-                  class={`${prefixCls}-input-inner`}
-                />
-                {props.allowClear && displayText.value && !props.disabled && (
-                  <span
-                    class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
-                    style={props.styles?.clear}
-                    onClick={clearValue}
-                  >
-                    <CloseCircleFilled />
-                  </span>
-                )}
-                <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-                  <CalendarOutlined />
-                </span>
-              </span>
-            </div>
-          ),
+          default: renderInput,
           popup: renderPopup,
         }}
       </Trigger>

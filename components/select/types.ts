@@ -31,7 +31,7 @@ export interface SelectClassNames {
   selector?: string
   /** 已选项 span.hmfw-select-selection-item（多选模式下为标签） */
   item?: string
-  /** 占位符 span.hmfw-select-selection-placeholder */
+  /** 占位符 span.hmfw-select-placeholder */
   placeholder?: string
   /** 后缀箭头容器 div.hmfw-select-arrow */
   arrow?: string
@@ -57,7 +57,7 @@ export interface SelectStyles {
   selector?: CSSProperties
   /** 已选项 span.hmfw-select-selection-item */
   item?: CSSProperties
-  /** 占位符 span.hmfw-select-selection-placeholder */
+  /** 占位符 span.hmfw-select-placeholder */
   placeholder?: CSSProperties
   /** 后缀箭头容器 div.hmfw-select-arrow */
   arrow?: CSSProperties

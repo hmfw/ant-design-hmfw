@@ -1,4 +1,6 @@
+import type { CSSProperties } from 'vue'
 import type { ComponentSize } from '../config-provider'
+import { CellRender } from '../calendar/types'
 
 export type DatePickerValue = string // YYYY-MM-DD
 
@@ -20,8 +22,6 @@ export interface ShowTimeConfig {
   /** 秒步长 */
   secondStep?: number
 }
-
-import type { CSSProperties } from 'vue'
 
 /** DatePicker 各部分的自定义类名 */
 export interface DatePickerClassNames {
@@ -168,15 +168,7 @@ export interface DatePickerProps {
   minDate?: string
   maxDate?: string
   renderExtraFooter?: () => any
-  cellRender?: (
-    current: Date,
-    info: {
-      originNode: any
-      today: Date
-      range?: 'start' | 'end'
-      type: 'date' | 'month' | 'year'
-    },
-  ) => any
+  cellRender?: CellRender
   /** 自定义各部分类名 */
   classNames?: DatePickerClassNames
   /** 自定义各部分样式 */

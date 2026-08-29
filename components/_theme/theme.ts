@@ -168,6 +168,7 @@ export interface MapTokens extends SeedTokens {
   colorBgTextHover: string
   colorTextLightSolid: string
   fontSize: number
+  fontSizeIcon: number
   lineHeight: number
 
   // Font sizes
@@ -469,6 +470,7 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     colorBgTextHover: alpha(colorTextBase, 0.06),
     colorTextLightSolid: '#ffffff',
     fontSize: seed.fontSizeBase,
+    fontSizeIcon: seed.fontSizeBase - 2,
     lineHeight: seed.lineHeightBase,
 
     // 字号阶梯（下限 1px，CSS 不接受更小的正值）
@@ -528,8 +530,9 @@ export function generateMapTokens(seed: SeedTokens): MapTokens {
     colorErrorOutline: alpha(seed.colorError, 0.1),
     colorWarningOutline: alpha(seed.colorWarning, 0.1),
     // 控件内边距使用固定值，不与间距系统绑定（Ant Design 中为独立设计常量）
-    controlPaddingHorizontal: 12,
+    controlPaddingHorizontal: 11,
     controlPaddingHorizontalSM: 8,
+
     lineWidthBold: 2,
     zIndexBase: 0,
     zIndexPopup: 1050,

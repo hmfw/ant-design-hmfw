@@ -69,49 +69,12 @@
   display: inline-flex;
   align-items: center;
   color: var(--hmfw-color-text-placeholder);
-  font-size: 14px;
-  transition: opacity 0.2s;
+  font-size: var(--hmfw-font-size-icon);
+  transition: opacity var(--hmfw-motion-duration-mid) ease;
 }
 
-/* clear 叠加在 suffix 同位置，picker hover 时显示并遮挡 suffix。
-   字号需与 suffix 一致（14px），否则两个 SVG 宽度不同，右对齐时会露出 suffix 边缘 */
-.hmfw-date-picker-clear {
-  position: absolute;
-  right: 11px;
-  display: inline-flex;
-  align-items: center;
-  /* 遮住底层输入内容的实底，需与输入框背景一致 */
-  background: var(--hmfw-color-bg-container);
-  color: var(--hmfw-color-text-placeholder);
-  font-size: 14px;
-  cursor: pointer;
+.hmfw-select-allow-clear:hover .hmfw-date-picker-suffix {
   opacity: 0;
-  pointer-events: none;
-  transition:
-    color 0.2s,
-    opacity 0.2s;
-}
-
-.hmfw-date-picker-clear:hover {
-  color: var(--hmfw-color-text-secondary);
-}
-
-.hmfw-date-picker:hover .hmfw-date-picker-clear {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.hmfw-date-picker-disabled .hmfw-date-picker-clear {
-  display: none;
-}
-
-.hmfw-date-picker-small .hmfw-date-picker-clear {
-  right: 7px;
-}
-
-/* Panel popup */
-.hmfw-date-picker-popup {
-  /* 仅作为 Trigger 弹出包装层，视觉样式由 panel 承载 */
 }
 
 .hmfw-date-picker-panel {

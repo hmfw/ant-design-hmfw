@@ -218,7 +218,7 @@ describe('generateMapTokens', () => {
     })
 
     it('controlPaddingHorizontal is fixed (not coupled to spacing)', () => {
-      expect(tokens.controlPaddingHorizontal).toBe(12)
+      expect(tokens.controlPaddingHorizontal).toBe(11)
       expect(tokens.controlPaddingHorizontalSM).toBe(8)
     })
 

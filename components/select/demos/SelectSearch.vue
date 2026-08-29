@@ -15,7 +15,7 @@
 import { ref } from 'vue'
 import { Select } from '@hmfw/ant-design'
 
-const value = ref('')
+const value = ref()
 
 const allOptions = [
   { label: '北京', value: 'beijing' },

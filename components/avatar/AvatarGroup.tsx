@@ -10,14 +10,8 @@ const avatarGroupProps = {
   maxCount: { type: Number, default: undefined },
   maxStyle: { type: Object as PropType<AvatarGroupProps['maxStyle']>, default: undefined },
   max: { type: Object as PropType<AvatarGroupMax>, default: undefined },
-  size: {
-    type: [String, Number, Object] as PropType<AvatarSize>,
-    default: undefined,
-  },
-  shape: {
-    type: String as PropType<AvatarShape>,
-    default: undefined,
-  },
+  size: { type: [String, Number, Object] as PropType<AvatarSize>, default: undefined },
+  shape: { type: String as PropType<AvatarShape>, default: undefined },
 } satisfies Record<keyof AvatarGroupProps, any>
 
 export const AvatarGroup = defineComponent({

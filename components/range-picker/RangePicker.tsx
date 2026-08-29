@@ -3,7 +3,6 @@ import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils/cls'
 import { formatDate, parseDate, isSameDay, buildCalendar } from '../_utils/date'
 import { Trigger } from '../_internal/trigger'
-import type { Placement } from '../_internal/trigger'
 import { CalendarOutlined, CloseCircleFilled } from '@hmfw/icons'
 import type { RangeValue, RangePreset, RangePickerClassNames, RangePickerStyles, RangePickerProps } from './types'
 import type { ComponentSize } from '../config-provider'
@@ -35,6 +34,8 @@ export const RangePicker = defineComponent({
   emits: ['update:value', 'change', 'openChange', 'calendarChange'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('date-picker')
+    const selectPfx = usePrefixCls('select')
+
     const locale = useLocale()
     const now = new Date()
 
@@ -149,7 +150,7 @@ export const RangePicker = defineComponent({
       closePanel()
     }
 
-    const clearValue = (e: MouseEvent) => {
+    const handleClear = (e: MouseEvent) => {
       e.stopPropagation()
       innerValue.value = [null, null]
       selecting.value = 'start'
@@ -361,11 +362,70 @@ export const RangePicker = defineComponent({
       </div>
     )
 
+    const renderInput = () => {
+      const showClear = props.allowClear && hasValue.value && !isDisabled.value
+
+      const rangePickerCls = cls(
+        `${prefixCls}`,
+        `${prefixCls}-range`,
+        `${prefixCls}-${props.size}`,
+        {
+          [`${prefixCls}-open`]: isOpen.value,
+          [`${prefixCls}-disabled`]: isDisabled.value,
+          [`${prefixCls}-status-error`]: props.status === 'error',
+          [`${prefixCls}-status-warning`]: props.status === 'warning',
+          [`${selectPfx}-allow-clear`]: showClear,
+        },
+        props.classNames?.root,
+      )
+      return (
+        <div class={rangePickerCls} style={props.styles?.root}>
+          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
+            <input
+              readonly
+              value={displayStart.value}
+              placeholder={placeholders.value[0]}
+              disabled={startDisabled.value}
+              class={cls(`${prefixCls}-input-inner`, props.classNames?.startInput)}
+              style={props.styles?.startInput}
+            />
+            <span
+              class={cls(`${prefixCls}-range-separator`, props.classNames?.separator)}
+              style={props.styles?.separator}
+            >
+              {props.separator}
+            </span>
+            <input
+              readonly
+              value={displayEnd.value}
+              placeholder={placeholders.value[1]}
+              disabled={endDisabled.value}
+              class={cls(`${prefixCls}-input-inner`, props.classNames?.endInput)}
+              style={props.styles?.endInput}
+            />
+
+            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              <CalendarOutlined />
+            </span>
+            {showClear && (
+              <button
+                class={cls(`${selectPfx}-clear`, props.classNames?.clear)}
+                style={props.styles?.clear}
+                onClick={handleClear}
+              >
+                <CloseCircleFilled />
+              </button>
+            )}
+          </span>
+        </div>
+      )
+    }
+
     return () => (
       <Trigger
         open={isOpen.value}
         trigger="click"
-        placement={'bottomLeft' as Placement}
+        placement="bottomLeft"
         disabled={isDisabled.value}
         destroyOnHidden
         popupClass={cls(`${prefixCls}-popup`, `${prefixCls}-range-popup`, props.classNames?.popup)}
@@ -376,60 +436,7 @@ export const RangePicker = defineComponent({
         }}
       >
         {{
-          default: () => (
-            <div
-              class={cls(
-                `${prefixCls}`,
-                `${prefixCls}-range`,
-                `${prefixCls}-${props.size}`,
-                {
-                  [`${prefixCls}-open`]: isOpen.value,
-                  [`${prefixCls}-disabled`]: isDisabled.value,
-                  [`${prefixCls}-status-error`]: props.status === 'error',
-                  [`${prefixCls}-status-warning`]: props.status === 'warning',
-                },
-                props.classNames?.root,
-              )}
-              style={props.styles?.root}
-            >
-              <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
-                <input
-                  readonly
-                  value={displayStart.value}
-                  placeholder={placeholders.value[0]}
-                  disabled={startDisabled.value}
-                  class={cls(`${prefixCls}-input-inner`, props.classNames?.startInput)}
-                  style={props.styles?.startInput}
-                />
-                <span
-                  class={cls(`${prefixCls}-range-separator`, props.classNames?.separator)}
-                  style={props.styles?.separator}
-                >
-                  {props.separator}
-                </span>
-                <input
-                  readonly
-                  value={displayEnd.value}
-                  placeholder={placeholders.value[1]}
-                  disabled={endDisabled.value}
-                  class={cls(`${prefixCls}-input-inner`, props.classNames?.endInput)}
-                  style={props.styles?.endInput}
-                />
-                {props.allowClear && hasValue.value && !isDisabled.value && (
-                  <span
-                    class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
-                    style={props.styles?.clear}
-                    onClick={clearValue}
-                  >
-                    <CloseCircleFilled />
-                  </span>
-                )}
-                <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-                  <CalendarOutlined />
-                </span>
-              </span>
-            </div>
-          ),
+          default: renderInput,
           popup: renderPopup,
         }}
       </Trigger>

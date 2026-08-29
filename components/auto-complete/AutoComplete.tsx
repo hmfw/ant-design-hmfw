@@ -2,8 +2,8 @@ import { defineComponent, ref, computed, watch, onMounted, type PropType, type V
 import { usePrefixCls, useConfig, useLocale } from '../config-provider'
 import { cls } from '../_utils/cls'
 import { Trigger } from '../_internal/trigger'
-import type { Placement } from '../_internal/trigger'
 import { VirtualList } from '../_internal/virtual-list'
+import { CloseCircleFilled } from '@hmfw/icons'
 import type {
   AutoCompleteProps,
   AutoCompleteOption,
@@ -72,6 +72,8 @@ export const AutoComplete = defineComponent({
   setup(props, { slots, emit, attrs, expose }) {
     const prefixCls = usePrefixCls('auto-complete')
     const inputPfx = usePrefixCls('input')
+    const selectPfx = usePrefixCls('select')
+
     const config = useConfig()
     const locale = useLocale()
 
@@ -230,7 +232,7 @@ export const AutoComplete = defineComponent({
       if (typeof props.allowClear === 'object' && props.allowClear.clearIcon) {
         return props.allowClear.clearIcon
       }
-      return '✕'
+      return <CloseCircleFilled />
     }
 
     /** 渲染单个选项，virtual 与非 virtual 路径共用。 */
@@ -259,7 +261,7 @@ export const AutoComplete = defineComponent({
       </div>
     )
 
-    const renderPopup = () => {
+    const renderDropdown = () => {
       const opts = filteredOptions.value
       if (opts.length === 0) {
         return (
@@ -283,6 +285,7 @@ export const AutoComplete = defineComponent({
     }
 
     const renderInput = () => {
+      const showClear = props.allowClear && !!inputValue.value && !props.disabled
       const autoCompleteCls = cls(
         prefixCls,
         `${inputPfx}-affix-wrapper`,
@@ -292,6 +295,7 @@ export const AutoComplete = defineComponent({
           [`${inputPfx}-affix-wrapper-status-error`]: props.status === 'error',
           [`${inputPfx}-affix-wrapper-status-warning`]: props.status === 'warning',
           [`${inputPfx}-affix-wrapper-focused`]: isOpen.value,
+          [`${selectPfx}-allow-clear`]: showClear,
         },
         props.classNames?.root,
       )
@@ -321,19 +325,19 @@ export const AutoComplete = defineComponent({
             onKeydown={handleKeydown}
             autocomplete="off"
           />
-          {!!props.allowClear && inputValue.value && !props.disabled && (
-            <span
-              class={cls(`${inputPfx}-clear-icon`, props.classNames?.clear)}
-              style={props.styles?.clear}
-              onMousedown={handleClear}
-            >
-              {renderClearIcon()}
-            </span>
-          )}
           {slots.suffix && (
             <span class={cls(`${inputPfx}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
               {slots.suffix()}
             </span>
+          )}
+          {showClear && (
+            <button
+              class={cls(`${selectPfx}-clear`, props.classNames?.clear)}
+              style={props.styles?.clear}
+              onMousedown={handleClear}
+            >
+              {renderClearIcon()}
+            </button>
           )}
         </div>
       )
@@ -343,7 +347,7 @@ export const AutoComplete = defineComponent({
       <Trigger
         open={isOpen.value}
         trigger="click"
-        placement={'bottomLeft' as Placement}
+        placement="bottomLeft"
         disabled={props.disabled}
         destroyOnHidden
         matchWidth
@@ -351,7 +355,10 @@ export const AutoComplete = defineComponent({
         popupStyle={props.styles?.dropdown}
         onOpenChange={(v: boolean) => setOpen(v)}
       >
-        {{ default: renderInput, popup: renderPopup }}
+        {{
+          default: renderInput,
+          popup: renderDropdown,
+        }}
       </Trigger>
     )
   },

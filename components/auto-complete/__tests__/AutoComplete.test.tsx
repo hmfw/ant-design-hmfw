@@ -177,7 +177,7 @@ describe('AutoComplete', () => {
       props: { options, allowClear: true, value: 'apple' },
       attachTo: document.body,
     })
-    const clear = wrapper.find('.hmfw-input-clear-icon')
+    const clear = wrapper.find('.hmfw-select-clear')
     expect(clear.exists()).toBe(true)
     await clear.trigger('mousedown')
     expect(wrapper.emitted('clear')).toBeTruthy()
@@ -187,7 +187,7 @@ describe('AutoComplete', () => {
 
   it('does not show clear icon without a value', () => {
     const wrapper = mount(AutoComplete, { props: { options, allowClear: true } })
-    expect(wrapper.find('.hmfw-input-clear-icon').exists()).toBe(false)
+    expect(wrapper.find('.hmfw-select-clear').exists()).toBe(false)
   })
 
   it('emits openChange when the dropdown opens and closes', async () => {
@@ -233,7 +233,7 @@ describe('AutoComplete', () => {
     const wrapper = mount(AutoComplete, {
       props: { options, value: 'apple', allowClear: { clearIcon: 'X' } },
     })
-    expect(wrapper.find('.hmfw-input-clear-icon').text()).toBe('X')
+    expect(wrapper.find('.hmfw-select-clear').text()).toBe('X')
   })
 
   // ----------------------------------------------------------------

@@ -229,7 +229,7 @@ interface SelectClassNames {
   root?: string // 根节点 `div.hmfw-select`
   selector?: string // 选择器容器 `div.hmfw-select-selector`
   item?: string // 已选项 `span.hmfw-select-selection-item`（多选模式下为标签）
-  placeholder?: string // 占位符 `span.hmfw-select-selection-placeholder`
+  placeholder?: string // 占位符 `span.hmfw-select-placeholder`
   arrow?: string // 后缀箭头容器 `div.hmfw-select-arrow`
   clear?: string // 清除按钮 `span.hmfw-select-clear`
   dropdown?: string // 下拉面板 `div.hmfw-select-dropdown`
@@ -242,7 +242,7 @@ interface SelectStyles {
   root?: CSSProperties // 根节点 `div.hmfw-select`
   selector?: CSSProperties // 选择器容器 `div.hmfw-select-selector`
   item?: CSSProperties // 已选项 `span.hmfw-select-selection-item`
-  placeholder?: CSSProperties // 占位符 `span.hmfw-select-selection-placeholder`
+  placeholder?: CSSProperties // 占位符 `span.hmfw-select-placeholder`
   arrow?: CSSProperties // 后缀箭头容器 `div.hmfw-select-arrow`
   clear?: CSSProperties // 清除按钮 `span.hmfw-select-clear`
   dropdown?: CSSProperties // 下拉面板 `div.hmfw-select-dropdown`
@@ -261,7 +261,7 @@ interface SelectStyles {
     <!-- ↑ classNames.selector / styles.selector 应用于此 -->
     <span class="hmfw-select-selection-item">已选项</span>
     <!-- ↑ classNames.item / styles.item 应用于此 -->
-    <span class="hmfw-select-selection-placeholder">占位符</span>
+    <span class="hmfw-select-placeholder">占位符</span>
     <!-- ↑ classNames.placeholder / styles.placeholder 应用于此 -->
   </div>
   <div class="hmfw-select-arrow">▾</div>

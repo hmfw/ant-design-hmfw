@@ -120,6 +120,8 @@ export const TimePicker = defineComponent({
   emits: ['update:value', 'change', 'openChange', 'focus', 'blur'],
   setup(props, { emit, expose }) {
     const prefixCls = usePrefixCls('time-picker')
+    const selectPfx = usePrefixCls('select')
+
     const locale = useLocale()
     const mergedPlaceholder = computed(() => props.placeholder ?? locale.value.TimePicker.placeholder)
     const parsed = parseTime(props.defaultValue ?? props.value)
@@ -249,7 +251,7 @@ export const TimePicker = defineComponent({
       if (!props.needConfirm) confirmTime()
     }
 
-    const clearValue = (e: MouseEvent) => {
+    const handleClear = (e: MouseEvent) => {
       e.stopPropagation()
       innerH.value = 0
       innerM.value = 0
@@ -494,7 +496,7 @@ export const TimePicker = defineComponent({
       )
     }
 
-    const renderPanel = () => (
+    const renderPopup = () => (
       <div ref={panelRef} class={cls(`${prefixCls}-popup`, props.classNames?.popup)} style={props.styles?.popup}>
         <div class={cls(`${prefixCls}-panel`, props.classNames?.panel)} style={props.styles?.panel}>
           <div class={cls(`${prefixCls}-panel-inner`, props.classNames?.panelInner)} style={props.styles?.panelInner}>
@@ -564,6 +566,52 @@ export const TimePicker = defineComponent({
       </div>
     )
 
+    const renderInput = () => {
+      const showClear = props.allowClear && !!displayValue.value && !props.disabled
+
+      const timePickerCls = cls(
+        prefixCls,
+        `${prefixCls}-${props.size}`,
+        `${prefixCls}-${props.variant}`,
+        {
+          [`${prefixCls}-open`]: isOpen.value,
+          [`${prefixCls}-disabled`]: props.disabled,
+          [`${prefixCls}-status-error`]: props.status === 'error',
+          [`${prefixCls}-status-warning`]: props.status === 'warning',
+          [`${selectPfx}-allow-clear`]: showClear,
+        },
+        props.classNames?.root,
+      )
+      return (
+        <div class={timePickerCls} style={props.styles?.root}>
+          <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
+            <input
+              ref={inputRef}
+              readonly
+              placeholder={mergedPlaceholder.value}
+              value={displayValue.value}
+              disabled={props.disabled}
+              class={`${prefixCls}-input-inner`}
+              onFocus={() => emit('focus')}
+              onBlur={() => emit('blur')}
+            />
+            <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+              <ClockCircleOutlined />
+            </span>
+            {showClear && (
+              <button
+                class={cls(`${selectPfx}-clear`, props.classNames?.clear)}
+                style={props.styles?.clear}
+                onClick={handleClear}
+              >
+                <CloseCircleFilled />
+              </button>
+            )}
+          </span>
+        </div>
+      )
+    }
+
     return () => (
       <Trigger
         open={isOpen.value}
@@ -579,49 +627,8 @@ export const TimePicker = defineComponent({
         }}
       >
         {{
-          default: () => (
-            <div
-              class={cls(
-                prefixCls,
-                `${prefixCls}-${props.size}`,
-                `${prefixCls}-${props.variant}`,
-                {
-                  [`${prefixCls}-open`]: isOpen.value,
-                  [`${prefixCls}-disabled`]: props.disabled,
-                  [`${prefixCls}-status-error`]: props.status === 'error',
-                  [`${prefixCls}-status-warning`]: props.status === 'warning',
-                },
-                props.classNames?.root,
-              )}
-              style={props.styles?.root}
-            >
-              <span class={cls(`${prefixCls}-input`, props.classNames?.input)} style={props.styles?.input}>
-                <input
-                  ref={inputRef}
-                  readonly
-                  placeholder={mergedPlaceholder.value}
-                  value={displayValue.value}
-                  disabled={props.disabled}
-                  class={`${prefixCls}-input-inner`}
-                  onFocus={() => emit('focus')}
-                  onBlur={() => emit('blur')}
-                />
-                {props.allowClear && displayValue.value && !props.disabled && (
-                  <span
-                    class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
-                    style={props.styles?.clear}
-                    onClick={clearValue}
-                  >
-                    <CloseCircleFilled />
-                  </span>
-                )}
-                <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-                  <ClockCircleOutlined />
-                </span>
-              </span>
-            </div>
-          ),
-          popup: renderPanel,
+          default: renderInput,
+          popup: renderPopup,
         }}
       </Trigger>
     )

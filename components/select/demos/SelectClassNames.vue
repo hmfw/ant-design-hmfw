@@ -168,7 +168,7 @@ const value8 = ref(undefined)
   border: none !important;
 }
 
-:deep(.custom-selector .hmfw-select-selection-placeholder) {
+:deep(.custom-selector .hmfw-select-placeholder) {
   color: rgba(255, 255, 255, 0.85);
 }
 

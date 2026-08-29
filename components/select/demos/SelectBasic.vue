@@ -1,6 +1,7 @@
 <template>
   <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
     <Select v-model:value="value" :options="options" placeholder="请选择" style="width: 100%" />
+    <Select v-model:value="value" :options="options" :allow-clear="true" placeholder="请选择" style="width: 100%" />
     <Select v-model:value="value2" :options="options" placeholder="禁用状态" disabled style="width: 100%" />
     <p>选中：{{ value }}</p>
   </div>

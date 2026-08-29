@@ -2,18 +2,11 @@ import { defineComponent, onMounted, onUnmounted, computed } from 'vue'
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils/cls'
 import { useAnchorContext } from './context'
-
-export interface AnchorLinkProps {
-  href: string
-  title: string
-  target?: string
-  replace?: boolean
-  targetOffset?: number
-}
+import type { AnchorLinkProps } from './types'
 
 const anchorLinkProps = {
-  href: { type: String, required: true as const },
-  title: { type: String, required: true as const },
+  href: { type: String, required: true, default: '' },
+  title: { type: String, required: true, default: '' },
   target: { type: String, default: undefined },
   replace: { type: Boolean, default: undefined },
   targetOffset: { type: Number, default: undefined },

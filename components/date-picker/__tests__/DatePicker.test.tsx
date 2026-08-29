@@ -51,7 +51,7 @@ describe('DatePicker', () => {
 
   it('shows clear button when value set', () => {
     const wrapper = mount(DatePicker, { props: { value: '2026-05-24', allowClear: true } })
-    expect(wrapper.find('.hmfw-date-picker-clear').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-select-clear').exists()).toBe(true)
   })
 
   it('warning status', () => {
@@ -99,7 +99,7 @@ describe('DatePicker', () => {
 
   it('clears value on clear button click', async () => {
     const wrapper = mount(DatePicker, { props: { value: '2026-05-24', allowClear: true } })
-    await wrapper.find('.hmfw-date-picker-clear').trigger('click')
+    await wrapper.find('.hmfw-select-clear').trigger('click')
     expect(wrapper.emitted('update:value')?.[0]).toEqual([undefined])
   })
 

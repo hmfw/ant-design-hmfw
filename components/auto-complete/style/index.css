@@ -1,4 +1,5 @@
 .hmfw-auto-complete {
+  position: relative;
   display: inline-flex;
   width: 100%;
 }

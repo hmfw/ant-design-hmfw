@@ -238,7 +238,7 @@ export const Avatar = defineComponent({
       }
 
       return (
-        <span ref={avatarRef} class={classes.value} style={{ ...sizeStyle.value, ...props.styles?.root }}>
+        <span ref={avatarRef} class={classes.value} style={[sizeStyle.value, props.styles?.root]}>
           {children}
         </span>
       )

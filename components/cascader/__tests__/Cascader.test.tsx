@@ -120,21 +120,21 @@ describe('Cascader', () => {
     const wrapper = mount(Cascader, {
       props: { options, value: ['zhejiang'], allowClear: true },
     })
-    expect(wrapper.find('.hmfw-cascader-clear').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-select-clear').exists()).toBe(true)
   })
 
   it('no clear when allowClear=false', () => {
     const wrapper = mount(Cascader, {
       props: { options, value: ['zhejiang'], allowClear: false },
     })
-    expect(wrapper.find('.hmfw-cascader-clear').exists()).toBe(false)
+    expect(wrapper.find('.hmfw-select-clear').exists()).toBe(false)
   })
 
   it('emits clear', async () => {
     const wrapper = mount(Cascader, {
       props: { options, value: ['zhejiang'], allowClear: true },
     })
-    await wrapper.find('.hmfw-cascader-clear').trigger('mousedown')
+    await wrapper.find('.hmfw-select-clear').trigger('click')
     expect(wrapper.emitted('clear')).toBeTruthy()
   })
 
@@ -143,9 +143,9 @@ describe('Cascader', () => {
       props: { options, defaultValue: ['zhejiang'], allowClear: true },
     })
     // 通过清除按钮触发内部 change，验证事件签名
-    const clearBtn = wrapper.find('.hmfw-cascader-clear')
+    const clearBtn = wrapper.find('.hmfw-select-clear')
     expect(clearBtn.exists()).toBe(true)
-    await clearBtn.trigger('mousedown')
+    await clearBtn.trigger('click')
     const changeEvents = wrapper.emitted('change')
     expect(changeEvents).toBeTruthy()
     const [value, selectedOptions] = changeEvents![0]

@@ -19,7 +19,7 @@
   flex-wrap: wrap;
   align-items: center;
   min-height: var(--hmfw-control-height);
-  padding: 0 var(--hmfw-padding-xs);
+  padding: 0 30px 0 var(--hmfw-control-padding-horizontal);
   background: var(--hmfw-color-bg-container);
   border: 1px solid var(--hmfw-color-border);
   border-radius: var(--hmfw-border-radius);
@@ -73,12 +73,11 @@
   display: inline-flex;
   align-items: center;
   background: var(--hmfw-color-fill-secondary);
-  border: 1px solid var(--hmfw-color-border-secondary);
   border-radius: var(--hmfw-border-radius-sm);
   padding: 0 4px 0 var(--hmfw-padding-xs);
   gap: 4px;
   font-size: var(--hmfw-font-size-sm);
-  height: 22px;
+  line-height: 22px;
 }
 
 .hmfw-tree-select-selection-item-content {
@@ -88,9 +87,11 @@
 }
 
 .hmfw-tree-select-selection-item-remove {
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
   color: var(--hmfw-color-text-secondary);
-  font-size: var(--hmfw-font-size);
+  font-size: var(--hmfw-font-size-icon);
   transition: color var(--hmfw-motion-duration-mid);
 }
 
@@ -108,7 +109,7 @@
 
 .hmfw-tree-select-arrow {
   position: absolute;
-  right: var(--hmfw-padding-xs);
+  right: var(--hmfw-control-padding-horizontal);
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
@@ -120,49 +121,13 @@
   line-height: 1;
 }
 
-.hmfw-tree-select-arrow-icon {
-  display: inline-block;
-  transition: transform var(--hmfw-motion-duration-mid);
-}
-
-.hmfw-tree-select-arrow-icon-open {
-  transform: rotate(180deg);
-}
-
-.hmfw-tree-select-clear {
-  position: absolute;
-  right: var(--hmfw-padding-xs);
-  top: 50%;
-  transform: translateY(-50%);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  background: var(--hmfw-color-bg-container);
-  border-radius: 50%;
-  color: var(--hmfw-color-text-tertiary);
-  font-size: var(--hmfw-font-size);
-  cursor: pointer;
-  z-index: 1;
-  transition: color var(--hmfw-motion-duration-mid);
-}
-
-.hmfw-tree-select:has(.hmfw-tree-select-clear):hover .hmfw-tree-select-clear {
-  display: inline-flex;
-}
-
-.hmfw-tree-select:has(.hmfw-tree-select-clear):hover .hmfw-tree-select-arrow {
-  display: none;
+.hmfw-select-allow-clear:hover .hmfw-tree-select-arrow {
+  opacity: 0;
 }
 
 /* Dropdown（bg/radius/shadow 由 hmfw-trigger-popup 统一提供） */
 .hmfw-tree-select-dropdown {
   padding: 4px 0;
-}
-
-.hmfw-tree-select-dropdown-list {
-  /* max-height 由组件 listHeight 注入，启用虚拟滚动时使用 */
 }
 
 .hmfw-tree-select-dropdown-list-holder {

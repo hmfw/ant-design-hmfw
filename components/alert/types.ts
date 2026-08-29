@@ -3,6 +3,15 @@ import type { CSSProperties, VNodeChild } from 'vue'
 export type AlertType = 'success' | 'info' | 'warning' | 'error'
 export type AlertVariant = 'outlined' | 'filled'
 
+export type AlertCloseHandler = (e: MouseEvent) => void
+export type AlertAfterCloseHandler = () => void
+
+export interface AlertClosableConfig {
+  closeIcon?: VNodeChild
+  'aria-label'?: string
+}
+export type AlertClosable = boolean | AlertClosableConfig
+
 /** 语义化结构 className */
 export interface AlertClassNames {
   root?: string // 警告提示根容器
@@ -25,44 +34,36 @@ export interface AlertStyles {
   closeIcon?: CSSProperties
 }
 
-/** closable 为对象时的配置（与 AntD v6 对齐） */
-export interface AlertClosableConfig {
-  /** 自定义关闭图标 */
-  closeIcon?: VNodeChild
-  /** 关闭按钮的 aria-label */
-  'aria-label'?: string
-}
-
-export type AlertClosable = boolean | AlertClosableConfig
-
-/** 关闭事件回调 */
-export type AlertCloseHandler = (e: MouseEvent) => void
-
-/** 关闭动画结束后的回调 */
-export type AlertAfterCloseHandler = () => void
-
 export interface AlertProps {
-  type?: AlertType
-  /**
-   * 样式变体
-   * @since AntD v6.4.0
-   */
-  variant?: AlertVariant
   /** 标题内容 */
   title?: string
+  /** 辅助描述文本，与 title 共同构成内容区 */
   description?: string
-  showIcon?: boolean
-  /** 是否可关闭；可传对象自定义 closeIcon 与 aria-label */
-  closable?: AlertClosable
-  /** 自定义图标 */
-  icon?: VNodeChild
+
+  /** 警告提示类型，决定状态色 */
+  type?: AlertType
+  /** 样式变体，@since AntD v6.4.0 */
+  variant?: AlertVariant
+  /** 是否为顶部横幅模式，通常无圆角且背景更深 */
   banner?: boolean
-  /** 自定义操作项 */
+
+  /** 是否显示状态图标 */
+  showIcon?: boolean
+  /** 自定义状态图标，会覆盖默认的状态图标 */
+  icon?: VNodeChild
+
+  /**
+   * 是否可关闭
+   * - `true`: 显示默认关闭按钮
+   * - `false`: 不显示
+   * - 对象: 自定义关闭图标及 aria-label
+   */
+  closable?: AlertClosable
+  /** 自定义操作项，位于内容区右侧（关闭按钮左侧） */
   action?: VNodeChild
-  /** 根元素 role，默认 `alert` */
-  role?: string
-  /** 语义化结构 className */
+
+  /** 语义化结构 className，用于精细化样式定制 */
   classNames?: AlertClassNames
-  /** 语义化结构 style */
+  /** 语义化结构 style，用于精细化样式定制 */
   styles?: AlertStyles
 }

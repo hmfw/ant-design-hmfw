@@ -1,6 +1,6 @@
 import type { CSSProperties, VNode } from 'vue'
 
-export type CalendarMode = 'month' | 'year'
+export type CalendarMode = 'date' | 'month' | 'year'
 
 /**
  * Calendar 组件各部分的自定义类名

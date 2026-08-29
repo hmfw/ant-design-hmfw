@@ -10,6 +10,30 @@
 
 ## 最近版本
 
+## [0.49.3] - 2026-08-29
+
+**🔨 代码优化**：
+
+- **主题**: 新增 `fontSizeIcon` 设计 Token（`fontSizeBase - 2`，默认 12px），控件内清除/移除等小图标统一使用；`controlPaddingHorizontal` 由 12 调整为 11，与 Ant Design 对齐
+- **Select / Cascader / TreeSelect / AutoComplete / DatePicker / RangePicker / TimePicker**: 清除按钮体系统一——各组件清除按钮复用 `.hmfw-select-clear` 结构与 `CloseCircleFilled` 图标（改为 `button` 元素），hover 时清除按钮淡入、后缀图标淡出
+- **Select**: 布局由绝对定位重构为 flex 布局，边框/背景/圆角样式上移至根节点；多选标签移除按钮由 `×` 文本改为 `CloseOutlined` 图标；占位符类名由 `hmfw-select-selection-placeholder` 改为 `hmfw-select-placeholder`；`hmfw-select-allow-clear` 状态类仅在清除按钮可见时挂载
+- **Alert**: 移除 `role` prop，根节点固定 `role="alert"` 与 Ant Design 对齐；关闭动画定时器增加 `onBeforeUnmount` 清理；类型定义按依赖关系重排并补充注释
+- **Calendar / DatePicker**: `CalendarMode` 新增 `'date'` 模式；`cellRender` 回调类型提取为公开的 `CellRender` 供 DatePicker 复用
+- **AnchorLink / Avatar / VirtualList**: props 与样式类型整理（`required` props 补充 `default`、根节点 style 改数组合并、样式对象显式标注 `CSSProperties`）
+
+**📝 文档优化**：
+
+- **Select / TreeSelect / AutoComplete**: demo 补充 `allowClear` 清除示例
+- **UploadDragger**: demo 上传图标由 emoji 改为 `InboxOutlined` 图标
+- **Alert / Select**: 文档 props 表与语义化 DOM 结构同步实际渲染值（移除 `role`、更新占位符与清除按钮类名）
+- **文档站**: 顶部导航间距与激活态样式、markdown 表格边框与内边距微调
+
+**🧪 测试**：
+
+- **Select / Cascader / TreeSelect / AutoComplete / DatePicker / RangePicker**: 清除按钮断言由各组件私有类名统一更新为 `.hmfw-select-clear`
+- **Alert**: 移除 `role` 相关测试用例；子节点遍历增加 `Element` 类型断言
+- 多处测试补齐 `vi` 显式导入与类型断言，与 TS 严格模式一致
+
 ## [0.49.2] - 2026-08-21
 
 **🔨 代码优化**：

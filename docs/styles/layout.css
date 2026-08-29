@@ -91,7 +91,7 @@ body,
 .navbar__nav {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 12px;
   flex: 1;
 }
 
@@ -114,19 +114,7 @@ body,
 .navbar__nav-link.is-active {
   color: var(--doc-c-brand);
   background: var(--doc-c-brand-soft-hover);
-  font-weight: 600;
-}
-
-.navbar__nav-link.is-active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 2px;
-  background: var(--doc-c-brand);
-  border-radius: 2px 2px 0 0;
+  font-weight: 700;
 }
 
 .navbar__social {

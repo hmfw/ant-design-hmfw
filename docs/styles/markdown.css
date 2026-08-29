@@ -237,8 +237,7 @@ h4 > code {
 .markdown-body > table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid var(--doc-c-divider);
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
   margin: 20px 0;
   font-size: 14px;
@@ -252,12 +251,12 @@ h4 > code {
   font-size: 13px;
   white-space: nowrap;
   text-align: left;
-  padding: 14px 16px;
-  border-bottom: 2px solid var(--doc-c-divider);
+  padding: 12px 0 12px 16px;
+  border-bottom: 1px solid var(--doc-c-divider);
 }
 
 .markdown-body > table td {
-  padding: 14px 16px;
+  padding: 12px 0 12px 16px;
   border-bottom: 1px solid var(--doc-c-divider);
   vertical-align: top;
   transition: var(--doc-t-bg);

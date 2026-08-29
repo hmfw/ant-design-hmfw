@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, watch, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils/cls'
-import { CaretRightFilled, CaretDownFilled, DownOutlined } from '@hmfw/icons'
+import { CaretRightFilled, CaretDownFilled, DownOutlined, CloseCircleFilled, CloseOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import { VirtualList } from '../_internal/virtual-list'
@@ -71,7 +71,10 @@ export const TreeSelect = defineComponent({
   emits: ['update:value', 'update:open', 'change', 'search', 'select', 'treeExpand', 'openChange', 'clear'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('tree-select')
+    const selectPfx = usePrefixCls('select')
+
     const locale = useLocale()
+
     // 复用 Select 段文案：TreeSelect 的占位符与空状态语义与 Select 一致
     const mergedPlaceholder = computed(() => props.placeholder ?? locale.value.Select.placeholder)
     const mergedNotFoundContent = computed(() => props.notFoundContent ?? locale.value.Select.notFoundContent)
@@ -450,7 +453,7 @@ export const TreeSelect = defineComponent({
       )
     }
 
-    function clearAll(e: MouseEvent) {
+    function handleClear(e: MouseEvent) {
       e.stopPropagation()
       const empty = isMultiple.value ? [] : undefined
       innerValue.value = empty
@@ -531,7 +534,18 @@ export const TreeSelect = defineComponent({
     }
 
     // ===================== Dropdown Content =====================
-    const renderDropdownContent = (checkedSet: Set<Key>, halfSet: Set<Key>) => {
+    const renderDropdown = () => {
+      let checkedSet = new Set<Key>()
+      let halfSet = new Set<Key>()
+      if (props.treeCheckable && !props.treeCheckStrictly) {
+        const leaves = new Set(selectedValues.value)
+        const result = conductCheck(leaves)
+        checkedSet = result.checked
+        halfSet = result.half
+      } else if (props.treeCheckable) {
+        checkedSet = new Set(selectedValues.value)
+      }
+
       if (flatNodes.value.length === 0) {
         return (
           <div
@@ -561,23 +575,131 @@ export const TreeSelect = defineComponent({
       )
     }
 
-    // ===================== Render =====================
-    return () => {
+    const renderSelector = () => {
       const hasValue = selectedValues.value.length > 0
       const showClear = props.allowClear && hasValue && !props.disabled
 
-      // Compute checked/half for checkable mode
-      let checkedSet = new Set<Key>()
-      let halfSet = new Set<Key>()
-      if (props.treeCheckable && !props.treeCheckStrictly) {
-        const leaves = new Set(selectedValues.value)
-        const result = conductCheck(leaves)
-        checkedSet = result.checked
-        halfSet = result.half
-      } else if (props.treeCheckable) {
-        checkedSet = new Set(selectedValues.value)
-      }
+      const treeSelectCls = cls(
+        prefixCls,
+        `${prefixCls}-${props.size}`,
+        {
+          [`${prefixCls}-open`]: isOpen.value,
+          [`${prefixCls}-disabled`]: props.disabled,
+          [`${selectPfx}-multiple`]: isMultiple.value,
+          [`${prefixCls}-status-error`]: props.status === 'error',
+          [`${prefixCls}-status-warning`]: props.status === 'warning',
+          [`${selectPfx}-allow-clear`]: showClear,
+        },
+        props.classNames?.root,
+      )
 
+      return (
+        <div class={treeSelectCls} style={props.styles?.root}>
+          <div
+            ref={selectorRef}
+            class={cls(`${prefixCls}-selector`, props.classNames?.selector)}
+            style={props.styles?.selector}
+            role="combobox"
+            aria-expanded={isOpen.value}
+            aria-haspopup="tree"
+            aria-disabled={props.disabled || undefined}
+            tabindex={props.disabled ? undefined : 0}
+            onKeydown={onSelectorKeydown}
+          >
+            {isMultiple.value ? (
+              <>
+                {selectedLabels.value.slice(0, visibleTagCount.value).map((label, i) => (
+                  <span
+                    key={selectedValues.value[i]}
+                    class={cls(`${prefixCls}-selection-item`, props.classNames?.item)}
+                    style={props.styles?.item}
+                  >
+                    <span class={`${prefixCls}-selection-item-content`}>{truncateLabel(label)}</span>
+                    <span
+                      class={`${prefixCls}-selection-item-remove`}
+                      onClick={(e) => removeTag(selectedValues.value[i], e)}
+                    >
+                      <CloseOutlined />
+                    </span>
+                  </span>
+                ))}
+                {selectedValues.value.length > visibleTagCount.value && (
+                  <span class={cls(`${prefixCls}-selection-item`, `${prefixCls}-selection-overflow`)}>
+                    <span class={`${prefixCls}-selection-item-content`}>
+                      {renderMaxTagPlaceholder(selectedValues.value.slice(visibleTagCount.value))}
+                    </span>
+                  </span>
+                )}
+                {props.showSearch && (
+                  <input
+                    class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
+                    style={props.styles?.search}
+                    value={searchText.value}
+                    onInput={(e) => {
+                      searchText.value = (e.target as HTMLInputElement).value
+                      emit('search', searchText.value)
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                )}
+                {!hasValue && !searchText.value && (
+                  <span
+                    class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
+                    style={props.styles?.placeholder}
+                  >
+                    {mergedPlaceholder.value}
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                {hasValue ? (
+                  <span class={cls(`${prefixCls}-selection-item`, props.classNames?.item)} style={props.styles?.item}>
+                    {selectedLabels.value[0]}
+                  </span>
+                ) : (
+                  <span
+                    class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
+                    style={props.styles?.placeholder}
+                  >
+                    {mergedPlaceholder.value}
+                  </span>
+                )}
+                {props.showSearch && isOpen.value && (
+                  <input
+                    class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
+                    style={props.styles?.search}
+                    value={searchText.value}
+                    onInput={(e) => {
+                      searchText.value = (e.target as HTMLInputElement).value
+                      emit('search', searchText.value)
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                )}
+              </>
+            )}
+          </div>
+
+          <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow}>
+            <DownOutlined />
+          </div>
+
+          {showClear && (
+            <button
+              class={cls(`${selectPfx}-clear`, props.classNames?.clear)}
+              style={props.styles?.clear}
+              onClick={handleClear}
+            >
+              <CloseCircleFilled />
+            </button>
+          )}
+        </div>
+      )
+    }
+
+    // ===================== Render =====================
+    return () => {
       return (
         <Trigger
           open={isOpen.value}
@@ -594,125 +716,8 @@ export const TreeSelect = defineComponent({
           }}
         >
           {{
-            default: () => (
-              <div
-                class={cls(prefixCls, `${prefixCls}-${props.size}`, props.classNames?.root, {
-                  [`${prefixCls}-open`]: isOpen.value,
-                  [`${prefixCls}-disabled`]: props.disabled,
-                  [`${prefixCls}-status-error`]: props.status === 'error',
-                  [`${prefixCls}-status-warning`]: props.status === 'warning',
-                })}
-                style={props.styles?.root}
-              >
-                <div
-                  ref={selectorRef}
-                  class={cls(`${prefixCls}-selector`, props.classNames?.selector)}
-                  style={props.styles?.selector}
-                  role="combobox"
-                  aria-expanded={isOpen.value}
-                  aria-haspopup="tree"
-                  aria-disabled={props.disabled || undefined}
-                  tabindex={props.disabled ? undefined : 0}
-                  onKeydown={onSelectorKeydown}
-                >
-                  {isMultiple.value ? (
-                    <>
-                      {selectedLabels.value.slice(0, visibleTagCount.value).map((label, i) => (
-                        <span
-                          key={selectedValues.value[i]}
-                          class={cls(`${prefixCls}-selection-item`, props.classNames?.item)}
-                          style={props.styles?.item}
-                        >
-                          <span class={`${prefixCls}-selection-item-content`}>{truncateLabel(label)}</span>
-                          <span
-                            class={`${prefixCls}-selection-item-remove`}
-                            onClick={(e) => removeTag(selectedValues.value[i], e)}
-                          >
-                            ×
-                          </span>
-                        </span>
-                      ))}
-                      {selectedValues.value.length > visibleTagCount.value && (
-                        <span class={cls(`${prefixCls}-selection-item`, `${prefixCls}-selection-overflow`)}>
-                          <span class={`${prefixCls}-selection-item-content`}>
-                            {renderMaxTagPlaceholder(selectedValues.value.slice(visibleTagCount.value))}
-                          </span>
-                        </span>
-                      )}
-                      {props.showSearch && (
-                        <input
-                          class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
-                          style={props.styles?.search}
-                          value={searchText.value}
-                          onInput={(e) => {
-                            searchText.value = (e.target as HTMLInputElement).value
-                            emit('search', searchText.value)
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      )}
-                      {!hasValue && !searchText.value && (
-                        <span
-                          class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
-                          style={props.styles?.placeholder}
-                        >
-                          {mergedPlaceholder.value}
-                        </span>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {hasValue ? (
-                        <span
-                          class={cls(`${prefixCls}-selection-item`, props.classNames?.item)}
-                          style={props.styles?.item}
-                        >
-                          {selectedLabels.value[0]}
-                        </span>
-                      ) : (
-                        <span
-                          class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
-                          style={props.styles?.placeholder}
-                        >
-                          {mergedPlaceholder.value}
-                        </span>
-                      )}
-                      {props.showSearch && isOpen.value && (
-                        <input
-                          class={cls(`${prefixCls}-selection-search`, props.classNames?.search)}
-                          style={props.styles?.search}
-                          value={searchText.value}
-                          onInput={(e) => {
-                            searchText.value = (e.target as HTMLInputElement).value
-                            emit('search', searchText.value)
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      )}
-                    </>
-                  )}
-                </div>
-
-                <div class={cls(`${prefixCls}-arrow`, props.classNames?.arrow)} style={props.styles?.arrow}>
-                  <DownOutlined
-                    class={cls(`${prefixCls}-arrow-icon`, {
-                      [`${prefixCls}-arrow-icon-open`]: isOpen.value,
-                    })}
-                  />
-                </div>
-
-                {showClear && (
-                  <span
-                    class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
-                    style={props.styles?.clear}
-                    onClick={clearAll}
-                  >
-                    ×
-                  </span>
-                )}
-              </div>
-            ),
-            popup: () => renderDropdownContent(checkedSet, halfSet),
+            default: renderSelector,
+            popup: renderDropdown,
           }}
         </Trigger>
       )

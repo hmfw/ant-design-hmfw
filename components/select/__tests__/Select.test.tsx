@@ -28,7 +28,7 @@ describe('Select', () => {
       props: { options, placeholder: 'Choose one' },
       attachTo: document.body,
     })
-    expect(wrapper.find('.hmfw-select-selection-placeholder').text()).toBe('Choose one')
+    expect(wrapper.find('.hmfw-select-placeholder').text()).toBe('Choose one')
     wrapper.unmount()
   })
 
@@ -436,10 +436,10 @@ describe('Select', () => {
       props: { options, value: null },
       attachTo: document.body,
     })
-    expect(wrapper.find('.hmfw-select-selection-placeholder').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-select-placeholder').exists()).toBe(true)
 
     await wrapper.setProps({ value: undefined })
-    expect(wrapper.find('.hmfw-select-selection-placeholder').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-select-placeholder').exists()).toBe(true)
     wrapper.unmount()
   })
 
@@ -500,7 +500,7 @@ describe('Select', () => {
       props: { options, mode: 'multiple', value: [] },
       attachTo: document.body,
     })
-    expect(wrapper.find('.hmfw-select-selection-placeholder').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-select-placeholder').exists()).toBe(true)
     wrapper.unmount()
   })
 

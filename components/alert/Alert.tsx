@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, type PropType, type VNodeChild } from 'vue'
+import { computed, defineComponent, onBeforeUnmount, ref, type PropType, type VNodeChild } from 'vue'
 import { usePrefixCls, useLocale } from '../config-provider'
 import { cls } from '../_utils/cls'
 import { isPlainObject } from '../_utils/is'
@@ -29,7 +29,6 @@ const alertProps = {
   icon: { type: [String, Object, Array, Function] as PropType<VNodeChild>, default: undefined },
   banner: { type: Boolean, default: false },
   action: { type: [String, Object, Array, Function] as PropType<VNodeChild>, default: undefined },
-  role: { type: String, default: 'alert' },
   classNames: { type: Object as PropType<AlertClassNames>, default: undefined },
   styles: { type: Object as PropType<AlertStyles>, default: undefined },
 } satisfies Record<keyof AlertProps, any>
@@ -41,19 +40,18 @@ export const Alert = defineComponent({
   setup(props, { slots, emit }) {
     const prefixCls = usePrefixCls('alert')
     const locale = useLocale()
+
     const closed = ref(false)
     const closing = ref(false)
+    let closeTimer: ReturnType<typeof setTimeout> | null = null
 
     // banner 模式默认为 warning
-    const mergedType = computed<AlertType>(() => {
-      if (props.type !== undefined) return props.type
-      return props.banner ? 'warning' : 'info'
-    })
+    const mergedType = computed<AlertType>(() => props.type ?? (props.banner ? 'warning' : 'info'))
 
     // banner 模式默认显示图标（与 AntD v6 对齐）
     const isShowIcon = computed(() => (props.banner && props.showIcon === undefined ? true : !!props.showIcon))
 
-    const mergedTitle = computed(() => props.title)
+    const hasDesc = computed(() => !!(props.description || slots.description))
 
     // 是否可关闭：closable 传对象即可关闭，boolean 时按其值
     const isClosable = computed(() => {
@@ -63,44 +61,37 @@ export const Alert = defineComponent({
       return false
     })
 
-    // 合并关闭图标：closable.closeIcon > slot > 默认 CloseOutlined
-    const mergedCloseIcon = computed<VNodeChild>(() => {
-      const { closable } = props
-      if (isPlainObject(closable) && closable.closeIcon != null) {
-        return closable.closeIcon as VNodeChild
-      }
-      if (slots.closeIcon) return slots.closeIcon()
-      return undefined
-    })
-
-    const closeAriaLabel = computed(() => {
-      const { closable } = props
-      if (isPlainObject(closable) && typeof closable['aria-label'] === 'string') {
-        return closable['aria-label'] as string
-      }
-      return locale.value.Alert.close
-    })
-
     const handleClose = (e: MouseEvent) => {
       closing.value = true
       emit('close', e)
-      setTimeout(() => {
+      closeTimer = setTimeout(() => {
         closed.value = true
         emit('afterClose')
       }, 300)
     }
 
+    onBeforeUnmount(() => {
+      if (closeTimer) {
+        clearTimeout(closeTimer)
+        closeTimer = null
+      }
+    })
+
     return () => {
       if (closed.value) return null
 
       const type = mergedType.value
-      const hasDesc = !!(props.description || slots.description)
       const IconComp = iconMap[type]
 
-      // 图标内容：icon prop > slot > 默认状态图标
+      // 关闭图标
+      const closeConfig = isPlainObject(props.closable) ? props.closable : {}
+      const closeIconNode = closeConfig.closeIcon ?? slots.closeIcon?.() ?? <CloseOutlined />
+      const closeAriaLabel =
+        typeof closeConfig['aria-label'] === 'string' ? closeConfig['aria-label'] : locale.value.Alert.close
+
+      // 内容合并
       const iconNode = props.icon ?? slots.icon?.() ?? <IconComp />
-      const closeIconNode = mergedCloseIcon.value ?? <CloseOutlined />
-      const titleNode = slots.title?.() ?? mergedTitle.value
+      const titleNode = slots.title?.() ?? props.title
       const actionNode = props.action ?? slots.action?.()
 
       const alertCls = cls(
@@ -108,7 +99,7 @@ export const Alert = defineComponent({
         `${prefixCls}-${type}`,
         `${prefixCls}-${props.variant}`,
         {
-          [`${prefixCls}-with-description`]: hasDesc,
+          [`${prefixCls}-with-description`]: hasDesc.value,
           [`${prefixCls}-banner`]: props.banner,
           [`${prefixCls}-closing`]: closing.value,
           [`${prefixCls}-no-icon`]: !isShowIcon.value,
@@ -118,7 +109,7 @@ export const Alert = defineComponent({
 
       return (
         <div
-          role={props.role}
+          role="alert"
           aria-live={type === 'error' || type === 'warning' ? 'assertive' : 'polite'}
           data-show={!closed.value}
           class={alertCls}
@@ -135,7 +126,7 @@ export const Alert = defineComponent({
                 {titleNode}
               </div>
             )}
-            {hasDesc && (
+            {hasDesc.value && (
               <div
                 class={cls(`${prefixCls}-description`, props.classNames?.description)}
                 style={props.styles?.description}
@@ -155,7 +146,7 @@ export const Alert = defineComponent({
               tabindex={0}
               class={cls(`${prefixCls}-close-icon`, props.classNames?.closeIcon)}
               style={props.styles?.closeIcon}
-              aria-label={closeAriaLabel.value}
+              aria-label={closeAriaLabel}
               onClick={handleClose}
             >
               {closeIconNode}

@@ -87,7 +87,6 @@
 | icon        | 自定义图标（`showIcon` 为 `true` 时有效）                                        | `VNode \| slot`                               | -                                     |
 | closable    | 是否显示关闭按钮，可传对象自定义图标与无障碍标签                                 | `boolean \| { closeIcon?, 'aria-label'? }`    | `false`                               |
 | action      | 自定义操作项                                                                     | `VNode \| slot`                               | -                                     |
-| role        | 根节点 `role` 属性                                                               | `string`                                      | `'alert'`                             |
 | banner      | 是否用作顶部公告                                                                 | `boolean`                                     | `false`                               |
 | classNames  | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AlertClassNames`                             | -                                     |
 | styles      | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AlertStyles`                                 | -                                     |

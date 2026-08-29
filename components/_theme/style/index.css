@@ -92,6 +92,7 @@
   --hmfw-color-bg-text-hover: rgba(0, 0, 0, 0.06);
   --hmfw-color-text-light-solid: #ffffff;
   --hmfw-font-size: 14px;
+  --hmfw-font-size-icon: 12px;
   --hmfw-line-height: 1.5714285714285714;
   --hmfw-font-size-sm: 12px;
   --hmfw-font-size-lg: 16px;
@@ -135,7 +136,7 @@
   --hmfw-control-outline: rgba(22, 119, 255, 0.1);
   --hmfw-color-error-outline: rgba(255, 77, 79, 0.1);
   --hmfw-color-warning-outline: rgba(250, 173, 20, 0.1);
-  --hmfw-control-padding-horizontal: 12px;
+  --hmfw-control-padding-horizontal: 11px;
   --hmfw-control-padding-horizontal-sm: 8px;
   --hmfw-line-width-bold: 2px;
   --hmfw-z-index-base: 0;

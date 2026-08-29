@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, type PropType } from 'vue'
+import { defineComponent, ref, computed, type PropType, CSSProperties } from 'vue'
 import type { VirtualListInstance, VirtualListProps } from './types'
 import { useVirtualScroll } from './useVirtualScroll'
 
@@ -74,31 +74,31 @@ export const VirtualList = defineComponent<VirtualListProps>({
     // ----------------------------------------------------------------
 
     /** 外层容器样式 */
-    const containerStyle = computed(() => ({
+    const containerStyle = computed<CSSProperties>(() => ({
       height: typeof props.height === 'number' ? `${props.height}px` : props.height,
-      overflow: 'auto' as const,
-      position: 'relative' as const,
+      overflow: 'auto',
+      position: 'relative',
     }))
 
     /** 占位容器样式，撑开总高度 */
-    const holderStyle = computed(() => ({
+    const holderStyle = computed<CSSProperties>(() => ({
       height: `${totalHeight.value}px`,
-      position: 'relative' as const,
+      position: 'relative',
     }))
 
     /** 可见项容器样式，通过 translateY 定位 */
-    const itemsStyle = computed(() => ({
+    const itemsStyle = computed<CSSProperties>(() => ({
       transform: `translateY(${offsetY.value}px)`,
-      position: 'absolute' as const,
+      position: 'absolute',
       left: 0,
       right: 0,
       top: 0,
     }))
 
     /** 单项样式 */
-    const itemStyle = computed(() => ({
+    const itemStyle = computed<CSSProperties>(() => ({
       height: `${itemHeight}px`,
-      overflow: 'hidden' as const,
+      overflow: 'hidden',
     }))
 
     // ----------------------------------------------------------------

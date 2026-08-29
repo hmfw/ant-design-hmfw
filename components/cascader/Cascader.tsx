@@ -208,6 +208,8 @@ export const Cascader = defineComponent({
   emits: ['update:value', 'update:open', 'change', 'search', 'clear'],
   setup(props, { emit, attrs, expose }) {
     const prefixCls = usePrefixCls('cascader')
+    const selectPfx = usePrefixCls('select')
+
     const locale = useLocale()
     // 复用 Select 段文案：Cascader 的占位符与空状态语义与 Select 一致
     const mergedPlaceholder = computed(() => props.placeholder ?? locale.value.Select.placeholder)
@@ -697,7 +699,7 @@ export const Cascader = defineComponent({
       )
     }
 
-    const renderDropdownContent = () =>
+    const renderDropdown = () =>
       filteredOptions.value ? (
         renderSearchMenu()
       ) : (
@@ -819,24 +821,47 @@ export const Cascader = defineComponent({
       </>
     )
 
-    // 后缀图标：有值且可清除时显示清除按钮，否则显示箭头
-    const renderSuffix = () => (
-      <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
-        {props.allowClear && currentValue.value.length > 0 && !props.disabled ? (
-          <CloseCircleFilled
-            class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
-            style={props.styles?.clear}
-            onMousedown={handleClear}
-            onClick={(e) => e.stopPropagation()}
-          />
-        ) : (
-          <DownOutlined
-            class={cls(`${prefixCls}-arrow`, { [`${prefixCls}-arrow-open`]: isOpen.value }, props.classNames?.arrow)}
-            style={props.styles?.arrow}
-          />
-        )}
-      </span>
-    )
+    const renderInput = () => {
+      const showClear = props.allowClear && currentValue.value.length > 0 && !props.disabled
+
+      const cascaderCls = cls(
+        prefixCls,
+        `${prefixCls}-${props.size}`,
+        {
+          [`${prefixCls}-open`]: isOpen.value,
+          [`${prefixCls}-disabled`]: props.disabled,
+          [`${prefixCls}-multiple`]: props.multiple,
+          [`${prefixCls}-status-error`]: props.status === 'error',
+          [`${prefixCls}-status-warning`]: props.status === 'warning',
+          [`${selectPfx}-allow-clear`]: showClear,
+        },
+        props.classNames?.root,
+        attrs.class,
+      )
+
+      return (
+        <div ref={triggerRef} class={cascaderCls} style={[props.styles?.root, attrs.style]}>
+          <span class={cls(`${prefixCls}-selector`, props.classNames?.selector)} style={props.styles?.selector}>
+            {props.multiple ? renderMultipleSelection() : renderSingleSelection()}
+          </span>
+          <span class={cls(`${prefixCls}-suffix`, props.classNames?.suffix)} style={props.styles?.suffix}>
+            <DownOutlined
+              class={cls(`${prefixCls}-arrow`, { [`${prefixCls}-arrow-open`]: isOpen.value }, props.classNames?.arrow)}
+              style={props.styles?.arrow}
+            />
+          </span>
+          {showClear && (
+            <button
+              class={cls(`${selectPfx}-clear`, props.classNames?.clear)}
+              style={props.styles?.clear}
+              onClick={handleClear}
+            >
+              <CloseCircleFilled />
+            </button>
+          )}
+        </div>
+      )
+    }
 
     return () => (
       <Trigger
@@ -853,31 +878,8 @@ export const Cascader = defineComponent({
         }}
       >
         {{
-          default: () => (
-            <div
-              ref={triggerRef}
-              class={cls(
-                prefixCls,
-                `${prefixCls}-${props.size}`,
-                {
-                  [`${prefixCls}-open`]: isOpen.value,
-                  [`${prefixCls}-disabled`]: props.disabled,
-                  [`${prefixCls}-multiple`]: props.multiple,
-                  [`${prefixCls}-status-error`]: props.status === 'error',
-                  [`${prefixCls}-status-warning`]: props.status === 'warning',
-                },
-                props.classNames?.root,
-                attrs.class as any,
-              )}
-              style={[props.styles?.root, attrs.style]}
-            >
-              <span class={cls(`${prefixCls}-selector`, props.classNames?.selector)} style={props.styles?.selector}>
-                {props.multiple ? renderMultipleSelection() : renderSingleSelection()}
-              </span>
-              {renderSuffix()}
-            </div>
-          ),
-          popup: renderDropdownContent,
+          default: renderInput,
+          popup: renderDropdown,
         }}
       </Trigger>
     )

@@ -102,21 +102,21 @@ describe('RangePicker', () => {
     const wrapper = mount(RangePicker, {
       props: { value: ['2024-01-01', '2024-01-31'], allowClear: true },
     })
-    expect(wrapper.find('.hmfw-date-picker-clear').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-select-clear').exists()).toBe(true)
   })
 
   it('shows clear button when only one side has value', () => {
     const wrapper = mount(RangePicker, {
       props: { value: ['2024-01-01', null], allowClear: true },
     })
-    expect(wrapper.find('.hmfw-date-picker-clear').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-select-clear').exists()).toBe(true)
   })
 
   it('clears value on clear button click', async () => {
     const wrapper = mount(RangePicker, {
       props: { value: ['2024-01-01', '2024-01-31'], allowClear: true },
     })
-    await wrapper.find('.hmfw-date-picker-clear').trigger('click')
+    await wrapper.find('.hmfw-select-clear').trigger('click')
     expect(wrapper.emitted('change')?.[0]?.[0]).toEqual([null, null])
   })
 

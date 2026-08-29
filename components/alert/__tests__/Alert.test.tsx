@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { h } from 'vue'
 import { Alert } from '../Alert'
 import { nextTick } from 'vue'
@@ -116,16 +116,6 @@ describe('Alert', () => {
     expect(wrapper.find('.hmfw-alert-title').html()).toContain('<strong>')
   })
 
-  it('has role=alert for accessibility by default', () => {
-    const wrapper = mount(Alert, { props: { title: 'msg' } })
-    expect(wrapper.attributes('role')).toBe('alert')
-  })
-
-  it('supports custom role prop', () => {
-    const wrapper = mount(Alert, { props: { title: 'msg', role: 'status' } })
-    expect(wrapper.attributes('role')).toBe('status')
-  })
-
   it('renders custom icon prop', () => {
     const wrapper = mount(Alert, {
       props: { title: 'msg', showIcon: true, icon: h('i', { class: 'my-icon' }) },
@@ -182,7 +172,7 @@ describe('Alert', () => {
         action: h('button', { class: 'act-btn' }, 'undo'),
       },
     })
-    const children = Array.from(wrapper.element.children).map((c) => c.className)
+    const children = Array.from(wrapper.element.children).map((c) => (c as Element).className)
     const actionsIdx = children.findIndex((c) => c.includes('hmfw-alert-actions'))
     const closeIdx = children.findIndex((c) => c.includes('hmfw-alert-close-icon'))
     expect(actionsIdx).toBeGreaterThan(-1)
@@ -221,7 +211,7 @@ describe('Alert', () => {
     const icon = wrapper.find('.hmfw-alert-icon')
     expect(icon.exists()).toBe(true)
     // 图标在 section 之前
-    const children = Array.from(wrapper.element.children).map((c) => c.className)
+    const children = Array.from(wrapper.element.children).map((c) => (c as Element).className)
     const iconIdx = children.findIndex((c) => c.includes('hmfw-alert-icon'))
     const sectionIdx = children.findIndex((c) => c.includes('hmfw-alert-section'))
     expect(iconIdx).toBeLessThan(sectionIdx)
@@ -239,7 +229,7 @@ describe('Alert', () => {
     expect(wrapper.find('.hmfw-alert-actions .desc-act').exists()).toBe(true)
     expect(wrapper.find('.hmfw-alert-close-icon').exists()).toBe(true)
     // action 在 close 之前
-    const children = Array.from(wrapper.element.children).map((c) => c.className)
+    const children = Array.from(wrapper.element.children).map((c) => (c as Element).className)
     const actionsIdx = children.findIndex((c) => c.includes('hmfw-alert-actions'))
     const closeIdx = children.findIndex((c) => c.includes('hmfw-alert-close-icon'))
     expect(actionsIdx).toBeLessThan(closeIdx)

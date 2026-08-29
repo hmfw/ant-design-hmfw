@@ -1,6 +1,12 @@
 <template>
   <div style="width: 300px">
-    <AutoComplete v-model:value="value" :options="options" placeholder="请输入内容" @search="handleSearch" />
+    <AutoComplete
+      v-model:value="value"
+      :options="options"
+      :allow-clear="true"
+      placeholder="请输入内容"
+      @search="handleSearch"
+    />
   </div>
 </template>
 

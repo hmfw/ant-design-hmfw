@@ -1,8 +1,9 @@
 .hmfw-time-picker {
+  position: relative;
   display: inline-flex;
   align-items: center;
   width: 128px;
-  padding: 4px 11px;
+  padding: 4px var(--hmfw-control-padding-horizontal);
   border: 1px solid var(--hmfw-color-border);
   border-radius: var(--hmfw-border-radius);
   background: var(--hmfw-color-bg-container);
@@ -108,43 +109,12 @@
   display: inline-flex;
   align-items: center;
   color: var(--hmfw-color-text-placeholder);
-  font-size: var(--hmfw-font-size);
-  transition: opacity 0.2s;
+  font-size: var(--hmfw-font-size-icon);
+  transition: opacity var(--hmfw-motion-duration-mid) ease;
 }
 
-/* clear 叠加在 suffix 同位置，picker hover 时显示并遮挡 suffix。
-   字号需与 suffix 一致（--hmfw-font-size），否则两个 SVG 宽度不同，右对齐时会露出 suffix 边缘 */
-.hmfw-time-picker-clear {
-  position: absolute;
-  right: 11px;
-  display: inline-flex;
-  align-items: center;
-  background: var(--hmfw-color-bg-container);
-  color: var(--hmfw-color-text-placeholder);
-  font-size: var(--hmfw-font-size);
-  cursor: pointer;
+.hmfw-select-allow-clear:hover .hmfw-time-picker-suffix {
   opacity: 0;
-  pointer-events: none;
-  transition:
-    color 0.2s,
-    opacity 0.2s;
-}
-
-.hmfw-time-picker-clear:hover {
-  color: var(--hmfw-color-text-secondary);
-}
-
-.hmfw-time-picker:hover .hmfw-time-picker-clear {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.hmfw-time-picker-disabled .hmfw-time-picker-clear {
-  display: none;
-}
-
-.hmfw-time-picker-small .hmfw-time-picker-clear {
-  right: var(--hmfw-padding-xs);
 }
 
 .hmfw-time-picker-borderless .hmfw-time-picker-clear,

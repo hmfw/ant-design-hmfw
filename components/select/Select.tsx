@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, watch, nextTick, toRef, type PropType, 
 import { usePrefixCls, useLocale, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils/cls'
 import { VirtualList } from '../_internal/virtual-list'
-import { DownOutlined, LoadingOutlined } from '@hmfw/icons'
+import { CloseCircleFilled, CloseOutlined, DownOutlined, LoadingOutlined } from '@hmfw/icons'
 import { Trigger } from '../_internal/trigger'
 import type { Placement } from '../_internal/trigger'
 import type {
@@ -329,7 +329,7 @@ export const Select = defineComponent({
       emit('deselect', val)
     }
 
-    const clearAll = (e: MouseEvent) => {
+    const handleClear = (e: MouseEvent) => {
       e.stopPropagation()
       const empty = isMultiple.value ? [] : undefined
       updateValue(empty)
@@ -554,7 +554,7 @@ export const Select = defineComponent({
       )
     }
 
-    const renderDropdownContent = () => {
+    const renderDropdown = () => {
       if (filteredOptions.value.length === 0) {
         return (
           <div class={`${prefixCls}-item-empty`}>{props.notFoundContent ?? locale.value.Select.notFoundContent}</div>
@@ -608,7 +608,7 @@ export const Select = defineComponent({
             <span class={`${prefixCls}-selection-item-content`}>{label}</span>
             {!mergedDisabled.value && (
               <span class={`${prefixCls}-selection-item-remove`} onClick={(e) => removeTag(val, e)}>
-                ×
+                <CloseOutlined />
               </span>
             )}
           </span>
@@ -627,10 +627,7 @@ export const Select = defineComponent({
 
       // 占位符与搜索框在多选/单选分支中重复出现，抽取复用
       const renderPlaceholder = () => (
-        <span
-          class={cls(`${prefixCls}-selection-placeholder`, props.classNames?.placeholder)}
-          style={props.styles?.placeholder}
-        >
+        <span class={cls(`${prefixCls}-placeholder`, props.classNames?.placeholder)} style={props.styles?.placeholder}>
           {props.placeholder ?? locale.value.Select.placeholder}
         </span>
       )
@@ -686,7 +683,7 @@ export const Select = defineComponent({
               [`${prefixCls}-loading`]: props.loading,
               [`${prefixCls}-multiple`]: isMultiple.value,
               [`${prefixCls}-status-${props.status}`]: !!props.status,
-              [`${prefixCls}-allow-clear`]: props.allowClear,
+              [`${prefixCls}-allow-clear`]: showClear,
             },
             props.classNames?.root,
           )}
@@ -717,13 +714,13 @@ export const Select = defineComponent({
           </div>
 
           {showClear && (
-            <span
+            <button
               class={cls(`${prefixCls}-clear`, props.classNames?.clear)}
               style={props.styles?.clear}
-              onClick={clearAll}
+              onClick={handleClear}
             >
-              ×
-            </span>
+              <CloseCircleFilled />
+            </button>
           )}
         </div>
       )
@@ -745,7 +742,7 @@ export const Select = defineComponent({
         >
           {{
             default: renderSelector,
-            popup: renderDropdownContent,
+            popup: renderDropdown,
           }}
         </Trigger>
       )
