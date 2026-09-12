@@ -22,7 +22,7 @@ import {
   SwapOutlined,
 } from '@hmfw/icons'
 import { usePanelRef } from '../watermark'
-import { useScrollLock, useOverlayKeyboard } from '../_utils/overlay'
+import { useScrollLock, useOverlayKeyboard } from '../_hooks'
 import type {
   PreviewConfig,
   TransformType,

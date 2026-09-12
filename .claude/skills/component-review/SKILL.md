@@ -87,7 +87,7 @@ description: 组件全面审查 - 从代码质量、API 设计、Demo 覆盖多�
 - `FIXES_SUMMARY.md` - 代码修复总结
 - `DEMO_SUPPLEMENT_SUMMARY.md` - Demo 补充总结
 
-> **文档为临时产物**：本流程生成的 4 份 `.md`（CODE_REVIEW / DEMO_COVERAGE_ANALYSIS / FIXES_SUMMARY / DEMO_SUPPLEMENT_SUMMARY）仅用于本次审查的过程记录与向用户汇报。**验证全部通过后应删除，不提交入库** —— 避免 67 个组件累积数百份报告文档污染仓库。若用户明确要求保留，再单独提交。
+> **文档为临时产物**：本流程生成的 4 份 `.md`（CODE_REVIEW / DEMO_COVERAGE_ANALYSIS / FIXES_SUMMARY / DEMO_SUPPLEMENT_SUMMARY）仅用于本次审查的过程记录与向用户汇报。**验证全部通过后应删除，不提交入库** —— 避免 71 个组件累积数百份报告文档污染仓库。若用户明确要求保留，再单独提交。
 
 ## 必检项（P0）
 
@@ -560,7 +560,7 @@ pnpm typecheck              # 类型检查
 
 ## 为什么需要这个技能
 
-1. **一致性**: 确保 67 个组件遵循相同规范
+1. **一致性**: 确保 71 个组件遵循相同规范
 2. **质量保证**: 系统化发现规范违反和安全隐患
 3. **文档完整性**: 确保每个 API 都有对应演示
 4. **可追溯性**: 生成结构化报告记录问题

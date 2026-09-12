@@ -1,16 +1,47 @@
-# Overlay Hooks
+# 共享 Hooks
 
-弹出层组件（Modal、Drawer、ImagePreview 等）的公共 Hooks，提供统一的交互行为。
+跨组件复用的组合式函数（响应式行为 + 副作用）。**仅库内部使用，不对外导出。**
 
-## 使用场景
+## 目录定位
 
-这些 Hooks 用于弹出层组件，提供：
+| 目录                   | 职责                                   |
+| ---------------------- | -------------------------------------- |
+| `components/_hooks`    | 跨组件共享的 hooks（本目录）           |
+| `components/_utils`    | 跨组件共享的纯函数（无状态、无副作用） |
+| `components/_internal` | 跨组件共享的组件                       |
 
-- 焦点管理（无障碍支持）
-- 滚动锁定（多层弹出层引用计数）
-- 键盘交互（ESC 关闭、方向键导航）
+组件私有的 hooks 留在组件目录内（如 `input/hooks.ts`、`menu/composables/`、`tabs/useKeyboardNav.ts`），不放入本目录。判断标准：**只有一个组件用 → 留在组件内；多个组件用 → 放这里。**
 
 ## API
+
+### useControlledState
+
+统一处理组件的受控 / 非受控双模式，返回内部状态和更新函数。
+
+**参数：**
+
+- `controlledValue: () => T | undefined` - 受控值（来自 props，返回 `undefined` 表示非受控）
+- `defaultValue: T` - 非受控时的默认值
+- `onChange?: (value: T) => void` - 值变化回调（受控与非受控模式都会触发）
+
+**示例：**
+
+```typescript
+import { useControlledState } from '../_hooks'
+
+const [innerOpen, setInnerOpen] = useControlledState(
+  () => props.open,
+  props.defaultOpen ?? false,
+  (value) => emit('update:open', value),
+)
+```
+
+**行为：**
+
+- 受控模式（`controlledValue()` 返回非 `undefined`）：内部状态跟随受控值，`setValue` 只触发 `onChange`
+- 非受控模式：`setValue` 更新内部状态，同时触发 `onChange`
+
+---
 
 ### useFocusTrap
 
@@ -25,7 +56,7 @@
 **示例：**
 
 ```typescript
-import { useFocusTrap } from '../_utils/overlay'
+import { useFocusTrap } from '../_hooks'
 
 const dialogRef = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
@@ -52,7 +83,7 @@ useFocusTrap(dialogRef, isOpen, true)
 **示例：**
 
 ```typescript
-import { useScrollLock } from '../_utils/overlay'
+import { useScrollLock } from '../_hooks'
 
 const isOpen = ref(false)
 useScrollLock(isOpen)
@@ -82,7 +113,7 @@ useScrollLock(isOpen)
 **示例：**
 
 ```typescript
-import { useOverlayKeyboard } from '../_utils/overlay'
+import { useOverlayKeyboard } from '../_hooks'
 
 // Modal/Drawer 场景
 useOverlayKeyboard(isOpen, {
@@ -134,7 +165,7 @@ useOverlayKeyboard(isOpen, {
 
 ```typescript
 import { ref, computed } from 'vue'
-import { useFocusTrap, useScrollLock, useOverlayKeyboard } from '../_utils/overlay'
+import { useFocusTrap, useScrollLock, useOverlayKeyboard } from '../_hooks'
 
 export default defineComponent({
   setup(props, { emit }) {

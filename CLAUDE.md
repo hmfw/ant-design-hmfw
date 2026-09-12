@@ -12,7 +12,7 @@
 
 ### 核心特性
 
-- 🎨 **67 个高质量组件** - 涵盖所有常用场景
+- 🎨 **71 个高质量组件** - 涵盖所有常用场景
 - 💪 **完整 TypeScript 支持** - 所有组件提供完整类型定义
 - 🎨 **语义化 API** - 所有组件支持 classNames/styles 精细化样式控制
 - ⚡ **高性能** - Select/Table 支持虚拟滚动
@@ -22,19 +22,23 @@
 ## 技术栈
 
 - **框架**: Vue 3.5+ | **语言**: TypeScript 5.9+ | **构建**: tsup
-- **测试**: Vitest + @vue/test-utils | **E2E**: Playwright（36 个自动化测试）
+- **测试**: Vitest + @vue/test-utils | **E2E**: Playwright（249 个自动化测试）
 
 ## 项目结构
 
 ```
 ant-design-hmfw/
-├── components/          # 组件库核心（67 个组件，含 demos）
+├── components/          # 组件库核心（71 个组件，含 demos）
 │   ├── button/、input/、...
 │   │   ├── *.tsx       # 组件实现
 │   │   ├── style/      # 组件样式
 │   │   ├── __tests__/  # 单元测试
 │   │   └── demos/      # 文档 & 演示
+│   ├── _internal/      # 跨组件共享组件（trigger、virtual-list 等）
+│   ├── _hooks/         # 跨组件共享 hooks（useScrollLock、useFocusTrap 等）
 │   ├── _theme/         # 设计 Token 系统
+│   ├── _utils/         # 纯函数工具（cls、date、dom 等）
+│   ├── _locale/        # 语言包
 │   ├── index.ts        # 统一导出
 │   └── style.css       # 统一样式
 ├── docs/               # 文档站框架（路由、布局、插件）
@@ -91,6 +95,22 @@ components/button/
     ├── button.md           # 组件文档（路由页面）
     └── ButtonBasic.vue     # 演示组件
 ```
+
+### 跨组件共享代码放置
+
+`components/` 下 `_` 前缀目录按**资源类型**存放跨组件共享资源，均为库内部实现，**不通过 `components/index.ts` 对外导出**：
+
+| 目录         | 存放内容                                                             |
+| ------------ | -------------------------------------------------------------------- |
+| `_internal/` | 共享组件（`trigger`、`virtual-list`、`picker-input`、`time-column`） |
+| `_hooks/`    | 有状态 hooks（响应式状态、DOM 副作用、模块级单例）                   |
+| `_utils/`    | 纯函数（无状态、无副作用）                                           |
+| `_theme/`    | 设计 Token 系统                                                      |
+| `_locale/`   | 语言包                                                               |
+
+**判断标准**：只有一个组件用 → 留在该组件目录内（如 `input/hooks.ts`、`menu/composables/`、`tabs/useKeyboardNav.ts`）；多个组件用 → 放入上表对应目录。
+
+`_hooks` 与 `_utils` 的边界是关键：含 `watch`/`onBeforeUnmount`/DOM 操作/全局计数的放 `_hooks`，纯函数放 `_utils`。共享 hooks 的 API 详见 `components/_hooks/README.md`。
 
 ### 语义化 API
 

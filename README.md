@@ -12,8 +12,8 @@
   <p>
     <img src="https://img.shields.io/badge/Vue-3.5+-4FC08D?style=flat-square&logo=vue.js&logoColor=white" alt="Vue 3.5+">
     <img src="https://img.shields.io/badge/TypeScript-5.9+-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 5.9+">
-    <img src="https://img.shields.io/badge/Tests-1828%20passed-success?style=flat-square" alt="Tests">
-    <img src="https://img.shields.io/badge/Components-68-blue?style=flat-square" alt="68 Components">
+    <img src="https://img.shields.io/badge/Tests-2598%20passed-success?style=flat-square" alt="Tests">
+    <img src="https://img.shields.io/badge/Components-71-blue?style=flat-square" alt="71 Components">
   </p>
 
   <p>
@@ -28,7 +28,7 @@
 
 ## ✨ 特性
 
-- 🎨 **67 个高质量组件** - 涵盖通用、布局、导航、表单、数据展示、反馈等全场景
+- 🎨 **71 个高质量组件** - 涵盖通用、布局、导航、表单、数据展示、反馈等全场景
 - 💪 **完整 TypeScript 支持** - 所有组件提供完整类型定义
 - 🎯 **按需引入** - 支持 Tree Shaking，打包体积最小化
 - 🌍 **国际化** - 内置中英文语言包，支持自定义语言
@@ -36,7 +36,7 @@
 - 🎨 **语义化 API** - 所有组件支持 classNames/styles 精细化样式控制
 - ⚡ **高性能** - Select/Table 支持虚拟滚动，流畅处理大数据
 - 📱 **响应式** - 移动端友好的栅格系统和断点设计
-- ✅ **质量保证** - 1828 个单元测试，代码质量有保障
+- ✅ **质量保证** - 2598 个单元测试，代码质量有保障
 
 ---
 
@@ -192,17 +192,17 @@ const customTheme = {
 
 ## 📦 组件
 
-67 个组件，覆盖所有常用场景：
+71 个组件，覆盖所有常用场景：
 
-| 分类         | 数量 | 包含组件                                                                                                                                                                             |
-| ------------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **通用**     | 3    | Button, Icon, Typography                                                                                                                                                             |
-| **布局**     | 5    | Divider, Flex, Grid, Layout, Space                                                                                                                                                   |
-| **导航**     | 7    | Anchor, Breadcrumb, Dropdown, Menu, Pagination, Steps, Tabs                                                                                                                          |
-| **数据录入** | 18   | AutoComplete, Cascader, Checkbox, ColorPicker, DatePicker, Form, Input, InputNumber, Radio, RangePicker, Rate, Select, Slider, Switch, TimePicker, Transfer, TreeSelect, Upload      |
-| **数据展示** | 18   | Avatar, Badge, Calendar, Card, Carousel, Collapse, Descriptions, Empty, Image, List, Popover, Progress, QRCode, Segmented, Statistic, Table, Tag, Timeline, Tooltip, Tree, Watermark |
-| **反馈**     | 11   | Alert, Drawer, Message, Modal, Notification, Popconfirm, Result, Skeleton, Spin, Tour                                                                                                |
-| **其他**     | 4    | App, BackTop, ConfigProvider, FloatButton                                                                                                                                            |
+| 分类         | 数量 | 包含组件                                                                                                                                                                                  |
+| ------------ | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **通用**     | 4    | Button, FloatButton, Icon, Typography                                                                                                                                                     |
+| **布局**     | 7    | Divider, Flex, Grid, Layout, Masonry, Space, Splitter                                                                                                                                     |
+| **导航**     | 7    | Anchor, Breadcrumb, Dropdown, Menu, Pagination, Steps, Tabs                                                                                                                               |
+| **数据录入** | 19   | AutoComplete, Cascader, Checkbox, ColorPicker, DatePicker, Form, Input, InputNumber, Mentions, Radio, RangePicker, Rate, Select, Slider, Switch, TimePicker, Transfer, TreeSelect, Upload |
+| **数据展示** | 21   | Avatar, Badge, Calendar, Card, Carousel, Collapse, Descriptions, Empty, Image, List, Listy, QRCode, Result, Segmented, Skeleton, Statistic, Table, Tag, Timeline, Tree, Watermark         |
+| **反馈**     | 10   | Alert, Drawer, Message, Modal, Notification, Popconfirm, Popover, Progress, Spin, Tooltip                                                                                                 |
+| **其他**     | 3    | App, ConfigProvider, Tour                                                                                                                                                                 |
 
 > 📖 查看 [完整文档](https://hmfw.github.io/ant-design-hmfw) 了解每个组件的详细用法和 API
 
@@ -243,8 +243,8 @@ app.use(AntDesignHmfw, { locale: zhCN }) // 或 enUS
 
 ## 📊 项目数据
 
-- 🎯 **67 个组件** - 覆盖所有常用场景
-- ✅ **2136 个测试** - 质量有保障
+- 🎯 **71 个组件** - 覆盖所有常用场景
+- ✅ **2598 个测试** - 质量有保障
 - 📦 **12 KB (3 KB Gzip)** - ESM 构建产物体积
 - 🌟 **681 个图标** - 独立图标库 [@hmfw/icons](https://www.npmjs.com/package/@hmfw/icons)
 - 🎨 **完整类型** - 100% TypeScript

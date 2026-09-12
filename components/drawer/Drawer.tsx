@@ -12,11 +12,10 @@ import {
 import { usePrefixCls } from '../config-provider'
 import { cls } from '../_utils/cls'
 import { renderContent } from '../_utils/renderContent'
-import { useControlledState } from '../_utils/useControlledState'
+import { useControlledState, useFocusTrap, useScrollLock, useOverlayKeyboard } from '../_hooks'
 import { CloseOutlined } from '@hmfw/icons'
 import { Skeleton } from '../skeleton'
 import { usePanelRef } from '../watermark'
-import { useFocusTrap, useScrollLock, useOverlayKeyboard } from '../_utils/overlay'
 import type { IconComponent } from '@hmfw/icons'
 import { drawerManager } from './manager'
 import type {
