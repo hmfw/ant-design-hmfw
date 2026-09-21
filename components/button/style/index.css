@@ -17,13 +17,13 @@
   text-decoration: none;
 }
 
-/* Shapes */
-.hmfw-btn-circle {
+/* Shapes（用 .hmfw-btn 叠加提高特异性，避免被后置的尺寸规则覆盖 border-radius） */
+.hmfw-btn.hmfw-btn-circle {
   border-radius: 50%;
   min-width: auto;
 }
 
-.hmfw-btn-round {
+.hmfw-btn.hmfw-btn-round {
   border-radius: 32px;
 }
 

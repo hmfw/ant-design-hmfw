@@ -1,14 +1,14 @@
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+  <Flex gap="small" wrap>
     <Button type="primary" loading> Loading </Button>
     <Button type="primary" size="small" loading> Loading </Button>
     <Button type="primary" :loading="loading" @click="handleClick"> Click me! </Button>
-  </div>
+  </Flex>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button } from '@hmfw/ant-design'
+import { Button, Flex } from '@hmfw/ant-design'
 
 const loading = ref(false)
 

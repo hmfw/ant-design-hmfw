@@ -1,17 +1,17 @@
 <template>
-  <div style="display: flex; flex-direction: column; gap: 16px">
-    <div style="display: flex; gap: 8px">
+  <Flex vertical gap="middle">
+    <Flex gap="small">
       <Button type="primary" :icon="SearchOutlined"> Search </Button>
       <Button type="primary" :icon="SearchOutlined" icon-position="end"> Search </Button>
-    </div>
-    <div style="display: flex; gap: 8px">
+    </Flex>
+    <Flex gap="small">
       <Button type="default" :icon="DownloadOutlined"> Download </Button>
       <Button type="default" :icon="DownloadOutlined" icon-position="end"> Download </Button>
-    </div>
-  </div>
+    </Flex>
+  </Flex>
 </template>
 
 <script setup lang="ts">
-import { Button } from '@hmfw/ant-design'
+import { Button, Flex } from '@hmfw/ant-design'
 import { SearchOutlined, DownloadOutlined } from '@hmfw/icons'
 </script>
