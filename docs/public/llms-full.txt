@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.39.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.50.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -10,6 +10,8 @@
 ## Alert 警告提示
 
 警告提示，展现需要关注的信息。
+
+**何时使用**：当某个页面需要向用户显示警告的信息时；非浮层的静态展现形式，始终展现，不会自动消失，用户可以点击关闭
 
 导入：
 ```ts
@@ -30,7 +32,6 @@ import { Alert } from '@hmfw/ant-design'
 | icon | 自定义图标（`showIcon` 为 `true` 时有效） | `VNode \| slot` | - |
 | closable | 是否显示关闭按钮，可传对象自定义图标与无障碍标签 | `boolean \| { closeIcon?, 'aria-label'? }` | `false` |
 | action | 自定义操作项 | `VNode \| slot` | - |
-| role | 根节点 `role` 属性 | `string` | `'alert'` |
 | banner | 是否用作顶部公告 | `boolean` | `false` |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AlertClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `AlertStyles` | - |
@@ -85,6 +86,8 @@ import { Alert } from '@hmfw/ant-design'
 ## Anchor 锚点
 
 用于跳转到页面指定位置。
+
+**何时使用**：需要展现当前页面上可供跳转的锚点链接，以及快速在锚点之间跳转时；需要固定在页面某个位置时
 
 导入：
 ```ts
@@ -252,6 +255,8 @@ const AnchorLink = Anchor.Link
 
 应用级别的全局上下文，提供 `useApp()` 组合式 API，使子组件可以通过 hooks 调用 `message`、`notification`、`modal`，而无需手动挂载实例。
 
+**何时使用**：需要在组件内部通过 `useApp()` 调用 `message.success()`、`notification.info()`、`modal.confirm()` 等命令式 API 时；替代直接导入全局静态方法，使调用与当前 ConfigProvider 的主题/国际化配置保持一致
+
 导入：
 ```ts
 import { App, useApp } from '@hmfw/ant-design'
@@ -415,7 +420,7 @@ li {
 
 输入框自动完成功能。
 
-**何时使用**：需要自动完成时。
+**何时使用**：需要自动完成时。 需要一个输入框而不是选择器。；需要输入建议/辅助提示。 和 Select 的区别是： AutoComplete 是一个带提示的文本输入框，用户可以自由输入，关键词是辅助输入。；Select 是在限定的可选项中进行选择，关键词是选择。
 
 导入：
 ```ts
@@ -477,7 +482,13 @@ import { AutoComplete } from '@hmfw/ant-design'
 ```vue
 <template>
   <div style="width: 300px">
-    <AutoComplete v-model:value="value" :options="options" placeholder="请输入内容" @search="handleSearch" />
+    <AutoComplete
+      v-model:value="value"
+      :options="options"
+      :allow-clear="true"
+      placeholder="请输入内容"
+      @search="handleSearch"
+    />
   </div>
 </template>
 
@@ -534,6 +545,8 @@ const handleSearch = (searchText: string) => {
 ## Avatar 头像
 
 用来代表用户或事物，支持图片、图标或字符展示。
+
+**何时使用**：需要展示用户头像或事物图标时；需要展示一组用户或事物时
 
 导入：
 ```ts
@@ -617,6 +630,8 @@ import { Avatar } from '@hmfw/ant-design'
 
 图标右上角的圆形徽标数字。
 
+**何时使用**：当需要在图标或文字旁边展示数字或状态时；用于消息提醒、待办事项等场景
+
 导入：
 ```ts
 import { Badge, Ribbon } from '@hmfw/ant-design'
@@ -649,12 +664,144 @@ import { Badge, Ribbon } from '@hmfw/ant-design'
 | color | 缎带颜色（预设色或自定义色值） | `string` | - |
 | placement | 缎带位置 | `'start' \| 'end'` | `'end'` |
 
+### 示例
+
+基本用法 — 简单的徽标展示，包括数字徽标、小红点、尺寸、位置偏移和独立使用等基础功能。当 count 为 0 时，默认不显示（可通过 showZero 控制）。
+
+```vue
+<template>
+  <div style="display: flex; flex-direction: column; gap: 32px">
+    <!-- 基础数字徽标 -->
+    <section>
+      <h4 style="margin-bottom: 12px; font-size: 14px; color: #666">基础数字徽标</h4>
+      <div style="display: flex; gap: 24px">
+        <Badge :count="5">
+          <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+        </Badge>
+        <Badge :count="0" show-zero>
+          <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+        </Badge>
+        <Badge :count="99">
+          <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+        </Badge>
+        <Badge :count="100">
+          <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+        </Badge>
+      </div>
+    </section>
+
+    <!-- 小红点 -->
+    <section>
+      <h4 style="margin-bottom: 12px; font-size: 14px; color: #666">小红点</h4>
+      <div style="display: flex; gap: 24px; align-items: center">
+        <Badge dot>
+          <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+        </Badge>
+        <Badge dot color="#52c41a">
+          <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+        </Badge>
+        <Badge :dot="showDot">
+          <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+        </Badge>
+        <Button size="small" @click="showDot = !showDot">
+          {{ showDot ? '隐藏' : '显示' }}
+        </Button>
+      </div>
+    </section>
+
+    <!-- 尺寸 -->
+    <section>
+      <h4 style="margin-bottom: 12px; font-size: 14px; color: #666">尺寸</h4>
+      <div style="display: flex; gap: 24px; align-items: center">
+        <Badge :count="5" size="small">
+          <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+        </Badge>
+        <Badge :count="5" size="middle">
+          <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+        </Badge>
+        <span style="color: #999; font-size: 12px">（左：small，右：middle）</span>
+      </div>
+    </section>
+
+    <!-- 位置偏移 -->
+    <section>
+      <h4 style="margin-bottom: 12px; font-size: 14px; color: #666">位置偏移 offset</h4>
+      <div style="display: flex; gap: 48px; align-items: center">
+        <div style="text-align: center">
+          <Badge :count="5">
+            <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+          </Badge>
+          <div style="margin-top: 8px; font-size: 12px; color: #999">默认</div>
+        </div>
+        <div style="text-align: center">
+          <Badge :count="5" :offset="[10, 0]">
+            <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+          </Badge>
+          <div style="margin-top: 8px; font-size: 12px; color: #999">右移 10px</div>
+        </div>
+        <div style="text-align: center">
+          <Badge :count="5" :offset="[0, 10]">
+            <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+          </Badge>
+          <div style="margin-top: 8px; font-size: 12px; color: #999">下移 10px</div>
+        </div>
+        <div style="text-align: center">
+          <Badge :count="5" :offset="[-5, 5]">
+            <div style="width: 42px; height: 42px; background: #eee; border-radius: 4px" />
+          </Badge>
+          <div style="margin-top: 8px; font-size: 12px; color: #999">左移 5px<br />下移 5px</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 独立使用（不包裹元素） -->
+    <section>
+      <h4 style="margin-bottom: 12px; font-size: 14px; color: #666">独立使用（不包裹元素）</h4>
+      <div style="display: flex; gap: 16px; align-items: center">
+        <Badge :count="5" />
+        <Badge :count="99" />
+        <Badge dot />
+        <Badge count="new" />
+        <Badge count="hot" color="#ff4d4f" />
+      </div>
+    </section>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Badge, Button } from '@hmfw/ant-design'
+
+const showDot = ref(true)
+</script>
+```
+
+状态点 — 用于表示状态的小圆点。
+
+```vue
+<template>
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <Badge status="success" text="成功" />
+    <Badge status="error" text="错误" />
+    <Badge status="default" text="默认" />
+    <Badge status="processing" text="进行中" />
+    <Badge status="warning" text="警告" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { Badge } from '@hmfw/ant-design'
+</script>
+```
+
 
 ---
 
 ## Breadcrumb 面包屑
 
 显示当前页面在系统层级结构中的位置，并能向上返回。
+
+**何时使用**：当系统拥有超过两级以上的层级结构时；当需要告知用户当前位置时；当需要向上导航的功能时
 
 导入：
 ```ts
@@ -733,7 +880,7 @@ const items = [{ title: '首页', href: '/' }, { title: '应用列表', href: '/
 
 按钮用于开始一个即时操作。
 
-**何时使用**：标记了一个（或封装一组）操作命令，响应用户点击行为，触发相应的业务逻辑。
+**何时使用**：标记了一个（或封装一组）操作命令，响应用户点击行为，触发相应的业务逻辑。 在 @hmfw/ant-design 中我们提供了五种按钮。 🔵 主按钮：用于主行动点，一个操作区域只能有一个主按钮。；⚪️ 默认按钮：用于没有主次之分的一组行动点。；😶 虚线按钮：常用于添加操作。；🔤 文本按钮：用于最次级的行动点。；🔗 链接按钮：一般用于链接，即导航至某位置。 以及四种状态属性与上面配合使用。 ⚠️ 危险：删除/移动/修改权限等危险操作，一般需要二次确认。；👻 幽灵：用于背景色比较复杂的地方，常用在首页/产品页等展示场景。；🚫 禁用：行动点不可用的时候，一般需要文案解释。；🔃 加载中：用于异步操作等待反馈的时候，也可以避免多次提交。
 
 导入：
 ```ts
@@ -777,21 +924,21 @@ import { Button } from '@hmfw/ant-design'
 
 ### 示例
 
-按钮类型 — 按钮有五种类型：主按钮、默认按钮、虚线按钮、文本按钮和链接按钮。
+按钮类型 — 通过 `type` 语法糖，使用预设的按钮样式：主按钮、次按钮、虚线按钮、文本按钮和链接按钮。推荐主按钮在同一个操作区域最多出现一次。
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+  <Flex gap="small" wrap>
     <Button type="primary"> Primary Button </Button>
     <Button>Default Button</Button>
     <Button type="dashed"> Dashed Button </Button>
     <Button type="text"> Text Button </Button>
     <Button type="link"> Link Button </Button>
-  </div>
+  </Flex>
 </template>
 
 <script setup lang="ts">
-import { Button } from '@hmfw/ant-design'
+import { Button, Flex } from '@hmfw/ant-design'
 </script>
 ```
 
@@ -799,15 +946,40 @@ import { Button } from '@hmfw/ant-design'
 
 ```vue
 <template>
-  <div style="display: flex; gap: 8px; align-items: center">
-    <Button type="primary" size="large"> Large </Button>
-    <Button type="primary"> Middle </Button>
-    <Button type="primary" size="small"> Small </Button>
+  <div>
+    <RadioGroup v-model:value="size" :options="sizeOptions" option-type="button" />
+    <Divider orientation="left" plain>预览</Divider>
+    <Flex gap="small" align="flex-start" vertical>
+      <Flex gap="small" wrap>
+        <Button type="primary" :size="size">Primary</Button>
+        <Button :size="size">Default</Button>
+        <Button type="dashed" :size="size">Dashed</Button>
+      </Flex>
+      <Button type="link" :size="size">Link</Button>
+      <Flex gap="small" wrap>
+        <Button type="primary" :icon="DownloadOutlined" :size="size" />
+        <Button type="primary" shape="circle" :icon="DownloadOutlined" :size="size" />
+        <Button type="primary" shape="round" :icon="DownloadOutlined" :size="size" />
+        <Button type="primary" shape="round" :icon="DownloadOutlined" :size="size">Download</Button>
+        <Button type="primary" :icon="DownloadOutlined" :size="size">Download</Button>
+      </Flex>
+    </Flex>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Button } from '@hmfw/ant-design'
+import { ref } from 'vue'
+import { Button, Divider, Flex, RadioGroup } from '@hmfw/ant-design'
+import { DownloadOutlined } from '@hmfw/icons'
+import type { ButtonSize } from '@hmfw/ant-design'
+
+const size = ref<ButtonSize>('large')
+
+const sizeOptions = [
+  { label: 'Large', value: 'large' },
+  { label: 'Middle', value: 'middle' },
+  { label: 'Small', value: 'small' },
+]
 </script>
 ```
 
@@ -920,6 +1092,8 @@ const value = shallowRef<string>()
 
 通用卡片容器。
 
+**何时使用**：最基础的卡片容器，可承载文字、列表、图片、段落等内容；常用于后台概览页面
+
 导入：
 ```ts
 import { Card, CardGrid, CardMeta } from '@hmfw/ant-design'
@@ -1017,6 +1191,8 @@ import { Card } from '@hmfw/ant-design'
 
 旋转播放的幻灯片。
 
+**何时使用**：当有一组平级的内容，需要轮播展示时；常用于图片或卡片轮播
+
 导入：
 ```ts
 import { Carousel } from '@hmfw/ant-design'
@@ -1105,6 +1281,8 @@ import { Carousel } from '@hmfw/ant-design'
 
 级联选择框。
 
+**何时使用**：需要从一组相关联的数据集合进行选择，例如省市区，公司层级，事物分类等。；从一个较大的数据集合中进行选择时，用多级分类进行分隔，方便选择。；比起 Select 组件，可以在同一个浮层中完成选择，有较好的体验。
+
 导入：
 ```ts
 import { Cascader } from '@hmfw/ant-design'
@@ -1116,14 +1294,14 @@ import { Cascader } from '@hmfw/ant-design'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| value(v-model) | 指定选中项 | `string[]` \| `string[][]` (multiple) | - |
-| defaultValue | 默认的选中项 | `string[]` \| `string[][]` (multiple) | `[]` |
+| value(v-model) | 指定选中项 | `(string \| number)[]` \| `(string \| number)[][]` (multiple) | - |
+| defaultValue | 默认的选中项 | `(string \| number)[]` \| `(string \| number)[][]` (multiple) | `[]` |
 | options | 可选项数据源 | `CascaderOption[]` | `[]` |
 | disabled | 禁用 | `boolean` | `false` |
 | placeholder | 输入框占位文本 | `string` | `'请选择'` |
 | allowClear | 是否支持清除 | `boolean` | `true` |
 | size | 输入框大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
-| status | 设置校验状态 | `'error' \| 'warning'` | - |
+| status | 设置校验状态 | `'error' \| 'warning' \| ''` | `''` |
 | expandTrigger | 次级菜单的展开方式 | `'click' \| 'hover'` | `'click'` |
 | multiple | 支持多选 | `boolean` | `false` |
 | showSearch | 在选择框中显示搜索框 | `boolean` | `false` |
@@ -1134,12 +1312,15 @@ import { Cascader } from '@hmfw/ant-design'
 | defaultOpen | 默认展开浮层 | `boolean` | `false` |
 | notFoundContent | 当下拉列表为空时显示的内容 | `string` | `'无匹配结果'` |
 | loadData | 用于动态加载选项 | `(selectedOptions: CascaderOption[]) => void` | - |
-| showCheckedStrategy | 多选时的选中策略 | `'SHOW_PARENT' \| 'SHOW_CHILD'` | `'SHOW_PARENT'` |
+| showCheckedStrategy | 多选时勾选值的折叠策略（对齐 AntD：`value` 存储按策略去重后的勾选集，面板勾选状态渲染时再传导补齐）。`SHOW_PARENT`：父路径被选中或某节点所有子节点选中时折叠为父路径；`SHOW_CHILD`：仅保留叶子路径 | `'SHOW_PARENT' \| 'SHOW_CHILD'` | `'SHOW_PARENT'` |
 | maxTagCount | 最多显示多少个 tag | `number` | - |
 | maxTagPlaceholder | 隐藏 tag 时显示的内容 | `string \| ((omittedValues: string[][]) => string)` | - |
 | maxTagTextLength | 最大显示的 tag 文本长度 | `number` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CascaderClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `CascaderStyles` | - |
+| virtual | 是否启用虚拟滚动（大数据量时开启以提升性能） | `boolean` | `false` |
+| listHeight | 下拉菜单容器高度（px） | `number` | `180` |
+| listItemHeight | 菜单项高度（px） | `number` | `32` |
 
 **CascaderOption**
 
@@ -1291,6 +1472,8 @@ const options = [
 
 多选框。
 
+**何时使用**：在一组可选项中进行多项选择时。；单独使用可以表示两种状态之间的切换，和 switch 类似。区别在于切换 switch 会直接触发状态改变，而 checkbox 一般用于状态标记，需要和提交操作配合。
+
 导入：
 ```ts
 import { Checkbox, CheckboxGroup } from '@hmfw/ant-design'
@@ -1438,6 +1621,8 @@ const colorOptions = [
 
 可以折叠/展开的内容区域。
 
+**何时使用**：对复杂区域进行分组和隐藏，保持页面的整洁；手风琴是一种特殊的折叠面板，只允许单个内容区域展开
+
 导入：
 ```ts
 import { Collapse, CollapsePanel } from '@hmfw/ant-design'
@@ -1559,6 +1744,8 @@ const activeKey = ref(['1'])
 
 提供颜色选取的组件。
 
+**何时使用**：需要用户选择颜色时，如主题配置、图表颜色等
+
 导入：
 ```ts
 import { ColorPicker } from '@hmfw/ant-design'
@@ -1656,6 +1843,8 @@ const color = ref('#1677ff')
 ## ConfigProvider 全局配置
 
 为组件提供统一的全局化配置。
+
+**何时使用**：需要统一配置组件库的主题、国际化、组件尺寸等全局属性时；在应用根组件处包裹，影响所有子组件
 
 导入：
 ```ts
@@ -1845,25 +2034,28 @@ import { DatePicker } from '@hmfw/ant-design'
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| value(v-model) | 日期 | `string` | - |
+| value(v-model) | 日期（week 模式为周字符串，如 `'2026-21'`） | `string` | - |
 | defaultValue | 默认日期 | `string` | - |
-| format | 展示的日期格式 | `string` | `'YYYY-MM-DD'` |
+| format | 展示的日期格式 | `string` | 见下方说明 |
 | disabled | 禁用 | `boolean` | `false` |
 | size | 输入框大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | placeholder | 输入框提示文字 | `string` | - |
 | allowClear | 是否显示清除按钮 | `boolean` | `true` |
-| picker | 设置选择器类型 | `'date' \| 'month' \| 'year' \| 'quarter'` | `'date'` |
+| picker | 设置选择器类型 | `'date' \| 'week' \| 'month' \| 'year' \| 'quarter'` | `'date'` |
 | showTime | 增加时间选择功能，可配置时分秒步长 | `boolean \| { format?, hourStep?, minuteStep?, secondStep? }` | `false` |
 | showToday | 是否展示"今天"按钮 | `boolean` | `true` |
 | showNow | 是否展示"此刻"按钮（优先于 showToday） | `boolean` | `false` |
-| disabledDate | 不可选择的日期 | `(dateStr: string) => boolean` | - |
+| disabledDate | 不可选择的日期 | `(date: Date, info?: { from?: Date, type?: DatePickerMode }) => boolean` | - |
 | status | 设置校验状态 | `'error' \| 'warning'` | - |
 | open | 控制弹层是否展开 | `boolean` | - |
 | defaultOpen | 默认是否展开弹层 | `boolean` | `false` |
 | presets | 预设时间范围快捷选择 | `PresetItem[]` | - |
 | minDate | 最小可选日期 | `string` | - |
 | maxDate | 最大可选日期 | `string` | - |
+| placement | 弹层弹出位置 | `'bottomLeft' \| 'bottomRight' \| 'topLeft' \| 'topRight'` | `'bottomLeft'` |
+| variant | 形态变体 | `'outlined' \| 'borderless' \| 'filled' \| 'underlined'` | `'outlined'` |
 | renderExtraFooter | 在面板中添加额外的页脚 | `() => VNode` | - |
+| cellRender | 自定义日期单元格内容 | `(date: Date, info: CellRenderInfo) => VNode` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DatePickerClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `DatePickerStyles` | - |
 
@@ -1878,10 +2070,12 @@ import { DatePicker } from '@hmfw/ant-design'
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
-| update:value | 日期发生变化的回调 | `(value: string) => void` |
-| change | 日期发生变化的回调 | `(value: string, dateString: string) => void` |
+| update:value | 日期发生变化的回调 | `(value: string \| undefined) => void` |
+| change | 日期发生变化的回调 | `(value: string \| undefined, date: Date \| null) => void` |
 | openChange | 弹出日历和关闭日历的回调 | `(open: boolean) => void` |
-| panelChange | 日历面板切换的回调 | `(value: any, mode: string) => void` |
+| panelChange | 日历面板切换的回调 | `(value: Date \| null, mode: 'date' \| 'month' \| 'year') => void` |
+| focus | 输入框获得焦点回调 | `() => void` |
+| blur | 输入框失去焦点回调 | `() => void` |
 
 ### 示例
 
@@ -1913,6 +2107,7 @@ const handleChange = (value: string) => {
 <template>
   <div style="display: flex; flex-direction: column; gap: 16px; width: 300px">
     <DatePicker v-model:value="date" picker="date" placeholder="选择日期" />
+    <DatePicker v-model:value="week" picker="week" placeholder="选择周" />
     <DatePicker v-model:value="month" picker="month" placeholder="选择月份" />
     <DatePicker v-model:value="quarter" picker="quarter" placeholder="选择季度" />
     <DatePicker v-model:value="year" picker="year" placeholder="选择年份" />
@@ -1924,6 +2119,7 @@ import { ref } from 'vue'
 import { DatePicker } from '@hmfw/ant-design'
 
 const date = ref('')
+const week = ref('')
 const month = ref('')
 const quarter = ref('')
 const year = ref('')
@@ -1936,6 +2132,8 @@ const year = ref('')
 ## Descriptions 描述列表
 
 成组展示多个只读字段。
+
+**何时使用**：常见于详情页的信息展示
 
 导入：
 ```ts
@@ -2036,6 +2234,8 @@ const items = [
 
 区隔内容的分割线。
 
+**何时使用**：对不同章节的文本段落进行分割；对行内文字/链接进行分割，例如表格的操作列
+
 导入：
 ```ts
 import { Divider } from '@hmfw/ant-design'
@@ -2105,6 +2305,8 @@ import { Divider } from '@hmfw/ant-design'
 ## Drawer 抽屉
 
 屏幕边缘滑出的浮层面板。
+
+**何时使用**：当需要一个附加的面板来控制父窗体内容，这个面板在需要时呼出；当需要在当前任务流中插入临时任务，创建或预览附加内容时
 
 导入：
 ```ts
@@ -2223,6 +2425,8 @@ function show(dir: 'top' | 'right' | 'bottom' | 'left') {
 
 向下弹出的列表。
 
+**何时使用**：当页面上的操作命令过多时，用此组件可以收纳操作元素；点击或移入触点，会出现一个下拉菜单，可从中选择操作项
+
 导入：
 ```ts
 import { Dropdown } from '@hmfw/ant-design'
@@ -2335,6 +2539,8 @@ const menu = {
 
 空状态时的展示占位图。
 
+**何时使用**：当目前没有数据时，用于显式的用户提示；初始化场景时的引导创建流程
+
 导入：
 ```ts
 import { Empty, PRESENTED_IMAGE_DEFAULT, PRESENTED_IMAGE_SIMPLE } from '@hmfw/ant-design'
@@ -2386,6 +2592,8 @@ import { Empty } from '@hmfw/ant-design'
 ## Flex 弹性布局
 
 弹性布局。
+
+**何时使用**：需要在水平或垂直方向上排列元素时；需要控制元素间距、对齐方式时；替代传统的 float 布局
 
 导入：
 ```ts
@@ -2463,6 +2671,8 @@ import { Flex } from '@hmfw/ant-design'
 ## FloatButton 悬浮按钮
 
 悬浮于页面上方的按钮。
+
+**何时使用**：用于网站上的全局功能；无论浏览到页面的哪个位置，都可以看见的按钮
 
 导入：
 ```ts
@@ -2584,6 +2794,8 @@ const s = { position: 'static' } as const
 ## Form 表单
 
 高性能表单控件，自带数据域管理。包含数据录入、校验以及对应样式。
+
+**何时使用**：用于创建一个实体或收集信息。；需要对输入的数据类型进行校验时。
 
 导入：
 ```ts
@@ -2744,8 +2956,8 @@ const handleReset = () => {
       <InputNumber v-model:value="formState.age" :min="1" :max="120" placeholder="请输入年龄" style="width: 100%" />
     </FormItem>
     <FormItem :wrapper-col="{ offset: 5, span: 19 }">
-      <Button type="primary" @click="handleValidate"> 校验 </Button>
-      <Button style="margin-left: 8px" @click="handleClear"> 清除校验 </Button>
+      <Button type="primary" @click="handleValidate">校验</Button>
+      <Button style="margin-left: 8px" @click="handleClear">清除校验</Button>
     </FormItem>
   </Form>
 </template>
@@ -2796,9 +3008,11 @@ const handleClear = () => {
 
 24 栅格系统。
 
+**何时使用**：需要对页面进行栅格化布局时；需要响应式布局时；需要等分或按比例分配空间时
+
 导入：
 ```ts
-import { Row, Col } from '@hmfw/ant-design'
+import { Row, Col, useBreakpoint } from '@hmfw/ant-design'
 ```
 
 ### Props
@@ -2818,16 +3032,17 @@ import { Row, Col } from '@hmfw/ant-design'
 | --- | --- | --- | --- |
 | flex | flex 布局属性 | `number \| 'auto' \| 'none' \| string` | - |
 | span | 栅格占位格数，0 时隐藏 | `number \| string` | - |
-| offset | 栅格左侧的间隔格数 | `number` | `0` |
-| order | 栅格顺序 | `number` | `0` |
-| push | 栅格向右移动格数 | `number` | `0` |
-| pull | 栅格向左移动格数 | `number` | `0` |
-| xs | `<576px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| sm | `≥576px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| md | `≥768px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| lg | `≥992px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| xl | `≥1200px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
-| xxl | `≥1600px` 响应式栅格 | `number \| { flex?: FlexType, span?: number, offset?: number, order?: number, push?: number, pull?: number }` | - |
+| offset | 栅格左侧的间隔格数 | `number \| string` | `0` |
+| order | 栅格顺序 | `number \| string` | `0` |
+| push | 栅格向右移动格数 | `number \| string` | `0` |
+| pull | 栅格向左移动格数 | `number \| string` | `0` |
+| xs | `<576px` 响应式栅格 | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | - |
+| sm | `≥576px` 响应式栅格 | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | - |
+| md | `≥768px` 响应式栅格 | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | - |
+| lg | `≥992px` 响应式栅格 | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | - |
+| xl | `≥1200px` 响应式栅格 | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | - |
+| xxl | `≥1600px` 响应式栅格 | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | - |
+| xxxl | `≥1920px` 响应式栅格 | `number \| { flex?: FlexType, span?: number \| string, offset?: number \| string, order?: number \| string, push?: number \| string, pull?: number \| string }` | - |
 
 ### 示例
 
@@ -2922,6 +3137,8 @@ import { Row, Col, Space } from '@hmfw/ant-design'
 ## Icon 图标
 
 语义化的矢量图形，用于展示常用的操作和状态。
+
+**何时使用**：需要展示操作图标时；需要展示状态图标时；需要展示品牌图标时
 
 导入：
 ```ts
@@ -3018,6 +3235,8 @@ import { Space } from '@hmfw/ant-design'
 ## Image 图片
 
 可预览的图片。
+
+**何时使用**：需要展示图片时；加载大图时显示 loading 占位或加载失败容错处理；需要预览图片，支持缩放、旋转、翻转等操作时；多张图片需要组合预览（上一张/下一张）时
 
 导入：
 ```ts
@@ -3156,6 +3375,8 @@ function handleError(message: string) {
 ## Input 输入框
 
 通过鼠标或键盘输入内容，是最基础的表单域的包装。
+
+**何时使用**：需要用户输入表单域内容时。；提供组合型输入框，带搜索的输入框，还可以进行大小选择。
 
 导入：
 ```ts
@@ -3394,6 +3615,8 @@ const value2 = ref<number>(0.5)
 
 协助进行页面级整体布局。
 
+**何时使用**：需要搭建页面整体结构时；需要侧边栏导航布局时；需要顶部导航 + 内容区布局时
+
 导入：
 ```ts
 import { Layout, Header, Footer, Content, Sider } from '@hmfw/ant-design'
@@ -3421,12 +3644,15 @@ import { Layout, Header, Footer, Content, Sider } from '@hmfw/ant-design'
 | trigger | 自定义 trigger，设为 null 时隐藏 trigger。**注意：`trigger` 为 VNode prop 而非 slot**，需通过 `h()` 或 JSX 传入 | `VNode \| null` | - |
 | reverseArrow | 翻转折叠提示箭头的方向 | `boolean` | `false` |
 | zeroWidthTriggerStyle | 指定当 collapsedWidth 为 0 时出现的特殊 trigger 的样式 | `CSSProperties` | - |
+| classNames | 语义化结构 className | `{ root?, body? }` | - |
+| styles | 语义化结构 style | `{ root?: CSSProperties, body?: CSSProperties }` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | collapse | 展开/收起时触发 | `(collapsed: boolean, type: 'clickTrigger' \| 'responsive') => void` |
+| update:collapsed | 折叠状态变化（v-model） | `(collapsed: boolean) => void` |
 | breakpoint | 触发响应式布局断点时触发 | `(broken: boolean) => void` |
 
 ### 示例
@@ -3474,6 +3700,8 @@ import { Layout, Header, Content, Footer, Sider } from '@hmfw/ant-design'
 ## List 列表
 
 通用列表。
+
+**何时使用**：最基础的列表展示，可承载文字、列表、图片、段落，常用于后台数据展示页面
 
 导入：
 ```ts
@@ -3598,9 +3826,347 @@ const renderItem = (item: any) =>
 
 ---
 
+## Listy 虚拟列表
+
+极简的虚拟滚动列表组件，专注性能和简洁性。
+
+**何时使用**：需要展示大量数据（1000+ 条）时，使用虚拟滚动提升性能；需要简单的列表渲染，不需要 pagination、grid 等复杂功能；需要分组展示数据并支持粘性标题
+
+导入：
+```ts
+import { Listy } from '@hmfw/ant-design'
+```
+
+### Props
+
+**Listy Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| data | 数据源 | `T[]` | - |
+| groups | 分组数据源（与 data 互斥） | `ListyGroupItem[]` | - |
+| children | 渲染函数 | `(item: T, index: number) => VNode` | - |
+| height | 容器高度（必需） | `number \| string` | - |
+| virtual | 是否启用虚拟滚动 | `boolean` | `false` |
+| itemHeight | 虚拟滚动模式下的项高度（px） | `number` | `40` |
+| itemKey | 数据项唯一键提取函数 | `string \| ((item: T, index: number) => Key)` | - |
+| prefixCls | 自定义前缀 | `string` | `'hmfw-listy'` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ListyClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ListyStyles` | - |
+| onScroll | 滚动事件 | `(event: Event) => void` | - |
+
+**ListyGroupItem**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| group | 分组标题 | `string \| VNode` | - |
+| items | 分组数据 | `T[]` | - |
+| sticky | 分组是否粘性定位 | `boolean` | `true` |
+
+**ListyScrollToConfig**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| index | 目标索引 | `number` | - |
+| align | 对齐方式 | `'top' \| 'bottom' \| 'auto'` | `'auto'` |
+| offset | 偏移量 | `number` | `0` |
+
+### 示例
+
+基础用法 — 最简单的列表展示。
+
+```vue
+<template>
+  <Listy :data="data" :height="300" :children="renderItem" />
+</template>
+
+<script setup lang="tsx">
+import { Listy } from '@hmfw/ant-design'
+
+const data = Array.from({ length: 50 }, (_, i) => ({
+  id: i + 1,
+  title: `列表项 ${i + 1}`,
+  content: `这是第 ${i + 1} 项的内容描述`,
+}))
+
+const renderItem = (item: any) => (
+  <div style={{ padding: '8px 0' }}>
+    <div style={{ fontWeight: 500 }}>{item.title}</div>
+    <div style={{ color: '#666', fontSize: '14px' }}>{item.content}</div>
+  </div>
+)
+</script>
+```
+
+虚拟滚动 — 通过 `virtual` 属性启用虚拟滚动，可流畅渲染大量数据。
+
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px"><strong>虚拟滚动模式</strong> - 10000 条数据，流畅滚动</div>
+    <Listy :data="data" :height="400" :virtual="true" :children="renderItem" :item-key="getKey" />
+  </div>
+</template>
+
+<script setup lang="tsx">
+import { Listy } from '@hmfw/ant-design'
+
+const data = Array.from({ length: 10000 }, (_, i) => ({
+  id: i + 1,
+  title: `列表项 ${i + 1}`,
+  content: `这是第 ${i + 1} 项的内容描述`,
+}))
+
+const getKey = (item: any) => item.id
+
+const renderItem = (item: any, index: number) => (
+  <div style={{ padding: '4px 0' }}>
+    <div style={{ fontWeight: 500, color: '#1890ff' }}>
+      #{index + 1} {item.title}
+    </div>
+    <div style={{ color: '#999', fontSize: '13px' }}>{item.content}</div>
+  </div>
+)
+</script>
+```
+
+
+---
+
+## Masonry 瀑布流
+
+瀑布流布局组件，用于展示不同高度的内容。
+
+**何时使用**：展示不规则高度的图片或卡片时；需要按照列数均匀分布内容时；需要响应式调整列数时 瀑布流布局通过贪心算法将每个项目放置在当前最短的列中，实现视觉上的平衡和美观。
+
+导入：
+```ts
+import { default } from '@hmfw/ant-design'
+```
+
+### Props
+
+**Masonry Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| items | 瀑布流项数据 | `MasonryItemType[]` | `[]` |
+| columns | 列数，支持固定值或响应式配置 | `number \| Partial<Record<Breakpoint, number>>` | `3` |
+| gutter | 项目间距，支持单值或 `[水平间距, 垂直间距]` | `number \| [number, number]` | `0` |
+| fresh | 是否持续监听子项尺寸变化 | `boolean` | `false` |
+| prefixCls | 自定义类名前缀 | `string` | `'hmfw-masonry'` |
+| className | 根元素类名 | `string` | - |
+| style | 根元素样式 | `CSSProperties` | - |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MasonryClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MasonryStyles` | - |
+
+**MasonryItemType**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| key | 唯一标识 | `string \| number` | - |
+| data | 自定义存储数据 | `any` | - |
+| column | 预指定所在列（可选） | `number` | - |
+| height | 预设高度（可选） | `number` | - |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| layoutChange | 布局变化时触发 | `(sortInfo: { key: string \| number; column: number }[]) => void` |
+
+### Slots
+
+| 插槽名 | 说明 |
+| --- | --- |
+| default | 自定义项目渲染 |
+
+### 示例
+
+基础用法 — 最简单的用法，通过 `items` 传入数据，通过默认插槽渲染每个项目。
+
+```vue
+<template>
+  <Masonry :columns="4" :gutter="16" :items="items">
+    <template #default="{ item, index }">
+      <Card size="small" :style="{ height: item + 'px' }">
+        {{ index + 1 }}
+      </Card>
+    </template>
+  </Masonry>
+</template>
+
+<script setup lang="ts">
+import { Masonry, Card } from '@hmfw/ant-design'
+import type { MasonryItemType } from '@hmfw/ant-design'
+
+const heights = [150, 50, 90, 70, 110, 150, 130, 80, 50, 90, 100, 150, 60, 50, 80]
+
+const items: MasonryItemType<number>[] = heights.map((height, index) => ({
+  key: `item-${index}`,
+  data: height,
+}))
+</script>
+```
+
+响应式列数 — 通过 `columns` 设置响应式列数，支持 `xs`、`sm`、`md`、`lg`、`xl`、`xxl`、`xxxl` 七个断点。
+
+```vue
+<template>
+  <Masonry :columns="{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }" :gutter="16" :items="items">
+    <template #default="{ item, index }">
+      <Card size="small" :style="{ height: item + 'px' }">
+        {{ index + 1 }}
+      </Card>
+    </template>
+  </Masonry>
+</template>
+
+<script setup lang="ts">
+import { Masonry, Card } from '@hmfw/ant-design'
+import type { MasonryItemType } from '@hmfw/ant-design'
+
+const heights = [150, 50, 90, 70, 110, 150, 130, 80, 50, 90, 100, 150, 60, 50, 80, 120, 70, 90]
+
+const items: MasonryItemType<number>[] = heights.map((height, index) => ({
+  key: `item-${index}`,
+  data: height,
+}))
+</script>
+```
+
+
+---
+
+## Mentions 提及
+
+提及组件，用于在文本输入中 @ 用户或实体。
+
+**何时使用**：在评论、聊天等场景中，需要提及某些用户或实体时使用。 在 @hmfw/ant-design 中我们提供了以下特性： 多前缀支持：支持自定义触发字符（@、#、$ 等）。；异步加载：支持远程搜索和动态加载选项。；虚拟滚动：内置虚拟滚动，轻松处理大量选项。；自动高度：支持根据内容自动调整高度。；完整状态：支持禁用、只读、错误、警告等状态。
+
+导入：
+```ts
+import { Mentions } from '@hmfw/ant-design'
+```
+
+### Props
+
+**Mentions Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| value | 输入框的值 | `string` | - |
+| options | 提及选项 | `MentionOption[]` | `[]` |
+| prefix | 触发字符 | `string \| string[]` | `'@'` |
+| split | 选项之间的分隔符 | `string` | `' '` |
+| placeholder | 输入框占位文本 | `string` | - |
+| disabled | 是否禁用 | `boolean` | `false` |
+| readOnly | 是否只读 | `boolean` | `false` |
+| allowClear | 是否显示清除按钮 | `boolean` | `false` |
+| autoSize | 自适应内容高度 | `boolean \| { minRows?: number; maxRows?: number }` | `false` |
+| rows | 输入框行数 | `number` | `1` |
+| loading | 加载状态 | `boolean` | `false` |
+| notFoundContent | 无匹配项时的内容 | `string` | `'无匹配项'` |
+| filterOption | 自定义过滤逻辑 | `(input: string, option: MentionOption) => boolean` | - |
+| status | 设置校验状态 | `'error' \| 'warning'` | - |
+| size | 输入框大小 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| placement | 弹出层位置 | `'top' \| 'bottom'` | `'bottom'` |
+| virtual | 是否使用虚拟滚动 | `boolean` | `false` |
+| listHeight | 下拉列表高度（虚拟滚动时生效） | `number` | `250` |
+| listItemHeight | 下拉列表项高度（虚拟滚动时生效） | `number` | `32` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MentionSemanticClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `MentionSemanticStyles` | - |
+
+**MentionOption**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| value | 选项唯一标识 | `string` | - |
+| label | 选项显示文本 | `string` | - |
+| disabled | 是否禁用该选项 | `boolean` | `false` |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| change | 输入框内容变化时的回调 | `(value: string) => void` |
+| search | 搜索时的回调 | `(text: string, prefix: string) => void` |
+| select | 选中选项时的回调 | `(option: MentionOption, prefix: string) => void` |
+| openChange | 弹出层显示隐藏时的回调 | `(open: boolean) => void` |
+| focus | 获得焦点时的回调 | `(e: FocusEvent) => void` |
+| blur | 失去焦点时的回调 | `(e: FocusEvent) => void` |
+| clear | 点击清除按钮时的回调 | `() => void` |
+
+### 示例
+
+基本使用 — 基础的提及用法，支持键盘操作。
+
+```vue
+<template>
+  <Mentions v-model:value="value" :options="options" placeholder="输入 @ 来提及某人" />
+  <div style="margin-top: 16px">
+    <div style="color: rgba(0, 0, 0, 0.45); font-size: 14px">当前值：</div>
+    <div style="margin-top: 8px">{{ value || '(空)' }}</div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Mentions } from '@hmfw/ant-design'
+
+const value = ref('')
+const options = [
+  { value: 'alice', label: 'Alice' },
+  { value: 'bob', label: 'Bob' },
+  { value: 'charlie', label: 'Charlie' },
+  { value: 'dave', label: 'Dave' },
+  { value: 'eve', label: 'Eve' },
+]
+</script>
+```
+
+尺寸 — 三种大小的提及框。
+
+```vue
+<template>
+  <Space direction="vertical" style="width: 100%">
+    <div>
+      <div style="margin-bottom: 8px; color: rgba(0, 0, 0, 0.85)">大尺寸</div>
+      <Mentions :options="options" size="large" placeholder="大尺寸" />
+    </div>
+
+    <div>
+      <div style="margin-bottom: 8px; color: rgba(0, 0, 0, 0.85)">中等尺寸（默认）</div>
+      <Mentions :options="options" size="middle" placeholder="中等尺寸（默认）" />
+    </div>
+
+    <div>
+      <div style="margin-bottom: 8px; color: rgba(0, 0, 0, 0.85)">小尺寸</div>
+      <Mentions :options="options" size="small" placeholder="小尺寸" />
+    </div>
+  </Space>
+</template>
+
+<script setup lang="ts">
+import { Space, Mentions } from '@hmfw/ant-design'
+
+const options = [
+  { value: 'alice', label: 'Alice' },
+  { value: 'bob', label: 'Bob' },
+  { value: 'charlie', label: 'Charlie' },
+  { value: 'dave', label: 'Dave' },
+]
+</script>
+```
+
+
+---
+
 ## Menu 导航菜单
 
 为页面和功能提供导航的菜单列表。
+
+**何时使用**：需要展示一个系统功能菜单时；需要展示多级导航时；需要顶部导航或侧边导航时
 
 导入：
 ```ts
@@ -3761,6 +4327,8 @@ const onOpenChange = (keys: string[]) => {
 
 全局展示操作反馈信息。
 
+**何时使用**：可提供成功、警告和错误等反馈信息；顶部居中显示并自动消失，是一种不打断用户操作的轻量级提示方式
+
 导入：
 ```ts
 import { message } from '@hmfw/ant-design'
@@ -3880,6 +4448,8 @@ function showWithCallback() {
 ## Modal 对话框
 
 模态对话框。
+
+**何时使用**：需要用户处理事务，又不希望跳转页面以致打断工作流程时，可以使用 Modal 在当前页面正中打开一个浮层，承载相应的操作。；需要一个简洁的确认框询问用户时，可以使用静态方法 `Modal.confirm()` / `Modal.info()` / `Modal.success()` / `Modal.error()` / `Modal.warning()`。
 
 导入：
 ```ts
@@ -4022,6 +4592,8 @@ function handleOk() {
 
 全局展示通知提醒信息。
 
+**何时使用**：在系统四个角显示通知提醒信息；系统主动推送的消息，内容较为复杂时使用；较为复杂的通知内容
+
 导入：
 ```ts
 import { notification } from '@hmfw/ant-design'
@@ -4160,6 +4732,8 @@ function openNeverClose() {
 
 采用分页的形式分隔长列表，每次只加载一个页面。
 
+**何时使用**：当加载/渲染所有数据将花费很多时间时；可切换页码浏览数据
+
 导入：
 ```ts
 import { Pagination } from '@hmfw/ant-design'
@@ -4259,6 +4833,8 @@ const onShowSizeChange = (cur: number, size: number) => {
 ## Popconfirm 气泡确认框
 
 点击元素，弹出气泡式的确认框。
+
+**何时使用**：目标元素的操作需要用户进一步的确认时，在目标元素附近弹出浮层提示，询问用户；和 confirm 弹出的全屏居中模态对话框相比，交互形式更轻量
 
 导入：
 ```ts
@@ -4362,6 +4938,8 @@ function onConfirm() {
 
 点击/鼠标移入元素，弹出气泡式的卡片浮层。
 
+**何时使用**：当目标元素有进一步的描述和相关操作时，可以收纳到卡片中，根据用户的操作行为进行展现；和 Tooltip 的区别是，用户可以对浮层上的元素进行操作，因此它可以承载更复杂的内容，比如链接或按钮等
+
 导入：
 ```ts
 import { Popover, PopoverPurePanel } from '@hmfw/ant-design'
@@ -4446,6 +5024,8 @@ import { Popover, Button } from '@hmfw/ant-design'
 
 展示操作的当前进度。
 
+**何时使用**：在操作需要较长时间才能完成时，为用户显示该操作的当前进度和状态；当操作会打断当前界面，或者需要在后台运行，且耗时可能超过 2 秒时；当需要显示一个操作完成的百分比时
+
 导入：
 ```ts
 import { Progress } from '@hmfw/ant-design'
@@ -4519,6 +5099,8 @@ import { Progress } from '@hmfw/ant-design'
 
 生成二维码。
 
+**何时使用**：当需要将链接转换成为二维码时使用
+
 导入：
 ```ts
 import { QRCode } from '@hmfw/ant-design'
@@ -4540,9 +5122,8 @@ import { QRCode } from '@hmfw/ant-design'
 | icon | 二维码中图片的地址 | `string` | - |
 | iconSize | 二维码中图片的大小 | `number \| { width: number; height: number }` | `40` |
 | bordered | 是否有边框 | `boolean` | `true` |
-| marginSize | SVG 类型二维码的边距 | `number` | - |
+| marginSize | 留白（安静区）大小（单位为模块数），`0` 表示无留白 | `number` | `0` |
 | statusRender | 自定义状态渲染函数 | `(info: StatusRenderInfo) => VNode \| null` | - |
-| onRefresh | 点击刷新的回调 | `() => void` | - |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `QRCodeClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `QRCodeStyles` | - |
 
@@ -4551,7 +5132,14 @@ import { QRCode } from '@hmfw/ant-design'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | status | 当前状态 | `'expired' \| 'loading' \| 'scanned'` |  |
+| locale | 当前语言包 | `Locale['QRCode']` |  |
 | onRefresh | 刷新回调 | `() => void \| undefined` |  |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| refresh | 点击刷新的回调 |  |
 
 ### 示例
 
@@ -4588,6 +5176,8 @@ import { QRCode } from '@hmfw/ant-design'
 ## Radio 单选框
 
 单选框。
+
+**何时使用**：用于在多个备选项中选中单个状态。；和 Select 的区别是，Radio 所有选项默认可见，方便用户在比较中选择，因此选项不宜过多。
 
 导入：
 ```ts
@@ -4712,6 +5302,8 @@ const options = [
 
 日期范围选择器。
 
+**何时使用**：需要选择一段时间范围时，如查询时间区间、预订日期等
+
 导入：
 ```ts
 import { RangePicker } from '@hmfw/ant-design'
@@ -4809,6 +5401,8 @@ function onChange(value: RangeValue) {
 
 评分组件。
 
+**何时使用**：对评价进行展示。；对事物进行快速的评级操作。
+
 导入：
 ```ts
 import { Rate } from '@hmfw/ant-design'
@@ -4901,6 +5495,8 @@ const value2 = ref(3.5)
 
 用于反馈一系列操作任务的处理结果。
 
+**何时使用**：当有重要操作需告知用户处理结果，且反馈内容较为复杂时使用
+
 导入：
 ```ts
 import { Result } from '@hmfw/ant-design'
@@ -4977,6 +5573,8 @@ function onRetry() {
 ## Segmented 分段控制器
 
 分段控制器。
+
+**何时使用**：用于展示多个选项并允许用户选择其中单个选项；当切换选中选项时,关联区域的内容会发生变化
 
 导入：
 ```ts
@@ -5089,6 +5687,8 @@ const onChange = (val: SegmentedValue) => {
 
 下拉选择器。
 
+**何时使用**：弹出一个下拉菜单给用户选择操作，用于代替原生的选择器，或者需要一个更优雅的多选器时。；当选项少时（少于 5 项），建议直接将选项平铺，使用 Radio 是更好的选择。
+
 导入：
 ```ts
 import { Select } from '@hmfw/ant-design'
@@ -5179,6 +5779,7 @@ import { Select } from '@hmfw/ant-design'
 <template>
   <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px">
     <Select v-model:value="value" :options="options" placeholder="请选择" style="width: 100%" />
+    <Select v-model:value="value" :options="options" :allow-clear="true" placeholder="请选择" style="width: 100%" />
     <Select v-model:value="value2" :options="options" placeholder="禁用状态" disabled style="width: 100%" />
     <p>选中：{{ value }}</p>
   </div>
@@ -5247,6 +5848,8 @@ const options = [
 ## Skeleton 骨架屏
 
 在需要等待加载内容的位置提供一个占位图形组合。
+
+**何时使用**：网络较慢，需要长时间等待加载处理的情况下；图文信息内容较多的列表/卡片中；只在第一次加载数据的时候使用
 
 导入：
 ```ts
@@ -5369,6 +5972,8 @@ import { Skeleton } from '@hmfw/ant-design'
 
 滑动型输入器，展示当前值和可选范围。
 
+**何时使用**：当用户需要在数值区间/自定义区间内进行选择时，可为连续或离散值。；当用户需要自定义数值范围时。；适合于对数值不太精确的场景。
+
 导入：
 ```ts
 import { Slider } from '@hmfw/ant-design'
@@ -5464,6 +6069,8 @@ const rangeValue2 = ref<[number, number]>([20, 60])
 
 设置组件之间的间距。
 
+**何时使用**：避免组件紧贴在一起，拉开统一的空间；适合行内元素的水平间距；可以设置各种水平对齐方式
+
 导入：
 ```ts
 import { Space } from '@hmfw/ant-design'
@@ -5476,8 +6083,9 @@ import { Space } from '@hmfw/ant-design'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | size | 间距大小，数组形式表示 `[水平, 垂直]` | `'small' \| 'middle' \| 'large' \| number \| [number, number]` | `'small'` |
-| direction | 间距方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| vertical | `direction="vertical"` 的简写 | `boolean` | `false` |
+| orientation | 间距方向（推荐使用，优先级高于 direction） | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| direction | 间距方向（兼容旧版，推荐使用 orientation） | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| vertical | `orientation="vertical"` 的简写 | `boolean` | `false` |
 | align | 对齐方式 | `'start' \| 'end' \| 'center' \| 'baseline'` | - |
 | wrap | 是否自动换行，仅水平方向有效 | `boolean` | `false` |
 | separator | 设置分隔符 | `VNode \| string` | - |
@@ -5524,6 +6132,8 @@ import { Space, Button } from '@hmfw/ant-design'
 ## Spin 加载中
 
 用于页面和区块的加载中状态。
+
+**何时使用**：页面局部处于等待异步数据或正在渲染过程时，合适的加载动效会有效缓解用户的焦虑
 
 导入：
 ```ts
@@ -5579,9 +6189,134 @@ import { Spin } from '@hmfw/ant-design'
 
 ---
 
+## Splitter 分割面板
+
+分割面板用于将页面或容器分成多个可调整大小的区域。
+
+**何时使用**：需要将页面或容器分成多个可调整的区域。；需要提供可折叠的侧边栏或面板。；需要指定区域的最大最小宽高时。
+
+导入：
+```ts
+import { default } from '@hmfw/ant-design'
+```
+
+### Props
+
+**Splitter Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| orientation | 分割方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| vertical | 垂直布局（简写），与 `orientation` 共存时 `orientation` 优先 | `boolean` | `false` |
+| rootClassName | 根节点额外类名 | `string` | - |
+| collapsible | 折叠配置，`motion` 控制是否开启折叠动画，`icon` 自定义折叠图标 | `{ motion?: boolean; icon?: { start?: VNode; end?: VNode } }` | - |
+| destroyOnHidden | 折叠时（size 为 0）销毁面板内容，应用于所有面板，可在单个面板上覆盖 | `boolean` | `false` |
+| draggerIcon | 自定义拖拽图标 | `VNode` | - |
+| lazy | 懒加载模式，拖拽时仅显示预览，松开后才应用更改 | `boolean` | `false` |
+| classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SplitterClassNames` | - |
+| styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `SplitterStyles` | - |
+| onDraggerDoubleClick | 双击拖拽条回调 | `(index: number) => void` | - |
+| onResizeStart | 开始调整大小回调 | `(sizes: number[]) => void` | - |
+| onResize | 调整大小回调 | `(sizes: number[]) => void` | - |
+| onResizeEnd | 结束调整大小回调 | `(sizes: number[]) => void` | - |
+| onCollapse | 折叠/展开回调，返回所有面板的折叠状态和尺寸 | `(collapsed: boolean[], sizes: number[]) => void` | - |
+
+**Splitter.Panel Props**
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| className | 面板自定义类名 | `string` | - |
+| style | 面板自定义样式 | `CSSProperties` | - |
+| min | 最小尺寸，支持像素值或百分比 | `number \| string` | - |
+| max | 最大尺寸，支持像素值或百分比 | `number \| string` | - |
+| size | 受控尺寸，支持像素值或百分比 | `number \| string` | - |
+| defaultSize | 默认尺寸，支持像素值或百分比 | `number \| string` | - |
+| resizable | 是否可调整大小 | `boolean` | `true` |
+| collapsible | 折叠配置，`true` 表示两侧都可折叠，对象可精确控制折叠方向和图标 | `boolean \| { start?: boolean; end?: boolean; showCollapsibleIcon?: boolean \| 'auto' }` | `false` |
+| destroyOnHidden | 折叠时（size 为 0）销毁面板内容，覆盖 Splitter 的配置 | `boolean` | - |
+
+### Slots
+
+| 插槽名 | 说明 |
+| --- | --- |
+| default | 面板内容，只支持 Splitter.Panel |
+
+### 示例
+
+基本用法 — 基本的分割面板，支持通过 `defaultSize`、`min`、`max` 控制面板尺寸。
+
+```vue
+<template>
+  <Splitter style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+    <Splitter.Panel default-size="40%" min="20%" max="70%">
+      <Desc text="第一个面板" />
+    </Splitter.Panel>
+    <Splitter.Panel>
+      <Desc text="第二个面板" />
+    </Splitter.Panel>
+  </Splitter>
+</template>
+
+<script setup lang="tsx">
+import { defineComponent } from 'vue'
+import { Splitter } from '@hmfw/ant-design'
+
+const Desc = defineComponent({
+  props: {
+    text: { type: String, default: '' },
+  },
+  setup(props) {
+    return () => (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <h5 style={{ color: 'var(--hmfw-color-text-secondary)', whiteSpace: 'nowrap' }}>{props.text}</h5>
+      </div>
+    )
+  },
+})
+</script>
+```
+
+垂直方向 — 设置 `orientation="vertical"` 可以垂直分割面板。
+
+```vue
+<template>
+  <Splitter orientation="vertical" style="height: 300px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+    <Splitter.Panel>
+      <Desc text="第一个面板" />
+    </Splitter.Panel>
+    <Splitter.Panel>
+      <Desc text="第二个面板" />
+    </Splitter.Panel>
+  </Splitter>
+</template>
+
+<script setup lang="tsx">
+import { defineComponent } from 'vue'
+import { Splitter } from '@hmfw/ant-design'
+
+const Desc = defineComponent({
+  props: {
+    text: { type: String, default: '' },
+  },
+  setup(props) {
+    return () => (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <h5 style={{ color: 'var(--hmfw-color-text-secondary)', whiteSpace: 'nowrap' }}>{props.text}</h5>
+      </div>
+    )
+  },
+})
+</script>
+```
+
+
+---
+
 ## Statistic 统计数值
 
 展示统计数值。
+
+**何时使用**：当需要突出某个或某组数字时。；当需要展示带描述的统计类数据时使用。
 
 导入：
 ```ts
@@ -5685,6 +6420,8 @@ import { Statistic, Space } from '@hmfw/ant-design'
 ## Steps 步骤条
 
 引导用户按照流程完成任务的导航条。
+
+**何时使用**：当任务复杂或者存在先后关系时，将其分解成一系列步骤，从而简化任务；需要展示当前操作的进度时
 
 导入：
 ```ts
@@ -5795,6 +6532,8 @@ const items = [
 
 开关选择器。
 
+**何时使用**：需要表示开关状态/两种状态之间的切换时。；和 checkbox 的区别是，切换 switch 会直接触发状态改变，而 checkbox 一般用于状态标记，需要和提交操作配合。
+
 导入：
 ```ts
 import { Switch } from '@hmfw/ant-design'
@@ -5891,6 +6630,8 @@ const checked3 = ref(true)
 ## Table 表格
 
 展示行列数据。
+
+**何时使用**：当有大量结构化的数据需要展现时；当需要对数据进行排序、搜索、分页、自定义操作等复杂行为时
 
 导入：
 ```ts
@@ -6041,7 +6782,7 @@ const columns = [
 
 选项卡切换组件。
 
-**何时使用**：提供平级的区域将大块内容进行收纳和展现，保持界面整洁。
+**何时使用**：提供平级的区域将大块内容进行收纳和展现，保持界面整洁。 Ant Design 依次提供了三级选项卡，分别用于不同的场景。 卡片式的页签，提供可关闭的样式，常用于容器顶部。；标准线条式页签，用于容器内部的主功能切换，这是最常用的 Tabs。
 
 导入：
 ```ts
@@ -6152,6 +6893,8 @@ const items = [
 ## Tag 标签
 
 进行标记和分类的小标签。
+
+**何时使用**：用于标记事物的属性和维度；进行分类
 
 导入：
 ```ts
@@ -6376,6 +7119,8 @@ const time3 = ref('')
 
 垂直展示的时间流信息。
 
+**何时使用**：当有一系列信息需按时间排列时；需要有一条时间轴进行视觉上的串联时
+
 导入：
 ```ts
 import { Timeline, TimelineItem } from '@hmfw/ant-design'
@@ -6456,6 +7201,8 @@ const items = [
 ## Tooltip 文字提示
 
 简单的文字提示气泡框。
+
+**何时使用**：鼠标移入则显示提示，移出消失，气泡浮层不承载复杂文本和操作
 
 导入：
 ```ts
@@ -6545,6 +7292,8 @@ import { Tooltip, Button } from '@hmfw/ant-design'
 ## Tour 漫游引导
 
 用于分步引导用户了解产品功能的组件。
+
+**何时使用**：新功能上线时，引导用户了解新功能；复杂操作流程，需要分步骤引导用户完成；对于特定的元素进行操作指引
 
 导入：
 ```ts
@@ -6707,6 +7456,8 @@ const steps: TourProps['steps'] = [
 
 双栏穿梭选择框，用于将元素从一列移入另一列。
 
+**何时使用**：需要在两个集合之间进行选择，且需要直观展示两个集合的内容时；用于将可选项在两个列表之间移动；权限分配、角色配置等需要批量选择和管理的场景；需要对已选项进行排序（配合 `draggable` 使用）；大数据量场景（1000+ 项），配合虚拟滚动优化性能
+
 导入：
 ```ts
 import { Transfer } from '@hmfw/ant-design'
@@ -6816,6 +7567,8 @@ const targetKeys = ref<string[]>(['1', '3', '5'])
 ## Tree 树形控件
 
 多层次的结构列表。
+
+**何时使用**：文件夹、组织架构、生物分类、国家地区等等，世间万物的大多数结构都是树形结构；使用树控件可以完整展现其中的层级关系，并具有展开收起选择等交互功能
 
 导入：
 ```ts
@@ -6976,6 +7729,8 @@ const treeData = [
 
 树形选择控件，类似 Select 的选择控件，可选择的数据结构是一个树形结构。
 
+**何时使用**：从一个树形结构中进行选择时，例如选择部门、分类等
+
 导入：
 ```ts
 import { TreeSelect } from '@hmfw/ant-design'
@@ -7040,7 +7795,7 @@ import { TreeSelect } from '@hmfw/ant-design'
 ```vue
 <template>
   <Space direction="vertical" style="width: 300px">
-    <TreeSelect v-model:value="value" :tree-data="treeData" placeholder="请选择" style="width: 100%" />
+    <TreeSelect v-model:value="value" :tree-data="treeData" allow-clear placeholder="请选择" style="width: 100%" />
     <span>选中：{{ value }}</span>
   </Space>
 </template>
@@ -7111,6 +7866,8 @@ const treeData: TreeSelectNode[] = [
 ## Typography 排版
 
 文本的基本格式。
+
+**何时使用**：当需要展示标题、段落、列表内容时；当需要对文字进行强调、标记、删除线等操作时；当需要展示代码片段时
 
 导入：
 ```ts
@@ -7229,7 +7986,7 @@ import { Text, Space } from '@hmfw/ant-design'
 
 文件选择上传和拖拽上传控件。
 
-**何时使用**：上传是将信息（网页、文字、图片、视频等）通过网页或者上传工具发布到远程服务器上的过程。
+**何时使用**：上传是将信息（网页、文字、图片、视频等）通过网页或者上传工具发布到远程服务器上的过程。 当需要上传一个或一些文件时。；当需要展现上传的进度时。；当需要使用拖拽交互时。
 
 导入：
 ```ts
@@ -7371,6 +8128,8 @@ const handleChange = (info: { file: UploadFile; fileList: UploadFile[] }) => {
 ## Watermark 水印
 
 给页面的某个区域加上水印。
+
+**何时使用**：页面需要添加水印标识版权时使用；适用于防止信息盗用
 
 导入：
 ```ts

@@ -44,6 +44,9 @@ import '@hmfw/ant-design/style.css'
 - [InputNumber 数字输入框](https://hmfw.github.io/ant-design-hmfw/components/input-number): 通过鼠标或键盘，输入范围内的数值。
 - [Layout 布局](https://hmfw.github.io/ant-design-hmfw/components/layout): 协助进行页面级整体布局。
 - [List 列表](https://hmfw.github.io/ant-design-hmfw/components/list): 通用列表。
+- [Listy 虚拟列表](https://hmfw.github.io/ant-design-hmfw/components/listy): 极简的虚拟滚动列表组件，专注性能和简洁性。
+- [Masonry 瀑布流](https://hmfw.github.io/ant-design-hmfw/components/masonry): 瀑布流布局组件，用于展示不同高度的内容。
+- [Mentions 提及](https://hmfw.github.io/ant-design-hmfw/components/mentions): 提及组件，用于在文本输入中 @ 用户或实体。
 - [Menu 导航菜单](https://hmfw.github.io/ant-design-hmfw/components/menu): 为页面和功能提供导航的菜单列表。
 - [Message 全局提示](https://hmfw.github.io/ant-design-hmfw/components/message): 全局展示操作反馈信息。
 - [Modal 对话框](https://hmfw.github.io/ant-design-hmfw/components/modal): 模态对话框。
@@ -63,6 +66,7 @@ import '@hmfw/ant-design/style.css'
 - [Slider 滑动输入条](https://hmfw.github.io/ant-design-hmfw/components/slider): 滑动型输入器，展示当前值和可选范围。
 - [Space 间距](https://hmfw.github.io/ant-design-hmfw/components/space): 设置组件之间的间距。
 - [Spin 加载中](https://hmfw.github.io/ant-design-hmfw/components/spin): 用于页面和区块的加载中状态。
+- [Splitter 分割面板](https://hmfw.github.io/ant-design-hmfw/components/splitter): 分割面板用于将页面或容器分成多个可调整大小的区域。
 - [Statistic 统计数值](https://hmfw.github.io/ant-design-hmfw/components/statistic): 展示统计数值。
 - [Steps 步骤条](https://hmfw.github.io/ant-design-hmfw/components/steps): 引导用户按照流程完成任务的导航条。
 - [Switch 开关](https://hmfw.github.io/ant-design-hmfw/components/switch): 开关选择器。

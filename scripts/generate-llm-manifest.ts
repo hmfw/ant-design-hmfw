@@ -53,18 +53,43 @@ function isSeparator(line: string): boolean {
 
 /** 提取某个二级标题段落内容（到下一个 ## 为止） */
 function sectionBody(md: string, heading: string): string {
-  const re = new RegExp(`^##\\s+${heading}\\s*$([\\s\\S]*?)(?=^##\\s|\\Z)`, 'm')
+  // 注意：JS 正则不支持 \Z（会被当成字面量 Z，导致正文在首个大写 Z 处被截断），
+  // 用 $(?![\s\S]) 断言字符串结尾。
+  const re = new RegExp(`^##\\s+${heading}\\s*$([\\s\\S]*?)(?=^##\\s|$(?![\\s\\S]))`, 'm')
   const m = md.match(re)
   return m ? m[1].trim() : ''
 }
 
-/** 取首段纯文本（跳过空行） */
+/** 取首段纯文本（跳过标题/HTML/列表块） */
 function firstParagraph(text: string): string {
   for (const block of text.split(/\n\s*\n/)) {
     const t = block.trim()
     if (t && !t.startsWith('#') && !t.startsWith('<') && !t.startsWith('-')) return t
   }
   return ''
+}
+
+/**
+ * 取整段可读文本：拼接普通段落 + 列表项。
+ * 「何时使用」这类段落正文往往是纯列表，firstParagraph 会整段跳过，
+ * 故这里把列表项去掉 "- " 前缀后用「；」连接，避免正文丢失。
+ */
+function sectionText(text: string): string {
+  const paras: string[] = []
+  for (const block of text.split(/\n\s*\n/)) {
+    const t = block.trim()
+    if (!t || t.startsWith('#') || t.startsWith('<')) continue
+    if (t.startsWith('-')) {
+      const items = t
+        .split('\n')
+        .map((l) => l.replace(/^-\s*/, '').trim())
+        .filter(Boolean)
+      paras.push(items.join('；'))
+    } else {
+      paras.push(t)
+    }
+  }
+  return paras.join(' ')
 }
 
 interface TableBlock {
@@ -234,7 +259,7 @@ for (const slug of slugs) {
   const title = titleMatch ? titleMatch[1].trim() : slug
   const afterTitle = titleMatch ? md.slice(md.indexOf(titleMatch[0]) + titleMatch[0].length) : md
   const desc = firstParagraph(afterTitle.split(/^##\s/m)[0])
-  const whenToUse = firstParagraph(sectionBody(md, '何时使用'))
+  const whenToUse = sectionText(sectionBody(md, '何时使用'))
 
   const names = slugMap[slug] && slugMap[slug].length ? slugMap[slug] : [title.split(/\s/)[0]]
   const importStmt = `import { ${names.join(', ')} } from '${PKG_NAME}'`
