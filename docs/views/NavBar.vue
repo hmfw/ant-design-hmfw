@@ -20,6 +20,7 @@
         组件
       </RouterLink>
     </nav>
+    <DocSearch />
     <Dropdown :menu="themeMenu" placement="bottom" trigger="click">
       <Button :icon="DownOutlined" icon-position="end" style="margin-right: 12px">
         <span class="theme-dot" :style="{ background: activeColor }" />
@@ -45,6 +46,7 @@ import { computed, h } from 'vue'
 import { useRoute } from 'vue-router'
 import { GithubOutlined, DownOutlined } from '@hmfw/icons'
 import { Dropdown, Button } from '@hmfw/ant-design'
+import DocSearch from './DocSearch.vue'
 import { useTheme, themePresets } from '../composables/useTheme'
 
 const route = useRoute()

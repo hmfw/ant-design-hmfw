@@ -84,9 +84,9 @@ const features = [
   z-index: 0;
 }
 
-.home > * {
+.home > .navbar {
   position: relative;
-  z-index: 1;
+  z-index: 100;
 }
 
 .home__hero {
