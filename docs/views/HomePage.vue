@@ -7,7 +7,7 @@
       <p class="home__tagline">基于 Ant Design v6 设计规范，使用 TypeScript + TSX 原生实现</p>
       <div class="home__actions">
         <RouterLink to="/guide/getting-started" class="home__btn home__btn--brand"> 快速上手 </RouterLink>
-        <RouterLink to="/components/button" class="home__btn home__btn--alt"> 组件文档 </RouterLink>
+        <RouterLink to="/components/overview" class="home__btn home__btn--alt"> 组件总览 </RouterLink>
       </div>
     </div>
     <div class="home__features">

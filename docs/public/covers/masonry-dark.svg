@@ -1,0 +1,14 @@
+<svg width="176px" height="96px" viewBox="0 0 176 96" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>暗色</title>
+    <defs>
+        <path d="M0,0 L176,0 L176,96 L0,96 L0,0 Z" id="path-1"></path>
+    </defs>
+    <g id="暗色" stroke="none" fill="none" xlink:href="#path-1" fill-rule="evenodd">
+        <rect id="矩形" fill-opacity="0.16" fill="#1677FF" x="0" y="0" width="50" height="55"></rect>
+        <rect id="矩形" fill-opacity="0.15" fill="#FFFFFF" x="0" y="68" width="50" height="28"></rect>
+        <rect id="矩形" fill-opacity="0.15" fill="#FFFFFF" x="126" y="0" width="50" height="44"></rect>
+        <rect id="矩形" fill-opacity="0.15" fill="#FFFFFF" x="126" y="57" width="50" height="32"></rect>
+        <rect id="矩形" fill-opacity="0.15" fill="#FFFFFF" x="63" y="0" width="50" height="23"></rect>
+        <rect id="矩形" fill-opacity="0.15" fill="#FFFFFF" x="63" y="36" width="50" height="41"></rect>
+    </g>
+</svg>

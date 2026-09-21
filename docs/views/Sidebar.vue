@@ -1,7 +1,7 @@
 <template>
   <aside class="sidebar">
     <div v-for="group in groups" :key="group.title" class="sidebar__group">
-      <div class="sidebar__group-title">
+      <div v-if="group.title" class="sidebar__group-title">
         {{ group.title }}
       </div>
       <ul class="sidebar__list">

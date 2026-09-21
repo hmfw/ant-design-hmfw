@@ -16,6 +16,11 @@ export const router = createRouter({
       component: AppLayout,
       children: [
         {
+          path: '/components/overview',
+          component: () => import('../views/ComponentOverview.vue'),
+          meta: { title: '组件总览' },
+        },
+        {
           path: '/guide/getting-started',
           component: () => import('../views/GettingStarted.vue'),
         },

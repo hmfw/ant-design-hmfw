@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="156px" height="104px" viewBox="0 0 156 104" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Grid</title>
+    <g id="组件骨架图更新" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="🎉-5.0-新版---黑" transform="translate(-540.000000, -775.000000)">
+            <g id="Grid" transform="translate(541.000000, 775.500000)">
+                <rect id="矩形" fill="#001D66" x="9.8333333" y="15.5" width="93" height="72"></rect>
+                <rect id="矩形复制-38" fill="#001D66" x="113.166667" y="15.5" width="31" height="72"></rect>
+                <g id="编组-27">
+                    <rect id="矩形" fill-opacity="0.15" fill="#FFFFFF" fill-rule="nonzero" opacity="0.999255952" x="9.8333333" y="0.5" width="10.3333333" height="102"></rect>
+                    <rect id="矩形复制-9" fill-opacity="0.15" fill="#FFFFFF" fill-rule="nonzero" opacity="0.999255952" x="51.1666667" y="0.5" width="10.3333333" height="102"></rect>
+                    <rect id="矩形复制-37" fill-opacity="0.15" fill="#FFFFFF" fill-rule="nonzero" opacity="0.999255952" x="92.5" y="0.5" width="10.3333333" height="102"></rect>
+                    <rect id="矩形复制-2" fill-opacity="0.15" fill="#FFFFFF" fill-rule="nonzero" opacity="0.999255952" x="30.5" y="0.5" width="10.3333333" height="102"></rect>
+                    <rect id="矩形复制-36" fill-opacity="0.15" fill="#FFFFFF" fill-rule="nonzero" opacity="0.999255952" x="71.8333333" y="0.5" width="10.3333333" height="102"></rect>
+                    <rect id="矩形复制-39" fill-opacity="0.15" fill="#FFFFFF" fill-rule="nonzero" opacity="0.999255952" x="113.166667" y="0.5" width="10.3333333" height="102"></rect>
+                    <rect id="矩形复制-40" fill-opacity="0.15" fill="#FFFFFF" fill-rule="nonzero" opacity="0.999255952" x="133.833333" y="0.5" width="10.3333333" height="102"></rect>
+                    <rect id="矩形" stroke-opacity="0.247159091" stroke="#FFFFFF" x="0" y="0" width="154" height="103" rx="2"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

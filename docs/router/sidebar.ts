@@ -140,14 +140,20 @@ export const componentGroups: ComponentGroup[] = [
 // 预加载所有组件 demo 的 markdown（懒加载）
 const demoModules = import.meta.glob('../../components/*/demos/*.md')
 
-/** 由 componentGroups 派生的组件侧边栏 */
-export const componentsSidebar: NavGroup[] = componentGroups.map((group) => ({
-  title: group.title,
-  children: group.children.map((item) => ({
-    title: item.title,
-    path: `/components/${item.name}`,
+/** 由 componentGroups 派生的组件侧边栏（顶部置入「组件总览」独立入口，无分组标题） */
+export const componentsSidebar: NavGroup[] = [
+  {
+    title: '',
+    children: [{ title: '组件总览', path: '/components/overview' }],
+  },
+  ...componentGroups.map((group) => ({
+    title: group.title,
+    children: group.children.map((item) => ({
+      title: item.title,
+      path: `/components/${item.name}`,
+    })),
   })),
-}))
+]
 
 /** 由 componentGroups 派生的组件 demo 路由（按组件名去重） */
 export const demoRoutes: RouteRecordRaw[] = Array.from(

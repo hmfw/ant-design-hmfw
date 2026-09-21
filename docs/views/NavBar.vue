@@ -13,7 +13,7 @@
         指南
       </RouterLink>
       <RouterLink
-        to="/components/button"
+        to="/components/overview"
         class="navbar__nav-link"
         :class="{ 'is-active': route.path.startsWith('/components') }"
       >
