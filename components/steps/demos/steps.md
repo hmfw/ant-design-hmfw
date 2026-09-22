@@ -157,38 +157,44 @@ interface StepsStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<StepsSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-steps">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-steps-item hmfw-steps-item-finish">
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
+    <!-- ↑ classNames.item / styles.item（除 root 外的节点均按步骤逐项渲染） -->
     <div class="hmfw-steps-item-header">
-      <!-- ↑ classNames.header / styles.header 应用于此 -->
+      <!-- ↑ classNames.header / styles.header -->
       <div class="hmfw-steps-item-icon">
-        <!-- ↑ classNames.icon / styles.icon 应用于此 -->
+        <!-- ↑ classNames.icon / styles.icon -->
         <span class="hmfw-steps-icon">1</span>
       </div>
       <div class="hmfw-steps-item-title">
-        <!-- ↑ classNames.title / styles.title 应用于此 -->
+        <!-- ↑ classNames.title / styles.title -->
         标题
         <span class="hmfw-steps-item-subtitle">
-          <!-- ↑ classNames.subtitle / styles.subtitle 应用于此 -->
+          <!-- ↑ classNames.subtitle / styles.subtitle -->
           副标题
         </span>
       </div>
       <div class="hmfw-steps-item-tail">
-        <!-- ↑ classNames.tail / styles.tail 应用于此 -->
+        <!-- ↑ classNames.tail / styles.tail -->
       </div>
     </div>
     <div class="hmfw-steps-item-content">
-      <!-- ↑ classNames.content / styles.content 应用于此 -->
+      <!-- ↑ classNames.content / styles.content -->
       <div class="hmfw-steps-item-icon hmfw-steps-item-icon-placeholder">
-        <!-- ↑ 空占位符，与 header icon 列对齐 -->
+        <!-- ↑ 空占位符，与 header icon 列对齐（classNames.icon 也会命中此处） -->
       </div>
       <div class="hmfw-steps-item-description">
-        <!-- ↑ classNames.description / styles.description 应用于此 -->
+        <!-- ↑ classNames.description / styles.description -->
         描述信息
       </div>
     </div>
@@ -197,21 +203,37 @@ interface StepsStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Steps
     :current="1"
     :items="items"
-    :class-names="{
-      root: 'my-steps-root',
-      icon: 'my-icon',
-      title: 'my-title',
-      tail: 'my-tail',
+    :class-names="{ root: 'my-steps-root', icon: 'my-icon', title: 'my-title', tail: 'my-tail' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Steps
+    :current="1"
+    :items="items"
+    :styles="{
+      root: { padding: '20px', backgroundColor: '#fafafa', borderRadius: '8px' },
+      icon: { fontSize: '20px' },
+      title: { fontWeight: 600, color: '#1677ff' },
+      description: { color: '#666', fontSize: '13px' },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Steps
+    :current="1"
+    :items="items"
+    :class-names="{ root: 'my-steps-root' }"
+    :styles="{ title: { fontWeight: 600, color: '#1677ff' }, description: { color: '#666' } }"
   />
 </template>
 
@@ -239,31 +261,11 @@ interface StepsStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Steps
-    :current="1"
-    :items="items"
-    :styles="{
-      root: { padding: '20px', backgroundColor: '#fafafa', borderRadius: '8px' },
-      icon: { fontSize: '20px' },
-      title: { fontWeight: 600, color: '#1677ff' },
-      description: { color: '#666', fontSize: '13px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `item`、`header`、`tail`、`icon`、`content`、`title`、`subtitle`、`description` 这些节点类名会应用到**每个步骤项**上
-- `tail` 是连接线，在最后一个步骤项中不渲染
-- `subtitle` 和 `description` 仅在配置了对应内容时渲染
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-steps-item`）合并，不会互相覆盖
+- 除 `root` 外的节点类名会应用到每个步骤项上
 - 垂直方向步骤条（`orientation="vertical"`）的 `tail` 会垂直延伸
 - 点状步骤条（`type="dot"`）的图标会变为小圆点，content 区的占位符 icon 会隐藏
 

@@ -171,42 +171,53 @@ interface QRCodeStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<QRCodeSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-qrcode">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <canvas></canvas>
   <!-- 或 <svg>...</svg> -->
 
   <!-- 仅在 status !== 'active' 时渲染 -->
   <div class="hmfw-qrcode-cover">
-    <!-- ↑ classNames.cover / styles.cover 应用于此 -->
+    <!-- ↑ classNames.cover / styles.cover -->
     <!-- 状态内容：loading / expired / scanned -->
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器样式 -->
+  <!-- classNames：追加自定义类 -->
   <QRCode value="https://ant.design" :class-names="{ root: 'my-qrcode' }" />
 
-  <!-- 自定义状态遮罩 -->
-  <QRCode value="https://ant.design" status="expired" :class-names="{ cover: 'my-cover' }" @refresh="handleRefresh" />
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <QRCode
+    value="https://ant.design"
+    status="expired"
+    :styles="{
+      cover: { background: 'rgba(0, 0, 0, 0.8)', color: 'white' },
+    }"
+    @refresh="handleRefresh"
+  />
 
-  <!-- 组合使用 -->
+  <!-- 组合：classNames 与 styles 混用 -->
   <QRCode
     value="https://ant.design"
     status="loading"
-    :class-names="{
-      root: 'my-qrcode',
-      cover: 'my-cover',
-    }"
+    :class-names="{ cover: 'my-cover' }"
+    :styles="{ root: { borderRadius: '12px', padding: '8px' } }"
   />
 </template>
 
@@ -232,52 +243,10 @@ interface QRCodeStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制根容器 -->
-  <QRCode
-    value="https://ant.design"
-    :styles="{
-      root: {
-        borderRadius: '16px',
-        boxShadow: '0 4px 12px rgba(22, 119, 255, 0.3)',
-      },
-    }"
-  />
-
-  <!-- 自定义遮罩样式 -->
-  <QRCode
-    value="https://ant.design"
-    status="expired"
-    :styles="{
-      cover: {
-        background: 'rgba(0, 0, 0, 0.8)',
-        color: 'white',
-      },
-    }"
-    @refresh="handleRefresh"
-  />
-
-  <!-- 组合使用 -->
-  <QRCode
-    value="https://ant.design"
-    status="loading"
-    :styles="{
-      root: { borderRadius: '12px', padding: '8px' },
-      cover: { backdropFilter: 'blur(8px)' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `cover` 节点仅在 `status` 不为 `'active'` 时渲染，因此相关样式仅在状态切换时生效
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-qrcode`）合并，不会互相覆盖
 - 根容器的 `width`、`height`、`backgroundColor` 由 `size` 和 `bgColor` props 控制，会与 `styles.root` 合并（`styles.root` 优先）
 - canvas/svg 元素是 QR 码的核心渲染节点，其样式通过 `color`、`bgColor`、`size` 等专有 props 控制，不暴露在语义化 API 中
 

@@ -206,160 +206,84 @@ interface ButtonStyles {
 
 ### 语义化 DOM
 
-将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的用法示例。
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
 
 <ButtonSemantic />
 
 ### DOM 结构与 className 映射
 
 ```html
-<!-- 基础按钮 -->
-<button type="button" class="hmfw-btn hmfw-btn-default hmfw-btn-middle">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
-  <span class="hmfw-btn-content">
-    <!-- ↑ classNames.content / styles.content 应用于此 -->
-    按钮文字
-  </span>
-</button>
-
-<!-- 带图标按钮 -->
+<!-- 带图标按钮：覆盖 root / icon / content 三个节点 -->
 <button type="button" class="hmfw-btn hmfw-btn-primary hmfw-btn-middle">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-btn-icon">
-    <!-- ↑ classNames.icon / styles.icon 应用于此 -->
-    <span role="img" aria-label="search" class="anticon anticon-search">
-      <svg>...</svg>
-    </span>
+    <!-- ↑ classNames.icon / styles.icon -->
+    <span role="img" aria-label="search" class="anticon anticon-search"><svg>...</svg></span>
   </span>
   <span class="hmfw-btn-content">搜索</span>
+  <!-- ↑ classNames.content / styles.content -->
 </button>
 
-<!-- 加载状态：root 上追加 hmfw-btn-loading，按钮同时被禁用 -->
+<!-- 加载状态：加载图标复用 icon 节点，root 追加 hmfw-btn-loading 且按钮被禁用 -->
 <button type="button" disabled aria-busy="true" class="hmfw-btn hmfw-btn-primary hmfw-btn-middle hmfw-btn-loading">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <span class="hmfw-btn-icon hmfw-btn-loading-icon">
-    <!-- ↑ 与图标按钮共用同一节点，classNames.icon / styles.icon 应用于此 -->
-    <!-- ↑ 只想影响加载态时，用内置类 .hmfw-btn-loading-icon 作为 CSS 选择器 -->
-    <span role="img" aria-label="loading" class="anticon anticon-loading anticon-spin">
-      <svg>...</svg>
-    </span>
+    <!-- ↑ classNames.icon / styles.icon 同样生效；仅命中加载态用内置类 .hmfw-btn-loading-icon -->
+    <span role="img" aria-label="loading" class="anticon anticon-loading anticon-spin"><svg>...</svg></span>
   </span>
   <span class="hmfw-btn-content">提交中</span>
 </button>
 
-<!-- 纯图标按钮：无子节点，不渲染 content，root 上追加 hmfw-btn-icon-only -->
+<!-- 纯图标按钮：不渲染 content，root 追加 hmfw-btn-icon-only -->
 <button type="button" class="hmfw-btn hmfw-btn-default hmfw-btn-middle hmfw-btn-circle hmfw-btn-icon-only">
   <span class="hmfw-btn-icon">
-    <span role="img" aria-label="search" class="anticon anticon-search">
-      <svg>...</svg>
-    </span>
+    <span role="img" aria-label="search" class="anticon anticon-search"><svg>...</svg></span>
   </span>
 </button>
-
-<!-- 两个汉字：autoInsertSpace 直接在两字之间插入空格，不额外产生节点或类名 -->
-<button type="button" class="hmfw-btn hmfw-btn-default hmfw-btn-middle">
-  <span class="hmfw-btn-content">
-    <!-- ↑ classNames.content / styles.content 应用于此 -->
-    按 钮
-  </span>
-</button>
-
-<!-- 链接按钮：设置 href 后 root 变为 <a> -->
-<a role="button" href="https://example.com" class="hmfw-btn hmfw-btn-link hmfw-btn-middle">
-  <span class="hmfw-btn-content">链接</span>
-</a>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义图标样式 -->
-  <Button type="primary" :icon="SearchOutlined" :class-names="{ icon: 'my-icon-wrapper' }"> 搜索 </Button>
+  <!-- classNames：追加自定义类 -->
+  <Button type="primary" :icon="SearchOutlined" :class-names="{ icon: 'my-icon' }">搜索</Button>
 
-  <!-- 自定义加载图标：loading 状态复用 icon 节点 -->
-  <Button loading :class-names="{ icon: 'my-loading-emphasis' }"> 加载中 </Button>
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Button :icon="SearchOutlined" icon-position="end" :styles="{ root: { borderColor: '#722ed1', color: '#722ed1' } }">
+    尾部图标
+  </Button>
 
-  <!-- 自定义根节点样式 -->
-  <Button :class-names="{ root: 'my-button-root' }"> 自定义按钮 </Button>
-
-  <!-- 自定义文本节点 -->
-  <Button :class-names="{ content: 'my-button-content' }"> 加宽字距 </Button>
+  <!-- 组合：三个节点各自定制 -->
+  <Button
+    :icon="SearchOutlined"
+    :class-names="{ content: 'my-content' }"
+    :styles="{ root: { borderRadius: '16px' }, icon: { fontSize: '20px' } }"
+  >
+    组合样式
+  </Button>
 </template>
 
 <style scoped>
-:deep(.my-icon-wrapper) {
+:deep(.my-icon) {
   color: #fadb14;
   filter: drop-shadow(0 0 2px rgba(250, 219, 20, 0.6));
 }
 
-:deep(.my-loading-emphasis) {
-  font-size: 16px;
-}
-
-:deep(.my-button-root) {
-  border-radius: 16px;
-}
-
-:deep(.my-button-content) {
+:deep(.my-content) {
   letter-spacing: 0.1em;
 }
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制图标 -->
-  <Button
-    type="primary"
-    :icon="SearchOutlined"
-    :styles="{
-      icon: { color: '#fadb14', fontSize: '18px' },
-    }"
-  >
-    搜索
-  </Button>
-
-  <!-- 自定义边框颜色 -->
-  <Button
-    :icon="SearchOutlined"
-    icon-position="end"
-    :styles="{
-      root: { borderColor: '#722ed1', color: '#722ed1' },
-    }"
-  >
-    尾部图标
-  </Button>
-
-  <!-- 组合使用 -->
-  <Button
-    :icon="SearchOutlined"
-    :styles="{
-      root: { borderRadius: '16px' },
-      icon: { fontSize: '20px' },
-      content: { fontWeight: 600 },
-    }"
-  >
-    组合样式
-  </Button>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-btn`、状态类 `.hmfw-btn-loading`）合并，不会互相覆盖
 - 语义节点与 Ant Design v6 一致，只有 `root` / `icon` / `content` 三个
-- 加载状态不额外产生节点：加载图标复用 `icon` 容器，`classNames.icon` / `styles.icon` 同样生效
-- 若只想影响加载状态，用内置类名 `.hmfw-btn-loading-icon`（图标容器）或 `.hmfw-btn-loading`（根节点）编写 CSS
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-btn-loading`）合并
-- `content` 节点仅在按钮有子节点时渲染，纯图标按钮上 `classNames.content` / `styles.content` 无效
-- 两个汉字的间距由 `autoInsertSpace` 在文本中直接插入空格实现，不再有额外的包裹节点与类名
+- 两个汉字的间距由 `autoInsertSpace` 在文本中直接插入空格实现，不额外产生节点或类名
+- 链接按钮（设置 `href`）根节点由 `<button>` 变为 `<a>`，`classNames.root` / `styles.root` 依旧作用于它
 
 ## 设计 Token
 

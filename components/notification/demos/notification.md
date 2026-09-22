@@ -184,43 +184,52 @@ interface NotificationStyles {
 
 ```html
 <div class="hmfw-notification-notice">
-  <!-- ↑ classNames.notice / styles.notice 应用于此 -->
+  <!-- ↑ 按状态追加 -success/-error 等类；classNames.notice / styles.notice -->
   <div class="hmfw-notification-notice-content">
-    <div class="hmfw-notification-notice-icon">
-      <!-- ↑ classNames.icon / styles.icon 应用于此 -->
-    </div>
+    <div class="hmfw-notification-notice-icon"></div>
+    <!-- ↑ classNames.icon / styles.icon -->
     <div class="hmfw-notification-notice-message-wrapper">
-      <div class="hmfw-notification-notice-message">
-        <!-- ↑ classNames.message / styles.message 应用于此 -->
-      </div>
-      <div class="hmfw-notification-notice-description">
-        <!-- ↑ classNames.description / styles.description 应用于此 -->
-      </div>
-      <div class="hmfw-notification-notice-btn">
-        <!-- ↑ classNames.btn / styles.btn 应用于此 -->
-      </div>
+      <div class="hmfw-notification-notice-message"></div>
+      <!-- ↑ classNames.message / styles.message -->
+      <div class="hmfw-notification-notice-description"></div>
+      <!-- ↑ classNames.description / styles.description -->
+      <div class="hmfw-notification-notice-btn"></div>
+      <!-- ↑ 设置 btn 时渲染；classNames.btn / styles.btn -->
     </div>
   </div>
-  <button class="hmfw-notification-notice-close">
-    <!-- ↑ classNames.close / styles.close 应用于此 -->
-  </button>
+  <button class="hmfw-notification-notice-close"></button>
+  <!-- ↑ classNames.close / styles.close -->
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过配置对象的 `classNames` 字段应用自定义 CSS 类（类名需定义在全局或带 `:deep()` 的作用域样式中）：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点，均通过调用方法的配置对象传入：
 
 ```ts
+// classNames：追加自定义类（类名需定义在全局或带 :deep() 的作用域样式中）
 notification.info({
   message: '系统更新',
   description: '新版本已发布，建议尽快升级。',
-  classNames: {
-    notice: 'my-notice',
-    message: 'my-message',
-    icon: 'my-icon',
-    close: 'my-close',
+  classNames: { notice: 'my-notice', message: 'my-message', icon: 'my-icon' },
+})
+
+// styles：内联样式，优先级高于 classNames
+notification.error({
+  message: '操作失败',
+  description: '请求超时，请检查网络后重试。',
+  styles: {
+    notice: { borderRadius: '12px', borderLeft: '4px solid #ff4d4f' },
+    message: { fontSize: '17px', color: '#cf1322' },
+    description: { color: '#a8071a' },
   },
+})
+
+// 组合：classNames 与 styles 混用
+notification.success({
+  message: '组合用法',
+  classNames: { notice: 'my-notice' },
+  styles: { message: { fontWeight: 700 } },
 })
 ```
 
@@ -240,27 +249,11 @@ notification.info({
 }
 ```
 
-### 使用 styles
-
-通过配置对象的 `styles` 字段直接传入内联样式对象：
-
-```ts
-notification.error({
-  message: '操作失败',
-  description: '请求超时，请检查网络后重试。',
-  styles: {
-    notice: { borderRadius: '12px', borderLeft: '4px solid #ff4d4f' },
-    message: { fontSize: '17px', color: '#cf1322' },
-    description: { color: '#a8071a' },
-  },
-})
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-notification-notice`）及调用参数的 `className` / `style` 合并，不会互相覆盖
 - Notification 为命令式 API，`classNames` / `styles` 通过调用方法的配置对象传入，而非组件 props
-- `classNames.notice` / `styles.notice` 会与组件内置的状态类名（如 `.hmfw-notification-notice-success`、`.hmfw-notification-notice-leaving`）及配置项 `className` / `style` 合并
 - 通知渲染在 `document.body` 下，若使用 `<style scoped>` 定义类名，需配合 `:deep()` 选择器或改用全局样式
 
 ## 设计 Token

@@ -209,42 +209,39 @@ interface UploadStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<UploadSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 选择按钮模式 (type="select") -->
 <div class="hmfw-upload">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-upload-select">
-    <!-- ↑ classNames.select / styles.select 应用于此 -->
-    <span class="hmfw-upload-select-icon">
-      <!-- ↑ classNames.selectIcon / styles.selectIcon 应用于此 -->
-      <svg>...</svg>
-    </span>
-    <span class="hmfw-upload-select-text">
-      <!-- ↑ classNames.selectText / styles.selectText 应用于此 -->
-      上传文件
-    </span>
+    <!-- ↑ classNames.select / styles.select -->
+    <span class="hmfw-upload-select-icon"><svg>...</svg></span>
+    <!-- ↑ classNames.selectIcon / styles.selectIcon -->
+    <span class="hmfw-upload-select-text">上传文件</span>
+    <!-- ↑ classNames.selectText / styles.selectText -->
   </div>
   <div class="hmfw-upload-list">
-    <!-- ↑ classNames.list / styles.list 应用于此 -->
+    <!-- ↑ classNames.list / styles.list -->
     <div class="hmfw-upload-list-item-container">
-      <!-- ↑ classNames.listItemContainer / styles.listItemContainer 应用于此 -->
+      <!-- ↑ classNames.listItemContainer / styles.listItemContainer -->
       <div class="hmfw-upload-list-item">
-        <!-- ↑ classNames.listItem / styles.listItem 应用于此 -->
-        <span class="hmfw-upload-list-item-icon">
-          <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
-        </span>
+        <!-- ↑ classNames.listItem / styles.listItem -->
+        <span class="hmfw-upload-list-item-icon"></span>
+        <!-- ↑ classNames.itemIcon / styles.itemIcon -->
         <span class="hmfw-upload-list-item-info">
-          <!-- ↑ classNames.itemInfo / styles.itemInfo 应用于此 -->
-          <span class="hmfw-upload-list-item-name">
-            <!-- ↑ classNames.itemName / styles.itemName 应用于此 -->
-            文件名.pdf
-          </span>
-          <span class="hmfw-upload-list-item-size">
-            <!-- ↑ classNames.itemSize / styles.itemSize 应用于此 -->
-            1.2 MB
-          </span>
+          <!-- ↑ classNames.itemInfo / styles.itemInfo -->
+          <span class="hmfw-upload-list-item-name">文件名.pdf</span>
+          <!-- ↑ classNames.itemName / styles.itemName -->
+          <span class="hmfw-upload-list-item-size">1.2 MB</span>
+          <!-- ↑ classNames.itemSize / styles.itemSize -->
         </span>
       </div>
     </div>
@@ -253,11 +250,11 @@ interface UploadStyles {
 
 <!-- 拖拽上传模式 (type="drag") -->
 <div class="hmfw-upload">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-upload-drag">
-    <!-- ↑ classNames.drag / styles.drag 应用于此 -->
+    <!-- ↑ classNames.drag / styles.drag -->
     <div class="hmfw-upload-drag-container">
-      <!-- ↑ classNames.dragContainer / styles.dragContainer 应用于此 -->
+      <!-- ↑ classNames.dragContainer / styles.dragContainer -->
       <p class="ant-upload-drag-icon">...</p>
       <p class="ant-upload-text">点击或拖拽文件到此区域上传</p>
     </div>
@@ -267,21 +264,17 @@ interface UploadStyles {
 <!-- 图片卡片模式 (list-type="picture-card") -->
 <div class="hmfw-upload">
   <div class="hmfw-upload-list hmfw-upload-list-picture-card">
-    <!-- ↑ classNames.list / styles.list 应用于此 -->
+    <!-- ↑ classNames.list / styles.list -->
     <div class="hmfw-upload-list-item-container">
-      <!-- ↑ classNames.listItemContainer / styles.listItemContainer 应用于此 -->
+      <!-- ↑ classNames.listItemContainer / styles.listItemContainer -->
       <div class="hmfw-upload-list-item-card">
-        <!-- ↑ classNames.itemCard / styles.itemCard 应用于此 -->
-        <div class="hmfw-upload-list-item-thumbnail">
-          <!-- ↑ classNames.thumbnail / styles.thumbnail 应用于此 -->
-          <img src="..." />
-        </div>
+        <!-- ↑ classNames.itemCard / styles.itemCard -->
+        <div class="hmfw-upload-list-item-thumbnail"><img src="..." /></div>
+        <!-- ↑ classNames.thumbnail / styles.thumbnail -->
         <div class="hmfw-upload-list-item-actions">
-          <!-- ↑ classNames.cardActions / styles.cardActions 应用于此 -->
-          <button class="hmfw-upload-list-item-action">
-            <!-- ↑ classNames.itemAction / styles.itemAction 应用于此 -->
-            预览
-          </button>
+          <!-- ↑ classNames.cardActions / styles.cardActions -->
+          <button class="hmfw-upload-list-item-action">预览</button>
+          <!-- ↑ classNames.itemAction / styles.itemAction -->
         </div>
       </div>
     </div>
@@ -291,57 +284,44 @@ interface UploadStyles {
 <!-- 上传进度 -->
 <div class="hmfw-upload-list-item">
   <div class="hmfw-upload-list-item-progress">
-    <!-- ↑ classNames.progress / styles.progress 应用于此 -->
-    <div class="hmfw-upload-list-item-progress-bar" style="width: 60%">
-      <!-- ↑ classNames.progressBar / styles.progressBar 应用于此 -->
-    </div>
+    <!-- ↑ classNames.progress / styles.progress -->
+    <div class="hmfw-upload-list-item-progress-bar" style="width: 60%"></div>
+    <!-- ↑ classNames.progressBar / styles.progressBar -->
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义拖拽区样式 -->
-  <Upload
-    type="drag"
-    action="/api/upload"
-    :class-names="{
-      drag: 'my-drag-area',
-      dragContainer: 'my-drag-container',
-    }"
-  >
+  <!-- classNames：追加自定义类 -->
+  <Upload type="drag" action="/api/upload" :class-names="{ drag: 'my-drag-area', listItem: 'my-file-item' }">
     <p class="ant-upload-drag-icon">
       <InboxOutlined />
     </p>
     <p class="ant-upload-text">点击或拖拽文件到此区域上传</p>
   </Upload>
 
-  <!-- 自定义文件列表项 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Upload
     action="/api/upload"
-    :class-names="{
-      list: 'my-file-list',
-      listItem: 'my-file-item',
-      itemIcon: 'my-file-icon',
-      itemName: 'my-file-name',
+    :styles="{
+      progress: { backgroundColor: 'rgba(114, 46, 209, 0.1)' },
+      progressBar: { backgroundColor: '#722ed1' },
     }"
   >
     <Button>上传文件</Button>
   </Upload>
 
-  <!-- 自定义图片卡片 -->
+  <!-- 组合：classNames 与 styles 混用 -->
   <Upload
     action="/api/upload"
     list-type="picture-card"
-    :class-names="{
-      itemCard: 'my-picture-card',
-      thumbnail: 'my-thumbnail',
-      cardActions: 'my-actions',
-    }"
+    :class-names="{ itemCard: 'my-picture-card' }"
+    :styles="{ thumbnail: { borderRadius: '12px' } }"
   >
     <div>+ 上传图片</div>
   </Upload>
@@ -387,61 +367,10 @@ interface UploadStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制拖拽区 -->
-  <Upload
-    type="drag"
-    action="/api/upload"
-    :styles="{
-      drag: { borderColor: '#722ed1', borderWidth: '2px' },
-      dragContainer: { padding: '32px' },
-    }"
-  >
-    <p class="ant-upload-drag-icon">
-      <InboxOutlined style="color: #722ed1" />
-    </p>
-    <p class="ant-upload-text">紫色主题拖拽上传</p>
-  </Upload>
-
-  <!-- 自定义进度条颜色 -->
-  <Upload
-    action="/api/upload"
-    :styles="{
-      progress: { backgroundColor: 'rgba(114, 46, 209, 0.1)' },
-      progressBar: { backgroundColor: '#722ed1' },
-    }"
-  >
-    <Button>上传文件</Button>
-  </Upload>
-
-  <!-- 组合使用 -->
-  <Upload
-    action="/api/upload"
-    list-type="picture-card"
-    :styles="{
-      itemCard: { borderRadius: '16px', borderColor: '#13c2c2' },
-      thumbnail: { borderRadius: '12px' },
-      cardActions: { background: 'linear-gradient(to bottom, transparent, rgba(19, 194, 194, 0.8))' },
-    }"
-  >
-    <div>+ 上传</div>
-  </Upload>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `select`、`selectIcon`、`selectText` 仅在 `type="select"` 时有效
-- `drag`、`dragContainer` 仅在 `type="drag"` 时有效
-- `itemCard`、`thumbnail`、`cardActions` 仅在 `list-type="picture-card"` 或 `list-type="picture-circle"` 时有效
-- `progress`、`progressBar` 仅在文件上传中状态时渲染
-- 不同的 `listType`（`text`/`picture`/`picture-card`/`picture-circle`）会影响部分节点的渲染逻辑
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-upload`）合并，不会互相覆盖
 
 ## 设计 Token
 

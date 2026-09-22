@@ -265,64 +265,70 @@ interface SkeletonNodeStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<SkeletonSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- Skeleton 主组件 -->
 <div class="hmfw-skeleton">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-skeleton-header">
-    <!-- ↑ classNames.header / styles.header 应用于此 -->
+    <!-- ↑ classNames.header / styles.header -->
     <span class="hmfw-skeleton-avatar">
-      <!-- ↑ classNames.avatar / styles.avatar 应用于此 -->
+      <!-- ↑ classNames.avatar / styles.avatar -->
     </span>
   </div>
   <div class="hmfw-skeleton-section">
-    <!-- ↑ classNames.section / styles.section 应用于此 -->
+    <!-- ↑ classNames.section / styles.section -->
     <h3 class="hmfw-skeleton-title">
-      <!-- ↑ classNames.title / styles.title 应用于此 -->
+      <!-- ↑ classNames.title / styles.title -->
     </h3>
     <ul class="hmfw-skeleton-paragraph">
-      <!-- ↑ classNames.paragraph / styles.paragraph 应用于此 -->
-      <li><!-- ↑ classNames.row / styles.row 应用于此 --></li>
-      <li><!-- ↑ classNames.row / styles.row 应用于此 --></li>
+      <!-- ↑ classNames.paragraph / styles.paragraph -->
+      <li><!-- ↑ classNames.row / styles.row --></li>
+      <li><!-- ↑ classNames.row / styles.row --></li>
     </ul>
   </div>
 </div>
 
 <!-- SkeletonButton -->
 <div class="hmfw-skeleton hmfw-skeleton-element">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-skeleton-button">
-    <!-- ↑ classNames.button / styles.button 应用于此 -->
+    <!-- ↑ classNames.button / styles.button -->
   </span>
 </div>
 
 <!-- SkeletonInput -->
 <div class="hmfw-skeleton hmfw-skeleton-element">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-skeleton-input">
-    <!-- ↑ classNames.input / styles.input 应用于此 -->
+    <!-- ↑ classNames.input / styles.input -->
   </span>
 </div>
 
 <!-- SkeletonAvatar -->
 <div class="hmfw-skeleton hmfw-skeleton-element">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-skeleton-avatar">
-    <!-- ↑ classNames.avatar / styles.avatar 应用于此 -->
+    <!-- ↑ classNames.avatar / styles.avatar -->
   </span>
 </div>
 
 <!-- SkeletonImage -->
 <div class="hmfw-skeleton hmfw-skeleton-element">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-skeleton-image">
-    <!-- ↑ classNames.image / styles.image 应用于此 -->
+    <!-- ↑ classNames.image / styles.image -->
     <svg class="hmfw-skeleton-image-svg">
-      <!-- ↑ classNames.svg / styles.svg 应用于此 -->
+      <!-- ↑ classNames.svg / styles.svg -->
       <path class="hmfw-skeleton-image-path">
-        <!-- ↑ classNames.path / styles.path 应用于此 -->
+        <!-- ↑ classNames.path / styles.path -->
       </path>
     </svg>
   </div>
@@ -330,48 +336,41 @@ interface SkeletonNodeStyles {
 
 <!-- SkeletonNode -->
 <div class="hmfw-skeleton hmfw-skeleton-element">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-skeleton-node">
-    <!-- ↑ classNames.node / styles.node 应用于此 -->
+    <!-- ↑ classNames.node / styles.node -->
     <!-- 插槽内容 -->
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- Skeleton 主组件 -->
+  <!-- classNames：追加自定义类 -->
   <Skeleton
     avatar
     :paragraph="{ rows: 3 }"
-    :class-names="{
-      root: 'my-skeleton',
-      avatar: 'my-avatar',
-      title: 'my-title',
-      row: 'my-row',
+    :class-names="{ root: 'my-skeleton', avatar: 'my-avatar', title: 'my-title', row: 'my-row' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Skeleton
+    avatar
+    :paragraph="{ rows: 2 }"
+    :styles="{
+      root: { padding: '16px', backgroundColor: '#fafafa', borderRadius: '8px' },
+      avatar: { borderRadius: '12px' },
+      title: { height: '20px', backgroundColor: '#1890ff20' },
+      row: { backgroundColor: '#52c41a20' },
     }"
   />
 
-  <!-- SkeletonButton -->
-  <SkeletonButton
-    active
-    :class-names="{
-      button: 'my-button',
-    }"
-  />
-
-  <!-- SkeletonImage -->
-  <SkeletonImage
-    active
-    :class-names="{
-      image: 'my-image',
-      path: 'my-path',
-    }"
-  />
+  <!-- 组合：classNames 与 styles 混用（子组件同样支持） -->
+  <SkeletonButton active :class-names="{ button: 'my-button' }" :styles="{ root: { marginTop: '8px' } }" />
 </template>
 
 <style scoped>
@@ -399,68 +398,14 @@ interface SkeletonNodeStyles {
   background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
   border-radius: 8px;
 }
-
-:deep(.my-image) {
-  background: linear-gradient(135deg, #faad14 0%, #d48806 100%);
-  border-radius: 12px;
-}
-
-:deep(.my-path) {
-  fill: #ffffff;
-}
 </style>
-```
-
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- Skeleton 主组件 -->
-  <Skeleton
-    avatar
-    :paragraph="{ rows: 2 }"
-    :styles="{
-      root: { padding: '16px', backgroundColor: '#fafafa', borderRadius: '8px' },
-      avatar: { borderRadius: '12px' },
-      title: { height: '20px', backgroundColor: '#1890ff20' },
-      row: { backgroundColor: '#52c41a20' },
-    }"
-  />
-
-  <!-- SkeletonButton -->
-  <SkeletonButton
-    :styles="{
-      button: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-    }"
-  />
-
-  <!-- SkeletonInput -->
-  <SkeletonInput
-    block
-    :styles="{
-      input: { backgroundColor: '#ff4d4f20', borderRadius: '6px' },
-    }"
-  />
-
-  <!-- SkeletonAvatar -->
-  <SkeletonAvatar
-    :size="64"
-    :styles="{
-      avatar: { borderRadius: '16px', background: 'linear-gradient(135deg, #722ed1 0%, #531dab 100%)' },
-    }"
-  />
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-skeleton`）合并，不会互相覆盖
 - Skeleton 主组件与子组件（Button/Input/Avatar/Image/Node）各自独立拥有 `classNames` 和 `styles` props
-- 主组件的 `classNames.row` 会应用于段落的每一行 `<li>` 元素
-- 子组件的 `root` key 对应 `.hmfw-skeleton.hmfw-skeleton-element` 根节点
-- SkeletonImage 的 `path` key 可用于自定义占位图标的填充色
 - 动画效果由 `.hmfw-skeleton-active` 类控制，`classNames` 不会覆盖动画行为
 - 响应 `prefers-reduced-motion` 和 `prefers-color-scheme: dark` 的样式由组件内置处理
 

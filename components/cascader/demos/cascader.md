@@ -229,62 +229,69 @@ interface CascaderStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<CascaderSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-cascader">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-cascader-selector">
-    <!-- ↑ classNames.selector / styles.selector 应用于此 -->
+    <!-- ↑ classNames.selector / styles.selector -->
     <span class="hmfw-cascader-selection-item">
-      <!-- ↑ classNames.selectionItem / styles.selectionItem 应用于此（多选模式） -->
+      <!-- ↑ 多选模式，classNames.selectionItem / styles.selectionItem -->
       <span class="hmfw-cascader-selection-item-content">浙江 / 杭州</span>
-      <!-- ↑ classNames.selectionItemContent / styles.selectionItemContent 应用于此 -->
+      <!-- ↑ classNames.selectionItemContent / styles.selectionItemContent -->
       <span class="hmfw-cascader-selection-item-remove">×</span>
-      <!-- ↑ classNames.selectionItemRemove / styles.selectionItemRemove 应用于此 -->
+      <!-- ↑ classNames.selectionItemRemove / styles.selectionItemRemove -->
     </span>
     <span class="hmfw-cascader-selection-placeholder">请选择</span>
-    <!-- ↑ classNames.selectionPlaceholder / styles.selectionPlaceholder 应用于此 -->
+    <!-- ↑ classNames.selectionPlaceholder / styles.selectionPlaceholder -->
     <input class="hmfw-cascader-search-input" />
-    <!-- ↑ classNames.searchInput / styles.searchInput 应用于此（搜索模式） -->
+    <!-- ↑ 搜索模式，classNames.searchInput / styles.searchInput -->
   </div>
   <div class="hmfw-cascader-suffix">
-    <!-- ↑ classNames.suffix / styles.suffix 应用于此 -->
+    <!-- ↑ classNames.suffix / styles.suffix -->
     <span class="hmfw-cascader-clear">×</span>
-    <!-- ↑ classNames.clear / styles.clear 应用于此 -->
+    <!-- ↑ classNames.clear / styles.clear -->
     <span class="hmfw-cascader-arrow">▾</span>
-    <!-- ↑ classNames.arrow / styles.arrow 应用于此 -->
+    <!-- ↑ classNames.arrow / styles.arrow -->
   </div>
-  <!-- Teleport 到 body -->
+  <!-- 下拉弹层经 Teleport 到 body -->
   <div class="hmfw-cascader-dropdown">
-    <!-- ↑ classNames.dropdown / styles.dropdown 应用于此 -->
+    <!-- ↑ classNames.dropdown / styles.dropdown -->
     <div class="hmfw-cascader-menus">
-      <!-- ↑ classNames.menus / styles.menus 应用于此 -->
+      <!-- ↑ classNames.menus / styles.menus -->
       <div class="hmfw-cascader-menu">
-        <!-- ↑ classNames.menu / styles.menu 应用于此 -->
+        <!-- ↑ classNames.menu / styles.menu -->
         <div class="hmfw-cascader-menu-item">
-          <!-- ↑ classNames.menuItem / styles.menuItem 应用于此 -->
+          <!-- ↑ classNames.menuItem / styles.menuItem -->
           <span class="hmfw-cascader-menu-item-checkbox">☑</span>
-          <!-- ↑ classNames.menuItemCheckbox / styles.menuItemCheckbox 应用于此（多选） -->
+          <!-- ↑ 多选模式，classNames.menuItemCheckbox / styles.menuItemCheckbox -->
           <div class="hmfw-cascader-menu-item-content">浙江</div>
-          <!-- ↑ classNames.menuItemContent / styles.menuItemContent 应用于此 -->
+          <!-- ↑ classNames.menuItemContent / styles.menuItemContent -->
           <span class="hmfw-cascader-menu-item-expand-icon">›</span>
-          <!-- ↑ classNames.menuItemExpandIcon / styles.menuItemExpandIcon 应用于此 -->
+          <!-- ↑ 含子级时渲染，classNames.menuItemExpandIcon / styles.menuItemExpandIcon -->
         </div>
         <div class="hmfw-cascader-menu-item-empty">无匹配结果</div>
-        <!-- ↑ classNames.menuItemEmpty / styles.menuItemEmpty 应用于此 -->
+        <!-- ↑ 搜索无命中时渲染，classNames.menuItemEmpty / styles.menuItemEmpty -->
       </div>
     </div>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Cascader
     :options="cityOptions"
     :class-names="{
@@ -293,6 +300,24 @@ interface CascaderStyles {
       dropdown: 'my-dropdown',
       menuItem: 'my-menu-item',
     }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Cascader
+    :options="cityOptions"
+    :styles="{
+      root: { borderRadius: '20px', borderColor: '#722ed1' },
+      selector: { padding: '8px 16px' },
+      dropdown: { borderRadius: '12px', boxShadow: '0 6px 16px rgba(0, 0, 0, 0.12)' },
+      menuItem: { padding: '10px 16px' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Cascader
+    :options="cityOptions"
+    :class-names="{ root: 'my-cascader-root', menuItem: 'my-menu-item' }"
+    :styles="{ selector: { padding: '8px 16px' } }"
   />
 </template>
 
@@ -323,36 +348,11 @@ interface CascaderStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Cascader
-    :options="cityOptions"
-    :styles="{
-      root: { borderRadius: '20px', borderColor: '#722ed1' },
-      selector: { padding: '8px 16px' },
-      dropdown: { borderRadius: '12px', boxShadow: '0 6px 16px rgba(0, 0, 0, 0.12)' },
-      menuItem: { padding: '10px 16px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `dropdown`、`menus`、`menu`、`menuItem` 等通过 `Teleport to="body"` 渲染，样式必须使用 `:global()` 而非 `:deep()`
-- `clear` 仅在 `allowClear` 启用且有选中值时显示
-- `selectionPlaceholder` 仅在无选中值时显示
-- `selectionItem`、`selectionItemContent`、`selectionItemRemove` 在多选模式下对应每个标签
-- `searchInput` 在 `showSearch` 启用时显示
-- `menuItemCheckbox` 仅在多选模式下显示
-- `menuItemExpandIcon` 在有子节点时显示
-- `menuItemHighlight` 在搜索模式下用于高亮匹配文本
-- `menuItemEmpty` 在搜索无结果时显示
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-cascader-menu-item-selected`）合并，不会互相覆盖
+- `dropdown`、`menus`、`menu`、`menuItem` 等经 `Teleport to="body"` 渲染，样式必须使用 `:global()` 而非 `:deep()`
 
 ## 设计 Token
 

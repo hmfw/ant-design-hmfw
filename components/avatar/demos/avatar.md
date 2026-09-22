@@ -110,47 +110,64 @@ interface AvatarStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<AvatarSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 图片模式 -->
 <span class="hmfw-avatar hmfw-avatar-circle hmfw-avatar-image">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <img src="..." />
-  <!-- ↑ classNames.img / styles.img 应用于此 -->
+  <!-- ↑ 设置 src 且加载成功时渲染，classNames.img / styles.img -->
 </span>
 
-<!-- 图标模式（无包裹层，icon 直接渲染） -->
+<!-- 图标模式：icon 直接渲染，无包裹层 -->
 <span class="hmfw-avatar hmfw-avatar-circle hmfw-avatar-icon">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <IconComponent />
   <!-- ↑ 图标组件无包裹层，不支持 classNames.icon -->
 </span>
 
 <!-- 字符/slot 模式 -->
 <span class="hmfw-avatar hmfw-avatar-circle">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-avatar-string" style="transform: translateX(-50%)">
-    <!-- ↑ classNames.string / styles.string 应用于此 -->
+    <!-- ↑ classNames.string / styles.string -->
     文本内容
   </span>
 </span>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器样式 -->
-  <Avatar :class-names="{ root: 'gradient-avatar' }">U</Avatar>
+  <!-- classNames：追加自定义类 -->
+  <Avatar :class-names="{ root: 'gradient-avatar', string: 'text-glow' }">U</Avatar>
 
-  <!-- 自定义图片样式 -->
-  <Avatar src="https://example.com/avatar.jpg" :class-names="{ root: 'custom-root', img: 'custom-img' }" />
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Avatar
+    :styles="{
+      root: { background: '#1677ff' },
+      string: { color: '#fff', fontWeight: 'bold' },
+    }"
+  >
+    Vue
+  </Avatar>
 
-  <!-- 自定义文本容器 -->
-  <Avatar :class-names="{ string: 'text-glow' }">李</Avatar>
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Avatar
+    src="https://example.com/avatar.jpg"
+    :class-names="{ img: 'custom-img' }"
+    :styles="{ root: { borderRadius: '12px' } }"
+  />
 </template>
 
 <style scoped>
@@ -172,51 +189,12 @@ interface AvatarStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制根容器 -->
-  <Avatar
-    :styles="{
-      root: {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        boxShadow: '0 4px 12px rgba(102, 126, 234, 0.4)',
-      },
-    }"
-  >
-    JS
-  </Avatar>
-
-  <!-- 内联样式控制图片 -->
-  <Avatar
-    src="https://example.com/avatar.jpg"
-    :styles="{
-      root: { borderRadius: '12px' },
-      img: { filter: 'grayscale(50%)' },
-    }"
-  />
-
-  <!-- 组合使用 -->
-  <Avatar
-    :styles="{
-      root: { background: '#1677ff' },
-      string: { color: '#fff', fontWeight: 'bold' },
-    }"
-  >
-    Vue
-  </Avatar>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 图标模式（`icon` prop）下，图标组件直接渲染无包裹层，无法应用 `classNames.icon` 或 `styles.icon`
-- `classNames.string` 仅在字符/slot 模式下生效，`classNames.img` 仅在图片模式下生效
-- `styles.string` 会与内置的 `transform` 样式合并，`styles.root` 会与内置的 `sizeStyle` 合并
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-avatar-circle`）合并，不会互相覆盖
+- 图标模式（`icon`）下图标组件直接渲染、无包裹层，不支持 `classNames.icon` / `styles.icon`
+- `styles.string` 会与内置的 `transform` 合并，`styles.root` 会与内置的尺寸样式合并
 
 ## 设计 Token
 

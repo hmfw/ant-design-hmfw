@@ -180,44 +180,61 @@ interface DropdownStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<DropdownSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="custom-trigger">触发元素</div>
-<!-- ↑ classNames.trigger / styles.trigger 应用于此 -->
+<!-- ↑ classNames.trigger / styles.trigger -->
 
 <!-- Teleport 到 body -->
 <div class="hmfw-dropdown">
-  <!-- ↑ classNames.dropdown / styles.dropdown 应用于此 -->
+  <!-- ↑ classNames.dropdown / styles.dropdown -->
   <div class="hmfw-dropdown-arrow" />
-  <!-- ↑ classNames.arrow / styles.arrow 应用于此（需开启 arrow） -->
+  <!-- ↑ classNames.arrow / styles.arrow（需开启 arrow） -->
   <div class="hmfw-dropdown-content">
-    <!-- ↑ classNames.content / styles.content 应用于此 -->
+    <!-- ↑ classNames.content / styles.content -->
     <!-- 菜单内容（由 menu prop 或 overlay slot 提供） -->
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Dropdown
     :menu="menu"
     :arrow="true"
-    :classNames="{
-      trigger: 'my-trigger',
-      dropdown: 'my-dropdown',
-      content: 'my-content',
-      arrow: 'my-arrow',
-    }"
+    :class-names="{ trigger: 'my-trigger', dropdown: 'my-dropdown', arrow: 'my-arrow' }"
   >
     <Button>下拉菜单</Button>
+  </Dropdown>
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Dropdown
+    :menu="menu"
+    :styles="{ dropdown: { borderRadius: '16px' }, content: { background: '#667eea', padding: '4px' } }"
+  >
+    <Button>动态样式</Button>
+  </Dropdown>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Dropdown :menu="menu" :class-names="{ content: 'my-content' }" :styles="{ dropdown: { borderRadius: '16px' } }">
+    <Button>组合样式</Button>
   </Dropdown>
 </template>
 
 <style>
-/* 全局样式（非 scoped）：dropdown/content/arrow 需要全局样式 */
+/* dropdown/content/arrow 通过 Teleport 渲染到 body，需使用全局样式（非 scoped） */
 .my-dropdown {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
@@ -239,27 +256,11 @@ interface DropdownStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <Dropdown
-    :menu="menu"
-    :styles="{
-      dropdown: { borderRadius: '16px' },
-      content: { background: '#667eea', padding: '4px' },
-    }"
-  >
-    <Button>动态样式</Button>
-  </Dropdown>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-dropdown`）合并，不会互相覆盖
 - `dropdown`、`content`、`arrow` 通过 `Teleport` 渲染到 body（或 `getPopupContainer` 指定的容器），其样式必须使用**全局样式**（非 scoped）
-- `arrow` 仅在开启 `arrow` 属性时渲染
 - 菜单项（menu/item）由 `menu` prop 传入的 [Menu](/components/menu) 组件控制，请使用 Menu 的语义化 API 定制
 - `classNames.trigger` 与组件的 `class` attr、`openClassName` 会合并应用到触发器容器
 - `styles.dropdown` 会与 `overlayStyle` 合并；`styles.trigger` 会与组件的 `style` attr 合并

@@ -206,71 +206,77 @@ interface TourStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TourSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- Tour 根容器 -->
 <div class="hmfw-tour-root">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
 
   <!-- 遮罩层 -->
   <div class="hmfw-tour-mask">
-    <!-- ↑ classNames.mask / styles.mask 应用于此 -->
+    <!-- ↑ classNames.mask / styles.mask -->
     <svg class="hmfw-tour-mask-svg">...</svg>
   </div>
 
   <!-- 弹出卡片 -->
   <div class="hmfw-tour-popover">
-    <!-- ↑ classNames.popover / styles.popover 应用于此 -->
+    <!-- ↑ classNames.popover / styles.popover -->
     <div class="hmfw-tour-popover-inner">
-      <!-- ↑ classNames.popoverInner / styles.popoverInner 应用于此 -->
+      <!-- ↑ classNames.popoverInner / styles.popoverInner -->
 
       <!-- 关闭按钮 -->
       <button class="hmfw-tour-close">
-        <!-- ↑ classNames.close / styles.close 应用于此 -->
+        <!-- ↑ classNames.close / styles.close -->
         <CloseOutlined />
       </button>
 
       <!-- 封面（可选） -->
       <div class="hmfw-tour-cover">
-        <!-- ↑ classNames.cover / styles.cover 应用于此 -->
+        <!-- ↑ classNames.cover / styles.cover -->
         <img src="..." />
       </div>
 
       <!-- 标题 -->
       <div class="hmfw-tour-title">
-        <!-- ↑ classNames.title / styles.title 应用于此 -->
+        <!-- ↑ classNames.title / styles.title -->
         标题文本
       </div>
 
       <!-- 描述 -->
       <div class="hmfw-tour-description">
-        <!-- ↑ classNames.description / styles.description 应用于此 -->
+        <!-- ↑ classNames.description / styles.description -->
         描述文本
       </div>
 
       <!-- 底部 -->
       <div class="hmfw-tour-footer">
-        <!-- ↑ classNames.footer / styles.footer 应用于此 -->
+        <!-- ↑ classNames.footer / styles.footer -->
 
         <!-- 指示器 -->
         <div class="hmfw-tour-indicators">
-          <!-- ↑ classNames.indicators / styles.indicators 应用于此 -->
+          <!-- ↑ classNames.indicators / styles.indicators -->
           <span class="hmfw-tour-indicator"></span>
-          <!-- ↑ classNames.indicator / styles.indicator 应用于此 -->
+          <!-- ↑ classNames.indicator / styles.indicator（含激活项 .hmfw-tour-indicator-active） -->
           <span class="hmfw-tour-indicator hmfw-tour-indicator-active"></span>
           <span class="hmfw-tour-indicator"></span>
         </div>
 
         <!-- 按钮组 -->
         <div class="hmfw-tour-buttons">
-          <!-- ↑ classNames.buttons / styles.buttons 应用于此 -->
+          <!-- ↑ classNames.buttons / styles.buttons -->
           <button class="hmfw-btn hmfw-btn-default hmfw-btn-small hmfw-tour-prev-btn">
-            <!-- ↑ classNames.prevBtn / styles.prevBtn 应用于此 -->
+            <!-- ↑ classNames.prevBtn / styles.prevBtn -->
             <span class="hmfw-btn-content">上一步</span>
           </button>
           <button class="hmfw-btn hmfw-btn-primary hmfw-btn-small hmfw-tour-next-btn">
-            <!-- ↑ classNames.nextBtn / styles.nextBtn 应用于此 -->
+            <!-- ↑ classNames.nextBtn / styles.nextBtn -->
             <span class="hmfw-btn-content">下一步</span>
           </button>
         </div>
@@ -280,14 +286,15 @@ interface TourStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
   <Button type="primary" @click="open = true">打开引导</Button>
 
+  <!-- classNames：追加自定义类 -->
   <Tour
     v-model:open="open"
     :steps="steps"
@@ -298,6 +305,26 @@ interface TourStyles {
       indicator: 'my-indicator',
     }"
   />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Tour
+    v-model:open="open"
+    :steps="steps"
+    :styles="{
+      popoverInner: { borderRadius: '16px', padding: '24px' },
+      title: { color: '#722ed1', fontSize: '18px' },
+      description: { color: '#52c41a', fontSize: '15px' },
+      buttons: { gap: '12px' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Tour
+    v-model:open="open"
+    :steps="steps"
+    :class-names="{ popoverInner: 'my-popover-inner' }"
+    :styles="{ title: { color: '#722ed1', fontSize: '18px' } }"
+  />
 </template>
 
 <script setup lang="ts">
@@ -306,14 +333,8 @@ import { Button, Tour } from '@hmfw/ant-design'
 
 const open = ref(false)
 const steps = [
-  {
-    title: '欢迎',
-    description: '这是一个漫游引导',
-  },
-  {
-    title: '第二步',
-    description: '继续了解更多功能',
-  },
+  { title: '欢迎', description: '这是一个漫游引导' },
+  { title: '第二步', description: '继续了解更多功能' },
 ]
 </script>
 
@@ -350,47 +371,11 @@ const steps = [
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Button type="primary" @click="open = true">打开引导</Button>
-
-  <Tour
-    v-model:open="open"
-    :steps="steps"
-    :styles="{
-      popoverInner: { borderRadius: '16px', padding: '24px' },
-      title: { color: '#722ed1', fontSize: '18px' },
-      description: { color: '#52c41a', fontSize: '15px' },
-      footer: { marginTop: '20px' },
-      buttons: { gap: '12px' },
-    }"
-  />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Button, Tour } from '@hmfw/ant-design'
-
-const open = ref(false)
-const steps = [
-  {
-    title: '内联样式',
-    description: '通过 styles 属性应用内联样式',
-  },
-]
-</script>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-tour-popover`）合并，不会互相覆盖
 - Tour 是弹层组件，挂载到 `body` 之外，样式定义需要使用 `:global()` 而非 `:deep()`
-- `classNames.indicator` 会应用到所有指示器点，包括激活状态的点（`.hmfw-tour-indicator-active`）
-- `classNames.prevBtn` 和 `classNames.nextBtn` 会与 Button 组件的样式类名合并
 - 在 primary 类型下，弹出卡片的背景和文字颜色会自动切换为主题色和白色
 
 ## 设计 Token

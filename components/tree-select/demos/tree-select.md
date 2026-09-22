@@ -192,59 +192,84 @@ interface TreeSelectStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TreeSelectSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-tree-select">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-tree-select-selector">
-    <!-- ↑ classNames.selector / styles.selector 应用于此 -->
+    <!-- ↑ classNames.selector / styles.selector -->
     <span class="hmfw-tree-select-selection-item">已选项</span>
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
+    <!-- ↑ classNames.item / styles.item -->
     <span class="hmfw-tree-select-selection-placeholder">请选择</span>
-    <!-- ↑ classNames.placeholder / styles.placeholder 应用于此 -->
+    <!-- ↑ classNames.placeholder / styles.placeholder -->
     <input class="hmfw-tree-select-selection-search" />
-    <!-- ↑ classNames.search / styles.search 应用于此 -->
+    <!-- ↑ classNames.search / styles.search -->
   </div>
   <div class="hmfw-tree-select-arrow">▾</div>
-  <!-- ↑ classNames.arrow / styles.arrow 应用于此 -->
+  <!-- ↑ classNames.arrow / styles.arrow -->
   <span class="hmfw-tree-select-clear">×</span>
-  <!-- ↑ classNames.clear / styles.clear 应用于此 -->
+  <!-- ↑ classNames.clear / styles.clear -->
 
   <!-- Teleport 到 body -->
   <div class="hmfw-tree-select-dropdown">
-    <!-- ↑ classNames.dropdown / styles.dropdown 应用于此 -->
+    <!-- ↑ classNames.dropdown / styles.dropdown -->
     <div class="hmfw-tree-select-dropdown-empty">暂无数据</div>
-    <!-- ↑ classNames.dropdownEmpty / styles.dropdownEmpty 应用于此 -->
+    <!-- ↑ classNames.dropdownEmpty / styles.dropdownEmpty -->
     <div class="hmfw-tree-select-tree-node">
-      <!-- ↑ classNames.treeNode / styles.treeNode 应用于此 -->
+      <!-- ↑ classNames.treeNode / styles.treeNode -->
       <span class="hmfw-tree-select-tree-switcher">+</span>
-      <!-- ↑ classNames.treeSwitcher / styles.treeSwitcher 应用于此 -->
+      <!-- ↑ classNames.treeSwitcher / styles.treeSwitcher -->
       <span class="hmfw-tree-select-tree-checkbox">☑</span>
-      <!-- ↑ classNames.treeCheckbox / styles.treeCheckbox 应用于此 -->
+      <!-- ↑ classNames.treeCheckbox / styles.treeCheckbox -->
       <span class="hmfw-tree-select-tree-icon">📁</span>
-      <!-- ↑ classNames.treeIcon / styles.treeIcon 应用于此 -->
+      <!-- ↑ classNames.treeIcon / styles.treeIcon -->
       <span class="hmfw-tree-select-tree-node-content">节点内容</span>
-      <!-- ↑ classNames.treeNodeContent / styles.treeNodeContent 应用于此 -->
+      <!-- ↑ classNames.treeNodeContent / styles.treeNodeContent -->
     </div>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <TreeSelect
     :tree-data="treeData"
-    :classNames="{
+    :class-names="{
       root: 'my-tree-select-root',
       selector: 'my-selector',
       dropdown: 'my-dropdown',
       treeNode: 'my-tree-node',
     }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <TreeSelect
+    :tree-data="treeData"
+    :styles="{
+      root: { borderRadius: '12px', borderColor: '#52c41a' },
+      selector: { background: 'linear-gradient(to right, #f0f9ff, #e0f2fe)' },
+      dropdown: { borderRadius: '12px', boxShadow: '0 6px 20px rgba(82, 196, 26, 0.2)' },
+      treeNode: { padding: '6px 8px' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <TreeSelect
+    :tree-data="treeData"
+    :class-names="{ dropdown: 'my-dropdown' }"
+    :styles="{ selector: { background: 'linear-gradient(to right, #f0f9ff, #e0f2fe)' } }"
   />
 </template>
 
@@ -273,32 +298,11 @@ interface TreeSelectStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <TreeSelect
-    :tree-data="treeData"
-    :styles="{
-      root: { borderRadius: '12px', borderColor: '#52c41a' },
-      selector: { background: 'linear-gradient(to right, #f0f9ff, #e0f2fe)' },
-      dropdown: { borderRadius: '12px', boxShadow: '0 6px 20px rgba(82, 196, 26, 0.2)' },
-      treeNode: { padding: '6px 8px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-tree-select`）合并，不会互相覆盖
 - `dropdown`、`dropdownEmpty`、`treeNode`、`treeNodeContent`、`treeSwitcher`、`treeCheckbox`、`treeIcon` 通过 `Teleport to="body"` 渲染，因此其样式必须使用 `:global()` 而非 `:deep()`（scoped 样式无法穿透 Teleport）
-- `clear` 仅在 `allowClear` 启用且有选中值时显示
-- `placeholder` 仅在无选中值时显示
-- `treeCheckbox` 仅在 `treeCheckable` 模式下显示
-- `item` 在多选模式下对应每个标签
 
 ## 设计 Token
 

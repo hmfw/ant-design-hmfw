@@ -252,50 +252,74 @@ interface SelectStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<SelectSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-select">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-select-selector">
-    <!-- ↑ classNames.selector / styles.selector 应用于此 -->
+    <!-- ↑ classNames.selector / styles.selector -->
     <span class="hmfw-select-selection-item">已选项</span>
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
+    <!-- ↑ classNames.item / styles.item -->
     <span class="hmfw-select-placeholder">占位符</span>
-    <!-- ↑ classNames.placeholder / styles.placeholder 应用于此 -->
+    <!-- ↑ classNames.placeholder / styles.placeholder -->
   </div>
   <div class="hmfw-select-arrow">▾</div>
-  <!-- ↑ classNames.arrow / styles.arrow 应用于此 -->
+  <!-- ↑ classNames.arrow / styles.arrow -->
   <span class="hmfw-select-clear">×</span>
-  <!-- ↑ classNames.clear / styles.clear 应用于此 -->
+  <!-- ↑ classNames.clear / styles.clear -->
   <!-- Teleport 到 body -->
   <div class="hmfw-select-dropdown">
-    <!-- ↑ classNames.dropdown / styles.dropdown 应用于此 -->
+    <!-- ↑ classNames.dropdown / styles.dropdown -->
     <div class="hmfw-select-item-option">
-      <!-- ↑ classNames.option / styles.option 应用于此 -->
+      <!-- ↑ classNames.option / styles.option -->
       <div class="hmfw-select-item-option-content">选项</div>
-      <!-- ↑ classNames.optionLabel / styles.optionLabel 应用于此 -->
+      <!-- ↑ classNames.optionLabel / styles.optionLabel -->
       <span class="hmfw-select-item-option-state">✓</span>
-      <!-- ↑ classNames.optionState / styles.optionState 应用于此 -->
+      <!-- ↑ classNames.optionState / styles.optionState -->
     </div>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Select
     :options="options"
-    :classNames="{
+    :class-names="{
       root: 'my-select-root',
       selector: 'my-select-selector',
       dropdown: 'my-select-dropdown',
       option: 'my-select-option',
     }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Select
+    :options="options"
+    :styles="{
+      root: { borderRadius: '20px' },
+      selector: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+      dropdown: { borderRadius: '12px' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Select
+    :options="options"
+    :class-names="{ root: 'my-select-root', dropdown: 'my-select-dropdown' }"
+    :styles="{ selector: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' } }"
   />
 </template>
 
@@ -323,30 +347,11 @@ interface SelectStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Select
-    :options="options"
-    :styles="{
-      root: { borderRadius: '20px' },
-      selector: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-      dropdown: { borderRadius: '12px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-select-selector`）合并，不会互相覆盖
 - `dropdown` 通过 `Teleport to="body"` 渲染，因此其样式必须使用**全局样式**（非 scoped），或在 scoped 中使用 `:deep()` 仍无效，需要单独的 `<style>` 块
-- `clear` 仅在 `allowClear` 启用且有选中值时显示
-- `placeholder` 仅在无选中值时显示
-- `item` 在多选模式下对应每个标签
 
 ## 设计 Token
 

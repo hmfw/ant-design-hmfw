@@ -259,82 +259,98 @@ interface MenuStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<MenuSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <ul class="hmfw-menu hmfw-menu-inline">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
 
-  <!-- 普通菜单项 -->
+  <!-- 普通菜单项（选中态叠加 -selected 附加类） -->
   <li class="hmfw-menu-item hmfw-menu-item-selected">
-    <!-- ↑ classNames.item + classNames.itemSelected / styles.item + styles.itemSelected 应用于此 -->
-    <span class="hmfw-menu-item-icon">
-      <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
-      <svg>...</svg>
-    </span>
-    <span class="hmfw-menu-title-content">
-      <!-- ↑ classNames.itemContent / styles.itemContent 应用于此 -->
-      导航一
-    </span>
+    <!-- ↑ classNames.item + classNames.itemSelected / styles.item + styles.itemSelected -->
+    <span class="hmfw-menu-item-icon"><svg>...</svg></span>
+    <!-- ↑ classNames.itemIcon / styles.itemIcon -->
+    <span class="hmfw-menu-title-content">导航一</span>
+    <!-- ↑ classNames.itemContent / styles.itemContent -->
   </li>
 
-  <!-- 子菜单 -->
+  <!-- 子菜单（展开/含选中项时叠加 -open / -selected 附加类） -->
   <li class="hmfw-menu-submenu hmfw-menu-submenu-open hmfw-menu-submenu-selected">
-    <!-- ↑ classNames.submenu + classNames.submenuOpen + classNames.submenuSelected 应用于此 -->
+    <!-- ↑ classNames.submenu + classNames.submenuOpen + classNames.submenuSelected -->
     <div class="hmfw-menu-submenu-title">
-      <!-- ↑ classNames.submenuTitle / styles.submenuTitle 应用于此 -->
-      <span class="hmfw-menu-item-icon">
-        <!-- ↑ classNames.submenuIcon / styles.submenuIcon 应用于此 -->
-        <svg>...</svg>
-      </span>
+      <!-- ↑ classNames.submenuTitle / styles.submenuTitle -->
+      <span class="hmfw-menu-item-icon"><svg>...</svg></span>
+      <!-- ↑ classNames.submenuIcon / styles.submenuIcon -->
       <span>子菜单</span>
-      <span class="hmfw-menu-submenu-arrow">
-        <!-- ↑ classNames.submenuArrow / styles.submenuArrow 应用于此 -->
-        <svg>...</svg>
-      </span>
+      <span class="hmfw-menu-submenu-arrow"><svg>...</svg></span>
+      <!-- ↑ classNames.submenuArrow / styles.submenuArrow -->
     </div>
     <ul class="hmfw-menu-sub hmfw-menu-inline">
-      <!-- ↑ classNames.sub / styles.sub 应用于此 -->
+      <!-- ↑ classNames.sub / styles.sub -->
       <li class="hmfw-menu-item">选项 1</li>
       <li class="hmfw-menu-item">选项 2</li>
     </ul>
   </li>
 
-  <!-- 菜单分组 -->
+  <!-- 菜单分组（type: "group"） -->
   <li class="hmfw-menu-item-group">
-    <!-- ↑ classNames.itemGroup / styles.itemGroup 应用于此 -->
-    <div class="hmfw-menu-item-group-title">
-      <!-- ↑ classNames.itemGroupTitle / styles.itemGroupTitle 应用于此 -->
-      分组标题
-    </div>
+    <!-- ↑ classNames.itemGroup / styles.itemGroup -->
+    <div class="hmfw-menu-item-group-title">分组标题</div>
+    <!-- ↑ classNames.itemGroupTitle / styles.itemGroupTitle -->
     <ul class="hmfw-menu-item-group-list">
-      <!-- ↑ classNames.itemGroupList / styles.itemGroupList 应用于此 -->
+      <!-- ↑ classNames.itemGroupList / styles.itemGroupList -->
       <li class="hmfw-menu-item">分组项 1</li>
       <li class="hmfw-menu-item">分组项 2</li>
     </ul>
   </li>
 
-  <!-- 分割线 -->
-  <li class="hmfw-menu-item-divider">
-    <!-- ↑ classNames.divider / styles.divider 应用于此 -->
-  </li>
+  <!-- 分割线（type: "divider"） -->
+  <li class="hmfw-menu-item-divider"></li>
+  <!-- ↑ classNames.divider / styles.divider -->
 </ul>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Menu
     mode="inline"
     :items="items"
-    :class-names="{
-      item: 'my-menu-item',
-      itemSelected: 'my-item-selected',
-      submenuTitle: 'my-submenu-title',
+    :class-names="{ item: 'my-menu-item', itemSelected: 'my-item-selected', submenuTitle: 'my-submenu-title' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Menu
+    mode="inline"
+    :items="items"
+    :styles="{
+      root: { border: '2px solid #722ed1', borderRadius: '12px' },
+      item: { margin: '8px 12px' },
+      itemSelected: {
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: '#fff',
+        fontWeight: 'bold',
+      },
+      itemIcon: { fontSize: '16px' },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Menu
+    mode="inline"
+    :items="items"
+    :class-names="{ item: 'my-menu-item' }"
+    :styles="{ root: { borderRadius: '12px' } }"
   />
 </template>
 
@@ -362,33 +378,10 @@ interface MenuStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Menu
-    mode="inline"
-    :items="items"
-    :styles="{
-      root: { border: '2px solid #722ed1', borderRadius: '12px' },
-      item: { margin: '8px 12px' },
-      itemSelected: {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: '#fff',
-        fontWeight: 'bold',
-      },
-      itemIcon: { fontSize: '16px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 状态类（如 `itemSelected`、`itemDisabled`）会与基础类（如 `item`）**叠加**应用
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-menu-item`）合并，不会互相覆盖
 - 子菜单的弹出层（`mode="vertical"` 或 `mode="horizontal"` 时）挂载到 `body`，需使用 `:global()` 而非 `:deep()` 来应用样式
 - 水平菜单（`mode="horizontal"`）的选中指示器通过 `border-bottom` 实现，可通过 `itemSelected` 自定义
 

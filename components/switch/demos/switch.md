@@ -122,23 +122,29 @@ interface SwitchStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<SwitchSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 基础开关 -->
 <button class="hmfw-switch hmfw-switch-checked">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-switch-handle">
-    <!-- ↑ classNames.indicator / styles.indicator 应用于此 -->
+    <!-- ↑ classNames.indicator / styles.indicator -->
   </span>
   <span class="hmfw-switch-inner">
-    <!-- ↑ classNames.content / styles.content 应用于此 -->
+    <!-- ↑ classNames.content / styles.content -->
     <span class="hmfw-switch-inner-checked">
-      <!-- ↑ classNames.checked / styles.checked 应用于此 -->
+      <!-- ↑ classNames.checked / styles.checked -->
       开
     </span>
     <span class="hmfw-switch-inner-unchecked">
-      <!-- ↑ classNames.unchecked / styles.unchecked 应用于此 -->
+      <!-- ↑ classNames.unchecked / styles.unchecked -->
       关
     </span>
   </span>
@@ -146,42 +152,52 @@ interface SwitchStyles {
 
 <!-- 加载状态：加载图标渲染在 handle 内部，随 indicator 一并定制 -->
 <button class="hmfw-switch hmfw-switch-loading">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-switch-handle">
-    <!-- ↑ classNames.indicator / styles.indicator 应用于此 -->
+    <!-- ↑ classNames.indicator / styles.indicator -->
     <span class="hmfw-switch-loading-icon"></span>
   </span>
 </button>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器渐变背景 -->
-  <Switch v-model:checked="checked" :class-names="{ root: 'gradient-switch' }" />
-
-  <!-- 自定义手柄样式（indicator 对应手柄节点） -->
-  <Switch
-    v-model:checked="checked"
-    :class-names="{
-      root: 'custom-root',
-      indicator: 'custom-handle',
-    }"
-  />
-
-  <!-- 自定义内部文字样式（content 对应内容容器） -->
+  <!-- classNames：追加自定义类 -->
   <Switch
     v-model:checked="checked"
     checked-children="开"
     un-checked-children="关"
     :class-names="{
+      root: 'gradient-switch',
+      indicator: 'custom-handle',
       content: 'custom-inner',
       checked: 'custom-checked',
-      unchecked: 'custom-unchecked',
     }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Switch
+    v-model:checked="checked"
+    checked-children="ON"
+    un-checked-children="OFF"
+    :styles="{
+      root: { minWidth: '60px', height: '28px' },
+      indicator: { width: '24px', height: '24px' },
+      content: { fontSize: '13px', fontWeight: 'bold' },
+      checked: { color: '#fffb00' },
+      unchecked: { color: '#ffa940' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Switch
+    v-model:checked="checked"
+    :class-names="{ root: 'gradient-switch' }"
+    :styles="{ indicator: { boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }, content: { fontSize: '12px' } }"
   />
 </template>
 
@@ -206,51 +222,10 @@ interface SwitchStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制尺寸和颜色 -->
-  <Switch
-    v-model:checked="checked"
-    :styles="{
-      root: { minWidth: '60px', height: '28px' },
-      indicator: { width: '24px', height: '24px' },
-    }"
-  />
-
-  <!-- 自定义文字样式 -->
-  <Switch
-    v-model:checked="checked"
-    checked-children="ON"
-    un-checked-children="OFF"
-    :styles="{
-      content: { fontSize: '13px', fontWeight: 'bold' },
-      checked: { color: '#fffb00' },
-      unchecked: { color: '#ffa940' },
-    }"
-  />
-
-  <!-- 组合使用 -->
-  <Switch
-    v-model:checked="checked"
-    :styles="{
-      root: { borderRadius: '14px' },
-      indicator: { boxShadow: '0 2px 8px rgba(0,0,0,0.3)' },
-      content: { fontSize: '12px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-switch-checked`、`.hmfw-switch-loading`）合并
-- `checked` 和 `unchecked` 对应开关内部的两个子内容节点，仅在设置 `checkedChildren` / `unCheckedChildren` 时渲染
-- 加载图标（`.hmfw-switch-loading-icon`）在 `loading` 状态时渲染于 `indicator`（手柄）内部，通过 `indicator` 一并定制
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-switch`）合并，不会互相覆盖
 - 自定义 `root` 的尺寸时，可能需要同步调整 `indicator`（手柄）的位置和尺寸以保持视觉协调
 
 ## 设计 Token

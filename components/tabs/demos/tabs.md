@@ -234,55 +234,70 @@ interface TabsStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TabsSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-tabs">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-tabs-nav">
-    <!-- ↑ classNames.nav / styles.nav 应用于此 -->
+    <!-- ↑ classNames.nav / styles.nav -->
     <div class="hmfw-tabs-extra-content-left">左侧附加内容（可选）</div>
     <div class="hmfw-tabs-nav-wrap">
       <div class="hmfw-tabs-nav-list">
         <div class="hmfw-tabs-tab hmfw-tabs-tab-active">
-          <!-- ↑ classNames.tab + classNames.tabActive / styles.tab + styles.tabActive 应用于此 -->
+          <!-- ↑ 激活标签同时叠加 classNames.tab + classNames.tabActive / styles.tab + styles.tabActive -->
           <div class="hmfw-tabs-tab-btn">
             <span class="hmfw-tabs-tab-icon">图标</span>
-            <!-- ↑ classNames.tabIcon / styles.tabIcon 应用于此 -->
+            <!-- ↑ classNames.tabIcon / styles.tabIcon -->
             标签
           </div>
         </div>
       </div>
       <div class="hmfw-tabs-ink-bar" />
-      <!-- ↑ classNames.inkBar / styles.inkBar 应用于此 -->
+      <!-- ↑ classNames.inkBar / styles.inkBar（仅 line 类型渲染） -->
     </div>
     <div class="hmfw-tabs-extra-content">右侧附加内容（可选）</div>
   </div>
   <div class="hmfw-tabs-content-holder">
     <div class="hmfw-tabs-content">
-      <!-- ↑ classNames.content / styles.content 应用于此 -->
+      <!-- ↑ classNames.content / styles.content -->
       <div class="hmfw-tabs-tabpane">面板内容</div>
-      <!-- ↑ classNames.tabpane / styles.tabpane 应用于此 -->
+      <!-- ↑ classNames.tabpane / styles.tabpane -->
     </div>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
+  <Tabs :items="items" :class-names="{ root: 'my-tabs-root', nav: 'my-tabs-nav', tabActive: 'my-tabs-tab-active' }" />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Tabs
     :items="items"
-    :classNames="{
-      root: 'my-tabs-root',
-      nav: 'my-tabs-nav',
-      tab: 'my-tabs-tab',
-      tabActive: 'my-tabs-tab-active',
-      content: 'my-tabs-content',
+    :styles="{
+      root: { border: '2px solid #1890ff', borderRadius: '12px' },
+      nav: { background: '#667eea' },
+      content: { padding: '16px' },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Tabs
+    :items="items"
+    :class-names="{ root: 'my-tabs-root' }"
+    :styles="{ nav: { background: '#667eea' }, tabActive: { fontWeight: 600 } }"
   />
 </template>
 
@@ -303,29 +318,10 @@ interface TabsStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Tabs
-    :items="items"
-    :styles="{
-      root: { border: '2px solid #1890ff', borderRadius: '12px' },
-      nav: { background: '#667eea' },
-      content: { padding: '16px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `tabActive` 与 `tab` 同时应用于激活的标签上（两者叠加）
-- `tabIcon` 仅在 `TabItem` 设置了 `icon` 时渲染
-- `inkBar` 仅在 `type="line"`（默认）时渲染，`card` 类型无墨条
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-tabs`）合并，不会互相覆盖
 - `styles.nav` 会与 `tabBarStyle` 合并；`styles.tabActive` 会与 `styles.tab` 在激活标签上合并
 
 ## 设计 Token

@@ -121,48 +121,71 @@ interface MasonryStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<MasonrySemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 瀑布流容器 -->
 <div class="hmfw-masonry">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
-
-  <!-- 瀑布流项目 1 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-masonry-item" style="position: absolute; left: 0; top: 0; width: calc(...)">
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
-    <!-- 项目内容由插槽渲染 -->
+    项目内容（插槽渲染）
   </div>
-
-  <!-- 瀑布流项目 2 -->
-  <div class="hmfw-masonry-item" style="position: absolute; left: calc(...); top: 0; width: calc(...)">
-    <!-- 项目内容 -->
-  </div>
-
+  <!-- ↑ 每个 items 数据项渲染一个，绝对定位由组件计算；classNames.item / styles.item -->
+  <div class="hmfw-masonry-item" style="position: absolute; left: calc(...); top: 0; width: calc(...)">项目内容</div>
   <!-- 更多项目... -->
 </div>
 
-<!-- RTL 模式：容器上追加 hmfw-masonry-rtl -->
-<div class="hmfw-masonry hmfw-masonry-rtl">
-  <!-- 项目使用 right 而非 left 定位 -->
-</div>
+<!-- RTL 模式：容器上追加 hmfw-masonry-rtl，项目使用 right 而非 left 定位 -->
+<div class="hmfw-masonry hmfw-masonry-rtl">...</div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义容器样式 -->
-  <Masonry :items="items" :columns="4" :gutter="16" :class-names="{ root: 'my-masonry-container' }">
+  <!-- classNames：追加自定义类 -->
+  <Masonry
+    :items="items"
+    :columns="4"
+    :gutter="16"
+    :class-names="{ root: 'my-masonry-container', item: 'my-masonry-item' }"
+  >
     <template #default="{ item }">
       <Card>{{ item }}</Card>
     </template>
   </Masonry>
 
-  <!-- 自定义项目样式 -->
-  <Masonry :items="items" :columns="4" :gutter="16" :class-names="{ item: 'my-masonry-item' }">
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Masonry
+    :items="items"
+    :columns="4"
+    :gutter="16"
+    :styles="{
+      root: { background: '#f5f5f5', padding: '16px' },
+      item: { border: '2px solid #1677ff', borderRadius: '8px' },
+    }"
+  >
+    <template #default="{ item }">
+      <Card>{{ item }}</Card>
+    </template>
+  </Masonry>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Masonry
+    :items="items"
+    :columns="4"
+    :gutter="16"
+    :class-names="{ root: 'my-masonry-container' }"
+    :styles="{ item: { borderRadius: '12px', overflow: 'hidden' } }"
+  >
     <template #default="{ item }">
       <Card>{{ item }}</Card>
     </template>
@@ -187,63 +210,11 @@ interface MasonryStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制容器 -->
-  <Masonry
-    :items="items"
-    :columns="4"
-    :gutter="16"
-    :styles="{
-      root: { background: '#f5f5f5', padding: '16px' },
-    }"
-  >
-    <template #default="{ item }">
-      <Card>{{ item }}</Card>
-    </template>
-  </Masonry>
-
-  <!-- 自定义项目边框 -->
-  <Masonry
-    :items="items"
-    :columns="4"
-    :gutter="16"
-    :styles="{
-      item: { border: '2px solid #1677ff', borderRadius: '8px' },
-    }"
-  >
-    <template #default="{ item }">
-      <Card>{{ item }}</Card>
-    </template>
-  </Masonry>
-
-  <!-- 组合使用 -->
-  <Masonry
-    :items="items"
-    :columns="4"
-    :gutter="16"
-    :styles="{
-      root: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-      item: { borderRadius: '12px', overflow: 'hidden' },
-    }"
-  >
-    <template #default="{ item }">
-      <Card>{{ item }}</Card>
-    </template>
-  </Masonry>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 语义节点只有 `root` 和 `item` 两个
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-masonry-item`）合并，不会互相覆盖
 - `styles.item` 会与组件内置的定位样式合并，请避免覆盖 `position`、`left`/`right`、`top`、`width` 等布局相关属性
-- RTL 模式下，容器会自动添加 `.hmfw-masonry-rtl` 类，项目使用 `right` 定位
 - 项目的过渡动画已内置，如需自定义可通过 `classNames.item` 覆盖
 
 ## 设计 Token

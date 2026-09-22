@@ -139,6 +139,92 @@
 
 Tag 是单元素透传组件，可直接使用原生 class 和 style attribute 进行样式定制。
 
+## 语义化 className 与 style
+
+通过 `classNames` 和 `styles` 属性可以对标签的各个子节点应用自定义样式，支持细粒度控制。
+
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface TagClassNames {
+  root?: string // 根节点 span.hmfw-tag（设置 href 后为 a.hmfw-tag）
+  icon?: string // 前置图标 .hmfw-tag-icon
+  content?: string // 内容包裹节点 .hmfw-tag-content（仅在存在 icon 时渲染）
+  closeIcon?: string // 关闭图标 span.hmfw-tag-close-icon
+}
+
+interface TagStyles {
+  root?: CSSProperties
+  icon?: CSSProperties
+  content?: CSSProperties
+  closeIcon?: CSSProperties
+}
+```
+
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TagSemantic />
+
+### DOM 结构与 className 映射
+
+```html
+<span class="hmfw-tag hmfw-tag-outlined">
+  <!-- ↑ classNames.root / styles.root（设置 href 后为 <a>） -->
+  <span class="hmfw-tag-icon" role="img"></span>
+  <!-- ↑ classNames.icon / styles.icon（设置 icon 时渲染） -->
+  <span class="hmfw-tag-content">标签文字</span>
+  <!-- ↑ classNames.content / styles.content（仅在同时存在 icon 与文字时渲染） -->
+  <span class="hmfw-tag-close-icon" role="button"></span>
+  <!-- ↑ classNames.closeIcon / styles.closeIcon（closable 时渲染） -->
+</span>
+```
+
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
+
+```vue
+<template>
+  <!-- classNames：追加自定义类 -->
+  <Tag
+    :icon="TagsOutlined"
+    closable
+    :class-names="{ root: 'custom-tag', icon: 'custom-icon', closeIcon: 'custom-close' }"
+  >
+    标签
+  </Tag>
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Tag :styles="{ root: { borderStyle: 'dashed', borderColor: '#722ed1' } }">标签</Tag>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Tag :icon="TagsOutlined" :class-names="{ icon: 'custom-icon' }" :styles="{ root: { borderRadius: '12px' } }">
+    标签
+  </Tag>
+</template>
+
+<style scoped>
+:deep(.custom-tag) {
+  border-radius: 12px;
+}
+:deep(.custom-icon) {
+  color: #722ed1;
+}
+:deep(.custom-close) {
+  color: #ff4d4f;
+}
+</style>
+```
+
+### 注意事项
+
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-tag`）合并，不会互相覆盖
+
 ## 设计 Token
 
 Tag 组件使用以下 Design Token 控制样式，可通过 ConfigProvider 全局配置或 CSS 变量覆盖实现主题定制。

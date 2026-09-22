@@ -172,28 +172,34 @@ interface PopconfirmStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<PopconfirmSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- Popconfirm 浮层内部结构 -->
 <div class="hmfw-popconfirm-inner">
   <div class="hmfw-popconfirm-message">
-    <!-- ↑ classNames.message / styles.message 应用于此 -->
+    <!-- ↑ classNames.message / styles.message -->
     <span class="hmfw-popconfirm-message-icon">
-      <!-- ↑ classNames.icon / styles.icon 应用于此 -->
+      <!-- ↑ classNames.icon / styles.icon -->
       ⚠
     </span>
     <div class="hmfw-popconfirm-message-title">
-      <!-- ↑ classNames.title / styles.title 应用于此 -->
+      <!-- ↑ classNames.title / styles.title -->
       确定删除吗？
     </div>
   </div>
   <div class="hmfw-popconfirm-description">
-    <!-- ↑ classNames.description / styles.description 应用于此 -->
+    <!-- ↑ classNames.description / styles.description -->
     此操作不可逆
   </div>
   <div class="hmfw-popconfirm-buttons">
-    <!-- ↑ classNames.buttons / styles.buttons 应用于此 -->
+    <!-- ↑ classNames.buttons / styles.buttons -->
     <button class="hmfw-btn hmfw-btn-default hmfw-btn-small">
       <!-- ↑ classNames.cancelBtn / styles.cancelBtn 通过 Button 的 classNames.root / styles.root 应用 -->
       <span class="hmfw-btn-content">取消</span>
@@ -206,33 +212,41 @@ interface PopconfirmStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义消息容器与图标 -->
+  <!-- classNames：追加自定义类 -->
   <Popconfirm
     title="确定删除这条记录吗？"
     description="此操作不可逆，请谨慎操作"
-    :class-names="{
-      message: 'custom-message',
-      icon: 'custom-icon',
-    }"
+    :class-names="{ message: 'custom-message', icon: 'custom-icon' }"
   >
     <Button type="primary">删除记录</Button>
   </Popconfirm>
 
-  <!-- 自定义按钮样式 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Popconfirm
-    title="确定要提交吗？"
-    :class-names="{
-      cancelBtn: 'custom-cancel',
-      okBtn: 'custom-ok',
+    title="确认操作"
+    description="这是一个测试描述"
+    :styles="{
+      icon: { color: '#52c41a', fontSize: '18px' },
+      title: { fontWeight: 'bold', color: '#1677ff' },
+      description: { fontStyle: 'italic', color: '#8c8c8c' },
     }"
   >
-    <Button>提交表单</Button>
+    <Button type="dashed">样式演示</Button>
+  </Popconfirm>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Popconfirm
+    title="确认发布？"
+    :class-names="{ message: 'custom-message' }"
+    :styles="{ okBtn: { minWidth: '80px', fontWeight: 'bold' }, cancelBtn: { color: '#8c8c8c' } }"
+  >
+    <Button type="primary">发布</Button>
   </Popconfirm>
 </template>
 
@@ -248,57 +262,13 @@ interface PopconfirmStyles {
   color: #1677ff;
   font-size: 18px;
 }
-
-:global(.custom-cancel:hover) {
-  border-color: #ff4d4f;
-  color: #ff4d4f;
-}
-
-:global(.custom-ok) {
-  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
-  border: none;
-  box-shadow: 0 2px 4px rgba(82, 196, 26, 0.3);
-}
 </style>
-```
-
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制各部分 -->
-  <Popconfirm
-    title="确认操作"
-    description="这是一个测试描述"
-    :styles="{
-      message: { padding: '8px 0' },
-      icon: { color: '#52c41a', fontSize: '18px' },
-      title: { fontWeight: 'bold', color: '#1677ff' },
-      description: { fontStyle: 'italic', color: '#8c8c8c' },
-    }"
-  >
-    <Button type="dashed">样式演示</Button>
-  </Popconfirm>
-
-  <!-- 自定义按钮尺寸 -->
-  <Popconfirm
-    title="确认发布？"
-    :styles="{
-      okBtn: { minWidth: '80px', fontWeight: 'bold' },
-      cancelBtn: { color: '#8c8c8c' },
-    }"
-  >
-    <Button type="primary">发布</Button>
-  </Popconfirm>
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `cancelBtn` 和 `okBtn` 通过 Button 组件的 `classNames.root` 和 `styles.root` 实现样式传递
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-popconfirm-message`）合并，不会互相覆盖
 - 如需更细粒度控制按钮内部（如图标），可通过 `okButtonProps.classNames` 和 `cancelButtonProps.classNames` 传递完整的 Button classNames
 - Popconfirm 浮层挂载在 `body` 外，样式需使用 `:global()` 而非 `:deep()`
 

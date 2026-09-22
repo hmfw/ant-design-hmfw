@@ -131,47 +131,56 @@ interface EmptyStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<EmptySemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 基础结构 -->
 <div class="hmfw-empty">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-empty-image">
-    <!-- ↑ classNames.image / styles.image 应用于此 -->
+    <!-- ↑ classNames.image / styles.image -->
     <svg>...</svg>
   </div>
   <div class="hmfw-empty-description">
-    <!-- ↑ classNames.description / styles.description 应用于此 -->
+    <!-- ↑ classNames.description / styles.description -->
     暂无数据
   </div>
   <div class="hmfw-empty-footer">
-    <!-- ↑ classNames.footer / styles.footer 应用于此 -->
+    <!-- ↑ classNames.footer / styles.footer -->
     <button>立即创建</button>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器背景 -->
-  <Empty :class-names="{ root: 'my-empty-root' }" description="精美卡片样式" />
+  <!-- classNames：追加自定义类 -->
+  <Empty :class-names="{ root: 'my-empty-root', image: 'my-image-wrapper' }" description="自定义卡片样式" />
 
-  <!-- 自定义图片容器 -->
-  <Empty :class-names="{ image: 'my-image-wrapper' }" description="图片增强效果" />
-
-  <!-- 组合使用 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Empty
-    :class-names="{
-      root: 'my-root',
-      description: 'my-description',
-      footer: 'my-footer',
+    :styles="{
+      root: { padding: '48px 24px', background: '#f0f5ff', borderRadius: '12px' },
+      description: { fontSize: '16px', color: '#fa8c16', fontWeight: '500' },
     }"
-    description="完整定制"
+    description="内联样式"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Empty
+    :class-names="{ description: 'my-description', footer: 'my-footer' }"
+    :styles="{ root: { background: '#fff7e6', borderRadius: '8px' } }"
+    description="组合定制"
   >
     <Button type="primary">立即创建</Button>
   </Empty>
@@ -207,49 +216,11 @@ interface EmptyStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制根容器 -->
-  <Empty
-    :styles="{
-      root: { padding: '48px 24px', background: '#f0f5ff', borderRadius: '12px' },
-    }"
-    description="自定义背景"
-  />
-
-  <!-- 内联样式控制图片尺寸 -->
-  <Empty
-    :styles="{
-      image: { height: '120px', opacity: '0.8' },
-    }"
-    description="调整图片透明度"
-  />
-
-  <!-- 组合使用 -->
-  <Empty
-    :styles="{
-      root: { background: '#fff7e6', borderRadius: '8px' },
-      description: { fontSize: '16px', color: '#fa8c16', fontWeight: '500' },
-      footer: { marginTop: '20px' },
-    }"
-    description="组合内联样式"
-  >
-    <Button>创建</Button>
-  </Empty>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-empty-normal`）合并
-- `description` 和 `footer` 节点仅在有内容时渲染，但 `classNames` / `styles` 会正确应用
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-empty`）合并，不会互相覆盖
 - `styles.image` 与已有的 `imageStyle` prop 会合并，优先级：`sizeStyle` < `imageStyle` < `styles.image`
-- `description` 为 `false` 时不渲染描述节点；但若提供了 `#description` 插槽，则以插槽内容为准（插槽优先级高于 `description=false`）
 - 当 `image` 为图片 URL 时，`img` 的 `alt` 会取字符串 `description`（无字符串描述时回退为 `'empty'`），利于无障碍访问
 
 ## 设计 Token

@@ -3,8 +3,10 @@
     <Row :style="{ minHeight: height ? `${height}px` : undefined }">
       <!-- 左：组件预览区，通过作用域插槽把标记 classNames 下发给使用方 -->
       <Col :span="16" class="semantic-preview__stage" :class="{ 'semantic-preview__stage--flush': padding === false }">
-        <!-- 插槽 prop 的键名不做 kebab→camel 归一化，必须与使用方解构的名字逐字一致 -->
-        <slot :class-names="markClassNames" />
+        <!-- 插槽 prop 的键名不做 kebab→camel 归一化，必须与使用方解构的名字逐字一致。
+             滚动进入视口后才渲染：许多 demo 用常开弹层展示浮层节点，若在页面加载时即渲染，
+             会在文档页留下额外的常开弹层，干扰针对同页基础 demo 的 E2E 定位。 -->
+        <slot v-if="rendered" :class-names="markClassNames" />
       </Col>
 
       <!-- 右：语义节点列表 -->
@@ -91,6 +93,8 @@ const MARK_PREFIX = 'semantic-mark-'
 const containerRef = ref<HTMLElement | null>(null)
 const hovered = ref<string | null>(null)
 const pinned = ref<string | null>(null)
+// 懒渲染：滚动进入视口后才渲染 slot（含常开弹层），避免页面加载时干扰同页 E2E
+const rendered = ref(false)
 
 /** pin 优先于 hover：钉住后移开鼠标仍保持高亮 */
 const active = computed(() => pinned.value ?? hovered.value)
@@ -129,10 +133,22 @@ function measure() {
     return
   }
   const base = container.getBoundingClientRect()
+  // getBoundingClientRect 返回的是「边框盒」坐标，而 position:absolute 的高亮框
+  // 是相对容器「内边距盒」（即容器边框之内）定位的。容器有 1px 边框，若不减掉
+  // 会让高亮框整体右下偏移 1px，表现为左上间隙偏小、右下间隙偏大。
+  const originX = base.left + container.clientLeft
+  const originY = base.top + container.clientTop
   rects.value = Array.from(container.querySelectorAll<HTMLElement>(`.${MARK_PREFIX}${active.value}`))
     .map((el) => {
       const r = el.getBoundingClientRect()
-      return { left: r.left - base.left, top: r.top - base.top, width: r.width, height: r.height }
+      // 四条边都取整到整数像素再算宽高：getBoundingClientRect 常返回小数坐标
+      // （flex 居中的元素易落在 x.16px），若直接使用，左右两侧的边框会落在
+      // 不同的设备像素边界上，视觉上一侧比另一侧多出约 1px。
+      const left = Math.round(r.left - originX)
+      const top = Math.round(r.top - originY)
+      const width = Math.round(r.right - originX) - left
+      const height = Math.round(r.bottom - originY) - top
+      return { left, top, width, height }
     })
     // 尺寸为 0 的节点（如未渲染的占位）不画框
     .filter((r) => r.width > 0 || r.height > 0)
@@ -142,6 +158,7 @@ function measure() {
 watch(active, () => nextTick(measure))
 
 let observer: ResizeObserver | null = null
+let inViewObserver: IntersectionObserver | null = null
 
 onMounted(() => {
   window.addEventListener('resize', measure)
@@ -149,12 +166,30 @@ onMounted(() => {
     observer = new ResizeObserver(() => measure())
     observer.observe(containerRef.value)
   }
+  // 进入视口后再渲染 slot；不支持 IntersectionObserver 时兜底为立即渲染
+  if (typeof IntersectionObserver !== 'undefined' && containerRef.value) {
+    inViewObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          rendered.value = true
+          inViewObserver?.disconnect()
+          inViewObserver = null
+        }
+      },
+      { rootMargin: '100px' },
+    )
+    inViewObserver.observe(containerRef.value)
+  } else {
+    rendered.value = true
+  }
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', measure)
   observer?.disconnect()
   observer = null
+  inViewObserver?.disconnect()
+  inViewObserver = null
 })
 
 /** 生成该语义节点的 Vue 用法片段（模板语法，与文档站其他示例一致） */

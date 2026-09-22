@@ -162,36 +162,52 @@ interface RadioGroupStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<RadioSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <label class="hmfw-radio-wrapper">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-radio">
-    <!-- ↑ classNames.radio / styles.radio 应用于此 -->
+    <!-- ↑ classNames.radio / styles.radio -->
     <input class="hmfw-radio-input" />
-    <!-- ↑ classNames.input / styles.input 应用于此 -->
+    <!-- ↑ classNames.input / styles.input -->
     <span class="hmfw-radio-inner" />
-    <!-- ↑ classNames.inner / styles.inner 应用于此 -->
+    <!-- ↑ classNames.inner / styles.inner -->
   </span>
   <span class="hmfw-radio-label">文字</span>
-  <!-- ↑ classNames.label / styles.label 应用于此，可选 -->
+  <!-- ↑ classNames.label / styles.label（仅有文本内容时渲染） -->
 </label>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
+  <Radio :class-names="{ root: 'my-radio-root', inner: 'my-radio-inner', label: 'my-radio-label' }"> 自定义样式 </Radio>
+
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Radio
-    :classNames="{
-      root: 'my-radio-root',
-      radio: 'my-radio-box',
-      inner: 'my-radio-inner',
-      label: 'my-radio-label',
+    :styles="{
+      root: { padding: '8px 16px', border: '2px solid #1890ff' },
+      radio: { transform: 'scale(1.2)' },
+      label: { fontWeight: 'bold', color: '#1890ff' },
     }"
   >
-    自定义样式
+    动态样式
+  </Radio>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Radio :class-names="{ root: 'my-radio-root' }" :styles="{ label: { fontWeight: 'bold', color: '#1890ff' } }">
+    组合样式
   </Radio>
 </template>
 
@@ -210,27 +226,10 @@ interface RadioGroupStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <Radio
-    :styles="{
-      root: { padding: '8px 16px', border: '2px solid #1890ff' },
-      radio: { transform: 'scale(1.2)' },
-      label: { fontWeight: 'bold', color: '#1890ff' },
-    }"
-  >
-    动态样式
-  </Radio>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `label` 的 className 仅在有文本内容（即 default slot 有内容）时生效
-- `input` 元素是原生 `<input type="radio">`，通常隐藏不可见
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-radio-wrapper`）合并，不会互相覆盖
 - `inner` 是视觉上的圆形选择框，可以完全自定义其外观（方形、心形等）
 
 ## 设计 Token

@@ -220,66 +220,68 @@ interface LinkStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TypographySemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- Text -->
 <span class="hmfw-typography">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   文本内容
-  <button class="hmfw-typography-copy">
-    <!-- ↑ classNames.copy / styles.copy 应用于此 -->
-    <svg>...</svg>
-  </button>
+  <button class="hmfw-typography-copy"><svg>...</svg></button>
+  <!-- ↑ classNames.copy / styles.copy -->
 </span>
 
-<!-- Title -->
+<!-- Title：root 为 h1-h5 -->
 <h1 class="hmfw-typography hmfw-typography-h1">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   标题内容
-  <button class="hmfw-typography-copy">
-    <!-- ↑ classNames.copy / styles.copy 应用于此 -->
-    <svg>...</svg>
-  </button>
+  <button class="hmfw-typography-copy"><svg>...</svg></button>
+  <!-- ↑ classNames.copy / styles.copy -->
 </h1>
 
-<!-- Paragraph -->
+<!-- Paragraph：root 为 p -->
 <p class="hmfw-typography">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   段落内容
-  <button class="hmfw-typography-copy">
-    <!-- ↑ classNames.copy / styles.copy 应用于此 -->
-    <svg>...</svg>
-  </button>
+  <button class="hmfw-typography-copy"><svg>...</svg></button>
+  <!-- ↑ classNames.copy / styles.copy -->
 </p>
 
-<!-- Link -->
+<!-- Link：root 为 a.hmfw-typography-link -->
 <a class="hmfw-typography-link" href="...">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   链接内容
-  <button class="hmfw-typography-copy">
-    <!-- ↑ classNames.copy / styles.copy 应用于此 -->
-    <svg>...</svg>
-  </button>
+  <button class="hmfw-typography-copy"><svg>...</svg></button>
+  <!-- ↑ classNames.copy / styles.copy -->
 </a>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- Text 自定义根节点 -->
-  <Text :class-names="{ root: 'custom-text' }"> 渐变文字效果 </Text>
-
-  <!-- Title 自定义复制按钮 -->
-  <Title :level="3" copyable :class-names="{ copy: 'custom-copy-btn' }"> 可复制的标题 </Title>
-
-  <!-- Paragraph 组合使用 -->
-  <Paragraph copyable :class-names="{ root: 'custom-paragraph', copy: 'custom-copy' }">
+  <!-- classNames：追加自定义类 -->
+  <Text :class-names="{ root: 'custom-text' }">渐变文字效果</Text>
+  <Paragraph copyable :class-names="{ root: 'custom-paragraph', copy: 'custom-copy-btn' }">
     这是一段自定义样式的段落。
   </Paragraph>
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Text :styles="{ root: { fontSize: '18px', fontWeight: 600, color: '#722ed1' } }"> 紫色加粗文字 </Text>
+  <Paragraph copyable :styles="{ copy: { fontSize: '18px', color: '#faad14' } }"> 自定义复制按钮样式 </Paragraph>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Title :level="3" copyable :class-names="{ copy: 'custom-copy-btn' }" :styles="{ root: { color: '#722ed1' } }">
+    可复制的标题
+  </Title>
 </template>
 
 <style scoped>
@@ -314,58 +316,10 @@ interface LinkStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制文字 -->
-  <Text
-    :styles="{
-      root: {
-        fontSize: '18px',
-        fontWeight: 600,
-        color: '#722ed1',
-      },
-    }"
-  >
-    紫色加粗文字
-  </Text>
-
-  <!-- 内联样式控制复制按钮 -->
-  <Paragraph
-    copyable
-    :styles="{
-      copy: { fontSize: '18px', color: '#faad14' },
-    }"
-  >
-    自定义复制按钮样式
-  </Paragraph>
-
-  <!-- 组合使用 -->
-  <Link
-    href="https://github.com"
-    :styles="{
-      root: {
-        fontSize: '16px',
-        textDecoration: 'underline',
-        textDecorationColor: '#52c41a',
-        textDecorationThickness: '2px',
-      },
-    }"
-  >
-    GitHub 官网
-  </Link>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `copy` 仅在 `copyable` 为 `true` 时渲染，否则该 key 不生效
-- Text、Title、Paragraph、Link 各自有独立的 ClassNames/Styles 接口，类型不通用
-- 四个子组件的语义化 API keys 完全相同（`root` 和 `copy`），但应用的 DOM 元素不同（Text 是 `<span>`，Title 是 `<h1-h5>`，Paragraph 是 `<p>`，Link 是 `<a>`）
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-typography`）合并，不会互相覆盖
 - 使用 `background-clip: text` 实现渐变文字时，需要配合 `-webkit-text-fill-color: transparent` 和 `-webkit-background-clip: text`
 
 ## 设计 Token

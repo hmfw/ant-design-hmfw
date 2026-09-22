@@ -264,48 +264,73 @@ interface FormItemStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<FormSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <form class="hmfw-form">
-  <!-- ↑ classNames.root / styles.root 应用于此（Form） -->
+  <!-- ↑ classNames.root / styles.root（Form） -->
   <div class="hmfw-form-item">
-    <!-- ↑ classNames.root / styles.root 应用于此（FormItem） -->
+    <!-- ↑ classNames.root / styles.root（FormItem） -->
     <div class="hmfw-form-item-label">
-      <!-- ↑ classNames.label / styles.label 应用于此 -->
+      <!-- ↑ classNames.label / styles.label -->
       <label>标签</label>
     </div>
     <div class="hmfw-form-item-control">
-      <!-- ↑ classNames.control / styles.control 应用于此 -->
+      <!-- ↑ classNames.control / styles.control -->
       <div class="hmfw-form-item-control-input">控件</div>
       <div class="hmfw-form-item-explain">错误信息</div>
-      <!-- ↑ classNames.feedback / styles.feedback 应用于此 -->
+      <!-- ↑ classNames.feedback / styles.feedback -->
       <div class="hmfw-form-item-extra">额外提示</div>
-      <!-- ↑ classNames.extra / styles.extra 应用于此 -->
+      <!-- ↑ classNames.extra / styles.extra -->
     </div>
   </div>
 </form>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- Form 级别 classNames -->
+  <!-- classNames：追加自定义类 -->
   <Form :model="state" :class-names="{ root: 'my-form-root' }">
-    <!-- FormItem 级别 classNames -->
     <FormItem
       label="用户名"
       name="username"
-      :class-names="{
-        root: 'my-item',
-        label: 'my-label',
-        control: 'my-control',
-        feedback: 'my-feedback',
-        extra: 'my-extra',
+      :class-names="{ label: 'my-label', control: 'my-control', feedback: 'my-feedback' }"
+    >
+      <Input v-model:value="state.username" />
+    </FormItem>
+  </Form>
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Form :model="state" :styles="{ root: { padding: '24px', backgroundColor: '#fafafa' } }">
+    <FormItem
+      label="用户名"
+      name="username"
+      :styles="{
+        label: { fontWeight: 600 },
+        feedback: { fontSize: '12px', color: '#ff4d4f' },
       }"
+    >
+      <Input v-model:value="state.username" />
+    </FormItem>
+  </Form>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Form :model="state">
+    <FormItem
+      label="用户名"
+      name="username"
+      :class-names="{ control: 'my-control' }"
+      :styles="{ label: { fontWeight: 600 } }"
     >
       <Input v-model:value="state.username" />
     </FormItem>
@@ -332,38 +357,12 @@ interface FormItemStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- Form 级别 styles -->
-  <Form :model="state" :styles="{ root: { padding: '24px', backgroundColor: '#fafafa' } }">
-    <!-- FormItem 级别 styles -->
-    <FormItem
-      label="用户名"
-      name="username"
-      :styles="{
-        label: { fontWeight: 600 },
-        control: { borderLeft: '2px solid #1890ff', paddingLeft: '8px' },
-        feedback: { fontSize: '12px', color: '#ff4d4f' },
-      }"
-    >
-      <Input v-model:value="state.username" />
-    </FormItem>
-  </Form>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-form-item`）合并，不会互相覆盖
 - Form 的语义化 API 只控制 `<form>` 根节点；表单项的结构样式应使用 FormItem 的 `classNames` / `styles`
 - FormItem 的 `styles.label` 会与 `labelCol` 计算出的布局样式合并；`styles.control` 会与 `wrapperCol` 计算出的布局样式合并
-- `label` 应用于标签外层容器，若要定制 `<label>` 文本本身，可在 CSS 中用后代选择器（如 `.my-label label`）
-- `feedback` 仅在有错误信息或 `help` 时渲染
-- `extra` 仅在设置了 `extra` 属性时渲染
 - `noStyle` 或 `hidden` 的 FormItem 不渲染结构节点，classNames 不生效
 
 ## 设计 Token

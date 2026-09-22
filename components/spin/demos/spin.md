@@ -121,21 +121,27 @@ interface SpinStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<SpinSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 基础用法 -->
 <span class="hmfw-spin hmfw-spin-spinning">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root；fullscreen 模式下为遮罩 <div> -->
   <span class="hmfw-spin-dot-holder">
     <span class="hmfw-spin-dot hmfw-spin-dot-spin">
-      <!-- ↑ classNames.dot / styles.dot 应用于此 -->
+      <!-- ↑ classNames.dot / styles.dot（作用于容器，内含 4 个 .hmfw-spin-dot-item 圆点） -->
       <i class="hmfw-spin-dot-item"></i>
       <!-- ...共 4 个点 -->
     </span>
   </span>
   <div class="hmfw-spin-description">
-    <!-- ↑ classNames.description / styles.description 应用于此 -->
+    <!-- ↑ classNames.description / styles.description -->
     加载中...
   </div>
 </span>
@@ -143,9 +149,9 @@ interface SpinStyles {
 <!-- 嵌套加载（含 default 插槽） -->
 <div class="hmfw-spin-nested-loading">
   <div class="hmfw-spin-container">
-    <!-- ↑ classNames.container / styles.container 应用于此（浮层） -->
+    <!-- ↑ classNames.container / styles.container（浮层） -->
     <span class="hmfw-spin hmfw-spin-spinning">
-      <!-- ↑ classNames.root / styles.root 应用于此 -->
+      <!-- ↑ classNames.root / styles.root -->
     </span>
   </div>
   <div class="hmfw-spin-blur-container">
@@ -154,17 +160,26 @@ interface SpinStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义指示符与描述 -->
+  <!-- classNames：追加自定义类 -->
   <Spin tip="数据加载中..." :class-names="{ dot: 'my-dot', description: 'my-desc' }" />
 
-  <!-- 自定义嵌套浮层 -->
-  <Spin spinning :class-names="{ container: 'my-container' }">
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Spin
+    tip="上传中"
+    :styles="{
+      root: { padding: '16px', background: '#f6ffed', borderRadius: '8px' },
+      description: { color: '#52c41a', fontWeight: 600 },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用（嵌套浮层） -->
+  <Spin spinning :class-names="{ container: 'my-container' }" :styles="{ root: { padding: '16px' } }">
     <div>内容区域</div>
   </Spin>
 </template>
@@ -186,30 +201,11 @@ interface SpinStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制根节点与描述 -->
-  <Spin
-    tip="上传中"
-    :styles="{
-      root: { padding: '16px', background: '#f6ffed', borderRadius: '8px' },
-      description: { color: '#52c41a', fontWeight: 600 },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `classNames.dot` 应用于指示符容器 `.hmfw-spin-dot`，若要修改四个圆点颜色需用 `:deep(.my-dot .hmfw-spin-dot-item)` 这类后代选择器
-- `classNames.container` 仅在使用 `default` 插槽的嵌套加载模式且 `spinning` 为 `true` 时渲染
-- `fullscreen` 模式下根节点为遮罩 `<div>`，`classNames.root` / `styles.root` 应用在该遮罩上
-- 自定义 `indicator` 插槽时，`classNames.dot` / `styles.dot` 仍应用于其外层容器 `.hmfw-spin-dot`
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-spin`）合并，不会互相覆盖
+- `classNames.dot` / `styles.dot` 作用于指示符容器 `.hmfw-spin-dot`（含自定义 `indicator`），若要修改内部四个圆点颜色需用 `:deep(.my-dot .hmfw-spin-dot-item)` 这类后代选择器
 
 ## 设计 Token
 

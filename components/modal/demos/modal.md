@@ -173,49 +173,35 @@ interface ModalStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<ModalSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-modal-root">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
-
-  <!-- 遮罩层 -->
-  <div class="hmfw-modal-mask">
-    <!-- ↑ classNames.mask / styles.mask 应用于此 -->
-  </div>
-
-  <!-- 容器包裹层 -->
+  <!-- ↑ classNames.root / styles.root -->
+  <div class="hmfw-modal-mask"></div>
+  <!-- ↑ 仅在 mask 开启时渲染；classNames.mask / styles.mask -->
   <div class="hmfw-modal-wrap">
-    <!-- ↑ classNames.wrapper / styles.wrapper 应用于此 -->
-
-    <!-- 对话框外层容器 -->
+    <!-- ↑ 定位/居中包裹层；classNames.wrapper / styles.wrapper -->
     <div class="hmfw-modal">
-      <!-- ↑ classNames.content / styles.content 应用于此 -->
-
-      <!-- 对话框内容包裹 -->
+      <!-- ↑ classNames.content / styles.content -->
       <div class="hmfw-modal-content">
-        <!-- 关闭按钮 -->
         <button class="hmfw-modal-close">
-          <span class="hmfw-modal-close-x">
-            <svg>×</svg>
-          </span>
+          <span class="hmfw-modal-close-x"><svg>×</svg></span>
         </button>
-
-        <!-- 标题区域 -->
         <div class="hmfw-modal-header">
-          <!-- ↑ classNames.header / styles.header 应用于此 -->
+          <!-- ↑ 仅在有 title 时渲染；classNames.header / styles.header -->
           <div class="hmfw-modal-title">标题文字</div>
         </div>
-
-        <!-- 内容区域 -->
-        <div class="hmfw-modal-body">
-          <!-- ↑ classNames.body / styles.body 应用于此 -->
-          对话框内容
-        </div>
-
-        <!-- 底部操作区 -->
+        <div class="hmfw-modal-body">对话框内容</div>
+        <!-- ↑ classNames.body / styles.body -->
         <div class="hmfw-modal-footer">
-          <!-- ↑ classNames.footer / styles.footer 应用于此 -->
+          <!-- ↑ footer 为 null 时不渲染；classNames.footer / styles.footer -->
           <button>取消</button>
           <button>确定</button>
         </div>
@@ -225,57 +211,46 @@ interface ModalStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义遮罩和内容容器 -->
+  <!-- classNames：追加自定义类 -->
   <Modal
     v-model:open="visible1"
     title="自定义样式"
     :class-names="{
       mask: 'my-modal-mask',
       content: 'my-modal-content',
-    }"
-  >
-    <p>对话框内容</p>
-  </Modal>
-
-  <!-- 自定义头部和底部 -->
-  <Modal
-    v-model:open="visible2"
-    title="渐变头部"
-    :class-names="{
       header: 'my-modal-header',
+      body: 'my-modal-body',
       footer: 'my-modal-footer',
     }"
   >
     <p>对话框内容</p>
   </Modal>
 
-  <!-- 自定义 body 区域 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Modal
-    v-model:open="visible3"
-    title="自定义内容区"
-    :class-names="{
-      body: 'my-modal-body',
+    v-model:open="visible2"
+    title="内联样式"
+    :styles="{
+      mask: { background: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)' },
+      content: { borderRadius: '16px', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)' },
+      header: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' },
     }"
   >
     <p>对话框内容</p>
   </Modal>
 
-  <!-- 组合使用 -->
+  <!-- 组合：classNames 与 styles 混用 -->
   <Modal
-    v-model:open="visible4"
+    v-model:open="visible3"
     title="完整自定义"
-    :class-names="{
-      mask: 'my-mask',
-      wrapper: 'my-wrapper',
-      content: 'my-content',
-      header: 'my-header',
-      body: 'my-body',
-      footer: 'my-footer',
-    }"
+    :class-names="{ content: 'my-modal-content', header: 'my-modal-header' }"
+    :styles="{ body: { background: '#f0f5ff', padding: '32px 24px' }, footer: { background: '#fafafa' } }"
   >
     <p>完全自定义的对话框</p>
   </Modal>
@@ -314,87 +289,11 @@ interface ModalStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <!-- 内联样式控制遮罩 -->
-  <Modal
-    v-model:open="visible1"
-    title="自定义遮罩"
-    :styles="{
-      mask: {
-        background: 'rgba(0, 0, 0, 0.7)',
-        backdropFilter: 'blur(4px)',
-      },
-    }"
-  >
-    <p>对话框内容</p>
-  </Modal>
-
-  <!-- 自定义内容容器 -->
-  <Modal
-    v-model:open="visible2"
-    title="圆角对话框"
-    :styles="{
-      content: {
-        borderRadius: '16px',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-      },
-    }"
-  >
-    <p>对话框内容</p>
-  </Modal>
-
-  <!-- 自定义头部和底部 -->
-  <Modal
-    v-model:open="visible3"
-    title="渐变头部"
-    :styles="{
-      header: {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        padding: '20px 24px',
-      },
-      footer: {
-        background: '#fafafa',
-        borderTop: '2px solid #e8e8e8',
-      },
-    }"
-  >
-    <p>对话框内容</p>
-  </Modal>
-
-  <!-- 组合使用 -->
-  <Modal
-    v-model:open="visible4"
-    title="完整自定义"
-    :styles="{
-      mask: { background: 'rgba(0, 0, 0, 0.8)' },
-      content: { borderRadius: '16px' },
-      header: {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-      },
-      body: {
-        background: '#f0f5ff',
-        padding: '32px 24px',
-        fontSize: '16px',
-      },
-      footer: { background: '#fafafa' },
-    }"
-  >
-    <p>完全自定义的对话框</p>
-  </Modal>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `mask` / `wrapper` / `content` 影响对话框的外层结构，`header` / `body` / `footer` 影响内容区域
-- 当同时设置 `bodyStyle` prop 和 `styles.body` 时，两者会合并（`styles.body` 优先）
-- 当同时设置 `maskStyle` prop 和 `styles.mask` 时，两者会合并（`styles.mask` 优先）
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-modal`）合并，不会互相覆盖
+- 当同时设置 `bodyStyle` prop 和 `styles.body`（或 `maskStyle` 与 `styles.mask`）时，两者会合并，`styles.*` 优先
 - `wrapper` 是对话框的定位容器，修改其样式可能影响居中效果，建议谨慎使用
 - 静态方法（`Modal.confirm` 等）创建的对话框暂不支持 `classNames` / `styles`，可使用 `className` / `wrapClassName` 配合全局样式
 

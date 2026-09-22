@@ -221,7 +221,7 @@ interface MentionSemanticStyles {
 
 ### 语义化 DOM
 
-将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的用法示例。
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
 
 <MentionsSemantic />
 
@@ -230,55 +230,33 @@ interface MentionSemanticStyles {
 ```html
 <!-- 基础结构 -->
 <div class="hmfw-mentions hmfw-input-affix-wrapper hmfw-input-affix-wrapper-middle">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <textarea class="hmfw-mentions" placeholder="输入 @ 提及" rows="1"></textarea>
-  <!-- ↑ classNames.textarea / styles.textarea 应用于此 -->
+  <!-- ↑ classNames.textarea / styles.textarea -->
 </div>
 
-<!-- 带清除按钮（allowClear + 聚焦且有内容） -->
+<!-- 带清除按钮（allowClear + 聚焦且有内容时渲染 suffix） -->
 <div class="hmfw-mentions hmfw-input-affix-wrapper hmfw-input-affix-wrapper-middle hmfw-input-affix-wrapper-focused">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <textarea class="hmfw-mentions">@alice</textarea>
   <span class="hmfw-input-clear-icon" role="button" aria-label="clear">
-    <!-- ↑ classNames.suffix / styles.suffix 应用于此 -->
-    <span role="img" aria-label="close-circle" class="hmfw-icon">
-      <svg>...</svg>
-    </span>
+    <!-- ↑ classNames.suffix / styles.suffix -->
+    <span role="img" aria-label="close-circle" class="hmfw-icon"><svg>...</svg></span>
   </span>
 </div>
 
-<!-- 禁用状态：root 上追加 hmfw-input-affix-wrapper-disabled -->
-<div class="hmfw-mentions hmfw-input-affix-wrapper hmfw-input-affix-wrapper-middle hmfw-input-affix-wrapper-disabled">
-  <textarea class="hmfw-mentions" disabled></textarea>
-</div>
-
-<!-- 错误状态：root 上追加 hmfw-input-affix-wrapper-status-error -->
-<div
-  class="hmfw-mentions hmfw-input-affix-wrapper hmfw-input-affix-wrapper-middle hmfw-input-affix-wrapper-status-error"
->
-  <textarea class="hmfw-mentions"></textarea>
-</div>
-
-<!-- 聚焦状态：root 上追加 hmfw-input-affix-wrapper-focused -->
-<div class="hmfw-mentions hmfw-input-affix-wrapper hmfw-input-affix-wrapper-middle hmfw-input-affix-wrapper-focused">
-  <textarea class="hmfw-mentions"></textarea>
-</div>
+<!-- 状态变体：root 上追加对应类（不影响语义节点映射） -->
+<!-- 禁用 hmfw-input-affix-wrapper-disabled / 错误 hmfw-input-affix-wrapper-status-error / 聚焦 hmfw-input-affix-wrapper-focused -->
 
 <!-- 弹出层（通过 Trigger 组件挂载到 body） -->
 <div class="hmfw-trigger-popup">
   <div class="hmfw-mentions-dropdown">
-    <!-- ↑ classNames.popup / styles.popup 应用于此 -->
+    <!-- ↑ classNames.popup / styles.popup -->
     <div role="listbox">
-      <!-- 有匹配项 -->
-      <div class="hmfw-mentions-dropdown-item" role="option" aria-selected="false">Alice</div>
-      <div class="hmfw-mentions-dropdown-item hmfw-mentions-dropdown-item-active" role="option" aria-selected="true">
-        <!-- ↑ 激活项追加 -active 类 -->
-        Bob
-      </div>
-      <div class="hmfw-mentions-dropdown-item hmfw-mentions-dropdown-item-disabled" role="option" aria-disabled="true">
-        <!-- ↑ 禁用项追加 -disabled 类 -->
-        Charlie
-      </div>
+      <div class="hmfw-mentions-dropdown-item" role="option">Alice</div>
+      <div class="hmfw-mentions-dropdown-item hmfw-mentions-dropdown-item-active" role="option">Bob</div>
+      <!-- ↑ 激活项追加 -active 类 -->
+      <div class="hmfw-mentions-dropdown-item hmfw-mentions-dropdown-item-disabled" role="option">Charlie</div>
+      <!-- ↑ 禁用项追加 -disabled 类 -->
     </div>
   </div>
 </div>
@@ -290,61 +268,60 @@ interface MentionSemanticStyles {
   </div>
 </div>
 
-<!-- 虚拟滚动：内部带虚拟列表容器 -->
+<!-- 虚拟滚动：弹出层内部为虚拟列表，仅渲染可视区域的选项 -->
 <div class="hmfw-trigger-popup">
   <div class="hmfw-mentions-dropdown">
-    <!-- ↑ classNames.popup / styles.popup 应用于此 -->
+    <!-- ↑ classNames.popup / styles.popup -->
     <div role="listbox">
       <div class="hmfw-virtual-list" style="height: 250px">
-        <!-- ↑ 虚拟列表实际高度 = listHeight -->
-        <div class="hmfw-virtual-list-holder" style="height: 3200px">
-          <!-- ↑ 虚拟占位高度 = 总选项数 × listItemHeight -->
-        </div>
+        <div class="hmfw-virtual-list-holder" style="height: 3200px"></div>
         <div class="hmfw-virtual-list-scrollbar">...</div>
-        <div class="hmfw-mentions-dropdown-item" style="position: absolute; top: 0px">
-          <!-- ↑ 可见项通过绝对定位渲染在可视区域 -->
-          Option 1
-        </div>
+        <div class="hmfw-mentions-dropdown-item" style="position: absolute; top: 0px">Option 1</div>
         <div class="hmfw-mentions-dropdown-item" style="position: absolute; top: 32px">Option 2</div>
-        <!-- ... 只渲染可视区域的项 ... -->
       </div>
     </div>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义输入框样式 -->
-  <Mentions :options="options" :class-names="{ textarea: 'my-textarea' }" />
-
-  <!-- 自定义后缀（清除按钮）样式 -->
-  <Mentions :options="options" allowClear :class-names="{ suffix: 'my-suffix' }" />
-
-  <!-- 自定义弹出层样式 -->
-  <Mentions :options="options" :class-names="{ popup: 'my-popup' }" />
-
-  <!-- 自定义根节点样式 -->
-  <Mentions :options="options" :class-names="{ root: 'my-mentions-root' }" />
-
-  <!-- 组合使用 -->
+  <!-- classNames：追加自定义类 -->
   <Mentions
     :options="options"
     allowClear
-    :class-names="{
-      root: 'my-mentions-root',
-      textarea: 'my-textarea',
-      suffix: 'my-suffix',
-      popup: 'my-popup',
+    :class-names="{ root: 'my-mentions-root', textarea: 'my-textarea', suffix: 'my-suffix', popup: 'my-popup' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Mentions
+    :options="options"
+    allowClear
+    :styles="{
+      root: { borderColor: '#1677ff', borderWidth: '2px' },
+      textarea: { fontWeight: 500, fontSize: '16px' },
+      suffix: { color: '#faad14' },
+      popup: { boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)' },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Mentions
+    :options="options"
+    :class-names="{ root: 'my-mentions-root' }"
+    :styles="{ textarea: { lineHeight: '1.8' } }"
   />
 </template>
 
 <style scoped>
+:deep(.my-mentions-root) {
+  border-radius: 8px;
+}
+
 :deep(.my-textarea) {
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -357,66 +334,14 @@ interface MentionSemanticStyles {
 :deep(.my-popup) {
   box-shadow: 0 4px 12px rgba(22, 119, 255, 0.2);
 }
-
-:deep(.my-mentions-root) {
-  border-radius: 8px;
-}
 </style>
-```
-
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制输入框 -->
-  <Mentions
-    :options="options"
-    :styles="{
-      textarea: { fontWeight: 500, fontSize: '16px' },
-    }"
-  />
-
-  <!-- 自定义边框颜色 -->
-  <Mentions
-    :options="options"
-    :styles="{
-      root: { borderColor: '#1677ff', borderWidth: '2px' },
-    }"
-  />
-
-  <!-- 自定义后缀（清除按钮）样式 -->
-  <Mentions
-    :options="options"
-    allowClear
-    :styles="{
-      suffix: { color: '#faad14', fontSize: '14px' },
-    }"
-  />
-
-  <!-- 组合使用 -->
-  <Mentions
-    :options="options"
-    allowClear
-    :styles="{
-      root: { borderRadius: '8px' },
-      textarea: { lineHeight: '1.8' },
-      suffix: { color: '#ff4d4f' },
-      popup: { boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)' },
-    }"
-  />
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 语义节点与 Ant Design v6 一致，包含 `root` / `textarea` / `suffix` / `popup` 四个
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-input-affix-wrapper-focused`、`.hmfw-input-affix-wrapper-disabled`）合并
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-mentions`）合并，不会互相覆盖
 - 弹出层通过 Trigger 组件挂载到 body，`classNames.popup` / `styles.popup` 应用于弹出层内的下拉容器
-- `suffix` 节点包含清除按钮等后缀元素，仅在 `allowClear` 为 `true` 且有内容时渲染
-- 虚拟滚动模式下，弹出层内的选项通过虚拟列表渲染，只渲染可视区域的选项以优化性能
 - 下拉选项和空状态的样式可以通过 CSS 选择器 `.hmfw-mentions-dropdown-item` 和 `.hmfw-mentions-dropdown-empty` 自定义
 
 ## 设计 Token

@@ -251,48 +251,66 @@ interface TableSemanticStyles {
 
 ```html
 <div class="hmfw-table">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-table-title">标题</div>
   <div class="hmfw-table-container">
     <div class="hmfw-table-content">
       <table>
         <thead class="hmfw-table-thead">
-          <!-- ↑ classNames.header / styles.header 应用于此 -->
+          <!-- ↑ classNames.header / styles.header -->
           <tr>
             <th class="hmfw-table-cell">列头</th>
+            <!-- ↑ 表头单元格 <th> 不应用 classNames.cell -->
           </tr>
         </thead>
         <tbody class="hmfw-table-tbody">
-          <!-- ↑ classNames.body / styles.body 应用于此 -->
+          <!-- ↑ classNames.body / styles.body -->
           <tr class="hmfw-table-row">
-            <!-- ↑ classNames.row / styles.row 应用于此 -->
+            <!-- ↑ classNames.row / styles.row -->
             <td class="hmfw-table-cell">单元格</td>
-            <!-- ↑ classNames.cell / styles.cell 应用于此 -->
+            <!-- ↑ classNames.cell / styles.cell（仅数据单元格 <td>） -->
           </tr>
         </tbody>
       </table>
     </div>
   </div>
   <div class="hmfw-table-footer">页脚</div>
-  <!-- ↑ classNames.footer / styles.footer 应用于此 -->
+  <!-- ↑ classNames.footer / styles.footer；仅设置 footer 时渲染 -->
   <div class="hmfw-table-pagination">分页</div>
-  <!-- ↑ classNames.pagination / styles.pagination 应用于此 -->
+  <!-- ↑ classNames.pagination / styles.pagination；仅分页启用且有数据时渲染 -->
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Table
     :data-source="data"
     :columns="columns"
-    :classNames="{
-      root: 'my-table',
-      header: 'my-header',
-      row: 'my-row',
-      cell: 'my-cell',
+    :class-names="{ root: 'my-table', header: 'my-header', row: 'my-row', cell: 'my-cell' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Table
+    :data-source="data"
+    :columns="columns"
+    :styles="{
+      root: { border: '2px solid #1890ff', borderRadius: '12px' },
+      header: { background: '#667eea' },
+      cell: { fontSize: '14px' },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Table
+    :data-source="data"
+    :columns="columns"
+    :class-names="{ root: 'my-table', header: 'my-header' }"
+    :styles="{ row: { cursor: 'pointer' }, cell: { fontSize: '14px' } }"
   />
 </template>
 
@@ -316,30 +334,12 @@ interface TableSemanticStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <Table
-    :data-source="data"
-    :columns="columns"
-    :styles="{
-      root: { border: '2px solid #1890ff', borderRadius: '12px' },
-      header: { background: '#667eea' },
-      cell: { fontSize: '14px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `cell` 同时应用于所有数据单元格（`<td>`），表头单元格（`<th>`）不应用此 className，如需定制表头单元格请通过 `header` 的后代选择器（如 `.my-header th`）
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-table`）合并，不会互相覆盖
+- `cell` 仅应用于数据单元格（`<td>`），表头单元格（`<th>`）不应用；如需定制表头单元格请通过 `header` 的后代选择器（如 `.my-header th`）
 - `row` 应用于所有数据行，包括虚拟滚动模式下的行
-- `header`/`body` 分别对应 `<thead>`/`<tbody>` 元素
-- `footer` 仅在设置了 `footer` 属性时渲染
-- `pagination` 仅在分页启用且有数据时渲染
 - `styles.header` 会与 sticky 模式下的定位样式合并；`styles.cell` 会与列的 `align` 对齐样式合并
 
 ## 设计 Token

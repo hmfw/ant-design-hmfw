@@ -147,74 +147,75 @@ interface SliderStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<SliderSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-slider">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
 
   <div class="hmfw-slider-rail">
-    <!-- ↑ classNames.rail / styles.rail 应用于此（轨道背景） -->
+    <!-- ↑ classNames.rail / styles.rail -->
   </div>
 
   <div class="hmfw-slider-track">
-    <!-- ↑ classNames.track / styles.track 应用于此（已选区间填充） -->
+    <!-- ↑ classNames.track / styles.track（included 为 true 时渲染） -->
   </div>
 
   <div class="hmfw-slider-handle">
-    <!-- ↑ classNames.handle / styles.handle 应用于此（滑块手柄） -->
+    <!-- ↑ classNames.handle / styles.handle；range 时渲染多个 -->
     <div class="hmfw-slider-tooltip">
-      <!-- ↑ classNames.tooltip / styles.tooltip 应用于此（手柄提示框） -->
+      <!-- ↑ classNames.tooltip / styles.tooltip -->
     </div>
   </div>
 
   <!-- 当设置 marks 时 -->
   <div class="hmfw-slider-mark">
-    <!-- ↑ classNames.mark / styles.mark 应用于此（刻度标签容器） -->
+    <!-- ↑ classNames.mark / styles.mark -->
     <span class="hmfw-slider-mark-text">
-      <!-- ↑ classNames.markText / styles.markText 应用于此（单个刻度文本） -->
+      <!-- ↑ classNames.markText / styles.markText -->
     </span>
   </div>
 
   <!-- 当设置 dots 时 -->
   <span class="hmfw-slider-dot">
-    <!-- ↑ classNames.dot / styles.dot 应用于此（刻度点） -->
+    <!-- ↑ classNames.dot / styles.dot -->
   </span>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义轨道与填充 -->
+  <!-- classNames：追加自定义类 -->
+  <Slider :default-value="40" :class-names="{ rail: 'my-rail', track: 'my-track', handle: 'my-handle' }" />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Slider
-    :default-value="40"
-    :class-names="{
-      rail: 'my-rail',
-      track: 'my-track',
+    :default-value="[20, 80]"
+    range
+    :styles="{
+      rail: { background: '#e6f7ff', height: '8px' },
+      track: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', height: '8px' },
+      handle: { borderColor: '#667eea', borderWidth: '3px' },
     }"
   />
 
-  <!-- 自定义滑块手柄 -->
-  <Slider
-    :default-value="60"
-    :class-names="{
-      handle: 'my-handle',
-    }"
-  />
-
-  <!-- 自定义刻度标记 -->
+  <!-- 组合：classNames 与 styles 混用 -->
   <Slider
     :default-value="50"
     :marks="{ 0: '0°C', 50: '50°C', 100: '100°C' }"
-    :class-names="{
-      markText: 'my-mark-text',
-      dot: 'my-dot',
-    }"
     dots
+    :class-names="{ markText: 'my-mark-text', dot: 'my-dot' }"
+    :styles="{ track: { background: '#52c41a' } }"
   />
 </template>
 
@@ -253,53 +254,12 @@ interface SliderStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 自定义轨道高度与颜色 -->
-  <Slider
-    :default-value="40"
-    :styles="{
-      rail: { background: '#f0f0f0', height: '8px' },
-      track: { background: '#52c41a', height: '8px' },
-    }"
-  />
-
-  <!-- 自定义滑块手柄 -->
-  <Slider
-    :default-value="60"
-    :styles="{
-      handle: {
-        width: '20px',
-        height: '20px',
-        borderColor: '#722ed1',
-        borderWidth: '3px',
-      },
-    }"
-  />
-
-  <!-- 组合使用：范围选择 -->
-  <Slider
-    :default-value="[20, 80]"
-    range
-    :styles="{
-      rail: { background: '#e6f7ff', height: '8px' },
-      track: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', height: '8px' },
-      handle: { borderColor: '#667eea', borderWidth: '3px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 范围选择模式 (`range={true}`) 下会渲染多个 `handle`，`classNames.handle` 和 `styles.handle` 会应用到所有手柄
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-slider`）合并，不会互相覆盖
+- 范围选择模式（`range`）下会渲染多个 `handle`，`classNames.handle` 和 `styles.handle` 会应用到所有手柄
 - 修改 `rail` 或 `track` 的高度时，需同步调整 `handle` 的 `marginTop`，以保持垂直居中（默认轨道高度 4px，手柄高度 14px，`marginTop: -5px`）
-- `tooltip` 样式仅在 Tooltip 显示时生效（hover/拖拽时或设置 `tooltip.open={true}` 时）
 - 垂直模式下，`rail` 和 `track` 的宽度对应水平模式的高度
 
 ## 设计 Token

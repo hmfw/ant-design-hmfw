@@ -190,122 +190,88 @@ interface PaginationStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<PaginationSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <ul class="hmfw-pagination">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
+  <li class="hmfw-pagination-total-text">共 100 条</li>
+  <!-- ↑ 仅在设置 showTotal 时渲染；classNames.total / styles.total -->
+  <li class="hmfw-pagination-prev"><button>&lt;</button></li>
+  <!-- ↑ classNames.prev / styles.prev -->
+  <li class="hmfw-pagination-item"><a>1</a></li>
+  <!-- ↑ 每个页码渲染一个，classNames.item / styles.item -->
+  <li class="hmfw-pagination-item hmfw-pagination-item-active"><a>2</a></li>
+  <!-- ↑ 激活项叠加 -active 类；classNames.item + classNames.itemActive、styles.item + styles.itemActive -->
 
-  <!-- 总数显示（当 showTotal 存在时） -->
-  <li class="hmfw-pagination-total-text">
-    <!-- ↑ classNames.total / styles.total 应用于此 -->
-    共 100 条
-  </li>
+  <!-- 跳转按钮（页数超阈值折叠时渲染，默认省略号 hover 显示双箭头） -->
+  <li class="hmfw-pagination-jump-prev"><button class="hmfw-pagination-item-link">•••</button></li>
+  <!-- ↑ classNames.jumpPrev / styles.jumpPrev -->
+  <li class="hmfw-pagination-jump-next"><button class="hmfw-pagination-item-link">•••</button></li>
+  <!-- ↑ classNames.jumpNext / styles.jumpNext -->
 
-  <!-- 上一页按钮 -->
-  <li class="hmfw-pagination-prev">
-    <!-- ↑ classNames.prev / styles.prev 应用于此 -->
-    <button>&lt;</button>
-  </li>
+  <li class="hmfw-pagination-next"><button>&gt;</button></li>
+  <!-- ↑ classNames.next / styles.next -->
 
-  <!-- 页码项 -->
-  <li class="hmfw-pagination-item">
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
-    <a>1</a>
-  </li>
-
-  <!-- 当前激活的页码项 -->
-  <li class="hmfw-pagination-item hmfw-pagination-item-active">
-    <!-- ↑ classNames.item + classNames.itemActive 叠加应用 -->
-    <!-- ↑ styles.item + styles.itemActive 合并应用 -->
-    <a>2</a>
-  </li>
-
-  <!-- 向前跳转按钮（默认显示省略号 •••，hover 显示双箭头图标） -->
-  <li class="hmfw-pagination-jump-prev">
-    <!-- ↑ classNames.jumpPrev / styles.jumpPrev 应用于此 -->
-    <button class="hmfw-pagination-item-link">
-      <div class="hmfw-pagination-item-container">
-        <!-- 图标与省略号叠放，通过 opacity 切换 -->
-        <span class="hmfw-pagination-item-link-icon"><!-- DoubleLeftOutlined --></span>
-        <span class="hmfw-pagination-item-ellipsis">•••</span>
-      </div>
-    </button>
-  </li>
-
-  <!-- 向后跳转按钮（默认显示省略号 •••，hover 显示双箭头图标） -->
-  <li class="hmfw-pagination-jump-next">
-    <!-- ↑ classNames.jumpNext / styles.jumpNext 应用于此 -->
-    <button class="hmfw-pagination-item-link">
-      <div class="hmfw-pagination-item-container">
-        <span class="hmfw-pagination-item-link-icon"><!-- DoubleRightOutlined --></span>
-        <span class="hmfw-pagination-item-ellipsis">•••</span>
-      </div>
-    </button>
-  </li>
-
-  <!-- 下一页按钮 -->
-  <li class="hmfw-pagination-next">
-    <!-- ↑ classNames.next / styles.next 应用于此 -->
-    <button>&gt;</button>
-  </li>
-
-  <!-- 选项容器（包含尺寸切换器和快速跳转） -->
+  <!-- 选项容器（showSizeChanger 时渲染） -->
   <li class="hmfw-pagination-options">
-    <!-- ↑ classNames.options / styles.options 应用于此 -->
-
-    <!-- 页码尺寸切换器（当 showSizeChanger 为 true 时） -->
+    <!-- ↑ classNames.options / styles.options -->
     <div class="hmfw-pagination-options-size-changer">
-      <!-- ↑ classNames.sizeChanger / styles.sizeChanger 应用于此 -->
       <select>
         ...
       </select>
     </div>
-
-    <!-- 快速跳转输入框（当 showQuickJumper 为 true 时） -->
-    <div class="hmfw-pagination-options-quick-jumper">
-      <!-- ↑ classNames.quickJumper / styles.quickJumper 应用于此 -->
-      跳至 <input /> 页
-    </div>
+    <!-- ↑ showSizeChanger 时渲染；classNames.sizeChanger / styles.sizeChanger -->
+    <div class="hmfw-pagination-options-quick-jumper">跳至 <input /> 页</div>
+    <!-- ↑ showQuickJumper 时渲染；classNames.quickJumper / styles.quickJumper -->
   </li>
 </ul>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器和页码项 -->
+  <!-- classNames：追加自定义类 -->
   <Pagination
-    :total="100"
+    :total="200"
+    show-size-changer
+    :show-total="(total) => `共 ${total} 条`"
     :class-names="{
       root: 'custom-pagination',
       item: 'custom-item',
       itemActive: 'custom-active',
-    }"
-  />
-
-  <!-- 自定义上一页/下一页按钮 -->
-  <Pagination
-    :total="100"
-    :class-names="{
       prev: 'custom-prev',
       next: 'custom-next',
+      total: 'custom-total',
     }"
   />
 
-  <!-- 自定义完整功能 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Pagination
-    :total="200"
-    show-size-changer
-    show-quick-jumper
-    :show-total="(total) => `共 ${total} 条`"
-    :class-names="{
-      total: 'custom-total',
-      sizeChanger: 'custom-size-changer',
-      quickJumper: 'custom-quick-jumper',
+    :total="80"
+    :styles="{
+      root: { padding: '16px', background: '#f0f5ff', borderRadius: '8px' },
+      item: { fontWeight: 'bold' },
+      itemActive: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', border: 'none' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Pagination
+    :total="100"
+    :class-names="{ root: 'custom-pagination', item: 'custom-item' }"
+    :styles="{
+      prev: { background: '#52c41a', color: 'white', border: 'none' },
+      next: { background: '#52c41a', color: 'white', border: 'none' },
     }"
   />
 </template>
@@ -343,53 +309,10 @@ interface PaginationStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制根容器和页码项 -->
-  <Pagination
-    :total="80"
-    :styles="{
-      root: { padding: '16px', background: '#f0f5ff', borderRadius: '8px' },
-      item: { fontWeight: 'bold' },
-      itemActive: {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        border: 'none',
-      },
-    }"
-  />
-
-  <!-- 自定义上一页/下一页按钮样式 -->
-  <Pagination
-    :total="100"
-    :styles="{
-      prev: { background: '#52c41a', color: 'white', border: 'none' },
-      next: { background: '#52c41a', color: 'white', border: 'none' },
-    }"
-  />
-
-  <!-- 自定义总数和选项样式 -->
-  <Pagination
-    :total="200"
-    show-size-changer
-    :show-total="(total) => `共 ${total} 条`"
-    :styles="{
-      total: { color: '#d46b08', fontWeight: 'bold', fontSize: '15px' },
-      sizeChanger: { background: '#fffbe6', padding: '4px 8px', borderRadius: '6px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 激活状态的页码项时，`classNames.itemActive` 与 `classNames.item` 会**叠加**应用在同一个 `<li>` 上
-- 激活状态的页码项时，`styles.itemActive` 与 `styles.item` 会**合并**应用，`styles.itemActive` 优先
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-pagination-disabled`、`.hmfw-pagination-simple`）合并
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-pagination-item`）合并，不会互相覆盖
 - 当使用 `simple` 模式时，只有 `root`、`prev`、`next` 等基础 key 生效，跳转按钮和选项容器不会渲染
 
 ## 设计 Token

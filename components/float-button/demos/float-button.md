@@ -212,57 +212,66 @@ interface FloatButtonStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<FloatButtonSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
-<!-- circle 形状（仅图标） -->
+<!-- circle 形状（仅图标）：不渲染 content -->
 <button class="hmfw-float-btn hmfw-float-btn-default hmfw-float-btn-circle">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-float-btn-body">
-    <!-- ↑ classNames.body / styles.body 应用于此 -->
+    <!-- ↑ classNames.body / styles.body -->
     <div class="hmfw-float-btn-icon">
-      <!-- ↑ classNames.icon / styles.icon 应用于此 -->
-      <span class="hmfw-icon">
-        <svg>...</svg>
-      </span>
+      <!-- ↑ classNames.icon / styles.icon -->
+      <span class="hmfw-icon"><svg>...</svg></span>
     </div>
   </div>
 </button>
 
-<!-- square 形状（图标 + 文本） -->
+<!-- square 形状（图标 + 文本）：额外渲染 content 节点 -->
 <button class="hmfw-float-btn hmfw-float-btn-primary hmfw-float-btn-square">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
   <div class="hmfw-float-btn-body">
-    <!-- ↑ classNames.body / styles.body 应用于此 -->
     <div class="hmfw-float-btn-icon">
-      <!-- ↑ classNames.icon / styles.icon 应用于此 -->
-      <span class="hmfw-icon">
-        <svg>...</svg>
-      </span>
+      <span class="hmfw-icon"><svg>...</svg></span>
     </div>
-    <div class="hmfw-float-btn-content">
-      <!-- ↑ classNames.content / styles.content 应用于此 -->
-      反馈
-    </div>
+    <div class="hmfw-float-btn-content">反馈</div>
+    <!-- ↑ classNames.content / styles.content -->
   </div>
 </button>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根节点渐变背景 -->
+  <!-- classNames：追加自定义类 -->
   <FloatButton :icon="QuestionCircleOutlined" :class-names="{ root: 'custom-root' }" tooltip="帮助" />
 
-  <!-- 自定义图标和内容区域 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <FloatButton
+    type="primary"
+    :icon="CustomerServiceOutlined"
+    :styles="{ root: { borderRadius: '12px' }, icon: { fontSize: '20px' } }"
+  />
+
+  <!-- 组合：square 形状四个节点各自定制 -->
   <FloatButton
     shape="square"
-    :icon="CommentOutlined"
-    content="反馈"
-    :class-names="{ icon: 'custom-icon', content: 'custom-content' }"
+    :icon="RocketOutlined"
+    content="启动"
+    :class-names="{ content: 'custom-content' }"
+    :styles="{
+      root: { boxShadow: '0 4px 16px rgba(22, 119, 255, 0.3)' },
+      body: { padding: '8px' },
+      icon: { fontSize: '20px' },
+    }"
   />
 </template>
 
@@ -278,11 +287,6 @@ interface FloatButtonStyles {
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
 }
 
-:deep(.custom-icon) {
-  font-size: 20px;
-  color: #52c41a;
-}
-
 :deep(.custom-content) {
   font-weight: bold;
   color: #1677ff;
@@ -290,43 +294,11 @@ interface FloatButtonStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制根节点和图标 -->
-  <FloatButton
-    type="primary"
-    :icon="CustomerServiceOutlined"
-    :styles="{
-      root: { borderRadius: '12px' },
-      icon: { fontSize: '20px' },
-    }"
-  />
-
-  <!-- square 形状完整样式定制 -->
-  <FloatButton
-    shape="square"
-    :icon="RocketOutlined"
-    content="启动"
-    :styles="{
-      root: { boxShadow: '0 4px 16px rgba(22, 119, 255, 0.3)' },
-      body: { padding: '8px' },
-      icon: { fontSize: '20px' },
-      content: { fontWeight: 'bold' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `content` key 仅在 `shape="square"` 时渲染，`circle` 形状不显示文本内容
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
 - Badge 和 Tooltip 是外部组件，不在 `classNames` / `styles` 控制范围内
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-float-btn-disabled`）合并
+- 各语义化类名会与组件内置类名（如 `.hmfw-float-btn`、状态类 `.hmfw-float-btn-disabled`）合并，不会互相覆盖
 
 ## 设计 Token
 

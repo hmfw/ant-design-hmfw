@@ -140,44 +140,75 @@ interface AlertStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<AlertSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-alert hmfw-alert-info hmfw-alert-outlined">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-alert-icon">
-    <!-- ↑ classNames.icon / styles.icon 应用于此（showIcon 为 true 时渲染） -->
+    <!-- ↑ showIcon 为 true 时渲染，classNames.icon / styles.icon -->
     <svg>...</svg>
   </span>
   <div class="hmfw-alert-section">
-    <!-- ↑ classNames.section / styles.section 应用于此 -->
+    <!-- ↑ classNames.section / styles.section -->
     <div class="hmfw-alert-title">
-      <!-- ↑ classNames.title / styles.title 应用于此 -->
+      <!-- ↑ classNames.title / styles.title -->
       标题文本
     </div>
     <div class="hmfw-alert-description">
-      <!-- ↑ classNames.description / styles.description 应用于此（有 description 时渲染） -->
+      <!-- ↑ 有 description 时渲染，classNames.description / styles.description -->
       辅助描述文本
     </div>
   </div>
   <div class="hmfw-alert-actions">
-    <!-- ↑ classNames.actions / styles.actions 应用于此（有 action 时渲染） -->
+    <!-- ↑ 有 action 时渲染，classNames.actions / styles.actions -->
     <button>操作</button>
   </div>
   <button class="hmfw-alert-close-icon">
-    <!-- ↑ classNames.closeIcon / styles.closeIcon 应用于此（closable 时渲染） -->
+    <!-- ↑ closable 时渲染，classNames.closeIcon / styles.closeIcon -->
     <svg>...</svg>
   </button>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Alert type="info" title="系统通知" closable :class-names="{ root: 'my-alert-root', closeIcon: 'my-alert-close' }" />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Alert
+    type="error"
+    show-icon
+    title="请求失败"
+    description="服务暂时不可用，请稍后重试。"
+    closable
+    :styles="{
+      root: { borderRadius: '10px', borderColor: '#ff7875' },
+      title: { fontWeight: 700, color: '#cf1322' },
+      icon: { fontSize: '22px' },
+      closeIcon: { color: '#cf1322' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Alert
+    type="warning"
+    show-icon
+    title="配置即将过期"
+    :class-names="{ root: 'my-alert-root' }"
+    :styles="{ title: { fontWeight: 700 }, icon: { fontSize: '20px' } }"
+  />
 </template>
 
 <style scoped>
@@ -194,36 +225,10 @@ interface AlertStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Alert
-    type="error"
-    show-icon
-    title="请求失败"
-    description="服务暂时不可用，请稍后重试。"
-    closable
-    :styles="{
-      root: { borderRadius: '10px', borderColor: '#ff7875' },
-      title: { fontWeight: 700, color: '#cf1322' },
-      icon: { fontSize: '22px' },
-      closeIcon: { color: '#cf1322' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `classNames.icon` 仅在 `showIcon` 为 `true`（或 banner 模式默认开启）时生效
-- `classNames.description` 仅在传入 `description` 时生效，无描述时该节点不渲染
-- `classNames.actions` 仅在传入 `action` 时生效
-- `classNames.closeIcon` 仅在 `closable` 为真值时生效
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-alert-error`、`.hmfw-alert-banner`）合并
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-alert-error`）合并，不会互相覆盖
 
 ## 设计 Token
 

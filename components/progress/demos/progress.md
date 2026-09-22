@@ -162,24 +162,30 @@ interface ProgressStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<ProgressSemantic />
+
 ### DOM 结构与 className 映射
 
 **线形进度条 (type="line")**
 
 ```html
 <div class="hmfw-progress hmfw-progress-line">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-progress-body">
-    <!-- ↑ classNames.body / styles.body 应用于此 -->
+    <!-- ↑ classNames.body / styles.body -->
     <div class="hmfw-progress-rail">
-      <!-- ↑ classNames.rail / styles.rail 应用于此 -->
+      <!-- ↑ classNames.rail / styles.rail -->
       <div class="hmfw-progress-track" style="width: 50%">
-        <!-- ↑ classNames.track / styles.track 应用于此 -->
+        <!-- ↑ classNames.track / styles.track -->
       </div>
     </div>
   </div>
   <span class="hmfw-progress-indicator">50%</span>
-  <!-- ↑ classNames.indicator / styles.indicator 应用于此 -->
+  <!-- ↑ classNames.indicator / styles.indicator -->
 </div>
 ```
 
@@ -187,45 +193,44 @@ interface ProgressStyles {
 
 ```html
 <div class="hmfw-progress hmfw-progress-circle">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-progress-body">
-    <!-- ↑ classNames.body / styles.body 应用于此 -->
+    <!-- ↑ classNames.body / styles.body -->
     <svg viewBox="-50 -50 100 100">
       <circle class="hmfw-progress-rail" />
-      <!-- ↑ classNames.rail / styles.rail 应用于此 -->
+      <!-- ↑ classNames.rail / styles.rail -->
       <circle class="hmfw-progress-track" />
-      <!-- ↑ classNames.track / styles.track 应用于此 -->
+      <!-- ↑ classNames.track / styles.track -->
     </svg>
   </div>
   <span class="hmfw-progress-indicator">50%</span>
-  <!-- ↑ classNames.indicator / styles.indicator 应用于此 -->
+  <!-- ↑ classNames.indicator / styles.indicator -->
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义轨道样式 -->
+  <!-- classNames：追加自定义类 -->
+  <Progress :percent="60" :class-names="{ rail: 'my-rail', track: 'my-track' }" />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Progress
-    :percent="60"
-    :class-names="{
-      rail: 'my-rail',
-      track: 'my-track',
+    :percent="75"
+    :styles="{
+      indicator: { fontSize: '18px', fontWeight: 'bold', color: '#ff4d4f' },
     }"
   />
 
-  <!-- 自定义百分比文本 -->
-  <Progress :percent="75" :class-names="{ indicator: 'my-indicator' }" />
-
-  <!-- 圆形进度条自定义 -->
+  <!-- 组合：classNames 与 styles 混用 -->
   <Progress
     type="circle"
     :percent="80"
-    :class-names="{
-      body: 'my-circle-body',
-      indicator: 'my-circle-text',
-    }"
+    :class-names="{ body: 'my-circle-body' }"
+    :styles="{ indicator: { fontSize: '24px', color: '#1890ff' } }"
   />
 </template>
 
@@ -238,62 +243,16 @@ interface ProgressStyles {
   background: linear-gradient(to right, #1890ff, #52c41a);
 }
 
-:deep(.my-indicator) {
-  font-weight: bold;
-  color: #722ed1;
-}
-
 :deep(.my-circle-body) {
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
-}
-
-:deep(.my-circle-text) {
-  font-size: 20px;
-  font-weight: 600;
 }
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <!-- 内联样式控制颜色 -->
-  <Progress
-    :percent="60"
-    :styles="{
-      rail: { background: '#f0f0f0' },
-      track: { background: 'linear-gradient(to right, #1890ff, #52c41a)' },
-    }"
-  />
-
-  <!-- 自定义指示器样式 -->
-  <Progress
-    :percent="75"
-    :styles="{
-      indicator: {
-        fontSize: '18px',
-        fontWeight: 'bold',
-        color: '#ff4d4f',
-      },
-    }"
-  />
-
-  <!-- 圆形进度条容器样式 -->
-  <Progress
-    type="circle"
-    :percent="80"
-    :styles="{
-      body: { filter: 'drop-shadow(0 4px 12px rgba(24, 144, 255, 0.3))' },
-      indicator: { fontSize: '24px', color: '#1890ff' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-progress-track`）合并，不会互相覆盖
 - 对于 `strokeColor` / `railColor` 等 props，建议优先使用组件提供的属性；`styles.track` / `styles.rail` 适合做细微调整
 - 圆形进度条的 `rail` / `track` 对应 SVG `<circle>` 元素，部分 CSS 属性（如 `stroke`）需使用 SVG 属性
 

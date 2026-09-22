@@ -148,65 +148,79 @@ interface StatisticStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<StatisticSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-statistic">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-statistic-title">
-    <!-- ↑ classNames.title / styles.title 应用于此 -->
+    <!-- ↑ classNames.title / styles.title；仅设置 title 时渲染 -->
     标题
   </div>
   <div class="hmfw-statistic-content">
-    <!-- ↑ classNames.content / styles.content 应用于此 -->
+    <!-- ↑ classNames.content / styles.content（valueStyle 也作用于此） -->
     <span class="hmfw-statistic-content-prefix">
-      <!-- ↑ classNames.prefix / styles.prefix 应用于此 -->
+      <!-- ↑ classNames.prefix / styles.prefix；仅设置 prefix 时渲染 -->
       前缀
     </span>
     <span class="hmfw-statistic-content-value">
-      <!-- ↑ classNames.value / styles.value 应用于此 -->
+      <!-- ↑ classNames.value / styles.value -->
       1,234
     </span>
     <span class="hmfw-statistic-content-suffix">
-      <!-- ↑ classNames.suffix / styles.suffix 应用于此 -->
+      <!-- ↑ classNames.suffix / styles.suffix；仅设置 suffix 时渲染 -->
       后缀
     </span>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器样式 -->
-  <Statistic title="活跃用户" :value="93185" :class-names="{ root: 'custom-root' }" prefix="👥" />
-
-  <!-- 自定义标题与数值 -->
+  <!-- classNames：追加自定义类 -->
   <Statistic
     title="总销售额"
     :value="1234567.89"
     :precision="2"
-    :class-names="{
-      title: 'custom-title',
-      value: 'custom-value',
-    }"
     prefix="¥"
+    :class-names="{ root: 'custom-root', title: 'custom-title', value: 'custom-value' }"
   />
 
-  <!-- 组合使用 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Statistic
+    title="转化率"
+    :value="12.8"
+    :precision="1"
+    suffix="%"
+    :styles="{
+      root: {
+        padding: '16px',
+        borderRadius: '8px',
+        background: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
+      },
+      title: { fontWeight: 'bold', color: '#8b4513' },
+      value: { fontSize: '28px', color: '#fff' },
+      suffix: { color: '#fff', fontSize: '18px' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
   <Statistic
     title="在线人数"
     :value="8888"
-    :class-names="{
-      root: 'combined-root',
-      title: 'combined-title',
-      content: 'combined-content',
-      value: 'combined-value',
-    }"
     suffix="人"
+    :class-names="{ root: 'custom-root' }"
+    :styles="{ content: { marginTop: '8px' }, value: { fontSize: '36px', color: '#52c41a' } }"
   />
 </template>
 
@@ -240,53 +254,12 @@ interface StatisticStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制 -->
-  <Statistic
-    title="转化率"
-    :value="12.8"
-    :precision="1"
-    :styles="{
-      root: {
-        padding: '16px',
-        borderRadius: '8px',
-        background: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
-      },
-      title: { fontWeight: 'bold', color: '#8b4513' },
-      value: { fontSize: '28px', color: '#fff' },
-      suffix: { color: '#fff', fontSize: '18px' },
-    }"
-    suffix="%"
-  />
-
-  <!-- 组合使用 -->
-  <Statistic
-    title="增长率"
-    :value="28.5"
-    :precision="1"
-    :styles="{
-      title: { color: '#52c41a', fontWeight: 600 },
-      content: { marginTop: '8px' },
-      value: { fontSize: '36px', color: '#52c41a' },
-      prefix: { fontSize: '24px', marginRight: '8px' },
-    }"
-    prefix="📈"
-    suffix="%"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `styles.content` 与现有的 `valueStyle` prop 会合并，`valueStyle` 在前、`styles.content` 在后，后者优先级更高
-- Countdown 组件通过 `extends StatisticProps` 自动继承所有语义化 API，可使用相同的 `classNames` 和 `styles`
-- 加载状态（`loading={true}`）时，组件显示骨架屏，`classNames.root` 仍会应用于根容器
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-statistic`）合并，不会互相覆盖
+- `styles.content` 与 `valueStyle` prop 会合并（`valueStyle` 在前、`styles.content` 在后，后者优先级更高）
+- Countdown 组件通过 `extends StatisticProps` 自动继承全部语义化 API，可使用相同的 `classNames` 和 `styles`
 
 ## 设计 Token
 

@@ -60,18 +60,21 @@
 
 ### ColorPicker Props
 
-| 参数            | 说明                                                                               | 类型                                         | 默认值      |
-| --------------- | ---------------------------------------------------------------------------------- | -------------------------------------------- | ----------- |
-| value (v-model) | 颜色值（HEX 格式）                                                                 | `string`                                     | `'#1677ff'` |
-| defaultValue    | 默认颜色值                                                                         | `string`                                     | `'#1677ff'` |
-| format          | 颜色格式。**当前仅实现 `hex`**，面板始终渲染 HEX 输入框，传入 `rgb`/`hsb` 暂无效果 | `'hex' \| 'rgb' \| 'hsb'`                    | `'hex'`     |
-| disabled        | 是否禁用                                                                           | `boolean`                                    | `false`     |
-| size            | 尺寸                                                                               | `'small' \| 'middle' \| 'large'`             | `'middle'`  |
-| showText        | 是否显示颜色文本                                                                   | `boolean`                                    | `false`     |
-| allowClear      | 是否允许清除                                                                       | `boolean`                                    | `false`     |
-| presets         | 预设颜色组                                                                         | `Array<{ label: string; colors: string[] }>` | `[]`        |
-| classNames      | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)   | `ColorPickerClassNames`                      | -           |
-| styles          | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)   | `ColorPickerStyles`                          | -           |
+| 参数              | 说明                                                                               | 类型                                         | 默认值      |
+| ----------------- | ---------------------------------------------------------------------------------- | -------------------------------------------- | ----------- |
+| value (v-model)   | 颜色值（HEX 格式）                                                                 | `string`                                     | `'#1677ff'` |
+| defaultValue      | 默认颜色值                                                                         | `string`                                     | `'#1677ff'` |
+| format            | 颜色格式。**当前仅实现 `hex`**，面板始终渲染 HEX 输入框，传入 `rgb`/`hsb` 暂无效果 | `'hex' \| 'rgb' \| 'hsb'`                    | `'hex'`     |
+| disabled          | 是否禁用                                                                           | `boolean`                                    | `false`     |
+| size              | 尺寸                                                                               | `'small' \| 'middle' \| 'large'`             | `'middle'`  |
+| showText          | 是否显示颜色文本                                                                   | `boolean`                                    | `false`     |
+| allowClear        | 是否允许清除                                                                       | `boolean`                                    | `false`     |
+| presets           | 预设颜色组                                                                         | `Array<{ label: string; colors: string[] }>` | `[]`        |
+| open (v-model)    | 受控展开状态                                                                       | `boolean`                                    | -           |
+| defaultOpen       | 非受控默认展开状态                                                                 | `boolean`                                    | `false`     |
+| getPopupContainer | 自定义弹出面板的挂载容器                                                           | `(triggerNode: HTMLElement) => HTMLElement`  | `body`      |
+| classNames        | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)   | `ColorPickerClassNames`                      | -           |
+| styles            | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)   | `ColorPickerStyles`                          | -           |
 
 ### ColorPicker Events
 
@@ -137,66 +140,72 @@ interface ColorPickerStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<ColorPickerSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-color-picker">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
 
   <div class="hmfw-color-picker-trigger">
-    <!-- ↑ classNames.trigger / styles.trigger 应用于此 -->
+    <!-- ↑ classNames.trigger / styles.trigger -->
     <div class="hmfw-color-picker-color-block" style="background: #1677ff">
-      <!-- ↑ classNames.colorBlock / styles.colorBlock 应用于此 -->
+      <!-- ↑ classNames.colorBlock / styles.colorBlock -->
     </div>
     <span class="hmfw-color-picker-text">
-      <!-- ↑ classNames.text / styles.text 应用于此 -->
+      <!-- ↑ classNames.text / styles.text -->
       #1677ff
     </span>
   </div>
 
   <!-- 弹出面板（Teleport 到 body） -->
   <div class="hmfw-color-picker-panel">
-    <!-- ↑ classNames.panel / styles.panel 应用于此 -->
+    <!-- ↑ classNames.panel / styles.panel -->
 
     <!-- 饱和度/亮度选择器 -->
     <div class="hmfw-color-picker-sb">
-      <!-- ↑ classNames.saturation / styles.saturation 应用于此 -->
+      <!-- ↑ classNames.saturation / styles.saturation -->
       <div class="hmfw-color-picker-sb-cursor">
-        <!-- ↑ classNames.saturationCursor / styles.saturationCursor 应用于此 -->
+        <!-- ↑ classNames.saturationCursor / styles.saturationCursor -->
       </div>
     </div>
 
     <!-- 色相滑块 -->
     <div class="hmfw-color-picker-hue">
-      <!-- ↑ classNames.hueSlider / styles.hueSlider 应用于此 -->
+      <!-- ↑ classNames.hueSlider / styles.hueSlider -->
       <div class="hmfw-color-picker-hue-cursor">
-        <!-- ↑ classNames.hueCursor / styles.hueCursor 应用于此 -->
+        <!-- ↑ classNames.hueCursor / styles.hueCursor -->
       </div>
     </div>
 
     <!-- HEX 输入 -->
     <div class="hmfw-color-picker-input-container">
-      <!-- ↑ classNames.inputContainer / styles.inputContainer 应用于此 -->
+      <!-- ↑ classNames.inputContainer / styles.inputContainer -->
       <div class="hmfw-color-picker-preview">
-        <!-- ↑ classNames.preview / styles.preview 应用于此 -->
+        <!-- ↑ classNames.preview / styles.preview -->
       </div>
       <input class="hmfw-color-picker-hex-input" />
-      <!-- ↑ classNames.hexInput / styles.hexInput 应用于此 -->
+      <!-- ↑ classNames.hexInput / styles.hexInput -->
       <span class="hmfw-color-picker-format-label">HEX</span>
-      <!-- ↑ classNames.formatLabel / styles.formatLabel 应用于此 -->
+      <!-- ↑ classNames.formatLabel / styles.formatLabel -->
     </div>
 
     <!-- 预设颜色 -->
     <div class="hmfw-color-picker-presets">
-      <!-- ↑ classNames.presets / styles.presets 应用于此 -->
+      <!-- ↑ classNames.presets / styles.presets -->
       <div class="hmfw-color-picker-preset-group">
-        <!-- ↑ classNames.presetGroup / styles.presetGroup 应用于此 -->
+        <!-- ↑ classNames.presetGroup / styles.presetGroup -->
         <div class="hmfw-color-picker-preset-label">推荐色</div>
-        <!-- ↑ classNames.presetLabel / styles.presetLabel 应用于此 -->
+        <!-- ↑ classNames.presetLabel / styles.presetLabel -->
         <div class="hmfw-color-picker-preset-colors">
-          <!-- ↑ classNames.presetColors / styles.presetColors 应用于此 -->
+          <!-- ↑ classNames.presetColors / styles.presetColors -->
           <div class="hmfw-color-picker-preset-color">
-            <!-- ↑ classNames.presetColor / styles.presetColor 应用于此 -->
+            <!-- ↑ classNames.presetColor / styles.presetColor -->
           </div>
         </div>
       </div>
@@ -204,37 +213,36 @@ interface ColorPickerStyles {
 
     <!-- 清除按钮 -->
     <div class="hmfw-color-picker-clear-btn">
-      <!-- ↑ classNames.clearBtn / styles.clearBtn 应用于此 -->
+      <!-- ↑ classNames.clearBtn / styles.clearBtn -->
       清除
     </div>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义触发器样式 -->
+  <!-- classNames：追加自定义类 -->
+  <ColorPicker v-model:value="color" show-text :class-names="{ trigger: 'my-trigger', colorBlock: 'my-color-block' }" />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
   <ColorPicker
     v-model:value="color"
-    show-text
-    :class-names="{
-      trigger: 'my-trigger',
-      colorBlock: 'my-color-block',
+    :styles="{
+      saturationCursor: { width: '24px', height: '24px', border: '3px solid white' },
+      hueCursor: { width: '20px', height: '20px' },
     }"
   />
 
-  <!-- 自定义面板样式 -->
+  <!-- 组合：classNames 与 styles 混用 -->
   <ColorPicker
     v-model:value="color"
-    :class-names="{
-      panel: 'my-panel',
-      saturation: 'my-saturation',
-      hueSlider: 'my-hue-slider',
-    }"
+    :class-names="{ panel: 'my-panel' }"
+    :styles="{ trigger: { borderRadius: '12px', padding: '6px 12px', border: '2px solid #722ed1' } }"
   />
 </template>
 
@@ -255,51 +263,14 @@ interface ColorPickerStyles {
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
-
-:global(.my-saturation) {
-  border-radius: 8px;
-}
-
-:global(.my-hue-slider) {
-  border-radius: 6px;
-  height: 14px;
-}
 </style>
-```
-
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 自定义触发器 -->
-  <ColorPicker
-    v-model:value="color"
-    show-text
-    :styles="{
-      trigger: { borderRadius: '12px', padding: '6px 12px', border: '2px solid #722ed1' },
-      colorBlock: { borderRadius: '8px', width: '32px', height: '32px' },
-      text: { color: '#722ed1', fontWeight: '500', marginLeft: '8px' },
-    }"
-  />
-
-  <!-- 自定义光标样式 -->
-  <ColorPicker
-    v-model:value="color"
-    :styles="{
-      saturationCursor: { width: '24px', height: '24px', border: '3px solid white' },
-      hueCursor: { width: '20px', height: '20px' },
-    }"
-  />
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-color-picker`）合并，不会互相覆盖
 - 弹出面板通过 `Teleport` 挂载到 `body`，样式定制需使用 `:global()` 而非 `:deep()`
-- `classNames.saturationCursor` 和 `classNames.hueCursor` 用于自定义选色器光标的外观
 - 预设颜色的 `presetColor` 在选中时会自动添加 `hmfw-color-picker-preset-color-active` 类名
 
 ## 设计 Token

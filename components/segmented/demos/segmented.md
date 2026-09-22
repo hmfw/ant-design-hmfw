@@ -182,33 +182,39 @@ interface SegmentedStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<SegmentedSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-segmented">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-segmented-group">
-    <!-- ↑ classNames.group / styles.group 应用于此 -->
+    <!-- ↑ classNames.group / styles.group -->
 
     <div class="hmfw-segmented-thumb">
-      <!-- ↑ classNames.thumb / styles.thumb 应用于此（动画滑块） -->
+      <!-- ↑ classNames.thumb / styles.thumb（动画滑块） -->
     </div>
 
     <label class="hmfw-segmented-item hmfw-segmented-item-selected">
-      <!-- ↑ classNames.item / styles.item 应用于此 -->
+      <!-- ↑ classNames.item / styles.item -->
       <!-- ↑ 选中状态时叠加 classNames.itemSelected / styles.itemSelected -->
 
       <input type="radio" class="hmfw-segmented-item-input" />
-      <!-- ↑ classNames.itemInput / styles.itemInput 应用于此（隐藏的 radio） -->
+      <!-- ↑ classNames.itemInput / styles.itemInput（隐藏的 radio） -->
 
       <div class="hmfw-segmented-item-label">
-        <!-- ↑ classNames.itemLabel / styles.itemLabel 应用于此 -->
+        <!-- ↑ classNames.itemLabel / styles.itemLabel -->
         <span class="hmfw-segmented-item-icon">
-          <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
+          <!-- ↑ classNames.itemIcon / styles.itemIcon -->
           <!-- 图标内容 -->
         </span>
         <span class="hmfw-segmented-item-text">
-          <!-- ↑ classNames.itemText / styles.itemText 应用于此 -->
+          <!-- ↑ classNames.itemText / styles.itemText -->
           选项文本
         </span>
       </div>
@@ -232,41 +238,41 @@ interface SegmentedStyles {
 }
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器和滑块 -->
+  <!-- classNames：追加自定义类 -->
   <Segmented
     v-model:value="value"
     :options="['选项一', '选项二', '选项三']"
-    :class-names="{
-      root: 'custom-root',
-      thumb: 'custom-thumb',
+    :class-names="{ root: 'custom-root', thumb: 'custom-thumb' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Segmented
+    v-model:value="value"
+    :options="['Morning', 'Afternoon', 'Evening']"
+    :styles="{
+      root: {
+        borderRadius: '16px',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        border: 'none',
+        padding: '4px',
+      },
+      thumb: { borderRadius: '12px', background: '#ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },
+      itemText: { color: '#ffffff', fontWeight: 500 },
     }"
   />
 
-  <!-- 自定义选项状态 -->
+  <!-- 组合：classNames 与 styles 混用 -->
   <Segmented
     v-model:value="value"
     :options="options"
-    :class-names="{
-      item: 'custom-item',
-      itemSelected: 'custom-item-selected',
-      itemDisabled: 'custom-item-disabled',
-    }"
-  />
-
-  <!-- 自定义图标和文本 -->
-  <Segmented
-    v-model:value="value"
-    :options="iconOptions"
-    :class-names="{
-      itemIcon: 'custom-icon',
-      itemText: 'custom-text',
-    }"
+    :class-names="{ itemSelected: 'custom-item-selected', itemDisabled: 'custom-item-disabled' }"
+    :styles="{ itemIcon: { fontSize: '20px' }, itemLabel: { padding: '8px 16px' } }"
   />
 </template>
 
@@ -302,67 +308,13 @@ const options = [
   opacity: 0.4;
   text-decoration: line-through;
 }
-
-:deep(.custom-icon) {
-  font-size: 18px;
-  filter: drop-shadow(0 0 2px rgba(22, 119, 255, 0.4));
-}
-
-:deep(.custom-text) {
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
 </style>
-```
-
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 渐变背景和自定义滑块 -->
-  <Segmented
-    v-model:value="value"
-    :options="['Morning', 'Afternoon', 'Evening']"
-    :styles="{
-      root: {
-        borderRadius: '16px',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        border: 'none',
-        padding: '4px',
-      },
-      thumb: {
-        borderRadius: '12px',
-        background: '#ffffff',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-      },
-      itemText: {
-        color: '#ffffff',
-        fontWeight: 500,
-      },
-    }"
-  />
-
-  <!-- 组合使用（垂直模式） -->
-  <Segmented
-    v-model:value="value"
-    :options="iconOptions"
-    vertical
-    :styles="{
-      itemIcon: { fontSize: '20px' },
-      itemLabel: { padding: '8px 16px' },
-    }"
-  />
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `itemSelected` 和 `itemDisabled` 是条件节点，仅在选项处于对应状态时应用
-- 选项的状态类名会**叠加**在 `item` 上：`classNames.item` + `classNames.itemSelected`（选中时）或 `classNames.itemDisabled`（禁用时）
-- 选项的状态样式会**合并**：`styles.item` + `styles.itemSelected`（选中时）或 `styles.itemDisabled`（禁用时），后者优先
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-segmented-item`）合并，不会互相覆盖
 - `thumb` 是动画滑块，建议自定义其背景色、圆角、阴影等样式以匹配主题
 - 每个选项还支持独立的 `className` 和 `style` 属性（见 `SegmentedOption` 配置），这些样式会与 `classNames.item` / `styles.item` 合并
 

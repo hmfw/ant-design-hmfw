@@ -197,63 +197,87 @@ interface TimePickerStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TimePickerSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 触发器部分 -->
 <div class="hmfw-time-picker">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-time-picker-input">12:00:00</span>
-  <!-- ↑ classNames.input / styles.input 应用于此 -->
+  <!-- ↑ classNames.input / styles.input -->
   <span class="hmfw-time-picker-clear">×</span>
-  <!-- ↑ classNames.clear / styles.clear 应用于此 -->
+  <!-- ↑ classNames.clear / styles.clear -->
   <span class="hmfw-time-picker-suffix">🕐</span>
-  <!-- ↑ classNames.suffix / styles.suffix 应用于此 -->
+  <!-- ↑ classNames.suffix / styles.suffix -->
 </div>
 
 <!-- 弹层部分（Teleport 到 body） -->
 <div class="hmfw-time-picker-popup">
-  <!-- ↑ classNames.popup / styles.popup 应用于此 -->
+  <!-- ↑ classNames.popup / styles.popup -->
   <div class="hmfw-time-picker-panel">
-    <!-- ↑ classNames.panel / styles.panel 应用于此 -->
+    <!-- ↑ classNames.panel / styles.panel -->
     <div class="hmfw-time-picker-panel-inner">
-      <!-- ↑ classNames.panelInner / styles.panelInner 应用于此 -->
+      <!-- ↑ classNames.panelInner / styles.panelInner -->
       <ul class="hmfw-time-picker-panel-column">
-        <!-- ↑ classNames.column / styles.column 应用于此（小时/分钟/秒/AM-PM 共用） -->
+        <!-- ↑ classNames.column / styles.column（小时/分钟/秒/AM-PM 共用） -->
         <li class="hmfw-time-picker-panel-cell">00</li>
-        <!-- ↑ classNames.cell / styles.cell 应用于此（所有列的单元格共用） -->
+        <!-- ↑ classNames.cell / styles.cell（所有列的单元格共用） -->
       </ul>
     </div>
     <div class="hmfw-time-picker-panel-footer">
-      <!-- ↑ classNames.footer / styles.footer 应用于此 -->
+      <!-- ↑ classNames.footer / styles.footer -->
       <div class="hmfw-time-picker-panel-footer-extra">额外内容</div>
-      <!-- ↑ classNames.footerExtra / styles.footerExtra 应用于此 -->
+      <!-- ↑ classNames.footerExtra / styles.footerExtra -->
       <div class="hmfw-time-picker-panel-footer-actions">
-        <!-- ↑ classNames.footerActions / styles.footerActions 应用于此 -->
+        <!-- ↑ classNames.footerActions / styles.footerActions -->
         <button class="hmfw-time-picker-panel-footer-btn">此刻</button>
-        <!-- ↑ classNames.now / styles.now 应用于此 -->
+        <!-- ↑ classNames.now / styles.now -->
         <button class="hmfw-time-picker-panel-footer-ok">确定</button>
-        <!-- ↑ classNames.ok / styles.ok 应用于此 -->
+        <!-- ↑ classNames.ok / styles.ok -->
       </div>
     </div>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <TimePicker
-    :classNames="{
+    :class-names="{
       root: 'my-trigger',
       input: 'my-input',
       popup: 'my-popup',
       cell: 'my-cell',
       ok: 'my-ok-btn',
     }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <TimePicker
+    :styles="{
+      root: { borderRadius: '20px', borderColor: '#722ed1' },
+      input: { color: '#722ed1', fontWeight: 500 },
+      suffix: { color: '#722ed1', fontSize: '18px' },
+      panel: { borderRadius: '12px' },
+      cell: { fontWeight: 500 },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <TimePicker
+    :class-names="{ root: 'my-trigger', cell: 'my-cell' }"
+    :styles="{ input: { color: '#722ed1', fontWeight: 500 } }"
   />
 </template>
 
@@ -289,32 +313,11 @@ interface TimePickerStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <TimePicker
-    :styles="{
-      root: { borderRadius: '20px', borderColor: '#722ed1' },
-      input: { color: '#722ed1', fontWeight: 500 },
-      suffix: { color: '#722ed1', fontSize: '18px' },
-      panel: { borderRadius: '12px' },
-      cell: { fontWeight: 500 },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-time-picker`）合并，不会互相覆盖
 - `popup`、`panel`、`column`、`cell`、`footer` 等弹层元素通过 `Teleport to="body"` 渲染，其样式必须使用 `:global()` 或非 scoped 的全局样式，使用 `:deep()` 无法穿透
-- `clear` 仅在 `allowClear` 启用且有选中值时显示
-- `column` 应用于所有时间列（小时/分钟/秒/AM-PM），`cell` 应用于所有列的单元格
-- `footer` 包含 `footerExtra`（`renderExtraFooter` 渲染的内容）和 `footerActions`（"此刻"/"确定"按钮区域）
-- `now` 按钮仅在 `showNow` 为 `true` 时显示，`ok` 按钮仅在 `needConfirm` 为 `true` 时显示
 
 ## 设计 Token
 

@@ -269,20 +269,26 @@ interface ImageStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<ImageSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 图片主体 -->
 <div class="hmfw-image">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <img class="hmfw-image-img" />
-  <!-- ↑ classNames.img / styles.img 应用于此 -->
+  <!-- ↑ classNames.img / styles.img -->
 
   <!-- hover 遮罩（preview !== false 时） -->
   <div class="hmfw-image-mask">
-    <!-- ↑ classNames.mask / styles.mask 应用于此 -->
+    <!-- ↑ classNames.mask / styles.mask -->
     <div class="hmfw-image-mask-info">
-      <!-- ↑ classNames.maskInfo / styles.maskInfo 应用于此 -->
+      <!-- ↑ classNames.maskInfo / styles.maskInfo -->
       预览
     </div>
   </div>
@@ -290,88 +296,92 @@ interface ImageStyles {
 
 <!-- 加载占位状态 -->
 <div class="hmfw-image hmfw-image-placeholder">
-  <!-- ↑ classNames.root 应用于此 -->
+  <!-- ↑ classNames.root -->
   <div class="hmfw-image-placeholder-content">
-    <!-- ↑ classNames.placeholder / styles.placeholder 应用于此 -->
+    <!-- ↑ classNames.placeholder / styles.placeholder -->
     骨架动画或自定义内容
   </div>
 </div>
 
 <!-- 错误状态 -->
 <div class="hmfw-image hmfw-image-error">
-  <!-- ↑ classNames.root 应用于此 -->
+  <!-- ↑ classNames.root -->
   <div class="hmfw-image-error-content">
-    <!-- ↑ classNames.error / styles.error 应用于此 -->
+    <!-- ↑ classNames.error / styles.error -->
     <span class="hmfw-image-error-icon">图标</span>
   </div>
 </div>
 
 <!-- 预览弹层（挂载到 body 或 getContainer 指定容器） -->
 <div class="hmfw-image-preview">
-  <!-- ↑ classNames.preview / styles.preview 应用于此 -->
+  <!-- ↑ classNames.preview / styles.preview -->
   <div class="hmfw-image-preview-mask">
-    <!-- ↑ classNames.previewMask / styles.previewMask 应用于此 -->
+    <!-- ↑ classNames.previewMask / styles.previewMask -->
   </div>
 
   <div class="hmfw-image-preview-wrap">
-    <!-- ↑ classNames.previewWrap / styles.previewWrap 应用于此 -->
+    <!-- ↑ classNames.previewWrap / styles.previewWrap -->
     <img class="hmfw-image-preview-img" />
-    <!-- ↑ classNames.previewImg / styles.previewImg 应用于此 -->
+    <!-- ↑ classNames.previewImg / styles.previewImg -->
   </div>
 
   <div class="hmfw-image-preview-operations">
-    <!-- ↑ classNames.operations / styles.operations 应用于此 -->
+    <!-- ↑ classNames.operations / styles.operations -->
     <button class="hmfw-image-preview-operation-btn">
-      <!-- ↑ classNames.operationBtn / styles.operationBtn 应用于此 -->
+      <!-- ↑ classNames.operationBtn / styles.operationBtn -->
       翻转/旋转/缩放等
     </button>
   </div>
 
   <button class="hmfw-image-preview-close-btn">
-    <!-- ↑ classNames.closeBtn / styles.closeBtn 应用于此 -->
+    <!-- ↑ classNames.closeBtn / styles.closeBtn -->
     关闭
   </button>
 
   <!-- PreviewGroup 场景 -->
   <button class="hmfw-image-preview-switch-btn hmfw-image-preview-switch-left">
-    <!-- ↑ classNames.switchBtn / styles.switchBtn 应用于此 -->
+    <!-- ↑ classNames.switchBtn / styles.switchBtn -->
     左箭头
   </button>
   <button class="hmfw-image-preview-switch-btn hmfw-image-preview-switch-right">
-    <!-- ↑ classNames.switchBtn / styles.switchBtn 应用于此 -->
+    <!-- ↑ classNames.switchBtn / styles.switchBtn -->
     右箭头
   </button>
 
   <div class="hmfw-image-preview-count">
-    <!-- ↑ classNames.count / styles.count 应用于此 -->
+    <!-- ↑ classNames.count / styles.count -->
     1 / 3
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义 hover 遮罩 -->
+  <!-- classNames：追加自定义类（预览挂载到 body，需用 :global()） -->
   <Image
     src="https://example.com/image.jpg"
-    :class-names="{
-      mask: 'my-mask',
-      maskInfo: 'my-mask-info',
+    :class-names="{ mask: 'my-mask', maskInfo: 'my-mask-info', preview: 'my-preview' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Image
+    src="https://example.com/image.jpg"
+    :styles="{
+      root: { borderRadius: '16px', overflow: 'hidden' },
+      operations: { background: 'rgba(0, 0, 0, 0.8)', borderRadius: '12px' },
+      operationBtn: { fontSize: '20px', color: '#fff' },
     }"
   />
 
-  <!-- 自定义预览弹层（注意使用 :global() 因为预览挂载到 body） -->
+  <!-- 组合：classNames 与 styles 混用 -->
   <Image
     src="https://example.com/image.jpg"
-    :class-names="{
-      preview: 'my-preview',
-      operations: 'my-operations',
-      operationBtn: 'my-btn',
-    }"
+    :class-names="{ operations: 'my-operations', operationBtn: 'my-btn' }"
+    :styles="{ root: { border: '2px solid #1677ff' }, maskInfo: { fontSize: '18px', fontWeight: 'bold' } }"
   />
 </template>
 
@@ -406,49 +416,12 @@ interface ImageStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 自定义图片容器 -->
-  <Image
-    src="https://example.com/image.jpg"
-    :styles="{
-      root: { borderRadius: '16px', overflow: 'hidden' },
-      img: { transition: 'transform 0.3s' },
-    }"
-  />
-
-  <!-- 自定义预览操作栏 -->
-  <Image
-    src="https://example.com/image.jpg"
-    :styles="{
-      operations: { background: 'rgba(0, 0, 0, 0.8)', borderRadius: '12px' },
-      operationBtn: { fontSize: '20px', color: '#fff' },
-    }"
-  />
-
-  <!-- 组合使用 -->
-  <Image
-    src="https://example.com/image.jpg"
-    :styles="{
-      root: { border: '2px solid #1677ff' },
-      mask: { background: 'rgba(22, 119, 255, 0.7)' },
-      maskInfo: { fontSize: '18px', fontWeight: 'bold' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-image`）合并，不会互相覆盖
 - 预览弹层（`preview`、`previewMask`、`previewWrap`、`previewImg`、`operations`、`operationBtn`、`closeBtn`、`switchBtn`、`count`）默认挂载到 `document.body`，需要使用 `:global()` 选择器
 - 如果通过 `preview.getContainer` 指定了容器，则预览相关样式的作用域取决于该容器位置
-- `placeholder` 和 `error` 仅在对应状态时渲染
-- PreviewGroup 场景下，`switchBtn` 和 `count` 才会显示
 
 ## 设计 Token
 

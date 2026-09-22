@@ -150,38 +150,43 @@ interface CalendarStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<CalendarSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-calendar">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
 
   <div class="hmfw-calendar-header">
-    <!-- ↑ classNames.header / styles.header 应用于此 -->
-    <!-- 头部：年月选择器、视图切换按钮 -->
+    <!-- ↑ 头部：年月选择器、视图切换按钮；classNames.header / styles.header -->
   </div>
 
   <div class="hmfw-calendar-content">
-    <!-- ↑ classNames.content / styles.content 应用于此 -->
+    <!-- ↑ classNames.content / styles.content -->
 
     <!-- 月视图 -->
     <div class="hmfw-calendar-panel">
-      <!-- ↑ classNames.panel / styles.panel 应用于此 -->
+      <!-- ↑ classNames.panel / styles.panel -->
 
       <div class="hmfw-calendar-weekdays">
-        <!-- ↑ classNames.weekdays / styles.weekdays 应用于此 -->
+        <!-- ↑ 仅月视图，classNames.weekdays / styles.weekdays -->
         <div class="hmfw-calendar-weekday-cell">日</div>
-        <!-- ↑ classNames.weekdayCell / styles.weekdayCell 应用于此 -->
+        <!-- ↑ classNames.weekdayCell / styles.weekdayCell -->
       </div>
 
       <div class="hmfw-calendar-body">
-        <!-- ↑ classNames.body / styles.body 应用于此 -->
+        <!-- ↑ 仅月视图，classNames.body / styles.body -->
         <div class="hmfw-calendar-cell">
-          <!-- ↑ classNames.cell / styles.cell 应用于此 -->
+          <!-- ↑ classNames.cell / styles.cell -->
           <div class="hmfw-calendar-cell-inner">
-            <!-- ↑ classNames.cellInner / styles.cellInner 应用于此 -->
+            <!-- ↑ classNames.cellInner / styles.cellInner -->
             <div class="hmfw-calendar-date">1</div>
-            <!-- ↑ classNames.date / styles.date 应用于此 -->
+            <!-- ↑ classNames.date / styles.date -->
           </div>
         </div>
       </div>
@@ -189,15 +194,15 @@ interface CalendarStyles {
 
     <!-- 年视图 -->
     <div class="hmfw-calendar-panel">
-      <!-- ↑ classNames.panel / styles.panel 应用于此 -->
+      <!-- ↑ classNames.panel / styles.panel -->
       <div class="hmfw-calendar-year-panel">
-        <!-- ↑ classNames.yearPanel / styles.yearPanel 应用于此 -->
+        <!-- ↑ 仅年视图，classNames.yearPanel / styles.yearPanel -->
         <div class="hmfw-calendar-month-cell">
-          <!-- ↑ classNames.monthCell / styles.monthCell 应用于此 -->
+          <!-- ↑ classNames.monthCell / styles.monthCell -->
           <div class="hmfw-calendar-cell-inner">
-            <!-- ↑ classNames.cellInner / styles.cellInner 应用于此 -->
+            <!-- ↑ classNames.cellInner / styles.cellInner -->
             <div class="hmfw-calendar-month">一月</div>
-            <!-- ↑ classNames.month / styles.month 应用于此 -->
+            <!-- ↑ classNames.month / styles.month -->
           </div>
         </div>
       </div>
@@ -206,20 +211,43 @@ interface CalendarStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Calendar
     :fullscreen="false"
-    :classNames="{
+    :class-names="{
       root: 'my-calendar',
       header: 'my-header',
       cell: 'my-cell',
       cellInner: 'my-cell-inner',
     }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Calendar
+    :fullscreen="false"
+    :styles="{
+      root: { borderRadius: '12px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' },
+      header: {
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white',
+        padding: '16px',
+      },
+      cell: { margin: '2px', borderRadius: '8px' },
+      cellInner: { transition: 'all 0.3s' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Calendar
+    :fullscreen="false"
+    :class-names="{ root: 'my-calendar', header: 'my-header' }"
+    :styles="{ cell: { margin: '2px', borderRadius: '8px' } }"
   />
 </template>
 
@@ -252,35 +280,10 @@ interface CalendarStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Calendar
-    :fullscreen="false"
-    :styles="{
-      root: { borderRadius: '12px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' },
-      header: {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        padding: '16px',
-      },
-      cell: { margin: '2px', borderRadius: '8px' },
-      cellInner: { transition: 'all 0.3s' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `cell` 既用于月视图的日期单元格，也用于年视图的月份单元格，使用时注意区分
-- `monthCell` 仅在年视图中生效，专门用于月份单元格的额外样式
-- `date` 和 `month` 分别控制日期数字和月份文字的样式
-- 自定义样式时建议结合状态类名（如 `.hmfw-calendar-cell-selected`、`.hmfw-calendar-cell-today`）实现更精细的控制
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名合并（不会互相覆盖），可结合状态类名（如 `.hmfw-calendar-cell-selected`、`.hmfw-calendar-cell-today`）做更精细的控制
 
 ## 设计 Token
 

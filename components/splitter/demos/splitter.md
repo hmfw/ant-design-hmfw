@@ -155,26 +155,31 @@ interface SplitterStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<SplitterSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 水平分割面板 -->
 <div class="hmfw-splitter hmfw-splitter-horizontal">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
 
   <!-- 第一个面板 -->
   <div class="hmfw-splitter-panel" style="flex-basis: 40%; flex-grow: 0;">
-    <!-- ↑ classNames.panel / styles.panel 应用于此 -->
+    <!-- ↑ classNames.panel / styles.panel -->
     第一个面板内容
   </div>
 
   <!-- 分隔栏 -->
   <div class="hmfw-splitter-bar">
-    <!-- 拖拽条 -->
+    <!-- 拖拽条；激活时追加 hmfw-splitter-bar-dragger-active -->
     <div class="hmfw-splitter-bar-dragger">
-      <!-- ↑ classNames.dragger.default / styles.dragger.default 应用于此 -->
-      <!-- 激活时追加 hmfw-splitter-bar-dragger-active -->
-      <!-- ↑ classNames.dragger.active / styles.dragger.active 应用于此 -->
+      <!-- ↑ classNames.dragger.default / styles.dragger.default -->
+      <!-- ↑ 激活态：classNames.dragger.active / styles.dragger.active -->
     </div>
 
     <!-- 折叠按钮（如果启用） -->
@@ -221,31 +226,18 @@ interface SplitterStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根节点样式 -->
-  <Splitter :class-names="{ root: 'my-splitter' }" style="height: 300px">
-    <Splitter.Panel>左侧</Splitter.Panel>
-    <Splitter.Panel>右侧</Splitter.Panel>
-  </Splitter>
-
-  <!-- 自定义拖拽条样式 -->
-  <Splitter :class-names="{ dragger: 'my-dragger' }" style="height: 300px">
-    <Splitter.Panel>左侧</Splitter.Panel>
-    <Splitter.Panel>右侧</Splitter.Panel>
-  </Splitter>
-
-  <!-- 区分拖拽条默认和激活状态 -->
+  <!-- classNames：追加自定义类（dragger 用对象分别指定默认/激活态） -->
   <Splitter
     :class-names="{
-      dragger: {
-        default: 'my-dragger-default',
-        active: 'my-dragger-active',
-      },
+      root: 'my-splitter',
+      panel: 'my-panel',
+      dragger: { default: 'my-dragger-default', active: 'my-dragger-active' },
     }"
     style="height: 300px"
   >
@@ -253,8 +245,27 @@ interface SplitterStyles {
     <Splitter.Panel>右侧</Splitter.Panel>
   </Splitter>
 
-  <!-- 自定义面板样式 -->
-  <Splitter :class-names="{ panel: 'my-panel' }" style="height: 300px">
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Splitter
+    :styles="{
+      root: { border: '2px solid #1677ff', borderRadius: '8px' },
+      dragger: { default: { background: '#d9d9d9' }, active: { background: '#1677ff' } },
+    }"
+    style="height: 300px"
+  >
+    <Splitter.Panel>左侧</Splitter.Panel>
+    <Splitter.Panel>右侧</Splitter.Panel>
+  </Splitter>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Splitter
+    :class-names="{ root: 'my-splitter' }"
+    :styles="{
+      panel: { padding: '16px', background: '#f5f5f5' },
+      dragger: { active: { background: '#ff4d4f' } },
+    }"
+    style="height: 300px"
+  >
     <Splitter.Panel>左侧</Splitter.Panel>
     <Splitter.Panel>右侧</Splitter.Panel>
   </Splitter>
@@ -264,10 +275,6 @@ interface SplitterStyles {
 :deep(.my-splitter) {
   border: 2px solid var(--hmfw-color-primary);
   border-radius: 8px;
-}
-
-:deep(.my-dragger) {
-  background: var(--hmfw-color-primary);
 }
 
 :deep(.my-dragger-default) {
@@ -285,61 +292,11 @@ interface SplitterStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制根节点 -->
-  <Splitter
-    :styles="{
-      root: { border: '2px solid #1677ff', borderRadius: '8px' },
-    }"
-    style="height: 300px"
-  >
-    <Splitter.Panel>左侧</Splitter.Panel>
-    <Splitter.Panel>右侧</Splitter.Panel>
-  </Splitter>
-
-  <!-- 自定义拖拽条样式 -->
-  <Splitter
-    :styles="{
-      dragger: {
-        default: { background: '#d9d9d9' },
-        active: { background: '#1677ff' },
-      },
-    }"
-    style="height: 300px"
-  >
-    <Splitter.Panel>左侧</Splitter.Panel>
-    <Splitter.Panel>右侧</Splitter.Panel>
-  </Splitter>
-
-  <!-- 组合使用 -->
-  <Splitter
-    :styles="{
-      root: { border: '1px solid #d9d9d9' },
-      panel: { padding: '16px', background: '#f5f5f5' },
-      dragger: { default: { background: '#ff4d4f' } },
-    }"
-    style="height: 300px"
-  >
-    <Splitter.Panel>左侧</Splitter.Panel>
-    <Splitter.Panel>右侧</Splitter.Panel>
-  </Splitter>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 语义节点包括 `root`（容器）、`panel`（面板）、`dragger`（拖拽条）
-- `dragger` 支持字符串（同时应用于默认和激活状态）或对象（分别指定 `default` 和 `active`）
-- `classNames.root` 会与组件内置的方向类名（如 `.hmfw-splitter-horizontal`）合并
-- 拖拽时，拖拽条会自动添加 `.hmfw-splitter-bar-dragger-active` 类名
-- 面板折叠时会自动添加 `.hmfw-splitter-panel-hidden` 类名
-- 启用折叠动画时会自动添加 `.hmfw-splitter-panel-transition` 类名
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-splitter-horizontal`）合并，不会互相覆盖
+- `dragger` 支持字符串（同时应用于默认与激活态）或对象（分别指定 `default` / `active`）
 
 ## 设计 Token
 

@@ -183,30 +183,33 @@ interface AnchorStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<AnchorSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 垂直锚点结构 -->
 <div class="hmfw-anchor-wrapper">
-  <!-- ↑ classNames.wrapper / styles.wrapper 应用于此 -->
+  <!-- ↑ classNames.wrapper / styles.wrapper -->
   <div class="hmfw-anchor">
-    <!-- ↑ classNames.root / styles.root 应用于此 -->
-    <span class="hmfw-anchor-ink">
-      <!-- ↑ classNames.ink / styles.ink 应用于此 -->
-    </span>
+    <!-- ↑ classNames.root / styles.root -->
+    <span class="hmfw-anchor-ink"></span>
+    <!-- ↑ classNames.ink / styles.ink -->
     <div class="hmfw-anchor-link">
-      <!-- ↑ classNames.link / styles.link 应用于此 -->
+      <!-- ↑ classNames.link / styles.link -->
       <a class="hmfw-anchor-link-title" href="#section-1">
-        <!-- ↑ classNames.title / styles.title 应用于此 -->
+        <!-- ↑ classNames.title / styles.title -->
         锚点标题
       </a>
     </div>
     <div class="hmfw-anchor-link hmfw-anchor-link-active">
-      <!-- ↑ classNames.link + classNames.linkActive 叠加应用 -->
-      <!-- ↑ styles.link + styles.linkActive 合并应用 -->
+      <!-- ↑ 激活项：classNames.linkActive / styles.linkActive 叠加在 link 之上 -->
       <a class="hmfw-anchor-link-title hmfw-anchor-link-title-active" href="#section-2">
-        <!-- ↑ classNames.title + classNames.titleActive 叠加应用 -->
-        <!-- ↑ styles.title + styles.titleActive 合并应用 -->
+        <!-- ↑ 激活项：classNames.titleActive / styles.titleActive 叠加在 title 之上 -->
         当前激活锚点
       </a>
     </div>
@@ -214,30 +217,40 @@ interface AnchorStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器和墨水条 -->
+  <!-- classNames：追加自定义类 -->
   <Anchor
     :items="items"
     :class-names="{
       root: 'my-anchor-root',
       ink: 'my-anchor-ink',
+      link: 'my-anchor-link',
+      linkActive: 'my-link-active',
+      titleActive: 'my-title-active',
     }"
   />
 
-  <!-- 自定义链接项和激活状态 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Anchor
     :items="items"
-    :class-names="{
-      link: 'my-anchor-link',
-      linkActive: 'my-link-active',
-      title: 'my-link-title',
-      titleActive: 'my-title-active',
+    :styles="{
+      root: { background: '#f0f5ff', padding: '12px', borderRadius: '8px' },
+      ink: { width: '4px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+      title: { fontSize: '15px', fontWeight: 500 },
+      titleActive: { color: '#52c41a' },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Anchor
+    :items="items"
+    :class-names="{ root: 'my-anchor-root' }"
+    :styles="{ ink: { width: '3px' }, link: { margin: '6px 0' } }"
   />
 </template>
 
@@ -274,49 +287,11 @@ interface AnchorStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制墨水条 -->
-  <Anchor
-    :items="items"
-    :styles="{
-      ink: { width: '4px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-    }"
-  />
-
-  <!-- 自定义链接文本样式 -->
-  <Anchor
-    :items="items"
-    :styles="{
-      title: { fontSize: '15px', fontWeight: 500 },
-      titleActive: { color: '#52c41a' },
-    }"
-  />
-
-  <!-- 组合使用 -->
-  <Anchor
-    :items="items"
-    :styles="{
-      root: { background: '#f0f5ff', padding: '12px', borderRadius: '8px' },
-      ink: { width: '3px' },
-      link: { margin: '6px 0' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 激活状态时，`classNames.linkActive` 与 `classNames.link` 会**叠加**应用在同一个 `<div>` 上
-- 激活状态时，`styles.linkActive` 与 `styles.link` 会**合并**应用，`styles.linkActive` 优先
-- 同样地，`classNames.titleActive` / `styles.titleActive` 会叠加/合并到激活的标题元素上
-- `wrapper` 是最外层容器，用于控制整体布局；`root` 是内层锚点容器，包含墨水条和链接列表
-- 水平锚点（`direction="horizontal"`）和垂直锚点共享相同的 classNames/styles 结构
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-anchor-link`）合并，不会互相覆盖
+- 水平锚点（`direction="horizontal"`）与垂直锚点共享相同的 classNames / styles 结构
 
 ## 设计 Token
 

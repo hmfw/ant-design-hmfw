@@ -157,69 +157,93 @@ interface AutoCompleteStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<AutoCompleteSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 输入框容器 -->
 <div class="hmfw-auto-complete">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
 
   <span class="hmfw-auto-complete-prefix">
-    <!-- ↑ classNames.prefix / styles.prefix 应用于此 -->
+    <!-- ↑ 提供 prefix 插槽时渲染，classNames.prefix / styles.prefix -->
     <slot name="prefix"></slot>
   </span>
 
   <input class="hmfw-auto-complete-input" />
-  <!-- ↑ classNames.input / styles.input 应用于此 -->
+  <!-- ↑ classNames.input / styles.input -->
 
   <span class="hmfw-auto-complete-clear">
-    <!-- ↑ classNames.clear / styles.clear 应用于此 -->
+    <!-- ↑ allowClear 且有输入值时渲染，classNames.clear / styles.clear -->
     <CloseCircleFilled />
   </span>
 
   <span class="hmfw-auto-complete-suffix">
-    <!-- ↑ classNames.suffix / styles.suffix 应用于此 -->
+    <!-- ↑ 提供 suffix 插槽时渲染，classNames.suffix / styles.suffix -->
     <slot name="suffix"></slot>
   </span>
 </div>
 
 <!-- 下拉面板（挂载到 body） -->
 <div class="hmfw-auto-complete-dropdown">
-  <!-- ↑ classNames.dropdown / styles.dropdown 应用于此 -->
+  <!-- ↑ classNames.dropdown / styles.dropdown -->
 
   <div class="hmfw-auto-complete-option">
-    <!-- ↑ classNames.option / styles.option 应用于此 -->
+    <!-- ↑ classNames.option / styles.option -->
     选项内容
   </div>
 
   <div class="hmfw-auto-complete-empty">
-    <!-- ↑ classNames.empty / styles.empty 应用于此 -->
+    <!-- ↑ 过滤结果为空时渲染，classNames.empty / styles.empty -->
     暂无数据
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义输入框容器 -->
-  <AutoComplete v-model="value" :options="options" :class-names="{ root: 'my-input-wrapper' }" />
-
-  <!-- 自定义下拉面板与选项 -->
+  <!-- classNames：追加自定义类 -->
   <AutoComplete
     v-model="value"
     :options="options"
+    allow-clear
     :class-names="{
+      root: 'my-input-wrapper',
       dropdown: 'my-dropdown',
       option: 'my-option',
+      clear: 'my-clear-icon',
     }"
   />
 
-  <!-- 自定义清除按钮 -->
-  <AutoComplete v-model="value" :options="options" allow-clear :class-names="{ clear: 'my-clear-icon' }" />
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <AutoComplete
+    v-model="value"
+    :options="options"
+    allow-clear
+    :styles="{
+      root: { borderRadius: '20px', borderColor: '#722ed1' },
+      input: { color: '#722ed1', fontWeight: 'bold' },
+      clear: { color: '#eb2f96', fontSize: '16px' },
+      dropdown: { background: '#f6ffed' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <AutoComplete
+    v-model="value"
+    :options="options"
+    :class-names="{ root: 'my-input-wrapper' }"
+    :styles="{ input: { fontSize: '16px' }, dropdown: { background: '#f6ffed' } }"
+  />
 </template>
 
 <style scoped>
@@ -257,51 +281,11 @@ interface AutoCompleteStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制输入框 -->
-  <AutoComplete
-    v-model="value"
-    :options="options"
-    :styles="{
-      root: { borderRadius: '20px', borderColor: '#722ed1' },
-      input: { color: '#722ed1', fontWeight: 'bold' },
-    }"
-  />
-
-  <!-- 自定义清除按钮颜色 -->
-  <AutoComplete
-    v-model="value"
-    :options="options"
-    allow-clear
-    :styles="{
-      clear: { color: '#eb2f96', fontSize: '16px' },
-    }"
-  />
-
-  <!-- 组合使用 -->
-  <AutoComplete
-    v-model="value"
-    :options="options"
-    :styles="{
-      root: { borderColor: '#52c41a' },
-      input: { fontSize: '16px' },
-      dropdown: { background: '#f6ffed' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 下拉面板（`dropdown`、`option`、`empty`）挂载到 `body` 之外，样式定义时需要使用 `:global()` 而非 `:deep()`
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-auto-complete-disabled`）合并
-- 自定义 `dropdown` 样式时，注意与全局主题的协调性
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 下拉面板（`dropdown`、`option`、`empty`）挂载到 `body` 之外，样式定义时需使用 `:global()` 而非 `:deep()`
+- 各语义化类名会与组件内置类名（如 `.hmfw-auto-complete-disabled`）合并，不会互相覆盖
 
 ## 设计 Token
 

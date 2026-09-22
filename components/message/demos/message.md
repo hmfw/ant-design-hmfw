@@ -186,35 +186,44 @@ interface MessageStyles {
 
 ```html
 <div class="hmfw-message-notice-wrapper">
-  <!-- ↑ classNames.wrapper / styles.wrapper 应用于此 -->
+  <!-- ↑ classNames.wrapper / styles.wrapper -->
   <div class="hmfw-message-notice hmfw-message-notice-success">
-    <!-- ↑ classNames.notice / styles.notice 应用于此 -->
+    <!-- ↑ notice 上按状态追加 -success/-error 等类；classNames.notice / styles.notice -->
     <div class="hmfw-message-notice-content">
-      <span class="hmfw-message-notice-icon">
-        <!-- ↑ classNames.icon / styles.icon 应用于此 -->
-        <svg>...</svg>
-      </span>
-      <span class="hmfw-message-notice-title">
-        <!-- ↑ classNames.title / styles.title 应用于此 -->
-        提示内容
-      </span>
+      <span class="hmfw-message-notice-icon"><svg>...</svg></span>
+      <!-- ↑ classNames.icon / styles.icon -->
+      <span class="hmfw-message-notice-title">提示内容</span>
+      <!-- ↑ classNames.title / styles.title -->
     </div>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 options 的 `classNames` 字段为各子节点指定自定义 class：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点，均通过调用方法的 options 传入：
 
 ```ts
+// classNames：追加自定义类
 message.success({
   content: '保存成功',
-  classNames: {
-    notice: 'my-notice',
-    icon: 'my-icon',
-    title: 'my-title',
+  classNames: { notice: 'my-notice', icon: 'my-icon', title: 'my-title' },
+})
+
+// styles：内联样式，优先级高于 classNames
+message.info({
+  content: '内联样式控制的提示',
+  styles: {
+    notice: { borderRadius: '16px', background: '#f0f5ff' },
+    title: { color: '#1677ff', fontWeight: 600 },
   },
+})
+
+// 组合：classNames 与 styles 混用
+message.warning({
+  content: '组合用法',
+  classNames: { notice: 'my-notice' },
+  styles: { title: { fontWeight: 700 } },
 })
 ```
 
@@ -237,25 +246,12 @@ message.success({
 </style>
 ```
 
-### 使用 styles
-
-通过 options 的 `styles` 字段直接传入内联样式对象：
-
-```ts
-message.info({
-  content: '内联样式控制的提示',
-  styles: {
-    notice: { borderRadius: '16px', background: '#f0f5ff' },
-    title: { color: '#1677ff', fontWeight: 600 },
-  },
-})
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `classNames` / `styles` 通过 **调用 options** 传入，仅作用于当前这一条提示，不影响其他提示
-- `styles.notice` 会与 options 的 `style`（及 `classNames.notice` 对应的 class）合并，`styles.notice` 优先级最高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-message-notice`）合并，不会互相覆盖
+- `classNames` / `styles` 通过调用 options 传入，仅作用于当前这一条提示，不影响其他提示
+- `styles.notice` 会与 options 的 `style` 合并，`styles.notice` 优先级最高
 - Message 挂载在 `document.body` 上，位于业务组件 DOM 树之外，scoped 样式的 `:deep()` 无法命中，请改用 `:global()` 或全局样式
 
 ## 设计 Token

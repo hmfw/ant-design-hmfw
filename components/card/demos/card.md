@@ -182,43 +182,74 @@ interface CardStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<CardSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-card">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-card-cover">封面</div>
+  <!-- ↑ 提供 cover 插槽时渲染，classNames.cover / styles.cover -->
   <div class="hmfw-card-head">
-    <!-- ↑ classNames.head / styles.head 应用于此 -->
+    <!-- ↑ 有 title/extra/tabList 时渲染，classNames.head / styles.head -->
     <div class="hmfw-card-head-wrapper">
       <div class="hmfw-card-head-title">标题</div>
-      <!-- ↑ classNames.title / styles.title 应用于此 -->
+      <!-- ↑ classNames.title / styles.title -->
       <div class="hmfw-card-extra">扩展</div>
-      <!-- ↑ classNames.extra / styles.extra 应用于此 -->
+      <!-- ↑ 提供 extra 插槽时渲染，classNames.extra / styles.extra -->
     </div>
   </div>
   <div class="hmfw-card-body">内容</div>
-  <!-- ↑ classNames.body / styles.body 应用于此 -->
+  <!-- ↑ classNames.body / styles.body -->
   <ul class="hmfw-card-actions">
     操作组
   </ul>
-  <!-- ↑ classNames.actions / styles.actions 应用于此 -->
+  <!-- ↑ 提供 actions 插槽时渲染，classNames.actions / styles.actions -->
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Card
     title="标题"
-    :classNames="{
+    :class-names="{
       root: 'my-card-root',
       head: 'my-card-head',
       title: 'my-card-title',
       body: 'my-card-body',
       actions: 'my-card-actions',
     }"
+  >
+    内容
+  </Card>
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Card
+    title="动态样式"
+    :styles="{
+      root: { border: '2px solid #1890ff', borderRadius: '12px' },
+      head: { background: '#667eea', color: 'white' },
+      body: { padding: '24px' },
+    }"
+  >
+    内容
+  </Card>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Card
+    title="组合"
+    :class-names="{ root: 'my-card-root', head: 'my-card-head' }"
+    :styles="{ body: { padding: '24px' } }"
   >
     内容
   </Card>
@@ -248,29 +279,10 @@ interface CardStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <Card
-    title="动态样式"
-    :styles="{
-      root: { border: '2px solid #1890ff', borderRadius: '12px' },
-      head: { background: '#667eea', color: 'white' },
-      body: { padding: '24px' },
-    }"
-  >
-    内容
-  </Card>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `title` 仅在设置了 `title` 属性或 `title` 插槽时渲染
-- `extra` 仅在设置了 `extra` 插槽时渲染
-- `actions` 仅在设置了 `actions` 插槽时渲染
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-card-small`）合并，不会互相覆盖
 - `styles.head` 会与 `headStyle` 合并，`styles.body` 会与 `bodyStyle` 合并
 
 ## 设计 Token

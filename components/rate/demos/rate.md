@@ -160,16 +160,22 @@ interface RateStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<RateSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 基础评分 -->
 <ul class="hmfw-rate">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <li class="hmfw-rate-star hmfw-rate-star-full">
-    <!-- ↑ classNames.star / styles.star 应用于此 -->
+    <!-- ↑ classNames.star / styles.star -->
     <div class="hmfw-rate-star-second">
-      <!-- ↑ classNames.starSecond / styles.starSecond 应用于此 -->
+      <!-- ↑ classNames.starSecond / styles.starSecond -->
       <span>★</span>
     </div>
   </li>
@@ -178,15 +184,15 @@ interface RateStyles {
 
 <!-- 半星模式 (allowHalf) -->
 <ul class="hmfw-rate">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <li class="hmfw-rate-star hmfw-rate-star-half">
-    <!-- ↑ classNames.star / styles.star 应用于此 -->
+    <!-- ↑ classNames.star / styles.star -->
     <div class="hmfw-rate-star-first">
-      <!-- ↑ classNames.starFirst / styles.starFirst 应用于此 -->
+      <!-- ↑ classNames.starFirst / styles.starFirst -->
       <span>★</span>
     </div>
     <div class="hmfw-rate-star-second">
-      <!-- ↑ classNames.starSecond / styles.starSecond 应用于此 -->
+      <!-- ↑ classNames.starSecond / styles.starSecond -->
       <span>★</span>
     </div>
   </li>
@@ -194,32 +200,24 @@ interface RateStyles {
 </ul>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义星星颜色 -->
-  <Rate v-model:value="rating" :class-names="{ star: 'gradient-star' }" />
+  <!-- classNames：追加自定义类 -->
+  <Rate v-model:value="rating" :class-names="{ root: 'custom-root', star: 'gradient-star' }" />
 
-  <!-- 半星不同颜色 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Rate v-model:value="rating" :styles="{ root: { gap: '12px' }, star: { fontSize: '32px', color: '#ff4d4f' } }" />
+
+  <!-- 组合：classNames 与 styles 混用 -->
   <Rate
     v-model:value="rating"
     allow-half
-    :class-names="{
-      starFirst: 'star-first-custom',
-      starSecond: 'star-second-custom',
-    }"
-  />
-
-  <!-- 容器与星星组合定制 -->
-  <Rate
-    v-model:value="rating"
-    :class-names="{
-      root: 'custom-root',
-      star: 'custom-star',
-    }"
+    :class-names="{ starFirst: 'star-first-custom', starSecond: 'star-second-custom' }"
+    :styles="{ star: { fontSize: '28px' } }"
   />
 </template>
 
@@ -238,6 +236,12 @@ interface RateStyles {
   filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.6));
 }
 
+:deep(.custom-root) {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+  border-radius: 8px;
+}
+
 :deep(.star-first-custom) {
   color: #ff6b6b;
 }
@@ -245,61 +249,13 @@ interface RateStyles {
 :deep(.star-second-custom) {
   color: #ffd93d;
 }
-
-:deep(.custom-root) {
-  padding: 12px 16px;
-  background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
-  border-radius: 8px;
-}
-
-:deep(.custom-star:hover) {
-  transform: scale(1.2) rotate(15deg);
-}
 </style>
-```
-
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制尺寸 -->
-  <Rate
-    v-model:value="rating"
-    :styles="{
-      root: { gap: '12px' },
-      star: { fontSize: '32px' },
-    }"
-  />
-
-  <!-- 自定义颜色 -->
-  <Rate
-    v-model:value="rating"
-    :styles="{
-      star: { color: '#ff4d4f' },
-    }"
-  />
-
-  <!-- 半星样式 -->
-  <Rate
-    v-model:value="rating"
-    allow-half
-    :styles="{
-      starFirst: { color: '#ff6b6b' },
-      starSecond: { color: '#ffd93d' },
-    }"
-  />
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `classNames.star` 会应用到所有星星项，包括已选中、半选、未选中状态
-- 在 `allowHalf` 模式下，每个星星包含 `starFirst` 和 `starSecond` 两个部分
-- `starFirst` 仅在 `allowHalf` 为 `true` 时渲染，用于实现半星效果
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-rate-disabled`）合并
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-rate`）合并，不会互相覆盖
 
 ## 设计 Token
 

@@ -211,19 +211,25 @@ interface TreeSemanticStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TreeSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-tree">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
 
   <!-- 树节点（每个节点一个） -->
   <div class="hmfw-tree-treenode">
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
+    <!-- ↑ classNames.item / styles.item -->
 
     <!-- 展开/收起开关 -->
     <span class="hmfw-tree-switcher">
-      <!-- ↑ classNames.itemSwitcher / styles.itemSwitcher 应用于此 -->
+      <!-- ↑ classNames.itemSwitcher / styles.itemSwitcher -->
       <svg>展开/收起图标</svg>
     </span>
 
@@ -234,13 +240,13 @@ interface TreeSemanticStyles {
 
     <!-- 节点图标（showIcon 时） -->
     <span class="hmfw-tree-iconEle">
-      <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
+      <!-- ↑ classNames.itemIcon / styles.itemIcon -->
       <svg>节点图标</svg>
     </span>
 
     <!-- 节点标题 -->
     <span class="hmfw-tree-title">
-      <!-- ↑ classNames.itemTitle / styles.itemTitle 应用于此 -->
+      <!-- ↑ classNames.itemTitle / styles.itemTitle -->
       节点文字
     </span>
   </div>
@@ -250,37 +256,13 @@ interface TreeSemanticStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义节点样式 -->
-  <Tree
-    :tree-data="treeData"
-    :class-names="{
-      item: 'my-tree-item',
-    }"
-  />
-
-  <!-- 自定义图标和标题 -->
-  <Tree
-    :tree-data="treeData"
-    show-icon
-    :class-names="{
-      itemIcon: 'my-tree-icon',
-      itemTitle: 'my-tree-title',
-    }"
-  />
-
-  <!-- 自定义展开/收起开关 -->
-  <Tree
-    :tree-data="treeData"
-    :class-names="{
-      itemSwitcher: 'my-tree-switcher',
-    }"
-  />
-
-  <!-- 完整自定义 -->
+  <!-- classNames：追加自定义类 -->
   <Tree
     :tree-data="treeData"
     show-icon
@@ -292,6 +274,26 @@ interface TreeSemanticStyles {
       itemTitle: 'my-tree-title',
       itemSwitcher: 'my-tree-switcher',
     }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Tree
+    :tree-data="treeData"
+    show-icon
+    :styles="{
+      root: { background: '#fafafa', padding: '16px', borderRadius: '8px' },
+      item: { padding: '8px 12px', borderRadius: '4px' },
+      itemIcon: { color: '#1890ff', fontSize: '18px' },
+      itemTitle: { fontWeight: '500', fontSize: '14px' },
+      itemSwitcher: { color: '#722ed1' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Tree
+    :tree-data="treeData"
+    :class-names="{ item: 'my-tree-item' }"
+    :styles="{ itemTitle: { fontWeight: '500', color: '#333' } }"
   />
 </template>
 
@@ -356,88 +358,11 @@ const treeData = [
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制节点 -->
-  <Tree
-    :tree-data="treeData"
-    :styles="{
-      item: {
-        padding: '8px 12px',
-        borderRadius: '4px',
-      },
-    }"
-  />
-
-  <!-- 自定义图标和标题 -->
-  <Tree
-    :tree-data="treeData"
-    show-icon
-    :styles="{
-      itemIcon: {
-        color: '#1890ff',
-        fontSize: '18px',
-        marginRight: '8px',
-      },
-      itemTitle: {
-        fontWeight: '500',
-        color: '#333',
-        fontSize: '14px',
-      },
-    }"
-  />
-
-  <!-- 自定义开关 -->
-  <Tree
-    :tree-data="treeData"
-    :styles="{
-      itemSwitcher: {
-        color: '#722ed1',
-        fontSize: '16px',
-      },
-    }"
-  />
-
-  <!-- 完整自定义 -->
-  <Tree
-    :tree-data="treeData"
-    show-icon
-    :styles="{
-      root: {
-        background: '#fafafa',
-        padding: '16px',
-        borderRadius: '8px',
-      },
-      item: {
-        padding: '8px 12px',
-        borderRadius: '4px',
-      },
-      itemIcon: {
-        color: '#1890ff',
-        fontSize: '18px',
-      },
-      itemTitle: {
-        fontWeight: '500',
-        fontSize: '14px',
-      },
-      itemSwitcher: {
-        color: '#722ed1',
-      },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-tree`）合并，不会互相覆盖
 - `item` / `itemIcon` / `itemTitle` / `itemSwitcher` 会应用到**所有节点**，无法针对单个节点定制（如需单节点样式，请使用 `titleRender` 自定义渲染）
-- `itemIcon` 仅在 `showIcon={true}` 或节点有自定义 `icon` 时生效
-- `itemSwitcher` 对所有节点生效，包括叶子节点（叶子节点的 switcher 默认显示为占位符）
 - 虚拟滚动模式（`virtual={true}`）下，样式应用方式相同，但需注意性能影响
 - 拖拽过程中的视觉反馈（如拖拽占位符）不受 `classNames` / `styles` 控制，由内置样式决定
 

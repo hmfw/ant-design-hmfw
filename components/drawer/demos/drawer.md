@@ -138,38 +138,44 @@ interface DrawerStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<DrawerSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-drawer">
-  <!-- ↑ classNames.root / styles.root 应用于此（最外层，含遮罩） -->
+  <!-- ↑ classNames.root / styles.root（最外层，含遮罩） -->
   <div class="hmfw-drawer-mask">
-    <!-- ↑ classNames.mask / styles.mask 应用于此 -->
+    <!-- ↑ classNames.mask / styles.mask -->
   </div>
   <div class="hmfw-drawer-content-wrapper">
-    <!-- ↑ classNames.wrapper / styles.wrapper 应用于此 -->
+    <!-- ↑ classNames.wrapper / styles.wrapper -->
     <div class="hmfw-drawer-content">
-      <!-- ↑ classNames.content / styles.content 应用于此 -->
+      <!-- ↑ classNames.content / styles.content -->
       <div class="hmfw-drawer-header">
-        <!-- ↑ classNames.header / styles.header 应用于此 -->
+        <!-- ↑ classNames.header / styles.header -->
         <div class="hmfw-drawer-header-title">
           <button class="hmfw-drawer-close">关闭按钮</button>
           <div class="hmfw-drawer-title">
-            <!-- ↑ classNames.title / styles.title 应用于此 -->
+            <!-- ↑ classNames.title / styles.title -->
             标题内容
           </div>
         </div>
         <div class="hmfw-drawer-extra">
-          <!-- ↑ classNames.extra / styles.extra 应用于此 -->
+          <!-- ↑ classNames.extra / styles.extra -->
           额外操作区
         </div>
       </div>
       <div class="hmfw-drawer-body">
-        <!-- ↑ classNames.body / styles.body 应用于此 -->
+        <!-- ↑ classNames.body / styles.body -->
         主体内容
       </div>
       <div class="hmfw-drawer-footer">
-        <!-- ↑ classNames.footer / styles.footer 应用于此 -->
+        <!-- ↑ classNames.footer / styles.footer -->
         页脚内容
       </div>
     </div>
@@ -177,19 +183,43 @@ interface DrawerStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Drawer
     v-model:open="open"
     title="自定义抽屉"
-    :class-names="{
-      mask: 'custom-mask',
-      wrapper: 'custom-wrapper',
-      header: 'custom-header',
-      body: 'custom-body',
+    :class-names="{ mask: 'custom-mask', wrapper: 'custom-wrapper', header: 'custom-header' }"
+  >
+    <p>抽屉内容</p>
+  </Drawer>
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Drawer
+    v-model:open="open"
+    title="动态样式"
+    :styles="{
+      wrapper: { boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)' },
+      header: { background: '#1890ff', color: 'white' },
+      footer: { background: '#fafafa', borderTop: '2px solid #1890ff' },
     }"
+  >
+    <p>抽屉内容</p>
+    <template #footer>
+      <Button type="primary">确定</Button>
+    </template>
+  </Drawer>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Drawer
+    v-model:open="open"
+    title="组合样式"
+    :class-names="{ body: 'custom-body' }"
+    :styles="{ mask: { background: 'rgba(0, 0, 0, 0.6)' } }"
   >
     <p>抽屉内容</p>
   </Drawer>
@@ -218,33 +248,10 @@ interface DrawerStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <Drawer
-    v-model:open="open"
-    title="动态样式"
-    :styles="{
-      mask: { background: 'rgba(0, 0, 0, 0.6)' },
-      wrapper: { boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)' },
-      header: { background: '#1890ff', color: 'white' },
-      body: { padding: '32px', background: '#f0f2f5' },
-      footer: { background: '#fafafa', borderTop: '2px solid #1890ff' },
-    }"
-  >
-    <p>抽屉内容</p>
-    <template #footer>
-      <Button type="primary">确定</Button>
-    </template>
-  </Drawer>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- 各子节点样式统一通过 `styles`（`root` / `mask` / `wrapper` / `content` / `header` / `title` / `extra` / `body` / `footer`）设置；`root` 作用于最外层容器（含遮罩）
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-drawer`）合并，不会互相覆盖
 - 自定义 `header` 样式时，注意关闭按钮的颜色需要单独处理（如 `.hmfw-drawer-close`）
 - 当 `placement` 为 `left` 时，`wrapper` 的圆角方向需要调整为右侧
 

@@ -194,32 +194,38 @@ interface CollapseStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<CollapseSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-collapse">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-collapse-item">
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
+    <!-- ↑ classNames.item / styles.item -->
     <div class="hmfw-collapse-header">
-      <!-- ↑ classNames.header / styles.header 应用于此 -->
+      <!-- ↑ classNames.header / styles.header -->
       <span class="hmfw-collapse-icon">
-        <!-- ↑ classNames.icon / styles.icon 应用于此 -->
+        <!-- ↑ showArrow 为 true 时渲染，classNames.icon / styles.icon -->
         <RightOutlined />
       </span>
       <span class="hmfw-collapse-header-text">
-        <!-- ↑ classNames.headerText / styles.headerText 应用于此 -->
+        <!-- ↑ classNames.headerText / styles.headerText -->
         面板标题
       </span>
       <div class="hmfw-collapse-extra">
-        <!-- ↑ classNames.extra / styles.extra 应用于此（仅 extra prop 存在时） -->
+        <!-- ↑ 设置 extra 时渲染，classNames.extra / styles.extra -->
         额外内容
       </div>
     </div>
     <div class="hmfw-collapse-content">
-      <!-- ↑ classNames.content / styles.content 应用于此（仅展开或 forceRender 时） -->
+      <!-- ↑ 展开或 forceRender 时渲染，classNames.content / styles.content -->
       <div class="hmfw-collapse-content-box">
-        <!-- ↑ classNames.body / styles.body 应用于此 -->
+        <!-- ↑ classNames.body / styles.body -->
         面板内容
       </div>
     </div>
@@ -227,35 +233,38 @@ interface CollapseStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- Collapse 级别 classNames -->
-  <Collapse
-    :default-active-key="['1']"
-    :class-names="{
-      header: 'my-header',
-      icon: 'my-icon',
-      body: 'my-body',
-    }"
-  >
+  <!-- classNames：追加自定义类 -->
+  <Collapse :default-active-key="['1']" :class-names="{ header: 'my-header', icon: 'my-icon', body: 'my-body' }">
     <CollapsePanel key="1" header="自定义样式面板"> 面板内容 </CollapsePanel>
   </Collapse>
 
-  <!-- CollapsePanel 级别 classNames（优先级更高） -->
-  <Collapse>
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Collapse
+    :default-active-key="['1']"
+    :styles="{
+      header: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', borderRadius: '8px' },
+      icon: { color: 'white', fontSize: '16px' },
+      body: { backgroundColor: '#f0f5ff', padding: '16px' },
+    }"
+  >
+    <CollapsePanel key="1" header="内联样式面板"> 面板内容 </CollapsePanel>
+  </Collapse>
+
+  <!-- 组合：classNames 与 styles 混用（Panel 级优先级高于 Collapse 级） -->
+  <Collapse :default-active-key="['1']">
     <CollapsePanel
       key="1"
-      header="面板级样式"
-      :class-names="{
-        item: 'my-item',
-        header: 'my-header-override',
-      }"
+      header="面板级定制"
+      :class-names="{ header: 'my-header' }"
+      :styles="{ body: { padding: '20px', backgroundColor: '#e6f7ff' } }"
     >
-      CollapsePanel 的 classNames 会覆盖 Collapse 传递的同名 key
+      面板内容
     </CollapsePanel>
   </Collapse>
 </template>
@@ -280,52 +289,13 @@ interface CollapseStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- Collapse 级别 styles -->
-  <Collapse
-    :default-active-key="['1']"
-    :styles="{
-      header: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', borderRadius: '8px' },
-      icon: { color: 'white', fontSize: '16px' },
-      body: { backgroundColor: '#f0f5ff', padding: '16px' },
-    }"
-  >
-    <CollapsePanel key="1" header="内联样式面板"> 面板内容 </CollapsePanel>
-  </Collapse>
-
-  <!-- CollapsePanel 级别 styles -->
-  <Collapse>
-    <CollapsePanel
-      key="1"
-      header="面板级内联样式"
-      :styles="{
-        header: { fontWeight: 600, fontSize: '16px' },
-        body: { padding: '20px', backgroundColor: '#e6f7ff' },
-      }"
-    >
-      CollapsePanel 的 styles 会覆盖 Collapse 传递的同名 key
-    </CollapsePanel>
-  </Collapse>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- Collapse 通过 `provide` / `inject` 将 `classNames` 和 `styles` 传递给子组件 CollapsePanel
-- CollapsePanel 自己的 `classNames` / `styles` props 优先级**高于** Collapse 传递的值（用于单独定制某个面板）
-- `icon` 仅在 `showArrow` 为 `true` 时渲染
-- `extra` 仅在设置了 `extra` prop 时渲染
-- `content` 和 `body` 在面板收起时：
-  - `destroyInactivePanel` 为 `true` 时不渲染
-  - `forceRender` 为 `true` 时渲染但隐藏（`display: none`）
-  - 默认使用 `<Transition>` 渲染但隐藏（`height: 0; overflow: hidden`）
-- `headerText` 应用于 `header` prop 或 `label` 字段的文本节点；若使用 slot 自定义 header，需自行包裹容器控制样式
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-collapse-item-active`）合并，不会互相覆盖
+- Collapse 的 `classNames` / `styles` 会经 provide/inject 下发给 CollapsePanel；CollapsePanel 自身同名 key 的值优先级更高，可单独定制某个面板
+- `content` / `body` 在面板收起时的渲染：`destroyInactivePanel` 为 `true` 时不渲染，`forceRender` 为 `true` 时渲染但隐藏，默认经 `<Transition>` 渲染并折叠高度
+- `headerText` 作用于 `header` prop 或 `label` 字段的文本节点；若用 slot 自定义 header，需自行包裹容器控制样式
 
 ## 设计 Token
 

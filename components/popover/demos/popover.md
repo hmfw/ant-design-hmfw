@@ -149,6 +149,12 @@ interface PopoverStyles {
 type PopoverStylesProp = PopoverStyles | ((info: { props: PopoverProps }) => PopoverStyles)
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<PopoverSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
@@ -159,13 +165,13 @@ type PopoverStylesProp = PopoverStyles | ((info: { props: PopoverProps }) => Pop
     <div class="hmfw-popover-inner">
       <!-- 标题区域（当 title 存在时） -->
       <div class="hmfw-popover-title">
-        <!-- ↑ classNames.title / styles.title 应用于此 -->
+        <!-- ↑ classNames.title / styles.title -->
         标题文字
       </div>
 
       <!-- 内容区域 -->
       <div class="hmfw-popover-inner-content">
-        <!-- ↑ classNames.content / styles.content 应用于此 -->
+        <!-- ↑ classNames.content / styles.content -->
         内容文字
       </div>
     </div>
@@ -173,55 +179,40 @@ type PopoverStylesProp = PopoverStyles | ((info: { props: PopoverProps }) => Pop
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类。
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义标题样式 -->
+  <!-- classNames：追加自定义类 -->
   <Popover title="提示标题" content="这是一段内容" :class-names="{ title: 'my-popover-title' }">
     <Button>鼠标移入</Button>
   </Popover>
 
-  <!-- 自定义内容样式 -->
-  <Popover title="通知" content="您有新的消息" :class-names="{ content: 'my-popover-content' }">
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Popover
+    title="通知"
+    content="您有新的消息"
+    :styles="{
+      content: { background: '#f0f5ff', padding: '16px', fontSize: '14px' },
+    }"
+  >
     <Button>点击查看</Button>
   </Popover>
 
-  <!-- 组合使用 -->
+  <!-- 组合：classNames 与 styles 混用 -->
   <Popover
     title="完整自定义"
     content="自定义标题和内容的样式"
-    :class-names="{
-      title: 'my-title',
-      content: 'my-content',
+    :class-names="{ content: 'my-popover-content' }"
+    :styles="{
+      title: { color: '#722ed1', fontWeight: '600', borderBottom: '2px solid #722ed1' },
     }"
   >
     <Button>完整示例</Button>
   </Popover>
-
-  <!-- 函数形式（动态计算） -->
-  <Popover
-    :title="dynamicTitle"
-    content="根据 props 动态计算样式"
-    :class-names="
-      (info) => ({
-        title: info.props.title ? 'has-title' : 'no-title',
-        content: 'dynamic-content',
-      })
-    "
-  >
-    <Button>动态样式</Button>
-  </Popover>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Popover, Button } from '@hmfw/ant-design'
-
-const dynamicTitle = ref('动态标题')
-</script>
 
 <style scoped>
 :deep(.my-popover-title) {
@@ -238,114 +229,14 @@ const dynamicTitle = ref('动态标题')
   font-size: 14px;
   color: #333;
 }
-
-:deep(.my-title) {
-  color: #722ed1;
-  font-size: 16px;
-  font-weight: 600;
-  border-bottom: 2px solid #722ed1;
-  padding-bottom: 8px;
-}
-
-:deep(.my-content) {
-  color: #1890ff;
-  line-height: 1.8;
-}
-
-:deep(.has-title) {
-  background: #e6f7ff;
-}
-
-:deep(.dynamic-content) {
-  font-style: italic;
-}
 </style>
-```
-
-### 使用 styles
-
-通过 `styles` 属性应用内联样式。
-
-```vue
-<template>
-  <!-- 内联样式控制标题 -->
-  <Popover
-    title="提示标题"
-    content="这是一段内容"
-    :styles="{
-      title: {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        padding: '12px 16px',
-        fontWeight: 'bold',
-      },
-    }"
-  >
-    <Button>鼠标移入</Button>
-  </Popover>
-
-  <!-- 内联样式控制内容 -->
-  <Popover
-    title="通知"
-    content="您有新的消息"
-    :styles="{
-      content: {
-        background: '#f0f5ff',
-        padding: '16px',
-        fontSize: '14px',
-      },
-    }"
-  >
-    <Button>点击查看</Button>
-  </Popover>
-
-  <!-- 组合使用 -->
-  <Popover
-    title="完整自定义"
-    content="自定义标题和内容的样式"
-    :styles="{
-      title: {
-        color: '#722ed1',
-        fontSize: '16px',
-        fontWeight: '600',
-        borderBottom: '2px solid #722ed1',
-        paddingBottom: '8px',
-      },
-      content: {
-        color: '#1890ff',
-        lineHeight: '1.8',
-      },
-    }"
-  >
-    <Button>完整示例</Button>
-  </Popover>
-
-  <!-- 函数形式（动态计算） -->
-  <Popover
-    :title="dynamicTitle"
-    content="根据 props 动态计算样式"
-    :styles="
-      (info) => ({
-        title: {
-          background: info.props.title ? '#e6f7ff' : '#f5f5f5',
-        },
-        content: {
-          fontStyle: 'italic',
-        },
-      })
-    "
-  >
-    <Button>动态样式</Button>
-  </Popover>
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-popover-title`）合并，不会互相覆盖
 - 支持**函数形式**，可根据 `props` 动态计算样式：`(info: { props: PopoverProps }) => { ... }`
-- `title` 样式仅在 `title` prop 或 slot 存在时生效
-- `content` 样式会应用到内容容器，不影响外层的 `.hmfw-popover-inner`
 - 浮层整体样式可通过 `overlayStyle` / `overlayInnerStyle` props 控制，`classNames` / `styles` 用于更细粒度的标题/内容控制
 - Popover 浮层通过 Teleport 挂载到 `body`（或自定义容器），所以 scoped 样式需要使用 `:deep()` 穿透
 

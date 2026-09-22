@@ -102,48 +102,62 @@ interface BadgeStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<BadgeSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- count/dot 模式：带包裹元素 -->
 <span class="hmfw-badge">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div>包裹内容</div>
   <sup class="hmfw-badge-count">
-    <!-- ↑ classNames.indicator / styles.indicator 应用于此 -->
+    <!-- ↑ classNames.indicator / styles.indicator -->
     5
   </sup>
 </span>
 
 <!-- status/color 独立模式：无包裹元素 -->
 <span class="hmfw-badge hmfw-badge-status">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-badge-status-dot">
-    <!-- ↑ classNames.dot / styles.dot 应用于此 -->
+    <!-- ↑ classNames.dot / styles.dot -->
   </span>
   <span class="hmfw-badge-status-text">
-    <!-- ↑ classNames.text / styles.text 应用于此 -->
+    <!-- ↑ classNames.text / styles.text -->
     状态文本
   </span>
 </span>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义数字徽标 -->
-  <Badge :count="5" :class-names="{ indicator: 'my-indicator' }">
+  <!-- classNames：追加自定义类 -->
+  <Badge :count="5" :class-names="{ root: 'my-badge-root', indicator: 'my-indicator' }">
     <Avatar shape="square" />
   </Badge>
-
-  <!-- 自定义状态点 -->
   <Badge status="success" text="成功" :class-names="{ dot: 'my-dot', text: 'my-text' }" />
 
-  <!-- 自定义根容器 -->
-  <Badge :count="99" :class-names="{ root: 'my-badge-root' }">
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Badge
+    status="success"
+    text="成功"
+    :styles="{
+      dot: { width: '12px', height: '12px', boxShadow: '0 0 8px rgba(82, 196, 26, 0.6)' },
+      text: { fontWeight: 600, fontSize: '14px' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Badge :count="5" :class-names="{ root: 'my-badge-root' }" :styles="{ indicator: { fontSize: '16px' } }">
     <Avatar shape="square" />
   </Badge>
 </template>
@@ -185,54 +199,11 @@ interface BadgeStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制数字徽标 -->
-  <Badge
-    :count="12"
-    :styles="{
-      indicator: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', fontSize: '14px' },
-    }"
-  >
-    <Avatar shape="square" />
-  </Badge>
-
-  <!-- 自定义状态点颜色 -->
-  <Badge
-    status="success"
-    text="成功"
-    :styles="{
-      dot: { width: '12px', height: '12px', boxShadow: '0 0 8px rgba(82, 196, 26, 0.6)' },
-      text: { fontWeight: 600, fontSize: '14px' },
-    }"
-  />
-
-  <!-- 组合使用 -->
-  <Badge
-    :count="5"
-    :styles="{
-      root: { padding: '4px', borderRadius: '8px', background: '#f0f5ff' },
-      indicator: { fontSize: '16px' },
-    }"
-  >
-    <Avatar shape="square" />
-  </Badge>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- Badge 有两种渲染模式：
-  - **count/dot 模式**：`indicator` 应用于 `<sup class="hmfw-badge-count">` 元素
-  - **status/color 独立模式**：`dot` 和 `text` 分别应用于状态点和文本
-- `styles.indicator` 会与组件内部计算的 offset/color 样式合并，用户样式优先
-- `styles.dot` 会与组件内部计算的 color 样式合并，用户样式优先
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-badge-status`）合并
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-badge-status`）合并，不会互相覆盖
+- `styles.indicator` / `styles.dot` 会与组件内部计算的 offset / color 样式合并，用户样式优先
 
 ## 设计 Token
 

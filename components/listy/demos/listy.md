@@ -117,66 +117,78 @@ interface ListyStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<ListySemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 普通列表 -->
 <div class="hmfw-listy">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
-
-  <div class="hmfw-listy-item">
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
-    列表项内容
-  </div>
-
+  <!-- ↑ classNames.root / styles.root -->
+  <div class="hmfw-listy-item">列表项内容</div>
+  <!-- ↑ 每条数据渲染一个，classNames.item / styles.item -->
   <div class="hmfw-listy-item">列表项内容</div>
 </div>
 
-<!-- 分组列表 -->
+<!-- 分组列表（使用 groups 时） -->
 <div class="hmfw-listy">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
-
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-listy-group-section">
-    <!-- ↑ classNames.groupSection / styles.groupSection 应用于此 -->
-
-    <div class="hmfw-listy-group-header hmfw-listy-group-header-sticky">
-      <!-- ↑ classNames.groupHeader / styles.groupHeader 应用于此 -->
-      分组标题
-    </div>
-
-    <div class="hmfw-listy-item">
-      <!-- ↑ classNames.item / styles.item 应用于此 -->
-      列表项内容
-    </div>
+    <!-- ↑ classNames.groupSection / styles.groupSection -->
+    <div class="hmfw-listy-group-header hmfw-listy-group-header-sticky">分组标题</div>
+    <!-- ↑ classNames.groupHeader / styles.groupHeader -->
+    <div class="hmfw-listy-item">列表项内容</div>
+    <!-- ↑ classNames.item / styles.item -->
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Listy
     :data="data"
     :height="400"
     :virtual="true"
     :children="renderItem"
-    :class-names="{
-      root: 'my-listy',
-      item: 'my-item',
+    :class-names="{ root: 'my-listy', item: 'my-item' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Listy
+    :data="data"
+    :height="400"
+    :virtual="true"
+    :children="renderItem"
+    :styles="{
+      root: { border: '2px solid #1677ff', borderRadius: '8px' },
+      item: { background: '#f0f5ff', padding: '12px' },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Listy
+    :data="data"
+    :height="400"
+    :virtual="true"
+    :children="renderItem"
+    :class-names="{ root: 'my-listy' }"
+    :styles="{ item: { padding: '12px' } }"
   />
 </template>
 
 <script setup lang="ts">
 import { Listy } from '@hmfw/ant-design'
 
-const data = Array.from({ length: 1000 }, (_, i) => ({
-  id: i,
-  title: `Item ${i}`,
-}))
+const data = Array.from({ length: 1000 }, (_, i) => ({ id: i, title: `Item ${i}` }))
 
 const renderItem = (item: any) => (
   <div>
@@ -205,37 +217,11 @@ const renderItem = (item: any) => (
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Listy
-    :data="data"
-    :height="400"
-    :virtual="true"
-    :children="renderItem"
-    :styles="{
-      root: { border: '2px solid #1677ff', borderRadius: '8px' },
-      item: { background: '#f0f5ff', padding: '12px' },
-    }"
-  />
-</template>
-
-<script setup lang="ts">
-import { Listy } from '@hmfw/ant-design'
-
-const data = Array.from({ length: 1000 }, (_, i) => ({ id: i, title: `Item ${i}` }))
-
-const renderItem = (item: any) => <div>{item.title}</div>
-</script>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `groupHeader` 和 `groupSection` 仅在使用 `groups` 属性时渲染
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-listy-item`）合并，不会互相覆盖
+- `groupSection` 仅在使用 `groups` 属性时渲染
 - 虚拟滚动模式下，`item` 样式仅应用于当前可见的列表项
 - 使用 `children` 渲染函数时，返回的内容会被包裹在 `.hmfw-listy-item` 中
 

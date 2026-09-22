@@ -172,68 +172,70 @@ interface TimelineStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TimelineSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <ul class="hmfw-timeline">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <li class="hmfw-timeline-item hmfw-timeline-item-placement-start">
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
+    <!-- ↑ classNames.item / styles.item -->
     <div class="hmfw-timeline-item-title">
-      <!-- ↑ classNames.itemTitle / styles.itemTitle 应用于此 -->
+      <!-- ↑ classNames.itemTitle / styles.itemTitle -->
       标题
     </div>
     <div class="hmfw-timeline-item-rail">
-      <!-- ↑ classNames.itemRail / styles.itemRail 应用于此 -->
+      <!-- ↑ classNames.itemRail / styles.itemRail -->
     </div>
     <div class="hmfw-timeline-item-icon hmfw-timeline-item-color-blue">
-      <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
+      <!-- ↑ classNames.itemIcon / styles.itemIcon -->
       节点图标
     </div>
     <div class="hmfw-timeline-item-content">
-      <!-- ↑ classNames.itemContent / styles.itemContent 应用于此 -->
+      <!-- ↑ classNames.itemContent / styles.itemContent -->
       内容
     </div>
   </li>
 </ul>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义连接线和节点 -->
+  <!-- classNames：追加自定义类 -->
   <Timeline
     :items="items"
     :class-names="{
+      itemTitle: 'custom-label',
       itemRail: 'custom-tail',
       itemIcon: 'custom-dot',
-    }"
-  />
-
-  <!-- 自定义标题和内容 -->
-  <Timeline
-    mode="alternate"
-    :items="labeledItems"
-    :class-names="{
-      itemTitle: 'custom-label',
       itemContent: 'custom-content',
     }"
   />
 
-  <!-- 组合自定义所有子元素 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Timeline
     :items="items"
-    :class-names="{
-      root: 'timeline-fancy',
-      item: 'timeline-fancy-item',
-      itemTitle: 'timeline-fancy-label',
-      itemRail: 'timeline-fancy-tail',
-      itemIcon: 'timeline-fancy-dot',
-      itemContent: 'timeline-fancy-content',
+    :styles="{
+      root: { padding: '16px', backgroundColor: '#f0f5ff', borderRadius: '8px' },
+      itemIcon: { transform: 'scale(1.2)' },
+      itemContent: { fontSize: '15px', fontWeight: 500 },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Timeline
+    :items="items"
+    :class-names="{ itemIcon: 'custom-dot' }"
+    :styles="{ itemTitle: { fontWeight: 600, color: '#1890ff' } }"
   />
 </template>
 
@@ -266,67 +268,15 @@ interface TimelineStyles {
   border-left: 3px solid #1890ff;
   transition: all 0.3s;
 }
-
-:deep(.timeline-fancy) {
-  background: linear-gradient(to right, #f0f5ff, #fff);
-  padding: 20px;
-  border-radius: 12px;
-}
-
-:deep(.timeline-fancy-dot) {
-  border: 3px solid #667eea;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
-}
 </style>
-```
-
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制各子元素 -->
-  <Timeline
-    :items="items"
-    :styles="{
-      root: { padding: '16px', backgroundColor: '#f0f5ff', borderRadius: '8px' },
-      itemIcon: { transform: 'scale(1.2)' },
-      itemContent: { fontSize: '15px', fontWeight: 500 },
-    }"
-  />
-
-  <!-- 自定义连接线样式 -->
-  <Timeline
-    :items="items"
-    :styles="{
-      itemRail: { borderLeftWidth: '3px', borderLeftStyle: 'dashed' },
-      itemTitle: { fontWeight: 600, color: '#1890ff' },
-    }"
-  />
-
-  <!-- 水平布局自定义 -->
-  <Timeline
-    orientation="horizontal"
-    :items="items"
-    :styles="{
-      root: { padding: '24px', backgroundColor: '#f6ffed', borderRadius: '12px' },
-      itemIcon: { transform: 'scale(1.3)', boxShadow: '0 0 12px rgba(82, 196, 26, 0.5)' },
-      itemContent: { padding: '8px 16px', fontWeight: 500 },
-    }"
-  />
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `classNames.item` / `styles.item` 应用于每个时间轴节点，会与 `items[i].className` / `items[i].style` 合并
-- `classNames.itemTitle` / `styles.itemTitle` 仅在设置了 `title` 属性的项上生效
-- `classNames.itemIcon` / `styles.itemIcon` 会与 `items[i].style` 合并应用到节点圆点上
-- `classNames.itemRail` 作用于连接线，可用于自定义线型（虚线、点线）、颜色、粗细
-- 水平布局（`orientation="horizontal"`）和垂直布局的 DOM 结构相同，但样式应用效果不同，需分别调试
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-timeline`）合并，不会互相覆盖
+- `classNames.item` / `styles.item`、`classNames.itemIcon` / `styles.itemIcon` 会与 `items[i].className` / `items[i].style` 合并应用到对应节点
+- 水平布局（`orientation="horizontal"`）与垂直布局的 DOM 结构相同，但样式应用效果不同，需分别调试
 
 ## 设计 Token
 

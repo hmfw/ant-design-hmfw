@@ -212,102 +212,92 @@ interface ListItemMetaStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<ListSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- List 主组件 -->
 <div class="hmfw-list">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
-  <div class="hmfw-list-header">
-    <!-- ↑ classNames.header / styles.header 应用于此 -->
-    头部内容
-  </div>
+  <!-- ↑ classNames.root / styles.root -->
+  <div class="hmfw-list-header">头部内容</div>
+  <!-- ↑ classNames.header / styles.header -->
 
   <ul class="hmfw-list-items">
-    <!-- ↑ classNames.items / styles.items 应用于此 -->
-
+    <!-- ↑ grid 模式下为 div.hmfw-list-container；classNames.items / styles.items -->
     <li class="hmfw-list-item">
-      <!-- ↑ ListItem 的 classNames.item / styles.item 应用于此 -->
-
+      <!-- ↑ ListItem 的 classNames.item / styles.item -->
       <div class="hmfw-list-item-meta">
-        <!-- ↑ ListItemMeta 的 classNames.meta / styles.meta 应用于此 -->
-
-        <div class="hmfw-list-item-meta-avatar">
-          <!-- ↑ ListItemMeta 的 classNames.avatar / styles.avatar 应用于此 -->
-          头像
-        </div>
-
+        <!-- ↑ ListItemMeta 的 classNames.meta / styles.meta -->
+        <div class="hmfw-list-item-meta-avatar">头像</div>
+        <!-- ↑ ListItemMeta 的 classNames.avatar / styles.avatar -->
         <div class="hmfw-list-item-meta-content">
-          <!-- ↑ ListItemMeta 的 classNames.content / styles.content 应用于此 -->
-
-          <h4 class="hmfw-list-item-meta-title">
-            <!-- ↑ ListItemMeta 的 classNames.title / styles.title 应用于此 -->
-            标题
-          </h4>
-
-          <div class="hmfw-list-item-meta-description">
-            <!-- ↑ ListItemMeta 的 classNames.description / styles.description 应用于此 -->
-            描述
-          </div>
+          <!-- ↑ ListItemMeta 的 classNames.content / styles.content -->
+          <h4 class="hmfw-list-item-meta-title">标题</h4>
+          <!-- ↑ ListItemMeta 的 classNames.title / styles.title -->
+          <div class="hmfw-list-item-meta-description">描述</div>
+          <!-- ↑ ListItemMeta 的 classNames.description / styles.description -->
         </div>
       </div>
 
       <ul class="hmfw-list-item-action">
-        <!-- ↑ ListItem 的 classNames.action / styles.action 应用于此 -->
+        <!-- ↑ 设置 actions 时渲染；ListItem 的 classNames.action / styles.action -->
         <li>操作1</li>
-        <em class="hmfw-list-item-action-split">
-          <!-- ↑ ListItem 的 classNames.actionSplit / styles.actionSplit 应用于此 -->
-          |
-        </em>
+        <em class="hmfw-list-item-action-split">|</em>
+        <!-- ↑ ListItem 的 classNames.actionSplit / styles.actionSplit -->
         <li>操作2</li>
       </ul>
     </li>
   </ul>
 
-  <div class="hmfw-list-footer">
-    <!-- ↑ classNames.footer / styles.footer 应用于此 -->
-    底部内容
-  </div>
-
-  <div class="hmfw-list-pagination">
-    <!-- ↑ classNames.pagination / styles.pagination 应用于此 -->
-    分页器
-  </div>
+  <div class="hmfw-list-footer">底部内容</div>
+  <!-- ↑ classNames.footer / styles.footer -->
+  <div class="hmfw-list-pagination">分页器</div>
+  <!-- ↑ 开启 pagination 时渲染；classNames.pagination / styles.pagination -->
 </div>
 
-<!-- 空状态 -->
+<!-- 空状态：dataSource 为空时 -->
 <div class="hmfw-list">
   <ul class="hmfw-list-items">
-    <div class="hmfw-list-empty-text">
-      <!-- ↑ classNames.empty / styles.empty 应用于此 -->
-      暂无数据
-    </div>
+    <div class="hmfw-list-empty-text">暂无数据</div>
+    <!-- ↑ classNames.empty / styles.empty -->
   </ul>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点。List、ListItem、ListItemMeta 各自独立设置，`renderItem` 中需手动把 `classNames` / `styles` 传给 ListItem 与 ListItemMeta：
 
 ```vue
 <template>
-  <!-- List 主组件 -->
+  <!-- classNames：追加自定义类 -->
   <List
     :data-source="data"
     :render-item="renderItem"
     header="文章列表"
     footer="查看更多"
-    :class-names="{
-      root: 'my-list',
-      header: 'my-header',
-      footer: 'my-footer',
-      items: 'my-items',
+    :class-names="{ root: 'my-list', header: 'my-header', footer: 'my-footer' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <List
+    :data-source="data"
+    :render-item="renderItem"
+    header="任务列表"
+    :styles="{
+      root: { borderRadius: '12px', overflow: 'hidden' },
+      header: { background: '#1677ff', color: 'white', fontWeight: 600 },
+      items: { background: '#fafafa' },
     }"
   />
 
-  <!-- ListItem -->
-  <List :data-source="data" :render-item="renderItemWithActions" />
+  <!-- 组合：List 上混用 classNames 与 styles，ListItem / ListItemMeta 在 renderItem 中传入 -->
+  <List :data-source="data" :render-item="renderItemMixed" :class-names="{ root: 'my-list' }" />
 </template>
 
 <script setup lang="ts">
@@ -316,26 +306,30 @@ import { List, Avatar } from '@hmfw/ant-design'
 
 const data = [{ id: 1, title: '标题', description: '描述' }]
 
-const renderItemWithActions = (item: any) =>
+const renderItem = (item: any) =>
+  h(List.Item, () =>
+    h(List.Item.Meta, {
+      avatar: h(Avatar, () => 'A'),
+      title: item.title,
+      description: item.description,
+    }),
+  )
+
+const renderItemMixed = (item: any) =>
   h(
     List.Item,
     {
       actions: [h('a', '编辑'), h('a', '删除')],
-      classNames: {
-        item: 'my-item',
-        action: 'my-action',
-      },
+      classNames: { item: 'my-item', action: 'my-action' },
+      styles: { item: { padding: '20px', borderLeft: '3px solid #1677ff' } },
     },
     () =>
       h(List.Item.Meta, {
         avatar: h(Avatar, () => 'A'),
         title: item.title,
         description: item.description,
-        classNames: {
-          meta: 'my-meta',
-          title: 'my-title',
-          description: 'my-desc',
-        },
+        classNames: { title: 'my-title' },
+        styles: { description: { fontStyle: 'italic' } },
       }),
   )
 </script>
@@ -375,62 +369,11 @@ const renderItemWithActions = (item: any) =>
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- List 主组件 -->
-  <List
-    :data-source="data"
-    :render-item="renderItem"
-    header="任务列表"
-    :styles="{
-      root: { borderRadius: '12px', overflow: 'hidden' },
-      header: { background: '#1677ff', color: 'white', fontWeight: 600 },
-      items: { background: '#fafafa' },
-    }"
-  />
-
-  <!-- ListItem 和 ListItemMeta -->
-  <List :data-source="data" :render-item="renderItemWithStyles" />
-</template>
-
-<script setup lang="ts">
-import { h } from 'vue'
-import { List, Avatar } from '@hmfw/ant-design'
-
-const renderItemWithStyles = (item: any) =>
-  h(
-    List.Item,
-    {
-      styles: {
-        item: { padding: '20px', borderLeft: '3px solid #1677ff' },
-      },
-    },
-    () =>
-      h(List.Item.Meta, {
-        avatar: h(Avatar, () => 'A'),
-        title: item.title,
-        description: item.description,
-        styles: {
-          title: { color: '#1677ff', fontSize: '16px' },
-          description: { fontStyle: 'italic' },
-        },
-      }),
-  )
-</script>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-list-item`）合并，不会互相覆盖
 - List、ListItem、ListItemMeta 的 `classNames` 和 `styles` 是独立的，需要分别在各自组件上设置
-- `items` 应用于列表容器（普通模式是 `<ul>`，grid 模式是 `<div>`）
-- `empty` 仅在数据源为空时渲染
-- `pagination` 仅在设置了 `pagination` 属性时渲染
-- `main` 仅在垂直布局（`itemLayout="vertical"`）时渲染
 - `extra` 仅在 ListItem 设置了 `extra` 属性时渲染
 - `action` 和 `actionSplit` 仅在 ListItem 设置了 `actions` 属性时渲染
 - 使用 `renderItem` 时，需在渲染函数中手动传递 `classNames` 和 `styles` 给 ListItem 和 ListItemMeta

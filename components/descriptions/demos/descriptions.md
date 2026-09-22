@@ -208,50 +208,56 @@ interface DescriptionsStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<DescriptionsSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-descriptions">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-descriptions-header">
-    <!-- ↑ classNames.header / styles.header 应用于此 -->
+    <!-- ↑ classNames.header / styles.header -->
     <div class="hmfw-descriptions-title">
-      <!-- ↑ classNames.title / styles.title 应用于此 -->
+      <!-- ↑ classNames.title / styles.title -->
       标题
     </div>
     <div class="hmfw-descriptions-extra">
-      <!-- ↑ classNames.extra / styles.extra 应用于此 -->
+      <!-- ↑ classNames.extra / styles.extra -->
       操作区域
     </div>
   </div>
   <div class="hmfw-descriptions-view">
-    <!-- ↑ classNames.view / styles.view 应用于此 -->
+    <!-- ↑ classNames.view / styles.view -->
     <table>
       <tbody>
         <tr class="hmfw-descriptions-row">
-          <!-- ↑ classNames.row / styles.row 应用于此 -->
+          <!-- ↑ classNames.row / styles.row -->
 
           <!-- 垂直布局 / 有边框布局 -->
           <th class="hmfw-descriptions-item-label">
-            <!-- ↑ classNames.label / styles.label 应用于此 -->
+            <!-- ↑ classNames.label / styles.label -->
             标签
           </th>
           <td class="hmfw-descriptions-item-content">
-            <!-- ↑ classNames.content / styles.content 应用于此 -->
+            <!-- ↑ classNames.content / styles.content -->
             内容
           </td>
 
           <!-- 水平无边框布局 -->
           <td class="hmfw-descriptions-item">
-            <!-- ↑ classNames.item / styles.item 应用于此 -->
+            <!-- ↑ classNames.item / styles.item -->
             <div class="hmfw-descriptions-item-container">
-              <!-- ↑ classNames.itemContainer / styles.itemContainer 应用于此 -->
+              <!-- ↑ classNames.itemContainer / styles.itemContainer -->
               <span class="hmfw-descriptions-item-label">
-                <!-- ↑ classNames.label / styles.label 应用于此 -->
+                <!-- ↑ classNames.label / styles.label -->
                 标签
               </span>
               <span class="hmfw-descriptions-item-content">
-                <!-- ↑ classNames.content / styles.content 应用于此 -->
+                <!-- ↑ classNames.content / styles.content -->
                 内容
               </span>
             </div>
@@ -263,22 +269,37 @@ interface DescriptionsStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Descriptions
     title="用户信息"
     extra="编辑"
     :items="items"
-    :class-names="{
-      header: 'custom-header',
-      title: 'custom-title',
-      label: 'custom-label',
-      content: 'custom-content',
+    :class-names="{ header: 'custom-header', title: 'custom-title', label: 'custom-label' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Descriptions
+    title="配置信息"
+    :items="items"
+    :styles="{
+      root: { border: '2px solid #1890ff', borderRadius: '12px', padding: '16px' },
+      label: { color: '#8c8c8c', fontWeight: 500 },
+      content: { color: '#262626', fontWeight: 600 },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Descriptions
+    title="服务详情"
+    :items="items"
+    :class-names="{ content: 'custom-content' }"
+    :styles="{ title: { fontSize: '18px', color: '#1890ff', fontWeight: 600 } }"
   />
 </template>
 
@@ -308,33 +329,10 @@ interface DescriptionsStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <Descriptions
-    title="配置信息"
-    :items="items"
-    :styles="{
-      root: { border: '2px solid #1890ff', borderRadius: '12px', padding: '16px' },
-      title: { fontSize: '18px', color: '#1890ff', fontWeight: 600 },
-      label: { color: '#8c8c8c', fontWeight: 500 },
-      content: { color: '#262626', fontWeight: 600 },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `item` 和 `itemContainer` 仅在水平无边框布局（`layout="horizontal"` 且 `bordered={false}`）时生效
-- 在垂直布局或有边框布局中，标签和内容分别使用 `<th>` 和 `<td>` 元素
-- `header`、`title` 和 `extra` 仅在设置了 `title` 或 `extra` 属性时渲染
-- `row` 应用于每一个表格行，可用于实现 hover 效果或斑马纹
-- `label` 和 `content` 在所有布局模式下都会应用
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-descriptions`）合并，不会互相覆盖
 
 ## 设计 Token
 

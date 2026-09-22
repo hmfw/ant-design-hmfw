@@ -180,65 +180,66 @@ interface BreadcrumbStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<BreadcrumbSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <nav class="hmfw-breadcrumb">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <ol>
-    <!-- ↑ classNames.list / styles.list 应用于此 -->
+    <!-- ↑ classNames.list / styles.list -->
     <li class="hmfw-breadcrumb-item">
-      <!-- ↑ classNames.item / styles.item 应用于此 -->
-      <a class="hmfw-breadcrumb-link" href="#">
-        <!-- ↑ classNames.link / styles.link 应用于此 -->
-        首页
-      </a>
+      <!-- ↑ classNames.item / styles.item -->
+      <a class="hmfw-breadcrumb-link" href="#">首页</a>
+      <!-- ↑ 设置 href 时为 <a>，否则为 <span>；classNames.link / styles.link -->
     </li>
-    <li class="hmfw-breadcrumb-separator">
-      <!-- ↑ classNames.separator / styles.separator 应用于此 -->
-      /
-    </li>
+    <li class="hmfw-breadcrumb-separator">/</li>
+    <!-- ↑ 相邻条目之间自动渲染，classNames.separator / styles.separator -->
     <li class="hmfw-breadcrumb-item">
-      <span class="hmfw-breadcrumb-link">
-        <!-- ↑ classNames.link / styles.link 应用于此 -->
-        当前页
-      </span>
+      <span class="hmfw-breadcrumb-link">当前页</span>
     </li>
   </ol>
 </nav>
 
-<!-- 带下拉菜单的情况 -->
+<!-- 条目配置了 menu 下拉菜单时，link 内会多一层 overlayLink -->
 <li class="hmfw-breadcrumb-item">
-  <span class="hmfw-breadcrumb-overlay-link">
-    <!-- ↑ classNames.overlayLink / styles.overlayLink 应用于此 -->
-    菜单项
-  </span>
+  <span class="hmfw-breadcrumb-overlay-link">菜单项</span>
+  <!-- ↑ classNames.overlayLink / styles.overlayLink -->
 </li>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器和列表 -->
-  <Breadcrumb
-    :items="[{ title: '首页', href: '#' }, { title: '产品', href: '#' }, { title: '详情' }]"
-    :class-names="{ root: 'custom-root', list: 'custom-list' }"
-  />
-
-  <!-- 自定义面包屑项和链接 -->
+  <!-- classNames：追加自定义类 -->
   <Breadcrumb
     :items="[{ title: '首页', href: '#' }, { title: '应用列表', href: '#' }, { title: '详情' }]"
-    :class-names="{ item: 'custom-item', link: 'custom-link' }"
+    :class-names="{ root: 'custom-root', link: 'custom-link', separator: 'custom-separator' }"
   />
 
-  <!-- 自定义分隔符 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Breadcrumb
-    :items="[{ title: '首页', href: '#' }, { title: '文档' }]"
-    separator=">"
-    :class-names="{ separator: 'custom-separator' }"
+    :items="[{ title: '首页', href: '#' }, { title: '设置', href: '#' }, { title: '个人信息' }]"
+    :styles="{
+      root: { padding: '12px 16px', background: '#f0f5ff', borderRadius: '8px' },
+      link: { color: '#1677ff', fontWeight: 500 },
+      separator: { color: '#d9d9d9', margin: '0 12px' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Breadcrumb
+    :items="[{ title: '控制台', href: '#' }, { title: '项目管理', href: '#' }, { title: '详情' }]"
+    :class-names="{ root: 'custom-root' }"
+    :styles="{ separator: { margin: '0 16px' }, item: { display: 'flex', alignItems: 'center' } }"
   />
 </template>
 
@@ -251,11 +252,6 @@ interface BreadcrumbStyles {
 
 :deep(.custom-root .hmfw-breadcrumb-link) {
   color: rgba(255, 255, 255, 0.85);
-}
-
-:deep(.custom-item:hover) {
-  transform: translateX(2px);
-  transition: all 0.3s;
 }
 
 :deep(.custom-link) {
@@ -278,41 +274,10 @@ interface BreadcrumbStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制 -->
-  <Breadcrumb
-    :items="[{ title: '首页', href: '#' }, { title: '设置', href: '#' }, { title: '个人信息' }]"
-    :styles="{
-      root: { padding: '12px 16px', background: '#f0f5ff', borderRadius: '8px' },
-      link: { color: '#1677ff', fontWeight: 500 },
-      separator: { color: '#d9d9d9', margin: '0 12px' },
-    }"
-  />
-
-  <!-- 组合使用 -->
-  <Breadcrumb
-    :items="[{ title: '控制台', href: '#' }, { title: '项目管理', href: '#' }, { title: '详情' }]"
-    :class-names="{ root: 'gradient-bg' }"
-    :styles="{
-      separator: { margin: '0 16px' },
-      item: { display: 'flex', alignItems: 'center' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `classNames.link` 同时应用于链接元素（`<a>`）和文本元素（`<span>`）
-- `classNames.separator` 应用于分隔符容器（`<li>`），分隔符内容在其内部
-- `classNames.overlayLink` 仅在面包屑项配置了 `menu` 属性时生效
-- 各语义化类名会与组件内置类名（如 `.hmfw-breadcrumb-item`）合并
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-breadcrumb-item`）合并，不会互相覆盖
 
 ## 设计 Token
 

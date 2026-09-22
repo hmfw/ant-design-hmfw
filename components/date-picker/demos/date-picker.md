@@ -221,87 +221,93 @@ interface DatePickerStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<DatePickerSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-date-picker">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <input class="hmfw-date-picker-input" />
-  <!-- ↑ classNames.input / styles.input 应用于此 -->
+  <!-- ↑ classNames.input / styles.input -->
   <span class="hmfw-date-picker-clear">×</span>
-  <!-- ↑ classNames.clear / styles.clear 应用于此 -->
+  <!-- ↑ classNames.clear / styles.clear -->
   <span class="hmfw-date-picker-suffix">📅</span>
-  <!-- ↑ classNames.suffix / styles.suffix 应用于此 -->
+  <!-- ↑ classNames.suffix / styles.suffix -->
 
   <!-- Teleport 到 body -->
   <div class="hmfw-date-picker-popup">
-    <!-- ↑ classNames.popup / styles.popup 应用于此 -->
+    <!-- ↑ classNames.popup / styles.popup -->
     <div class="hmfw-date-picker-panel">
-      <!-- ↑ classNames.panel / styles.panel 应用于此 -->
+      <!-- ↑ classNames.panel / styles.panel -->
       <div class="hmfw-date-picker-panel-header">
-        <!-- ↑ classNames.panelHeader / styles.panelHeader 应用于此 -->
+        <!-- ↑ classNames.panelHeader / styles.panelHeader -->
         年月切换器
       </div>
       <div class="hmfw-date-picker-panel-body">
-        <!-- ↑ classNames.panelBody / styles.panelBody 应用于此 -->
+        <!-- ↑ classNames.panelBody / styles.panelBody -->
         <div class="hmfw-date-picker-weekdays">
-          <!-- ↑ classNames.weekdays / styles.weekdays 应用于此 -->
+          <!-- ↑ classNames.weekdays / styles.weekdays -->
           <div class="hmfw-date-picker-weekday">日</div>
-          <!-- ↑ classNames.weekday / styles.weekday 应用于此 -->
+          <!-- ↑ classNames.weekday / styles.weekday -->
         </div>
         <div class="hmfw-date-picker-days">
-          <!-- ↑ classNames.days / styles.days 应用于此 -->
+          <!-- ↑ classNames.days / styles.days -->
           <div class="hmfw-date-picker-day">1</div>
-          <!-- ↑ classNames.day / styles.day 应用于此 -->
+          <!-- ↑ classNames.day / styles.day -->
         </div>
         <!-- picker="month" 时 -->
         <div class="hmfw-date-picker-months">
-          <!-- ↑ classNames.months / styles.months 应用于此 -->
+          <!-- ↑ classNames.months / styles.months -->
           <div class="hmfw-date-picker-month">一月</div>
-          <!-- ↑ classNames.month / styles.month 应用于此 -->
+          <!-- ↑ classNames.month / styles.month -->
         </div>
         <!-- picker="year" 时 -->
         <div class="hmfw-date-picker-years">
-          <!-- ↑ classNames.years / styles.years 应用于此 -->
+          <!-- ↑ classNames.years / styles.years -->
           <div class="hmfw-date-picker-year">2024</div>
-          <!-- ↑ classNames.year / styles.year 应用于此 -->
+          <!-- ↑ classNames.year / styles.year -->
         </div>
         <!-- picker="quarter" 时 -->
         <div class="hmfw-date-picker-quarters">
-          <!-- ↑ classNames.quarters / styles.quarters 应用于此 -->
+          <!-- ↑ classNames.quarters / styles.quarters -->
           <div class="hmfw-date-picker-quarter">Q1</div>
-          <!-- ↑ classNames.quarter / styles.quarter 应用于此 -->
+          <!-- ↑ classNames.quarter / styles.quarter -->
         </div>
       </div>
       <!-- showTime 时 -->
       <div class="hmfw-date-picker-time-panel">
-        <!-- ↑ classNames.timePanel / styles.timePanel 应用于此 -->
+        <!-- ↑ classNames.timePanel / styles.timePanel -->
         <div class="hmfw-date-picker-time-content">
-          <!-- ↑ classNames.timeContent / styles.timeContent 应用于此 -->
+          <!-- ↑ classNames.timeContent / styles.timeContent -->
           <div class="hmfw-date-picker-time-column">
-            <!-- ↑ classNames.timeColumn / styles.timeColumn 应用于此 -->
+            <!-- ↑ classNames.timeColumn / styles.timeColumn -->
             <div class="hmfw-date-picker-time-cell">00</div>
-            <!-- ↑ classNames.timeCell / styles.timeCell 应用于此 -->
+            <!-- ↑ classNames.timeCell / styles.timeCell -->
           </div>
         </div>
       </div>
       <div class="hmfw-date-picker-panel-footer">
-        <!-- ↑ classNames.panelFooter / styles.panelFooter 应用于此 -->
+        <!-- ↑ classNames.panelFooter / styles.panelFooter -->
         <div class="hmfw-date-picker-panel-footer-extra">
-          <!-- ↑ classNames.panelFooterExtra / styles.panelFooterExtra 应用于此 -->
+          <!-- ↑ classNames.panelFooterExtra / styles.panelFooterExtra -->
           额外内容
         </div>
         <div class="hmfw-date-picker-presets">
-          <!-- ↑ classNames.presets / styles.presets 应用于此 -->
+          <!-- ↑ classNames.presets / styles.presets -->
           <button class="hmfw-date-picker-preset-btn">昨天</button>
-          <!-- ↑ classNames.presetBtn / styles.presetBtn 应用于此 -->
+          <!-- ↑ classNames.presetBtn / styles.presetBtn -->
         </div>
         <div class="hmfw-date-picker-panel-footer-actions">
-          <!-- ↑ classNames.panelFooterActions / styles.panelFooterActions 应用于此 -->
+          <!-- ↑ classNames.panelFooterActions / styles.panelFooterActions -->
           <button class="hmfw-date-picker-today">今天</button>
-          <!-- ↑ classNames.today / styles.today 应用于此 -->
+          <!-- ↑ classNames.today / styles.today -->
           <button class="hmfw-date-picker-ok">确定</button>
-          <!-- ↑ classNames.ok / styles.ok 应用于此 -->
+          <!-- ↑ classNames.ok / styles.ok -->
         </div>
       </div>
     </div>
@@ -309,19 +315,33 @@ interface DatePickerStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <DatePicker
     placeholder="选择日期"
-    :class-names="{
-      root: 'my-date-picker-root',
-      panel: 'my-date-picker-panel',
-      day: 'my-date-picker-day',
+    :class-names="{ root: 'my-date-picker-root', panel: 'my-date-picker-panel', day: 'my-date-picker-day' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <DatePicker
+    placeholder="选择日期"
+    :styles="{
+      input: { color: '#722ed1', fontWeight: 500 },
+      popup: { borderRadius: '16px' },
+      panel: { boxShadow: '0 8px 24px rgba(114, 46, 209, 0.15)' },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <DatePicker
+    placeholder="选择日期"
+    :class-names="{ day: 'my-date-picker-day' }"
+    :styles="{ root: { borderRadius: '20px', borderColor: '#722ed1' } }"
   />
 </template>
 
@@ -351,34 +371,11 @@ interface DatePickerStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <DatePicker
-    placeholder="选择日期"
-    :styles="{
-      root: { borderRadius: '20px', borderColor: '#722ed1' },
-      input: { color: '#722ed1', fontWeight: 500 },
-      popup: { borderRadius: '16px' },
-      panel: { boxShadow: '0 8px 24px rgba(114, 46, 209, 0.15)' },
-      day: { borderRadius: '8px', fontWeight: 500 },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-date-picker`）合并，不会互相覆盖
 - `popup`、`panel` 及其所有子节点（如 `day`、`month`、`timeCell` 等）通过 `Teleport to="body"` 渲染，因此其样式必须使用 `:global()` 而非 `:deep()`
-- `clear` 仅在 `allowClear` 启用且有选中值时显示
-- `timePanel`、`timeContent`、`timeColumn`、`timeCell` 仅在 `showTime` 启用时显示
-- `ok` 按钮仅在 `showTime` 模式下显示
-- `today` 按钮受 `showToday` / `showNow` 控制
-- 不同 `picker` 类型（date/month/year/quarter）会显示不同的单元格容器（days/months/years/quarters）
 
 ## 设计 Token
 

@@ -113,17 +113,23 @@ interface SpaceStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<SpaceSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-space hmfw-space-horizontal">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-space-item">
-    <!-- ↑ classNames.item / styles.item 应用于此 -->
+    <!-- ↑ classNames.item / styles.item -->
     <button>按钮 1</button>
   </div>
   <span class="hmfw-space-item-split">
-    <!-- ↑ classNames.split / styles.split 应用于此 -->
+    <!-- ↑ classNames.split / styles.split；仅设置 separator 或 split 插槽时渲染 -->
     |
   </span>
   <div class="hmfw-space-item">
@@ -132,21 +138,41 @@ interface SpaceStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <Space
-    separator="|"
-    :class-names="{
-      root: 'custom-root',
-      item: 'custom-item',
-      split: 'custom-split',
-    }"
-  >
+  <!-- classNames：追加自定义类 -->
+  <Space separator="|" :class-names="{ root: 'custom-root', item: 'custom-item', split: 'custom-split' }">
     <span>选项 1</span>
     <span>选项 2</span>
     <span>选项 3</span>
+  </Space>
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Space
+    separator="|"
+    :styles="{
+      root: { padding: '12px', background: '#f0f5ff', borderRadius: '8px' },
+      item: { padding: '4px 8px', background: '#e6f7ff', borderRadius: '4px' },
+      split: { color: '#1890ff', fontWeight: 'bold', margin: '0 4px' },
+    }"
+  >
+    <span>项目 A</span>
+    <span>项目 B</span>
+    <span>项目 C</span>
+  </Space>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Space
+    separator="|"
+    :class-names="{ root: 'custom-root' }"
+    :styles="{ item: { padding: '4px 8px' }, split: { color: '#1890ff', fontWeight: 'bold' } }"
+  >
+    <span>A</span>
+    <span>B</span>
   </Space>
 </template>
 
@@ -178,30 +204,10 @@ interface SpaceStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <Space
-    separator="|"
-    :styles="{
-      root: { padding: '12px', background: '#f0f5ff', borderRadius: '8px' },
-      item: { padding: '4px 8px', background: '#e6f7ff', borderRadius: '4px' },
-      split: { color: '#1890ff', fontWeight: 'bold', margin: '0 4px' },
-    }"
-  >
-    <span>项目 A</span>
-    <span>项目 B</span>
-    <span>项目 C</span>
-  </Space>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `split` 节点仅在设置了 `separator` prop 或 `split` 插槽时才会渲染
-- 当使用 `wrap` 属性时，子元素容器会自动换行，可通过 `classNames.item` 自定义换行后的样式
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-space`）合并，不会互相覆盖
 
 ## 设计 Token
 

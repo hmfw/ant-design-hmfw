@@ -236,31 +236,37 @@ interface TextAreaStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<InputSemantic />
+
 ### DOM 结构与 className 映射
 
 **Input - 普通输入框（无前后缀）**
 
 ```html
 <input class="hmfw-input" />
-<!-- ↑ classNames.input / styles.input 应用于此 -->
+<!-- ↑ classNames.input / styles.input -->
 ```
 
 **Input - 带前缀/后缀的输入框**
 
 ```html
 <span class="hmfw-input-affix-wrapper">
-  <!-- ↑ classNames.affixWrapper / styles.affixWrapper 应用于此 -->
+  <!-- ↑ classNames.affixWrapper / styles.affixWrapper -->
 
   <span class="hmfw-input-prefix">
-    <!-- ↑ classNames.prefix / styles.prefix 应用于此 -->
+    <!-- ↑ classNames.prefix / styles.prefix -->
     <svg>搜索图标</svg>
   </span>
 
   <input class="hmfw-input" />
-  <!-- ↑ classNames.input / styles.input 应用于此 -->
+  <!-- ↑ classNames.input / styles.input -->
 
   <span class="hmfw-input-suffix">
-    <!-- ↑ classNames.suffix / styles.suffix 应用于此 -->
+    <!-- ↑ classNames.suffix / styles.suffix -->
     <svg>清除图标</svg>
   </span>
 </span>
@@ -272,7 +278,7 @@ interface TextAreaStyles {
 <span class="hmfw-input-affix-wrapper">
   <input class="hmfw-input" />
   <span class="hmfw-input-show-count-suffix">
-    <!-- ↑ classNames.count / styles.count 应用于此 -->
+    <!-- ↑ classNames.count / styles.count -->
     10 / 100
   </span>
 </span>
@@ -282,52 +288,48 @@ interface TextAreaStyles {
 
 ```html
 <textarea class="hmfw-input hmfw-input-textarea">
-  <!-- ↑ classNames.textarea / styles.textarea 应用于此 -->
+  <!-- ↑ classNames.textarea / styles.textarea -->
 </textarea>
 
 <!-- 带字数统计时 -->
 <div class="hmfw-input-textarea-show-count">
   <textarea class="hmfw-input hmfw-input-textarea"></textarea>
   <span class="hmfw-input-show-count-suffix">
-    <!-- ↑ classNames.count / styles.count 应用于此 -->
+    <!-- ↑ classNames.count / styles.count -->
     50 / 200
   </span>
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义前缀/后缀样式 -->
+  <!-- classNames：追加自定义类 -->
   <Input
     v-model:value="value1"
     placeholder="搜索"
     :prefix="SearchOutlined"
-    :class-names="{
-      prefix: 'my-prefix',
-      suffix: 'my-suffix',
+    :class-names="{ affixWrapper: 'my-wrapper', prefix: 'my-prefix', suffix: 'my-suffix' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Input
+    v-model:value="value2"
+    :styles="{
+      input: { background: 'linear-gradient(to right, #ffffff, #f5f5f5)', fontWeight: '500' },
     }"
   />
 
-  <!-- 自定义输入框本身样式 -->
-  <Input v-model:value="value2" :class-names="{ input: 'my-input' }" />
-
-  <!-- 自定义外层容器 -->
-  <Input v-model:value="value3" :prefix="UserOutlined" :class-names="{ affixWrapper: 'my-wrapper' }" />
-
-  <!-- 自定义字数统计样式 -->
-  <Input v-model:value="value4" :max-length="100" show-count :class-names="{ count: 'my-count' }" />
-
-  <!-- TextArea 自定义 -->
+  <!-- 组合：classNames 与 styles 混用（TextArea） -->
   <TextArea
     v-model:value="textarea"
     :rows="4"
     show-count
-    :class-names="{
-      textarea: 'my-textarea',
-      count: 'my-textarea-count',
-    }"
+    :class-names="{ textarea: 'my-textarea' }"
+    :styles="{ count: { fontSize: '12px', color: '#8c8c8c' } }"
   />
 </template>
 
@@ -341,102 +343,22 @@ interface TextAreaStyles {
   color: #52c41a;
 }
 
-:deep(.my-input) {
-  background: linear-gradient(to right, #ffffff, #f5f5f5);
-  font-weight: 500;
-}
-
 :deep(.my-wrapper) {
   border: 2px solid #722ed1;
   border-radius: 8px;
-}
-
-:deep(.my-count) {
-  color: #ff4d4f;
-  font-weight: bold;
 }
 
 :deep(.my-textarea) {
   background: #f0f5ff;
   font-family: 'Courier New', monospace;
 }
-
-:deep(.my-textarea-count) {
-  font-size: 12px;
-  color: #8c8c8c;
-}
 </style>
-```
-
-### 使用 styles
-
-```vue
-<template>
-  <!-- 内联样式控制前缀/后缀 -->
-  <Input
-    v-model:value="value1"
-    :prefix="SearchOutlined"
-    :styles="{
-      prefix: { color: '#1890ff', fontSize: '16px' },
-      suffix: { color: '#52c41a' },
-    }"
-  />
-
-  <!-- 自定义输入框样式 -->
-  <Input
-    v-model:value="value2"
-    :styles="{
-      input: {
-        background: 'linear-gradient(to right, #ffffff, #f5f5f5)',
-        fontWeight: '500',
-      },
-    }"
-  />
-
-  <!-- 自定义外层容器 -->
-  <Input
-    v-model:value="value3"
-    :prefix="UserOutlined"
-    :styles="{
-      affixWrapper: {
-        border: '2px solid #722ed1',
-        borderRadius: '8px',
-      },
-    }"
-  />
-
-  <!-- 自定义字数统计 -->
-  <Input
-    v-model:value="value4"
-    :max-length="100"
-    show-count
-    :styles="{
-      count: { color: '#ff4d4f', fontWeight: 'bold' },
-    }"
-  />
-
-  <!-- TextArea 自定义 -->
-  <TextArea
-    v-model:value="textarea"
-    :rows="4"
-    show-count
-    :styles="{
-      textarea: {
-        background: '#f0f5ff',
-        fontFamily: 'Courier New, monospace',
-      },
-      count: { fontSize: '12px', color: '#8c8c8c' },
-    }"
-  />
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `affixWrapper` 仅在有 `prefix` / `suffix` / `allowClear` / `showCount` 时才会渲染
-- `input` 样式会应用到实际的 `<input>` 元素，不受外层容器影响
-- TextArea 的 `textarea` 对应 `<textarea>` 元素，`count` 对应字数统计的 `<span>`
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-input`）合并，不会互相覆盖
 
 ## 设计 Token
 

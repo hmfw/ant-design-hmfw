@@ -138,64 +138,64 @@ interface InputNumberStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<InputNumberSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <!-- 基础结构 -->
 <div class="hmfw-input-number">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
-  <span class="hmfw-input-number-prefix">
-    <!-- ↑ classNames.prefix / styles.prefix 应用于此 -->
-    ¥
-  </span>
+  <!-- ↑ classNames.root / styles.root -->
+  <span class="hmfw-input-number-prefix">¥</span>
+  <!-- ↑ 仅在设置 prefix 时渲染；classNames.prefix / styles.prefix -->
   <input class="hmfw-input-number-input" />
-  <!-- ↑ classNames.input / styles.input 应用于此 -->
-  <span class="hmfw-input-number-suffix">
-    <!-- ↑ classNames.suffix / styles.suffix 应用于此 -->
-    元
-  </span>
+  <!-- ↑ classNames.input / styles.input -->
+  <span class="hmfw-input-number-suffix">元</span>
+  <!-- ↑ 仅在设置 suffix 时渲染；classNames.suffix / styles.suffix -->
   <div class="hmfw-input-number-handler-wrap">
-    <!-- ↑ classNames.handlerWrap / styles.handlerWrap 应用于此 -->
-    <span class="hmfw-input-number-handler-up">
-      <!-- ↑ classNames.handlerUp / styles.handlerUp 应用于此 -->
-      <span class="hmfw-icon">...</span>
-    </span>
-    <span class="hmfw-input-number-handler-down">
-      <!-- ↑ classNames.handlerDown / styles.handlerDown 应用于此 -->
-      <span class="hmfw-icon">...</span>
-    </span>
+    <!-- ↑ input 模式且 controls 开启时渲染；classNames.handlerWrap / styles.handlerWrap -->
+    <span class="hmfw-input-number-handler-up"><span class="hmfw-icon">...</span></span>
+    <!-- ↑ 增加按钮，classNames.handlerUp / styles.handlerUp -->
+    <span class="hmfw-input-number-handler-down"><span class="hmfw-icon">...</span></span>
+    <!-- ↑ 减少按钮，classNames.handlerDown / styles.handlerDown -->
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义根容器 -->
-  <InputNumber v-model:value="value" :class-names="{ root: 'custom-root' }" />
-
-  <!-- 自定义输入框和操作按钮 -->
-  <InputNumber
-    v-model:value="value"
-    :class-names="{
-      input: 'custom-input',
-      handlerUp: 'custom-handler-up',
-      handlerDown: 'custom-handler-down',
-    }"
-  />
-
-  <!-- 自定义前后缀 -->
+  <!-- classNames：追加自定义类 -->
   <InputNumber
     v-model:value="value"
     prefix="¥"
     suffix="元"
-    :class-names="{
-      prefix: 'custom-prefix',
-      suffix: 'custom-suffix',
+    :class-names="{ root: 'custom-root', input: 'custom-input', prefix: 'custom-prefix' }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <InputNumber
+    v-model:value="value"
+    :styles="{
+      root: { borderColor: '#722ed1', borderWidth: '2px' },
+      input: { color: '#722ed1', fontWeight: 'bold' },
+      handlerUp: { color: '#52c41a' },
+      handlerDown: { color: '#ff4d4f' },
     }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <InputNumber
+    v-model:value="value"
+    :class-names="{ root: 'custom-root' }"
+    :styles="{ handlerWrap: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' } }"
   />
 </template>
 
@@ -212,14 +212,6 @@ interface InputNumberStyles {
   color: #1890ff;
 }
 
-:deep(.custom-handler-up) {
-  color: #52c41a;
-}
-
-:deep(.custom-handler-down) {
-  color: #ff4d4f;
-}
-
 :deep(.custom-prefix) {
   color: #52c41a;
   font-weight: bold;
@@ -227,49 +219,13 @@ interface InputNumberStyles {
   padding: 0 8px;
   border-radius: 4px;
 }
-
-:deep(.custom-suffix) {
-  color: #1890ff;
-  background: #e6f7ff;
-  padding: 0 8px;
-  border-radius: 4px;
-}
 </style>
-```
-
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制 -->
-  <InputNumber
-    v-model:value="value"
-    :styles="{
-      root: { borderColor: '#722ed1', borderWidth: '2px' },
-      input: { color: '#722ed1', fontWeight: 'bold' },
-    }"
-  />
-
-  <!-- 自定义操作按钮容器 -->
-  <InputNumber
-    v-model:value="value"
-    :styles="{
-      handlerWrap: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-      handlerUp: { color: '#52c41a' },
-      handlerDown: { color: '#ff4d4f' },
-    }"
-  />
-</template>
 ```
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `classNames.root` 会与组件内置的状态类名（如 `.hmfw-input-number-disabled`、`.hmfw-input-number-focused`）合并
-- `handlerUp` 和 `handlerDown` 分别对应增加和减少按钮，可单独定制样式
-- `prefix` 和 `suffix` 仅在对应 props 有值时渲染
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-input-number`）合并，不会互相覆盖
 
 ## 设计 Token
 

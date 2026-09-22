@@ -204,37 +204,59 @@ interface CheckboxStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<CheckboxSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <label class="hmfw-checkbox-wrapper">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-checkbox">
-    <!-- ↑ classNames.checkbox / styles.checkbox 应用于此 -->
+    <!-- ↑ classNames.checkbox / styles.checkbox -->
     <input class="hmfw-checkbox-input" />
-    <!-- ↑ classNames.input / styles.input 应用于此 -->
+    <!-- ↑ classNames.input / styles.input -->
     <span class="hmfw-checkbox-inner" />
-    <!-- ↑ classNames.inner / styles.inner 应用于此 -->
+    <!-- ↑ classNames.inner / styles.inner -->
   </span>
   <span class="hmfw-checkbox-label">文字</span>
-  <!-- ↑ classNames.label / styles.label 应用于此，可选 -->
+  <!-- ↑ 提供默认插槽时渲染，classNames.label / styles.label -->
 </label>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <Checkbox
-    :classNames="{
+    :class-names="{
       root: 'my-checkbox-root',
-      checkbox: 'my-checkbox-box',
       inner: 'my-checkbox-inner',
       label: 'my-checkbox-label',
     }"
   >
     自定义样式
   </Checkbox>
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Checkbox
+    :styles="{
+      root: { padding: '8px 16px', border: '2px solid #1890ff' },
+      checkbox: { transform: 'scale(1.2)' },
+      label: { fontWeight: 'bold', color: '#1890ff' },
+    }"
+  >
+    动态样式
+  </Checkbox>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Checkbox :class-names="{ root: 'my-checkbox-root' }" :styles="{ inner: { borderRadius: '50%' } }"> 组合 </Checkbox>
 </template>
 
 <style scoped>
@@ -252,28 +274,10 @@ interface CheckboxStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <Checkbox
-    :styles="{
-      root: { padding: '8px 16px', border: '2px solid #1890ff' },
-      checkbox: { transform: 'scale(1.2)' },
-      label: { fontWeight: 'bold', color: '#1890ff' },
-    }"
-  >
-    动态样式
-  </Checkbox>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `label` 的 className 仅在有文本内容（即 default slot 有内容）时生效
-- `input` 元素是原生 `<input type="checkbox">`，通常隐藏不可见，但可自定义其样式
-- `inner` 是视觉上的勾选框，可以完全自定义其外观（圆形、星形等）
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-checkbox-checked`）合并，不会互相覆盖
 
 ## 设计 Token
 

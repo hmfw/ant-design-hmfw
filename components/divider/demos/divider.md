@@ -119,33 +119,60 @@ interface DividerStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<DividerSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-divider">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-divider-rail hmfw-divider-rail-start">
-    <!-- ↑ classNames.rail / styles.rail 应用于此 -->
+    <!-- ↑ classNames.rail / styles.rail -->
   </div>
   <span class="hmfw-divider-inner-text">
-    <!-- ↑ classNames.content / styles.content 应用于此 -->
+    <!-- ↑ classNames.content / styles.content -->
     文字内容
   </span>
   <div class="hmfw-divider-rail hmfw-divider-rail-end">
-    <!-- ↑ classNames.rail / styles.rail 应用于此 -->
+    <!-- ↑ classNames.rail / styles.rail -->
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
   <div>
     <p>内容上方</p>
+
+    <!-- classNames：追加自定义类 -->
     <Divider :class-names="{ root: 'custom-divider', rail: 'custom-rail', content: 'custom-text' }">
       自定义文字
     </Divider>
+
+    <!-- styles：内联样式，优先级高于 classNames -->
+    <Divider
+      :styles="{
+        root: { borderColor: '#1890ff', borderWidth: '2px', margin: '32px 0' },
+        rail: { opacity: 0.6 },
+        content: { fontSize: '16px', color: '#1890ff', fontWeight: 'bold' },
+      }"
+    >
+      动态样式文字
+    </Divider>
+
+    <!-- 组合：classNames 与 styles 混用 -->
+    <Divider :class-names="{ content: 'custom-text' }" :styles="{ root: { borderColor: '#1890ff', margin: '32px 0' } }">
+      组合样式文字
+    </Divider>
+
     <p>内容下方</p>
   </div>
 </template>
@@ -170,32 +197,10 @@ interface DividerStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <div>
-    <p>内容上方</p>
-    <Divider
-      :styles="{
-        root: { borderColor: '#1890ff', borderWidth: '2px', margin: '32px 0' },
-        rail: { opacity: 0.6 },
-        content: { fontSize: '16px', color: '#1890ff', fontWeight: 'bold' },
-      }"
-    >
-      动态样式文字
-    </Divider>
-    <p>内容下方</p>
-  </div>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `rail` 和 `content` 只在分割线有文字内容（通过默认插槽传入）时生效
-- `rail` 会同时作用于文字左右两侧的线条
-- 垂直分割线（`type="vertical"`）不支持文字内容，因此仅 `root` 生效
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-divider`）合并，不会互相覆盖
 
 ---
 

@@ -146,67 +146,73 @@ interface RangePickerStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<RangePickerSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-date-picker">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <span class="hmfw-date-picker-input">
-    <!-- ↑ classNames.input / styles.input 应用于此 -->
+    <!-- ↑ classNames.input / styles.input -->
     <input class="hmfw-date-picker-input-inner" placeholder="开始日期" />
-    <!-- ↑ classNames.startInput / styles.startInput 应用于此 -->
+    <!-- ↑ classNames.startInput / styles.startInput -->
     <span class="hmfw-date-picker-range-separator">→</span>
-    <!-- ↑ classNames.separator / styles.separator 应用于此 -->
+    <!-- ↑ classNames.separator / styles.separator -->
     <input class="hmfw-date-picker-input-inner" placeholder="结束日期" />
-    <!-- ↑ classNames.endInput / styles.endInput 应用于此 -->
+    <!-- ↑ classNames.endInput / styles.endInput -->
   </span>
   <span class="hmfw-date-picker-clear">×</span>
-  <!-- ↑ classNames.clear / styles.clear 应用于此 -->
+  <!-- ↑ classNames.clear / styles.clear -->
   <span class="hmfw-date-picker-suffix">📅</span>
-  <!-- ↑ classNames.suffix / styles.suffix 应用于此 -->
+  <!-- ↑ classNames.suffix / styles.suffix -->
 
   <!-- Teleport 到 body -->
   <div class="hmfw-date-picker-popup">
-    <!-- ↑ classNames.popup / styles.popup 应用于此 -->
+    <!-- ↑ classNames.popup / styles.popup -->
     <div class="hmfw-date-picker-range-wrapper">
-      <!-- ↑ classNames.rangeWrapper / styles.rangeWrapper 应用于此 -->
+      <!-- ↑ classNames.rangeWrapper / styles.rangeWrapper -->
       <div class="hmfw-date-picker-presets">
-        <!-- ↑ classNames.presets / styles.presets 应用于此 -->
+        <!-- ↑ classNames.presets / styles.presets -->
         <ul>
           <li class="hmfw-date-picker-preset">最近 7 天</li>
-          <!-- ↑ classNames.preset / styles.preset 应用于此 -->
+          <!-- ↑ classNames.preset / styles.preset -->
         </ul>
       </div>
       <div class="hmfw-date-picker-range-panels">
-        <!-- ↑ classNames.rangePanels / styles.rangePanels 应用于此 -->
+        <!-- ↑ classNames.rangePanels / styles.rangePanels -->
         <div class="hmfw-date-picker-panel">
-          <!-- ↑ classNames.panel / styles.panel 应用于此 -->
+          <!-- ↑ classNames.panel / styles.panel -->
           <div class="hmfw-date-picker-panel-header">
-            <!-- ↑ classNames.panelHeader / styles.panelHeader 应用于此 -->
+            <!-- ↑ classNames.panelHeader / styles.panelHeader -->
             <button class="hmfw-date-picker-panel-header-btn">‹</button>
-            <!-- ↑ classNames.panelHeaderBtn / styles.panelHeaderBtn 应用于此 -->
+            <!-- ↑ classNames.panelHeaderBtn / styles.panelHeaderBtn -->
             <span class="hmfw-date-picker-panel-header-title">2024 年 1 月</span>
-            <!-- ↑ classNames.panelHeaderTitle / styles.panelHeaderTitle 应用于此 -->
+            <!-- ↑ classNames.panelHeaderTitle / styles.panelHeaderTitle -->
           </div>
           <div class="hmfw-date-picker-panel-body">
-            <!-- ↑ classNames.panelBody / styles.panelBody 应用于此 -->
+            <!-- ↑ classNames.panelBody / styles.panelBody -->
             <div class="hmfw-date-picker-weekdays">
-              <!-- ↑ classNames.weekdays / styles.weekdays 应用于此 -->
+              <!-- ↑ classNames.weekdays / styles.weekdays -->
               <span class="hmfw-date-picker-weekday">日</span>
-              <!-- ↑ classNames.weekday / styles.weekday 应用于此 -->
+              <!-- ↑ classNames.weekday / styles.weekday -->
             </div>
             <div class="hmfw-date-picker-days">
-              <!-- ↑ classNames.days / styles.days 应用于此 -->
+              <!-- ↑ classNames.days / styles.days -->
               <button class="hmfw-date-picker-day">1</button>
-              <!-- ↑ classNames.day / styles.day 应用于此 -->
+              <!-- ↑ classNames.day / styles.day -->
               <button class="hmfw-date-picker-day hmfw-date-picker-day-today">15</button>
-              <!-- ↑ classNames.dayToday / styles.dayToday 应用于此 -->
+              <!-- ↑ classNames.dayToday / styles.dayToday -->
               <button class="hmfw-date-picker-day hmfw-date-picker-day-in-range">20</button>
-              <!-- ↑ classNames.dayInRange / styles.dayInRange 应用于此 -->
+              <!-- ↑ classNames.dayInRange / styles.dayInRange -->
               <button class="hmfw-date-picker-day hmfw-date-picker-day-range-start">18</button>
-              <!-- ↑ classNames.dayRangeStart / styles.dayRangeStart 应用于此 -->
+              <!-- ↑ classNames.dayRangeStart / styles.dayRangeStart -->
               <button class="hmfw-date-picker-day hmfw-date-picker-day-range-end">25</button>
-              <!-- ↑ classNames.dayRangeEnd / styles.dayRangeEnd 应用于此 -->
+              <!-- ↑ classNames.dayRangeEnd / styles.dayRangeEnd -->
             </div>
           </div>
         </div>
@@ -217,12 +223,13 @@ interface RangePickerStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
+  <!-- classNames：追加自定义类 -->
   <RangePicker
     :class-names="{
       root: 'my-range-picker-root',
@@ -233,6 +240,22 @@ interface RangePickerStyles {
       dayRangeStart: 'my-day-range-start',
       dayRangeEnd: 'my-day-range-end',
     }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <RangePicker
+    :styles="{
+      root: { borderRadius: '12px' },
+      input: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' },
+      separator: { color: 'white', fontWeight: 'bold' },
+      popup: { borderRadius: '12px' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <RangePicker
+    :class-names="{ root: 'my-range-picker-root', popup: 'my-popup' }"
+    :styles="{ separator: { color: '#1890ff', fontWeight: 'bold' } }"
   />
 </template>
 
@@ -276,31 +299,11 @@ interface RangePickerStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <RangePicker
-    :styles="{
-      root: { borderRadius: '12px' },
-      input: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' },
-      separator: { color: 'white', fontWeight: 'bold' },
-      popup: { borderRadius: '12px' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-date-picker`）合并，不会互相覆盖
 - `popup`、`presets`、`preset`、`rangePanels`、`panel` 等弹层相关节点通过 `Teleport to="body"` 渲染，因此其样式必须使用 `:global()` 包裹（在 scoped 样式中），或在独立的非 scoped `<style>` 块中定义
-- `clear` 仅在 `allowClear` 启用且有选中值时显示
-- `dayToday`、`daySelected`、`dayInRange`、`dayRangeStart`、`dayRangeEnd` 是状态类 className，会与 `day` 同时应用
-- 左右两个日历面板共享 `panel`、`panelHeader`、`panelBody` 等样式
-- 预设范围仅在传入 `presets` 属性时显示
 
 ## 设计 Token
 

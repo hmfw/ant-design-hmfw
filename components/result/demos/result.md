@@ -48,13 +48,101 @@
   <ResultCustomIcon />
 </DemoBlock>
 
-### 语义化样式
+## 语义化 className 与 style
 
-通过 `classNames` / `styles` 精细化控制根节点、标题、内容等各部分样式。
+通过 `classNames` 和 `styles` 属性可以对结果页的各个子节点应用自定义样式，支持细粒度控制。
 
-<DemoBlock title="语义化样式" :source="ResultSemanticSource">
-  <ResultSemantic />
-</DemoBlock>
+### 类型定义
+
+```typescript
+import type { CSSProperties } from 'vue'
+
+interface ResultClassNames {
+  root?: string // 根节点 div.hmfw-result
+  icon?: string // 图标/插画容器 div.hmfw-result-icon
+  title?: string // 标题 div.hmfw-result-title
+  subtitle?: string // 副标题 div.hmfw-result-subtitle
+  extra?: string // 操作区 div.hmfw-result-extra
+  content?: string // 内容主体 div.hmfw-result-body（default 插槽）
+}
+
+interface ResultStyles {
+  root?: CSSProperties
+  icon?: CSSProperties
+  title?: CSSProperties
+  subtitle?: CSSProperties
+  extra?: CSSProperties
+  content?: CSSProperties
+}
+```
+
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<ResultSemantic />
+
+### DOM 结构与 className 映射
+
+```html
+<div class="hmfw-result hmfw-result-success">
+  <!-- ↑ classNames.root / styles.root（附带 status 类，如 .hmfw-result-success） -->
+  <div class="hmfw-result-icon"><svg>...</svg></div>
+  <!-- ↑ classNames.icon / styles.icon（状态图标或 403/404/500 异常插画） -->
+  <div class="hmfw-result-title">操作成功</div>
+  <!-- ↑ classNames.title / styles.title（设置 title 时渲染） -->
+  <div class="hmfw-result-subtitle">订单已提交</div>
+  <!-- ↑ classNames.subtitle / styles.subtitle（设置 subTitle 时渲染） -->
+  <div class="hmfw-result-extra">...</div>
+  <!-- ↑ classNames.extra / styles.extra（设置 extra 时渲染） -->
+  <div class="hmfw-result-body">...</div>
+  <!-- ↑ classNames.content / styles.content（提供默认插槽内容时渲染） -->
+</div>
+```
+
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
+
+```vue
+<template>
+  <!-- classNames：追加自定义类 -->
+  <Result status="success" title="操作成功" :class-names="{ root: 'custom-root', title: 'custom-title' }" />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Result
+    status="info"
+    title="内联样式"
+    sub-title="通过 styles 控制各节点"
+    :styles="{ title: { color: '#1677ff' }, subtitle: { color: '#8c8c8c' } }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Result
+    status="success"
+    title="组合样式"
+    :class-names="{ root: 'custom-root' }"
+    :styles="{ content: { background: '#f6ffed' } }"
+  >
+    <p>补充说明内容</p>
+  </Result>
+</template>
+
+<style scoped>
+:deep(.custom-root) {
+  border: 1px solid var(--hmfw-color-success-border);
+  border-radius: 8px;
+}
+:deep(.custom-title) {
+  letter-spacing: 1px;
+}
+</style>
+```
+
+### 注意事项
+
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-result`）合并，不会互相覆盖
 
 ## API
 

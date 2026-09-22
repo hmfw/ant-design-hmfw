@@ -182,6 +182,12 @@ interface CarouselStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<CarouselSemantic />
+
 ### DOM 结构映射
 
 ```
@@ -197,7 +203,9 @@ hmfw-carousel                    ← root
     └── hmfw-carousel-dot hmfw-carousel-dot-active ← dot + dotActive
 ```
 
-### 使用示例
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
@@ -207,7 +215,7 @@ hmfw-carousel                    ← root
     <div>Slide 2</div>
   </Carousel>
 
-  <!-- styles：内联样式控制箭头 -->
+  <!-- styles：内联样式控制箭头，优先级高于 classNames -->
   <Carousel
     arrows
     :styles="{
@@ -215,6 +223,12 @@ hmfw-carousel                    ← root
       slide: { padding: '8px' },
     }"
   >
+    <div>Slide 1</div>
+    <div>Slide 2</div>
+  </Carousel>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Carousel arrows :class-names="{ dot: 'my-dot' }" :styles="{ arrow: { borderRadius: '50%' } }">
     <div>Slide 1</div>
     <div>Slide 2</div>
   </Carousel>
@@ -239,8 +253,8 @@ hmfw-carousel                    ← root
 
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，冲突时 `styles` 优先
-- 带 `Active` / `Left` / `Right` 后缀的槽位会与基础槽位**叠加**：`arrow` + `arrowLeft` 同时应用
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-carousel`）合并，不会互相覆盖
 - 箭头基于 Button 组件实现，`arrow` class 应用到 Button 根节点
 - 指示点通过 `<li>` 承载 `dot` class，内部 `<button>` 需用 `:deep(.xxx button)` 选中
 

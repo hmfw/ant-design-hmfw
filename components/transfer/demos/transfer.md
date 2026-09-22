@@ -275,43 +275,49 @@ interface TransferSemanticStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TransferSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-transfer">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
 
   <!-- 左侧列表 -->
   <div class="hmfw-transfer-section hmfw-transfer-section-source">
-    <!-- ↑ classNames.section / styles.section 应用于此 -->
+    <!-- ↑ classNames.section / styles.section -->
     <div class="hmfw-transfer-header">
-      <!-- ↑ classNames.header / styles.header 应用于此 -->
+      <!-- ↑ classNames.header / styles.header -->
       <span class="hmfw-transfer-title">源列表</span>
-      <!-- ↑ classNames.title / styles.title 应用于此 -->
+      <!-- ↑ classNames.title / styles.title -->
     </div>
     <div class="hmfw-transfer-body">
-      <!-- ↑ classNames.body / styles.body 应用于此 -->
+      <!-- ↑ classNames.body / styles.body -->
       <ul class="hmfw-transfer-list">
-        <!-- ↑ classNames.list / styles.list 应用于此 -->
+        <!-- ↑ classNames.list / styles.list -->
         <li class="hmfw-transfer-item">
-          <!-- ↑ classNames.item / styles.item 应用于此 -->
+          <!-- ↑ classNames.item / styles.item -->
           <span class="hmfw-transfer-item-icon">
-            <!-- ↑ classNames.itemIcon / styles.itemIcon 应用于此 -->
+            <!-- ↑ classNames.itemIcon / styles.itemIcon -->
             <input type="checkbox" />
           </span>
           <span class="hmfw-transfer-item-content">选项 1</span>
-          <!-- ↑ classNames.itemContent / styles.itemContent 应用于此 -->
+          <!-- ↑ classNames.itemContent / styles.itemContent -->
         </li>
       </ul>
     </div>
     <div class="hmfw-transfer-footer">
-      <!-- ↑ classNames.footer / styles.footer 应用于此 -->
+      <!-- ↑ classNames.footer / styles.footer -->
     </div>
   </div>
 
   <!-- 中间操作区 -->
   <div class="hmfw-transfer-actions">
-    <!-- ↑ classNames.actions / styles.actions 应用于此 -->
+    <!-- ↑ classNames.actions / styles.actions -->
     <button>→</button>
     <button>←</button>
   </div>
@@ -321,39 +327,44 @@ interface TransferSemanticStyles {
 </div>
 ```
 
-### 使用 classNames
+### 用法
+
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义列表样式 -->
+  <!-- classNames：追加自定义类 -->
   <Transfer
     :data-source="dataSource"
     v-model:target-keys="targetKeys"
     :class-names="{
       section: 'my-section',
+      header: 'my-header',
       list: 'my-list',
       item: 'my-item',
-    }"
-  />
-
-  <!-- 自定义操作按钮区域 -->
-  <Transfer
-    :data-source="dataSource"
-    v-model:target-keys="targetKeys"
-    :class-names="{
-      actions: 'my-actions',
-      header: 'my-header',
-    }"
-  />
-
-  <!-- 自定义列表项内容 -->
-  <Transfer
-    :data-source="dataSource"
-    v-model:target-keys="targetKeys"
-    :class-names="{
-      itemContent: 'my-item-content',
       itemIcon: 'my-item-icon',
+      itemContent: 'my-item-content',
     }"
+  />
+
+  <!-- styles：内联样式，优先级高于 classNames -->
+  <Transfer
+    :data-source="dataSource"
+    v-model:target-keys="targetKeys"
+    :styles="{
+      root: { maxWidth: '800px', margin: '0 auto' },
+      section: { padding: '16px' },
+      list: { maxHeight: '400px' },
+      itemContent: { fontSize: '14px', fontWeight: '500' },
+    }"
+  />
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Transfer
+    :data-source="dataSource"
+    v-model:target-keys="targetKeys"
+    :class-names="{ section: 'my-section' }"
+    :styles="{ actions: { margin: '0 24px' } }"
   />
 </template>
 
@@ -377,10 +388,6 @@ interface TransferSemanticStyles {
   transform: translateX(4px);
 }
 
-:deep(.my-actions) {
-  margin: 0 24px;
-}
-
 :deep(.my-header) {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -398,54 +405,10 @@ interface TransferSemanticStyles {
 </style>
 ```
 
-### 使用 styles
-
-```vue
-<template>
-  <!-- 内联样式控制间距 -->
-  <Transfer
-    :data-source="dataSource"
-    v-model:target-keys="targetKeys"
-    :styles="{
-      section: { padding: '16px' },
-      item: { padding: '12px 16px' },
-    }"
-  />
-
-  <!-- 自定义头部和操作区 -->
-  <Transfer
-    :data-source="dataSource"
-    v-model:target-keys="targetKeys"
-    :styles="{
-      header: {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        padding: '12px',
-      },
-      actions: {
-        margin: '0 24px',
-      },
-    }"
-  />
-
-  <!-- 组合使用 -->
-  <Transfer
-    :data-source="dataSource"
-    v-model:target-keys="targetKeys"
-    :styles="{
-      root: { maxWidth: '800px', margin: '0 auto' },
-      list: { maxHeight: '400px' },
-      itemContent: { fontSize: '14px', fontWeight: '500' },
-    }"
-  />
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
-- `section` 会同时应用于左右两侧列表容器
-- `item` / `itemIcon` / `itemContent` 会应用于所有列表项（左右两侧）
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-transfer`）合并，不会互相覆盖
 - 对于列表样式（`listStyle` prop），建议优先使用组件提供的 `listStyle` 属性；`styles.list` 适合做细微调整
 
 ## 设计 Token

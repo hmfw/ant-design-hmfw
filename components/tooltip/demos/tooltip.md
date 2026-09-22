@@ -170,49 +170,54 @@ interface TooltipStyles {
 }
 ```
 
+### 语义化 DOM
+
+将鼠标移到右侧任一节点上，左侧预览区会框出它对应的 DOM 元素。点击图钉可固定高亮，点击信息图标查看该节点的 `classNames` / `styles` 写法模板。
+
+<TooltipSemantic />
+
 ### DOM 结构与 className 映射
 
 ```html
 <div class="hmfw-tooltip hmfw-tooltip-placement-top">
-  <!-- ↑ classNames.root / styles.root 应用于此 -->
+  <!-- ↑ classNames.root / styles.root -->
   <div class="hmfw-tooltip-content">
-    <!-- ↑ classNames.content / styles.content 应用于此 -->
+    <!-- ↑ classNames.content / styles.content -->
     <div class="hmfw-tooltip-arrow">
-      <!-- ↑ classNames.arrow / styles.arrow 应用于此 -->
+      <!-- ↑ classNames.arrow / styles.arrow -->
     </div>
     <div class="hmfw-tooltip-inner">
-      <!-- ↑ classNames.inner / styles.inner 应用于此 -->
+      <!-- ↑ classNames.inner / styles.inner -->
       提示文字内容
     </div>
   </div>
 </div>
 ```
 
-### 使用 classNames
+### 用法
 
-通过 `classNames` 属性应用自定义 CSS 类：
+`classNames` 追加自定义类，`styles` 写内联样式，二者可同时作用于同一节点：
 
 ```vue
 <template>
-  <!-- 自定义内容区域样式 -->
-  <Tooltip title="大号字体提示" :class-names="{ inner: 'custom-inner' }">
-    <Button>悬停查看</Button>
+  <!-- classNames：追加自定义类 -->
+  <Tooltip title="完整自定义" :class-names="{ root: 'custom-root', inner: 'custom-inner', arrow: 'custom-arrow' }">
+    <Button>自定义样式</Button>
   </Tooltip>
 
-  <!-- 自定义箭头样式 -->
-  <Tooltip title="自定义箭头" :class-names="{ arrow: 'custom-arrow' }">
-    <Button>自定义箭头</Button>
-  </Tooltip>
-
-  <!-- 组合使用 -->
+  <!-- styles：内联样式，优先级高于 classNames -->
   <Tooltip
-    title="完整自定义"
-    :class-names="{
-      root: 'custom-root',
-      inner: 'custom-inner',
-      arrow: 'custom-arrow',
+    title="内联样式"
+    :styles="{
+      root: { filter: 'drop-shadow(0 4px 12px rgba(102, 126, 234, 0.4))' },
+      inner: { fontSize: '16px', padding: '12px 16px', borderRadius: '8px' },
     }"
   >
+    <Button>内联样式</Button>
+  </Tooltip>
+
+  <!-- 组合：classNames 与 styles 混用 -->
+  <Tooltip title="组合样式" :class-names="{ inner: 'custom-inner' }" :styles="{ root: { zIndex: '2000' } }">
     <Button>组合样式</Button>
   </Tooltip>
 </template>
@@ -235,51 +240,11 @@ interface TooltipStyles {
 </style>
 ```
 
-### 使用 styles
-
-通过 `styles` 属性应用内联样式：
-
-```vue
-<template>
-  <!-- 内联样式控制内容区域 -->
-  <Tooltip
-    title="内联样式"
-    :styles="{
-      inner: { fontSize: '16px', padding: '12px 16px', borderRadius: '8px' },
-    }"
-  >
-    <Button>内联样式</Button>
-  </Tooltip>
-
-  <!-- 自定义根容器阴影 -->
-  <Tooltip
-    title="自定义阴影"
-    :styles="{
-      root: { filter: 'drop-shadow(0 4px 12px rgba(102, 126, 234, 0.4))' },
-    }"
-  >
-    <Button>自定义阴影</Button>
-  </Tooltip>
-
-  <!-- 组合使用 -->
-  <Tooltip
-    title="组合样式"
-    :styles="{
-      root: { zIndex: '2000' },
-      inner: { fontSize: '15px', fontWeight: '600' },
-    }"
-  >
-    <Button>组合样式</Button>
-  </Tooltip>
-</template>
-```
-
 ### 注意事项
 
-- `classNames` 和 `styles` 可同时使用，`styles` 内联样式优先级更高
+- `styles` 内联样式优先级高于 `classNames`，二者可同时作用于同一节点
+- 各语义化类名会与组件内置类名（如 `.hmfw-tooltip`）合并，不会互相覆盖
 - Tooltip 是弹层组件，默认挂载到 `body`，因此在 `<style scoped>` 中需使用 `:global()` 选择器
-- `arrow` 节点仅在 `arrow` prop 不为 `false` 时渲染
-- 自定义 `root` 样式会与内置的位置类（如 `.hmfw-tooltip-placement-top`）和状态类（如 `.hmfw-tooltip-hidden`）合并
 - 如果使用 `getPopupContainer` 自定义了挂载容器，需确保该容器的样式上下文支持你的自定义类
 
 ## 设计 Token
