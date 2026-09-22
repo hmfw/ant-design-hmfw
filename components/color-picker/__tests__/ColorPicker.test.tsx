@@ -164,4 +164,53 @@ describe('ColorPicker', () => {
     const wrapper = mount(ColorPicker, { props: { disabled: false } })
     expect(wrapper.find('.hmfw-color-picker-trigger').attributes('aria-disabled')).toBeUndefined()
   })
+
+  it('defaultOpen 时挂载即展开面板', async () => {
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#ff0000', defaultOpen: true },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    expect(document.querySelector('.hmfw-color-picker-panel')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('受控 open 保持展开，不受内部点击影响', async () => {
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#ff0000', open: true },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    expect(document.querySelector('.hmfw-color-picker-panel')).not.toBeNull()
+    // 展开态类名与 aria-expanded 跟随受控值
+    expect(wrapper.find('.hmfw-color-picker-trigger-open').exists()).toBe(true)
+    expect(wrapper.find('.hmfw-color-picker-trigger').attributes('aria-expanded')).toBe('true')
+    wrapper.unmount()
+  })
+
+  it('getPopupContainer 将面板挂载到指定容器', async () => {
+    const host = document.createElement('div')
+    host.className = 'cp-host'
+    document.body.appendChild(host)
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#ff0000', defaultOpen: true, getPopupContainer: () => host },
+      attachTo: document.body,
+    })
+    await wrapper.vm.$nextTick()
+    expect(host.querySelector('.hmfw-color-picker-panel')).not.toBeNull()
+    wrapper.unmount()
+    host.remove()
+  })
+
+  it('展开时 emit openChange 与 update:open', async () => {
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#ff0000' },
+      attachTo: document.body,
+    })
+    await wrapper.find('.hmfw-color-picker-trigger').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('openChange')?.at(-1)).toEqual([true])
+    expect(wrapper.emitted('update:open')?.at(-1)).toEqual([true])
+    wrapper.unmount()
+  })
 })

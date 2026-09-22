@@ -63,6 +63,12 @@ export interface ColorPickerProps {
   showText?: boolean
   allowClear?: boolean
   presets?: Array<{ label: string; colors: string[] }>
+  /** 受控展开状态 */
+  open?: boolean
+  /** 非受控默认展开状态 */
+  defaultOpen?: boolean
+  /** 自定义弹出面板的挂载容器，默认挂载到 body */
+  getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement
   classNames?: ColorPickerClassNames
   styles?: ColorPickerStyles
 }

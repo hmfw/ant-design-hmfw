@@ -20,6 +20,12 @@ const colorPickerProps = {
   showText: { type: Boolean, default: false },
   allowClear: { type: Boolean, default: false },
   presets: { type: Array as PropType<Array<{ label: string; colors: string[] }>>, default: () => [] },
+  open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: false },
+  getPopupContainer: {
+    type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
+    default: undefined,
+  },
   classNames: { type: Object as PropType<ColorPickerClassNames>, default: undefined },
   styles: { type: Object as PropType<ColorPickerStyles>, default: undefined },
 } satisfies Record<keyof ColorPickerProps, any>
@@ -27,10 +33,16 @@ const colorPickerProps = {
 export const ColorPicker = defineComponent({
   name: 'ColorPicker',
   props: colorPickerProps,
-  emits: ['update:value', 'change', 'clear', 'openChange'],
+  emits: ['update:value', 'change', 'clear', 'openChange', 'update:open'],
   setup(props, { emit }) {
     const prefixCls = usePrefixCls('color-picker')
-    const open = ref(false)
+    // 受控展开跟随 props.open，非受控由 defaultOpen 初始化、随 Trigger 回调同步
+    const innerOpen = ref(props.open ?? props.defaultOpen ?? false)
+    const open = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
+    const handleOpenChange = (v: boolean) => {
+      innerOpen.value = v
+      emit('openChange', v)
+    }
 
     // 内部颜色状态（受控/非受控合并）
     const innerValue = ref(props.value ?? props.defaultValue ?? DEFAULT_COLOR)
@@ -318,15 +330,15 @@ export const ColorPicker = defineComponent({
 
     return () => (
       <Trigger
-        open={open.value}
+        open={props.open}
+        defaultOpen={props.defaultOpen}
         trigger="click"
         placement={'bottomLeft' as Placement}
         disabled={props.disabled}
+        getPopupContainer={props.getPopupContainer}
         destroyOnHidden
-        onOpenChange={(v: boolean) => {
-          open.value = v
-          emit('openChange', v)
-        }}
+        onUpdate:open={(v: boolean) => emit('update:open', v)}
+        onOpenChange={handleOpenChange}
       >
         {{
           default: () => (
