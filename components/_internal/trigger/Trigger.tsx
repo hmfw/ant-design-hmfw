@@ -250,7 +250,18 @@ export const Trigger = defineComponent({
         arrowPointAtCenter: props.arrowPointAtCenter,
       })
       actualPlacement.value = r.placement
-      position.value = { top: r.top, left: r.left }
+      // computePosition 返回文档坐标；弹层以 position:absolute 定位，坐标须相对其 offsetParent。
+      // 传送到 body 时 offsetParent 即文档原点（偏移 0，保持既有行为）；当 getPopupContainer
+      // 返回定位容器（position:relative/absolute）时，需扣除该容器的文档偏移，否则弹层会被推离触发器。
+      let originX = 0
+      let originY = 0
+      const offsetParent = popupRef.value.offsetParent as HTMLElement | null
+      if (offsetParent && offsetParent !== document.body && offsetParent !== document.documentElement) {
+        const opRect = offsetParent.getBoundingClientRect()
+        originX = opRect.left + window.scrollX + offsetParent.clientLeft
+        originY = opRect.top + window.scrollY + offsetParent.clientTop
+      }
+      position.value = { top: r.top - originY, left: r.left - originX }
       if (props.matchWidth === true) popupWidth.value = triggerRect.width
     }
 
