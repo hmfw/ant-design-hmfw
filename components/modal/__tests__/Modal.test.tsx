@@ -152,6 +152,43 @@ describe('Modal', () => {
     expect(wrapper.emitted('afterClose')).toBeTruthy()
     wrapper.unmount()
   })
+
+  it('getContainer 为 HTMLElement 时挂载到指定容器', () => {
+    const host = document.createElement('div')
+    host.id = 'modal-host'
+    document.body.appendChild(host)
+    const wrapper = mount(Modal, {
+      props: { open: true, title: 'Host', getContainer: host },
+      attachTo: document.body,
+    })
+    expect(host.querySelector('.hmfw-modal-root')).toBeTruthy()
+    wrapper.unmount()
+    host.remove()
+  })
+
+  it('getContainer 为字符串选择器时挂载到对应节点', () => {
+    const host = document.createElement('div')
+    host.id = 'modal-host-str'
+    document.body.appendChild(host)
+    const wrapper = mount(Modal, {
+      props: { open: true, title: 'Str', getContainer: '#modal-host-str' },
+      attachTo: document.body,
+    })
+    expect(host.querySelector('.hmfw-modal-root')).toBeTruthy()
+    wrapper.unmount()
+    host.remove()
+  })
+
+  it('getContainer 为 false 时原地渲染（不 Teleport）', () => {
+    const wrapper = mount(Modal, {
+      props: { open: true, title: 'Inline', getContainer: false },
+      attachTo: document.body,
+    })
+    // 未挂载到 body 直接子层，而是留在组件宿主内
+    expect(wrapper.find('.hmfw-modal-root').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
   // STATIC_TESTS
   describe('static methods', () => {
     afterEach(() => {

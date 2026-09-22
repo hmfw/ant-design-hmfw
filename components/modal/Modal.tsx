@@ -61,6 +61,16 @@ export const Modal = defineComponent({
 
     const isOpen = computed(() => innerOpen.value)
 
+    // 弹层挂载容器：解析 getContainer（字符串选择器 / DOM 元素 / 函数 / false 原地渲染）
+    const teleportTarget = computed<string | HTMLElement>(() => {
+      const c = props.getContainer
+      if (c === false) return 'body' // false → 原地渲染，下方 Teleport 被 disabled
+      if (typeof c === 'function') return c()
+      if (typeof c === 'string') return c
+      if (c instanceof HTMLElement) return c
+      return 'body'
+    })
+
     // 集成 Watermark Context - 使水印传导到 Modal
     const watermarkPanelRef = usePanelRef()
     const mergedDialogRef = (el: any) => {
@@ -203,7 +213,7 @@ export const Modal = defineComponent({
       })
 
       return (
-        <Teleport to="body">
+        <Teleport to={teleportTarget.value} disabled={props.getContainer === false}>
           <Transition name="hmfw-zoom" onAfterLeave={onAfterLeave}>
             {(isOpen.value || props.forceRender) && (
               <div class={cls(`${prefixCls}-root`, props.classNames?.root)} style={{ zIndex: props.zIndex }}>
