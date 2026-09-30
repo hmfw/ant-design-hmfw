@@ -1,16 +1,35 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs'
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 const COMPONENTS_DIR = join(ROOT, 'components')
-const OUT_DIR = join(ROOT, 'docs/public')
+const SITE_OUT = join(ROOT, 'docs/public')
 const SITE = 'https://hmfw.github.io/ant-design-hmfw'
 const PKG_NAME = '@hmfw/ant-design'
 
+/**
+ * `--pkg`（由 `pnpm gen:llm:pkg` 传入，挂在 postbuild:lib 上）：
+ * 除文档站产物外，额外把 llms.txt / llms-full.txt 写到包根，随 npm 包发布，
+ * 让消费方项目的 AI 助手能直接读 node_modules 里的离线文档。
+ * 常规 `pnpm gen:llm` 不带此参数，只更新 docs/public，不在仓库根留下任何文件。
+ */
+const TO_PKG_ROOT = process.argv.includes('--pkg')
+/** 只有这两个文件进包根（components.json 1.5 MB，没有模型能读进上下文，不进包） */
+const PKG_ROOT_NAMES = new Set(['llms.txt', 'llms-full.txt'])
+
 // ---------- helpers ----------
+
+/** 写出产物：始终写 docs/public；--pkg 时对 llms*.txt 追加写一份到包根 */
+function emit(name: string, content: string): void {
+  const dirs = TO_PKG_ROOT && PKG_ROOT_NAMES.has(name) ? [SITE_OUT, ROOT] : [SITE_OUT]
+  for (const dir of dirs) {
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(join(dir, name), content, 'utf8')
+  }
+}
 
 /** 读取 package.json 的 version / description */
 function readPkg(): { version: string; description: string } {
@@ -298,12 +317,13 @@ const manifest = {
   },
   components,
 }
-writeFileSync(join(OUT_DIR, 'components.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8')
+emit('components.json', JSON.stringify(manifest, null, 2) + '\n')
 
 // ---------- llms.txt (index) ----------
 const blurb = '基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。'
 let llms = `# ${PKG_NAME}\n\n> ${blurb}\n\n`
 llms += `安装：\`pnpm add ${PKG_NAME}\`\n\n`
+llms += `完整 API 文档就在本包内：\`node_modules/${PKG_NAME}/llms-full.txt\`（${PKG_NAME} 不在模型训练数据中，请勿凭记忆猜 API）。\n\n`
 llms += `按需引入：\n\`\`\`ts\nimport { Button } from '${PKG_NAME}'\nimport '${PKG_NAME}/style.css'\n\`\`\`\n\n`
 llms += `## Components\n\n`
 for (const c of components) {
@@ -313,7 +333,8 @@ for (const c of components) {
 llms += `\n## More\n\n`
 llms += `- [components.json](${SITE}/components.json): 全量结构化 API 数据（props/events/slots/demos）\n`
 llms += `- [llms-full.txt](${SITE}/llms-full.txt): 自包含全量文档，可直接喂给大模型\n`
-writeFileSync(join(OUT_DIR, 'llms.txt'), llms, 'utf8')
+llms += `- 本文件与 llms-full.txt 同时随 npm 包发布，位于 \`node_modules/${PKG_NAME}/\` 下，可离线读取（无需联网）。\n`
+emit('llms.txt', llms)
 
 // ---------- llms-full.txt (self-contained) ----------
 function mdTable(headers: string[], rows: string[][]): string {
@@ -366,9 +387,15 @@ for (const c of components) {
     }
   }
 }
-writeFileSync(join(OUT_DIR, 'llms-full.txt'), full, 'utf8')
+emit('llms-full.txt', full)
 
+const kb = (s: string) => (Buffer.byteLength(s, 'utf8') / 1024).toFixed(1)
 console.log(`\n✅ Generated for ${components.length} components:`)
 console.log(`   docs/public/components.json`)
-console.log(`   docs/public/llms.txt`)
-console.log(`   docs/public/llms-full.txt`)
+for (const dir of TO_PKG_ROOT ? ['docs/public', '.（包根，随 npm 发布）'] : ['docs/public']) {
+  console.log(`   ${dir}/llms.txt (${kb(llms)} KB)`)
+  console.log(`   ${dir}/llms-full.txt (${kb(full)} KB)`)
+}
+if (!TO_PKG_ROOT) {
+  console.log(`   提示：包根副本用 \`pnpm gen:llm:pkg\` 生成（pnpm build:lib 会自动执行）`)
+}

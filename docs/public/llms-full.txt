@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.50.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.51.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -1765,6 +1765,9 @@ import { ColorPicker } from '@hmfw/ant-design'
 | showText | 是否显示颜色文本 | `boolean` | `false` |
 | allowClear | 是否允许清除 | `boolean` | `false` |
 | presets | 预设颜色组 | `Array<{ label: string; colors: string[] }>` | `[]` |
+| open (v-model) | 受控展开状态 | `boolean` | - |
+| defaultOpen | 非受控默认展开状态 | `boolean` | `false` |
+| getPopupContainer | 自定义弹出面板的挂载容器 | `(triggerNode: HTMLElement) => HTMLElement` | `body` |
 | classNames | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ColorPickerClassNames` | - |
 | styles | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `ColorPickerStyles` | - |
 

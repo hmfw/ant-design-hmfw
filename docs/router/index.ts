@@ -24,6 +24,11 @@ export const router = createRouter({
           path: '/guide/getting-started',
           component: () => import('../views/GettingStarted.vue'),
         },
+        {
+          path: '/guide/ai',
+          component: () => import('../views/AiGuide.vue'),
+          meta: { title: 'AI 辅助开发' },
+        },
         { path: '/guide/theming', component: () => import('../views/Theming.vue') },
         { path: '/guide/i18n', component: () => import('../views/I18n.vue') },
         { path: '/guide/changelog', component: () => import('../../CHANGELOG.md') },

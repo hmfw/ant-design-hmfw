@@ -4,6 +4,8 @@
 
 安装：`pnpm add @hmfw/ant-design`
 
+完整 API 文档就在本包内：`node_modules/@hmfw/ant-design/llms-full.txt`（@hmfw/ant-design 不在模型训练数据中，请勿凭记忆猜 API）。
+
 按需引入：
 ```ts
 import { Button } from '@hmfw/ant-design'
@@ -88,3 +90,4 @@ import '@hmfw/ant-design/style.css'
 
 - [components.json](https://hmfw.github.io/ant-design-hmfw/components.json): 全量结构化 API 数据（props/events/slots/demos）
 - [llms-full.txt](https://hmfw.github.io/ant-design-hmfw/llms-full.txt): 自包含全量文档，可直接喂给大模型
+- 本文件与 llms-full.txt 同时随 npm 包发布，位于 `node_modules/@hmfw/ant-design/` 下，可离线读取（无需联网）。

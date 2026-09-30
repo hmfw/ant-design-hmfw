@@ -241,10 +241,38 @@ app.use(AntDesignHmfw, { locale: zhCN }) // 或 enUS
 
 ---
 
+## 🤖 AI 辅助开发
+
+本库不在大模型的训练数据里，AI 编码助手默认只能「猜」API。为此 **npm 包根内置了两份离线文档**，无需联网、无需翻源码：
+
+| 文件                                          | 体积    | 内容                                                            |
+| --------------------------------------------- | ------- | --------------------------------------------------------------- |
+| `node_modules/@hmfw/ant-design/llms.txt`      | ~9 KB   | 组件索引：71 个组件的名称、一句话简介与文档链接                 |
+| `node_modules/@hmfw/ant-design/llms-full.txt` | ~300 KB | 全量文档：每个组件的 props / events / slots 表格 + 完整示例源码 |
+
+把下面这段加进 `CLAUDE.md`（Claude Code）、`.cursor/rules/*.mdc`（Cursor）或 `.github/copilot-instructions.md`（Copilot），AI 就知道该去哪儿查：
+
+```md
+## @hmfw/ant-design
+
+本项目使用 `@hmfw/ant-design`（Vue3 组件库，Ant Design v6 风格）。
+写 UI 前先读包内文档，不要凭记忆猜 API —— 本库不在模型训练数据里。
+
+- `node_modules/@hmfw/ant-design/llms.txt` —— 组件索引（约 9 KB），先读它确定用哪个组件
+- `node_modules/@hmfw/ant-design/llms-full.txt` —— 全量文档（约 300 KB），含每个组件的
+  props / events / slots 表格与完整示例源码
+
+用法：从 llms.txt 定位组件后，到 llms-full.txt 检索该组件的 `## 组件名` 小节，只读该小节。
+```
+
+> 📖 接入细节、提示词模板与 token 预算见 [AI 辅助开发](https://hmfw.github.io/ant-design-hmfw/guide/ai)。
+
+---
+
 ## 📊 项目数据
 
 - 🎯 **71 个组件** - 覆盖所有常用场景
-- ✅ **2598 个测试** - 质量有保障
+- ✅ **2605 个测试** - 质量有保障
 - 📦 **12 KB (3 KB Gzip)** - ESM 构建产物体积
 - 🌟 **681 个图标** - 独立图标库 [@hmfw/icons](https://www.npmjs.com/package/@hmfw/icons)
 - 🎨 **完整类型** - 100% TypeScript

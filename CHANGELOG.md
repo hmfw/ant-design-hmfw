@@ -10,6 +10,43 @@
 
 ## 最近版本
 
+## [0.51.0] - 2026-09-30
+
+[查看完整内容](./changelogs/v0.51.0.md)
+
+**✨ 新增功能**：
+
+- **ColorPicker**: 新增受控 `open` / `defaultOpen` 属性与 `update:open` 事件，透传 `getPopupContainer` 自定义弹层挂载容器
+- **Modal**: 新增 `getContainer` 自定义弹层挂载容器（支持字符串选择器 / DOM 元素 / 函数 / `false` 原地渲染），默认挂载到 `body`
+- **包内 AI 离线文档**: npm 包根内置 `llms.txt`（约 9 KB 组件索引）与 `llms-full.txt`（约 300 KB 自包含全量文档），消费方项目的 AI 编码助手可离线读取；新增 `gen:llm:pkg` 脚本并接入 `postbuild:lib`
+- **文档站**: 新增组件总览页（71 个组件封面卡片 + 中英文过滤）；新增全局搜索（快捷键唤起、方向键导航、命中高亮）
+- **语义化 demo**: 各组件新增基于 `SemanticPreview` 的 `*Semantic.vue` 交互式语义化 DOM 演示
+- **文档站**: 侧边栏选中项在路由变化后自动滚入可视区
+
+**🐛 问题修复**：
+
+- **Trigger**: 修正 `getPopupContainer` 返回定位容器时弹层被推离触发器的坐标偏移
+- **SemanticPreview**: 修复浮层节点被组件 z-index 遮挡、高亮框左上/右下 1px 不对称
+- **scripts**: 修正 llm manifest 正则 `\Z` 导致的正文截断，补全「何时使用」纯列表段落丢失
+- **文档过时数据**: `package.json` description 组件数 68 → 71 并精简为单句中文；首页「66 个组件」「655 个测试用例」与 README 测试数同步为实际值
+
+**🔨 代码重构**：
+
+- **新增 `_hooks` 共享层**: `useControlledState` 与 overlay 三个 hooks 从 `_utils` 移出，`_utils` 回归纯函数语义；CLAUDE.md 补充 `_hooks` / `_utils` 边界判断标准
+- **Button**: `circle` / `round` 形状规则用 `.hmfw-btn` 叠加提高特异性，避免被尺寸规则覆盖 `border-radius`
+
+**📝 文档优化**：
+
+- **新增「AI 辅助开发」指南页**（`/guide/ai`）: 包内离线文档说明、Claude Code / Cursor / Copilot 三种接入方式、token 预算与按组件检索技巧
+- **语义化文档**: 统一所有组件「语义化 className 与 style」章节结构，合并「使用 classNames」与「使用 styles」为单一「用法」，订正悬空/孤儿 class 引用
+- **Button**: 新增渐变按钮 demo；`button.md` 类型/尺寸/加载状态文案优化
+- **README**: 新增「🤖 AI 辅助开发」章节，含可直接复制的挂载片段
+
+**🧪 测试**：
+
+- **ColorPicker / Modal**: 新增受控 `open` 与 `getContainer` 相关测试用例
+- 全体 **2605** 单元测试通过，组件总数 **71** 个
+
 ## [0.50.0] - 2026-08-29
 
 [查看完整内容](./changelogs/v0.50.0.md)

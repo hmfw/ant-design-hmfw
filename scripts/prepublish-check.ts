@@ -30,6 +30,8 @@ const requiredFiles = [
   { path: 'dist/index.js', name: 'ESM 构建产物' },
   { path: 'dist/index.d.ts', name: 'TypeScript 类型声明' },
   { path: 'dist/style.css', name: 'CSS 样式文件' },
+  { path: 'llms.txt', name: 'AI 文档索引（包根）' },
+  { path: 'llms-full.txt', name: 'AI 全量文档（包根）' },
 ]
 
 requiredFiles.forEach(({ path, name }) => {

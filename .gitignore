@@ -8,3 +8,7 @@ coverage
 playwright-report/
 test-results/
 antd/
+# 包根 AI 文档产物（由 pnpm gen:llm:pkg 生成；前导斜杠锚定根目录，勿删，
+# 否则会误匹配到已跟踪的 docs/public/llms*.txt）
+/llms.txt
+/llms-full.txt

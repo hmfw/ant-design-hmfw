@@ -176,6 +176,7 @@ export const guideSidebar: NavGroup[] = [
     title: '指南',
     children: [
       { title: '快速上手', path: '/guide/getting-started' },
+      { title: 'AI 辅助开发', path: '/guide/ai' },
       { title: '主题定制', path: '/guide/theming' },
       { title: '国际化', path: '/guide/i18n' },
       { title: '更新日志', path: '/guide/changelog' },
