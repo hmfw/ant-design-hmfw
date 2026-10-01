@@ -215,19 +215,21 @@ export const Modal = defineComponent({
       return (
         <Teleport to={teleportTarget.value} disabled={props.getContainer === false}>
           <Transition name="hmfw-zoom" onAfterLeave={onAfterLeave}>
-            {(isOpen.value || props.forceRender) && (
-              <div class={cls(`${prefixCls}-root`, props.classNames?.root)} style={{ zIndex: props.zIndex }}>
-                {props.mask && (
-                  <div
-                    class={cls(`${prefixCls}-mask`, props.classNames?.mask)}
-                    style={{ ...props.maskStyle, ...props.styles?.mask }}
-                  />
-                )}
-                <div class={wrapCls} style={props.styles?.wrapper} onClick={handleMaskClick}>
-                  {renderedDialog}
+            {() =>
+              isOpen.value || props.forceRender ? (
+                <div class={cls(`${prefixCls}-root`, props.classNames?.root)} style={{ zIndex: props.zIndex }}>
+                  {props.mask && (
+                    <div
+                      class={cls(`${prefixCls}-mask`, props.classNames?.mask)}
+                      style={{ ...props.maskStyle, ...props.styles?.mask }}
+                    />
+                  )}
+                  <div class={wrapCls} style={props.styles?.wrapper} onClick={handleMaskClick}>
+                    {renderedDialog}
+                  </div>
                 </div>
-              </div>
-            )}
+              ) : null
+            }
           </Transition>
         </Teleport>
       )

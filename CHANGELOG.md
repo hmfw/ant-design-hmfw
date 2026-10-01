@@ -10,6 +10,14 @@
 
 ## 最近版本
 
+## [0.51.1] - 2026-10-02
+
+[查看完整内容](./changelogs/v0.51.1.md)
+
+**🐛 问题修复**：
+
+- **Transition / TransitionGroup**: 为内置过渡组件的子节点统一改用函数插槽，消除开发模式下 `normalizeVNodeSlots` 告警（无运行时行为变更）；涉及 Menu/SubMenu、Drawer、Collapse、Image、Modal、FloatButton、Upload
+
 ## [0.51.0] - 2026-09-30
 
 [查看完整内容](./changelogs/v0.51.0.md)

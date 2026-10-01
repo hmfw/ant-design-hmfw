@@ -240,34 +240,36 @@ export const Drawer = defineComponent({
       return (
         <Teleport to={getContainer.value} disabled={teleportDisabled}>
           <Transition name={`hmfw-drawer-${props.placement}`} appear>
-            {(isOpen.value || props.forceRender) && (
-              <div class={drawerCls} style={rootStyle}>
-                {props.mask && (
+            {() =>
+              isOpen.value || props.forceRender ? (
+                <div class={drawerCls} style={rootStyle}>
+                  {props.mask && (
+                    <div
+                      class={cls(`${prefixCls}-mask`, props.classNames?.mask)}
+                      style={props.styles?.mask}
+                      onClick={handleMaskClick}
+                    />
+                  )}
                   <div
-                    class={cls(`${prefixCls}-mask`, props.classNames?.mask)}
-                    style={props.styles?.mask}
-                    onClick={handleMaskClick}
-                  />
-                )}
-                <div
-                  ref={mergedDrawerRef}
-                  class={contentCls}
-                  style={{ ...sizeStyle.value, ...props.styles?.wrapper }}
-                  role="dialog"
-                  aria-modal="true"
-                  aria-labelledby={hasTitle ? ariaId : undefined}
-                  {...attrs}
-                >
-                  <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
-                    {renderHeader()}
-                    <div class={cls(`${prefixCls}-body`, props.classNames?.body)} style={props.styles?.body}>
-                      {renderBody()}
+                    ref={mergedDrawerRef}
+                    class={contentCls}
+                    style={{ ...sizeStyle.value, ...props.styles?.wrapper }}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby={hasTitle ? ariaId : undefined}
+                    {...attrs}
+                  >
+                    <div class={cls(`${prefixCls}-content`, props.classNames?.content)} style={props.styles?.content}>
+                      {renderHeader()}
+                      <div class={cls(`${prefixCls}-body`, props.classNames?.body)} style={props.styles?.body}>
+                        {renderBody()}
+                      </div>
+                      {renderFooter()}
                     </div>
-                    {renderFooter()}
                   </div>
                 </div>
-              </div>
-            )}
+              ) : null
+            }
           </Transition>
         </Teleport>
       )

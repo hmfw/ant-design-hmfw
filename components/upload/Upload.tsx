@@ -488,14 +488,25 @@ export const Upload = defineComponent({
           style={props.styles?.list}
           name={`${prefixCls}-animate`}
         >
-          {fileList.value.map((file) => {
-            const originNode = renderItem(file)
-            // itemRender 钩子 —— 用户接管单项渲染但仍可通过 actions 触发内置行为
-            if (props.itemRender) {
-              const actions: ItemRenderActions = {
-                download: () => emit('download', file),
-                preview: () => handlePreview(file),
-                remove: () => handleRemove(file),
+          {() =>
+            fileList.value.map((file) => {
+              const originNode = renderItem(file)
+              // itemRender 钩子 —— 用户接管单项渲染但仍可通过 actions 触发内置行为
+              if (props.itemRender) {
+                const actions: ItemRenderActions = {
+                  download: () => emit('download', file),
+                  preview: () => handlePreview(file),
+                  remove: () => handleRemove(file),
+                }
+                return (
+                  <div
+                    key={file.uid}
+                    class={cls(`${prefixCls}-list-item-container`, props.classNames?.listItemContainer)}
+                    style={props.styles?.listItemContainer}
+                  >
+                    {props.itemRender(originNode, file, fileList.value, actions)}
+                  </div>
+                )
               }
               return (
                 <div
@@ -503,20 +514,11 @@ export const Upload = defineComponent({
                   class={cls(`${prefixCls}-list-item-container`, props.classNames?.listItemContainer)}
                   style={props.styles?.listItemContainer}
                 >
-                  {props.itemRender(originNode, file, fileList.value, actions)}
+                  {originNode}
                 </div>
               )
-            }
-            return (
-              <div
-                key={file.uid}
-                class={cls(`${prefixCls}-list-item-container`, props.classNames?.listItemContainer)}
-                style={props.styles?.listItemContainer}
-              >
-                {originNode}
-              </div>
-            )
-          })}
+            })
+          }
         </TG>
       )
     }

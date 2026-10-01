@@ -401,82 +401,87 @@ export const ImagePreview = defineComponent({
       const showCount = props.total != null && props.total > 1
       const previewContent = (
         <Transition name={`${previewCls}-fade`}>
-          {props.visible && (
-            <div
-              ref={mergedPreviewRef}
-              class={cls(`${previewCls}-root`, props.classNames?.preview)}
-              style={[props.config.zIndex != null ? { zIndex: props.config.zIndex } : undefined, props.styles?.preview]}
-              role="dialog"
-              aria-modal="true"
-              aria-label="图片预览"
-              onClick={handleMaskClick}
-            >
+          {() =>
+            props.visible ? (
               <div
-                class={cls(
-                  `${previewCls}-mask`,
-                  {
-                    [`${previewCls}-mask-hidden`]: !maskInfo.value.enabled,
-                  },
-                  props.classNames?.previewMask,
-                )}
-                style={props.styles?.previewMask}
-                aria-hidden="true"
-              />
-              <button
-                class={cls(`${previewCls}-close`, props.classNames?.closeBtn)}
-                style={props.styles?.closeBtn}
-                onClick={props.onClose}
-                aria-label="关闭预览"
-                title="关闭"
-              >
-                {getCloseIcon()}
-              </button>
-              <div
-                class={cls(`${previewCls}-wrap`, props.classNames?.previewWrap)}
-                style={props.styles?.previewWrap}
+                ref={mergedPreviewRef}
+                class={cls(`${previewCls}-root`, props.classNames?.preview)}
+                style={[
+                  props.config.zIndex != null ? { zIndex: props.config.zIndex } : undefined,
+                  props.styles?.preview,
+                ]}
+                role="dialog"
+                aria-modal="true"
+                aria-label="图片预览"
                 onClick={handleMaskClick}
-                onWheel={handleWheel}
               >
-                {renderImage()}
-              </div>
-              {renderToolbar()}
-              {showCount && (
-                <div class={cls(`${previewCls}-count`, props.classNames?.count)} style={props.styles?.count}>
-                  {props.countRender
-                    ? props.countRender((props.current ?? 0) + 1, props.total!)
-                    : `${(props.current ?? 0) + 1} / ${props.total}`}
+                <div
+                  class={cls(
+                    `${previewCls}-mask`,
+                    {
+                      [`${previewCls}-mask-hidden`]: !maskInfo.value.enabled,
+                    },
+                    props.classNames?.previewMask,
+                  )}
+                  style={props.styles?.previewMask}
+                  aria-hidden="true"
+                />
+                <button
+                  class={cls(`${previewCls}-close`, props.classNames?.closeBtn)}
+                  style={props.styles?.closeBtn}
+                  onClick={props.onClose}
+                  aria-label="关闭预览"
+                  title="关闭"
+                >
+                  {getCloseIcon()}
+                </button>
+                <div
+                  class={cls(`${previewCls}-wrap`, props.classNames?.previewWrap)}
+                  style={props.styles?.previewWrap}
+                  onClick={handleMaskClick}
+                  onWheel={handleWheel}
+                >
+                  {renderImage()}
                 </div>
-              )}
-              {props.hasPrev && (
-                <button
-                  class={cls(`${previewCls}-switch`, `${previewCls}-switch-left`, props.classNames?.switchBtn)}
-                  style={props.styles?.switchBtn}
-                  onClick={(e: MouseEvent) => {
-                    e.stopPropagation()
-                    props.onPrev?.()
-                  }}
-                  aria-label="上一张"
-                  title="上一张"
-                >
-                  <LeftOutlined class="hmfw-icon" />
-                </button>
-              )}
-              {props.hasNext && (
-                <button
-                  class={cls(`${previewCls}-switch`, `${previewCls}-switch-right`, props.classNames?.switchBtn)}
-                  style={props.styles?.switchBtn}
-                  onClick={(e: MouseEvent) => {
-                    e.stopPropagation()
-                    props.onNext?.()
-                  }}
-                  aria-label="下一张"
-                  title="下一张"
-                >
-                  <RightOutlined class="hmfw-icon" />
-                </button>
-              )}
-            </div>
-          )}
+                {renderToolbar()}
+                {showCount && (
+                  <div class={cls(`${previewCls}-count`, props.classNames?.count)} style={props.styles?.count}>
+                    {props.countRender
+                      ? props.countRender((props.current ?? 0) + 1, props.total!)
+                      : `${(props.current ?? 0) + 1} / ${props.total}`}
+                  </div>
+                )}
+                {props.hasPrev && (
+                  <button
+                    class={cls(`${previewCls}-switch`, `${previewCls}-switch-left`, props.classNames?.switchBtn)}
+                    style={props.styles?.switchBtn}
+                    onClick={(e: MouseEvent) => {
+                      e.stopPropagation()
+                      props.onPrev?.()
+                    }}
+                    aria-label="上一张"
+                    title="上一张"
+                  >
+                    <LeftOutlined class="hmfw-icon" />
+                  </button>
+                )}
+                {props.hasNext && (
+                  <button
+                    class={cls(`${previewCls}-switch`, `${previewCls}-switch-right`, props.classNames?.switchBtn)}
+                    style={props.styles?.switchBtn}
+                    onClick={(e: MouseEvent) => {
+                      e.stopPropagation()
+                      props.onNext?.()
+                    }}
+                    aria-label="下一张"
+                    title="下一张"
+                  >
+                    <RightOutlined class="hmfw-icon" />
+                  </button>
+                )}
+              </div>
+            ) : null
+          }
         </Transition>
       )
 

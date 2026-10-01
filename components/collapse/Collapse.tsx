@@ -212,13 +212,15 @@ export function renderPanelNode(options: PanelRenderOptions): VNode {
           onLeave={collapseMotion.onLeave}
           onAfterLeave={collapseMotion.onAfterLeave}
         >
-          {isOpen && (
-            <div class={cls(`${prefixCls}-content`, classNames?.content)} role="region" style={styles?.content}>
-              <div class={cls(`${prefixCls}-content-box`, classNames?.body)} style={styles?.body}>
-                {children as any}
+          {() =>
+            isOpen ? (
+              <div class={cls(`${prefixCls}-content`, classNames?.content)} role="region" style={styles?.content}>
+                <div class={cls(`${prefixCls}-content-box`, classNames?.body)} style={styles?.body}>
+                  {children as any}
+                </div>
               </div>
-            </div>
-          )}
+            ) : null
+          }
         </Transition>
       )}
       {shouldRender && !useTransition && (

@@ -197,19 +197,21 @@ export const Menu = defineComponent({
           {props.overflowedIndicator || <span class={`${prefixCls}-overflowed-indicator`}>•••</span>}
         </div>
         <Transition name={`${prefixCls}-popup-zoom`}>
-          {isOverflowOpen.value && (
-            <ul
-              class={cls(
-                `${prefixCls}-sub`,
-                `${prefixCls}-${props.mode}`,
-                `${prefixCls}-${props.theme}`,
-                props.classNames?.sub,
-              )}
-              style={props.styles?.sub}
-            >
-              {renderItems(overflowedItems.value)}
-            </ul>
-          )}
+          {() =>
+            isOverflowOpen.value ? (
+              <ul
+                class={cls(
+                  `${prefixCls}-sub`,
+                  `${prefixCls}-${props.mode}`,
+                  `${prefixCls}-${props.theme}`,
+                  props.classNames?.sub,
+                )}
+                style={props.styles?.sub}
+              >
+                {renderItems(overflowedItems.value)}
+              </ul>
+            ) : null
+          }
         </Transition>
       </li>
     )

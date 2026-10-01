@@ -98,11 +98,13 @@ export const FloatButtonGroup = defineComponent({
                 }}
               >
                 <Transition name={`${prefixCls}-group-wrap`}>
-                  {isOpen.value && (
-                    <div class={`${prefixCls}-group-wrap`} onClick={(e: MouseEvent) => e.stopPropagation()}>
-                      {slots.default?.()}
-                    </div>
-                  )}
+                  {() =>
+                    isOpen.value ? (
+                      <div class={`${prefixCls}-group-wrap`} onClick={(e: MouseEvent) => e.stopPropagation()}>
+                        {slots.default?.()}
+                      </div>
+                    ) : null
+                  }
                 </Transition>
                 <FloatButton
                   type={props.type}

@@ -78,19 +78,21 @@ export const FloatButtonBackTop = defineComponent({
     return () => {
       return (
         <Transition name={`${prefixCls}-fade`}>
-          {visible.value && (
-            <FloatButton
-              type={props.type}
-              shape={props.shape}
-              icon={props.icon ?? VerticalAlignTopOutlined}
-              tooltip={props.tooltip}
-              content={props.content}
-              class={`${prefixCls}-back-top`}
-              onClick={scrollToTop}
-            >
-              {slots.icon ? { icon: slots.icon } : undefined}
-            </FloatButton>
-          )}
+          {() =>
+            visible.value ? (
+              <FloatButton
+                type={props.type}
+                shape={props.shape}
+                icon={props.icon ?? VerticalAlignTopOutlined}
+                tooltip={props.tooltip}
+                content={props.content}
+                class={`${prefixCls}-back-top`}
+                onClick={scrollToTop}
+              >
+                {slots.icon ? { icon: slots.icon } : undefined}
+              </FloatButton>
+            ) : null
+          }
         </Transition>
       )
     }

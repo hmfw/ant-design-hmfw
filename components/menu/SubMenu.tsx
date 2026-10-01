@@ -198,14 +198,16 @@ export const SubMenu = defineComponent({
                 e.style.opacity = '0'
               }}
             >
-              {open && (
-                <ul
-                  class={cls(`${prefixCls}-sub`, `${prefixCls}-inline`, context.classNames?.sub)}
-                  style={context.styles?.sub}
-                >
-                  {renderSubContent()}
-                </ul>
-              )}
+              {() =>
+                open ? (
+                  <ul
+                    class={cls(`${prefixCls}-sub`, `${prefixCls}-inline`, context.classNames?.sub)}
+                    style={context.styles?.sub}
+                  >
+                    {renderSubContent()}
+                  </ul>
+                ) : null
+              }
             </Transition>
           </li>
         )
