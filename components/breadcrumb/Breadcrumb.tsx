@@ -163,7 +163,7 @@ export const Breadcrumb = defineComponent<BreadcrumbProps>({
 
         return (
           <Dropdown menu={mergedMenu} trigger={['hover']} {...dropdownProps}>
-            {linkContent}
+            {() => linkContent}
           </Dropdown>
         )
       }

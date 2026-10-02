@@ -282,7 +282,7 @@ export const Segmented = defineComponent({
         const tooltipProps = typeof opt.tooltip === 'string' ? { title: opt.tooltip } : opt.tooltip
         return (
           <Tooltip key={opt.value} {...tooltipProps}>
-            {itemNode}
+            {() => itemNode}
           </Tooltip>
         )
       }

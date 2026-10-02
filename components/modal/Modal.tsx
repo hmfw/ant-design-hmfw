@@ -133,7 +133,7 @@ export const Modal = defineComponent({
       return (
         <div class={cls(`${prefixCls}-footer`, props.classNames?.footer)} style={props.styles?.footer}>
           <Button {...props.cancelButtonProps} onClick={(e: MouseEvent) => close(e)}>
-            {props.cancelText ?? locale.value.Modal.cancelText}
+            {() => props.cancelText ?? locale.value.Modal.cancelText}
           </Button>
           <Button
             type={okType as any}
@@ -142,7 +142,7 @@ export const Modal = defineComponent({
             {...props.okButtonProps}
             onClick={handleOk}
           >
-            {props.okText ?? locale.value.Modal.okText}
+            {() => props.okText ?? locale.value.Modal.okText}
           </Button>
         </div>
       )

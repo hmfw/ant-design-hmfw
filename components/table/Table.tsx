@@ -575,7 +575,8 @@ export const Table = defineComponent({
                                   trigger={['click']}
                                   open={filterDropdownOpen.value[key]}
                                   onUpdate:open={(v) => (filterDropdownOpen.value[key] = v)}
-                                  v-slots={{
+                                >
+                                  {{
                                     default: () => (
                                       <span
                                         class={cls(`${prefixCls}-filter-trigger`, {
@@ -601,7 +602,7 @@ export const Table = defineComponent({
                                       />
                                     ),
                                   }}
-                                />
+                                </Dropdown>
                               )}
                             </div>
                           </th>

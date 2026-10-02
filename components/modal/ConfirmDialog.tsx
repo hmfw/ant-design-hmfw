@@ -91,12 +91,12 @@ export const ConfirmDialog = defineComponent({
           {...c.okButtonProps}
           onClick={handleOk}
         >
-          {okText.value}
+          {() => okText.value}
         </Button>
       )
       const cancelBtn = okCancel.value ? (
         <Button {...c.cancelButtonProps} onClick={handleCancel}>
-          {cancelText.value}
+          {() => cancelText.value}
         </Button>
       ) : null
 
@@ -118,32 +118,34 @@ export const ConfirmDialog = defineComponent({
           onCancel={(e: MouseEvent) => handleCancel(e)}
           onAfterClose={() => emit('afterClose')}
         >
-          <div class={cls(confirmPrefixCls, `${confirmPrefixCls}-${type.value}`)}>
-            <div
-              class={cls(`${confirmPrefixCls}-body`, {
-                [`${confirmPrefixCls}-no-icon`]: !iconComp,
-              })}
-            >
-              {iconComp && (
-                <span class={`${confirmPrefixCls}-icon`}>
-                  {isVNode(iconComp)
-                    ? iconComp
-                    : (() => {
-                        const C = iconComp as IconComponent
-                        return <C class="hmfw-icon" />
-                      })()}
-                </span>
-              )}
-              <div class={`${confirmPrefixCls}-paragraph`}>
-                {titleNode != null && <span class={`${confirmPrefixCls}-title`}>{titleNode}</span>}
-                <div class={`${confirmPrefixCls}-content`}>{renderNode(c.content)}</div>
+          {() => (
+            <div class={cls(confirmPrefixCls, `${confirmPrefixCls}-${type.value}`)}>
+              <div
+                class={cls(`${confirmPrefixCls}-body`, {
+                  [`${confirmPrefixCls}-no-icon`]: !iconComp,
+                })}
+              >
+                {iconComp && (
+                  <span class={`${confirmPrefixCls}-icon`}>
+                    {isVNode(iconComp)
+                      ? iconComp
+                      : (() => {
+                          const C = iconComp as IconComponent
+                          return <C class="hmfw-icon" />
+                        })()}
+                  </span>
+                )}
+                <div class={`${confirmPrefixCls}-paragraph`}>
+                  {titleNode != null && <span class={`${confirmPrefixCls}-title`}>{titleNode}</span>}
+                  <div class={`${confirmPrefixCls}-content`}>{renderNode(c.content)}</div>
+                </div>
+              </div>
+              <div class={`${confirmPrefixCls}-btns`}>
+                {cancelBtn}
+                {okBtn}
               </div>
             </div>
-            <div class={`${confirmPrefixCls}-btns`}>
-              {cancelBtn}
-              {okBtn}
-            </div>
-          </div>
+          )}
         </Modal>
       )
     }

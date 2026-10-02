@@ -332,9 +332,11 @@ export const TransferList = defineComponent({
           disabled={props.disabled}
           menu={{ items: dropdownItems.value as any }}
         >
-          <span class={`${lp}-header-dropdown-trigger`}>
-            <DownOutlined class="hmfw-icon" />
-          </span>
+          {() => (
+            <span class={`${lp}-header-dropdown-trigger`}>
+              <DownOutlined class="hmfw-icon" />
+            </span>
+          )}
         </Dropdown>
       )
 

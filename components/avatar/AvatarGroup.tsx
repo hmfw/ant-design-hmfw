@@ -52,12 +52,9 @@ export const AvatarGroup = defineComponent({
 
       const overflowAvatar =
         overflowCount > 0 ? (
-          <Avatar
-            size={props.size}
-            shape={props.shape}
-            style={mergeStyle}
-            v-slots={{ default: () => `+${overflowCount}` }}
-          />
+          <Avatar size={props.size} shape={props.shape} style={mergeStyle}>
+            {() => `+${overflowCount}`}
+          </Avatar>
         ) : null
 
       return (
@@ -72,7 +69,7 @@ export const AvatarGroup = defineComponent({
                 destroyOnHidden
                 {...props.max.popover}
               >
-                {overflowAvatar}
+                {() => overflowAvatar}
               </Popover>
             ) : (
               overflowAvatar

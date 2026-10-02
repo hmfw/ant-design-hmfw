@@ -133,7 +133,7 @@ export const List = defineComponent({
                 style={props.styles?.items}
                 gutter={props.grid.gutter}
               >
-                {renderedItems}
+                {() => renderedItems}
               </Row>
             )
           } else {
@@ -159,7 +159,7 @@ export const List = defineComponent({
                 style={props.styles?.items}
                 gutter={props.grid.gutter}
               >
-                {renderedItems}
+                {() => renderedItems}
               </Row>
             )
           } else {
@@ -219,8 +219,12 @@ export const List = defineComponent({
             </div>
           )}
           <Spin spinning={isLoading.value}>
-            {childrenContent}
-            {slots.default?.()}
+            {() => (
+              <>
+                {childrenContent}
+                {slots.default?.()}
+              </>
+            )}
           </Spin>
           {(props.footer || slots.footer) && (
             <div class={cls(`${prefixCls}-footer`, props.classNames?.footer)} style={props.styles?.footer}>

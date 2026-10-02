@@ -10,6 +10,18 @@
 
 ## 最近版本
 
+## [0.51.2] - 2026-10-02
+
+[查看完整内容](./changelogs/v0.51.2.md)
+
+**🐛 问题修复**：
+
+- **组件插槽写法全库规范化**: 修复 `RadioGroup` 等 22 处组件向子组件传裸子节点、及 4 处 `v-slots` 写法，在已发布产物中触发「Non-function value encountered for default slot」告警 / 插槽不渲染的问题（dev 与单测因走 Babel 无法复现，仅消费方可见）
+
+**🔧 构建 / 工程**：
+
+- **库构建改用 `@vue/babel-plugin-jsx`**: tsup 对 `.tsx` 改用与开发 / 文档 / 单测相同的 Babel 转换链，使 dist 与 dev 的 JSX 语义彻底对齐，从构建层根治上述插槽类 bug；逐文件产物、tree-shaking、UMD 不受影响，并为 `defineComponent` 补上 `/* @__PURE__ */` 标注
+
 ## [0.51.1] - 2026-10-02
 
 [查看完整内容](./changelogs/v0.51.1.md)

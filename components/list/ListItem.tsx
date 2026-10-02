@@ -120,7 +120,7 @@ export const ListItem = defineComponent({
 
         return (
           <Col {...colProps} style={{ marginBottom: `${gutter || 0}px` }}>
-            {itemChildren}
+            {() => itemChildren}
           </Col>
         )
       }

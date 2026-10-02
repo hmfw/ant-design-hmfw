@@ -231,8 +231,12 @@ export const Calendar = defineComponent({
             onChange={(e) => onModeChange(e.target.value as CalendarMode)}
             size={props.fullscreen ? 'middle' : 'small'}
           >
-            <Radio value="month">{locale.value.Calendar?.month ?? '月'}</Radio>
-            <Radio value="year">{locale.value.Calendar?.year ?? '年'}</Radio>
+            {() => (
+              <>
+                <Radio value="month">{() => locale.value.Calendar?.month ?? '月'}</Radio>
+                <Radio value="year">{() => locale.value.Calendar?.year ?? '年'}</Radio>
+              </>
+            )}
           </RadioGroup>
         </div>
       )

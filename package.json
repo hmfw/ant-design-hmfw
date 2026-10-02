@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.51.1",
+  "version": "0.51.2",
   "description": "基于 Ant Design v6 的 Vue3 组件库 —— 71 个高质量组件，完整 TypeScript 支持",
   "keywords": [
     "vue3",
@@ -112,8 +112,11 @@
     "vue": ">=3.3.0 <4.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-typescript": "^7.29.7",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
+    "@types/babel__core": "^7.20.5",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^26.1.1",
     "@types/prismjs": "^1.26.6",
@@ -122,6 +125,7 @@
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitejs/plugin-vue-jsx": "^5.1.6",
     "@vitest/coverage-v8": "^4.1.10",
+    "@vue/babel-plugin-jsx": "^2.0.1",
     "@vue/test-utils": "^2.4.11",
     "esbuild": "^0.28.1",
     "eslint": "^10.7.0",

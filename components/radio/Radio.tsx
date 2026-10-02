@@ -357,7 +357,7 @@ export const RadioGroup = defineComponent({
               const Component = props.optionType === 'button' ? RadioButton : Radio
               return (
                 <Component key={String(item.value)} value={item.value} disabled={item.disabled} id={item.id}>
-                  {item.label}
+                  {() => item.label}
                 </Component>
               )
             })}

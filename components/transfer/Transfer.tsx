@@ -311,7 +311,7 @@ export const Transfer = defineComponent({
             disabled={!rightActive.value || props.disabled}
             onClick={moveToRight}
           >
-            {actions.value[0]}
+            {() => actions.value[0]}
           </Button>
           {!props.oneWay && (
             <Button
@@ -321,7 +321,7 @@ export const Transfer = defineComponent({
               disabled={!leftActive.value || props.disabled}
               onClick={moveToLeft}
             >
-              {actions.value[1]}
+              {() => actions.value[1]}
             </Button>
           )}
         </div>

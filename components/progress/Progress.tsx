@@ -427,7 +427,7 @@ export const Progress = defineComponent({
       )
 
       if (smallCircle && indicator) {
-        return <Tooltip title={indicator}>{node}</Tooltip>
+        return <Tooltip title={indicator}>{() => node}</Tooltip>
       }
       return node
     }

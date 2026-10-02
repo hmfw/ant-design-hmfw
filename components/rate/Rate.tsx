@@ -257,9 +257,9 @@ export const Rate = defineComponent({
 
       // tooltips 支持 string 与 TooltipProps 两种形式
       if (typeof tooltipItem === 'string') {
-        return <Tooltip title={tooltipItem}>{starNode}</Tooltip>
+        return <Tooltip title={tooltipItem}>{() => starNode}</Tooltip>
       } else {
-        return <Tooltip {...tooltipItem}>{starNode}</Tooltip>
+        return <Tooltip {...tooltipItem}>{() => starNode}</Tooltip>
       }
     }
 

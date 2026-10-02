@@ -84,7 +84,7 @@ export const FloatButton = defineComponent({
             color={props.badge.color}
             offset={props.badge.offset}
           >
-            {body}
+            {() => body}
           </Badge>
         ) : (
           body

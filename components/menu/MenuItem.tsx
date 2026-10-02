@@ -116,7 +116,7 @@ export const MenuItem = defineComponent({
             mouseEnterDelay={0.5}
             {...(typeof context.tooltip === 'object' ? context.tooltip : {})}
           >
-            {menuItemContent}
+            {() => menuItemContent}
           </Tooltip>
         )
       }

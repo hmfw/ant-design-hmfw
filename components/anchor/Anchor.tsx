@@ -316,7 +316,7 @@ export const Anchor = defineComponent({
           target={item.target}
           targetOffset={item.targetOffset}
         >
-          {props.direction === 'vertical' && item.children?.length ? renderLinks(item.children) : null}
+          {() => (props.direction === 'vertical' && item.children?.length ? renderLinks(item.children) : null)}
         </AnchorLink>
       ))
     }

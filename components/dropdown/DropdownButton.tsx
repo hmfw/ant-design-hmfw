@@ -80,7 +80,7 @@ export const DropdownButton = defineComponent({
           disabled={props.disabled}
           classNames={{ root: `${prefixCls}-right` }}
         >
-          {iconNode}
+          {() => iconNode}
         </Button>
       )
 
@@ -107,7 +107,7 @@ export const DropdownButton = defineComponent({
             onUpdate:open={(v) => emit('update:open', v)}
             onOpenChange={(v, info) => emit('openChange', v, info)}
           >
-            {rightRendered}
+            {() => rightRendered}
           </Dropdown>
         </div>
       )

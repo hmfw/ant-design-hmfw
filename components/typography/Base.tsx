@@ -182,7 +182,7 @@ export function useCopyable(prefixCls: string) {
       return button
     }
 
-    return <Tooltip title={copied.value ? copiedText : copyText}>{button}</Tooltip>
+    return <Tooltip title={copied.value ? copiedText : copyText}>{() => button}</Tooltip>
   }
 
   return { renderCopy }

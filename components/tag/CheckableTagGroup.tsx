@@ -81,7 +81,7 @@ export const CheckableTagGroup = defineComponent({
             disabled={props.disabled || option.disabled}
             onChange={(checked: boolean) => handleChange(checked, option)}
           >
-            {option.label}
+            {() => option.label}
           </CheckableTag>
         ))}
       </div>

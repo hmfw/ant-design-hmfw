@@ -205,7 +205,7 @@ export default defineComponent({
                 supportMotion={props.collapsible?.motion && movingIndex.value === undefined}
                 destroyOnHidden={item.destroyOnHidden ?? props.destroyOnHidden}
               >
-                {children[idx]}
+                {() => children[idx]}
               </InternalPanel>
             )
 

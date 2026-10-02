@@ -55,7 +55,7 @@ export default defineComponent({
       )
 
       if (tooltipProps) {
-        return <Tooltip {...tooltipProps}>{node}</Tooltip>
+        return <Tooltip {...tooltipProps}>{() => node}</Tooltip>
       }
       return node
     }

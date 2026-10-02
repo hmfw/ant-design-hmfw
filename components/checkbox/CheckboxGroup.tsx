@@ -106,10 +106,9 @@ export const CheckboxGroup = defineComponent({
                   title={opt.title}
                   id={opt.id}
                   required={opt.required}
-                  v-slots={{
-                    default: () => opt.label,
-                  }}
-                />
+                >
+                  {() => opt.label}
+                </Checkbox>
               )
             })}
           </div>

@@ -45,7 +45,7 @@ export const FilterDropdown = defineComponent({
         return (
           <div key={String(filter.value)} class={`${props.prefixCls}-dropdown-menu-item`}>
             <Checkbox checked={checked} onChange={(e) => handleCheckChange(filter.value as Key, e.target.checked)}>
-              {filter.text}
+              {() => filter.text}
             </Checkbox>
           </div>
         )
@@ -57,10 +57,10 @@ export const FilterDropdown = defineComponent({
         <div class={`${props.prefixCls}-dropdown-menu`}>{renderFilterItems()}</div>
         <div class={`${props.prefixCls}-dropdown-btns`}>
           <Button size="small" onClick={handleReset}>
-            {props.locale.filterReset || '重置'}
+            {() => props.locale.filterReset || '重置'}
           </Button>
           <Button type="primary" size="small" onClick={handleConfirm}>
-            {props.locale.filterConfirm || '确定'}
+            {() => props.locale.filterConfirm || '确定'}
           </Button>
         </div>
       </div>

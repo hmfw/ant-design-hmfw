@@ -218,10 +218,11 @@ export default defineComponent({
                 column={columnIndex}
                 fresh={props.fresh}
                 onResize={props.fresh ? collectItemSize : undefined}
-                v-slots={{
+              >
+                {{
                   default: slots.default,
                 }}
-              />
+              </MasonryItem>
             )
           })}
         </div>
