@@ -74,8 +74,20 @@ export const Dropdown = defineComponent({
       if (!props.menu?.items) {
         return slots.overlay?.()
       }
+      // 剥离 Dropdown 专有回调（见 types.ts DropdownMenuConfig 注释）：这些回调不应随
+      // {...props.menu} 展开进 Vue prop 系统，否则会与下方显式 onClick 经 mergeProps 合并成
+      // 数组 [menu.onClick, handleMenuClick] 导致 menu.onClick 被触发两次。统一由此处显式接线。
+      const { onClick: _onClick, onSelect, onDeselect, onOpenChange, ...menuRest } = props.menu
       const menuNode = (
-        <Menu {...props.menu} mode="vertical" selectable={props.menu.selectable ?? false} onClick={handleMenuClick} />
+        <Menu
+          {...menuRest}
+          mode="vertical"
+          selectable={props.menu.selectable ?? false}
+          onClick={handleMenuClick}
+          onSelect={onSelect}
+          onDeselect={onDeselect}
+          onOpenChange={onOpenChange}
+        />
       )
       const renderFn = props.popupRender
       return renderFn ? renderFn(menuNode) : menuNode

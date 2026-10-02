@@ -10,6 +10,14 @@
 
 ## 最近版本
 
+## [0.52.1] - 2026-10-02
+
+[查看完整内容](./changelogs/v0.52.1.md)
+
+**🐛 问题修复**：
+
+- **Dropdown `menu.onClick` 单次点击触发两次**: `<Menu {...props.menu} onClick={...} />` 中用户 `onClick` 与显式 `onClick` 经 `mergeProps` 合并成监听器数组，叠加 `handleMenuClick` 内再次调用导致重复触发；现将 `onClick` / `onSelect` / `onDeselect` / `onOpenChange` 从展开中剥离，由 Dropdown 显式接线
+
 ## [0.52.0] - 2026-10-02
 
 [查看完整内容](./changelogs/v0.52.0.md)

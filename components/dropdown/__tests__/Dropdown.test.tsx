@@ -586,7 +586,9 @@ describe('Dropdown', () => {
     const firstItem = document.querySelector('.hmfw-menu-item') as HTMLElement
     firstItem?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await nextTick()
-    expect(onMenuClick).toHaveBeenCalled()
+    // 单次点击只应触发一次 onClick（防回归：曾因 {...menu} 展开的 onClick 与显式 onClick
+    // 经 mergeProps 合并成数组导致触发两次）
+    expect(onMenuClick).toHaveBeenCalledTimes(1)
     expect(onMenuClick.mock.calls[0][0]).toHaveProperty('key')
     wrapper.unmount()
   })

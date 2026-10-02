@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.51.2",
+  "version": "0.52.1",
   "description": "基于 Ant Design v6 的 Vue3 组件库 —— 71 个高质量组件，完整 TypeScript 支持",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -6099,6 +6099,20 @@
         },
         {
           "section": "Input Props",
+          "name": "addonBefore",
+          "description": "带标签的 input，设置前置标签（也可用同名插槽）",
+          "type": "`string | VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Input Props",
+          "name": "addonAfter",
+          "description": "带标签的 input，设置后置标签（也可用同名插槽）",
+          "type": "`string | VNode`",
+          "default": "-"
+        },
+        {
+          "section": "Input Props",
           "name": "status",
           "description": "设置校验状态",
           "type": "`'error' | 'warning'`",
@@ -6122,14 +6136,14 @@
           "section": "Input Props",
           "name": "classNames",
           "description": "语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
-          "type": "`{ affixWrapper?: string; prefix?: string; suffix?: string; input?: string; count?: string }`",
+          "type": "`{ affixWrapper?; prefix?; suffix?; input?; count?; groupWrapper?; addon?: string }`",
           "default": "-"
         },
         {
           "section": "Input Props",
           "name": "styles",
           "description": "语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style)",
-          "type": "`{ affixWrapper?: CSSProperties; prefix?: CSSProperties; suffix?: CSSProperties; input?: CSSProperties; count?: CSSProperties }`",
+          "type": "`{ affixWrapper?; prefix?; suffix?; input?; count?; groupWrapper?; addon?: CSSProperties }`",
           "default": "-"
         },
         {
@@ -6292,7 +6306,17 @@
         {
           "title": "前缀/后缀",
           "description": "在输入框上添加前缀或后缀图标。",
-          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Input v-model:value=\"value1\" placeholder=\"请输入用户名\" :prefix=\"UserOutlined\" />\n    <Input v-model:value=\"value2\" placeholder=\"请输入金额\" prefix=\"¥\" suffix=\"元\" />\n    <!-- addon-before/addon-after are deprecated, use Space.Compact instead -->\n    <Input v-model:value=\"value4\" placeholder=\"支持清除\" allow-clear />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Input } from '@hmfw/ant-design'\nimport { UserOutlined } from '@hmfw/icons'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value4 = ref('')\n</script>"
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Input v-model:value=\"value1\" placeholder=\"请输入用户名\" :prefix=\"UserOutlined\" />\n    <Input v-model:value=\"value2\" placeholder=\"请输入金额\" prefix=\"¥\" suffix=\"元\" />\n    <Input v-model:value=\"value4\" placeholder=\"支持清除\" allow-clear />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Input } from '@hmfw/ant-design'\nimport { UserOutlined } from '@hmfw/icons'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value4 = ref('')\n</script>"
+        },
+        {
+          "title": "前置/后置标签",
+          "description": "用 `addonBefore` / `addonAfter`（或同名插槽）在输入框前后添加标签，可放文本、图标，或 `Select` / `Button` 等组件。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 440px\">\n    <!-- 文本标签 -->\n    <Input v-model:value=\"value1\" addon-before=\"https://\" addon-after=\".com\" placeholder=\"请输入网址\" />\n\n    <!-- 单侧标签 -->\n    <Input v-model:value=\"value2\" addon-before=\"金额\" addon-after=\"元\" placeholder=\"请输入金额\" />\n\n    <!-- 图标标签 -->\n    <Input v-model:value=\"value3\" placeholder=\"请输入内容\">\n      <template #addonBefore>\n        <SettingOutlined />\n      </template>\n    </Input>\n\n    <!-- 配合 Select 作为前置标签 -->\n    <Input v-model:value=\"value4\" placeholder=\"请输入站点\">\n      <template #addonBefore>\n        <Select v-model:value=\"protocol\" :options=\"protocolOptions\" style=\"width: 90px\" />\n      </template>\n    </Input>\n\n    <!-- 与前后缀、尺寸组合 -->\n    <Input\n      v-model:value=\"value5\"\n      addon-before=\"用户\"\n      :prefix=\"UserOutlined\"\n      allow-clear\n      placeholder=\"大号 + 前缀 + 清除\"\n      size=\"large\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Input, Select } from '@hmfw/ant-design'\nimport { SettingOutlined, UserOutlined } from '@hmfw/icons'\n\nconst value1 = ref('')\nconst value2 = ref('')\nconst value3 = ref('')\nconst value4 = ref('')\nconst value5 = ref('')\nconst protocol = ref('https://')\nconst protocolOptions = [\n  { value: 'https://', label: 'https://' },\n  { value: 'http://', label: 'http://' },\n]\n</script>"
+        },
+        {
+          "title": "三种大小",
+          "description": "通过 `size` 设置大、中、小三种尺寸。",
+          "code": "<template>\n  <div style=\"display: flex; flex-direction: column; gap: 16px; max-width: 400px\">\n    <Input v-model:value=\"value\" size=\"large\" placeholder=\"大号 Large\" />\n    <Input v-model:value=\"value\" placeholder=\"默认 Middle\" />\n    <Input v-model:value=\"value\" size=\"small\" placeholder=\"小号 Small\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Input } from '@hmfw/ant-design'\n\nconst value = ref('')\n</script>"
         },
         {
           "title": "密码框",
