@@ -174,6 +174,69 @@ describe('Input', () => {
     await wrapper.find('input').trigger('blur')
     expect(wrapper.emitted('blur')).toBeTruthy()
   })
+
+  it('renders addonBefore / addonAfter as group addons', () => {
+    const wrapper = mount(Input, { props: { addonBefore: 'https://', addonAfter: '.com' } })
+    expect(wrapper.find('.hmfw-input-group-wrapper').exists()).toBe(true)
+    const addons = wrapper.findAll('.hmfw-input-group-addon')
+    expect(addons).toHaveLength(2)
+    expect(addons[0].text()).toBe('https://')
+    expect(addons[1].text()).toBe('.com')
+    // 标签模式下仍渲染原生 input
+    expect(wrapper.find('input').exists()).toBe(true)
+  })
+
+  it('renders a single addon without the other', () => {
+    const wrapper = mount(Input, { props: { addonBefore: '金额' } })
+    const addons = wrapper.findAll('.hmfw-input-group-addon')
+    expect(addons).toHaveLength(1)
+    expect(addons[0].text()).toBe('金额')
+  })
+
+  it('renders addon via slots', () => {
+    const wrapper = mount(Input, {
+      slots: { addonBefore: () => 'A', addonAfter: () => 'B' },
+    })
+    const addons = wrapper.findAll('.hmfw-input-group-addon')
+    expect(addons.map((a) => a.text())).toEqual(['A', 'B'])
+  })
+
+  it('wraps the affix-wrapper inside the group when both addon and prefix are set', () => {
+    const wrapper = mount(Input, { props: { addonBefore: 'Pre', prefix: '@' } })
+    const group = wrapper.find('.hmfw-input-group')
+    expect(group.exists()).toBe(true)
+    // affix-wrapper 作为 group 的直接子元素（核心元素）存在
+    const affix = wrapper.find('.hmfw-input-affix-wrapper')
+    expect(affix.exists()).toBe(true)
+    expect(affix.element.parentElement).toBe(group.element)
+    expect(wrapper.find('.hmfw-input-prefix').text()).toBe('@')
+  })
+
+  it('applies size / status / disabled modifiers on the group wrapper', () => {
+    const wrapper = mount(Input, {
+      props: { addonBefore: 'x', size: 'large', status: 'error', disabled: true },
+    })
+    const gw = wrapper.find('.hmfw-input-group-wrapper')
+    expect(gw.classes()).toContain('hmfw-input-group-wrapper-lg')
+    expect(gw.classes()).toContain('hmfw-input-group-wrapper-status-error')
+    expect(gw.classes()).toContain('hmfw-input-group-wrapper-disabled')
+  })
+
+  it('applies semantic classNames/styles on groupWrapper and addon', () => {
+    const wrapper = mount(Input, {
+      props: {
+        addonBefore: 'x',
+        classNames: { groupWrapper: 'gw-cls', addon: 'addon-cls' },
+        styles: { groupWrapper: { background: 'red' }, addon: { color: 'blue' } },
+      },
+    })
+    const gw = wrapper.find('.hmfw-input-group-wrapper')
+    expect(gw.classes()).toContain('gw-cls')
+    expect(gw.attributes('style')).toContain('background: red')
+    const addon = wrapper.find('.hmfw-input-group-addon')
+    expect(addon.classes()).toContain('addon-cls')
+    expect(addon.attributes('style')).toContain('color: blue')
+  })
 })
 
 describe('InputPassword', () => {
@@ -527,9 +590,11 @@ describe('InputSearch', () => {
     expect(wrapper.emitted('pressEnter')).toBeTruthy()
   })
 
-  it('renders enterButton as string on button', () => {
+  it('renders enterButton as string on a dedicated button', () => {
     const wrapper = mount(InputSearch, { props: { enterButton: '搜索' } })
-    expect(wrapper.find('.hmfw-input-search-button').text()).toBe('搜索')
+    expect(wrapper.find('.hmfw-input-search-with-button').exists()).toBe(true)
+    // Button 会在两个中文字之间自动插入空格（autoInsertSpace）
+    expect(wrapper.find('.hmfw-btn').text().replace(/\s/g, '')).toBe('搜索')
   })
 
   it('applies error status class to wrapper', () => {

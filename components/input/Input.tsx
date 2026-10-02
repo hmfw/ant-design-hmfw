@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, toRef, type PropType } from 'vue'
+import { defineComponent, ref, computed, toRef, type PropType, type VNode } from 'vue'
 import { usePrefixCls, useMergedDisabled } from '../config-provider'
 import { cls } from '../_utils/cls'
 import { CloseOutlined } from '@hmfw/icons'
@@ -38,6 +38,8 @@ const inputProps = {
   type: { type: String, default: 'text' },
   prefix: { type: [String, Object, Function] as PropType<InputAffix>, default: undefined },
   suffix: { type: [String, Object, Function] as PropType<InputAffix>, default: undefined },
+  addonBefore: { type: [String, Object] as PropType<string | VNode>, default: undefined },
+  addonAfter: { type: [String, Object] as PropType<string | VNode>, default: undefined },
   allowClear: { type: [Boolean, Object] as PropType<boolean | AllowClearConfig>, default: undefined },
   showCount: { type: [Boolean, Object] as PropType<boolean | ShowCountConfig>, default: undefined },
   // 语义化 API
@@ -107,7 +109,45 @@ export const Input = defineComponent({
         props.showCount,
     )
 
+    const hasAddon = computed(() => !!(slots.addonBefore || slots.addonAfter || props.addonBefore || props.addonAfter))
+
     return () => {
+      // 前/后置标签：将核心元素（input 或 affix-wrapper）包进 group 容器
+      const withAddon = (coreEl: VNode) => {
+        if (!hasAddon.value) return coreEl
+        const addonBeforeNode = slots.addonBefore?.() || props.addonBefore
+        const addonAfterNode = slots.addonAfter?.() || props.addonAfter
+        const groupWrapperCls = cls(
+          `${prefixCls}-group-wrapper`,
+          {
+            [`${prefixCls}-group-wrapper-lg`]: mergedSize.value === 'large',
+            [`${prefixCls}-group-wrapper-sm`]: mergedSize.value === 'small',
+            [`${prefixCls}-group-wrapper-status-error`]: props.status === 'error',
+            [`${prefixCls}-group-wrapper-status-warning`]: props.status === 'warning',
+            [`${prefixCls}-group-wrapper-disabled`]: mergedDisabled.value,
+          },
+          props.classNames?.groupWrapper,
+        )
+        const addonCls = cls(`${prefixCls}-group-addon`, props.classNames?.addon)
+        return (
+          <span class={groupWrapperCls} style={props.styles?.groupWrapper}>
+            <span class={`${prefixCls}-group`}>
+              {addonBeforeNode && (
+                <span class={addonCls} style={props.styles?.addon}>
+                  {addonBeforeNode}
+                </span>
+              )}
+              {coreEl}
+              {addonAfterNode && (
+                <span class={addonCls} style={props.styles?.addon}>
+                  {addonAfterNode}
+                </span>
+              )}
+            </span>
+          </span>
+        )
+      }
+
       const inputEl = (
         <input
           ref={inputRef}
@@ -128,7 +168,7 @@ export const Input = defineComponent({
         />
       )
 
-      if (!hasFix.value) return inputEl
+      if (!hasFix.value) return withAddon(inputEl)
 
       const clearIcon = allowClearConfig.value.clearIcon || <CloseOutlined />
       const clearBtn = props.allowClear && innerValue.value && !allowClearConfig.value.disabled && (
@@ -159,7 +199,7 @@ export const Input = defineComponent({
       const prefixNode = slots.prefix?.() || (props.prefix && renderAffix(props.prefix))
       const suffixNode = slots.suffix?.() || (props.suffix && renderAffix(props.suffix))
 
-      return (
+      return withAddon(
         <span class={cls(wrapperCls.value, props.classNames?.affixWrapper)} style={props.styles?.affixWrapper}>
           {prefixNode && (
             <span class={cls(`${prefixCls}-prefix`, props.classNames?.prefix)} style={props.styles?.prefix}>
@@ -174,7 +214,7 @@ export const Input = defineComponent({
             </span>
           )}
           {countNode}
-        </span>
+        </span>,
       )
     }
   },

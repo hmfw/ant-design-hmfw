@@ -10,6 +10,20 @@
 
 ## 最近版本
 
+## [0.52.0] - 2026-10-02
+
+[查看完整内容](./changelogs/v0.52.0.md)
+
+**✨ 新增功能**：
+
+- **Input `addonBefore` / `addonAfter`**: 新增前/后置标签（及同名插槽），可放文本、图标或嵌入 `Select` / `Button`，对齐 AntD input group 结构；语义化 API 新增 `groupWrapper` / `addon` 节点
+- **InputSearch / InputPassword 委托基础 Input**: 重构为封装基础 `Input`，天然继承 `prefix` / `suffix` / `allowClear` / `showCount` / `maxLength` / `classNames` / `styles`，消除重复实现
+
+**🐛 问题修复**：
+
+- **Search / Password 传 `prefix` 崩溃**: 根除 `TypeError: Cannot set property prefix of #<Element>`（委托基础 Input 后结构性消除）
+- **Select 作为 addon 左侧双边框**: Select 边框在根元素 `.hmfw-select` 上，补中和其边框 / 背景 / 阴影及 `:hover` / `.hmfw-select-open` 态
+
 ## [0.51.2] - 2026-10-02
 
 [查看完整内容](./changelogs/v0.51.2.md)

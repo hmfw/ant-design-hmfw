@@ -41,6 +41,10 @@ export interface InputClassNames {
   suffix?: string
   input?: string
   count?: string
+  /** 带前/后置标签时的最外层容器 */
+  groupWrapper?: string
+  /** 前/后置标签节点 */
+  addon?: string
 }
 
 /** Input 语义化样式 */
@@ -50,6 +54,10 @@ export interface InputStyles {
   suffix?: CSSProperties
   input?: CSSProperties
   count?: CSSProperties
+  /** 带前/后置标签时的最外层容器 */
+  groupWrapper?: CSSProperties
+  /** 前/后置标签节点 */
+  addon?: CSSProperties
 }
 
 /** TextArea 语义化类名 */
@@ -81,6 +89,10 @@ export interface InputProps {
   status?: InputStatus
   prefix?: InputAffix
   suffix?: InputAffix
+  /** 带标签的 input，设置前置标签 */
+  addonBefore?: string | VNode
+  /** 带标签的 input，设置后置标签 */
+  addonAfter?: string | VNode
   allowClear?: boolean | AllowClearConfig
   maxLength?: number
   showCount?: boolean | ShowCountConfig
@@ -120,9 +132,17 @@ export interface InputPasswordProps {
   status?: InputStatus
   maxLength?: number
   id?: string
+  /** 透传给基础 Input 的前缀 */
+  prefix?: InputAffix
+  /** 用户自定义后缀，渲染在「显隐切换图标」之前 */
+  suffix?: InputAffix
+  allowClear?: boolean | AllowClearConfig
+  showCount?: boolean | ShowCountConfig
   visibilityToggle?: boolean | VisibilityToggleConfig
   iconRender?: (visible: boolean) => VNode | string
   action?: 'click' | 'hover'
+  classNames?: InputClassNames
+  styles?: InputStyles
 }
 
 export interface InputSearchProps {
@@ -134,8 +154,17 @@ export interface InputSearchProps {
   readOnly?: boolean
   size?: InputSize
   status?: InputStatus
+  maxLength?: number
   loading?: boolean
   enterButton?: boolean | string
   searchIcon?: InputAffix
   id?: string
+  /** 透传给基础 Input 的前缀 */
+  prefix?: InputAffix
+  /** 用户自定义后缀（无 enterButton 时渲染在搜索图标之前） */
+  suffix?: InputAffix
+  allowClear?: boolean | AllowClearConfig
+  showCount?: boolean | ShowCountConfig
+  classNames?: InputClassNames
+  styles?: InputStyles
 }

@@ -25,6 +25,22 @@
   <InputAddon />
 </DemoBlock>
 
+### 前置/后置标签
+
+用 `addonBefore` / `addonAfter`（或同名插槽）在输入框前后添加标签，可放文本、图标，或 `Select` / `Button` 等组件。
+
+<DemoBlock title="前置/后置标签" :source="InputGroupSource">
+  <InputGroup />
+</DemoBlock>
+
+### 三种大小
+
+通过 `size` 设置大、中、小三种尺寸。
+
+<DemoBlock title="三种大小" :source="InputSizeSource">
+  <InputSize />
+</DemoBlock>
+
 ### 密码框
 
 密码输入框，可切换密码可见性。
@@ -77,23 +93,25 @@ error / warning 状态的输入框。
 
 ### Input Props
 
-| 参数           | 说明                                                                             | 类型                                                                                                                             | 默认值     |
-| -------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| value(v-model) | 输入框内容（受控值，传入后转为受控模式）                                         | `string`                                                                                                                         | -          |
-| defaultValue   | 非受控模式下的初始值（未传 `value` 时生效）                                      | `string`                                                                                                                         | -          |
-| placeholder    | 输入框占位文本                                                                   | `string`                                                                                                                         | -          |
-| disabled       | 是否禁用状态                                                                     | `boolean`                                                                                                                        | `false`    |
-| size           | 控件大小                                                                         | `'small' \| 'middle' \| 'large'`                                                                                                 | `'middle'` |
-| maxlength      | 最大长度                                                                         | `number`                                                                                                                         | -          |
-| showCount      | 是否展示字数，支持自定义格式化                                                   | `boolean \| { formatter: (info) => VNode \| string }`                                                                            | `false`    |
-| allowClear     | 可以点击清除图标删除内容，支持自定义清除图标                                     | `boolean \| { clearIcon?: VNode; disabled?: boolean }`                                                                           | `false`    |
-| prefix         | 带有前缀图标的 input                                                             | `string \| VNode`                                                                                                                | -          |
-| suffix         | 带有后缀图标的 input                                                             | `string \| VNode`                                                                                                                | -          |
-| status         | 设置校验状态                                                                     | `'error' \| 'warning'`                                                                                                           | -          |
-| readonly       | 是否只读                                                                         | `boolean`                                                                                                                        | `false`    |
-| id             | 输入框的 id                                                                      | `string`                                                                                                                         | -          |
-| classNames     | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ affixWrapper?: string; prefix?: string; suffix?: string; input?: string; count?: string }`                                    | -          |
-| styles         | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ affixWrapper?: CSSProperties; prefix?: CSSProperties; suffix?: CSSProperties; input?: CSSProperties; count?: CSSProperties }` | -          |
+| 参数           | 说明                                                                             | 类型                                                                                        | 默认值     |
+| -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------- |
+| value(v-model) | 输入框内容（受控值，传入后转为受控模式）                                         | `string`                                                                                    | -          |
+| defaultValue   | 非受控模式下的初始值（未传 `value` 时生效）                                      | `string`                                                                                    | -          |
+| placeholder    | 输入框占位文本                                                                   | `string`                                                                                    | -          |
+| disabled       | 是否禁用状态                                                                     | `boolean`                                                                                   | `false`    |
+| size           | 控件大小                                                                         | `'small' \| 'middle' \| 'large'`                                                            | `'middle'` |
+| maxlength      | 最大长度                                                                         | `number`                                                                                    | -          |
+| showCount      | 是否展示字数，支持自定义格式化                                                   | `boolean \| { formatter: (info) => VNode \| string }`                                       | `false`    |
+| allowClear     | 可以点击清除图标删除内容，支持自定义清除图标                                     | `boolean \| { clearIcon?: VNode; disabled?: boolean }`                                      | `false`    |
+| prefix         | 带有前缀图标的 input                                                             | `string \| VNode`                                                                           | -          |
+| suffix         | 带有后缀图标的 input                                                             | `string \| VNode`                                                                           | -          |
+| addonBefore    | 带标签的 input，设置前置标签（也可用同名插槽）                                   | `string \| VNode`                                                                           | -          |
+| addonAfter     | 带标签的 input，设置后置标签（也可用同名插槽）                                   | `string \| VNode`                                                                           | -          |
+| status         | 设置校验状态                                                                     | `'error' \| 'warning'`                                                                      | -          |
+| readonly       | 是否只读                                                                         | `boolean`                                                                                   | `false`    |
+| id             | 输入框的 id                                                                      | `string`                                                                                    | -          |
+| classNames     | 语义化结构 class，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ affixWrapper?; prefix?; suffix?; input?; count?; groupWrapper?; addon?: string }`        | -          |
+| styles         | 语义化结构 style，见下方 [语义化 className 与 style](#语义化-classname-与-style) | `{ affixWrapper?; prefix?; suffix?; input?; count?; groupWrapper?; addon?: CSSProperties }` | -          |
 
 ### InputPassword Props
 
@@ -211,6 +229,8 @@ interface InputClassNames {
   suffix?: string // 后缀容器
   input?: string // 输入框元素本身
   count?: string // 字数统计容器
+  groupWrapper?: string // 带前/后置标签时的最外层容器
+  addon?: string // 前/后置标签节点
 }
 
 interface InputStyles {
@@ -219,6 +239,8 @@ interface InputStyles {
   suffix?: CSSProperties // 后缀容器
   input?: CSSProperties // 输入框元素本身
   count?: CSSProperties // 字数统计容器
+  groupWrapper?: CSSProperties // 带前/后置标签时的最外层容器
+  addon?: CSSProperties // 前/后置标签节点
 }
 ```
 
@@ -280,6 +302,25 @@ interface TextAreaStyles {
   <span class="hmfw-input-show-count-suffix">
     <!-- ↑ classNames.count / styles.count -->
     10 / 100
+  </span>
+</span>
+```
+
+**Input - 前置/后置标签（addonBefore / addonAfter）**
+
+```html
+<span class="hmfw-input-group-wrapper">
+  <!-- ↑ classNames.groupWrapper / styles.groupWrapper -->
+  <span class="hmfw-input-group">
+    <span class="hmfw-input-group-addon">
+      <!-- ↑ classNames.addon / styles.addon（前置标签） -->
+      https://
+    </span>
+    <input class="hmfw-input" />
+    <span class="hmfw-input-group-addon">
+      <!-- ↑ classNames.addon / styles.addon（后置标签） -->
+      .com
+    </span>
   </span>
 </span>
 ```

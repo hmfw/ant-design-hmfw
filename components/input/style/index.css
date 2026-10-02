@@ -211,6 +211,8 @@
 
 /* Search suffix（复用 .hmfw-input-suffix 布局，仅补充点击态） */
 .hmfw-input-search-button {
+  display: flex;
+  align-items: center;
   cursor: pointer;
   color: var(--hmfw-color-text-secondary);
   transition: color 0.2s;
@@ -229,6 +231,35 @@
   color: var(--hmfw-color-text-disabled);
 }
 
+/* Search 按钮模式：Input + 尾随 Button 分组 */
+.hmfw-input-search-with-button {
+  display: inline-flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+.hmfw-input-search-with-button > .hmfw-input,
+.hmfw-input-search-with-button > .hmfw-input-affix-wrapper {
+  flex: 1;
+  min-width: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.hmfw-input-search-with-button .hmfw-btn {
+  flex-shrink: 0;
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* 合并边框处：hover/focus 时抬升层级，保证高亮边框不被相邻元素遮挡 */
+.hmfw-input-search-with-button > .hmfw-input:focus,
+.hmfw-input-search-with-button > .hmfw-input-affix-wrapper:focus-within,
+.hmfw-input-search-with-button .hmfw-btn:hover {
+  z-index: 1;
+}
+
 /* Password */
 .hmfw-input-password .hmfw-input-suffix {
   cursor: pointer;
@@ -241,3 +272,115 @@
 }
 
 /* Loading icon 使用 @hmfw/icons 原生的 spin 属性 */
+
+/* ── Group：addonBefore / addonAfter（前/后置标签）────────────────────── */
+.hmfw-input-group-wrapper {
+  display: inline-block;
+  width: 100%;
+  text-align: start;
+  vertical-align: top;
+}
+
+.hmfw-input-group {
+  display: inline-flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+.hmfw-input-group > .hmfw-input,
+.hmfw-input-group > .hmfw-input-affix-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 标签单元 */
+.hmfw-input-group-addon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 var(--hmfw-padding-sm);
+  color: var(--hmfw-color-text);
+  font-size: var(--hmfw-font-size-base);
+  white-space: nowrap;
+  background: var(--hmfw-color-fill-tertiary);
+  border: 1px solid var(--hmfw-color-border);
+  border-radius: var(--hmfw-border-radius);
+  transition: all 0.2s;
+}
+
+/* addon 内嵌的 Select/Button 等去掉自身边框与背景，交由标签单元统一呈现 */
+.hmfw-input-group-addon .hmfw-select,
+.hmfw-input-group-addon .hmfw-btn {
+  margin: 0 calc(-1 * var(--hmfw-padding-sm));
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Select 的边框/高亮都在根元素上，hover/open 态同样中和，避免与标签单元叠出双边框 */
+.hmfw-input-group-addon .hmfw-select:hover,
+.hmfw-input-group-addon .hmfw-select.hmfw-select-open,
+.hmfw-input-group-addon .hmfw-select .hmfw-select-selector:hover {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* 尺寸：标签字号/圆角随 group 尺寸变化（高度由内部 Input 的 -lg/-sm 决定） */
+.hmfw-input-group-wrapper-lg .hmfw-input-group-addon {
+  font-size: var(--hmfw-font-size-lg);
+  border-radius: var(--hmfw-border-radius-lg);
+}
+
+.hmfw-input-group-wrapper-sm .hmfw-input-group-addon {
+  padding: 0 var(--hmfw-padding-xs);
+  border-radius: var(--hmfw-border-radius-sm);
+}
+
+/* 圆角合并 + 边框叠放：相邻处取消圆角，核心元素左移 1px 与标签共用边框 */
+.hmfw-input-group-addon:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.hmfw-input-group-addon:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.hmfw-input-group-addon:not(:first-child) {
+  margin-left: -1px;
+}
+
+.hmfw-input-group > .hmfw-input:not(:first-child),
+.hmfw-input-group > .hmfw-input-affix-wrapper:not(:first-child) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.hmfw-input-group > .hmfw-input:not(:last-child),
+.hmfw-input-group > .hmfw-input-affix-wrapper:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* hover/focus 抬升层级，保证高亮边框不被相邻标签遮挡 */
+.hmfw-input-group > .hmfw-input:focus,
+.hmfw-input-group > .hmfw-input-affix-wrapper:focus-within {
+  z-index: 1;
+}
+
+/* 校验状态：标签边框跟随 */
+.hmfw-input-group-wrapper-status-error .hmfw-input-group-addon {
+  border-color: var(--hmfw-color-error);
+}
+
+.hmfw-input-group-wrapper-status-warning .hmfw-input-group-addon {
+  border-color: var(--hmfw-color-warning);
+}
+
+/* 禁用态 */
+.hmfw-input-group-wrapper-disabled .hmfw-input-group-addon {
+  color: var(--hmfw-color-text-disabled);
+  background: var(--hmfw-color-bg-container-disabled);
+}
