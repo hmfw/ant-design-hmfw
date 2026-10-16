@@ -64,8 +64,8 @@ test.describe('Cascader', () => {
     await dropdown.locator('.hmfw-cascader-menu-item', { hasText: '杭州' }).click()
     await dropdown.locator('.hmfw-cascader-menu-item', { hasText: '西湖区' }).click()
     await expect(selector).toContainText('西湖区')
-    // 清除按钮出现并点击
-    const clear = page.locator('.hmfw-cascader-clear').first()
+    // 清除按钮出现并点击（Cascader 复用 Select 的类名，见 Cascader.tsx 的 selectPfx）
+    const clear = page.locator('.hmfw-select-clear').first()
     await expect(clear).toBeVisible()
     await clear.click()
     // 恢复占位文本

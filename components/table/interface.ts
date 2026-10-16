@@ -68,9 +68,12 @@ export interface TableColumn<T = any> {
   fixed?: 'left' | 'right'
 
   // Sorter
-  sorter?: boolean | CompareFn<T>
+  sorter?: boolean | CompareFn<T> | { compare?: CompareFn<T>; multiple?: number }
+  /** 排序的受控属性：设置后该列的排序状态完全由它决定 */
   sortOrder?: SortOrder
+  /** 默认排序状态（仅在首次渲染生效） */
   defaultSortOrder?: SortOrder
+  /** 支持的排序方向序列，点击时按此序列循环，默认 ['ascend', 'descend', null] */
   sortDirections?: SortOrder[]
   showSorterTooltip?: boolean
 
@@ -88,9 +91,16 @@ export interface TableColumn<T = any> {
   ellipsis?: boolean
 
   // Cell
+  /** 表头横向合并列数（设置为 0 时该表头不渲染）；数据单元格的合并请使用 onCell */
   colSpan?: number
-  rowSpan?: number
   className?: string
+  /**
+   * 设置数据单元格属性（动态合并/自定义单元格）：
+   * 返回 `{ colSpan?, rowSpan?, className?, style?, ...事件 }`，`colSpan` 或 `rowSpan` 为 0 时不渲染该单元格
+   */
+  onCell?: (record: T, index: number) => Record<string, any>
+  /** 设置表头单元格属性（如表头合并 colSpan） */
+  onHeaderCell?: (column: TableColumn<T>) => Record<string, any>
 
   // Responsive
   responsive?: string[]

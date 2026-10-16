@@ -4,12 +4,25 @@
  * Trigger 是内部原语，通过消费组件（Select、Tooltip、Dropdown、DatePicker）间接验证。
  * 覆盖 jsdom 无法模拟的场景：真实视口定位、焦点管理、翻转、宽度匹配、多实例等。
  */
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
 const SELECT_URL = '/components/select'
 const TOOLTIP_URL = '/components/tooltip'
 const DROPDOWN_URL = '/components/dropdown'
 const DATEPICKER_URL = '/components/date-picker'
+
+/**
+ * Select 下拉弹层（只匹配 Select 自身）。
+ *
+ * 不要写 `.hmfw-trigger-popup:not(.hmfw-dropdown-hidden)`：Trigger 的隐藏态 class
+ * 由消费组件决定（Select 未自定义，用默认的 `hmfw-trigger-popup-hidden`），而文档站
+ * 导航栏的主题 Dropdown、页面底部「语义化 API」的 Popover 同样会把弹层 teleport 到
+ * body 并常驻 DOM（更靠前），裸选择器会命中这些隐藏弹层，断言必然失败。
+ */
+const selectDropdown = (page: Page) => page.locator('.hmfw-select-dropdown')
+
+/** DatePicker 弹层（popupClass = hmfw-date-picker-popup）。 */
+const datePickerPopup = (page: Page) => page.locator('.hmfw-date-picker-popup')
 
 // ====================================================================
 // 场景 1：弹层定位不溢出视口
@@ -29,7 +42,7 @@ test.describe('弹层定位与视口边界', () => {
     await page.waitForTimeout(300)
 
     // 获取弹层坐标 — 等待弹层出现且不带 hidden 类
-    const popup = page.locator('.hmfw-trigger-popup:not(.hmfw-dropdown-hidden)').first()
+    const popup = selectDropdown(page).first()
     await expect(popup).toBeVisible({ timeout: 5000 })
 
     const popupBox = await popup.boundingBox()
@@ -50,7 +63,7 @@ test.describe('弹层定位与视口边界', () => {
     await select.click()
     await page.waitForTimeout(300)
 
-    const popup = page.locator('.hmfw-trigger-popup:not(.hmfw-dropdown-hidden)').first()
+    const popup = selectDropdown(page).first()
     await expect(popup).toBeVisible({ timeout: 5000 })
 
     const popupBox = await popup.boundingBox()
@@ -147,10 +160,7 @@ test.describe('焦点管理', () => {
     await searchSelect.click()
     await page.waitForTimeout(300)
 
-    // 必须限定为 Select 的下拉且排除隐藏态：文档站导航栏的主题 Dropdown 也会
-    // 把弹层 teleport 到 body 且位于 DOM 更靠前的位置，裸用 .first() 会命中它
-    // （那个弹层始终 hidden，断言必然失败）。
-    const popup = page.locator('.hmfw-select-dropdown:not(.hmfw-dropdown-hidden)').first()
+    const popup = selectDropdown(page).first()
     await expect(popup).toBeVisible({ timeout: 5000 })
 
     // 输入搜索关键词 — 焦点在 input 中，弹层应保持打开
@@ -174,7 +184,7 @@ test.describe('焦点管理', () => {
     await select.click()
     await page.waitForTimeout(300)
 
-    const popup = page.locator('.hmfw-trigger-popup:not(.hmfw-dropdown-hidden)').first()
+    const popup = selectDropdown(page).first()
     await expect(popup).toBeVisible({ timeout: 5000 })
 
     await page.keyboard.press('Escape')
@@ -190,7 +200,7 @@ test.describe('焦点管理', () => {
     await select.click()
     await page.waitForTimeout(300)
 
-    const popup = page.locator('.hmfw-trigger-popup:not(.hmfw-dropdown-hidden)').first()
+    const popup = selectDropdown(page).first()
     await expect(popup).toBeVisible({ timeout: 5000 })
 
     // 点击 h1 标题区域（弹层外部）
@@ -216,7 +226,7 @@ test.describe('matchWidth 宽度同步', () => {
     await select.click()
     await page.waitForTimeout(300)
 
-    const popup = page.locator('.hmfw-trigger-popup:not(.hmfw-dropdown-hidden)').first()
+    const popup = selectDropdown(page).first()
     await expect(popup).toBeVisible({ timeout: 5000 })
     const popupBox = await popup.boundingBox()
 
@@ -313,10 +323,8 @@ test.describe('多实例', () => {
       await page.waitForTimeout(300)
 
       // Select 使用 destroyOnHidden，关闭时 popup 被移除；
-      // 验证：至少有一次 popup 渲染成功（不管用哪个选择器）
-      const anyPopup = page.locator(
-        '[class*="hmfw-trigger-popup"]:not(.hmfw-dropdown-hidden):not(.hmfw-trigger-popup-hidden):not(.hmfw-tooltip-hidden)',
-      )
+      // 验证：至少有一次 popup 渲染成功
+      const anyPopup = selectDropdown(page)
       const popupExists = await anyPopup.count()
       // 如果 popup 不存在，仍然继续（可能因为某些 Select 配置不同）
       if (popupExists > 0) {
@@ -370,11 +378,7 @@ test.describe('DatePicker 触发', () => {
     await picker.click()
     await page.waitForTimeout(500)
 
-    const popup = page
-      .locator(
-        '.hmfw-trigger-popup:not(.hmfw-dropdown-hidden):not(.hmfw-trigger-popup-hidden):not(.hmfw-tooltip-hidden)',
-      )
-      .first()
+    const popup = datePickerPopup(page).first()
     await expect(popup).toBeVisible({ timeout: 5000 })
 
     // Escape 关闭

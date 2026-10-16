@@ -1,6 +1,16 @@
 <template>
   <Table :data-source="dataSource" :columns="columns" row-key="key" :row-selection="rowSelection" />
   <p>已选择：{{ selectedKeys.join(', ') }}</p>
+
+  <div style="height: 16px"></div>
+
+  <Table :data-source="dataSource" :columns="columns" row-key="key" :row-selection="rowSelectionCustom" />
+  <p>默认选中第 1 行、隐藏表头全选框、自定义列表头：{{ selectedKeysCustom.join(', ') }}</p>
+
+  <div style="height: 16px"></div>
+
+  <Table :data-source="dataSource" :columns="columns" row-key="key" :row-selection="rowSelectionRadio" />
+  <p>单选：{{ selectedKeysRadio.join(', ') }}</p>
 </template>
 
 <script setup lang="ts">
@@ -13,6 +23,29 @@ const rowSelection = {
   selectedRowKeys: selectedKeys,
   onChange: (keys: string[]) => {
     selectedKeys.value = keys
+  },
+}
+
+// defaultSelectedRowKeys 默认选中、hideSelectAll 隐藏全选框、columnTitle 自定义列表头
+const selectedKeysCustom = ref<string[]>(['1'])
+
+const rowSelectionCustom = {
+  defaultSelectedRowKeys: ['1'],
+  hideSelectAll: true,
+  columnTitle: '选择',
+  onChange: (keys: string[]) => {
+    selectedKeysCustom.value = keys
+  },
+}
+
+// 单选（radio）：同一时间只能选中一行
+const selectedKeysRadio = ref<string[]>([])
+
+const rowSelectionRadio = {
+  type: 'radio' as const,
+  selectedRowKeys: selectedKeysRadio,
+  onChange: (keys: string[]) => {
+    selectedKeysRadio.value = keys
   },
 }
 

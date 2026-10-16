@@ -2,7 +2,7 @@
 
 > 基于 Ant Design v6 的 Vue3 UI 组件库，TypeScript + TSX 实现。
 
-版本 0.52.1。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
+版本 0.53.0。安装 `pnpm add @hmfw/ant-design`，样式 `import '@hmfw/ant-design/style.css'`。
 
 
 ---
@@ -6658,13 +6658,13 @@ import { Table } from '@hmfw/ant-design'
 | size | 表格大小 | `'default' \| 'middle' \| 'small'` | `'default'` |
 | bordered | 是否展示外边框和列边框 | `boolean` | `false` |
 | showHeader | 是否显示表头 | `boolean` | `true` |
-| sticky | 设置粘性头部和滚动条 | `boolean \| { offsetHeader?: number, offsetScroll?: number }` | `false` |
+| sticky | 设置粘性表头与吸底横向滚动条；`getContainer` 指定判断基准的滚动容器（默认 window） | `boolean \| { offsetHeader?: number, offsetScroll?: number, getContainer?: () => HTMLElement }` | `false` |
 | scroll | 表格是否可滚动 | `{ x?: number \| string, y?: number \| string }` | - |
 | summary | 总结栏 | `(pageData: any[]) => VNode` | - |
 | title | 表格标题 | `string \| ((data: any[]) => VNode)` | - |
 | footer | 表格页脚 | `string \| ((data: any[]) => VNode)` | - |
 | rowClassName | 表格行的类名 | `string \| ((record: any, index: number) => string)` | - |
-| locale | 国际化配置 | `{ emptyText?: string }` | - |
+| locale | 组件级语言包，覆盖全局 Table 命名空间文案（含 `emptyText`/`filterTitle`/`expand` 等） | `TableLocale` | - |
 | onChange | 分页、排序、筛选变化时触发 | `(pagination, filters, sorter, extra) => void` | - |
 | onRow | 设置行属性 | `(record, index) => object` | - |
 | onHeaderRow | 设置表头行属性 | `(columns, index) => object` | - |
@@ -6682,12 +6682,22 @@ import { Table } from '@hmfw/ant-design'
 | align | 设置列的对齐方式 | `'left' \| 'center' \| 'right'` | `'left'` |
 | fixed | 列是否固定（左侧/右侧） | `'left' \| 'right'` | - |
 | ellipsis | 超过宽度将自动省略 | `boolean` | `false` |
-| sorter | 排序函数，支持多列排序 | `CompareFn \| { compare: CompareFn, multiple: number }` | - |
-| sortOrder | 排序的受控属性 | `'ascend' \| 'descend' \| null` | - |
+| className | 列单元格的自定义类名 | `string` | - |
+| colSpan | 表头横向合并列数，为 `0` 时该表头不渲染；数据单元格合并请用 `onCell` | `number` | - |
+| onCell | 设置数据单元格属性（动态合并/自定义），返回 `{ colSpan?, rowSpan?, className?, style?, ...事件 }`，span 为 `0` 时不渲染该单元格 | `(record, index) => object` | - |
+| onHeaderCell | 设置表头单元格属性（如表头合并 `colSpan`） | `(column) => object` | - |
+| sorter | 排序函数；对象形式支持 `multiple` 声明多列排序优先级 | `boolean \| CompareFn \| { compare?: CompareFn, multiple?: number }` | - |
+| sortOrder | 排序的受控属性，设置后该列排序状态完全由它决定 | `'ascend' \| 'descend' \| null` | - |
+| defaultSortOrder | 默认排序状态（仅在首次渲染生效） | `'ascend' \| 'descend' \| null` | - |
+| sortDirections | 支持的排序方向序列，点击按此循环 | `SortOrder[]` | `['ascend', 'descend', null]` |
+| showSorterTooltip | 是否展示表头排序提示（以原生 title 呈现） | `boolean` | `true` |
 | filters | 表头的筛选菜单项 | `ColumnFilterItem[]` | - |
-| filteredValue | 筛选的受控属性 | `FilterValue` | - |
+| filteredValue | 筛选的受控属性（优先级高于 defaultFilteredValue） | `FilterValue` | - |
+| defaultFilteredValue | 默认筛选值（仅在首次渲染生效） | `FilterValue` | - |
 | onFilter | 筛选函数 | `(value: any, record: any) => boolean` | - |
 | filterMultiple | 是否多选 | `boolean` | `true` |
+| filterDropdown | 自定义筛选面板（函数形式提供 setSelectedKeys/confirm/clearFilters） | `VNode \| ((props) => VNode)` | - |
+| filterIcon | 自定义筛选图标 | `VNode \| ((filtered: boolean) => VNode)` | - |
 | responsive | 响应式断点 | `('xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl')[]` | - |
 | render | 自定义渲染函数 | `(text: any, record: any, index: number) => any` | - |
 
@@ -6696,11 +6706,18 @@ import { Table } from '@hmfw/ant-design'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | type | 选择框类型 | `'checkbox' \| 'radio'` | `'checkbox'` |
-| selectedRowKeys | 指定选中项的 key 数组 | `Key[]` | - |
+| selectedRowKeys | 指定选中项的 key 数组（受控） | `Key[]` | - |
+| defaultSelectedRowKeys | 默认选中项的 key 数组 | `Key[]` | - |
 | onChange | 选中项发生变化时的回调 | `(keys: Key[], rows: any[], info: { type: string }) => void` | - |
 | onSelect | 用户手动选择/取消选择某行的回调 | `(record, selected, selectedRows, nativeEvent) => void` | - |
 | onSelectAll | 用户手动选择/取消选择所有行的回调 | `(selected, selectedRows, changeRows) => void` | - |
 | getCheckboxProps | 选择框的默认属性配置 | `(record) => object` | - |
+| columnWidth | 选择列宽度 | `string \| number` | - |
+| columnTitle | 自定义选择列表头（替代全选框） | `string \| VNode` | - |
+| fixed | 将选择列固定在左侧 | `boolean` | - |
+| hideSelectAll | 隐藏表头全选框 | `boolean` | `false` |
+| preserveSelectedRowKeys | 行移出 dataSource 后仍保留其选中状态 | `boolean` | `false` |
+| checkStrictly | 树形数据下关闭父子选择联动（`false` 时勾选父节点联动后代） | `boolean` | `false` |
 
 **ExpandableConfig**
 
@@ -6709,6 +6726,13 @@ import { Table } from '@hmfw/ant-design'
 | expandedRowRender | 额外的展开行内容 | `(record, index, indent, expanded) => VNode` | - |
 | expandedRowKeys | 展开的行，受控属性 | `Key[]` | - |
 | defaultExpandedRowKeys | 默认展开的行 | `Key[]` | - |
+| defaultExpandAllRows | 初始时是否展开所有行 | `boolean` | `false` |
+| childrenColumnName | 树形数据中子节点字段名 | `string` | `'children'` |
+| indentSize | 树形数据每一层级的缩进宽度（px） | `number` | `15` |
+| rowExpandable | 控制某行是否可展开（树形数据下为是否可展开子级） | `(record) => boolean` | - |
+| expandRowByClick | 点击整行时触发展开 | `boolean` | `false` |
+| expandIconColumnIndex | 展开图标在最终列序中的位置（含选择列，默认 0；树形数据下为图标内嵌的数据列，默认紧随选择列） | `number` | `0` |
+| expandIcon | 自定义展开图标 | `(props: { expanded, record, onExpand }) => VNode` | - |
 | onExpand | 点击展开图标时触发 | `(expanded, record) => void` | - |
 | onExpandedRowsChange | 展开的行变化时触发 | `(expandedKeys: Key[]) => void` | - |
 
@@ -6717,13 +6741,21 @@ import { Table } from '@hmfw/ant-design'
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | current | 当前页数 | `number` | - |
+| defaultCurrent | 默认当前页数 | `number` | `1` |
 | pageSize | 每页条数 | `number` | `10` |
+| defaultPageSize | 默认每页条数 | `number` | `10` |
 | total | 数据总数 | `number` | - |
 | showQuickJumper | 是否可以快速跳转至某页 | `boolean` | `false` |
 | showSizeChanger | 是否展示 pageSize 切换器 | `boolean` | `false` |
 | showTotal | 用于显示数据总量和当前数据顺序 | `(total, range) => string` | - |
 | pageSizeOptions | 指定每页可以显示多少条 | `number[]` | `[10, 20, 50, 100]` |
+| size | 分页器大小 | `'small' \| 'middle' \| 'large'` | - |
+| simple | 简洁模式 | `boolean` | `false` |
+| disabled | 禁用分页 | `boolean` | `false` |
+| hideOnSinglePage | 只有一页时隐藏分页 | `boolean` | `false` |
+| position | 分页位置，首项决定上下与水平对齐 | `('topLeft' \| 'topCenter' \| 'topRight' \| 'bottomLeft' \| 'bottomCenter' \| 'bottomRight')[]` | `['bottomRight']` |
 | onChange | 页码或 pageSize 改变的回调 | `(page, pageSize) => void` | - |
+| onShowSizeChange | pageSize 变化时的回调 | `(page, pageSize) => void` | - |
 
 ### 示例
 

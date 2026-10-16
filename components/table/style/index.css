@@ -225,6 +225,34 @@
   background: var(--hmfw-color-fill-quaternary);
 }
 
+/* Tree data（嵌套 children）：首列缩进 + 内嵌展开图标 */
+.hmfw-table-cell-tree {
+  display: flex;
+  align-items: center;
+}
+
+.hmfw-table-row-indent {
+  display: inline-block;
+  flex: none;
+  height: 1px;
+}
+
+.hmfw-table-row-expand-icon-wrap,
+.hmfw-table-row-expand-icon-spacer {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  margin-right: 8px;
+}
+
+.hmfw-table-cell-content {
+  flex: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Expanded row animation */
 .hmfw-table-expanded-row-enter-active {
   animation: hmfwExpandIn 0.3s ease-out;
@@ -279,6 +307,14 @@
   justify-content: flex-end;
 }
 
+.hmfw-table-pagination-left {
+  justify-content: flex-start;
+}
+
+.hmfw-table-pagination-center {
+  justify-content: center;
+}
+
 /* Scroll */
 .hmfw-table-content {
   overflow: auto;
@@ -296,11 +332,13 @@
   background: var(--hmfw-color-bg-container);
 }
 
-/* 表头固定列层级更高，且沿用表头底色 */
+/* 表头固定列层级更高；半透明填充色叠加在不透明底色上，避免滚动内容透出 */
 .hmfw-table-thead > tr > th.hmfw-table-cell-fix-left,
 .hmfw-table-thead > tr > th.hmfw-table-cell-fix-right {
   z-index: 3;
-  background: var(--hmfw-color-fill-quaternary);
+  background:
+    linear-gradient(var(--hmfw-color-fill-quaternary), var(--hmfw-color-fill-quaternary)),
+    var(--hmfw-color-bg-container);
 }
 
 .hmfw-table-cell-fix-left {
@@ -311,10 +349,12 @@
   right: 0;
 }
 
-/* hover / 选中态时，固定列背景需同步，避免露出白底 */
+/* hover 态：填充色同样需叠加在底色上，避免露出下层内容 */
 .hmfw-table-tbody > tr:hover > td.hmfw-table-cell-fix-left,
 .hmfw-table-tbody > tr:hover > td.hmfw-table-cell-fix-right {
-  background: var(--hmfw-color-fill-quaternary);
+  background:
+    linear-gradient(var(--hmfw-color-fill-quaternary), var(--hmfw-color-fill-quaternary)),
+    var(--hmfw-color-bg-container);
 }
 
 .hmfw-table-row-selected > td.hmfw-table-cell-fix-left,
@@ -360,8 +400,58 @@
   background: var(--hmfw-color-bg-container);
 }
 
+/* 吸顶表头：表头与表体拆分为两个 table，表头独立吸顶（表体在横向滚动容器内） */
+.hmfw-table-header {
+  background: var(--hmfw-color-bg-container);
+}
+
+.hmfw-table-header > table {
+  width: 100%;
+}
+
+/* 拆分表头时表体不再需要上边框，避免与表头下边框形成双线 */
+.hmfw-table-split-header .hmfw-table-content > table {
+  border-top: none;
+}
+
+/* 吸底横向滚动条（sticky.offsetScroll）：真实滚动条滚出视口时固定在底部 */
+.hmfw-table-sticky-scroll {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  height: 8px;
+  background: var(--hmfw-color-bg-container);
+  border-top: 1px solid var(--hmfw-color-fill-secondary);
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.hmfw-table-sticky-scroll:hover {
+  opacity: 1;
+}
+
+.hmfw-table-sticky-scroll-bar {
+  position: absolute;
+  bottom: 0;
+  height: 8px;
+  background: var(--hmfw-color-text-quaternary);
+  border-radius: 4px;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.hmfw-table-sticky-scroll-bar:hover,
+.hmfw-table-sticky-scroll-bar-active {
+  background: var(--hmfw-color-text-tertiary);
+}
+
 .hmfw-table-sticky .hmfw-table-thead > tr > th {
-  background: var(--hmfw-color-fill-quaternary);
+  /* 半透明填充色叠加在底色上：表体内容从吸顶表头下方滚过时不透出 */
+  background:
+    linear-gradient(var(--hmfw-color-fill-quaternary), var(--hmfw-color-fill-quaternary)),
+    var(--hmfw-color-bg-container);
 }
 
 .hmfw-table-sticky .hmfw-table-thead::after {

@@ -10,7 +10,9 @@ test.describe('Input 输入框', () => {
   })
 
   test('普通输入框输入文本后 value 正确', async ({ page }) => {
-    const input = page.locator('input[placeholder="请输入内容"]')
+    // 页面中「基础用法」与「InputGroup」两个 demo 共用该 placeholder，
+    // demo 异步挂载完成前只有一个匹配，必须显式取第一个（基础用法）
+    const input = page.locator('input[placeholder="请输入内容"]').first()
     await expect(input).toBeVisible()
     await input.fill('Hello Kiro')
     await expect(input).toHaveValue('Hello Kiro')

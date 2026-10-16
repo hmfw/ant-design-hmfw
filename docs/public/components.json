@@ -1,6 +1,6 @@
 {
   "name": "@hmfw/ant-design",
-  "version": "0.52.1",
+  "version": "0.53.0",
   "description": "基于 Ant Design v6 的 Vue3 组件库 —— 71 个高质量组件，完整 TypeScript 支持",
   "docs": "https://hmfw.github.io/ant-design-hmfw",
   "install": "pnpm add @hmfw/ant-design",
@@ -12968,8 +12968,8 @@
         {
           "section": "Table Props",
           "name": "sticky",
-          "description": "设置粘性头部和滚动条",
-          "type": "`boolean | { offsetHeader?: number, offsetScroll?: number }`",
+          "description": "设置粘性表头与吸底横向滚动条；`getContainer` 指定判断基准的滚动容器（默认 window）",
+          "type": "`boolean | { offsetHeader?: number, offsetScroll?: number, getContainer?: () => HTMLElement }`",
           "default": "`false`"
         },
         {
@@ -13010,8 +13010,8 @@
         {
           "section": "Table Props",
           "name": "locale",
-          "description": "国际化配置",
-          "type": "`{ emptyText?: string }`",
+          "description": "组件级语言包，覆盖全局 Table 命名空间文案（含 `emptyText`/`filterTitle`/`expand` 等）",
+          "type": "`TableLocale`",
           "default": "-"
         },
         {
@@ -13100,17 +13100,66 @@
         },
         {
           "section": "TableColumn",
+          "name": "className",
+          "description": "列单元格的自定义类名",
+          "type": "`string`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "colSpan",
+          "description": "表头横向合并列数，为 `0` 时该表头不渲染；数据单元格合并请用 `onCell`",
+          "type": "`number`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "onCell",
+          "description": "设置数据单元格属性（动态合并/自定义），返回 `{ colSpan?, rowSpan?, className?, style?, ...事件 }`，span 为 `0` 时不渲染该单元格",
+          "type": "`(record, index) => object`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "onHeaderCell",
+          "description": "设置表头单元格属性（如表头合并 `colSpan`）",
+          "type": "`(column) => object`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
           "name": "sorter",
-          "description": "排序函数，支持多列排序",
-          "type": "`CompareFn | { compare: CompareFn, multiple: number }`",
+          "description": "排序函数；对象形式支持 `multiple` 声明多列排序优先级",
+          "type": "`boolean | CompareFn | { compare?: CompareFn, multiple?: number }`",
           "default": "-"
         },
         {
           "section": "TableColumn",
           "name": "sortOrder",
-          "description": "排序的受控属性",
+          "description": "排序的受控属性，设置后该列排序状态完全由它决定",
           "type": "`'ascend' | 'descend' | null`",
           "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "defaultSortOrder",
+          "description": "默认排序状态（仅在首次渲染生效）",
+          "type": "`'ascend' | 'descend' | null`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "sortDirections",
+          "description": "支持的排序方向序列，点击按此循环",
+          "type": "`SortOrder[]`",
+          "default": "`['ascend', 'descend', null]`"
+        },
+        {
+          "section": "TableColumn",
+          "name": "showSorterTooltip",
+          "description": "是否展示表头排序提示（以原生 title 呈现）",
+          "type": "`boolean`",
+          "default": "`true`"
         },
         {
           "section": "TableColumn",
@@ -13122,7 +13171,14 @@
         {
           "section": "TableColumn",
           "name": "filteredValue",
-          "description": "筛选的受控属性",
+          "description": "筛选的受控属性（优先级高于 defaultFilteredValue）",
+          "type": "`FilterValue`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "defaultFilteredValue",
+          "description": "默认筛选值（仅在首次渲染生效）",
           "type": "`FilterValue`",
           "default": "-"
         },
@@ -13139,6 +13195,20 @@
           "description": "是否多选",
           "type": "`boolean`",
           "default": "`true`"
+        },
+        {
+          "section": "TableColumn",
+          "name": "filterDropdown",
+          "description": "自定义筛选面板（函数形式提供 setSelectedKeys/confirm/clearFilters）",
+          "type": "`VNode | ((props) => VNode)`",
+          "default": "-"
+        },
+        {
+          "section": "TableColumn",
+          "name": "filterIcon",
+          "description": "自定义筛选图标",
+          "type": "`VNode | ((filtered: boolean) => VNode)`",
+          "default": "-"
         },
         {
           "section": "TableColumn",
@@ -13164,7 +13234,14 @@
         {
           "section": "TableRowSelection",
           "name": "selectedRowKeys",
-          "description": "指定选中项的 key 数组",
+          "description": "指定选中项的 key 数组（受控）",
+          "type": "`Key[]`",
+          "default": "-"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "defaultSelectedRowKeys",
+          "description": "默认选中项的 key 数组",
           "type": "`Key[]`",
           "default": "-"
         },
@@ -13197,6 +13274,48 @@
           "default": "-"
         },
         {
+          "section": "TableRowSelection",
+          "name": "columnWidth",
+          "description": "选择列宽度",
+          "type": "`string | number`",
+          "default": "-"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "columnTitle",
+          "description": "自定义选择列表头（替代全选框）",
+          "type": "`string | VNode`",
+          "default": "-"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "fixed",
+          "description": "将选择列固定在左侧",
+          "type": "`boolean`",
+          "default": "-"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "hideSelectAll",
+          "description": "隐藏表头全选框",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "preserveSelectedRowKeys",
+          "description": "行移出 dataSource 后仍保留其选中状态",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TableRowSelection",
+          "name": "checkStrictly",
+          "description": "树形数据下关闭父子选择联动（`false` 时勾选父节点联动后代）",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
           "section": "ExpandableConfig",
           "name": "expandedRowRender",
           "description": "额外的展开行内容",
@@ -13215,6 +13334,55 @@
           "name": "defaultExpandedRowKeys",
           "description": "默认展开的行",
           "type": "`Key[]`",
+          "default": "-"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "defaultExpandAllRows",
+          "description": "初始时是否展开所有行",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "childrenColumnName",
+          "description": "树形数据中子节点字段名",
+          "type": "`string`",
+          "default": "`'children'`"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "indentSize",
+          "description": "树形数据每一层级的缩进宽度（px）",
+          "type": "`number`",
+          "default": "`15`"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "rowExpandable",
+          "description": "控制某行是否可展开（树形数据下为是否可展开子级）",
+          "type": "`(record) => boolean`",
+          "default": "-"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "expandRowByClick",
+          "description": "点击整行时触发展开",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "expandIconColumnIndex",
+          "description": "展开图标在最终列序中的位置（含选择列，默认 0；树形数据下为图标内嵌的数据列，默认紧随选择列）",
+          "type": "`number`",
+          "default": "`0`"
+        },
+        {
+          "section": "ExpandableConfig",
+          "name": "expandIcon",
+          "description": "自定义展开图标",
+          "type": "`(props: { expanded, record, onExpand }) => VNode`",
           "default": "-"
         },
         {
@@ -13240,8 +13408,22 @@
         },
         {
           "section": "TablePaginationConfig",
+          "name": "defaultCurrent",
+          "description": "默认当前页数",
+          "type": "`number`",
+          "default": "`1`"
+        },
+        {
+          "section": "TablePaginationConfig",
           "name": "pageSize",
           "description": "每页条数",
+          "type": "`number`",
+          "default": "`10`"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "defaultPageSize",
+          "description": "默认每页条数",
           "type": "`number`",
           "default": "`10`"
         },
@@ -13282,8 +13464,50 @@
         },
         {
           "section": "TablePaginationConfig",
+          "name": "size",
+          "description": "分页器大小",
+          "type": "`'small' | 'middle' | 'large'`",
+          "default": "-"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "simple",
+          "description": "简洁模式",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "disabled",
+          "description": "禁用分页",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "hideOnSinglePage",
+          "description": "只有一页时隐藏分页",
+          "type": "`boolean`",
+          "default": "`false`"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "position",
+          "description": "分页位置，首项决定上下与水平对齐",
+          "type": "`('topLeft' | 'topCenter' | 'topRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight')[]`",
+          "default": "`['bottomRight']`"
+        },
+        {
+          "section": "TablePaginationConfig",
           "name": "onChange",
           "description": "页码或 pageSize 改变的回调",
+          "type": "`(page, pageSize) => void`",
+          "default": "-"
+        },
+        {
+          "section": "TablePaginationConfig",
+          "name": "onShowSizeChange",
+          "description": "pageSize 变化时的回调",
           "type": "`(page, pageSize) => void`",
           "default": "-"
         }
@@ -13302,14 +13526,34 @@
           "code": "<template>\n  <Table :data-source=\"dataSource\" :columns=\"columns\" row-key=\"key\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Table } from '@hmfw/ant-design'\n\nconst dataSource = [\n  { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },\n  { key: '2', name: '胡彦祖', age: 42, address: '西湖区湖底公园2号' },\n  { key: '3', name: '李明', age: 28, address: '朝阳区建国路88号' },\n]\n\nconst columns = [\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  {\n    title: '年龄',\n    dataIndex: 'age',\n    key: 'age',\n    sorter: (a: any, b: any) => a.age - b.age,\n  },\n  { title: '住址', dataIndex: 'address', key: 'address' },\n]\n</script>"
         },
         {
+          "title": "受控排序",
+          "description": "通过列的 `sortOrder` 控制排序状态，点击表头仅触发 `onChange`，在回调中更新状态才会改变排序。",
+          "code": "<template>\n  <Table :data-source=\"dataSource\" :columns=\"columns\" row-key=\"key\" @change=\"onChange\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { computed, ref } from 'vue'\nimport { Table } from '@hmfw/ant-design'\n\n// 受控排序：sortOrder 由外部状态驱动，点击表头仅触发 change 回调\nconst sortOrder = ref<'ascend' | 'descend' | null>('ascend')\n\nconst dataSource = [\n  { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },\n  { key: '2', name: '胡彦祖', age: 42, address: '西湖区湖底公园2号' },\n  { key: '3', name: '李明', age: 28, address: '朝阳区建国路88号' },\n]\n\nconst columns = computed(() => [\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  {\n    title: '年龄',\n    dataIndex: 'age',\n    key: 'age',\n    sorter: (a: any, b: any) => a.age - b.age,\n    sortOrder: sortOrder.value,\n  },\n  { title: '住址', dataIndex: 'address', key: 'address' },\n])\n\nconst onChange = (_pagination: any, _filters: any, sorter: any) => {\n  sortOrder.value = Array.isArray(sorter) ? (sorter[0]?.order ?? null) : (sorter.order ?? null)\n}\n</script>"
+        },
+        {
+          "title": "默认排序与排序方向",
+          "description": "通过 `defaultSortOrder` 设置首次渲染的排序方向；`sortDirections` 限制点击时可选的方向序列。",
+          "code": "<template>\n  <Table :columns=\"columns\" :data-source=\"dataSource\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Table } from '@hmfw/ant-design'\nimport type { TableColumn } from '@hmfw/ant-design'\n\ninterface DataType {\n  key: string\n  name: string\n  age: number\n  score: number\n}\n\nconst dataSource: DataType[] = [\n  { key: '1', name: '张三', age: 32, score: 88 },\n  { key: '2', name: '李四', age: 42, score: 95 },\n  { key: '3', name: '王五', age: 28, score: 72 },\n  { key: '4', name: '赵六', age: 36, score: 81 },\n]\n\nconst columns: TableColumn<DataType>[] = [\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  {\n    title: '年龄',\n    dataIndex: 'age',\n    key: 'age',\n    // 首次渲染即按年龄降序，后续点击正常在 asc/desc/取消 之间循环\n    sorter: (a, b) => a.age - b.age,\n    defaultSortOrder: 'descend',\n  },\n  {\n    title: '分数',\n    dataIndex: 'score',\n    key: 'score',\n    sorter: (a, b) => a.score - b.score,\n    // 仅允许降序：点击在「降序 → 取消」之间循环\n    sortDirections: ['descend'],\n  },\n]\n</script>"
+        },
+        {
           "title": "行选择",
-          "description": "第一列是联动的选择框，支持单选和多选。",
-          "code": "<template>\n  <Table :data-source=\"dataSource\" :columns=\"columns\" row-key=\"key\" :row-selection=\"rowSelection\" />\n  <p>已选择：{{ selectedKeys.join(', ') }}</p>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Table } from '@hmfw/ant-design'\n\nconst selectedKeys = ref<string[]>([])\n\nconst rowSelection = {\n  selectedRowKeys: selectedKeys,\n  onChange: (keys: string[]) => {\n    selectedKeys.value = keys\n  },\n}\n\nconst dataSource = [\n  { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },\n  { key: '2', name: '胡彦祖', age: 42, address: '西湖区湖底公园2号' },\n]\n\nconst columns = [\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  { title: '年龄', dataIndex: 'age', key: 'age' },\n  { title: '住址', dataIndex: 'address', key: 'address' },\n]\n</script>"
+          "description": "第一列是联动的选择框，支持单选和多选。第二张表演示 `defaultSelectedRowKeys` 默认选中、`hideSelectAll` 隐藏全选框、`columnTitle` 自定义列表头。",
+          "code": "<template>\n  <Table :data-source=\"dataSource\" :columns=\"columns\" row-key=\"key\" :row-selection=\"rowSelection\" />\n  <p>已选择：{{ selectedKeys.join(', ') }}</p>\n\n  <div style=\"height: 16px\"></div>\n\n  <Table :data-source=\"dataSource\" :columns=\"columns\" row-key=\"key\" :row-selection=\"rowSelectionCustom\" />\n  <p>默认选中第 1 行、隐藏表头全选框、自定义列表头：{{ selectedKeysCustom.join(', ') }}</p>\n\n  <div style=\"height: 16px\"></div>\n\n  <Table :data-source=\"dataSource\" :columns=\"columns\" row-key=\"key\" :row-selection=\"rowSelectionRadio\" />\n  <p>单选：{{ selectedKeysRadio.join(', ') }}</p>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Table } from '@hmfw/ant-design'\n\nconst selectedKeys = ref<string[]>([])\n\nconst rowSelection = {\n  selectedRowKeys: selectedKeys,\n  onChange: (keys: string[]) => {\n    selectedKeys.value = keys\n  },\n}\n\n// defaultSelectedRowKeys 默认选中、hideSelectAll 隐藏全选框、columnTitle 自定义列表头\nconst selectedKeysCustom = ref<string[]>(['1'])\n\nconst rowSelectionCustom = {\n  defaultSelectedRowKeys: ['1'],\n  hideSelectAll: true,\n  columnTitle: '选择',\n  onChange: (keys: string[]) => {\n    selectedKeysCustom.value = keys\n  },\n}\n\n// 单选（radio）：同一时间只能选中一行\nconst selectedKeysRadio = ref<string[]>([])\n\nconst rowSelectionRadio = {\n  type: 'radio' as const,\n  selectedRowKeys: selectedKeysRadio,\n  onChange: (keys: string[]) => {\n    selectedKeysRadio.value = keys\n  },\n}\n\nconst dataSource = [\n  { key: '1', name: '胡彦斌', age: 32, address: '西湖区湖底公园1号' },\n  { key: '2', name: '胡彦祖', age: 42, address: '西湖区湖底公园2号' },\n]\n\nconst columns = [\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  { title: '年龄', dataIndex: 'age', key: 'age' },\n  { title: '住址', dataIndex: 'address', key: 'address' },\n]\n</script>"
         },
         {
           "title": "筛选",
           "description": "对某一列数据进行筛选。",
           "code": "<template>\n  <Table :columns=\"columns\" :data-source=\"data\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { Table } from '@hmfw/ant-design'\n\nconst columns = [\n  {\n    title: 'Name',\n    dataIndex: 'name',\n    key: 'name',\n    filters: [\n      { text: 'Joe', value: 'Joe' },\n      { text: 'Jim', value: 'Jim' },\n      { text: 'Alice', value: 'Alice' },\n    ],\n    onFilter: (value: string, record: any) => record.name.includes(value),\n  },\n  {\n    title: 'Age',\n    dataIndex: 'age',\n    key: 'age',\n    filters: [\n      { text: '20-30', value: '20-30' },\n      { text: '30-40', value: '30-40' },\n    ],\n    onFilter: (value: string, record: any) => {\n      const age = record.age\n      if (value === '20-30') return age >= 20 && age < 30\n      if (value === '30-40') return age >= 30 && age < 40\n      return false\n    },\n  },\n  {\n    title: 'Address',\n    dataIndex: 'address',\n    key: 'address',\n  },\n]\n\nconst data = [\n  { key: '1', name: 'Joe', age: 32, address: 'New York' },\n  { key: '2', name: 'Jim', age: 28, address: 'London' },\n  { key: '3', name: 'Alice', age: 35, address: 'Sydney' },\n  { key: '4', name: 'Bob', age: 25, address: 'Paris' },\n]\n</script>"
+        },
+        {
+          "title": "自定义筛选",
+          "description": "通过 `defaultFilteredValue` 设置默认筛选值，`filterDropdown` 自定义筛选面板（提供 `setSelectedKeys` / `confirm` / `clearFilters`），`filterIcon` 自定义筛选图标。",
+          "code": "<template>\n  <Table :columns=\"columns\" :data-source=\"data\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { h } from 'vue'\nimport { Table, Input, Button } from '@hmfw/ant-design'\nimport type { TableColumn } from '@hmfw/ant-design'\n\ninterface DataType {\n  key: string\n  name: string\n  city: string\n}\n\nconst data: DataType[] = [\n  { key: '1', name: '张三', city: '杭州' },\n  { key: '2', name: '李四', city: '上海' },\n  { key: '3', name: '王五', city: '北京' },\n  { key: '4', name: '赵六', city: '杭州' },\n]\n\nconst columns: TableColumn<DataType>[] = [\n  {\n    title: '姓名',\n    dataIndex: 'name',\n    key: 'name',\n    filters: [\n      { text: '张三', value: '张三' },\n      { text: '李四', value: '李四' },\n      { text: '王五', value: '王五' },\n      { text: '赵六', value: '赵六' },\n    ],\n    onFilter: (value, record) => record.name === value,\n    // 默认筛选：首次渲染即应用该筛选值\n    defaultFilteredValue: ['张三', '李四'],\n  },\n  {\n    title: '城市',\n    dataIndex: 'city',\n    key: 'city',\n    // 自定义筛选面板：输入关键字后确认过滤\n    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) =>\n      h('div', { style: { padding: '8px', width: '180px' } }, [\n        h(Input, {\n          size: 'small',\n          placeholder: '搜索城市',\n          value: selectedKeys[0] ?? '',\n          'onUpdate:value': (v: string) => setSelectedKeys(v ? [v] : []),\n          onPressEnter: () => confirm(),\n        }),\n        h('div', { style: { display: 'flex', justifyContent: 'space-between', marginTop: '8px' } }, [\n          h(Button, { size: 'small', onClick: () => clearFilters() }, () => '重置'),\n          h(Button, { size: 'small', type: 'primary', onClick: () => confirm() }, () => '确定'),\n        ]),\n      ]),\n    onFilter: (value, record) => record.city.includes(String(value)),\n  },\n]\n</script>"
+        },
+        {
+          "title": "分页",
+          "description": "分页位置（`position`）、每页条数切换（`showSizeChanger`）、总数文案（`showTotal`）、默认页码（`defaultCurrent`）与简洁模式（`simple`）。",
+          "code": "<template>\n  <div>\n    <Table :columns=\"columns\" :data-source=\"dataSource\" :pagination=\"paginationTop\" />\n    <div style=\"height: 16px\"></div>\n    <Table :columns=\"columns\" :data-source=\"dataSource\" :pagination=\"paginationSimple\" />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Table } from '@hmfw/ant-design'\nimport type { TableColumn, TablePaginationConfig } from '@hmfw/ant-design'\n\ninterface DataType {\n  key: number\n  name: string\n  age: number\n  address: string\n}\n\nconst dataSource: DataType[] = Array.from({ length: 46 }, (_, i) => ({\n  key: i + 1,\n  name: `成员 ${i + 1}`,\n  age: 20 + (i % 40),\n  address: `某市某区某街道 ${i + 1} 号`,\n}))\n\nconst columns: TableColumn<DataType>[] = [\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  { title: '年龄', dataIndex: 'age', key: 'age' },\n  { title: '住址', dataIndex: 'address', key: 'address' },\n]\n\n// 分页在上方 + 尺寸切换 + 总数文案 + 默认每页条数\nconst paginationTop: TablePaginationConfig = {\n  position: ['topRight'],\n  defaultPageSize: 5,\n  pageSizeOptions: [5, 10, 20],\n  showSizeChanger: true,\n  showTotal: (total: number) => `共 ${total} 条`,\n}\n\n// 简洁模式 + 小尺寸 + 默认页码\nconst paginationSimple: TablePaginationConfig = {\n  simple: true,\n  size: 'small',\n  defaultPageSize: 5,\n  defaultCurrent: 3,\n}\n</script>"
         },
         {
           "title": "固定列",
@@ -13320,6 +13564,16 @@
           "title": "展开行",
           "description": "可展开的行，显示额外信息。",
           "code": "<template>\n  <Table :columns=\"columns\" :data-source=\"data\" :expandable=\"expandable\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Table } from '@hmfw/ant-design'\n\nconst expandedKeys = ref<string[]>([])\n\nconst columns = [\n  {\n    title: 'Name',\n    dataIndex: 'name',\n    key: 'name',\n  },\n  {\n    title: 'Age',\n    dataIndex: 'age',\n    key: 'age',\n  },\n  {\n    title: 'Address',\n    dataIndex: 'address',\n    key: 'address',\n  },\n]\n\nconst data = [\n  {\n    key: '1',\n    name: 'Joe',\n    age: 32,\n    address: 'New York',\n    description: 'My name is Joe, I am 32 years old, living in New York.',\n  },\n  {\n    key: '2',\n    name: 'Jim',\n    age: 28,\n    address: 'London',\n    description: 'My name is Jim, I am 28 years old, living in London.',\n  },\n  {\n    key: '3',\n    name: 'Alice',\n    age: 35,\n    address: 'Sydney',\n    description: 'My name is Alice, I am 35 years old, living in Sydney.',\n  },\n]\n\nconst expandable = {\n  expandedRowRender: (record: any) => record.description,\n  expandedRowKeys: expandedKeys.value,\n  onExpandedRowsChange: (keys: string[]) => {\n    expandedKeys.value = keys\n  },\n}\n</script>"
+        },
+        {
+          "title": "树形数据",
+          "description": "通过给数据项设置 `children` 字段（可用 `childrenColumnName` 自定义），展示层级结构。展开图标内嵌在首列，支持 `indentSize` 缩进、`defaultExpandAllRows` 默认全展开、`rowExpandable` 控制可展开性。开启 `rowSelection` 后默认父子联动勾选（`checkStrictly: true` 可切换为各自独立）。",
+          "code": "<template>\n  <Table\n    :columns=\"columns\"\n    :data-source=\"data\"\n    :expandable=\"{ defaultExpandAllRows: true }\"\n    :row-selection=\"rowSelection\"\n  />\n  <p>已选择：{{ selectedKeys.join(', ') || '无' }}</p>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Table } from '@hmfw/ant-design'\n\nconst selectedKeys = ref<string[]>([])\n\n// 树形数据默认父子联动：勾选父节点自动勾选全部后代，取消子节点自动取消祖先\n// 如需各节点独立勾选，设置 checkStrictly: true\nconst rowSelection = {\n  onChange: (keys: string[]) => {\n    selectedKeys.value = keys\n  },\n}\n\nconst columns = [\n  { title: 'Name', dataIndex: 'name', key: 'name' },\n  { title: 'Age', dataIndex: 'age', key: 'age', width: 120 },\n  { title: 'Address', dataIndex: 'address', key: 'address' },\n]\n\n// 通过 children 字段表达层级结构，Table 自动渲染为树形表格\nconst data = [\n  {\n    key: '1',\n    name: 'John Brown sr.',\n    age: 60,\n    address: 'New York No. 1 Lake Park',\n    children: [\n      { key: '1-1', name: 'John Brown', age: 42, address: 'New York No. 2 Lake Park' },\n      {\n        key: '1-2',\n        name: 'John Brown jr.',\n        age: 30,\n        address: 'New York No. 3 Lake Park',\n        children: [{ key: '1-2-1', name: 'Jimmy Brown', age: 16, address: 'New York No. 3 Lake Park' }],\n      },\n    ],\n  },\n  {\n    key: '2',\n    name: 'Joe Black',\n    age: 32,\n    address: 'Sydney No. 1 Lake Park',\n    children: [{ key: '2-1', name: 'Jim Green', age: 42, address: 'London No. 1 Lake Park' }],\n  },\n]\n</script>"
+        },
+        {
+          "title": "单元格合并",
+          "description": "通过列的 `onCell` / `onHeaderCell` 返回 `{ colSpan, rowSpan }` 实现单元格合并；返回 `0` 表示该单元格已被相邻单元格合并、不渲染。",
+          "code": "<template>\n  <div>\n    <Table :columns=\"columns\" :data-source=\"dataSource\" bordered />\n    <div style=\"height: 16px\"></div>\n    <Table :columns=\"columnsWithColSpan\" :data-source=\"dataSource\" bordered />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { Table } from '@hmfw/ant-design'\nimport type { TableColumn } from '@hmfw/ant-design'\n\ninterface DataType {\n  key: string\n  province: string\n  city: string\n  name: string\n  tel: string\n  phone: string\n  address: string\n}\n\nconst dataSource: DataType[] = [\n  {\n    key: '1',\n    province: '浙江',\n    city: '杭州',\n    name: '张三',\n    tel: '0571-8888888',\n    phone: '138****0001',\n    address: '西湖区湖底公园 1 号',\n  },\n  {\n    key: '2',\n    province: '浙江',\n    city: '宁波',\n    name: '李四',\n    tel: '0574-6666666',\n    phone: '139****0002',\n    address: '江东区中山东路 2 号',\n  },\n  {\n    key: '3',\n    province: '江苏',\n    city: '南京',\n    name: '王五',\n    tel: '025-5555555',\n    phone: '137****0003',\n    address: '鼓楼区中山北路 3 号',\n  },\n  {\n    key: '4',\n    province: '江苏',\n    city: '苏州',\n    name: '赵六',\n    tel: '0512-4444444',\n    phone: '136****0004',\n    address: '姑苏区人民路 4 号',\n  },\n]\n\n// 纵向合并：通过 onCell 让「省份」每两行合并（第二行返回 rowSpan: 0 不渲染）\nconst columns: TableColumn<DataType>[] = [\n  {\n    title: '省份',\n    dataIndex: 'province',\n    key: 'province',\n    onCell: (_record, index) => ({ rowSpan: index % 2 === 0 ? 2 : 0 }),\n  },\n  { title: '城市', dataIndex: 'city', key: 'city' },\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  { title: '住址', dataIndex: 'address', key: 'address' },\n]\n\n// 横向合并：\n// 1. 表头「联系方式」通过列级 colSpan 跨过「座机」「手机」两列（被合并列 colSpan: 0 不渲染表头）\n// 2. 数据单元格「地址」通过 onCell 跨过「地址」「邮编」两列（被合并列返回 colSpan: 0 不渲染）\nconst columnsWithColSpan: TableColumn<DataType>[] = [\n  { title: '姓名', dataIndex: 'name', key: 'name' },\n  { title: '城市', dataIndex: 'city', key: 'city' },\n  { title: '联系方式', dataIndex: 'tel', key: 'contact', colSpan: 2 },\n  { title: '手机', dataIndex: 'phone', key: 'phone', colSpan: 0 },\n  {\n    title: '地址',\n    dataIndex: 'address',\n    key: 'address',\n    onCell: () => ({ colSpan: 2 }),\n    onHeaderCell: () => ({ colSpan: 2 }),\n  },\n  {\n    title: '邮编',\n    key: 'zip',\n    onCell: () => ({ colSpan: 0 }),\n    onHeaderCell: () => ({ colSpan: 0 }),\n  },\n]\n</script>"
         },
         {
           "title": "响应式",
@@ -13333,8 +13587,8 @@
         },
         {
           "title": "吸顶表头",
-          "description": "当页面滚动时，表头会固定在页面顶部。",
-          "code": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Table } from '@hmfw/ant-design'\nimport type { TableColumn } from '@hmfw/ant-design'\n\ninterface DataType {\n  key: number\n  name: string\n  age: number\n  address: string\n  tags: string[]\n}\n\nconst dataSource = ref<DataType[]>(\n  Array.from({ length: 100 }, (_, i) => ({\n    key: i,\n    name: `李明 ${i + 1}`,\n    age: 20 + (i % 50),\n    address: `北京市朝阳区某街道 ${i + 1} 号`,\n    tags: i % 2 === 0 ? ['开发者', '设计师'] : ['产品经理'],\n  })),\n)\n\nconst columns: TableColumn<DataType>[] = [\n  {\n    title: '姓名',\n    dataIndex: 'name',\n    key: 'name',\n    width: 150,\n    fixed: 'left',\n  },\n  {\n    title: '年龄',\n    dataIndex: 'age',\n    key: 'age',\n    width: 100,\n    sorter: (a, b) => a.age - b.age,\n  },\n  {\n    title: '地址',\n    dataIndex: 'address',\n    key: 'address',\n    width: 300,\n  },\n  {\n    title: '标签',\n    key: 'tags',\n    dataIndex: 'tags',\n    width: 200,\n    render: (tags: string[]) => tags.join(', '),\n  },\n]\n</script>\n\n<template>\n  <div style=\"height: 600px; overflow: auto\">\n    <div\n      style=\"\n        height: 300px;\n        background: #f0f0f0;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        margin-bottom: 16px;\n      \"\n    >\n      <p>向下滚动查看表头吸顶效果</p>\n    </div>\n    <Table\n      :data-source=\"dataSource\"\n      :columns=\"columns\"\n      :pagination=\"false\"\n      :scroll=\"{ y: 300 }\"\n      :sticky=\"true\"\n      bordered\n    />\n    <div\n      style=\"\n        height: 300px;\n        background: #f0f0f0;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        margin-top: 16px;\n      \"\n    >\n      <p>底部内容</p>\n    </div>\n  </div>\n</template>"
+          "description": "当页面滚动时，表头会固定在页面顶部。表格存在横向滚动时，还会在视口底部吸附一个横向滚动条（真实滚动条滚出视口后显示，可用 `offsetScroll` 调整距底部距离，`getContainer` 指定作为基准的滚动容器）。",
+          "code": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Table } from '@hmfw/ant-design'\nimport type { TableColumn } from '@hmfw/ant-design'\n\ninterface DataType {\n  key: number\n  name: string\n  age: number\n  address: string\n  tags: string[]\n}\n\n// 自定义滚动容器：吸顶表头与吸底横向滚动条以此容器为基准\nconst scrollRef = ref<HTMLElement>()\n\nconst sticky = {\n  offsetHeader: 0,\n  offsetScroll: 0,\n  getContainer: () => scrollRef.value as HTMLElement,\n}\n\nconst dataSource = ref<DataType[]>(\n  Array.from({ length: 100 }, (_, i) => ({\n    key: i,\n    name: `李明 ${i + 1}`,\n    age: 20 + (i % 50),\n    address: `北京市朝阳区某街道 ${i + 1} 号`,\n    tags: i % 2 === 0 ? ['开发者', '设计师'] : ['产品经理'],\n  })),\n)\n\nconst columns: TableColumn<DataType>[] = [\n  {\n    title: '姓名',\n    dataIndex: 'name',\n    key: 'name',\n    width: 150,\n    fixed: 'left',\n  },\n  {\n    title: '年龄',\n    dataIndex: 'age',\n    key: 'age',\n    width: 100,\n    sorter: (a, b) => a.age - b.age,\n  },\n  {\n    title: '地址',\n    dataIndex: 'address',\n    key: 'address',\n    width: 300,\n  },\n  {\n    title: '标签',\n    key: 'tags',\n    dataIndex: 'tags',\n    width: 200,\n    render: (tags: string[]) => tags.join(', '),\n  },\n]\n</script>\n\n<template>\n  <div ref=\"scrollRef\" style=\"height: 420px; overflow: auto\">\n    <div\n      style=\"\n        height: 200px;\n        background: #f0f0f0;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        margin-bottom: 16px;\n      \"\n    >\n      <p>向下滚动查看表头吸顶效果</p>\n    </div>\n    <!-- 不使用 scroll.y：表头吸顶到容器顶部（配合 getContainer 指定滚动容器），\n         横向溢出时容器底部吸附横向滚动条 -->\n    <Table\n      :data-source=\"dataSource\"\n      :columns=\"columns\"\n      :pagination=\"false\"\n      :scroll=\"{ x: 1000 }\"\n      :sticky=\"sticky\"\n      bordered\n    />\n    <div\n      style=\"\n        height: 300px;\n        background: #f0f0f0;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        margin-top: 16px;\n      \"\n    >\n      <p>底部内容</p>\n    </div>\n  </div>\n</template>"
         },
         {
           "title": "总结栏",

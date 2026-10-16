@@ -11,6 +11,15 @@ interface DataType {
   tags: string[]
 }
 
+// 自定义滚动容器：吸顶表头与吸底横向滚动条以此容器为基准
+const scrollRef = ref<HTMLElement>()
+
+const sticky = {
+  offsetHeader: 0,
+  offsetScroll: 0,
+  getContainer: () => scrollRef.value as HTMLElement,
+}
+
 const dataSource = ref<DataType[]>(
   Array.from({ length: 100 }, (_, i) => ({
     key: i,
@@ -53,10 +62,10 @@ const columns: TableColumn<DataType>[] = [
 </script>
 
 <template>
-  <div style="height: 600px; overflow: auto">
+  <div ref="scrollRef" style="height: 420px; overflow: auto">
     <div
       style="
-        height: 300px;
+        height: 200px;
         background: #f0f0f0;
         display: flex;
         align-items: center;
@@ -66,12 +75,14 @@ const columns: TableColumn<DataType>[] = [
     >
       <p>向下滚动查看表头吸顶效果</p>
     </div>
+    <!-- 不使用 scroll.y：表头吸顶到容器顶部（配合 getContainer 指定滚动容器），
+         横向溢出时容器底部吸附横向滚动条 -->
     <Table
       :data-source="dataSource"
       :columns="columns"
       :pagination="false"
-      :scroll="{ y: 300 }"
-      :sticky="true"
+      :scroll="{ x: 1000 }"
+      :sticky="sticky"
       bordered
     />
     <div

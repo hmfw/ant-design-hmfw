@@ -78,6 +78,96 @@ test.describe('Table 表格', () => {
     expect(count).toBeGreaterThanOrEqual(0)
   })
 
+  test('树形表格展开/收起子节点', async ({ page }) => {
+    // 含树形数据的表格（TableTree，默认全部展开）
+    const table = page
+      .locator('.hmfw-table')
+      .filter({ has: page.locator('.hmfw-table-cell-tree') })
+      .first()
+    const rows = table.locator('.hmfw-table-tbody .hmfw-table-row')
+
+    // 默认全展开：顶级 2 行 + 后代 4 行
+    await expect(rows).toHaveCount(6)
+
+    // 收起第一个父节点 → 其 3 个后代隐藏
+    await table.locator('.hmfw-table-expand-icon').first().click()
+    await expect(rows).toHaveCount(3)
+
+    // 再次展开恢复
+    await table.locator('.hmfw-table-expand-icon').first().click()
+    await expect(rows).toHaveCount(6)
+  })
+
+  test('受控排序点击表头后按新方向重排', async ({ page }) => {
+    // 受控排序 demo：初始 sortOrder 为 ascend，点击后回调更新为 descend
+    const table = page
+      .locator('.hmfw-table')
+      .filter({ has: page.locator('.hmfw-table-column-sort') })
+      .first()
+    const ages = () => table.locator('.hmfw-table-tbody .hmfw-table-row td:nth-child(2)')
+
+    await expect(ages()).toHaveText(['28', '32', '42'])
+    await table.locator('.hmfw-table-column-has-sorters').first().click()
+    await expect(ages()).toHaveText(['42', '32', '28'])
+  })
+
+  test('吸顶表格：真实滚动条滚出容器视口时显示吸底滚动条并可拖动', async ({ page }) => {
+    const table = page.locator('.hmfw-table-sticky').first()
+    await table.scrollIntoViewIfNeeded()
+    // 外层滚动容器滚回顶部：表格底部（真实滚动条）位于容器视口之外
+    await table.evaluate((el) => {
+      ;(el.parentElement as HTMLElement).scrollTop = 0
+    })
+
+    const bar = table.locator('.hmfw-table-sticky-scroll-bar')
+    await expect(bar).toBeVisible()
+
+    // 拖动吸底滚动条 → 内容区横向滚动，固定列阴影出现
+    const box = (await bar.boundingBox())!
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+    await page.mouse.down()
+    await page.mouse.move(box.x + box.width / 2 + 120, box.y + box.height / 2, { steps: 4 })
+    await page.mouse.up()
+
+    const scrollLeft = await table.locator('.hmfw-table-content').evaluate((el) => el.scrollLeft)
+    expect(scrollLeft).toBeGreaterThan(0)
+    await expect(table).toHaveClass(/hmfw-table-ping-left/)
+
+    // 容器滚到底部（真实滚动条可见）后吸底滚动条隐藏
+    await table.evaluate((el) => {
+      const cont = el.parentElement as HTMLElement
+      cont.scrollTop = cont.scrollHeight
+    })
+    await expect(table.locator('.hmfw-table-sticky-scroll')).toHaveCount(0)
+  })
+
+  test('吸顶表头随容器滚动固定且列与表体对齐', async ({ page }) => {
+    const table = page.locator('.hmfw-table-sticky').first()
+    await table.scrollIntoViewIfNeeded()
+    const container = table.locator('xpath=..')
+
+    // 容器内部滚动 900px
+    await table.evaluate((el) => {
+      ;(el.parentElement as HTMLElement).scrollTop = 900
+    })
+
+    // 表头吸附在容器顶部
+    const contBox = (await container.boundingBox())!
+    const headerBox = (await table.locator('.hmfw-table-header').boundingBox())!
+    expect(Math.abs(headerBox.y - contBox.y)).toBeLessThanOrEqual(2)
+
+    // 表头与表体各列左边界一致（拆分为两个 table 后列宽需对齐）
+    const headerLefts = await table
+      .locator('.hmfw-table-header th')
+      .evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().left)))
+    const bodyLefts = await table
+      .locator('.hmfw-table-content tbody tr')
+      .first()
+      .locator('td')
+      .evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().left)))
+    expect(headerLefts).toEqual(bodyLefts)
+  })
+
   test('排序后虚拟列表保持在正确位置', async ({ page }) => {
     // 含可排序列的表格，排序后数据更新但列表正常渲染
     const table = page

@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
+import { h, nextTick } from 'vue'
 import { Table } from '../Table'
 
 const columns = [
@@ -282,6 +283,103 @@ describe('Table', () => {
     expect(wrapper.find('.hmfw-table-expand-icon svg').exists()).toBe(true)
   })
 
+  describe('树形数据（嵌套 children）', () => {
+    const treeData = [
+      {
+        key: '1',
+        name: 'Parent',
+        age: 40,
+        city: 'Beijing',
+        children: [
+          { key: '1-1', name: 'Child A', age: 15, city: 'Beijing' },
+          {
+            key: '1-2',
+            name: 'Child B',
+            age: 12,
+            city: 'Beijing',
+            children: [{ key: '1-2-1', name: 'Grandchild', age: 1, city: 'Beijing' }],
+          },
+        ],
+      },
+      { key: '2', name: 'Leaf', age: 20, city: 'Shanghai' },
+    ]
+
+    it('展开图标内嵌首列，可展开行渲染图标、叶子行渲染占位', () => {
+      const wrapper = mount(Table, { props: { columns, dataSource: treeData } })
+      // 树形模式不使用独立展开列
+      expect(wrapper.find('.hmfw-table-expand-icon-cell').exists()).toBe(false)
+      const trees = wrapper.findAll('.hmfw-table-cell-tree')
+      // 顶层两行各有一个树形首列
+      expect(trees).toHaveLength(2)
+      // Parent 行可展开 → 有展开图标
+      expect(trees[0].find('.hmfw-table-row-expand-icon-wrap').exists()).toBe(true)
+      // Leaf 行无子节点 → 占位
+      expect(trees[1].find('.hmfw-table-row-expand-icon-spacer').exists()).toBe(true)
+    })
+
+    it('点击展开图标后渲染子节点行', async () => {
+      const onExpand = vi.fn()
+      const wrapper = mount(Table, {
+        props: { columns, dataSource: treeData, expandable: { onExpand } },
+      })
+      // 未展开时子节点不渲染
+      expect(wrapper.text()).not.toContain('Child A')
+      await wrapper.find('.hmfw-table-cell-tree .hmfw-table-expand-icon').trigger('click')
+      expect(onExpand).toHaveBeenCalledWith(true, treeData[0])
+      expect(wrapper.text()).toContain('Child A')
+      expect(wrapper.text()).toContain('Child B')
+      // 孙节点未展开，不渲染
+      expect(wrapper.text()).not.toContain('Grandchild')
+    })
+
+    it('defaultExpandAllRows 默认展开所有带子节点的行', () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource: treeData, expandable: { defaultExpandAllRows: true } },
+      })
+      expect(wrapper.text()).toContain('Child A')
+      expect(wrapper.text()).toContain('Grandchild')
+    })
+
+    it('indentSize 控制子节点缩进', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource: treeData,
+          expandable: { expandedRowKeys: ['1'], indentSize: 20 },
+        },
+      })
+      const indents = wrapper.findAll('.hmfw-table-row-indent')
+      // 顶层缩进为 0
+      expect(indents[0].attributes('style')).toContain('padding-left: 0px')
+      // 子节点缩进为 1 * 20 = 20px
+      const childIndent = indents.find((n) => n.attributes('style')?.includes('20px'))
+      expect(childIndent).toBeTruthy()
+    })
+
+    it('rowExpandable 可否决某行展开', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource: treeData,
+          expandable: { rowExpandable: (record: any) => record.key !== '1' },
+        },
+      })
+      // key '1' 被否决 → 无展开图标，渲染占位
+      const trees = wrapper.findAll('.hmfw-table-cell-tree')
+      expect(trees[0].find('.hmfw-table-row-expand-icon-wrap').exists()).toBe(false)
+      expect(trees[0].find('.hmfw-table-row-expand-icon-spacer').exists()).toBe(true)
+    })
+
+    it('expandRowByClick 点击整行切换展开', async () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource: treeData, expandable: { expandRowByClick: true } },
+      })
+      expect(wrapper.text()).not.toContain('Child A')
+      await wrapper.find('.hmfw-table-row').trigger('click')
+      expect(wrapper.text()).toContain('Child A')
+    })
+  })
+
   it('calls rowSelection onChange with selected keys and info', async () => {
     const onChange = vi.fn()
     const wrapper = mount(Table, {
@@ -531,6 +629,655 @@ describe('Table', () => {
       const firstRow = wrapper.find('tbody tr.hmfw-table-row')
       expect(firstRow.classes()).toContain('custom-row')
       expect(firstRow.classes()).toContain('hmfw-table-row-selected')
+    })
+  })
+
+  describe('排序受控 / 默认排序 / 方向序列', () => {
+    const nameCol = { key: 'name', dataIndex: 'name', title: 'Name' }
+
+    it('defaultSortOrder 首次渲染即按默认方向排序', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns: [
+            nameCol,
+            {
+              key: 'age',
+              dataIndex: 'age',
+              title: 'Age',
+              sorter: (a: any, b: any) => a.age - b.age,
+              defaultSortOrder: 'descend',
+            },
+          ],
+          dataSource,
+          pagination: false,
+        },
+      })
+      expect(wrapper.find('tbody tr.hmfw-table-row').text()).toContain('Charlie')
+    })
+
+    it('sortOrder 受控：渲染跟随 props，点击仅抛出 change 不改变显示', async () => {
+      const onChange = vi.fn()
+      const sortColumn = {
+        key: 'age',
+        dataIndex: 'age',
+        title: 'Age',
+        sorter: (a: any, b: any) => a.age - b.age,
+        sortOrder: 'ascend',
+      }
+      const wrapper = mount(Table, {
+        props: { columns: [nameCol, sortColumn], dataSource, pagination: false, onChange },
+      })
+      expect(wrapper.find('tbody tr.hmfw-table-row').text()).toContain('Bob')
+
+      await wrapper.find('th.hmfw-table-column-has-sorters').trigger('click')
+      // 受控列未收到新 props → 显示保持 ascend
+      expect(wrapper.find('tbody tr.hmfw-table-row').text()).toContain('Bob')
+      expect(onChange.mock.calls[0][2].order).toBe('descend')
+
+      // 外部更新 sortOrder 后渲染跟随
+      await wrapper.setProps({ columns: [nameCol, { ...sortColumn, sortOrder: 'descend' }] })
+      expect(wrapper.find('tbody tr.hmfw-table-row').text()).toContain('Charlie')
+    })
+
+    it('sortDirections 控制方向循环，越过末尾即取消排序', async () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns: [
+            nameCol,
+            {
+              key: 'age',
+              dataIndex: 'age',
+              title: 'Age',
+              sorter: (a: any, b: any) => a.age - b.age,
+              sortDirections: ['ascend'],
+            },
+          ],
+          dataSource,
+          pagination: false,
+        },
+      })
+      const th = wrapper.find('th.hmfw-table-column-has-sorters')
+      await th.trigger('click')
+      expect(wrapper.find('tbody tr.hmfw-table-row').text()).toContain('Bob')
+      await th.trigger('click') // ascend 已是最后一个方向 → 取消
+      expect(wrapper.find('tbody tr.hmfw-table-row').text()).toContain('Alice')
+    })
+
+    it('sorter 对象形式 { compare, multiple } 参与排序并支持多列', async () => {
+      const onChange = vi.fn()
+      const wrapper = mount(Table, {
+        props: {
+          columns: [
+            {
+              key: 'name',
+              dataIndex: 'name',
+              title: 'Name',
+              sorter: { compare: (a: any, b: any) => a.name.localeCompare(b.name), multiple: 1 },
+            },
+            {
+              key: 'age',
+              dataIndex: 'age',
+              title: 'Age',
+              sorter: { compare: (a: any, b: any) => a.age - b.age, multiple: 2 },
+            },
+          ],
+          dataSource,
+          pagination: false,
+          onChange,
+        },
+      })
+      const ths = wrapper.findAll('th.hmfw-table-column-has-sorters')
+      await ths[0].trigger('click')
+      await ths[1].trigger('click')
+      // 第二列为多列排序：两次点击后 sorter 为长度 2 的数组
+      const sorter = onChange.mock.calls[1][2]
+      expect(Array.isArray(sorter)).toBe(true)
+      expect(sorter).toHaveLength(2)
+    })
+  })
+
+  describe('分页透传', () => {
+    const manyData = Array.from({ length: 15 }, (_, i) => ({
+      key: String(i + 1),
+      name: `Row${i + 1}`,
+      age: 20 + i,
+      city: 'X',
+    }))
+
+    it('defaultCurrent / defaultPageSize 决定初始页', () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource: manyData, pagination: { pageSize: 5, defaultCurrent: 2 } },
+      })
+      expect(wrapper.find('tbody tr.hmfw-table-row').text()).toContain('Row6')
+    })
+
+    it('position 含 top 时分页渲染在表格容器之前', () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource: manyData, pagination: { pageSize: 5, position: ['topRight'] } },
+      })
+      const html = wrapper.html()
+      expect(html.indexOf('hmfw-table-pagination')).toBeLessThan(html.indexOf('hmfw-table-container'))
+      expect(wrapper.find('.hmfw-table-pagination-right').exists()).toBe(true)
+    })
+
+    it('size 与 simple 透传到 Pagination', () => {
+      const small = mount(Table, {
+        props: { columns, dataSource: manyData, pagination: { pageSize: 5, size: 'small' } },
+      })
+      expect(small.find('.hmfw-pagination-mini').exists()).toBe(true)
+
+      const simple = mount(Table, {
+        props: { columns, dataSource: manyData, pagination: { pageSize: 5, simple: true } },
+      })
+      expect(simple.find('.hmfw-pagination-simple').exists()).toBe(true)
+    })
+
+    it('hideOnSinglePage 单页时隐藏分页', () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, pagination: { defaultPageSize: 10, hideOnSinglePage: true } },
+      })
+      expect(wrapper.find('.hmfw-pagination').exists()).toBe(false)
+    })
+
+    it('onShowSizeChange 在页大小变化时回调', async () => {
+      const onShowSizeChange = vi.fn()
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource: manyData,
+          pagination: { pageSize: 5, showSizeChanger: true, onShowSizeChange },
+        },
+      })
+      const select = wrapper.findComponent({ name: 'Select' })
+      await select.vm.$emit('change', 10)
+      expect(onShowSizeChange).toHaveBeenCalledWith(1, 10)
+    })
+  })
+
+  describe('列级 colSpan（表头合并）', () => {
+    it('列级 colSpan 只作用于表头，数据单元格不受影响', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns: [
+            { key: 'name', dataIndex: 'name', title: 'Name' },
+            { key: 'age', dataIndex: 'age', title: 'Age', colSpan: 2 },
+            { key: 'city', dataIndex: 'city', title: 'City', colSpan: 0 },
+          ],
+          dataSource,
+        },
+      })
+      // 表头：Age 跨 2 列、City 不渲染
+      const ths = wrapper.findAll('thead th')
+      expect(ths).toHaveLength(2)
+      expect(ths[1].attributes('colspan')).toBe('2')
+      // 数据行：三列均正常渲染（合并表头跨过两个数据单元格）
+      expect(wrapper.findAll('tbody tr.hmfw-table-row')[0].findAll('td')).toHaveLength(3)
+    })
+  })
+
+  describe('locale 覆盖', () => {
+    it('locale.emptyText 覆盖空数据文案', () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource: [], locale: { emptyText: '空空如也' } },
+      })
+      expect(wrapper.text()).toContain('空空如也')
+    })
+
+    it('locale.expand / collapse 用于展开图标 aria-label', async () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource,
+          locale: { expand: '展开', collapse: '收起' },
+          expandable: { expandedRowRender: (record: any) => record.name },
+        },
+      })
+      const icon = wrapper.find('.hmfw-table-expand-icon')
+      expect(icon.attributes('aria-label')).toBe('展开')
+      await icon.trigger('click')
+      expect(wrapper.find('.hmfw-table-expand-icon').attributes('aria-label')).toBe('收起')
+    })
+  })
+
+  describe('rowSelection 细项', () => {
+    it('defaultSelectedRowKeys 初始选中', () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, rowSelection: { defaultSelectedRowKeys: ['2'] } },
+      })
+      const boxes = wrapper.findAll('tbody input[type="checkbox"]')
+      expect((boxes[0].element as HTMLInputElement).checked).toBe(false)
+      expect((boxes[1].element as HTMLInputElement).checked).toBe(true)
+    })
+
+    it('hideSelectAll 隐藏表头全选框', () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, rowSelection: { hideSelectAll: true } },
+      })
+      expect(wrapper.find('thead input[type="checkbox"]').exists()).toBe(false)
+      expect(wrapper.findAll('tbody input[type="checkbox"]')).toHaveLength(3)
+    })
+
+    it('columnTitle 自定义选择列表头', () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, rowSelection: { columnTitle: '选择' } },
+      })
+      expect(wrapper.find('thead th.hmfw-table-selection-column').text()).toContain('选择')
+    })
+
+    it('preserveSelectedRowKeys 保留移出 dataSource 的选中项', async () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, rowSelection: { preserveSelectedRowKeys: true } },
+      })
+      await wrapper.findAll('tbody input[type="checkbox"]')[0].setValue(true)
+      await wrapper.setProps({ dataSource: dataSource.slice(1) })
+      await wrapper.setProps({ dataSource })
+      expect((wrapper.findAll('tbody input[type="checkbox"]')[0].element as HTMLInputElement).checked).toBe(true)
+    })
+
+    it('未开启 preserveSelectedRowKeys 时选中项随行移除', async () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, rowSelection: {} },
+      })
+      await wrapper.findAll('tbody input[type="checkbox"]')[0].setValue(true)
+      await wrapper.setProps({ dataSource: dataSource.slice(1) })
+      await wrapper.setProps({ dataSource })
+      expect((wrapper.findAll('tbody input[type="checkbox"]')[0].element as HTMLInputElement).checked).toBe(false)
+    })
+  })
+
+  describe('defaultFilteredValue 默认筛选', () => {
+    it('首次渲染即应用默认筛选值', () => {
+      const filterCols = [
+        { key: 'name', dataIndex: 'name', title: 'Name' },
+        {
+          key: 'city',
+          dataIndex: 'city',
+          title: 'City',
+          filters: [
+            { text: 'Beijing', value: 'Beijing' },
+            { text: 'Shanghai', value: 'Shanghai' },
+          ],
+          onFilter: (value: any, record: any) => record.city === value,
+          defaultFilteredValue: ['Shanghai'],
+        },
+      ]
+      const wrapper = mount(Table, { props: { columns: filterCols, dataSource } })
+      const rows = wrapper.findAll('tbody tr.hmfw-table-row')
+      expect(rows).toHaveLength(1)
+      expect(rows[0].text()).toContain('Bob')
+    })
+
+    it('受控 filteredValue 优先于 defaultFilteredValue', () => {
+      const filterCols = [
+        { key: 'name', dataIndex: 'name', title: 'Name' },
+        {
+          key: 'city',
+          dataIndex: 'city',
+          title: 'City',
+          filters: [{ text: 'Beijing', value: 'Beijing' }],
+          onFilter: (value: any, record: any) => record.city === value,
+          filteredValue: ['Beijing'],
+          defaultFilteredValue: ['Shanghai'],
+        },
+      ]
+      const wrapper = mount(Table, { props: { columns: filterCols, dataSource } })
+      const rows = wrapper.findAll('tbody tr.hmfw-table-row')
+      expect(rows).toHaveLength(1)
+      expect(rows[0].text()).toContain('Alice')
+    })
+  })
+
+  describe('expandIconColumnIndex 展开列位置', () => {
+    it('expandedRowRender 模式下可插入到选择列之后', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource,
+          rowSelection: {},
+          expandable: { expandedRowRender: (record: any) => record.name, expandIconColumnIndex: 1 },
+        },
+      })
+      const ths = wrapper.findAll('thead th')
+      expect(ths[0].classes()).toContain('hmfw-table-selection-column')
+      expect(ths[1].classes()).toContain('hmfw-table-expand-icon-col')
+      // 数据单元格顺序同样生效
+      const tds = wrapper.findAll('tbody tr.hmfw-table-row')[0].findAll('td')
+      expect(tds[0].classes()).toContain('hmfw-table-selection-column')
+      expect(tds[1].classes()).toContain('hmfw-table-expand-icon-cell')
+    })
+
+    it('默认展开列在首位（选择列之前）', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource,
+          rowSelection: {},
+          expandable: { expandedRowRender: (record: any) => record.name },
+        },
+      })
+      const ths = wrapper.findAll('thead th')
+      expect(ths[0].classes()).toContain('hmfw-table-expand-icon-col')
+      expect(ths[1].classes()).toContain('hmfw-table-selection-column')
+    })
+
+    it('树形模式下指定图标内嵌的数据列', () => {
+      const treeData = [
+        {
+          key: '1',
+          name: 'Parent',
+          age: 40,
+          city: 'Beijing',
+          children: [{ key: '1-1', name: 'Child', age: 1, city: 'Beijing' }],
+        },
+      ]
+      const wrapper = mount(Table, {
+        props: { columns, dataSource: treeData, expandable: { expandIconColumnIndex: 1 } },
+      })
+      const tds = wrapper.findAll('tbody tr.hmfw-table-row')[0].findAll('td')
+      expect(tds[0].find('.hmfw-table-cell-tree').exists()).toBe(false)
+      expect(tds[1].find('.hmfw-table-cell-tree').exists()).toBe(true)
+    })
+  })
+
+  describe('自定义筛选入口', () => {
+    it('仅提供 filterDropdown 的列也渲染筛选入口，自定义面板可用', async () => {
+      const wrapper = mount(Table, {
+        attachTo: document.body,
+        props: {
+          columns: [
+            { key: 'name', dataIndex: 'name', title: 'Name' },
+            {
+              key: 'city',
+              dataIndex: 'city',
+              title: 'City',
+              filterDropdown: ({ setSelectedKeys, confirm }: any) =>
+                h('div', { class: 'my-filter-panel' }, [
+                  h(
+                    'button',
+                    {
+                      class: 'my-filter-confirm',
+                      onClick: () => {
+                        setSelectedKeys(['Beijing'])
+                        confirm()
+                      },
+                    },
+                    'ok',
+                  ),
+                ]),
+              onFilter: (value: any, record: any) => record.city === value,
+            },
+          ],
+          dataSource,
+        },
+      })
+      expect(wrapper.find('.hmfw-table-filter-trigger').exists()).toBe(true)
+
+      await wrapper.find('.hmfw-table-filter-trigger').trigger('click')
+      await nextTick()
+      await new Promise((resolve) => setTimeout(resolve, 50))
+
+      // 弹层经 Teleport 渲染到 body
+      expect(document.querySelector('.my-filter-panel')).toBeTruthy()
+      ;(document.querySelector('.my-filter-confirm') as HTMLElement).click()
+      await nextTick()
+      await new Promise((resolve) => setTimeout(resolve, 50))
+
+      // 过滤生效：只剩 Beijing 行（Alice）
+      const rows = wrapper.findAll('tbody tr.hmfw-table-row')
+      expect(rows).toHaveLength(1)
+      expect(rows[0].text()).toContain('Alice')
+      wrapper.unmount()
+    })
+  })
+
+  describe('onCell / onHeaderCell 单元格合并', () => {
+    const mergeData = [
+      { key: '1', province: '浙江', city: '杭州', name: 'A' },
+      { key: '2', province: '浙江', city: '宁波', name: 'B' },
+      { key: '3', province: '江苏', city: '南京', name: 'C' },
+    ]
+
+    it('onCell 返回 rowSpan 时纵向合并，为 0 时不渲染该单元格', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns: [
+            {
+              key: 'province',
+              dataIndex: 'province',
+              title: '省份',
+              onCell: (_: any, index: number) => ({ rowSpan: index % 2 === 0 ? 2 : 0 }),
+            },
+            { key: 'city', dataIndex: 'city', title: '城市' },
+            { key: 'name', dataIndex: 'name', title: '姓名' },
+          ],
+          dataSource: mergeData,
+        },
+      })
+      const rows = wrapper.findAll('tbody tr.hmfw-table-row')
+      expect(rows[0].findAll('td')).toHaveLength(3)
+      expect(rows[0].findAll('td')[0].attributes('rowspan')).toBe('2')
+      // 第二行省份单元格被合并（rowSpan 0 → 不渲染）
+      expect(rows[1].findAll('td')).toHaveLength(2)
+      expect(rows[2].findAll('td')[0].attributes('rowspan')).toBe('2')
+    })
+
+    it('onCell / onHeaderCell 返回 colSpan 时横向合并', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns: [
+            {
+              key: 'name',
+              dataIndex: 'name',
+              title: '姓名',
+              onCell: () => ({ colSpan: 2 }),
+              onHeaderCell: () => ({ colSpan: 2 }),
+            },
+            {
+              key: 'city',
+              dataIndex: 'city',
+              title: '城市',
+              onCell: () => ({ colSpan: 0 }),
+              onHeaderCell: () => ({ colSpan: 0 }),
+            },
+          ],
+          dataSource: mergeData,
+        },
+      })
+      const ths = wrapper.findAll('thead th')
+      expect(ths).toHaveLength(1)
+      expect(ths[0].attributes('colspan')).toBe('2')
+      const tds = wrapper.findAll('tbody tr.hmfw-table-row')[0].findAll('td')
+      expect(tds).toHaveLength(1)
+      expect(tds[0].attributes('colspan')).toBe('2')
+    })
+
+    it('onCell 返回的 className/style/事件合并到单元格', async () => {
+      const onClick = vi.fn()
+      const wrapper = mount(Table, {
+        props: {
+          columns: [
+            { key: 'name', dataIndex: 'name', title: '姓名', className: 'col-cls' },
+            {
+              key: 'city',
+              dataIndex: 'city',
+              title: '城市',
+              onCell: () => ({ className: 'cell-cls', style: { color: 'rgb(255, 0, 0)' }, onClick }),
+            },
+          ],
+          dataSource: mergeData,
+        },
+      })
+      const td = wrapper.findAll('tbody tr.hmfw-table-row')[0].findAll('td')[1]
+      expect(td.classes()).toContain('cell-cls')
+      expect(td.attributes('style')).toContain('color: rgb(255, 0, 0)')
+      await td.trigger('click')
+      expect(onClick).toHaveBeenCalled()
+    })
+
+    it('onCell 返回的 span 为 1 时不渲染 colspan/rowspan 属性', () => {
+      const wrapper = mount(Table, {
+        props: {
+          columns: [
+            {
+              key: 'province',
+              dataIndex: 'province',
+              title: '省份',
+              onCell: () => ({ colSpan: 1, rowSpan: 1 }),
+            },
+          ],
+          dataSource: mergeData,
+        },
+      })
+      const td = wrapper.findAll('tbody tr.hmfw-table-row')[0].find('td')
+      expect(td.attributes('colspan')).toBeUndefined()
+      expect(td.attributes('rowspan')).toBeUndefined()
+    })
+  })
+
+  describe('固定列阴影与吸底滚动条', () => {
+    const mockContentBox = (
+      wrapper: any,
+      box: { scrollWidth: number; clientWidth: number; bottom?: number; top?: number },
+    ) => {
+      const content = wrapper.find('.hmfw-table-content').element as HTMLElement
+      Object.defineProperty(content, 'scrollWidth', { value: box.scrollWidth, configurable: true })
+      Object.defineProperty(content, 'clientWidth', { value: box.clientWidth, configurable: true })
+      Object.defineProperty(content, 'offsetHeight', { value: 300, configurable: true })
+      Object.defineProperty(content, 'clientHeight', { value: 285, configurable: true })
+      content.getBoundingClientRect = () =>
+        ({
+          top: box.top ?? 100,
+          bottom: box.bottom ?? 2000,
+          left: 0,
+          right: 0,
+          width: 0,
+          height: 0,
+          x: 0,
+          y: 0,
+          toJSON: () => ({}),
+        }) as DOMRect
+      return content
+    }
+
+    it('横向滚动时按位置切换 ping 阴影类名', async () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, scroll: { x: 800 } },
+      })
+      const content = mockContentBox(wrapper, { scrollWidth: 800, clientWidth: 400 }) as any
+      content.scrollLeft = 0
+      await wrapper.find('.hmfw-table-content').trigger('scroll')
+      expect(wrapper.find('.hmfw-table').classes()).not.toContain('hmfw-table-ping-left')
+
+      content.scrollLeft = 100
+      await wrapper.find('.hmfw-table-content').trigger('scroll')
+      const root = wrapper.find('.hmfw-table')
+      expect(root.classes()).toContain('hmfw-table-ping-left')
+      expect(root.classes()).toContain('hmfw-table-ping-right')
+
+      // 滚到最右侧：右侧阴影消失
+      content.scrollLeft = 400
+      await wrapper.find('.hmfw-table-content').trigger('scroll')
+      expect(root.classes()).toContain('hmfw-table-ping-left')
+      expect(root.classes()).not.toContain('hmfw-table-ping-right')
+    })
+
+    it('sticky 开启且有横向溢出且真实滚动条不可见时渲染吸底滚动条', async () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, sticky: true, scroll: { x: 800 } },
+      })
+      mockContentBox(wrapper, { scrollWidth: 800, clientWidth: 400 })
+      await wrapper.find('.hmfw-table-content').trigger('scroll')
+
+      const bar = wrapper.find('.hmfw-table-sticky-scroll')
+      expect(bar.exists()).toBe(true)
+      // 滑块宽度 = clientWidth² / scrollWidth = 200
+      expect(bar.find('.hmfw-table-sticky-scroll-bar').attributes('style')).toContain('width: 200px')
+    })
+
+    it('真实滚动条在可视区域内时不渲染吸底滚动条', async () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, sticky: true, scroll: { x: 800 } },
+      })
+      // bottom 在视口内（jsdom innerHeight=768）
+      mockContentBox(wrapper, { scrollWidth: 800, clientWidth: 400, top: 0, bottom: 300 })
+      await wrapper.find('.hmfw-table-content').trigger('scroll')
+      expect(wrapper.find('.hmfw-table-sticky-scroll').exists()).toBe(false)
+    })
+
+    it('拖动吸底滚动条同步内容区横向滚动', async () => {
+      const wrapper = mount(Table, {
+        props: { columns, dataSource, sticky: true, scroll: { x: 800 } },
+      })
+      const content = mockContentBox(wrapper, { scrollWidth: 800, clientWidth: 400 }) as any
+      await wrapper.find('.hmfw-table-content').trigger('scroll')
+
+      await wrapper.find('.hmfw-table-sticky-scroll-bar').trigger('mousedown', { pageX: 0 })
+      // pageX 由 clientX + 滚动偏移推导；用 clientX 保证 jsdom 下生效
+      document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, bubbles: true }))
+      // left(100) / wrapWidth(400) * scrollWidth(800) = 200
+      expect(content.scrollLeft).toBe(200)
+      document.dispatchEvent(new MouseEvent('mouseup'))
+    })
+  })
+
+  describe('树形数据 · 选择级联', () => {
+    const treeData = [
+      {
+        key: '1',
+        name: 'Parent',
+        age: 40,
+        city: 'Beijing',
+        children: [
+          { key: '1-1', name: 'Child A', age: 15, city: 'Beijing' },
+          {
+            key: '1-2',
+            name: 'Child B',
+            age: 12,
+            city: 'Beijing',
+            children: [{ key: '1-2-1', name: 'Grandchild', age: 1, city: 'Beijing' }],
+          },
+        ],
+      },
+      { key: '2', name: 'Leaf', age: 20, city: 'Shanghai' },
+    ]
+
+    it('勾选父节点联动全部后代，取消子节点联动祖先', async () => {
+      const onChange = vi.fn()
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource: treeData,
+          expandable: { defaultExpandAllRows: true },
+          rowSelection: { onChange },
+        },
+      })
+      // 行顺序：Parent, Child A, Child B, Grandchild, Leaf
+      let boxes = wrapper.findAll('tbody input[type="checkbox"]')
+      await boxes[0].setValue(true)
+      expect(onChange.mock.calls[0][0]).toEqual(expect.arrayContaining(['1', '1-1', '1-2', '1-2-1']))
+
+      // 取消 Child A → 祖先 Parent 一并取消
+      boxes = wrapper.findAll('tbody input[type="checkbox"]')
+      await boxes[1].setValue(false)
+      const keys = onChange.mock.calls[1][0]
+      expect(keys).not.toContain('1')
+      expect(keys).not.toContain('1-1')
+      expect(keys).toContain('1-2')
+    })
+
+    it('checkStrictly 关闭父子联动', async () => {
+      const onChange = vi.fn()
+      const wrapper = mount(Table, {
+        props: {
+          columns,
+          dataSource: treeData,
+          expandable: { defaultExpandAllRows: true },
+          rowSelection: { onChange, checkStrictly: true },
+        },
+      })
+      const boxes = wrapper.findAll('tbody input[type="checkbox"]')
+      await boxes[0].setValue(true)
+      expect(onChange.mock.calls[0][0]).toEqual(['1'])
     })
   })
 })

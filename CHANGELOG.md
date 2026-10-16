@@ -10,6 +10,37 @@
 
 ## 最近版本
 
+## [0.53.0] - 2026-10-16
+
+[查看完整内容](./changelogs/v0.53.0.md)
+
+**✨ 新增功能**：
+
+- **Table 树形数据**: 数据项带 `children`（`childrenColumnName` 可自定义）时自动进入树形模式，展开图标内嵌数据列（`expandIconColumnIndex`）、`indentSize` 缩进、`defaultExpandAllRows` 默认全展开、`rowExpandable` / `expandRowByClick` / `expandIcon`；开启行选择后默认父子联动（`checkStrictly` 可关闭）
+- **Table 单元格合并**: 新增 `onCell` / `onHeaderCell` 按行动态合并（返回 `{ colSpan, rowSpan, ... }`，为 `0` 时不渲染）；列级 `colSpan` 收敛为表头合并语义，移除无效的静态 `rowSpan`
+- **Table 排序补齐**: `sortOrder` 受控排序、`defaultSortOrder` 默认排序、`sortDirections` 方向序列、`sorter: { compare, multiple }` 多列排序、`showSorterTooltip`
+- **Table 分页 / 行选择 / 筛选补齐**: 分页 `defaultCurrent` / `defaultPageSize` / `size` / `simple` / `disabled` / `hideOnSinglePage` / `position` / `onShowSizeChange`；行选择 `defaultSelectedRowKeys` / `columnWidth` / `columnTitle` / `fixed` / `hideSelectAll` / `preserveSelectedRowKeys`；筛选 `defaultFilteredValue` / `filterDropdown` / `filterIcon`
+- **Table 吸顶表头与吸底滚动条**: `sticky` 表头可吸附外层容器/页面（`getContainer` 指定基准容器），`offsetScroll` 在底部吸附可拖拽的横向滚动条；固定列横向滚动时按位置显示左右阴影
+- **Table 其他**: `locale` prop 接入全量语言包覆盖；`scroll.scrollToFirstRowOnChange` 生效；根导出补齐表格相关类型
+
+**🐛 问题修复**：
+
+- **行选择无法取消勾选**: Checkbox/Radio 的 `change` 载荷为事件对象，Table 误当布尔使用导致永远 truthy，取消单行勾选与取消全选从未生效
+- **`onChange` 单次操作触发两次**: `emit('change')` 已调用 `onChange` prop，叠加显式调用导致重复触发
+- **固定列滚动时透出下层内容**: 固定列表头与行 hover 态使用半透明填充色作背景，改为叠加在不透明底色之上
+- **吸顶表头无法吸附外层容器**: `overflow-x` 容器同时成为纵向滚动容器，`position: sticky` 被限制在容器内；表头拆分独立渲染结构性解决，`colgroup` 保证列对齐
+- **仅提供 `filterDropdown` 的列不渲染筛选入口**（改为二者有其一即渲染）
+
+**🔨 代码重构**：
+
+- `Table.tsx` 1460 行拆分至 911 行：抽出 `composables/useHorizontalScroll`（阴影与吸底滚动条）、`useTableSort`、`useTreeData`、`useRowSelection`、`TableHeader.tsx`（表头组件）、`CustomFilterDropdown.tsx`
+
+**📝 文档 / 测试**：
+
+- 新增 demo：树形数据、受控排序、默认排序与方向、自定义筛选、分页配置、单元格合并；行选择补充单选示例、吸顶表头补充自定义容器示例
+- 单测 Table 44 → 77（+33），e2e 5 → 9（+4）
+- 修复既有 e2e 用例 10 处过时断言（Trigger ×7 / Cascader / Input / Select），均为文档站渲染完整后必然失败的历史遗留
+
 ## [0.52.1] - 2026-10-02
 
 [查看完整内容](./changelogs/v0.52.1.md)
