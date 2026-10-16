@@ -10,6 +10,20 @@
 
 ## 最近版本
 
+## [0.53.1] - 2026-10-16
+
+[查看完整内容](./changelogs/v0.53.1.md)
+
+**🐛 问题修复**：
+
+- **Select 重置为 `undefined` 后仍显示旧值**: `value` 从有效值变为 `undefined` 时同步清空内部值，修复查询条件或表单重置后仍残留旧选中文本的问题；单选与多选模式均覆盖
+- **Form 无法重置初始值为 `undefined` 的字段**: 初始值快照在克隆响应式 model 前先解除 Vue Proxy，避免降级到 JSON 克隆后丢失值为 `undefined` 的字段
+
+**📝 文档 / 测试**：
+
+- Form「复杂控件绑定」Demo 新增重置按钮，可直接验证 Select 从已选值恢复为 `undefined` 后显示占位符
+- 新增 Select 单选、多选组件级回归测试及 Form `resetFields()` 集成测试
+
 ## [0.53.0] - 2026-10-16
 
 [查看完整内容](./changelogs/v0.53.0.md)

@@ -34,6 +34,7 @@
 
     <FormItem :wrapper-col="{ offset: 6, span: 18 }">
       <Button type="primary" @click="handleSubmit">提交</Button>
+      <Button style="margin-left: 8px" @click="handleReset">重置</Button>
       <span style="margin-left: 12px">{{ result }}</span>
     </FormItem>
   </Form>
@@ -104,5 +105,10 @@ async function handleSubmit() {
   } catch {
     result.value = '校验未通过'
   }
+}
+
+function handleReset() {
+  formRef.value?.resetFields()
+  result.value = ''
 }
 </script>

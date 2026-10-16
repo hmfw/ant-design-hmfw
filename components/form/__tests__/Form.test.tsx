@@ -6,6 +6,7 @@ import { Input } from '../../input'
 import { Checkbox } from '../../checkbox'
 import { Switch } from '../../switch'
 import { Button } from '../../button'
+import { Select } from '../../select'
 import { defineComponent, h, nextTick, reactive, ref, computed } from 'vue'
 
 describe('Form', () => {
@@ -759,6 +760,40 @@ describe('Form - validateTrigger', () => {
 })
 
 describe('Form - resetFields', () => {
+  it('clears Select display when resetting a field whose initial value is undefined', async () => {
+    const model = reactive<{ city: string | undefined }>({ city: undefined })
+    const formRef = ref<any>(null)
+    const options = [{ label: 'Beijing', value: 'beijing' }]
+    const Host = defineComponent({
+      setup: () => () =>
+        h(Form, { ref: formRef, model }, () =>
+          h(FormItem, { name: 'city' }, () =>
+            h(Select, {
+              options,
+              value: model.city,
+              placeholder: 'Select a city',
+              'onUpdate:value': (value) => {
+                model.city = value as string | undefined
+              },
+            }),
+          ),
+        ),
+    })
+    const wrapper = mount(Host)
+    await nextTick()
+
+    model.city = 'beijing'
+    await nextTick()
+    expect(wrapper.find('.hmfw-select-selection-item').text()).toBe('Beijing')
+
+    formRef.value.resetFields()
+    await nextTick()
+
+    expect(model.city).toBeUndefined()
+    expect(wrapper.find('.hmfw-select-selection-item').exists()).toBe(false)
+    expect(wrapper.find('.hmfw-select-placeholder').text()).toBe('Select a city')
+  })
+
   it('restores initial values and clears errors', async () => {
     const model = reactive({ name: 'Alice', age: 20 })
     const rules = { name: [{ required: true, message: 'Required' }] }

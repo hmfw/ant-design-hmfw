@@ -443,6 +443,34 @@ describe('Select', () => {
     wrapper.unmount()
   })
 
+  it('clears a selected value when value changes to undefined', async () => {
+    const wrapper = mount(Select, {
+      props: { options, value: 'apple' },
+      attachTo: document.body,
+    })
+    expect(wrapper.find('.hmfw-select-selection-item').text()).toBe('Apple')
+
+    await wrapper.setProps({ value: undefined })
+
+    expect(wrapper.find('.hmfw-select-selection-item').exists()).toBe(false)
+    expect(wrapper.find('.hmfw-select-placeholder').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('clears selected values in multiple mode when value changes to undefined', async () => {
+    const wrapper = mount(Select, {
+      props: { options, mode: 'multiple', value: ['apple', 'banana'] },
+      attachTo: document.body,
+    })
+    expect(wrapper.findAll('.hmfw-select-selection-item')).toHaveLength(2)
+
+    await wrapper.setProps({ value: undefined })
+
+    expect(wrapper.findAll('.hmfw-select-selection-item')).toHaveLength(0)
+    expect(wrapper.find('.hmfw-select-placeholder').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
   it('supports custom fieldNames', async () => {
     const customOptions = [
       { name: 'Apple', id: 'apple' },

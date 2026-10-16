@@ -169,7 +169,7 @@ export const Select = defineComponent({
     watch(
       () => props.value,
       (v) => {
-        if (v !== undefined) innerValue.value = extractRawValues(v)
+        innerValue.value = extractRawValues(v)
       },
     )
 

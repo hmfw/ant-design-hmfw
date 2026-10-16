@@ -1,4 +1,4 @@
-import { defineComponent, ref, provide, inject, computed, onMounted, type PropType } from 'vue'
+import { defineComponent, ref, provide, inject, computed, onMounted, toRaw, type PropType } from 'vue'
 import { usePrefixCls, useConfig, CONFIG_PROVIDER_KEY } from '../config-provider'
 import type { ComponentSize } from '../config-provider'
 import type { Locale } from '../_locale'
@@ -55,7 +55,7 @@ function cloneDeep<T>(value: T): T {
   if (value == null || typeof value !== 'object') return value
   if (typeof structuredClone === 'function') {
     try {
-      return structuredClone(value)
+      return structuredClone(toRaw(value))
     } catch {
       // 含函数/Symbol 等不可克隆值时降级
     }

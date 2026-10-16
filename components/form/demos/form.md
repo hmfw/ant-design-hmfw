@@ -99,7 +99,7 @@ Form 的样式消费全局设计 Token，通过 `ConfigProvider` 修改主题后
 
 ### 复杂控件绑定
 
-各类控件都能作为字段使用，注意 v-model 的参数名并不统一：Input / Select / DatePicker / Rate / RadioGroup 用 `v-model:value`，Checkbox / Switch 用 `v-model:checked`。非文本控件同样支持 `rules` 校验。
+各类控件都能作为字段使用，注意 v-model 的参数名并不统一：Input / Select / DatePicker / Rate / RadioGroup 用 `v-model:value`，Checkbox / Switch 用 `v-model:checked`。非文本控件同样支持 `rules` 校验；选择城市后点击重置，可看到初始值为 `undefined` 的 Select 恢复为空。
 
 <DemoBlock title="复杂控件绑定" :source="FormComplexControlsSource">
   <FormComplexControls />
