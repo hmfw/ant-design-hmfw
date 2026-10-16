@@ -185,6 +185,8 @@ pnpm e2e --headed        # 带浏览器界面运行 E2E
 
 E2E 测试文件命名：`*.e2e.spec.ts`
 
+E2E 默认单 worker（`playwright.config.ts`）：多 worker 在文档站预热后跑完全量用例时，Playwright 的 worker 优雅退出会死锁，用例全绿也不出汇总、不写报告（上游 microsoft/playwright#38276、#39753）。看到 `[253/253]` 后无输出即为该问题，**不要当作用例失败**；需要并行加速时用 `PW_WORKERS=4 pnpm e2e`（可能需 Ctrl-C 结束）。
+
 ## 图标系统
 
 图标系统已独立为 npm 包 [`@hmfw/icons`](https://www.npmjs.com/package/@hmfw/icons)，包含 **681 个高质量图标**（从 Ant Design v6 同步）。

@@ -14,8 +14,12 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  // 修复: 限制 worker 数量，避免资源竞争
-  workers: process.env.CI ? 1 : 4,
+  // 本地默认单 worker：多 worker（实测 2 / 4）在文档站预热后跑完全量用例时，
+  // Playwright 的 worker 优雅退出会死锁 —— 主进程与各 worker 互相等待一条永远不会
+  // 到达的 IPC 消息，253 个用例全绿也不出汇总、不写报告（上游
+  // microsoft/playwright#38276、#39753）。单 worker 实测可稳定退出（约 5.4 分钟）。
+  // 确需并行加速时：PW_WORKERS=4 pnpm e2e（可能卡在收尾，卡住直接 Ctrl-C）
+  workers: process.env.CI ? 1 : Number(process.env.PW_WORKERS) || 1,
 
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
